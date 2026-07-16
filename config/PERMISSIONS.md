@@ -13,7 +13,7 @@ By default the application reads the private maps from `config/`. Production
 deployments should keep them outside the Git checkout and set:
 
 ```toml
-APP_PRIVATE_CONFIG_DIR = "/var/lib/mparanza/config"
+APP_PRIVATE_CONFIG_DIR = "/home/<service-user>/.config/mparanza"
 ```
 
 `SITE_PAGE_PERMISSIONS_FILE` may instead point only the site-level map to a
@@ -42,5 +42,6 @@ APP_FILES_DEPLOY_HOST=myserver \
 
 The command validates every `config/*_permissions.json` file, uploads temporary
 copies, sets mode `600`, and atomically replaces the server files under
-`/var/lib/mparanza/config`. The application detects file timestamp and size
-changes, so permission updates take effect without a restart.
+`.config/mparanza` in the SSH user's home. Set `APP_PRIVATE_CONFIG_DIR` to that
+directory's absolute path for the service account. The application detects file
+timestamp and size changes, so permission updates take effect without a restart.
