@@ -18,6 +18,7 @@ from modules.auth.session import (
     InvalidSessionError,
     decode_session_cookie,
 )
+from modules.utilities.private_config import resolve_private_config_path
 
 __all__ = [
     "get_allowed_page_keys_for_email",
@@ -114,12 +115,23 @@ def require_authenticated_user_for_site(request: Request) -> AuthenticatedUser |
 
 _SITE_PERMISSIONS_FILE = _resolve_config_path("site_page_permissions.json")
 _PERMISSION_STRUCTURE_FILE = _resolve_config_path("permission_structure.json")
+_SITE_PERMISSIONS_ENV = "SITE_PAGE_PERMISSIONS_FILE"
+
+
+def _site_permissions_file() -> Path:
+    """Return the deployment-private site permission path."""
+
+    return resolve_private_config_path(
+        _SITE_PERMISSIONS_FILE,
+        filename="site_page_permissions.json",
+        specific_env_var=_SITE_PERMISSIONS_ENV,
+    )
 
 
 def _site_permissions_cache_key() -> tuple[str, int, int]:
     """Return a cache key that changes whenever the permissions file changes."""
 
-    path = _SITE_PERMISSIONS_FILE
+    path = _site_permissions_file()
     try:
         stat_result = path.stat()
     except FileNotFoundError:
@@ -147,7 +159,9 @@ def _get_site_permissions(cache_key: tuple[str, int, int]) -> dict[str, set[str]
     permissions_path, _mtime_ns, _size = cache_key
     path = Path(permissions_path)
     if not path.exists():
-        LOGGER.warning("Site permissions file not found at %s; allowing all pages.", path)
+        LOGGER.error(
+            "Site permissions file not found at %s; denying protected pages.", path
+        )
         return {}
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -219,7 +233,9 @@ def _get_permission_structure(
     path_str, _mtime_ns, _size = cache_key
     path = Path(path_str)
     if not path.exists():
-        LOGGER.warning("Permission structure file not found at %s; allowing all pages.", path)
+        LOGGER.warning(
+            "Permission structure file not found at %s; allowing all pages.", path
+        )
         return {}
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -301,6 +317,19 @@ def _email_has_site_permission(email: str, allowed: set[str]) -> bool:
     return email in allowed or _ALL_AUTHENTICATED_USERS in allowed
 
 
+def _site_permissions_unavailable(page_key: str) -> HTTPException:
+    """Return a fail-closed error for missing or empty permission state."""
+
+    return HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail={
+            "error": "permissions_unavailable",
+            "message": "Page permissions are temporarily unavailable.",
+            "page": page_key,
+        },
+    )
+
+
 def require_site_permission(page_key: str):
     """Return a dependency enforcing per-page access control."""
 
@@ -312,7 +341,7 @@ def require_site_permission(page_key: str):
             return None
         permissions = _get_site_permissions(_site_permissions_cache_key())
         if not permissions:
-            return user
+            raise _site_permissions_unavailable(page_key)
         normalized_email = user.email.strip().lower()
         allowed = permissions.get(page_key)
         if allowed is None:
@@ -351,7 +380,7 @@ def require_site_permission_for_request(request: Request) -> AuthenticatedUser |
         return user
     permissions = _get_site_permissions(_site_permissions_cache_key())
     if not permissions:
-        return user
+        raise _site_permissions_unavailable(page_key)
     normalized_email = user.email.strip().lower()
     allowed = permissions.get(page_key)
     if allowed is None:
