@@ -28,7 +28,7 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 
 _DEFAULT_CONFIG_DIR = Path("config")
-_DEFAULT_REMOTE_DIR = PurePosixPath("/var/lib/mparanza/config")
+_DEFAULT_REMOTE_DIR = PurePosixPath(".config/mparanza")
 _DEPLOY_HOST_ENV = "APP_FILES_DEPLOY_HOST"
 _HOST_PATTERN = re.compile(r"^[A-Za-z0-9_.@-]+$")
 _FILENAME_PATTERN = re.compile(r"^[A-Za-z0-9_-]+_permissions\.json$")
@@ -130,8 +130,14 @@ def _validate_host(host: str) -> str:
 
 
 def _validate_remote_dir(remote_dir: PurePosixPath) -> PurePosixPath:
-    if not remote_dir.is_absolute():
-        raise PermissionConfigError("Remote configuration directory must be absolute.")
+    if remote_dir == PurePosixPath(".") or ".." in remote_dir.parts:
+        raise PermissionConfigError(
+            "Remote configuration directory must not be empty or traverse parents."
+        )
+    if not remote_dir.is_absolute() and remote_dir.parts[0] != ".config":
+        raise PermissionConfigError(
+            "Relative remote configuration directories must be under '.config'."
+        )
     if any(character.isspace() for character in str(remote_dir)):
         raise PermissionConfigError(
             "Remote configuration directory must not contain whitespace."
@@ -217,7 +223,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--remote-dir",
         type=PurePosixPath,
         default=_DEFAULT_REMOTE_DIR,
-        help="Private configuration directory on the server.",
+        help=(
+            "Private configuration directory on the server "
+            "(defaults to .config/mparanza under the SSH user's home)."
+        ),
     )
     parser.add_argument(
         "--file",

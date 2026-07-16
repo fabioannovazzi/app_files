@@ -72,7 +72,7 @@ def test_deploy_permission_files_stages_then_atomically_publishes(
     summaries = deploy_private_permissions.deploy_permission_files(
         [permissions_path],
         host="myserver",
-        remote_dir=PurePosixPath("/var/lib/mparanza/config"),
+        remote_dir=PurePosixPath(".config/mparanza"),
     )
 
     assert len(summaries) == 1
@@ -81,7 +81,7 @@ def test_deploy_permission_files_stages_then_atomically_publishes(
             [
                 "ssh",
                 "myserver",
-                "install -d -m 700 /var/lib/mparanza/config",
+                "install -d -m 700 .config/mparanza",
             ],
             True,
         ),
@@ -89,7 +89,7 @@ def test_deploy_permission_files_stages_then_atomically_publishes(
             [
                 "scp",
                 str(permissions_path),
-                "myserver:/var/lib/mparanza/config/.site_page_permissions.json.fixed.tmp",
+                "myserver:.config/mparanza/.site_page_permissions.json.fixed.tmp",
             ],
             True,
         ),
@@ -97,9 +97,9 @@ def test_deploy_permission_files_stages_then_atomically_publishes(
             [
                 "ssh",
                 "myserver",
-                "chmod 600 /var/lib/mparanza/config/.site_page_permissions.json.fixed.tmp"
-                " && mv -f /var/lib/mparanza/config/.site_page_permissions.json.fixed.tmp"
-                " /var/lib/mparanza/config/site_page_permissions.json",
+                "chmod 600 .config/mparanza/.site_page_permissions.json.fixed.tmp"
+                " && mv -f .config/mparanza/.site_page_permissions.json.fixed.tmp"
+                " .config/mparanza/site_page_permissions.json",
             ],
             True,
         ),
@@ -115,5 +115,31 @@ def test_deploy_permission_files_rejects_unsafe_host(tmp_path: Path) -> None:
         deploy_private_permissions.deploy_permission_files(
             [permissions_path],
             host="host;command",
-            remote_dir=PurePosixPath("/var/lib/mparanza/config"),
+            remote_dir=PurePosixPath(".config/mparanza"),
+        )
+
+
+def test_deploy_permission_files_rejects_parent_traversal(tmp_path: Path) -> None:
+    permissions_path = tmp_path / "site_page_permissions.json"
+    _write_permissions(permissions_path)
+
+    with pytest.raises(PermissionConfigError, match="traverse parents"):
+        deploy_private_permissions.deploy_permission_files(
+            [permissions_path],
+            host="myserver",
+            remote_dir=PurePosixPath("../private-config"),
+        )
+
+
+def test_deploy_permission_files_rejects_unscoped_relative_directory(
+    tmp_path: Path,
+) -> None:
+    permissions_path = tmp_path / "site_page_permissions.json"
+    _write_permissions(permissions_path)
+
+    with pytest.raises(PermissionConfigError, match="under '.config'"):
+        deploy_private_permissions.deploy_permission_files(
+            [permissions_path],
+            host="myserver",
+            remote_dir=PurePosixPath("private-config"),
         )
