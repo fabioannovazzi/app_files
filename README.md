@@ -426,6 +426,24 @@ future email allow-listing. To
 protect a new page, add a route prefix entry in `config/permission_structure.json`
 and create a matching entry in `config/site_page_permissions.json`.
 
+Real permission maps are deployment-private state, not source files. Git tracks
+the corresponding `*.example.json` contracts and ignores
+`config/*_permissions.json`. Production should set
+`APP_PRIVATE_CONFIG_DIR=/var/lib/mparanza/config`; an explicit
+`SITE_PAGE_PERMISSIONS_FILE` overrides only the site-level map. Protected site
+routes fail closed when their site permission map is missing or empty.
+
+After changing an ignored permission map locally, validate and publish all
+private maps over SSH without committing their contents:
+
+```bash
+APP_FILES_DEPLOY_HOST=myserver \
+  .venv/bin/python scripts/deploy_private_permissions.py
+```
+
+See `config/PERMISSIONS.md` for the dry-run command, path precedence, and the
+server-side file contract.
+
 ## Testing
 
 Run the test suite with coverage:
