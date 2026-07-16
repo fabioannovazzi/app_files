@@ -429,7 +429,7 @@ and create a matching entry in `config/site_page_permissions.json`.
 Real permission maps are deployment-private state, not source files. Git tracks
 the corresponding `*.example.json` contracts and ignores
 `config/*_permissions.json`. Production should set
-`APP_PRIVATE_CONFIG_DIR=/var/lib/mparanza/config`; an explicit
+`APP_PRIVATE_CONFIG_DIR=/home/<service-user>/.config/mparanza`; an explicit
 `SITE_PAGE_PERMISSIONS_FILE` overrides only the site-level map. Protected site
 routes fail closed when their site permission map is missing or empty.
 
@@ -440,6 +440,9 @@ private maps over SSH without committing their contents:
 APP_FILES_DEPLOY_HOST=myserver \
   .venv/bin/python scripts/deploy_private_permissions.py
 ```
+
+The publisher defaults to `.config/mparanza` under the SSH user's home, matching
+the application path above when the SSH and service accounts are the same.
 
 See `config/PERMISSIONS.md` for the dry-run command, path precedence, and the
 server-side file contract.
