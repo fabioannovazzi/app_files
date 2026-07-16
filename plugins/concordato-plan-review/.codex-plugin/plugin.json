@@ -1,0 +1,49 @@
+{
+  "name": "concordato-plan-review",
+  "version": "0.1.20",
+  "description": "Tie-out and auditor-oriented Word/Excel review workflow for Italian concordato plan numerical sections against accounting evidence.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "concordato",
+    "audit",
+    "tie-out",
+    "reconciliation",
+    "going-concern",
+    "financial-statements",
+    "piano-concordato",
+    "revision"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Revisione Piano Concordato",
+    "shortDescription": "Confronta il piano di concordato con bilancio, mastrini, DB rettificato e dettagli debiti, con report criticita per revisore.",
+    "longDescription": "Workflow Codex per tie-out numerico e review contabile di piani di concordato. Ispeziona PDF e workbook, chiede solo perimetro/data/tolleranze non inferibili, estrae candidati numerici, crea match meccanici per importo e produce automaticamente il pacchetto completo: Word riassuntivo batte/non batte, tabulato differenze, audit, review Codex, classificazione di dati storici, rettifiche, riclassifiche, assunzioni prospettiche, omissioni e criticita rilevanti per la continuita aziendale.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Usa Revisione Piano Concordato sulla cartella che indico.",
+      "Ispeziona piano, bilancio, mastrini, DB rettificato e dettagli debiti; inferisci quanto possibile e chiedimi solo ambiguita sostanziali su perimetro, data e tolleranze.",
+      "Prepara tabulato tie-out, differenze, fonti usate e criticita per revisore su bilancio, continuita aziendale, omissioni e dati non supportati."
+    ],
+    "brandColor": "#31493C",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

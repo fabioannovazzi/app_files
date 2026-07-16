@@ -1,0 +1,35 @@
+{
+  "plugin": "journal-sampling",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "variable-journal-sample",
+      "prompt": "Use Journal Sampling on this Excel journal, map the columns, normalize entries, and select a reproducible audit sample.",
+      "required_signals": [
+        "asks for sample size and sampling method",
+        "runs scripts/check_dependencies.py",
+        "creates a mapping recipe",
+        "delivers sample and audit trail"
+      ]
+    },
+    {
+      "id": "print-style-journal",
+      "prompt": "Extract sample entries from a print-style Excel export generated from a PDF and ask only for essential mapping ambiguities.",
+      "required_signals": [
+        "inspects the source file",
+        "keeps extraction deterministic",
+        "reports parser confidence and missing fields"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "general-reconciliation",
+      "prompt": "Reconcile this open item list to bank statements and factoring evidence."
+    },
+    {
+      "id": "generic-spreadsheet-cleanup",
+      "prompt": "Clean this spreadsheet and make the formatting nicer."
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_label or "Hierarchy Fix" }}{% endblock %}
+
+{% block body %}
+  <header class="landing-header">
+    <a href="/?lang={{ lang or 'en' }}" class="landing-logo-link" aria-label="Return to the home page">
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main class="app-main">
+    <div class="container">
+      <section class="panel">
+        <h1 class="page-title">{{ page_label or "Hierarchy Fix" }}</h1>
+        <p>{{ copy.description | default("Upload a CSV, Parquet, or Excel file to detect and resolve hierarchy issues.") }}</p>
+        <form id="previewForm" class="form" enctype="multipart/form-data">
+          <label>Data file
+            <input type="file" name="data_file" accept=".csv,.parquet,.xlsx,.xls" required />
+          </label>
+          <label>Allowed ambiguous percentage
+            <input type="number" name="ambiguous_pct" min="0" max="100" step="0.5" value="0" />
+          </label>
+          <label>
+            <input type="checkbox" name="allow_parent_more_uniques" checked />
+            Allow parent column with more unique values
+          </label>
+          <div class="actions">
+            <button class="primary-button" type="submit">Preview hierarchy</button>
+          </div>
+        </form>
+        <pre id="previewOutput" class="code-block"></pre>
+      </section>
+      <section class="panel">
+        <h2 class="panel-title">Resolve and download</h2>
+        <form id="resolveForm" class="form" method="post" action="/hierarchy/resolve" enctype="multipart/form-data">
+          <label>Data file
+            <input type="file" name="data_file" accept=".csv,.parquet,.xlsx,.xls" required />
+          </label>
+          <label>Weight column (optional)
+            <input type="text" name="weight_col" placeholder="e.g. Amount" />
+          </label>
+          <label>Allowed ambiguous percentage
+            <input type="number" name="ambiguous_pct" min="0" max="100" step="0.5" value="0" />
+          </label>
+          <label>
+            <input type="checkbox" name="allow_parent_more_uniques" checked />
+            Allow parent column with more unique values
+          </label>
+          <div class="actions">
+            <button class="primary-button" type="submit">Download resolved CSV</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    const previewForm = document.getElementById("previewForm");
+    const previewOutput = document.getElementById("previewOutput");
+
+    previewForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      previewOutput.textContent = "Loading...";
+      const formData = new FormData(previewForm);
+      const response = await fetch("/hierarchy/preview", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        previewOutput.textContent = "Preview failed.";
+        return;
+      }
+      const payload = await response.json();
+      previewOutput.textContent = JSON.stringify(payload, null, 2);
+    });
+  </script>
+{% endblock %}

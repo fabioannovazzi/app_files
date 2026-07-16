@@ -1,0 +1,48 @@
+{
+  "name": "journal-sampling",
+  "version": "0.1.24",
+  "description": "Deterministic journal extraction and audit sample selection guided by Codex.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "audit",
+    "journal",
+    "sampling",
+    "accounting",
+    "excel",
+    "pdf",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Journal Sampling",
+    "shortDescription": "Extract varied journals and create reproducible audit samples in Italian, English, French, or German.",
+    "longDescription": "Codex workflow for audit journal sampling across variable Excel, CSV, print-style Excel, and text PDF formats. Codex inspects files, proposes a mapping recipe, asks only for non-inferable mapping or sampling assumptions, and runs deterministic scripts to normalize rows and automatically generate the natural full package: reproducible sample, XLSX/CSV where available, diagnostics, audit trail, and Codex review. Supports working locales it/en/fr/de with separate source-document language assumptions.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Journal Sampling on the folder I provide.",
+      "Infer working language, source-document language, and mappings where possible; ask only for essential ambiguities, then generate sample, diagnostics, audit trail, and review package.",
+      "Keep extraction and sampling deterministic: use the plugin scripts, not opaque model decisions."
+    ],
+    "brandColor": "#0f766e",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "plugin": "attribute-reporting",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "scrape-map-report",
+      "prompt": "Scrape this retailer category locally, map the product attributes with Codex, compare new products and best sellers, and write the report as HTML.",
+      "required_signals": [
+        "scrape",
+        "map the product attributes",
+        "new products",
+        "best sellers",
+        "HTML"
+      ]
+    },
+    {
+      "id": "existing-package-report",
+      "prompt": "Use the current cashmere sweater evidence package to create the attribute trend report locally.",
+      "required_signals": [
+        "cashmere sweater",
+        "evidence package",
+        "attribute trend report",
+        "locally"
+      ]
+    },
+    {
+      "id": "report-correctness",
+      "prompt": "Is this generated attribute report correct? Check the evidence and give me a direct verdict.",
+      "required_signals": [
+        "attribute report",
+        "correct",
+        "evidence",
+        "direct verdict"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "generic-web-scrape",
+      "prompt": "Scrape the contact details from these company websites into a CSV."
+    },
+    {
+      "id": "financial-report",
+      "prompt": "Build a management report from these financial Excel files."
+    },
+    {
+      "id": "deck-correction",
+      "prompt": "Apply this spoken feedback to my PowerPoint deck."
+    }
+  ]
+}

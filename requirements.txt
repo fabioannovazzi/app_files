@@ -1,0 +1,70 @@
+aspose-slides==26.2.0
+beautifulsoup4==4.13.3
+datashader==0.18.1
+# Datashader relies on Numba to compile its Python code; pin NumPy and
+# Numba to mutually compatible versions.  Numba 0.61.2 supports NumPy
+# ≥1.24 and <2.3, and requires llvmlite 0.44.x
+fastapi>=0.115,<0.116
+deepdiff==8.4.2
+fastexcel==0.14.0
+ftfy==6.3.1
+ipython==9.0.2
+imageio-ffmpeg>=0.5,<1
+json_repair==0.40.0
+langdetect==1.0.9
+llvmlite>=0.44,<0.45  # pulled in by Numba but pinned here for clarity
+# Guardrails AI v0.6.x pins lxml to >=4.9.3,<5.0
+lxml>=4.9.3,<5.0
+MarkupSafe==3.0.2
+markdownify
+Markdown>=3.7,<4
+matplotlib==3.10.1
+matplotlib_venn==1.1.2
+# Numba 0.61.x does not support NumPy 2.3+, so keep NumPy below 2.3.
+numpy>=1.24,<2.3
+numba>=0.61.2,<0.62
+openai>=1.100.0,<2
+openpyxl==3.1.5
+opencv-python-headless==4.9.0.80
+opencv-python==4.9.0.80
+pydantic>=2.5,<3
+pydantic-core>=2.16,<3
+pdfplumber==0.11.6
+pypdf>=4.0
+pdfminer.six>=20221105
+pymupdf
+pdf2image
+paddleocr>=3.0
+paddlepaddle>=3.0
+paddlex[ocr]>=3.0
+pypandoc
+Pillow==11.1.0
+pillow-avif-plugin==1.5.5
+plotly==6.5.2
+kaleido==1.3.0
+polars>=1.37.1
+protobuf>=3.20,<6
+psutil==7.0.0
+psycopg[binary]>=3.2,<4
+python_dateutil==2.9.0.post0
+python-multipart==0.0.20
+python-pptx==0.6.23
+python-docx>=1.1
+rarfile==4.2
+rapidfuzz==3.13.0
+readability_lxml==0.8.1
+requests[security]==2.32.3
+# Requests 2.32.x accepts chardet <6 when chardet is installed. Keep this
+# explicit so local environments do not drift to incompatible 7.x releases.
+chardet>=5.2,<6
+redis>=5.0
+cryptography>=43.0.1
+google-auth>=2.35.0,<3
+scikit_learn==1.6.1
+scipy==1.15.2
+seaborn==0.13.2
+uvicorn[standard]>=0.32,<0.33
+xlrd==2.0.1
+xlsxwriter==3.2.0
+playwright>=1.48.0
+reportlab>=4.2.0

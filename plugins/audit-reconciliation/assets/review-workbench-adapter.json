@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "audit-reconciliation",
+  "title": "Audit Reconciliation Review",
+  "reviewTitle": "Reconciliation Evidence Review",
+  "queueTitle": "Reconciliation Rows",
+  "detailTitle": "Row Vs Evidence",
+  "detailMode": "reconciliation-desk",
+  "detailHelp": "Tie the reconciliation row to source evidence and decide whether more support is needed.",
+  "detailGroups": [
+    {
+      "title": "Reconciliation Row",
+      "variant": "ledger",
+      "fields": [
+        "document_no",
+        "account",
+        "counterparty",
+        "amount",
+        "status"
+      ],
+      "empty": "No row fields."
+    },
+    {
+      "title": "Evidence",
+      "variant": "source",
+      "fields": [
+        "evidence",
+        "support",
+        "rule",
+        "source_file",
+        "source_row"
+      ],
+      "empty": "No evidence fields."
+    },
+    {
+      "title": "Exception",
+      "variant": "finding",
+      "fields": [
+        "reason",
+        "review_instruction",
+        "deterministic_rule",
+        "deterministic_status"
+      ],
+      "empty": "No exception fields."
+    }
+  ],
+  "panels": [
+    "Reconciliation row",
+    "Evidence",
+    "Exception"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione riconciliazione audit",
+      "reviewTitle": "Revisione evidenze riconciliazione",
+      "queueTitle": "Righe riconciliazione",
+      "detailTitle": "Riga ed evidenza",
+      "detailHelp": "Collega la riga di riconciliazione alle evidenze e decidi se serve altro supporto.",
+      "search": "Cerca match, conto, controparte, evidenza, blocco"
+    },
+    "fr": {
+      "title": "Revue rapprochement audit",
+      "reviewTitle": "Revue des justificatifs de rapprochement",
+      "queueTitle": "Lignes de rapprochement",
+      "detailTitle": "Ligne et justificatif",
+      "detailHelp": "Reliez la ligne au justificatif et decidez si un support supplementaire est requis.",
+      "search": "Chercher match, compte, contrepartie, justificatif, blocage"
+    },
+    "de": {
+      "title": "Audit-Abstimmung Review",
+      "reviewTitle": "Abstimmungsnachweise pruefen",
+      "queueTitle": "Abstimmungszeilen",
+      "detailTitle": "Zeile und Nachweis",
+      "detailHelp": "Abstimmungszeile mit Nachweisen verbinden und entscheiden, ob weiterer Beleg noetig ist.",
+      "search": "Match, Konto, Gegenpartei, Nachweis, Blocker suchen"
+    }
+  },
+  "saveTool": "save_audit_reconciliation_decisions",
+  "applyTool": "apply_audit_reconciliation_decisions",
+  "widgetType": "audit_reconciliation_review",
+  "demo": {
+    "review_type": "audit_reconciliation_review",
+    "items": [
+      {
+        "id": "match-1",
+        "item_type": "closure_evidence_review",
+        "title": "Customer ACME - open item 4582",
+        "source_path": "open_items.xlsx",
+        "output_path": "reconciliation_workpaper.xlsx",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "account": "Trade receivables",
+          "counterparty": "ACME",
+          "amount": "1250.00",
+          "status": "matched",
+          "evidence": "bank statement line 42",
+          "document_no": "4582",
+          "target_artifact": "codex_review_packet.json",
+          "target_id_field": "document_no",
+          "target_record_id": "4582",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this row updates review_notes in codex_review_packet.json for document 4582."
+        },
+        "evidence": [
+          {
+            "kind": "row_vs_evidence",
+            "support": "bank statement line 42"
+          }
+        ]
+      },
+      {
+        "id": "exception-1",
+        "item_type": "unresolved_item",
+        "title": "Unmatched open item 4610",
+        "source_path": "open_items.xlsx",
+        "output_path": "exceptions.csv",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "mark_unclear",
+        "data": {
+          "account": "Trade receivables",
+          "amount": "640.00",
+          "status": "unmatched",
+          "document_no": "4610",
+          "reason": "No ledger or bank support found.",
+          "requested_document": "Ledger or bank support for open item 4610",
+          "target_artifact": "codex_review_packet.json",
+          "target_id_field": "document_no",
+          "target_record_id": "4610",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this exception updates review_notes in codex_review_packet.json for document 4610."
+        },
+        "evidence": [
+          {
+            "kind": "exception",
+            "finding": "missing support"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Journal-bank reconciliation | Vera</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --text: #334155;
+      --muted: #667085;
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --soft: #ffffff;
+      --accent: #496373;
+      --accent-soft: #e7eef1;
+      --line: #d9e2e1;
+      --content: 1120px;
+      --shadow: 0 16px 42px rgba(31, 41, 51, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand img {
+      display: block;
+      width: 140px;
+      height: auto;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--ink); }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .lang-switch button.is-active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 560px;
+      padding: 76px 0 56px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 54px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 620;
+    }
+
+    h2 {
+      font-size: clamp(28px, 3.4vw, 42px);
+      font-weight: 620;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 620;
+    }
+
+    p { margin: 0; }
+
+    .subtitle {
+      max-width: 720px;
+      margin-top: 22px;
+      color: var(--text);
+      font-size: clamp(19px, 2.3vw, 25px);
+      line-height: 1.38;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .action-row {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #f8fbfa;
+      font-size: 14px;
+      font-weight: 620;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .hero-card,
+    .card,
+    .download-panel,
+    .review-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .hero-card {
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .label {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 620;
+    }
+
+    .hero-list,
+    .plain-list,
+    .output-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hero-list li,
+    .plain-list li {
+      padding: 14px 0;
+      border-top: 1px solid #eef2f4;
+      color: var(--text);
+    }
+
+    .hero-list li:first-child,
+    .plain-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .section-block {
+      padding: 58px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.7fr);
+      gap: 40px;
+      align-items: end;
+    }
+
+    .section-head > p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .split,
+    .download-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #182320;
+      color: #eef7f4;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+    }
+
+    .card p {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .output-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .output-list li {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .output-list strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-weight: 620;
+    }
+
+    .output-list span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .review-panel,
+    .download-panel {
+      padding: 24px;
+      background: var(--soft);
+    }
+
+    .review-panel {
+      margin-top: 22px;
+    }
+
+    .review-panel p,
+    .download-panel p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .download-panel a:not(.button) { color: var(--accent); }
+
+    @media (max-width: 900px) {
+      .nav-shell {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav-right {
+        width: 100%;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .nav-links { flex-wrap: wrap; }
+
+      .hero,
+      .section-head,
+      .split,
+      .download-panel,
+      .output-list {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      main,
+      .nav-shell {
+        width: min(var(--content), calc(100% - 28px));
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 48px 0 42px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-right { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=en" aria-label="Mparanza home">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Page sections">
+          <a href="#cosa-fa" data-i18n="nav.what">What it does</a>
+          <a href="#input" data-i18n="nav.inputs">Inputs</a>
+          <a href="#output" data-i18n="nav.outputs">Outputs</a>
+          <a href="#prompt" data-i18n="nav.prompts">Prompts</a>
+          <a href="#scarica" data-i18n="nav.download">Installation</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="it">It</button>
+          <button type="button" data-lang="en">En</button>
+          <button type="button" data-lang="fr">Fr</button>
+          <button type="button" data-lang="de">De</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero" id="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Bank reconciliation</p>
+        <h1 data-i18n="hero.title">Match bank rows to accounting rows without burying exceptions.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Reconcile bank movements to journal or ledger rows.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Give it bank statements and journal or ledger rows. Get back accepted matches, candidate matches, unmatched rows and a workbook that keeps thresholds visible.</p>
+      </div>
+
+      <aside class="hero-card" aria-label="Problem solved">
+        <div class="label" data-i18n="hero.cardLabel">Problem it solves</div>
+        <ul class="hero-list" id="hero-list">
+          <li>Bank and journal exports use different dates, references and descriptions.</li>
+          <li>Open-item clearing and bank-to-journal matching are different jobs.</li>
+          <li>The reviewer needs matches, candidates and unmatched rows in separate views.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <section class="section-block" id="cosa-fa">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="what.eyebrow">What it does</p>
+          <h2 data-i18n="what.title">From bank and journal files to a reviewable reconciliation</h2>
+        </div>
+        <p data-i18n="what.copy">Use it when the journal-bank reconciliation is structurally different from open-item reconciliation: bank statement rows must be matched directly to journal or ledger rows.</p>
+      </div>
+      <div class="split">
+        <pre><code>input/
+  bank/
+    statement.xlsx
+  journal.xlsx
+  sample_movements.xlsx</code></pre>
+        <pre><code>out/
+  inspection.json
+  suggested_recipe.json
+  reconciliation/
+    normalized_bank.csv
+    normalized_journal.csv
+    reconciliation_matches.csv
+    unmatched_bank.csv
+    unmatched_journal.csv
+    journal_bank_reconciliation.xlsx
+    reconciliation_audit.json
+    review_notes.md</code></pre>
+      </div>
+    </section>
+
+    <section class="section-block" id="input">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
+          <h2 data-i18n="inputs.title">What it reads</h2>
+        </div>
+        <p data-i18n="inputs.copy">Reads local Excel, CSV and text-PDF inputs. OCR-only PDFs are flagged for review rather than treated as reconciled.</p>
+      </div>
+      <div class="grid" id="input-cards"></div>
+    </section>
+
+    <section class="section-block" id="output">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="outputs.eyebrow">Outputs</p>
+          <h2 data-i18n="outputs.title">What it produces</h2>
+        </div>
+        <p data-i18n="outputs.copy">The result is a reviewable work folder: recipe, normalized bank and journal rows, match table, exception tables, workbook and review log.</p>
+      </div>
+      <ul class="output-list" id="output-list"></ul>
+      <div class="review-panel">
+        <h3 data-i18n="review.title">Matches and exceptions stay separate</h3>
+        <p data-i18n="review.copy1">The inspection step proposes bank and journal fields and asks only for unresolved choices before the reconciliation files are produced.</p>
+        <p data-i18n="review.copy2">The workbook keeps normalized inputs, accepted matches and unmatched rows apart, so exceptions can be reviewed without losing the source trail.</p>
+      </div>
+    </section>
+
+    <section class="section-block" id="prompt">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="prompts.eyebrow">Prompts</p>
+          <h2 data-i18n="prompts.title">Ready prompts</h2>
+        </div>
+        <p data-i18n="prompts.copy">Start from one of these prompts and replace the file and folder paths. Codex will ask before resolving essential ambiguities.</p>
+      </div>
+      <ul class="output-list" id="prompt-list"></ul>
+    </section>
+
+    <section class="section-block" id="scarica">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="download.eyebrow">Installation</p>
+          <h2 data-i18n="download.title">Install from Plugin Pack</h2>
+        </div>
+        <p data-i18n="download.copy">Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.</p>
+      </div>
+      <div class="download-panel">
+        <div>
+          <h3 data-i18n="download.installTitle">Installation</h3>
+          <p><span data-i18n="download.codexText">Official page:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
+          <div class="action-row">
+            <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Download Vera</a>
+          </div>
+          <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
+        </div>
+        <div>
+          <h3 data-i18n="download.firstUseTitle">First use</h3>
+          <p data-i18n="download.firstUseCopy">In a Codex chat, provide the bank path, journal path, language and thresholds.</p>
+          <pre style="margin-top: 10px;"><code id="prompt-example">Use Journal-Bank Reconciliation on bank statements in /path/bank and journal file /path/journal.xlsx.
+Language: en. Document language: auto.
+Inspect columns and files, ask only for essential ambiguities, then generate reconciliation, checks and review log.</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const translations = {
+      it: {
+        nav: { what: "A cosa serve", inputs: "File letti", outputs: "Output", prompts: "Prompt pronti", download: "Installazione" },
+        hero: {
+          eyebrow: "Riconciliazione banca-contabilità",
+          title: "Abbina banca e contabilità senza nascondere le eccezioni",
+          subtitle: "Abbina movimenti bancari a righe di giornale o mastrino.",
+          copy: "Dagli estratti banca e righe contabili. Ottieni abbinamenti accettati, candidati, righe non abbinate e un file Excel con soglie visibili.",
+          primary: "Scarica ZIP",
+          secondary: "Vedi output",
+          cardLabel: "Cosa dai / cosa ottieni",
+          bullets: [
+            "Dagli export banca e righe di giornale o mastrino.",
+            "Imposta tolleranza importo, finestra data e assunzioni di abbinamento.",
+            "Ottieni abbinamenti, candidati, righe non abbinate e file Excel rivedibile."
+          ]
+        },
+        what: {
+          eyebrow: "A cosa serve",
+          title: "Da banca e contabilità a riconciliazione rivedibile",
+          copy: "Serve quando i movimenti bancari devono essere abbinati direttamente a righe di giornale o mastrino, senza confonderli con la riconciliazione delle partite aperte."
+        },
+        inputs: {
+          eyebrow: "File letti",
+          title: "Che cosa legge",
+          copy: "Legge Excel, CSV e PDF testuali locali. I PDF solo scansionati vengono segnalati per revisione, non trattati come riconciliati.",
+          cards: [
+            ["Banca", "Estratti conto in Excel, CSV o PDF testuale."],
+            ["Giornale o mastrino", "Righe contabili con importo, data, descrizione e riferimenti."],
+            ["Campione opzionale", "Lista movimenti per limitare il lato giornale/mastrino."],
+            ["Soglie di abbinamento", "Tolleranza importo, finestra data e regole per spiegare gli scarti."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Output",
+          title: "Che cosa produce",
+          copy: "La cartella di lavoro contiene campi scelti, banca e giornale normalizzati, tabella abbinamenti, eccezioni, file Excel e JSON di revisione.",
+          items: [
+            ["inspection.json", "Controllo iniziale su colonne e campi."],
+            ["suggested_recipe.json", "Mappatura modificabile nella cartella di lavoro."],
+            ["normalized_bank.csv", "Movimenti banca canonici."],
+            ["normalized_journal.csv", "Righe giornale/mastrino canoniche."],
+            ["reconciliation_matches.csv", "Abbinamenti riproducibili con fase e scarti."],
+            ["unmatched_bank.csv / unmatched_journal.csv", "Eccezioni da rivedere."],
+            ["journal_bank_reconciliation.xlsx", "File Excel rivedibile."],
+            ["reconciliation_audit.json", "Parametri, conteggi e percorsi output."]
+          ]
+        },
+        review: {
+          title: "Abbinamenti ed eccezioni restano separati",
+          copy1: "L'ispezione propone i campi di banca e giornale e chiede solo le scelte rimaste aperte prima di produrre i file di riconciliazione.",
+          copy2: "Il file Excel mantiene separati input normalizzati, abbinamenti accettati e righe non abbinate, così le eccezioni si rivedono senza perdere la traccia delle fonti."
+        },
+        prompts: {
+          eyebrow: "Prompt pronti",
+          title: "Prompt pronti",
+          copy: "Sostituisci percorsi, lingua e soglie. Codex chiederà solo le ambiguità essenziali.",
+          items: [
+            ["Riconciliazione completa", "Usa Riconciliazione banca-contabilità sugli estratti banca in /percorso/banca e sul giornale in /percorso/giornale.xlsx. Lingua: it. Lingua documenti: auto. Ispeziona colonne e file, chiedimi solo le ambiguità essenziali e genera riconciliazione, eccezioni e traccia di revisione."],
+            ["Con campione movimenti", "Usa Riconciliazione banca-contabilità su /percorso/banca e /percorso/giornale.xlsx con campione /percorso/campione.xlsx. Limita il lato contabile ai movimenti campionati e segnala movimenti bancari e contabili non abbinati."],
+            ["Con soglie esplicite", "Usa Riconciliazione banca-contabilità su /percorso/banca.csv e /percorso/mastrino.xlsx. Applica tolleranza importo 0,01 e finestra data 3 giorni. Mantieni soglie esplicite e spiega le eccezioni."]
+          ]
+        },
+        download: {
+          eyebrow: "Installazione",
+          title: "Installa dal Plugin Pack",
+          copy: "Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.",
+          installTitle: "Installazione",
+          codexText: "Pagina ufficiale:",
+          button: "Scarica ZIP",
+          firstUseTitle: "Primo uso",
+          firstUseCopy: "In una chat Codex, indica percorso banca, percorso giornale, lingua e soglie.",
+          steps: [
+            "Scarica e decomprimi lo ZIP.",
+            "Apri Codex desktop e installa il marketplace locale incluso.",
+            "Apri la cartella di lavoro e richiama Riconciliazione banca-contabilità."
+          ]
+        }
+      },
+      en: {
+        nav: { what: "What it does", inputs: "Inputs", outputs: "Outputs", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Bank reconciliation",
+          title: "Match bank rows to accounting rows without burying exceptions.",
+          subtitle: "Reconcile bank movements to journal or ledger rows.",
+          copy: "Give it bank statements and journal or ledger rows. Get back accepted matches, candidate matches, unmatched rows and a workbook that keeps thresholds visible.",
+          primary: "Download ZIP",
+          secondary: "See outputs",
+          cardLabel: "Give it / get back",
+          bullets: [
+            "Give it bank exports plus journal or ledger rows.",
+            "Set amount tolerance, date window and matching assumptions.",
+            "Get back matches, candidates, unmatched rows and a reviewable workbook."
+          ]
+        },
+        what: {
+          eyebrow: "What it does",
+          title: "From bank and journal files to a reviewable reconciliation",
+          copy: "Use it when journal-bank reconciliation is structurally different from open-item reconciliation: bank statement rows must be matched directly to journal or ledger rows."
+        },
+        inputs: {
+          eyebrow: "Inputs",
+          title: "What it reads",
+          copy: "Reads local Excel, CSV and text-PDF inputs. OCR-only PDFs are flagged for review rather than treated as reconciled.",
+          cards: [
+            ["Bank", "Statements in Excel, CSV or text PDF."],
+            ["Journal or ledger", "Accounting rows with amount, date, description and references."],
+            ["Optional sample", "Movement list to restrict the journal/ledger side."],
+            ["Matching thresholds", "Amount tolerance, date window and rules used to explain exceptions."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Outputs",
+          title: "What it produces",
+          copy: "The work folder contains the recipe, normalized bank and journal rows, match table, exception tables, workbook and review log.",
+          items: [
+            ["inspection.json", "Initial checks on columns and matching fields."],
+            ["suggested_recipe.json", "Recipe Codex can edit in the work folder."],
+            ["normalized_bank.csv", "Canonical bank movements."],
+            ["normalized_journal.csv", "Canonical journal/ledger rows."],
+            ["reconciliation_matches.csv", "Reproducible matches with stage and deltas."],
+            ["unmatched_bank.csv / unmatched_journal.csv", "Exceptions to review."],
+            ["journal_bank_reconciliation.xlsx", "Reviewable workbook."],
+            ["reconciliation_audit.json", "Parameters, counts and output paths."]
+          ]
+        },
+        review: {
+          title: "Matches and exceptions stay separate",
+          copy1: "The inspection step proposes bank and journal fields and asks only for unresolved choices before the reconciliation files are produced.",
+          copy2: "The workbook keeps normalized inputs, accepted matches and unmatched rows apart, so exceptions can be reviewed without losing the source trail."
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Ready prompts",
+          copy: "Replace paths, language and thresholds. Codex will ask only for essential ambiguities.",
+          items: [
+            ["Complete reconciliation", "Use Journal-Bank Reconciliation on bank statements in /path/bank and journal file /path/journal.xlsx. Language: en. Document language: auto. Inspect columns and files, ask only for essential ambiguities, then generate reconciliation, checks and review log."],
+            ["With sample movements", "Use Journal-Bank Reconciliation on /path/bank and /path/journal.xlsx with sample /path/sample.xlsx. Restrict the journal side to sampled movements and report unmatched_bank and unmatched_journal."],
+            ["With explicit thresholds", "Use Journal-Bank Reconciliation on /path/bank.csv and /path/ledger.xlsx. Apply amount tolerance 0.01 and date window 3 days. Keep thresholds explicit and explain exceptions."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Install from Plugin Pack",
+          copy: "Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.",
+          installTitle: "Installation",
+          codexText: "Official page:",
+          button: "Download ZIP",
+          firstUseTitle: "First use",
+          firstUseCopy: "In a Codex chat, provide the bank path, journal path, language and thresholds.",
+          steps: [
+            "Download and unzip the package.",
+            "Open Codex desktop and install the included local marketplace.",
+            "Open the work folder and invoke Journal-Bank Reconciliation."
+          ]
+        }
+      },
+      fr: {
+        nav: { what: "Ce qu'il fait", inputs: "Entrées", outputs: "Sorties", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Rapprochement bancaire",
+          title: "Rapprocher banque et comptabilité sans masquer les exceptions",
+          subtitle: "Rapproche les mouvements bancaires avec les lignes de journal ou grand livre.",
+          copy: "Donnez des relevés bancaires et des lignes comptables. Recevez correspondances acceptées, candidats, lignes non rapprochées et un classeur avec seuils visibles.",
+          primary: "Télécharger le ZIP",
+          secondary: "Voir les sorties",
+          cardLabel: "Données / résultat",
+          bullets: [
+            "Donnez exports bancaires et lignes de journal ou grand livre.",
+            "Fixez tolérance montant, fenêtre date et hypothèses de rapprochement.",
+            "Recevez correspondances, candidats, lignes non rapprochées et classeur révisable."
+          ]
+        },
+        what: {
+          eyebrow: "Ce qu'il fait",
+          title: "Des fichiers banque et journal au rapprochement révisable",
+          copy: "À utiliser quand le rapprochement journal-banque est différent du rapprochement de postes ouverts : les mouvements bancaires doivent être rapprochés directement avec les lignes du journal ou du grand livre."
+        },
+        inputs: {
+          eyebrow: "Entrées",
+          title: "Ce qu'il lit",
+          copy: "Lit les fichiers locaux Excel, CSV et PDF texte. Les PDF uniquement OCR/scannés sont signalés pour revue plutôt que considérés comme rapprochés.",
+          cards: [
+            ["Banque", "Relevés en Excel, CSV ou PDF texte."],
+            ["Journal ou grand livre", "Lignes comptables avec montant, date, description et références."],
+            ["Échantillon optionnel", "Liste de mouvements pour limiter le côté journal/grand livre."],
+            ["Seuils de rapprochement", "Tolérance montant, fenêtre date et règles utilisées pour expliquer les écarts."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Sorties",
+          title: "Ce qu'il produit",
+          copy: "Le dossier de travail contient la recette, les lignes banque et journal normalisées, la table de rapprochement, les exceptions, le classeur et la trace de revue.",
+          items: [
+            ["inspection.json", "Contrôle initial des colonnes et champs de rapprochement."],
+            ["suggested_recipe.json", "Recette modifiable dans le dossier de travail."],
+            ["normalized_bank.csv", "Mouvements bancaires canoniques."],
+            ["normalized_journal.csv", "Lignes journal/grand livre canoniques."],
+            ["reconciliation_matches.csv", "Correspondances reproductibles avec étape et écarts."],
+            ["unmatched_bank.csv / unmatched_journal.csv", "Exceptions à revoir."],
+            ["journal_bank_reconciliation.xlsx", "Workbook révisable."],
+            ["reconciliation_audit.json", "Paramètres, comptes et chemins de sortie."]
+          ]
+        },
+        review: {
+          title: "Correspondances et exceptions restent séparées",
+          copy1: "L'inspection propose les champs banque et journal, puis demande seulement les choix encore ouverts avant de produire les fichiers de rapprochement.",
+          copy2: "Le classeur garde séparés les fichiers normalisés, les correspondances acceptées et les lignes non rapprochées, afin que les exceptions soient revues sans perdre la trace des sources."
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts prêts",
+          copy: "Remplacez chemins, langue et seuils. Codex demandera uniquement les ambiguïtés essentielles.",
+          items: [
+            ["Rapprochement complet", "Utilise Journal-Bank Reconciliation sur les relevés bancaires dans /chemin/banque et le journal /chemin/journal.xlsx. Langue: fr. Langue des documents: auto. Inspecte les colonnes et les fichiers, demande uniquement les ambiguïtés essentielles, puis génère le rapprochement, les contrôles et la trace de revue."],
+            ["Avec échantillon", "Utilise Journal-Bank Reconciliation sur /chemin/banque et /chemin/journal.xlsx avec l'échantillon /chemin/sample.xlsx. Limite le côté journal aux mouvements échantillonnés et signale unmatched_bank et unmatched_journal."],
+            ["Avec seuils explicites", "Utilise Journal-Bank Reconciliation sur /chemin/banque.csv et /chemin/grand_livre.xlsx. Applique une tolérance montant de 0,01 et une fenêtre date de 3 jours. Garde les seuils explicites et explique les exceptions."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Installer depuis le Plugin Pack",
+          copy: "Nécessite Codex desktop. Un seul ZIP installe Vera avec ses onze modules.",
+          installTitle: "Installation",
+          codexText: "Page officielle :",
+          button: "Télécharger le ZIP",
+          firstUseTitle: "Première utilisation",
+          firstUseCopy: "Dans une conversation Codex, indiquez chemin banque, chemin journal, langue et seuils.",
+          steps: [
+            "Téléchargez et décompressez le ZIP.",
+            "Ouvrez Codex desktop et installez le marketplace local inclus.",
+            "Ouvrez le dossier de travail et appelez Journal-Bank Reconciliation."
+          ]
+        }
+      },
+      de: {
+        nav: { what: "Was es tut", inputs: "Eingaben", outputs: "Ergebnisse", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Bankabstimmung",
+          title: "Bank- und Buchhaltungszeilen abgleichen, ohne Ausnahmen zu verstecken",
+          subtitle: "Stimmt Bankbewegungen mit Journal- oder Hauptbuchzeilen ab.",
+          copy: "Geben Sie Kontoauszüge und Journal- oder Hauptbuchzeilen an. Zurück kommen akzeptierte Treffer, Kandidaten, nicht abgestimmte Zeilen und eine Arbeitsmappe mit sichtbaren Schwellen.",
+          primary: "ZIP herunterladen",
+          secondary: "Ergebnisse ansehen",
+          cardLabel: "Eingabe / Ergebnis",
+          bullets: [
+            "Geben Sie Bankexporte und Journal- oder Hauptbuchzeilen an.",
+            "Setzen Sie Betragstoleranz, Datumsfenster und Abgleichsannahmen.",
+            "Zurück kommen Treffer, Kandidaten, nicht abgestimmte Zeilen und eine prüfbare Arbeitsmappe."
+          ]
+        },
+        what: {
+          eyebrow: "Was es tut",
+          title: "Von Bank- und Journaldateien zur prüfbaren Abstimmung",
+          copy: "Nutzen Sie es, wenn Journal-Bank-Abstimmung strukturell anders ist als Offene-Posten-Abstimmung: Bankzeilen müssen direkt mit Journal- oder Hauptbuchzeilen abgeglichen werden."
+        },
+        inputs: {
+          eyebrow: "Eingaben",
+          title: "Was gelesen wird",
+          copy: "Liest lokale Excel-, CSV- und Text-PDF-Dateien. Reine OCR-/Scan-PDFs werden zur Prüfung markiert, nicht als abgestimmt behandelt.",
+          cards: [
+            ["Bank", "Kontoauszüge in Excel, CSV oder Text-PDF."],
+            ["Journal oder Hauptbuch", "Buchungszeilen mit Betrag, Datum, Beschreibung und Referenzen."],
+            ["Optionale Stichprobe", "Bewegungsliste zur Einschränkung der Journal-/Hauptbuchseite."],
+            ["Abstimmungsschwellen", "Betragstoleranz, Datumsfenster und Regeln zur Erklärung von Ausnahmen."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Output",
+          title: "Was erzeugt wird",
+          copy: "Der Arbeitsordner enthält Rezept, normalisierte Bank- und Journalzeilen, Treffer-Tabelle, Ausnahmen, Arbeitsmappe und Prüfprotokoll.",
+          items: [
+            ["inspection.json", "Erstprüfung zu Spalten und Abgleichsfeldern."],
+            ["suggested_recipe.json", "Anpassbares Rezept im Arbeitsordner."],
+            ["normalized_bank.csv", "Kanonische Bankbewegungen."],
+            ["normalized_journal.csv", "Kanonische Journal-/Hauptbuchzeilen."],
+            ["reconciliation_matches.csv", "Reproduzierbare Treffer mit Stufe und Abweichungen."],
+            ["unmatched_bank.csv / unmatched_journal.csv", "Ausnahmen zur Prüfung."],
+            ["journal_bank_reconciliation.xlsx", "Prüfbares Workbook."],
+            ["reconciliation_audit.json", "Parameter, Zählungen und Ausgabepfade."]
+          ]
+        },
+        review: {
+          title: "Treffer und Ausnahmen bleiben getrennt",
+          copy1: "Die Inspektion schlägt Bank- und Journalfelder vor und fragt nur offene Entscheidungen ab, bevor die Abstimmungsdateien erzeugt werden.",
+          copy2: "Die Arbeitsmappe hält normalisierte Eingaben, akzeptierte Treffer und nicht abgeglichene Zeilen getrennt, damit Ausnahmen ohne Verlust der Quellspur geprüft werden können."
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts zur Nutzung",
+          copy: "Ersetzen Sie Pfade, Sprache und Schwellenwerte. Codex fragt nur wesentliche Unklarheiten ab.",
+          items: [
+            ["Vollständige Abstimmung", "Verwende Journal-Bank Reconciliation für Kontoauszüge in /pfad/bank und Journaldatei /pfad/journal.xlsx. Sprache: de. Dokumentsprache: auto. Prüfe Spalten und Dateien, frage nur wesentliche Unklarheiten ab und erstelle Abstimmung, Kontrollen und Prüfprotokoll."],
+            ["Mit Stichprobe", "Verwende Journal-Bank Reconciliation für /pfad/bank und /pfad/journal.xlsx mit Stichprobe /pfad/sample.xlsx. Beschränke die Journalseite auf die Stichprobenbewegungen und melde unmatched_bank und unmatched_journal."],
+            ["Mit festen Schwellen", "Verwende Journal-Bank Reconciliation für /pfad/bank.csv und /pfad/hauptbuch.xlsx. Nutze Betragstoleranz 0,01 und Datumsfenster 3 Tage. Halte Schwellen explizit und erkläre Ausnahmen."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Aus Plugin Pack installieren",
+          copy: "Erfordert Codex desktop. Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
+          installTitle: "Installation",
+          codexText: "Offizielle Seite:",
+          button: "ZIP herunterladen",
+          firstUseTitle: "Erste Nutzung",
+          firstUseCopy: "Geben Sie in einem Codex-Chat Bankpfad, Journalpfad, Sprache und Schwellenwerte an.",
+          steps: [
+            "ZIP herunterladen und entpacken.",
+            "Codex desktop öffnen und den enthaltenen lokalen Marketplace installieren.",
+            "Arbeitsordner öffnen und Journal-Bank Reconciliation aufrufen."
+          ]
+        }
+      }
+    };
+
+    function valueAt(obj, path) {
+      return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+    }
+
+    function renderCards(targetId, items) {
+      const target = document.getElementById(targetId);
+      target.innerHTML = "";
+      items.forEach(([title, copy]) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `<h3>${title}</h3><p>${copy}</p>`;
+        target.appendChild(card);
+      });
+    }
+
+    function renderOutputList(targetId, items) {
+      const target = document.getElementById(targetId);
+      target.innerHTML = "";
+      items.forEach(([title, copy]) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${title}</strong><span>${copy}</span>`;
+        target.appendChild(li);
+      });
+    }
+
+    function setLanguage(lang) {
+      const safeLang = translations[lang] ? lang : "en";
+      const t = translations[safeLang];
+      document.documentElement.lang = safeLang;
+      document.title = `${t.hero.title} | Vera`;
+      document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${safeLang}`;
+      });
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const text = valueAt(t, node.dataset.i18n);
+        if (typeof text === "string") node.textContent = text;
+      });
+      document.getElementById("hero-list").innerHTML = t.hero.bullets.map((item) => `<li>${item}</li>`).join("");
+      renderCards("input-cards", t.inputs.cards);
+      renderOutputList("output-list", t.outputs.items);
+      renderOutputList("prompt-list", t.prompts.items);
+      document.getElementById("install-steps").innerHTML = t.download.steps.map((item) => `<li>${item}</li>`).join("");
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.lang === safeLang);
+      });
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", safeLang);
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    setLanguage(params.get("lang") || "en");
+  </script>
+</body>
+</html>

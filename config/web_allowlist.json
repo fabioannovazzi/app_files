@@ -1,0 +1,65 @@
+{
+    "web_allowlist": {
+        "blush": [
+            "form",
+            "configuration",
+            "dermatology_claims",
+            "ethics_claims",
+            "finish",
+            "fragrance"
+        ],
+        "bronzer": [
+            "form",
+            "packaging_type"
+        ],
+        "concealer": [
+            "form"
+        ],
+        "eyebrow": [
+            "finish",
+            "form",
+            "applicator_type"
+        ],
+        "eyeliner": [
+            "finish",
+            "form",
+            "applicator_type"
+        ],
+        "eyeshadow": [
+            "palette_type",
+            "finish",
+            "form",
+            "mirror_included"
+        ],
+        "face_primer": [
+            "base type",
+            "form"
+        ],
+        "foundation": [
+            "form",
+            "packaging_type"
+        ],
+        "highlighter": [
+            "finish",
+            "form"
+        ],
+        "lip_gloss": [
+            "form",
+            "packaging_type",
+            "applicator_type"
+        ],
+        "lipstick": [
+            "form"
+        ],
+        "palette": [
+            "palette_type",
+            "mirror_included",
+            "applicator_included"
+        ],
+        "setting_spray_powder": [
+            "form",
+            "packaging_type"
+        ]
+    },
+    "no_web_categories": []
+}

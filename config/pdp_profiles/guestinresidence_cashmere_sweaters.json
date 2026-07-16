@@ -1,0 +1,124 @@
+{
+  "profile_name": "guestinresidence_cashmere_sweaters",
+  "display_name": "Guest in Residence · Cashmere Sweaters PDP",
+  "retailer": "guestinresidence",
+  "base_url": "https://guestinresidence.com",
+  "category_hints": [
+    "collections/womens-sweaters",
+    "collections/womens-cardigans-jackets",
+    "collections/100-cashmere"
+  ],
+  "category_urls": [
+    "https://guestinresidence.com/collections/womens-sweaters",
+    "https://guestinresidence.com/collections/womens-cardigans-jackets",
+    "https://guestinresidence.com/collections/100-cashmere"
+  ],
+  "parent_rules": {
+    "min_color_variants": 1,
+    "disallow_kits_regex": "(?i)\\b(?:set|sets|bundle|bundles|gift|gifts)\\b",
+    "finish_split_tokens": []
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "/products/([A-Za-z0-9-]+)",
+    "parent_json_paths": [
+      "$.id",
+      "$.handle",
+      "$.parent.parent_product_id"
+    ],
+    "variant_id_fields": [
+      "$.id",
+      "$.sku"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.brand",
+      "$.vendor"
+    ],
+    "parent_title": [
+      "$.name",
+      "$.title"
+    ],
+    "parent_summary": [
+      "$.description",
+      "$.parent.summary"
+    ],
+    "series_label": [
+      "$.collection"
+    ],
+    "category_path": [
+      "$.categoryPath[*]",
+      "$.parent.category_path[*]"
+    ],
+    "variant_list": [
+      "$.variants[*]"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.id",
+        "$.sku"
+      ],
+      "shade_name": [
+        "$.color",
+        "$.shade",
+        "$.option1"
+      ],
+      "size_text": [
+        "$.size",
+        "$.option2"
+      ],
+      "price": [
+        "$.price"
+      ],
+      "currency": [
+        "$.currency"
+      ],
+      "barcode": [
+        "$.barcode"
+      ],
+      "swatch_image": [
+        "$.image"
+      ],
+      "hero_image": [
+        "$.image"
+      ],
+      "availability": [
+        "$.availability"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_trailing_shade_tokens": false,
+      "strip_pack_counts": false
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": true
+  }
+}

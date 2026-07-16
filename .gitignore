@@ -1,0 +1,125 @@
+# ----------------------------------------------------------------------
+# 1. Python byte-code and cache
+__pycache__/
+*.py[cod]
+
+# 2. Virtual environments
+.venv/
+env/
+venv/
+
+# 3. Editor settings
+.idea/
+.vscode/
+.vs/
+
+# 4. OS-specific junk
+.DS_Store
+Thumbs.db
+
+# 5. Build / packaging artefacts
+build/
+dist/
+*.egg-info/
+plugins/*/vendor/modules/
+!plugins/_shared/vendor/modules/
+!plugins/_shared/vendor/modules/**
+!plugins/_shared/variance/vendor/modules/
+!plugins/_shared/variance/vendor/modules/**
+plugins/_shared/**/__pycache__/
+plugins/_shared/**/*.py[cod]
+
+# 6. Logs and temporary output
+logs/
+caches/
+output/
+outputs/
+runs/
+variance_analysis_runs/
+audit_reconciliation_runs/
+out/
+.tmp_render/
+tmp/
+tmp_local_review_probe/
+out/amazon_reviews*/
+.env*
+!.env.example
+*.pem
+*.key
+credentials.toml
+attribute_classifications.parquet
+attribute_taxonomy.json
+attribute_activity.json
+category_aliases.json
+attribute_taxonomy_old.json
+attribute_taxonomy.json
+attribute_activity.json
+attribute_taxonomy_new.json
+brand_aliases.json
+merchant_brand_websites.json
+product_attributes.json
+record.json
+taxonomy_review_queue.json
+top_lines.json
+reports/
+data/pdp/pdp_attribute_cache/
+data/pdp/exports/
+data/pdp/cli/
+# Deployment-specific access-control lists. Copy the matching example locally;
+# never commit real email addresses.
+config/*_permissions.json
+
+# 8a. User-upload staging and outputs
+product_attributes/
+concept_sites/
+test_data/sample_entries/
+screenshots/*.png
+
+# 7. Test / coverage artefacts
+htmlcov/
+.coverage
+coverage.xml
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# 8. Misc data folders
+extracted_files/
+images/
+local_tools/
+caches/
+data/*
+!data/pdp/
+data/pdp/*
+slide_decks/
+/new_datasets/
+# dependencies & build artefacts
+node_modules/
+dist/
+.page_cache/
+.cache/
+.secrets/
+.codex_targets.txt
+tests_to_scan.txt
+modules_to_scan.txt
+/presentations/*
+!/presentations/.gitkeep
+!/presentations/demo/
+!/presentations/demo/**
+/launch_reports/*
+!/launch_reports/.gitkeep
+/brand_reports/*
+!/brand_reports/.gitkeep
+/launch_report_documents/
+/launch_report_podcasts/
+/launch_report_videos/
+/brand_report_*/
+/brand_report_documents/
+/brand_report_podcasts/
+brand_report_podcasts/
+
+# Generated public gallery full-data extracts. Keep compact chart sidecars
+# such as *_chart_data.csv tracked for orchestrator-readable chart payloads.
+static/shared/**/*_canonical.csv
+static/shared/png-gallery/
+static/shared/**/variance_results.csv

@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "journal-bank-reconciliation",
+  "title": "Journal-Bank Review",
+  "reviewTitle": "Journal To Bank Match Review",
+  "queueTitle": "Matches",
+  "detailTitle": "Journal Vs Bank",
+  "detailMode": "match-ledger",
+  "detailHelp": "Compare journal entry and bank statement evidence at the same grain.",
+  "detailGroups": [
+    {
+      "title": "Journal Entry",
+      "variant": "ledger",
+      "fields": [
+        "entry",
+        "entry_date",
+        "account",
+        "counterparty",
+        "amount"
+      ],
+      "empty": "No journal fields."
+    },
+    {
+      "title": "Bank Statement",
+      "variant": "ledger",
+      "fields": [
+        "bank_line",
+        "statement_date",
+        "counterparty",
+        "amount",
+        "reference"
+      ],
+      "empty": "No bank fields."
+    },
+    {
+      "title": "Match Result",
+      "variant": "finding",
+      "fields": [
+        "status",
+        "match_basis",
+        "requested_document",
+        "reason",
+        "review_notes"
+      ],
+      "empty": "No match result."
+    }
+  ],
+  "panels": [
+    "Journal entry",
+    "Bank statement",
+    "Match result"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione giornale-banca",
+      "reviewTitle": "Revisione match giornale-banca",
+      "queueTitle": "Match",
+      "detailTitle": "Giornale e banca",
+      "detailHelp": "Confronta scrittura e movimento banca allo stesso livello di dettaglio.",
+      "search": "Cerca riga banca, scrittura, conto, match, eccezione"
+    },
+    "fr": {
+      "title": "Revue journal-banque",
+      "reviewTitle": "Revue rapprochement journal-banque",
+      "queueTitle": "Matches",
+      "detailTitle": "Journal et banque",
+      "detailHelp": "Comparez l'ecriture et la ligne bancaire au meme niveau de detail.",
+      "search": "Chercher ligne banque, ecriture, compte, match, exception"
+    },
+    "de": {
+      "title": "Journal-Bank Review",
+      "reviewTitle": "Journal-Bank-Abstimmung pruefen",
+      "queueTitle": "Matches",
+      "detailTitle": "Journal und Bank",
+      "detailHelp": "Buchung und Kontoauszugszeile auf gleicher Ebene vergleichen.",
+      "search": "Bankzeile, Buchung, Konto, Match, Ausnahme suchen"
+    }
+  },
+  "saveTool": "save_journal_bank_decisions",
+  "applyTool": "apply_journal_bank_decisions",
+  "widgetType": "journal_bank_review",
+  "demo": {
+    "review_type": "journal_bank_reconciliation_review",
+    "items": [
+      {
+        "id": "bank-match-1",
+        "item_type": "matched_pair",
+        "title": "Payment 1001 - ACME",
+        "source_path": "journal.xlsx",
+        "output_path": "journal_bank_reconciliation.xlsx",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "entry": "1001",
+          "bank_line": "statement row 18",
+          "amount": "123.45",
+          "status": "matched",
+          "counterparty": "ACME",
+          "bank_transaction_id": "bank:18",
+          "target_artifact": "reconciliation_matches.csv",
+          "target_id_field": "bank_transaction_id",
+          "target_record_id": "bank:18",
+          "target_field": "review_note",
+          "edit_hint": "Editing this matched pair updates review_note in reconciliation_matches.csv for bank:18."
+        },
+        "evidence": [
+          {
+            "kind": "journal_vs_bank",
+            "match_basis": "amount/date/reference"
+          }
+        ]
+      },
+      {
+        "id": "bank-unmatched-1",
+        "item_type": "unmatched_bank",
+        "title": "2025-01-05 | 9.99 | FEE9",
+        "source_path": "bank.xlsx; row 3",
+        "output_path": "unmatched_bank.csv",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "bank_line": "statement row 3",
+          "statement_date": "2025-01-05",
+          "amount": "9.99",
+          "reference": "FEE9",
+          "status": "unmatched",
+          "requested_document": "Journal or ledger support for bank transaction FEE9",
+          "reason": "Bank transaction has no deterministic journal match."
+        },
+        "evidence": [
+          {
+            "kind": "missing_reconciliation_evidence",
+            "side": "bank",
+            "requested_document": "Journal or ledger support for bank transaction FEE9",
+            "reason": "Bank transaction has no deterministic journal match.",
+            "status": "needs_evidence"
+          }
+        ]
+      }
+    ]
+  }
+}

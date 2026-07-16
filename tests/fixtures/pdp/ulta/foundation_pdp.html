@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sample Ulta Foundation PDP</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Example Brand Soft Matte Foundation | 210 Warm",
+        "brand": {"name": "Example Brand"},
+        "description": "A synthetic soft matte foundation that builds medium-to-full coverage.",
+        "breadcrumb": [
+          {"name": "Makeup"},
+          {"name": "Face"},
+          {"name": "Foundation"}
+        ],
+        "product": {
+          "productId": "pimprod7891011",
+          "name": "Example Brand Soft Matte Foundation",
+          "brandName": "Example Brand",
+          "variants": [
+            {
+              "sku": "foundation150",
+              "shadeName": "150 Cool",
+              "price": "39.00",
+              "listPrice": "39.00",
+              "priceCurrency": "USD",
+              "image": "https://example.com/images/foundation150.jpg"
+            },
+            {
+              "sku": "foundation210",
+              "shadeName": "210 Warm",
+              "price": "39.00",
+              "listPrice": "39.00",
+              "priceCurrency": "USD",
+              "image": "https://example.com/images/foundation210.jpg"
+            }
+          ]
+        }
+      }
+    </script>
+    <script id="apollo_state">
+      window.__APOLLO_STATE__ = {
+        "ROOT_QUERY": {
+          "Page({\"moduleParams\":{\"sku\":\"foundation210\"}})": {
+            "content": {
+              "moduleName": "Page",
+              "modules": [
+                {
+                  "moduleName": "ProductInformation",
+                  "productName": "Example Brand Soft Matte Foundation",
+                  "brandAction": {
+                    "label": "Example Brand",
+                    "url": "https://example.com/brand/example"
+                  },
+                  "rating": 4.6,
+                  "reviewCount": 8200,
+                  "badges": ["Best Seller", "Clean"]
+                },
+                {
+                  "moduleName": "ProductSummary",
+                  "message": "A breathable soft-matte foundation that loves heat and humidity.",
+                  "summaries": [
+                    {
+                      "title": "Highlights",
+                      "items": [
+                        {
+                          "label": "Longwear",
+                          "itemDetailCard": {
+                            "description": "Stays put with sweat-resistant pigments."
+                          }
+                        },
+                        {
+                          "label": "Oil Free",
+                          "itemDetailCard": {
+                            "description": "Controls shine without clogging pores."
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "summaryCards": [
+                    {
+                      "title": "Coverage",
+                      "items": [
+                        {"title": "Medium to Full"},
+                        {"text": "Buildable, natural finish"}
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "moduleName": "ProductDetail",
+                  "description": "#### Why you'll love it\\n\\n- Soft matte finish\\n- Oil-free formula\\n- Climate-adaptive technology",
+                  "usage": "Shake before use. Apply to skin with brush or sponge.",
+                  "ingredients": "Water, Dimethicone, Butylene Glycol, Trimethylsiloxysilicate.",
+                  "restrictions": "For external use only."
+                }
+              ]
+            }
+          },
+          "ProductVariants": {
+            "variants": [
+              {
+                "productId": "pimprod7891011",
+                "skuId": "foundation150",
+                "name": "150 Cool",
+                "shadeDescription": "For light skin with cool undertones",
+                "salePrice": "39.00",
+                "priceCurrency": "USD",
+                "mainImage": {"imageUrl": "https://example.com/images/foundation150.jpg"},
+                "swatchImage": {"imageUrl": "https://example.com/images/foundation150-swatch.jpg"},
+                "badges": ["Best Seller"],
+                "skuUPC": "123456789150"
+              },
+              {
+                "productId": "pimprod7891011",
+                "skuId": "foundation210",
+                "name": "210 Warm",
+                "shadeDescription": "For medium skin with warm undertones",
+                "salePrice": "39.00",
+                "priceCurrency": "USD",
+                "mainImage": {"imageUrl": "https://example.com/images/foundation210.jpg"},
+                "swatchImage": {"imageUrl": "https://example.com/images/foundation210-swatch.jpg"},
+                "badges": ["Clean"],
+                "skuUPC": "123456789210"
+              },
+              {
+                "productId": "pimprod7891011",
+                "skuId": "foundation300",
+                "name": "300 Neutral",
+                "shadeDescription": "For tan skin with neutral undertones",
+                "salePrice": "39.00",
+                "priceCurrency": "USD",
+                "mainImage": {"imageUrl": "https://example.com/images/foundation300.jpg"},
+                "swatchImage": {"imageUrl": "https://example.com/images/foundation300-swatch.jpg"},
+                "badges": ["Vegan"],
+                "skuUPC": "123456789300"
+              },
+              {
+                "productId": "pimprod7891011",
+                "skuId": "foundation445",
+                "name": "445 Cool",
+                "shadeDescription": "For deep skin with cool undertones",
+                "salePrice": "39.00",
+                "listPrice": "42.00",
+                "priceCurrency": "USD",
+                "unavailable": true,
+                "mainImage": {"imageUrl": "https://example.com/images/foundation445.jpg"},
+                "swatchImage": {"imageUrl": "https://example.com/images/foundation445-swatch.jpg"},
+                "badges": ["Award Winner"],
+                "skuUPC": "123456789445"
+              }
+            ]
+          }
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <main>
+      <ul class="shade-grid">
+        <li
+          data-variant-id="foundation498"
+          data-shade-name="498 Neutral Olive"
+          data-price="39.00"
+          data-currency="USD"
+        ></li>
+      </ul>
+    </main>
+  </body>
+</html>

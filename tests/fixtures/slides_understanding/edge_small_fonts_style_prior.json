@@ -1,0 +1,103 @@
+{
+  "slide_id": "edge-small-fonts",
+  "slide_number": 1,
+  "image_size": {
+    "w": 1200,
+    "h": 800
+  },
+  "style_prior": {
+    "prompt_style": "uniform",
+    "font_family_primary": "Inter SemiBold",
+    "font_family_fallback": "Inter",
+    "title_size_pt": 42.0,
+    "body_size_pt": 24.0,
+    "title_to_body_ratio": 1.75
+  },
+  "objects": [
+    {
+      "object_id": "title-1",
+      "object_type": "title",
+      "bbox": {
+        "x": 50,
+        "y": 40,
+        "w": 1000,
+        "h": 72
+      },
+      "z_index": 10,
+      "reading_index": 1,
+      "z_role": "foreground_editable_text",
+      "style": {
+        "font_family": "Inter SemiBold",
+        "font_size": 36.0
+      }
+    },
+    {
+      "object_id": "footnote-1",
+      "object_type": "footer",
+      "bbox": {
+        "x": 60,
+        "y": 740,
+        "w": 900,
+        "h": 24
+      },
+      "z_index": 10,
+      "reading_index": 2,
+      "z_role": "foreground_editable_text",
+      "style": {
+        "font_family": "Calibri",
+        "font_size": 10.0
+      },
+      "style_override_reason": "Observed embedded footnote font differs from style preset."
+    }
+  ],
+  "text_lines": [
+    {
+      "line_id": "L1",
+      "text": "Main title with normal style prior",
+      "bbox": {
+        "x": 50,
+        "y": 40,
+        "w": 1000,
+        "h": 72
+      },
+      "role": "page_title",
+      "object_id": "title-1",
+      "z_role": "foreground_editable_text",
+      "confidence": 0.99,
+      "runs": [
+        {
+          "text": "Main title with normal style prior",
+          "start_offset": 0,
+          "end_offset": 33,
+          "bold": true,
+          "italic": false,
+          "underline": false,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "line_id": "L2",
+      "text": "Source: small legal note",
+      "bbox": {
+        "x": 60,
+        "y": 740,
+        "w": 900,
+        "h": 24
+      },
+      "role": "footnote",
+      "object_id": "footnote-1",
+      "z_role": "foreground_editable_text",
+      "confidence": 0.93
+    }
+  ],
+  "chart_objects": [],
+  "image_objects": [],
+  "decision": {
+    "has_chart": false,
+    "status": "pass"
+  },
+  "metrics": {
+    "ocr_coverage_ratio": 0.9
+  }
+}

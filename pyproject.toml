@@ -1,0 +1,34 @@
+[project]
+name = "journal_ingest"
+version = "0.1.0"
+description = "Journal ingestion library"
+requires-python = ">=3.11"
+dependencies = ["polars", "pyyaml"]
+
+
+
+[project.scripts]
+journal-parse = "journal_ingest.cli:main"
+
+[tool.black]
+line-length = 88
+target-version = ["py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["src"]   # adjust if your package is named differently
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+follow_imports = "skip"
+ignore_errors = true
+incremental = false
+exclude = "(modules|tools)"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = [".", "src"]
+testpaths = ["tests"]

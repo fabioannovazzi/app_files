@@ -1,0 +1,35 @@
+{
+  "plugin": "mix-contribution-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "mix-contribution-sales",
+      "prompt": "Use Mix & Contribution Analysis on this sales Excel file and explain the biggest contribution patterns.",
+      "required_signals": ["Mix & Contribution Analysis", "sales Excel", "contribution"]
+    },
+    {
+      "id": "mekko-pareto-revenue",
+      "prompt": "Can you plot a Mekko and Pareto contribution analysis for this revenue CSV?",
+      "required_signals": ["Mekko", "Pareto", "revenue CSV"]
+    },
+    {
+      "id": "small-multiple-mix",
+      "prompt": "Build mix and contribution charts with small multiples by region.",
+      "required_signals": ["mix", "contribution charts", "small multiples"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "contract-summary",
+      "prompt": "Summarize this contract PDF."
+    },
+    {
+      "id": "variance-bridge",
+      "prompt": "Run a price volume mix variance bridge and root-cause drilldown."
+    },
+    {
+      "id": "bank-reconciliation",
+      "prompt": "Reconcile this bank statement against the journal."
+    }
+  ]
+}

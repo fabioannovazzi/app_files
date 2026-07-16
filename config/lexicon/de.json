@@ -1,0 +1,13 @@
+{
+  "tax_tokens": ["steuer", "mwst", "mehrwertsteuer", "umsatzsteuer", "steueramt", "finanzamt"],
+  "sdd_tokens": [" lastschrift", " sepa-lastschrift", "einzug"],
+  "bonifico_tokens": [" überweisung", " ueberweisung", " sepa", " transfer"],
+  "fee_tokens": ["gebühr", "gebuehr", "entgelt", "kosten", "kontoführung", "kartengebühr"],
+  "riba_tokens": [" riba"],
+  "card_tokens": ["karte", "kartenzahlung", "visa", "mastercard", " pos ", "girocard", "ec-karte"],
+  "withdrawal_terms": ["abhebung", "barabhebung", "bargeld", "abheben"],
+  "deposit_terms": ["einzahlung", "einzahlungen", "bareinzahlung"],
+  "atm_terms": ["atm", "geldautomat", "bancomat", "filiale"],
+  "payroll_tokens": ["gehalt", "gehälter", "lohn", "löhne", "salär", "lohnabrechnung", "payroll"],
+  "tax_ledger_tokens": ["steuer", "mwst", "mehrwertsteuer", "umsatzsteuer", "lohnsteuer", "kirchensteuer", "finanzamt", "steueramt"]
+}

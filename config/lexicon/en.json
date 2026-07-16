@@ -1,0 +1,83 @@
+{
+  "tax_tokens": [
+    "vat",
+    "tax",
+    "taxes",
+    "hmrc",
+    "irs",
+    "inland revenue",
+    "revenue"
+  ],
+  "sdd_tokens": [
+    " direct debit",
+    " dd ",
+    " ach debit",
+    " auto debit",
+    " autodirect"
+  ],
+  "bonifico_tokens": [
+    " bank transfer",
+    " transfer",
+    " wire",
+    " sepa",
+    " faster payment"
+  ],
+  "fee_tokens": [
+    " fee",
+    " fees",
+    " commission",
+    " service charge",
+    " maintenance fee",
+    " monthly fee",
+    " bank fee",
+    " stamp duty"
+  ],
+  "riba_tokens": [" riba"],
+  "card_tokens": [
+    " card payment",
+    " credit card",
+    " debit card",
+    " visa ",
+    " mastercard",
+    " pos "
+  ],
+  "withdrawal_terms": [
+    " withdrawal",
+    " cash withdrawal",
+    " cash out",
+    " cash"
+  ],
+  "deposit_terms": [
+    " deposit",
+    " deposits",
+    " cash deposit"
+  ],
+  "atm_terms": [
+    " atm",
+    " cashpoint",
+    " cash machine",
+    " branch"
+  ],
+  "payroll_tokens": [
+    "SALARY",
+    "SALARIES",
+    "PAYROLL",
+    "WAGE",
+    "WAGES",
+    "PAYCHECK",
+    "PAY CHEQUE",
+    "PAYSLIP",
+    "NET PAY",
+    "GROSS PAY"
+  ],
+  "tax_ledger_tokens": [
+    "vat",
+    "tax",
+    "taxes",
+    "hmrc",
+    "irs",
+    "inland revenue",
+    "revenue",
+    "stamp duty"
+  ]
+}

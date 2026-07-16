@@ -1,0 +1,35 @@
+{
+  "plugin": "report-builder",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "build-financial-report",
+      "prompt": "Use Codex to build a management report from these Excel and PDF files, map sections, and produce a DOCX.",
+      "required_signals": ["build report", "management report", "Excel", "DOCX"]
+    },
+    {
+      "id": "relazione-ente-locale",
+      "prompt": "Genera una relazione ente locale partendo da fogli Excel, con commenti Codex e output Word.",
+      "required_signals": ["relazione", "ente locale", "Excel", "Word"]
+    },
+    {
+      "id": "report-from-folder",
+      "prompt": "Inspect this folder of financial tables and readable PDFs, propose a report structure, and create Markdown plus audit JSON.",
+      "required_signals": ["financial tables", "PDFs", "report structure", "audit JSON"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "journal-sampling",
+      "prompt": "Extract the accounting journal and select a reproducible audit sample."
+    },
+    {
+      "id": "bank-reconciliation",
+      "prompt": "Match bank statement rows to journal entries and list unmatched movements."
+    },
+    {
+      "id": "slides",
+      "prompt": "Create a PowerPoint deck from this outline."
+    }
+  ]
+}

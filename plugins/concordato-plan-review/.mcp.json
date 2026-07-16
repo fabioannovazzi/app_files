@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "concordatoPlanReviewWidgets": {
+      "title": "Concordato Plan Review Widgets",
+      "description": "Validate and render Concordato Plan Review payloads.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": ["24x24"]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "profile_name": "amazon_wet_cat_food",
+  "display_name": "Amazon · Wet Cat Food PDP",
+  "retailer": "amazon",
+  "base_url": "https://www.amazon.com",
+  "category_hints": [
+    "pet supplies/cats/wet cat food"
+  ],
+  "category_urls": [
+    "https://www.amazon.com/s?k=wet+cat+food&i=pets"
+  ],
+  "parent_rules": {
+    "min_color_variants": 0,
+    "disallow_kits_regex": "",
+    "finish_split_tokens": []
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "B0?[0-9A-Z]{8,9}",
+    "parent_json_paths": [
+      "$.parent.parent_asin",
+      "$.parent.parentAsin",
+      "$.asin",
+      "$.sku"
+    ],
+    "variant_id_fields": [
+      "$.asin",
+      "$.variantId",
+      "$.sku",
+      "$.id"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "script_a_state",
+        "selector": "script[type='a-state']"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "#dp"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.parent.brand",
+      "$.brand.name",
+      "$.brand",
+      "$.Brand"
+    ],
+    "parent_title": [
+      "$.parent.title",
+      "$.name",
+      "$.title"
+    ],
+    "parent_summary": [
+      "$.parent.summary",
+      "$.description"
+    ],
+    "series_label": [
+      "$.parent.series",
+      "$.isPartOf.name"
+    ],
+    "category_path": [
+      "$.parent.category_path[*]",
+      "$.breadcrumb[*].name"
+    ],
+    "variant_list": [
+      "$.variants[*]",
+      "$.offers[*]"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.asin",
+        "$.variantId",
+        "$.sku",
+        "$.id"
+      ],
+      "shade_name": [
+        "$.flavorName",
+        "$.styleName",
+        "$.colorName",
+        "$.variationValues.flavor_name",
+        "$.variationValues.style_name",
+        "$.variationValues.color_name",
+        "$.shadeDescription"
+      ],
+      "size_text": [
+        "$.sizeText",
+        "$.variationValues.size_name",
+        "$.variationValues.item_package_quantity",
+        "$.variationValues.number_of_items"
+      ],
+      "price": [
+        "$.price",
+        "$.offers.price"
+      ],
+      "list_price": [
+        "$.list_price",
+        "$.listPrice",
+        "$.offers.listPrice"
+      ],
+      "currency": [
+        "$.currency",
+        "$.currencyCode",
+        "$.offers.priceCurrency"
+      ],
+      "barcode": [
+        "$.upc",
+        "$.ean",
+        "$.asin"
+      ],
+      "swatch_image": [
+        "$.swatchImage",
+        "$.images.swatch",
+        "$.images.swatchImage"
+      ],
+      "hero_image": [
+        "$.heroImage",
+        "$.images.hero",
+        "$.image"
+      ],
+      "availability": [
+        "$.availability",
+        "$.offers.availability"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": false,
+    "reject_if_zero_variants": false
+  }
+}

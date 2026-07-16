@@ -1,0 +1,65 @@
+{
+  "version": "launch_brief/1",
+  "deckName": "Ulta Lipstick Launch Brief Experiment",
+  "templateKey": "uniform",
+  "promptStyle": "uniform",
+  "slides": [
+    {
+      "role": "cover",
+      "title": "Testing whether launch attributes are signal, not noise",
+      "body": [
+        "Ulta lipstick launches are the cleanest place to test whether early attribute signal survives audit.",
+        "The point is to turn a noisy first read into a tighter management narrative."
+      ],
+      "footerText": "Ulta new arrivals | April 2026"
+    },
+    {
+      "role": "launch_tiles",
+      "title": "Included launches",
+      "body": "The cohort still skews comfort-led rather than novelty-led.",
+      "implication": "Implication: care language matters more than novelty language.",
+      "products": [
+        {
+          "brand": "Brand A",
+          "product": "Hydrating Lip Stick",
+          "body": "Hydrating stick form with high brand familiarity.",
+          "tags": ["Hydrating", "Stick"],
+          "badge": "Core signal"
+        },
+        {
+          "brand": "Brand B",
+          "product": "Daily Lip Tint",
+          "body": "Tint-forward form framed as easy daily wear.",
+          "tags": ["Tint", "Daily wear"]
+        },
+        {
+          "brand": "Brand C",
+          "product": "Wearable Liquid Lip",
+          "body": "Shade story is bolder, but the message still leans wearable.",
+          "tags": ["Shade-led", "Wearable"]
+        }
+      ]
+    },
+    {
+      "role": "comparison",
+      "title": "What survived vs what failed",
+      "body": "Audit keeps one modest comfort-led signal and removes the sustainability false positive.",
+      "left": {
+        "heading": "Survived",
+        "items": [
+          "Hydrating over-indexes",
+          "Long-wear remains a credible support feature"
+        ]
+      },
+      "right": {
+        "heading": "Failed",
+        "items": [
+          "Refillable does not survive audit",
+          "Retailer sustainability boilerplate inflated the first pass"
+        ]
+      },
+      "calloutTitle": "Bottom line",
+      "calloutBody": "The signal is real, but smaller than the first read implied."
+    }
+  ]
+}

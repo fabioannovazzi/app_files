@@ -1,0 +1,136 @@
+    <section class="slide slide--top is-active" id="cover" data-slide-title="{{DECK_TITLE}}" data-chapter="opening" data-chapter-label="Opening" data-tone="dark" data-template-example="true" aria-hidden="false">
+      <div class="slide-frame wide">
+        <div class="eyebrow reveal" style="--i:0">{{DECK_EYEBROW}}</div>
+        <h1 class="reveal" style="--i:1">{{DECK_TITLE}}</h1>
+        <p class="lede reveal" style="--i:2">{{DECK_SUBTITLE}}</p>
+        <div class="statement-rule reveal" style="--i:3"></div>
+        <p class="reveal" style="--i:4">{{DECK_AUTHOR}}</p>
+      </div>
+      <aside class="speaker-notes">Open on the audience's real tension. State what they will be able to see, decide, or do differently by the end.</aside>
+    </section>
+
+    <section class="slide" id="core-tension" data-slide-title="One clear tension" data-chapter="argument" data-chapter-label="Argument" data-template-example="true" aria-hidden="true">
+      <div class="slide-frame narrow">
+        <div class="eyebrow reveal" style="--i:0">01 · Start with the contradiction</div>
+        <h2 class="reveal" style="--i:1">A strong deck turns <span class="accent">evidence</span> into a decision the room can make.</h2>
+        <p class="lede reveal" style="--i:2">Replace this statement with the governing claim of the talk. Keep the consequence visible and specific.</p>
+        <p class="source-note">Template example — replace with a decision-relevant qualification or source.</p>
+      </div>
+      <aside class="speaker-notes">Do not narrate the table of contents. Explain why the current way of seeing the problem is insufficient.</aside>
+    </section>
+
+    <section class="slide slide--top" id="metric-contrast" data-slide-title="Quantify the difference" data-chapter="argument" data-chapter-label="Argument" data-template-example="true" aria-hidden="true">
+      <div class="slide-frame wide">
+        <div class="eyebrow reveal" style="--i:0">02 · Quantify what changes</div>
+        <h2 class="reveal" style="--i:1">Use numbers to reveal the mechanism, not to decorate the page.</h2>
+        <div class="grid-3 reveal" style="--i:2">
+          <article class="card" data-fragment="1">
+            <span class="card-label">Observed</span>
+            <strong class="metric">72</strong>
+            <p>Name the actual measure and its period.</p>
+          </article>
+          <article class="card" data-fragment="2">
+            <span class="card-label">Expected</span>
+            <strong class="metric accent">48</strong>
+            <p>State whether this is a target, baseline, or forecast.</p>
+          </article>
+          <article class="card" data-fragment="3">
+            <span class="card-label">Decision gap</span>
+            <strong class="metric secondary">24</strong>
+            <p>Translate the difference into an implication.</p>
+          </article>
+        </div>
+        <p class="source-note">Template values are illustrative. Replace all values, units, and labels.</p>
+      </div>
+      <aside class="speaker-notes">Reveal the three measures in order: actual, comparison basis, and decision implication.</aside>
+    </section>
+
+    <section class="slide slide--top" id="evidence-path" data-slide-title="Make the change visible" data-chapter="evidence" data-chapter-label="Evidence" data-template-example="true" aria-hidden="true">
+      <div class="slide-frame wide">
+        <div class="eyebrow reveal" style="--i:0">03 · Let the visual carry the proof</div>
+        <h2 class="reveal" style="--i:1">Show the change across time and mark the threshold that matters.</h2>
+        <div class="split reveal" style="--i:2">
+          <div class="chart-frame">
+            <svg viewBox="0 0 600 250" role="img" aria-label="Illustrative line moving below and then above a decision threshold">
+              <title>Illustrative path and threshold</title>
+              <g class="chart-grid">
+                <path d="M42 38H570M42 94H570M42 150H570M42 206H570" />
+                <path d="M42 28V216M148 28V216M254 28V216M360 28V216M466 28V216M570 28V216" />
+              </g>
+              <path class="chart-risk" pathLength="1" d="M42 145H570" />
+              <path class="chart-line anim-draw" pathLength="1" d="M42 66C112 70 138 104 204 119S305 181 360 164S457 103 570 72" />
+              <g class="chart-label"><text x="46" y="137">decision threshold</text><text x="42" y="234">T0</text><text x="551" y="234">T5</text></g>
+            </svg>
+          </div>
+          <div class="bar-list">
+            <div class="bar-row" data-fragment="1"><span class="bar-label">Driver A</span><div class="bar-track"><div class="bar-fill" style="--value:82%"></div></div><span class="bar-value">82</span></div>
+            <div class="bar-row" data-fragment="2"><span class="bar-label">Driver B</span><div class="bar-track"><div class="bar-fill" style="--value:58%"></div></div><span class="bar-value">58</span></div>
+            <div class="bar-row" data-fragment="3"><span class="bar-label">Driver C</span><div class="bar-track"><div class="bar-fill" style="--value:36%"></div></div><span class="bar-value">36</span></div>
+          </div>
+        </div>
+        <p class="source-note">Template example — direct-label the real measure, period, unit, and threshold.</p>
+      </div>
+      <aside class="speaker-notes">Explain the inflection point first, then the drivers. Do not read every mark.</aside>
+    </section>
+
+    <section class="slide slide--top" id="decision-process" data-slide-title="Turn insight into a process" data-chapter="action" data-chapter-label="Action" data-template-example="true" aria-hidden="true">
+      <div class="slide-frame wide">
+        <div class="eyebrow reveal" style="--i:0">04 · Make the operating sequence explicit</div>
+        <h2 class="reveal" style="--i:1">A useful recommendation names the evidence, owner, threshold, and action.</h2>
+        <div class="process reveal" style="--i:2">
+          <article class="process-step" data-fragment="1"><span class="process-dot" style="--i:0">A</span><h3>Observe</h3><p>Define the authoritative signal and cadence.</p></article>
+          <article class="process-step" data-fragment="2"><span class="process-dot" style="--i:1">B</span><h3>Interpret</h3><p>Separate change, uncertainty, and data error.</p></article>
+          <article class="process-step" data-fragment="3"><span class="process-dot" style="--i:2">C</span><h3>Decide</h3><p>Name the owner and decision threshold.</p></article>
+          <article class="process-step" data-fragment="4"><span class="process-dot" style="--i:3">D</span><h3>Learn</h3><p>Record outcome, override, and next test.</p></article>
+        </div>
+      </div>
+      <aside class="speaker-notes">Tie each step to an actual role and artifact. Replace generic verbs with the concrete operating flow.</aside>
+    </section>
+
+    <section class="slide slide--top" id="scenario-decision" data-slide-title="Compare scenarios and actions" data-chapter="action" data-chapter-label="Action" data-tone="dark" data-template-example="true" aria-hidden="true">
+      <div class="slide-frame wide">
+        <div class="eyebrow reveal" style="--i:0">05 · Preserve uncertainty</div>
+        <h2 class="reveal" style="--i:1">Scenarios matter only when they change the action.</h2>
+        <div class="scenario-board reveal" style="--i:2">
+          <div class="scenario-stack">
+            <div class="scenario-row" data-fragment="1"><strong>Base</strong><span>Current assumptions</span><b>100</b></div>
+            <div class="scenario-row" data-fragment="2"><strong>Downside</strong><span>Named adverse change</span><b>62</b></div>
+            <div class="scenario-row" data-fragment="3"><strong>Stress</strong><span>Additional event</span><b>31</b></div>
+          </div>
+          <div class="decision-ring" data-fragment="4">
+            <span class="card-label">After actions</span>
+            <strong class="metric">76</strong>
+            <p>Show what remains exposed.</p>
+          </div>
+        </div>
+        <p class="source-note">Template values are illustrative. Replace assumptions, outcomes, actions, and residual risk.</p>
+      </div>
+      <aside class="speaker-notes">Do not imply precision the evidence cannot support. State which assumptions drive the downside and what can be activated in time.</aside>
+    </section>
+
+    <section class="slide slide--top" id="implementation-roadmap" data-slide-title="Sequence the implementation" data-chapter="delivery" data-chapter-label="Delivery" data-template-example="true" aria-hidden="true">
+      <div class="slide-frame wide">
+        <div class="eyebrow reveal" style="--i:0">06 · Make delivery testable</div>
+        <h2 class="reveal" style="--i:1">Move from intent to a reversible sequence with owners and gates.</h2>
+        <div class="roadmap reveal" style="--i:2">
+          <article class="road-step" data-fragment="1"><span class="road-dot" style="--i:0">1</span><h3>Scope</h3><p>Agree the decision, source perimeter, and owner.</p></article>
+          <article class="road-step" data-fragment="2"><span class="road-dot" style="--i:1">2</span><h3>Reconcile</h3><p>Make the critical inputs traceable and comparable.</p></article>
+          <article class="road-step" data-fragment="3"><span class="road-dot" style="--i:2">3</span><h3>Pilot</h3><p>Test one use case against a clear baseline.</p></article>
+          <article class="road-step" data-fragment="4"><span class="road-dot" style="--i:3">4</span><h3>Govern</h3><p>Approve, monitor, and define stop conditions.</p></article>
+        </div>
+      </div>
+      <aside class="speaker-notes">Replace the template phases with the actual sequence, timing, owners, proof points, and stop conditions.</aside>
+    </section>
+
+    <section class="slide slide--center" id="closing" data-slide-title="Close on the decision" data-chapter="closing" data-chapter-label="Closing" data-tone="dark" data-template-example="true" aria-hidden="true">
+      <div class="slide-frame narrow">
+        <div class="eyebrow reveal" style="--i:0">The decision to take away</div>
+        <h2 class="reveal" style="--i:1">End with the three moves the audience should remember.</h2>
+        <div class="closing-triad reveal" style="--i:2">
+          <div class="closing-word" data-fragment="1"><strong>See</strong><p>Make the mechanism visible.</p></div>
+          <div class="closing-word" data-fragment="2"><strong>Choose</strong><p>Compare conditions and consequences.</p></div>
+          <div class="closing-word" data-fragment="3"><strong>Act</strong><p>Name the owner and next move.</p></div>
+        </div>
+      </div>
+      <aside class="speaker-notes">Repeat the governing decision in plain language. End on the action or question the room must now own.</aside>
+    </section>

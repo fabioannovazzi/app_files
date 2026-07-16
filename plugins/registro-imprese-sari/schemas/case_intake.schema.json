@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/registro-imprese-sari/case-intake-1.0.json",
+  "title": "Registro Imprese e SARI case intake",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plugin",
+    "run_id",
+    "reference_date",
+    "client_reference",
+    "competent_chamber",
+    "subject",
+    "activity",
+    "requested_operation",
+    "professional_question",
+    "processing_authorization"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plugin": {"const": "registro-imprese-sari"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
+    "reference_date": {"type": "string", "format": "date"},
+    "client_reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
+    "competent_chamber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant", "name", "territorial_basis", "confirmation_status"],
+      "properties": {
+        "tenant": {"type": "string"},
+        "name": {"type": "string"},
+        "territorial_basis": {"type": "string"},
+        "confirmation_status": {"enum": ["confirmed", "needs_professional_review", "unknown"]}
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["legal_form", "confirmation_status"],
+      "properties": {
+        "legal_form": {"type": "string"},
+        "confirmation_status": {"enum": ["confirmed", "needs_professional_review", "unknown"]}
+      }
+    },
+    "activity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "classification_status"],
+      "properties": {
+        "description": {"type": "string"},
+        "classification_status": {"enum": ["confirmed", "needs_professional_review", "unknown"]},
+        "ateco_proposal": {"type": ["string", "null"]}
+      }
+    },
+    "requested_operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "position_types", "effective_date", "confirmation_status"],
+      "properties": {
+        "description": {"type": "string"},
+        "position_types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["registro_imprese", "rea", "agenzia_entrate", "inps", "inail", "suap", "ivass_rui", "other"]}
+        },
+        "effective_date": {"type": ["string", "null"], "format": "date"},
+        "confirmation_status": {"enum": ["confirmed", "needs_professional_review", "unknown"]}
+      }
+    },
+    "current_positions": {"type": "array", "items": {"type": "object"}},
+    "professional_question": {"type": "string"},
+    "processing_authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approved", "approval_id", "approved_by_role", "recorded_at"],
+      "properties": {
+        "approved": {"const": true},
+        "approval_id": {"type": "string"},
+        "approved_by_role": {"type": "string"},
+        "recorded_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  }
+}

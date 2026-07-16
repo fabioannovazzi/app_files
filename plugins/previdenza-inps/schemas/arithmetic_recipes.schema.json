@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Previdenza INPS arithmetic recipes",
+  "type": "object",
+  "required": ["recipes"],
+  "properties": {
+    "recipes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "recipe_id",
+          "formula_basis_claim_id",
+          "review_status",
+          "approval",
+          "operands",
+          "steps",
+          "rounding"
+        ],
+        "properties": {
+          "recipe_id": {"type": "string", "minLength": 1},
+          "formula_basis_claim_id": {"type": "string", "minLength": 1},
+          "review_status": {"const": "confirmed"},
+          "approval": {
+            "type": "object",
+            "required": [
+              "approved_by_id",
+              "approved_by_role",
+              "recorded_at",
+              "basis"
+            ],
+            "properties": {
+              "approved_by_id": {"type": "string", "minLength": 1},
+              "approved_by_role": {"const": "professional_reviewer"},
+              "recorded_at": {"type": "string", "format": "date-time"},
+              "basis": {"type": "string", "minLength": 1}
+            }
+          },
+          "operands": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "value", "unit"],
+              "anyOf": [
+                {"required": ["source_fact_ids"]},
+                {"required": ["source_claim_ids"]}
+              ]
+            }
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "operation", "inputs"],
+              "properties": {
+                "operation": {"enum": ["add", "subtract", "multiply", "divide"]},
+                "inputs": {"type": "array", "minItems": 2, "maxItems": 2}
+              }
+            }
+          },
+          "rounding": {
+            "type": "object",
+            "required": ["places", "mode"],
+            "properties": {
+              "places": {"type": "integer", "minimum": 0, "maximum": 8},
+              "mode": {
+                "enum": ["ROUND_DOWN", "ROUND_HALF_EVEN", "ROUND_HALF_UP", "ROUND_UP"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

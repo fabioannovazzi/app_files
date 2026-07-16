@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "deep-research-validator",
+  "title": "Deep Research Review",
+  "reviewTitle": "Claim And Citation Review",
+  "queueTitle": "Claims",
+  "detailTitle": "Claim Evidence",
+  "detailMode": "claim-desk",
+  "detailHelp": "Compare the claim, cited source, and validation finding before deciding.",
+  "detailGroups": [
+    {
+      "title": "Claim",
+      "variant": "prose",
+      "fields": [
+        "claim",
+        "claim_text",
+        "title"
+      ],
+      "empty": "No claim text."
+    },
+    {
+      "title": "Citation / Source",
+      "variant": "source",
+      "fields": [
+        "citation",
+        "source_title",
+        "source_url",
+        "source_refs"
+      ],
+      "empty": "No citation fields."
+    },
+    {
+      "title": "Source Support",
+      "variant": "source",
+      "fields": [
+        "source_quote",
+        "source_support",
+        "reasoning_review"
+      ],
+      "empty": "No source-support fields."
+    },
+    {
+      "title": "Validation Finding",
+      "variant": "finding",
+      "fields": [
+        "verdict",
+        "finding",
+        "severity",
+        "review_notes",
+        "proposed_fix"
+      ],
+      "empty": "No finding fields."
+    }
+  ],
+  "panels": [
+    "Claim",
+    "Citation / source",
+    "Source support",
+    "Finding"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione Deep Research",
+      "reviewTitle": "Revisione claim e citazioni",
+      "queueTitle": "Claim",
+      "detailTitle": "Evidenza claim",
+      "detailHelp": "Confronta claim, fonte citata e rilievo di validazione prima della decisione.",
+      "search": "Cerca claim, citazione, fonte, severita, output"
+    },
+    "fr": {
+      "title": "Revue Deep Research",
+      "reviewTitle": "Revue assertions et citations",
+      "queueTitle": "Assertions",
+      "detailTitle": "Preuve de l'assertion",
+      "detailHelp": "Comparez l'assertion, la source citee et le constat de validation avant de decider.",
+      "search": "Chercher assertion, citation, source, severite, sortie"
+    },
+    "de": {
+      "title": "Deep Research Review",
+      "reviewTitle": "Aussagen- und Quellenreview",
+      "queueTitle": "Aussagen",
+      "detailTitle": "Nachweis zur Aussage",
+      "detailHelp": "Aussage, zitierte Quelle und Validierungsfeststellung vor der Entscheidung vergleichen.",
+      "search": "Aussage, Zitat, Quelle, Schweregrad, Ausgabe suchen"
+    }
+  },
+  "saveTool": "save_deep_research_decisions",
+  "applyTool": "apply_deep_research_decisions",
+  "widgetType": "deep_research_review",
+  "demo": {
+    "review_type": "deep_research_validation_review",
+    "items": [
+      {
+        "id": "claim-1",
+        "item_type": "supported_claim",
+        "title": "Claim 4: tax residence follows center of vital interests",
+        "source_path": "deep_research.md",
+        "output_path": "claims_review.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "mark_unclear",
+        "data": {
+          "claim": "Residence follows the taxpayer's center of vital interests.",
+          "citation": "OECD Model Commentary, Article 4",
+          "source_title": "OECD Model Tax Convention Commentary",
+          "source_quote": "Where an individual has a permanent home in both states, the centre of vital interests is considered.",
+          "source_support": "The quote supports treaty residence tie-breaker logic, not domestic filing deadlines.",
+          "status": "needs_evidence",
+          "severity": "medium",
+          "review_notes": "The citation supports treaty tie-breaker logic but not local filing deadlines.",
+          "claim_index": 4,
+          "target_artifact": "claims_review.json",
+          "target_records_key": "claims",
+          "target_id_field": "claim_index",
+          "target_record_id": "4",
+          "target_field": "proposed_fix",
+          "edit_hint": "Editing this claim writes the reviewer correction to proposed_fix in claims_review.json."
+        },
+        "evidence": [
+          {
+            "kind": "claim_vs_citation",
+            "claim": "Residence follows center of vital interests.",
+            "citation": "OECD Model Commentary, Article 4",
+            "source_quote": "centre of vital interests",
+            "source_support": "Partial support for the claim scope",
+            "finding": "Partially supported"
+          }
+        ]
+      },
+      {
+        "id": "source-1",
+        "item_type": "source_limit",
+        "title": "Source relevance: OECD Commentary",
+        "source_path": "sources/oecd-commentary.txt",
+        "output_path": "source_inventory.json",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "source_title": "OECD Model Tax Convention Commentary",
+          "status": "relevant",
+          "source_url": "https://www.oecd.org/"
+        },
+        "evidence": [
+          {
+            "kind": "source_inventory",
+            "relevance": "high"
+          }
+        ]
+      }
+    ]
+  }
+}

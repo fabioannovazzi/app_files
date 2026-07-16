@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "reportBuilderWidgets": {
+      "title": "Report Builder Widgets",
+      "description": "Validate and render Build Report review-session payloads.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./mcp/server.cjs",
+        "--stdio"
+      ]
+    }
+  }
+}

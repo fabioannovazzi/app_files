@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deck Correction"
+  short_description: "Turn feedback into verified deck changes"
+  default_prompt: "Use $deck-correction to record feedback on this deck when needed, import the capture automatically, interpret the requested changes, preserve untouched deck content, apply approved changes to a copy, and verify the final rendered deck."

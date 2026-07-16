@@ -1,0 +1,17 @@
+[run]
+source = src
+omit =
+    src/bank_ingestion/*
+    src/finance/*
+    src/journal_ingest/*
+    src/check_statements_logic.py
+    src/identify_columns_logic.py
+    src/period_options.py
+    src/load_sales_logic.py
+    src/check_entries_review.py
+    src/charting_logic.py
+    src/bank_loader.py
+    src/load_report_logic.py
+    src/ledger_loader.py
+    src/reconcile.py
+    src/statements/*

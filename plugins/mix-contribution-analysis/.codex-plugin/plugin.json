@@ -1,0 +1,45 @@
+{
+  "name": "mix-contribution-analysis",
+  "version": "0.1.91",
+  "description": "Legacy-backed mix, composition and contribution chart-family workflow with source packs and Codex interpretation.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "mix",
+    "contribution",
+    "mekko",
+    "pareto",
+    "sales"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Mix & Contribution Analysis",
+    "shortDescription": "Run legacy-backed composition, contribution, related-metrics, Pareto and Mekko charts.",
+    "longDescription": "Self-contained mix and contribution workflow for CSV or Excel sales datasets. It inspects amount, date, period and dimension mappings, asks only unresolved material choices, routes the prepared dataset through the original legacy charting pipeline for Mekko, BarMekko, related-metrics bar charts with marker overlays, stacked composition, Pareto, stacked Pareto, multitier bar and small-multiple-capable chart families, records any legacy compatibility failure instead of drawing substitute charts, writes audit and source-pack files, and creates a Word report for Codex interpretation. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Mix & Contribution Analysis on the sales CSV or Excel file I provide.",
+      "Inspect the columns, ask only for required mappings that cannot be inferred, run the complete legacy contribution chart package including Mekko, BarMekko, related-metrics bar charts with marker overlays, stacked composition, Pareto, stacked Pareto, multitier bar and small multiples where applicable, write the charts, audit, source pack and client-ready report, then interpret the largest composition and contribution patterns from the source data."
+    ],
+    "brandColor": "#4f6f52",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

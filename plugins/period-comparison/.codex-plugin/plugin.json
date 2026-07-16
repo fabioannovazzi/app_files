@@ -1,0 +1,44 @@
+{
+  "name": "period-comparison",
+  "version": "0.1.57",
+  "description": "Period-comparison chart-family workflow with exports, source packs and Codex interpretation.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "period comparison",
+    "year-over-year",
+    "charts",
+    "sales"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Period-over-Period Analysis",
+    "shortDescription": "Run previous-year comparison charts with reviewable source data.",
+    "longDescription": "Self-contained period-comparison workflow for CSV or Excel sales datasets. It inspects date, metric and dimension mappings, asks only unresolved material choices, prepares actual-versus-previous-year data through the original preparation pipeline, renders year-over-year column, line, by-period, slope, dot/dumbbell and bridge charts through the original chart functions, adds compact scenario/variance tables, adds small multiples when a useful dimension exists, generates audit and source-pack files, and creates a Word report for Codex interpretation. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Period Comparison on the sales CSV or Excel file I provide.",
+      "Inspect the columns, ask only for required mappings that cannot be inferred, run the complete period-comparison chart package including year-over-year column, line, by-period, slope/dot, waterfall, compact scenario/variance tables, small multiples where applicable, audit, source pack and Word report, then interpret the largest movements from the source data."
+    ],
+    "brandColor": "#4f6f52",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

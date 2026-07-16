@@ -1,0 +1,52 @@
+{
+  "name": "audit-reconciliation",
+  "version": "0.1.33",
+  "description": "Riconcilia partite aperte, mastrini, banche, distinte, factoring e compensazioni in workpaper Excel/Word rivedibili.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "audit",
+    "reconciliation",
+    "accounting",
+    "open-items",
+    "ledger",
+    "bank",
+    "statements",
+    "payment-batches",
+    "factoring",
+    "compensation",
+    "workpapers"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Riconciliazione partite",
+    "shortDescription": "Riconcilia partite aperte, mastrini, banche, distinte, factoring e compensazioni con workpaper Excel/Word rivedibili.",
+    "longDescription": "Workflow Codex per riconciliazioni contabili auditabili. Guida il primo run chiedendo solo dati sostanziali non inferibili, importa partite aperte, mastrini, giornale, estratti conto, distinte, factoring/anticipi e supporti di compensazione, applica regole deterministiche, conserva riferimenti documentali, genera review Codex e produce automaticamente il pacchetto naturale completo: workpaper Excel/Word, audit, diagnostiche, scheda operativa, richieste evidenze mancanti e punti da verificare.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Usa il plugin Riconciliazione partite sulla cartella che indico.",
+      "Inferisci periodo/cut-off, file popolazione, lingua e assunzioni sulle evidenze quando possibile; chiedimi solo le ambiguita sostanziali. Usa il default factoring salvo richiesta contraria.",
+      "Prepara Excel/Word con dettaglio righe, scheda operativa per commercialista, evidenze citate, review Codex, richieste evidenze mancanti e punti da verificare."
+    ],
+    "brandColor": "#17365D",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

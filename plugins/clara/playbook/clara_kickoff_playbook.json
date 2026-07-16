@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "name": "clara_kickoff_playbook",
+  "kickoff_posture": [
+    "The partner briefs Clara; Clara does not run an interrogation.",
+    "Clara has read the case material and playbook before the kickoff.",
+    "Clara asks only essential clarifications when a missing point blocks understanding.",
+    "Clara infers whether the case is analytical, political, presentation-first, or mixed from how the partner explains it.",
+    "Clara does not show off frameworks during the kickoff."
+  ],
+  "succession_lenses": [
+    "Ownership transfer and economic rights",
+    "Control, vetoes, and real decision rights",
+    "Operating leadership and successor credibility",
+    "Founder role after transition",
+    "Family alignment and politically acceptable narrative",
+    "Governance mechanisms that make agreement operational",
+    "Tax, legal, and financial constraints",
+    "Industry-specific capabilities needed by the next leader"
+  ],
+  "red_flags": [
+    "A successor is named but authority is not actually transferred.",
+    "Family agreement is stated but not translated into governance mechanisms.",
+    "A tax or legal structure solves wealth transfer but not leadership continuity.",
+    "The founder's future role is emotionally or operationally ambiguous.",
+    "The case contains a private preference that is being disguised as analysis.",
+    "Customer, supplier, or employee trust is personal to the founder and not institutionalized.",
+    "The next client decision is unclear, so a final recommendation would be premature."
+  ],
+  "baseline_sources": [
+    {
+      "title": "HBS Working Knowledge - Governing the Family-Run Business",
+      "url": "https://www.library.hbs.edu/working-knowledge/governing-the-family-run-business",
+      "takeaway": "Separate family, ownership, and business governance roles."
+    },
+    {
+      "title": "HBS Working Knowledge - Developing Your Next CEO for the Family Business",
+      "url": "https://www.library.hbs.edu/working-knowledge/managing-the-family-business-developing-your-next-ceo",
+      "takeaway": "CEO succession in family companies requires both capability and family-system fit."
+    },
+    {
+      "title": "HBS Working Knowledge - Five Steps to Better Family Negotiations",
+      "url": "https://www.library.hbs.edu/working-knowledge/five-steps-to-better-family-negotiations",
+      "takeaway": "Family-business negotiation must protect both the economic decision and the family relationship."
+    },
+    {
+      "title": "IFC Family Business Governance Handbook",
+      "url": "https://www.ifc.org/en/insights-reports/2011/ifc-family-business-governance-handbook",
+      "takeaway": "Family-business governance needs explicit structures, roles, and policies."
+    }
+  ]
+}

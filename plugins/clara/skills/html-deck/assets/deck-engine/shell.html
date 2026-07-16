@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="{{DECK_LANGUAGE}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="{{DECK_ROBOTS}}">
+  <meta name="description" content="{{DECK_DESCRIPTION}}">
+  <meta name="theme-color" content="{{DECK_THEME_COLOR}}">
+  <title>{{DECK_TITLE}}</title>
+  <style>
+{{DECK_CSS}}
+{{CUSTOM_CSS}}
+  </style>
+</head>
+<body>
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+
+  <main class="deck-stage" data-clara-deck-mode="stage" aria-live="polite">
+{{DECK_SLIDES}}
+  </main>
+
+  <aside class="deck-rail" aria-label="Chapters">
+    <div class="rail-brand" aria-hidden="true">
+      <span class="rail-mark"></span>
+      <strong>{{DECK_TITLE}}</strong>
+      <small>{{DECK_AUTHOR}}</small>
+    </div>
+    <nav class="chapter-nav" id="chapterNav" aria-label="Chapter navigation"></nav>
+    <div class="rail-foot">{{DECK_EYEBROW}}</div>
+  </aside>
+
+  <nav class="deck-dots" id="deckDots" aria-label="Slide navigation"></nav>
+
+  <div class="deck-controls" aria-label="Presentation controls">
+    <button type="button" id="prevBtn" aria-label="Previous slide">←</button>
+    <button type="button" id="nextBtn" aria-label="Next slide">→</button>
+    <button type="button" id="overviewBtn" aria-label="Open overview">▦</button>
+    <button type="button" id="helpBtn" aria-label="Open keyboard help">?</button>
+    <button type="button" id="fullscreenBtn" aria-label="Toggle fullscreen">⛶</button>
+  </div>
+
+  <aside class="notes-panel" id="notesPanel" aria-live="polite" aria-label="Speaker notes"><p></p></aside>
+
+  <div class="overlay" id="overviewOverlay" role="dialog" aria-modal="true" aria-labelledby="overviewTitle" hidden>
+    <div class="overlay-panel">
+      <div class="overlay-head">
+        <strong id="overviewTitle">Presentation map</strong>
+        <button type="button" data-close-overlay aria-label="Close overview">×</button>
+      </div>
+      <div class="overview-grid" id="overviewGrid"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+    <div class="overlay-panel overlay-panel--compact">
+      <div class="overlay-head">
+        <strong id="helpTitle">Controls</strong>
+        <button type="button" data-close-overlay aria-label="Close help">×</button>
+      </div>
+      <div class="help-list">
+        <span><kbd>←</kbd><kbd>→</kbd> navigate and reveal</span>
+        <span><kbd>Space</kbd> next</span>
+        <span><kbd>Home</kbd><kbd>End</kbd> first / last</span>
+        <span><kbd>O</kbd> overview</span>
+        <span><kbd>N</kbd> notes</span>
+        <span><kbd>F</kbd> fullscreen</span>
+        <span><kbd>Esc</kbd> close</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="orientation-hint" aria-hidden="true">Rotate for presentation view</div>
+
+{{CONTENT_LEDGER}}
+
+  <script>
+{{DECK_JS}}
+  </script>
+</body>
+</html>

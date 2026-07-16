@@ -1,0 +1,45 @@
+{
+  "name": "scatter-bubble-analysis",
+  "version": "0.1.40",
+  "description": "Legacy-backed scatter and bubble chart workflow with reusable prepared-data caching and audit outputs.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "scatter",
+    "bubble",
+    "legacy charting",
+    "sales",
+    "plotly"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Scatter & Bubble Analysis",
+    "shortDescription": "Run legacy-backed scatter and bubble charts from CSV or Excel data.",
+    "longDescription": "Self-contained scatter and bubble chart workflow for CSV or Excel datasets. It inspects numeric metrics and categorical dimensions, asks only unresolved material choices, canonicalizes the dataset once, renders normal and small-multiple scatter and bubble charts through the original legacy Plotly charting functions, records the exact legacy source path and prepared-data cache activity, writes chart context data, audit files and a source pack, and never draws substitute charts when the legacy path cannot produce a figure.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Scatter & Bubble Analysis on the CSV or Excel file I provide.",
+      "Inspect the columns, ask only for required x metric, y metric, bubble-size metric or dimension mappings that cannot be inferred, run the legacy scatter and bubble chart package including small multiples where useful, write charts, context data, audit and source pack, then interpret the strongest relationship and outlier patterns from the source data."
+    ],
+    "brandColor": "#315f72",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Access restricted{% endblock %}
+
+{% block body_attrs %}class="landing-body"{% endblock %}
+
+{% block body %}
+  <header class="landing-header">
+    <a href="/?lang={{ lang or 'en' }}" class="landing-logo-link" aria-label="Return to the home page">
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main class="landing-content">
+    <section class="landing-section">
+      <div class="landing-card">
+        <h1>{% if clara_access_required %}{{ forbidden_title or "Clara access" }}{% else %}Access restricted{% endif %}</h1>
+        <p>{{ message or "You are not authorized to see this page." }}</p>
+        {% if clara_access_required %}
+          <p>{{ standard_plugin_pack_copy or "You can still download Vera for free." }}</p>
+          <div class="forbidden-actions">
+            <a class="primary-button" href="{{ standard_plugin_pack_href }}">
+              {{ standard_plugin_pack_label or "Download Vera" }}
+            </a>
+            <a class="secondary-button" href="/?lang={{ lang or 'en' }}">{{ return_home_label or "Return home" }}</a>
+          </div>
+        {% else %}
+          <p class="forbidden-contact">
+            Please contact
+            <a href="mailto:hello@mparanza.com">hello@mparanza.com</a>
+            if you believe this is an error.
+          </p>
+          <a class="primary-button" href="/?lang={{ lang or 'en' }}">Return home</a>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+{% endblock %}

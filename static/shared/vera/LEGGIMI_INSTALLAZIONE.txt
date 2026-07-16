@@ -1,0 +1,78 @@
+Vera - pacchetto plugin per Codex
+
+Codice sorgente: https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera
+Licenza MIT: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
+
+Vera è la collega AI per il lavoro dello studio: prepara fascicoli, controlla
+evidenze e documenta i risultati in carte di lavoro rivedibili. Il giudizio
+professionale resta al commercialista.
+
+Installazione
+
+1. Estrai lo ZIP.
+2. In Codex, aggiungi la cartella estratta come marketplace locale. Seleziona la
+   cartella che contiene `.agents/plugins/marketplace.json`.
+3. In Plugin, abilita `Vera`.
+4. Apri una nuova chat Codex nello stesso workspace.
+
+Moduli inclusi
+
+- Riconciliazione partite
+- Istruttoria cliente
+- Campionamento del giornale
+- Controllo scritture
+- Riconciliazione banca-contabilità
+- Genera report
+- Revisione Piano Concordato
+- Previdenza INPS
+- Registro Imprese e SARI
+- Ottimizza prompt
+- Valida Deep Research
+
+Primo utilizzo
+
+Chiedi direttamente a Vera il lavoro da svolgere e indica la cartella o i file
+di input. Per esempio:
+
+Vera, prepara la prima istruttoria di questa cartella cliente.
+
+Oppure:
+
+Vera, controlla queste scritture con i PDF di supporto.
+
+Ogni modulo conserva script, requisiti, istruzioni e controlli di dipendenza
+specifici. Vera attiva il modulo adatto alla richiesta e mantiene visibili fonti,
+controlli ed eccezioni per la revisione del professionista.
+
+Per PDF scansionati e immagini, il modulo Previdenza INPS riusa PaddleOCR in
+locale e mantiene il riferimento alla singola pagina. I pesi dei modelli OCR non
+sono inclusi nello ZIP: Vera usa quelli già presenti in cache e chiede
+un'autorizzazione esplicita prima di scaricarli. Il testo OCR resta da verificare
+visivamente prima di confermare un fatto.
+
+Per Previdenza INPS il percorso ordinario usa documenti o esportazioni ufficiali
+scaricati dal titolare o dall'intermediario/delegato e registrati con provenienza
+e hash. Una cattura locale in sola lettura della scheda già aperta è disponibile
+solo dopo una verifica separata del permesso previsto dai termini del servizio o
+da altra base applicabile: l'approvazione dell'utente o dello studio, da sola, non
+dimostra il permesso INPS all'acquisizione software. L'utente accede con le proprie
+credenziali e conferma profilo e delega; Vera non legge né conserva SPID/CIE/CNS,
+cookie o codici, non attiva deleghe e non effettua invii. Il testo catturato resta
+evidenza parziale finché un revisore umano non lo confronta con l'immagine.
+
+Per Registro Imprese e SARI, Vera raccoglie i fatti del caso, consulta in sola
+lettura la Camera competente e registra le fonti ufficiali selezionate con data
+e hash. Mantiene distinti Registro Imprese, REA, DIRE/Comunicazione Unica, INPS,
+INAIL, SUAP e IVASS/RUI. Gli endpoint JSON usati internamente dal sito SARI non
+sono un'API pubblica documentata: il connettore diretto resta bloccato senza una
+separata autorizzazione scritta al riuso. Vera non accede a DIRE, non riceve
+credenziali, non contatta l'assistenza, non firma, non paga e non invia pratiche.
+
+---
+
+English quick start
+
+1. Unzip the package.
+2. Add the extracted folder containing `.agents/plugins/marketplace.json` as a
+   local marketplace in Codex.
+3. Enable `Vera`, then start a new Codex chat in the same workspace.

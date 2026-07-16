@@ -1,0 +1,46 @@
+{
+  "name": "distribution-analysis",
+  "version": "0.1.35",
+  "description": "Legacy-backed distribution chart workflow with standard and small-multiple Plotly outputs.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "distribution",
+    "histogram",
+    "boxplot",
+    "ECDF",
+    "kernel density",
+    "legacy charting"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Distribution Analysis",
+    "shortDescription": "Run legacy histogram, boxplot, stripplot, ECDF and kernel-density charts.",
+    "longDescription": "Self-contained distribution chart workflow for CSV or Excel datasets. It inspects numeric metrics, optional period fields and useful categorical dimensions, canonicalizes the dataset once, renders normal and small-multiple distribution charts through the original legacy Plotly charting functions, records the exact legacy source path and prepared-data cache activity, writes chart context data, audit files and a source pack, and never draws substitute charts when the legacy path cannot produce a figure.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Distribution Analysis on the CSV or Excel file I provide.",
+      "Inspect the columns, ask only for required metric, period or dimension mappings that cannot be inferred, run the complete legacy distribution chart package including histogram, boxplot, stripplot, ECDF, kernel density and small multiples where useful, write charts, context data, audit and source pack, then interpret the strongest shape, skew, spread and outlier patterns from the source data."
+    ],
+    "brandColor": "#7a563a",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

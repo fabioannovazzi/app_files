@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Link not found{% endblock %}
+
+{% block body_attrs %}class="landing-body not-found-body"{% endblock %}
+
+{% block head_extra %}
+  <style>
+    body.not-found-body {
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+    }
+
+    .not-found-page {
+      flex: 1;
+      display: grid;
+      align-items: center;
+      width: min(920px, 100%);
+      padding: clamp(48px, 9vh, 108px) 0 clamp(64px, 11vh, 132px);
+    }
+
+    .not-found-page__content {
+      display: grid;
+      gap: 26px;
+      max-width: 620px;
+    }
+
+    .not-found-page__status {
+      margin: 0;
+      color: #667085;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .not-found-page__title {
+      margin: 0;
+      color: #111827;
+      font-size: clamp(2.3rem, 5vw, 4.8rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .not-found-page__message {
+      margin: 0;
+      max-width: 46rem;
+      color: #475467;
+      font-size: clamp(1rem, 1.6vw, 1.18rem);
+      line-height: 1.62;
+      letter-spacing: 0;
+      text-wrap: pretty;
+    }
+
+    .not-found-page__path {
+      display: grid;
+      gap: 6px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 6px 0 0;
+      color: #667085;
+      font-size: 0.8125rem;
+      line-height: 1.35;
+    }
+
+    .not-found-page__path span {
+      display: block;
+      max-width: min(620px, calc(100vw - 96px));
+      overflow-wrap: anywhere;
+      color: #344054;
+      font-size: 0.9375rem;
+    }
+
+    .not-found-page__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .not-found-page__actions .primary-button,
+    .not-found-page__secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      text-decoration: none;
+    }
+
+    .not-found-page__secondary {
+      padding: 11px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+      color: #344054;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      line-height: 1.2;
+      transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+    }
+
+    .not-found-page__secondary:hover,
+    .not-found-page__secondary:focus-visible {
+      border-color: rgba(148, 163, 184, 0.86);
+      background: rgba(255, 255, 255, 0.96);
+      color: #111827;
+      outline: none;
+    }
+
+    @media (max-width: 720px) {
+      body.not-found-body {
+        padding: 28px 24px;
+      }
+
+      .not-found-page {
+        align-items: start;
+        padding-top: 56px;
+      }
+
+      .not-found-page__path span {
+        max-width: calc(100vw - 48px);
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <header class="landing-header">
+    <a href="/?lang={{ lang or 'en' }}" class="landing-logo-link" aria-label="Return to the home page">
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main class="landing-content not-found-page">
+    <section class="not-found-page__content" aria-labelledby="not-found-title">
+      <p class="not-found-page__status">404</p>
+      <h1 id="not-found-title" class="not-found-page__title">This link cannot be found</h1>
+      <p class="not-found-page__message">{{ message }}</p>
+      <p class="not-found-page__path">
+        Requested link
+        <span>{{ requested_path }}</span>
+      </p>
+      <div class="not-found-page__actions">
+        <a class="primary-button" href="{{ primary_href }}">{{ primary_label }}</a>
+        <a class="not-found-page__secondary" href="/?lang={{ lang or 'en' }}">Home</a>
+      </div>
+    </section>
+  </main>
+{% endblock %}

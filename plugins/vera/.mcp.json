@@ -1,0 +1,92 @@
+{
+  "mcpServers": {
+    "auditReconciliationWidgets": {
+      "title": "Riconciliazione partite",
+      "description": "Validate and render Audit Reconciliation review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "audit-reconciliation"]
+    },
+    "clientIntakeWidgets": {
+      "title": "Client Intake",
+      "description": "Validate and render Client Intake review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "client-intake"]
+    },
+    "journalSamplingWidgets": {
+      "title": "Journal Sampling",
+      "description": "Validate and render Journal Sampling review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "journal-sampling"]
+    },
+    "checkEntriesWidgets": {
+      "title": "Check Entries",
+      "description": "Validate and render Check Entries review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "check-entries"]
+    },
+    "journalBankWidgets": {
+      "title": "Journal-Bank Reconciliation",
+      "description": "Validate and render Journal-Bank Reconciliation review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "journal-bank-reconciliation"]
+    },
+    "reportBuilderWidgets": {
+      "title": "Build Report",
+      "description": "Validate and render Build Report review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "report-builder"]
+    },
+    "concordatoPlanReviewWidgets": {
+      "title": "Revisione Piano Concordato",
+      "description": "Validate and render Concordato Plan Review payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "concordato-plan-review"]
+    },
+    "promptOptimizerWidgets": {
+      "title": "Optimize Prompt",
+      "description": "Validate and render Prompt Optimizer review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "prompt-optimizer"]
+    },
+    "deepResearchValidatorWidgets": {
+      "title": "Validate Deep Research",
+      "description": "Validate and render Deep Research review-session payloads.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "deep-research-validator"]
+    },
+    "previdenzaInpsReview": {
+      "title": "Previdenza INPS Review",
+      "description": "Validate, render, save, and apply Previdenza INPS review decisions.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "previdenza-inps"]
+    },
+    "registroImpreseSariReview": {
+      "title": "Registro Imprese e SARI Review",
+      "description": "Validate, render, save, and apply a source-backed Registro Imprese/DIRE practice review.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "registro-imprese-sari"]
+    }
+  }
+}

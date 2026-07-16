@@ -1,0 +1,10 @@
+{
+  "builtins": [
+    "pkgutil",
+    "importlib",
+    "markupsafe",
+    "fastapi",
+    "starlette"
+  ],
+  "typing": true
+}

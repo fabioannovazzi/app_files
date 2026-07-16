@@ -1,0 +1,920 @@
+{
+    "id": "wet_cat_food",
+    "label": "wet cat food",
+    "attributes": [
+        {
+            "id": "flavor",
+            "label": "flavor",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "alligator",
+                    "label": "Alligator"
+                },
+                {
+                    "id": "beef",
+                    "label": "Beef"
+                },
+                {
+                    "id": "boar",
+                    "label": "Boar"
+                },
+                {
+                    "id": "buffalo",
+                    "label": "Buffalo"
+                },
+                {
+                    "id": "carrot",
+                    "label": "Carrot"
+                },
+                {
+                    "id": "catnip",
+                    "label": "Catnip"
+                },
+                {
+                    "id": "cheese",
+                    "label": "Cheese"
+                },
+                {
+                    "id": "chicken",
+                    "label": "Chicken"
+                },
+                {
+                    "id": "chicken_veggies",
+                    "label": "Chicken & Veggies",
+                    "synonyms": [
+                        "chicken and veggies",
+                        "chicken vegetables"
+                    ]
+                },
+                {
+                    "id": "cod",
+                    "label": "Cod"
+                },
+                {
+                    "id": "duck",
+                    "label": "Duck"
+                },
+                {
+                    "id": "flavor_variety",
+                    "label": "Flavor Variety",
+                    "synonyms": [
+                        "multi flavor"
+                    ]
+                },
+                {
+                    "id": "flower_herbs",
+                    "label": "Flower Herbs",
+                    "synonyms": [
+                        "flower & herbs",
+                        "flower and herbs"
+                    ]
+                },
+                {
+                    "id": "fruits_vegetables",
+                    "label": "Fruits & Vegetables",
+                    "synonyms": [
+                        "fruit & vegetable",
+                        "fruits and vegetables"
+                    ]
+                },
+                {
+                    "id": "guinea_fowl",
+                    "label": "Guinea Fowl"
+                },
+                {
+                    "id": "herbs_spices",
+                    "label": "Herbs & Spices",
+                    "synonyms": [
+                        "herbs and spices"
+                    ]
+                },
+                {
+                    "id": "kangaroo",
+                    "label": "Kangaroo"
+                },
+                {
+                    "id": "lamb",
+                    "label": "Lamb"
+                },
+                {
+                    "id": "liver",
+                    "label": "Liver"
+                },
+                {
+                    "id": "mackerel",
+                    "label": "Mackerel"
+                },
+                {
+                    "id": "meat",
+                    "label": "Meat"
+                },
+                {
+                    "id": "pork",
+                    "label": "Pork"
+                },
+                {
+                    "id": "poultry",
+                    "label": "Poultry"
+                },
+                {
+                    "id": "pumpkin",
+                    "label": "Pumpkin"
+                },
+                {
+                    "id": "quail",
+                    "label": "Quail"
+                },
+                {
+                    "id": "rabbit",
+                    "label": "Rabbit"
+                },
+                {
+                    "id": "salmon",
+                    "label": "Salmon"
+                },
+                {
+                    "id": "salmon_veggies",
+                    "label": "Salmon & Veggies",
+                    "synonyms": [
+                        "salmon and veggies",
+                        "salmon vegetables"
+                    ]
+                },
+                {
+                    "id": "sardine",
+                    "label": "Sardine"
+                },
+                {
+                    "id": "seafood_fish",
+                    "label": "Seafood & Fish",
+                    "synonyms": [
+                        "seafood and fish"
+                    ]
+                },
+                {
+                    "id": "shrimp",
+                    "label": "Shrimp"
+                },
+                {
+                    "id": "sweet_potato",
+                    "label": "Sweet Potato"
+                },
+                {
+                    "id": "tuna",
+                    "label": "Tuna"
+                },
+                {
+                    "id": "turkey",
+                    "label": "Turkey"
+                },
+                {
+                    "id": "venison",
+                    "label": "Venison"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "food_texture",
+            "label": "food texture",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "aspic_gelee",
+                    "label": "Aspic / Gelee",
+                    "synonyms": [
+                        "aspic gelee",
+                        "gelée"
+                    ]
+                },
+                {
+                    "id": "bits_in_broth",
+                    "label": "Bits in Broth"
+                },
+                {
+                    "id": "chunks_in_gravy",
+                    "label": "Chunks in Gravy"
+                },
+                {
+                    "id": "flaked",
+                    "label": "Flaked"
+                },
+                {
+                    "id": "grilled",
+                    "label": "Grilled"
+                },
+                {
+                    "id": "ground",
+                    "label": "Ground"
+                },
+                {
+                    "id": "minced",
+                    "label": "Minced"
+                },
+                {
+                    "id": "mousse",
+                    "label": "Mousse"
+                },
+                {
+                    "id": "pate",
+                    "label": "Pate"
+                },
+                {
+                    "id": "puree",
+                    "label": "Purée",
+                    "synonyms": [
+                        "puree"
+                    ]
+                },
+                {
+                    "id": "shredded",
+                    "label": "Shredded"
+                },
+                {
+                    "id": "sliced",
+                    "label": "Sliced"
+                },
+                {
+                    "id": "stew",
+                    "label": "Stew"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "lifestage",
+            "label": "lifestage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "adult",
+                    "label": "Adult"
+                },
+                {
+                    "id": "all_lifestages",
+                    "label": "All Lifestages",
+                    "synonyms": [
+                        "all life stage",
+                        "all life stages"
+                    ]
+                },
+                {
+                    "id": "kitten",
+                    "label": "Kitten"
+                },
+                {
+                    "id": "puppy",
+                    "label": "Puppy"
+                },
+                {
+                    "id": "senior",
+                    "label": "Senior"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "special_diet",
+            "label": "special diet",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "chicken_free",
+                    "label": "Chicken-Free",
+                    "synonyms": [
+                        "chicken free"
+                    ]
+                },
+                {
+                    "id": "flax_free",
+                    "label": "Flax-Free",
+                    "synonyms": [
+                        "flax free"
+                    ]
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "Gluten Free"
+                },
+                {
+                    "id": "grain_free",
+                    "label": "Grain-Free",
+                    "synonyms": [
+                        "grain free"
+                    ]
+                },
+                {
+                    "id": "high_fiber",
+                    "label": "High Fiber"
+                },
+                {
+                    "id": "high_protein",
+                    "label": "High-Protein",
+                    "synonyms": [
+                        "high protein"
+                    ]
+                },
+                {
+                    "id": "human_grade",
+                    "label": "Human-Grade",
+                    "synonyms": [
+                        "human grade"
+                    ]
+                },
+                {
+                    "id": "hydrolyzed_protein",
+                    "label": "Hydrolyzed Protein"
+                },
+                {
+                    "id": "indoor",
+                    "label": "Indoor"
+                },
+                {
+                    "id": "limited_ingredient_diet",
+                    "label": "Limited Ingredient Diet"
+                },
+                {
+                    "id": "low_fat",
+                    "label": "Low Fat"
+                },
+                {
+                    "id": "low_glycemic",
+                    "label": "Low Glycemic"
+                },
+                {
+                    "id": "low_protein",
+                    "label": "Low-Protein",
+                    "synonyms": [
+                        "low protein"
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "Natural"
+                },
+                {
+                    "id": "no_corn_no_wheat_no_soy",
+                    "label": "No Corn No Wheat No Soy",
+                    "synonyms": [
+                        "corn free wheat free soy free",
+                        "no corn, no wheat, no soy"
+                    ]
+                },
+                {
+                    "id": "non_gmo",
+                    "label": "Non-GMO",
+                    "synonyms": [
+                        "non gmo"
+                    ]
+                },
+                {
+                    "id": "organic",
+                    "label": "Organic"
+                },
+                {
+                    "id": "pea_free",
+                    "label": "Pea-Free",
+                    "synonyms": [
+                        "pea free"
+                    ]
+                },
+                {
+                    "id": "soy_free",
+                    "label": "Soy Free"
+                },
+                {
+                    "id": "starch_free",
+                    "label": "Starch Free"
+                },
+                {
+                    "id": "vegetarian",
+                    "label": "Vegetarian"
+                },
+                {
+                    "id": "veterinary_diet",
+                    "label": "Veterinary Diet"
+                },
+                {
+                    "id": "weight_control",
+                    "label": "Weight Control"
+                },
+                {
+                    "id": "with_grain",
+                    "label": "With Grain"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "health_feature",
+            "label": "health feature",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "allergy_relief",
+                    "label": "Allergy Relief"
+                },
+                {
+                    "id": "appetite_stimulation",
+                    "label": "Appetite Stimulation"
+                },
+                {
+                    "id": "brain_health",
+                    "label": "Brain Health"
+                },
+                {
+                    "id": "calming",
+                    "label": "Calming"
+                },
+                {
+                    "id": "circulatory_care",
+                    "label": "Circulatory Care"
+                },
+                {
+                    "id": "colic_relief",
+                    "label": "Colic Relief"
+                },
+                {
+                    "id": "dental_breath_care",
+                    "label": "Dental & Breath Care",
+                    "synonyms": [
+                        "dental and breath care"
+                    ]
+                },
+                {
+                    "id": "diabetic_support",
+                    "label": "Diabetic Support"
+                },
+                {
+                    "id": "digestive_health",
+                    "label": "Digestive Health"
+                },
+                {
+                    "id": "eye_care",
+                    "label": "Eye Care"
+                },
+                {
+                    "id": "hairball_control",
+                    "label": "Hairball Control"
+                },
+                {
+                    "id": "heart_care",
+                    "label": "Heart Care"
+                },
+                {
+                    "id": "high_energy",
+                    "label": "High-Energy"
+                },
+                {
+                    "id": "hip_joint_support",
+                    "label": "Hip & Joint Support",
+                    "synonyms": [
+                        "hip and joint support"
+                    ]
+                },
+                {
+                    "id": "hormone_support",
+                    "label": "Hormone Support"
+                },
+                {
+                    "id": "immune_support",
+                    "label": "Immune Support"
+                },
+                {
+                    "id": "itch_redness_remedy",
+                    "label": "Itch & Redness Remedy",
+                    "synonyms": [
+                        "itch and redness remedy"
+                    ]
+                },
+                {
+                    "id": "kidney_care",
+                    "label": "Kidney Care"
+                },
+                {
+                    "id": "liver_care",
+                    "label": "Liver Care"
+                },
+                {
+                    "id": "metabolic",
+                    "label": "Metabolic"
+                },
+                {
+                    "id": "milk_replacer",
+                    "label": "Milk Replacer"
+                },
+                {
+                    "id": "muscle_care",
+                    "label": "Muscle Care"
+                },
+                {
+                    "id": "oncology_care",
+                    "label": "Oncology Care"
+                },
+                {
+                    "id": "recovery",
+                    "label": "Recovery"
+                },
+                {
+                    "id": "reproduction_nursing",
+                    "label": "Reproduction & Nursing",
+                    "synonyms": [
+                        "reproduction and nursing"
+                    ]
+                },
+                {
+                    "id": "senior_care",
+                    "label": "Senior Care"
+                },
+                {
+                    "id": "sensitive_digestion",
+                    "label": "Sensitive Digestion"
+                },
+                {
+                    "id": "sensitive_skin",
+                    "label": "Sensitive Skin"
+                },
+                {
+                    "id": "shedding_control",
+                    "label": "Shedding Control"
+                },
+                {
+                    "id": "skin_coat_health",
+                    "label": "Skin & Coat Health",
+                    "synonyms": [
+                        "skin and coat health"
+                    ]
+                },
+                {
+                    "id": "thyroid_support",
+                    "label": "Thyroid-Support",
+                    "synonyms": [
+                        "thyroid support"
+                    ]
+                },
+                {
+                    "id": "urinary_tract_health",
+                    "label": "Urinary Tract Health"
+                },
+                {
+                    "id": "vitamins_minerals",
+                    "label": "Vitamins & Minerals",
+                    "synonyms": [
+                        "vitamins and minerals"
+                    ]
+                },
+                {
+                    "id": "weight_management",
+                    "label": "Weight Management"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "package_count",
+            "label": "package count",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "count_13_24",
+                    "label": "13-24 count"
+                },
+                {
+                    "id": "count_25_plus",
+                    "label": "25 count & above",
+                    "synonyms": [
+                        "25 count and above",
+                        "25+ count"
+                    ]
+                },
+                {
+                    "id": "count_6_or_less",
+                    "label": "6 count or less",
+                    "synonyms": [
+                        "six count or less"
+                    ]
+                },
+                {
+                    "id": "count_7_12",
+                    "label": "7-12 count"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "packaging_type",
+            "label": "packaging type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "bag",
+                    "label": "Bag"
+                },
+                {
+                    "id": "box",
+                    "label": "Box"
+                },
+                {
+                    "id": "can",
+                    "label": "Can"
+                },
+                {
+                    "id": "cup",
+                    "label": "Cup"
+                },
+                {
+                    "id": "pouch",
+                    "label": "Pouch"
+                },
+                {
+                    "id": "tray",
+                    "label": "Tray"
+                },
+                {
+                    "id": "tub",
+                    "label": "Tub"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "product_assortment",
+            "label": "product assortment",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "single_recipe",
+                    "label": "single recipe",
+                    "synonyms": [
+                        "single flavor",
+                        "single variety"
+                    ]
+                },
+                {
+                    "id": "variety_pack",
+                    "label": "variety pack",
+                    "synonyms": [
+                        "assortment pack",
+                        "multi flavor pack"
+                    ]
+                },
+                {
+                    "id": "meal_bundle",
+                    "label": "meal bundle",
+                    "synonyms": [
+                        "bundle",
+                        "multipack bundle"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "prescription_status",
+            "label": "prescription status",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "veterinary_diet",
+                    "label": "veterinary diet",
+                    "synonyms": [
+                        "prescription diet",
+                        "vet diet"
+                    ]
+                },
+                {
+                    "id": "non_prescription",
+                    "label": "non-prescription",
+                    "synonyms": [
+                        "over the counter",
+                        "regular diet"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "animal_protein_source",
+            "label": "animal protein source",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "alligator",
+                    "label": "Alligator protein"
+                },
+                {
+                    "id": "beef",
+                    "label": "Beef protein"
+                },
+                {
+                    "id": "boar",
+                    "label": "Boar protein"
+                },
+                {
+                    "id": "buffalo",
+                    "label": "Buffalo protein"
+                },
+                {
+                    "id": "chicken",
+                    "label": "Chicken protein"
+                },
+                {
+                    "id": "cod",
+                    "label": "Cod protein"
+                },
+                {
+                    "id": "duck",
+                    "label": "Duck protein"
+                },
+                {
+                    "id": "guinea_fowl",
+                    "label": "Guinea fowl protein"
+                },
+                {
+                    "id": "kangaroo",
+                    "label": "Kangaroo protein"
+                },
+                {
+                    "id": "lamb",
+                    "label": "Lamb protein"
+                },
+                {
+                    "id": "liver",
+                    "label": "Liver protein"
+                },
+                {
+                    "id": "mackerel",
+                    "label": "Mackerel protein"
+                },
+                {
+                    "id": "pork",
+                    "label": "Pork protein"
+                },
+                {
+                    "id": "poultry",
+                    "label": "Poultry protein"
+                },
+                {
+                    "id": "quail",
+                    "label": "Quail protein"
+                },
+                {
+                    "id": "rabbit",
+                    "label": "Rabbit protein"
+                },
+                {
+                    "id": "salmon",
+                    "label": "Salmon protein"
+                },
+                {
+                    "id": "sardine",
+                    "label": "Sardine protein"
+                },
+                {
+                    "id": "seafood_fish",
+                    "label": "Seafood & fish protein",
+                    "synonyms": [
+                        "fish"
+                    ]
+                },
+                {
+                    "id": "shrimp",
+                    "label": "Shrimp protein"
+                },
+                {
+                    "id": "tuna",
+                    "label": "Tuna protein"
+                },
+                {
+                    "id": "turkey",
+                    "label": "Turkey protein"
+                },
+                {
+                    "id": "venison",
+                    "label": "Venison protein"
+                },
+                {
+                    "id": "mixed_protein",
+                    "label": "Mixed animal protein",
+                    "synonyms": [
+                        "multi protein",
+                        "variety protein"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ],
+    "guidance": "Seeded from Chewy wet cat food filter surfaces plus local listing and PDP parser evidence. The first seven attributes preserve Chewy-native category filter families; later attributes are analysis-friendly derivations from product titles and selected options"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "journal-bank-reconciliation",
+  "version": "0.1.25",
+  "description": "Deterministic journal-to-bank reconciliation guided by Codex.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "audit",
+    "bank",
+    "journal",
+    "ledger",
+    "reconciliation",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Journal-Bank Reconciliation",
+    "shortDescription": "Reconcile bank statements with journal or ledger exports in Italian, English, French, or German.",
+    "longDescription": "Codex workflow for deterministic bank-to-journal reconciliation. Codex inspects local bank and journal files, asks only for non-inferable mappings or assumptions, runs deterministic scripts, reviews exceptions, and explains limits. The plugin normalizes rows, filters sample movements when supplied, performs staged amount/date/reference/beneficiary/description matching, and automatically writes the natural full package: CSV/XLSX/JSON outputs, audit, diagnostics, review notes, and Codex review, without direct model API calls from scripts.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Journal-Bank Reconciliation on the bank files and journal/ledger file I provide.",
+      "Infer language and column mappings where possible, ask only for essential ambiguities, then run deterministic reconciliation and prepare the complete natural review package.",
+      "Do not make direct OpenAI API calls from the plugin scripts; use Codex for review judgment and deterministic scripts for extraction/matching."
+    ],
+    "brandColor": "#496373",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

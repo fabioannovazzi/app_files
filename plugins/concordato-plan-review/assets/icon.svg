@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Revisione Piano Concordato" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#B45F3D"/>
+  <circle cx="51" cy="50" r="7" fill="#B45F3D"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M18 13h27l8 9v31H18z" fill="#F7F0DF"/>
+  <path d="M45 13v10h8" fill="#E1D1AC"/>
+  <path d="M26 31h18M26 39h15" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M32 47h11" stroke="#B45F3D" stroke-width="4" stroke-linecap="round"/>
+  <path d="m44 44 4 4 8-11" fill="none" stroke="#B45F3D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

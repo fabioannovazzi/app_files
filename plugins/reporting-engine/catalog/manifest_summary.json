@@ -1,0 +1,77 @@
+{
+  "schema_version": "0.1",
+  "manifest_schema_version": "0.1",
+  "capability_count": 48,
+  "artifact_count": 0,
+  "role_registry_count": 5,
+  "plugin_sources": [
+    "attribute-tables",
+    "distribution-analysis",
+    "funnel-analysis",
+    "mix-contribution-analysis",
+    "period-comparison",
+    "scatter-bubble-analysis",
+    "set-overlap-analysis",
+    "statement-analysis",
+    "variance-analysis"
+  ],
+  "legacy_plugin_sources": [
+    "attribute-tables",
+    "distribution-analysis",
+    "funnel-analysis",
+    "mix-contribution-analysis",
+    "period-comparison",
+    "scatter-bubble-analysis",
+    "set-overlap-analysis",
+    "statement-analysis",
+    "variance-analysis"
+  ],
+  "clara_adapter_ids": [
+    "reporting-engine.attributes",
+    "reporting-engine.distribution",
+    "reporting-engine.funnel",
+    "reporting-engine.mix",
+    "reporting-engine.period_comparison",
+    "reporting-engine.scatter_bubble",
+    "reporting-engine.set_overlap",
+    "reporting-engine.statement",
+    "reporting-engine.variance"
+  ],
+  "clara_component_names": [
+    "attribute-reporting",
+    "distribution-analysis",
+    "funnel-analysis",
+    "mix-contribution-analysis",
+    "period-comparison",
+    "scatter-bubble-analysis",
+    "set-overlap-analysis",
+    "statement-analysis",
+    "variance-analysis"
+  ],
+  "adapter_registry": {
+    "schema_version": "0.1",
+    "owner": "clara.reporting-engine",
+    "adapter_count": 9,
+    "legacy_plugin_source_policy": "Legacy plugin_source values are provenance only. Clara callers should resolve capabilities through the reporting-engine adapter_id.",
+    "render_api_statuses": {
+      "unified_attribute_table_adapter": 4,
+      "unified_component_cli_adapter": 44
+    }
+  },
+  "invocation_statuses": {
+    "parameter_contract_ready": 48
+  },
+  "coverage_gaps": {
+    "generated_manifest_capabilities_without_gallery_examples": [],
+    "gallery_capabilities_without_generated_manifest_records": []
+  },
+  "selector_audit": {
+    "result": "pass",
+    "capabilities_checked": 48,
+    "duplicate_selector_signatures": 0,
+    "high_overlap_pair_count": 21,
+    "unresolved_pair_count": 0,
+    "generated_manifest_only_capabilities": 0
+  },
+  "boundary": "Non-semantic chart capability and mechanical parameter contract. Clara owns the reporting-engine adapter registry; legacy plugin sources are provenance only. This does not choose semantically valid analyses."
+}

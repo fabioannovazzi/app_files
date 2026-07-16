@@ -1,0 +1,375 @@
+{
+    "id": "tinted_moisturizer",
+    "label": "tinted moisturizer",
+    "attributes": [
+        {
+            "id": "product_type",
+            "label": "product type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "tinted_moisturizer",
+                    "label": "tinted moisturizer"
+                },
+                {
+                    "id": "skin_tint",
+                    "label": "skin tint"
+                },
+                {
+                    "id": "moisturizer_base_hybrid",
+                    "label": "moisturizer/base hybrid",
+                    "synonyms": [
+                        "complexion moisturizer"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "form",
+            "label": "form",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "balm",
+                    "label": "balm"
+                },
+                {
+                    "id": "cream",
+                    "label": "cream"
+                },
+                {
+                    "id": "gel",
+                    "label": "gel"
+                },
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "synonyms": [
+                        "fluid",
+                        "skin veil",
+                        "tinted fluid",
+                        "tinted hydrator"
+                    ]
+                },
+                {
+                    "id": "lotion",
+                    "label": "lotion"
+                },
+                {
+                    "id": "oil",
+                    "label": "oil",
+                    "synonyms": [
+                        "tint oil"
+                    ]
+                },
+                {
+                    "id": "serum",
+                    "label": "serum",
+                    "synonyms": [
+                        "serum tint",
+                        "tinted serum"
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte"
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "skin like",
+                        "soft focus"
+                    ]
+                },
+                {
+                    "id": "radiant",
+                    "label": "radiant",
+                    "synonyms": [
+                        "dewy",
+                        "glow",
+                        "glowy",
+                        "luminous"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "sheer",
+                    "label": "sheer"
+                },
+                {
+                    "id": "light",
+                    "label": "light"
+                },
+                {
+                    "id": "medium",
+                    "label": "medium"
+                },
+                {
+                    "id": "buildable",
+                    "label": "buildable"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "skin_type",
+            "label": "skin type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "combination",
+                    "label": "combination"
+                },
+                {
+                    "id": "dry",
+                    "label": "dry"
+                },
+                {
+                    "id": "normal",
+                    "label": "normal"
+                },
+                {
+                    "id": "oily",
+                    "label": "oily"
+                },
+                {
+                    "id": "sensitive",
+                    "label": "sensitive"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "skin_concern",
+            "label": "skin concern",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "anti_aging",
+                    "label": "anti-aging"
+                },
+                {
+                    "id": "pores_texture",
+                    "label": "pores/texture",
+                    "synonyms": [
+                        "blackheads & visible pores"
+                    ]
+                },
+                {
+                    "id": "dark_spots",
+                    "label": "dark spots"
+                },
+                {
+                    "id": "dryness",
+                    "label": "dryness"
+                },
+                {
+                    "id": "dullness",
+                    "label": "dullness"
+                },
+                {
+                    "id": "redness",
+                    "label": "redness"
+                },
+                {
+                    "id": "tone_uneven_tone",
+                    "label": "tone/uneven tone",
+                    "synonyms": [
+                        "tone",
+                        "uneven skin tone"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "brown",
+                    "label": "brown",
+                    "synonyms": [
+                        "tan"
+                    ]
+                },
+                {
+                    "id": "gold",
+                    "label": "gold",
+                    "synonyms": [
+                        "golden"
+                    ]
+                },
+                {
+                    "id": "neutral",
+                    "label": "neutral",
+                    "synonyms": [
+                        "beige",
+                        "nude"
+                    ]
+                },
+                {
+                    "id": "orange",
+                    "label": "orange",
+                    "synonyms": [
+                        "peach"
+                    ]
+                },
+                {
+                    "id": "pink",
+                    "label": "pink",
+                    "synonyms": [
+                        "rose"
+                    ]
+                },
+                {
+                    "id": "red",
+                    "label": "red"
+                },
+                {
+                    "id": "yellow",
+                    "label": "yellow"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "spf",
+            "label": "SPF",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "no_spf",
+                    "label": "no SPF"
+                },
+                {
+                    "id": "under_15",
+                    "label": "under 15"
+                },
+                {
+                    "id": "spf_15_30",
+                    "label": "15 - 30"
+                },
+                {
+                    "id": "above_30",
+                    "label": "above 30",
+                    "synonyms": [
+                        "30+",
+                        "50+"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

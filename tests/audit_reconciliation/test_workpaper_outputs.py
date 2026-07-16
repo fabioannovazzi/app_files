@@ -1,0 +1,338 @@
+from __future__ import annotations
+
+import importlib.util
+from pathlib import Path
+
+from docx import Document
+from openpyxl import load_workbook
+
+OUTPUTS = (
+    Path(__file__).resolve().parents[2]
+    / "plugins"
+    / "audit-reconciliation"
+    / "scripts"
+    / "workpaper_outputs.py"
+)
+
+
+def load_outputs():
+    spec = importlib.util.spec_from_file_location("audit_workpaper_outputs", OUTPUTS)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def document_text(path: Path) -> str:
+    document = Document(path)
+    parts = [paragraph.text for paragraph in document.paragraphs]
+    for table in document.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                parts.extend(paragraph.text for paragraph in cell.paragraphs)
+    return "\n".join(parts)
+
+
+def test_build_audit_workbook_sheets_has_standard_tabs():
+    outputs = load_outputs()
+    sheets = outputs.build_audit_workbook_sheets(
+        assumptions={"cutoff_date": "2023-12-31"},
+        source_inventory=[{"source_file": "ledger.pdf"}],
+        normalized_records=[{"record_id": "n1"}],
+        reconciliation_rows=[
+            {
+                "record_id": "open-1",
+                "amount": "100.00",
+                "reconciliation_status": "closed",
+                "rule_applied": "direct_external_or_documented",
+            }
+        ],
+        checks=[{"check": "row_count", "status": "PASS"}],
+        bank_allocation_candidates=[
+            {
+                "candidate_id": "candidate-1",
+                "candidate_type": "unallocated_counterparty_bank_pool",
+            }
+        ],
+        external_evidence_summary=[
+            {
+                "external_category": "TOTAL",
+                "settlement_effect_signed_net_debit_minus_credit": "-180.00",
+            }
+        ],
+        external_evidence_detail=[
+            {
+                "record_id": "bank-direct",
+                "external_category": "direct_counterparty_bank_receipt",
+            }
+        ],
+        ledger_balance_rows=[
+            {"account": "TOTAL", "closing_balance_signed_debit_minus_credit": "550.00"}
+        ],
+        account_rollforward_check=[{"account": "TOTAL", "status": "PASS"}],
+        aggregate_rollforward_summary=[
+            {"account": "TOTAL", "closing_net_debit_minus_credit": "550.00"}
+        ],
+        aggregate_rollforward_rows=[{"record_id": "journal_rollforward:1"}],
+        post_cutoff_candidates=[{"candidate_id": "post-cutoff-1"}],
+        aging_summary=[{"aging_bucket": "181-365", "rows": 1}],
+        evidence_concentration=[{"support_bucket": "bank", "rows": 1}],
+        review_signals=[{"record_id": "open-1", "review_signal_rank": 1}],
+        document_source_map=[{"document_key": "INV1|2023", "open_item_rows": 1}],
+        reversal_candidates=[{"candidate_id": "reversal-1"}],
+        cutoff_window_movements=[{"record_id": "cutoff-1"}],
+        review_rows=[{"record_id": "open-1", "review_result": "PASS"}],
+    )
+
+    assert list(sheets) == outputs.STANDARD_SHEET_ORDER
+    assert sheets["Summary"][0]["rows"] == 1
+    assert sheets["Bank allocation candidates"][0]["candidate_id"] == "candidate-1"
+    assert (
+        sheets["External evidence aggregate"][0][
+            "settlement_effect_signed_net_debit_minus_credit"
+        ]
+        == "-180.00"
+    )
+    assert sheets["External evidence detail"][0]["record_id"] == "bank-direct"
+    assert (
+        sheets["Ledger balance check"][0]["closing_balance_signed_debit_minus_credit"]
+        == "550.00"
+    )
+    assert sheets["Account rollforward check"][0]["status"] == "PASS"
+    assert (
+        sheets["Journal rollforward"][0]["closing_net_debit_minus_credit"] == "550.00"
+    )
+    assert sheets["Journal detail"][0]["record_id"] == "journal_rollforward:1"
+    assert sheets["Post-cutoff candidates"][0]["candidate_id"] == "post-cutoff-1"
+    assert sheets["Open item aging"][0]["aging_bucket"] == "181-365"
+    assert sheets["Evidence concentration"][0]["support_bucket"] == "bank"
+    assert sheets["Review signals"][0]["review_signal_rank"] == 1
+    assert sheets["Document source map"][0]["document_key"] == "INV1|2023"
+    assert sheets["Reversal candidates"][0]["candidate_id"] == "reversal-1"
+    assert sheets["Cutoff window movements"][0]["record_id"] == "cutoff-1"
+    assert sheets["Index"][0]["Sheet"] == "Assumptions"
+
+
+def test_write_excel_workpaper_creates_auditable_tabs(tmp_path):
+    outputs = load_outputs()
+    path = tmp_path / "audit.xlsx"
+    sheets = outputs.build_audit_workbook_sheets(
+        assumptions={"cutoff_date": "2023-12-31"},
+        source_inventory=[],
+        normalized_records=[],
+        reconciliation_rows=[],
+        checks=[],
+        review_rows=[],
+    )
+
+    outputs.write_excel_workpaper(path, sheets)
+
+    workbook = load_workbook(path)
+    assert workbook.sheetnames == outputs.STANDARD_SHEET_ORDER
+    assert workbook["Index"].freeze_panes == "A2"
+
+
+def test_write_excel_workpaper_adds_italian_presentation_tabs_without_removing_raw(
+    tmp_path,
+):
+    outputs = load_outputs()
+    path = tmp_path / "audit.xlsx"
+    sheets = outputs.build_audit_workbook_sheets(
+        assumptions={"factoring_pro_soluto_closes_item": True},
+        source_inventory=[{"source_role": "bank_statement"}],
+        normalized_records=[],
+        reconciliation_rows=[
+            {
+                "record_id": "open-1",
+                "amount": "100.00",
+                "reconciliation_status": "needs_evidence",
+                "rule_applied": "internal_closure_without_external",
+                "matched_evidence_type": "internal_closure",
+            }
+        ],
+        checks=[],
+        review_rows=[],
+    )
+
+    outputs.write_excel_workpaper(path, sheets, language="it")
+
+    workbook = load_workbook(path)
+    assert "Dettaglio riconciliazione" in workbook.sheetnames
+    assert "Reconciliation detail" in workbook.sheetnames
+    assert workbook["Reconciliation detail"].sheet_state == "hidden"
+    localized_sheet = workbook["Dettaglio riconciliazione"]
+    headers = [cell.value for cell in localized_sheet[1]]
+    values = [cell.value for cell in localized_sheet[2]]
+    assert "Esito riconciliazione" in headers
+    assert "Regola applicata" in headers
+    assert "Serve evidenza aggiuntiva" in values
+    assert "Chiusura interna senza evidenza esterna" in values
+    assert "needs_evidence" not in {str(value) for value in values}
+    assert "internal_closure_without_external" not in {str(value) for value in values}
+    assumption_values = [
+        cell.value
+        for row in workbook["Assunzioni"].iter_rows(values_only=False)
+        for cell in row
+    ]
+    assert "Factoring pro-soluto chiude con evidenza esterna allocata" in assumption_values
+    assert "factoring_pro_soluto_closes_item" not in {
+        str(value) for value in assumption_values
+    }
+
+
+def test_write_word_report_defaults_to_italian_labels(tmp_path):
+    outputs = load_outputs()
+    path = tmp_path / "relazione.docx"
+
+    outputs.write_word_report(
+        path,
+        title="Relazione di riconciliazione",
+        metadata={"Periodo": "2023"},
+        summary_rows=[{"Esito": "Chiuso", "Righe": 1}],
+        assumptions={"cutoff_date": "2023-12-31"},
+        next_steps=["Acquisire documentazione mancante."],
+        narrative="Sintesi tecnica.",
+    )
+
+    text = document_text(path)
+    assert "Conclusioni" in text
+    assert "Assunzioni" in text
+    assert "Prossimi passi" in text
+
+
+def test_write_word_report_localizes_italian_internal_codes(tmp_path):
+    outputs = load_outputs()
+    path = tmp_path / "relazione.docx"
+
+    outputs.write_word_report(
+        path,
+        title="Relazione di riconciliazione",
+        metadata={},
+        summary_rows=[
+            {
+                "reconciliation_status": "needs_evidence",
+                "rule_applied": "internal_closure_without_external",
+                "rows": 1,
+                "amount": "100.00",
+            }
+        ],
+        assumptions={
+            "factoring_pro_soluto_closes_item": True,
+            "post_cutoff_events_excluded": True,
+        },
+        next_steps=["Acquisire evidenze aggiuntive."],
+        source_inventory=[{"source_role": "bank_statement"}],
+        checks=[{"check": "review_packet", "status": "WARN"}],
+        review_rows=[{"review_status": "PENDING"}],
+    )
+
+    text = document_text(path)
+    assert "Serve evidenza aggiuntiva" in text
+    assert "Chiusura interna senza evidenza esterna" in text
+    assert "Factoring pro-soluto chiude con evidenza esterna allocata: Sì" in text
+    assert "Eventi post cut-off esclusi dalla chiusura: Sì" in text
+    assert "Estratto conto bancario" in text
+    assert "needs_evidence" not in text
+    assert "internal_closure_without_external" not in text
+    assert "factoring_pro_soluto_closes_item" not in text
+    assert "post_cutoff_events_excluded" not in text
+
+
+def test_write_word_report_includes_deterministic_check_summaries(tmp_path):
+    outputs = load_outputs()
+    path = tmp_path / "relazione.docx"
+
+    outputs.write_word_report(
+        path,
+        title="Relazione di riconciliazione",
+        metadata={},
+        summary_rows=[],
+        assumptions={"cutoff_date": "2023-12-31"},
+        next_steps=[],
+        account_rollforward_check=[
+            {
+                "account": "TOTAL",
+                "account_name": "Conti confrontati",
+                "opening_difference_journal_minus_ledger": "0.00",
+                "closing_difference_journal_minus_ledger": "8941820.33",
+                "status": "DIFFERENCE",
+                "review_note": "Il saldo ricostruito dal giornale non coincide con il saldo finale del mastro.",
+            }
+        ],
+        post_cutoff_candidates=[
+            {
+                "document_no": "23FE01/000425",
+                "document_date": "2023-01-31",
+                "open_amount": "109484.65",
+                "evidence_date": "2024-01-12",
+                "evidence_type": "external_bank",
+                "exact_amount_match": "YES",
+                "evidence_source_file": "banca.pdf",
+                "evidence_amount": "109484.65",
+            }
+        ],
+        aging_summary=[
+            {"aging_bucket": "181-365", "rows": 1, "amount_abs_total": "109484.65"}
+        ],
+        evidence_concentration=[
+            {
+                "support_bucket": "payment_order",
+                "reconciliation_status": "needs_evidence",
+                "rows": 1,
+                "amount_abs_total": "109484.65",
+                "share_of_abs_amount_percent": "100.00",
+            }
+        ],
+        review_signals=[
+            {
+                "review_signal_rank": 1,
+                "document_no": "23FE01/000425",
+                "amount": "109484.65",
+                "age_days_at_reference": 334,
+                "reconciliation_status": "needs_evidence",
+                "review_signals": "high_value; needs_evidence",
+            }
+        ],
+        document_source_map=[
+            {
+                "document_no_examples": "23FE01/000425",
+                "open_amount_total": "109484.65",
+                "open_item_rows": 1,
+                "ledger_rows": 1,
+                "journal_rows": 1,
+                "bank_rows": 0,
+                "payment_order_rows": 1,
+                "factoring_rows": 0,
+                "review_note": "Documento presente in distinta/compensazione: verificare supporto di chiusura.",
+            }
+        ],
+        reversal_candidates=[
+            {
+                "document_no": "23FE01/000425",
+                "open_amount": "109484.65",
+                "evidence_amount": "-109484.65",
+                "evidence_type": "compensation",
+                "evidence_date": "2023-12-15",
+                "candidate_reasons": "opposite_sign_amount",
+            }
+        ],
+        cutoff_window_movements=[
+            {
+                "cutoff_window_timing": "before_cutoff",
+                "evidence_type": "compensation",
+                "amount": "-109484.65",
+            }
+        ],
+    )
+
+    text = document_text(path)
+    assert "Controllo saldi da mastro e giornale" in text
+    assert "Differenza" in text
+    assert "8,941,820.33" in text
+    assert "Evidenze successive al cut-off" in text
+    assert "Principali candidati" in text
+    assert "23FE01/000425" in text
+    assert "Analisi deterministiche aggiuntive" in text
+    assert "Aging partite aperte" in text
+    assert "Mappa documento-fonti" in text
+    assert "Possibili storni, giroconti o compensazioni" in text

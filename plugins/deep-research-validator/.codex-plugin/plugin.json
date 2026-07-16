@@ -1,0 +1,47 @@
+{
+  "name": "deep-research-validator",
+  "version": "0.1.25",
+  "description": "Validate Deep Research reports against cited sources with Codex-guided review and deterministic evidence checks.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/research/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "deep-research",
+    "validation",
+    "citations",
+    "sources",
+    "claims",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Validate Deep Research",
+    "shortDescription": "Review Deep Research outputs against cited sources and package validated findings in Italian, English, French, or German.",
+    "longDescription": "Codex workflow for validating Deep Research answers and reports. Codex identifies material claims, reviews source support, checks reasoning, and writes corrections. Deterministic scripts only inspect document structure, extract citations and URLs, fetch or parse sources, match quoted passages, validate review JSON, and automatically package the natural full output set: Markdown, DOCX when tooling is available, validation audit, claim review, and validation package. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Validate Deep Research on the report or answer I provide.",
+      "Inspect the document, collect citations and source URLs, review material claims against sources, flag unsupported or weak reasoning, and package the complete validated Markdown/DOCX result when tooling permits.",
+      "Do not make direct OpenAI API calls from plugin scripts; use Codex for claim judgment and deterministic scripts for inspection, fetching, quote matching, and packaging."
+    ],
+    "brandColor": "#4f6b78",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

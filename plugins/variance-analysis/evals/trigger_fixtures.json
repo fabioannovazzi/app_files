@@ -1,0 +1,35 @@
+{
+  "plugin": "variance-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "sales-variance-bridge",
+      "prompt": "Use Variance Analysis on this sales file and explain the sales bridge.",
+      "required_signals": ["Variance Analysis", "sales file", "sales bridge"]
+    },
+    {
+      "id": "price-volume-mix",
+      "prompt": "Run price volume mix variance between 2024 and 2025 for this Excel dataset.",
+      "required_signals": ["price volume mix", "variance", "Excel"]
+    },
+    {
+      "id": "optional-waterfall",
+      "prompt": "Build a deterministic sales variance analysis with optional waterfall chart.",
+      "required_signals": ["deterministic", "sales variance", "waterfall"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "journal-support-check",
+      "prompt": "Reconcile these journal entries against support PDFs."
+    },
+    {
+      "id": "deep-research-validation",
+      "prompt": "Validate this Deep Research report against its citations."
+    },
+    {
+      "id": "slide-deck",
+      "prompt": "Create a launch monitoring slide deck from these screenshots."
+    }
+  ]
+}

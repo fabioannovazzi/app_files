@@ -1,0 +1,4 @@
+interface:
+  display_name: "Previdenza INPS"
+  short_description: "Istruttoria previdenziale INPS verificabile"
+  default_prompt: "Usa $previdenza-inps per istruire e verificare questo caso previdenziale INPS."

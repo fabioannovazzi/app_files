@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Distribution Analysis" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#C4804D"/>
+  <circle cx="51" cy="50" r="7" fill="#C4804D"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M15 49h36" stroke="#F7F0DF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M20 46V34c0-3 2-5 5-5s5 2 5 5v12M31 46V24c0-3 2-5 5-5s5 2 5 5v22M42 46V31c0-3 2-5 5-5s5 2 5 5v15" fill="none" stroke="#F7F0DF" stroke-width="5" stroke-linecap="round"/>
+  <path d="M16 25c9-11 18-11 27 0 5 6 10 7 15 1" fill="none" stroke="#C4804D" stroke-width="4" stroke-linecap="round"/>
+</svg>

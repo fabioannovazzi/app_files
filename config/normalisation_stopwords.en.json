@@ -1,0 +1,33 @@
+{
+  "stopwords": [
+    "TRANSFER",
+    "PAYMENT",
+    "INSTANT",
+    "SEPA",
+    "FEE",
+    "CHARGE",
+    "COMMISSION",
+    "DEBIT",
+    "CREDIT",
+    "REF",
+    "REFERENCE",
+    "NUMBER",
+    "NO",
+    "IBAN",
+    "CRO",
+    "TRN"
+  ],
+  "keepwords": [
+    "RENT",
+    "SALARY",
+    "REFUND",
+    "INSURANCE",
+    "BILL",
+    "TAX",
+    "VAT",
+    "AMAZON",
+    "PAYPAL",
+    "STRIPE"
+  ]
+}
+

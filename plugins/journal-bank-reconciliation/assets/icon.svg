@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Journal-Bank Reconciliation" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#85C7B5"/>
+  <circle cx="51" cy="50" r="7" fill="#85C7B5"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M32 13 14 24h36z" fill="#F7F0DF"/>
+  <path d="M17 28h30M18 48h28" stroke="#F7F0DF" stroke-width="5" stroke-linecap="round"/>
+  <path d="M22 29v16M32 29v16M42 29v16" stroke="#F7F0DF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M17 36h-3a4 4 0 0 1 0-8h5M47 36h3a4 4 0 0 0 0-8h-5" fill="none" stroke="#85C7B5" stroke-width="3" stroke-linecap="round"/>
+  <path d="m24 52 5 5 12-14" fill="none" stroke="#85C7B5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

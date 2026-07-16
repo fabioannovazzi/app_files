@@ -1,0 +1,242 @@
+{
+    "id": "contour",
+    "label": "contour",
+    "attributes": [
+        {
+            "id": "form",
+            "label": "form",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "balm",
+                    "label": "balm"
+                },
+                {
+                    "id": "cream",
+                    "label": "cream"
+                },
+                {
+                    "id": "gel",
+                    "label": "gel"
+                },
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "synonyms": [
+                        "fluid",
+                        "wand"
+                    ]
+                },
+                {
+                    "id": "pressed_powder",
+                    "label": "pressed powder",
+                    "synonyms": [
+                        "compact powder",
+                        "contour kit",
+                        "contour palette",
+                        "face palette",
+                        "palette"
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte"
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "blurred",
+                        "skin like",
+                        "soft focus"
+                    ]
+                },
+                {
+                    "id": "radiant",
+                    "label": "radiant",
+                    "synonyms": [
+                        "glow",
+                        "glowy",
+                        "luminous",
+                        "pearlescent",
+                        "shimmer"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "light",
+                    "label": "light"
+                },
+                {
+                    "id": "medium",
+                    "label": "medium shade",
+                    "synonyms": [
+                        "mid tone"
+                    ]
+                },
+                {
+                    "id": "full",
+                    "label": "full"
+                },
+                {
+                    "id": "buildable",
+                    "label": "buildable"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "undertone",
+            "label": "undertone",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "cool",
+                    "label": "cool"
+                },
+                {
+                    "id": "neutral",
+                    "label": "neutral"
+                },
+                {
+                    "id": "warm",
+                    "label": "warm"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "shade_depth",
+            "label": "shade depth",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "fair_light",
+                    "label": "fair/light"
+                },
+                {
+                    "id": "medium",
+                    "label": "medium"
+                },
+                {
+                    "id": "tan_deep",
+                    "label": "tan/deep"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "application_area",
+            "label": "application area",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "cheeks",
+                    "label": "cheeks"
+                },
+                {
+                    "id": "jawline",
+                    "label": "jawline"
+                },
+                {
+                    "id": "nose",
+                    "label": "nose"
+                },
+                {
+                    "id": "all_over_sculpt",
+                    "label": "all-over sculpt",
+                    "synonyms": [
+                        "full face contour",
+                        "multi area"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

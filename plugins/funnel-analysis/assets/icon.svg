@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Funnel Analysis" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#D89B3D"/>
+  <circle cx="51" cy="50" r="7" fill="#D89B3D"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M15 16h34L38 31v15l-12 6V31z" fill="#F7F0DF"/>
+  <path d="M21 22h22M25 30h14M29 38h6" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M45 17l-7 13M38 45l8-4" fill="none" stroke="#D89B3D" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="48" cy="18" r="3" fill="#D89B3D"/><circle cx="46" cy="41" r="3" fill="#D89B3D"/>
+</svg>

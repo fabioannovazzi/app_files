@@ -1,0 +1,34 @@
+{
+  "plugin": "distribution-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "distribution-charts",
+      "prompt": "Use Distribution Analysis on this sales file and show histogram, boxplot, ECDF and small multiples.",
+      "required_signals": [
+        "Distribution Analysis",
+        "histogram",
+        "small multiples"
+      ]
+    },
+    {
+      "id": "legacy-distribution",
+      "prompt": "Run the legacy distribution charts for price spread by brand and period.",
+      "required_signals": [
+        "legacy distribution",
+        "price spread",
+        "brand"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "variance-bridge",
+      "prompt": "Explain the price-volume-mix variance bridge for these two periods."
+    },
+    {
+      "id": "email-draft",
+      "prompt": "Draft an email to the client asking for missing bank statements."
+    }
+  ]
+}

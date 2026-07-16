@@ -1,0 +1,1112 @@
+{
+  "schema_version": "2.0",
+  "assets_root": "docs/reporting_visual_references/assets",
+  "source_notes": [
+    {
+      "source": "IBCS",
+      "usage_note": "Use IBCS standards and examples as directional reporting guidance only. Do not imply certification, endorsement, or affiliation.",
+      "license_note": "IBCS Standards are published under CC BY-SA 4.0; other IBCS website material can have separate restrictions. Keep source URLs and attribution with any cached asset.",
+      "url": "https://www.ibcs.com/terms-of-use/"
+    },
+    {
+      "source": "UniformChart",
+      "usage_note": "Use UniformChart as a fixed visual reference source for common standardized chart and table families. Do not publish UniformChart examples inside our generated gallery.",
+      "license_note": "UniformChart provides free examples/templates and is inspired by IBCS but is not affiliated with the IBCS Institute or Association. Keep source URLs and attribution with any cached asset.",
+      "url": "https://uniformchart.com/"
+    }
+  ],
+  "families": [
+    {
+      "family_id": "waterfall_variance",
+      "label": "Waterfall and variance bridge",
+      "match_terms": [
+        "waterfall",
+        "bridge",
+        "variance"
+      ],
+      "default_variants": [
+        "variance",
+        "waterfall"
+      ],
+      "review_focus": [
+        "Separate base, positive variance, negative variance, and final total with consistent visual semantics.",
+        "Keep variance notation compact and comparable across bars.",
+        "Avoid decorative color; use color only when it carries variance meaning."
+      ],
+      "reference_example_ids": [
+        "ibcs_c12_waterfall_12a",
+        "uniformchart_c12a_waterfall",
+        "uniformchart_waterfall_variance_combo_001"
+      ]
+    },
+    {
+      "family_id": "stacked_bar_column",
+      "label": "Stacked bar and stacked column",
+      "match_terms": [
+        "stacked column",
+        "stacked bar",
+        "stacked",
+        "cohort"
+      ],
+      "default_variants": [
+        "stacked"
+      ],
+      "review_focus": [
+        "Use stacking only when segment composition is part of the message.",
+        "Keep total labels, segment labels, and legends from competing.",
+        "Suppress labels that do not add information, especially single-segment duplicates."
+      ],
+      "reference_example_ids": [
+        "ibcs_c01_stacked_column_01a",
+        "ibcs_c02_stacked_bar_02a",
+        "uniformchart_columns_stacked_001",
+        "uniformchart_stacked_bar_total_sorted_value_001",
+        "uniformchart_stacked_bar_total_sorted_share_001",
+        "uniformchart_stacked_column_connectors_001"
+      ]
+    },
+    {
+      "family_id": "column_bar",
+      "label": "Column and bar",
+      "match_terms": [
+        "column",
+        "bar",
+        "ranked",
+        "top items"
+      ],
+      "default_variants": [
+        "bar_or_column"
+      ],
+      "review_focus": [
+        "Use clear measure, unit, and period in the title or subtitle.",
+        "Keep axis, labels, and value notation consistent across comparable charts.",
+        "Prefer restrained monochrome bars unless color encodes a real semantic difference."
+      ],
+      "reference_example_ids": [
+        "ibcs_c03_multitier_column_03a",
+        "ibcs_c04_multitier_bar_04a",
+        "uniformchart_columns_variances_001",
+        "uniformchart_bars_001",
+        "uniformchart_bar_variance_sorted_percent_001",
+        "uniformchart_column_time_series_simple_001"
+      ]
+    },
+    {
+      "family_id": "distribution",
+      "label": "Distribution",
+      "match_terms": [
+        "distribution",
+        "boxplot",
+        "histogram",
+        "violin",
+        "ecdf",
+        "stripplot"
+      ],
+      "default_variants": [
+        "distribution"
+      ],
+      "review_focus": [
+        "Make the distribution shape readable before adding decorative detail.",
+        "Use units and sample scope so the reader knows what population is being compared.",
+        "Avoid dense annotations that obscure the statistical shape."
+      ],
+      "reference_example_ids": []
+    },
+    {
+      "family_id": "time_series",
+      "label": "Line, area, and time-series",
+      "match_terms": [
+        "line",
+        "area",
+        "trend",
+        "indexed",
+        "time series",
+        "small multiples"
+      ],
+      "default_variants": [
+        "time_series",
+        "trend"
+      ],
+      "review_focus": [
+        "Make the period grain, unit, and baseline explicit.",
+        "Use direct labels and sparse anchor labels instead of dense legends.",
+        "Keep comparable panels or series on consistent scales unless a different scale is explicitly disclosed."
+      ],
+      "reference_example_ids": [
+        "uniformchart_time_series_direct_lines_001",
+        "uniformchart_time_series_indexed_lines_001",
+        "uniformchart_time_series_area_small_multiples_001",
+        "uniformchart_small_multiples_001"
+      ]
+    },
+    {
+      "family_id": "scatter_bubble",
+      "label": "Scatter and bubble",
+      "match_terms": [
+        "scatter",
+        "bubble",
+        "scattergram"
+      ],
+      "default_variants": [
+        "scatter_or_bubble"
+      ],
+      "review_focus": [
+        "State the x and y measures, units, and denominator clearly.",
+        "Use color or bubble size only when it encodes a meaningful dimension.",
+        "Keep labels sparse enough that outliers and clusters remain visible."
+      ],
+      "reference_example_ids": [
+        "ibcs_c09_scattergram_09a",
+        "uniformchart_bubbles_001",
+        "uniformchart_scatter_bubbles_002",
+        "uniformchart_scatter_bubble_reference_curves_003"
+      ]
+    },
+    {
+      "family_id": "mekko_mosaic",
+      "label": "Mekko and mosaic",
+      "match_terms": [
+        "mekko",
+        "marimekko",
+        "mosaic"
+      ],
+      "default_variants": [
+        "composition",
+        "variable_width"
+      ],
+      "review_focus": [
+        "Make both dimensions and their denominators explicit.",
+        "Keep labels legible inside variable-width cells.",
+        "Use sorting and grouping to make comparison possible without visual clutter."
+      ],
+      "reference_example_ids": []
+    },
+    {
+      "family_id": "reporting_table",
+      "label": "Reporting table",
+      "match_terms": [
+        "table",
+        "time table",
+        "scenario table",
+        "variance table"
+      ],
+      "default_variants": [
+        "table"
+      ],
+      "review_focus": [
+        "Use business rows and comparison columns rather than raw data dumps.",
+        "Align numbers, units, deltas, and percent deltas consistently.",
+        "Use thin separators, emphasized totals, and optional in-cell variance markers only when they improve scanability."
+      ],
+      "reference_example_ids": [
+        "ibcs_t02_reporting_table_02_3",
+        "uniformchart_table_001",
+        "uniformchart_table_variance_compact_001",
+        "uniformchart_table_statement_variance_bars_001"
+      ]
+    },
+    {
+      "family_id": "general_chart",
+      "label": "General reporting chart",
+      "match_terms": [],
+      "default_variants": [
+        "general"
+      ],
+      "review_focus": [
+        "Start from the generated artifact and the user complaint.",
+        "Check title, unit, period, labeling, color semantics, clutter, and export mode.",
+        "Suggest adjacent issues separately from the requested change."
+      ],
+      "reference_example_ids": [
+        "ibcs_c03_multitier_column_03a",
+        "uniformchart_columns_variances_001"
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "example_id": "ibcs_c01_stacked_column_01a",
+      "source": "IBCS",
+      "title": "C01 stacked column chart, 01A",
+      "family_id": "stacked_bar_column",
+      "variant_ids": [
+        "stacked_column",
+        "vertical",
+        "time_series",
+        "composition"
+      ],
+      "source_url": "https://www.ibcs.com/resource/chart-template-01/",
+      "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/01A-500x500.png",
+      "asset_type": "image/png",
+      "primary_use": "Stacked vertical columns over time with period totals and segment labels.",
+      "look_at": [
+        "period total labels above columns",
+        "integrated segment labels",
+        "suppressed labels where space is insufficient",
+        "plain title and footnote discipline"
+      ],
+      "avoid_using_for": [
+        "single-segment columns",
+        "ranked horizontal bars",
+        "distribution shapes"
+      ],
+      "selection_tags": [
+        "stacked",
+        "column",
+        "vertical",
+        "totals",
+        "segment_labels"
+      ],
+      "license_note": "IBCS reference image; keep attribution and do not imply certification."
+    },
+    {
+      "example_id": "ibcs_c02_stacked_bar_02a",
+      "source": "IBCS",
+      "title": "C02 stacked bar chart, 02A",
+      "family_id": "stacked_bar_column",
+      "variant_ids": [
+        "stacked_bar",
+        "horizontal",
+        "composition"
+      ],
+      "source_url": "https://www.ibcs.com/resource/ibcs-stacked-bar-excel-chart/",
+      "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/02A-500x500.png",
+      "asset_type": "image/png",
+      "primary_use": "Horizontal stacked structure with totals outside bars.",
+      "look_at": [
+        "outside total labels",
+        "horizontal label placement",
+        "small-value label suppression",
+        "compact legend/segment notation"
+      ],
+      "avoid_using_for": [
+        "time-series column development",
+        "waterfall bridges"
+      ],
+      "selection_tags": [
+        "stacked",
+        "bar",
+        "horizontal",
+        "totals",
+        "small_labels"
+      ],
+      "license_note": "IBCS reference image; keep attribution and do not imply certification."
+    },
+    {
+      "example_id": "ibcs_c03_multitier_column_03a",
+      "source": "IBCS",
+      "title": "C03 multi-tier column chart, 03A",
+      "family_id": "column_bar",
+      "variant_ids": [
+        "column",
+        "vertical",
+        "scenario",
+        "absolute_variance",
+        "relative_variance"
+      ],
+      "source_url": "https://www.ibcs.com/resource/multi-tier-column-chart/",
+      "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/03A-500x500.png",
+      "asset_type": "image/png",
+      "primary_use": "Column chart with scenario comparison and variance tiers.",
+      "look_at": [
+        "scenario labels",
+        "absolute variance columns",
+        "relative variance pins",
+        "consistent scaling across tiers"
+      ],
+      "avoid_using_for": [
+        "plain single-measure distribution",
+        "part-to-whole mosaic charts"
+      ],
+      "selection_tags": [
+        "column",
+        "variance",
+        "scenario",
+        "pin",
+        "scale"
+      ],
+      "license_note": "IBCS reference image; keep attribution and do not imply certification."
+    },
+    {
+      "example_id": "ibcs_c04_multitier_bar_04a",
+      "source": "IBCS",
+      "title": "C04 multi-tier bar chart, 04A",
+      "family_id": "column_bar",
+      "variant_ids": [
+        "bar",
+        "horizontal",
+        "scenario",
+        "absolute_variance",
+        "relative_variance"
+      ],
+      "source_url": "https://www.ibcs.com/resource/multi-tier-bar-charts/",
+      "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/04A-500x500.png",
+      "asset_type": "image/png",
+      "primary_use": "Horizontal bar chart with scenario comparison and variance tiers.",
+      "look_at": [
+        "bar labels",
+        "positive/negative variance colors",
+        "relative variance pins",
+        "group separators"
+      ],
+      "avoid_using_for": [
+        "vertical time-series columns",
+        "scatter/bubble plots"
+      ],
+      "selection_tags": [
+        "bar",
+        "variance",
+        "scenario",
+        "horizontal",
+        "pin"
+      ],
+      "license_note": "IBCS reference image; keep attribution and do not imply certification."
+    },
+    {
+      "example_id": "ibcs_c09_scattergram_09a",
+      "source": "IBCS",
+      "title": "C09 scattergram, 09A",
+      "family_id": "scatter_bubble",
+      "variant_ids": [
+        "scatter",
+        "two_measures",
+        "selective_labels"
+      ],
+      "source_url": "https://www.ibcs.com/resource/chart-template-09/",
+      "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/09A-500x500.png",
+      "asset_type": "image/png",
+      "primary_use": "Scattergram with two value axes, selective labels, and grouped marks.",
+      "look_at": [
+        "axis naming",
+        "selective data point labels",
+        "semantic color grouping",
+        "reference lines/curves"
+      ],
+      "avoid_using_for": [
+        "dense category bars",
+        "waterfall variance bridges"
+      ],
+      "selection_tags": [
+        "scatter",
+        "axis",
+        "labels",
+        "color_grouping"
+      ],
+      "license_note": "IBCS reference image; keep attribution and do not imply certification."
+    },
+    {
+      "example_id": "ibcs_c12_waterfall_12a",
+      "source": "IBCS",
+      "title": "C12 vertical waterfall chart, 12A",
+      "family_id": "waterfall_variance",
+      "variant_ids": [
+        "waterfall",
+        "vertical",
+        "variance",
+        "bridge"
+      ],
+      "source_url": "https://www.ibcs.com/resource/chart-template-12/",
+      "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/12A-1-500x500.png",
+      "asset_type": "image/png",
+      "primary_use": "Vertical waterfall/bridge with positive and negative variance contributions.",
+      "look_at": [
+        "connector discipline",
+        "base and final total treatment",
+        "positive/negative variance notation",
+        "compact callouts"
+      ],
+      "avoid_using_for": [
+        "simple static bars",
+        "distribution charts"
+      ],
+      "selection_tags": [
+        "waterfall",
+        "bridge",
+        "variance",
+        "connector",
+        "totals"
+      ],
+      "license_note": "IBCS reference image; keep attribution and do not imply certification."
+    },
+    {
+      "example_id": "ibcs_t02_reporting_table_02_3",
+      "source": "IBCS",
+      "title": "T02 table with integrated variance bars",
+      "family_id": "reporting_table",
+      "variant_ids": [
+        "table",
+        "hierarchical_rows",
+        "integrated_bar",
+        "relative_variance_pin"
+      ],
+      "source_url": "https://www.ibcs.com/resource/table-template-02/",
+      "asset_url": "https://www.ibcs.com/wp-content/uploads/2016/08/IBCS_table_template_02-3_500px.png",
+      "asset_type": "image/png",
+      "primary_use": "Reporting table with hierarchy, comparison columns, integrated bars, and pins.",
+      "look_at": [
+        "row hierarchy",
+        "aligned figures",
+        "variance bars",
+        "relative variance pins",
+        "subtotals and totals"
+      ],
+      "avoid_using_for": [
+        "raw data tables",
+        "unstructured data dumps"
+      ],
+      "selection_tags": [
+        "table",
+        "variance",
+        "hierarchy",
+        "bars",
+        "pins"
+      ],
+      "license_note": "IBCS reference image; keep attribution and do not imply certification."
+    },
+    {
+      "example_id": "uniformchart_columns_stacked_001",
+      "source": "UniformChart",
+      "title": "Columns stacked example",
+      "family_id": "stacked_bar_column",
+      "variant_ids": [
+        "stacked_column",
+        "vertical",
+        "composition"
+      ],
+      "source_url": "https://uniformchart.com/example/9c48932d-72a2-4031-a01f-37801e712a28",
+      "asset_url": "https://uniformchart.com/storage/examples/Columns_stacked_001.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Stacked column reference with compact standardized notation.",
+      "look_at": [
+        "stacked column proportions",
+        "legend and label placement",
+        "space around title and chart area"
+      ],
+      "avoid_using_for": [
+        "horizontal bar structures",
+        "waterfall bridges"
+      ],
+      "selection_tags": [
+        "stacked",
+        "column",
+        "composition"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_columns_variances_001",
+      "source": "UniformChart",
+      "title": "Columns variances example",
+      "family_id": "column_bar",
+      "variant_ids": [
+        "column",
+        "variance",
+        "scenario"
+      ],
+      "source_url": "https://uniformchart.com/example/9c48932d-7376-4eb4-ac71-dfc0dbe8965f",
+      "asset_url": "https://uniformchart.com/storage/examples/Columns_variances_001.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Column chart with standardized variance notation.",
+      "look_at": [
+        "scenario comparison",
+        "variance notation",
+        "axis and value label density"
+      ],
+      "avoid_using_for": [
+        "stacked composition",
+        "scatter plots"
+      ],
+      "selection_tags": [
+        "column",
+        "variance",
+        "scenario"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_bars_001",
+      "source": "UniformChart",
+      "title": "Bars example",
+      "family_id": "column_bar",
+      "variant_ids": [
+        "bar",
+        "horizontal",
+        "ranked"
+      ],
+      "source_url": "https://uniformchart.com/example/9c48932d-8224-4b26-87e6-c95e03c46b96",
+      "asset_url": "https://uniformchart.com/storage/examples/Bars_001.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Horizontal bar reference for labels, spacing, and ranking.",
+      "look_at": [
+        "left-side category labels",
+        "horizontal value labels",
+        "sorting and group spacing"
+      ],
+      "avoid_using_for": [
+        "vertical time series",
+        "stacked segment totals"
+      ],
+      "selection_tags": [
+        "bar",
+        "horizontal",
+        "ranked"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_c12a_waterfall",
+      "source": "UniformChart",
+      "title": "C12A waterfall example",
+      "family_id": "waterfall_variance",
+      "variant_ids": [
+        "waterfall",
+        "vertical",
+        "variance",
+        "bridge"
+      ],
+      "source_url": "https://uniformchart.com/example/9fa2b0f3-a699-4a18-bc62-550a8462a5dd",
+      "asset_url": "https://uniformchart.com/storage/examples/5abd284b-5a88-461d-b074-1f551d2f5d31.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Waterfall bridge reference from UniformChart's C12A example.",
+      "look_at": [
+        "variance bar sequence",
+        "connector/bridge flow",
+        "positive and negative bar treatment"
+      ],
+      "avoid_using_for": [
+        "ranked bars",
+        "scatter/bubble"
+      ],
+      "selection_tags": [
+        "waterfall",
+        "bridge",
+        "variance"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_bubbles_001",
+      "source": "UniformChart",
+      "title": "Bubbles example",
+      "family_id": "scatter_bubble",
+      "variant_ids": [
+        "bubble",
+        "two_measures",
+        "size_encoding"
+      ],
+      "source_url": "https://uniformchart.com/example/9c48932d-7dee-41b3-a142-b714007cd41d",
+      "asset_url": "https://uniformchart.com/storage/examples/Bubbles_001.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Bubble reference for size encoding and point labeling.",
+      "look_at": [
+        "bubble size semantics",
+        "axis labeling",
+        "selective point labels"
+      ],
+      "avoid_using_for": [
+        "pure bar/column charts",
+        "waterfall bridges"
+      ],
+      "selection_tags": [
+        "bubble",
+        "scatter",
+        "size"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_scatter_bubbles_002",
+      "source": "UniformChart",
+      "title": "Scatter/bubbles example",
+      "family_id": "scatter_bubble",
+      "variant_ids": [
+        "scatter",
+        "bubble",
+        "two_measures"
+      ],
+      "source_url": "https://uniformchart.com/example/9c48932d-7eea-488f-a095-db8d5f182794",
+      "asset_url": "https://uniformchart.com/storage/examples/Bubbles_002.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Scatter/bubble reference for axis discipline and label selection.",
+      "look_at": [
+        "axis titles",
+        "grid and reference line restraint",
+        "selective labels"
+      ],
+      "avoid_using_for": [
+        "column/bar labels",
+        "table layout"
+      ],
+      "selection_tags": [
+        "scatter",
+        "bubble",
+        "axis"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_table_001",
+      "source": "UniformChart",
+      "title": "Table example",
+      "family_id": "reporting_table",
+      "variant_ids": [
+        "table",
+        "scenario_table",
+        "variance"
+      ],
+      "source_url": "https://uniformchart.com/example/9c48932d-855b-46a5-bb86-171943c33167",
+      "asset_url": "https://uniformchart.com/storage/examples/Table_001.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Scenario/reporting table reference.",
+      "look_at": [
+        "numeric alignment",
+        "scenario columns",
+        "variance columns",
+        "thin separators and totals"
+      ],
+      "avoid_using_for": [
+        "raw data dumps",
+        "point charts"
+      ],
+      "selection_tags": [
+        "table",
+        "scenario",
+        "variance"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_small_multiples_001",
+      "source": "UniformChart",
+      "title": "Small multiples example",
+      "family_id": "general_chart",
+      "variant_ids": [
+        "small_multiples",
+        "column",
+        "comparison"
+      ],
+      "source_url": "https://uniformchart.com/example/9c48932d-7867-4088-be5a-e897f08a1cb1",
+      "asset_url": "https://uniformchart.com/storage/examples/Small_multiples_001.jpg",
+      "asset_type": "image/jpeg",
+      "primary_use": "Small-multiples reference for repeated panel layout and consistent scaling.",
+      "look_at": [
+        "panel spacing",
+        "consistent axes",
+        "title and unit repetition",
+        "label density"
+      ],
+      "avoid_using_for": [
+        "single large chart where panel comparison is not relevant"
+      ],
+      "selection_tags": [
+        "small_multiples",
+        "panel",
+        "scaling"
+      ],
+      "license_note": "UniformChart reference image; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_table_variance_compact_001",
+      "source": "UniformChart",
+      "title": "Compact variance table with embedded bars",
+      "family_id": "reporting_table",
+      "variant_ids": [
+        "table",
+        "scenario_table",
+        "variance",
+        "sorted"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Compact table reference for scenario values, sorted variance columns, and embedded positive/negative bars.",
+      "look_at": [
+        "aligned scenario columns",
+        "embedded variance bars",
+        "highlighted active sort column",
+        "subtotal row emphasis"
+      ],
+      "avoid_using_for": [
+        "small mobile-first tables",
+        "simple one-measure lists"
+      ],
+      "selection_tags": [
+        "table",
+        "variance",
+        "bars",
+        "scenario",
+        "sorted"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_table_statement_variance_bars_001",
+      "source": "UniformChart",
+      "title": "Statement table with integrated variance bars",
+      "family_id": "reporting_table",
+      "variant_ids": [
+        "table",
+        "statement",
+        "variance",
+        "waterfall"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Dense reporting-table reference for financial statement rows, subtotal hierarchy, and embedded actual/forecast/variance marks.",
+      "look_at": [
+        "business row hierarchy",
+        "subtotal and total emphasis",
+        "aligned actual and forecast bars",
+        "variance columns grouped by comparison period"
+      ],
+      "avoid_using_for": [
+        "lightweight chart cards",
+        "unstructured raw data exports",
+        "direct visual styling without simplification"
+      ],
+      "selection_tags": [
+        "table",
+        "statement",
+        "variance",
+        "subtotals",
+        "embedded_bars"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_bar_variance_sorted_percent_001",
+      "source": "UniformChart",
+      "title": "Horizontal bar variance sorted by percent",
+      "family_id": "column_bar",
+      "variant_ids": [
+        "bar",
+        "horizontal",
+        "variance",
+        "ranked"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Horizontal bar reference combining absolute values with percent variance sorting and compact positive/negative markers.",
+      "look_at": [
+        "left-side category labels",
+        "bar labels close to the marks",
+        "separate absolute and percent variance scales",
+        "explicit sort message"
+      ],
+      "avoid_using_for": [
+        "composition-only stacked bars",
+        "time-series columns"
+      ],
+      "selection_tags": [
+        "bar",
+        "horizontal",
+        "variance",
+        "percent",
+        "sorted"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_scatter_bubble_reference_curves_003",
+      "source": "UniformChart",
+      "title": "Scatter/bubble with reference curves",
+      "family_id": "scatter_bubble",
+      "variant_ids": [
+        "scatter",
+        "bubble",
+        "reference_curves",
+        "two_measures"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/jpeg",
+      "primary_use": "Scatter/bubble reference for using reference curves, sparse labels, and meaningful color grouping.",
+      "look_at": [
+        "reference curve restraint",
+        "outlier labels",
+        "axis measure clarity",
+        "limited color semantics"
+      ],
+      "avoid_using_for": [
+        "bar/column comparisons",
+        "dense point labeling"
+      ],
+      "selection_tags": [
+        "scatter",
+        "bubble",
+        "reference_curves",
+        "labels"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_stacked_bar_total_sorted_value_001",
+      "source": "UniformChart",
+      "title": "Stacked horizontal bars sorted by absolute total",
+      "family_id": "stacked_bar_column",
+      "variant_ids": [
+        "stacked_bar",
+        "horizontal",
+        "composition",
+        "ranked"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Horizontal stacked-bar reference with composition segments plus separate absolute-total bars.",
+      "look_at": [
+        "composition labels inside segments",
+        "separate total measure on the right",
+        "sorting by absolute total",
+        "total row treatment"
+      ],
+      "avoid_using_for": [
+        "single-measure horizontal bars",
+        "charts where totals and shares use the same scale"
+      ],
+      "selection_tags": [
+        "stacked",
+        "bar",
+        "horizontal",
+        "composition",
+        "total"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_stacked_bar_total_sorted_share_001",
+      "source": "UniformChart",
+      "title": "Stacked horizontal bars sorted by composition share",
+      "family_id": "stacked_bar_column",
+      "variant_ids": [
+        "stacked_bar",
+        "horizontal",
+        "composition",
+        "ranked"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Horizontal stacked-bar reference where composition sorting is the main message and absolute totals are shown separately.",
+      "look_at": [
+        "share-based sort order",
+        "segment header labels",
+        "separate right-side totals",
+        "world/total row separation"
+      ],
+      "avoid_using_for": [
+        "absolute ranking only",
+        "small multiples"
+      ],
+      "selection_tags": [
+        "stacked",
+        "bar",
+        "horizontal",
+        "composition",
+        "share_sort"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_waterfall_variance_combo_001",
+      "source": "UniformChart",
+      "title": "Combined waterfall and variance chart",
+      "family_id": "waterfall_variance",
+      "variant_ids": [
+        "waterfall",
+        "variance",
+        "bridge",
+        "time_series"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Combined actual/forecast and variance-bridge reference for compact positive/negative variance notation.",
+      "look_at": [
+        "positive and negative variance colors",
+        "forecast hatching",
+        "separation of actual and forecast periods",
+        "compact delta labels"
+      ],
+      "avoid_using_for": [
+        "simple totals-only charts",
+        "composition charts without variance"
+      ],
+      "selection_tags": [
+        "waterfall",
+        "variance",
+        "bridge",
+        "forecast",
+        "hatching"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_time_series_direct_lines_001",
+      "source": "UniformChart",
+      "title": "Direct labeled multi-line time series",
+      "family_id": "time_series",
+      "variant_ids": [
+        "line",
+        "time_series",
+        "direct_labels",
+        "trend"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Line-chart reference for direct labels, sparse anchor values, and restrained monthly guides.",
+      "look_at": [
+        "direct labels at line ends",
+        "sparse anchor value labels",
+        "period separators",
+        "minimal legend dependence"
+      ],
+      "avoid_using_for": [
+        "indexed baseline comparisons",
+        "dense daily data without aggregation"
+      ],
+      "selection_tags": [
+        "line",
+        "time_series",
+        "direct_labels",
+        "anchors"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_time_series_indexed_lines_001",
+      "source": "UniformChart",
+      "title": "Indexed multi-line time series",
+      "family_id": "time_series",
+      "variant_ids": [
+        "line",
+        "time_series",
+        "indexed",
+        "baseline"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Line-chart reference for indexed-to-100 comparison across multiple series.",
+      "look_at": [
+        "baseline statement in the message",
+        "direct labels at line ends",
+        "anchor values at common periods",
+        "clear distinction between indexed and absolute values"
+      ],
+      "avoid_using_for": [
+        "absolute-value comparisons where indexing would change the message",
+        "single-series trend charts"
+      ],
+      "selection_tags": [
+        "line",
+        "indexed",
+        "baseline",
+        "comparison"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_time_series_area_small_multiples_001",
+      "source": "UniformChart",
+      "title": "Small-multiple stacked area time series",
+      "family_id": "time_series",
+      "variant_ids": [
+        "area",
+        "stacked_area",
+        "small_multiples",
+        "time_series"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/jpeg",
+      "primary_use": "Small-multiple stacked-area reference for repeated region panels with consistent time axes.",
+      "look_at": [
+        "consistent month axes",
+        "panel spacing",
+        "direct area labels",
+        "total line over stacked areas"
+      ],
+      "avoid_using_for": [
+        "single-panel charts",
+        "precise segment comparison where stacked area is weak"
+      ],
+      "selection_tags": [
+        "area",
+        "stacked_area",
+        "small_multiples",
+        "time_series"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_stacked_column_connectors_001",
+      "source": "UniformChart",
+      "title": "Stacked columns with segment connector lines",
+      "family_id": "stacked_bar_column",
+      "variant_ids": [
+        "stacked_column",
+        "vertical",
+        "composition",
+        "time_series"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Stacked-column reference for showing segment continuity across periods with connector lines.",
+      "look_at": [
+        "segment connector lines",
+        "total labels above columns",
+        "direct segment labels at the right",
+        "inside segment value labels"
+      ],
+      "avoid_using_for": [
+        "single-segment columns",
+        "charts where connector lines add clutter"
+      ],
+      "selection_tags": [
+        "stacked",
+        "column",
+        "connectors",
+        "time_series"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    },
+    {
+      "example_id": "uniformchart_column_time_series_simple_001",
+      "source": "UniformChart",
+      "title": "Simple monthly column time series",
+      "family_id": "column_bar",
+      "variant_ids": [
+        "column",
+        "vertical",
+        "time_series",
+        "total_labels"
+      ],
+      "source_url": "https://uniformchart.com/",
+      "asset_url": "https://uniformchart.com/",
+      "asset_type": "image/png",
+      "primary_use": "Simple column time-series reference for period labels, top value labels, and restrained axes.",
+      "look_at": [
+        "top value labels",
+        "period label spacing",
+        "minimal axis treatment",
+        "clear title and unit"
+      ],
+      "avoid_using_for": [
+        "stacked composition",
+        "variance bridge charts"
+      ],
+      "selection_tags": [
+        "column",
+        "time_series",
+        "monthly",
+        "labels"
+      ],
+      "license_note": "UniformChart reference image from user-provided local export; keep attribution and do not imply IBCS affiliation."
+    }
+  ]
+}

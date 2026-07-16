@@ -1,0 +1,43 @@
+{
+  "name": "funnel-analysis",
+  "version": "0.1.5",
+  "description": "Deterministic funnel-stage reporting table workflow.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "funnel",
+    "stage gate",
+    "conversion",
+    "reporting table",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Funnel Analysis",
+    "shortDescription": "Build deterministic funnel-stage reporting tables from CSV files.",
+    "longDescription": "Self-contained funnel-stage workflow for CSV datasets. It takes explicit ordered stage definitions, validates stage predicate columns, evaluates each gate sequentially, and writes a compact reporting table with starting population, passing population, drop-off, stage conversion, cumulative conversion, source CSV, context JSON, and artifact manifest. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Funnel Analysis on the CSV file I provide.",
+      "Confirm or build explicit ordered stage definitions, run the deterministic funnel-stage table package, write the table, context data and artifact manifest, then interpret the largest drop-offs from the source data."
+    ],
+    "brandColor": "#4c6759",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

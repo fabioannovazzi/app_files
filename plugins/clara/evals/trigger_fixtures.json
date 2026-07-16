@@ -1,0 +1,117 @@
+{
+  "plugin": "clara",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "succession-case-workspace",
+      "prompt": "Use Clara to organize this succession case, capture advisor judgement, and produce a decision pack.",
+      "required_signals": ["Clara", "succession", "judgement", "decision pack"]
+    },
+    {
+      "id": "consultant-notes",
+      "prompt": "I pasted consultant notes; structure them as pending judgement and keep the case materials organized.",
+      "required_signals": ["consultant notes", "pending judgement", "case materials"]
+    },
+    {
+      "id": "decision-pack-ready-pack",
+      "prompt": "Build a decision-maker-ready decision pack using only advisor judgement marked ready for the client pack and open questions.",
+      "required_signals": ["decision pack", "client pack", "advisor judgement"]
+    },
+    {
+      "id": "voice-capture",
+      "prompt": "Use Clara Voice Capture to transcribe a consultant discussion and save pending candidates for review.",
+      "required_signals": ["voice capture", "consultant discussion", "pending candidates"]
+    },
+    {
+      "id": "hosted-participant-interview",
+      "prompt": "Prepare a 15-minute hosted research interview link in French for an external stakeholder, then retrieve its bundle and quality review when complete.",
+      "required_signals": ["hosted research interview", "external stakeholder", "bundle", "quality review"],
+      "expected_skill": "clara:interview",
+      "must_not_route_to": ["clara:transcribe", "clara:deck-correction"]
+    },
+    {
+      "id": "voice-note-transcription-import",
+      "prompt": "Transcribe this meeting recording, complete local speaker attribution, and import the reviewed transcript into the existing case.",
+      "required_signals": ["meeting recording", "speaker attribution", "reviewed transcript", "existing case"],
+      "expected_skill": "clara:transcribe",
+      "must_not_route_to": ["clara:interview", "clara:deck-correction"]
+    },
+    {
+      "id": "voice-led-pptx-correction",
+      "prompt": "Revise this existing PPTX from the attached call transcript, preserve untouched slides, show me the interpreted changes for approval, then render and verify the corrected copy.",
+      "required_signals": ["existing PPTX", "call transcript", "approval", "render", "verify"],
+      "expected_skill": "clara:deck-correction",
+      "must_not_route_to": ["clara:interview", "clara:transcribe"]
+    },
+    {
+      "id": "one-command-deck-feedback-capture",
+      "prompt": "Clara, record feedback on this deck, open the capture for me, and import it when I finish.",
+      "required_signals": ["record feedback", "this deck", "open the capture", "import"],
+      "expected_skill": "clara:deck-correction",
+      "must_not_route_to": ["clara:interview", "clara:transcribe"]
+    },
+    {
+      "id": "retail-attribute-report-from-current-data",
+      "prompt": "Use Clara to map product attributes for this retailer and category from the current database snapshot, compare the retailer-defined new products with the rest of the assortment, create the private local HTML report, and tell me whether it is correct.",
+      "required_signals": ["product attributes", "current database snapshot", "new products", "local HTML report", "correct"],
+      "expected_skill": "clara:attribute-reporting",
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction"]
+    },
+    {
+      "id": "retail-attribute-report-fresh-scrape",
+      "prompt": "Use Clara to scrape this retailer and category locally, map the products to the central taxonomy, compare best sellers with the other products, and produce a checked HTML attribute report.",
+      "required_signals": ["scrape", "central taxonomy", "best sellers", "checked HTML attribute report"],
+      "expected_skill": "clara:attribute-reporting",
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction"]
+    },
+    {
+      "id": "reporting-engine-direct-chart-analysis",
+      "prompt": "Use Clara to analyze this spreadsheet, choose the most useful chart from the business question and actual fields, render it, and explain the result.",
+      "required_signals": ["Clara", "analyze this spreadsheet", "most useful chart", "actual fields", "render", "explain"],
+      "expected_skill": "clara:reporting-engine",
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting"]
+    },
+    {
+      "id": "reporting-engine-chart-contract",
+      "prompt": "Use Clara to inspect the chart-selection manifest, profile this dataset into chart roles, and tell me which chart capabilities are mechanically compatible before semantic selection.",
+      "required_signals": ["chart-selection manifest", "profile this dataset", "chart roles", "mechanically compatible", "semantic selection"],
+      "expected_skill": "clara:reporting-engine",
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting"]
+    },
+    {
+      "id": "deck-claim-basis-map",
+      "prompt": "Use Clara to create a readable sidecar that maps each PPTX slide claim to its source, calculation, prior-slide claim, reasoning, assumption, or ungrounded status without adding visible citations to the deck.",
+      "required_signals": ["PPTX", "slide claim", "prior-slide claim", "ungrounded"]
+    },
+    {
+      "id": "deck-image2-beautify",
+      "prompt": "Use Clara to beautify this final editable PPTX with Image2 into a non-editable image PDF, check each slide twice for identical content, regenerate failed pages, and send only the editable PPTX plus the beautified PDF.",
+      "required_signals": ["Image2", "non-editable image PDF", "regenerate failed pages", "editable PPTX"]
+    },
+    {
+      "id": "animated-html-deck-from-docx",
+      "prompt": "Turn this approved Word document into a distinctive self-contained animated HTML presentation with speaker notes and a difficult publication URL.",
+      "required_signals": ["Word document", "animated HTML presentation", "speaker notes", "publication URL"]
+    },
+    {
+      "id": "fixed-stage-browser-presentation",
+      "prompt": "Use Clara to create a source-faithful fixed 16:9 browser deck from this report, with semantic motion, fullscreen navigation, and browser QA.",
+      "required_signals": ["source-faithful", "16:9 browser deck", "semantic motion", "browser QA"]
+    },
+    {
+      "id": "preservation-aware-html-deck-revision",
+      "prompt": "Revise this existing Clara HTML deck from the approved change notes, preserve every untouched slide and protected component, and prove the before/after fidelity.",
+      "required_signals": ["Clara HTML deck", "change notes", "protected component", "before/after fidelity"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "journal-check",
+      "prompt": "Compare these journal entries with supporting invoices and mark mismatches."
+    },
+    {
+      "id": "legal-prompt",
+      "prompt": "Optimize this tax question into a Deep Research prompt with legal source domains."
+    }
+  ]
+}

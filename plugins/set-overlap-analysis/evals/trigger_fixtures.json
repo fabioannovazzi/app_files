@@ -1,0 +1,34 @@
+{
+  "plugin": "set-overlap-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "set_overlap_basic",
+      "prompt": "Run Set Overlap Analysis on this sales file and show Venn and UpSet source data.",
+      "required_signals": [
+        "Set Overlap Analysis",
+        "Venn",
+        "UpSet"
+      ]
+    },
+    {
+      "id": "venn_upset_basic",
+      "prompt": "Create an UpSet plot and Venn diagram for product overlap by retailer.",
+      "required_signals": [
+        "UpSet",
+        "Venn",
+        "overlap by retailer"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "variance_bridge",
+      "prompt": "Explain the price-volume-mix variance bridge between AC and PY."
+    },
+    {
+      "id": "distribution_histogram",
+      "prompt": "Create a histogram and boxplot of unit price by brand."
+    }
+  ]
+}

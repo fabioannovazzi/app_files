@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "plugin": "set-overlap-analysis",
+  "language": "en",
+  "mappings": {
+    "item_column": "Product_Id",
+    "set_column": "Market",
+    "period_column": null,
+    "dimensions": [
+      "Category"
+    ]
+  },
+  "options": {
+    "charts": [
+      "upset_small_multiples"
+    ],
+    "selected_period": null,
+    "set_values": [],
+    "max_sets": 5,
+    "min_intersection_size": 1,
+    "highlighted_sets": [],
+    "aggregate_other_sets": true,
+    "include_other_rank_with_explicit_sets": false,
+    "small_multiples_dimension": "Category",
+    "small_multiples_max_panels": 3,
+    "write_html": true,
+    "reporting_entity_label": "Category market overlap"
+  }
+}

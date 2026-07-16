@@ -1,0 +1,35 @@
+{
+  "plugin": "scatter-bubble-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "scatter_sales_price_units",
+      "prompt": "Use Scatter & Bubble Analysis on this sales file and plot price versus units with sales as bubble size.",
+      "required_signals": [
+        "scatter",
+        "bubble",
+        "x metric",
+        "y metric"
+      ]
+    },
+    {
+      "id": "bubble_small_multiples",
+      "prompt": "Run the scatter bubble plugin and create small-multiple bubble charts by retailer.",
+      "required_signals": [
+        "scatter bubble plugin",
+        "small-multiple",
+        "bubble"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "journal_reconciliation",
+      "prompt": "Reconcile these journal entries to the bank statement."
+    },
+    {
+      "id": "tax_question",
+      "prompt": "Can I deduct home office expenses on my tax return?"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "version": "category_insights/1",
+  "deckName": "Ulta Lipstick Category Insights",
+  "templateKey": "uniform",
+  "promptStyle": "uniform",
+  "retailer": "Ulta",
+  "category": "Lipstick",
+  "observationWindow": "April 2026",
+  "thesis": "Hydration survives audit as the clearest launch signal.",
+  "summary": [
+    "New lipstick launches skew comfort-led rather than novelty-led.",
+    "The initial sustainability read weakens once retailer boilerplate is excluded."
+  ],
+  "evidenceIntro": "Representative launches showing the current shape of the category.",
+  "evidenceExamples": [
+    {
+      "brand": "Brand A",
+      "product": "Hydrating Lip Stick",
+      "body": "Hydrating stick form with strong brand familiarity.",
+      "tags": ["Hydrating", "Stick"],
+      "badge": "Core signal"
+    },
+    {
+      "brand": "Brand B",
+      "product": "Daily Lip Tint",
+      "body": "Tint-led form framed as easy daily wear.",
+      "tags": ["Tint", "Daily wear"]
+    },
+    {
+      "brand": "Brand C",
+      "product": "Wearable Liquid Lip",
+      "body": "Bolder shade story, but still framed as wearable.",
+      "tags": ["Shade-led", "Wearable"]
+    }
+  ],
+  "survivingSignals": [
+    "Hydrating language over-indexes versus the older base.",
+    "Long-wear remains a credible support feature."
+  ],
+  "droppedSignals": [
+    "Refillable does not survive audit.",
+    "Retailer sustainability boilerplate inflated the first read."
+  ],
+  "bottomLine": "The signal is real, but smaller than the first pass suggested."
+}

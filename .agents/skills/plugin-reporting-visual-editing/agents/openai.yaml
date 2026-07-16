@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plugin Reporting Visual Editing"
+  short_description: "Review and edit generated plugin charts and tables."
+  default_prompt: "Use $plugin-reporting-visual-editing to review this generated plugin chart before changing code."

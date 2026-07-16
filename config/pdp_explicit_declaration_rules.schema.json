@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PDP Explicit Declaration Rules",
+  "type": "object",
+  "required": [
+    "version",
+    "updated_at",
+    "categories",
+    "metadata"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "values"
+              ],
+              "properties": {
+                "values": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "required": [
+                      "certainty_signals"
+                    ],
+                    "properties": {
+                      "certainty_signals": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "rule_id",
+                            "type",
+                            "pattern"
+                          ],
+                          "properties": {
+                            "rule_id": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "phrase",
+                                "regex"
+                              ]
+                            },
+                            "pattern": {
+                              "type": "string"
+                            },
+                            "case_sensitive": {
+                              "type": "boolean"
+                            },
+                            "word_boundary": {
+                              "type": "boolean"
+                            },
+                            "required_path_tokens": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "exclude_patterns": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "priority": {
+                              "type": "integer"
+                            },
+                            "notes": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "active",
+                                "inactive"
+                              ]
+                            },
+                            "reviewed_samples": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "observed_precision": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "reviewer_justification": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "activation_defaults": {
+          "type": "object",
+          "properties": {
+            "min_reviewed_samples": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "min_precision": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "broad_pattern_requires_justification": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

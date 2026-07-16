@@ -1,0 +1,47 @@
+{
+  "name": "prompt-optimizer",
+  "version": "0.1.28",
+  "description": "Legal, tax, and compliance Deep Research prompt optimization guided by Codex.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/research/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "prompt",
+    "deep-research",
+    "legal",
+    "tax",
+    "compliance",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Optimize Prompt",
+    "shortDescription": "Turn legal, tax, or compliance questions into source-backed Deep Research prompts with explicit angle and framework confirmation.",
+    "longDescription": "Codex workflow for optimizing legal, tax, and compliance Deep Research prompts. The workflow checks whether the run needs a material research-angle choice: decision lens, scope, audience, or source posture. In Default mode, Codex states proposed assumptions and pauses only when material choices are unresolved; the user can confirm in chat or switch to Plan mode for native structured choices when available. The workflow separates output language from legal framework, and automatically produces the natural full package: optimized prompt, source-domain sidecars, validation audit, prompt package, and human README. Deterministic scripts do not choose governing law, legal topics, research phasing, source domains, or language fallbacks. They inventory possible framework cues, facts, dates, amounts, entities, URLs, explicit questions, angle choices, confirmation options, and validation checks. Named laws, regulators, issue categories, and source domains are model-curated after the source facts and confirmed framework are clear. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Optimize Prompt on the legal, tax, or compliance research question I provide.",
+      "Infer the research lens and output package where possible, pause only for unresolved material angle or framework choices, then produce the complete optimized prompt package.",
+      "Do not make direct OpenAI API calls from plugin scripts; use Codex for prompt writing and deterministic scripts for inspection, validation, and packaging."
+    ],
+    "brandColor": "#4f6b78",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

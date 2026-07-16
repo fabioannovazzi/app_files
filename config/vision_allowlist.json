@@ -1,0 +1,127 @@
+{
+    "image_allowlist": {
+        "blush": [
+            "form",
+            "configuration"
+        ],
+        "bb_cc_creams": [
+            "product_type",
+            "form"
+        ],
+        "foundation": [
+            "form",
+            "packaging_type"
+        ],
+        "bronzer": [
+            "form",
+            "packaging_type"
+        ],
+        "contour": [
+            "form"
+        ],
+        "color_correct": [
+            "form",
+            "color_corrector_shade"
+        ],
+        "tinted_moisturizer": [
+            "product_type",
+            "form"
+        ],
+        "lipstick": [
+            "form"
+        ],
+        "lip_balms": [
+            "form",
+            "product_type"
+        ],
+        "lip_gloss": [
+            "form",
+            "packaging_type",
+            "applicator_type"
+        ],
+        "lip_liner": [
+            "form"
+        ],
+        "lip_stain": [
+            "form",
+            "applicator_type",
+            "formula_base"
+        ],
+        "lip_treatments": [
+            "form",
+            "treatment_type",
+            "finish_effect"
+        ],
+        "lip_plumpers": [
+            "form",
+            "product_type"
+        ],
+        "concealer": [
+            "form"
+        ],
+        "highlighter": [
+            "form"
+        ],
+        "palette": [
+            "palette_type",
+            "mirror_included",
+            "applicator_included"
+        ],
+        "eyeshadow": [
+            "palette_type",
+            "form",
+            "mirror_included"
+        ],
+        "eyeliner": [
+            "form",
+            "applicator_type"
+        ],
+        "eyebrow": [
+            "form",
+            "applicator_type"
+        ],
+        "mascara": [
+            "effect",
+            "water_resistance",
+            "bristle_material"
+        ],
+        "setting_spray_powder": [
+            "form",
+            "packaging_type"
+        ],
+        "face_primer": [
+            "form"
+        ],
+        "cashmere_sweaters": [
+            "style",
+            "garment_type",
+            "neckline",
+            "sleeve_length",
+            "knit_detail"
+        ],
+        "low_top_sneakers": [
+            "material",
+            "closure",
+            "toe_shape",
+            "sole_type",
+            "design_detail",
+            "silhouette"
+        ],
+        "permanent": [
+            "form"
+        ],
+        "wet_cat_food": [
+            "flavor",
+            "food_texture",
+            "lifestage",
+            "special_diet",
+            "health_feature",
+            "product_assortment",
+            "prescription_status"
+        ]
+    },
+    "no_image_categories": [
+        "liquid_lipstick",
+        "lip_oil"
+    ]
+}

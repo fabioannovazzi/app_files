@@ -1,0 +1,28 @@
+{
+  "bundles": [
+    {
+      "name": "vera",
+      "plugins": [
+        "vera"
+      ],
+      "package_root": "vera-codex-plugin",
+      "marketplace_name": "mp-vera",
+      "marketplace_display": "MP Vera",
+      "output_zip": "protected_downloads/vera/vera-plugin.zip",
+      "install_readme": "static/shared/vera/LEGGIMI_INSTALLAZIONE.txt",
+      "category": "Productivity"
+    }
+  ],
+  "packages": [
+    {
+      "plugin": "clara",
+      "package_root": "clara-codex-plugin",
+      "marketplace_name": "mp-clara",
+      "marketplace_display": "MP Clara",
+      "output_zip": "static/shared/clara/downloads/clara-plugin.zip",
+      "install_readme": "static/shared/clara/LEGGIMI_INSTALLAZIONE.txt",
+      "category": "Productivity"
+    }
+  ],
+  "non_downloadable_plugins": []
+}

@@ -1,0 +1,386 @@
+{
+    "version": "2025-10-07",
+    "categories": [
+        {
+            "id": "blush",
+            "label": "blush",
+            "attributes": [
+                {
+                    "id": "format",
+                    "label": "format",
+                    "status": "active"
+                },
+                {
+                    "id": "finish",
+                    "label": "finish",
+                    "status": "active"
+                },
+                {
+                    "id": "coverage",
+                    "label": "coverage",
+                    "status": "active"
+                },
+                {
+                    "id": "shade_family",
+                    "label": "shade family",
+                    "status": "inactive"
+                },
+                {
+                    "id": "undertone",
+                    "label": "undertone",
+                    "status": "inactive"
+                },
+                {
+                    "id": "configuration",
+                    "label": "configuration",
+                    "status": "inactive"
+                },
+                {
+                    "id": "resistance_claims",
+                    "label": "resistance claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "skin_benefits",
+                    "label": "skin benefits",
+                    "status": "inactive"
+                },
+                {
+                    "id": "fragrance",
+                    "label": "fragrance",
+                    "status": "inactive"
+                },
+                {
+                    "id": "ethics_claims",
+                    "label": "ethics claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "dermatology_claims",
+                    "label": "dermatology claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "refillable",
+                    "label": "refillable",
+                    "status": "inactive"
+                }
+            ]
+        },
+        {
+            "id": "foundation",
+            "label": "foundation",
+            "attributes": [
+                {
+                    "id": "format",
+                    "label": "format",
+                    "status": "active"
+                },
+                {
+                    "id": "finish",
+                    "label": "finish",
+                    "status": "active"
+                },
+                {
+                    "id": "coverage",
+                    "label": "coverage",
+                    "status": "active"
+                },
+                {
+                    "id": "coverage_buildable",
+                    "label": "buildable coverage",
+                    "status": "inactive"
+                },
+                {
+                    "id": "suitable_skin_type",
+                    "label": "suitable skin type",
+                    "status": "active"
+                },
+                {
+                    "id": "sensitive_skin_compatible",
+                    "label": "sensitive-skin compatible",
+                    "status": "inactive"
+                },
+                {
+                    "id": "formula_base",
+                    "label": "formula base",
+                    "status": "inactive"
+                },
+                {
+                    "id": "resistance_features",
+                    "label": "resistance features",
+                    "status": "inactive"
+                },
+                {
+                    "id": "packaging_type",
+                    "label": "packaging type",
+                    "status": "inactive"
+                },
+                {
+                    "id": "spf",
+                    "label": "SPF",
+                    "status": "inactive"
+                },
+                {
+                    "id": "sun_filter_type",
+                    "label": "sun filter type",
+                    "status": "inactive"
+                },
+                {
+                    "id": "broad_spectrum",
+                    "label": "broad spectrum (UVA/UVB)",
+                    "status": "inactive"
+                }
+            ]
+        },
+        {
+            "id": "bronzer",
+            "label": "bronzer",
+            "attributes": [
+                {
+                    "id": "format",
+                    "label": "format",
+                    "status": "active"
+                },
+                {
+                    "id": "finish",
+                    "label": "finish",
+                    "status": "active"
+                },
+                {
+                    "id": "pigment_level",
+                    "label": "pigment level",
+                    "status": "inactive"
+                },
+                {
+                    "id": "undertone",
+                    "label": "undertone",
+                    "status": "inactive"
+                },
+                {
+                    "id": "shade_depth",
+                    "label": "shade depth",
+                    "status": "inactive"
+                },
+                {
+                    "id": "skin_type",
+                    "label": "skin type suitability",
+                    "status": "inactive"
+                },
+                {
+                    "id": "benefits",
+                    "label": "benefits/claims",
+                    "status": "active"
+                },
+                {
+                    "id": "free_from",
+                    "label": "free-from claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "key_ingredients",
+                    "label": "key ingredients",
+                    "status": "inactive"
+                },
+                {
+                    "id": "application_area",
+                    "label": "application area",
+                    "status": "inactive"
+                },
+                {
+                    "id": "packaging_type",
+                    "label": "packaging type",
+                    "status": "inactive"
+                },
+                {
+                    "id": "ethical_claims",
+                    "label": "ethical claims",
+                    "status": "inactive"
+                }
+            ]
+        },
+        {
+            "id": "lipstick",
+            "label": "lipstick",
+            "attributes": [
+                {
+                    "id": "format",
+                    "label": "format",
+                    "status": "active"
+                },
+                {
+                    "id": "finish",
+                    "label": "finish",
+                    "status": "active"
+                },
+                {
+                    "id": "coverage",
+                    "label": "coverage",
+                    "status": "active"
+                },
+                {
+                    "id": "color_family",
+                    "label": "color family",
+                    "status": "inactive"
+                },
+                {
+                    "id": "undertone",
+                    "label": "undertone",
+                    "status": "inactive"
+                },
+                {
+                    "id": "wear_claims",
+                    "label": "wear claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "benefits",
+                    "label": "benefits",
+                    "status": "active"
+                },
+                {
+                    "id": "scent_flavor",
+                    "label": "scent/flavor",
+                    "status": "inactive"
+                },
+                {
+                    "id": "ethical_free_from",
+                    "label": "ethical/regulatory claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "packaging_features",
+                    "label": "packaging features",
+                    "status": "inactive"
+                }
+            ]
+        },
+        {
+            "id": "liquid_lipstick",
+            "label": "liquid lipstick",
+            "attributes": [
+                {
+                    "id": "finish",
+                    "label": "finish",
+                    "status": "active"
+                },
+                {
+                    "id": "coverage",
+                    "label": "coverage",
+                    "status": "active"
+                },
+                {
+                    "id": "color_family",
+                    "label": "color family",
+                    "status": "inactive"
+                },
+                {
+                    "id": "undertone",
+                    "label": "undertone",
+                    "status": "inactive"
+                },
+                {
+                    "id": "applicator_type",
+                    "label": "applicator type",
+                    "status": "inactive"
+                },
+                {
+                    "id": "fragrance",
+                    "label": "fragrance",
+                    "status": "inactive"
+                },
+                {
+                    "id": "durability_claims",
+                    "label": "durability claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "care_claims",
+                    "label": "care claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "clean_and_ethics",
+                    "label": "clean and ethics",
+                    "status": "inactive"
+                },
+                {
+                    "id": "refillable",
+                    "label": "refillable packaging",
+                    "status": "inactive"
+                },
+                {
+                    "id": "formula_base",
+                    "label": "formula base",
+                    "status": "inactive"
+                }
+            ]
+        },
+        {
+            "id": "lip_gloss",
+            "label": "lip gloss",
+            "attributes": [
+                {
+                    "id": "format",
+                    "label": "product type",
+                    "status": "active"
+                },
+                {
+                    "id": "product_type",
+                    "label": "product type",
+                    "status": "inactive"
+                },
+                {
+                    "id": "finish",
+                    "label": "finish",
+                    "status": "active"
+                },
+                {
+                    "id": "coverage",
+                    "label": "coverage",
+                    "status": "active"
+                },
+                {
+                    "id": "color_family",
+                    "label": "color family",
+                    "status": "inactive"
+                },
+                {
+                    "id": "flavor_fragrance",
+                    "label": "flavor or fragrance",
+                    "status": "inactive"
+                },
+                {
+                    "id": "packaging_type",
+                    "label": "packaging type",
+                    "status": "inactive"
+                },
+                {
+                    "id": "applicator_type",
+                    "label": "applicator type",
+                    "status": "inactive"
+                },
+                {
+                    "id": "benefits",
+                    "label": "benefits",
+                    "status": "active"
+                },
+                {
+                    "id": "base_formula",
+                    "label": "base formula",
+                    "status": "inactive"
+                },
+                {
+                    "id": "regulatory_claims",
+                    "label": "regulatory claims",
+                    "status": "inactive"
+                },
+                {
+                    "id": "free_from",
+                    "label": "free from",
+                    "status": "inactive"
+                }
+            ]
+        }
+    ]
+}

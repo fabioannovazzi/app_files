@@ -1,0 +1,453 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_label or "Presentations" }}{% endblock %}
+
+{% block head_extra %}
+  <style>
+    body.document-library-page .document-library {
+      display: flex;
+      flex-direction: column;
+      padding-top: 10px;
+      padding-bottom: 40px;
+    }
+
+    body.document-library-page .document-library__masthead {
+      margin-bottom: 18px;
+    }
+
+    body.document-library-page .document-library__shell {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: min(100%, 456px);
+    }
+
+    body.document-library-page .document-library__title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      width: fit-content;
+      max-width: 100%;
+      position: relative;
+    }
+
+    body.document-library-page .document-library__page-title.page-title {
+      display: block;
+      width: auto;
+      margin: 0;
+      text-align: left;
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: -0.008em;
+      color: #1f2937;
+    }
+
+    body.document-library-page .document-library__help {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    body.document-library-page .document-library__help-button {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: #98a2b3;
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      padding: 0;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 400;
+      cursor: help;
+      transition: color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    body.document-library-page .document-library__help-button:hover,
+    body.document-library-page .document-library__help-button:focus-visible,
+    body.document-library-page .document-library__help.is-open .document-library__help-button {
+      color: #667085;
+      background: rgba(248, 250, 252, 0.98);
+      box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.92);
+      outline: none;
+    }
+
+    body.document-library-page .document-library__tooltip {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: min(300px, calc(100vw - 48px));
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      background: rgba(255, 255, 255, 0.985);
+      color: #475467;
+      font-size: 12px;
+      line-height: 1.45;
+      text-align: left;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+      z-index: 10;
+    }
+
+    body.document-library-page .document-library__help:hover .document-library__tooltip,
+    body.document-library-page .document-library__help:focus-within .document-library__tooltip,
+    body.document-library-page .document-library__help.is-open .document-library__tooltip {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    body.document-library-page .document-library__list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    body.document-library-page .document-library__item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 0;
+      padding: 9px 0 10px;
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.82);
+      background: transparent;
+      text-decoration: none;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    body.document-library-page .document-library__item:hover,
+    body.document-library-page .document-library__item:focus-visible {
+      border-color: rgba(203, 213, 225, 1);
+    }
+
+    body.document-library-page .document-library__item--child {
+      padding-left: 1.1rem;
+    }
+
+    body.document-library-page .document-library__item--disabled,
+    body.document-library-page .document-library__item--disabled:hover,
+    body.document-library-page .document-library__item--disabled:focus-visible {
+      border-color: rgba(226, 232, 240, 0.64);
+      color: #98a2b3;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    body.document-library-page .document-library__item--disabled .document-library__label {
+      color: #98a2b3;
+      text-decoration: none;
+    }
+
+    body.document-library-page .document-library__label {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    body.document-library-page .document-library__label,
+    body.document-library-page .document-library__item--disabled {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #344054;
+    }
+
+    body.document-library-page .document-library__validation-mark {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 1.15rem;
+      height: 1.15rem;
+      color: #98a2b3;
+      font-size: 0.9rem;
+      font-weight: 520;
+      line-height: 1;
+      text-decoration: none;
+      text-align: center;
+      font-kerning: normal;
+      transition: color 0.16s ease;
+      z-index: 1;
+    }
+
+    body.document-library-page .document-library__validation-mark::before {
+      content: "\25CB";
+    }
+
+    body.document-library-page .document-library__validation-mark::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: calc(100% + 9px);
+      right: -2px;
+      width: max-content;
+      max-width: min(340px, calc(100vw - 32px));
+      padding: 7px 9px;
+      border: 1px solid rgba(226, 232, 240, 0.96);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.985);
+      color: #475467;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      font-size: 11.5px;
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: 0;
+      text-align: left;
+      white-space: pre-line;
+      opacity: 0;
+      transform: translateY(-3px);
+      pointer-events: none;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+      z-index: 20;
+    }
+
+    body.document-library-page .document-library__item:hover {
+      z-index: 2;
+    }
+
+    body.document-library-page .document-library__item:hover .document-library__validation-mark::after,
+    body.document-library-page .document-library__validation-mark:hover::after,
+    body.document-library-page .document-library__item:focus-visible .document-library__validation-mark::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    body.document-library-page .document-library__validation-mark--checked {
+      color: #2f6f57;
+    }
+
+    body.document-library-page .document-library__validation-mark--checked::before {
+      content: "\2713";
+    }
+
+    body.document-library-page .document-library__validation-mark--noted {
+      color: #6f6f2f;
+    }
+
+    body.document-library-page .document-library__validation-mark--noted::before {
+      content: "\25D0";
+    }
+
+    body.document-library-page .document-library__validation-mark--caution {
+      color: #9a6700;
+    }
+
+    body.document-library-page .document-library__validation-mark--caution::before {
+      content: "\25B3";
+    }
+
+    body.document-library-page .document-library__validation-mark--unknown {
+      color: #64748b;
+    }
+
+    body.document-library-page .document-library__validation-mark--unknown::before {
+      content: "";
+      display: block;
+      width: 1rem;
+      height: 1rem;
+      background-color: currentColor;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Ccircle%20cx=%2712%27%20cy=%2712%27%20r=%2710%27/%3E%3Cpath%20d=%27M9.09%209a3%203%200%200%201%205.83%201c0%202-3%203-3%203%27/%3E%3Cpath%20d=%27M12%2017h.01%27/%3E%3C/svg%3E") center / contain no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27black%27%20stroke-width=%272%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Ccircle%20cx=%2712%27%20cy=%2712%27%20r=%2710%27/%3E%3Cpath%20d=%27M9.09%209a3%203%200%200%201%205.83%201c0%202-3%203-3%203%27/%3E%3Cpath%20d=%27M12%2017h.01%27/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+
+    body.document-library-page .document-library__validation-mark--summary {
+      color: #64748b;
+    }
+
+    body.document-library-page .document-library__validation-mark--summary::before {
+      content: "\25C7";
+    }
+
+    body.document-library-page .document-library__validation-mark--pending {
+      color: #98a2b3;
+    }
+
+    body.document-library-page .document-library__validation-mark--pending::before {
+      content: "";
+      box-sizing: border-box;
+      display: block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid currentColor;
+      border-radius: 999px;
+    }
+
+    body.document-library-page .document-library__item:hover .document-library__label,
+    body.document-library-page .document-library__item:focus-visible .document-library__label {
+      color: #1f2937;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+    }
+
+    body.document-library-page .document-library__item:focus-visible {
+      outline: 2px solid rgba(148, 163, 184, 0.34);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 640px) {
+      body.document-library-page .document-library {
+        padding-top: 4px;
+        padding-bottom: 30px;
+      }
+
+      body.document-library-page .document-library__masthead {
+        margin-bottom: 12px;
+      }
+
+      body.document-library-page .document-library__title-row {
+        gap: 6px;
+      }
+
+      body.document-library-page .document-library__page-title.page-title {
+        font-size: 16px;
+      }
+
+      body.document-library-page .document-library__tooltip {
+        width: min(280px, calc(100vw - 36px));
+        font-size: 11.5px;
+      }
+
+      body.document-library-page .document-library__item {
+        padding: 8px 0 9px;
+      }
+
+      body.document-library-page .document-library__item--child {
+        padding-left: 0.9rem;
+      }
+
+      body.document-library-page .document-library__label,
+      body.document-library-page .document-library__item--disabled {
+        font-size: 13px;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block body_attrs %}class="landing-body document-library-page"{% endblock %}
+
+{% block body %}
+  <header class="landing-header document-library__masthead">
+    <a href="/?lang={{ lang or 'en' }}" class="landing-logo-link" aria-label="Return to the home page">
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main id="projectsContent" class="document-library">
+    <section class="document-library__shell">
+      <div class="document-library__title-row">
+        <h1 class="page-title document-library__page-title">
+          {{ page_label or "Presentations" }}
+        </h1>
+        <div class="document-library__help" data-library-help>
+          <button
+            type="button"
+            class="document-library__help-button"
+            aria-label="{{ copy.page_help | default('Browse category reports to see which attributes stand out in launches and among top sellers.') }}"
+            aria-expanded="false"
+            aria-controls="documentLibraryHelpTooltip"
+          >
+            i
+          </button>
+          <div
+            id="documentLibraryHelpTooltip"
+            class="document-library__tooltip"
+            role="tooltip"
+          >
+            {{ copy.page_help | default('Browse category reports to see which attributes stand out in launches and among top sellers.') }}
+          </div>
+        </div>
+      </div>
+      <div class="document-library__list" aria-label="{{ page_label or 'Documents' }}">
+        {% for doc in documents | default([]) %}
+          {% if doc.allowed %}
+            <a class="document-library__item{% if doc.indent_level | default(0) > 0 %} document-library__item--child{% endif %}" href="{{ viewer_base_path | default('/presentations/pdf') }}/{{ doc.doc_id }}?lang={{ lang or 'en' }}" target="_blank" rel="noopener">
+              <span class="document-library__label">{{ doc.title }}</span>
+              {% if doc.validation %}
+                {% set validation_label = copy.get(doc.validation.label_key, 'Current automated checks are provisional.') %}
+                {% set validation_short_key = doc.validation.short_label_key | default('') %}
+                {% set validation_short_label = copy.get(validation_short_key, '') if validation_short_key else '' %}
+                {% set validation_tooltip = doc.validation.tooltip | default(validation_label, true) %}
+                <span class="document-library__validation-mark document-library__validation-mark--{{ doc.validation.state }}" role="img" aria-label="{{ validation_tooltip }}" data-tooltip="{{ validation_tooltip }}" data-status-label="{{ validation_short_label }}"></span>
+              {% endif %}
+            </a>
+          {% else %}
+            <span class="document-library__item document-library__item--disabled{% if doc.indent_level | default(0) > 0 %} document-library__item--child{% endif %}" aria-disabled="true">
+              <span class="document-library__label">{{ doc.title }}</span>
+              {% if doc.validation %}
+                {% set validation_label = copy.get(doc.validation.label_key, 'Current automated checks are provisional.') %}
+                {% set validation_short_key = doc.validation.short_label_key | default('') %}
+                {% set validation_short_label = copy.get(validation_short_key, '') if validation_short_key else '' %}
+                {% set validation_tooltip = doc.validation.tooltip | default(validation_label, true) %}
+                <span class="document-library__validation-mark document-library__validation-mark--{{ doc.validation.state }}" role="img" aria-label="{{ validation_tooltip }}" data-tooltip="{{ validation_tooltip }}" data-status-label="{{ validation_short_label }}"></span>
+              {% endif %}
+            </span>
+          {% endif %}
+        {% else %}
+          <span class="document-library__item document-library__item--disabled">No PDF documents available.</span>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    (() => {
+      const help = document.querySelector("[data-library-help]");
+      if (!help) {
+        return;
+      }
+
+      const button = help.querySelector(".document-library__help-button");
+      if (!button) {
+        return;
+      }
+
+      const close = () => {
+        help.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+      };
+
+      const open = () => {
+        help.classList.add("is-open");
+        button.setAttribute("aria-expanded", "true");
+      };
+
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (help.classList.contains("is-open")) {
+          close();
+          button.blur();
+          return;
+        }
+        open();
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!help.contains(event.target)) {
+          close();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          close();
+        }
+      });
+    })();
+  </script>
+{% endblock %}

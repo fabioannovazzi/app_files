@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reporting Engine"
+  short_description: "Inspect chart contracts and dataset compatibility"
+  default_prompt: "Use $reporting-engine to inspect the chart manifest, profile the dataset into chart roles, and report mechanical compatibility without claiming semantic validity."

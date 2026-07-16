@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "check-entries",
+  "title": "Check Entries Review",
+  "reviewTitle": "Journal Entry Support Review",
+  "queueTitle": "Entry Checks",
+  "detailTitle": "Entry Vs Support",
+  "detailMode": "entry-support-desk",
+  "detailHelp": "Compare the journal entry, matched support document, and deterministic finding before deciding.",
+  "detailGroups": [
+    {
+      "title": "Journal Entry",
+      "variant": "ledger",
+      "fields": [
+        "movement_number",
+        "entry_date",
+        "beneficiary",
+        "amount_abs",
+        "source_file",
+        "status"
+      ],
+      "empty": "No journal entry fields."
+    },
+    {
+      "title": "Support Document",
+      "variant": "source",
+      "fields": [
+        "requested_document",
+        "matched_pdf",
+        "filename",
+        "extractable_text",
+        "text_chars",
+        "amount_found",
+        "date_found",
+        "beneficiary_found",
+        "reason"
+      ],
+      "empty": "No support document fields."
+    },
+    {
+      "title": "Finding",
+      "variant": "finding",
+      "fields": [
+        "checks_run",
+        "mismatches",
+        "review_notes",
+        "error",
+        "exists",
+        "size_bytes",
+        "path"
+      ],
+      "empty": "No finding fields."
+    }
+  ],
+  "panels": [
+    "Journal entry",
+    "Support document",
+    "Finding"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione Check Entries",
+      "reviewTitle": "Revisione supporto scritture",
+      "queueTitle": "Scritture",
+      "detailTitle": "Scrittura e supporto",
+      "detailHelp": "Confronta scrittura, PDF di supporto e rilievo prima della decisione.",
+      "search": "Cerca movimento, PDF, stato, anomalia, beneficiario"
+    },
+    "fr": {
+      "title": "Revue Check Entries",
+      "reviewTitle": "Revue des justificatifs d'ecritures",
+      "queueTitle": "Ecritures",
+      "detailTitle": "Ecriture et justificatif",
+      "detailHelp": "Comparez l'ecriture, le justificatif et le constat avant de decider.",
+      "search": "Chercher mouvement, PDF, statut, ecart, beneficiaire"
+    },
+    "de": {
+      "title": "Check Entries Review",
+      "reviewTitle": "Belegpruefung fuer Buchungen",
+      "queueTitle": "Buchungen",
+      "detailTitle": "Buchung und Beleg",
+      "detailHelp": "Buchung, Beleg und Feststellung vor der Entscheidung vergleichen.",
+      "search": "Buchung, PDF, Status, Abweichung, Empfaenger suchen"
+    }
+  },
+  "saveTool": "save_check_entries_decisions",
+  "applyTool": "apply_check_entries_decisions",
+  "widgetType": "check_entries_review",
+  "demo": {
+    "review_type": "journal_entry_support_review",
+    "items": [
+      {
+        "id": "entry-1",
+        "item_type": "supported_entry",
+        "title": "1001 | 123.45 | 2025-01-02",
+        "source_path": "entries.xlsx",
+        "output_path": "check_results.csv",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "status": "ok",
+          "movement_number": "1001",
+          "entry_date": "2025-01-02",
+          "beneficiary": "ACME Spa",
+          "amount_abs": 123.45,
+          "matched_pdf": "support_1001.pdf",
+          "checks_run": "amount,date,beneficiary",
+          "source_row": 1,
+          "target_artifact": "check_results.csv",
+          "target_id_field": "source_row",
+          "target_record_id": "1",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this row updates review_notes in check_results.csv for source_row 1."
+        },
+        "evidence": [
+          {
+            "kind": "deterministic_checks",
+            "checks_run": "amount,date,beneficiary",
+            "review_notes": "All checks passed against support_1001.pdf.",
+            "matched_pdf": "support_1001.pdf"
+          }
+        ]
+      },
+      {
+        "id": "entry-2",
+        "item_type": "missing_support",
+        "title": "1002 | 88.00 | 2025-01-03",
+        "source_path": "entries.xlsx",
+        "output_path": "check_results.csv",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "status": "missing_support",
+          "movement_number": "1002",
+          "entry_date": "2025-01-03",
+          "amount_abs": 88,
+          "mismatches": "support_pdf",
+          "source_row": 2,
+          "target_artifact": "check_results.csv",
+          "target_id_field": "source_row",
+          "target_record_id": "2",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this row updates review_notes in check_results.csv for source_row 2.",
+          "requested_document": "Supporting PDF for movement 1002",
+          "reason": "No supporting PDF matched the movement number."
+        },
+        "evidence": [
+          {
+            "kind": "deterministic_checks",
+            "checks_run": "movement_number",
+            "mismatches": "support_pdf",
+            "review_notes": "No matching PDF filename or extracted text reference was found."
+          },
+          {
+            "kind": "missing_document_request",
+            "requested_document": "Supporting PDF for movement 1002",
+            "reason": "No supporting PDF matched the movement number.",
+            "status": "needs_evidence"
+          }
+        ]
+      }
+    ]
+  }
+}

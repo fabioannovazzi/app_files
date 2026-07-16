@@ -1,0 +1,67 @@
+{
+  "drop_summary_headers": [
+    "RIASSUNTO\\s+SCALARE",
+    "SALDI\\s+PER\\s+VALUTA",
+    "NUMERI\\s+A\\s+DEBITO",
+    "NUMERI\\s+A\\s+CREDITO",
+    "DETTAGLIO\\s+SALDI",
+    "ELEMENTI\\s+PER\\s+IL\\s+CONTEGGIO\\s+DELLE\\s+COMPETENZE",
+    "INTERESSI\\s+CREDITORI\\s+DI\\s+PERIODO",
+    "INTERESSI\\s+DEBITORI\\s+DI\\s+PERIODO",
+    "RIEPILOGO\\s+INTERESSI",
+    "COMPETENZE\\s+LIQUIDATE",
+    "COMMISSIONE\\s+GESTIONE\\s+GIACENZE",
+    "RIEPILOGO\\s+COMPETENZE\\s+LIQUIDATE",
+    "RIEPILOGO\\s+DEGLI\\s+EVENTI\\s+DI\\s+SCONFINAMENTO",
+    "SEGNALAZIONI\\s+AI\\s+FINI\\s+ISEE",
+    "PROSPETTO\\s+RIASSUNTIVO\\s+AFFIDAMENTI",
+    "ESTRATTO\\s+CONTO\\s+FACILE",
+    "SERVIZI\\s+DI\\s+PAGAMENTO",
+    "OPERATIVITA'\\s+CORRENTE",
+    "MODULO\\s+STANDARD\\s+PER\\s+LE\\s+INFORMAZIONI\\s+DA\\s+FORNIRE\\s+AI\\s+DEPOSITANTI",
+    "FONDO\\s+INTERBANCARIO\\s+DI\\s+TUTELA",
+    "NUOVI\\s+ORARI\\s+FILIALE",
+    "ELEMENTI\\s+PER\\s+IL\\s+CONTEGGIO",
+    "DECORRENZA\\s+TASSO\\s+NOMINALE",
+    "NUMERI\\s+INTERESSI",
+    "PRIMA\\s+DEL\\s+CONTEGGIO",
+    "RILEVAZIONE\\s+COSTI",
+    "RILEVAZIONI\\s+VARIE"
+  ],
+  "drop_page_furniture": [
+    "^PAGINA\\s+\\d+\\s+DI\\s+\\d+",
+    "^DATA\\s+DI\\s+RIFERIMENTO",
+    "^DEL\\s+CONTO",
+    "^INDEX:",
+    "\\bCOORDINATE\\s+BANCARIE\\s+INTERNAZIONALI\\s+IBAN\\b",
+    "\\bSWIFT\\b",
+    "\\bIBAN\\b",
+    "VIA\\s+\\w+\\s+\\d+",
+    "GRAZIE\\s+PER\\s+AVER\\s+SCELTO",
+    "GESTISCI\\s+ONLINE\\s+I\\s+CONTI"
+  ],
+  "drop_regulatory": [
+    "GENTILE\\s+CLIENTE",
+    "AI\\s+SENSI\\s+DELL'ARTICOLO",
+    "LA\\s+INFORMA(MO)?\\s+CHE",
+    "AL\\s+FINE\\s+DI\\s+APPROFONDIRE",
+    "RIFERIMENTI\\s+NORMATIVI"
+  ],
+  "drop_mis_extracted_headers": [
+    "^ATM\\s+WEB\\s+APP$",
+    "^DATA\\s+CONTABILE$",
+    "^DATA\\s+VALUTA$",
+    "^DATA\\s+DISPONIBILE$",
+    "^USCITE$",
+    "^ENTRATE$",
+    "^DESCRIZIONE\\s+DELLE\\s+OPERAZIONI$"
+  ],
+  "drop_obvious_page_markers": [
+    "^ECITA\\b.*\\b\\d{5}\\b",
+    "04039\\s*-\\s*7$",
+    "^BANCO\\s+BPM"
+  ],
+  "drop_balance_summary": [
+    "^\\d{2}/\\d{2}/\\d{4}\\s+\\d[\\d\\., ]*-?\\s+\\d+\\s+\\d[\\d\\., ]*-?\\s*$"
+  ]
+}

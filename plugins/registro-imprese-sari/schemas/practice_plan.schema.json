@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/registro-imprese-sari/practice-plan-1.0.json",
+  "title": "Source-backed DIRE practice plan draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plugin",
+    "run_id",
+    "case_summary",
+    "classification_proposals",
+    "position_matrix",
+    "dire_steps",
+    "required_documents",
+    "application_fields",
+    "risks",
+    "missing_information",
+    "sari_question_draft",
+    "limitations",
+    "professional_review"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plugin": {"const": "registro-imprese-sari"},
+    "run_id": {"type": "string"},
+    "case_summary": {"type": "string"},
+    "classification_proposals": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "position_matrix": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "dire_steps": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "required_documents": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "application_fields": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "risks": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "missing_information": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "sari_question_draft": {"type": "string"},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "professional_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["pending", "reviewed", "rejected"]},
+        "reviewer_id": {"type": ["string", "null"]},
+        "reviewer_role": {"type": ["string", "null"]},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "notes": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "$defs": {
+    "reviewItem": {
+      "type": "object",
+      "required": ["id", "title", "detail", "source_ids", "case_fact_ids", "review_status"],
+      "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "detail": {"type": "string"},
+        "system": {"type": ["string", "null"]},
+        "sequence": {"type": ["integer", "null"]},
+        "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "case_fact_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "review_status": {"enum": ["proposed", "confirmed", "not_applicable", "blocked"]},
+        "confirmation": {
+          "type": ["object", "null"],
+          "properties": {
+            "confirmed_by_id": {"type": "string"},
+            "confirmed_by_role": {"type": "string"},
+            "confirmed_at": {"type": "string", "format": "date-time"},
+            "basis": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+# Optional local OCR support for DIRE/SARI screenshots and image-only evidence.
+paddleocr>=3.2,<4
+paddlepaddle>=3.2,<4
+paddlex>=3.2,<4

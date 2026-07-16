@@ -1,0 +1,6 @@
+# Optional local OCR dependencies for scanned PDFs, screenshots, and image-only evidence.
+# Install alongside requirements.txt when Clara needs deterministic local OCR.
+Pillow>=11.1
+opencv-python>=4.8
+paddleocr>=3.0
+paddlepaddle>=3.0

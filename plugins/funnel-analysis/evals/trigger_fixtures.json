@@ -1,0 +1,35 @@
+{
+  "plugin": "funnel-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "crm_lead_readiness_funnel",
+      "prompt": "Use Funnel Analysis to build a lead readiness table from this CRM CSV with owner, source, activity, country, industry, revenue, and sales accepted stages.",
+      "required_signals": [
+        "funnel",
+        "stage",
+        "CRM CSV"
+      ]
+    },
+    {
+      "id": "stage_gate_conversion_table",
+      "prompt": "Create a deterministic stage-gate table showing start, pass, drop-off, stage conversion, and cumulative conversion.",
+      "required_signals": [
+        "stage-gate",
+        "drop-off",
+        "conversion"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "simple_sales_period_comparison",
+      "prompt": "Compare AC vs PY sales by brand and show exact variance rows."
+    },
+    {
+      "id": "distribution_histogram",
+      "prompt": "Plot the distribution of product prices as a histogram."
+    }
+  ]
+}
+

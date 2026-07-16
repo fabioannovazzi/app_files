@@ -1,0 +1,8 @@
+# run detectors (never fails the build)
+make -f Makefile.codex detectors
+
+# run all refactors; keep going even if some fail; always exit 0
+make -f Makefile.codex codex-refactors
+
+# fail-fast on first error (good for CI)
+FAILFAST=1 make -f Makefile.codex codex-refactors

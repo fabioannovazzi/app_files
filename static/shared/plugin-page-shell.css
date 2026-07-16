@@ -1,0 +1,491 @@
+:root {
+  --paper: #ffffff;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --panel: #ffffff;
+  --panel-soft: #ffffff;
+  --soft: #f7f9f6;
+  --code: #f7f9f6;
+  --ink: #243027;
+  --text: #465148;
+  --muted: #6d776f;
+  --accent: #496a60;
+  --accent-ink: #263b34;
+  --accent-soft: #e7eee9;
+  --green: #496a60;
+  --blue: #27313a;
+  --line: #dfe6dd;
+  --line-strong: #cfd9d0;
+  --radius: 8px;
+  --content: 1120px;
+  --shadow: none;
+  --measure: 68ch;
+  --measure-tight: 48ch;
+  --plugin-hero-title-size: 2.875rem;
+  --plugin-section-title-size: 2.125rem;
+  --plugin-card-title-size: 1.125rem;
+  --plugin-lead-size: 1.1875rem;
+  --plugin-heading-line-height: 1.12;
+  --plugin-lead-line-height: 1.48;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: #ffffff !important;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--text) !important;
+  font-family: "Instrument Sans", "Aptos", "Segoe UI", -apple-system,
+    BlinkMacSystemFont, sans-serif !important;
+  font-kerning: normal;
+  letter-spacing: 0;
+}
+
+.topbar,
+body > .page > header {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+
+.topbar {
+  backdrop-filter: blur(12px);
+}
+
+.nav-shell,
+.nav,
+main,
+.page {
+  width: min(var(--content), calc(100% - 40px));
+  max-width: calc(100vw - 40px);
+}
+
+body > .page {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+body > .page > header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  width: 100% !important;
+  min-height: 70px;
+  margin: 0 !important;
+  padding: 0 max(20px, calc((100vw - var(--content)) / 2)) !important;
+}
+
+body > .page > main {
+  width: min(var(--content), calc(100% - 40px)) !important;
+  max-width: calc(100vw - 40px) !important;
+  margin: 0 auto !important;
+}
+
+.brand {
+  align-items: center;
+  color: var(--ink) !important;
+  display: inline-flex;
+  font-weight: 650;
+  font-size: 0;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.brand img {
+  max-width: 140px;
+  height: auto;
+}
+
+.brand img {
+  display: none !important;
+}
+
+.brand::before {
+  content: "Home";
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.nav-links a,
+.nav-right a,
+nav a {
+  align-items: center;
+  border-radius: 6px;
+  color: var(--muted);
+  display: inline-flex;
+  min-height: 44px;
+  min-width: 44px;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.nav-links a:hover,
+.nav-right a:hover,
+nav a:hover,
+.nav-links a:focus-visible,
+.nav-right a:focus-visible,
+nav a:focus-visible {
+  color: var(--ink) !important;
+  background: var(--soft);
+}
+
+.lang-switch,
+.lang {
+  border-color: var(--line) !important;
+  background: var(--surface) !important;
+}
+
+.lang-switch button,
+.lang button {
+  border-radius: 6px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+}
+
+.lang-switch button.is-active,
+.lang button[aria-pressed="true"] {
+  color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+}
+
+.engine a,
+.card a,
+.item a,
+.plugin-card a,
+.workflow-card a {
+  min-height: 44px;
+  align-items: center;
+}
+
+.download-panel a:not(.button) {
+  align-items: center;
+  display: inline-flex;
+  min-height: 44px;
+}
+
+.eyebrow,
+.kicker,
+.label {
+  color: var(--accent) !important;
+  letter-spacing: 0.08em !important;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--ink) !important;
+  letter-spacing: 0 !important;
+  line-height: var(--plugin-heading-line-height) !important;
+}
+
+h1 {
+  font-size: var(--plugin-hero-title-size) !important;
+  font-weight: 620 !important;
+  max-width: var(--measure-tight);
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: var(--plugin-section-title-size) !important;
+  font-weight: 620 !important;
+}
+
+h2,
+h3 {
+  text-wrap: pretty;
+}
+
+h3 {
+  font-size: var(--plugin-card-title-size) !important;
+}
+
+p,
+li,
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+}
+
+p,
+li {
+  max-width: var(--measure);
+}
+
+.lead,
+.hero-copy,
+.subtitle {
+  max-width: var(--measure) !important;
+  color: var(--text) !important;
+  font-size: var(--plugin-lead-size) !important;
+  line-height: var(--plugin-lead-line-height) !important;
+}
+
+.section-head p,
+.summary,
+.item p,
+.engine p,
+.method p,
+.output p,
+.card p {
+  line-height: 1.58 !important;
+}
+
+.summary h2,
+.item h3,
+.engine h3,
+.card h3 {
+  font-size: 1.02rem !important;
+  line-height: 1.28 !important;
+}
+
+.button,
+.download,
+a.download,
+button {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transition:
+    transform 170ms ease,
+    background-color 170ms ease,
+    border-color 170ms ease,
+    color 170ms ease;
+}
+
+.button:hover,
+.download:hover,
+a.download:hover,
+button:hover {
+  transform: translateY(-1px);
+}
+
+.button.secondary,
+.download.secondary {
+  background: #ffffff !important;
+  color: var(--accent-ink) !important;
+  border-color: var(--line-strong) !important;
+}
+
+.hero-card,
+.summary,
+.scope-panel,
+.download-panel,
+.card,
+.engine,
+.item,
+.principle,
+.example,
+.method,
+.output,
+.step,
+.feature,
+.tile,
+.panel,
+.prompt-card,
+.output-card,
+.workflow-card,
+.plugin-card {
+  background: #ffffff !important;
+  border-color: var(--line) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.hero,
+.section-head,
+.split,
+.download-panel,
+.output-list,
+.grid,
+.usage-grid,
+.cards,
+.engine-grid,
+.workflow,
+.examples,
+.method-grid {
+  max-width: 100%;
+}
+
+.hero > *,
+.section-head > *,
+.split > *,
+.download-panel > *,
+.output-list > *,
+.grid > *,
+.usage-grid > *,
+.cards > *,
+.engine-grid > *,
+.workflow > *,
+.examples > *,
+.method-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.card,
+.engine,
+.item,
+.principle,
+.example,
+.method,
+.output,
+.step,
+.feature,
+.tile,
+.prompt-card,
+.output-card,
+.workflow-card,
+.plugin-card {
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.card:hover,
+.engine:hover,
+.item:hover,
+.principle:hover,
+.example:hover,
+.method:hover,
+.output:hover,
+.step:hover,
+.feature:hover,
+.tile:hover,
+.prompt-card:hover,
+.output-card:hover,
+.workflow-card:hover,
+.plugin-card:hover {
+  border-color: var(--line-strong) !important;
+  transform: translateY(-1px);
+}
+
+pre,
+.code,
+.command,
+.prompt,
+.terminal,
+.snippet {
+  background: #f7f9f6 !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+  max-width: 100%;
+}
+
+code {
+  background: #f7f9f6;
+  color: var(--ink);
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 3px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .button:hover,
+  .download:hover,
+  a.download:hover,
+  button:hover,
+  .card:hover,
+  .engine:hover,
+  .item:hover,
+  .principle:hover,
+  .example:hover,
+  .method:hover,
+  .output:hover,
+  .step:hover,
+  .feature:hover,
+  .tile:hover,
+  .prompt-card:hover,
+  .output-card:hover,
+  .workflow-card:hover,
+  .plugin-card:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --plugin-hero-title-size: 1.95rem;
+    --plugin-section-title-size: 1.55rem;
+    --plugin-card-title-size: 1.08rem;
+    --plugin-lead-size: 1.08rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-shell,
+  .nav,
+  main,
+  .page,
+  body > .page > main {
+    width: min(var(--content), calc(100% - 40px)) !important;
+    max-width: calc(100vw - 40px) !important;
+  }
+
+  .nav-right,
+  .nav-links,
+  .lang-switch,
+  .lang {
+    max-width: 100%;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 10px 14px !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  li,
+  .lead,
+  .hero-copy,
+  .subtitle,
+  .hero-card,
+  .review-panel,
+  pre,
+  .code,
+  .command,
+  .prompt,
+  .terminal,
+  .snippet {
+    max-width: calc(100vw - 56px) !important;
+  }
+
+  .hero-card,
+  .review-panel,
+  pre,
+  .code,
+  .command,
+  .prompt,
+  .terminal,
+  .snippet {
+    width: 100%;
+  }
+}

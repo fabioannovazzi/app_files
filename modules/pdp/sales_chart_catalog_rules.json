@@ -1,0 +1,670 @@
+{
+  "version": 1,
+  "actions": {
+    "plotTotalCombo": {
+      "chart_key": "total_combo",
+      "label": "Total combo",
+      "rendering": "server_chart",
+      "chart_type": "stacked_column",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": true,
+      "lenses": [
+        "growth_size",
+        "price_value_capture"
+      ],
+      "evidence_role": "primary",
+      "time_scope": "trend",
+      "request_overrides": {
+        "chart_type": "stacked_column",
+        "dynamic_metric_plan": true,
+        "dynamic_overlay_metric": true
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotBar": {
+      "chart_key": "bar",
+      "label": "Bar",
+      "rendering": "server_chart",
+      "chart_type": "bar",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": true,
+      "brief_enabled": true,
+      "lenses": [
+        "price_value_capture",
+        "brand_shifts",
+        "fragmentation_concentration",
+        "attribute_mix"
+      ],
+      "evidence_role": "supporting",
+      "time_scope": "snapshot",
+      "request_overrides": {
+        "chart_type": "bar",
+        "single_month_required": true
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotVerticalWaterfall": {
+      "chart_key": "vertical_waterfall",
+      "label": "Vertical waterfall",
+      "rendering": "client_only",
+      "chart_type": "vertical_waterfall",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": true,
+      "lenses": [
+        "growth_size",
+        "brand_shifts",
+        "fragmentation_concentration"
+      ],
+      "evidence_role": "special_case",
+      "time_scope": "decomposition",
+      "request_overrides": {
+        "single_month_required": true,
+        "source": "sales_metrics_rows"
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotPareto": {
+      "chart_key": "pareto",
+      "label": "Pareto",
+      "rendering": "server_chart",
+      "chart_type": "pareto",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": true,
+      "lenses": [
+        "fragmentation_concentration",
+        "brand_shifts",
+        "attribute_mix"
+      ],
+      "evidence_role": "primary",
+      "time_scope": "snapshot",
+      "request_overrides": {
+        "chart_type": "pareto"
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotStackedColumn": {
+      "chart_key": "stacked_column",
+      "label": "Stacked column",
+      "rendering": "server_chart",
+      "chart_type": "stacked_column",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": true,
+      "brief_enabled": true,
+      "lenses": [
+        "growth_size",
+        "price_value_capture",
+        "brand_shifts",
+        "attribute_mix",
+        "retailer_divergence"
+      ],
+      "evidence_role": "primary",
+      "time_scope": "trend",
+      "request_overrides": {
+        "chart_type": "stacked_column"
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotAreaAbsolute": {
+      "chart_key": "area_absolute",
+      "label": "Area",
+      "rendering": "server_chart",
+      "chart_type": "area",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": true,
+      "brief_enabled": true,
+      "lenses": [
+        "growth_size",
+        "price_value_capture",
+        "brand_shifts",
+        "attribute_mix",
+        "retailer_divergence"
+      ],
+      "evidence_role": "primary",
+      "time_scope": "trend",
+      "request_overrides": {
+        "chart_type": "area",
+        "area_mode": "absolute"
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotStacked100": {
+      "chart_key": "stacked_share",
+      "label": "100% area",
+      "rendering": "server_chart",
+      "chart_type": "area",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": true,
+      "brief_enabled": true,
+      "lenses": [
+        "price_value_capture",
+        "brand_shifts",
+        "fragmentation_concentration",
+        "attribute_mix",
+        "retailer_divergence"
+      ],
+      "evidence_role": "primary",
+      "time_scope": "trend",
+      "request_overrides": {
+        "chart_type": "area",
+        "area_mode": "percent"
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotSlope": {
+      "chart_key": "slope",
+      "label": "Slope",
+      "rendering": "server_chart",
+      "chart_type": "slope",
+      "variants": [
+        "standard",
+        "small_multiples"
+      ],
+      "supports_small_multiples": true,
+      "brief_enabled": true,
+      "lenses": [
+        "price_value_capture",
+        "brand_shifts",
+        "attribute_mix",
+        "retailer_divergence"
+      ],
+      "evidence_role": "primary",
+      "time_scope": "change",
+      "request_overrides": {
+        "chart_type": "slope",
+        "small_multiples_when_three_dimensions": true
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "plotStackedPareto": {
+      "chart_key": "stacked_pareto",
+      "label": "Stacked pareto",
+      "rendering": "server_chart",
+      "chart_type": "stacked_pareto",
+      "variants": [
+        "standard"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": true,
+      "lenses": [
+        "fragmentation_concentration",
+        "brand_shifts",
+        "attribute_mix",
+        "retailer_divergence"
+      ],
+      "evidence_role": "supporting",
+      "time_scope": "snapshot",
+      "request_overrides": {
+        "chart_type": "stacked_pareto"
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "tableAttributeBundleComparison": {
+      "kind": "table",
+      "chart_key": "attribute_bundle_comparison_table",
+      "label": "Attribute bundle comparison table",
+      "rendering": "server_table",
+      "chart_type": "evidence_table",
+      "use_when": "Use when the report needs exact bundle evidence for winning-now or emerging-signal rows, including focus/baseline counts, shares, delta, index, and brand breadth.",
+      "avoid_when": "Do not use for shelf visibility decomposition or individual product validation; use the visibility or product evidence table instead.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "variants": [
+        "signal_bundle",
+        "cohort_comparison",
+        "brand_breadth",
+        "compact_comparison"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": false,
+      "lenses": [
+        "attribute_mix",
+        "brand_shifts",
+        "retailer_divergence"
+      ],
+      "evidence_role": "supporting",
+      "time_scope": "snapshot",
+      "request_overrides": {
+        "visual_family": "reporting_table",
+        "table_template": "attribute_bundle_comparison_table",
+        "source": "attribute_tables/attribute_bundle_comparison_table.csv",
+        "reference_family": "reporting_table",
+        "required_columns": [
+          "layer",
+          "comparison",
+          "signal_bundle",
+          "focus_n",
+          "baseline_n",
+          "focus_share",
+          "baseline_share",
+          "delta",
+          "index",
+          "brands"
+        ]
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "tableAttributeBridge": {
+      "kind": "table",
+      "chart_key": "attribute_bridge_table",
+      "label": "Winner and emerging signal bridge table",
+      "rendering": "server_table",
+      "chart_type": "evidence_table",
+      "use_when": "Use when the report needs to compare current winners with emerging signals and explicitly show alignment, divergence, or one-sided evidence.",
+      "avoid_when": "Do not use when only one cohort layer exists or when the question is about product examples rather than bundle alignment.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "variants": [
+        "winning_now",
+        "emerging_signal",
+        "alignment"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": false,
+      "lenses": [
+        "attribute_mix",
+        "brand_shifts",
+        "retailer_divergence"
+      ],
+      "evidence_role": "supporting",
+      "time_scope": "snapshot",
+      "request_overrides": {
+        "visual_family": "reporting_table",
+        "table_template": "attribute_bridge_table",
+        "source": "attribute_tables/attribute_bridge_table.csv",
+        "reference_family": "reporting_table",
+        "required_columns": [
+          "signal_bundle",
+          "alignment",
+          "current_share",
+          "current_delta",
+          "current_index",
+          "emerging_share",
+          "emerging_delta",
+          "emerging_index",
+          "current_brands",
+          "recent_brands"
+        ]
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "tableRankWeightedVisibility": {
+      "kind": "table",
+      "chart_key": "rank_weighted_visibility_table",
+      "label": "Rank-weighted visibility table",
+      "rendering": "server_table",
+      "chart_type": "evidence_table",
+      "use_when": "Use when the report needs to ground claims about rank-weighted shelf visibility, incremental lane contribution, or robustness across alpha assumptions.",
+      "avoid_when": "Do not use as sales, demand, or causality evidence; use it only as shelf-visibility evidence.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "variants": [
+        "web_shelf_lane",
+        "gross_incremental_visibility",
+        "robustness"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": false,
+      "lenses": [
+        "attribute_mix",
+        "retailer_divergence"
+      ],
+      "evidence_role": "supporting",
+      "time_scope": "snapshot",
+      "request_overrides": {
+        "visual_family": "reporting_table",
+        "table_template": "rank_weighted_visibility_table",
+        "source": "attribute_tables/rank_weighted_visibility_table.csv",
+        "reference_family": "reporting_table",
+        "required_columns": [
+          "rank",
+          "lane",
+          "gross_weight",
+          "incremental",
+          "cumulative",
+          "skus",
+          "brands",
+          "robustness"
+        ]
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    },
+    "tableProductSignalEvidence": {
+      "kind": "table",
+      "chart_key": "product_signal_evidence_table",
+      "label": "Product signal evidence table",
+      "rendering": "server_table",
+      "chart_type": "evidence_table",
+      "use_when": "Use when the report needs product-level grounding for selected bundles, standout examples, or PDP/review reality checks; prefer image cards in the report narrative and this table as compact validation detail.",
+      "avoid_when": "Do not use to rank the category as a whole or to compare bundle prevalence; use the bundle comparison table for that.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "variants": [
+        "product_rows",
+        "matched_signal",
+        "evidence_notes",
+        "image_reference"
+      ],
+      "supports_small_multiples": false,
+      "brief_enabled": false,
+      "lenses": [
+        "attribute_mix",
+        "brand_shifts"
+      ],
+      "evidence_role": "supporting",
+      "time_scope": "snapshot",
+      "request_overrides": {
+        "visual_family": "reporting_table",
+        "table_template": "product_signal_evidence_table",
+        "source": "attribute_tables/product_signal_evidence_table.csv",
+        "reference_family": "reporting_table",
+        "required_columns": [
+          "cohort",
+          "rank",
+          "brand",
+          "product",
+          "matched_signal",
+          "rating",
+          "reviews",
+          "attributes",
+          "caveat",
+          "image_file"
+        ]
+      },
+      "scope_support": [
+        "single_category"
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "reject_too_many_dimensions",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "gt",
+          "value": 3
+        }
+      ],
+      "type": "error",
+      "message": "Choose 1 to 3 attributes."
+    },
+    {
+      "id": "reject_no_dimension_invalid_metric",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 0
+        }
+      ],
+      "type": "error",
+      "message": "wrong metric"
+    },
+    {
+      "id": "reject_price_metric_with_dimensions",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "gt",
+          "value": 0
+        },
+        {
+          "field": "metrics",
+          "op": "contains",
+          "value": "price"
+        }
+      ],
+      "type": "error",
+      "message": "wrong metric"
+    },
+    {
+      "id": "plot_single_dimension_single_month_bar",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 1
+        },
+        {
+          "field": "isSingleMonthSelected",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "metrics",
+          "op": "contains_only",
+          "value": [
+            "units"
+          ]
+        }
+      ],
+      "type": "plot",
+      "action": "plotBar",
+      "intent": "Bar, units, 1 dimension, single month.",
+      "goal": "Compare units for a selected month."
+    },
+    {
+      "id": "plot_single_dimension_single_month_vertical_waterfall",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 1
+        },
+        {
+          "field": "isSingleMonthSelected",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "metrics",
+          "op": "contains_only",
+          "value": [
+            "sales"
+          ]
+        }
+      ],
+      "type": "plot",
+      "action": "plotVerticalWaterfall",
+      "intent": "Waterfall, sales contribution, 1 dimension, single month.",
+      "goal": "Explain sales contribution for a selected month."
+    },
+    {
+      "id": "plot_single_dimension_single_month_pareto",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 1
+        },
+        {
+          "field": "isSingleMonthSelected",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "type": "plot",
+      "action": "plotPareto",
+      "intent": "Pareto, 1 dimension, single month.",
+      "goal": "Rank contributions and cumulative share for a selected month."
+    },
+    {
+      "id": "plot_single_dimension_slope",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "type": "plot",
+      "action": "plotSlope",
+      "intent": "Slope, trend, 1 dimension.",
+      "goal": "Show start-to-end share change, 1 dimension."
+    },
+    {
+      "id": "plot_two_dimensions_no_single_month_slope",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 2
+        },
+        {
+          "field": "isSingleMonthSelected",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "type": "plot",
+      "action": "plotSlope",
+      "intent": "Slope, trend, 2 dimensions.",
+      "goal": "Show start-to-end share change, 2 dimensions."
+    },
+    {
+      "id": "plot_two_dimensions_single_month_bar",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 2
+        },
+        {
+          "field": "isSingleMonthSelected",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "metrics",
+          "op": "contains_only",
+          "value": [
+            "units"
+          ]
+        }
+      ],
+      "type": "plot",
+      "action": "plotBar",
+      "intent": "Bar, units, 1 dimension, faceted, single month.",
+      "goal": "Compare units for a selected month, faceted."
+    },
+    {
+      "id": "plot_two_dimensions_single_month_stacked_pareto",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 2
+        },
+        {
+          "field": "isSingleMonthSelected",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "type": "plot",
+      "action": "plotStackedPareto",
+      "intent": "Stacked pareto, 2 dimensions, single month.",
+      "goal": "Rank contributions and cumulative share for a selected month."
+    },
+    {
+      "id": "plot_three_dimensions_single_month_stacked_pareto",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 3
+        },
+        {
+          "field": "isSingleMonthSelected",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "type": "plot",
+      "action": "plotStackedPareto",
+      "intent": "Stacked pareto, 2 dimensions, faceted, single month.",
+      "goal": "Rank contributions and cumulative share for a selected month, faceted."
+    },
+    {
+      "id": "plot_three_dimensions_slope",
+      "all": [
+        {
+          "field": "dimsCount",
+          "op": "eq",
+          "value": 3
+        }
+      ],
+      "type": "plot",
+      "action": "plotSlope",
+      "intent": "Slope, trend, 2 dimensions, faceted.",
+      "goal": "Show start-to-end share change, 2 dimensions, faceted."
+    },
+    {
+      "id": "fallback_no_chart",
+      "all": [],
+      "type": "error",
+      "message": "No chart available for the current selection."
+    }
+  ]
+}

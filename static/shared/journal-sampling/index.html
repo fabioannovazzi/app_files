@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Journal Sampling | Vera</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --text: #334155;
+      --muted: #667085;
+      --faint: #eef2f4;
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --soft: #ffffff;
+      --accent: #2f6f68;
+      --accent-soft: #e7f0ee;
+      --line: #d9e2e1;
+      --shadow: 0 16px 42px rgba(31, 41, 51, 0.06);
+      --content: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand img {
+      display: block;
+      width: 140px;
+      height: auto;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+
+    .lang-switch button {
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      min-width: 34px;
+      min-height: 30px;
+      padding: 5px 9px;
+    }
+
+    .lang-switch button.is-active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 560px;
+      padding: 76px 0 56px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 54px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 620;
+    }
+
+    h2 {
+      font-size: clamp(28px, 3.4vw, 42px);
+      font-weight: 620;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 620;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin-top: 22px;
+      color: var(--text);
+      font-size: clamp(19px, 2.3vw, 25px);
+      line-height: 1.38;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .action-row {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #f8fbfa;
+      padding: 10px 16px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 620;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .hero-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 620;
+      margin-bottom: 14px;
+    }
+
+    .hero-list,
+    .plain-list,
+    .output-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .hero-list li,
+    .plain-list li {
+      padding: 14px 0;
+      border-top: 1px solid var(--faint);
+      color: var(--text);
+    }
+
+    .hero-list li:first-child,
+    .plain-list li:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .section-block {
+      border-top: 1px solid var(--line);
+      padding: 58px 0;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.7fr);
+      gap: 40px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-head > p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #182320;
+      color: #eef7f4;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 20px;
+    }
+
+    .card p {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .output-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .output-list li {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 16px 18px;
+    }
+
+    .output-list strong {
+      display: block;
+      color: var(--ink);
+      font-weight: 620;
+      margin-bottom: 5px;
+    }
+
+    .output-list span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .review-panel,
+    .download-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      padding: 24px;
+    }
+
+    .review-panel {
+      margin-top: 22px;
+    }
+
+    .review-panel p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .usage-grid,
+    .download-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .step {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    .download-panel p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .download-panel a:not(.button) {
+      color: var(--accent);
+    }
+
+    @media (max-width: 900px) {
+      .nav-shell {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav-right {
+        width: 100%;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+      }
+
+      .hero,
+      .section-head,
+      .split,
+      .usage-grid,
+      .download-panel,
+      .output-list {
+        grid-template-columns: 1fr;
+      }
+
+      .grid,
+      .grid.four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      main,
+      .nav-shell {
+        width: min(var(--content), calc(100% - 28px));
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 48px 0 42px;
+      }
+
+      .grid,
+      .grid.four {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-right {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=en" aria-label="Mparanza home">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Page sections">
+          <a href="#cosa-fa" data-i18n="nav.what">What it does</a>
+          <a href="#input" data-i18n="nav.inputs">Inputs</a>
+          <a href="#output" data-i18n="nav.outputs">Outputs</a>
+          <a href="#uso" data-i18n="nav.use">Use</a>
+          <a href="#prompt" data-i18n="nav.prompts">Prompts</a>
+          <a href="#scarica" data-i18n="nav.download">Installation</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="it">It</button>
+          <button type="button" data-lang="en">En</button>
+          <button type="button" data-lang="fr">Fr</button>
+          <button type="button" data-lang="de">De</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero" id="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Audit sampling</p>
+        <h1 data-i18n="hero.title">Create a reproducible sample from a messy journal export.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Turn variable accounting journals into audit samples a reviewer can replay.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Give it a readable journal and sampling method. Get back a normalized population, selected sample, seed, filters and reading checks.</p>
+      </div>
+
+      <aside class="hero-card" aria-label="Problem solved">
+          <div class="label" data-i18n="hero.cardLabel">Give it / get back</div>
+        <ul class="hero-list" id="hero-list">
+          <li>Give it Excel, CSV or text-PDF journal files.</li>
+          <li>Confirm the few accounting fields that remain ambiguous.</li>
+          <li>Get back the normalized population, sample files and audit parameters.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <section class="section-block" id="cosa-fa">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="what.eyebrow">What it does</p>
+          <h2 data-i18n="what.title">From mixed journals to a reviewable sample</h2>
+        </div>
+        <p data-i18n="what.copy">Use it when a journal is readable but not standardized: good Excel, CSV, print-style Excel exported from PDF, or text PDF. Codex asks only for the few field choices that cannot be inferred safely.</p>
+      </div>
+
+      <div class="split">
+        <pre><code id="input-tree">input/
+  journal.xlsx
+  print_export_from_pdf.xlsx
+  general_journal.pdf</code></pre>
+
+        <pre><code id="result-tree">out/
+  inspection.json
+  suggested_recipe.json
+  normalized_journal.csv
+  normalization_diagnostics.json
+  sample/
+    journal_sample.csv
+    journal_sample.xlsx
+    sampling_audit.json</code></pre>
+      </div>
+    </section>
+
+    <section class="section-block" id="input">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
+          <h2 data-i18n="inputs.title">What it reads</h2>
+        </div>
+        <p data-i18n="inputs.copy">Works with local files already available to the firm. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.</p>
+      </div>
+      <div class="grid four" id="input-cards"></div>
+    </section>
+
+    <section class="section-block" id="output">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="outputs.eyebrow">Outputs</p>
+          <h2 data-i18n="outputs.title">What it produces</h2>
+        </div>
+        <p data-i18n="outputs.copy">The result is a reviewable work folder: recipe, normalized population, sample files, reading checks and review trail.</p>
+      </div>
+      <ul class="output-list" id="output-list"></ul>
+      <div class="review-panel">
+        <h3 data-i18n="review.title">Sample selection you can replay</h3>
+        <p data-i18n="review.copy1">The inspection step proposes the accounting columns and asks only for essential unresolved choices: header row, account column, debit/credit convention or sample assumptions.</p>
+        <p data-i18n="review.copy2">The resulting folder keeps extraction, normalization, filters, sample seed and exports visible, so a reviewer can repeat or challenge the selection.</p>
+        <p data-i18n="review.copy3">Reading gaps stay visible instead of being hidden in the final sample.</p>
+      </div>
+    </section>
+
+    <section class="section-block" id="uso">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="use.eyebrow">Use</p>
+          <h2 data-i18n="use.title">Create the sample from the work folder</h2>
+        </div>
+        <p data-i18n="use.copy">Open the work folder, confirm the essential field choices and generate the sample package.</p>
+      </div>
+      <div class="usage-grid" id="usage-grid"></div>
+    </section>
+
+    <section class="section-block" id="prompt">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="prompts.eyebrow">Prompts</p>
+          <h2 data-i18n="prompts.title">Ready prompts</h2>
+        </div>
+        <p data-i18n="prompts.copy">Start from one of these prompts and replace the folder path, language, method and sample size. Codex will ask before resolving essential ambiguities.</p>
+      </div>
+      <ul class="output-list" id="prompt-list"></ul>
+    </section>
+
+    <section class="section-block" id="scarica">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="download.eyebrow">Installation</p>
+          <h2 data-i18n="download.title">Install from Plugin Pack</h2>
+        </div>
+        <p data-i18n="download.copy">Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.</p>
+      </div>
+
+      <div class="download-panel">
+        <div>
+          <h3 data-i18n="download.installTitle">Installation</h3>
+          <p><span data-i18n="download.codexText">Official page:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
+          <div class="action-row">
+            <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Download Vera</a>
+          </div>
+          <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
+          <pre style="margin-top: 18px;"><code id="install-path">/Users/name/Documents/CodexPlugins/vera-codex-plugin</code></pre>
+        </div>
+        <div>
+          <h3 data-i18n="download.firstUseTitle">First use</h3>
+          <p data-i18n="download.firstUseCopy">In a Codex chat, provide the journal folder, language, sampling method and target size.</p>
+          <pre style="margin-top: 10px;"><code id="prompt-example">Use Journal Sampling on /path/input.
+Language: en. Document language: auto.
+Inspect the files, ask only for essential field ambiguities, then generate sample, reading checks and review trail.
+Method: random. Size: 25.</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const translations = {
+      it: {
+        nav: { what: "A cosa serve", inputs: "File letti", outputs: "Output", use: "Come usarlo", prompts: "Prompt pronti", download: "Installazione" },
+        hero: {
+          eyebrow: "Campionamento contabile",
+          title: "Crea un campione riproducibile da un giornale disordinato.",
+          subtitle: "Trasforma giornali contabili variabili in campioni che il revisore può ripetere.",
+          copy: "Dagli un giornale leggibile e un metodo di campionamento. Ottieni popolazione normalizzata, campione, seed, filtri e controlli di lettura.",
+          primary: "Scarica ZIP",
+          secondary: "Come funziona",
+          cardLabel: "Cosa dai / cosa ottieni",
+          bullets: [
+            "Dagli file giornale Excel, CSV o PDF testuali.",
+            "Conferma i pochi campi contabili rimasti ambigui.",
+            "Ottieni popolazione normalizzata, file campione e parametri di revisione."
+          ]
+        },
+        what: {
+          eyebrow: "A cosa serve",
+          title: "Da giornale variabile a campione rivedibile",
+          copy: "Serve quando il giornale è leggibile ma non standardizzato: Excel, CSV, esportazioni da stampa PDF o PDF testuali. Codex chiede solo le scelte sui campi che non si possono ricavare con sicurezza."
+        },
+        inputs: {
+          eyebrow: "File letti",
+          title: "Che cosa legge",
+          copy: "Lavora su file locali già disponibili allo studio. I PDF solo scansionati vengono segnalati per gestione manuale, non trattati come giornali leggibili.",
+          cards: [
+            ["Excel e CSV", "Giornali esportati con intestazioni leggibili e righe contabili."],
+            ["Excel da stampa PDF", "Fogli con intestazioni ripetute, colonne larghe e righe di dettaglio."],
+            ["PDF testuali", "PDF da cui il testo delle righe è estraibile senza OCR."],
+            ["Parametri del campione", "Metodo, seed, filtri e dimensione del campione da conservare nella traccia di revisione."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Output",
+          title: "Che cosa produce",
+          copy: "Il risultato è una cartella di lavoro rivedibile: regole sui campi, popolazione normalizzata, file campione, controlli di lettura e traccia di revisione.",
+          items: [
+            ["inspection.json", "Sintesi dell'ispezione e limiti di lettura."],
+            ["suggested_recipe.json", "Mappatura proposta e modificabile nella cartella di lavoro."],
+            ["normalized_journal.csv", "Popolazione normalizzata con campi canonici."],
+            ["normalization_diagnostics.json", "Campi mancanti, righe scartate e limiti di lettura."],
+            ["journal_sample.csv / .xlsx", "Campione estratto con metodo riproducibile."],
+            ["sampling_audit.json", "Metodo, seed, filtri, popolazione e dimensione campione."]
+          ]
+        },
+        review: {
+          title: "Campione riproducibile e controllabile",
+          copy1: "L'ispezione propone le colonne contabili e chiede solo le scelte essenziali rimaste aperte: riga di intestazione, colonna conto, convenzione dare/avere o assunzioni di campionamento.",
+          copy2: "La cartella risultante mantiene visibili estrazione, normalizzazione, filtri, seed ed esportazioni, così il revisore può ripetere o contestare la selezione.",
+          copy3: "I limiti di lettura restano nei file di controllo invece di sparire nel campione finale."
+        },
+        use: {
+          eyebrow: "Come usarlo",
+          title: "Prepara il campione dalla cartella di lavoro",
+          copy: "Apri la cartella in Codex, conferma le scelte essenziali sui campi e genera il pacchetto campione.",
+          steps: [
+            ["Prepara", "Metti file Excel, CSV o PDF testuali in una cartella lavoro."],
+            ["Ispeziona", "Rivedi inspection.json e suggested_recipe.json."],
+            ["Conferma", "Se serve, conferma riga di intestazione o colonne essenziali."],
+            ["Esegui", "Genera normalized_journal.csv, file campione e sampling_audit.json."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompt pronti",
+          title: "Prompt pronti",
+          copy: "Parti da uno di questi prompt e sostituisci percorso, lingua, metodo e dimensione del campione. Codex chiederà prima di risolvere ambiguità essenziali.",
+          items: [
+            ["Campionamento completo", "Usa Campionamento scritture contabili sulla cartella /percorso/input. Lingua: it. Lingua documenti: auto. Ispeziona i file, chiedimi solo le ambiguità essenziali e genera campione, controlli di lettura e traccia di revisione. Metodo: random. Dimensione: 25."],
+            ["Excel stampato da PDF", "Usa Campionamento scritture contabili sul file /percorso/giornale.xlsx. Trattalo come export da stampa PDF, trova intestazioni e righe di dettaglio, poi proponi i campi prima della normalizzazione."],
+            ["Campione MUS", "Usa Campionamento scritture contabili su /percorso/input con metodo MUS. Prima conferma importo base e filtri, poi genera il campione e sampling_audit.json."]
+          ]
+        },
+        download: {
+          eyebrow: "Installazione",
+          title: "Installa dal Plugin Pack",
+          copy: "Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.",
+          installTitle: "Installazione",
+          codexText: "Pagina ufficiale:",
+          button: "Scarica ZIP",
+          steps: [
+            "Scarica e decomprimi lo ZIP.",
+            "Sposta la cartella estratta, per esempio in Documents/CodexPlugins.",
+            "In Codex apri Plugins e scegli Add marketplace.",
+            "Seleziona il file .agents/plugins/marketplace.json nella cartella estratta.",
+            "Seleziona MP Vera e installa Vera."
+          ],
+          firstUseTitle: "Primo uso",
+          firstUseCopy: "In una chat Codex, indica cartella giornale, lingua, metodo e dimensione campione.",
+          prompt: "Usa Campionamento scritture contabili sulla cartella /percorso/input.\nLingua: it. Lingua documenti: auto.\nIspeziona i file, chiedimi solo le ambiguità essenziali sui campi, poi genera campione, controlli di lettura e traccia di revisione.\nMetodo: random. Dimensione: 25."
+        }
+      },
+      en: {
+        nav: { what: "What it does", inputs: "Inputs", outputs: "Outputs", use: "Use", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Audit sampling",
+          title: "Create a reproducible sample from a messy journal export.",
+          subtitle: "Turn variable accounting journals into audit samples a reviewer can replay.",
+          copy: "Give it a readable journal and sampling method. Get back a normalized population, selected sample, seed, filters and reading checks.",
+          primary: "Download ZIP",
+          secondary: "How it works",
+          cardLabel: "Give it / get back",
+          bullets: [
+            "Give it Excel, CSV or text-PDF journal files.",
+            "Confirm the few accounting fields that remain ambiguous.",
+            "Get back the normalized population, sample files and audit parameters."
+          ]
+        },
+        what: {
+          eyebrow: "What it does",
+          title: "From mixed journals to a reviewable sample",
+          copy: "Use it when a journal is readable but not standardized: good Excel, CSV, print-style Excel exported from PDF, or text PDF. Codex asks only for the few field choices that cannot be inferred safely."
+        },
+        inputs: {
+          eyebrow: "Inputs",
+          title: "What it reads",
+          copy: "Works with local files already available to the firm. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.",
+          cards: [
+            ["Excel and CSV", "Exported journals with readable headers and accounting rows."],
+            ["Print-style Excel", "Sheets with repeated headers, wide columns and detail rows."],
+            ["Text PDFs", "PDFs where journal-line text can be extracted without OCR."],
+            ["Sample parameters", "Method, seed, filters and sample size documented in the review trail."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Outputs",
+          title: "What it produces",
+          copy: "The result is a reviewable work folder: recipe, normalized population, sample files, reading checks and review trail.",
+          items: [
+            ["inspection.json", "Inspection summary and reading confidence."],
+            ["suggested_recipe.json", "Proposed field recipe that can be updated in the work folder."],
+            ["normalized_journal.csv", "Normalized population with canonical fields."],
+            ["normalization_diagnostics.json", "Missing fields, skipped rows and reading limits."],
+            ["journal_sample.csv / .xlsx", "Sample selected with a reproducible method."],
+            ["sampling_audit.json", "Method, seed, filters, population and sample size."]
+          ]
+        },
+        review: {
+          title: "Sample selection you can replay",
+          copy1: "The inspection step proposes the accounting columns and asks only for essential unresolved choices: header row, account column, debit/credit convention or sample assumptions.",
+          copy2: "The resulting folder keeps extraction, normalization, filters, sample seed and exports visible, so a reviewer can repeat or challenge the selection.",
+          copy3: "Reading gaps stay visible instead of being hidden in the final sample."
+        },
+        use: {
+          eyebrow: "Use",
+          title: "Create the sample from the work folder",
+          copy: "Open the work folder, confirm the essential field choices and generate the sample package.",
+          steps: [
+            ["Prepare", "Put Excel, CSV or text PDF files in one work folder."],
+            ["Inspect", "Review inspection.json and suggested_recipe.json."],
+            ["Resolve", "If needed, confirm the header row or essential columns."],
+            ["Create", "Generate normalized_journal.csv, sample files and sampling_audit.json."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Ready prompts",
+          copy: "Start from one of these prompts and replace the folder path, language, method and sample size. Codex will ask before resolving essential ambiguities.",
+          items: [
+            ["Full journal sampling", "Use Journal Sampling on /path/input. Language: en. Document language: auto. Inspect the files, ask only for essential ambiguities, then generate sample, reading checks and review trail. Method: random. Size: 25."],
+            ["Print-style Excel", "Use Journal Sampling on /path/journal.xlsx. Treat it as a print-style PDF export, find headers and detail rows, then propose the field recipe before normalization."],
+            ["MUS sample", "Use Journal Sampling on /path/input with MUS method. First confirm amount basis and filters, then generate the sample and sampling_audit.json."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Install from Plugin Pack",
+          copy: "Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.",
+          installTitle: "Installation",
+          codexText: "Official page:",
+          button: "Download ZIP",
+          steps: [
+            "Download and unzip the package.",
+            "Move the extracted folder, for example to Documents/CodexPlugins.",
+            "In Codex open Plugins and choose Add marketplace.",
+            "Select .agents/plugins/marketplace.json inside the extracted folder.",
+            "Select MP Vera and install Vera."
+          ],
+          firstUseTitle: "First use",
+          firstUseCopy: "In a Codex chat, provide the journal folder, language, sampling method and target size.",
+          prompt: "Use Journal Sampling on /path/input.\nLanguage: en. Document language: auto.\nInspect the files, ask only for essential field ambiguities, then generate sample, reading checks and review trail.\nMethod: random. Size: 25."
+        }
+      },
+      fr: {
+        nav: { what: "Ce qu'il fait", inputs: "Entrées", outputs: "Sorties", use: "Utilisation", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Échantillonnage audit",
+          title: "Créer un échantillon reproductible depuis un journal désordonné.",
+          subtitle: "Transforme des journaux comptables variables en échantillons que le réviseur peut rejouer.",
+          copy: "Donnez un journal lisible et une méthode d'échantillonnage. Recevez population normalisée, échantillon, seed, filtres et contrôles de lecture.",
+          primary: "Télécharger le ZIP",
+          secondary: "Comment l'utiliser",
+          cardLabel: "Données / résultat",
+          bullets: [
+            "Donnez des fichiers journal Excel, CSV ou PDF texte.",
+            "Confirmez les quelques champs comptables restés ambigus.",
+            "Recevez population normalisée, fichiers échantillon et paramètres de revue."
+          ]
+        },
+        what: {
+          eyebrow: "Ce qu'il fait",
+          title: "Des journaux mixtes vers un échantillon révisable",
+          copy: "À utiliser quand le journal est lisible mais non standardisé : bon Excel, CSV, Excel type impression issu d'un PDF, ou PDF textuel. Codex demande seulement les quelques choix de champs qui ne peuvent pas être inférés sûrement."
+        },
+        inputs: {
+          eyebrow: "Entrées",
+          title: "Ce qu'il lit",
+          copy: "Le contrôle travaille sur les fichiers locaux déjà disponibles au cabinet. Les PDF uniquement scannés/OCR sont signalés pour traitement manuel plutôt que considérés comme lisibles.",
+          cards: [
+            ["Excel et CSV", "Journaux exportés avec en-têtes lisibles et lignes comptables."],
+            ["Excel type impression", "Feuilles avec en-têtes répétés, colonnes larges et lignes de détail."],
+            ["PDF textuels", "PDF dont le texte des lignes de journal peut être extrait sans OCR."],
+            ["Paramètres d'échantillon", "Méthode, seed, filtres et taille d'échantillon documentés dans la trace de revue."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Sorties",
+          title: "Ce qu'il produit",
+          copy: "Le résultat est un dossier de travail révisable : recette, population normalisée, fichiers d'échantillon, contrôles de lecture et trace de revue.",
+          items: [
+            ["inspection.json", "Synthèse d'inspection et confiance de lecture."],
+            ["suggested_recipe.json", "Recette de champs proposée et modifiable dans le dossier de travail."],
+            ["normalized_journal.csv", "Population normalisée avec champs canoniques."],
+            ["normalization_diagnostics.json", "Champs manquants, lignes exclues et limites de lecture."],
+            ["journal_sample.csv / .xlsx", "Échantillon sélectionné avec une méthode reproductible."],
+            ["sampling_audit.json", "Méthode, seed, filtres, population et taille d'échantillon."]
+          ]
+        },
+        review: {
+          title: "Échantillon reproductible et contrôlable",
+          copy1: "L'inspection propose les colonnes comptables et demande seulement les choix essentiels encore ouverts : ligne d'en-tête, colonne compte, convention débit/crédit ou hypothèses d'échantillon.",
+          copy2: "Le dossier résultant garde visibles extraction, normalisation, filtres, seed et exports, afin qu'un réviseur puisse rejouer ou contester la sélection.",
+          copy3: "Les limites de lecture restent visibles au lieu d'être masquées dans l'échantillon final."
+        },
+        use: {
+          eyebrow: "Usage",
+          title: "Exécuter l'échantillon depuis le dossier de travail",
+          copy: "Ouvrez le dossier de travail, confirmez les choix essentiels de champs et générez le paquet d'échantillon.",
+          steps: [
+            ["Préparer", "Placez les fichiers Excel, CSV ou PDF textuels dans un dossier de travail."],
+            ["Inspecter", "Revoyez inspection.json et suggested_recipe.json."],
+            ["Résoudre", "Si nécessaire, confirmez la ligne d'en-tête ou les colonnes essentielles."],
+            ["Exécuter", "Générez normalized_journal.csv, fichiers d'échantillon et sampling_audit.json."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts de départ",
+          copy: "Partez de l'un de ces prompts et remplacez chemin, langue, méthode et taille d'échantillon. Codex demandera avant de résoudre les ambiguïtés essentielles.",
+          items: [
+            ["Échantillonnage complet", "Utilise Journal Sampling sur /chemin/input. Langue : fr. Langue des documents : auto. Inspecte les fichiers, demande uniquement les ambiguïtés essentielles, puis génère échantillon, contrôles de lecture et trace de revue. Méthode : random. Taille : 25."],
+            ["Excel type impression", "Utilise Journal Sampling sur /chemin/journal.xlsx. Traite-le comme un export PDF type impression, trouve les en-têtes et lignes détail, puis propose la recette de champs avant normalisation."],
+            ["Échantillon MUS", "Utilise Journal Sampling sur /chemin/input avec la méthode MUS. Confirme d'abord la base montant et les filtres, puis génère l'échantillon et sampling_audit.json."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Installer depuis le Plugin Pack",
+          copy: "Nécessite Codex desktop. Un seul ZIP installe Vera avec ses onze modules.",
+          installTitle: "Installation",
+          codexText: "Page officielle :",
+          button: "Télécharger ZIP",
+          steps: [
+            "Téléchargez et décompressez le paquet.",
+            "Déplacez le dossier extrait, par exemple dans Documents/CodexPlugins.",
+            "Dans Codex, ouvrez Plugins puis Add marketplace.",
+            "Sélectionnez .agents/plugins/marketplace.json dans le dossier extrait.",
+            "Sélectionnez MP Vera et installez Vera."
+          ],
+          firstUseTitle: "Premier usage",
+          firstUseCopy: "Dans une conversation Codex, indiquez le dossier journal, la langue, la méthode et la taille cible.",
+          prompt: "Utilise Journal Sampling sur /chemin/input.\nLangue : fr. Langue des documents : auto.\nInspecte les fichiers, demande uniquement les ambiguïtés de champs essentielles, puis génère échantillon, contrôles de lecture et trace de revue.\nMéthode : random. Taille : 25."
+        }
+      },
+      de: {
+        nav: { what: "Was es tut", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Audit-Stichprobe",
+          title: "Eine reproduzierbare Stichprobe aus einem uneinheitlichen Journal erstellen.",
+          subtitle: "Verwandelt variable Buchungsjournale in Stichproben, die Prüfer wiederholen können.",
+          copy: "Geben Sie ein lesbares Journal und eine Stichprobenmethode an. Zurück kommen normalisierte Population, Stichprobe, Seed, Filter und Lesekontrollen.",
+          primary: "ZIP herunterladen",
+          secondary: "Wie es funktioniert",
+          cardLabel: "Eingabe / Ergebnis",
+          bullets: [
+            "Geben Sie Journaldateien in Excel, CSV oder Text-PDF an.",
+            "Bestätigen Sie die wenigen noch unklaren Buchhaltungsfelder.",
+            "Zurück kommen normalisierte Population, Stichprobendateien und Prüfparameter."
+          ]
+        },
+        what: {
+          eyebrow: "Was es tut",
+          title: "Von gemischten Journalen zur prüfbaren Stichprobe",
+          copy: "Nutzen Sie es, wenn ein Journal lesbar, aber nicht standardisiert ist: gutes Excel, CSV, Druck-Excel aus PDF oder Text-PDF. Codex fragt nur die wenigen Feldentscheidungen ab, die nicht sicher ableitbar sind."
+        },
+        inputs: {
+          eyebrow: "Eingaben",
+          title: "Was es liest",
+          copy: "Arbeitet mit lokalen Dateien, die der Kanzlei bereits vorliegen. Reine Scan-/OCR-PDFs werden zur manuellen Bearbeitung markiert und nicht als lesbarer Input behandelt.",
+          cards: [
+            ["Excel und CSV", "Exportierte Journale mit lesbaren Kopfzeilen und Buchungszeilen."],
+            ["Druck-Excel", "Blätter mit wiederholten Kopfzeilen, breiten Spalten und Detailzeilen."],
+            ["Text-PDFs", "PDFs, deren Journalzeilen ohne OCR als Text extrahierbar sind."],
+            ["Stichprobenparameter", "Methode, Seed, Filter und Stichprobengröße in den Prüfdateien dokumentiert."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Ergebnisse",
+          title: "Was es erzeugt",
+          copy: "Das Ergebnis ist ein prüfbarer Arbeitsordner: Feldrezept, normalisierte Population, Stichprobendateien, Lesekontrollen und Prüfdateien.",
+          items: [
+            ["inspection.json", "Inspektionszusammenfassung und Lesesicherheit."],
+            ["suggested_recipe.json", "Vorgeschlagenes Feldrezept, im Arbeitsordner anpassbar."],
+            ["normalized_journal.csv", "Normalisierte Population mit kanonischen Feldern."],
+            ["normalization_diagnostics.json", "Fehlende Felder, ausgeschlossene Zeilen und Leselimits."],
+            ["journal_sample.csv / .xlsx", "Stichprobe mit reproduzierbarer Methode."],
+            ["sampling_audit.json", "Methode, Seed, Filter, Population und Stichprobengröße."]
+          ]
+        },
+        review: {
+          title: "Stichprobe, die wiederholt werden kann",
+          copy1: "Die Inspektion schlägt die Buchhaltungsspalten vor und fragt nur wesentliche offene Entscheidungen ab: Kopfzeile, Kontospalte, Soll/Haben-Konvention oder Stichprobenannahmen.",
+          copy2: "Der Ergebnisordner hält Extraktion, Normalisierung, Filter, Seed und Exporte sichtbar, damit ein Prüfer die Auswahl wiederholen oder hinterfragen kann.",
+          copy3: "Lesegrenzen bleiben sichtbar, statt in der finalen Stichprobe zu verschwinden."
+        },
+        use: {
+          eyebrow: "Nutzung",
+          title: "Stichprobe aus dem Arbeitsordner starten",
+          copy: "Öffnen Sie den Arbeitsordner, bestätigen Sie die wesentlichen Feldentscheidungen und erzeugen Sie das Stichprobenpaket.",
+          steps: [
+            ["Vorbereiten", "Excel-, CSV- oder Text-PDF-Dateien in einen Arbeitsordner legen."],
+            ["Prüfen", "Öffnen Sie inspection.json und suggested_recipe.json."],
+            ["Klären", "Falls nötig Kopfzeile oder essenzielle Spalten bestätigen."],
+            ["Ausführen", "normalized_journal.csv, Stichprobendateien und sampling_audit.json erzeugen."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts zur Nutzung",
+          copy: "Starten Sie mit einem dieser Prompts und ersetzen Sie Pfad, Sprache, Methode und Stichprobengröße. Codex fragt vor der Klärung wesentlicher Unklarheiten.",
+          items: [
+            ["Vollständige Journal-Stichprobe", "Verwende Journal Sampling für /pfad/input. Sprache: de. Dokumentsprache: auto. Prüfe die Dateien, frage nur wesentliche Unklarheiten und erstelle Stichprobe, Lesekontrollen und Prüfdateien. Methode: random. Größe: 25."],
+            ["Druck-Excel", "Verwende Journal Sampling für /pfad/journal.xlsx. Behandle es als Druck-Export aus PDF, finde Kopfzeilen und Detailzeilen und schlage vor der Normalisierung das Feldrezept vor."],
+            ["MUS-Stichprobe", "Verwende Journal Sampling für /pfad/input mit MUS-Methode. Bestätige zuerst Betragsbasis und Filter, dann erstelle Stichprobe und sampling_audit.json."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Aus Plugin Pack installieren",
+          copy: "Erfordert Codex Desktop. Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
+          installTitle: "Installation",
+          codexText: "Offizielle Seite:",
+          button: "ZIP herunterladen",
+          steps: [
+            "Paket herunterladen und entpacken.",
+            "Den entpackten Ordner verschieben, zum Beispiel nach Documents/CodexPlugins.",
+            "In Codex Plugins öffnen und Add marketplace wählen.",
+            ".agents/plugins/marketplace.json im entpackten Ordner auswählen.",
+            "MP Vera auswählen und Vera installieren."
+          ],
+          firstUseTitle: "Erste Nutzung",
+          firstUseCopy: "In einem Codex-Chat Journalordner, Sprache, Stichprobenmethode und Zielgröße angeben.",
+          prompt: "Verwende Journal Sampling für /pfad/input.\nSprache: de. Dokumentsprache: auto.\nPrüfe die Dateien, frage nur wesentliche Feldunklarheiten und erstelle Stichprobe, Lesekontrollen und Prüfdateien.\nMethode: random. Größe: 25."
+        }
+      }
+    };
+
+    function setList(id, values) {
+      const target = document.getElementById(id);
+      target.innerHTML = "";
+      values.forEach((text) => {
+        const item = document.createElement("li");
+        item.textContent = text;
+        target.appendChild(item);
+      });
+    }
+
+    function setCards(id, values) {
+      const target = document.getElementById(id);
+      target.innerHTML = "";
+      values.forEach(([title, body]) => {
+        const article = document.createElement("article");
+        article.className = "card";
+        article.innerHTML = `<h3></h3><p></p>`;
+        article.querySelector("h3").textContent = title;
+        article.querySelector("p").textContent = body;
+        target.appendChild(article);
+      });
+    }
+
+    function setOutputList(id, values) {
+      const target = document.getElementById(id);
+      target.innerHTML = "";
+      values.forEach(([title, body]) => {
+        const item = document.createElement("li");
+        item.innerHTML = `<strong></strong><span></span>`;
+        item.querySelector("strong").textContent = title;
+        item.querySelector("span").textContent = body;
+        target.appendChild(item);
+      });
+    }
+
+    function setSteps(values) {
+      const target = document.getElementById("usage-grid");
+      target.innerHTML = "";
+      values.forEach(([title, body]) => {
+        const item = document.createElement("article");
+        item.className = "step";
+        item.innerHTML = `<h3></h3><p></p>`;
+        item.querySelector("h3").textContent = title;
+        item.querySelector("p").textContent = body;
+        target.appendChild(item);
+      });
+    }
+
+    function applyLanguage(lang) {
+      const safeLang = translations[lang] ? lang : "en";
+      const data = translations[safeLang];
+      document.documentElement.lang = safeLang;
+      document.title = `${data.hero.title} | Vera`;
+      document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${safeLang}`;
+      });
+
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const path = node.getAttribute("data-i18n").split(".");
+        let value = data;
+        path.forEach((part) => { value = value && value[part]; });
+        if (typeof value === "string") {
+          node.textContent = value;
+        }
+      });
+
+      setList("hero-list", data.hero.bullets);
+      setCards("input-cards", data.inputs.cards);
+      setOutputList("output-list", data.outputs.items);
+      setSteps(data.use.steps);
+      setOutputList("prompt-list", data.prompts.items);
+      setList("install-steps", data.download.steps);
+      document.getElementById("prompt-example").textContent = data.download.prompt;
+
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.classList.toggle("is-active", button.getAttribute("data-lang") === safeLang);
+      });
+    }
+
+    function initialLanguage() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = params.get("lang");
+      if (requested && translations[requested]) {
+        return requested;
+      }
+      const browserLang = (navigator.language || "en").slice(0, 2);
+      return translations[browserLang] ? browserLang : "en";
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const lang = button.getAttribute("data-lang");
+        const url = new URL(window.location.href);
+        url.searchParams.set("lang", lang);
+        window.history.replaceState(null, "", url);
+        applyLanguage(lang);
+      });
+    });
+
+    applyLanguage(initialLanguage());
+  </script>
+</body>
+</html>

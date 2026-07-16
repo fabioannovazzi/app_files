@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Review{% endblock %}
+
+{% block head_scripts %}
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" defer></script>
+{% endblock %}
+
+{% block body %}
+  <header class="landing-header">
+    <a href="/?lang={{ lang or 'en' }}" class="landing-logo-link" aria-label="Return to the home page">
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main id="reactRoot" class="app-main" style="padding: 24px;">
+    <div class="container">
+      <div id="reactApp"></div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/review-react.js?v={{ asset_version or '' }}" defer></script>
+{% endblock %}

@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Vera prepara, controlla e documenta il lavoro dello studio. Il giudizio professionale resta al commercialista.">
+  <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
+  <title>Vera · AI per commercialisti</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #002060;
+      --blue: #0070C0;
+      --cyan: #00B0F0;
+      --white: #FFFFFF;
+      --content: 1120px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--navy);
+      background: var(--white);
+      font-family: "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--cyan);
+      background: var(--white);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 72px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand,
+    .nav-links a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand { gap: 10px; color: var(--navy); font-weight: 650; }
+    .brand img { width: 34px; height: 34px; }
+    .nav-right, .nav-links, .lang-switch { display: flex; align-items: center; }
+    .nav-right { gap: 20px; }
+    .nav-links { gap: 18px; color: var(--blue); font-size: 14px; }
+    .nav-links a:hover { color: var(--navy); }
+
+    .lang-switch {
+      gap: 2px;
+      padding: 2px;
+      border: 1px solid var(--blue);
+      border-radius: 9px;
+      background: var(--white);
+    }
+
+    .lang-switch button {
+      min-width: 42px;
+      min-height: 38px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--blue);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .lang-switch button.is-active {
+      color: var(--white);
+      background: var(--blue);
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 560px;
+      padding: 82px 0 72px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 250px;
+      align-items: center;
+      gap: clamp(48px, 9vw, 112px);
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { margin: 0; color: var(--navy); line-height: 1.12; }
+    h1 { max-width: 760px; font-size: clamp(58px, 8vw, 92px); font-weight: 650; letter-spacing: -0.04em; }
+    h2 { font-size: clamp(30px, 4vw, 43px); font-weight: 650; }
+    h3 { font-size: 18px; font-weight: 650; }
+    p { margin: 0; }
+
+    .lead {
+      max-width: 720px;
+      margin-top: 20px;
+      color: var(--navy);
+      font-size: clamp(21px, 2.4vw, 27px);
+      line-height: 1.42;
+    }
+
+    .hero-note { max-width: 690px; margin-top: 17px; color: var(--blue); }
+    .actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 18px;
+      border: 1px solid var(--navy);
+      border-radius: 8px;
+      background: var(--navy);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .button.secondary { color: var(--navy); background: var(--white); border-color: var(--blue); }
+    .button:hover { border-color: var(--blue); background: var(--blue); transform: translateY(-1px); }
+    .button.secondary:hover { color: var(--white); }
+
+    .vera-mark {
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--cyan);
+      border-radius: 30px;
+      background: var(--white);
+    }
+
+    .vera-mark img { display: block; width: 100%; height: auto; }
+
+    .promise-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .promise {
+      min-height: 142px;
+      padding: 30px 28px 30px 0;
+    }
+
+    .promise + .promise { padding-left: 28px; border-left: 1px solid var(--cyan); }
+    .promise__number { color: var(--cyan); font-size: 12px; font-weight: 650; letter-spacing: 0.08em; }
+    .promise h3 { margin-top: 8px; font-size: 22px; }
+    .promise p { margin-top: 8px; color: var(--blue); }
+
+    section { padding: 78px 0; }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
+      align-items: end;
+      gap: 48px;
+      margin-bottom: 36px;
+    }
+
+    .section-head p { max-width: 660px; color: var(--blue); font-size: 17px; }
+    .module-directory { border-top: 2px solid var(--navy); }
+
+    .module-row {
+      min-height: 100px;
+      display: grid;
+      grid-template-columns: minmax(210px, 0.68fr) minmax(0, 1.32fr) 30px;
+      align-items: center;
+      gap: 28px;
+      padding: 22px 4px;
+      border-bottom: 1px solid var(--cyan);
+      text-decoration: none;
+      transition: color 160ms ease, padding 160ms ease;
+    }
+
+    .module-row:hover { color: var(--blue); padding-left: 10px; }
+    .module-row p { max-width: 690px; color: var(--blue); }
+    .module-row__arrow { color: var(--cyan); font-size: 19px; text-align: right; }
+
+    .download-panel {
+      padding: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      border: 1px solid var(--blue);
+      border-radius: 14px;
+      background: var(--white);
+      box-shadow: inset 8px 0 0 var(--cyan);
+    }
+
+    .download-panel h2 { font-size: 30px; }
+    .download-panel p { max-width: 650px; margin-top: 10px; color: var(--blue); }
+    .download-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+
+    footer {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+      border-top: 1px solid var(--cyan);
+      color: var(--blue);
+      font-size: 13px;
+    }
+
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+      .hero { min-height: 0; grid-template-columns: 1fr; padding: 58px 0 48px; }
+      .vera-mark { width: 148px; grid-row: 1; padding: 10px; border-radius: 20px; }
+      .promise-strip { grid-template-columns: 1fr; }
+      .promise { min-height: 0; padding: 25px 0; }
+      .promise + .promise { padding-left: 0; border-top: 1px solid var(--cyan); border-left: 0; }
+      .section-head { grid-template-columns: 1fr; gap: 16px; }
+      .module-row { grid-template-columns: 1fr 28px; gap: 8px 18px; }
+      .module-row p { grid-column: 1; }
+      .module-row__arrow { grid-column: 2; grid-row: 1 / span 2; }
+      .download-panel { align-items: flex-start; flex-direction: column; }
+      .download-actions { justify-content: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-shell, main, footer { width: calc(100% - 32px); }
+      .brand span { display: none; }
+      .lang-switch button { min-width: 36px; }
+      h1 { font-size: 56px; }
+      section { padding: 58px 0; }
+      .download-panel { padding: 28px 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+      .button:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="/?lang=it" data-home-link>
+        <img src="icon.svg" alt="">
+        <span>Vera</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Page navigation">
+          <a href="#modules" data-i18n="nav.modules">Moduli</a>
+          <a href="#download" data-i18n="nav.download">Installazione</a>
+          <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="it">IT</button>
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="de">DE</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Vera · AI per commercialisti</p>
+        <h1 data-i18n="hero.title">Vera</h1>
+        <p class="lead" data-i18n="hero.lead">La collega AI che prepara, controlla e documenta il lavoro dello studio.</p>
+        <p class="hero-note" data-i18n="hero.note">Vera mette ordine nei fascicoli, verifica le evidenze e prepara carte di lavoro rivedibili. Il giudizio professionale resta al commercialista.</p>
+        <div class="actions">
+          <a class="button" href="https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="hero.download">Installa Vera</a>
+          <a class="button secondary" href="#modules" data-i18n="hero.modules">Scopri cosa sa fare</a>
+        </div>
+      </div>
+      <figure class="vera-mark" aria-hidden="true">
+        <img src="icon.svg" alt="">
+      </figure>
+    </section>
+
+    <div class="promise-strip" aria-label="Vera at work">
+      <div class="promise">
+        <span class="promise__number">01</span>
+        <h3 data-i18n="promise.prepare.title">Prepara</h3>
+        <p data-i18n="promise.prepare">Organizza fascicoli e dati prima della revisione.</p>
+      </div>
+      <div class="promise">
+        <span class="promise__number">02</span>
+        <h3 data-i18n="promise.check.title">Controlla</h3>
+        <p data-i18n="promise.check">Collega numeri, documenti e anomalie alle evidenze.</p>
+      </div>
+      <div class="promise">
+        <span class="promise__number">03</span>
+        <h3 data-i18n="promise.document.title">Documenta</h3>
+        <p data-i18n="promise.document">Consegna carte di lavoro chiare e rivedibili.</p>
+      </div>
+    </div>
+
+    <section id="modules">
+      <div class="section-head">
+        <h2 data-i18n="modules.title">Il lavoro di Vera</h2>
+        <p data-i18n="modules.copy">Chiedi a Vera il lavoro per nome. Lei attiva le istruzioni e gli strumenti del modulo adatto, mantenendo controlli e fonti visibili.</p>
+      </div>
+
+      <div class="module-directory">
+        <a class="module-row" href="../client-intake/index.html" data-module-link>
+          <h3 data-i18n="module.client.title">Istruttoria cliente</h3>
+          <p data-i18n="module.client">Prima istruttoria della cartella cliente, dati fiscali, anomalie formali, nota di sintesi ed email.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../journal-sampling/index.html" data-module-link>
+          <h3 data-i18n="module.sampling.title">Campionamento del giornale</h3>
+          <p data-i18n="module.sampling">Estrazione, normalizzazione e campionamento riproducibile del giornale contabile.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../check-entries/index.html" data-module-link>
+          <h3 data-i18n="module.entries.title">Controllo scritture</h3>
+          <p data-i18n="module.entries">Confronto delle scritture selezionate con i PDF di supporto e gestione delle eccezioni.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link>
+          <h3 data-i18n="module.bank.title">Riconciliazione banca-contabilità</h3>
+          <p data-i18n="module.bank">Riconciliazione tra estratti conto e giornale o mastrino con abbinamenti verificabili.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link>
+          <h3 data-i18n="module.reconciliation.title">Riconciliazione partite</h3>
+          <p data-i18n="module.reconciliation">Partite aperte, mastrini, banche e supporti raccolti in carte di lavoro Excel e Word.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../report-builder/index.html" data-module-link>
+          <h3 data-i18n="module.report.title">Genera report</h3>
+          <p data-i18n="module.report">Da Excel, CSV e PDF a una bozza Word con tabelle, fonti e controlli di lettura.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../concordato-plan-review/index.html" data-module-link>
+          <h3 data-i18n="module.concordato.title">Revisione Piano Concordato</h3>
+          <p data-i18n="module.concordato">Verifica numerica del piano rispetto a bilancio, mastrini e prospetti di supporto.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" id="previdenza-inps" href="../previdenza-inps/index.html" data-module-link>
+          <h3 data-i18n="module.previdenza.title">Previdenza INPS</h3>
+          <p data-i18n="module.previdenza">Istruttoria previdenziale con OCR locale su documenti ed esportazioni ufficiali INPS, fonti verificabili e bozza per revisione professionale.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" id="registro-imprese-sari" href="../registro-imprese-sari/index.html" data-module-link>
+          <h3 data-i18n="module.registro.title">Registro Imprese e SARI</h3>
+          <p data-i18n="module.registro">Bozza della pratica Registro Imprese/DIRE da fonti SARI e CCIAA tracciate, con RI/REA, INPS, INAIL, SUAP e RUI tenuti distinti.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../prompt-optimizer/index.html" data-module-link>
+          <h3 data-i18n="module.prompt.title">Ottimizza prompt</h3>
+          <p data-i18n="module.prompt">Preparazione di quesiti per Deep Research in ambito legale, fiscale e conformità, con fonti e controlli.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../deep-research-validator/index.html" data-module-link>
+          <h3 data-i18n="module.research.title">Valida Deep Research</h3>
+          <p data-i18n="module.research">Verifica delle affermazioni rilevanti rispetto alle fonti citate e preparazione del materiale corretto.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="download-panel">
+        <div>
+          <h2 data-i18n="download.title">Porta Vera nel tuo studio</h2>
+          <p data-i18n="download.copy">Installa Vera dalla sua pagina ufficiale OpenAI. Dopo l'installazione, apri una nuova chat e affidale il lavoro da preparare o controllare.</p>
+        </div>
+        <div class="download-actions">
+          <a class="button" href="https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="hero.download">Installa Vera</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Vera · AI per commercialisti</footer>
+
+  <script>
+    const copy = {
+      it: {
+        "nav.modules": "Moduli", "nav.download": "Installazione",
+        "hero.eyebrow": "Vera · AI per commercialisti",
+        "hero.title": "Vera",
+        "hero.lead": "La collega AI che prepara, controlla e documenta il lavoro dello studio.",
+        "hero.note": "Vera mette ordine nei fascicoli, verifica le evidenze e prepara carte di lavoro rivedibili. Il giudizio professionale resta al commercialista.",
+        "hero.download": "Installa Vera", "hero.modules": "Scopri cosa sa fare",
+        "promise.prepare.title": "Prepara", "promise.prepare": "Organizza fascicoli e dati prima della revisione.",
+        "promise.check.title": "Controlla", "promise.check": "Collega numeri, documenti e anomalie alle evidenze.",
+        "promise.document.title": "Documenta", "promise.document": "Consegna carte di lavoro chiare e rivedibili.",
+        "modules.title": "Il lavoro di Vera",
+        "modules.copy": "Chiedi a Vera il lavoro per nome. Lei attiva le istruzioni e gli strumenti del modulo adatto, mantenendo controlli e fonti visibili.",
+        "module.client.title": "Istruttoria cliente",
+        "module.client": "Prima istruttoria della cartella cliente, dati fiscali, anomalie formali, nota di sintesi ed email.",
+        "module.sampling.title": "Campionamento del giornale",
+        "module.sampling": "Estrazione, normalizzazione e campionamento riproducibile del giornale contabile.",
+        "module.entries.title": "Controllo scritture",
+        "module.entries": "Confronto delle scritture selezionate con i PDF di supporto e gestione delle eccezioni.",
+        "module.bank.title": "Riconciliazione banca-contabilità",
+        "module.bank": "Riconciliazione tra estratti conto e giornale o mastrino con abbinamenti verificabili.",
+        "module.reconciliation.title": "Riconciliazione partite",
+        "module.reconciliation": "Partite aperte, mastrini, banche e supporti raccolti in carte di lavoro Excel e Word.",
+        "module.report.title": "Genera report",
+        "module.report": "Da Excel, CSV e PDF a una bozza Word con tabelle, fonti e controlli di lettura.",
+        "module.concordato.title": "Revisione Piano Concordato",
+        "module.concordato": "Verifica numerica del piano rispetto a bilancio, mastrini e prospetti di supporto.",
+        "module.previdenza.title": "Previdenza INPS",
+        "module.previdenza": "Istruttoria previdenziale con OCR locale su documenti ed esportazioni ufficiali INPS, fonti verificabili e bozza per revisione professionale.",
+        "module.registro.title": "Registro Imprese e SARI",
+        "module.registro": "Bozza della pratica Registro Imprese/DIRE da fonti SARI e CCIAA tracciate, con RI/REA, INPS, INAIL, SUAP e RUI tenuti distinti.",
+        "module.prompt.title": "Ottimizza prompt",
+        "module.prompt": "Preparazione di quesiti per Deep Research in ambito legale, fiscale e conformità, con fonti e controlli.",
+        "module.research.title": "Valida Deep Research",
+        "module.research": "Verifica delle affermazioni rilevanti rispetto alle fonti citate e preparazione del materiale corretto.",
+        "download.title": "Porta Vera nel tuo studio",
+        "download.copy": "Installa Vera dalla sua pagina ufficiale OpenAI. Dopo l'installazione, apri una nuova chat e affidale il lavoro da preparare o controllare."
+      },
+      en: {
+        "nav.modules": "Modules", "nav.download": "Installation",
+        "hero.eyebrow": "Vera · AI for accounting firms",
+        "hero.title": "Vera",
+        "hero.lead": "The AI colleague who prepares, checks and documents your firm's work.",
+        "hero.note": "Vera organizes client files, checks the evidence and prepares reviewable workpapers. Professional judgment stays with the practitioner.",
+        "hero.download": "Install Vera", "hero.modules": "See what she can do",
+        "promise.prepare.title": "Prepares", "promise.prepare": "Organizes client files and data before review.",
+        "promise.check.title": "Checks", "promise.check": "Connects figures, documents and exceptions to evidence.",
+        "promise.document.title": "Documents", "promise.document": "Delivers clear, reviewable workpapers.",
+        "modules.title": "Vera at work",
+        "modules.copy": "Ask Vera for the task by name. She activates the instructions and tools for the right module while keeping checks and sources visible.",
+        "module.client.title": "Client Intake",
+        "module.client": "First review of a client folder, fiscal fields, formal anomalies, firm memo and email draft.",
+        "module.sampling.title": "Journal Sampling",
+        "module.sampling": "Extraction, normalization and reproducible sampling of accounting journals.",
+        "module.entries.title": "Check Entries",
+        "module.entries": "Compare selected entries with supporting PDFs and review the exceptions.",
+        "module.bank.title": "Journal-Bank Reconciliation",
+        "module.bank": "Reconcile bank statements with journal or ledger rows through reviewable matching.",
+        "module.reconciliation.title": "Open-item reconciliation",
+        "module.reconciliation": "Bring open items, ledgers, banks and supporting evidence into Excel and Word workpapers.",
+        "module.report.title": "Build Report",
+        "module.report": "Turn Excel, CSV and PDF sources into a Word draft with tables, sources and reading checks.",
+        "module.concordato.title": "Concordato Plan Review",
+        "module.concordato": "Tie out plan figures against balances, ledgers and supporting schedules.",
+        "module.previdenza.title": "INPS Social Security Review",
+        "module.previdenza": "Prepare an evidence-backed case with local OCR on documents and official INPS exports, verifiable sources and a draft for professional review.",
+        "module.registro.title": "Business Register and SARI",
+        "module.registro": "Prepare a source-backed Business Register/DIRE practice draft while keeping RI/REA, INPS, INAIL, SUAP and RUI questions distinct.",
+        "module.prompt.title": "Optimize Prompt",
+        "module.prompt": "Prepare legal, tax and compliance Deep Research prompts with source and checking rules.",
+        "module.research.title": "Validate Deep Research",
+        "module.research": "Check material claims against cited sources and prepare a corrected package.",
+        "download.title": "Bring Vera into your firm",
+        "download.copy": "Install Vera from her official OpenAI listing. After installation, open a new chat and give her the work you want prepared or checked."
+      },
+      fr: {
+        "nav.modules": "Modules", "nav.download": "Installation",
+        "hero.eyebrow": "Vera · IA pour cabinets comptables",
+        "hero.title": "Vera",
+        "hero.lead": "La collègue IA qui prépare, contrôle et documente le travail du cabinet.",
+        "hero.note": "Vera organise les dossiers, vérifie les justificatifs et prépare des feuilles de travail révisables. Le jugement professionnel reste à l'expert-comptable.",
+        "hero.download": "Installer Vera", "hero.modules": "Découvrir son travail",
+        "promise.prepare.title": "Prépare", "promise.prepare": "Organise les dossiers et les données avant la revue.",
+        "promise.check.title": "Contrôle", "promise.check": "Relie chiffres, documents et anomalies aux justificatifs.",
+        "promise.document.title": "Documente", "promise.document": "Produit des feuilles de travail claires et révisables.",
+        "modules.title": "Le travail de Vera",
+        "modules.copy": "Demandez la tâche à Vera par son nom. Elle active les instructions et outils du bon module en gardant contrôles et sources visibles.",
+        "module.client.title": "Ouverture du dossier client",
+        "module.client": "Première revue du dossier client, champs fiscaux, anomalies formelles, mémo cabinet et email.",
+        "module.sampling.title": "Échantillonnage du journal",
+        "module.sampling": "Extraction, normalisation et échantillonnage reproductible du journal comptable.",
+        "module.entries.title": "Contrôle des écritures",
+        "module.entries": "Comparaison des écritures sélectionnées avec les PDF justificatifs et revue des exceptions.",
+        "module.bank.title": "Rapprochement banque-comptabilité",
+        "module.bank": "Rapprochement des relevés bancaires avec le journal ou le grand livre.",
+        "module.reconciliation.title": "Rapprochement des postes ouverts",
+        "module.reconciliation": "Postes ouverts, grands livres, banques et justificatifs réunis dans des dossiers Excel et Word.",
+        "module.report.title": "Générer un rapport",
+        "module.report": "Transformer Excel, CSV et PDF en projet Word avec tableaux, sources et contrôles de lecture.",
+        "module.concordato.title": "Revue du plan de concordat",
+        "module.concordato": "Rapprochement des chiffres du plan avec bilans, grands livres et tableaux justificatifs.",
+        "module.previdenza.title": "Revue de prévoyance INPS",
+        "module.previdenza": "Préparer un dossier traçable avec OCR local sur des documents et exports officiels INPS, sources vérifiables et projet pour revue professionnelle.",
+        "module.registro.title": "Registre des entreprises et SARI",
+        "module.registro": "Préparer un projet de formalité Registre/DIRE fondé sur des sources officielles, en distinguant RI/REA, INPS, INAIL, SUAP et RUI.",
+        "module.prompt.title": "Optimiser le prompt",
+        "module.prompt": "Préparation de prompts Deep Research juridiques, fiscaux et conformité avec règles de sources.",
+        "module.research.title": "Valider Deep Research",
+        "module.research": "Vérification des affirmations matérielles contre les sources citées et préparation d'un package corrigé.",
+        "download.title": "Accueillez Vera dans votre cabinet",
+        "download.copy": "Installez Vera depuis sa page officielle OpenAI. Après l'installation, ouvrez un nouveau chat et confiez-lui le travail à préparer ou à contrôler."
+      },
+      de: {
+        "nav.modules": "Module", "nav.download": "Installation",
+        "hero.eyebrow": "Vera · KI für Steuerkanzleien",
+        "hero.title": "Vera",
+        "hero.lead": "Die KI-Kollegin, die Kanzleiarbeit vorbereitet, prüft und dokumentiert.",
+        "hero.note": "Vera ordnet Mandantenakten, prüft Nachweise und erstellt nachvollziehbare Arbeitspapiere. Das fachliche Urteil bleibt bei der Steuerberaterin oder dem Steuerberater.",
+        "hero.download": "Vera installieren", "hero.modules": "Ihre Arbeit kennenlernen",
+        "promise.prepare.title": "Bereitet vor", "promise.prepare": "Ordnet Akten und Daten vor der Prüfung.",
+        "promise.check.title": "Prüft", "promise.check": "Verknüpft Zahlen, Dokumente und Auffälligkeiten mit Nachweisen.",
+        "promise.document.title": "Dokumentiert", "promise.document": "Erstellt klare, nachvollziehbare Arbeitspapiere.",
+        "modules.title": "Vera bei der Arbeit",
+        "modules.copy": "Nennen Sie Vera die Aufgabe. Sie aktiviert die Anweisungen und Werkzeuge des passenden Moduls und hält Kontrollen und Quellen sichtbar.",
+        "module.client.title": "Mandantenaufnahme",
+        "module.client": "Erste Sichtung des Mandantendossiers, Steuerfelder, formale Auffälligkeiten, Kanzleinotiz und E-Mail.",
+        "module.sampling.title": "Journalstichprobe",
+        "module.sampling": "Extraktion, Normalisierung und reproduzierbare Stichproben aus Buchungsjournalen.",
+        "module.entries.title": "Buchungen prüfen",
+        "module.entries": "Ausgewählte Buchungen mit Beleg-PDFs vergleichen und Ausnahmen prüfen.",
+        "module.bank.title": "Bank und Buchhaltung abstimmen",
+        "module.bank": "Kontoauszüge mit Journal- oder Hauptbuchzeilen nachvollziehbar abstimmen.",
+        "module.reconciliation.title": "Offene-Posten-Abstimmung",
+        "module.reconciliation": "Offene Posten, Hauptbücher, Banken und Nachweise in Excel- und Word-Arbeitspapieren bündeln.",
+        "module.report.title": "Bericht erstellen",
+        "module.report": "Excel-, CSV- und PDF-Quellen in einen Word-Entwurf mit Tabellen und Lesekontrollen überführen.",
+        "module.concordato.title": "Concordato-Plan prüfen",
+        "module.concordato": "Planzahlen mit Bilanz, Hauptbüchern und unterstützenden Aufstellungen abstimmen.",
+        "module.previdenza.title": "INPS-Sozialversicherung prüfen",
+        "module.previdenza": "Einen beleggestützten Fall mit lokaler OCR für Dokumente und offizielle INPS-Exporte, prüfbaren Quellen und einem Entwurf zur fachlichen Prüfung vorbereiten.",
+        "module.registro.title": "Unternehmensregister und SARI",
+        "module.registro": "Einen quellengebundenen Register-/DIRE-Entwurf vorbereiten und RI/REA, INPS, INAIL, SUAP sowie RUI getrennt prüfen.",
+        "module.prompt.title": "Prompt optimieren",
+        "module.prompt": "Deep-Research-Prompts für Recht, Steuern und Compliance mit Quellen- und Prüfregeln vorbereiten.",
+        "module.research.title": "Deep Research prüfen",
+        "module.research": "Wesentliche Aussagen gegen zitierte Quellen prüfen und ein korrigiertes Paket erstellen.",
+        "download.title": "Holen Sie Vera in Ihre Kanzlei",
+        "download.copy": "Installieren Sie Vera über ihren offiziellen OpenAI-Eintrag. Öffnen Sie danach einen neuen Chat und geben Sie ihr die Aufgabe, die vorbereitet oder geprüft werden soll."
+      }
+    };
+
+    const supported = new Set(Object.keys(copy));
+    const params = new URLSearchParams(window.location.search);
+
+    function withLanguage(rawHref, lang) {
+      const url = new URL(rawHref, window.location.href);
+      url.searchParams.set("lang", lang);
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+
+    function setLanguage(requested, updateHistory = true) {
+      const lang = supported.has(requested) ? requested : "it";
+      const strings = copy[lang];
+      document.documentElement.lang = lang;
+      document.title = "Vera · AI per commercialisti";
+
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const value = strings[node.dataset.i18n];
+        if (value) node.textContent = value;
+      });
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.lang === lang);
+        button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
+      });
+      document.querySelectorAll("[data-module-link]").forEach((link) => {
+        if (!link.dataset.baseHref) link.dataset.baseHref = link.getAttribute("href");
+        link.setAttribute("href", withLanguage(link.dataset.baseHref, lang));
+      });
+      const home = document.querySelector("[data-home-link]");
+      if (home) home.setAttribute("href", `/?lang=${lang}`);
+      if (updateHistory) {
+        const next = new URL(window.location.href);
+        next.searchParams.set("lang", lang);
+        history.replaceState({}, "", `${next.pathname}${next.search}${next.hash}`);
+      }
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    setLanguage(params.get("lang") || "it", false);
+  </script>
+</body>
+</html>

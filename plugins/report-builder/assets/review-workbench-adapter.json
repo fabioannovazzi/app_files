@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "report-builder",
+  "title": "Build Report Review",
+  "reviewTitle": "Report Section Review",
+  "queueTitle": "Report Sections",
+  "detailTitle": "Section Editor",
+  "detailMode": "report-editor",
+  "detailHelp": "Review each narrative section against its source table and capture revisions.",
+  "detailGroups": [
+    {
+      "title": "Draft Section",
+      "variant": "draft",
+      "fields": [
+        "section",
+        "draft_text",
+        "prompt",
+        "status"
+      ],
+      "empty": "No draft text."
+    },
+    {
+      "title": "Source Table",
+      "variant": "source",
+      "fields": [
+        "source_table",
+        "source_path",
+        "metric",
+        "period",
+        "amount"
+      ],
+      "empty": "No source table fields."
+    },
+    {
+      "title": "Revision Note",
+      "variant": "finding",
+      "fields": [
+        "review_notes",
+        "reason",
+        "blocker",
+        "proposed_fix"
+      ],
+      "empty": "No revision note."
+    }
+  ],
+  "panels": [
+    "Report section",
+    "Source table",
+    "Review note"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione report",
+      "reviewTitle": "Revisione sezioni report",
+      "queueTitle": "Sezioni report",
+      "detailTitle": "Editor sezione",
+      "detailHelp": "Rivedi ogni sezione narrativa rispetto alla tabella fonte e cattura revisioni.",
+      "search": "Cerca sezione, tabella, fonte, blocco, output"
+    },
+    "fr": {
+      "title": "Revue rapport",
+      "reviewTitle": "Revue des sections du rapport",
+      "queueTitle": "Sections rapport",
+      "detailTitle": "Editeur section",
+      "detailHelp": "Revoyez chaque section narrative avec sa table source et saisissez les revisions.",
+      "search": "Chercher section, table, source, blocage, sortie"
+    },
+    "de": {
+      "title": "Report Review",
+      "reviewTitle": "Berichtsabschnitte pruefen",
+      "queueTitle": "Berichtsabschnitte",
+      "detailTitle": "Abschnittseditor",
+      "detailHelp": "Jeden narrativen Abschnitt gegen die Quelltabelle pruefen und Ueberarbeitungen erfassen.",
+      "search": "Abschnitt, Tabelle, Quelle, Blocker, Ausgabe suchen"
+    }
+  },
+  "saveTool": "save_report_builder_decisions",
+  "applyTool": "apply_report_builder_decisions",
+  "widgetType": "report_builder_review",
+  "demo": {
+    "review_type": "report_builder_review",
+    "items": [
+      {
+        "id": "section-1",
+        "item_type": "report_section",
+        "title": "Liquidity bridge",
+        "source_path": "cash_flow.xlsx",
+        "output_path": "report.docx",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "edit",
+        "data": {
+          "section": "Liquidity bridge",
+          "source_table": "cash_flow.xlsx",
+          "status": "drafted",
+          "draft_text": "Operating cash improved, but the bridge needs a separate one-off tax-payment explanation.",
+          "metric": "Net cash movement",
+          "period": "Q1 2026",
+          "amount": "-42000",
+          "review_notes": "Needs clearer explanation of one-off tax payment.",
+          "target_artifact": "report_draft.md",
+          "target_id_field": "section",
+          "target_record_id": "Liquidity bridge",
+          "target_field": "draft_text",
+          "edit_hint": "Editing this section updates the Liquidity bridge draft text before DOCX regeneration."
+        },
+        "evidence": [
+          {
+            "kind": "section_vs_source",
+            "source_table": "cash_flow.xlsx"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "item_type": "review_issue",
+        "title": "Revenue trend - missing source table",
+        "source_path": "sales_tables/",
+        "output_path": "report_draft.md",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "section": "Revenue trend",
+          "status": "needs_evidence",
+          "source_table": "not mapped",
+          "blocker": "Missing revenue table for the requested period.",
+          "requested_document": "Revenue table or trial balance schedule for Q1 2026",
+          "reason": "The report section cannot be drafted from the available local tables.",
+          "target_artifact": "report_draft.md",
+          "target_id_field": "section",
+          "target_record_id": "Revenue trend",
+          "target_field": "draft_text",
+          "edit_hint": "Editing this row records the reviewer draft for the Revenue trend section."
+        },
+        "evidence": [
+          {
+            "kind": "missing_source_table",
+            "status": "needs_evidence",
+            "requested_document": "Revenue table or trial balance schedule for Q1 2026"
+          }
+        ]
+      }
+    ]
+  }
+}

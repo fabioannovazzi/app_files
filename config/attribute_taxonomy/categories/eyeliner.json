@@ -1,0 +1,935 @@
+{
+    "id": "eyeliner",
+    "label": "eyeliner",
+    "attributes": [
+        {
+            "id": "form",
+            "label": "form",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "sharpenable_pencil",
+                    "label": "sharpenable pencil",
+                    "synonyms": [
+                        "pencil liner",
+                        "sharpenable eyeliner",
+                        "traditional pencil",
+                        "wood pencil",
+                        "wooden pencil"
+                    ]
+                },
+                {
+                    "id": "retractable_pencil",
+                    "label": "retractable pencil",
+                    "synonyms": [
+                        "automatic pencil",
+                        "mechanical pencil",
+                        "retractable eyeliner",
+                        "twist up",
+                        "wind up pencil"
+                    ]
+                },
+                {
+                    "id": "liquid_brush",
+                    "label": "liquid (brush)",
+                    "synonyms": [
+                        "brush tip liquid",
+                        "dip liner",
+                        "liquid eyeliner"
+                    ]
+                },
+                {
+                    "id": "felt_tip_pen",
+                    "label": "felt tip pen",
+                    "synonyms": [
+                        "eyeliner pen",
+                        "felt tip eyeliner",
+                        "liquid eyeliner pen",
+                        "marker eyeliner",
+                        "pen liner"
+                    ]
+                },
+                {
+                    "id": "gel_cream_pot",
+                    "label": "gel/cream pot",
+                    "synonyms": [
+                        "cream eyeliner",
+                        "cream pot",
+                        "gel eyeliner",
+                        "gel pot",
+                        "pot eyeliner"
+                    ]
+                },
+                {
+                    "id": "cake_compact",
+                    "label": "cake compact",
+                    "synonyms": [
+                        "activated cake",
+                        "cake eyeliner",
+                        "wet/dry cake"
+                    ]
+                },
+                {
+                    "id": "powder",
+                    "label": "powder",
+                    "synonyms": [
+                        "loose powder liner",
+                        "powder eyeliner",
+                        "pressed powder liner",
+                        "shadow liner"
+                    ]
+                },
+                {
+                    "id": "kohl_kajal",
+                    "label": "kohl/kajal",
+                    "synonyms": [
+                        "kajal eyeliner",
+                        "kajal stick",
+                        "kohl eyeliner",
+                        "soorma",
+                        "surma"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat finish",
+                        "matte finish",
+                        "no shine",
+                        "non gloss",
+                        "velvet matte"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "low sheen",
+                        "satin finish",
+                        "satiny",
+                        "semi matte",
+                        "soft sheen"
+                    ]
+                },
+                {
+                    "id": "shimmer",
+                    "label": "shimmer",
+                    "synonyms": [
+                        "iridescent",
+                        "light shimmer",
+                        "luminous sheen",
+                        "pearl shimmer",
+                        "shimmery"
+                    ]
+                },
+                {
+                    "id": "metallic",
+                    "label": "metallic",
+                    "synonyms": [
+                        "chrome like",
+                        "foil finish",
+                        "metal sheen",
+                        "metallic finish",
+                        "molten metal"
+                    ]
+                },
+                {
+                    "id": "glitter",
+                    "label": "glitter",
+                    "synonyms": [
+                        "glitter finish",
+                        "glittery",
+                        "micro glitter",
+                        "sparkle",
+                        "sparkly"
+                    ]
+                },
+                {
+                    "id": "glossy",
+                    "label": "glossy",
+                    "synonyms": [
+                        "gloss finish",
+                        "high gloss",
+                        "lacquered",
+                        "vinyl finish",
+                        "wet look"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "black",
+                    "label": "black",
+                    "synonyms": [
+                        "blackest black",
+                        "carbon black",
+                        "inky black",
+                        "jet black",
+                        "pitch black"
+                    ]
+                },
+                {
+                    "id": "brown",
+                    "label": "brown",
+                    "synonyms": [
+                        "chocolate brown",
+                        "cocoa",
+                        "deep brown",
+                        "espresso brown",
+                        "mocha"
+                    ]
+                },
+                {
+                    "id": "blue",
+                    "label": "blue",
+                    "synonyms": [
+                        "cobalt blue",
+                        "midnight blue",
+                        "navy blue",
+                        "royal blue",
+                        "sapphire blue"
+                    ]
+                },
+                {
+                    "id": "green",
+                    "label": "green",
+                    "synonyms": [
+                        "emerald green",
+                        "forest green",
+                        "hunter green",
+                        "olive green",
+                        "teal green"
+                    ]
+                },
+                {
+                    "id": "gray",
+                    "label": "gray",
+                    "synonyms": [
+                        "graphite gray",
+                        "gunmetal gray",
+                        "slate gray",
+                        "smoke gray",
+                        "steel gray"
+                    ]
+                },
+                {
+                    "id": "purple",
+                    "label": "purple",
+                    "synonyms": [
+                        "amethyst purple",
+                        "aubergine",
+                        "eggplant purple",
+                        "plum purple",
+                        "violet purple"
+                    ]
+                },
+                {
+                    "id": "white",
+                    "label": "white",
+                    "synonyms": [
+                        "bright white",
+                        "matte white",
+                        "opaque white",
+                        "pure white",
+                        "snow white"
+                    ]
+                },
+                {
+                    "id": "nude_beige",
+                    "label": "nude/beige",
+                    "synonyms": [
+                        "beige",
+                        "camel",
+                        "nude",
+                        "sand",
+                        "tan"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "performance_claims",
+            "label": "performance claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "waterproof",
+                    "label": "waterproof",
+                    "synonyms": [
+                        "storm proof",
+                        "swim proof",
+                        "tear proof",
+                        "water proof",
+                        "water sealed"
+                    ]
+                },
+                {
+                    "id": "smudge_proof",
+                    "label": "smudge-proof",
+                    "synonyms": [
+                        "anti smear",
+                        "no smudge",
+                        "smudge proof",
+                        "smudge resistant",
+                        "won't smudge"
+                    ]
+                },
+                {
+                    "id": "long_wear",
+                    "label": "long-wear",
+                    "synonyms": [
+                        "all day wear",
+                        "day long",
+                        "extended wear",
+                        "long lasting",
+                        "longwear"
+                    ]
+                },
+                {
+                    "id": "transfer_proof",
+                    "label": "transfer-proof",
+                    "synonyms": [
+                        "no transfer",
+                        "non transfer",
+                        "transfer proof",
+                        "transfer resistant",
+                        "won't transfer"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "water_resistant",
+                    "label": "water-resistant",
+                    "synonyms": [
+                        "rain resistant",
+                        "splash proof",
+                        "splash resistant",
+                        "water repellent",
+                        "water resistant"
+                    ]
+                },
+                {
+                    "id": "sweat_proof",
+                    "label": "sweat-proof",
+                    "synonyms": [
+                        "gym proof",
+                        "no sweat",
+                        "perspiration resistant",
+                        "sweat resistant",
+                        "workout proof"
+                    ]
+                },
+                {
+                    "id": "quick_drying",
+                    "label": "quick-drying",
+                    "synonyms": [
+                        "dries fast",
+                        "fast drying",
+                        "quick set",
+                        "rapid dry",
+                        "sets quickly"
+                    ]
+                },
+                {
+                    "id": "fade_resistant",
+                    "label": "fade-resistant",
+                    "synonyms": [
+                        "color stay",
+                        "colorfast",
+                        "fade proof",
+                        "fade resistant",
+                        "no fade"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "application_areas",
+            "label": "application areas",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "upper_lash_line",
+                    "label": "upper lash line",
+                    "synonyms": [
+                        "top lash line",
+                        "top lid line",
+                        "upper eyelid line",
+                        "upper lashline",
+                        "upper liner"
+                    ]
+                },
+                {
+                    "id": "lower_lash_line",
+                    "label": "lower lash line",
+                    "synonyms": [
+                        "bottom lash line",
+                        "bottom lid line",
+                        "lower eyelid line",
+                        "lower lashline",
+                        "lower liner"
+                    ]
+                },
+                {
+                    "id": "waterline",
+                    "label": "waterline",
+                    "synonyms": [
+                        "inner rim",
+                        "inner waterline",
+                        "lower waterline",
+                        "upper waterline",
+                        "water line"
+                    ]
+                },
+                {
+                    "id": "tightline",
+                    "label": "tightline",
+                    "synonyms": [
+                        "invisible liner",
+                        "lashline tightline",
+                        "tight line",
+                        "tightlining",
+                        "upper inner rim"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "applicator_type",
+            "label": "applicator type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "pencil_tip",
+                    "label": "pencil tip",
+                    "synonyms": [
+                        "crayon tip",
+                        "pencil point",
+                        "pointed pencil",
+                        "sharpened tip",
+                        "wood pencil tip"
+                    ]
+                },
+                {
+                    "id": "felt_tip",
+                    "label": "felt tip",
+                    "synonyms": [
+                        "fiber tip",
+                        "marker tip",
+                        "stiff felt tip"
+                    ]
+                },
+                {
+                    "id": "brush_tip",
+                    "label": "brush tip",
+                    "synonyms": [
+                        "bristle tip",
+                        "brush applicator",
+                        "fine brush",
+                        "liner brush",
+                        "precision brush"
+                    ]
+                },
+                {
+                    "id": "angled_brush",
+                    "label": "angled brush",
+                    "synonyms": [
+                        "angled applicator",
+                        "angled liner brush",
+                        "angled tip",
+                        "slanted brush",
+                        "wing brush"
+                    ]
+                },
+                {
+                    "id": "smudger_tip",
+                    "label": "smudger tip",
+                    "synonyms": [
+                        "smudge sponge",
+                        "smudge tip",
+                        "smudge tool",
+                        "smudger",
+                        "sponge smudger"
+                    ]
+                },
+                {
+                    "id": "roller_wheel",
+                    "label": "roller wheel",
+                    "synonyms": [
+                        "roll on wheel",
+                        "rolling applicator",
+                        "wheel applicator",
+                        "wheel tip"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "stamp_tip",
+                    "label": "stamp tip",
+                    "synonyms": [
+                        "liner stamp",
+                        "stamp applicator",
+                        "stamp eyeliner",
+                        "stamp wing",
+                        "wing stamp"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "special_features",
+            "label": "special features",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "built_in_sharpener",
+                    "label": "built-in sharpener",
+                    "synonyms": [
+                        "attached sharpener",
+                        "built in sharpener",
+                        "cap sharpener",
+                        "in cap sharpener",
+                        "self sharpening cap"
+                    ]
+                },
+                {
+                    "id": "smudger_included",
+                    "label": "smudger included",
+                    "synonyms": [
+                        "built in smudger",
+                        "smoke smudger",
+                        "smudge tool included"
+                    ]
+                },
+                {
+                    "id": "brush_included",
+                    "label": "brush included",
+                    "synonyms": [
+                        "built in brush",
+                        "cap brush",
+                        "comes with brush",
+                        "includes brush"
+                    ]
+                },
+                {
+                    "id": "dual_ended",
+                    "label": "dual-ended",
+                    "synonyms": [
+                        "double ended",
+                        "dual ended",
+                        "dual sided",
+                        "duo ended",
+                        "two sided"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "refillable",
+                    "label": "refillable",
+                    "synonyms": [
+                        "cartridge refillable",
+                        "ink refillable",
+                        "refill compatible",
+                        "refill ready",
+                        "refill system"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "safety_claims",
+            "label": "safety claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "ophthalmologist_tested",
+                    "label": "ophthalmologist tested",
+                    "synonyms": [
+                        "eye doctor tested",
+                        "eye tested",
+                        "ophthalmologically tested",
+                        "ophthalmologist approved"
+                    ]
+                },
+                {
+                    "id": "contact_lens_safe",
+                    "label": "contact lens safe",
+                    "synonyms": [
+                        "contact friendly",
+                        "contact lens friendly",
+                        "contact wearer safe",
+                        "contacts safe",
+                        "safe for contacts"
+                    ]
+                },
+                {
+                    "id": "hypoallergenic",
+                    "label": "hypoallergenic",
+                    "synonyms": [
+                        "allergen reduced",
+                        "allergy tested",
+                        "hypo allergenic",
+                        "low allergen",
+                        "sensitive skin friendly"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "suitable_for_sensitive_eyes",
+                    "label": "suitable for sensitive eyes",
+                    "synonyms": [
+                        "for sensitive eyes",
+                        "gentle on eyes",
+                        "safe for sensitive eyes",
+                        "sensitive eye safe",
+                        "sensitive eyes friendly"
+                    ]
+                },
+                {
+                    "id": "dermatologist_tested",
+                    "label": "dermatologist tested",
+                    "synonyms": [
+                        "derm approved",
+                        "derm tested",
+                        "dermatologically tested",
+                        "dermatologist approved"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "free_from",
+            "label": "free from",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "paraben_free",
+                    "label": "paraben-free",
+                    "synonyms": [
+                        "no parabens",
+                        "paraben free",
+                        "parabens not added",
+                        "without parabens"
+                    ]
+                },
+                {
+                    "id": "phthalate_free",
+                    "label": "phthalate-free",
+                    "synonyms": [
+                        "no phthalates",
+                        "phthalate free",
+                        "phthalates not added",
+                        "without phthalates"
+                    ]
+                },
+                {
+                    "id": "sulfate_free",
+                    "label": "sulfate-free",
+                    "synonyms": [
+                        "no sulfates",
+                        "sulfate free",
+                        "sulfates not added",
+                        "without sulfates"
+                    ]
+                },
+                {
+                    "id": "talc_free",
+                    "label": "talc-free",
+                    "synonyms": [
+                        "no talc",
+                        "talc free",
+                        "talc not added",
+                        "without talc"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "oil_free",
+                    "label": "oil-free",
+                    "synonyms": [
+                        "no oil",
+                        "non oily",
+                        "oil free",
+                        "without oil",
+                        "zero oil"
+                    ]
+                },
+                {
+                    "id": "alcohol_free",
+                    "label": "alcohol-free",
+                    "synonyms": [
+                        "alcohol free",
+                        "alcohol not added",
+                        "ethanol free",
+                        "no alcohol",
+                        "without alcohol"
+                    ]
+                },
+                {
+                    "id": "silicone_free",
+                    "label": "silicone-free",
+                    "synonyms": [
+                        "dimethicone free",
+                        "no silicones",
+                        "silicone free",
+                        "siloxane free",
+                        "without silicones"
+                    ]
+                },
+                {
+                    "id": "fragrance_free",
+                    "label": "fragrance-free",
+                    "synonyms": [
+                        "fragrance free",
+                        "fragrance free formula",
+                        "no fragrance",
+                        "unscented",
+                        "without fragrance"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "base",
+            "label": "primary base",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "water_based",
+                    "label": "water-based",
+                    "synonyms": [
+                        "aqua based",
+                        "aqueous base",
+                        "water base",
+                        "water based",
+                        "water formula"
+                    ]
+                },
+                {
+                    "id": "oil_based",
+                    "label": "oil-based",
+                    "synonyms": [
+                        "lipid base",
+                        "oil base",
+                        "oil based",
+                        "oil formulation",
+                        "oily base"
+                    ]
+                },
+                {
+                    "id": "wax_based",
+                    "label": "wax-based",
+                    "synonyms": [
+                        "wax base",
+                        "wax based",
+                        "wax blend",
+                        "wax formulation",
+                        "waxy base"
+                    ]
+                },
+                {
+                    "id": "silicone_based",
+                    "label": "silicone-based",
+                    "synonyms": [
+                        "dimethicone base",
+                        "silicone base",
+                        "silicone based",
+                        "silicone formula",
+                        "siloxane base"
+                    ]
+                },
+                {
+                    "id": "alcohol_based",
+                    "label": "alcohol-based",
+                    "synonyms": [
+                        "alcohol base",
+                        "alcohol based",
+                        "alcohol formula",
+                        "alcoholic base",
+                        "ethanol base"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "pigmentation",
+            "label": "pigmentation",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "sheer",
+                    "label": "sheer",
+                    "synonyms": [
+                        "light coverage",
+                        "lightly pigmented",
+                        "soft pigment",
+                        "subtle color",
+                        "translucent"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium",
+                    "synonyms": [
+                        "balanced coverage",
+                        "buildable",
+                        "medium coverage",
+                        "medium opacity",
+                        "moderate pigment"
+                    ]
+                },
+                {
+                    "id": "opaque",
+                    "label": "opaque",
+                    "synonyms": [
+                        "full coverage",
+                        "high opacity",
+                        "highly pigmented",
+                        "intense pigment",
+                        "rich color"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

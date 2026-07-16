@@ -1,0 +1,35 @@
+{
+  "plugin": "deep-research-validator",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "validate-deep-research-output",
+      "prompt": "Use Validate Deep Research on this report and check whether the cited sources support the key claims.",
+      "required_signals": ["Deep Research output", "source validation", "claims review"]
+    },
+    {
+      "id": "valida-deep-research",
+      "prompt": "Valida questo output di Deep Research, controlla fonti e ragionamento, e prepara il documento corretto.",
+      "required_signals": ["validation", "sources", "corrected document"]
+    },
+    {
+      "id": "check-citations-reasoning",
+      "prompt": "Review this research answer for unsupported citations, weak reasoning and overstated conclusions.",
+      "required_signals": ["citations", "reasoning review", "unsupported claims"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "optimize-prompt",
+      "prompt": "Create a better Deep Research prompt for this tax question."
+    },
+    {
+      "id": "answer-question",
+      "prompt": "Answer this legal question from scratch."
+    },
+    {
+      "id": "bank-reconciliation",
+      "prompt": "Reconcile the bank statement against the accounting journal."
+    }
+  ]
+}

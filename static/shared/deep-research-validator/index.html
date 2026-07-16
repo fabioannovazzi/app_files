@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Valida Deep Research | Vera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #223026;
+      --muted: #5e6a61;
+      --line: #d9e0d8;
+      --panel: #ffffff;
+      --accent: #4f6b78;
+      --accent-ink: #263942;
+      --bg: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    .page {
+      width: min(100% - 48px, 1180px);
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 28px 0 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--accent-ink);
+    }
+    .brand img {
+      height: 34px;
+      width: auto;
+      display: block;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+    nav a { text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+    .lang {
+      display: inline-flex;
+      gap: 10px;
+      margin-left: 8px;
+      font-weight: 600;
+    }
+    .lang button {
+      border: 0;
+      background: transparent;
+      padding: 2px 0;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+    }
+    .lang button[aria-pressed="true"] { color: var(--ink); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: clamp(32px, 5vw, 72px);
+      align-items: end;
+      padding: clamp(56px, 8vw, 110px) 0 48px;
+    }
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+    .lead {
+      margin: 28px 0 0;
+      max-width: 720px;
+      color: #405047;
+      font-size: clamp(1.08rem, 2vw, 1.42rem);
+      line-height: 1.42;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 18px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .button.secondary {
+      background: transparent;
+      color: var(--accent-ink);
+      border-color: var(--line);
+    }
+    .summary {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      padding: 20px;
+    }
+    .summary h2 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+    }
+    .summary ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+    section {
+      padding: 42px 0;
+      border-top: 1px solid var(--line);
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.34fr) minmax(0, 0.66fr);
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(28px, 3.4vw, 42px);
+      letter-spacing: 0;
+    }
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .item {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .item h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+    .item p, .item li {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .item p { margin: 0; }
+    .output-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .output-list li {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      color: var(--muted);
+    }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #1f2a24;
+      color: #edf3ee;
+      border-radius: 8px;
+      padding: 18px;
+      font-size: 0.9rem;
+      line-height: 1.48;
+    }
+    @media (max-width: 820px) {
+      .page { width: min(100% - 32px, 1180px); }
+      header, nav { align-items: flex-start; }
+      header, .hero, .section-head { grid-template-columns: 1fr; }
+      header { flex-direction: column; }
+      nav { flex-wrap: wrap; }
+      .hero { padding-top: 44px; }
+      .grid, .output-list { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a class="brand" id="home-link" href="/?lang=it">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <nav>
+        <a href="#workflow" data-i18n="nav.workflow">Come funziona</a>
+        <a href="#outputs" data-i18n="nav.outputs">File prodotti</a>
+        <a href="#prompts" data-i18n="nav.prompts">Prompt</a>
+        <a href="#download" data-i18n="nav.download">Installazione</a>
+        <span class="lang" aria-label="Language">
+          <button type="button" data-lang="en">En</button>
+          <button type="button" data-lang="it">It</button>
+          <button type="button" data-lang="fr">Fr</button>
+          <button type="button" data-lang="de">De</button>
+        </span>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow" data-i18n="hero.eyebrow">Validazione ricerca</p>
+          <h1 id="hero-title" data-i18n="hero.title">Valida Deep Research</h1>
+          <p class="lead" data-i18n="hero.lead">Rivede una risposta Deep Research prima che venga usata: seleziona le affermazioni essenziali, controlla il supporto citato e separa correzioni, limiti e punti da rivedere.</p>
+        </div>
+        <aside class="summary">
+          <h2 data-i18n="summary.title">Quando usarlo</h2>
+          <ul>
+            <li data-i18n="summary.item0">Hai un output Deep Research con fonti e citazioni</li>
+            <li data-i18n="summary.item1">Devi capire quali affermazioni reggono davvero</li>
+            <li data-i18n="summary.item2">Vuoi un pacchetto di revisione, non una nuova risposta</li>
+            <li data-i18n="summary.item3">Il professionista decide cosa accettare</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section id="workflow">
+        <div class="section-head">
+          <h2 data-i18n="workflow.title">Revisione per affermazioni</h2>
+          <p data-i18n="workflow.copy">La pagina non prova a ricontrollare tutto. Organizza poche affermazioni materiali, le confronta con fonti recuperabili e conserva la traccia del giudizio.</p>
+        </div>
+        <div class="grid">
+          <article class="item">
+            <h3 data-i18n="workflow.item1.title">Sceglie le affermazioni</h3>
+            <p data-i18n="workflow.item1.copy">Porta in primo piano le affermazioni che cambiano davvero il giudizio professionale.</p>
+          </article>
+          <article class="item">
+            <h3 data-i18n="workflow.item2.title">Controlla le fonti</h3>
+            <p data-i18n="workflow.item2.copy">Verifica se le fonti citate supportano l'affermazione, la indeboliscono o non bastano.</p>
+          </article>
+          <article class="item">
+            <h3 data-i18n="workflow.item3.title">Consegna la revisione</h3>
+            <p data-i18n="workflow.item3.copy">Prepara revisione delle affermazioni, traccia di revisione e documento corretto con limiti e punti da verificare.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="outputs">
+        <div class="section-head">
+          <h2 data-i18n="outputs.title">File prodotti</h2>
+          <p data-i18n="outputs.copy">Apri claims_review.json per il verdetto affermazione per affermazione. validation_package.md riassume che cosa è stato controllato e cosa resta incerto.</p>
+        </div>
+        <ul class="output-list">
+          <li>document_inventory.json</li>
+          <li>source_inventory.json</li>
+          <li>claims_review.json</li>
+          <li>validation_audit.json</li>
+          <li>validated_document.md</li>
+          <li>validated_document.docx</li>
+          <li>validation_package.md</li>
+        </ul>
+      </section>
+
+      <section id="prompts">
+        <div class="section-head">
+          <h2 data-i18n="prompts.title">Prompt pronti</h2>
+          <p data-i18n="prompts.copy">Usa questo prompt quando hai già l'output Deep Research e vuoi una revisione mirata prima di affidarti alla risposta.</p>
+        </div>
+        <pre><code id="prompt-example">Usa Valida Deep Research su questo output. Lingua: it. Seleziona le affermazioni materiali, controlla le fonti citate, indica cosa è supportato, debole o non verificato, e prepara una revisione con correzioni, limiti e punti da decidere manualmente.</code></pre>
+      </section>
+
+      <section id="download">
+        <div class="section-head">
+          <h2 data-i18n="download.title">Installazione</h2>
+          <p data-i18n="download.copy">Un unico ZIP installa Vera con tutti i suoi undici moduli.</p>
+        </div>
+        <a class="button" href="/downloads/vera?lang=it" data-free-download-link data-i18n="download.button">Scarica Vera</a>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const translations = {
+      it: {
+        title: "Valida Deep Research | Vera",
+        "nav.workflow": "Come funziona",
+        "nav.outputs": "File prodotti",
+        "nav.prompts": "Prompt",
+        "nav.download": "Installazione",
+        "hero.eyebrow": "Validazione ricerca",
+        "hero.title": "Valida Deep Research",
+        "hero.lead": "Rivede una risposta Deep Research prima che venga usata: seleziona le affermazioni essenziali, controlla il supporto citato e separa correzioni, limiti e punti da rivedere.",
+        "summary.title": "Quando usarlo",
+        "summary.item0": "Hai un output Deep Research con fonti e citazioni",
+        "summary.item1": "Devi capire quali affermazioni reggono davvero",
+        "summary.item2": "Vuoi un pacchetto di revisione, non una nuova risposta",
+        "summary.item3": "Il professionista decide cosa accettare",
+        "workflow.title": "Revisione per affermazioni",
+        "workflow.copy": "La pagina non prova a ricontrollare tutto. Organizza poche affermazioni materiali, le confronta con fonti recuperabili e conserva la traccia del giudizio.",
+        "workflow.item1.title": "Sceglie le affermazioni",
+        "workflow.item1.copy": "Porta in primo piano le affermazioni che cambiano davvero il giudizio professionale.",
+        "workflow.item2.title": "Controlla le fonti",
+        "workflow.item2.copy": "Verifica se le fonti citate supportano l'affermazione, la indeboliscono o non bastano.",
+        "workflow.item3.title": "Consegna la revisione",
+        "workflow.item3.copy": "Prepara revisione delle affermazioni, traccia di revisione e documento corretto con limiti e punti da verificare.",
+        "outputs.title": "File prodotti",
+        "outputs.copy": "Apri claims_review.json per il verdetto affermazione per affermazione. validation_package.md riassume che cosa è stato controllato e cosa resta incerto.",
+        "prompts.title": "Prompt pronti",
+        "prompts.copy": "Usa questo prompt quando hai già l'output Deep Research e vuoi una revisione mirata prima di affidarti alla risposta.",
+        "download.title": "Installazione",
+        "download.copy": "Un unico ZIP installa Vera con tutti i suoi undici moduli.",
+        "download.button": "Scarica ZIP",
+        prompt: "Usa Valida Deep Research su questo output. Lingua: it. Seleziona le affermazioni materiali, controlla le fonti citate, indica cosa è supportato, debole o non verificato, e prepara una revisione con correzioni, limiti e punti da decidere manualmente."
+      },
+      en: {
+        title: "Validate Deep Research | Vera",
+        "nav.workflow": "Review method",
+        "nav.outputs": "Files produced",
+        "nav.prompts": "Prompt ready",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Research validation",
+        "hero.title": "Validate Deep Research",
+        "hero.lead": "Reviews a Deep Research answer before you rely on it: selects core claims, checks cited support and separates corrections, limits and points for review.",
+        "summary.title": "Use it when",
+        "summary.item0": "You have a Deep Research output with sources and citations",
+        "summary.item1": "You need to know which claims actually hold",
+        "summary.item2": "You want a review package, not a new answer",
+        "summary.item3": "The professional reviewer decides what to accept",
+        "workflow.title": "Review by material claim",
+        "workflow.copy": "The page does not try to re-check everything. It organizes a small set of material claims, compares them with retrievable sources and keeps a review trail.",
+        "workflow.item1.title": "Select claims",
+        "workflow.item1.copy": "Brings forward the statements that would change the professional conclusion.",
+        "workflow.item2.title": "Check sources",
+        "workflow.item2.copy": "Reviews whether cited sources support the claim, weaken it or are not enough.",
+        "workflow.item3.title": "Deliver review",
+        "workflow.item3.copy": "Prepares the claim review, corrected document, limits and points to verify.",
+        "outputs.title": "Files produced",
+        "outputs.copy": "Open claims_review.json for the claim-by-claim verdict. validation_package.md summarizes what was checked and what remains uncertain.",
+        "prompts.title": "Prompt ready",
+        "prompts.copy": "Use this when you already have the Deep Research output and want a focused review before relying on it.",
+        "download.title": "Install from the Plugin Pack",
+        "download.copy": "One ZIP installs Vera with all eleven of her modules.",
+        "download.button": "Download ZIP",
+        prompt: "Use Validate Deep Research on this output. Language: en. Select the material claims, check the cited sources, state what is supported, weak or unverified, and prepare a review with corrections, limits and points for manual decision."
+      },
+      fr: {
+        title: "Valider Deep Research | Vera",
+        "nav.workflow": "Méthode",
+        "nav.outputs": "Fichiers produits",
+        "nav.prompts": "Prompt prêt",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Validation recherche",
+        "hero.title": "Valider Deep Research",
+        "hero.lead": "Relit une réponse Deep Research avant de s'y appuyer : sélectionne les affirmations essentielles, contrôle les sources citées et sépare corrections, limites et points à revoir.",
+        "summary.title": "Quand l'utiliser",
+        "summary.item0": "Vous avez une sortie Deep Research avec sources et citations",
+        "summary.item1": "Vous devez savoir quelles affirmations tiennent vraiment",
+        "summary.item2": "Vous voulez un paquet de revue, pas une nouvelle réponse",
+        "summary.item3": "Le professionnel décide ce qu'il accepte",
+        "workflow.title": "Revue par affirmation",
+        "workflow.copy": "La page ne tente pas de tout revérifier. Elle organise quelques affirmations matérielles, les compare aux sources récupérables et conserve une trace de revue.",
+        "workflow.item1.title": "Choisir les affirmations",
+        "workflow.item1.copy": "Fait ressortir les affirmations qui changent réellement la conclusion professionnelle.",
+        "workflow.item2.title": "Contrôler les sources",
+        "workflow.item2.copy": "Vérifie si les sources citées soutiennent l'affirmation, l'affaiblissent ou ne suffisent pas.",
+        "workflow.item3.title": "Livrer la revue",
+        "workflow.item3.copy": "Prépare la revue des affirmations, le document corrigé, les limites et les points à vérifier.",
+        "outputs.title": "Fichiers produits",
+        "outputs.copy": "Ouvrez claims_review.json pour le verdict affirmation par affirmation. validation_package.md résume ce qui a été contrôlé et ce qui reste incertain.",
+        "prompts.title": "Prompt de départ",
+        "prompts.copy": "Utilisez ce prompt quand vous avez déjà la sortie Deep Research et voulez une revue ciblée avant de vous appuyer dessus.",
+        "download.title": "Installer depuis le Plugin Pack",
+        "download.copy": "Un seul ZIP installe Vera avec ses onze modules.",
+        "download.button": "Télécharger ZIP",
+        prompt: "Utilise Valider Deep Research sur cette sortie. Langue : fr. Sélectionne les affirmations matérielles, contrôle les sources citées, indique ce qui est soutenu, faible ou non vérifié, puis prépare une revue avec corrections, limites et points à décider manuellement."
+      },
+      de: {
+        title: "Deep Research validieren | Vera",
+        "nav.workflow": "Methode",
+        "nav.outputs": "Dateien",
+        "nav.prompts": "Promptvorlage",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Research-Prüfung",
+        "hero.title": "Deep Research validieren",
+        "hero.lead": "Prüft eine Deep-Research-Antwort, bevor Sie sich darauf stützen: wählt Kernaussagen, kontrolliert zitierte Belege und trennt Korrekturen, Grenzen und Prüfpunkte.",
+        "summary.title": "Wann es hilft",
+        "summary.item0": "Sie haben einen Deep-Research-Output mit Quellen und Zitaten",
+        "summary.item1": "Sie müssen wissen, welche Aussagen wirklich halten",
+        "summary.item2": "Sie wollen ein Prüfungspaket, keine neue Antwort",
+        "summary.item3": "Der professionelle Prüfer entscheidet, was gilt",
+        "workflow.title": "Prüfung nach Aussagen",
+        "workflow.copy": "Die Seite versucht nicht, alles erneut zu prüfen. Sie organisiert wenige wesentliche Aussagen, vergleicht sie mit abrufbaren Quellen und dokumentiert die Prüfung.",
+        "workflow.item1.title": "Aussagen wählen",
+        "workflow.item1.copy": "Hebt die Aussagen hervor, die die professionelle Schlussfolgerung wirklich ändern.",
+        "workflow.item2.title": "Quellen prüfen",
+        "workflow.item2.copy": "Prüft, ob zitierte Quellen die Aussage stützen, schwächen oder nicht ausreichen.",
+        "workflow.item3.title": "Ergebnis vorbereiten",
+        "workflow.item3.copy": "Erstellt die Aussagenprüfung, das korrigierte Dokument, Einschränkungen und Prüfpunkte.",
+        "outputs.title": "Dateien",
+        "outputs.copy": "Öffnen Sie claims_review.json für das Urteil Aussage für Aussage. validation_package.md fasst zusammen, was geprüft wurde und was unsicher bleibt.",
+        "prompts.title": "Promptvorlage",
+        "prompts.copy": "Nutzen Sie das, wenn der Deep-Research-Output vorliegt und vor der Nutzung gezielt geprüft werden soll.",
+        "download.title": "Aus Plugin Pack installieren",
+        "download.copy": "Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
+        "download.button": "ZIP herunterladen",
+        prompt: "Verwende Deep Research validieren für diesen Output. Sprache: de. Wähle die wesentlichen Aussagen, prüfe die zitierten Quellen, benenne was gestützt, schwach oder ungeprüft ist, und erstelle eine Prüfung mit Korrekturen, Grenzen und Punkten für die manuelle Entscheidung."
+      }
+    };
+
+    function getLang() {
+      const params = new URLSearchParams(window.location.search);
+      const fromQuery = params.get("lang");
+      return translations[fromQuery] ? fromQuery : "it";
+    }
+
+    function applyLanguage(lang) {
+      const data = translations[lang] || translations.it;
+      document.documentElement.lang = lang;
+      document.title = data.title || translations.it.title;
+      document.getElementById("home-link").href = `/?lang=${lang}`;
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.getAttribute("data-i18n");
+        if (data[key]) node.textContent = data[key];
+      });
+      document.getElementById("prompt-example").textContent = data.prompt;
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.setAttribute("aria-pressed", button.dataset.lang === lang ? "true" : "false");
+      });
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${lang}`;
+      });
+      const params = new URLSearchParams(window.location.search);
+      params.set("lang", lang);
+      history.replaceState(null, "", `${window.location.pathname}?${params.toString()}${window.location.hash}`);
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+    });
+
+    applyLanguage(getLang());
+  </script>
+</body>
+</html>

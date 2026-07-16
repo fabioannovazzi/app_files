@@ -1,0 +1,122 @@
+{
+  "slide_id": "edge-bullets-chart",
+  "slide_number": 1,
+  "image_size": {
+    "w": 1200,
+    "h": 800
+  },
+  "style_prior": {
+    "prompt_style": "uniform",
+    "font_family_primary": "Inter SemiBold",
+    "font_family_fallback": "Inter",
+    "title_size_pt": 42.0,
+    "body_size_pt": 24.0,
+    "title_to_body_ratio": 1.75
+  },
+  "objects": [
+    {
+      "object_id": "title-1",
+      "object_type": "title",
+      "bbox": {
+        "x": 48,
+        "y": 34,
+        "w": 1080,
+        "h": 78
+      },
+      "z_index": 10,
+      "reading_index": 1,
+      "z_role": "foreground_editable_text"
+    },
+    {
+      "object_id": "chart-1",
+      "object_type": "chart",
+      "bbox": {
+        "x": 320,
+        "y": 180,
+        "w": 760,
+        "h": 420
+      },
+      "z_index": 1,
+      "reading_index": 2,
+      "z_role": "background_chart"
+    }
+  ],
+  "text_lines": [
+    {
+      "line_id": "L1",
+      "text": "Bullets overlap chart area but must stay visible",
+      "bbox": {
+        "x": 48,
+        "y": 34,
+        "w": 1080,
+        "h": 78
+      },
+      "role": "page_title",
+      "object_id": "title-1",
+      "z_role": "foreground_editable_text",
+      "confidence": 0.98
+    },
+    {
+      "line_id": "L2",
+      "text": "- This bullet is foreground and cannot be masked.",
+      "bbox": {
+        "x": 340,
+        "y": 196,
+        "w": 420,
+        "h": 62
+      },
+      "role": "bullet",
+      "z_role": "foreground_editable_text",
+      "confidence": 0.97
+    }
+  ],
+  "chart_objects": [
+    {
+      "chart_id": "chart-1",
+      "chart_bbox": {
+        "x": 320,
+        "y": 180,
+        "w": 760,
+        "h": 420
+      },
+      "plot_area_bbox": {
+        "x": 320,
+        "y": 180,
+        "w": 760,
+        "h": 420
+      },
+      "mask_regions": [
+        {
+          "x": 320,
+          "y": 260,
+          "w": 760,
+          "h": 340
+        }
+      ],
+      "missing_elements": [
+        "title",
+        "axis",
+        "legend",
+        "data_label",
+        "annotation"
+      ],
+      "missing_flags": {
+        "missing_title": true,
+        "missing_axis": true,
+        "missing_legend": true,
+        "missing_data_labels": true,
+        "missing_annotations": true
+      },
+      "chart_confidence": 0.95
+    }
+  ],
+  "image_objects": [],
+  "decision": {
+    "has_chart": true,
+    "chart_confidence": 0.95,
+    "status": "pass"
+  },
+  "metrics": {
+    "ocr_coverage_ratio": 0.88
+  }
+}

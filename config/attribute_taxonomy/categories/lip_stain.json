@@ -1,0 +1,692 @@
+{
+    "id": "lip_stain",
+    "label": "lip stain",
+    "attributes": [
+        {
+            "id": "form",
+            "label": "form",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "marker_pen",
+                    "label": "marker/pen",
+                    "synonyms": [
+                        "felt tip stain",
+                        "lip marker",
+                        "pen stain"
+                    ]
+                },
+                {
+                    "id": "wand",
+                    "label": "wand",
+                    "synonyms": [
+                        "doe foot stain",
+                        "liquid stain wand"
+                    ]
+                },
+                {
+                    "id": "water_tint",
+                    "label": "water tint",
+                    "synonyms": [
+                        "water based tint",
+                        "watery tint"
+                    ]
+                },
+                {
+                    "id": "jelly_gel",
+                    "label": "jelly/gel",
+                    "synonyms": [
+                        "gel stain",
+                        "jelly tint"
+                    ]
+                },
+                {
+                    "id": "peel_off",
+                    "label": "peel-off",
+                    "synonyms": [
+                        "film tint",
+                        "peel off tint"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "fresh finish",
+                        "skin like lip"
+                    ]
+                },
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "soft matte",
+                        "velvet matte"
+                    ]
+                },
+                {
+                    "id": "glossy",
+                    "label": "glossy",
+                    "synonyms": [
+                        "dewy shine",
+                        "wet look"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "satiny finish",
+                        "soft sheen"
+                    ]
+                },
+                {
+                    "id": "blurred_soft_focus",
+                    "label": "blurred/soft focus",
+                    "synonyms": [
+                        "blur finish",
+                        "soft focus lip"
+                    ]
+                },
+                {
+                    "id": "shimmer",
+                    "label": "shimmer",
+                    "synonyms": [
+                        "shimmery stain",
+                        "subtle shimmer"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "full",
+                    "label": "full",
+                    "synonyms": [
+                        "full coverage",
+                        "full opacity",
+                        "high coverage",
+                        "high pigment",
+                        "opaque"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium",
+                    "synonyms": [
+                        "medium opacity",
+                        "moderate coverage"
+                    ]
+                },
+                {
+                    "id": "sheer",
+                    "label": "sheer",
+                    "synonyms": [
+                        "light coverage",
+                        "see through",
+                        "sheer wash",
+                        "translucent",
+                        "wash of color"
+                    ]
+                },
+                {
+                    "id": "buildable",
+                    "label": "buildable coverage",
+                    "synonyms": [
+                        "build up",
+                        "customizable coverage",
+                        "layerable",
+                        "sheer to full"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "nude",
+                    "label": "nude",
+                    "synonyms": [
+                        "beige nude",
+                        "naked",
+                        "neutral nude",
+                        "skin tone"
+                    ]
+                },
+                {
+                    "id": "pink",
+                    "label": "pink",
+                    "synonyms": [
+                        "blush pink",
+                        "bubblegum",
+                        "hot pink",
+                        "rose"
+                    ]
+                },
+                {
+                    "id": "red",
+                    "label": "red",
+                    "synonyms": [
+                        "crimson",
+                        "ruby red",
+                        "scarlet",
+                        "true red"
+                    ]
+                },
+                {
+                    "id": "coral",
+                    "label": "coral",
+                    "synonyms": [
+                        "apricot",
+                        "coral pink",
+                        "peachy coral",
+                        "salmon"
+                    ]
+                },
+                {
+                    "id": "mauve",
+                    "label": "mauve",
+                    "synonyms": [
+                        "dusty rose",
+                        "mauvy",
+                        "rosy mauve",
+                        "taupe rose"
+                    ]
+                },
+                {
+                    "id": "berry",
+                    "label": "berry",
+                    "synonyms": [
+                        "cranberry",
+                        "currant",
+                        "raspberry",
+                        "wine"
+                    ]
+                },
+                {
+                    "id": "plum",
+                    "label": "plum",
+                    "synonyms": [
+                        "aubergine",
+                        "deep plum",
+                        "eggplant",
+                        "prune"
+                    ]
+                },
+                {
+                    "id": "brown",
+                    "label": "brown",
+                    "synonyms": [
+                        "chocolate",
+                        "cocoa",
+                        "coffee",
+                        "mocha"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "undertone",
+            "label": "undertone",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "warm",
+                    "label": "warm",
+                    "synonyms": [
+                        "golden undertone",
+                        "peachy undertone",
+                        "warm tone",
+                        "yellow undertone"
+                    ]
+                },
+                {
+                    "id": "cool",
+                    "label": "cool",
+                    "synonyms": [
+                        "blue undertone",
+                        "cool tone",
+                        "pink cool",
+                        "rosy undertone"
+                    ]
+                },
+                {
+                    "id": "neutral",
+                    "label": "neutral",
+                    "synonyms": [
+                        "balanced tone",
+                        "balanced undertone",
+                        "neither warm nor cool",
+                        "neutral tone"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "applicator_type",
+            "label": "applicator type",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "wand_applicator",
+                    "label": "wand applicator",
+                    "children": [
+                        {
+                            "id": "doe_foot",
+                            "label": "doe-foot",
+                            "synonyms": [
+                                "classic wand",
+                                "doe foot",
+                                "doefoot",
+                                "petal tip"
+                            ]
+                        },
+                        {
+                            "id": "paddle",
+                            "label": "paddle",
+                            "synonyms": [
+                                "flat applicator",
+                                "flat paddle",
+                                "paddle wand"
+                            ]
+                        },
+                        {
+                            "id": "brush_tip",
+                            "label": "brush tip",
+                            "synonyms": [
+                                "bristle brush",
+                                "brush applicator",
+                                "fine brush"
+                            ]
+                        },
+                        {
+                            "id": "precision_tip",
+                            "label": "precision tip",
+                            "synonyms": [
+                                "arrow applicator",
+                                "pointed doe foot",
+                                "teardrop tip"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "tip_applicator",
+                    "label": "tip applicator",
+                    "children": [
+                        {
+                            "id": "slanted_tip",
+                            "label": "slanted tip",
+                            "synonyms": [
+                                "angled tip",
+                                "slant tip",
+                                "slanted nozzle"
+                            ]
+                        },
+                        {
+                            "id": "sponge_tip",
+                            "label": "sponge tip",
+                            "synonyms": [
+                                "cushion applicator",
+                                "cushion tip",
+                                "sponge applicator"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "wear_claims",
+            "label": "wear claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "longwear",
+                    "label": "longwear",
+                    "synonyms": [
+                        "all day stain",
+                        "long lasting tint"
+                    ]
+                },
+                {
+                    "id": "transfer_resistant",
+                    "label": "transfer-resistant",
+                    "synonyms": [
+                        "kiss proof",
+                        "transfer proof"
+                    ]
+                },
+                {
+                    "id": "smudge_resistant",
+                    "label": "smudge-resistant",
+                    "synonyms": [
+                        "budge proof",
+                        "won't smear"
+                    ]
+                },
+                {
+                    "id": "water_resistant",
+                    "label": "water-resistant",
+                    "synonyms": [
+                        "resists moisture",
+                        "waterproof like"
+                    ]
+                },
+                {
+                    "id": "food_resistant",
+                    "label": "food-resistant",
+                    "synonyms": [
+                        "meal proof",
+                        "survives eating"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "benefits",
+            "label": "benefits",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "non_drying",
+                    "label": "non-drying",
+                    "synonyms": [
+                        "comfortable stain",
+                        "won't dry lips"
+                    ]
+                },
+                {
+                    "id": "hydrating",
+                    "label": "hydrating",
+                    "synonyms": [
+                        "moisturizing",
+                        "water locking"
+                    ]
+                },
+                {
+                    "id": "lightweight",
+                    "label": "lightweight",
+                    "synonyms": [
+                        "barely there feel",
+                        "weightless"
+                    ]
+                },
+                {
+                    "id": "blurring",
+                    "label": "blurring",
+                    "synonyms": [
+                        "blur effect",
+                        "softens lip lines"
+                    ]
+                },
+                {
+                    "id": "buildable",
+                    "label": "layerable benefit",
+                    "synonyms": [
+                        "customizable depth",
+                        "layerable color"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "formula_base",
+            "label": "formula base",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "water_based",
+                    "label": "water-based",
+                    "synonyms": [
+                        "aqueous base",
+                        "watery formula"
+                    ]
+                },
+                {
+                    "id": "gel_based",
+                    "label": "gel-based",
+                    "synonyms": [
+                        "gel formula",
+                        "jelly base"
+                    ]
+                },
+                {
+                    "id": "oil_serum",
+                    "label": "oil/serum",
+                    "synonyms": [
+                        "serum tint",
+                        "staining oil"
+                    ]
+                },
+                {
+                    "id": "mousse_cream",
+                    "label": "mousse/cream",
+                    "synonyms": [
+                        "cloud tint",
+                        "whipped stain"
+                    ]
+                },
+                {
+                    "id": "peel_off_film",
+                    "label": "peel-off film",
+                    "synonyms": [
+                        "film forming tint",
+                        "peel mask tint"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "free_from",
+            "label": "free from",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "paraben_free",
+                    "label": "paraben-free",
+                    "synonyms": [
+                        "free of parabens",
+                        "no parabens",
+                        "paraben free",
+                        "without parabens"
+                    ]
+                },
+                {
+                    "id": "phthalate_free",
+                    "label": "phthalate-free",
+                    "synonyms": [
+                        "free of phthalates",
+                        "no phthalates",
+                        "phthalate free",
+                        "without phthalates"
+                    ]
+                },
+                {
+                    "id": "mineral_oil_free",
+                    "label": "mineral oil-free",
+                    "synonyms": [
+                        "free of mineral oil",
+                        "mineral oil free",
+                        "no mineral oil",
+                        "without mineral oil"
+                    ]
+                },
+                {
+                    "id": "sulfate_free",
+                    "label": "sulfate-free",
+                    "synonyms": [
+                        "free of sulfates",
+                        "no sulfates",
+                        "sulfate free",
+                        "without sulfates"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "silicone_free",
+                    "label": "silicone-free",
+                    "synonyms": [
+                        "free of silicones",
+                        "no silicones",
+                        "silicone free",
+                        "without silicones"
+                    ]
+                },
+                {
+                    "id": "alcohol_free",
+                    "label": "alcohol-free",
+                    "synonyms": [
+                        "alcohol free",
+                        "free of alcohol",
+                        "no alcohol",
+                        "without alcohol"
+                    ]
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "gluten-free",
+                    "synonyms": [
+                        "free of gluten",
+                        "gluten free",
+                        "no gluten",
+                        "without gluten"
+                    ]
+                }
+            ]
+        }
+    ]
+}

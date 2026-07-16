@@ -1,0 +1,7 @@
+[
+  "(?i)\\bcompetenze?\\b",
+  "(?i)\\bcompetenze?\\s+spese\\s+ed\\s+oneri\\b",
+  "(?i)\\bcanone\\s+(?:servizi\\s+)?telematic[oi]\\b",
+  "(?i)\\bcanone\\s+multicanalit[aà]\\b",
+  "(?i)commissioni\\s+bon(?:\\.|ifico)?\\s*istan"
+]

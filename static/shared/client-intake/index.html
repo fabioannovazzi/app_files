@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Istruttoria clienti | Vera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111827;
+      --text: #1f2937;
+      --muted: #475467;
+      --soft: #667085;
+      --line: #e2e8f0;
+      --line-strong: #cbd5e1;
+      --paper: #ffffff;
+      --panel: #ffffff;
+      --panel-soft: #ffffff;
+      --blue: #27313a;
+      --blue-soft: #ffffff;
+      --green: #486f62;
+      --green-soft: #ffffff;
+      --red: #8a4b4a;
+      --red-soft: #ffffff;
+      --code: #202834;
+      --radius: 8px;
+      --shadow: none;
+      --content: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+      font-kerning: normal;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.86);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .brand {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 650;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      line-height: 1;
+    }
+
+    .brand img {
+      display: block;
+      width: 128px;
+      height: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-links a {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 560;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--blue);
+      background: var(--blue-soft);
+      outline: none;
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    section {
+      scroll-margin-top: 92px;
+    }
+
+    .hero {
+      padding: 74px 0 56px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 46px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 20px;
+      font-weight: 650;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .subtitle {
+      margin-top: 18px;
+      max-width: 750px;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.45;
+    }
+
+    .hero-copy {
+      margin-top: 28px;
+      max-width: 840px;
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .emphasis-copy {
+      margin-top: 16px;
+      max-width: 760px;
+      color: var(--muted);
+    }
+
+    .badge-row {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 620;
+    }
+
+    .action-row {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid var(--green);
+      border-radius: var(--radius);
+      background: var(--green);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--blue);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      outline: none;
+      filter: brightness(0.96);
+    }
+
+    .callout {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--panel);
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .callout strong {
+      color: var(--blue);
+    }
+
+    .hero-card {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 360px;
+      padding: 28px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card .label {
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .hero-list {
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-list li {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.45;
+      padding-top: 14px;
+      border-top: 1px solid rgba(217, 224, 231, 0.85);
+    }
+
+    .hero-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .hero-list strong {
+      display: block;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .hero-list code {
+      display: inline-block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .hero-note {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section-block {
+      padding: 62px 0;
+      border-top: 1px solid rgba(217, 224, 231, 0.75);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.42fr) minmax(0, 0.58fr);
+      gap: 44px;
+      align-items: start;
+      margin-bottom: 30px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.five {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .card.soft {
+      background: var(--panel-soft);
+    }
+
+    .card h3 {
+      margin-top: 10px;
+    }
+
+    .card p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .mail-example {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .mail-example p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .icon {
+      display: inline-flex;
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--blue-soft);
+      font-size: 16px;
+    }
+
+    .tag-list {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-list li {
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.62);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .plain-list {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text);
+    }
+
+    .plain-list li + li {
+      margin-top: 8px;
+    }
+
+    .before-box {
+      padding: 26px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .before-box h3 {
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .download-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 24px;
+      align-items: start;
+      padding: 30px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .download-panel > *,
+    .output-wrap > * {
+      min-width: 0;
+    }
+
+    .download-panel p {
+      margin-top: 12px;
+      color: var(--muted);
+    }
+
+    .download-list {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text);
+    }
+
+    .download-list li + li {
+      margin-top: 8px;
+    }
+
+    .output-wrap {
+      display: grid;
+      grid-template-columns: minmax(340px, 0.92fr) minmax(0, 1.08fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    pre {
+      margin: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      white-space: pre;
+      color: #eef3f6;
+      background: var(--code);
+      border-radius: var(--radius);
+      padding: 22px;
+      font-size: 13px;
+      line-height: 1.55;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+
+    .file-table,
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    .file-table th,
+    .file-table td,
+    .compare-table th,
+    .compare-table td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .file-table tr:last-child td,
+    .compare-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .file-table th,
+    .compare-table th {
+      color: var(--ink);
+      background: var(--panel-soft);
+      font-weight: 650;
+    }
+
+    .file-table td:first-child,
+    .compare-table td:first-child {
+      color: var(--blue);
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      border-radius: var(--radius);
+    }
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .component {
+      min-height: 220px;
+      padding: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .component h3 {
+      font-size: 18px;
+    }
+
+    .component p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .example-layout {
+      display: grid;
+      grid-template-columns: minmax(340px, 0.9fr) minmax(0, 1.1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .command-box {
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 650;
+    }
+
+    .metric-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric-list li {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .metric-list strong {
+      display: block;
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .metric-list span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .memo,
+    .email {
+      padding: 28px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .memo h3,
+    .email h3 {
+      margin-bottom: 18px;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .memo h4 {
+      margin: 18px 0 6px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .memo p,
+    .email p {
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .email-subject {
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .negative {
+      background: var(--paper);
+      border-color: rgba(217, 224, 231, 0.75);
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .principles div {
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--green);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .steps {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .steps li {
+      min-height: 158px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .steps li::before {
+      content: "";
+      display: block;
+      width: 34px;
+      height: 3px;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      background: var(--blue);
+    }
+
+    .flow-line {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .flow-line span {
+      padding: 15px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      text-align: center;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .module-card {
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .module-card h3 {
+      font-size: 19px;
+    }
+
+    .module-card p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .usage-step {
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .usage-step strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .benefits {
+      columns: 2;
+      column-gap: 46px;
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .benefits li {
+      break-inside: avoid;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 1040px) {
+      h1 {
+        font-size: clamp(42px, 5vw, 58px);
+      }
+
+      .hero,
+      .section-head,
+      .output-wrap,
+      .example-layout,
+      .download-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .grid.five,
+      .component-grid,
+      .steps,
+      .flow-line {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .usage-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-shell {
+        width: min(100% - 24px, var(--content));
+        min-height: 58px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 0;
+      }
+
+      .nav-links {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      main {
+        width: min(100% - 24px, var(--content));
+      }
+
+      h1 {
+        font-size: clamp(42px, 5vw, 58px);
+      }
+
+      h2 {
+        font-size: 29px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .hero {
+        padding-top: 44px;
+      }
+
+      .section-block {
+        padding: 46px 0;
+      }
+
+      .grid.two,
+      .grid.three,
+      .grid.five,
+      .component-grid,
+      .metric-list,
+      .principles,
+      .steps,
+      .flow-line,
+      .module-grid,
+      .usage-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .benefits {
+        columns: 1;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="/?lang=it" aria-label="Homepage Mparanza">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <nav class="nav-links" aria-label="Sezioni pagina">
+        <a href="#cosa-fa">Cosa fa</a>
+        <a href="#output">Output</a>
+        <a href="#primo-run">Primo uso</a>
+        <a href="#giurisdizioni">Pagine locali</a>
+        <a href="#prompt">Prompt</a>
+        <a href="#scarica">Installazione</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero" id="hero">
+      <div>
+        <p class="eyebrow">Istruttoria clienti</p>
+        <h1>Istruttoria clienti</h1>
+        <p class="subtitle">Prima lettura di una cartella cliente: che cosa è arrivato, che cosa manca e che cosa chiedere prima di lavorare il fascicolo.</p>
+        <p class="hero-copy">Usalo quando un cliente invia PDF, immagini, fatture XML, avvisi o documenti di supporto sparsi. Dai a Codex la cartella e l'anno fiscale: ottieni inventario, dati leggibili, anomalie, memo interno e bozza email cliente con richieste specifiche.</p>
+      </div>
+
+      <aside class="hero-card" aria-label="Ambito istruttoria">
+        <div>
+          <div class="label">Lavoro di istruttoria</div>
+          <ul class="hero-list">
+            <li><strong>Legge la cartella</strong><code>file ricevuti dal cliente</code></li>
+            <li><strong>Separa i documenti</strong><code>redditi, pagamenti, fatture, avvisi, supporti</code></li>
+            <li><strong>Segnala i vuoti</strong><code>mancanze, duplicati, anno errato, scansioni illeggibili</code></li>
+            <li><strong>Prepara il seguito</strong><code>memo studio e richieste al cliente</code></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <section class="section-block" id="cosa-fa">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Cosa fa</p>
+          <h2>Trasforma una cartella cliente disordinata in un primo fascicolo di lavoro</h2>
+        </div>
+        <p>Serve quando lo studio deve capire rapidamente che cosa ha ricevuto: documenti presenti, documenti mancanti, punti dubbi e domande precise da rimandare al cliente.</p>
+      </div>
+
+      <div class="output-wrap" style="margin-top: 24px;">
+        <pre><code>Cartella cliente ricevuta/
+  47 file
+  CU.pdf
+  F24_giugno.pdf
+  spese_mediche_1.pdf
+  mutuo_contratto.pdf
+  fatture/
+    IT01234567890_001.xml
+  avviso_agenzia.pdf</code></pre>
+
+        <pre><code>Istruttoria/
+  8 categorie identificate
+  2 possibili duplicati
+  1 file fuori anno fiscale
+  mutuo senza certificazione interessi
+  bozza email con richieste al cliente</code></pre>
+      </div>
+    </section>
+
+    <section class="section-block" id="output">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Output</p>
+          <h2>I file che lo studio apre per primi</h2>
+        </div>
+        <p>L'output serve alla decisione successiva: revisione interna, richiesta al cliente o preparazione della dichiarazione.</p>
+      </div>
+
+      <div class="grid five">
+        <article class="card">
+          <h3>Inventario</h3>
+          <p>File, categoria probabile, anno, percorso e note operative.</p>
+        </article>
+        <article class="card">
+          <h3>Testo estratto</h3>
+          <p>Testo estratto da PDF e immagini quando le librerie locali lo permettono.</p>
+        </article>
+        <article class="card">
+          <h3>Fatture XML</h3>
+          <p>Lettura formale, CSV riepilogativi, possibili duplicati e file malformati.</p>
+        </article>
+        <article class="card">
+          <h3>Dati fiscali</h3>
+          <p>Campi italiani con fonte, estratto, confidenza e avvisi.</p>
+        </article>
+        <article class="card">
+          <h3>Richieste e memo</h3>
+          <p>Punti da chiarire, memo interno e bozza email cliente.</p>
+        </article>
+      </div>
+
+      <div class="output-wrap" style="margin-top: 24px;">
+        <pre><code>out/
+  01_document_inventory.csv
+  02_documenti_mancanti_o_incerti.md
+  03_domande_interne_studio.md
+  04_bozza_email_cliente.md
+  05_anomalie_formali.md
+  06_memo_istruttoria.md
+  08_dati_fiscali_strutturati.md
+  fatture/
+    fatture_summary.csv
+  avviso/
+    avviso_intake_memo.md</code></pre>
+
+        <div class="mail-example">
+          <h3>Esempio di bozza email cliente</h3>
+          <p>Il testo è una bozza operativa, pronta per la revisione prima dell'invio.</p>
+          <pre style="margin-top: 14px;"><code>Oggetto: Documenti e chiarimenti per completare l'istruttoria
+
+Buongiorno [Nome],
+
+per completare la prima verifica del materiale ricevuto, le chiediamo di:
+- indicarci se ci sono altre CU o altri redditi da includere;
+- inviarci la certificazione interessi del mutuo;
+- confermare che gli F24 trasmessi siano completi;
+- chiarire i documenti segnalati dallo studio.
+
+Grazie.</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="primo-run">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Primo uso</p>
+          <h2>Prima di partire, fissa il perimetro</h2>
+        </div>
+        <p>Il primo run chiede solo le scelte che cambiano l'output: anno fiscale, giurisdizione, cartella di destinazione, gestione OCR/scansioni e stato di lettura.</p>
+      </div>
+
+      <ul class="steps">
+        <li>Conferma cartella cliente, giurisdizione, anno fiscale e cartella output.</li>
+        <li>Chiede se sono presenti scansioni o immagini e se usare OCR locale.</li>
+        <li>Controlla ambiente locale e leggibilità dei file.</li>
+        <li>Prepara inventario, testo estratto, controlli XML e dati fiscali.</li>
+        <li>Separa mancanze reali, punti incerti e documenti ancora da classificare.</li>
+        <li>Prepara memo studio, bozza email, stato di lettura e prossimi passi.</li>
+      </ul>
+
+      <div class="callout" style="margin-top: 22px;">
+        <strong>Prima istruttoria operativa:</strong> organizza i file ricevuti, estrae i dati leggibili, segnala elementi mancanti o incerti e prepara una bozza email cliente più un memo studio basati sui file trovati.
+      </div>
+    </section>
+
+    <section class="section-block" id="giurisdizioni">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Pagine locali</p>
+          <h2>Stesso lavoro di intake, lingua e perimetro locali</h2>
+        </div>
+        <p>Le pagine locali mantengono lo stesso obiettivo operativo, con esempi e terminologia adattati al mercato fiscale rilevante.</p>
+      </div>
+
+      <div class="grid three">
+        <article class="card">
+          <h3>Gen&egrave;ve</h3>
+          <p>Prima lettura in francese per fiduciari e professionisti fiscali di Ginevra: inventario, punti mancanti, memo cabinet e bozza email cliente.</p>
+          <div class="action-row" style="margin-top: 18px;">
+            <a class="button secondary" href="geneva.html">Apri pagina Gen&egrave;ve</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Z&uuml;rich</h3>
+          <p>Prima lettura in tedesco per studi Treuhand di Zurigo: documenti, punti aperti, nota interna e bozza email cliente.</p>
+          <div class="action-row" style="margin-top: 18px;">
+            <a class="button secondary" href="zurich.html">Apri pagina Z&uuml;rich</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>United Kingdom</h3>
+            <p>Prima lettura in inglese per il mercato UK: inventario documenti, documenti mancanti, memo accountant e bozza email cliente.</p>
+          <div class="action-row" style="margin-top: 18px;">
+            <a class="button secondary" href="uk.html">Apri pagina UK</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="callout" style="margin-top: 22px;">
+        <strong>Principio:</strong> il lavoro resta lo stesso: documenti ricevuti, dati estratti, mancanze operative, memo studio e bozza email cliente.
+      </div>
+    </section>
+
+    <section class="section-block" id="prompt">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Prompt pronti</p>
+          <h2>Punti di partenza per la prima istruttoria</h2>
+        </div>
+        <p>Usali così o adattali alla cartella. Percorso della cartella e anno fiscale sono gli input minimi.</p>
+      </div>
+
+      <div class="grid three">
+        <article class="card">
+          <h3>Istruttoria completa</h3>
+          <p>Inventario, controlli formali, dati fiscali strutturati, memo studio, email cliente e stato di lettura.</p>
+          <pre style="margin-top: 14px;"><code>Usa Client Intake su /percorso/cartella-cliente.
+Anno fiscale 2025.
+Prima di procedere, chiedimi cartella output, OCR/scansioni e stato di lettura.</code></pre>
+        </article>
+        <article class="card">
+          <h3>730 / Redditi PF</h3>
+          <p>Focus su CU, F24, spese, mutuo, file 730/Redditi PF leggibili e documenti mancanti.</p>
+          <pre style="margin-top: 14px;"><code>Prepara una prima istruttoria su una cartella 730/Redditi PF.
+Evidenzia documenti trovati, mancanze, dati estratti e punti da verificare.</code></pre>
+        </article>
+        <article class="card">
+          <h3>Fatture XML</h3>
+          <p>Controllo formale FatturaPA, possibili duplicati, date fuori periodo e file malformati.</p>
+          <pre style="margin-top: 14px;"><code>Controlla formalmente i file XML FatturaPA.
+Prepara riepilogo CSV, duplicati, date fuori periodo e anomalie formali.</code></pre>
+        </article>
+        <article class="card">
+          <h3>Dati fiscali strutturati</h3>
+          <p>Campi fiscali da documenti leggibili, con fonte, estratto, confidenza e avvisi.</p>
+          <pre style="margin-top: 14px;"><code>Estrai e organizza dati fiscali strutturati dai documenti leggibili.
+Riporta fonte, estratto, confidenza e avvisi per ogni campo.</code></pre>
+        </article>
+        <article class="card">
+          <h3>Email cliente</h3>
+          <p>Richieste operative collegate alle mancanze trovate nella cartella.</p>
+          <pre style="margin-top: 14px;"><code>Migliora la bozza email cliente.
+Usa le richieste supportate da 02_documenti_mancanti_o_incerti.md.</code></pre>
+        </article>
+        <article class="card">
+          <h3>Avviso fiscale</h3>
+          <p>Primo memo con riferimenti, date, importi e documenti da recuperare.</p>
+          <pre style="margin-top: 14px;"><code>Prepara un primo memo su avvisi o cartelle presenti nella cartella.
+Evidenzia riferimenti, date, importi e documenti da recuperare.</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block" id="scarica">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Installazione</p>
+          <h2>Installa dal Plugin Pack</h2>
+        </div>
+        <p>Un solo ZIP installa Vera con tutti i suoi undici moduli.</p>
+      </div>
+
+      <div class="download-panel">
+        <div>
+          <h3>Installazione</h3>
+          <p>Richiede Codex desktop. Pagina ufficiale: <a href="https://openai.com/codex/" target="_blank" rel="noopener">Download Codex desktop</a>.</p>
+          <div class="action-row">
+            <a class="button" href="/downloads/vera?lang=it" data-free-download-link>Scarica Vera</a>
+          </div>
+          <ol class="plain-list" style="margin-top: 22px;">
+            <li>Estrai lo ZIP.</li>
+            <li>Sposta la cartella estratta, per esempio in <code>Documents/CodexPlugins</code>.</li>
+            <li>In Codex apri <code>Plugins</code> e scegli <code>Add marketplace</code>.</li>
+            <li>In <code>Source</code>, incolla il percorso della cartella estratta: quella che contiene <code>LEGGIMI_INSTALLAZIONE.txt</code>.</li>
+            <li>Seleziona <code>MP Vera</code> e installa <code>Vera</code>.</li>
+          </ol>
+          <pre style="margin-top: 18px;"><code>/Users/name/Documents/CodexPlugins/vera-codex-plugin</code></pre>
+        </div>
+        <div>
+          <h3>Primo uso</h3>
+          <p>In una chat Codex, indica percorso della cartella cliente e anno fiscale. Codex chiederà cartella output, OCR/scansioni e stato di lettura prima di procedere.</p>
+          <pre style="margin-top: 10px;"><code>Usa Client Intake su /percorso/cartella-cliente.
+Anno fiscale 2025.
+Prima di procedere, chiedimi cartella output, OCR/scansioni e stato di lettura.
+Prepara inventario, controlli formali, dati fiscali strutturati, memo studio e bozza email cliente.</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

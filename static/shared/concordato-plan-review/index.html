@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revisione numeri di piano | Vera</title>
+  <style>
+    :root {
+      --ink: #243026;
+      --text: #3f4c43;
+      --muted: #6c766e;
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --soft: #f7f5ef;
+      --accent: #496a60;
+      --accent-soft: #e7eee9;
+      --line: #dfe5dc;
+      --gold: #9a6b24;
+      --content: 1120px;
+      --shadow: 0 16px 42px rgba(36, 48, 38, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand img {
+      display: block;
+      width: 140px;
+      height: auto;
+    }
+
+    .nav-right,
+    .nav-links,
+    .lang-switch {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-right { gap: 20px; }
+    .nav-links { gap: 18px; color: var(--muted); font-size: 13px; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--ink); }
+
+    .lang-switch {
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .lang-switch button.is-active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 560px;
+      padding: 76px 0 56px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 54px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 620;
+    }
+
+    h2 {
+      font-size: clamp(28px, 3.4vw, 42px);
+      font-weight: 620;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 620;
+    }
+
+    p { margin: 0; }
+
+    .subtitle {
+      max-width: 760px;
+      margin-top: 22px;
+      color: var(--text);
+      font-size: clamp(19px, 2.3vw, 25px);
+      line-height: 1.38;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .action-row {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #f8fbfa;
+      font-size: 14px;
+      font-weight: 620;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .hero-card,
+    .card,
+    .download-panel,
+    .review-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .hero-card {
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .label {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 620;
+    }
+
+    .hero-list,
+    .plain-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-list li,
+    .plain-list li {
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .hero-list li::before,
+    .plain-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.72em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    section {
+      padding: 54px 0;
+      border-top: 1px solid var(--line);
+      scroll-margin-top: 88px;
+    }
+
+    .section-head {
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.7fr);
+      gap: 40px;
+      align-items: end;
+    }
+
+    .section-head > p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .split,
+    .usage-grid,
+    .download-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #182320;
+      color: #eef7f4;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      padding: 20px;
+    }
+
+    .card p {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .output-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .output-list li {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .output-list strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-weight: 620;
+    }
+
+    .output-list span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .review-panel,
+    .download-panel {
+      padding: 24px;
+    }
+
+    .review-panel {
+      margin-top: 22px;
+      background: var(--surface);
+      border-left: 3px solid var(--gold);
+    }
+
+    .download-panel { background: var(--surface); }
+
+    .review-panel p,
+    .download-panel p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .step {
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .step-label {
+      margin-bottom: 7px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .download-panel a:not(.button) { color: var(--accent); }
+
+    @media (max-width: 900px) {
+      .nav-shell {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav-right {
+        width: 100%;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .nav-links { flex-wrap: wrap; }
+
+      .hero,
+      .section-head,
+      .split,
+      .usage-grid,
+      .download-panel,
+      .output-list {
+        grid-template-columns: 1fr;
+      }
+
+      .grid,
+      .grid.four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      main,
+      .nav-shell {
+        width: min(var(--content), calc(100% - 28px));
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 48px 0 42px;
+      }
+
+      .grid,
+      .grid.four {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-right { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza home">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Page sections">
+          <a href="#cosa-fa" data-i18n="nav.what">Cosa fa</a>
+          <a href="#input" data-i18n="nav.inputs">Input</a>
+          <a href="#output" data-i18n="nav.outputs">Output</a>
+          <a href="#uso" data-i18n="nav.use">Uso</a>
+          <a href="#prompt" data-i18n="nav.prompts">Prompt</a>
+          <a href="#scarica" data-i18n="nav.download">Download</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="it">It</button>
+          <button type="button" data-lang="en">En</button>
+          <button type="button" data-lang="fr">Fr</button>
+          <button type="button" data-lang="de">De</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero" id="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Revisione concordato</p>
+        <h1 data-i18n="hero.title">Controlla i numeri del piano prima della posizione del revisore.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Collega i valori del piano a bilancio, mastrini, schede rettificate e dettagli tributari/previdenziali.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Dagli piano, bilancio, mastrini e dettagli di supporto. Ottieni cosa torna, cosa è solo candidato e quali numeri restano da spiegare.</p>
+      </div>
+
+      <aside class="hero-card" aria-label="Problem solved">
+        <div class="label" data-i18n="hero.cardLabel">Cosa dai / cosa ottieni</div>
+        <ul class="hero-list" id="hero-list"></ul>
+      </aside>
+    </div>
+
+    <section id="cosa-fa">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="what.eyebrow">Cosa fa</p>
+          <h2 data-i18n="what.title">Da fascicolo disordinato a tabulato per revisore</h2>
+        </div>
+        <p data-i18n="what.copy">Serve quando un piano di concordato va confrontato con bilancio, mastrini, schede rettificate, dettagli fiscali e previdenziali, senza confondere riconciliazione contabile e giudizio professionale.</p>
+      </div>
+
+      <div class="split">
+        <pre><code>input/
+  ExampleCo piano CP_2026.05.25.pdf
+  BILANCIO 31-03-26 PROVVISORIO.pdf
+  mastrini al 31-03-26.pdf
+  controllo pvc/
+    DB_31.03.2026_21052026.xlsx
+    Dettaglio ExampleCo Srl_Debiti tributari e previdenziali_Aggiornato.xlsx</code></pre>
+
+        <pre><code>out/
+  inventory.json
+  amount_candidates.csv
+  exact_amount_matches.csv
+  concordato_tie_out_workpaper.xlsx
+  concordato_review_summary.docx
+  run_audit.json
+  codex_run_review.md</code></pre>
+      </div>
+    </section>
+
+    <section id="input">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="inputs.eyebrow">Input</p>
+          <h2 data-i18n="inputs.title">Che cosa legge</h2>
+        </div>
+        <p data-i18n="inputs.copy">Lavora su file locali già disponibili allo studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.</p>
+      </div>
+      <div class="grid four" id="input-cards"></div>
+    </section>
+
+    <section id="output">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="outputs.eyebrow">Output</p>
+          <h2 data-i18n="outputs.title">Che cosa produce</h2>
+        </div>
+        <p data-i18n="outputs.copy">La cartella di lavoro separa inventario fonti, importi estratti, collegamenti candidati, tabulato Excel e sintesi Word. Il Word riassume cosa torna, cosa non torna e cosa resta da spiegare.</p>
+      </div>
+      <ul class="output-list" id="output-list"></ul>
+      <div class="review-panel">
+        <h3 data-i18n="review.title">Il ponte mostra cosa torna, cosa è candidato e cosa manca</h3>
+        <p data-i18n="review.copy1">Il tabulato raccoglie importi, pagine, fogli, formule e collegamenti per importo. La sintesi spiega se una voce del piano è supportata, solo candidata o non spiegata.</p>
+        <p data-i18n="review.copy2">Il risultato non sostituisce il revisore: mette in evidenza differenze, omissioni, fonti deboli e punti da chiarire prima di assumere una posizione sul piano di concordato.</p>
+      </div>
+    </section>
+
+    <section id="uso">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="use.eyebrow">Uso</p>
+          <h2 data-i18n="use.title">Come si imposta il controllo</h2>
+        </div>
+        <p data-i18n="use.copy">Apri la cartella cliente e conferma solo le scelte davvero necessarie: perimetro, data di riferimento, tolleranza e lingua del documento finale.</p>
+      </div>
+      <div class="usage-grid" id="usage-grid"></div>
+    </section>
+
+    <section id="prompt">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="prompts.eyebrow">Prompt</p>
+          <h2 data-i18n="prompts.title">Prompt pronti</h2>
+        </div>
+        <p data-i18n="prompts.copy">Parti da questi prompt e sostituisci il percorso della cartella. Codex chiederà prima di assumere scelte materiali non risolte dai file.</p>
+      </div>
+      <ul class="output-list" id="prompt-list"></ul>
+    </section>
+
+    <section id="scarica">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="download.eyebrow">Download</p>
+          <h2 data-i18n="download.title">Installa dal Plugin Pack</h2>
+        </div>
+        <p data-i18n="download.copy">Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.</p>
+      </div>
+
+      <div class="download-panel">
+        <div>
+          <h3 data-i18n="download.installTitle">Installazione</h3>
+          <p><span data-i18n="download.codexText">Pagina ufficiale:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
+          <div class="action-row">
+            <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Scarica Vera</a>
+          </div>
+          <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
+          <pre style="margin-top: 18px;"><code>/Users/name/Documents/CodexPlugins/vera-codex-plugin</code></pre>
+        </div>
+        <div>
+          <h3 data-i18n="download.firstUseTitle">Primo uso</h3>
+          <p data-i18n="download.firstUseCopy">In una chat Codex, indica la cartella del fascicolo, la data di riferimento, la lingua e la tolleranza importi.</p>
+          <pre style="margin-top: 10px;"><code id="prompt-example">Usa Revisione numeri di piano su /percorso/cartella.
+Data di riferimento: 2026-03-31. Lingua documento: it.
+Confronta piano, bilancio, mastrini, schede rettificate e dettaglio debiti fiscali/previdenziali.
+Produci tabulato Excel, Word riassuntivo e memo delle differenze.</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const translations = {
+      it: {
+        nav: { what: "A cosa serve", inputs: "File letti", outputs: "Output", use: "Come usarlo", prompts: "Prompt pronti", download: "Installazione" },
+        hero: {
+          eyebrow: "Revisione concordato",
+          title: "Controlla i numeri del piano prima della posizione del revisore.",
+          subtitle: "Collega i valori del piano a bilancio, mastrini, schede rettificate e dettagli tributari/previdenziali.",
+          copy: "Dagli piano, bilancio, mastrini e dettagli di supporto. Ottieni cosa torna, cosa è solo candidato e quali numeri restano da spiegare.",
+          primary: "Scarica ZIP",
+          secondary: "Come funziona",
+          cardLabel: "Cosa dai / cosa ottieni",
+          bullets: [
+            "Dagli piano, bilancio, mastrini e schede di supporto.",
+            "Conferma data, perimetro, tolleranza e lingua del documento.",
+            "Ottieni tabulato Excel, sintesi Word e memo differenze."
+          ]
+        },
+        what: {
+          eyebrow: "A cosa serve",
+          title: "Da fascicolo disordinato a tabulato per revisore",
+          copy: "Serve quando un piano di concordato va confrontato con bilancio, mastrini, schede rettificate, dettagli fiscali e previdenziali, senza confondere riconciliazione contabile e giudizio professionale."
+        },
+        inputs: {
+          eyebrow: "File letti",
+          title: "Che cosa legge",
+          copy: "Lavora su file locali già disponibili allo studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.",
+          cards: [
+            ["Piano di concordato", "Parte descrittiva e numerica del piano, PDF o Excel."],
+            ["Bilancio e mastrini", "Saldi e schede da usare come primo riscontro numerico."],
+            ["Schede rettificate", "Saldi rettificati, scenari di continuità o liquidazione e fogli di supporto."],
+            ["Debiti fiscali e previdenziali", "Dettagli tributari, previdenziali e altre schede da collegare al piano."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Output",
+          title: "Che cosa produce",
+          copy: "La cartella di lavoro separa inventario fonti, importi estratti, collegamenti candidati, tabulato Excel e sintesi Word. Il Word riassume cosa torna, cosa non torna e cosa resta da spiegare.",
+          items: [
+            ["inventory.json", "Inventario fonti, ruoli suggeriti e limiti di lettura."],
+            ["amount_candidates.csv", "Numeri estratti da PDF, Excel e CSV con posizione di origine."],
+            ["exact_amount_matches.csv", "Collegamenti per importo tra piano e fonti di supporto, da validare nel contesto."],
+            ["concordato_tie_out_workpaper.xlsx", "Tabulato Excel rivedibile con differenze candidate e fogli sorgente."],
+            ["concordato_review_summary.docx", "Documento Word con sezioni torna, non torna e da spiegare."],
+            ["run_audit.json", "Parametri, conteggi e confine tra dati estratti e sintesi finale."],
+            ["codex_run_review.md", "Memo finale su differenze, criticità e prossimi chiarimenti."]
+          ]
+        },
+        review: {
+          title: "Il ponte mostra cosa torna, cosa è candidato e cosa manca",
+          copy1: "Il tabulato raccoglie importi, pagine, fogli, formule e collegamenti per importo. La sintesi spiega se una voce del piano è supportata, solo candidata o non spiegata.",
+          copy2: "Il risultato non sostituisce il revisore: mette in evidenza differenze, omissioni, fonti deboli e punti da chiarire prima di assumere una posizione sul piano di concordato."
+        },
+        use: {
+          eyebrow: "Come usarlo",
+          title: "Come si imposta il controllo",
+          copy: "Apri la cartella cliente e conferma solo le scelte davvero necessarie: perimetro, data di riferimento, tolleranza e lingua del documento finale.",
+          steps: [
+            ["Preparazione", "Controllo materiali", "Verifica dipendenze, leggibilità dei file e fonti disponibili."],
+            ["Scelte", "Perimetro e assunzioni", "Se il fascicolo è ambiguo, conferma solo perimetro, data, tolleranza o fonte piano."],
+            ["Analisi", "Ponte numerico", "Estrae importi, fogli, pagine e collegamenti candidati."],
+            ["Revisione", "Sintesi per revisore", "Prepara il memo sulle differenze e sulle criticità per il revisore."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompt pronti",
+          title: "Prompt pronti",
+          copy: "Parti da questi prompt e sostituisci il percorso della cartella. Codex chiederà prima di assumere scelte materiali non risolte dai file.",
+          items: [
+            ["Revisione completa", "Usa Revisione numeri di piano sulla cartella /path/fascicolo. Confronta piano, bilancio, mastrini, schede rettificate e dettaglio debiti tributari/previdenziali. Produci Excel, Word e memo differenze."],
+            ["Solo riscontro numerico", "Verifica se i numeri del piano tornano con bilancio e mastrini. Per ciò che non torna, cerca supporto nelle schede rettificate e nel dettaglio debiti. Elenca esempi concreti."],
+            ["Posizione revisore", "Dopo il controllo numerico, evidenzia criticità su continuità aziendale, effetti sul bilancio, dati non supportati, omissioni e richieste da inviare al cliente."]
+          ]
+        },
+        download: {
+          eyebrow: "Installazione",
+          title: "Installa dal Plugin Pack",
+          copy: "Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.",
+          installTitle: "Installazione",
+          codexText: "Pagina ufficiale:",
+          button: "Scarica ZIP",
+          firstUseTitle: "Primo uso",
+          firstUseCopy: "In una chat Codex, indica la cartella del fascicolo, la data di riferimento, la lingua e la tolleranza importi.",
+          steps: [
+            "Scarica lo ZIP e decomprimilo in una cartella locale.",
+            "In Codex aggiungi il marketplace locale indicato nel file LEGGIMI_INSTALLAZIONE.txt.",
+            "Apri la cartella cliente e chiedi a Codex di usare Revisione numeri di piano."
+          ],
+          prompt: "Usa Revisione numeri di piano su /percorso/cartella.\nData di riferimento: 2026-03-31. Lingua documento: it.\nConfronta piano, bilancio, mastrini, schede rettificate e dettaglio debiti fiscali/previdenziali.\nProduci tabulato Excel, Word riassuntivo e memo delle differenze."
+        }
+      },
+      en: {
+        nav: { what: "What it does", inputs: "Inputs", outputs: "Outputs", use: "Use", prompts: "Prompts", download: "Download" },
+        hero: {
+          eyebrow: "Plan tie-out",
+          title: "Check plan numbers before the reviewer takes a position.",
+          subtitle: "Tie plan values to the balance sheet, ledgers, adjusted schedules and tax/social-security debt detail.",
+          copy: "Give it the plan, balance, ledgers and support schedules. Get back what ties, what is only a candidate and which numbers still need explanation.",
+          primary: "Download ZIP",
+          secondary: "How to use it",
+          cardLabel: "Give it / get back",
+          bullets: [
+            "Give it the plan, balance, ledgers and support schedules.",
+            "Confirm date, scope, tolerance and document language.",
+            "Get back an Excel review file, Word summary and differences memo."
+          ]
+        },
+        what: {
+          eyebrow: "What it does",
+          title: "From scattered files to a reviewable Excel file",
+          copy: "Use it when a concordato plan must be compared with accounting support without mixing mechanical reconciliation and professional review judgment."
+        },
+        inputs: {
+          eyebrow: "Inputs",
+          title: "What it reads",
+          copy: "Works with local files already available to the firm. Non-text PDFs and broken formulas are flagged for review rather than forced into a false match.",
+          cards: [
+            ["Concordato plan", "Descriptive and numerical plan sections, PDF or Excel."],
+            ["Balance and ledgers", "Account balances and schedules used as the first tie-out source."],
+            ["Adjusted schedules", "Adjusted balances, continuity or liquidation scenarios and support sheets."],
+            ["Tax and social debt detail", "Tax, social security and other schedules to tie back to the plan."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Outputs",
+          title: "What it produces",
+          copy: "The work folder separates source inventory, extracted amounts, candidate matches, Excel review file and Word summary. The Word document states what ties, what does not tie and what still needs explanation.",
+          items: [
+            ["inventory.json", "Source inventory, suggested roles and read limitations."],
+            ["amount_candidates.csv", "Amounts extracted from PDF, Excel and CSV with origin context."],
+            ["exact_amount_matches.csv", "Amount matches between plan and supporting sources, to validate in context."],
+            ["concordato_tie_out_workpaper.xlsx", "Reviewable Excel file with candidate differences and source sheets."],
+            ["concordato_review_summary.docx", "Word summary with ties, does not tie and needs explanation sections."],
+            ["run_audit.json", "Parameters, counts and boundary between extracted data and final summary."],
+            ["codex_run_review.md", "Final memo on differences, critical issues and next clarifications."]
+          ]
+        },
+        review: {
+          title: "The bridge shows what ties, what is candidate and what is missing",
+          copy1: "The Excel file collects amounts, pages, sheets, formulas and amount matches. The summary explains whether a plan line is supported, only a candidate match or unexplained.",
+          copy2: "The result does not replace the reviewer. It surfaces differences, omissions, weak sources and clarifications before a position is taken on the concordato plan."
+        },
+        use: {
+          eyebrow: "Use",
+          title: "How to set up the review",
+          copy: "Open the client folder and confirm only the material choices: perimeter, reference date, tolerance and final document language.",
+          steps: [
+            ["Setup", "Material check", "Verify dependencies, readable files and available sources."],
+            ["Choices", "Material choices", "If the file set is ambiguous, confirm only perimeter, date, tolerance or plan source."],
+            ["Analysis", "Numerical bridge", "Extract amounts, sheets, pages and candidate matches."],
+            ["Review", "Reviewer summary", "Prepare the memo on differences and critical issues for the reviewer."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Ready prompts",
+          copy: "Start from these prompts and replace the folder path. Codex will ask before assuming material choices not resolved by the files.",
+          items: [
+            ["Complete review", "Use Concordato Plan Review on /path/folder. Compare plan, balance, ledgers, adjusted schedules and tax/social debt detail. Produce Excel, Word and differences memo."],
+            ["Numerical tie-out only", "Check whether plan numbers tie to balance and ledgers. For what does not tie, look for support in the adjusted schedules and debt detail. List concrete examples."],
+            ["Reviewer position", "After tie-out, highlight going-concern, balance-sheet effects, unsupported data, omissions and requests to send to the client."]
+          ]
+        },
+        download: {
+          eyebrow: "Download",
+          title: "Install from Plugin Pack",
+          copy: "Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.",
+          installTitle: "Installation",
+          codexText: "Official page:",
+          button: "Download ZIP",
+          firstUseTitle: "First use",
+          firstUseCopy: "In a Codex chat, provide the file folder, reference date, language and amount tolerance.",
+          steps: [
+            "Download the ZIP and extract it into a local folder.",
+            "In Codex, add the local marketplace shown in LEGGIMI_INSTALLAZIONE.txt.",
+            "Open the client folder and ask Codex to use Concordato Plan Review."
+          ],
+          prompt: "Use Concordato Plan Review on /path/folder.\nReference date: 2026-03-31. Document language: en.\nCompare plan, balance, ledgers, adjusted schedules and tax/social debt detail.\nProduce Excel review file, Word summary and review of differences."
+        }
+      },
+      fr: {
+        nav: { what: "Objet", inputs: "Entrées", outputs: "Sorties", use: "Utilisation", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Revue concordat",
+          title: "Contrôler les chiffres du plan avant la position du réviseur.",
+          subtitle: "Relier les valeurs du plan au bilan, aux grands livres, aux tableaux ajustés et au détail fiscal/social.",
+          copy: "Donnez le plan, le bilan, les grands livres et les tableaux de support. Obtenez ce qui concorde, ce qui reste candidat et les chiffres qui doivent encore être expliqués.",
+          primary: "Télécharger le ZIP",
+          secondary: "Comment l'utiliser",
+          cardLabel: "Ce que vous donnez / obtenez",
+          bullets: [
+            "Donnez le plan, bilan, grands livres, tableaux ajustés et détail fiscal/social.",
+            "Confirmez date, périmètre, tolérance et langue du document.",
+            "Obtenez un tableau Excel, une synthèse Word et un mémo des écarts."
+          ]
+        },
+        what: {
+          eyebrow: "Objet",
+          title: "Des pièces dispersées à un dossier de revue",
+          copy: "À utiliser lorsqu'un plan de concordat doit être comparé aux éléments comptables sans mélanger rapprochement mécanique et jugement professionnel."
+        },
+        inputs: {
+          eyebrow: "Entrées",
+          title: "Ce qu'il lit",
+          copy: "Le contrôle travaille sur les fichiers locaux déjà disponibles au cabinet. Les PDF non textuels et les formules cassées sont signalés pour revue.",
+          cards: [
+            ["Plan de concordat", "Parties descriptives et chiffrées du plan, PDF ou Excel."],
+            ["Bilan et grands livres", "Soldes et fiches utilisés comme première source de rapprochement."],
+            ["Tableaux ajustés", "Soldes ajustés, scénarios de continuité ou liquidation et feuilles de support."],
+            ["Détail fiscal et social", "Détails fiscaux, sociaux et autres tableaux à rapprocher du plan."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Sorties",
+          title: "Ce qu'il produit",
+          copy: "Le dossier de travail sépare inventaire des sources, montants extraits, correspondances candidates, tableau Excel et synthèse Word. Le Word indique ce qui concorde, ce qui ne concorde pas et ce qui reste à expliquer.",
+          items: [
+            ["inventory.json", "Inventaire des sources, rôles suggérés et limites de lecture."],
+            ["amount_candidates.csv", "Montants extraits des PDF, Excel et CSV avec contexte d'origine."],
+            ["exact_amount_matches.csv", "Correspondances par montant entre le plan et les sources de support."],
+            ["concordato_tie_out_workpaper.xlsx", "Tableau Excel révisable avec écarts candidats et feuilles source."],
+            ["concordato_review_summary.docx", "Synthèse Word avec sections concorde, ne concorde pas et à expliquer."],
+            ["run_audit.json", "Paramètres, décomptes et frontière entre données extraites et synthèse finale."],
+            ["codex_run_review.md", "Mémo final sur écarts, points critiques et prochaines clarifications."]
+          ]
+        },
+        review: {
+          title: "Le rapprochement montre ce qui concorde, ce qui est candidat et ce qui manque",
+          copy1: "Le tableau collecte montants, pages, feuilles, formules et correspondances par montant. La synthèse explique si une ligne du plan est supportée, seulement candidate ou non expliquée.",
+          copy2: "Le résultat ne remplace pas le réviseur. Il fait ressortir écarts, omissions, sources faibles et clarifications avant de prendre position sur le plan."
+        },
+        use: {
+          eyebrow: "Usage",
+          title: "Comment préparer le contrôle",
+          copy: "Ouvrez le dossier client et confirmez seulement les choix matériels : périmètre, date de référence, tolérance et langue du document final.",
+          steps: [
+            ["Setup", "Contrôle des matériaux", "Vérifiez dépendances, lisibilité des fichiers et sources disponibles."],
+            ["Choix", "Choix matériels", "Si le dossier est ambigu, confirmez uniquement périmètre, date, tolérance ou source du plan."],
+            ["Analyse", "Pont numérique", "Extrayez montants, feuilles, pages et correspondances candidates."],
+            ["Revue", "Synthèse pour réviseur", "Préparez le mémo des écarts et des points critiques pour le réviseur."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts prêts",
+          copy: "Partez de ces prompts et remplacez le chemin du dossier. Codex demandera avant de retenir des choix matériels non résolus par les fichiers.",
+          items: [
+            ["Revue complète", "Utilise Révision du plan de concordat sur /chemin/dossier. Compare plan, bilan, grands livres, tableaux ajustés et détail fiscal/social. Produis Excel, Word et mémo des écarts."],
+            ["Rapprochement chiffré seul", "Vérifie si les chiffres du plan concordent avec bilan et grands livres. Pour les écarts, cherche le support dans les tableaux ajustés et le détail des dettes."],
+            ["Position du réviseur", "Après le rapprochement, souligne continuité d'exploitation, effets bilan, données non supportées, omissions et demandes à envoyer au client."]
+          ]
+        },
+        download: {
+          eyebrow: "Download",
+          title: "Installer depuis le Plugin Pack",
+          copy: "Nécessite Codex desktop. Un seul ZIP installe Vera avec ses onze modules.",
+          installTitle: "Installation",
+          codexText: "Page officielle :",
+          button: "Télécharger le ZIP",
+          firstUseTitle: "Premier usage",
+          firstUseCopy: "Dans une conversation Codex, indiquez le dossier, la date de référence, la langue et la tolérance des montants.",
+          steps: [
+            "Téléchargez le ZIP et extrayez-le dans un dossier local.",
+            "Dans Codex, ajoutez le marketplace local indiqué dans LEGGIMI_INSTALLAZIONE.txt.",
+            "Ouvrez le dossier client et demandez à Codex d'utiliser Révision du plan de concordat."
+          ],
+          prompt: "Utilise Révision du plan de concordat sur /chemin/dossier.\nDate de référence : 2026-03-31. Langue du document : fr.\nCompare plan, bilan, grands livres, tableaux ajustés et détail fiscal/social.\nProduis tableau Excel, synthèse Word et revue des écarts."
+        }
+      },
+      de: {
+        nav: { what: "Leistung", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Planprüfung",
+          title: "Planzahlen prüfen, bevor der Prüfer Stellung nimmt.",
+          subtitle: "Planzahlen mit Bilanz, Hauptbüchern, angepassten Aufstellungen und Steuer-/Sozialschuldendetails verknüpfen.",
+          copy: "Geben Sie Plan, Bilanz, Hauptbücher und unterstützende Aufstellungen an. Sie erhalten Treffer, Kandidaten und Zahlen, die noch erklärt werden müssen.",
+          primary: "ZIP herunterladen",
+          secondary: "So wird es genutzt",
+          cardLabel: "Eingabe / Ergebnis",
+          bullets: [
+            "Plan, Bilanz, Hauptbücher, angepasste Aufstellungen und Steuer-/Sozialschuldendetails bereitstellen.",
+            "Stichtag, Umfang, Toleranz und Dokumentsprache bestätigen.",
+            "Excel-Workpaper, Word-Zusammenfassung und Differenzenmemo erhalten."
+          ]
+        },
+        what: {
+          eyebrow: "Leistung",
+          title: "Von verstreuten Unterlagen zum Prüfer-Workpaper",
+          copy: "Einsetzen, wenn ein Concordato-Plan mit Buchhaltungsnachweisen verglichen werden muss, ohne mechanischen Abgleich und professionelles Urteil zu vermischen."
+        },
+        inputs: {
+          eyebrow: "Inputs",
+          title: "Was gelesen wird",
+          copy: "Die Prüfung arbeitet mit lokalen Dateien der Kanzlei. Nicht-textuelle PDFs und fehlerhafte Formeln werden markiert, nicht künstlich normalisiert.",
+          cards: [
+            ["Concordato-Plan", "Beschreibende und numerische Planabschnitte, PDF oder Excel."],
+            ["Bilanz und Hauptbücher", "Salden und Karten als erste Tie-out-Quelle."],
+            ["Angepasste Aufstellungen", "Angepasste Salden, Fortführungs- oder Liquidationsszenarien und unterstützende Blätter."],
+            ["Steuer- und Sozialschuldendetail", "Steuer-, Sozial- und weitere Aufstellungen zum Abgleich mit dem Plan."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Ergebnisse",
+          title: "Was erzeugt wird",
+          copy: "Der Arbeitsordner trennt Quelleninventar, extrahierte Beträge, mögliche Treffer, Excel-Arbeitsmappe und Word-Zusammenfassung. Das Word-Dokument zeigt, was belegt ist, was abweicht und was noch erklärt werden muss.",
+          items: [
+            ["inventory.json", "Quelleninventar, vorgeschlagene Rollen und Lesebeschränkungen."],
+            ["amount_candidates.csv", "Aus PDF, Excel und CSV extrahierte Beträge mit Herkunftskontext."],
+            ["exact_amount_matches.csv", "Betragsabgleiche zwischen Plan und Belegquellen, im Kontext zu validieren."],
+            ["concordato_tie_out_workpaper.xlsx", "Prüfbare Excel-Arbeitsmappe mit Kandidatendifferenzen und Quellblättern."],
+            ["concordato_review_summary.docx", "Word-Zusammenfassung mit belegten, abweichenden und noch zu erklärenden Beträgen."],
+            ["run_audit.json", "Parameter, Zählungen und Grenze zwischen extrahierten Daten und finaler Zusammenfassung."],
+            ["codex_run_review.md", "Finales Memo zu Differenzen, kritischen Punkten und Klärungen."]
+          ]
+        },
+        review: {
+          title: "Der Abgleich zeigt Treffer, Kandidaten und fehlende Erklärungen",
+          copy1: "Die Arbeitsmappe sammelt Beträge, Seiten, Blätter, Formeln und Betragsmatches. Die Zusammenfassung erklärt, ob eine Planzeile gestützt, nur ein Kandidat oder ungeklärt ist.",
+          copy2: "Das Ergebnis ersetzt den Prüfer nicht. Es macht Differenzen, Auslassungen, schwache Quellen und offene Klärungen sichtbar, bevor eine Position zum Plan eingenommen wird."
+        },
+        use: {
+          eyebrow: "Nutzung",
+          title: "Prüfung einrichten",
+          copy: "Öffnen Sie den Mandantenordner und bestätigen Sie nur die wesentlichen Entscheidungen: Umfang, Stichtag, Toleranz und Sprache des Schlussdokuments.",
+          steps: [
+            ["Setup", "Materialprüfung", "Abhängigkeiten, lesbare Dateien und verfügbare Quellen prüfen."],
+            ["Entscheidungen", "Wesentliche Annahmen", "Bei unklarem Dossier nur Umfang, Datum, Toleranz oder Planquelle bestätigen."],
+            ["Analyse", "Zahlenbrücke", "Beträge, Blätter, Seiten und Kandidatenmatches extrahieren."],
+            ["Prüfung", "Zusammenfassung für Prüfer", "Memo zu Differenzen und kritischen Punkten für den Prüfer vorbereiten."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts zur Nutzung",
+          copy: "Nutzen Sie diese Prompts und ersetzen Sie den Ordnerpfad. Codex fragt nach, bevor es wesentliche Annahmen trifft.",
+          items: [
+            ["Vollständige Prüfung", "Nutze Concordato-Plan prüfen für /pfad/ordner. Vergleiche Plan, Bilanz, Hauptbücher, angepasste Aufstellungen und Steuer-/Sozialschuldendetail. Erzeuge Excel, Word und Differenzenmemo."],
+            ["Nur Zahlenabgleich", "Prüfe, ob die Planzahlen mit Bilanz und Hauptbüchern übereinstimmen. Für Differenzen suche Belege in angepassten Aufstellungen und Schuldendetail. Nenne konkrete Beispiele."],
+            ["Prüferposition", "Nach dem Abgleich hebe Fortführung, Bilanzauswirkungen, nicht belegte Daten, Auslassungen und Kundenanfragen hervor."]
+          ]
+        },
+        download: {
+          eyebrow: "Download",
+          title: "Aus Plugin Pack installieren",
+          copy: "Erfordert Codex desktop. Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
+          installTitle: "Installation",
+          codexText: "Offizielle Seite:",
+          button: "ZIP herunterladen",
+          firstUseTitle: "Erste Nutzung",
+          firstUseCopy: "Geben Sie in einem Codex-Chat Ordner, Stichtag, Sprache und Betragstoleranz an.",
+          steps: [
+            "ZIP herunterladen und in einen lokalen Ordner entpacken.",
+            "In Codex den lokalen Marketplace aus LEGGIMI_INSTALLAZIONE.txt hinzufügen.",
+            "Mandantenordner öffnen und Codex bitten, Concordato-Plan prüfen zu verwenden."
+          ],
+          prompt: "Nutze Concordato-Plan prüfen für /pfad/ordner.\nStichtag: 2026-03-31. Dokumentsprache: de.\nVergleiche Plan, Bilanz, Hauptbücher, angepasste Aufstellungen und Steuer-/Sozialschuldendetail.\nErzeuge Excel-Workpaper, Word-Zusammenfassung und Prüfung der Differenzen."
+        }
+      }
+    };
+
+    function renderPairs(containerId, pairs) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      pairs.forEach(([title, body]) => {
+        const item = document.createElement("li");
+        item.innerHTML = `<strong>${title}</strong><span>${body}</span>`;
+        container.appendChild(item);
+      });
+    }
+
+    function renderCards(cards) {
+      const container = document.getElementById("input-cards");
+      container.innerHTML = "";
+      cards.forEach(([title, body]) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `<h3>${title}</h3><p>${body}</p>`;
+        container.appendChild(card);
+      });
+    }
+
+    function renderSteps(steps) {
+      const container = document.getElementById("usage-grid");
+      container.innerHTML = "";
+      steps.forEach(([number, title, body]) => {
+        const step = document.createElement("article");
+        step.className = "step";
+        step.innerHTML = `<div class="step-label">${number}</div><h3>${title}</h3><p>${body}</p>`;
+        container.appendChild(step);
+      });
+    }
+
+    function renderBullets(items) {
+      const container = document.getElementById("hero-list");
+      container.innerHTML = "";
+      items.forEach((body) => {
+        const item = document.createElement("li");
+        item.textContent = body;
+        container.appendChild(item);
+      });
+    }
+
+    function renderInstallSteps(steps) {
+      const container = document.getElementById("install-steps");
+      container.innerHTML = "";
+      steps.forEach((body) => {
+        const item = document.createElement("li");
+        item.textContent = body;
+        container.appendChild(item);
+      });
+    }
+
+    function setLanguage(lang) {
+      const safeLang = translations[lang] ? lang : "it";
+      const t = translations[safeLang];
+      document.documentElement.lang = safeLang;
+      document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${safeLang}`;
+      });
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const path = node.dataset.i18n.split(".");
+        const value = path.reduce((current, key) => current && current[key], t);
+        if (typeof value === "string") {
+          node.textContent = value;
+        }
+      });
+      renderBullets(t.hero.bullets);
+      renderCards(t.inputs.cards);
+      renderPairs("output-list", t.outputs.items);
+      renderSteps(t.use.steps);
+      renderPairs("prompt-list", t.prompts.items);
+      renderInstallSteps(t.download.steps);
+      document.getElementById("prompt-example").textContent = t.download.prompt;
+      document.querySelectorAll(".lang-switch button").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.lang === safeLang);
+      });
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", safeLang);
+      window.history.replaceState({}, "", url);
+    }
+
+    document.querySelectorAll(".lang-switch button").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    const initial = new URLSearchParams(window.location.search).get("lang") || "it";
+    setLanguage(initial);
+  </script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <title>Hosted interview output</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #172033;
+        --muted: #667085;
+        --line: #d8deea;
+        --paper: #fbfaf7;
+        --surface: #ffffff;
+        --accent: #164f43;
+        --danger: #9b2f2f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        letter-spacing: 0;
+      }
+
+      main {
+        width: min(100%, 1040px);
+        margin: 0 auto;
+        padding: clamp(24px, 5vw, 52px) clamp(20px, 4vw, 40px);
+      }
+
+      .eyebrow {
+        color: var(--accent);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin: 0 0 12px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 6vw, 3.6rem);
+        line-height: 1;
+        margin: 0;
+        max-width: 16ch;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .summary {
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.55;
+        margin: 20px 0 0;
+        max-width: 76ch;
+      }
+
+      .meta {
+        border-top: 1px solid var(--line);
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 34px;
+        padding-top: 24px;
+      }
+
+      .metric {
+        min-width: 0;
+      }
+
+      .metric span {
+        color: var(--muted);
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.05rem;
+        line-height: 1.35;
+        margin-top: 6px;
+        overflow-wrap: anywhere;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      a.button {
+        align-items: center;
+        background: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 999px;
+        color: #ffffff;
+        display: inline-flex;
+        font-weight: 700;
+        min-height: 44px;
+        padding: 0 18px;
+        text-decoration: none;
+      }
+
+      section {
+        border-top: 1px solid var(--line);
+        margin-top: 34px;
+        padding-top: 24px;
+      }
+
+      h2 {
+        font-size: 1rem;
+        line-height: 1.2;
+        margin: 0 0 14px;
+      }
+
+      pre {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        line-height: 1.55;
+        margin: 0;
+        max-height: 520px;
+        overflow: auto;
+        padding: 18px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .dialogue {
+        display: grid;
+        gap: 16px;
+      }
+
+      .review-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .review-block {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+      }
+
+      .review-block h3 {
+        font-size: 0.92rem;
+        line-height: 1.25;
+        margin: 0 0 10px;
+      }
+
+      .review-block ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .review-block li + li {
+        margin-top: 10px;
+      }
+
+      .review-meta {
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.45;
+        margin: 4px 0 0;
+      }
+
+      .dialogue-turn {
+        border-left: 3px solid var(--line);
+        padding-left: 14px;
+      }
+
+      .dialogue-turn[data-speaker="Interviewer"] {
+        border-color: var(--accent);
+      }
+
+      .dialogue-speaker {
+        color: var(--accent);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+
+      .dialogue-text {
+        line-height: 1.58;
+        margin: 6px 0 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .empty,
+      .error {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        margin-top: 24px;
+        padding: 18px;
+      }
+
+      .error {
+        border-color: color-mix(in oklch, var(--danger) 40%, white);
+        color: var(--danger);
+      }
+
+      @media (max-width: 760px) {
+        .meta {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 520px) {
+        .meta {
+          grid-template-columns: 1fr;
+        }
+
+        a.button {
+          justify-content: center;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      {% if error_message %}
+        <p class="eyebrow">Hosted interview</p>
+        <h1>Output unavailable</h1>
+        <p class="error">{{ error_message }}</p>
+      {% else %}
+        <p class="eyebrow">{{ record.get("case_name", "Hosted interview") }}</p>
+        <h1>{{ record.get("interview_title", "Interview") }}</h1>
+        {% if record.get("purpose") %}
+          <p class="summary">{{ record.get("purpose") }}</p>
+        {% endif %}
+
+        {% set mic_transcription = completion.get("interviewee_audio_transcription", {}) if completion else {} %}
+        <div class="meta" aria-label="Interview metadata">
+          <div class="metric">
+            <span>Campaign</span>
+            <strong>{{ record.get("interview_campaign_id", "legacy-unclassified-v1") }}</strong>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <strong>{{ record.get("status", "") }}</strong>
+          </div>
+          <div class="metric">
+            <span>Completed</span>
+            <strong>{{ completion.get("completed_at", "Not completed") }}</strong>
+          </div>
+          <div class="metric">
+            <span>Duration</span>
+            <strong>{{ completion.get("elapsed_seconds", 0) | int }} seconds</strong>
+          </div>
+          <div class="metric">
+            <span>Language</span>
+            <strong>{{ record.get("language", "") }}</strong>
+          </div>
+          <div class="metric">
+            <span>Interviewee role</span>
+            <strong>{{ record.get("interviewee_role", "") or "Not specified" }}</strong>
+          </div>
+          <div class="metric">
+            <span>Transcript words</span>
+            <strong>{{ completion.get("transcript_words", 0) }}</strong>
+          </div>
+          <div class="metric">
+            <span>Transcript source</span>
+            <strong>{{ completion.get("transcript_source", "Not available") }}</strong>
+          </div>
+          <div class="metric">
+            <span>Mic transcript</span>
+            <strong>{{ mic_transcription.get("status", "Not available") }}</strong>
+          </div>
+          <div class="metric">
+            <span>Audio chunks</span>
+            <strong>{{ audio_chunk_count }}</strong>
+          </div>
+          <div class="metric">
+            <span>Saved events</span>
+            <strong>{{ event_count }}</strong>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="button" href="{{ bundle_url }}">Open JSON bundle</a>
+          <a class="button" href="{{ review_url }}">Open quality review</a>
+        </div>
+
+        {% if completion %}
+          <section>
+            <h2>Quality Review</h2>
+            {% if review %}
+              <div class="review-grid">
+                <article class="review-block">
+                  <h3>Summary</h3>
+                  <p class="dialogue-text">{{ review.get("summary", "") }}</p>
+                  <p class="review-meta">
+                    Overall quality: {{ review.get("overall_quality", "") }}
+                    {% if review.get("model") %} · Model: {{ review.get("model") }}{% endif %}
+                    {% if review.get("generated_at") %} · Generated: {{ review.get("generated_at") }}{% endif %}
+                  </p>
+                </article>
+
+                {% if review.get("key_findings") %}
+                  <article class="review-block">
+                    <h3>Key Findings</h3>
+                    <ul>
+                      {% for finding in review.get("key_findings", []) %}
+                        <li>
+                          <strong>{{ finding.get("severity", "") }} · {{ finding.get("category", "") }}</strong><br />
+                          {{ finding.get("diagnosis", "") }}
+                          {% if finding.get("evidence") %}
+                            <p class="review-meta">Evidence: {{ finding.get("evidence", "") }}</p>
+                          {% endif %}
+                          {% if finding.get("suggested_improvement") %}
+                            <p class="review-meta">Improvement: {{ finding.get("suggested_improvement", "") }}</p>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </article>
+                {% endif %}
+
+                {% if review.get("evidence_backed_claims") %}
+                  <article class="review-block">
+                    <h3>Evidence-Backed Claims</h3>
+                    <ul>
+                      {% for claim in review.get("evidence_backed_claims", []) %}
+                        <li>
+                          {{ claim.get("claim", "") }}
+                          {% if claim.get("supporting_quote") %}
+                            <p class="review-meta">Quote: {{ claim.get("supporting_quote", "") }}</p>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </article>
+                {% endif %}
+
+                {% for label, values in [
+                  ("Missed Opportunities", review.get("missed_opportunities", [])),
+                  ("Uncertainties", review.get("uncertainties", [])),
+                  ("Follow-Up Questions", review.get("follow_up_questions", [])),
+                  ("Pipeline Improvements", review.get("pipeline_improvements", [])),
+                  ("Do Not Change", review.get("do_not_change", []))
+                ] %}
+                  {% if values %}
+                    <article class="review-block">
+                      <h3>{{ label }}</h3>
+                      <ul>
+                        {% for value in values %}
+                          <li>{{ value }}</li>
+                        {% endfor %}
+                      </ul>
+                    </article>
+                  {% endif %}
+                {% endfor %}
+
+                {% if review.get("contradictions") %}
+                  <article class="review-block">
+                    <h3>Contradictions</h3>
+                    <ul>
+                      {% for contradiction in review.get("contradictions", []) %}
+                        <li>
+                          {{ contradiction.get("description", "") }}
+                          {% if contradiction.get("evidence") %}
+                            <p class="review-meta">Evidence: {{ contradiction.get("evidence", "") }}</p>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </article>
+                {% endif %}
+              </div>
+            {% elif review_error %}
+              <p class="error">Quality review unavailable: {{ review_error.get("error", "") }}</p>
+            {% else %}
+              <p class="empty">No quality review was generated.</p>
+            {% endif %}
+          </section>
+
+          <section>
+            <h2>Dialog Transcript</h2>
+            {% if dialog_turns %}
+              <div class="dialogue">
+                {% for turn in dialog_turns %}
+                  <article class="dialogue-turn" data-speaker="{{ turn.speaker }}">
+                    <p class="dialogue-speaker">{{ turn.speaker }}</p>
+                    <p class="dialogue-text">{{ turn.text }}</p>
+                  </article>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p class="empty">No dialog transcript was saved.</p>
+            {% endif %}
+          </section>
+
+          {% if completion.get("transcript_source") == "post_call_interviewee_audio" and completion.get("user_transcript") %}
+            <section>
+              <h2>Final Interviewee Transcript</h2>
+              <p class="dialogue-text">{{ completion.get("user_transcript", "") }}</p>
+            </section>
+          {% endif %}
+        {% else %}
+          <p class="empty">This interview has not been completed yet.</p>
+        {% endif %}
+      {% endif %}
+    </main>
+  </body>
+</html>

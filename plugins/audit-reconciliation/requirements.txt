@@ -1,0 +1,13 @@
+# Base dependencies for audit-reconciliation helper scripts and generated workpaper builders.
+# Codex may already provide many of these through its bundled runtime; this file documents
+# what the plugin expects when run in a fresh Python environment.
+pandas>=2.0
+openpyxl>=3.1
+python-docx>=1.1
+pypdf>=4.0
+PyMuPDF>=1.23
+pdfplumber>=0.11
+beautifulsoup4>=4.12
+lxml>=5.0
+Pillow>=10.0
+rapidfuzz>=3.0

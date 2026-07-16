@@ -1,0 +1,46 @@
+{
+  "name": "reporting-engine",
+  "version": "0.1.5",
+  "description": "Clara component for chart capability manifests, dataset profiling, mechanical compatibility evidence, reporting runtime contracts, chart-family adapter resolution, and unified capability rendering.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "reporting",
+    "charts",
+    "manifest",
+    "dataset-profiling",
+    "compatibility-audit",
+    "adapter-registry",
+    "clara"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Reporting Engine",
+    "shortDescription": "Expose chart capability contracts, adapter resolution, dataset profiling, and rendering for Clara reports.",
+    "longDescription": "A Clara-embedded reporting contract component. It packages the reviewed chart-selection manifest, role registry, dataset-profile examples, mechanical compatibility audits, render-proof matrix, family selector playbooks, and Clara adapter registry. It also provides local scripts for reading the reporting contract, resolving capabilities to reporting-engine adapter ids, profiling datasets into chart-useful role candidates, and rendering a chosen capability through the embedded family component. This component is not an orchestrator and does not decide semantic business validity; it surfaces the mechanical evidence needed before a future selector or report workflow chooses and renders charts.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Use Reporting Engine to inspect chart capabilities and dataset mechanical compatibility.",
+      "Read the packaged chart-selection manifest, profile the dataset into role candidates, and report which chart capabilities are mechanically possible or incomplete.",
+      "Do not claim semantic validity or choose a final chart without an explicit semantic layer or user instruction."
+    ],
+    "brandColor": "#455E68",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "plugin": "prompt-optimizer",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "optimize-tax-question",
+      "prompt": "Use Optimize Prompt on this Italian VAT question and turn it into a Deep Research prompt with official sources and citations.",
+      "required_signals": ["legal/tax question", "Deep Research prompt", "source-backed"]
+    },
+    {
+      "id": "ottimizza-prompt-fiscale",
+      "prompt": "Ottimizza questo quesito fiscale per Deep Research, mantenendo tutti i fatti e chiedendo fonti ufficiali.",
+      "required_signals": ["tax/compliance question", "fact preservation", "official sources"]
+    },
+    {
+      "id": "compliance-research-prompt",
+      "prompt": "Create a defensible compliance Deep Research prompt from this cross-border case, including citations and residual uncertainty.",
+      "required_signals": ["compliance", "cross-border", "citations"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "general-copywriting",
+      "prompt": "Improve this marketing headline for my website."
+    },
+    {
+      "id": "answer-tax-question",
+      "prompt": "Tell me the answer to this tax question and calculate what I owe."
+    },
+    {
+      "id": "journal-reconciliation",
+      "prompt": "Reconcile this accounting journal to the bank statement."
+    }
+  ]
+}

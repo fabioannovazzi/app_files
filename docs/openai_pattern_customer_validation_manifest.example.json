@@ -1,0 +1,411 @@
+{
+  "cases": [
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-audit-reconciliation-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "audit-reconciliation",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-check-entries-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "check-entries",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-client-intake-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "client-intake",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-concordato-plan-review-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "concordato-plan-review",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-deep-research-validator-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "deep-research-validator",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-journal-bank-reconciliation-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "journal-bank-reconciliation",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-journal-sampling-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "journal-sampling",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-prompt-optimizer-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "prompt-optimizer",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    },
+    {
+      "artifact_paths": {
+        "applied_decisions": "TODO: output/applied_decisions.json",
+        "final_artifacts": "TODO: output/final_artifacts.json",
+        "native_output_readback": "TODO: readback path for DOCX/XLSX/PDF/report output, or not_applicable",
+        "review_payload": "TODO: output/review_payload.json",
+        "run_intake": "TODO: output/run_intake.json",
+        "screenshot_paths": [
+          "TODO: screenshot path showing queue/detail/decision state"
+        ],
+        "ui_decisions": "TODO: output/ui_decisions.json"
+      },
+      "case_id": "case-report-builder-001",
+      "commands": [
+        "TODO: run workflow on local customer input",
+        "TODO: open local or MCP review surface",
+        "TODO: save and apply reviewer decisions"
+      ],
+      "decision_summary": {
+        "accepted": 0,
+        "blocked": 0,
+        "edited": 0,
+        "marked_unclear": 0,
+        "rejected": 0,
+        "requested_more_documents": 0,
+        "skipped": 0
+      },
+      "input_path_or_case_id": "TODO: anonymized local input path or customer case id",
+      "language": "TODO: language code, for example it or en",
+      "plugin": "report-builder",
+      "reviewer": "TODO: reviewer name",
+      "reviewer_notes": "TODO: reviewer notes on queue clarity, evidence comparison, decision controls, edit flow, and artifact handoff",
+      "scenario_name": "TODO: representative customer scenario",
+      "status": "partial",
+      "ux_checks": {
+        "artifact_handoff_clear": false,
+        "decision_controls_complete": false,
+        "edit_flow_usable": false,
+        "evidence_comparison_clear": false,
+        "no_blocking_issues": false,
+        "queue_clear": false
+      },
+      "ux_verdict": "usable_with_issues",
+      "validated_at": "TODO: ISO timestamp"
+    }
+  ],
+  "purpose": "Template for recording real customer-folder validation evidence. Replace TODO values with actual local run evidence before using this as the live readiness manifest.",
+  "schema_version": "1.0"
+}

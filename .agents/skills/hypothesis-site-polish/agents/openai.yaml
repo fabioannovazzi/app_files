@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hypothesis Site Polish"
+  short_description: "Polish product hypothesis concept sites."
+  default_prompt: "Use $hypothesis-site-polish to add or refine a product hypothesis concept site so links, hero images, captions, permissions, and quiet Mparanza styling work consistently."

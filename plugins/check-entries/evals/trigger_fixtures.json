@@ -1,0 +1,47 @@
+{
+  "plugin": "check-entries",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "check-entries-obvious-en",
+      "prompt": "Use Check Entries to compare these sampled journal rows with the support PDFs and give me the exceptions.",
+      "required_signals": [
+        "journal entries",
+        "support PDFs",
+        "deterministic checks"
+      ]
+    },
+    {
+      "id": "check-entries-obvious-it",
+      "prompt": "Controlla queste registrazioni contabili campione contro i PDF di supporto e prepara il file delle eccezioni.",
+      "required_signals": [
+        "registrazioni contabili",
+        "PDF di supporto",
+        "eccezioni"
+      ]
+    },
+    {
+      "id": "check-entries-mapping",
+      "prompt": "The entry file has unusual column names; inspect it, propose the mapping, and run entry checks against the attached PDF folder.",
+      "required_signals": [
+        "mapping",
+        "entry checks",
+        "PDF folder"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "journal-sampling-only",
+      "prompt": "Select a random sample from this full general ledger journal."
+    },
+    {
+      "id": "bank-reconciliation-only",
+      "prompt": "Reconcile this open-item list with the bank statement and factoring evidence."
+    },
+    {
+      "id": "generic-code-review",
+      "prompt": "Review this pull request for security issues."
+    }
+  ]
+}

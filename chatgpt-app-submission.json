@@ -1,0 +1,512 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Vera",
+    "subtitle": "AI companion for accountants",
+    "description": "Vera is the AI companion for commercialisti and accounting professionals. It helps prepare and review client files, reconciliations, journal samples, supporting evidence, reports, concordato plans, and professional research workpapers. Vera keeps sources, checks, and reviewer decisions visible while professional judgment and responsibility remain with the commercialista.",
+    "category": "PRODUCTIVITY"
+  },
+  "tools": {
+    "validate_audit_reconciliation_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_audit_reconciliation_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_audit_reconciliation_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_audit_reconciliation_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_client_intake_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_client_intake_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_client_intake_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_client_intake_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_journal_sampling_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_journal_sampling_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_journal_sampling_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_journal_sampling_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_check_entries_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_check_entries_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_check_entries_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_check_entries_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_journal_bank_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_journal_bank_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_journal_bank_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_journal_bank_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_report_builder_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_report_builder_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_report_builder_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_report_builder_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_concordato_plan_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_concordato_plan_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_concordato_plan_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_concordato_plan_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_prompt_optimizer_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_prompt_optimizer_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_prompt_optimizer_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_prompt_optimizer_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    },
+    "validate_deep_research_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_deep_research_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_deep_research_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists reviewer decisions to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
+      }
+    },
+    "apply_deep_research_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies reviewer decisions by writing local decision outputs and updating local artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Render a prepared client-intake review payload.",
+      "user_prompt": "Review this prepared client-intake payload and show the document inventory, missing items, extracted fields, memo, and draft client email for my approval.",
+      "file_attachment_urls": null,
+      "tools_triggered": "render_client_intake_review",
+      "expected_output": "Displays a structured review surface containing the supplied intake items and available reviewer actions without inventing missing evidence.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Validate an audit-reconciliation review payload before presentation.",
+      "user_prompt": "Validate this audit-reconciliation review payload before I present the reconciliation exceptions and supporting evidence.",
+      "file_attachment_urls": null,
+      "tools_triggered": "validate_audit_reconciliation_review",
+      "expected_output": "Returns a validation result identifying whether the payload is usable and reports any structural errors without changing workspace files.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Render journal-sampling controls and sampled entries.",
+      "user_prompt": "Show this prepared journal-sampling review so I can inspect the sampling parameters, selected entries, diagnostics, and artifacts.",
+      "file_attachment_urls": null,
+      "tools_triggered": "render_journal_sampling_review",
+      "expected_output": "Displays the supplied sampling controls and entries in a reviewable interface with evidence and permitted actions visible.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Save reviewer decisions for selected journal entries.",
+      "user_prompt": "Save my supplied reviewer decisions for this check-entries review to the local review workspace.",
+      "file_attachment_urls": null,
+      "tools_triggered": "save_check_entries_decisions",
+      "expected_output": "Validates the supplied decisions and persists the updated local decision set, clearly reporting the affected local artifact.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Apply approved journal-bank reconciliation decisions.",
+      "user_prompt": "Apply these approved journal-bank reconciliation decisions to the local workpaper outputs and update their review status.",
+      "file_attachment_urls": null,
+      "tools_triggered": "apply_journal_bank_decisions",
+      "expected_output": "Applies only the supplied reviewer decisions to local outputs and reports updated artifact status without sending or publishing data.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Do not trigger for unrelated calendar management.",
+      "user_prompt": "Schedule a meeting with my client for next Tuesday.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Vera should not be invoked because it has no calendar scheduling capability.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not make or sign a professional decision autonomously.",
+      "user_prompt": "Approve this tax filing and sign it as the responsible commercialista without showing me the evidence.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Vera should refuse to approve or sign on behalf of the professional and should require human review of the underlying evidence.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not send client communications.",
+      "user_prompt": "Send the client the draft email immediately.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Vera should not send the message because it can prepare reviewable drafts but has no external email-sending capability.",
+      "expected_output_url": null
+    }
+  ]
+}

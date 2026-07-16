@@ -1,0 +1,670 @@
+{
+    "id": "lip_plumpers",
+    "label": "lip plumpers",
+    "attributes": [
+        {
+            "id": "form",
+            "label": "form",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "wand",
+                    "label": "wand",
+                    "synonyms": [
+                        "doe foot applicator",
+                        "wand applicator"
+                    ]
+                },
+                {
+                    "id": "tube",
+                    "label": "tube",
+                    "synonyms": [
+                        "squeeze tube",
+                        "tube gloss"
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick",
+                    "synonyms": [
+                        "balm stick",
+                        "bullet plumper"
+                    ]
+                },
+                {
+                    "id": "pot",
+                    "label": "pot/jar",
+                    "synonyms": [
+                        "jar plumper",
+                        "pot plumper"
+                    ]
+                },
+                {
+                    "id": "pen",
+                    "label": "pen",
+                    "synonyms": [
+                        "click pen",
+                        "plumper pen"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "product_type",
+            "label": "product type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "clear_plumper",
+                    "label": "clear plumper",
+                    "synonyms": [
+                        "clear lip plumper",
+                        "transparent plumper"
+                    ]
+                },
+                {
+                    "id": "tinted_plumper",
+                    "label": "tinted plumper",
+                    "synonyms": [
+                        "colored plumper",
+                        "tinted lip plumper"
+                    ]
+                },
+                {
+                    "id": "gloss_plumper",
+                    "label": "gloss plumper",
+                    "synonyms": [
+                        "plumping gloss",
+                        "volumizing gloss"
+                    ]
+                },
+                {
+                    "id": "balm_plumper",
+                    "label": "balm plumper",
+                    "synonyms": [
+                        "plumping balm",
+                        "treatment balm plumper"
+                    ]
+                },
+                {
+                    "id": "treatment_plumper",
+                    "label": "treatment plumper",
+                    "synonyms": [
+                        "line treatment plumper",
+                        "serum plumper"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "high_shine_glossy",
+                    "label": "high shine/glossy",
+                    "synonyms": [
+                        "glass shine",
+                        "high shine",
+                        "mirror like",
+                        "ultra glossy",
+                        "wet look"
+                    ]
+                },
+                {
+                    "id": "shimmer",
+                    "label": "shimmer",
+                    "synonyms": [
+                        "fine shimmer",
+                        "luminous shimmer",
+                        "micro shimmer",
+                        "shimmery",
+                        "subtle shimmer"
+                    ]
+                },
+                {
+                    "id": "glitter",
+                    "label": "glitter",
+                    "synonyms": [
+                        "chunky glitter",
+                        "glitter finish",
+                        "glittery",
+                        "sparkle",
+                        "sparkly glitter"
+                    ]
+                },
+                {
+                    "id": "metallic",
+                    "label": "metallic",
+                    "synonyms": [
+                        "chrome like",
+                        "foil finish",
+                        "liquid metal",
+                        "metal sheen",
+                        "molten metal"
+                    ]
+                },
+                {
+                    "id": "pearlescent",
+                    "label": "pearlescent",
+                    "synonyms": [
+                        "mother of pearl",
+                        "pearl finish",
+                        "pearlescence",
+                        "pearlized",
+                        "satiny pearl"
+                    ]
+                },
+                {
+                    "id": "holographic",
+                    "label": "holographic",
+                    "synonyms": [
+                        "duochrome",
+                        "holo",
+                        "iridescent",
+                        "opalescent",
+                        "rainbow shift"
+                    ]
+                },
+                {
+                    "id": "natural_sheen",
+                    "label": "natural sheen",
+                    "synonyms": [
+                        "low shine",
+                        "natural finish",
+                        "sheen",
+                        "soft gloss",
+                        "subtle shine"
+                    ]
+                },
+                {
+                    "id": "vinyl_lacquer",
+                    "label": "vinyl/lacquer",
+                    "synonyms": [
+                        "lacquer gloss",
+                        "lacquered",
+                        "patent shine",
+                        "vinyl finish",
+                        "vinyl like"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "clear_transparent",
+                    "label": "clear/transparent",
+                    "synonyms": [
+                        "colorless",
+                        "crystal clear",
+                        "no tint",
+                        "transparent"
+                    ]
+                },
+                {
+                    "id": "sheer",
+                    "label": "sheer",
+                    "synonyms": [
+                        "hint of tint",
+                        "light tint",
+                        "sheer wash",
+                        "translucent",
+                        "wash of color"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium",
+                    "synonyms": [
+                        "buildable",
+                        "medium coverage",
+                        "mid coverage",
+                        "moderate opacity",
+                        "semi opaque"
+                    ]
+                },
+                {
+                    "id": "opaque_full",
+                    "label": "opaque/full",
+                    "synonyms": [
+                        "full color",
+                        "full coverage",
+                        "fully opaque",
+                        "high pigment",
+                        "opaque"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "clear",
+                    "label": "clear",
+                    "synonyms": [
+                        "crystal"
+                    ]
+                },
+                {
+                    "id": "nude_beige",
+                    "label": "nude/beige",
+                    "synonyms": [
+                        "beige",
+                        "neutral",
+                        "nude",
+                        "sand",
+                        "tan"
+                    ]
+                },
+                {
+                    "id": "pink_rose",
+                    "label": "pink/rose",
+                    "synonyms": [
+                        "blush pink",
+                        "petal pink",
+                        "pink",
+                        "rose",
+                        "rosy"
+                    ]
+                },
+                {
+                    "id": "peach_coral",
+                    "label": "peach/coral",
+                    "synonyms": [
+                        "apricot",
+                        "coral",
+                        "peach",
+                        "peachy",
+                        "salmon"
+                    ]
+                },
+                {
+                    "id": "red_crimson",
+                    "label": "red/crimson",
+                    "synonyms": [
+                        "cherry",
+                        "crimson",
+                        "red",
+                        "ruby",
+                        "scarlet"
+                    ]
+                },
+                {
+                    "id": "berry_plum",
+                    "label": "berry/plum",
+                    "synonyms": [
+                        "berry",
+                        "burgundy",
+                        "plum",
+                        "raspberry",
+                        "wine"
+                    ]
+                },
+                {
+                    "id": "mauve_brown",
+                    "label": "mauve/brown",
+                    "synonyms": [
+                        "brown",
+                        "cocoa",
+                        "mauve",
+                        "mocha",
+                        "taupe"
+                    ]
+                },
+                {
+                    "id": "gold_bronze_copper",
+                    "label": "gold/bronze/copper",
+                    "synonyms": [
+                        "brassy",
+                        "bronze",
+                        "copper",
+                        "gilded",
+                        "gold"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "plumping_sensation",
+            "label": "plumping sensation",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "tingling_heat",
+                    "label": "tingling/heat",
+                    "synonyms": [
+                        "hot tingle",
+                        "warming sensation"
+                    ]
+                },
+                {
+                    "id": "cooling",
+                    "label": "cooling",
+                    "synonyms": [
+                        "cooling tingle",
+                        "minty cooling"
+                    ]
+                },
+                {
+                    "id": "no_tingle",
+                    "label": "no tingle",
+                    "synonyms": [
+                        "gentle plumping",
+                        "tingle free"
+                    ]
+                },
+                {
+                    "id": "instant_volume",
+                    "label": "instant volume",
+                    "synonyms": [
+                        "immediate plump",
+                        "visible volume boost"
+                    ]
+                },
+                {
+                    "id": "overnight_treatment",
+                    "label": "overnight treatment",
+                    "synonyms": [
+                        "night plumper",
+                        "sleeping plump treatment"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "benefits",
+            "label": "benefits",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "plumping",
+                    "label": "plumping",
+                    "synonyms": [
+                        "fuller looking lips",
+                        "volumizing"
+                    ]
+                },
+                {
+                    "id": "hydrating",
+                    "label": "hydrating",
+                    "synonyms": [
+                        "moisturizing",
+                        "quenching"
+                    ]
+                },
+                {
+                    "id": "smoothing",
+                    "label": "smoothing",
+                    "synonyms": [
+                        "smooths lip lines",
+                        "softening"
+                    ]
+                },
+                {
+                    "id": "line_filling",
+                    "label": "line filling",
+                    "synonyms": [
+                        "fills lines",
+                        "wrinkle filling"
+                    ]
+                },
+                {
+                    "id": "shine",
+                    "label": "shine",
+                    "synonyms": [
+                        "mirror shine"
+                    ]
+                },
+                {
+                    "id": "conditioning",
+                    "label": "conditioning",
+                    "synonyms": [
+                        "comforting wear",
+                        "nourishing"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "active_complex",
+            "label": "active complex",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "hyaluronic_acid",
+                    "label": "hyaluronic acid",
+                    "synonyms": [
+                        "ha",
+                        "sodium hyaluronate"
+                    ]
+                },
+                {
+                    "id": "peptides",
+                    "label": "peptides",
+                    "synonyms": [
+                        "peptide complex",
+                        "volumizing peptides"
+                    ]
+                },
+                {
+                    "id": "menthol_capsicum",
+                    "label": "menthol/capsicum",
+                    "synonyms": [
+                        "chili extract",
+                        "menthol",
+                        "pepper extract"
+                    ]
+                },
+                {
+                    "id": "collagen",
+                    "label": "collagen",
+                    "synonyms": [
+                        "collagen boosting",
+                        "marine collagen"
+                    ]
+                },
+                {
+                    "id": "botanical_oils_butters",
+                    "label": "botanical oils/butters",
+                    "synonyms": [
+                        "nourishing oils",
+                        "plant butters"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "free_from",
+            "label": "free from",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "paraben_free",
+                    "label": "paraben-free",
+                    "synonyms": [
+                        "free of parabens",
+                        "no parabens",
+                        "paraben free",
+                        "without parabens"
+                    ]
+                },
+                {
+                    "id": "phthalate_free",
+                    "label": "phthalate-free",
+                    "synonyms": [
+                        "free of phthalates",
+                        "no phthalates",
+                        "phthalate free",
+                        "without phthalates"
+                    ]
+                },
+                {
+                    "id": "mineral_oil_free",
+                    "label": "mineral oil-free",
+                    "synonyms": [
+                        "free of mineral oil",
+                        "mineral oil free",
+                        "no mineral oil",
+                        "without mineral oil"
+                    ]
+                },
+                {
+                    "id": "sulfate_free",
+                    "label": "sulfate-free",
+                    "synonyms": [
+                        "free of sulfates",
+                        "no sulfates",
+                        "sulfate free",
+                        "without sulfates"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "silicone_free",
+                    "label": "silicone-free",
+                    "synonyms": [
+                        "free of silicones",
+                        "no silicones",
+                        "silicone free",
+                        "without silicones"
+                    ]
+                },
+                {
+                    "id": "alcohol_free",
+                    "label": "alcohol-free",
+                    "synonyms": [
+                        "alcohol free",
+                        "free of alcohol",
+                        "no alcohol",
+                        "without alcohol"
+                    ]
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "gluten-free",
+                    "synonyms": [
+                        "free of gluten",
+                        "gluten free",
+                        "no gluten",
+                        "without gluten"
+                    ]
+                }
+            ]
+        }
+    ]
+}

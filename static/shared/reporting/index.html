@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reporting | Mparanza</title>
+  <style>
+    :root {
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --ink: #243027;
+      --text: #465148;
+      --muted: #6d776f;
+      --line: #dfe6dd;
+      --soft: #f3f6f2;
+      --accent: #496a60;
+      --accent-soft: #e7eee9;
+      --content: 1120px;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand img {
+      display: block;
+      width: 140px;
+      height: auto;
+    }
+    .nav-right,
+    .nav-links,
+    .lang-switch {
+      display: flex;
+      align-items: center;
+    }
+    .nav-right { gap: 20px; }
+    .nav-links {
+      gap: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      transition: color 160ms ease-out;
+    }
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--ink);
+    }
+    .lang-switch {
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+    }
+    .lang-switch button.is-active {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .lang-switch button:focus-visible,
+    .button:focus-visible,
+    .analysis-row a:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+    .hero {
+      padding: 82px 0 56px;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+    h1 {
+      max-width: 860px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 620;
+    }
+    h2 {
+      font-size: clamp(28px, 3.2vw, 40px);
+      font-weight: 620;
+    }
+    h3 {
+      font-size: 18px;
+      font-weight: 620;
+    }
+    p { margin: 0; }
+    .lead {
+      max-width: 780px;
+      margin-top: 22px;
+      color: var(--text);
+      font-size: clamp(19px, 2.2vw, 24px);
+      line-height: 1.4;
+    }
+    .copy {
+      max-width: 760px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .action-row {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #f8fbfa;
+      font-size: 14px;
+      font-weight: 620;
+      text-decoration: none;
+    }
+    .button.secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+    section {
+      padding: 58px 0;
+      border-top: 1px solid var(--line);
+      scroll-margin-top: 88px;
+    }
+    .section-head {
+      max-width: 780px;
+      margin-bottom: 28px;
+    }
+    .section-head p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .principle {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .principle {
+      padding: 22px;
+    }
+    .principle p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+    .analysis-list {
+      border-top: 1px solid var(--line);
+    }
+    .analysis-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.4fr) auto;
+      gap: 22px;
+      align-items: start;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .analysis-row small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .analysis-row p {
+      color: var(--muted);
+    }
+    .analysis-row a {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 620;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .analysis-row a:hover {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .analysis-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px 14px;
+    }
+    .report-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 26px;
+      align-items: start;
+    }
+    .flow {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .flow li {
+      padding: 16px 18px;
+      border-top: 1px solid var(--line);
+    }
+    .flow li:first-child { border-top: 0; }
+    .flow strong {
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+    }
+    .flow span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    @media (max-width: 900px) {
+      .nav-shell {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+      .nav-right {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .nav-links { flex-wrap: wrap; }
+      .principles,
+      .report-flow {
+        grid-template-columns: 1fr;
+      }
+      .analysis-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .analysis-links {
+        justify-content: flex-start;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .nav-links a { transition: none; }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="/?lang=en" data-home-link aria-label="Mparanza home">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Section links">
+          <a href="#method" data-i18n="nav.method">Method</a>
+          <a href="#engines" data-i18n="nav.engines">Sources</a>
+          <a href="#report-flow" data-i18n="nav.report-flow">Report logic</a>
+          <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/reporting-engine" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="it">IT</button>
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="de">DE</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="overview">
+      <p class="eyebrow" data-i18n="hero.eyebrow">Reporting</p>
+      <h1 data-i18n="hero.title">Reporting that starts from verifiable analysis.</h1>
+      <p class="lead" data-i18n="hero.lead">Use Reporting when the question needs a written explanation grounded in generated views, tables and checks.</p>
+      <p class="copy" data-i18n="hero.copy">The tools produce reviewable analysis views first. The reporting flow then writes an explanation tied to those views.</p>
+      <div class="action-row">
+        <a class="button" href="#engines" data-i18n="hero.secondary">Browse sources</a>
+      </div>
+    </section>
+
+    <section id="method">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="method.eyebrow">Core idea</p>
+        <h2 data-i18n="method.title">Generate the views before writing the explanation.</h2>
+        <p data-i18n="method.copy">Analysis views, tables and review files are generated first. Codex uses those fixed outputs to choose useful sources and write supported commentary.</p>
+      </div>
+      <div class="principles">
+        <article class="principle">
+          <h3 data-i18n="method.det.title">Repeatable analysis</h3>
+          <p data-i18n="method.det.copy">File reading, field choices, formulas, totals, residuals and checks are handled before interpretation starts.</p>
+        </article>
+        <article class="principle">
+          <h3 data-i18n="method.chart.title">Reviewable sources</h3>
+          <p data-i18n="method.chart.copy">Each output carries the comparison, measure, period and total logic needed for review.</p>
+        </article>
+        <article class="principle">
+          <h3 data-i18n="method.ai.title">Commentary tied to outputs</h3>
+          <p data-i18n="method.ai.copy">Codex compares the generated views, identifies the useful message and explains which outputs support it.</p>
+      </div>
+    </section>
+
+    <section id="engines">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="engines.eyebrow">Sources</p>
+        <h2 data-i18n="engines.title">Source families for the report.</h2>
+        <p data-i18n="engines.copy">Reporting chooses the charts, tables and checks needed for the written explanation. These source families define the available analytical views.</p>
+      </div>
+      <div class="analysis-list">
+        <article class="analysis-row" id="movement-source">
+          <div>
+            <h3 data-i18n="engines.movement.title">Movement and period sources</h3>
+            <small data-i18n="engines.movement.meta">Changes, drivers, comparisons</small>
+          </div>
+          <p data-i18n="engines.movement.copy">Shows what changed across periods and which components explain the movement.</p>
+        </article>
+        <article class="analysis-row" id="composition-source">
+          <div>
+            <h3 data-i18n="engines.composition.title">Mix and composition sources</h3>
+            <small data-i18n="engines.composition.meta">Share, ranking, contribution</small>
+          </div>
+          <p data-i18n="engines.composition.copy">Explains whether performance is driven by product, customer, channel or category mix.</p>
+        </article>
+        <article class="analysis-row" id="relationship-source">
+          <div>
+            <h3 data-i18n="engines.relationship.title">Relationship, spread and overlap sources</h3>
+            <small data-i18n="engines.relationship.meta">Outliers, distribution, intersections</small>
+          </div>
+          <p data-i18n="engines.relationship.copy">Highlights correlation, concentration, unusual values, distribution shape and set membership.</p>
+        </article>
+        <article class="analysis-row" id="table-source">
+          <div>
+            <h3 data-i18n="engines.tables.title">Structured table sources</h3>
+            <small data-i18n="engines.tables.meta">Stages, statements, totals</small>
+          </div>
+          <p data-i18n="engines.tables.copy">Keeps stage logic, statement rows, subtotals and scenario comparisons readable for review.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="report-flow">
+      <div class="report-flow">
+        <div class="section-head">
+          <p class="eyebrow" data-i18n="reportFlow.eyebrow">Report logic</p>
+          <h2 data-i18n="reportFlow.title">Written explanation starts from selected views.</h2>
+          <p data-i18n="reportFlow.copy">An analysis can produce many charts and tables. Codex ranks the useful views, explains the conclusion and points back to the generated outputs. The review trail remains available.</p>
+        </div>
+        <ul class="flow">
+          <li>
+            <strong data-i18n="reportFlow.one.title">Create outputs</strong>
+            <span data-i18n="reportFlow.one.copy">Read the file, apply the formulas and produce charts, tables and checks with repeatable logic.</span>
+          </li>
+          <li>
+            <strong data-i18n="reportFlow.two.title">Select views</strong>
+            <span data-i18n="reportFlow.two.copy">Compare the generated outputs and keep the views that clarify the business question.</span>
+          </li>
+          <li>
+            <strong data-i18n="reportFlow.three.title">Explain with traceability</strong>
+            <span data-i18n="reportFlow.three.copy">Use Codex to compare the selected views and keep the underlying files available for review.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const copy = {
+      en: {
+        title: "Reporting",
+        "nav.method": "Method",
+        "nav.engines": "Sources",
+        "nav.report-flow": "Report logic",
+        "hero.eyebrow": "Reporting",
+        "hero.title": "Reporting that starts from verifiable analysis.",
+        "hero.lead": "Use Reporting when the question needs a written explanation grounded in generated views, tables and checks.",
+        "hero.copy": "The tools produce reviewable analysis views first. The reporting flow then writes an explanation tied to those views.",
+        "hero.secondary": "Browse sources",
+        "method.eyebrow": "Core idea",
+        "method.title": "Generate the views before writing the explanation.",
+        "method.copy": "Analysis views, tables and review files are generated first. Codex uses those fixed outputs to choose useful sources and write supported commentary.",
+        "method.det.title": "Repeatable analysis",
+        "method.det.copy": "File reading, field choices, formulas, totals, residuals and checks are handled before interpretation starts.",
+        "method.chart.title": "Reviewable sources",
+        "method.chart.copy": "Each output carries the comparison, measure, period and total logic needed for review.",
+        "method.ai.title": "Commentary tied to outputs",
+        "method.ai.copy": "Codex compares the generated views, identifies the useful message and explains which outputs support it.",
+        "engines.eyebrow": "Sources",
+        "engines.title": "Source families for the report.",
+        "engines.copy": "Reporting chooses the charts, tables and checks needed for the written explanation. These source families define the available analytical views.",
+        "engines.movement.title": "Movement and period sources",
+        "engines.movement.meta": "Changes, drivers, comparisons",
+        "engines.movement.copy": "Shows what changed across periods and which components explain the movement.",
+        "engines.composition.title": "Mix and composition sources",
+        "engines.composition.meta": "Share, ranking, contribution",
+        "engines.composition.copy": "Explains whether performance is driven by product, customer, channel or category mix.",
+        "engines.relationship.title": "Relationship, spread and overlap sources",
+        "engines.relationship.meta": "Outliers, distribution, intersections",
+        "engines.relationship.copy": "Highlights correlation, concentration, unusual values, distribution shape and set membership.",
+        "engines.tables.title": "Structured table sources",
+        "engines.tables.meta": "Stages, statements, totals",
+        "engines.tables.copy": "Keeps stage logic, statement rows, subtotals and scenario comparisons readable for review.",
+        "reportFlow.eyebrow": "Report logic",
+        "reportFlow.title": "Written explanation starts from selected views.",
+        "reportFlow.copy": "An analysis can produce many charts and tables. Codex ranks the useful views, explains the conclusion and points back to the generated outputs. The review trail remains available.",
+        "reportFlow.one.title": "Create outputs",
+        "reportFlow.one.copy": "Read the file, apply the formulas and produce charts, tables and checks with repeatable logic.",
+        "reportFlow.two.title": "Select views",
+        "reportFlow.two.copy": "Compare the generated outputs and keep the views that clarify the business question.",
+        "reportFlow.three.title": "Explain with traceability",
+        "reportFlow.three.copy": "Use Codex to compare the selected views and keep the underlying files available for review."
+      },
+      it: {
+        title: "Reporting",
+        "nav.method": "Metodo",
+        "nav.engines": "Evidenze",
+        "nav.report-flow": "Spiegazione",
+        "hero.eyebrow": "Reporting",
+        "hero.title": "Reporting basato su analisi verificabili.",
+        "hero.lead": "Usa Reporting quando la domanda richiede una spiegazione scritta fondata su viste, tabelle e controlli generati.",
+        "hero.copy": "Prima prepara le viste di analisi, poi compone una spiegazione scritta che rimanda a quelle viste.",
+        "hero.secondary": "Sfoglia le evidenze",
+        "method.eyebrow": "Idea di fondo",
+        "method.title": "Prepara le viste prima di scrivere la spiegazione.",
+        "method.copy": "Viste di analisi, tabelle e file di revisione vengono prodotti prima. Codex usa quegli output stabili per scegliere evidenze utili e scrivere commenti supportati.",
+        "method.det.title": "Analisi ripetibile",
+        "method.det.copy": "Lettura file, campi, formule, totali, residui e controlli sono gestiti prima dell'interpretazione.",
+        "method.chart.title": "Evidenze rivedibili",
+        "method.chart.copy": "Ogni output mostra confronto, misura, periodo e logica dei totali necessari per la revisione.",
+        "method.ai.title": "Commento collegato agli output",
+        "method.ai.copy": "Codex confronta le viste generate, identifica il messaggio utile e spiega quali output lo supportano.",
+        "engines.eyebrow": "Evidenze",
+        "engines.title": "Famiglie di evidenze per il report.",
+        "engines.copy": "Reporting sceglie i grafici, le tabelle e i controlli necessari alla spiegazione scritta. Queste famiglie definiscono le viste analitiche disponibili.",
+        "engines.movement.title": "Evidenze di movimento e periodo",
+        "engines.movement.meta": "Variazioni, driver, confronti",
+        "engines.movement.copy": "Mostra cosa è cambiato tra periodi e quali componenti spiegano il movimento.",
+        "engines.composition.title": "Evidenze di mix e composizione",
+        "engines.composition.meta": "Quota, ranking, contribuzione",
+        "engines.composition.copy": "Spiega se la performance dipende da mix prodotto, cliente, canale o categoria.",
+        "engines.relationship.title": "Evidenze di relazione, dispersione e sovrapposizione",
+        "engines.relationship.meta": "Outlier, distribuzione, intersezioni",
+        "engines.relationship.copy": "Evidenzia correlazione, concentrazione, valori anomali, forma della distribuzione e membership.",
+        "engines.tables.title": "Evidenze tabellari strutturate",
+        "engines.tables.meta": "Fasi, prospetti, totali",
+        "engines.tables.copy": "Mantiene leggibili logiche di fase, righe di prospetto, subtotali e confronti scenario.",
+        "reportFlow.eyebrow": "Spiegazione",
+        "reportFlow.title": "La spiegazione parte dalle viste selezionate.",
+        "reportFlow.copy": "Un'analisi può produrre molti grafici e tabelle. Codex ordina le viste utili, spiega la conclusione e rimanda agli output generati. La traccia di revisione resta disponibile.",
+        "reportFlow.one.title": "Crea gli output",
+        "reportFlow.one.copy": "Legge il file, applica le formule e produce grafici, tabelle e controlli con logica ripetibile.",
+        "reportFlow.two.title": "Seleziona le viste",
+        "reportFlow.two.copy": "Confronta gli output generati e tiene le viste che chiariscono la domanda business.",
+        "reportFlow.three.title": "Spiega con tracciabilità",
+        "reportFlow.three.copy": "Usa Codex per confrontare le viste selezionate e mantiene i file sottostanti disponibili per la revisione."
+      },
+      fr: {
+        title: "Reporting",
+        "nav.method": "Méthode",
+        "nav.engines": "Preuves",
+        "nav.report-flow": "Explication",
+        "hero.eyebrow": "Reporting",
+        "hero.title": "Un reporting fondé sur des analyses vérifiables.",
+        "hero.lead": "Utilisez Reporting quand la question demande une explication écrite fondée sur des vues, tables et contrôles générés.",
+        "hero.copy": "Les outils produisent d'abord des vues d'analyse révisables. Le flux de reporting rédige ensuite une explication liée à ces vues.",
+        "hero.secondary": "Parcourir les preuves",
+        "method.eyebrow": "Idée centrale",
+        "method.title": "Préparer les vues avant d'écrire l'explication.",
+        "method.copy": "Vues d'analyse, tables et fichiers de revue sont générés d'abord. Codex utilise ces sorties fixes pour choisir les preuves utiles et rédiger un commentaire étayé.",
+        "method.det.title": "Analyse répétable",
+        "method.det.copy": "Lecture du fichier, choix de champs, formules, totaux, résidus et contrôles sont traités avant le début de l'interprétation.",
+        "method.chart.title": "Preuves révisables",
+        "method.chart.copy": "Chaque sortie porte la comparaison, la mesure, la période et la logique des totaux nécessaires à la revue.",
+        "method.ai.title": "Commentaire relié aux sorties",
+        "method.ai.copy": "Codex compare les vues générées, identifie le message utile et explique quelles sorties le soutiennent.",
+        "engines.eyebrow": "Preuves",
+        "engines.title": "Familles de preuves pour le rapport.",
+        "engines.copy": "Reporting choisit les graphiques, tables et contrôles nécessaires à l'explication écrite. Ces familles définissent les vues analytiques disponibles.",
+        "engines.movement.title": "Preuves de mouvement et de période",
+        "engines.movement.meta": "Changements, facteurs, comparaisons",
+        "engines.movement.copy": "Montre ce qui a changé entre périodes et quelles composantes expliquent le mouvement.",
+        "engines.composition.title": "Preuves de mix et de composition",
+        "engines.composition.meta": "Part, classement, contribution",
+        "engines.composition.copy": "Explique si la performance est portée par le mix produit, client, canal ou catégorie.",
+        "engines.relationship.title": "Preuves de relation, dispersion et chevauchement",
+        "engines.relationship.meta": "Outliers, distribution, intersections",
+        "engines.relationship.copy": "Met en évidence corrélation, concentration, valeurs atypiques, forme de distribution et appartenance aux ensembles.",
+        "engines.tables.title": "Preuves tabulaires structurées",
+        "engines.tables.meta": "Étapes, états, totaux",
+        "engines.tables.copy": "Garde lisibles la logique d'étapes, les lignes d'état, les sous-totaux et les comparaisons de scénarios.",
+        "reportFlow.eyebrow": "Explication",
+        "reportFlow.title": "L'explication écrite commence par les vues sélectionnées.",
+        "reportFlow.copy": "Une analyse peut produire beaucoup de graphiques et de tables. Codex classe les vues utiles, explique la conclusion et renvoie vers les sorties générées. La trace de revue reste disponible.",
+        "reportFlow.one.title": "Créer les sorties",
+        "reportFlow.one.copy": "Lire le fichier, appliquer les formules et produire graphiques, tables et contrôles avec une logique répétable.",
+        "reportFlow.two.title": "Sélectionner les vues",
+        "reportFlow.two.copy": "Comparer les sorties générées et garder les vues qui clarifient la question métier.",
+        "reportFlow.three.title": "Expliquer avec traçabilité",
+        "reportFlow.three.copy": "Utiliser Codex pour comparer les vues sélectionnées et garder les fichiers sous-jacents disponibles pour revue."
+      },
+      de: {
+        title: "Reporting",
+        "nav.method": "Methode",
+        "nav.engines": "Belege",
+        "nav.report-flow": "Erklärung",
+        "hero.eyebrow": "Reporting",
+        "hero.title": "Reporting auf Basis überprüfbarer Analysen.",
+        "hero.lead": "Nutzen Sie Reporting, wenn die Frage eine schriftliche Erklärung auf Basis erzeugter Ansichten, Tabellen und Kontrollen braucht.",
+        "hero.copy": "Die Tools erzeugen zuerst prüfbare Analyseansichten. Der Reporting-Flow schreibt danach eine Erklärung, die auf diese Ansichten verweist.",
+        "hero.secondary": "Belege ansehen",
+        "method.eyebrow": "Grundidee",
+        "method.title": "Ansichten erzeugen, bevor die Erklärung geschrieben wird.",
+        "method.copy": "Analyseansichten, Tabellen und Prüfdateien werden zuerst erzeugt. Codex nutzt diese festen Ausgaben, um nützliche Belege auszuwählen und belegte Kommentare zu schreiben.",
+        "method.det.title": "Wiederholbare Analyse",
+        "method.det.copy": "Dateilesung, Feldauswahl, Formeln, Summen, Residuen und Kontrollen werden vor der Interpretation verarbeitet.",
+        "method.chart.title": "Prüfbare Belege",
+        "method.chart.copy": "Jede Ausgabe trägt Vergleich, Kennzahl, Zeitraum und Summenlogik, die für die Prüfung nötig sind.",
+        "method.ai.title": "Kommentar mit Bezug auf die Ausgaben",
+        "method.ai.copy": "Codex vergleicht die erzeugten Ansichten, identifiziert die nützliche Aussage und erklärt, welche Ausgaben sie stützen.",
+        "engines.eyebrow": "Belege",
+        "engines.title": "Belegfamilien für den Bericht.",
+        "engines.copy": "Reporting wählt die Diagramme, Tabellen und Kontrollen aus, die für die schriftliche Erklärung nötig sind. Diese Familien definieren die verfügbaren Analyseansichten.",
+        "engines.movement.title": "Belege für Bewegung und Perioden",
+        "engines.movement.meta": "Änderungen, Treiber, Vergleiche",
+        "engines.movement.copy": "Zeigt, was sich zwischen Perioden geändert hat und welche Komponenten die Bewegung erklären.",
+        "engines.composition.title": "Belege für Mix und Komposition",
+        "engines.composition.meta": "Anteil, Ranking, Beitrag",
+        "engines.composition.copy": "Erklärt, ob Performance durch Produkt-, Kunden-, Kanal- oder Kategoriemix getrieben wird.",
+        "engines.relationship.title": "Belege für Beziehung, Streuung und Overlap",
+        "engines.relationship.meta": "Ausreißer, Verteilung, Schnittmengen",
+        "engines.relationship.copy": "Hebt Korrelation, Konzentration, ungewöhnliche Werte, Verteilungsform und Set-Zugehörigkeit hervor.",
+        "engines.tables.title": "Strukturierte Tabellenbelege",
+        "engines.tables.meta": "Stufen, Statements, Summen",
+        "engines.tables.copy": "Hält Stufenlogik, Statement-Zeilen, Zwischensummen und Szenariovergleiche prüfbar lesbar.",
+        "reportFlow.eyebrow": "Erklärung",
+        "reportFlow.title": "Die schriftliche Erklärung beginnt mit ausgewählten Ansichten.",
+        "reportFlow.copy": "Eine Analyse kann viele Diagramme und Tabellen erzeugen. Codex ordnet nützliche Ansichten, erklärt die Schlussfolgerung und verweist auf die erzeugten Ausgaben. Die Prüfdateien bleiben verfügbar.",
+        "reportFlow.one.title": "Ausgaben erzeugen",
+        "reportFlow.one.copy": "Datei lesen, Formeln anwenden und Diagramme, Tabellen und Kontrollen mit wiederholbarer Logik erzeugen.",
+        "reportFlow.two.title": "Ansichten auswählen",
+        "reportFlow.two.copy": "Die erzeugten Ausgaben vergleichen und die Ansichten behalten, die die Business-Frage klären.",
+        "reportFlow.three.title": "Mit Rückverfolgbarkeit erklären",
+        "reportFlow.three.copy": "Codex die ausgewählten Ansichten vergleichen lassen und die zugrunde liegenden Dateien zur Prüfung verfügbar halten."
+      }
+    };
+
+    const supported = new Set(["en", "it", "fr", "de"]);
+    const params = new URLSearchParams(window.location.search);
+    const initialLang = supported.has(params.get("lang")) ? params.get("lang") : "en";
+
+    function setLanguage(lang) {
+      const safeLang = supported.has(lang) ? lang : "en";
+      document.documentElement.lang = safeLang;
+      document.title = `${copy[safeLang].title} | Mparanza`;
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.dataset.i18n;
+        if (copy[safeLang][key]) node.textContent = copy[safeLang][key];
+      });
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.lang === safeLang);
+      });
+      document.querySelectorAll("[data-home-link]").forEach((link) => {
+        link.href = `/?lang=${safeLang}`;
+      });
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", safeLang);
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    setLanguage(initialLang);
+  </script>
+</body>
+</html>

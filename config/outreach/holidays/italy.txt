@@ -1,0 +1,4 @@
+# Add skipped Italian outreach dates as YYYY-MM-DD, one per line.
+# Example:
+# 2026-01-01
+2026-06-02 # Festa della Repubblica

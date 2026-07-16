@@ -1,0 +1,323 @@
+{
+    "id": "cashmere_sweaters",
+    "label": "cashmere sweaters",
+    "attributes": [
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "black",
+                    "label": "black"
+                },
+                {
+                    "id": "blue",
+                    "label": "blue"
+                },
+                {
+                    "id": "brown",
+                    "label": "brown"
+                },
+                {
+                    "id": "green",
+                    "label": "green"
+                },
+                {
+                    "id": "grey",
+                    "label": "grey",
+                    "synonyms": [
+                        "gray"
+                    ]
+                },
+                {
+                    "id": "multicolor",
+                    "label": "multicolor",
+                    "synonyms": [
+                        "multi color"
+                    ]
+                },
+                {
+                    "id": "neutrals",
+                    "label": "neutrals",
+                    "synonyms": [
+                        "neutral"
+                    ]
+                },
+                {
+                    "id": "orange",
+                    "label": "orange"
+                },
+                {
+                    "id": "pink",
+                    "label": "pink"
+                },
+                {
+                    "id": "purple",
+                    "label": "purple"
+                },
+                {
+                    "id": "red",
+                    "label": "red"
+                },
+                {
+                    "id": "silver",
+                    "label": "silver"
+                },
+                {
+                    "id": "white",
+                    "label": "white"
+                },
+                {
+                    "id": "yellow",
+                    "label": "yellow"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "style",
+            "label": "style",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "graphic_logo",
+                    "label": "graphic & logo",
+                    "synonyms": [
+                        "graphic logo"
+                    ]
+                },
+                {
+                    "id": "oversized",
+                    "label": "oversized"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "garment_type",
+            "label": "garment type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "pullover",
+                    "label": "pullover",
+                    "synonyms": [
+                        "jumper",
+                        "sweater"
+                    ]
+                },
+                {
+                    "id": "cardigan",
+                    "label": "cardigan"
+                },
+                {
+                    "id": "vest_shell",
+                    "label": "vest/shell",
+                    "synonyms": [
+                        "shell",
+                        "sweater vest",
+                        "vest"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "neckline",
+            "label": "neckline",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "crewneck",
+                    "label": "crewneck",
+                    "synonyms": [
+                        "crew neck"
+                    ]
+                },
+                {
+                    "id": "v_neck",
+                    "label": "v-neck",
+                    "synonyms": [
+                        "v neck"
+                    ]
+                },
+                {
+                    "id": "turtleneck_mock",
+                    "label": "turtleneck/mock neck",
+                    "synonyms": [
+                        "funnel neck",
+                        "funnelneck",
+                        "mock neck",
+                        "turtleneck"
+                    ]
+                },
+                {
+                    "id": "polo_open_collar",
+                    "label": "polo/open collar",
+                    "synonyms": [
+                        "collared",
+                        "open collar",
+                        "polo"
+                    ]
+                },
+                {
+                    "id": "boatneck",
+                    "label": "boatneck",
+                    "synonyms": [
+                        "boat neck"
+                    ]
+                },
+                {
+                    "id": "off_shoulder",
+                    "label": "off-the-shoulder",
+                    "synonyms": [
+                        "off the shoulder"
+                    ]
+                },
+                {
+                    "id": "one_shoulder",
+                    "label": "one-shoulder",
+                    "synonyms": [
+                        "one shoulder"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "sleeve_length",
+            "label": "sleeve length",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "sleeveless",
+                    "label": "sleeveless"
+                },
+                {
+                    "id": "short_sleeve",
+                    "label": "short sleeve",
+                    "synonyms": [
+                        "t shirt"
+                    ]
+                },
+                {
+                    "id": "long_sleeve",
+                    "label": "long sleeve"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "knit_detail",
+            "label": "knit detail",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "rib_knit",
+                    "label": "rib-knit",
+                    "synonyms": [
+                        "rib knit",
+                        "ribbed"
+                    ]
+                },
+                {
+                    "id": "cable_knit",
+                    "label": "cable-knit",
+                    "synonyms": [
+                        "cable knit"
+                    ]
+                },
+                {
+                    "id": "pointelle",
+                    "label": "pointelle"
+                },
+                {
+                    "id": "fair_isle",
+                    "label": "fair isle",
+                    "synonyms": [
+                        "fair isle style"
+                    ]
+                },
+                {
+                    "id": "striped",
+                    "label": "striped",
+                    "synonyms": [
+                        "stripe"
+                    ]
+                },
+                {
+                    "id": "brushed",
+                    "label": "brushed"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

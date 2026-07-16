@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_label or "Sign in" }}{% endblock %}
+
+{% block body_attrs %}class="auth-login-page"{% endblock %}
+
+{% block head_extra %}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    .auth-login-page {
+      font-kerning: normal;
+      text-rendering: optimizeLegibility;
+    }
+
+    .auth-login-page .landing-header {
+      width: min(760px, calc(100% - 48px));
+      margin: 0 auto 18px;
+    }
+
+    .auth-login-page .container {
+      width: min(760px, 100%);
+    }
+
+    .auth-login-page .panel {
+      width: min(100%, 42rem);
+      margin: 0 auto;
+      padding: clamp(2rem, 4vw, 2.75rem);
+    }
+
+    .auth-login__lead {
+      max-width: 44ch;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.68;
+      letter-spacing: -0.012em;
+      color: #344054;
+      text-wrap: pretty;
+    }
+
+    .auth-login__methods {
+      width: 100%;
+      max-width: 500px;
+      margin: 20px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .auth-login__methods .auth-button {
+      justify-content: center;
+      width: min(100%, 320px);
+      align-self: center;
+    }
+
+    .auth-login__methods .landing-auth__magic {
+      width: min(100%, 320px);
+      box-sizing: border-box;
+      margin: 0;
+      align-self: center;
+    }
+
+    .auth-login__methods .landing-auth__form {
+      flex-wrap: nowrap;
+    }
+
+    .auth-login__methods .landing-auth__input {
+      flex: 1 1 auto;
+    }
+
+    .auth-login__methods .landing-auth__submit {
+      min-width: 82px;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 640px) {
+      .auth-login-page .landing-header {
+        width: calc(100% - 32px);
+        margin-bottom: 12px;
+      }
+
+      .auth-login__methods {
+        max-width: 100%;
+      }
+
+      .auth-login-page .panel {
+        padding: 1.5rem;
+      }
+
+      .auth-login__lead {
+        margin-bottom: 6px;
+        font-size: 0.9375rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .auth-login__methods .landing-auth__form {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .auth-login__methods .landing-auth__input {
+        flex: none;
+        width: 100%;
+      }
+
+      .auth-login__methods .landing-auth__submit {
+        width: 100%;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <header class="landing-header">
+    <a
+      href="/?lang={{ lang or 'en' }}"
+      class="landing-logo-link"
+      aria-label="{{ copy.home_link_aria | default('Return to the home page') }}"
+    >
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main class="app-main">
+    <div class="container">
+      <section class="panel" aria-label="{{ page_label or 'Sign in' }}">
+        <p class="auth-login__lead">
+          {{ copy.description | default("Use Google sign-in or request a magic link to access the requested workspace.") }}
+        </p>
+        {% if auth_enabled %}
+          <div class="auth-login__methods">
+            {% if google_client_id %}
+              <div id="authButton" class="auth-button"></div>
+            {% endif %}
+            <div
+              class="landing-auth__magic"
+              data-tooltip="{{ copy.magic_link_tooltip | default('Enter your email and we will send a one-time sign-in link.') }}"
+            >
+              <p class="landing-auth__copy">
+                {{ copy.magic_link_helper | default("Use your email to receive a sign-in link.") }}
+              </p>
+              <form id="authMagicForm" class="landing-auth__form" novalidate>
+                <label class="sr-only" for="authMagicEmail">
+                  {{ copy.magic_link_email_label | default("Email") }}
+                </label>
+                <input
+                  id="authMagicEmail"
+                  class="landing-auth__input"
+                  type="email"
+                  placeholder="{{ copy.magic_link_placeholder | default('name@example.com') }}"
+                  aria-label="{{ copy.magic_link_email_label | default('Email') }}"
+                  autocomplete="email"
+                  required
+                />
+                <button id="authMagicSubmit" class="landing-auth__submit" type="submit">
+                  {{ copy.magic_link_button | default("Send link") }}
+                </button>
+              </form>
+              <p id="authMagicStatus" class="landing-auth__status" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+        {% else %}
+          <p class="status-bar">{{ copy.disabled | default("Authentication is currently disabled.") }}</p>
+        {% endif %}
+      </section>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      window.authRedirectPath = {{ redirect_path | tojson }};
+      window.magicLinkRedirect = {{ redirect_path | tojson }};
+      const magicForm = document.getElementById("authMagicForm");
+      const magicEmailInput = document.getElementById("authMagicEmail");
+      const magicSubmit = document.getElementById("authMagicSubmit");
+      const magicStatus = document.getElementById("authMagicStatus");
+      const copy = window.appCopy || {};
+
+      function setMagicStatus(message, tone) {
+        if (!magicStatus) return;
+        magicStatus.textContent = message || "";
+        if (tone) magicStatus.dataset.tone = tone;
+        else magicStatus.removeAttribute("data-tone");
+      }
+
+      function setMagicPending(pending) {
+        if (magicSubmit) {
+          magicSubmit.disabled = pending;
+          if (pending) magicSubmit.setAttribute("aria-busy", "true");
+          else magicSubmit.removeAttribute("aria-busy");
+        }
+        if (magicEmailInput) {
+          magicEmailInput.disabled = pending;
+        }
+      }
+
+      async function handleMagicSubmit(event) {
+        event.preventDefault();
+        if (!magicEmailInput) return;
+
+        const email = magicEmailInput.value.trim();
+        if (!email || !/@/.test(email)) {
+          setMagicStatus(copy.magic_link_invalid_email || "Enter a valid email address.", "error");
+          magicEmailInput.focus();
+          return;
+        }
+
+        setMagicPending(true);
+        setMagicStatus(copy.magic_link_sending || "Sending link...", "info");
+
+        try {
+          const response = await fetch("/auth/magic/request", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              email,
+              redirect_path: window.magicLinkRedirect || `/?lang=${window.appLanguage || "en"}`,
+            }),
+          });
+
+          if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            throw new Error(data.detail || "Unable to send link.");
+          }
+
+          setMagicStatus(
+            copy.magic_link_sent || "Check your inbox for the sign-in link. It stays valid for 15 minutes. If you don't see it, check Spam or Junk.",
+            "success",
+          );
+          magicEmailInput.value = "";
+        } catch (error) {
+          setMagicStatus(error.message || copy.magic_link_error_generic || "Unable to send link. Try again.", "error");
+        } finally {
+          setMagicPending(false);
+        }
+      }
+
+      if (window.renderAuthButton && document.getElementById("authButton")) {
+        window.renderAuthButton("#authButton");
+      }
+
+      magicForm?.addEventListener("submit", handleMagicSubmit);
+
+      document.addEventListener("auth:change", (event) => {
+        const detail = event.detail || {};
+        const redirectPath = window.authRedirectPath || "";
+        if (!detail.authenticated || !detail.user || !redirectPath) return;
+        const current = `${window.location.pathname}${window.location.search}`;
+        if (redirectPath !== current) {
+          window.location.assign(redirectPath);
+        }
+      });
+    });
+  </script>
+{% endblock %}

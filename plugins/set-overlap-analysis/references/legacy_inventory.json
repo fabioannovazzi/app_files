@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "plugin": "set-overlap-analysis",
+  "items": [
+    {
+      "legacy_id": "legacy.set_overlap.upset",
+      "status": "mapped_active",
+      "legacy_function": "modules.charting.upset_plot.plot_upset",
+      "target_capability_id": "set_overlap.upset",
+      "related_capability_ids": [
+        "set_overlap.upset"
+      ],
+      "reason": "The plugin builds the legacy UpSet membership matrix and renders the deterministic UpSet chart through the legacy helper path."
+    },
+    {
+      "legacy_id": "legacy.set_overlap.venn",
+      "status": "mapped_active",
+      "legacy_function": "modules.charting.draw_venn_upset.draw_venn_chart",
+      "target_capability_id": "set_overlap.venn",
+      "related_capability_ids": [
+        "set_overlap.venn"
+      ],
+      "reason": "The plugin preserves the legacy Venn limitation: render only for exactly two or three selected sets."
+    }
+  ]
+}

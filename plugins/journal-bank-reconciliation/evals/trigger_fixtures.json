@@ -1,0 +1,35 @@
+{
+  "plugin": "journal-bank-reconciliation",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "bank_to_journal_reconciliation",
+      "prompt": "Reconcile these bank statements to the accounting journal and produce unmatched bank and journal rows.",
+      "required_signals": ["bank statements", "journal", "reconcile"]
+    },
+    {
+      "id": "riconciliazione_banca_giornale",
+      "prompt": "Usa la riconciliazione giornale-banca sugli estratti conto e sul mastrino banca.",
+      "required_signals": ["riconciliazione", "giornale", "banca"]
+    },
+    {
+      "id": "ledger_bank_matching",
+      "prompt": "Match ledger rows to bank movements with amount/date tolerance and explain exceptions.",
+      "required_signals": ["ledger", "bank", "amount/date"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "journal_sampling_only",
+      "prompt": "Extract this journal and select a sample of 25 entries."
+    },
+    {
+      "id": "support_testing_only",
+      "prompt": "Compare these sampled entries to their invoice PDFs."
+    },
+    {
+      "id": "generic_report",
+      "prompt": "Build a financial report from these trial balance files."
+    }
+  ]
+}

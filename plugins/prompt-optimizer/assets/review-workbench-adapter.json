@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "prompt-optimizer",
+  "title": "Prompt Optimizer Review",
+  "reviewTitle": "Research Prompt Review",
+  "queueTitle": "Prompt Checks",
+  "detailTitle": "Prompt Revision",
+  "detailMode": "prompt-lab",
+  "detailHelp": "Review prompt scope, source posture, and required edits before the research request is final.",
+  "detailGroups": [
+    {
+      "title": "Prompt Section",
+      "variant": "draft",
+      "fields": [
+        "prompt",
+        "optimized_prompt",
+        "section",
+        "status"
+      ],
+      "empty": "No prompt text."
+    },
+    {
+      "title": "Research Scope",
+      "variant": "checklist",
+      "fields": [
+        "scope",
+        "jurisdiction",
+        "source_posture",
+        "source_domains"
+      ],
+      "empty": "No scope fields."
+    },
+    {
+      "title": "Required Revision",
+      "variant": "finding",
+      "fields": [
+        "review_notes",
+        "reason",
+        "blocker",
+        "proposed_fix"
+      ],
+      "empty": "No revision fields."
+    }
+  ],
+  "panels": [
+    "Prompt section",
+    "Research scope",
+    "Review decision"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione Prompt Optimizer",
+      "reviewTitle": "Revisione prompt di ricerca",
+      "queueTitle": "Controlli prompt",
+      "detailTitle": "Revisione prompt",
+      "detailHelp": "Rivedi ambito, postura fonti e modifiche richieste prima del prompt finale.",
+      "search": "Cerca prompt, fonti, ambito, blocco, output"
+    },
+    "fr": {
+      "title": "Revue Prompt Optimizer",
+      "reviewTitle": "Revue du prompt de recherche",
+      "queueTitle": "Controles prompt",
+      "detailTitle": "Revision prompt",
+      "detailHelp": "Revoyez le perimetre, la posture sources et les edits requis avant le prompt final.",
+      "search": "Chercher prompt, sources, perimetre, blocage, sortie"
+    },
+    "de": {
+      "title": "Prompt Optimizer Review",
+      "reviewTitle": "Rechercheprompt pruefen",
+      "queueTitle": "Prompt-Pruefungen",
+      "detailTitle": "Prompt-Ueberarbeitung",
+      "detailHelp": "Umfang, Quellenhaltung und erforderliche Edits vor dem finalen Prompt pruefen.",
+      "search": "Prompt, Quellenhaltung, Umfang, Blocker, Ausgabe suchen"
+    }
+  },
+  "saveTool": "save_prompt_optimizer_decisions",
+  "applyTool": "apply_prompt_optimizer_decisions",
+  "widgetType": "prompt_optimizer_review",
+  "demo": {
+    "review_type": "prompt_optimizer_review",
+    "items": [
+      {
+        "id": "prompt-1",
+        "item_type": "prompt_artifact",
+        "title": "Swiss tax residence research prompt",
+        "source_path": "question.txt",
+        "output_path": "optimized_prompt.md",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "edit",
+        "data": {
+          "prompt": "Swiss tax residence research prompt",
+          "optimized_prompt": "Research Swiss tax residence for Geneva and federal rules using official sources first.",
+          "scope": "Geneva and federal tax rules",
+          "jurisdiction": "Switzerland / Geneva",
+          "source_posture": "official sources first",
+          "status": "drafted",
+          "review_notes": "Add source priority for official guidance.",
+          "target_artifact": "optimized_prompt.md",
+          "target_id_field": "section",
+          "target_record_id": "research_prompt",
+          "target_field": "optimized_prompt",
+          "edit_hint": "Editing this prompt updates optimized_prompt.md before prompt-package refresh."
+        },
+        "evidence": [
+          {
+            "kind": "scope_review",
+            "source_posture": "official sources first"
+          }
+        ]
+      },
+      {
+        "id": "prompt-2",
+        "item_type": "source_domain_artifact",
+        "title": "Source scope - unofficial commentary overused",
+        "source_path": "question.txt",
+        "output_path": "prompt_audit.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "section": "Source policy",
+          "status": "needs_evidence",
+          "scope": "cross-border residence support",
+          "jurisdiction": "Switzerland / Italy",
+          "source_posture": "official sources first, secondary commentary only for context",
+          "source_domains": "estv.admin.ch, ge.ch, agenziaentrate.gov.it",
+          "reason": "The prompt should require official tax authority sources before commentary.",
+          "requested_document": "Confirmed official source domains for Swiss and Italian residence guidance",
+          "target_artifact": "optimized_prompt.md",
+          "target_id_field": "section",
+          "target_record_id": "source_policy",
+          "target_field": "optimized_prompt",
+          "edit_hint": "Editing this source policy updates the source requirements in optimized_prompt.md."
+        },
+        "evidence": [
+          {
+            "kind": "source_policy_review",
+            "status": "needs_evidence",
+            "source_posture": "official sources first",
+            "requested_document": "Confirmed official source domains for Swiss and Italian residence guidance"
+          }
+        ]
+      }
+    ]
+  }
+}

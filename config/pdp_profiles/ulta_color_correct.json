@@ -1,0 +1,185 @@
+{
+  "profile_name": "ulta_color_correct",
+  "display_name": "Ulta - Color Correct PDP",
+  "retailer": "ulta",
+  "base_url": "https://www.ulta.com",
+  "category_hints": [
+    "makeup/face/color-correcting"
+  ],
+  "category_urls": [
+    "https://www.ulta.com/shop/makeup/face/color-correcting"
+  ],
+  "parent_rules": {
+    "min_color_variants": 3,
+    "disallow_kits_regex": "(?i)\\b(set|sets|duo|duos|kit|kits|vault|vaults|gift|gifts)\\b",
+    "finish_split_tokens": [
+      "matte",
+      "radiant",
+      "luminous",
+      "glow",
+      "dewy",
+      "natural",
+      "correcting",
+      "brightening"
+    ]
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "(?:pimprod|mkt|xlsImpprod)[0-9A-Za-z]+",
+    "parent_json_paths": [
+      "$.product.productId",
+      "$.product.id",
+      "$.id"
+    ],
+    "variant_id_fields": [
+      "$.sku",
+      "$.skuId",
+      "$.id",
+      "$.upc",
+      "$.ean"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "script_app_state",
+        "selector": "script#__NEXT_DATA__,script[data-state],script[id*='__APOLLO_STATE__'],script#apollo_state"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "#react-root"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.brand.name",
+      "$.brand",
+      "$.product.brandName"
+    ],
+    "parent_title": [
+      "$.name",
+      "$.product.name",
+      "$.title"
+    ],
+    "parent_summary": [
+      "$.description",
+      "$.product.summary",
+      "$.seo.WebpageMetaData.metaDescription"
+    ],
+    "series_label": [
+      "$.isPartOf.name",
+      "$.breadcrumb[1].name",
+      "$.product.collectionName"
+    ],
+    "category_path": [
+      "$.breadcrumb[*].name",
+      "$.categoryPath[*].name"
+    ],
+    "variant_list": [
+      "$.variants[*]",
+      "$.offers[*]",
+      "$.skuList[*]",
+      "$.product.variants[*]"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.sku",
+        "$.skuId",
+        "$.id",
+        "$.upc",
+        "$.ean",
+        "$.variant-id"
+      ],
+      "shade_name": [
+        "$.colorName",
+        "$.shadeName",
+        "$.name",
+        "$.attributes.color",
+        "$.attributes.shade"
+      ],
+      "size_text": [
+        "$.size",
+        "$.attributes.size",
+        "$.volume"
+      ],
+      "price": [
+        "$.price",
+        "$.offers.price",
+        "$.currentPrice"
+      ],
+      "list_price": [
+        "$.listPrice",
+        "$.offers.listPrice",
+        "$.regularPrice",
+        "$.list_price"
+      ],
+      "currency": [
+        "$.priceCurrency",
+        "$.offers.priceCurrency",
+        "$.currency"
+      ],
+      "barcode": [
+        "$.upc",
+        "$.ean",
+        "$.barcode",
+        "$.gtin13",
+        "$.gtin14"
+      ],
+      "swatch_image": [
+        "$.swatch",
+        "$.swatchImage",
+        "$.images.swatch.url"
+      ],
+      "hero_image": [
+        "$.image",
+        "$.images[0].url",
+        "$.media.gallery[0].url"
+      ],
+      "availability": [
+        "$.availability",
+        "$.inStock",
+        "$.inventoryStatus"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_trailing_shade_tokens": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": true
+  },
+  "claim_mapping": {
+    "keywords": {
+      "finish": {
+        "matte": [
+          "matte"
+        ]
+      }
+    },
+    "highlights": {
+      "cruelty free": "cruelty_free"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "registro-imprese-sari",
+  "version": "0.1.2",
+  "description": "Prepara una pratica Registro Imprese/DIRE da fonti ufficiali SARI e CCIAA, con provenienza e revisione professionale.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/registro-imprese-sari/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "registro-imprese",
+    "sari",
+    "cciaa",
+    "dire",
+    "comunicazione-unica",
+    "inps",
+    "ivass",
+    "commercialisti"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Registro Imprese e SARI",
+    "shortDescription": "Imposta pratiche CCIAA da fonti ufficiali, senza accesso o invio.",
+    "longDescription": "Vera raccoglie il perimetro della posizione da aprire, collega fonti pubbliche SARI, CCIAA, Registro Imprese, DIRE e gli altri enti pertinenti, e prepara una bozza della pratica con passaggi, campi, allegati, dubbi e citazioni. La consultazione ordinaria di SARI avviene in sola lettura nel browser e la scheda rilevante viene scelta da una persona; il connettore JSON non documentato resta bloccato senza un riferimento di autorizzazione scritta. Gli script controllano soltanto struttura, date, provenienza, hash e completezza: forma giuridica, ATECO, posizioni RI/REA/INPS/INAIL/SUAP/RUI e compilazione DIRE restano proposte da confermare professionalmente. Il modulo non riceve credenziali, non accede a DIRE, non firma e non invia pratiche.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Aiutami a capire come impostare in DIRE l'apertura di questa posizione usando la Camera competente e fonti SARI ufficiali.",
+      "Mantieni separate le posizioni Registro Imprese/REA, Agenzia Entrate, INPS, INAIL, SUAP e IVASS/RUI; segnala ciò che richiede conferma professionale.",
+      "Non accedere a portali, non usare credenziali e non inviare nulla."
+    ],
+    "brandColor": "#145f5a",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

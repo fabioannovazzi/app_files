@@ -1,0 +1,127 @@
+{
+  "profile_name": "kiko_face_palette",
+  "display_name": "KIKO \u00b7 Face Palette PDP",
+  "retailer": "kiko",
+  "base_url": "https://www.kikocosmetics.com",
+  "category_hints": [
+    "make-up/palettes/face-palette"
+  ],
+  "category_urls": [
+    "https://www.kikocosmetics.com/{locale}/c/make-up/palettes/face-palette/"
+  ],
+  "parent_rules": {
+    "min_color_variants": 2,
+    "disallow_kits_regex": "(?i)\\b(set|sets|duo|duos|kit|kits|vault|vaults|gift|gifts)\\b",
+    "finish_split_tokens": [
+      "matte",
+      "satin",
+      "cream",
+      "gloss",
+      "sheer",
+      "shine",
+      "balm"
+    ]
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "/p/([A-Za-z0-9-]+)",
+    "parent_json_paths": [
+      "$.root.product_id"
+    ],
+    "variant_id_fields": [
+      "$.product_id",
+      "$.slug"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "script_app_state",
+        "selector": "script#__NEXT_DATA__"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [],
+    "parent_title": [
+      "$.root.product_name"
+    ],
+    "parent_summary": [
+      "$.root.short_description"
+    ],
+    "series_label": [
+      "$.root.primitive_name"
+    ],
+    "category_path": [
+      "$.selected.product_class_lev1_desc",
+      "$.selected.product_class_lev2_desc",
+      "$.selected.product_class_lev3_desc",
+      "$.selected.product_class_lev4_desc"
+    ],
+    "variant_list": [
+      "$.children[*]",
+      "$.selected"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.product_id",
+        "$.slug"
+      ],
+      "shade_name": [
+        "$.color"
+      ],
+      "price": [
+        "$.display_price"
+      ],
+      "currency": [
+        "$.currency_id"
+      ],
+      "swatch_image": [
+        "$.product_media.media[0].url",
+        "$.product_media.primary_image.url",
+        "$.primary_image.url"
+      ],
+      "hero_image": [
+        "$.product_media.primary_image.url",
+        "$.primary_image.url",
+        "$.product_media.media[0].url"
+      ],
+      "availability": [
+        "$.is_available",
+        "$.has_stock",
+        "$.is_sellable"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_trailing_shade_tokens": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": false,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": true
+  }
+}

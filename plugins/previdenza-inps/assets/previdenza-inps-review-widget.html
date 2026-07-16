@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revisione previdenza INPS</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1c211f;
+      --muted: #626a66;
+      --quiet: #8a918d;
+      --line: #dfe3df;
+      --line-strong: #c7cdc8;
+      --paper: #fbfcfa;
+      --white: #fefefc;
+      --wash: #f4f6f3;
+      --blue: #315f79;
+      --blue-wash: #edf3f6;
+      --green: #35634d;
+      --green-wash: #edf4ef;
+      --amber: #8a5b22;
+      --amber-wash: #f7f1e7;
+      --red: #8a433b;
+      --red-wash: #f8efed;
+      --focus: #2d6685;
+      --sans: "Avenir Next", "Helvetica Neue", Helvetica, sans-serif;
+      --serif: "Iowan Old Style", Baskerville, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--white); color: var(--ink); }
+    body { font: 1rem/1.45 var(--sans); }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .shell { min-height: 100vh; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; }
+    .topbar {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 16px clamp(18px, 3vw, 42px);
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--white);
+    }
+    .identity { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .seal {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      flex: none;
+      border-radius: 10px;
+      background: #171816;
+      color: #f7f0df;
+      font: 600 0.72rem/1 var(--serif);
+      letter-spacing: 0.08em;
+    }
+    .eyebrow { margin: 0 0 2px; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    h1 { margin: 0; font: 600 1.32rem/1.15 var(--serif); letter-spacing: -0.01em; }
+    .actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+    .button {
+      min-height: 36px;
+      padding: 7px 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: var(--white);
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+    .button:hover { border-color: #9da59f; background: var(--wash); }
+    .button.primary { border-color: #244f66; background: var(--blue); color: #fbfcfa; }
+    .button.primary:hover { background: #284f66; }
+    .button.quiet { border-color: transparent; background: transparent; color: var(--muted); }
+    .button:disabled { cursor: not-allowed; opacity: 0.5; }
+
+    .runbar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(110px, auto)) minmax(180px, 1fr);
+      align-items: stretch;
+      border-bottom: 1px solid var(--line);
+      padding: 0 clamp(18px, 3vw, 42px);
+      background: var(--paper);
+    }
+    .metric { padding: 10px 22px 11px 0; }
+    .metric + .metric { padding-left: 22px; border-left: 1px solid var(--line); }
+    .metric-label { display: block; margin-bottom: 2px; color: var(--quiet); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .metric-value { display: block; max-width: 28ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+    .run-message { align-self: center; justify-self: end; padding: 10px 0 10px 22px; color: var(--muted); font-size: 0.82rem; text-align: right; }
+    .run-message.error { color: var(--red); }
+    .run-message.ok { color: var(--green); }
+
+    .workspace {
+      container: review / inline-size;
+      display: grid;
+      grid-template-columns: minmax(320px, 39%) minmax(0, 1fr);
+      min-height: 560px;
+    }
+    .queue { min-width: 0; border-right: 1px solid var(--line-strong); background: var(--paper); }
+    .queue-head { padding: 20px clamp(16px, 2vw, 26px) 14px; border-bottom: 1px solid var(--line); }
+    .queue-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+    h2 { margin: 0; font-size: 0.96rem; font-weight: 650; }
+    .count { color: var(--muted); font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+    .search {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      padding: 8px 11px;
+      background: var(--white);
+    }
+    .filters { display: flex; gap: 7px; overflow-x: auto; padding: 11px 0 1px; scrollbar-width: thin; }
+    .filter {
+      flex: none;
+      padding: 4px 8px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+    .filter.active { border-color: var(--line-strong); background: var(--white); color: var(--ink); }
+    .queue-tools { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; }
+    .queue-tools select { min-height: 32px; border: 1px solid var(--line); border-radius: 5px; background: var(--white); padding: 4px 24px 4px 8px; font-size: 0.78rem; }
+    .text-action { border: 0; background: transparent; color: var(--blue); padding: 4px 0; font-size: 0.78rem; font-weight: 600; }
+
+    .rows { max-height: calc(100vh - 226px); overflow: auto; }
+    .row {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 9px minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: start;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      padding: 14px clamp(16px, 2vw, 26px);
+      background: transparent;
+      text-align: left;
+    }
+    .row:hover { background: #f0f3ef; }
+    .row.selected { background: var(--white); box-shadow: inset 3px 0 0 var(--blue); }
+    .state-dot { width: 8px; height: 8px; margin-top: 5px; border: 1px solid #aab1ac; border-radius: 50%; background: transparent; }
+    .state-dot.accepted, .state-dot.edited { border-color: var(--green); background: var(--green); }
+    .state-dot.needs_evidence { border-color: var(--amber); background: var(--amber); }
+    .state-dot.rejected { border-color: var(--red); background: var(--red); }
+    .state-dot.skipped { border-color: var(--quiet); background: var(--quiet); }
+    .row-title { display: block; overflow: hidden; text-overflow: ellipsis; font-weight: 600; font-size: 0.9rem; }
+    .row-meta { display: flex; gap: 7px; align-items: center; margin-top: 4px; color: var(--muted); font-size: 0.74rem; }
+    .row-meta span + span::before { content: "·"; margin-right: 7px; color: var(--quiet); }
+    .risk { padding-top: 1px; color: var(--quiet); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .risk.high { color: var(--red); }
+    .empty { padding: 42px 24px; color: var(--muted); text-align: center; }
+    .empty strong { display: block; margin-bottom: 6px; color: var(--ink); }
+
+    .detail { min-width: 0; padding: 24px clamp(22px, 3vw, 44px) 40px; overflow: auto; }
+    .detail-head { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; padding-bottom: 18px; border-bottom: 1px solid var(--line-strong); }
+    .item-type { margin: 0 0 5px; color: var(--blue); font-size: 0.72rem; font-weight: 650; letter-spacing: 0.09em; text-transform: uppercase; }
+    .detail h3 { max-width: 34ch; margin: 0; font: 600 1.42rem/1.22 var(--serif); }
+    .status {
+      flex: none;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: var(--wash);
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+    .status.needs_evidence { border-color: #d9c6a4; background: var(--amber-wash); color: var(--amber); }
+    .status.accepted, .status.edited { border-color: #bcd0c2; background: var(--green-wash); color: var(--green); }
+    .status.rejected { border-color: #dfc0bc; background: var(--red-wash); color: var(--red); }
+    .safeguards { margin: 14px 0 0; border-bottom: 1px solid var(--line); }
+    .safeguards summary { padding: 9px 0 13px; color: var(--muted); cursor: pointer; font-size: 0.78rem; }
+    .safeguards summary strong { color: var(--ink); }
+    .safeguard-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding: 2px 0 15px; }
+    .safeguard { min-width: 0; }
+    .safeguard span { display: block; color: var(--quiet); font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase; }
+    .safeguard strong { display: block; margin-top: 3px; overflow-wrap: anywhere; font-size: 0.78rem; font-weight: 600; }
+    .trace { padding: 0 0 15px; color: var(--muted); font-size: 0.76rem; }
+    .trace div { padding: 5px 0; border-top: 1px solid var(--line); }
+    .trace span { display: block; margin-top: 2px; overflow-wrap: anywhere; color: var(--quiet); }
+    .section { padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .section:last-child { border-bottom: 0; }
+    .section-title { margin: 0 0 12px; color: var(--muted); font-size: 0.7rem; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; }
+    .lead { max-width: 72ch; margin: 0; white-space: pre-wrap; }
+    .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+    .fact { display: grid; grid-template-columns: minmax(105px, 34%) 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+    .fact:nth-child(-n+2) { border-top: 0; }
+    .fact-key { color: var(--muted); font-size: 0.78rem; }
+    .fact-value { min-width: 0; overflow-wrap: anywhere; font-size: 0.86rem; font-variant-numeric: tabular-nums; }
+    .evidence-list { display: grid; gap: 0; }
+    .evidence { padding: 11px 0; border-top: 1px solid var(--line); }
+    .evidence:first-child { border-top: 0; padding-top: 0; }
+    .evidence-title { display: flex; justify-content: space-between; gap: 14px; font-weight: 600; font-size: 0.88rem; }
+    .evidence-meta { margin-top: 4px; color: var(--muted); font-size: 0.78rem; overflow-wrap: anywhere; }
+    .evidence-excerpt { margin: 8px 0 0; padding-left: 12px; border-left: 2px solid var(--line-strong); color: #3f4743; font-family: var(--serif); }
+    .decision-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .decision-action {
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      padding: 7px 10px;
+      background: var(--white);
+      font-size: 0.8rem;
+    }
+    .decision-action:hover { background: var(--wash); }
+    .decision-action.selected { border-color: var(--blue); background: var(--blue-wash); color: #234f67; font-weight: 650; }
+    .field { display: grid; gap: 5px; margin-top: 13px; }
+    .field label { color: var(--muted); font-size: 0.76rem; font-weight: 600; }
+    textarea { width: 100%; min-height: 76px; resize: vertical; border: 1px solid var(--line-strong); border-radius: 6px; padding: 9px 10px; background: var(--white); }
+    .impact { margin-top: 13px; padding: 10px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--muted); font-size: 0.78rem; }
+
+    .artifact-strip { border-top: 1px solid var(--line-strong); padding: 16px clamp(18px, 3vw, 42px) 20px; background: var(--paper); }
+    .artifact-head { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; margin-bottom: 9px; }
+    .artifact-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px; }
+    .artifact { min-width: 0; padding: 8px 0; border-top: 1px solid var(--line); }
+    .artifact strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.82rem; }
+    .artifact span { color: var(--muted); font-size: 0.72rem; }
+
+    @container review (max-width: 820px) {
+      .workspace { grid-template-columns: 1fr; }
+      .queue { border-right: 0; border-bottom: 1px solid var(--line-strong); }
+      .rows { max-height: 360px; }
+    }
+    @media (max-width: 760px) {
+      .topbar { align-items: flex-start; padding: 14px 16px; }
+      .identity { align-items: flex-start; }
+      .seal { width: 34px; height: 34px; }
+      .actions { gap: 5px; }
+      .actions #copy { display: none; }
+      .button { min-height: 34px; padding: 6px 9px; }
+      .runbar { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0 16px; }
+      .metric { padding: 9px 8px 9px 0; }
+      .metric + .metric { padding-left: 8px; }
+      .metric:nth-child(3) { border-left: 0; }
+      .run-message { grid-column: 1 / -1; justify-self: start; padding: 8px 0; text-align: left; }
+      .facts { grid-template-columns: 1fr; }
+      .fact:nth-child(2) { border-top: 1px solid var(--line); }
+      .safeguard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .artifact-list { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .detail > * { animation: arrive 240ms cubic-bezier(.22, 1, .36, 1) both; }
+      @keyframes arrive { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="identity">
+        <div class="seal" aria-hidden="true">V</div>
+        <div>
+          <p class="eyebrow">Vera · fascicolo previdenziale</p>
+          <h1>Revisione previdenza INPS</h1>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="button quiet" id="copy" type="button">Copia JSON</button>
+        <button class="button quiet" id="cancel" type="button">Annulla modifiche</button>
+        <button class="button" id="save" type="button">Salva decisioni</button>
+        <button class="button primary" id="apply" type="button">Applica</button>
+      </div>
+    </header>
+
+    <section class="runbar" id="runbar" aria-label="Stato revisione"></section>
+
+    <main class="workspace">
+      <aside class="queue" aria-label="Coda di revisione">
+        <div class="queue-head">
+          <div class="queue-title-row">
+            <h2>Coda di revisione</h2>
+            <span class="count" id="visible-count"></span>
+          </div>
+          <input class="search" id="search" type="search" placeholder="Cerca fatto, fonte, periodo, evidenza">
+          <div class="filters" id="type-filters" aria-label="Filtri per tipo"></div>
+          <div class="queue-tools">
+            <select id="state-filter" aria-label="Filtra per stato">
+              <option value="all">Tutti gli stati</option>
+              <option value="pending">Da decidere</option>
+              <option value="reviewed">Decisi</option>
+              <option value="needs_evidence">Serve evidenza</option>
+            </select>
+            <button class="text-action" id="recommended" type="button">Usa raccomandate visibili</button>
+          </div>
+        </div>
+        <div class="rows" id="rows"></div>
+      </aside>
+
+      <article class="detail" id="detail" aria-live="polite"></article>
+    </main>
+
+    <section class="artifact-strip" id="artifacts" aria-label="Output finali"></section>
+  </div>
+
+  <script>
+    const ITEM_LABELS = {
+      fact: "Fatto",
+      finding: "Rilievo",
+      calculation: "Calcolo",
+      missing_evidence: "Evidenza mancante",
+      authority: "Fonte normativa",
+      audit_check: "Controllo",
+      artifact: "Output",
+    };
+    const ACTION_LABELS = {
+      accept: "Accetta",
+      reject: "Rifiuta",
+      edit: "Correggi",
+      mark_unclear: "Segna incerto",
+      request_more_documents: "Richiedi documenti",
+      skip: "Salta",
+    };
+    const STATUS_LABELS = {
+      pending: "Da decidere",
+      accepted: "Accettato",
+      rejected: "Rifiutato",
+      edited: "Corretto",
+      needs_evidence: "Serve evidenza",
+      skipped: "Saltato",
+    };
+    const ACTION_STATUSES = {
+      accept: "accepted",
+      reject: "rejected",
+      edit: "edited",
+      mark_unclear: "needs_evidence",
+      request_more_documents: "needs_evidence",
+      skip: "skipped",
+    };
+    const DEMO = {
+      widget_type: "previdenza_inps_review",
+      run_intake: null,
+      review_payload: {
+        schema_version: "1.0",
+        plugin: "previdenza-inps",
+        workflow: "previdenza_inps_case_review",
+        run_id: "anteprima",
+        item_count: 0,
+        items: [],
+        status: "ready_for_review",
+      },
+      ui_decisions: null,
+      final_artifacts: null,
+      decision_policy: {
+        save_tool: "save_previdenza_inps_decisions",
+        apply_tool: "apply_previdenza_inps_decisions",
+        can_persist: false,
+        persistence_root: "run_intake.output_dir",
+        fallback: "copy_or_download_json",
+      },
+    };
+
+    const state = {
+      payload: null,
+      decisions: {},
+      selectedId: null,
+      type: "all",
+      status: "all",
+      query: "",
+      dirty: false,
+      busy: false,
+      message: "",
+      messageKind: "",
+    };
+
+    function esc(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function isObject(value) {
+      return value !== null && typeof value === "object" && !Array.isArray(value);
+    }
+
+    function pickPayload(value) {
+      if (!isObject(value)) return null;
+      if (isObject(value.review_payload) && Array.isArray(value.review_payload.items)) return value;
+      for (const key of ["structuredContent", "toolOutput", "result"]) {
+        const nested = pickPayload(value[key]);
+        if (nested) return nested;
+      }
+      return null;
+    }
+
+    function incomingPayload() {
+      const host = window.openai || {};
+      return pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || DEMO;
+    }
+
+    function items() {
+      return Array.isArray(state.payload?.review_payload?.items) ? state.payload.review_payload.items : [];
+    }
+
+    function itemById(id) {
+      return items().find((item) => item.id === id) || null;
+    }
+
+    function decisionFor(item) {
+      return item ? state.decisions[item.id] || null : null;
+    }
+
+    function statusFor(item) {
+      const decision = decisionFor(item);
+      return decision ? ACTION_STATUSES[decision.action] || "pending" : "pending";
+    }
+
+    function humanize(value) {
+      return String(value || "").replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+    }
+
+    function compactValue(value) {
+      if (value == null || value === "") return "—";
+      if (Array.isArray(value)) return value.map(compactValue).join(", ");
+      if (isObject(value)) return Object.entries(value).map(([key, nested]) => `${humanize(key)}: ${compactValue(nested)}`).join(" · ");
+      return String(value);
+    }
+
+    function normalizedDecision(decision) {
+      return {
+        item_id: decision.item_id,
+        action: decision.action,
+        reviewer_note: decision.reviewer_note || "",
+        edit_value: decision.edit_value || "",
+        requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [],
+      };
+    }
+
+    function savedDecisionMap() {
+      const loaded = {};
+      const saved = Array.isArray(state.payload?.ui_decisions?.decisions) ? state.payload.ui_decisions.decisions : [];
+      for (const decision of saved) {
+        if (decision?.item_id && decision?.action && itemById(decision.item_id)) {
+          loaded[decision.item_id] = normalizedDecision(decision);
+        }
+      }
+      return loaded;
+    }
+
+    function loadDecisions() {
+      const saved = savedDecisionMap();
+      const loaded = { ...saved };
+      let recoveredDraft = false;
+      const draft = window.openai?.widgetState;
+      if (draft?.run_id === state.payload?.review_payload?.run_id && isObject(draft.decisions)) {
+        for (const [id, decision] of Object.entries(draft.decisions)) {
+          if (itemById(id) && decision?.action) {
+            const normalized = normalizedDecision({ ...decision, item_id: id });
+            if (JSON.stringify(loaded[id] || null) !== JSON.stringify(normalized)) recoveredDraft = true;
+            loaded[id] = normalized;
+          }
+        }
+      }
+      state.decisions = loaded;
+      state.dirty = recoveredDraft;
+    }
+
+    function clearDraft() {
+      try {
+        window.openai?.setWidgetState?.({
+          run_id: state.payload?.review_payload?.run_id || null,
+          decisions: {},
+        });
+      } catch { }
+    }
+
+    function cancelChanges() {
+      if (state.busy || !state.dirty) return;
+      state.decisions = savedDecisionMap();
+      clearDraft();
+      state.dirty = false;
+      state.message = "Modifiche non salvate annullate.";
+      state.messageKind = "";
+      render();
+    }
+
+    function persistDraft() {
+      state.dirty = true;
+      try {
+        window.openai?.setWidgetState?.({
+          run_id: state.payload?.review_payload?.run_id || null,
+          decisions: state.decisions,
+        });
+      } catch { }
+    }
+
+    function visibleItems() {
+      const query = state.query.trim().toLocaleLowerCase("it");
+      return items().filter((item) => {
+        if (state.type !== "all" && item.item_type !== state.type) return false;
+        const status = statusFor(item);
+        if (state.status === "pending" && status !== "pending") return false;
+        if (state.status === "reviewed" && status === "pending") return false;
+        if (state.status === "needs_evidence" && status !== "needs_evidence") return false;
+        if (!query) return true;
+        const haystack = [item.title, item.summary, item.item_type, item.source_path, compactValue(item.data), compactValue(item.evidence)].join(" ").toLocaleLowerCase("it");
+        return haystack.includes(query);
+      });
+    }
+
+    function renderRunbar() {
+      const review = state.payload.review_payload;
+      const total = items().length;
+      const decided = Object.keys(state.decisions).length;
+      const gaps = items().filter((item) => statusFor(item) === "needs_evidence").length;
+      const persistLabel = state.payload.decision_policy?.can_persist ? "Output locale" : "Solo export JSON";
+      const saved = Array.isArray(state.payload?.ui_decisions?.decisions) ? state.payload.ui_decisions.decisions.length : 0;
+      const applied = Array.isArray(state.payload?.applied_decisions?.decisions) ? state.payload.applied_decisions.decisions.length : 0;
+      const persistenceState = state.dirty
+        ? "Modifiche non salvate"
+        : applied
+          ? `${applied} decisioni applicate`
+          : saved
+            ? `${saved} decisioni salvate`
+            : "Nessuna decisione salvata";
+      document.getElementById("runbar").innerHTML = `
+        <div class="metric"><span class="metric-label">Esecuzione</span><span class="metric-value" title="${esc(review.run_id)}">${esc(review.run_id)}</span></div>
+        <div class="metric"><span class="metric-label">Elementi</span><span class="metric-value">${total}</span></div>
+        <div class="metric"><span class="metric-label">Decisi</span><span class="metric-value">${decided} / ${total}</span></div>
+        <div class="metric"><span class="metric-label">Da integrare</span><span class="metric-value">${gaps}</span></div>
+        <div class="run-message ${esc(state.messageKind)}">${esc(state.message || `${persistenceState} · ${persistLabel}`)}</div>`;
+    }
+
+    function hasExternalUse(posture) {
+      const values = [
+        posture.external_connectors_used,
+        posture.upload_paths_used,
+        posture.remote_sql_execution_used,
+        posture.hosted_notebook_execution_used,
+      ];
+      return values.some((value) => Array.isArray(value) ? value.length > 0 : Boolean(value));
+    }
+
+    function safeguardsHtml() {
+      const run = isObject(state.payload?.run_intake) ? state.payload.run_intake : {};
+      const posture = isObject(run.data_posture) ? run.data_posture : {};
+      const trace = Array.isArray(run.execution_trace) ? run.execution_trace : [];
+      const external = hasExternalUse(posture);
+      const approval = isObject(posture.external_execution_approval) && posture.external_execution_approval.approved === true;
+      const locations = [...new Set(trace.map((entry) => entry?.execution_location).filter(Boolean))];
+      const location = locations.length ? locations.join(", ") : "non dichiarata";
+      const externalLabel = external ? (approval ? "uso esterno approvato" : "uso esterno da verificare") : "nessun uso esterno";
+      const persistence = state.payload.decision_policy?.can_persist ? "run_intake.output_dir" : "fallback JSON";
+      const traceRows = trace.slice(0, 6).map((entry) => {
+        const details = [
+          entry.command ? `Comando: ${entry.command}` : "",
+          Array.isArray(entry.inputs) && entry.inputs.length ? `Input: ${entry.inputs.join(", ")}` : "",
+          Array.isArray(entry.outputs) && entry.outputs.length ? `Output: ${entry.outputs.join(", ")}` : "",
+        ].filter(Boolean).join(" · ");
+        return `<div><strong>${esc(entry.step_id || entry.kind || "Passaggio")}</strong> · ${esc(entry.status || "")}${entry.execution_location ? ` · ${esc(entry.execution_location)}` : ""}${details ? `<span>${esc(details)}</span>` : ""}</div>`;
+      }).join("");
+      return `<details class="safeguards">
+        <summary><strong>Controlli di esecuzione</strong> · ${esc(location)} · ${esc(externalLabel)} · ${items().length}/${2500} elementi</summary>
+        <div class="safeguard-grid">
+          <div class="safeguard"><span>Esecuzione</span><strong>${esc(location)}</strong></div>
+          <div class="safeguard"><span>Accesso esterno</span><strong>${esc(externalLabel)}</strong></div>
+          <div class="safeguard"><span>Payload</span><strong>${items().length} di 2500</strong></div>
+          <div class="safeguard"><span>Persistenza</span><strong>${esc(persistence)}</strong></div>
+        </div>
+        ${traceRows ? `<div class="trace">${traceRows}</div>` : `<div class="trace">Nessuna traccia di esecuzione dichiarata nel payload.</div>`}
+      </details>`;
+    }
+
+    function renderFilters() {
+      const present = [...new Set(items().map((item) => item.item_type))];
+      const filters = [{ value: "all", label: "Tutti" }, ...present.map((value) => ({ value, label: ITEM_LABELS[value] || humanize(value) }))];
+      document.getElementById("type-filters").innerHTML = filters.map((filter) => `
+        <button type="button" class="filter ${state.type === filter.value ? "active" : ""}" data-type="${esc(filter.value)}">${esc(filter.label)}</button>`).join("");
+    }
+
+    function renderRows() {
+      const visible = visibleItems();
+      document.getElementById("visible-count").textContent = `${visible.length} di ${items().length}`;
+      if (state.selectedId && !visible.some((item) => item.id === state.selectedId)) state.selectedId = null;
+      if (!state.selectedId && visible.length) state.selectedId = visible[0].id;
+      const node = document.getElementById("rows");
+      if (!items().length) {
+        node.innerHTML = `<div class="empty"><strong>Nessun fascicolo caricato</strong>Apri il widget dal risultato di <code>render_previdenza_inps_review</code>.</div>`;
+        return;
+      }
+      if (!visible.length) {
+        node.innerHTML = `<div class="empty"><strong>Nessun elemento</strong>Modifica ricerca o filtri.</div>`;
+        return;
+      }
+      node.innerHTML = visible.map((item) => {
+        const status = statusFor(item);
+        const data = isObject(item.data) ? item.data : {};
+        const risk = String(item.risk || data.risk || item.priority || data.priority || "");
+        const period = item.period || data.period || item.source_path || "";
+        return `<button type="button" class="row ${state.selectedId === item.id ? "selected" : ""}" data-id="${esc(item.id)}">
+          <span class="state-dot ${esc(status)}" aria-hidden="true"></span>
+          <span><span class="row-title">${esc(item.title)}</span><span class="row-meta"><span>${esc(ITEM_LABELS[item.item_type] || humanize(item.item_type))}</span>${period ? `<span>${esc(period)}</span>` : ""}</span></span>
+          <span class="risk ${risk.toLowerCase() === "high" || risk.toLowerCase() === "alta" ? "high" : ""}">${esc(risk)}</span>
+        </button>`;
+      }).join("");
+    }
+
+    function factEntries(item) {
+      const data = isObject(item.data) ? item.data : {};
+      const omitted = new Set(["summary", "description", "target_artifact", "target_id_field", "target_record_id", "target_field", "edit_hint"]);
+      return Object.entries(data).filter(([key, value]) => !omitted.has(key) && value != null && value !== "");
+    }
+
+    function evidenceHtml(item) {
+      const evidence = Array.isArray(item.evidence) ? item.evidence : [];
+      if (!evidence.length) return `<p class="lead">Nessuna evidenza collegata a questo elemento.</p>`;
+      return `<div class="evidence-list">${evidence.map((entry, index) => {
+        if (!isObject(entry)) return `<div class="evidence"><div class="evidence-title"><span>Evidenza ${index + 1}</span></div><div class="evidence-meta">${esc(entry)}</div></div>`;
+        const title = entry.title || entry.authority || entry.source || entry.kind || `Evidenza ${index + 1}`;
+        const locator = [entry.source_path, entry.document, entry.locator, entry.page != null ? `p. ${entry.page}` : "", entry.date].filter(Boolean).join(" · ");
+        const confidence = entry.confidence || entry.status || "";
+        const excerpt = entry.excerpt || entry.summary || entry.support || "";
+        return `<div class="evidence"><div class="evidence-title"><span>${esc(title)}</span><span>${esc(confidence)}</span></div>${locator ? `<div class="evidence-meta">${esc(locator)}</div>` : ""}${excerpt ? `<p class="evidence-excerpt">${esc(excerpt)}</p>` : ""}</div>`;
+      }).join("")}</div>`;
+    }
+
+    function explicitDocumentHints(item) {
+      const hints = [];
+      const sources = [item, isObject(item.data) ? item.data : {}, ...(Array.isArray(item.evidence) ? item.evidence : [])];
+      for (const source of sources) {
+        if (!isObject(source)) continue;
+        for (const key of ["requested_document", "required_document"]) if (typeof source[key] === "string" && source[key].trim()) hints.push(source[key].trim());
+        for (const key of ["requested_documents", "missing_documents", "support_documents"]) if (Array.isArray(source[key])) hints.push(...source[key].filter((value) => typeof value === "string" && value.trim()));
+      }
+      return [...new Set(hints)];
+    }
+
+    function ensureDecision(item, action) {
+      const current = state.decisions[item.id] || {};
+      const nextAction = action || current.action || item.recommended_action || item.allowed_actions?.[0] || "mark_unclear";
+      state.decisions[item.id] = {
+        item_id: item.id,
+        action: nextAction,
+        reviewer_note: current.reviewer_note || "",
+        edit_value: current.edit_value || "",
+        requested_documents: Array.isArray(current.requested_documents) && current.requested_documents.length
+          ? current.requested_documents
+          : nextAction === "request_more_documents" ? explicitDocumentHints(item) : [],
+      };
+      persistDraft();
+      return state.decisions[item.id];
+    }
+
+    function decisionSection(item) {
+      const decision = decisionFor(item);
+      const allowed = Array.isArray(item.allowed_actions) ? item.allowed_actions : [];
+      const action = decision?.action || "";
+      const disabled = state.busy ? " disabled" : "";
+      const editField = action === "edit" ? `<div class="field"><label for="edit-value">Correzione proposta</label><textarea id="edit-value" data-field="edit_value" placeholder="Inserisci il valore o il testo corretto"${disabled}>${esc(decision?.edit_value || "")}</textarea></div>` : "";
+      const docsField = action === "request_more_documents" ? `<div class="field"><label for="requested-documents">Documenti richiesti · uno per riga</label><textarea id="requested-documents" data-field="requested_documents"${disabled}>${esc((decision?.requested_documents || explicitDocumentHints(item)).join("\n"))}</textarea></div>` : "";
+      const impact = action === "edit"
+        ? "La correzione resta registrata nell’esito di revisione; l’eventuale rigenerazione del documento professionale avviene nel workflow locale."
+        : action === "request_more_documents" || action === "mark_unclear"
+          ? "Questa decisione crea un blocco visibile in final_artifacts.json."
+          : "La decisione aggiorna lo stato di revisione senza modificare le fonti originali.";
+      return `<section class="section">
+        <p class="section-title">Decisione professionale</p>
+        <div class="decision-actions">${allowed.map((value) => `<button type="button" class="decision-action ${action === value ? "selected" : ""}" data-action="${esc(value)}"${disabled}>${esc(ACTION_LABELS[value] || humanize(value))}</button>`).join("")}</div>
+        ${editField}${docsField}
+        <div class="field"><label for="reviewer-note">Nota del revisore</label><textarea id="reviewer-note" data-field="reviewer_note" placeholder="Motivo, cautela o prossima verifica">${esc(decision?.reviewer_note || "")}</textarea></div>
+        <div class="impact">${esc(impact)}</div>
+      </section>`;
+    }
+
+    function renderDetail() {
+      const node = document.getElementById("detail");
+      const item = itemById(state.selectedId);
+      if (!item) {
+        node.innerHTML = `<div class="empty"><strong>Seleziona un elemento</strong>Qui compariranno evidenze, autorità, dati e decisione.</div>`;
+        return;
+      }
+      const status = statusFor(item);
+      const entries = factEntries(item);
+      const summary = item.summary || item.description || (isObject(item.data) ? item.data.summary || item.data.description : "") || "Nessuna sintesi disponibile.";
+      node.innerHTML = `
+        <header class="detail-head"><div><p class="item-type">${esc(ITEM_LABELS[item.item_type] || humanize(item.item_type))}</p><h3>${esc(item.title)}</h3></div><span class="status ${esc(status)}">${esc(STATUS_LABELS[status] || humanize(status))}</span></header>
+        ${safeguardsHtml()}
+        <section class="section"><p class="section-title">Sintesi</p><p class="lead">${esc(summary)}</p></section>
+        ${entries.length ? `<section class="section"><p class="section-title">Dati del controllo</p><div class="facts">${entries.map(([key, value]) => `<div class="fact"><span class="fact-key">${esc(humanize(key))}</span><span class="fact-value">${esc(compactValue(value))}</span></div>`).join("")}</div></section>` : ""}
+        <section class="section"><p class="section-title">Evidenze e fonti</p>${evidenceHtml(item)}</section>
+        ${decisionSection(item)}`;
+    }
+
+    function renderArtifacts() {
+      const node = document.getElementById("artifacts");
+      const outputs = Array.isArray(state.payload?.final_artifacts?.outputs) ? state.payload.final_artifacts.outputs : [];
+      const blockers = Array.isArray(state.payload?.final_artifacts?.blockers) ? state.payload.final_artifacts.blockers.length : 0;
+      node.innerHTML = `<div class="artifact-head"><h2>Output del fascicolo</h2><span class="count">${outputs.length} file · ${blockers} blocchi</span></div>${outputs.length ? `<div class="artifact-list">${outputs.map((output) => `<div class="artifact"><strong title="${esc(output.path || output.title)}">${esc(output.path || output.title || "Output")}</strong><span>${esc([output.kind, output.status].filter(Boolean).join(" · "))}</span></div>`).join("")}</div>` : `<span class="count">Gli output compariranno dopo l’esecuzione locale e l’applicazione delle decisioni.</span>`}`;
+    }
+
+    function render() {
+      renderRunbar();
+      renderFilters();
+      renderRows();
+      renderDetail();
+      renderArtifacts();
+      for (const button of [document.getElementById("save"), document.getElementById("apply")]) button.disabled = state.busy;
+      document.getElementById("cancel").disabled = state.busy || !state.dirty;
+      document.getElementById("recommended").disabled = state.busy;
+    }
+
+    function decisionInputs() {
+      return Object.values(state.decisions).filter((decision) => decision?.item_id && decision?.action).map((decision) => {
+        const result = { item_id: decision.item_id, action: decision.action };
+        if (decision.reviewer_note?.trim()) result.reviewer_note = decision.reviewer_note.trim();
+        if (decision.edit_value?.trim()) result.edit_value = decision.edit_value.trim();
+        if (Array.isArray(decision.requested_documents) && decision.requested_documents.length) result.requested_documents = decision.requested_documents;
+        return result;
+      });
+    }
+
+    function validateDecisions(decisions) {
+      for (const decision of decisions) {
+        if (decision.action === "edit" && !decision.edit_value) throw new Error(`Inserisci la correzione per “${itemById(decision.item_id)?.title || decision.item_id}”.`);
+      }
+    }
+
+    function toolArgs(includeArtifacts = false) {
+      const args = {
+        run_intake: state.payload.run_intake || null,
+        review_payload: state.payload.review_payload,
+        ui_decisions: state.payload.ui_decisions || null,
+        decisions: decisionInputs(),
+        decision_source: "mcp_widget",
+      };
+      if (includeArtifacts) args.final_artifacts = state.payload.final_artifacts || null;
+      return args;
+    }
+
+    function exportPayload() {
+      const review = state.payload.review_payload;
+      const now = new Date().toISOString();
+      const decisions = decisionInputs().map((decision) => {
+        const item = itemById(decision.item_id);
+        return {
+          item_id: decision.item_id,
+          item_type: item?.item_type || "",
+          title: item?.title || "",
+          action: decision.action,
+          status: ACTION_STATUSES[decision.action] || "reviewed",
+          decided_at: now,
+          ...(decision.reviewer_note ? { reviewer_note: decision.reviewer_note } : {}),
+          ...(decision.edit_value ? { edit_value: decision.edit_value } : {}),
+          ...(decision.requested_documents?.length ? { requested_documents: decision.requested_documents } : {}),
+        };
+      });
+      return {
+        schema_version: review.schema_version || "1.0",
+        plugin: "previdenza-inps",
+        workflow: review.workflow,
+        run_id: review.run_id,
+        decided_at: decisions.length ? now : null,
+        decision_source: "mcp_widget_export",
+        review_payload_path: "review_payload.json",
+        decisions,
+        decision_count: decisions.length,
+        item_count: items().length,
+        status: decisions.length === 0 ? "pending_review" : decisions.length === items().length ? "reviewed" : "partial_review",
+      };
+    }
+
+    async function copyJson() {
+      const text = `${JSON.stringify(exportPayload(), null, 2)}\n`;
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
+      else {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+      state.message = "JSON decisioni copiato.";
+      state.messageKind = "ok";
+      renderRunbar();
+    }
+
+    function parseToolResult(result) {
+      if (isObject(result?.structuredContent)) return result.structuredContent;
+      if (isObject(result) && (result.ok != null || result.ui_decisions)) return result;
+      const text = Array.isArray(result?.content) ? result.content.find((entry) => entry?.type === "text")?.text : "";
+      if (text) {
+        try { return JSON.parse(text); } catch { return { ok: false, error: text }; }
+      }
+      return result || {};
+    }
+
+    async function runWrite(kind) {
+      const decisions = decisionInputs();
+      try { validateDecisions(decisions); }
+      catch (error) { state.message = error.message; state.messageKind = "error"; renderRunbar(); return; }
+      const isApply = kind === "apply";
+      const tool = state.payload.decision_policy?.[isApply ? "apply_tool" : "save_tool"] || (isApply ? "apply_previdenza_inps_decisions" : "save_previdenza_inps_decisions");
+      if (typeof window.openai?.callTool !== "function") {
+        await copyJson();
+        state.message = isApply ? "Bridge MCP non disponibile: JSON copiato, applicazione non eseguita." : "Bridge MCP non disponibile: JSON copiato.";
+        state.messageKind = isApply ? "error" : "ok";
+        renderRunbar();
+        return;
+      }
+      state.busy = true;
+      state.message = isApply ? "Applicazione in corso…" : "Salvataggio in corso…";
+      state.messageKind = "";
+      render();
+      try {
+        const result = parseToolResult(await window.openai.callTool(tool, toolArgs(isApply)));
+        if (!result?.ok) throw new Error(result?.error || "Operazione non riuscita.");
+        const persisted = result.persisted === true;
+        if (persisted) {
+          if (result.ui_decisions) state.payload.ui_decisions = result.ui_decisions;
+          if (result.applied_decisions) state.payload.applied_decisions = result.applied_decisions;
+          if (result.final_artifacts) state.payload.final_artifacts = result.final_artifacts;
+          state.dirty = false;
+          clearDraft();
+        } else {
+          state.dirty = true;
+        }
+        state.message = result.message || (isApply ? "Decisioni applicate." : "Decisioni salvate.");
+        state.messageKind = persisted ? "ok" : "";
+      } catch (error) {
+        state.message = `${error.message || error} Copia il JSON per recuperare le decisioni.`;
+        state.messageKind = "error";
+      } finally {
+        state.busy = false;
+        render();
+      }
+    }
+
+    document.getElementById("search").addEventListener("input", (event) => {
+      state.query = event.target.value;
+      renderRows();
+      renderDetail();
+    });
+    document.getElementById("state-filter").addEventListener("change", (event) => {
+      state.status = event.target.value;
+      renderRows();
+      renderDetail();
+    });
+    document.getElementById("type-filters").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-type]");
+      if (!button) return;
+      state.type = button.dataset.type;
+      renderFilters();
+      renderRows();
+      renderDetail();
+    });
+    document.getElementById("rows").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-id]");
+      if (!button) return;
+      state.selectedId = button.dataset.id;
+      renderRows();
+      renderDetail();
+    });
+    document.getElementById("detail").addEventListener("click", (event) => {
+      if (state.busy) return;
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const item = itemById(state.selectedId);
+      if (!item) return;
+      ensureDecision(item, button.dataset.action);
+      render();
+    });
+    document.getElementById("detail").addEventListener("input", (event) => {
+      if (state.busy) return;
+      const field = event.target.closest("[data-field]");
+      const item = itemById(state.selectedId);
+      if (!field || !item) return;
+      const decision = ensureDecision(item);
+      if (field.dataset.field === "requested_documents") {
+        decision.requested_documents = field.value.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+      } else decision[field.dataset.field] = field.value;
+      persistDraft();
+      renderRunbar();
+      renderRows();
+    });
+    document.getElementById("recommended").addEventListener("click", () => {
+      if (state.busy) return;
+      for (const item of visibleItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0]);
+      render();
+    });
+    document.getElementById("copy").addEventListener("click", () => copyJson().catch((error) => {
+      state.message = error.message || String(error);
+      state.messageKind = "error";
+      renderRunbar();
+    }));
+    document.getElementById("save").addEventListener("click", () => runWrite("save"));
+    document.getElementById("apply").addEventListener("click", () => runWrite("apply"));
+    document.getElementById("cancel").addEventListener("click", cancelChanges);
+
+    state.payload = incomingPayload();
+    loadDecisions();
+    render();
+  </script>
+</body>
+</html>

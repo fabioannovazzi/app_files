@@ -1,0 +1,45 @@
+{
+  "name": "attribute-reporting",
+  "version": "0.1.4",
+  "description": "Local Codex workflow for product attribute mapping, cohort analysis, HTML reporting, and evidence-backed correctness review.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "attributes",
+    "retail",
+    "taxonomy",
+    "mapping",
+    "html-report",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Attribute Reporting",
+    "shortDescription": "Map product attributes and turn cohort evidence into a locally reviewed HTML report.",
+    "longDescription": "A Codex-native workflow for current-database retail evidence, centrally governed attribute mapping, preserved new-versus-rest and best-seller-versus-other comparisons, private HTML report authoring, and a direct evidence-backed correctness verdict. Fresh local scraping is available only in the app_files development runtime. Deterministic scripts own calculations, evidence bindings, rendering, and integrity checks; Codex agents own semantic mapping, narrative, and independent review. Plugin scripts never call a model API.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Use Attribute Reporting for this retailer and category.",
+      "Use the authenticated current-database snapshot by default; run a fresh local scrape only in the app_files development runtime. Preserve the existing cohort-comparison logic, write the report as private local HTML, and answer whether the report is correct.",
+      "Use Codex agents for semantic mapping, narrative, and independent review; never call a model API from plugin scripts."
+    ],
+    "brandColor": "#516254",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

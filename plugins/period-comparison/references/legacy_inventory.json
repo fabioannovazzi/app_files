@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.1",
+  "plugin": "period-comparison",
+  "items": [
+    {
+      "legacy_id": "legacy.period_comparison.by_period",
+      "status": "mapped_active",
+      "legacy_function": "write_legacy_period_comparison_chart",
+      "target_capability_id": "period_comparison.by_period",
+      "related_capability_ids": [
+        "period_comparison.by_period"
+      ],
+      "reason": "The legacy by-period comparison renderer is exposed as a concrete chart capability."
+    },
+    {
+      "legacy_id": "legacy.period_comparison.dot",
+      "status": "mapped_active",
+      "legacy_function": "write_legacy_dot_chart",
+      "target_capability_id": "period_comparison.dot",
+      "related_capability_ids": [
+        "period_comparison.dot"
+      ],
+      "reason": "The legacy dot renderer is exposed as a concrete chart capability."
+    },
+    {
+      "legacy_id": "legacy.period_comparison.horizontal_waterfall",
+      "status": "mapped_active",
+      "legacy_function": "write_legacy_horizontal_waterfall_chart",
+      "target_capability_id": "period_comparison.horizontal_waterfall",
+      "related_capability_ids": [
+        "period_comparison.horizontal_waterfall"
+      ],
+      "reason": "The legacy horizontal-waterfall renderer is exposed as a concrete chart capability."
+    },
+    {
+      "legacy_id": "legacy.period_comparison.multitier_column",
+      "status": "mapped_active",
+      "legacy_function": "write_legacy_multitier_column_chart",
+      "target_capability_id": "period_comparison.multitier_column",
+      "related_capability_ids": [
+        "period_comparison.multitier_column"
+      ],
+      "reason": "The legacy multitier-column renderer is exposed as a named period-comparison source capability."
+    },
+    {
+      "legacy_id": "legacy.period_comparison.slope",
+      "status": "mapped_active",
+      "legacy_function": "write_legacy_slope_chart",
+      "target_capability_id": "period_comparison.slope",
+      "related_capability_ids": [
+        "period_comparison.slope"
+      ],
+      "reason": "The legacy slope renderer is exposed as a named period-comparison source capability."
+    }
+  ]
+}

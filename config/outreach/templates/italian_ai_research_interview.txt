@@ -1,0 +1,13 @@
+Oggetto: Ricerca sull'uso dell'AI negli studi professionali
+
+{salutation}
+
+Sto conducendo interviste con commercialisti e studi professionali in diversi Paesi su come l'intelligenza artificiale viene usata nel lavoro quotidiano.
+
+L'intervista e' condotta da un intervistatore AI e dura circa 10 minuti. Al termine della raccolta condividero' una sintesi dei risultati.
+
+Se le interessa partecipare, puo' aprire questo link:
+{interview_url}
+
+Cordialmente,
+Mparanza

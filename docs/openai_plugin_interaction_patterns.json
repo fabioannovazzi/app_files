@@ -1,0 +1,386 @@
+{
+  "schema_version": "1.0",
+  "source": "docs/openai_plugin_lessons_playbook.md",
+  "purpose": "Structured OpenAI-derived interaction lessons adopted selectively for local Mparanza plugins.",
+  "patterns": [
+    {
+      "pattern_id": "ask_material_questions_only",
+      "source_pattern": "OpenAI plugins ask when the answer changes source, method, destination, authority, or write scope.",
+      "local_rule": "Do not ask the user to type continue for ceremony; ask only for external, destructive, approval-sensitive, or material choices.",
+      "playbook_section": "Ask Only When The Answer Changes The Work",
+      "evidence_signals": [
+        "has_no_continue_theater",
+        "has_approval_boundary_language"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_codex_plugin_packages.py::test_plugin_skills_do_not_require_continue_theater",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "adoption_scope": "all plugin skills",
+      "applicability_signals": [],
+      "evidence_mode": "all"
+    },
+    {
+      "pattern_id": "local_deterministic_boundary",
+      "source_pattern": "OpenAI data workflows expose execution/source posture before rendering artifacts.",
+      "local_rule": "State local data and deterministic-script ownership; record any external connector, upload, remote SQL, or hosted execution as explicitly approved posture.",
+      "playbook_section": "Local Execution Boundary",
+      "evidence_signals": [
+        "has_local_data_posture_language"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/scripts/test_audit_plugin_interaction_patterns.py"
+      ],
+      "adoption_scope": "review-session and data-handling plugins",
+      "applicability_signals": [],
+      "evidence_mode": "all"
+    },
+    {
+      "pattern_id": "stateful_decision_review",
+      "source_pattern": "OpenAI widgets are action surfaces, not static summaries, when the user must review rows or findings.",
+      "local_rule": "Review widgets must persist decisions to ui_decisions.json, apply decisions to applied_decisions.json, and update final_artifacts.json when decisions alter outputs.",
+      "playbook_section": "Decision Capture Is The Interaction Contract",
+      "evidence_signals": [
+        "mcp_review_widget",
+        "stateful_decision_review",
+        "has_decision_contract_language"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "tests/plugins/test_chart_review_mcp_contracts.py",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "adoption_scope": "plugins with row, finding, claim, prompt, or artifact review",
+      "applicability_signals": [
+        "mcp_review_widget"
+      ],
+      "evidence_mode": "all"
+    },
+    {
+      "pattern_id": "visible_review_handoff",
+      "source_pattern": "OpenAI plugin runs hand off visible app/card surfaces instead of expecting users to inspect hidden JSON.",
+      "local_rule": "Normal review-session runs leave review_handoff.md or the workflow-specific artifact_card.md, and the card names payload, decision, apply, and final-artifact paths.",
+      "playbook_section": "Visible Handoff Beats Hidden JSON",
+      "evidence_signals": [
+        "has_review_handoff_contract"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/plugins/test_codex_plugin_packages.py::test_non_plotting_review_plugins_document_save_apply_contract",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "adoption_scope": "MCP-first and local-browser review plugins",
+      "applicability_signals": [
+        "stateful_decision_review"
+      ],
+      "evidence_mode": "all"
+    },
+    {
+      "pattern_id": "local_browser_writeback",
+      "source_pattern": "OpenAI review widgets can be action surfaces that save the user's choices instead of becoming copy-only HTML.",
+      "local_rule": "Generated local review workbenches must have a local browser or MCP bridge that persists save/apply decisions through the plugin's review tools.",
+      "playbook_section": "Decision Capture Is The Interaction Contract",
+      "evidence_signals": [
+        "generated_workbench_asset",
+        "stateful_decision_review",
+        "has_local_browser_writeback"
+      ],
+      "verifier_paths": [
+        "scripts/serve_review_workbench.py",
+        "scripts/audit_local_review_workbench_writeback.py",
+        "tests/scripts/test_serve_review_workbench.py",
+        "tests/scripts/test_audit_local_review_workbench_writeback.py",
+        "tests/plugins/test_codex_plugin_packages.py::test_generated_workbench_packages_include_local_review_server",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "adoption_scope": "generated review-workbench plugins",
+      "applicability_signals": [
+        "generated_workbench_asset"
+      ],
+      "evidence_mode": "all"
+    },
+    {
+      "pattern_id": "bounded_validated_rendering",
+      "source_pattern": "OpenAI artifact renderers validate bounded snapshots before creating visible widgets.",
+      "local_rule": "Validate review payloads before rendering; reject oversized or malformed payloads before returning a widget.",
+      "playbook_section": "Validate Before Render Or Final Handoff",
+      "evidence_signals": [
+        "mcp_review_widget"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "tests/plugins/test_chart_review_mcp_contracts.py",
+        "scripts/validate_plugin_review_contract.py"
+      ],
+      "adoption_scope": "MCP-rendered review widgets",
+      "applicability_signals": [
+        "mcp_review_widget"
+      ],
+      "evidence_mode": "all"
+    },
+    {
+      "pattern_id": "shared_ui_with_explicit_exceptions",
+      "source_pattern": "OpenAI plugins reuse host/widget conventions instead of creating unrelated interaction models for each workflow.",
+      "local_rule": "Use the shared non-plotting workbench for comparable review workflows; allow custom stateful surfaces only when the domain needs a different interaction model.",
+      "playbook_section": "Local UI / MCP",
+      "evidence_signals": [
+        "generated_workbench_asset",
+        "custom_stateful_review_surface"
+      ],
+      "verifier_paths": [
+        "scripts/generate_non_plotting_review_widgets.py",
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "adoption_scope": "review UI assets",
+      "applicability_signals": [
+        "stateful_decision_review"
+      ],
+      "evidence_mode": "any"
+    }
+  ],
+  "rejected_patterns": [
+    {
+      "pattern_id": "remote_warehouse_default",
+      "playbook_text": "Remote warehouse execution as the default. Our default is local execution.",
+      "local_replacement": "Local deterministic execution by default; explicit approval is required for remote SQL, hosted notebooks, connector reads, uploads, or external execution.",
+      "guardrail_signals": [
+        "has_local_data_posture_language",
+        "local_deterministic_posture_missing"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ]
+    },
+    {
+      "pattern_id": "model_generated_core_calculations",
+      "playbook_text": "Model-generated calculations where a deterministic script already owns the domain logic.",
+      "local_replacement": "Deterministic scripts own mechanically verifiable calculations; Codex owns orchestration, review, narrative, and handoff.",
+      "guardrail_signals": [
+        "has_local_data_posture_language",
+        "local_deterministic_posture_missing"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "docs/openai_plugin_lessons_playbook.md"
+      ]
+    },
+    {
+      "pattern_id": "continue_theater_checkpoints",
+      "playbook_text": "Asking the user to type `continue` after every progress checkpoint.",
+      "local_replacement": "Ask only for material choices, approval-sensitive actions, external writes, destructive operations, or irreversible steps.",
+      "guardrail_signals": [
+        "has_no_continue_theater",
+        "continue_theater",
+        "has_approval_boundary_language"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_codex_plugin_packages.py::test_plugin_skills_do_not_require_continue_theater",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ]
+    },
+    {
+      "pattern_id": "one_off_html_per_plugin",
+      "playbook_text": "A separate one-off HTML app per plugin.",
+      "local_replacement": "Use the shared non-plotting workbench for comparable review workflows and allow custom stateful surfaces only for domain-specific interaction needs.",
+      "guardrail_signals": [
+        "generated_workbench_asset",
+        "custom_stateful_review_surface"
+      ],
+      "verifier_paths": [
+        "scripts/generate_non_plotting_review_widgets.py",
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ]
+    },
+    {
+      "pattern_id": "raw_json_review_views",
+      "playbook_text": "Raw JSON review views when workflow-specific evidence panels are possible.",
+      "local_replacement": "Render workflow-specific evidence views with bounded payloads, queue/detail panels, state filters, and artifact handoff instead of asking reviewers to inspect raw JSON.",
+      "guardrail_signals": [
+        "mcp_review_widget",
+        "static_review_without_mcp_widget"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "scripts/audit_non_plotting_review_workbench_demos.py"
+      ]
+    },
+    {
+      "pattern_id": "static_html_fake_persistence",
+      "playbook_text": "Static HTML pretending to persist decisions when it can only copy/download JSON.",
+      "local_replacement": "Use MCP or the local review server bridge for durable Save/Apply; static HTML is only a fallback with explicit copy/download limitations.",
+      "guardrail_signals": [
+        "static_review_without_mcp_widget",
+        "render_only_review",
+        "has_local_browser_writeback"
+      ],
+      "verifier_paths": [
+        "scripts/serve_review_workbench.py",
+        "scripts/audit_local_review_workbench_writeback.py",
+        "tests/scripts/test_serve_review_workbench.py"
+      ]
+    },
+    {
+      "pattern_id": "polish_hiding_source_gaps",
+      "playbook_text": "UI polish that hides source gaps, blocked states, or missing evidence.",
+      "local_replacement": "Show partial/blocked states, missing evidence, caveats, blockers, data posture, and final-artifact readiness as first-class review state.",
+      "guardrail_signals": [
+        "has_review_handoff_contract",
+        "has_decision_contract_language",
+        "stateful_decision_review"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "scripts/audit_openai_pattern_adoption_readiness.py"
+      ]
+    }
+  ],
+  "playbook_section_coverage": [
+    {
+      "section": "Ask Only When The Answer Changes The Work",
+      "coverage_mode": "catalog_pattern",
+      "pattern_ids": [
+        "ask_material_questions_only"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_codex_plugin_packages.py::test_plugin_skills_do_not_require_continue_theater",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "note": "Interaction-level rule enforced across plugin skills."
+    },
+    {
+      "section": "Preflight Before Write-Heavy Work",
+      "coverage_mode": "contract_guidance",
+      "pattern_ids": [
+        "local_deterministic_boundary"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "scripts/audit_openai_pattern_adoption_readiness.py",
+        "tests/scripts/test_audit_openai_pattern_adoption_readiness.py"
+      ],
+      "note": "Handled as run-intake and readiness evidence rather than a standalone interaction-pattern signal."
+    },
+    {
+      "section": "Required Source Means Required Source",
+      "coverage_mode": "contract_guidance",
+      "pattern_ids": [
+        "stateful_decision_review"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/plugins/test_non_plotting_review_workbench.py"
+      ],
+      "note": "Handled through partial/blocked review states, blockers, caveats, and final-artifact validation."
+    },
+    {
+      "section": "Deterministic Evidence First",
+      "coverage_mode": "contract_guidance",
+      "pattern_ids": [
+        "local_deterministic_boundary"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "note": "Enforced through local/deterministic posture and execution-trace contracts rather than a separate UI pattern."
+    },
+    {
+      "section": "Local Execution Boundary",
+      "coverage_mode": "catalog_pattern",
+      "pattern_ids": [
+        "local_deterministic_boundary"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/scripts/test_audit_plugin_interaction_patterns.py"
+      ],
+      "note": "Interaction pattern checks that plugin skills declare local deterministic posture."
+    },
+    {
+      "section": "Bounded Payloads And Reviewable Snapshots",
+      "coverage_mode": "catalog_pattern",
+      "pattern_ids": [
+        "bounded_validated_rendering"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "tests/plugins/test_chart_review_mcp_contracts.py",
+        "scripts/validate_plugin_review_contract.py"
+      ],
+      "note": "Handled by bounded render validation and malformed-payload rejection before visible widgets are returned."
+    },
+    {
+      "section": "Validate Before Render Or Final Handoff",
+      "coverage_mode": "catalog_pattern",
+      "pattern_ids": [
+        "bounded_validated_rendering"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "tests/plugins/test_chart_review_mcp_contracts.py",
+        "scripts/validate_plugin_review_contract.py"
+      ],
+      "note": "Same pattern covers validation before visible review rendering and handoff validation."
+    },
+    {
+      "section": "First-Class Partial And Blocked States",
+      "coverage_mode": "contract_guidance",
+      "pattern_ids": [
+        "stateful_decision_review",
+        "visible_review_handoff"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "tests/scripts/test_audit_openai_pattern_adoption_readiness.py"
+      ],
+      "note": "Handled by review-state, blocker, caveat, and final-artifact contracts rather than a separate catalog signal."
+    },
+    {
+      "section": "Decision Capture Is The Interaction Contract",
+      "coverage_mode": "catalog_pattern",
+      "pattern_ids": [
+        "stateful_decision_review",
+        "local_browser_writeback"
+      ],
+      "verifier_paths": [
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "tests/plugins/test_chart_review_mcp_contracts.py",
+        "scripts/audit_local_review_workbench_writeback.py"
+      ],
+      "note": "Catalog patterns cover MCP decision persistence plus local-browser save/apply write-back."
+    },
+    {
+      "section": "Visible Handoff Beats Hidden JSON",
+      "coverage_mode": "catalog_pattern",
+      "pattern_ids": [
+        "visible_review_handoff"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/plugins/test_codex_plugin_packages.py::test_non_plotting_review_plugins_document_save_apply_contract",
+        "scripts/audit_plugin_interaction_patterns.py"
+      ],
+      "note": "Catalog pattern checks handoff-card contracts for review-session workflows."
+    },
+    {
+      "section": "Provenance Must Survive The UI",
+      "coverage_mode": "contract_guidance",
+      "pattern_ids": [
+        "local_deterministic_boundary",
+        "bounded_validated_rendering"
+      ],
+      "verifier_paths": [
+        "scripts/validate_plugin_review_contract.py",
+        "tests/plugins/test_non_plotting_review_workbench.py",
+        "tests/scripts/test_audit_openai_pattern_adoption_readiness.py"
+      ],
+      "note": "Handled by execution-trace, data-posture, and review-surface provenance contracts."
+    }
+  ]
+}

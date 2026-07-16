@@ -1,0 +1,60 @@
+{
+  "slide_id": "edge-chart-image-ambiguity",
+  "slide_number": 1,
+  "image_size": {
+    "w": 1200,
+    "h": 800
+  },
+  "objects": [
+    {
+      "object_id": "image-1",
+      "object_type": "image",
+      "bbox": {
+        "x": 300,
+        "y": 180,
+        "w": 740,
+        "h": 460
+      },
+      "z_index": 1,
+      "reading_index": 1,
+      "z_role": "background_decoration"
+    }
+  ],
+  "text_lines": [
+    {
+      "line_id": "L1",
+      "text": "Visual area with uncertain chart signal",
+      "bbox": {
+        "x": 56,
+        "y": 44,
+        "w": 780,
+        "h": 70
+      },
+      "role": "page_title",
+      "z_role": "foreground_editable_text",
+      "confidence": 0.97
+    }
+  ],
+  "chart_objects": [],
+  "image_objects": [
+    {
+      "image_id": "image-1",
+      "bbox": {
+        "x": 300,
+        "y": 180,
+        "w": 740,
+        "h": 460
+      },
+      "kind": "illustration",
+      "preserve_original": true,
+      "confidence": 0.81
+    }
+  ],
+  "decision": {
+    "has_chart": false,
+    "status": "pass"
+  },
+  "metrics": {
+    "ocr_coverage_ratio": 0.84
+  }
+}

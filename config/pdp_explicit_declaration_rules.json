@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "updated_at": "",
+  "categories": {},
+  "metadata": {
+    "owner": "",
+    "notes": "Certainty-only explicit declaration rules.",
+    "activation_defaults": {
+      "min_reviewed_samples": 30,
+      "min_precision": 0.98,
+      "broad_pattern_requires_justification": true
+    }
+  }
+}

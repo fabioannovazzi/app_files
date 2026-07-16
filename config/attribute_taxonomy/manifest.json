@@ -1,0 +1,125 @@
+{
+    "version": "2026-05-06",
+    "no_image_categories": [
+        "liquid_lipstick",
+        "lip_oil"
+    ],
+    "category_files": [
+        {
+            "id": "blush",
+            "file": "categories/blush.json"
+        },
+        {
+            "id": "foundation",
+            "file": "categories/foundation.json"
+        },
+        {
+            "id": "bb_cc_creams",
+            "file": "categories/bb_cc_creams.json"
+        },
+        {
+            "id": "bronzer",
+            "file": "categories/bronzer.json"
+        },
+        {
+            "id": "cashmere_sweaters",
+            "file": "categories/cashmere_sweaters.json"
+        },
+        {
+            "id": "lipstick",
+            "file": "categories/lipstick.json"
+        },
+        {
+            "id": "liquid_lipstick",
+            "file": "categories/liquid_lipstick.json"
+        },
+        {
+            "id": "lip_gloss",
+            "file": "categories/lip_gloss.json"
+        },
+        {
+            "id": "concealer",
+            "file": "categories/concealer.json"
+        },
+        {
+            "id": "color_correct",
+            "file": "categories/color_correct.json"
+        },
+        {
+            "id": "contour",
+            "file": "categories/contour.json"
+        },
+        {
+            "id": "highlighter",
+            "file": "categories/highlighter.json"
+        },
+        {
+            "id": "palette",
+            "file": "categories/palette.json"
+        },
+        {
+            "id": "mascara",
+            "file": "categories/mascara.json"
+        },
+        {
+            "id": "eyeshadow",
+            "file": "categories/eyeshadow.json"
+        },
+        {
+            "id": "eyeliner",
+            "file": "categories/eyeliner.json"
+        },
+        {
+            "id": "eyebrow",
+            "file": "categories/eyebrow.json"
+        },
+        {
+            "id": "lip_oil",
+            "file": "categories/lip_oil.json"
+        },
+        {
+            "id": "setting_spray_powder",
+            "file": "categories/setting_spray_powder.json"
+        },
+        {
+            "id": "face_primer",
+            "file": "categories/face_primer.json"
+        },
+        {
+            "id": "tinted_moisturizer",
+            "file": "categories/tinted_moisturizer.json"
+        },
+        {
+            "id": "lip_balms",
+            "file": "categories/lip_balms.json"
+        },
+        {
+            "id": "lip_liner",
+            "file": "categories/lip_liner.json"
+        },
+        {
+            "id": "lip_plumpers",
+            "file": "categories/lip_plumpers.json"
+        },
+        {
+            "id": "lip_stain",
+            "file": "categories/lip_stain.json"
+        },
+        {
+            "id": "lip_treatments",
+            "file": "categories/lip_treatments.json"
+        },
+        {
+            "id": "low_top_sneakers",
+            "file": "categories/low_top_sneakers.json"
+        },
+        {
+            "id": "permanent",
+            "file": "categories/permanent.json"
+        },
+        {
+            "id": "wet_cat_food",
+            "file": "categories/wet_cat_food.json"
+        }
+    ]
+}

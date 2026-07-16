@@ -1,0 +1,81 @@
+{
+  "tax_tokens": [
+    "delega unificata",
+    "erario",
+    "agenzia entrate",
+    " ade "
+  ],
+  "sdd_tokens": [" sdd ", " rid "],
+  "bonifico_tokens": [" bonifico", " sepa", " istantaneo"],
+  "fee_tokens": [
+    "commissioni",
+    "commissione",
+    " comm.",
+    " canone",
+    " imposta di bollo",
+    " bollo "
+  ],
+  "riba_tokens": [" riba"],
+  "card_tokens": [
+    "carta",
+    " pos ",
+    "pagamento carta",
+    "card payment",
+    "credit card",
+    "debit card",
+    "visa",
+    "mastercard"
+  ],
+  "withdrawal_terms": [
+    "prelievo",
+    "prelievi",
+    "prelevamento",
+    "prelevamenti",
+    "withdrawal",
+    "contanti",
+    "cash"
+  ],
+  "deposit_terms": ["versamento", "versamenti", "deposito", "depositi"],
+  "atm_terms": ["atm", "bancomat", "sportello"],
+  "payroll_tokens": [
+    "STIPENDIO",
+    "STIPENDI",
+    "STIPEND",
+    "SALARIO",
+    "SALARI",
+    "SALARI E STIPENDI",
+    "SALARIES",
+    "SALARY",
+    "WAGE",
+    "WAGES",
+    "PAYROLL",
+    "CEDOLINO",
+    "BUSTA PAGA",
+    "BUSTE PAGA",
+    "RETRIBUZIONE",
+    "RETRIBUZIONI",
+    "PERSONALE",
+    "COSTO DEL PERSONALE"
+  ],
+  "tax_ledger_tokens": [
+    "iva",
+    "vat",
+    "erario",
+    "f24",
+    "liquidazione iva",
+    "debiti tributari",
+    "tax",
+    "taxes",
+    "imposte",
+    "imposta",
+    "tasse",
+    "tributi",
+    "inps",
+    "inail",
+    "irpef",
+    "irap",
+    "addizionale",
+    "ritenute",
+    "erario c/"
+  ]
+}

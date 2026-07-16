@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "auditReconciliationWidgets": {
+      "title": "Audit Reconciliation Widgets",
+      "description": "Validate and render Audit Reconciliation review-session payloads.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": ["24x24"]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}

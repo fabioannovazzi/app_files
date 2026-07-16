@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "concordato-plan-review",
+  "title": "Concordato Plan Review",
+  "reviewTitle": "Plan Support Review",
+  "queueTitle": "Tie-Out Items",
+  "detailTitle": "Plan Vs Support",
+  "detailMode": "tieout-board",
+  "detailHelp": "Compare plan numbers to accounting support and keep variance decisions traceable.",
+  "detailGroups": [
+    {
+      "title": "Plan Section",
+      "variant": "draft",
+      "fields": [
+        "section",
+        "plan_amount",
+        "amount",
+        "status"
+      ],
+      "empty": "No plan fields."
+    },
+    {
+      "title": "Accounting Support",
+      "variant": "source",
+      "fields": [
+        "support",
+        "support_amount",
+        "source_file",
+        "source_role"
+      ],
+      "empty": "No support fields."
+    },
+    {
+      "title": "Tie-Out Finding",
+      "variant": "finding",
+      "fields": [
+        "variance",
+        "reason",
+        "review_notes",
+        "finding"
+      ],
+      "empty": "No tie-out finding."
+    }
+  ],
+  "panels": [
+    "Plan section",
+    "Accounting support",
+    "Tie-out finding"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione piano concordato",
+      "reviewTitle": "Revisione supporti del piano",
+      "queueTitle": "Tie-out",
+      "detailTitle": "Piano e supporto",
+      "detailHelp": "Confronta numeri del piano e supporti contabili mantenendo decisioni tracciabili.",
+      "search": "Cerca sezione piano, tie-out, evidenza, blocco, output"
+    },
+    "fr": {
+      "title": "Revue plan concordato",
+      "reviewTitle": "Revue des supports du plan",
+      "queueTitle": "Tie-out",
+      "detailTitle": "Plan et support",
+      "detailHelp": "Comparez les chiffres du plan aux supports comptables avec decisions tracables.",
+      "search": "Chercher section plan, tie-out, justificatif, blocage, sortie"
+    },
+    "de": {
+      "title": "Concordato Plan Review",
+      "reviewTitle": "Plannachweise pruefen",
+      "queueTitle": "Abgleichspunkte",
+      "detailTitle": "Plan und Nachweis",
+      "detailHelp": "Planzahlen mit Buchhaltungsnachweisen vergleichen und Entscheidungen nachvollziehbar halten.",
+      "search": "Planabschnitt, Abgleich, Nachweis, Blocker, Ausgabe suchen"
+    }
+  },
+  "saveTool": "save_concordato_plan_decisions",
+  "applyTool": "apply_concordato_plan_decisions",
+  "widgetType": "concordato_plan_review",
+  "demo": {
+    "review_type": "concordato_plan_support_review",
+    "items": [
+      {
+        "id": "tie-out-1",
+        "item_type": "candidate_amount_match",
+        "title": "Section 3.2 - trade payables",
+        "source_path": "piano_concordato.docx",
+        "output_path": "concordato_tie_out_workpaper.xlsx",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "mark_unclear",
+        "data": {
+          "section": "Trade payables",
+          "amount": "185000.00",
+          "plan_amount": "185000.00",
+          "support": "trial_balance.xlsx",
+          "support_amount": "182600.00",
+          "source_file": "trial_balance.xlsx",
+          "source_role": "accounting support",
+          "status": "variance",
+          "variance": "2400.00",
+          "review_notes": "Plan amount differs from support by 2,400.",
+          "target_artifact": "codex_run_review.md",
+          "target_id_field": "section",
+          "target_record_id": "Trade payables",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this tie-out writes reviewer notes into codex_run_review.md."
+        },
+        "evidence": [
+          {
+            "kind": "plan_vs_support",
+            "variance": "2400.00"
+          }
+        ]
+      },
+      {
+        "id": "tie-out-2",
+        "item_type": "unmatched_plan_amount",
+        "title": "Section 4.1 - payroll accrual support missing",
+        "source_path": "piano_concordato.docx",
+        "output_path": "concordato_tie_out_workpaper.xlsx",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "section": "Payroll accrual",
+          "plan_amount": "52000.00",
+          "status": "needs_evidence",
+          "support": "not found",
+          "source_role": "missing support",
+          "reason": "No payroll accrual support schedule was found in the local folder.",
+          "requested_document": "Payroll accrual schedule supporting section 4.1",
+          "target_artifact": "codex_run_review.md",
+          "target_id_field": "section",
+          "target_record_id": "Payroll accrual",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this row adds reviewer context to codex_run_review.md."
+        },
+        "evidence": [
+          {
+            "kind": "missing_support",
+            "status": "needs_evidence",
+            "requested_document": "Payroll accrual schedule supporting section 4.1"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Attribute Reporting"
+  short_description: "Map retail attributes and build checked reports"
+  default_prompt: "Use $attribute-reporting to map product attributes, preserve the established cohort comparisons, create a private local HTML report, and answer whether the report is correct."

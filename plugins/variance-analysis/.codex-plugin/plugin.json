@@ -1,0 +1,44 @@
+{
+  "name": "variance-analysis",
+  "version": "0.1.82",
+  "description": "Sales variance analysis workflow with reviewable charts, exploded drilldowns, root-cause outputs, and driver interpretation.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "variance",
+    "sales",
+    "price-volume-mix",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Variance Analysis",
+    "shortDescription": "Run sales variance analysis with reviewable outputs, exploded drilldowns, and waterfall PNGs.",
+    "longDescription": "Self-contained sales variance workflow for CSV or Excel sales datasets. It inspects columns, confirms only unresolved required mappings, prepares legacy-backed YTD or rolling period buckets when requested, and automatically runs the complete natural package: price/volume/mix, net-of-discount, margin period totals, the legacy Price / Units / Mix decomposition ladder, fixed-dimension and exploded parent/child variance bridges, root-cause variance across dimension combinations, alternative sweep, automatic drilldowns, main waterfall PNG output, standard component small-multiples output when a useful dimension exists, diagnostics, model-context files, a structured source pack for reporting consumers, client-ready Word report, audit outputs, and business-driver interpretation. The scripts do not make direct model API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Variance Analysis on the sales CSV or Excel file I provide.",
+      "Inspect the columns, ask only for required mappings that cannot be inferred, run the complete deterministic variance package including root-cause sweep, drilldowns, main waterfall, standard component small multiples where applicable, write the charts and client-ready report, and interpret the largest drivers from the source data."
+    ],
+    "brandColor": "#386c75",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

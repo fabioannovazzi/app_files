@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Check Entries | Vera</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --text: #334155;
+      --muted: #667085;
+      --faint: #eef2f4;
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --soft: #ffffff;
+      --accent: #355f6f;
+      --accent-soft: #e7eef1;
+      --line: #d9e2e1;
+      --shadow: 0 16px 42px rgba(31, 41, 51, 0.06);
+      --content: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand img {
+      display: block;
+      width: 140px;
+      height: auto;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--ink); }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .lang-switch button.is-active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 560px;
+      padding: 76px 0 56px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 54px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 620;
+    }
+
+    h2 {
+      font-size: clamp(28px, 3.4vw, 42px);
+      font-weight: 620;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 620;
+    }
+
+    p { margin: 0; }
+
+    .subtitle {
+      max-width: 720px;
+      margin-top: 22px;
+      color: var(--text);
+      font-size: clamp(19px, 2.3vw, 25px);
+      line-height: 1.38;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .action-row {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #f8fbfa;
+      font-size: 14px;
+      font-weight: 620;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .hero-card {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .label {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 620;
+    }
+
+    .hero-list,
+    .plain-list,
+    .output-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hero-list li,
+    .plain-list li {
+      padding: 14px 0;
+      border-top: 1px solid var(--faint);
+      color: var(--text);
+    }
+
+    .hero-list li:first-child,
+    .plain-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .section-block {
+      padding: 58px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.7fr);
+      gap: 40px;
+      align-items: end;
+    }
+
+    .section-head > p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #182320;
+      color: #eef7f4;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .card p {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .output-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .output-list li {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .output-list strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-weight: 620;
+    }
+
+    .output-list span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .review-panel,
+    .download-panel {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .review-panel {
+      margin-top: 22px;
+    }
+
+    .review-panel p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .usage-grid,
+    .download-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .step {
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .download-panel p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .download-panel a:not(.button) { color: var(--accent); }
+
+    @media (max-width: 900px) {
+      .nav-shell {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav-right {
+        width: 100%;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .nav-links { flex-wrap: wrap; }
+
+      .hero,
+      .section-head,
+      .split,
+      .usage-grid,
+      .download-panel,
+      .output-list {
+        grid-template-columns: 1fr;
+      }
+
+      .grid,
+      .grid.four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      main,
+      .nav-shell {
+        width: min(var(--content), calc(100% - 28px));
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 48px 0 42px;
+      }
+
+      .grid,
+      .grid.four {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-right { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=en" aria-label="Mparanza home">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Page sections">
+          <a href="#cosa-fa" data-i18n="nav.what">What it does</a>
+          <a href="#input" data-i18n="nav.inputs">Inputs</a>
+          <a href="#output" data-i18n="nav.outputs">Outputs</a>
+          <a href="#uso" data-i18n="nav.use">Use</a>
+          <a href="#prompt" data-i18n="nav.prompts">Prompts</a>
+          <a href="#scarica" data-i18n="nav.download">Installation</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="it">It</button>
+          <button type="button" data-lang="en">En</button>
+          <button type="button" data-lang="fr">Fr</button>
+          <button type="button" data-lang="de">De</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero" id="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Support testing</p>
+        <h1 data-i18n="hero.title">Test sampled entries against support PDFs.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Compare selected journal rows with invoices, transfers, vouchers and other readable support.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Give it the sampled entries and a folder of support PDFs. Get back row-level statuses, mismatches, missing support and manual-review cases.</p>
+      </div>
+
+      <aside class="hero-card" aria-label="Problem solved">
+        <div class="label" data-i18n="hero.cardLabel">Give it / get back</div>
+        <ul class="hero-list" id="hero-list">
+          <li>Give it sampled entries plus a folder of support PDFs.</li>
+          <li>Confirm fields, amount tolerance and date window.</li>
+          <li>Get back ok, mismatch, missing_support and manual_review rows.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <section class="section-block" id="cosa-fa">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="what.eyebrow">What it does</p>
+          <h2 data-i18n="what.title">From selected entries to support checks</h2>
+        </div>
+        <p data-i18n="what.copy">Use it when sample rows are known but support is scattered across local PDFs. Codex asks only for field and tolerance choices that affect the check.</p>
+      </div>
+
+      <div class="split">
+        <pre><code id="input-tree">input/
+  entries.xlsx
+  support_pdfs/
+    1001_invoice.pdf
+    1002_payment.pdf</code></pre>
+
+        <pre><code id="result-tree">out/
+  inspection.json
+  suggested_recipe.json
+  checks/
+    normalized_entries.csv
+    pdf_inventory.json
+    check_results.csv
+    check_results.xlsx
+    check_audit.json
+    review_notes.md</code></pre>
+      </div>
+    </section>
+
+    <section class="section-block" id="input">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
+          <h2 data-i18n="inputs.title">What it reads</h2>
+        </div>
+        <p data-i18n="inputs.copy">Works with local files already available to the firm. OCR-only scanned PDFs are flagged for review rather than treated as checked.</p>
+      </div>
+      <div class="grid four" id="input-cards"></div>
+    </section>
+
+    <section class="section-block" id="output">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="outputs.eyebrow">Outputs</p>
+          <h2 data-i18n="outputs.title">What it produces</h2>
+        </div>
+        <p data-i18n="outputs.copy">The result is a reviewable work folder: recipe, normalized entries, PDF inventory, result table, reading checks and review trail.</p>
+      </div>
+      <ul class="output-list" id="output-list"></ul>
+      <div class="review-panel">
+        <h3 data-i18n="review.title">Entry checks tied to documents</h3>
+        <p data-i18n="review.copy1">The inspection step proposes movement number, date, amount, debit/credit and beneficiary fields, then asks only for unresolved choices.</p>
+        <p data-i18n="review.copy2">The result separates normalized entries, PDF inventory, comparison outcomes and review settings so mismatches can be reviewed row by row.</p>
+        <p data-i18n="review.copy3">Unreadable PDFs and weak matches are labeled for manual review instead of being treated as passed.</p>
+      </div>
+    </section>
+
+    <section class="section-block" id="uso">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="use.eyebrow">Use</p>
+          <h2 data-i18n="use.title">Create support checks from one folder</h2>
+        </div>
+        <p data-i18n="use.copy">Open the folder, confirm the entry fields and tolerances, then generate the check results, reading checks and review trail.</p>
+      </div>
+      <div class="usage-grid" id="usage-grid"></div>
+    </section>
+
+    <section class="section-block" id="prompt">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="prompts.eyebrow">Prompts</p>
+          <h2 data-i18n="prompts.title">Ready prompts</h2>
+        </div>
+        <p data-i18n="prompts.copy">Start from one of these prompts and replace the file and folder paths. Codex will ask before resolving essential ambiguities.</p>
+      </div>
+      <ul class="output-list" id="prompt-list"></ul>
+    </section>
+
+    <section class="section-block" id="scarica">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="download.eyebrow">Installation</p>
+          <h2 data-i18n="download.title">Install from Plugin Pack</h2>
+        </div>
+        <p data-i18n="download.copy">Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.</p>
+      </div>
+
+      <div class="download-panel">
+        <div>
+          <h3 data-i18n="download.installTitle">Installation</h3>
+          <p><span data-i18n="download.codexText">Official page:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
+          <div class="action-row">
+            <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Download Vera</a>
+          </div>
+          <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
+          <pre style="margin-top: 18px;"><code id="install-path">/Users/name/Documents/CodexPlugins/vera-codex-plugin</code></pre>
+        </div>
+        <div>
+          <h3 data-i18n="download.firstUseTitle">First use</h3>
+          <p data-i18n="download.firstUseCopy">In a Codex chat, provide the entry file, support PDF folder, language and tolerance assumptions.</p>
+          <pre style="margin-top: 10px;"><code id="prompt-example">Use Check Entries on /path/entries.xlsx and support PDFs in /path/pdfs.
+Language: en. Document language: auto.
+Inspect columns and PDFs, ask only for essential ambiguities, then generate results, reading checks and review trail.
+Amount tolerance: 0. Date window days: 0.</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const translations = {
+      it: {
+        nav: { what: "A cosa serve", inputs: "File letti", outputs: "Output", use: "Come usarlo", prompts: "Prompt pronti", download: "Installazione" },
+        hero: {
+          eyebrow: "Verifica supporti",
+          title: "Verifica le scritture campionate contro i PDF di supporto.",
+          subtitle: "Confronta righe selezionate con fatture, bonifici, voucher e altri supporti leggibili.",
+          copy: "Dagli le scritture campionate e una cartella di PDF. Ottieni esiti riga per riga, differenze, supporti mancanti e casi da rivedere.",
+          primary: "Scarica ZIP",
+          secondary: "Come funziona",
+          cardLabel: "Cosa dai / cosa ottieni",
+          bullets: [
+            "Dagli scritture campionate e cartella PDF di supporto.",
+            "Conferma campi, tolleranza importo e finestra data.",
+            "Ottieni righe ok, mismatch, missing_support e manual_review."
+          ]
+        },
+        what: {
+          eyebrow: "A cosa serve",
+          title: "Dalle scritture selezionate al controllo dei supporti",
+          copy: "Serve quando le righe campione sono note ma i supporti sono sparsi tra PDF locali. Codex chiede solo le scelte su campi e tolleranza che cambiano l'esito del controllo."
+        },
+        inputs: {
+          eyebrow: "File letti",
+          title: "Che cosa legge",
+          copy: "Lavora su file locali già disponibili allo studio. I PDF solo scansionati vengono segnalati per revisione, non trattati come supporti verificati.",
+          cards: [
+            ["Excel e CSV", "Registrazioni campione con colonne mappabili."],
+            ["PDF di supporto", "Fatture, bonifici, ordini, contabili o altri documenti con testo leggibile."],
+            ["Mappatura flessibile", "Numero movimento, data, importo, dare/avere, descrizione e beneficiario."],
+            ["Tolleranze di controllo", "Soglia importo, finestra data e regole per mismatch e supporti mancanti."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Output",
+          title: "Che cosa produce",
+          copy: "La cartella di lavoro contiene campi scelti, registrazioni normalizzate, inventario PDF, risultati, controlli di lettura e traccia di revisione.",
+          items: [
+            ["inspection.json", "Controllo iniziale su colonne, campi e PDF."],
+            ["suggested_recipe.json", "Mappatura modificabile nella cartella di lavoro."],
+            ["normalized_entries.csv", "Righe canoniche usate per il controllo."],
+            ["pdf_inventory.json", "Inventario PDF e testo estraibile."],
+            ["check_results.csv / .xlsx", "Esiti riga per riga: ok, mismatch, missing_support, manual_review."],
+            ["check_audit.json", "Parametri, conteggi e percorso degli output."]
+          ]
+        },
+        review: {
+          title: "Controlli con supporto collegato",
+          copy1: "L'ispezione propone i campi per numero movimento, data, importo, dare/avere e beneficiario, poi chiede solo le scelte rimaste aperte.",
+          copy2: "Il risultato separa registrazioni normalizzate, inventario PDF, esiti di confronto e impostazioni di controllo, così le differenze si rivedono riga per riga.",
+          copy3: "PDF non leggibili e collegamenti deboli sono marcati per revisione manuale invece di essere trattati come superati."
+        },
+        use: {
+          eyebrow: "Come usarlo",
+          title: "Esegui i controlli da una cartella",
+          copy: "Apri la cartella, conferma campi delle registrazioni e tolleranze, poi genera risultati e traccia di revisione.",
+          steps: [
+            ["Contesto", "Indica file registrazioni, cartella PDF, lingua e tolleranze."],
+            ["Inventario", "Rivedi colonne e inventario dei PDF di supporto."],
+            ["Mappatura", "Conferma colonne e tolleranze rimaste aperte."],
+            ["Controllo", "Genera risultati, eccezioni e traccia di revisione."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompt pronti",
+          title: "Prompt pronti",
+          copy: "Sostituisci percorsi, lingua e tolleranze. Codex chiederà solo le ambiguità essenziali.",
+          items: [
+            ["Verifica completa", "Usa Verifica supporti delle scritture sulla registrazione campione /percorso/entries.xlsx e sui PDF in /percorso/pdf. Lingua: it. Lingua documenti: auto. Ispeziona colonne e PDF, chiedimi solo le ambiguità essenziali e genera risultati, eccezioni e traccia di revisione."],
+            ["Con tolleranza", "Usa Verifica supporti delle scritture su /percorso/entries.xlsx e /percorso/pdf. Applica tolleranza importo 0,01 e finestra data 2 giorni. Segnala mismatch e missing_support."],
+            ["Dopo il campionamento", "Usa Verifica supporti delle scritture sul CSV normalizzato prodotto dal campionamento e sui PDF di supporto. Mantieni campi scelti e controlli rivedibili."]
+          ]
+        },
+        download: {
+          eyebrow: "Installazione",
+          title: "Installa dal Plugin Pack",
+          copy: "Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.",
+          installTitle: "Installazione",
+          codexText: "Pagina ufficiale:",
+          button: "Scarica ZIP",
+          firstUseTitle: "Primo uso",
+          firstUseCopy: "In una chat Codex, indica file registrazioni, cartella PDF, lingua e tolleranze.",
+          steps: [
+            "Scarica e decomprimi lo ZIP.",
+            "Apri Codex desktop e installa il marketplace locale incluso.",
+            "Apri la cartella di lavoro e richiama Verifica supporti delle scritture."
+          ]
+        }
+      },
+      en: {
+        nav: { what: "What it does", inputs: "Inputs", outputs: "Outputs", use: "Use", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Support testing",
+          title: "Test sampled entries against support PDFs.",
+          subtitle: "Compare selected journal rows with invoices, transfers, vouchers and other readable support.",
+          copy: "Give it the sampled entries and a folder of support PDFs. Get back row-level statuses, mismatches, missing support and manual-review cases.",
+          primary: "Download ZIP",
+          secondary: "How to use it",
+          cardLabel: "Give it / get back",
+          bullets: [
+            "Give it sampled entries plus a folder of support PDFs.",
+            "Confirm fields, amount tolerance and date window.",
+            "Get back ok, mismatch, missing_support and manual_review rows."
+          ]
+        },
+        what: {
+          eyebrow: "What it does",
+          title: "From selected entries to support checks",
+          copy: "Use it when sample rows are known but support is scattered across local PDFs. Codex asks only for the field and tolerance choices that affect the check."
+        },
+        inputs: {
+          eyebrow: "Inputs",
+          title: "What it reads",
+          copy: "Works with local files already available to the firm. OCR-only scanned PDFs are flagged for review rather than treated as checked.",
+          cards: [
+            ["Excel and CSV", "Sampled entries with mappable columns."],
+            ["Supporting PDFs", "Invoices, transfers, orders, vouchers or other text documents."],
+            ["Flexible field match", "Movement number, date, amount, debit/credit, description and beneficiary."],
+            ["Check tolerances", "Amount threshold, date window and rules for mismatches and missing support."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Outputs",
+          title: "What it produces",
+          copy: "The work folder contains the recipe, normalized entries, PDF inventory, results, reading checks and review trail.",
+          items: [
+            ["inspection.json", "Initial checks on columns, fields and PDFs."],
+            ["suggested_recipe.json", "Editable recipe in the work folder."],
+            ["normalized_entries.csv", "Canonical rows used for checks."],
+            ["pdf_inventory.json", "PDF inventory and extractable text status."],
+            ["check_results.csv / .xlsx", "Row-level statuses: ok, mismatch, missing_support, manual_review."],
+            ["check_audit.json", "Parameters, counts and output paths."]
+          ]
+        },
+        review: {
+          title: "Entry checks tied to documents",
+          copy1: "The inspection step proposes movement number, date, amount, debit/credit and beneficiary fields, then asks only for unresolved choices.",
+          copy2: "The result separates normalized entries, PDF inventory, comparison outcomes and review settings so mismatches can be reviewed row by row.",
+          copy3: "Unreadable PDFs and weak matches are labeled for manual review instead of being treated as passed."
+        },
+        use: {
+          eyebrow: "Use",
+          title: "Create support checks from one folder",
+          copy: "Open the folder, confirm the entry fields and tolerances, then generate the check results, reading checks and review trail.",
+          steps: [
+            ["Context", "Provide entry file, PDF folder, language and tolerances."],
+            ["Inventory", "Inspect columns and support PDF inventory."],
+            ["Fields", "Confirm the unresolved columns and tolerances."],
+            ["Checks", "Generate results, reading checks and review trail."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Ready prompts",
+          copy: "Replace paths, language and tolerances. Codex will ask only for essential ambiguities.",
+          items: [
+            ["Complete check", "Use Check Entries on /path/entries.xlsx and support PDFs in /path/pdfs. Language: en. Document language: auto. Inspect columns and PDFs, ask only for essential ambiguities, then generate results, reading checks and review trail."],
+            ["With tolerance", "Use Check Entries on /path/entries.xlsx and /path/pdfs. Apply amount tolerance 0.01 and date window 2 days. Highlight mismatch and missing_support rows."],
+            ["After Journal Sampling", "Use Check Entries on the normalized CSV produced by Journal Sampling and the support PDFs. Keep fields and checks deterministic."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Install from Plugin Pack",
+          copy: "Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.",
+          installTitle: "Installation",
+          codexText: "Official page:",
+          button: "Download ZIP",
+          firstUseTitle: "First use",
+          firstUseCopy: "In a Codex chat, provide the entry file, support PDF folder, language and tolerance assumptions.",
+          steps: [
+            "Download and unzip the package.",
+            "Open Codex desktop and install the included local marketplace.",
+            "Open the work folder and invoke Check Entries."
+          ]
+        }
+      },
+      fr: {
+        nav: { what: "Ce qu'il fait", inputs: "Entrées", outputs: "Sorties", use: "Utilisation", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Contrôle des justificatifs",
+          title: "Tester les écritures échantillonnées contre les PDF justificatifs.",
+          subtitle: "Compare les lignes sélectionnées avec factures, virements, pièces et autres justificatifs lisibles.",
+          copy: "Donnez les écritures échantillonnées et un dossier de PDF. Recevez statuts ligne par ligne, écarts, justificatifs manquants et cas à revoir.",
+          primary: "Télécharger le ZIP",
+          secondary: "Comment l'utiliser",
+          cardLabel: "Données / résultat",
+          bullets: [
+            "Donnez écritures échantillonnées et dossier de PDF justificatifs.",
+            "Confirmez champs, tolérance montant et fenêtre date.",
+            "Recevez lignes ok, mismatch, missing_support et manual_review."
+          ]
+        },
+        what: {
+          eyebrow: "Ce qu'il fait",
+          title: "Des écritures sélectionnées au contrôle des justificatifs",
+          copy: "À utiliser quand les lignes d'échantillon sont connues mais que les justificatifs sont dispersés dans des PDF locaux. Codex demande seulement les choix de champs et de tolérance qui affectent le contrôle."
+        },
+        inputs: {
+          eyebrow: "Entrées",
+          title: "Ce qu'il lit",
+          copy: "Le contrôle travaille sur des fichiers locaux déjà disponibles. Les PDF uniquement scannés/OCR sont signalés pour revue plutôt que considérés comme contrôlés.",
+          cards: [
+            ["Excel et CSV", "Écritures échantillonnées avec colonnes mappables."],
+            ["PDF justificatifs", "Factures, virements, commandes, pièces comptables ou autres documents textuels."],
+            ["Correspondance flexible", "Numéro mouvement, date, montant, débit/crédit, description et bénéficiaire."],
+            ["Tolérances de contrôle", "Seuil montant, fenêtre date et règles pour écarts et justificatifs manquants."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Sorties",
+          title: "Ce qu'il produit",
+          copy: "Le dossier de travail contient la recette, les écritures normalisées, l'inventaire PDF, les résultats, les contrôles de lecture et la trace de revue.",
+          items: [
+            ["inspection.json", "Contrôle initial des colonnes, champs et PDF."],
+            ["suggested_recipe.json", "Recette modifiable dans le dossier de travail."],
+            ["normalized_entries.csv", "Lignes canoniques utilisées pour les contrôles."],
+            ["pdf_inventory.json", "Inventaire PDF et statut du texte extractible."],
+            ["check_results.csv / .xlsx", "Statuts ligne par ligne : ok, mismatch, missing_support, manual_review."],
+            ["check_audit.json", "Paramètres, comptes et chemins de sortie."]
+          ]
+        },
+        review: {
+          title: "Contrôles avec justificatifs rattachés",
+          copy1: "L'inspection propose les champs numéro mouvement, date, montant, débit/crédit et bénéficiaire, puis demande seulement les choix encore ouverts.",
+          copy2: "Le résultat sépare écritures normalisées, inventaire PDF, résultats de comparaison et paramètres de revue, afin que les écarts soient revus ligne par ligne.",
+          copy3: "Les PDF illisibles et les correspondances faibles sont marqués pour revue manuelle au lieu d'être traités comme validés."
+        },
+        use: {
+          eyebrow: "Utilisation",
+          title: "Exécuter les contrôles depuis un dossier",
+          copy: "Ouvrez le dossier, confirmez les champs des écritures et les tolérances, puis générez résultats, contrôles de lecture et trace de revue.",
+          steps: [
+            ["Contexte", "Fournissez fichier d'écritures, dossier PDF, langue et tolérances."],
+            ["Inventaire", "Revoyez colonnes et inventaire des PDF justificatifs."],
+            ["Champs", "Confirmez les colonnes et tolérances encore ouvertes."],
+            ["Contrôles", "Générez résultats, contrôles de lecture et trace de revue."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts prêts",
+          copy: "Remplacez chemins, langue et tolérances. Codex demandera uniquement les ambiguïtés essentielles.",
+          items: [
+            ["Contrôle complet", "Utilise Check Entries sur /chemin/entries.xlsx et les PDF dans /chemin/pdfs. Langue: fr. Langue des documents: auto. Inspecte les colonnes et les PDF, demande uniquement les ambiguïtés essentielles, puis génère les résultats, les contrôles de lecture et la trace de revue."],
+            ["Avec tolérance", "Utilise Check Entries sur /chemin/entries.xlsx et /chemin/pdfs. Applique une tolérance montant de 0,01 et une fenêtre date de 2 jours. Mets en évidence mismatch et missing_support."],
+            ["Après Journal Sampling", "Utilise Check Entries sur le CSV normalisé produit par Journal Sampling et les PDF justificatifs. Garde les champs et les contrôles déterministes."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Installer depuis le Plugin Pack",
+          copy: "Nécessite Codex desktop. Un seul ZIP installe Vera avec ses onze modules.",
+          installTitle: "Installation",
+          codexText: "Page officielle :",
+          button: "Télécharger le ZIP",
+          firstUseTitle: "Première utilisation",
+          firstUseCopy: "Dans une conversation Codex, indiquez fichier d'écritures, dossier PDF, langue et tolérances.",
+          steps: [
+            "Téléchargez et décompressez le ZIP.",
+            "Ouvrez Codex desktop et installez le marketplace local inclus.",
+            "Ouvrez le dossier de travail et appelez Check Entries."
+          ]
+        }
+      },
+      de: {
+        nav: { what: "Was es tut", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Belegprüfung",
+          title: "Stichprobenbuchungen gegen Beleg-PDFs prüfen.",
+          subtitle: "Vergleicht ausgewählte Journalzeilen mit Rechnungen, Überweisungen, Belegen und anderen lesbaren Nachweisen.",
+          copy: "Geben Sie Stichprobenbuchungen und einen Ordner mit Beleg-PDFs an. Zurück kommen zeilenweise Status, Differenzen, fehlende Belege und manuelle Prüffälle.",
+          primary: "ZIP herunterladen",
+          secondary: "So funktioniert es",
+          cardLabel: "Eingabe / Ergebnis",
+          bullets: [
+            "Geben Sie Stichprobenbuchungen und einen Ordner mit Beleg-PDFs an.",
+            "Bestätigen Sie Felder, Betragstoleranz und Datumsfenster.",
+            "Zurück kommen ok-, mismatch-, missing_support- und manual_review-Zeilen."
+          ]
+        },
+        what: {
+          eyebrow: "Was es tut",
+          title: "Von ausgewählten Buchungen zur Belegprüfung",
+          copy: "Nutzen Sie es, wenn Stichprobenzeilen bekannt sind, die Belege aber über lokale PDFs verteilt sind. Codex fragt nur Feld- und Toleranzentscheidungen ab, die die Prüfung beeinflussen."
+        },
+        inputs: {
+          eyebrow: "Eingaben",
+          title: "Was gelesen wird",
+          copy: "Die Prüfung arbeitet mit lokalen Dateien. Reine Scan-/OCR-PDFs werden zur Prüfung markiert, nicht als geprüft behandelt.",
+          cards: [
+            ["Excel und CSV", "Stichproben-Buchungen mit mappbaren Spalten."],
+            ["Beleg-PDFs", "Rechnungen, Überweisungen, Bestellungen, Buchungsbelege oder andere Textdokumente."],
+            ["Flexible Feldzuordnung", "Bewegungsnummer, Datum, Betrag, Soll/Haben, Beschreibung und Begünstigter."],
+            ["Prüftoleranzen", "Betragsschwelle, Datumsfenster und Regeln für Abweichungen und fehlende Belege."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Output",
+          title: "Was erzeugt wird",
+          copy: "Der Arbeitsordner enthält Rezept, normalisierte Buchungen, PDF-Inventar, Ergebnisse, Lesekontrollen und Prüfdateien.",
+          items: [
+            ["inspection.json", "Erstprüfung zu Spalten, Feldern und PDFs."],
+            ["suggested_recipe.json", "Anpassbares Rezept im Arbeitsordner."],
+            ["normalized_entries.csv", "Kanonische Zeilen für die Prüfungen."],
+            ["pdf_inventory.json", "PDF-Inventar und Status des extrahierbaren Textes."],
+            ["check_results.csv / .xlsx", "Zeilenstatus: ok, mismatch, missing_support, manual_review."],
+            ["check_audit.json", "Parameter, Zählungen und Ausgabepfade."]
+          ]
+        },
+        review: {
+          title: "Buchungsprüfungen mit zugeordneten Nachweisen",
+          copy1: "Die Inspektion schlägt Felder für Bewegungsnummer, Datum, Betrag, Soll/Haben und Begünstigten vor und fragt dann nur offene Entscheidungen ab.",
+          copy2: "Das Ergebnis trennt normalisierte Buchungen, PDF-Inventar, Vergleichsergebnisse und Prüfeinstellungen, damit Abweichungen zeilenweise geprüft werden können.",
+          copy3: "Unlesbare PDFs und schwache Treffer werden für manuelle Prüfung markiert, statt als bestanden zu gelten."
+        },
+        use: {
+          eyebrow: "Nutzung",
+          title: "Belegprüfungen aus einem Ordner starten",
+          copy: "Öffnen Sie den Ordner, bestätigen Sie Buchungsfelder und Toleranzen und erzeugen Sie Ergebnisse, Lesekontrollen und Prüfdateien.",
+          steps: [
+            ["Kontext", "Geben Sie Buchungsdatei, PDF-Ordner, Sprache und Toleranzen an."],
+            ["Inventar", "Spalten und Inventar der Beleg-PDFs prüfen."],
+            ["Felder", "Offene Spalten und Toleranzen bestätigen."],
+            ["Prüfungen", "Ergebnisse, Lesekontrollen und Prüfdateien erzeugen."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts zur Nutzung",
+          copy: "Ersetzen Sie Pfade, Sprache und Toleranzen. Codex fragt nur wesentliche Unklarheiten ab.",
+          items: [
+            ["Vollständige Prüfung", "Verwende Check Entries für /pfad/entries.xlsx und die Beleg-PDFs in /pfad/pdfs. Sprache: de. Dokumentsprache: auto. Prüfe Spalten und PDFs, frage nur wesentliche Unklarheiten ab und erstelle Ergebnisse, Lesekontrollen und Prüfdateien."],
+            ["Mit Toleranz", "Verwende Check Entries für /pfad/entries.xlsx und /pfad/pdfs. Nutze Betragstoleranz 0,01 und Datumsfenster 2 Tage. Hebe mismatch und missing_support hervor."],
+            ["Nach Journal Sampling", "Verwende Check Entries auf dem von Journal Sampling normalisierten CSV und den Beleg-PDFs. Halte Felder und Prüfungen deterministisch."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Aus Plugin Pack installieren",
+          copy: "Erfordert Codex desktop. Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
+          installTitle: "Installation",
+          codexText: "Offizielle Seite:",
+          button: "ZIP herunterladen",
+          firstUseTitle: "Erste Nutzung",
+          firstUseCopy: "Geben Sie in einem Codex-Chat Buchungsdatei, PDF-Ordner, Sprache und Toleranzen an.",
+          steps: [
+            "ZIP herunterladen und entpacken.",
+            "Codex desktop öffnen und den enthaltenen lokalen Marketplace installieren.",
+            "Arbeitsordner öffnen und Check Entries aufrufen."
+          ]
+        }
+      }
+    };
+
+    function valueAt(obj, path) {
+      return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+    }
+
+    function renderCards(targetId, items) {
+      const target = document.getElementById(targetId);
+      target.innerHTML = "";
+      items.forEach(([title, copy]) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `<h3>${title}</h3><p>${copy}</p>`;
+        target.appendChild(card);
+      });
+    }
+
+    function renderOutputList(targetId, items) {
+      const target = document.getElementById(targetId);
+      target.innerHTML = "";
+      items.forEach(([title, copy]) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${title}</strong><span>${copy}</span>`;
+        target.appendChild(li);
+      });
+    }
+
+    function setLanguage(lang) {
+      const safeLang = translations[lang] ? lang : "en";
+      const t = translations[safeLang];
+      document.documentElement.lang = safeLang;
+      document.title = `${t.hero.title} | Vera`;
+      document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${safeLang}`;
+      });
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const text = valueAt(t, node.dataset.i18n);
+        if (typeof text === "string") node.textContent = text;
+      });
+      document.getElementById("hero-list").innerHTML = t.hero.bullets.map((item) => `<li>${item}</li>`).join("");
+      renderCards("input-cards", t.inputs.cards);
+      renderOutputList("output-list", t.outputs.items);
+      renderOutputList("prompt-list", t.prompts.items);
+      document.getElementById("usage-grid").innerHTML = t.use.steps.map(([title, copy]) => (
+        `<article class="step"><h3>${title}</h3><p>${copy}</p></article>`
+      )).join("");
+      document.getElementById("install-steps").innerHTML = t.download.steps.map((item) => `<li>${item}</li>`).join("");
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.lang === safeLang);
+      });
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", safeLang);
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    setLanguage(params.get("lang") || "en");
+  </script>
+</body>
+</html>

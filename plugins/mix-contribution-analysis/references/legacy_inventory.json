@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.1",
+  "plugin": "mix-contribution-analysis",
+  "items": [
+    {
+      "legacy_id": "legacy.mix.horizontal_waterfall",
+      "status": "out_of_scope",
+      "legacy_function": "legacy_mix_charting",
+      "target_capability_id": "mix.contribution_bridge",
+      "related_capability_ids": [
+        "mix.contribution_bridge"
+      ],
+      "reason": "Retired from the mix catalog because period-comparison owns the active horizontal waterfall source output for before/after movement."
+    },
+    {
+      "legacy_id": "legacy.mix.horizontal_waterfall_small_multiples",
+      "status": "out_of_scope",
+      "legacy_function": "legacy_mix_charting",
+      "target_capability_id": "mix.contribution_bridge",
+      "related_capability_ids": [
+        "mix.contribution_bridge"
+      ],
+      "reason": "Retired from the mix catalog because period-comparison owns the active horizontal waterfall small-multiple source output."
+    },
+    {
+      "legacy_id": "legacy.mix.stacked_bar",
+      "status": "mapped_active",
+      "legacy_function": "legacy_mix_charting",
+      "target_capability_id": "mix.stacked_bar",
+      "related_capability_ids": [
+        "mix.stacked_bar"
+      ],
+      "reason": "The generic stacked-bar renderer is exposed as a concrete chart capability; cohort chart variants use the legacy stacked-column grammar."
+    },
+    {
+      "legacy_id": "legacy.mix.stacked_bar_overlay",
+      "status": "mapped_active",
+      "legacy_function": "legacy_mix_charting",
+      "target_capability_id": "mix.stacked_bar_overlay",
+      "related_capability_ids": [
+        "mix.stacked_bar_overlay"
+      ],
+      "reason": "The legacy plotOverlayChart path is exposed separately from plain stacked-bar composition."
+    },
+    {
+      "legacy_id": "legacy.mix.stacked_column",
+      "status": "mapped_active",
+      "legacy_function": "legacy_mix_charting",
+      "target_capability_id": "mix.stacked_column",
+      "related_capability_ids": [
+        "mix.column",
+        "mix.column_overlay",
+        "mix.stacked_column",
+        "mix.like_for_like_column",
+        "mix.like_for_like_stacked_column",
+        "mix.cohort_since_stacked_column",
+        "mix.cohort_lost_stacked_column"
+      ],
+      "reason": "The legacy stacked-column renderer is exposed through concrete total-column, stacked-column, like-for-like, and since/lost cohort column capabilities. The stacked-column overlay variant is retired because stacked composition cannot carry a related metric overlay."
+    }
+  ]
+}

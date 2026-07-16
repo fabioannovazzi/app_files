@@ -1,0 +1,59 @@
+{
+  "name": "vera",
+  "version": "0.1.6+codex.20260716173336",
+  "description": "Vera prepara istruttorie e carte di lavoro rivedibili, inclusi casi INPS e pratiche Registro Imprese/DIRE da fonti SARI ufficiali.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "vera",
+    "commercialisti",
+    "accounting",
+    "audit",
+    "client-intake",
+    "reconciliation",
+    "journal",
+    "reporting",
+    "concordato",
+    "research",
+    "inps",
+    "previdenza",
+    "registro-imprese",
+    "sari",
+    "cciaa",
+    "dire"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Vera",
+    "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
+    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Prepara fascicoli cliente, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS con OCR locale ed esportazioni ufficiali registrate con hash, e prepara pratiche Registro Imprese/DIRE da fonti SARI e CCIAA tracciate. Non gestisce credenziali o invii; le acquisizioni condizionali restano soggette a una separata verifica del permesso del servizio e SARI viene consultato in sola lettura nel browser salvo autorizzazione scritta al connettore diretto. Vera rende fonti, passaggi e risultati verificabili; giudizio professionale, decisioni e responsabilit\u00e0 restano sempre al commercialista.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Chiedi a Vera di preparare la prima istruttoria della cartella cliente e controllare registrazioni e documenti di supporto.",
+      "Chiedi a Vera di usare OCR locale ed export ufficiali per istruire il caso previdenziale INPS con fonti e bozza rivedibile.",
+      "Chiedi a Vera di usare Camera competente e fonti SARI ufficiali per una bozza Registro Imprese/DIRE, senza accedere o inviare."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

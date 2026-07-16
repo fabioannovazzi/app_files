@@ -1,0 +1,47 @@
+{
+  "name": "report-builder",
+  "version": "0.1.25",
+  "description": "Deterministic report-building workflow guided by Codex.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/report-builder/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "report",
+    "finance",
+    "audit",
+    "excel",
+    "pdf",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Build Report",
+    "shortDescription": "Inspect financial Excel/PDF inputs and build reviewable report drafts in Italian, English, French, or German.",
+    "longDescription": "Codex workflow for deterministic report building. Codex inspects local workbooks, CSV files, text PDFs, or ZIP folders, asks only for section mapping or business assumptions that cannot be inferred, writes or refines the narrative in the work recipe, then automatically runs deterministic scripts to produce the natural full package: tables, diagnostics, Markdown, DOCX, audit outputs, and Codex review. The scripts do not make direct model API calls; Codex provides the reasoning and prose layer.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Build Report on the financial files I provide.",
+      "Infer language, report type, sections and table mapping where possible, ask only for essential ambiguities, then fill the narrative recipe and build the complete Markdown/DOCX/audit package.",
+      "Do not make direct OpenAI API calls from the plugin scripts; use Codex for review judgment and deterministic scripts for extraction, analysis, and rendering."
+    ],
+    "brandColor": "#5d685c",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

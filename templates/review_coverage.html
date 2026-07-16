@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_label or "Attribute coverage" }}{% endblock %}
+
+{% block head_extra %}
+  <style>
+    .coverage-body .app-main {
+      padding: 24px;
+    }
+
+    .coverage-container {
+      gap: 16px;
+    }
+
+    .coverage-toolbar {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .coverage-toggle {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      max-width: 100%;
+      overflow: visible;
+      padding-bottom: 0;
+    }
+
+    .coverage-segment {
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+      color: #111827;
+      cursor: pointer;
+      position: relative;
+      font-size: 13px;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .coverage-segment[aria-pressed="true"] {
+      background: #111827;
+      color: #fff;
+      cursor: default;
+    }
+
+    .coverage-segment[data-tooltip]:hover::after,
+    .coverage-segment[data-tooltip]:focus-visible::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      z-index: 10;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .coverage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .coverage-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .coverage-subtitle {
+      margin: 6px 0 0;
+      color: #6b7280;
+      font-size: 14px;
+      max-width: 720px;
+    }
+
+    .coverage-layout {
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .coverage-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .coverage-card.coverage-toolbar-card {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      justify-content: start;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      width: 100%;
+      max-width: 100%;
+      justify-self: start;
+    }
+
+    .coverage-toolbar-card .coverage-subcard {
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .coverage-toolbar-card .coverage-subcard--views {
+      min-width: 0;
+    }
+
+    .coverage-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: normal;
+      color: #111827;
+    }
+
+    .coverage-toolbar-card .coverage-card-title {
+      grid-column: 1 / -1;
+    }
+
+    .coverage-form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .coverage-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .coverage-subcard {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f9fafb;
+    }
+
+    .coverage-pill-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .coverage-pill {
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+      color: #111827;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .coverage-pill[aria-pressed="true"] {
+      background: #111827;
+      color: #fff;
+      cursor: default;
+    }
+
+    .coverage-label {
+      font-size: 12px;
+      font-weight: 400;
+      color: #111827;
+    }
+
+    .coverage-button {
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      color: #111827;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .coverage-button:hover {
+      background: #f3f4f6;
+    }
+
+    .coverage-status {
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .coverage-status .muted {
+      color: #6b7280;
+    }
+
+    .coverage-status .error {
+      color: #ef4444;
+    }
+
+    .coverage-body .muted {
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .coverage-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .coverage-mini-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f9fafb;
+    }
+
+    .coverage-mini-card h3 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 400;
+      color: #111827;
+    }
+
+    .coverage-summary-card h3 {
+      margin-bottom: 10px;
+    }
+
+    .coverage-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px 16px;
+    }
+
+    .coverage-summary-item {
+      display: grid;
+      gap: 2px;
+    }
+
+    .coverage-summary-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6b7280;
+    }
+
+    .coverage-summary-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .coverage-mini-card--header {
+      grid-column: 1 / -1;
+      background: #f9fafb;
+    }
+
+    .coverage-mini-card--taxonomy {
+      grid-column: auto;
+    }
+
+    .coverage-mini-card--deterministic {
+      grid-column: auto;
+    }
+
+    .coverage-mini-subtitle {
+      color: #6b7280;
+      font-size: 12px;
+      margin: 6px 0 12px;
+    }
+
+    .coverage-taxonomy-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #111827;
+    }
+
+    .coverage-taxonomy-row {
+      border-left: 2px solid #e5e7eb;
+      padding-left: 10px;
+    }
+
+    .coverage-taxonomy-label {
+      font-weight: 600;
+    }
+
+    .coverage-taxonomy-synonyms {
+      color: #6b7280;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .coverage-deterministic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .coverage-deterministic-row {
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .coverage-deterministic-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .coverage-deterministic-term {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .coverage-deterministic-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      color: #4b5563;
+      font-size: 12px;
+    }
+
+    .coverage-deterministic-item {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .coverage-deterministic-name-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .coverage-deterministic-name {
+      background: #f3f4f6;
+      border-radius: 999px;
+      padding: 2px 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .coverage-deterministic-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .coverage-deterministic-badge {
+      background: #dbeafe;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+    }
+
+    .coverage-match-term {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .coverage-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .coverage-table th,
+    .coverage-table td {
+      border: 1px solid #e5e7eb;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    .coverage-table th {
+      background: #f9fafb;
+      color: #4b5563;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .coverage-table tr[data-attr-id] {
+      cursor: pointer;
+    }
+
+    .coverage-table tr[data-attr-id]:hover {
+      background: #f3f4f6;
+    }
+
+    .coverage-table tr.coverage-table-row--selected {
+      background: #e5e7eb;
+    }
+
+    .coverage-examples-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .coverage-examples-grid .coverage-mini-card {
+      background: #fff;
+    }
+
+    .coverage-example-meta {
+      color: #6b7280;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .coverage-example-label {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #4b5563;
+    }
+
+    .coverage-example-text {
+      margin-top: 6px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: 12px;
+      color: #111827;
+      white-space: pre-wrap;
+      max-height: 240px;
+      overflow: auto;
+    }
+
+    .coverage-example-audit {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.4;
+    }
+
+    .coverage-example-audit div {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .coverage-example-audit a {
+      overflow-wrap: anywhere;
+      word-break: break-all;
+      text-decoration: underline;
+    }
+
+    .coverage-example-image-wrapper {
+      margin-top: 8px;
+    }
+
+    .coverage-example-image {
+      width: 100%;
+      border-radius: 6px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .coverage-empty {
+      grid-column: 1 / -1;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .coverage-card--examples {
+      grid-column: 1 / -1;
+    }
+
+    .coverage-card--brand {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 980px) {
+      .coverage-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .coverage-toggle {
+        flex-wrap: wrap;
+        overflow: visible;
+        padding-bottom: 0;
+      }
+
+      .coverage-toolbar {
+        width: 100%;
+      }
+
+      .coverage-card.coverage-toolbar-card {
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+
+      .coverage-toolbar-card .coverage-subcard {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1400px) {
+      .coverage-examples-grid {
+        grid-template-columns: repeat(4, minmax(220px, 1fr));
+      }
+    }
+
+    @media (max-width: 1160px) {
+      .coverage-examples-grid {
+        grid-template-columns: repeat(3, minmax(220px, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .coverage-examples-grid {
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block body_attrs %}class="coverage-body"{% endblock %}
+
+{% block body %}
+  <header class="landing-header">
+    <a href="/?lang={{ lang or 'en' }}" class="landing-logo-link" aria-label="Return to the home page">
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main id="reactRoot" class="app-main">
+    <div class="container coverage-container">
+      <div id="reactCoverageApp"></div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/review-coverage-react.js?v={{ asset_version or '' }}" defer></script>
+{% endblock %}

@@ -1,0 +1,201 @@
+{
+  "profile_name": "saloncentric_permanent",
+  "display_name": "SalonCentric \u00b7 Permanent Hair Color PDP",
+  "retailer": "saloncentric",
+  "base_url": "https://www.saloncentric.com",
+  "category_hints": [
+    "hair color/permanent"
+  ],
+  "category_urls": [
+    "https://www.saloncentric.com/hair-color?plp=true&prefn1=productTypeSc&prefv1=permanent"
+  ],
+  "parent_rules": {
+    "min_color_variants": 3,
+    "disallow_kits_regex": "(?i)\\b(?:set|sets|duo|duos|kit|kits|bundle|bundles|gift|gifts)\\b",
+    "finish_split_tokens": [
+      "cream",
+      "gel",
+      "liquid"
+    ]
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "/([^/?#]+)\\.html",
+    "parent_json_paths": [
+      "$.product.id",
+      "$.productID",
+      "$.id",
+      "$.productId"
+    ],
+    "variant_id_fields": [
+      "$.id",
+      "$.sku",
+      "$.skuId",
+      "$.upc",
+      "$.ean",
+      "$.gtin13"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "script_app_state",
+        "selector": "script#__NEXT_DATA__, script[type='application/json'][data-state], script[type='application/json'][data-apollo-state], script[id*='apollo'][type='application/json'], script[id*='state'][type='application/json']"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.brand.name",
+      "$.brand",
+      "$.product.brand.name",
+      "$.product.brand",
+      "$.manufacturer",
+      "$.mpnBrand"
+    ],
+    "parent_title": [
+      "$.name",
+      "$.product.name",
+      "$.title",
+      "$.product.title",
+      "$.seo.title"
+    ],
+    "parent_summary": [
+      "$.description",
+      "$.product.description",
+      "$.shortDescription",
+      "$.product.shortDescription",
+      "$.seo.metaDescription"
+    ],
+    "series_label": [
+      "$.product.line",
+      "$.product.series",
+      "$.series",
+      "$.collection",
+      "$.product.collection"
+    ],
+    "category_path": [
+      "$.categoryPath",
+      "$.breadcrumbs[*].name",
+      "$.product.categoryPath",
+      "$.product.categories[*].name",
+      "$.category.name"
+    ],
+    "variant_list": [
+      "$.offers",
+      "$.hasVariant",
+      "$.variants",
+      "$.product.variants",
+      "$.skus",
+      "$.product.skus",
+      "$.items",
+      "$.product.items"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.id",
+        "$.sku",
+        "$.skuId",
+        "$.productId",
+        "$.itemId"
+      ],
+      "shade_name": [
+        "$.name",
+        "$.title",
+        "$.shade",
+        "$.color",
+        "$.attributes.shade",
+        "$.variationValues.shade"
+      ],
+      "size_text": [
+        "$.size",
+        "$.sizeText",
+        "$.netContent",
+        "$.attributes.size",
+        "$.packageSize",
+        "$.variationValues.size"
+      ],
+      "price": [
+        "$.offers.price",
+        "$.price",
+        "$.pricing.price",
+        "$.salePrice",
+        "$.currentPrice",
+        "$.priceInfo.currentPrice.price"
+      ],
+      "list_price": [
+        "$.offers.priceSpecification.price",
+        "$.listPrice",
+        "$.pricing.listPrice",
+        "$.msrp",
+        "$.wasPrice",
+        "$.priceInfo.listPrice.price"
+      ],
+      "currency": [
+        "$.offers.priceCurrency",
+        "$.currency",
+        "$.pricing.currency",
+        "$.priceInfo.currentPrice.currencyCode"
+      ],
+      "barcode": [
+        "$.gtin13",
+        "$.gtin12",
+        "$.gtin",
+        "$.upc",
+        "$.ean"
+      ],
+      "swatch_image": [
+        "$.swatch.image",
+        "$.swatchImage",
+        "$.images.swatch",
+        "$.media.swatch.url",
+        "$.variationValues.swatchImage"
+      ],
+      "hero_image": [
+        "$.image",
+        "$.images[0]",
+        "$.images.primary",
+        "$.media.main.url",
+        "$.primaryImage.url"
+      ],
+      "availability": [
+        "$.offers.availability",
+        "$.availability",
+        "$.inventory.status",
+        "$.stockLevelStatus",
+        "$.inStock"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_trailing_shade_tokens": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": false,
+    "reject_if_zero_variants": false
+  }
+}

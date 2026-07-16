@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Period-over-Period Analysis" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#6EA4B8"/>
+  <circle cx="51" cy="50" r="7" fill="#6EA4B8"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M15 24h34M15 41h34" stroke="#F7F0DF" stroke-width="5" stroke-linecap="round"/>
+  <path d="M25 16v32M39 16v32" stroke="#F7F0DF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M20 24l6-6 6 6M44 41l-6 6-6-6" fill="none" stroke="#6EA4B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="32" r="5" fill="#6EA4B8"/>
+</svg>

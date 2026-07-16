@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ottimizza prompt | Vera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #223026;
+      --muted: #5e6a61;
+      --line: #d9e0d8;
+      --panel: #ffffff;
+      --soft: #ffffff;
+      --accent: #4f6b78;
+      --accent-ink: #263942;
+      --bg: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    .page {
+      width: min(100% - 48px, 1180px);
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 28px 0 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--accent-ink);
+    }
+    .brand img {
+      height: 34px;
+      width: auto;
+      display: block;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+    nav a {
+      text-decoration: none;
+    }
+    nav a:hover { color: var(--ink); }
+    .lang {
+      display: inline-flex;
+      gap: 10px;
+      margin-left: 8px;
+      font-weight: 600;
+    }
+    .lang button {
+      border: 0;
+      background: transparent;
+      padding: 2px 0;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+    }
+    .lang button[aria-pressed="true"] { color: var(--ink); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: clamp(32px, 5vw, 72px);
+      align-items: end;
+      padding: clamp(56px, 8vw, 110px) 0 48px;
+    }
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+    .lead {
+      margin: 28px 0 0;
+      max-width: 720px;
+      color: #405047;
+      font-size: clamp(1.08rem, 2vw, 1.42rem);
+      line-height: 1.42;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 18px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .button.secondary {
+      background: transparent;
+      color: var(--accent-ink);
+      border-color: var(--line);
+    }
+    .summary {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      padding: 20px;
+    }
+    .summary h2 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+    }
+    .summary ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+    section {
+      padding: 42px 0;
+      border-top: 1px solid var(--line);
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.34fr) minmax(0, 0.66fr);
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(28px, 3.4vw, 42px);
+      letter-spacing: 0;
+    }
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .item {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .item h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+    .item p, .item li {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .item p { margin: 0; }
+    .output-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .output-list li {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      color: var(--muted);
+    }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #1f2a24;
+      color: #edf3ee;
+      border-radius: 8px;
+      padding: 18px;
+      font-size: 0.9rem;
+      line-height: 1.48;
+    }
+    @media (max-width: 820px) {
+      .page { width: min(100% - 32px, 1180px); }
+      header, nav { align-items: flex-start; }
+      header, .hero, .section-head { grid-template-columns: 1fr; }
+      header { flex-direction: column; }
+      nav { flex-wrap: wrap; }
+      .hero { padding-top: 44px; }
+      .grid, .output-list { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a class="brand" id="home-link" href="/?lang=it">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <nav>
+        <a href="#workflow" data-i18n="nav.workflow">Come usarlo</a>
+        <a href="#scope" data-i18n="nav.scope">Perimetro</a>
+        <a href="#outputs" data-i18n="nav.outputs">File prodotti</a>
+        <a href="#prompts" data-i18n="nav.prompts">Prompt pronto</a>
+        <a href="#download" data-i18n="nav.download">Installazione</a>
+        <span class="lang" aria-label="Language">
+          <button type="button" data-lang="en">En</button>
+          <button type="button" data-lang="it">It</button>
+          <button type="button" data-lang="fr">Fr</button>
+          <button type="button" data-lang="de">De</button>
+        </span>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow" data-i18n="hero.eyebrow">Ricerca legale e fiscale</p>
+          <h1 id="hero-title" data-i18n="hero.title">Ottimizza prompt</h1>
+          <p class="lead" data-i18n="hero.lead">Trasforma una domanda legale, fiscale o compliance in un brief di ricerca per Deep Research: fatti preservati, perimetro dichiarato, fonti prioritarie e controlli finali.</p>
+        </div>
+        <aside class="summary">
+          <h2 data-i18n="summary.title">Quando usarlo</h2>
+          <ul>
+            <li data-i18n="summary.item1">La domanda è utile, ma troppo disordinata per la ricerca</li>
+            <li data-i18n="summary.item2">Serve separare lingua, diritto applicabile e obiettivo</li>
+            <li data-i18n="summary.item3">Vuoi una traccia verificabile prima di inviare la richiesta a Deep Research</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section id="scope">
+        <div class="section-head">
+          <h2 data-i18n="scope.title">Perimetro prima delle fonti</h2>
+          <p data-i18n="scope.copy">La pagina non decide il diritto applicabile. Rende espliciti gli indizi e chiede conferma quando il quadro cambia la ricerca.</p>
+        </div>
+        <div class="grid">
+          <article class="item">
+            <h3 data-i18n="scope.it.title">Fatti preservati</h3>
+            <p data-i18n="scope.it.copy">Date, importi, parti, luoghi e link entrano nel prompt come vincoli, non come suggerimenti vaghi.</p>
+          </article>
+          <article class="item">
+            <h3 data-i18n="scope.fr.title">Quadro confermato</h3>
+            <p data-i18n="scope.fr.copy">Lingua dell'output e diritto applicabile restano separati fino alla conferma.</p>
+          </article>
+          <article class="item">
+            <h3 data-i18n="scope.de.title">Fonti prioritarie</h3>
+            <p data-i18n="scope.de.copy">Il brief ordina fonti ufficiali, regolatori, giurisprudenza e materiale secondario.</p>
+          </article>
+          <article class="item">
+            <h3 data-i18n="scope.en.title">Controlli inclusi</h3>
+            <p data-i18n="scope.en.copy">La richiesta finale include citazioni, limiti, assunzioni e punti da validare.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow">
+        <div class="section-head">
+          <h2 data-i18n="workflow.title">Come viene preparato</h2>
+          <p data-i18n="workflow.copy">Chiarisce il brief, scrive il prompt e controlla che i fatti importanti non siano stati persi.</p>
+        </div>
+        <div class="grid">
+          <article class="item">
+            <h3 data-i18n="workflow.item1.title">Chiarisce</h3>
+            <p data-i18n="workflow.item1.copy">Raccoglie fatti, domande esplicite, link, parti coinvolte e scelte che devono essere confermate.</p>
+          </article>
+          <article class="item">
+            <h3 data-i18n="workflow.item2.title">Scrive</h3>
+            <p data-i18n="workflow.item2.copy">Produce un prompt Deep Research con obiettivo, perimetro, gerarchia fonti, vincoli sui fatti e formato dell'output.</p>
+          </article>
+          <article class="item">
+            <h3 data-i18n="workflow.item3.title">Controlla</h3>
+            <p data-i18n="workflow.item3.copy">Segnala ambiguità, requisiti mancanti o istruzioni che potrebbero produrre una ricerca fragile.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="outputs">
+        <div class="section-head">
+          <h2 data-i18n="outputs.title">File prodotti</h2>
+          <p data-i18n="outputs.copy">Apri soprattutto optimized_prompt.md e README_HUMAN.md. Gli altri file servono a rivedere come il brief è stato costruito.</p>
+        </div>
+        <ul class="output-list">
+          <li>question_inventory.json</li>
+          <li>prompt_recipe.json</li>
+          <li>optimized_prompt.md</li>
+          <li>prompt_audit.json</li>
+          <li>prompt_package.md</li>
+          <li>source_domains.txt</li>
+          <li>source_domains_comma.txt</li>
+          <li>README_HUMAN.md</li>
+        </ul>
+      </section>
+
+      <section id="prompts">
+        <div class="section-head">
+          <h2 data-i18n="prompts.title">Prompt pronti</h2>
+          <p data-i18n="prompts.copy">Usa questo prompt quando hai già il quesito e vuoi ottenere un brief pulito prima di inviarlo a Deep Research.</p>
+        </div>
+        <pre><code id="prompt-example">Usa Ottimizza prompt su questo quesito fiscale. Lingua output: it. Mantieni separati lingua, diritto applicabile e obiettivo. Se il perimetro non è chiaro, fermati e chiedi conferma. Prepara un prompt Deep Research con fatti preservati, fonti prioritarie, limiti, assunzioni e controlli finali.</code></pre>
+      </section>
+
+      <section id="download">
+        <div class="section-head">
+          <h2 data-i18n="download.title">Installa dal Plugin Pack</h2>
+          <p data-i18n="download.copy">Un unico ZIP installa Vera con tutti i suoi undici moduli.</p>
+        </div>
+        <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Scarica Vera</a>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const translations = {
+      it: {
+        title: "Ottimizza prompt | Vera",
+        "nav.workflow": "Come usarlo",
+        "nav.scope": "Perimetro",
+        "nav.outputs": "File prodotti",
+        "nav.prompts": "Prompt pronto",
+        "nav.download": "Installazione",
+        "hero.eyebrow": "Ricerca legale e fiscale",
+        "hero.title": "Ottimizza prompt",
+        "hero.lead": "Trasforma una domanda legale, fiscale o compliance in un brief di ricerca per Deep Research: fatti preservati, perimetro dichiarato, fonti prioritarie e controlli finali.",
+        "summary.title": "Quando usarlo",
+        "summary.item1": "La domanda è utile, ma troppo disordinata per la ricerca",
+        "summary.item2": "Serve separare lingua, diritto applicabile e obiettivo",
+        "summary.item3": "Vuoi una traccia verificabile prima di inviare la richiesta a Deep Research",
+        "scope.title": "Perimetro prima delle fonti",
+        "scope.copy": "La pagina non decide il diritto applicabile. Rende espliciti gli indizi e chiede conferma quando il quadro cambia la ricerca.",
+        "scope.it.title": "Fatti preservati",
+        "scope.it.copy": "Date, importi, parti, luoghi e link entrano nel prompt come vincoli, non come suggerimenti vaghi.",
+        "scope.fr.title": "Quadro confermato",
+        "scope.fr.copy": "Lingua dell'output e diritto applicabile restano separati fino alla conferma.",
+        "scope.de.title": "Fonti prioritarie",
+        "scope.de.copy": "Il brief ordina fonti ufficiali, regolatori, giurisprudenza e materiale secondario.",
+        "scope.en.title": "Controlli inclusi",
+        "scope.en.copy": "La richiesta finale include citazioni, limiti, assunzioni e punti da validare.",
+        "workflow.title": "Come viene preparato",
+        "workflow.copy": "Chiarisce il brief, scrive il prompt e controlla che i fatti importanti non siano stati persi.",
+        "workflow.item1.title": "Chiarisce",
+        "workflow.item1.copy": "Raccoglie fatti, domande esplicite, link, parti coinvolte e scelte che devono essere confermate.",
+        "workflow.item2.title": "Scrive",
+        "workflow.item2.copy": "Produce un prompt Deep Research con obiettivo, perimetro, gerarchia fonti, vincoli sui fatti e formato dell'output.",
+        "workflow.item3.title": "Controlla",
+        "workflow.item3.copy": "Segnala ambiguità, requisiti mancanti o istruzioni che potrebbero produrre una ricerca fragile.",
+        "outputs.title": "File prodotti",
+        "outputs.copy": "Apri soprattutto optimized_prompt.md e README_HUMAN.md. Gli altri file servono a rivedere come il brief è stato costruito.",
+        "prompts.title": "Prompt pronti",
+        "prompts.copy": "Usa questo prompt quando hai già il quesito e vuoi ottenere un brief pulito prima di inviarlo a Deep Research.",
+        "download.title": "Installa dal Plugin Pack",
+        "download.copy": "Un unico ZIP installa Vera con tutti i suoi undici moduli.",
+        "download.button": "Scarica ZIP",
+        prompt: "Usa Ottimizza prompt su questo quesito fiscale. Lingua output: it. Mantieni separati lingua, diritto applicabile e obiettivo. Se il perimetro non è chiaro, fermati e chiedi conferma. Prepara un prompt Deep Research con fatti preservati, fonti prioritarie, limiti, assunzioni e controlli finali."
+      },
+      en: {
+        title: "Optimize Prompt | Vera",
+        "nav.workflow": "Preparation",
+        "nav.scope": "Scope",
+        "nav.outputs": "Files produced",
+        "nav.prompts": "Prompt ready",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Legal and tax research",
+        "hero.title": "Optimize Prompt",
+        "hero.lead": "Turns a legal, tax or compliance question into a brief ready for Deep Research: preserved facts, stated scope, priority sources and final checks.",
+        "summary.title": "Use it when",
+        "summary.item1": "The question is useful, but too messy for research",
+        "summary.item2": "Language, governing law and objective need to stay separate",
+        "summary.item3": "You want a reviewable trail before launching Deep Research",
+        "scope.title": "Scope before sources",
+        "scope.copy": "The page does not decide governing law. It makes the cues explicit and asks for confirmation when the frame changes the research.",
+        "scope.it.title": "Facts preserved",
+        "scope.it.copy": "Dates, amounts, parties, places and links enter the prompt as constraints, not loose hints.",
+        "scope.fr.title": "Framework confirmed",
+        "scope.fr.copy": "Output language and governing law remain separate until confirmed.",
+        "scope.de.title": "Sources prioritized",
+        "scope.de.copy": "The brief orders official sources, regulators, case law and secondary material.",
+        "scope.en.title": "Checks included",
+        "scope.en.copy": "The final request includes citations, limits, assumptions and points to validate.",
+        "workflow.title": "How the brief is prepared",
+        "workflow.copy": "First it clarifies the brief, then it writes the prompt, then it checks that important facts were not lost.",
+        "workflow.item1.title": "Clarify",
+        "workflow.item1.copy": "Collects facts, explicit questions, links, parties and choices that need confirmation.",
+        "workflow.item2.title": "Write",
+        "workflow.item2.copy": "Produces a Deep Research prompt with objective, scope, source hierarchy, fact constraints and output format.",
+        "workflow.item3.title": "Check",
+        "workflow.item3.copy": "Flags ambiguity, missing requirements or instructions that could lead to weak research.",
+        "outputs.title": "Files produced",
+        "outputs.copy": "Open optimized_prompt.md and README_HUMAN.md first. The other files show how the brief was built.",
+        "prompts.title": "Prompt ready",
+        "prompts.copy": "Use this when you already have the question and want a cleaner brief before sending it to Deep Research.",
+        "download.title": "Install from the Plugin Pack",
+        "download.copy": "One ZIP installs Vera with all eleven of her modules.",
+        "download.button": "Download ZIP",
+        prompt: "Use Optimize Prompt on this legal/tax question. Output language: en. Keep output language, governing law and objective separate. If scope is unclear, stop and ask for confirmation. Prepare a Deep Research prompt with preserved facts, priority sources, limits, assumptions and final checks."
+      },
+      fr: {
+        title: "Optimiser le prompt | Vera",
+        "nav.workflow": "Préparation",
+        "nav.scope": "Périmètre",
+        "nav.outputs": "Fichiers produits",
+        "nav.prompts": "Prompt prêt",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Recherche juridique et fiscale",
+        "hero.title": "Optimiser le prompt",
+        "hero.lead": "Transforme une question juridique, fiscale ou compliance en brief prêt pour Deep Research : faits préservés, périmètre explicite, sources prioritaires et contrôles finaux.",
+        "summary.title": "Quand l'utiliser",
+        "summary.item1": "La question est utile, mais trop confuse pour la recherche",
+        "summary.item2": "Langue, droit applicable et objectif doivent rester séparés",
+        "summary.item3": "Vous voulez une trace vérifiable avant de lancer Deep Research",
+        "scope.title": "Le périmètre avant les sources",
+        "scope.copy": "La page ne décide pas le droit applicable. Elle rend les indices explicites et demande confirmation quand le cadre change la recherche.",
+        "scope.it.title": "Faits préservés",
+        "scope.it.copy": "Dates, montants, parties, lieux et liens entrent dans le prompt comme contraintes, pas comme indices vagues.",
+        "scope.fr.title": "Cadre confirmé",
+        "scope.fr.copy": "La langue de sortie et le droit applicable restent séparés jusqu'à confirmation.",
+        "scope.de.title": "Sources priorisées",
+        "scope.de.copy": "Le brief ordonne sources officielles, régulateurs, jurisprudence et matériel secondaire.",
+        "scope.en.title": "Contrôles inclus",
+        "scope.en.copy": "La demande finale inclut citations, limites, hypothèses et points à valider.",
+        "workflow.title": "Comment le brief est préparé",
+        "workflow.copy": "D'abord le brief est clarifié, puis le prompt est rédigé, puis les faits importants sont contrôlés.",
+        "workflow.item1.title": "Clarifier",
+        "workflow.item1.copy": "Rassemble faits, questions explicites, liens, parties et choix qui doivent être confirmés.",
+        "workflow.item2.title": "Rédiger",
+        "workflow.item2.copy": "Produit un prompt Deep Research avec objectif, périmètre, hiérarchie des sources, contraintes factuelles et format de sortie.",
+        "workflow.item3.title": "Contrôler",
+        "workflow.item3.copy": "Signale les ambiguïtés, exigences manquantes ou instructions qui peuvent produire une recherche fragile.",
+        "outputs.title": "Fichiers produits",
+        "outputs.copy": "Ouvrez d'abord optimized_prompt.md et README_HUMAN.md. Les autres fichiers montrent comment le brief a été construit.",
+        "prompts.title": "Prompt de départ",
+        "prompts.copy": "Utilisez ce prompt quand vous avez déjà la question et voulez un brief propre avant de l'envoyer à Deep Research.",
+        "download.title": "Installer depuis le Plugin Pack",
+        "download.copy": "Un seul ZIP installe Vera avec ses onze modules.",
+        "download.button": "Télécharger ZIP",
+        prompt: "Utilise Optimiser le prompt sur cette question juridique/fiscale. Langue de sortie : fr. Garde séparés langue de sortie, droit applicable et objectif. Si le périmètre n'est pas clair, arrête-toi et demande confirmation. Prépare un prompt Deep Research avec faits préservés, sources prioritaires, limites, hypothèses et contrôles finaux."
+      },
+      de: {
+        title: "Prompt optimieren | Vera",
+        "nav.workflow": "Vorbereitung",
+        "nav.scope": "Rahmen",
+        "nav.outputs": "Dateien",
+        "nav.prompts": "Promptvorlage",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Rechts- und Steuerrecherche",
+        "hero.title": "Prompt optimieren",
+        "hero.lead": "Macht aus einer Rechts-, Steuer- oder Compliance-Frage ein Briefing für Deep Research: gesicherte Fakten, klarer Rahmen, priorisierte Quellen und abschließende Prüfpunkte.",
+        "summary.title": "Wann es hilft",
+        "summary.item1": "Die Frage ist nützlich, aber zu ungeordnet für Recherche",
+        "summary.item2": "Sprache, anwendbares Recht und Ziel müssen getrennt bleiben",
+        "summary.item3": "Vor Deep Research soll eine prüfbare Spur entstehen",
+        "scope.title": "Rahmen vor Quellen",
+        "scope.copy": "Die Seite entscheidet nicht das anwendbare Recht. Sie macht Hinweise sichtbar und fragt nach Bestätigung, wenn der Rahmen die Recherche verändert.",
+        "scope.it.title": "Fakten gesichert",
+        "scope.it.copy": "Daten, Beträge, Parteien, Orte und Links gehen als Vorgaben in den Prompt ein, nicht als lose Hinweise.",
+        "scope.fr.title": "Rahmen bestätigt",
+        "scope.fr.copy": "Ausgabesprache und anwendbares Recht bleiben bis zur Bestätigung getrennt.",
+        "scope.de.title": "Quellen priorisiert",
+        "scope.de.copy": "Das Briefing ordnet offizielle Quellen, Regulatoren, Rechtsprechung und Sekundärmaterial.",
+        "scope.en.title": "Prüfpunkte enthalten",
+        "scope.en.copy": "Die finale Anfrage enthält Zitate, Grenzen, Annahmen und Punkte zur Validierung.",
+        "workflow.title": "Wie das Briefing entsteht",
+        "workflow.copy": "Zuerst wird das Briefing geklärt, dann der Prompt geschrieben, danach werden wichtige Fakten geprüft.",
+        "workflow.item1.title": "Klären",
+        "workflow.item1.copy": "Sammelt Fakten, explizite Fragen, Links, Beteiligte und Entscheidungen, die bestätigt werden müssen.",
+        "workflow.item2.title": "Schreiben",
+        "workflow.item2.copy": "Erstellt einen Deep-Research-Prompt mit Ziel, Scope, Quellenhierarchie, Faktvorgaben und Ausgabeformat.",
+        "workflow.item3.title": "Prüfen",
+        "workflow.item3.copy": "Meldet Unklarheiten, fehlende Anforderungen oder Anweisungen, die zu schwacher Recherche führen können.",
+        "outputs.title": "Dateien",
+        "outputs.copy": "Öffnen Sie zuerst optimized_prompt.md und README_HUMAN.md. Die anderen Dateien zeigen, wie das Briefing gebaut wurde.",
+        "prompts.title": "Promptvorlage",
+        "prompts.copy": "Nutzen Sie das, wenn die Frage schon vorliegt und vor Deep Research ein sauberes Briefing entstehen soll.",
+        "download.title": "Aus Plugin Pack installieren",
+        "download.copy": "Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
+        "download.button": "ZIP herunterladen",
+        prompt: "Verwende Prompt optimieren für diese Rechts-/Steuerfrage. Ausgabesprache: de. Halte Ausgabesprache, anwendbares Recht und Ziel getrennt. Wenn der Rahmen unklar ist, halte an und frage nach Bestätigung. Erstelle einen Deep-Research-Prompt mit gesicherten Fakten, priorisierten Quellen, Grenzen, Annahmen und abschließenden Prüfpunkten."
+      }
+    };
+
+    function getLang() {
+      const params = new URLSearchParams(window.location.search);
+      const fromQuery = params.get("lang");
+      return translations[fromQuery] ? fromQuery : "it";
+    }
+
+    function applyLanguage(lang) {
+      const safeLang = translations[lang] ? lang : "it";
+      const data = translations[safeLang];
+      document.documentElement.lang = safeLang;
+      document.title = data.title || translations.it.title;
+      document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${safeLang}`;
+      });
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.getAttribute("data-i18n");
+        if (data[key]) node.textContent = data[key];
+      });
+      document.getElementById("prompt-example").textContent = data.prompt;
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.setAttribute("aria-pressed", button.dataset.lang === safeLang ? "true" : "false");
+      });
+      const params = new URLSearchParams(window.location.search);
+      params.set("lang", safeLang);
+      history.replaceState(null, "", `${window.location.pathname}?${params.toString()}${window.location.hash}`);
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+    });
+
+    applyLanguage(getLang());
+  </script>
+</body>
+</html>

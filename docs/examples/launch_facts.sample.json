@@ -1,0 +1,54 @@
+{
+  "version": "launch_facts/1",
+  "retailer": "Ulta",
+  "category": "Lipstick",
+  "observationWindow": "April 2026",
+  "question": "Which launch attributes survive basic audit and deserve management attention?",
+  "summaryMetrics": [
+    {
+      "label": "Observed launches",
+      "value": "29"
+    },
+    {
+      "label": "Audited launches",
+      "value": "21"
+    },
+    {
+      "label": "Legacy base",
+      "value": "138"
+    }
+  ],
+  "attributeSignals": [
+    {
+      "attribute": "Hydrating",
+      "finding": "Over-indexes in launches versus the older base.",
+      "evidence": "Appears in 10 of 21 audited launches."
+    },
+    {
+      "attribute": "Long-wear",
+      "finding": "Still common, but usually as a support feature rather than the hero message.",
+      "evidence": "Appears in 7 of 21 audited launches."
+    },
+    {
+      "attribute": "Refillable",
+      "finding": "Collapses after audit because retailer sustainability copy inflated the first read.",
+      "evidence": "Only 1 audited launch has genuine refillable positioning."
+    }
+  ],
+  "launchExamples": [
+    {
+      "brand": "Brand A",
+      "product": "Hydrating Lip Stick",
+      "note": "Hydrating stick launch with high brand familiarity."
+    },
+    {
+      "brand": "Brand B",
+      "product": "Daily Lip Tint",
+      "note": "Tint-led launch framed as easy daily wear."
+    }
+  ],
+  "caveats": [
+    "Retailer copy creates false positives on sustainability language.",
+    "Small cohorts make over-reading easy."
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "journal-sampling",
+  "title": "Journal Sampling Review",
+  "reviewTitle": "Journal Extraction And Sample Review",
+  "queueTitle": "Sample Rows",
+  "detailTitle": "Sample Rationale",
+  "detailMode": "sample-sheet",
+  "detailHelp": "Review extracted journal fields, sampling basis, and output trace.",
+  "detailGroups": [
+    {
+      "title": "Extracted Journal Row",
+      "variant": "ledger",
+      "fields": [
+        "entry",
+        "entry_date",
+        "account",
+        "description",
+        "amount",
+        "status"
+      ],
+      "empty": "No journal row fields."
+    },
+    {
+      "title": "Sampling Basis",
+      "variant": "checklist",
+      "fields": [
+        "method",
+        "reason",
+        "sample_size",
+        "population_size",
+        "seed"
+      ],
+      "empty": "No sampling basis."
+    },
+    {
+      "title": "Output Trace",
+      "variant": "source",
+      "fields": [
+        "source_file",
+        "output_path",
+        "review_notes",
+        "status"
+      ],
+      "empty": "No output trace."
+    }
+  ],
+  "panels": [
+    "Journal row",
+    "Sampling basis",
+    "Finding"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione campionamento contabile",
+      "reviewTitle": "Revisione estrazione e campione",
+      "queueTitle": "Righe campione",
+      "detailTitle": "Razionale campione",
+      "detailHelp": "Rivedi campi estratti, base di campionamento e tracciabilita output.",
+      "search": "Cerca campione, riga contabile, mapping, estrazione, output"
+    },
+    "fr": {
+      "title": "Revue echantillonnage journal",
+      "reviewTitle": "Revue extraction et echantillon",
+      "queueTitle": "Lignes echantillon",
+      "detailTitle": "Rationale echantillon",
+      "detailHelp": "Revoyez les champs extraits, la base d'echantillonnage et la trace de sortie.",
+      "search": "Chercher echantillon, ligne, mapping, extraction, sortie"
+    },
+    "de": {
+      "title": "Journal Sampling Review",
+      "reviewTitle": "Buchungsextraktion und Stichprobe pruefen",
+      "queueTitle": "Stichprobenzeilen",
+      "detailTitle": "Stichprobenbegruendung",
+      "detailHelp": "Extrahierte Buchungsfelder, Stichprobenbasis und Ausgabeprotokoll pruefen.",
+      "search": "Stichprobe, Buchungszeile, Mapping, Extraktion, Ausgabe suchen"
+    }
+  },
+  "saveTool": "save_journal_sampling_decisions",
+  "applyTool": "apply_journal_sampling_decisions",
+  "widgetType": "journal_sampling_review",
+  "demo": {
+    "review_type": "journal_sampling_review",
+    "items": [
+      {
+        "id": "sample-1",
+        "item_type": "sampled_entry",
+        "title": "Entry 812 - manual journal",
+        "source_path": "journal.xlsx",
+        "output_path": "audit_sample.csv",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "entry": "812",
+          "account": "Accruals",
+          "amount": "980.00",
+          "status": "selected",
+          "reason": "High-value manual journal.",
+          "target_artifact": "journal_sample.csv",
+          "target_id_field": "entry",
+          "target_record_id": "812",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this sample updates review_notes in journal_sample.csv for entry 812."
+        },
+        "evidence": [
+          {
+            "kind": "sampling_basis",
+            "method": "risk-ranked sample"
+          }
+        ]
+      },
+      {
+        "id": "sample-2",
+        "item_type": "review_artifact",
+        "title": "Entry 944 - incomplete account mapping",
+        "source_path": "journal.xlsx",
+        "output_path": "journal_exceptions.csv",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "mark_unclear",
+        "data": {
+          "entry": "944",
+          "account": "",
+          "amount": "410.00",
+          "status": "needs_evidence",
+          "method": "mapping exception review",
+          "reason": "The printed journal row has an amount but no readable account label.",
+          "requested_document": "Original journal export with account code for entry 944",
+          "target_artifact": "journal_exceptions.csv",
+          "target_id_field": "entry",
+          "target_record_id": "944",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this exception updates review_notes in journal_exceptions.csv for entry 944."
+        },
+        "evidence": [
+          {
+            "kind": "extraction_exception",
+            "status": "needs_evidence",
+            "reason": "Account column was blank after deterministic extraction."
+          }
+        ]
+      }
+    ]
+  }
+}

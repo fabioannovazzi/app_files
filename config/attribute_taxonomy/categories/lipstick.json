@@ -1,0 +1,450 @@
+{
+    "id": "lipstick",
+    "label": "lipstick",
+    "attributes": [
+        {
+            "id": "color_lips",
+            "label": "color lips",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "beige",
+                    "label": "beige",
+                    "synonyms": [
+                        "nude",
+                        "nude beige",
+                        "nude/beige"
+                    ]
+                },
+                {
+                    "id": "berry",
+                    "label": "berry"
+                },
+                {
+                    "id": "brown",
+                    "label": "brown"
+                },
+                {
+                    "id": "clear",
+                    "label": "clear"
+                },
+                {
+                    "id": "coral",
+                    "label": "coral"
+                },
+                {
+                    "id": "multi",
+                    "label": "multi"
+                },
+                {
+                    "id": "non_traditional",
+                    "label": "non-traditional"
+                },
+                {
+                    "id": "orange",
+                    "label": "orange"
+                },
+                {
+                    "id": "pink",
+                    "label": "pink"
+                },
+                {
+                    "id": "purple",
+                    "label": "purple",
+                    "synonyms": [
+                        "plum",
+                        "plum/purple"
+                    ]
+                },
+                {
+                    "id": "red",
+                    "label": "red"
+                },
+                {
+                    "id": "wine",
+                    "label": "wine",
+                    "synonyms": [
+                        "berry/wine"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "cream",
+                    "label": "cream finish",
+                    "synonyms": [
+                        "creamy",
+                        "creme"
+                    ]
+                },
+                {
+                    "id": "glitter",
+                    "label": "glitter"
+                },
+                {
+                    "id": "high_shine",
+                    "label": "high shine",
+                    "synonyms": [
+                        "glossy",
+                        "glossy/high shine",
+                        "mirror shine"
+                    ]
+                },
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "semi matte"
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "natural finish",
+                        "satin"
+                    ]
+                },
+                {
+                    "id": "radiant",
+                    "label": "radiant"
+                },
+                {
+                    "id": "sheer",
+                    "label": "sheer finish"
+                },
+                {
+                    "id": "shimmer",
+                    "label": "shimmer",
+                    "synonyms": [
+                        "metallic",
+                        "shimmer/pearlescent"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "form",
+            "label": "form",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "balm",
+                    "label": "balm",
+                    "synonyms": [
+                        "lip balm",
+                        "tinted lip balm"
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "synonyms": [
+                        "lip cream"
+                    ]
+                },
+                {
+                    "id": "gloss",
+                    "label": "gloss",
+                    "synonyms": [
+                        "lip gloss",
+                        "lip lacquer",
+                        "vinyl"
+                    ]
+                },
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "synonyms": [
+                        "liquid lipstick"
+                    ]
+                },
+                {
+                    "id": "pencil",
+                    "label": "pencil",
+                    "synonyms": [
+                        "crayon",
+                        "lip crayon/pencil"
+                    ]
+                },
+                {
+                    "id": "stain",
+                    "label": "stain",
+                    "synonyms": [
+                        "lip tint/stain",
+                        "tint"
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick",
+                    "synonyms": [
+                        "bullet lipstick",
+                        "lipstick stick"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "preference",
+            "label": "preference",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "alcohol_free",
+                    "label": "alcohol free"
+                },
+                {
+                    "id": "cbd",
+                    "label": "cbd"
+                },
+                {
+                    "id": "clean_ingredients",
+                    "label": "clean ingredients",
+                    "synonyms": [
+                        "clean"
+                    ]
+                },
+                {
+                    "id": "cruelty_free",
+                    "label": "cruelty free"
+                },
+                {
+                    "id": "fragrance_free",
+                    "label": "fragrance free"
+                },
+                {
+                    "id": "give_back",
+                    "label": "give back"
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "gluten free"
+                },
+                {
+                    "id": "hyaluronic_acid",
+                    "label": "hyaluronic acid"
+                },
+                {
+                    "id": "mineral",
+                    "label": "mineral"
+                },
+                {
+                    "id": "oil_free",
+                    "label": "oil free"
+                },
+                {
+                    "id": "paraben_free",
+                    "label": "paraben free"
+                },
+                {
+                    "id": "phthalate_free",
+                    "label": "phthalate free"
+                },
+                {
+                    "id": "silicone_free",
+                    "label": "silicone free"
+                },
+                {
+                    "id": "sulfate_free",
+                    "label": "sulfate free"
+                },
+                {
+                    "id": "sustainable_packaging",
+                    "label": "sustainable packaging"
+                },
+                {
+                    "id": "talc_free",
+                    "label": "talc free"
+                },
+                {
+                    "id": "vegan",
+                    "label": "vegan"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "buildable",
+                    "label": "buildable coverage",
+                    "synonyms": [
+                        "buildable"
+                    ]
+                },
+                {
+                    "id": "full",
+                    "label": "full coverage",
+                    "synonyms": [
+                        "full"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium coverage",
+                    "synonyms": [
+                        "medium"
+                    ]
+                },
+                {
+                    "id": "sheer",
+                    "label": "sheer coverage"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "wear_claims",
+            "label": "wear claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "fade_resistant",
+                    "label": "fade-resistant"
+                },
+                {
+                    "id": "feather_resistant",
+                    "label": "feather-resistant"
+                },
+                {
+                    "id": "long_wear",
+                    "label": "long-wear"
+                },
+                {
+                    "id": "smudge_resistant",
+                    "label": "smudge-resistant"
+                },
+                {
+                    "id": "transfer_proof",
+                    "label": "transfer-proof"
+                },
+                {
+                    "id": "waterproof",
+                    "label": "waterproof"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "benefits",
+            "label": "benefits",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "hydrating_moisturizing",
+                    "label": "hydrating/moisturizing"
+                },
+                {
+                    "id": "lightweight_feel",
+                    "label": "lightweight feel"
+                },
+                {
+                    "id": "non_sticky",
+                    "label": "non-sticky"
+                },
+                {
+                    "id": "nourishing_conditioning",
+                    "label": "nourishing/conditioning"
+                },
+                {
+                    "id": "plumping",
+                    "label": "plumping"
+                },
+                {
+                    "id": "smoothing_blur",
+                    "label": "smoothing/blur"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

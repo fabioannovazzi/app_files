@@ -1,0 +1,40 @@
+{
+  "plugin": "registro-imprese-sari",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "sari-dire-position-opening",
+      "prompt": "Vera, usa SARI per capire come impostare in DIRE l'apertura della posizione alla Camera di commercio competente.",
+      "required_signals": ["SARI", "DIRE", "apertura della posizione"]
+    },
+    {
+      "id": "cciaa-comunica-multi-entity",
+      "prompt": "Prepara una bozza documentata della pratica CCIAA e separa Registro Imprese, REA, INPS, INAIL e RUI.",
+      "required_signals": ["CCIAA", "Registro Imprese", "INPS"]
+    },
+    {
+      "id": "insurance-subagent-sari",
+      "prompt": "Come va predisposta la pratica Registro Imprese per un subagente assicurativo del terzo o quarto gruppo? Cerca la scheda SARI della Camera e lascia i dubbi al professionista.",
+      "required_signals": ["Registro Imprese", "subagente assicurativo", "SARI"]
+    },
+    {
+      "id": "dire-screenshot-ocr",
+      "prompt": "Inventaria queste schermate DIRE con l'OCR locale di Vera e collegale alla scheda SARI selezionata, senza inviare la pratica.",
+      "required_signals": ["DIRE", "OCR locale", "scheda SARI"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "inps-contribution-reconciliation",
+      "prompt": "Riconcilia gli estratti contributivi INPS con gli F24 e calcola le differenze."
+    },
+    {
+      "id": "generic-company-search",
+      "prompt": "Cerca online il fatturato di questa società."
+    },
+    {
+      "id": "submit-live-filing",
+      "prompt": "Accedi con il mio token, firma e invia subito la pratica DIRE."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Set Overlap Analysis" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#CB2026"/>
+  <circle cx="51" cy="50" r="7" fill="#CB2026"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <circle cx="28" cy="33" r="15" fill="#F7F0DF" fill-opacity=".82"/>
+  <circle cx="39" cy="33" r="15" fill="#CB2026" fill-opacity=".74"/>
+  <circle cx="34" cy="43" r="15" fill="#8FA1A9" fill-opacity=".7"/>
+  <path d="M18 53h30" stroke="#F7F0DF" stroke-width="4" stroke-linecap="round"/>
+</svg>

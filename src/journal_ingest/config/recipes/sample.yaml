@@ -1,0 +1,11 @@
+entry_header_regex: "^HEADER"
+detail_regex: "^DETAIL"
+number_format:
+  infer: true
+  decimal_candidates: ["."]
+  thousands_candidates: [","]
+date_formats: ["%Y-%m-%d"]
+drop_rules:
+  drop_repeated_headers: true
+  drop_page_totals_by_sum: true
+  drop_carry_forward_by_repeat: true

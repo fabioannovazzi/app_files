@@ -1,0 +1,13 @@
+{
+  "tax_tokens": ["tva", "impôt", "impots", "taxe", "taxes", "trésor public", "tresor public", "urssaf"],
+  "sdd_tokens": [" prélèvement", " prelevement", " sepa"],
+  "bonifico_tokens": [" virement", " sepa", " transfert"],
+  "fee_tokens": ["frais", "commission", "tenue de compte", "frais mensuels", "frais bancaires"],
+  "riba_tokens": [" riba"],
+  "card_tokens": ["carte", "paiement carte", "cb ", "visa", "mastercard", " tpe "],
+  "withdrawal_terms": ["retrait", "distributeur", "guichet", "espèces", "especes"],
+  "deposit_terms": ["dépôt", "depot", "versement", "versements"],
+  "atm_terms": ["dab", "distributeur", "guichet", "atm"],
+  "payroll_tokens": ["salaire", "salaires", "paie", "payroll", "bulletin de paie", "fiche de paie", "paye"],
+  "tax_ledger_tokens": ["tva", "impôt", "impots", "taxe", "taxes", "urssaf", "trésor public", "tresor public"]
+}

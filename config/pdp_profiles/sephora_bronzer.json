@@ -1,0 +1,170 @@
+{
+  "profile_name": "sephora_bronzer",
+  "display_name": "Sephora · Bronzer PDP",
+  "retailer": "sephora",
+  "base_url": "https://www.sephora.com",
+  "category_hints": [
+    "makeup/face/bronzer"
+  ],
+  "category_urls": [
+    "https://www.sephora.com/shop/bronzer-makeup"
+  ],
+  "parent_rules": {
+    "min_color_variants": 3,
+    "disallow_kits_regex": "(?i)\\b(set|sets|duo|duos|kit|kits|vault|vaults|gift|gifts)\\b",
+    "finish_split_tokens": [
+      "matte",
+      "radiant",
+      "luminous",
+      "shimmer",
+      "glow",
+      "bronzing"
+    ]
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "P[0-9]+",
+    "parent_json_paths": [
+      "$.productId",
+      "$.id",
+      "$.product.id",
+      "$.mainSku.productId",
+      "$.productGroupID"
+    ],
+    "variant_id_fields": [
+      "$.skuId",
+      "$.sku",
+      "$.id",
+      "$.offerId"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "script_app_state",
+        "selector": "script#__NUXT__"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.brand.displayName",
+      "$.brand.name",
+      "$.brand"
+    ],
+    "parent_title": [
+      "$.displayName",
+      "$.name",
+      "$.productName"
+    ],
+    "parent_summary": [
+      "$.shortDescription",
+      "$.description"
+    ],
+    "series_label": [
+      "$.line",
+      "$.collection",
+      "$.brand.collectionName"
+    ],
+    "category_path": [
+      "$.breadcrumbs[*].displayName",
+      "$.categoryPath[*].name"
+    ],
+    "variant_list": [
+      "$.skus[*]",
+      "$.offers[*]",
+      "$.hasVariant[*]"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.skuId",
+        "$.sku",
+        "$.id"
+      ],
+      "shade_name": [
+        "$.displayName",
+        "$.shadeDescription",
+        "$.attributes.color",
+        "$.name",
+        "$.color"
+      ],
+      "size_text": [
+        "$.size",
+        "$.attributes.size"
+      ],
+      "price": [
+        "$.salePrice",
+        "$.price",
+        "$.currentPrice",
+        "$.offers[*].price",
+        "$.offers.price"
+      ],
+      "list_price": [
+        "$.listPrice",
+        "$.originalPrice",
+        "$.offers[*].price",
+        "$.offers.price"
+      ],
+      "currency": [
+        "$.currencyCode",
+        "$.priceCurrency",
+        "$.currency",
+        "$.offers[*].priceCurrency",
+        "$.offers.priceCurrency"
+      ],
+      "barcode": [
+        "$.upc",
+        "$.ean",
+        "$.gtin13",
+        "$.gtin14"
+      ],
+      "swatch_image": [
+        "$.swatchImage.imageUrl",
+        "$.swatchImage.url",
+        "$.swatch.url"
+      ],
+      "hero_image": [
+        "$.primaryImage.imageUrl",
+        "$.primaryImage.url",
+        "$.image"
+      ],
+      "availability": [
+        "$.inventoryStatus",
+        "$.availability",
+        "$.offers[*].availability",
+        "$.offers.availability"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_trailing_shade_tokens": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": true
+  }
+}

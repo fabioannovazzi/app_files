@@ -1,0 +1,115 @@
+{
+  "profile_name": "lorealparis_blush",
+  "display_name": "L'Oreal Paris · Blush PDP",
+  "retailer": "lorealparis",
+  "base_url": "https://www.lorealparisusa.com",
+  "category_hints": [
+    "makeup/face/blush"
+  ],
+  "category_urls": [
+    "https://www.lorealparisusa.com/makeup/face/blush"
+  ],
+  "parent_rules": {
+    "min_color_variants": 2,
+    "disallow_kits_regex": "(?i)\\b(set|sets|duo|duos|kit|kits|vault|vaults|gift|gifts)\\b",
+    "finish_split_tokens": [
+      "matte",
+      "satin",
+      "natural",
+      "luminous",
+      "dewy",
+      "shimmer",
+      "liquid",
+      "powder",
+      "cream"
+    ]
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "/makeup/face/(?:blush|bronzer)/([A-Za-z0-9-]+)",
+    "parent_json_paths": [
+      "$.parent.parent_product_id"
+    ],
+    "variant_id_fields": [
+      "$.variant_id"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.parent.brand"
+    ],
+    "parent_title": [
+      "$.parent.title"
+    ],
+    "parent_summary": [
+      "$.parent.summary"
+    ],
+    "series_label": [
+      "$.parent.series_label"
+    ],
+    "category_path": [
+      "$.parent.category_path[*]"
+    ],
+    "variant_list": [
+      "$.variants[*]"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.variant_id"
+      ],
+      "shade_name": [
+        "$.shade_name"
+      ],
+      "price": [
+        "$.price"
+      ],
+      "currency": [
+        "$.currency"
+      ],
+      "swatch_image": [
+        "$.swatch_image"
+      ],
+      "hero_image": [
+        "$.hero_image"
+      ],
+      "availability": [
+        "$.availability"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_trailing_shade_tokens": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": false,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": true
+  }
+}

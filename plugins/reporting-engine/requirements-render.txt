@@ -1,0 +1,13 @@
+plotly
+kaleido
+Pillow
+openpyxl
+python-docx
+numpy>=2.0
+python-dateutil>=2.9
+fastexcel>=0.14
+xlsxwriter>=3.2
+matplotlib
+matplotlib_venn
+datashader
+scikit-learn

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beautify Deck"
+  short_description: "Beautify decks with image-model QA"
+  default_prompt: "Use $beautify-deck to turn this final editable PPTX into a beautified non-editable PDF with slide-by-slide fidelity checks."

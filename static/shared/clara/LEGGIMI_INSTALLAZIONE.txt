@@ -1,0 +1,36 @@
+Clara - installazione plugin Codex
+
+Codice sorgente: https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara
+Licenza MIT: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
+
+1. Scarica lo ZIP del plugin.
+2. Estrai la cartella in una posizione locale stabile.
+3. In Codex, aggiungi il marketplace locale incluso nello ZIP.
+4. Avvia una nuova chat e chiedi: "Use Clara on this advisory project".
+
+Il plugin crea note di caso locali, indicizza materiali senza copiarli,
+registra judgement consulenziale con stato pending/approved/rejected e genera
+output Markdown e Word usando solo judgement approvato.
+
+Quattro flussi conversazionali restano distinti:
+- Interview prepara link a scadenza per interviste adattive a partecipanti esterni
+  e recupera bundle e review di qualita'.
+- Transcribe registra o carica note vocali, riunioni e chiamate e conserva una
+  trascrizione locale attribuita e rivista.
+- Deck Correction trasforma feedback parlato o scritto in modifiche approvate,
+  renderizzate e verificate a un PPTX o deck HTML esistente.
+- Attribute Reporting mappa i prodotti sulla tassonomia centrale della categoria,
+  conserva i confronti new-versus-rest e best-seller-versus-other, crea un report
+  HTML locale e risponde direttamente se il report e' corretto.
+
+Clara Voice Capture usa la pagina hosted per registrare o caricare audio e
+scaricare un bundle trascritto. Attribuzione speaker e review semantica restano
+lavoro locale Codex/Clara dopo l'import.
+
+Dipendenze: vedere requirements.txt nel plugin. Codex esegue
+scripts/check_dependencies.py prima dei run operativi.
+Per Attribute Reporting, Clara delega il controllo con
+scripts/check_dependencies.py --module attribute-reporting.
+Il controllo verifica i pacchetti Python, ma non installa o verifica il browser.
+La QA rigorosa dei deck HTML richiede Chrome/Chromium disponibile; in alternativa
+esegui `playwright install chromium` nell'ambiente Python usato da Codex.

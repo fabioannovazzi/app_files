@@ -1,0 +1,50 @@
+{
+  "source_root": "plugins/_shared/vendor/modules",
+  "default_module_roots": [
+    "auth",
+    "chart_harness",
+    "charting",
+    "data",
+    "layout",
+    "llm",
+    "plan",
+    "utilities",
+    "utils",
+    "variance"
+  ],
+  "plugins": {
+    "distribution-analysis": {},
+    "mix-contribution-analysis": {},
+    "period-comparison": {},
+    "scatter-bubble-analysis": {},
+    "set-overlap-analysis": {},
+    "variance-analysis": {
+      "source_root": "plugins/_shared/variance/vendor/modules",
+      "overlays": [
+        {
+          "source_root": "plugins/_shared/vendor/modules",
+          "module_roots": [
+            "chart_harness"
+          ]
+        }
+      ]
+    },
+    "attribute-reporting": {
+      "source_root": "modules",
+      "module_roots": [
+        "pdp/attribute_table_catalog.json",
+        "pdp/attribute_table_catalog.py",
+        "pdp/attribute_table_templates.py",
+        "utilities/utils.py"
+      ]
+    },
+    "reporting-engine": {
+      "source_root": "plugins/_shared/vendor/modules"
+    },
+    "vera": {
+      "module_roots": [
+        "vera_ocr"
+      ]
+    }
+  }
+}

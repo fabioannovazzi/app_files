@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build report | Vera</title>
+  <style>
+    :root {
+      --ink: #243026;
+      --text: #3f4c43;
+      --muted: #6c766e;
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --soft: #ffffff;
+      --accent: #5d685c;
+      --accent-soft: #e7ece5;
+      --line: #dfe5dc;
+      --content: 1120px;
+      --shadow: 0 16px 42px rgba(36, 48, 38, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand img {
+      display: block;
+      width: 140px;
+      height: auto;
+    }
+
+    .nav-right,
+    .nav-links,
+    .lang-switch {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-right { gap: 20px; }
+    .nav-links { gap: 18px; color: var(--muted); font-size: 13px; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--ink); }
+
+    .lang-switch {
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .lang-switch button.is-active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 460px;
+      padding: 76px 0 56px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 54px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 620;
+    }
+
+    h2 {
+      font-size: clamp(28px, 3.4vw, 42px);
+      font-weight: 620;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 620;
+    }
+
+    p { margin: 0; }
+
+    .subtitle {
+      max-width: 720px;
+      margin-top: 22px;
+      color: var(--text);
+      font-size: clamp(19px, 2.3vw, 25px);
+      line-height: 1.38;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .action-row {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #f8fbfa;
+      font-size: 14px;
+      font-weight: 620;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .hero-card,
+    .card,
+    .download-panel,
+    .review-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .hero-card {
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .label {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 620;
+    }
+
+    .hero-list,
+    .plain-list,
+    .prompt-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-list li,
+    .plain-list li {
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .hero-list li::before,
+    .plain-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.72em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    section {
+      padding: 54px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 28px;
+    }
+
+    .section-head p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card,
+    .download-panel,
+    .review-panel {
+      padding: 22px;
+    }
+
+    .card p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .code {
+      display: inline-flex;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .output-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .output-list span {
+      min-width: 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      overflow-wrap: anywhere;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .prompt-list li {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .prompt-list strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .prompt-list code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .download-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    [data-i18n] { transition: opacity 140ms ease; }
+
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 56px;
+      }
+      .grid,
+      .output-list,
+      .download-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="/" aria-label="Mparanza">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Section links">
+          <a href="#workflow" data-i18n="nav.workflow">How to use it</a>
+          <a href="#outputs" data-i18n="nav.outputs">Files produced</a>
+          <a href="#prompts" data-i18n="nav.prompts">Prompts</a>
+          <a href="#download" data-i18n="nav.download">Installation</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="it">IT</button>
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="de">DE</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Reporting</p>
+        <h1 data-i18n="hero.title">Turn source tables into a reviewable Word report.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Build a DOCX draft from spreadsheets, CSVs and readable PDFs.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Give it a folder of source tables and a report type. Get back a Word draft, Markdown version, reading checks and review files.</p>
+      </div>
+      <aside class="hero-card">
+        <p class="label" data-i18n="hero.card_label">Give it / get back</p>
+        <ul class="hero-list">
+          <li data-i18n="hero.point1">Source files: workbooks, CSV exports and readable PDFs.</li>
+          <li data-i18n="hero.point2">Report choices: type, language and section assignments.</li>
+          <li data-i18n="hero.point3">Output: DOCX draft, Markdown version, reading checks and review files.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="workflow">
+      <div class="section-head">
+        <h2 data-i18n="workflow.title">From source files to a report you can review</h2>
+        <p data-i18n="workflow.copy">The page keeps the practical sequence clear: inspect inputs, confirm where each table belongs, then draft a document with traceable sources.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <h3 data-i18n="workflow.card1.title">Find tables</h3>
+          <p data-i18n="workflow.card1.copy">Creates <span class="code">inspection.json</span> and <span class="code">suggested_recipe.json</span> so the usable inputs are visible before drafting.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="workflow.card2.title">Assign sections</h3>
+          <p data-i18n="workflow.card2.copy">Keeps uncertain tables unassigned until the section choice is clear.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="workflow.card3.title">Draft report</h3>
+          <p data-i18n="workflow.card3.copy">Builds <span class="code">report.docx</span>, <span class="code">report_draft.md</span>, reading checks and review files from the confirmed section choices.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="outputs">
+      <div class="section-head">
+        <h2 data-i18n="outputs.title">Reviewable outputs</h2>
+        <p data-i18n="outputs.copy">Open report.docx first. Use report_analysis.json and report_audit.json to check how tables were assigned and what remains uncertain.</p>
+      </div>
+      <div class="review-panel">
+        <div class="output-list">
+          <span>inspection.json</span>
+          <span>suggested_recipe.json</span>
+          <span>report_tables.json</span>
+          <span>report_analysis.json</span>
+          <span>report_draft.md</span>
+          <span>report.docx</span>
+          <span>report_audit.json</span>
+          <span>used_recipe.json</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="prompts">
+      <div class="section-head">
+        <h2 data-i18n="prompts.title">Ready prompts</h2>
+        <p data-i18n="prompts.copy">Start with the folder, report type and language. Ask for missing section choices only when they affect the draft.</p>
+      </div>
+      <ul class="prompt-list">
+        <li>
+          <strong data-i18n="prompts.item1.title">Complete management report</strong>
+          <code data-i18n="prompts.item1.copy">Use Build Report on /path/report. Language: en. Document language: auto. Report type: management_report. Inspect files, propose section choices, ask only essential questions, then help me complete the narrative and generate Markdown, DOCX and review trail.</code>
+        </li>
+        <li>
+          <strong data-i18n="prompts.item2.title">Relazione ente locale</strong>
+          <code data-i18n="prompts.item2.copy">Usa Build Report sui file in /percorso/ente. Lingua: it. Tipo report: local_government_review. Assegna FPV, FCDE, debito, cassa e investimenti, poi genera bozza Word e controlli di lettura.</code>
+        </li>
+        <li>
+          <strong data-i18n="prompts.item3.title">Annual financial statement</strong>
+          <code data-i18n="prompts.item3.copy">Use Build Report on this ZIP of annual accounts. Report type: annual_financial_statement. Keep uncertain tables unassigned, fill only supported comments, and produce report_analysis.json and report.docx.</code>
+        </li>
+      </ul>
+    </section>
+
+    <section id="download">
+      <div class="download-panel">
+        <div>
+          <h2 data-i18n="download.title">Install from Plugin Pack</h2>
+          <p data-i18n="download.copy">One ZIP installs Vera with all eleven of her modules; then ask Vera to build a report from your files.</p>
+        </div>
+        <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Download Vera</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const copy = {
+      en: {
+        "nav.workflow": "How to use it",
+        "nav.outputs": "Files produced",
+        "nav.prompts": "Prompts",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Reporting",
+        "hero.title": "Turn source tables into a reviewable Word report.",
+        "hero.subtitle": "Build a DOCX draft from spreadsheets, CSVs and readable PDFs.",
+        "hero.copy": "Give it a folder of source tables and a report type. Get back a Word draft, Markdown version, reading checks and review files.",
+        "hero.card_label": "Give it / get back",
+        "hero.point1": "Source files: workbooks, CSV exports and readable PDFs.",
+        "hero.point2": "Report choices: type, language and section assignments.",
+        "hero.point3": "Output: DOCX draft, Markdown version, reading checks and review files.",
+        "workflow.title": "From source files to a report you can review",
+        "workflow.copy": "The page keeps the practical sequence clear: inspect inputs, confirm where each table belongs, then draft a document with traceable sources.",
+        "workflow.card1.title": "Find tables",
+        "workflow.card1.copy": "Creates inspection.json and suggested_recipe.json so the usable inputs are visible before drafting.",
+        "workflow.card2.title": "Assign sections",
+        "workflow.card2.copy": "Keeps uncertain tables unassigned until the section choice is clear.",
+        "workflow.card3.title": "Draft report",
+        "workflow.card3.copy": "Builds report.docx, report_draft.md, reading checks and review files from the confirmed section choices.",
+        "outputs.title": "Reviewable files",
+        "outputs.copy": "Open report.docx first. Use report_analysis.json and report_audit.json to check how tables were assigned and what remains uncertain.",
+        "prompts.title": "Ready prompts",
+        "prompts.copy": "Start with the folder, report type and language. Ask for missing section choices only when they affect the draft.",
+        "prompts.item1.title": "Complete management report",
+        "prompts.item1.copy": "Use Build Report on /path/report. Language: en. Document language: auto. Report type: management_report. Inspect files, propose section choices, ask only essential questions, then help me complete the draft and generate Markdown, DOCX and review trail.",
+        "prompts.item2.title": "Local government review",
+        "prompts.item2.copy": "Use Build Report on /path/local-government. Language: en. Report type: local_government_review. Assign FPV, FCDE, debt, cash and investments, then generate Word draft and reading checks.",
+        "prompts.item3.title": "Annual financial statement",
+        "prompts.item3.copy": "Use Build Report on this ZIP of annual accounts. Report type: annual_financial_statement. Keep uncertain tables unassigned, fill only supported comments, and produce report_analysis.json and report.docx.",
+        "download.title": "Install from Plugin Pack",
+        "download.copy": "One ZIP installs Vera with all eleven of her modules; then ask Vera to build a report from your files.",
+        "download.button": "Download ZIP",
+      },
+      it: {
+        "nav.workflow": "Come usarlo",
+        "nav.outputs": "File prodotti",
+        "nav.prompts": "Prompt pronti",
+        "nav.download": "Installazione",
+        "hero.eyebrow": "Reportistica",
+        "hero.title": "Da tabelle sorgente a un report Word rivedibile.",
+        "hero.subtitle": "Prepara una bozza DOCX da Excel, CSV e PDF leggibili.",
+        "hero.copy": "Dagli una cartella con tabelle sorgente e un tipo di report. Ottieni bozza Word, versione Markdown, controlli di lettura e file di revisione.",
+        "hero.card_label": "Cosa dai / cosa ottieni",
+        "hero.point1": "File sorgente: cartelle Excel, export CSV e PDF leggibili.",
+        "hero.point2": "Scelte report: tipo, lingua e sezioni.",
+        "hero.point3": "Output: bozza DOCX, Markdown, controlli di lettura e file di revisione.",
+        "workflow.title": "Dai file sorgente a un report rivedibile",
+        "workflow.copy": "Il percorso resta pratico: leggere i file, confermare quali tabelle servono, poi preparare un documento con fonti tracciabili.",
+        "workflow.card1.title": "Trova tabelle",
+        "workflow.card1.copy": "Crea inspection.json e suggested_recipe.json per rendere visibili gli input utilizzabili prima della bozza.",
+        "workflow.card2.title": "Assegna sezioni",
+        "workflow.card2.copy": "Lascia non assegnate le tabelle incerte finché la scelta della sezione non è chiara.",
+        "workflow.card3.title": "Prepara la bozza",
+        "workflow.card3.copy": "Costruisce report.docx, report_draft.md, controlli di lettura e file di revisione dalle sezioni confermate.",
+        "outputs.title": "File prodotti rivedibili",
+        "outputs.copy": "Apri prima report.docx. Usa report_analysis.json e report_audit.json per controllare come sono state assegnate le tabelle e che cosa resta incerto.",
+        "prompts.title": "Prompt pronti",
+        "prompts.copy": "Parti da cartella, tipo di report e lingua. Chiedi scelte di sezione mancanti solo quando cambiano la bozza.",
+        "prompts.item1.title": "Report gestionale completo",
+        "prompts.item1.copy": "Usa Genera report sui file in /percorso/report. Lingua: it. Lingua documenti: auto. Tipo report: management_report. Ispeziona file, proponi le sezioni, chiedi solo domande essenziali, poi aiutami a completare la bozza e genera Markdown, DOCX e traccia di revisione.",
+        "prompts.item2.title": "Relazione ente locale",
+        "prompts.item2.copy": "Usa Genera report sui file in /percorso/ente. Lingua: it. Tipo report: local_government_review. Assegna FPV, FCDE, debito, cassa e investimenti, poi genera bozza Word e controlli di lettura.",
+        "prompts.item3.title": "Bilancio annuale",
+        "prompts.item3.copy": "Usa Genera report su questo ZIP di bilancio. Tipo report: annual_financial_statement. Lascia non assegnate le tabelle incerte, compila solo commenti supportati e produci report_analysis.json e report.docx.",
+        "download.title": "Installa dal Plugin Pack",
+        "download.copy": "Un unico ZIP installa Vera con tutti i suoi undici moduli; poi chiedile di generare un report dai file che fornisci.",
+        "download.button": "Scarica ZIP",
+      },
+      fr: {
+        "nav.workflow": "Utilisation",
+        "nav.outputs": "Fichiers produits",
+        "nav.prompts": "Prompts",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Reporting",
+        "hero.title": "Transformer les tableaux source en rapport Word révisable.",
+        "hero.subtitle": "Prépare une ébauche DOCX depuis tableurs, CSV et PDF lisibles.",
+        "hero.copy": "Donnez un dossier de tableaux source et un type de rapport. Recevez une ébauche Word, une version Markdown, des contrôles de lecture et des fichiers de revue.",
+        "hero.card_label": "Données / résultat",
+        "hero.point1": "Fichiers source : classeurs, exports CSV et PDF lisibles.",
+        "hero.point2": "Choix du rapport : type, langue et sections.",
+        "hero.point3": "Sortie : ébauche DOCX, Markdown, contrôles de lecture et fichiers de revue.",
+        "workflow.title": "Des fichiers source à un rapport révisable",
+        "workflow.copy": "Le parcours reste pratique : lire les fichiers, confirmer les tableaux utiles, puis préparer un document avec sources traçables.",
+        "workflow.card1.title": "Trouver les tableaux",
+        "workflow.card1.copy": "Crée inspection.json et suggested_recipe.json pour rendre visibles les entrées utilisables avant la rédaction.",
+        "workflow.card2.title": "Assigner les sections",
+        "workflow.card2.copy": "Garde les tableaux incertains non assignés tant que le choix de section n'est pas clair.",
+        "workflow.card3.title": "Rédiger le rapport",
+        "workflow.card3.copy": "Construit report.docx, report_draft.md, contrôles de lecture et fichiers de revue depuis l'affectation confirmée.",
+        "outputs.title": "Fichiers révisables",
+        "outputs.copy": "Ouvrez d'abord report.docx. Utilisez report_analysis.json et report_audit.json pour contrôler l'affectation des tableaux et ce qui reste incertain.",
+        "prompts.title": "Prompts prêts",
+        "prompts.copy": "Commencez par le dossier, le type de rapport et la langue. Demandez les choix de section manquants seulement s'ils changent l'ébauche.",
+        "prompts.item1.title": "Rapport de gestion complet",
+        "prompts.item1.copy": "Utilise Build Report sur /chemin/report. Langue: fr. Langue des documents: auto. Type de rapport: management_report. Inspecte les fichiers, propose l'affectation des sections, demande seulement les points essentiels, puis aide-moi à compléter l'ébauche et génère Markdown, DOCX et trace de revue.",
+        "prompts.item2.title": "Revue collectivité locale",
+        "prompts.item2.copy": "Utilise Build Report sur /chemin/collectivité. Langue: fr. Type de rapport: local_government_review. Assigne FPV, FCDE, dette, trésorerie et investissements, puis génère une ébauche Word et des contrôles de lecture.",
+        "prompts.item3.title": "États financiers annuels",
+        "prompts.item3.copy": "Utilise Build Report sur ce ZIP de comptes annuels. Type de rapport: annual_financial_statement. Laisse les tableaux incertains non assignés, remplis seulement les commentaires supportés et produis report_analysis.json et report.docx.",
+        "download.title": "Installer depuis le Plugin Pack",
+        "download.copy": "Un seul ZIP installe Vera avec ses onze modules; demandez ensuite à Codex d'utiliser Build Report sur vos fichiers.",
+        "download.button": "Télécharger ZIP",
+      },
+      de: {
+        "nav.workflow": "Nutzung",
+        "nav.outputs": "Ergebnisse",
+        "nav.prompts": "Prompts",
+        "nav.download": "Installation",
+        "hero.eyebrow": "Reporting",
+        "hero.title": "Quelltabellen in einen prüfbaren Word-Bericht verwandeln.",
+        "hero.subtitle": "Erstellt einen DOCX-Entwurf aus Tabellen, CSVs und lesbaren PDFs.",
+        "hero.copy": "Geben Sie einen Ordner mit Quelltabellen und einen Berichtstyp an. Zurück kommen Word-Entwurf, Markdown-Version, Lesekontrollen und Prüfdateien.",
+        "hero.card_label": "Eingabe / Ergebnis",
+        "hero.point1": "Quelldateien: Arbeitsmappen, CSV-Exporte und lesbare PDFs.",
+        "hero.point2": "Berichtsentscheidungen: Typ, Sprache und Abschnitte.",
+        "hero.point3": "Ergebnis: DOCX-Entwurf, Markdown, Lesekontrollen und Prüfdateien.",
+        "workflow.title": "Von Quelldateien zu einem prüfbaren Bericht",
+        "workflow.copy": "Der Ablauf bleibt praktisch: Dateien lesen, nützliche Tabellen bestätigen und dann ein Dokument mit nachvollziehbaren Quellen vorbereiten.",
+        "workflow.card1.title": "Tabellen finden",
+        "workflow.card1.copy": "Erzeugt inspection.json und suggested_recipe.json, damit nutzbare Eingaben vor dem Entwurf sichtbar sind.",
+        "workflow.card2.title": "Abschnitte zuordnen",
+        "workflow.card2.copy": "Lässt unsichere Tabellen unzugeordnet, bis die Abschnittswahl klar ist.",
+        "workflow.card3.title": "Bericht entwerfen",
+        "workflow.card3.copy": "Erstellt report.docx, report_draft.md, Lesekontrollen und Prüfdateien aus der bestätigten Abschnittswahl.",
+        "outputs.title": "Prüfbare Dateien",
+        "outputs.copy": "Öffnen Sie zuerst report.docx. Mit report_analysis.json und report_audit.json prüfen Sie Tabellenzuordnung und verbleibende Unsicherheiten.",
+        "prompts.title": "Prompts zur Nutzung",
+        "prompts.copy": "Starten Sie mit Ordner, Berichtstyp und Sprache. Fehlende Abschnittsentscheidungen nur abfragen, wenn sie den Entwurf verändern.",
+        "prompts.item1.title": "Vollständiger Managementbericht",
+        "prompts.item1.copy": "Verwende Build Report für /pfad/report. Sprache: de. Dokumentsprache: auto. Berichtstyp: management_report. Prüfe Dateien, schlage passende Abschnitte vor, frage nur wesentliche Punkte ab und hilf dann beim Ergänzen des Entwurfs sowie beim Erstellen von Markdown, DOCX und Prüfdateien.",
+        "prompts.item2.title": "Kommunaler Prüfbericht",
+        "prompts.item2.copy": "Verwende Build Report für /pfad/kommune. Sprache: de. Berichtstyp: local_government_review. Ordne FPV, FCDE, Schulden, Liquidität und Investitionen zu und erstelle Word-Entwurf und Lesekontrollen.",
+        "prompts.item3.title": "Jahresabschluss",
+        "prompts.item3.copy": "Verwende Build Report für dieses ZIP mit Jahresabschlussdaten. Berichtstyp: annual_financial_statement. Unsichere Tabellen bleiben unzugeordnet, nur belegte Kommentare werden gefüllt, report_analysis.json und report.docx werden erzeugt.",
+        "download.title": "Aus Plugin Pack installieren",
+        "download.copy": "Eine ZIP-Datei installiert Vera mit allen elf Modulen; danach Codex bitten, Build Report für die bereitgestellten Dateien zu verwenden.",
+        "download.button": "ZIP herunterladen",
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const initialLang = params.get("lang") || document.documentElement.lang || "en";
+    const supported = new Set(["it", "en", "fr", "de"]);
+
+    function setLanguage(lang) {
+      const safeLang = supported.has(lang) ? lang : "en";
+      document.documentElement.lang = safeLang;
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.dataset.i18n;
+        if (copy[safeLang] && copy[safeLang][key]) {
+          node.textContent = copy[safeLang][key];
+        }
+      });
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.lang === safeLang);
+      });
+      const home = document.querySelector("[data-home-link]");
+      if (home) {
+        home.href = `/?lang=${safeLang}`;
+      }
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${safeLang}`;
+      });
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", safeLang);
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    setLanguage(initialLang);
+  </script>
+</body>
+</html>

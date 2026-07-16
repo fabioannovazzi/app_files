@@ -1,0 +1,25 @@
+{
+  "default": {
+    "sales_sku_field": "sku",
+    "catalog_variant_field": "variant_id",
+    "catalog_parent_field": "parent_product_id"
+  },
+  "retailers": {
+    "sephora": {
+      "sales_sku_field": "sku",
+      "catalog_variant_field": "variant_id"
+    },
+    "ulta": {
+      "sales_sku_field": "sku",
+      "catalog_variant_field": "variant_id"
+    },
+    "amazon": {
+      "sales_sku_field": "sku",
+      "catalog_variant_field": "variant_id"
+    },
+    "kiko": {
+      "sales_sku_field": "sku",
+      "catalog_variant_field": "variant_id_or_backend_id"
+    }
+  }
+}

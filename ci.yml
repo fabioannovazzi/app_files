@@ -1,0 +1,19 @@
+name: CI          # appears in GitHub’s Checks tab
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4    # pulls your code
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'     # match project’s Python
+
+      # Install runtime and dev dependencies
+      - run: pip install -r requirements.txt
+      - run: pip install -r dev-requirements.txt
+
+      # Run the single quality-gate command
+      - run: make check

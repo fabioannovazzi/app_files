@@ -1,0 +1,136 @@
+{
+  "profile_name": "tikicat_wet_cat_food",
+  "display_name": "Tiki Cat \u00b7 Wet Cat Food PDP",
+  "retailer": "tikicat",
+  "base_url": "https://tikipets.com",
+  "category_hints": [
+    "cat food/wet food"
+  ],
+  "category_urls": [
+    "https://tikipets.com/product-category/tiki-cat/tiki-cat-wet-food/"
+  ],
+  "parent_rules": {
+    "min_color_variants": 0,
+    "disallow_kits_regex": "",
+    "finish_split_tokens": []
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "/product/tiki-cat/tiki-cat-wet-food/.+/([^/]+)/?$",
+    "parent_json_paths": [
+      "$.id",
+      "$.parent.parent_product_id"
+    ],
+    "variant_id_fields": [
+      "$.id",
+      "$.sku"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.brand",
+      "$.manufacturer",
+      "$.product.brand"
+    ],
+    "parent_title": [
+      "$.name",
+      "$.title",
+      "$.product.name"
+    ],
+    "parent_summary": [
+      "$.description",
+      "$.summary",
+      "$.product.description"
+    ],
+    "series_label": [
+      "$.collection",
+      "$.series",
+      "$.product.line"
+    ],
+    "category_path": [
+      "$.categoryPath",
+      "$.breadcrumbs[*].name",
+      "$.product.categoryPath"
+    ],
+    "variant_list": [
+      "$.variants",
+      "$.offers",
+      "$.hasVariant"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.id",
+        "$.sku"
+      ],
+      "shade_name": [
+        "$.name",
+        "$.flavor"
+      ],
+      "size_text": [
+        "$.size",
+        "$.sizeText",
+        "$.attributes.size"
+      ],
+      "price": [
+        "$.price",
+        "$.offers.price"
+      ],
+      "list_price": [
+        "$.listPrice"
+      ],
+      "currency": [
+        "$.currency",
+        "$.offers.priceCurrency"
+      ],
+      "barcode": [
+        "$.gtin",
+        "$.gtin13",
+        "$.upc"
+      ],
+      "swatch_image": [
+        "$.swatchImage",
+        "$.image"
+      ],
+      "hero_image": [
+        "$.image",
+        "$.images[0]"
+      ],
+      "availability": [
+        "$.availability",
+        "$.offers.availability"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": false,
+    "reject_if_zero_variants": false
+  }
+}

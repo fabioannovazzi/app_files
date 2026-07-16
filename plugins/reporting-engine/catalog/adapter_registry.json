@@ -1,0 +1,262 @@
+{
+  "schema_version": "0.1",
+  "owner": "clara.reporting-engine",
+  "purpose": "Map chart manifest plugin provenance to Clara-owned reporting-engine adapters and embedded family components.",
+  "legacy_plugin_source_policy": "Legacy plugin_source values are provenance only. Clara callers should resolve capabilities through the reporting-engine adapter_id.",
+  "runtime_contract": {
+    "capability_field": "normalized_invocation_contract.clara_adapter",
+    "registry_loader": "scripts/reporting_adapters.py:load_adapter_registry",
+    "capability_resolver": "scripts/reporting_adapters.py:resolve_capability_adapter",
+    "invocation_planner": "scripts/reporting_adapters.py:prepare_invocation_plan",
+    "renderer": "scripts/render_capability.py:render_capability"
+  },
+  "adapters": {
+    "attribute-tables": {
+      "adapter_id": "reporting-engine.attributes",
+      "family": "attributes",
+      "legacy_plugin_source": "attribute-tables",
+      "component_name": "attribute-reporting",
+      "capability_prefixes": [
+        "attributes."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_attribute_table_adapter",
+      "component_scripts": [
+        "scripts/check_dependencies.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": null,
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "distribution-analysis": {
+      "adapter_id": "reporting-engine.distribution",
+      "family": "distribution",
+      "legacy_plugin_source": "distribution-analysis",
+      "component_name": "distribution-analysis",
+      "capability_prefixes": [
+        "distribution."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_distribution.py",
+        "scripts/distribution_core.py",
+        "scripts/legacy_distribution_charting.py",
+        "scripts/inspect_inputs.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_distribution.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "funnel-analysis": {
+      "adapter_id": "reporting-engine.funnel",
+      "family": "funnel",
+      "legacy_plugin_source": "funnel-analysis",
+      "component_name": "funnel-analysis",
+      "capability_prefixes": [
+        "funnel."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_funnel_analysis.py",
+        "scripts/funnel_core.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_funnel_analysis.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "mix-contribution-analysis": {
+      "adapter_id": "reporting-engine.mix",
+      "family": "mix",
+      "legacy_plugin_source": "mix-contribution-analysis",
+      "component_name": "mix-contribution-analysis",
+      "capability_prefixes": [
+        "mix."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_mix_contribution.py",
+        "scripts/mix_core.py",
+        "scripts/legacy_mix_charting.py",
+        "scripts/inspect_inputs.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_mix_contribution.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "period-comparison": {
+      "adapter_id": "reporting-engine.period_comparison",
+      "family": "period_comparison",
+      "legacy_plugin_source": "period-comparison",
+      "component_name": "period-comparison",
+      "capability_prefixes": [
+        "period_comparison."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_period_comparison.py",
+        "scripts/period_core.py",
+        "scripts/legacy_charting.py",
+        "scripts/inspect_inputs.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_period_comparison.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "scatter-bubble-analysis": {
+      "adapter_id": "reporting-engine.scatter_bubble",
+      "family": "scatter_bubble",
+      "legacy_plugin_source": "scatter-bubble-analysis",
+      "component_name": "scatter-bubble-analysis",
+      "capability_prefixes": [
+        "scatter."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_scatter_bubble.py",
+        "scripts/scatter_bubble_core.py",
+        "scripts/legacy_scatter_bubble_charting.py",
+        "scripts/inspect_inputs.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_scatter_bubble.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "set-overlap-analysis": {
+      "adapter_id": "reporting-engine.set_overlap",
+      "family": "set_overlap",
+      "legacy_plugin_source": "set-overlap-analysis",
+      "component_name": "set-overlap-analysis",
+      "capability_prefixes": [
+        "set_overlap."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_set_overlap.py",
+        "scripts/set_overlap_core.py",
+        "scripts/inspect_inputs.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_set_overlap.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "statement-analysis": {
+      "adapter_id": "reporting-engine.statement",
+      "family": "statement",
+      "legacy_plugin_source": "statement-analysis",
+      "component_name": "statement-analysis",
+      "capability_prefixes": [
+        "statement."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_statement_analysis.py",
+        "scripts/statement_core.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_statement_analysis.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    },
+    "variance-analysis": {
+      "adapter_id": "reporting-engine.variance",
+      "family": "variance",
+      "legacy_plugin_source": "variance-analysis",
+      "component_name": "variance-analysis",
+      "capability_prefixes": [
+        "variance."
+      ],
+      "ownership_status": "embedded_clara_component",
+      "adapter_status": "registered",
+      "render_api_status": "unified_component_cli_adapter",
+      "component_scripts": [
+        "scripts/run_variance.py",
+        "scripts/variance_core.py",
+        "scripts/legacy_adapter.py",
+        "scripts/legacy_plotting.py",
+        "scripts/root_cause_bridge_chart.py",
+        "scripts/exploded_variance_bridge_chart.py",
+        "scripts/total_by_dimension_bridge_chart.py"
+      ],
+      "entrypoints": {
+        "list_capabilities": "scripts/reporting_adapters.py:list_capabilities",
+        "resolve_capability": "scripts/reporting_adapters.py:resolve_capability_adapter",
+        "profile_dataset": "scripts/profile_dataset.py:profile_dataset",
+        "check_compatibility": "catalog/*_dataset_profile_chart_compatibility.json",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "legacy_runner": "scripts/run_variance.py",
+        "render_chart": "scripts/render_capability.py:render_capability",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe"
+      }
+    }
+  }
+}

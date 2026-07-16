@@ -1,0 +1,77 @@
+"""Keyword mappings used for bank statement parsing."""
+
+from __future__ import annotations
+
+# Multilingual keywords to detect header rows and map columns
+BASE_BANK_KEYWORDS: dict[str, list[str]] = {
+    "date": [
+        "date",
+        "data",
+        "dataoperazione",
+        "datareg",
+        "dataregistrazione",
+        "fecha",
+        "fecharegistro",
+        "fechaoperacion",
+        "datum",
+        "daten",
+        "valuta",
+        "datavaluta",
+        "valuedate",
+        "data valuta",
+    ],
+    "description": [
+        "desc",
+        "descr",
+        "descrizione",
+        "descrcausale",
+        "descrizionecausale",
+        "descragg",
+        "causale",
+        "description",
+        "descripcion",
+        "beschreibung",
+        "libelle",
+        "intitule",
+        "memo",
+        "note",
+        "narrative",
+        "riferimento",
+        "reference",
+    ],
+    "debit": [
+        "dare",
+        "debit",
+        "debito",
+        "uscite",
+        "addebito",
+        "addebiti",
+        "debe",
+        "lastschrift",
+        "prelievo",
+    ],
+    "credit": [
+        "avere",
+        "credit",
+        "credito",
+        "entrate",
+        "accredito",
+        "accrediti",
+        "haber",
+        "gutschrift",
+        "gutschriften",
+        "versamento",
+        "deposito",
+    ],
+    "amount": [
+        "importo",
+        "amount",
+        "importe",
+        "betrag",
+        "montant",
+        "valor",
+        "ammontare",
+    ],
+}
+
+__all__ = ["BASE_BANK_KEYWORDS"]

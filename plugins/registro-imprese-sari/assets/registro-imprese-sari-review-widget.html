@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revisione Registro Imprese e SARI</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2927;
+      --muted: #64716e;
+      --line: #d9e1de;
+      --paper: #f7f9f8;
+      --white: #fff;
+      --teal: #145f5a;
+      --teal-soft: #e7f2f0;
+      --amber: #9b641e;
+      --amber-soft: #fbf3e5;
+      --red: #91463d;
+      --red-soft: #f9ece9;
+      --green: #31694e;
+      --green-soft: #eaf4ed;
+      --serif: "Iowan Old Style", Baskerville, "Times New Roman", serif;
+      --sans: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--white); color: var(--ink); }
+    body { font: 15px/1.45 var(--sans); }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--teal); outline-offset: 2px;
+    }
+    .shell { min-height: 100vh; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      padding: 17px clamp(18px, 3vw, 38px); border-bottom: 1px solid var(--line);
+    }
+    .identity { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .mark {
+      width: 40px; height: 40px; display: grid; place-items: center; flex: none;
+      border-radius: 9px; background: var(--teal); color: white; font: 700 11px/1 var(--serif);
+      letter-spacing: .08em;
+    }
+    .eyebrow { margin: 0 0 2px; color: var(--muted); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+    h1 { margin: 0; font: 600 21px/1.18 var(--serif); }
+    .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+    .button {
+      min-height: 36px; border: 1px solid #bcc9c5; border-radius: 7px; padding: 7px 12px;
+      background: white; font-weight: 650; font-size: 13px;
+    }
+    .button:hover { background: var(--paper); }
+    .button.primary { border-color: var(--teal); background: var(--teal); color: white; }
+    .button:disabled { cursor: not-allowed; opacity: .45; }
+    .notice {
+      display: grid; grid-template-columns: repeat(4, minmax(100px, 1fr)) minmax(240px, 1.5fr);
+      border-bottom: 1px solid var(--line); background: var(--paper); padding: 0 clamp(18px, 3vw, 38px);
+    }
+    .metric { padding: 11px 18px 12px 0; }
+    .metric + .metric { padding-left: 18px; border-left: 1px solid var(--line); }
+    .metric span { display: block; color: var(--muted); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; }
+    .metric strong { display: block; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+    .message { align-self: center; padding: 10px 0 10px 20px; color: var(--muted); font-size: 12px; text-align: right; }
+    .message.ok { color: var(--green); }
+    .message.error { color: var(--red); }
+    .workspace { display: grid; grid-template-columns: minmax(310px, 38%) minmax(0, 1fr); min-height: 560px; }
+    .queue { min-width: 0; border-right: 1px solid var(--line); background: var(--paper); }
+    .queue-head { padding: 18px 20px 13px; border-bottom: 1px solid var(--line); }
+    .queue-title { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    h2 { margin: 0; font-size: 14px; }
+    .count { color: var(--muted); font-size: 12px; }
+    .search { width: 100%; min-height: 38px; border: 1px solid #bcc9c5; border-radius: 6px; padding: 8px 10px; background: white; }
+    .filters { display: flex; gap: 5px; overflow-x: auto; padding-top: 9px; }
+    .filter { flex: none; border: 1px solid transparent; border-radius: 5px; padding: 4px 7px; background: transparent; color: var(--muted); font-size: 11px; }
+    .filter.active { border-color: #bcc9c5; background: white; color: var(--ink); }
+    .rows { max-height: calc(100vh - 224px); overflow: auto; }
+    .row {
+      width: 100%; display: grid; grid-template-columns: 9px minmax(0, 1fr) auto; gap: 10px;
+      border: 0; border-bottom: 1px solid var(--line); padding: 13px 20px; background: transparent; text-align: left;
+    }
+    .row:hover { background: #eef3f1; }
+    .row.selected { background: white; box-shadow: inset 3px 0 var(--teal); }
+    .dot { width: 8px; height: 8px; margin-top: 5px; border: 1px solid #96a49f; border-radius: 50%; }
+    .dot.accepted { border-color: var(--green); background: var(--green); }
+    .dot.rejected { border-color: var(--red); background: var(--red); }
+    .dot.edited_revision_required, .dot.needs_clarification, .dot.needs_documents { border-color: var(--amber); background: var(--amber); }
+    .row-title { display: block; overflow: hidden; text-overflow: ellipsis; font-weight: 650; font-size: 13px; }
+    .row-meta { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .recommended { color: var(--muted); font-size: 10px; text-transform: uppercase; }
+    .empty { padding: 34px 20px; color: var(--muted); text-align: center; }
+    .detail { min-width: 0; overflow: auto; padding: 25px clamp(22px, 4vw, 48px) 42px; }
+    .detail-head { display: flex; justify-content: space-between; gap: 22px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+    .type { margin: 0 0 4px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    h3 { max-width: 35ch; margin: 0; font: 600 23px/1.22 var(--serif); }
+    .pill { flex: none; border: 1px solid #bcc9c5; border-radius: 999px; padding: 4px 8px; background: var(--paper); color: var(--muted); font-size: 10px; }
+    .privacy { margin: 13px 0 0; padding: 10px 12px; border: 1px solid #bdd6d1; background: var(--teal-soft); color: #315d58; font-size: 12px; }
+    .section { padding: 19px 0; border-bottom: 1px solid var(--line); }
+    .section:last-child { border-bottom: 0; }
+    .section h4 { margin: 0 0 10px; color: var(--muted); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+    dl { display: grid; grid-template-columns: minmax(120px, 34%) 1fr; margin: 0; }
+    dt, dd { margin: 0; padding: 7px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+    dt { color: var(--muted); font-size: 12px; }
+    dd { font-size: 13px; }
+    .decision-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .decision-action { border: 1px solid #bcc9c5; border-radius: 6px; padding: 7px 9px; background: white; font-size: 12px; }
+    .decision-action.selected { border-color: var(--teal); background: var(--teal-soft); color: var(--teal); font-weight: 700; }
+    .field { display: grid; gap: 5px; margin-top: 12px; }
+    .field label { color: var(--muted); font-size: 11px; font-weight: 650; }
+    textarea { width: 100%; min-height: 72px; resize: vertical; border: 1px solid #bcc9c5; border-radius: 6px; padding: 8px 9px; background: white; }
+    .impact { margin-top: 11px; padding: 9px 10px; border: 1px solid var(--line); background: var(--paper); color: var(--muted); font-size: 11px; }
+    .footer { padding: 14px clamp(18px, 3vw, 38px); border-top: 1px solid var(--line); background: var(--paper); color: var(--muted); font-size: 11px; }
+    @media (max-width: 820px) {
+      .workspace { grid-template-columns: 1fr; }
+      .queue { border-right: 0; border-bottom: 1px solid var(--line); }
+      .rows { max-height: 340px; }
+      .notice { grid-template-columns: repeat(2, 1fr); }
+      .message { grid-column: 1 / -1; text-align: left; padding-left: 0; }
+    }
+    @media (max-width: 580px) {
+      .topbar { align-items: flex-start; padding: 14px 15px; }
+      .actions { gap: 4px; }
+      .button { padding: 6px 8px; }
+      .notice { padding: 0 15px; }
+      .detail { padding: 20px 18px 34px; }
+      dl { grid-template-columns: 1fr; }
+      dt { padding-bottom: 0; }
+      dd { border-top: 0; padding-top: 2px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="identity">
+        <div class="mark" aria-hidden="true">RI</div>
+        <div>
+          <p class="eyebrow">Vera · carta di lavoro locale</p>
+          <h1>Registro Imprese e SARI</h1>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="button" id="copy" type="button">Copia decisioni</button>
+        <button class="button" id="save" type="button">Salva</button>
+        <button class="button primary" id="apply" type="button">Applica alla carta</button>
+      </div>
+    </header>
+
+    <section class="notice" aria-label="Riepilogo run">
+      <div class="metric"><span>Run</span><strong id="run">—</strong></div>
+      <div class="metric"><span>Stato</span><strong id="status">—</strong></div>
+      <div class="metric"><span>Elementi</span><strong id="item-count">0</strong></div>
+      <div class="metric"><span>Decisioni</span><strong id="decision-count">0</strong></div>
+      <div class="message" id="message">Nessun accesso, firma o invio è disponibile in questa revisione.</div>
+    </section>
+
+    <section class="workspace">
+      <aside class="queue">
+        <div class="queue-head">
+          <div class="queue-title"><h2>Coda di revisione</h2><span class="count" id="visible-count">0</span></div>
+          <input class="search" id="search" type="search" placeholder="Filtra per titolo o tipo" aria-label="Filtra la coda">
+          <div class="filters" id="filters"></div>
+        </div>
+        <div class="rows" id="rows"></div>
+      </aside>
+      <article class="detail" id="detail"></article>
+    </section>
+
+    <footer class="footer">
+      Il widget contiene solo metadati minimizzati. Attività, valori proposti, citazioni e quesito SARI restano negli artefatti locali del run.
+    </footer>
+  </main>
+
+  <script>
+    const FALLBACK = {
+      widget_type: "registro_imprese_sari_review",
+      run_intake: null,
+      review_payload: {
+        schema_version: "1.0",
+        plugin: "registro-imprese-sari",
+        workflow: "registro-imprese-sari",
+        run_id: "demo-local",
+        status: "draft_for_professional_review",
+        item_count: 3,
+        filing_status: "not_filed",
+        filing_authorized: false,
+        privacy_notice: "Demo minimizzata: aprire gli artefatti locali per i dettagli.",
+        items: [
+          {
+            id: "source-demo",
+            item_type: "official_source",
+            title: "Fonte ufficiale SARI-DEMO",
+            allowed_actions: ["accept", "reject", "mark_unclear", "skip"],
+            recommended_action: "mark_unclear",
+            data: { source_id: "SARI-DEMO", applicability_status: "requires_professional_confirmation" },
+          },
+          {
+            id: "plan-step-1",
+            item_type: "practice_step",
+            title: "Dire step 1",
+            allowed_actions: ["accept", "reject", "edit", "mark_unclear", "request_more_documents", "skip"],
+            recommended_action: "mark_unclear",
+            data: { system: "DIRE", review_status: "proposed", source_ids: ["SARI-DEMO"] },
+          },
+          {
+            id: "audit-demo",
+            item_type: "audit_check",
+            title: "Controlli meccanici della pratica",
+            allowed_actions: ["accept", "mark_unclear", "skip"],
+            recommended_action: "accept",
+            data: { validation_status: "passed_with_blockers", blocker_count: 1 },
+          },
+        ],
+      },
+      decision_policy: {
+        save_tool: "save_registro_imprese_sari_decisions",
+        apply_tool: "apply_registro_imprese_sari_decisions",
+      },
+    };
+
+    const TYPE_LABELS = {
+      case_fact: "Qualificazione",
+      practice_step: "Passaggio pratica",
+      official_source: "Fonte ufficiale",
+      missing_information: "Informazione mancante",
+      audit_check: "Controllo",
+      artifact: "Artefatto",
+    };
+    const ACTION_LABELS = {
+      accept: "Accetta",
+      reject: "Rifiuta",
+      edit: "Correggi",
+      mark_unclear: "Da chiarire",
+      request_more_documents: "Chiedi documenti",
+      skip: "Salta",
+    };
+    const state = {
+      payload: null,
+      selectedId: null,
+      selectedType: "all",
+      query: "",
+      decisions: new Map(),
+    };
+
+    function toolOutput() {
+      return window.openai?.toolOutput || window.openai?.structuredContent || FALLBACK;
+    }
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+      })[char]);
+    }
+    function review() { return state.payload?.review_payload || FALLBACK.review_payload; }
+    function items() { return Array.isArray(review().items) ? review().items : []; }
+    function decisionFor(id) { return state.decisions.get(id) || null; }
+    function filteredItems() {
+      const query = state.query.trim().toLowerCase();
+      return items().filter((item) => {
+        if (state.selectedType !== "all" && item.item_type !== state.selectedType) return false;
+        if (!query) return true;
+        return `${item.title} ${item.item_type}`.toLowerCase().includes(query);
+      });
+    }
+    function statusClass(decision) {
+      if (!decision) return "";
+      return ({
+        accept: "accepted", reject: "rejected", edit: "edited_revision_required",
+        mark_unclear: "needs_clarification", request_more_documents: "needs_documents", skip: "skipped",
+      })[decision.action] || "";
+    }
+    function setMessage(text, kind = "") {
+      const node = document.getElementById("message");
+      node.textContent = text;
+      node.className = `message ${kind}`.trim();
+    }
+    function renderMetrics() {
+      document.getElementById("run").textContent = review().run_id || "—";
+      document.getElementById("status").textContent = review().status || "—";
+      document.getElementById("item-count").textContent = String(items().length);
+      document.getElementById("decision-count").textContent = String(state.decisions.size);
+    }
+    function renderFilters() {
+      const counts = new Map([["all", items().length]]);
+      for (const item of items()) counts.set(item.item_type, (counts.get(item.item_type) || 0) + 1);
+      document.getElementById("filters").innerHTML = Array.from(counts.entries()).map(([type, count]) => {
+        const label = type === "all" ? "Tutti" : (TYPE_LABELS[type] || type);
+        return `<button type="button" class="filter ${state.selectedType === type ? "active" : ""}" data-type="${esc(type)}">${esc(label)} · ${count}</button>`;
+      }).join("");
+    }
+    function renderRows() {
+      const visible = filteredItems();
+      document.getElementById("visible-count").textContent = `${visible.length} / ${items().length}`;
+      if (!state.selectedId && visible[0]) state.selectedId = visible[0].id;
+      if (state.selectedId && !items().some((item) => item.id === state.selectedId)) {
+        state.selectedId = visible[0]?.id || null;
+      }
+      document.getElementById("rows").innerHTML = visible.length ? visible.map((item) => {
+        const decision = decisionFor(item.id);
+        return `<button type="button" class="row ${state.selectedId === item.id ? "selected" : ""}" data-id="${esc(item.id)}">
+          <span class="dot ${statusClass(decision)}"></span>
+          <span><span class="row-title">${esc(item.title)}</span><span class="row-meta">${esc(TYPE_LABELS[item.item_type] || item.item_type)}</span></span>
+          <span class="recommended">${esc(decision ? ACTION_LABELS[decision.action] : ACTION_LABELS[item.recommended_action] || "rivedi")}</span>
+        </button>`;
+      }).join("") : '<div class="empty">Nessun elemento corrisponde al filtro.</div>';
+      renderDetail();
+    }
+    function detailFields(item) {
+      const entries = [
+        ["ID", item.id],
+        ["Tipo", TYPE_LABELS[item.item_type] || item.item_type],
+        ["Fonte locale", item.source_path],
+        ["Output", item.output_path],
+        ...Object.entries(item.data || {}).map(([key, value]) => [key.replaceAll("_", " "), Array.isArray(value) ? value.join(", ") : value]),
+      ].filter(([, value]) => value !== null && value !== undefined && value !== "");
+      return `<dl>${entries.map(([key, value]) => `<dt>${esc(key)}</dt><dd>${esc(value)}</dd>`).join("")}</dl>`;
+    }
+    function renderDetail() {
+      const item = items().find((candidate) => candidate.id === state.selectedId);
+      if (!item) {
+        document.getElementById("detail").innerHTML = '<div class="empty">Seleziona un elemento.</div>';
+        return;
+      }
+      const decision = decisionFor(item.id) || { item_id: item.id, action: "", reviewer_note: "", edit_value: "", requested_documents: [] };
+      const actions = item.allowed_actions || [];
+      document.getElementById("detail").innerHTML = `
+        <div class="detail-head">
+          <div><p class="type">${esc(TYPE_LABELS[item.item_type] || item.item_type)}</p><h3>${esc(item.title)}</h3></div>
+          <span class="pill">${esc(decision.action ? ACTION_LABELS[decision.action] : "da rivedere")}</span>
+        </div>
+        <p class="privacy">${esc(review().privacy_notice || "I dettagli completi restano negli artefatti locali.")}</p>
+        <section class="section"><h4>Metadati minimizzati</h4>${detailFields(item)}</section>
+        <section class="section">
+          <h4>Decisione</h4>
+          <div class="decision-actions">${actions.map((action) => `<button type="button" class="decision-action ${decision.action === action ? "selected" : ""}" data-action="${esc(action)}">${esc(ACTION_LABELS[action] || action)}</button>`).join("")}</div>
+          <div class="field"><label for="note">Nota del revisore</label><textarea id="note">${esc(decision.reviewer_note || "")}</textarea></div>
+          ${decision.action === "edit" ? `<div class="field"><label for="edit-value">Testo corretto proposto</label><textarea id="edit-value">${esc(decision.edit_value || "")}</textarea></div>` : ""}
+          ${decision.action === "request_more_documents" ? `<div class="field"><label for="documents">Documenti richiesti, uno per riga</label><textarea id="documents">${esc((decision.requested_documents || []).join("\n"))}</textarea></div>` : ""}
+          <p class="impact">Le decisioni aggiornano soltanto la carta di lavoro. “Correggi” crea una richiesta di revisione e non modifica automaticamente il piano professionale.</p>
+        </section>`;
+    }
+    function updateDecision(itemId, changes) {
+      const current = state.decisions.get(itemId) || { item_id: itemId, action: "", reviewer_note: "", edit_value: "", requested_documents: [] };
+      const next = { ...current, ...changes };
+      if (!next.action) state.decisions.delete(itemId); else state.decisions.set(itemId, next);
+      renderMetrics();
+      renderRows();
+    }
+    function serializedDecisions() {
+      return Array.from(state.decisions.values()).map((decision) => {
+        const result = { item_id: decision.item_id, action: decision.action };
+        if (decision.reviewer_note?.trim()) result.reviewer_note = decision.reviewer_note.trim();
+        if (decision.action === "edit") result.edit_value = decision.edit_value?.trim() || "";
+        if (decision.action === "request_more_documents") result.requested_documents = decision.requested_documents || [];
+        return result;
+      });
+    }
+    function toolArguments() {
+      return {
+        run_intake: state.payload?.run_intake || undefined,
+        persistence_token: state.payload?.persistence_token || undefined,
+        review_payload: review(),
+        decisions: serializedDecisions(),
+        decision_source: "mcp_widget",
+      };
+    }
+    async function callReviewTool(toolName) {
+      if (!toolName) throw new Error("Strumento di revisione non configurato");
+      if (!window.openai?.callTool) throw new Error("Salvataggio MCP non disponibile; usa Copia decisioni");
+      return window.openai.callTool(toolName, toolArguments());
+    }
+    async function copyDecisions() {
+      const text = JSON.stringify(toolArguments(), null, 2);
+      await navigator.clipboard.writeText(text);
+      setMessage("Decisioni copiate negli appunti.", "ok");
+    }
+    function render() { renderMetrics(); renderFilters(); renderRows(); }
+
+    document.getElementById("search").addEventListener("input", (event) => {
+      state.query = event.target.value; renderRows();
+    });
+    document.getElementById("filters").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-type]");
+      if (!button) return;
+      state.selectedType = button.dataset.type; state.selectedId = null; render();
+    });
+    document.getElementById("rows").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-id]");
+      if (!button) return;
+      state.selectedId = button.dataset.id; renderRows();
+    });
+    document.getElementById("detail").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button || !state.selectedId) return;
+      updateDecision(state.selectedId, { action: button.dataset.action });
+    });
+    document.getElementById("detail").addEventListener("input", (event) => {
+      if (!state.selectedId) return;
+      const current = state.decisions.get(state.selectedId) || {
+        item_id: state.selectedId, action: "", reviewer_note: "", edit_value: "", requested_documents: [],
+      };
+      if (event.target.id === "note") current.reviewer_note = event.target.value;
+      if (event.target.id === "edit-value") current.edit_value = event.target.value;
+      if (event.target.id === "documents") {
+        current.requested_documents = event.target.value.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+      }
+      if (current.action) state.decisions.set(state.selectedId, current);
+      renderMetrics();
+    });
+    document.getElementById("copy").addEventListener("click", () => copyDecisions().catch((error) => setMessage(error.message, "error")));
+    document.getElementById("save").addEventListener("click", async () => {
+      try {
+        await callReviewTool(state.payload?.decision_policy?.save_tool);
+        setMessage("Decisioni salvate nella cartella privata del run.", "ok");
+      } catch (error) { setMessage(error.message, "error"); }
+    });
+    document.getElementById("apply").addEventListener("click", async () => {
+      try {
+        await callReviewTool(state.payload?.decision_policy?.apply_tool);
+        setMessage("Decisioni applicate alla carta di lavoro; nessuna azione su portali.", "ok");
+      } catch (error) { setMessage(error.message, "error"); }
+    });
+
+    state.payload = toolOutput();
+    const previous = state.payload?.ui_decisions?.decisions;
+    if (Array.isArray(previous)) previous.forEach((decision) => state.decisions.set(decision.item_id, decision));
+    render();
+  </script>
+</body>
+</html>

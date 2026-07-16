@@ -1,0 +1,434 @@
+{
+  "schema_version": "clara.html_deck_layout_registry.v1",
+  "css": "layouts.css",
+  "layouts": [
+    {
+      "id": "editorial-cover",
+      "name": "Editorial cover",
+      "narrative_role": "Open on the governing decision or tension.",
+      "description": "A restrained title page with a one-line promise and speaker identity.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 48, "max_items": 0},
+      "typography_budget": {"headline_max_chars": 92, "headline_max_lines": 3, "body_min_px": 20},
+      "fragment_support": {"mode": "none", "max_fragments": 0},
+      "template": "templates/editorial-cover.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 92},
+        "subtitle": {"type": "text", "required": true, "max_chars": 180},
+        "author": {"type": "text", "required": false, "max_chars": 100},
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "assertion",
+      "name": "Assertion",
+      "narrative_role": "State the governing claim and its consequence.",
+      "description": "An editorial statement slide with one implication and one qualification.",
+      "slide_class": "slide--center",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 78, "max_items": 0},
+      "typography_budget": {"headline_max_chars": 115, "headline_max_lines": 4, "body_min_px": 20},
+      "fragment_support": {"mode": "none", "max_fragments": 0},
+      "template": "templates/assertion.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 115},
+        "body": {"type": "text", "required": true, "max_chars": 300},
+        "implication_label": {"type": "text", "required": false, "max_chars": 48},
+        "implication": {"type": "text", "required": false, "max_chars": 180},
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "chapter-transition",
+      "name": "Chapter transition",
+      "narrative_role": "Reorient the room before a material change in the argument.",
+      "description": "A quiet transition with a chapter assertion rather than a table-of-contents label.",
+      "slide_class": "slide--center",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 42, "max_items": 0},
+      "typography_budget": {"headline_max_chars": 90, "headline_max_lines": 3, "body_min_px": 22},
+      "fragment_support": {"mode": "none", "max_fragments": 0},
+      "template": "templates/chapter-transition.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 48},
+        "title": {"type": "text", "required": true, "max_chars": 90},
+        "subtitle": {"type": "text", "required": false, "max_chars": 180},
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "metric-contrast",
+      "name": "Metric contrast",
+      "narrative_role": "Quantify the gap that changes the decision.",
+      "description": "Two to four directly labelled measures with explicit comparison bases.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 92, "max_items": 4},
+      "typography_budget": {"headline_max_chars": 105, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 4},
+      "template": "templates/metric-contrast.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 105},
+        "metrics": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 4,
+          "item_template": "templates/items/metric.html",
+          "item_fields": {
+            "label": {"type": "text", "required": true, "max_chars": 42},
+            "value": {"type": "text", "required": true, "max_chars": 24},
+            "detail": {"type": "text", "required": true, "max_chars": 110},
+            "tone": {"type": "enum", "required": true, "values": ["neutral", "accent", "analytical", "risk"]}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "paired-comparison",
+      "name": "Paired comparison",
+      "narrative_role": "Compare two choices on the dimensions that govern the decision.",
+      "description": "An asymmetrical two-column comparison with concise evidence points.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 128, "max_items": 8},
+      "typography_budget": {"headline_max_chars": 100, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 8},
+      "template": "templates/paired-comparison.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 100},
+        "left_label": {"type": "text", "required": true, "max_chars": 42},
+        "left_title": {"type": "text", "required": true, "max_chars": 80},
+        "left_items": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 4,
+          "item_template": "templates/items/comparison-point.html",
+          "item_fields": {
+            "label": {"type": "text", "required": true, "max_chars": 34},
+            "body": {"type": "text", "required": true, "max_chars": 115}
+          }
+        },
+        "right_label": {"type": "text", "required": true, "max_chars": 42},
+        "right_title": {"type": "text", "required": true, "max_chars": 80},
+        "right_items": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 4,
+          "item_template": "templates/items/comparison-point.html",
+          "item_fields": {
+            "label": {"type": "text", "required": true, "max_chars": 34},
+            "body": {"type": "text", "required": true, "max_chars": 115}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "evidence-split",
+      "name": "Evidence and implication",
+      "narrative_role": "Separate observed evidence from advisor judgement.",
+      "description": "A structured evidence column beside a clearly labelled takeaway and condition.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 120, "max_items": 4},
+      "typography_budget": {"headline_max_chars": 105, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 4},
+      "template": "templates/evidence-split.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 105},
+        "evidence_label": {"type": "text", "required": true, "max_chars": 42},
+        "evidence_items": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 4,
+          "item_template": "templates/items/evidence-point.html",
+          "item_fields": {
+            "label": {"type": "text", "required": true, "max_chars": 42},
+            "body": {"type": "text", "required": true, "max_chars": 130}
+          }
+        },
+        "takeaway_label": {"type": "text", "required": true, "max_chars": 42},
+        "takeaway": {"type": "text", "required": true, "max_chars": 220},
+        "condition": {"type": "text", "required": false, "max_chars": 180},
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "visual-takeaway",
+      "name": "Visual with takeaway",
+      "narrative_role": "Let one data exhibit carry the proof, then state the implication.",
+      "description": "A renderer extension point for a source-bound visual beside a concise conclusion.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 78, "max_items": 0},
+      "typography_budget": {"headline_max_chars": 105, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "none", "max_fragments": 0},
+      "template": "templates/visual-takeaway.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 105},
+        "visual": {"type": "extension", "required": true, "renderer": "data_visual"},
+        "takeaway_label": {"type": "text", "required": true, "max_chars": 42},
+        "takeaway": {"type": "text", "required": true, "max_chars": 220},
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "timeline",
+      "name": "Evidence timeline",
+      "narrative_role": "Show how events, evidence, or thresholds change over time.",
+      "description": "Three to six dated moments on one restrained horizontal sequence.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 126, "max_items": 6},
+      "typography_budget": {"headline_max_chars": 105, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 6},
+      "template": "templates/timeline.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 105},
+        "steps": {
+          "type": "items",
+          "required": true,
+          "min_items": 3,
+          "max_items": 6,
+          "item_template": "templates/items/timeline-step.html",
+          "item_fields": {
+            "period": {"type": "text", "required": true, "max_chars": 28},
+            "title": {"type": "text", "required": true, "max_chars": 48},
+            "body": {"type": "text", "required": true, "max_chars": 100},
+            "status": {"type": "enum", "required": true, "values": ["past", "current", "future", "risk"]}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "process-flow",
+      "name": "Operating process",
+      "narrative_role": "Make the operating sequence, ownership, or causal mechanism explicit.",
+      "description": "Three to five connected stages with evidence-sized descriptions.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 112, "max_items": 5},
+      "typography_budget": {"headline_max_chars": 105, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 5},
+      "template": "templates/process-flow.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 105},
+        "steps": {
+          "type": "items",
+          "required": true,
+          "min_items": 3,
+          "max_items": 5,
+          "item_template": "templates/items/process-step.html",
+          "item_fields": {
+            "label": {"type": "text", "required": true, "max_chars": 12},
+            "title": {"type": "text", "required": true, "max_chars": 48},
+            "body": {"type": "text", "required": true, "max_chars": 110}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "scenario-matrix",
+      "name": "Scenario matrix",
+      "narrative_role": "Compare uncertainty only where it changes the action.",
+      "description": "Two to four scenarios with triggers, actions, owners, and explicit state.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 148, "max_items": 4},
+      "typography_budget": {"headline_max_chars": 102, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 4},
+      "template": "templates/scenario-matrix.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 102},
+        "scenarios": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 4,
+          "item_template": "templates/items/scenario-row.html",
+          "item_fields": {
+            "scenario": {"type": "text", "required": true, "max_chars": 34},
+            "trigger": {"type": "text", "required": true, "max_chars": 100},
+            "action": {"type": "text", "required": true, "max_chars": 115},
+            "owner": {"type": "text", "required": true, "max_chars": 48},
+            "status": {"type": "enum", "required": true, "values": ["base", "watch", "act", "stop"]}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "decision-gates",
+      "name": "Decision gates",
+      "narrative_role": "Define the conditions that permit, pause, or stop action.",
+      "description": "A governance surface joining the gate, evidence, owner, and resulting action.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 140, "max_items": 5},
+      "typography_budget": {"headline_max_chars": 102, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 5},
+      "template": "templates/decision-gates.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 102},
+        "gates": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 5,
+          "item_template": "templates/items/decision-gate.html",
+          "item_fields": {
+            "gate": {"type": "text", "required": true, "max_chars": 34},
+            "condition": {"type": "text", "required": true, "max_chars": 110},
+            "owner": {"type": "text", "required": true, "max_chars": 48},
+            "action": {"type": "text", "required": true, "max_chars": 100}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "roadmap",
+      "name": "Implementation roadmap",
+      "narrative_role": "Sequence delivery through outcomes, owners, and proof points.",
+      "description": "Three to five practical phases without ornamental project theatre.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 126, "max_items": 5},
+      "typography_budget": {"headline_max_chars": 105, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 5},
+      "template": "templates/roadmap.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 105},
+        "phases": {
+          "type": "items",
+          "required": true,
+          "min_items": 3,
+          "max_items": 5,
+          "item_template": "templates/items/roadmap-phase.html",
+          "item_fields": {
+            "period": {"type": "text", "required": true, "max_chars": 28},
+            "title": {"type": "text", "required": true, "max_chars": 44},
+            "outcome": {"type": "text", "required": true, "max_chars": 110},
+            "owner": {"type": "text", "required": true, "max_chars": 48}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "image-led",
+      "name": "Image-led evidence",
+      "narrative_role": "Use one essential image as evidence, not decoration.",
+      "description": "An inline source image with accessible description, caption, and conclusion.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 82, "max_items": 0},
+      "typography_budget": {"headline_max_chars": 96, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "none", "max_fragments": 0},
+      "template": "templates/image-led.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 96},
+        "image_src": {"type": "data_uri", "required": true, "media": "image"},
+        "image_alt": {"type": "text", "required": true, "max_chars": 180},
+        "caption": {"type": "text", "required": true, "max_chars": 180},
+        "takeaway": {"type": "text", "required": true, "max_chars": 190},
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "evidence-register",
+      "name": "Evidence register",
+      "narrative_role": "Expose what is supported, uncertain, or still open.",
+      "description": "A compact exhibit-style register of claims, evidence states, and implications.",
+      "slide_class": "slide--top",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 168, "max_items": 6},
+      "typography_budget": {"headline_max_chars": 96, "headline_max_lines": 3, "body_min_px": 18},
+      "fragment_support": {"mode": "items", "max_fragments": 6},
+      "template": "templates/evidence-register.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 96},
+        "entries": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 6,
+          "item_template": "templates/items/evidence-entry.html",
+          "item_fields": {
+            "claim": {"type": "text", "required": true, "max_chars": 105},
+            "evidence": {"type": "text", "required": true, "max_chars": 105},
+            "status": {"type": "enum", "required": true, "values": ["supported", "partial", "open", "conflict"]},
+            "implication": {"type": "text", "required": true, "max_chars": 110}
+          }
+        },
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    },
+    {
+      "id": "closing-decision",
+      "name": "Closing decision",
+      "narrative_role": "End on the actions or questions the room must own.",
+      "description": "A quiet closing page with two or three memorable moves and named ownership.",
+      "slide_class": "slide--center",
+      "tone_options": ["light", "dark"],
+      "headline_slot": "title",
+      "density_budget": {"max_total_words": 88, "max_items": 3},
+      "typography_budget": {"headline_max_chars": 96, "headline_max_lines": 3, "body_min_px": 20},
+      "fragment_support": {"mode": "items", "max_fragments": 3},
+      "template": "templates/closing-decision.html",
+      "slots": {
+        "eyebrow": {"type": "text", "required": true, "max_chars": 64},
+        "title": {"type": "text", "required": true, "max_chars": 96},
+        "actions": {
+          "type": "items",
+          "required": true,
+          "min_items": 2,
+          "max_items": 3,
+          "item_template": "templates/items/closing-action.html",
+          "item_fields": {
+            "verb": {"type": "text", "required": true, "max_chars": 22},
+            "body": {"type": "text", "required": true, "max_chars": 105},
+            "owner": {"type": "text", "required": false, "max_chars": 48}
+          }
+        },
+        "closing_line": {"type": "text", "required": false, "max_chars": 150},
+        "source_note": {"type": "text", "required": false, "max_chars": 180}
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% set _auth_enabled = auth_enabled | default(false) %}
+{% set _google_client_id = google_client_id | default("") %}
+<html lang="{{ lang or 'en' }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Mparanza{% endblock %}</title>
+    <link rel="icon" type="image/png" href="https://mparanza.com/images/MPARANZA-FAVICON.png" />
+    <link rel="stylesheet" href="/static/css/app.css?v={{ app_css_asset_version | default('0') }}" />
+    {% block head_extra %}{% endblock %}
+    <script>
+      window.appLanguage = "{{ lang or 'en' }}";
+      window.appCopy = {{ (copy or {}) | tojson }};
+      window.authConfig = {{ {
+        "enabled": _auth_enabled,
+        "clientId": _google_client_id,
+        "sessionEndpoint": "/auth/session",
+        "loginEndpoint": "/auth/login",
+        "logoutEndpoint": "/auth/logout",
+      } | tojson }};
+    </script>
+    {% if _auth_enabled and _google_client_id %}
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
+    {% endif %}
+    {% if _auth_enabled %}
+      <script src="/static/js/auth.js" defer></script>
+    {% endif %}
+    {% block head_scripts %}{% endblock %}
+    <script src="/static/js/custom_select.js" defer></script>
+    <script src="/static/js/page_title_help.js" defer></script>
+  </head>
+  <body
+    data-auth-enabled="{{ 'true' if _auth_enabled else 'false' }}"
+    {% if _google_client_id %}data-google-client-id="{{ _google_client_id }}"{% endif %}
+    {% block body_attrs %}{% endblock %}
+  >
+    {% block body %}{% endblock %}
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

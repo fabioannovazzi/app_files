@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claim Basis Map"
+  short_description: "Map deck claims and check text drift"
+  default_prompt: "Use $claim-basis-map to produce deck.claims.json and deck.claims.md while generating this clean deck, or check the current PPTX against an existing generation-time claim snapshot."

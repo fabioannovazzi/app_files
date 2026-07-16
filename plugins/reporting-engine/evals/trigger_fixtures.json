@@ -1,0 +1,40 @@
+{
+  "plugin": "reporting-engine",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "chart-manifest-inspection",
+      "prompt": "Use Clara to inspect the chart-selection manifest and tell me which chart capabilities can answer monthly sales questions.",
+      "required_signals": [
+        "Clara",
+        "chart-selection manifest",
+        "chart capabilities",
+        "monthly sales"
+      ]
+    },
+    {
+      "id": "dataset-chart-compatibility",
+      "prompt": "Profile this dataset and check which reporting charts are mechanically compatible before any semantic selection.",
+      "required_signals": [
+        "profile this dataset",
+        "reporting charts",
+        "mechanically compatible",
+        "semantic selection"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "attribute-taxonomy-report",
+      "prompt": "Map product attributes to the central taxonomy and build the checked attribute report."
+    },
+    {
+      "id": "advisory-case-workpaper",
+      "prompt": "Use Clara to organize this succession case and write the advisory workpaper."
+    },
+    {
+      "id": "direct-chart-render",
+      "prompt": "Render a final variance bridge from this spreadsheet now."
+    }
+  ]
+}

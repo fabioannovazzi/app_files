@@ -1,0 +1,35 @@
+{
+  "plugin": "audit-reconciliation",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "open-items-full-reconciliation",
+      "prompt": "Use Riconciliazione partite on this client folder to reconcile open items, ledgers, bank statements, factoring evidence, and compensation support.",
+      "required_signals": [
+        "asks for input folder and cut-off",
+        "runs scripts/check_dependencies.py",
+        "uses deterministic reconciliation scripts",
+        "delivers Excel or Word workpapers"
+      ]
+    },
+    {
+      "id": "missing-evidence-pack",
+      "prompt": "Starting from the reconciliation workbook, generate operational missing-evidence requests for the unresolved rows.",
+      "required_signals": [
+        "reads the workbook",
+        "uses localized operational wording",
+        "does not expose internal rule codes in client requests"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "generic-code-review",
+      "prompt": "Review this pull request for Python bugs and missing tests."
+    },
+    {
+      "id": "tax-advice",
+      "prompt": "Tell me whether this invoice is deductible and how to treat the VAT."
+    }
+  ]
+}

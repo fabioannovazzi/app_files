@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brand Retailer PDP Setup"
+  short_description: "Set up brand-site PDP sources for retailer comparison packages."
+  default_prompt: "Set up a brand-site PDP source for a retailer category comparison."

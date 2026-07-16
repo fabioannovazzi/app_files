@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.1",
+  "plugin": "variance-analysis",
+  "items": [
+    {
+      "legacy_id": "legacy.variance.single_vertical_waterfall_by_dimension",
+      "status": "mapped_active",
+      "legacy_function": "run_legacy_variable_dimension_bridge",
+      "target_capability_id": "variance.root_cause_total_bridge",
+      "related_capability_ids": [
+        "variance.total_by_dimension_bridge",
+        "variance.exploded_variance_bridge",
+        "variance.root_cause_total_bridge",
+        "variance.root_cause_component_bridge",
+        "variance.root_cause_alternative_sweep"
+      ],
+      "reason": "The legacy one-dimensional waterfall grammar supports both the fixed single-dimension total variance view and the variable-dimension root-cause total bridge. The plugin exposes them as separate capabilities so reporting can distinguish a light dimension split from root-cause source data."
+    },
+    {
+      "legacy_id": "legacy.variance.fixed_single_dimension_total_waterfall",
+      "status": "mapped_active",
+      "legacy_function": "run_legacy_variance",
+      "target_capability_id": "variance.total_by_dimension_bridge",
+      "related_capability_ids": [
+        "variance.scenario_bridge",
+        "variance.total_by_dimension_bridge",
+        "variance.exploded_variance_bridge"
+      ],
+      "reason": "The plugin-native total_by_dimension_bridge aggregates the standard variance result by one selected dimension and renders the legacy-style initial/final value bars and percent pins without launching variable-dimension root-cause analysis."
+    },
+    {
+      "legacy_id": "legacy.variance.waterfall_small_multiples",
+      "status": "mapped_active",
+      "legacy_function": "run_legacy_variance",
+      "target_capability_id": "variance.scenario_bridge",
+      "related_capability_ids": [
+        "variance.scenario_bridge"
+      ],
+      "reason": "Small multiples are represented as a panel parameter of the scenario bridge capability, not a separate capability."
+    }
+  ]
+}

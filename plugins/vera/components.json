@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "plugins": [
+    "audit-reconciliation",
+    "client-intake",
+    "journal-sampling",
+    "check-entries",
+    "journal-bank-reconciliation",
+    "report-builder",
+    "concordato-plan-review",
+    "prompt-optimizer",
+    "deep-research-validator",
+    "previdenza-inps",
+    "registro-imprese-sari"
+  ]
+}

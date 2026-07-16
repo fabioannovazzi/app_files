@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Variance Analysis" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#F07F68"/>
+  <circle cx="51" cy="50" r="7" fill="#F07F68"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M13 47h38" stroke="#F7F0DF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M18 44V30h8v14M30 44V18h8v26M42 44V25h8v19" fill="none" stroke="#F7F0DF" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M16 19h11l6 8 7-12h8" fill="none" stroke="#F07F68" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

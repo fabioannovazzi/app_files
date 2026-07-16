@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block body_attrs %}class="slides-editor-body"{% endblock %}
+{% block title %}{{ page_label or "Slide editor" }}{% endblock %}
+{% block head_extra %}
+  <link
+    rel="stylesheet"
+    href="/static/css/slides_editor.css?v={{ (asset_versions | default({})).get('css', '0') }}"
+  />
+{% endblock %}
+{% block head_scripts %}
+  <script id="slidesEditorBootstrap" type="application/json">
+    {{
+      {
+        "lang": lang,
+        "page_label": page_label,
+        "copy": copy,
+        "preview_styles": preview_styles,
+        "preview_scripts": preview_scripts,
+        "preview_allowlist": preview_allowlist,
+      }
+      | tojson
+    }}
+  </script>
+{% endblock %}
+{% block body %}
+  <header class="landing-header">
+    <a
+      href="/?lang={{ lang or 'en' }}"
+      class="landing-logo-link"
+      aria-label="{{ copy.home_link_aria | default('Return to the home page') }}"
+    >
+      <img
+        class="landing-logo"
+        src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png"
+        alt="Mparanza"
+      />
+    </a>
+  </header>
+  <main id="slidesReactRoot" class="app-main slides-editor-main">
+    <div class="container">
+      <div id="slidesReactApp"></div>
+    </div>
+  </main>
+{% endblock %}
+{% block scripts %}
+  <script
+    src="/static/js/slides-react.js?v={{ (asset_versions | default({})).get('js', '0') }}"
+    defer
+  ></script>
+{% endblock %}

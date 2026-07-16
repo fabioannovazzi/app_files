@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_label or "Check entries" }}{% endblock %}
+
+{% block head_scripts %}
+  <script id="checkEntriesBootstrap" type="application/json">
+    {{ {"lang": lang, "page_label": page_label, "initial_job_id": initial_job_id, "user_email": user_email} | tojson }}
+  </script>
+{% endblock %}
+
+{% block body %}
+  <div id="checkEntriesReactApp"></div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/check-entries-react.js?v={{ asset_version or '' }}" defer></script>
+{% endblock %}

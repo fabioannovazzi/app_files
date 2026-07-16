@@ -1,0 +1,35 @@
+{
+  "plugin": "statement-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "pnl_statement_table",
+      "prompt": "Use Statement Analysis to build a P&L table with revenue, cost of sales, gross profit, operating expenses, tax, and net income rows.",
+      "required_signals": [
+        "P&L",
+        "statement",
+        "net income"
+      ]
+    },
+    {
+      "id": "income_statement_scheme",
+      "prompt": "Create a deterministic income statement table with grouped years and PL/AC scenario columns.",
+      "required_signals": [
+        "income statement",
+        "grouped years",
+        "scenario columns"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "simple_sales_period_comparison",
+      "prompt": "Compare AC vs PY sales by brand and show exact variance rows."
+    },
+    {
+      "id": "lead_funnel",
+      "prompt": "Show lead readiness through owner, source, activity and sales accepted stages."
+    }
+  ]
+}
+

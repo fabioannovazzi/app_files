@@ -1,0 +1,44 @@
+{
+  "name": "set-overlap-analysis",
+  "version": "0.1.28",
+  "description": "Deterministic Venn and UpSet overlap chart workflow for CSV and Excel datasets.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "venn",
+    "upset",
+    "set overlap",
+    "legacy charting",
+    "deterministic source data"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Set Overlap Analysis",
+    "shortDescription": "Run deterministic Venn and UpSet overlap charts.",
+    "longDescription": "CSV and Excel workflow for set-overlap analysis. It inspects item and set columns, applies explicit recipe filters, optionally selects a period, prepares deterministic set membership and intersection source data, renders Venn charts for two or three sets and UpSet charts for larger overlap structures, and writes context, audit, source-pack, CSV and chart artifacts for Codex interpretation.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Set Overlap Analysis on the CSV or Excel file I provide.",
+      "Inspect the columns, ask only for unresolved item/set/period mappings, run deterministic Venn and UpSet overlap analysis, write chart artifacts, context data, audit and source pack, then interpret the most important intersections from the structured source data."
+    ],
+    "brandColor": "#343434",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

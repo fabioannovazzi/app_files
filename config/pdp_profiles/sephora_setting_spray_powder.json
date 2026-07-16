@@ -1,0 +1,180 @@
+{
+  "profile_name": "sephora_setting_spray_powder",
+  "display_name": "Sephora · Setting Spray & Powder PDP",
+  "retailer": "sephora",
+  "base_url": "https://www.sephora.com",
+  "category_hints": [
+    "makeup/face/setting-spray-powder"
+  ],
+  "category_urls": [
+    "https://www.sephora.com/shop/setting-powder-face-powder"
+  ],
+  "parent_rules": {
+    "min_color_variants": 0,
+    "disallow_kits_regex": "(?i)\\b(set|sets|duo|duos|kit|kits|vault|vaults|gift|gifts)\\b",
+    "finish_split_tokens": [
+      "matte",
+      "satin",
+      "luminous",
+      "glow",
+      "radiant",
+      "dewy",
+      "natural",
+      "blurring"
+    ]
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "P[0-9]+",
+    "parent_json_paths": [
+      "$.productId",
+      "$.id",
+      "$.product.id",
+      "$.mainSku.productId",
+      "$.productGroupID"
+    ],
+    "variant_id_fields": [
+      "$.skuId",
+      "$.sku",
+      "$.id",
+      "$.offerId"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "script_app_state",
+        "selector": "script#__NUXT__"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.brand.displayName",
+      "$.brand.name",
+      "$.brand"
+    ],
+    "parent_title": [
+      "$.displayName",
+      "$.name",
+      "$.productName"
+    ],
+    "parent_summary": [
+      "$.shortDescription",
+      "$.description"
+    ],
+    "series_label": [
+      "$.line",
+      "$.collection",
+      "$.brand.collectionName"
+    ],
+    "category_path": [
+      "$.breadcrumbs[*].displayName",
+      "$.categoryPath[*].name"
+    ],
+    "variant_list": [
+      "$.variants",
+      "$.skus",
+      "$.SKU_SKIN_TYPE",
+      "$.SKUs",
+      "$.groupedSKUs",
+      "$.groupedSkus",
+      "$.buyLinks"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.sku",
+        "$.skuId",
+        "$.id",
+        "$.offerId"
+      ],
+      "variant_sku": [
+        "$.sku",
+        "$.skuId",
+        "$.id",
+        "$.offerId"
+      ],
+      "parent_id": [
+        "$.productId",
+        "$.product.id",
+        "$.mainSku.productId",
+        "$.productGroupID"
+      ],
+      "variant_price": [
+        "$.listPrice",
+        "$.price.listPrice",
+        "$.price.price"
+      ],
+      "variant_sale_price": [
+        "$.salePrice",
+        "$.price.salePrice",
+        "$.price.sale_price",
+        "$.price.sale_price_lowest"
+      ],
+      "variant_currency": [
+        "$.currency",
+        "$.price.currency"
+      ],
+      "variant_shade_label": [
+        "$.shadeName",
+        "$.shade",
+        "$.variationLabel"
+      ],
+      "variant_size": [
+        "$.size",
+        "$.sizeText",
+        "$.itemSize"
+      ],
+      "variant_upc": [
+        "$.upc",
+        "$.UPC"
+      ],
+      "variant_image": [
+        "$.primarySkuImage.url",
+        "$.image.url",
+        "$.images[0].url"
+      ],
+      "variant_availability": [
+        "$.availabilityStatus",
+        "$.inventoryStatus",
+        "$.inStock",
+        "$.available"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "dedupe_symbols": true,
+      "normalize_number_position": true,
+      "strip_trailing_shade_tokens": true,
+      "strip_pack_counts": true
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": false
+  }
+}

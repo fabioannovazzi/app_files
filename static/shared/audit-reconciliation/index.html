@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit and reconciliation | Vera</title>
+  <style>
+    :root {
+      --paper: #ffffff;
+      --ink: #243027;
+      --text: #465148;
+      --muted: #6d776f;
+      --line: #dfe6dd;
+      --soft: #f5f7f4;
+      --accent: #496a60;
+      --content: 1080px;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+    .nav {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 68px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      color: var(--ink);
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .nav-right,
+    .lang-switch {
+      display: flex;
+      align-items: center;
+    }
+    .nav-right {
+      gap: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .nav-right a { text-decoration: none; }
+    .nav-right a:hover,
+    .nav-right a:focus-visible { color: var(--ink); }
+    .lang-switch {
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+    }
+    .lang-switch button.is-active {
+      background: #e7eee9;
+      color: var(--accent);
+    }
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+    .hero {
+      padding: 82px 0 58px;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+    h1 {
+      max-width: 840px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 620;
+    }
+    h2 {
+      font-size: clamp(28px, 3.2vw, 40px);
+      font-weight: 620;
+    }
+    h3 {
+      font-size: 18px;
+      font-weight: 620;
+    }
+    p { margin: 0; }
+    .lead {
+      max-width: 780px;
+      margin-top: 22px;
+      font-size: clamp(19px, 2.2vw, 24px);
+      line-height: 1.4;
+    }
+    section {
+      padding: 54px 0;
+      border-top: 1px solid var(--line);
+    }
+    .section-head {
+      max-width: 780px;
+      margin-bottom: 26px;
+    }
+    .section-head p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .engine-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .engine,
+    .method {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 22px;
+    }
+    .engine {
+      transition:
+        border-color 160ms ease,
+        transform 160ms ease;
+    }
+    .engine:hover,
+    .engine:focus-within {
+      border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+      transform: translateY(-2px);
+    }
+    .engine p,
+    .method p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+    .engine a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      margin-top: 16px;
+      padding: 6px 0;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 620;
+      text-decoration: none;
+    }
+
+    .engine-grid .engine:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+    .kicker {
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .method {
+      max-width: 780px;
+      background: var(--soft);
+    }
+    .download {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 22px;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #f8fbfa;
+      font-size: 14px;
+      font-weight: 620;
+      text-decoration: none;
+    }
+    @media (max-width: 760px) {
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      body main,
+      body .nav {
+        width: auto !important;
+        max-width: none !important;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      .nav {
+        min-height: auto;
+        padding: 18px 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .nav-right {
+        width: 100%;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .lang-switch {
+        max-width: 100%;
+        flex-wrap: wrap;
+      }
+      body h1 {
+        max-width: 100% !important;
+        font-size: 1.95rem;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+      }
+      body h2 {
+        max-width: 100% !important;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+      }
+      .lead { font-size: 1.08rem !important; }
+      .hero,
+      section,
+      .section-head,
+      .engine-grid,
+      .engine,
+      .method,
+      .section-head p,
+      .lead {
+        min-width: 0;
+        max-width: 100% !important;
+        overflow-wrap: anywhere;
+      }
+      .engine,
+      .method {
+        width: 100%;
+      }
+      .engine-grid { grid-template-columns: minmax(0, 1fr); }
+      .engine-grid .engine:last-child:nth-child(odd) { grid-column: auto; }
+      .hero { padding-top: 58px; }
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav">
+      <a class="brand" href="/" data-i18n="nav.home">Home</a>
+      <div class="nav-right">
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="it">IT</button>
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="de">DE</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow" data-i18n="hero.eyebrow">Audit and reconciliation</p>
+      <h1 data-i18n="hero.title">Choose the accounting check you need.</h1>
+      <p class="lead" data-i18n="hero.lead">Start here when the task is to sample, test entries, reconcile bank movements, clear open items or support a plan number.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2 data-i18n="engines.title">Available checks</h2>
+        <p data-i18n="engines.copy">Pick by the accounting question. Each page explains what to provide, what you get back and which review file to open first.</p>
+      </div>
+      <div class="engine-grid">
+        <article class="engine">
+          <h3 data-i18n="journal.title">Journal sampling</h3>
+          <p data-i18n="journal.copy">Normalizes variable journal exports, identifies fields, selects reproducible samples and writes reading checks.</p>
+          <a href="../journal-sampling/index.html" data-localized-link data-i18n="card.link">View details</a>
+        </article>
+        <article class="engine">
+          <h3 data-i18n="entries.title">Entry support testing</h3>
+          <p data-i18n="entries.copy">Checks selected accounting entries against supporting PDFs or support files and isolates unexplained differences.</p>
+          <a href="../check-entries/index.html" data-localized-link data-i18n="card.link">View details</a>
+        </article>
+        <article class="engine">
+          <h3 data-i18n="bank.title">Journal-bank reconciliation</h3>
+          <p data-i18n="bank.copy">Matches bank statement rows with journal or ledger movements and separates matches, candidates and unmatched items.</p>
+          <a href="../journal-bank-reconciliation/index.html" data-localized-link data-i18n="card.link">View details</a>
+        </article>
+        <article class="engine">
+          <h3 data-i18n="open.title">Open-item reconciliation</h3>
+          <p data-i18n="open.copy">Reconciles open items with ledgers, banks, payment lists, factoring schedules and other external support.</p>
+          <a href="../riconciliazione-partite/index.html" data-localized-link data-i18n="card.link">View details</a>
+        </article>
+        <article class="engine">
+          <h3 data-i18n="plan.title">Plan support review</h3>
+          <p data-i18n="plan.copy">Ties plan figures to balances, ledgers, adjusted schedules and tax or social-security details.</p>
+          <a href="../concordato-plan-review/index.html" data-localized-link data-i18n="card.link">View details</a>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="method">
+        <p class="kicker" data-i18n="method.kicker">Review method</p>
+        <h2 data-i18n="method.title">Prepare the files before interpreting the result.</h2>
+        <p data-i18n="method.copy">The pages create normalized rows, matches, exceptions and review files first. Interpretation comes after that, with unresolved items kept visible.</p>
+        <a class="download" href="/downloads/vera" data-download-link data-i18n="download.label">Download Vera</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const copy = {
+      en: {
+        title: "Audit and reconciliation | Vera",
+        "nav.home": "Home",
+        "hero.eyebrow": "Audit and reconciliation",
+        "hero.title": "Choose the accounting check you need.",
+        "hero.lead": "Start here when the task is to sample, test entries, reconcile bank movements, clear open items or support a plan number.",
+        "engines.title": "Available checks",
+        "engines.copy": "Pick by the accounting question. Each page explains what to provide, what you get back and which review file to open first.",
+        "journal.title": "Journal sampling",
+        "journal.copy": "Normalizes variable journal exports, identifies fields, selects reproducible samples and writes reading checks.",
+        "entries.title": "Entry support testing",
+        "entries.copy": "Checks selected accounting entries against supporting PDFs or support files and isolates unexplained differences.",
+        "bank.title": "Journal-bank reconciliation",
+        "bank.copy": "Matches bank statement rows with journal or ledger movements and separates matches, candidates and unmatched items.",
+        "open.title": "Open-item reconciliation",
+        "open.copy": "Reconciles open items with ledgers, banks, payment lists, factoring schedules and other external support.",
+        "plan.title": "Plan support review",
+        "plan.copy": "Ties plan figures to balances, ledgers, adjusted schedules and tax or social-security details.",
+        "card.link": "View details",
+        "method.kicker": "Review method",
+        "method.title": "Prepare the files before interpreting the result.",
+        "method.copy": "The pages create normalized rows, matches, exceptions and review files first. Interpretation comes after that, with unresolved items kept visible.",
+        "download.label": "Download ZIP",
+      },
+      it: {
+        title: "Controlli contabili e riconciliazioni | Vera",
+        "nav.home": "Home",
+        "hero.eyebrow": "Controlli contabili",
+        "hero.title": "Scegli il controllo contabile da fare.",
+        "hero.lead": "Parti da qui quando devi campionare scritture, verificare supporti, riconciliare banca e contabilità, chiudere partite aperte o documentare un numero di piano.",
+        "engines.title": "Le verifiche disponibili",
+        "engines.copy": "Scegli in base alla domanda contabile. Ogni pagina indica quali file fornire, quali output aspettarsi e da quale file iniziare la revisione.",
+        "journal.title": "Campionamento scritture contabili",
+        "journal.copy": "Prepara campioni riproducibili da giornali con formati diversi e conserva i controlli di lettura.",
+        "entries.title": "Verifica supporti delle scritture",
+        "entries.copy": "Confronta scritture selezionate con PDF o file di supporto e separa differenze, supporti mancanti e casi da rivedere.",
+        "bank.title": "Riconciliazione banca-contabilità",
+        "bank.copy": "Abbina movimenti di estratto conto a righe di giornale o mastrino e tiene separate corrispondenze ed eccezioni.",
+        "open.title": "Riconciliazione partite aperte",
+        "open.copy": "Confronta partite aperte, mastrini, banche, distinte, factoring e compensazioni per capire cosa resta aperto.",
+        "plan.title": "Supporto numeri di piano",
+        "plan.copy": "Collega i valori del piano a bilancio, mastrini, prospetti rettificati e dettagli fiscali o previdenziali.",
+        "card.link": "Vedi dettagli",
+        "method.kicker": "Metodo di lavoro",
+        "method.title": "Prima prepara i riscontri, poi valuta.",
+        "method.copy": "Le pagine preparano righe normalizzate, corrispondenze, eccezioni e file di revisione. La valutazione professionale arriva dopo, con gli elementi irrisolti ancora visibili.",
+        "download.label": "Scarica ZIP",
+      },
+      fr: {
+        title: "Audit et rapprochements | Vera",
+        "nav.home": "Accueil",
+        "hero.eyebrow": "Audit et rapprochements",
+        "hero.title": "Choisissez le contrôle comptable à lancer.",
+        "hero.lead": "Commencez ici pour échantillonner un journal, tester des écritures, rapprocher la banque, solder des postes ouverts ou documenter un chiffre de plan.",
+        "engines.title": "Les contrôles disponibles",
+        "engines.copy": "Choisissez selon la question comptable. Chaque page indique les fichiers à fournir, les sorties attendues et le premier fichier à ouvrir pour la revue.",
+        "journal.title": "Échantillonnage du journal",
+        "journal.copy": "Normalise les exports de journal variables, identifie les champs, sélectionne des échantillons reproductibles et écrit les contrôles de lecture.",
+        "entries.title": "Contrôle des écritures",
+        "entries.copy": "Vérifie les écritures sélectionnées avec les PDF ou fichiers justificatifs et isole les différences non expliquées.",
+        "bank.title": "Rapprochement journal-banque",
+        "bank.copy": "Rapproche les lignes de relevé bancaire avec les mouvements du journal ou du grand livre et sépare correspondances, candidats et non rapprochés.",
+        "open.title": "Rapprochement des postes ouverts",
+        "open.copy": "Rapproche les postes ouverts avec grands livres, banques, listes de paiement, factoring et autres justificatifs externes.",
+        "plan.title": "Révision du plan",
+        "plan.copy": "Relie les chiffres du plan aux bilans, grands livres, tableaux ajustés et détails fiscaux ou sociaux.",
+        "card.link": "Voir le détail",
+        "method.kicker": "Méthode de revue",
+        "method.title": "Préparer les fichiers avant d'interpréter le résultat.",
+        "method.copy": "Les pages créent d'abord les lignes normalisées, rapprochements, exceptions et fichiers de revue. L'interprétation vient ensuite, avec les points non résolus visibles.",
+        "download.label": "Télécharger ZIP",
+      },
+      de: {
+        title: "Audit und Abstimmung | Vera",
+        "nav.home": "Start",
+        "hero.eyebrow": "Audit und Abstimmung",
+        "hero.title": "Wählen Sie die passende Buchhaltungsprüfung.",
+        "hero.lead": "Starten Sie hier, wenn Sie Stichproben ziehen, Buchungen prüfen, Bankbewegungen abstimmen, offene Posten klären oder eine Planzahl belegen müssen.",
+        "engines.title": "Verfügbare Prüfungen",
+        "engines.copy": "Wählen Sie nach Buchhaltungsfrage. Jede Seite erklärt, welche Dateien benötigt werden, welche Ergebnisse entstehen und welche Prüfdatei zuerst geöffnet wird.",
+        "journal.title": "Journal-Stichproben",
+        "journal.copy": "Normalisiert variable Journalexporte, erkennt Felder, wählt reproduzierbare Stichproben und schreibt Lesekontrollen.",
+        "entries.title": "Buchungen prüfen",
+        "entries.copy": "Prüft ausgewählte Buchungen gegen Beleg-PDFs oder Nachweisdateien und isoliert ungeklärte Differenzen.",
+        "bank.title": "Journal-Bank-Abstimmung",
+        "bank.copy": "Stimmt Kontoauszugszeilen mit Journal- oder Hauptbuchbewegungen ab und trennt Treffer, Kandidaten und ungeklärte Posten.",
+        "open.title": "Offene-Posten-Abstimmung",
+        "open.copy": "Stimmt offene Posten mit Hauptbüchern, Banken, Zahlungslisten, Factoring und anderen externen Nachweisen ab.",
+        "plan.title": "Planunterstützung prüfen",
+        "plan.copy": "Verknüpft Planzahlen mit Bilanzen, Hauptbüchern, angepassten Tabellen und Steuer- oder Sozialdetails.",
+        "card.link": "Details ansehen",
+        "method.kicker": "Prüfmethode",
+        "method.title": "Erst die Dateien vorbereiten, dann das Ergebnis bewerten.",
+        "method.copy": "Die Seiten erzeugen zuerst normalisierte Zeilen, Treffer, Ausnahmen und Prüfdateien. Die Bewertung folgt danach; offene Punkte bleiben sichtbar.",
+        "download.label": "ZIP herunterladen",
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const lang = ["en", "it", "fr", "de"].includes(params.get("lang")) ? params.get("lang") : "en";
+    const safeLang = lang || "en";
+    const activeCopy = copy[safeLang] || copy.en;
+    document.documentElement.lang = safeLang;
+    document.title = activeCopy.title || copy.en.title;
+    document.querySelectorAll("[data-i18n]").forEach((node) => {
+      const value = activeCopy[node.dataset.i18n];
+      if (value) node.textContent = value;
+    });
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      const isActive = button.dataset.lang === safeLang;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+      button.addEventListener("click", () => {
+        const next = new URL(window.location.href);
+        next.searchParams.set("lang", button.dataset.lang);
+        window.location.href = next.toString();
+      });
+    });
+    document.querySelectorAll("[data-localized-link]").forEach((link) => {
+      const url = new URL(link.getAttribute("href"), window.location.href);
+      url.searchParams.set("lang", safeLang);
+      link.href = url.pathname + url.search;
+    });
+    document.querySelectorAll("[data-download-link]").forEach((link) => {
+      link.href = `/downloads/vera?lang=${safeLang}`;
+    });
+    document.querySelectorAll('a[href="/"]').forEach((link) => {
+      link.href = `/?lang=${safeLang}`;
+    });
+  </script>
+</body>
+</html>

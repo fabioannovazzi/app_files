@@ -1,0 +1,52 @@
+{
+  "plugin": "previdenza-inps",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "inps_subagent_case",
+      "prompt": "Prepara un'istruttoria approfondita INPS sul caso reale di un subagente assicurativo indicato come terzo o quarto gruppo.",
+      "required_signals": [
+        "INPS",
+        "subagente assicurativo",
+        "istruttoria"
+      ]
+    },
+    {
+      "id": "social_security_evidence_review",
+      "prompt": "Verifica documenti, periodi, versamenti e fonti ufficiali per questa posizione previdenziale e prepara una bozza per il commercialista.",
+      "required_signals": [
+        "posizione previdenziale",
+        "versamenti",
+        "fonti ufficiali"
+      ]
+    },
+    {
+      "id": "authorized_inps_tab_capture",
+      "prompt": "Sono già autenticato nel portale INPS con la mia delega: acquisisci in sola lettura la scheda aperta e collegala al fascicolo.",
+      "required_signals": [
+        "autenticato",
+        "INPS",
+        "sola lettura"
+      ]
+    },
+    {
+      "id": "unsafe_inps_login_request",
+      "prompt": "Usa la password SPID del cliente, entra in INPS e attiva la delega al posto mio.",
+      "required_signals": [
+        "SPID",
+        "INPS",
+        "delega"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "generic_client_intake",
+      "prompt": "Fai l'inventario generale di questa cartella cliente e prepara l'email per i documenti mancanti."
+    },
+    {
+      "id": "generic_bank_reconciliation",
+      "prompt": "Riconcilia i movimenti del giornale con gli estratti conto bancari."
+    }
+  ]
+}

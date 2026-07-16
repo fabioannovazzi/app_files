@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sample Ulta Lipstick PDP</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Example Brand Matte Lip Color | 01 Classic Red",
+        "brand": {"name": "Example Brand"},
+        "description": "Example Brand Matte Lip Color is a synthetic product used to exercise parser behavior.",
+        "breadcrumb": [
+          {"name": "Makeup"},
+          {"name": "Lips"},
+          {"name": "Lipstick"}
+        ],
+        "product": {
+          "productId": "pimprod123456",
+          "name": "Example Brand Matte Lip Color",
+          "brandName": "Example Brand",
+          "variants": [
+            {
+              "sku": "sku101",
+              "shadeName": "01 Classic Red",
+              "price": "19.00",
+              "barcode": "0001122334455",
+              "priceCurrency": "USD",
+              "image": "https://example.com/images/sku101.jpg"
+            },
+            {
+              "sku": "sku102",
+              "shadeName": "02 Rosy Nude",
+              "price": "19.00",
+              "priceCurrency": "USD",
+              "image": "https://example.com/images/sku102.jpg"
+            },
+            {
+              "sku": "sku103",
+              "shadeName": "03 Plum",
+              "price": "TBD",
+              "priceCurrency": "USD",
+              "image": "https://example.com/images/sku103.jpg"
+            }
+          ]
+        }
+      }
+    </script>
+    <script id="apollo_state">
+      window.__APOLLO_STATE__ = {
+        "ROOT_QUERY": {
+          "Page({\"moduleParams\":{\"sku\":\"sku101\"}})": {
+            "content": {
+              "moduleName": "Page",
+              "modules": [
+                {
+                  "moduleName": "ProductInformation",
+                  "productName": "Example Brand Matte Lip Color",
+                  "brandAction": {
+                    "label": "Example Brand",
+                    "url": "https://example.com/brand/example"
+                  },
+                  "rating": 4.8,
+                  "reviewCount": 120,
+                  "badges": ["Vegan"]
+                },
+                {
+                  "moduleName": "ProductSummary",
+                  "message": "Example Brand Matte Lip Color features synthetic highlights.",
+                  "summaries": [
+                    {
+                      "title": "Highlights",
+                      "items": [
+                        {
+                          "label": "Cruelty Free",
+                          "itemDetailCard": {
+                            "description": "This brand does not test on animals."
+                          }
+                        },
+                        {
+                          "label": "Vegan",
+                          "itemDetailCard": {
+                            "description": "Formulated without animal-derived ingredients."
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "moduleName": "ProductDetail",
+                  "description": "#### Features\\n\\n- Long wear\\n- Bold color payoff",
+                  "usage": "Apply from the center of the lips outward.",
+                  "ingredients": "Dimethicone, Caprylic/Capric Triglyceride, Synthetic Wax.",
+                  "restrictions": ""
+                }
+              ]
+            }
+          },
+          "ProductVariants": {
+            "variants": [
+              {
+                "productId": "pimprod123456",
+                "skuId": "sku101",
+                "name": "Classic Red 01",
+                "shadeDescription": "Bold red",
+                "salePrice": "19.00",
+                "listPrice": "24.00",
+                "priceCurrency": "USD",
+                "mainImage": {"imageUrl": "https://example.com/images/sku101.jpg"},
+                "swatchImage": {"imageUrl": "https://example.com/images/sku101-swatch.jpg"},
+                "badges": ["Vegan"]
+              },
+              {
+                "productId": "pimprod123456",
+                "skuId": "sku102",
+                "name": "Rosy Nude 02",
+                "shadeDescription": "Soft nude",
+                "salePrice": "19.00",
+                "priceCurrency": "USD",
+                "mainImage": {"imageUrl": "https://example.com/images/sku102.jpg"},
+                "swatchImage": {"imageUrl": "https://example.com/images/sku102-swatch.jpg"}
+              },
+              {
+                "productId": "pimprod123456",
+                "skuId": "sku103",
+                "name": "Plum 03",
+                "shadeDescription": "Deep plum",
+                "salePrice": "TBD",
+                "priceCurrency": "USD",
+                "unavailable": true,
+                "mainImage": {"imageUrl": "https://example.com/images/sku103.jpg"},
+                "swatchImage": {"imageUrl": "https://example.com/images/sku103-swatch.jpg"}
+              }
+            ]
+          }
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <main>
+      <ul class="shade-grid">
+        <li
+          data-variant-id="sku104"
+          data-shade-name="04 Pink Bloom"
+          data-price="20.00"
+          data-currency="USD"
+        ></li>
+      </ul>
+    </main>
+  </body>
+</html>

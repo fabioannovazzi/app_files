@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} - Mparanza{% endblock %}
+
+{% block body_attrs %}class="landing-body legal-body"{% endblock %}
+
+{% block head_extra %}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+{% endblock %}
+
+{% block body %}
+<header class="landing-header legal-header">
+  <a href="/" class="landing-logo-link" aria-label="Return to the home page">
+    <img class="landing-logo"
+         src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png"
+         alt="Mparanza" />
+  </a>
+
+  <nav class="legal-nav" aria-label="Legal pages">
+    <a href="/zero-retention" class="legal-nav__link{% if active_legal_page == 'zero-retention' %} is-active{% endif %}">Zero Retention</a>
+    <a href="/terms" class="legal-nav__link{% if active_legal_page == 'terms' %} is-active{% endif %}">Terms</a>
+    <a href="/support" class="legal-nav__link{% if active_legal_page == 'support' %} is-active{% endif %}">Support</a>
+  </nav>
+</header>
+
+<main class="legal-page">
+  <section class="legal-hero" aria-labelledby="legal-page-title">
+    <p class="legal-eyebrow">{{ page.eyebrow }}</p>
+    <h1 id="legal-page-title">{{ page.title }}</h1>
+    <p class="legal-summary">{{ page.summary }}</p>
+    {% if page.contact_email %}
+      <p class="legal-effective">Email <a href="mailto:{{ page.contact_email }}">{{ page.contact_email }}</a></p>
+    {% else %}
+      <p class="legal-effective">Effective {{ page.effective_date }}</p>
+    {% endif %}
+  </section>
+
+  <div class="legal-layout">
+    <aside class="legal-toc" aria-label="{{ page.title }} sections">
+      <p class="legal-toc__title">Sections</p>
+      <nav>
+        {% for section in page.sections %}
+          <a href="#{{ section.id }}">{{ section.title }}</a>
+        {% endfor %}
+      </nav>
+    </aside>
+
+    <article class="legal-document">
+      {% for section in page.sections %}
+        <section class="legal-document__section" id="{{ section.id }}">
+          <h2>{{ section.title }}</h2>
+          {% for paragraph in section.paragraphs %}
+            <p>{{ paragraph }}</p>
+          {% endfor %}
+          {% if section.bullets %}
+            <ul>
+              {% for bullet in section.bullets %}
+                <li>{{ bullet }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </section>
+      {% endfor %}
+    </article>
+  </div>
+</main>
+
+{% endblock %}

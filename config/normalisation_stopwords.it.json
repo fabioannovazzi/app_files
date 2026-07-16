@@ -1,0 +1,25 @@
+{
+  "stopwords": [
+    "GIROCONTO",
+    "RIBA"
+  ],
+  "keepwords": [
+    "AFFITTO",
+    "STIPENDIO",
+    "RIMBORSO",
+    "ASSICURAZIONI",
+    "BOLLETTA",
+    "F24",
+    "IMU",
+    "TARI",
+    "IVA",
+    "TELEPASS",
+    "UNIPOLSAI",
+    "ENEL",
+    "TIM",
+    "AMAZON",
+    "PAYPAL",
+    "STRIPE"
+  ]
+}
+

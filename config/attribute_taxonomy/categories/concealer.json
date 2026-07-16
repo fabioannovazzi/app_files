@@ -1,0 +1,902 @@
+{
+    "id": "concealer",
+    "label": "concealer",
+    "attributes": [
+        {
+            "id": "form",
+            "label": "form",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "children": [
+                        {
+                            "id": "liquid_doe_foot_tube",
+                            "label": "liquid with doe-foot wand",
+                            "synonyms": [
+                                "doe foot",
+                                "liquid wand",
+                                "tube with wand",
+                                "wand applicator"
+                            ]
+                        },
+                        {
+                            "id": "liquid_squeeze_tube",
+                            "label": "liquid in squeeze tube",
+                            "synonyms": [
+                                "liquid tube",
+                                "soft tube",
+                                "squeeze tube"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "children": [
+                        {
+                            "id": "cream_pot_jar",
+                            "label": "cream in pot/jar",
+                            "synonyms": [
+                                "cream jar",
+                                "cream pot",
+                                "jar concealer",
+                                "pot concealer"
+                            ]
+                        },
+                        {
+                            "id": "cream_compact",
+                            "label": "cream in compact",
+                            "synonyms": [
+                                "compact cream",
+                                "compact pan",
+                                "cream compact",
+                                "cream pan",
+                                "pan concealer"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick",
+                    "children": [
+                        {
+                            "id": "stick_bullet",
+                            "label": "twist-up stick",
+                            "synonyms": [
+                                "bullet concealer",
+                                "solid stick",
+                                "stick concealer",
+                                "twist up stick"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "pencil_pen",
+                    "label": "pencil/pen",
+                    "children": [
+                        {
+                            "id": "crayon_pencil",
+                            "label": "crayon/pencil",
+                            "synonyms": [
+                                "concealer pencil",
+                                "crayon",
+                                "pencil concealer",
+                                "sharpenable",
+                                "wood pencil"
+                            ]
+                        },
+                        {
+                            "id": "click_pen_brush",
+                            "label": "click pen with brush",
+                            "synonyms": [
+                                "brush pen",
+                                "click pen",
+                                "concealer pen",
+                                "twist up pen"
+                            ]
+                        },
+                        {
+                            "id": "click_pen_sponge",
+                            "label": "click pen with sponge",
+                            "synonyms": [
+                                "cushion applicator",
+                                "cushion tip",
+                                "sponge pen",
+                                "sponge tip"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "palette",
+                    "label": "palette",
+                    "children": [
+                        {
+                            "id": "concealer_palette",
+                            "label": "multi-shade palette",
+                            "synonyms": [
+                                "concealer wheel",
+                                "corrector palette",
+                                "multi shade palette",
+                                "palette concealer",
+                                "pro palette"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat matte",
+                        "matte finish",
+                        "oil control",
+                        "shine free",
+                        "velvet matte"
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "natural finish",
+                        "natural look",
+                        "semi matte",
+                        "skin like",
+                        "soft natural"
+                    ]
+                },
+                {
+                    "id": "radiant",
+                    "label": "radiant/dewy",
+                    "synonyms": [
+                        "dewy",
+                        "glow finish",
+                        "glowy",
+                        "luminous",
+                        "radiant"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "satin finish",
+                        "satiny",
+                        "semi dewy",
+                        "silky finish",
+                        "soft sheen"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "sheer",
+                    "label": "sheer",
+                    "synonyms": [
+                        "tint",
+                        "transparent",
+                        "veil",
+                        "very light"
+                    ]
+                },
+                {
+                    "id": "light",
+                    "label": "light coverage",
+                    "synonyms": [
+                        "lightweight coverage",
+                        "natural coverage",
+                        "soft coverage",
+                        "subtle coverage"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium coverage",
+                    "synonyms": [
+                        "buildable",
+                        "medium buildable",
+                        "moderate",
+                        "true medium"
+                    ]
+                },
+                {
+                    "id": "full",
+                    "label": "full",
+                    "synonyms": [
+                        "full coverage",
+                        "high coverage",
+                        "maximum coverage",
+                        "opaque"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "concealer_type",
+            "label": "concealer type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "skin_tone_concealer",
+                    "label": "skin-tone concealer",
+                    "synonyms": [
+                        "all over concealer",
+                        "skin tone",
+                        "standard concealer",
+                        "traditional concealer",
+                        "true concealer"
+                    ]
+                },
+                {
+                    "id": "under_eye_brightener",
+                    "label": "under-eye brightener",
+                    "synonyms": [
+                        "brightening concealer",
+                        "highlighting concealer",
+                        "illuminating concealer",
+                        "radiance pen",
+                        "under eye brightener"
+                    ]
+                },
+                {
+                    "id": "color_corrector",
+                    "label": "color-corrector",
+                    "synonyms": [
+                        "color corrector",
+                        "correcting concealer",
+                        "corrector",
+                        "neutralizing concealer",
+                        "tone corrector"
+                    ]
+                },
+                {
+                    "id": "contour_concealer",
+                    "label": "contour concealer",
+                    "synonyms": [
+                        "contouring",
+                        "darker concealer",
+                        "shading concealer",
+                        "shadowing concealer"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "blemish_treatment",
+                    "label": "blemish-treatment concealer",
+                    "synonyms": [
+                        "acne concealer",
+                        "medicated concealer",
+                        "salicylic concealer",
+                        "spot treatment concealer",
+                        "zit concealer"
+                    ]
+                },
+                {
+                    "id": "camouflage_concealer",
+                    "label": "camouflage concealer",
+                    "synonyms": [
+                        "camouflage",
+                        "cover up",
+                        "heavy duty concealer",
+                        "scar concealer",
+                        "tattoo concealer"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "application_area",
+            "label": "application area",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "under_eye",
+                    "label": "under-eye",
+                    "synonyms": [
+                        "below eye",
+                        "dark circle area",
+                        "eye area",
+                        "under eye",
+                        "undereye"
+                    ]
+                },
+                {
+                    "id": "face",
+                    "label": "face",
+                    "synonyms": [
+                        "all over face",
+                        "blemish area",
+                        "complexion",
+                        "spots",
+                        "t zone"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "tone_depth",
+            "label": "tone depth",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "fair",
+                    "label": "fair",
+                    "synonyms": [
+                        "fairest",
+                        "porcelain",
+                        "ultra light",
+                        "very fair"
+                    ]
+                },
+                {
+                    "id": "light",
+                    "label": "light tone",
+                    "synonyms": [
+                        "fair light",
+                        "ivory",
+                        "light medium"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium tone",
+                    "synonyms": [
+                        "medium light",
+                        "mid tone"
+                    ]
+                },
+                {
+                    "id": "tan",
+                    "label": "tan",
+                    "synonyms": [
+                        "caramel tan",
+                        "deep tan",
+                        "golden tan",
+                        "medium tan"
+                    ]
+                },
+                {
+                    "id": "deep",
+                    "label": "deep",
+                    "synonyms": [
+                        "cocoa",
+                        "dark",
+                        "espresso",
+                        "very deep"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "undertone",
+            "label": "undertone",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "cool",
+                    "label": "cool",
+                    "synonyms": [
+                        "blue undertone",
+                        "cool complexion",
+                        "cool toned",
+                        "pink undertone",
+                        "rosy"
+                    ]
+                },
+                {
+                    "id": "neutral",
+                    "label": "neutral",
+                    "synonyms": [
+                        "balanced",
+                        "neutral toned",
+                        "neutral undertone"
+                    ]
+                },
+                {
+                    "id": "warm",
+                    "label": "warm",
+                    "synonyms": [
+                        "golden",
+                        "peachy undertone",
+                        "warm complexion",
+                        "warm toned",
+                        "yellow undertone"
+                    ]
+                },
+                {
+                    "id": "olive",
+                    "label": "olive",
+                    "synonyms": [
+                        "green gold",
+                        "olive complexion",
+                        "olive toned",
+                        "olive undertone",
+                        "yellow green undertone"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_corrector_shade",
+            "label": "color-corrector shade",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "green",
+                    "label": "green",
+                    "synonyms": [
+                        "anti redness",
+                        "green corrector",
+                        "green neutralizer",
+                        "mint",
+                        "redness corrector"
+                    ]
+                },
+                {
+                    "id": "peach",
+                    "label": "peach",
+                    "synonyms": [
+                        "bisque corrector",
+                        "light peach",
+                        "peach corrector",
+                        "peachy",
+                        "salmon"
+                    ]
+                },
+                {
+                    "id": "orange",
+                    "label": "orange",
+                    "synonyms": [
+                        "apricot",
+                        "deep peach",
+                        "orange corrector",
+                        "orange neutralizer"
+                    ]
+                },
+                {
+                    "id": "yellow",
+                    "label": "yellow",
+                    "synonyms": [
+                        "banana",
+                        "blue neutralizer",
+                        "sallow brightener",
+                        "yellow brightener",
+                        "yellow corrector"
+                    ]
+                },
+                {
+                    "id": "lavender",
+                    "label": "lavender",
+                    "synonyms": [
+                        "dullness corrector",
+                        "lavender corrector",
+                        "lavender neutralizer",
+                        "purple corrector",
+                        "violet corrector"
+                    ]
+                },
+                {
+                    "id": "pink",
+                    "label": "pink",
+                    "synonyms": [
+                        "brightening pink",
+                        "cool pink",
+                        "eye brightener pink",
+                        "pink corrector",
+                        "rose corrector"
+                    ]
+                },
+                {
+                    "id": "red",
+                    "label": "red",
+                    "synonyms": [
+                        "red corrector",
+                        "scar cover"
+                    ]
+                },
+                {
+                    "id": "blue",
+                    "label": "blue",
+                    "synonyms": [
+                        "blue brightener",
+                        "blue corrector",
+                        "cool blue corrector",
+                        "sallow neutralizer"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "skin_type",
+            "label": "skin type suitability",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "normal",
+                    "label": "normal",
+                    "synonyms": [
+                        "balanced skin",
+                        "normal complexion",
+                        "normal skin",
+                        "normal type"
+                    ]
+                },
+                {
+                    "id": "dry",
+                    "label": "dry",
+                    "synonyms": [
+                        "dehydrated",
+                        "dry skin",
+                        "flaky",
+                        "parched",
+                        "very dry"
+                    ]
+                },
+                {
+                    "id": "oily",
+                    "label": "oily",
+                    "synonyms": [
+                        "greasy",
+                        "oily skin",
+                        "shine prone",
+                        "very oily"
+                    ]
+                },
+                {
+                    "id": "combination",
+                    "label": "combination",
+                    "synonyms": [
+                        "combination skin",
+                        "combo complexion",
+                        "combo skin",
+                        "oily dry mix",
+                        "t zone oily"
+                    ]
+                },
+                {
+                    "id": "sensitive",
+                    "label": "sensitive",
+                    "synonyms": [
+                        "delicate skin",
+                        "easily irritated",
+                        "reactive",
+                        "sensitive skin",
+                        "sensitized"
+                    ]
+                },
+                {
+                    "id": "acne_prone",
+                    "label": "acne-prone",
+                    "synonyms": [
+                        "acne prone",
+                        "blemish prone",
+                        "breakout prone",
+                        "problem skin",
+                        "spot prone"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "mature",
+                    "label": "mature",
+                    "synonyms": [
+                        "ageing skin",
+                        "aging skin",
+                        "fine line friendly",
+                        "mature complexion",
+                        "wrinkle prone"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "water_resistance",
+            "label": "water resistance",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "none",
+                    "label": "none",
+                    "synonyms": [
+                        "no water resistance",
+                        "non waterproof",
+                        "not water resistant",
+                        "regular",
+                        "washable"
+                    ]
+                },
+                {
+                    "id": "water_resistant",
+                    "label": "water-resistant",
+                    "synonyms": [
+                        "humidity resistant",
+                        "resists water",
+                        "sweat resistant",
+                        "water resistant"
+                    ]
+                },
+                {
+                    "id": "waterproof",
+                    "label": "waterproof",
+                    "synonyms": [
+                        "fully waterproof",
+                        "longwear waterproof",
+                        "swim proof"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "non_comedogenic",
+            "label": "non-comedogenic claim",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "yes",
+                    "label": "yes",
+                    "synonyms": [
+                        "non comedogenic",
+                        "non pore clogging",
+                        "noncomedogenic",
+                        "pore safe",
+                        "won't clog pores"
+                    ]
+                },
+                {
+                    "id": "no",
+                    "label": "no",
+                    "synonyms": [
+                        "clogs pores",
+                        "comedogenic",
+                        "may clog pores",
+                        "pore clogging"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "active_ingredient_family",
+            "label": "active ingredient family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "hydrating",
+                    "label": "hydrating",
+                    "synonyms": [
+                        "aloe",
+                        "glycerin",
+                        "hyaluronic acid",
+                        "panthenol",
+                        "squalane"
+                    ]
+                },
+                {
+                    "id": "brightening",
+                    "label": "brightening",
+                    "synonyms": [
+                        "arbutin",
+                        "kojic acid",
+                        "licorice",
+                        "niacinamide",
+                        "vitamin c"
+                    ]
+                },
+                {
+                    "id": "anti_blemish",
+                    "label": "anti-blemish",
+                    "synonyms": [
+                        "bha",
+                        "salicylic acid",
+                        "sulfur",
+                        "tea tree",
+                        "zinc"
+                    ]
+                },
+                {
+                    "id": "depuffing",
+                    "label": "de-puffing",
+                    "synonyms": [
+                        "caffeine",
+                        "coffee seed",
+                        "de puffing complex",
+                        "green tea",
+                        "yeast extract"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "soothing_calming",
+                    "label": "soothing/calming",
+                    "synonyms": [
+                        "allantoin",
+                        "aloe vera",
+                        "bisabolol",
+                        "centella asiatica",
+                        "chamomile"
+                    ]
+                },
+                {
+                    "id": "firming_smoothing",
+                    "label": "firming/smoothing",
+                    "synonyms": [
+                        "bakuchiol",
+                        "coenzyme q10",
+                        "copper peptides",
+                        "peptides",
+                        "retinol"
+                    ]
+                },
+                {
+                    "id": "sun_protection",
+                    "label": "sun protection",
+                    "synonyms": [
+                        "avobenzone",
+                        "octinoxate",
+                        "octocrylene",
+                        "titanium dioxide",
+                        "zinc oxide"
+                    ]
+                }
+            ]
+        }
+    ]
+}

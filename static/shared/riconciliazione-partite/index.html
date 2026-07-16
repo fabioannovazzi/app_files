@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Riconciliazione partite | Vera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111827;
+      --text: #1f2937;
+      --muted: #475467;
+      --soft: #667085;
+      --line: #e2e8f0;
+      --line-strong: #cbd5e1;
+      --paper: #ffffff;
+      --panel: #ffffff;
+      --green: #486f62;
+      --code: #202834;
+      --radius: 12px;
+      --shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+      --content: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.86);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-shell {
+      width: min(var(--content), calc(100% - 40px));
+      min-height: 66px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      text-decoration: none;
+    }
+
+    .brand img {
+      display: block;
+      width: 128px;
+      height: auto;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .nav-links,
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-links {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-links a,
+    .lang-switch button {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 560;
+      text-decoration: none;
+    }
+
+    .lang-switch button {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible,
+    .lang-switch button:hover,
+    .lang-switch button:focus-visible,
+    .lang-switch button.active {
+      color: var(--ink);
+      background: #f8fafc;
+      outline: none;
+    }
+
+    main {
+      width: min(var(--content), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    section {
+      scroll-margin-top: 92px;
+    }
+
+    .hero {
+      padding: 74px 0 56px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 46px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(42px, 5vw, 58px);
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      font-size: 20px;
+      font-weight: 650;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .subtitle {
+      margin-top: 18px;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.45;
+    }
+
+    .hero-copy {
+      margin-top: 28px;
+      max-width: 840px;
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .action-row {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid var(--green);
+      border-radius: var(--radius);
+      background: var(--green);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--ink);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      outline: none;
+      filter: brightness(0.96);
+    }
+
+    .hero-card {
+      align-self: stretch;
+      min-height: 360px;
+      padding: 28px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .label {
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .hero-list {
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-list li {
+      padding-top: 14px;
+      border-top: 1px solid rgba(217, 224, 231, 0.85);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .hero-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .section-block {
+      padding: 62px 0;
+      border-top: 1px solid rgba(217, 224, 231, 0.75);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.42fr) minmax(0, 0.58fr);
+      gap: 44px;
+      align-items: start;
+      margin-bottom: 30px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(340px, 0.92fr) minmax(0, 1.08fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .card p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .output-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .output-list li {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .output-list strong {
+      display: block;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .output-list span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .review-panel {
+      margin-top: 18px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .review-panel h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(22px, 2vw, 28px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .review-panel p {
+      max-width: 880px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .usage-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .usage-step {
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .usage-step strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--green);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .download-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 24px;
+      align-items: start;
+      padding: 30px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .download-panel > *,
+    .split > * {
+      min-width: 0;
+    }
+
+    .download-panel p {
+      margin-top: 12px;
+      color: var(--muted);
+    }
+
+    .plain-list {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text);
+    }
+
+    .plain-list li + li {
+      margin-top: 8px;
+    }
+
+    pre {
+      margin: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      white-space: pre;
+      color: #eef3f6;
+      background: var(--code);
+      border-radius: var(--radius);
+      padding: 22px;
+      font-size: 13px;
+      line-height: 1.55;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+
+    @media (max-width: 1040px) {
+      h1 {
+        font-size: clamp(42px, 5vw, 58px);
+      }
+
+      .hero,
+      .section-head,
+      .split,
+      .download-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .grid.four,
+      .usage-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-shell {
+        width: min(100% - 24px, var(--content));
+        min-height: 58px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
+      }
+
+      .nav-right {
+        width: 100%;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .nav-links {
+        width: 100%;
+      }
+
+      main {
+        width: min(100% - 24px, var(--content));
+      }
+
+      h1 {
+        font-size: clamp(42px, 5vw, 58px);
+      }
+
+      h2 {
+        font-size: 29px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .hero {
+        padding-top: 44px;
+      }
+
+      .section-block {
+        padding: 46px 0;
+      }
+
+      .grid.four,
+      .usage-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+  </style>
+  <link rel="stylesheet" href="../plugin-page-shell.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza home">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Sezioni principali">
+          <a href="#cosa-fa" data-i18n="nav.what">Cosa fa</a>
+          <a href="#input" data-i18n="nav.inputs">Input</a>
+          <a href="#output" data-i18n="nav.outputs">Output</a>
+          <a href="#uso" data-i18n="nav.use">Uso</a>
+          <a href="#prompt" data-i18n="nav.prompts">Prompt</a>
+          <a href="#scarica" data-i18n="nav.download">Download</a>
+        </nav>
+        <div class="lang-switch" aria-label="Lingua">
+          <button type="button" data-lang="it">It</button>
+          <button type="button" data-lang="en">En</button>
+          <button type="button" data-lang="fr">Fr</button>
+          <button type="button" data-lang="de">De</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero" id="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Riconciliazione contabile</p>
+        <h1 data-i18n="hero.title">Riconcilia partite, pagamenti e supporti in un file Excel rivedibile.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Metti partite aperte, mastrini, banca e supporti in una vista riga per riga.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Fornisci partite, mastrini, banca e documenti di supporto. Ottieni stato riga, supporto citato, supporti mancanti e una sintesi Word per il revisore.</p>
+      </div>
+
+      <aside class="hero-card" aria-label="Problema che risolve">
+        <div class="label" data-i18n="hero.cardLabel">Cosa dai / cosa ottieni</div>
+        <ul class="hero-list" id="hero-list">
+          <li>Dagli partite, mastrini, banche, giornale e supporti.</li>
+          <li>Conferma periodo, cut-off e assunzioni sui supporti.</li>
+          <li>Ottieni file Excel, sintesi Word e richieste sui supporti mancanti.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <section class="section-block" id="cosa-fa">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="what.eyebrow">Cosa fa</p>
+          <h2 data-i18n="what.title">Da documenti contabili a riconciliazione rivedibile</h2>
+        </div>
+        <p data-i18n="what.copy">Serve quando lo studio deve confrontare partite, mastrini, movimenti bancari e supporti documentali senza perdere la traccia di cosa ha chiuso una riga e cosa resta da verificare.</p>
+      </div>
+
+      <div class="split">
+        <pre><code id="input-tree">input/
+  partite_aperte.xlsx
+  mastrino_cliente.pdf
+  libro_giornale.csv
+  estratti_conto/
+    banca_2025.pdf
+  distinte_pagamento.zip
+  compensazioni.pdf</code></pre>
+
+        <pre><code id="result-tree">out/
+  riconciliazione_audit.xlsx
+  relazione_riconciliazione_audit.docx
+
+nel file Excel:
+  Assumptions
+  Source inventory
+  Normalized records
+  Reconciliation detail
+  Summary
+  Checks
+  Codex review rows</code></pre>
+      </div>
+    </section>
+
+    <section class="section-block" id="input">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="inputs.eyebrow">Input</p>
+          <h2 data-i18n="inputs.title">Che cosa legge</h2>
+        </div>
+        <p data-i18n="inputs.copy">Lavora su esportazioni e documenti già disponibili allo studio. Quando un PDF è scansionato, l'OCR è opzionale e locale.</p>
+      </div>
+      <div class="grid four" id="input-cards"></div>
+    </section>
+
+    <section class="section-block" id="output">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="outputs.eyebrow">Output</p>
+          <h2 data-i18n="outputs.title">Che cosa produce</h2>
+        </div>
+        <p data-i18n="outputs.copy">Il risultato è materiale di lavoro da aprire, filtrare e rivedere. Il dettaglio riga per riga resta nel file Excel.</p>
+      </div>
+      <ul class="output-list" id="output-list"></ul>
+      <div class="review-panel">
+        <h3 data-i18n="review.title">Facilita la revisione manuale delle eccezioni</h3>
+        <p data-i18n="review.copy1">Excel conserva il dettaglio riga per riga; Word riassume perimetro, assunzioni, conclusioni operative e punti aperti.</p>
+        <p data-i18n="review.copy2">Ogni eccezione mantiene il percorso verso fonte, pagina, importo, data, regola applicata, supporto trovato e supporto mancante.</p>
+        <p data-i18n="review.copy3">Le righe non chiuse restano raggruppate per controllo manuale, così il revisore parte dalle eccezioni invece di ricostruire il fascicolo.</p>
+        <p data-i18n="review.copy4">Non sostituisce il giudizio professionale. Rende la riconciliazione riproducibile, ispezionabile e più semplice da rivedere.</p>
+      </div>
+    </section>
+
+    <section class="section-block" id="uso">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="use.eyebrow">Uso</p>
+          <h2 data-i18n="use.title">Come si usa in Codex</h2>
+        </div>
+        <p data-i18n="use.copy">Apri la cartella del lavoro in Codex e conferma le sole assunzioni necessarie prima della riconciliazione.</p>
+      </div>
+      <div class="usage-grid" id="usage-grid"></div>
+    </section>
+
+    <section class="section-block" id="prompt">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="prompts.eyebrow">Prompt</p>
+          <h2 data-i18n="prompts.title">Prompt pronti</h2>
+        </div>
+        <p data-i18n="prompts.copy">Parti da uno di questi prompt e sostituisci percorso, periodo e cut-off. Codex chiederà le assunzioni mancanti prima di procedere.</p>
+      </div>
+      <ul class="output-list" id="prompt-list"></ul>
+    </section>
+
+    <section class="section-block" id="scarica">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="download.eyebrow">Download</p>
+          <h2 data-i18n="download.title">Installa dal Plugin Pack</h2>
+        </div>
+        <p data-i18n="download.copy">Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.</p>
+      </div>
+
+      <div class="download-panel">
+        <div>
+          <h3 data-i18n="download.installTitle">Installazione</h3>
+          <p><span data-i18n="download.codexText">Pagina ufficiale:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
+          <div class="action-row">
+            <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Scarica ZIP</a>
+          </div>
+          <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
+          <pre style="margin-top: 18px;"><code id="install-path">/Users/nome/Documents/CodexPlugins/vera-codex-plugin</code></pre>
+        </div>
+        <div>
+          <h3 data-i18n="download.firstUseTitle">Primo uso</h3>
+          <p data-i18n="download.firstUseCopy">In una chat Codex, indica la cartella contabile, il periodo e il cut-off.</p>
+          <pre style="margin-top: 10px;"><code id="prompt-example">Usa Riconciliazione partite sulla cartella /percorso/lavoro/input.
+Periodo 2025, cut-off 31/12/2025.
+Lingua: it.
+Chiedimi le assunzioni mancanti e prepara Excel/Word con dettaglio righe, supporti, punti da rivedere e verifiche aperte.
+Usa il default factoring: factor/operatore collegato a pagamento in estratto conto bancario chiude, salvo mia richiesta contraria.</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const translations = {
+      it: {
+        nav: { what: "A cosa serve", inputs: "File letti", outputs: "Output", use: "Come usarlo", prompts: "Prompt pronti", download: "Installazione" },
+        hero: {
+          eyebrow: "Riconciliazione contabile",
+          title: "Riconcilia partite, pagamenti e supporti in un file Excel rivedibile.",
+          subtitle: "Metti partite aperte, mastrini, banca e supporti in una vista riga per riga.",
+          copy: "Fornisci partite, mastrini, banca e documenti di supporto. Ottieni stato riga, supporto citato, supporti mancanti e una sintesi Word per il revisore.",
+          primary: "Scarica ZIP",
+          secondary: "Come si usa",
+          cardLabel: "Cosa dai / cosa ottieni",
+          bullets: [
+            "Dagli partite, mastrini, banche, giornale e supporti.",
+            "Conferma periodo, cut-off e assunzioni sui supporti.",
+            "Ottieni file Excel, sintesi Word e richieste sui supporti mancanti."
+          ]
+        },
+        what: {
+          eyebrow: "A cosa serve",
+          title: "Da documenti contabili a riconciliazione rivedibile",
+          copy: "Serve quando lo studio deve confrontare partite, mastrini, movimenti bancari e supporti documentali senza perdere la traccia di cosa ha chiuso una riga e cosa resta da verificare.",
+          inputTree: "input/\n  partite_aperte.xlsx\n  mastrino_cliente.pdf\n  libro_giornale.csv\n  estratti_conto/\n    banca_2025.pdf\n  distinte_pagamento.zip\n  compensazioni.pdf",
+          resultTree: "out/\n  riconciliazione_audit.xlsx\n  relazione_riconciliazione_audit.docx\n\nnel file Excel:\n  Assumptions\n  Source inventory\n  Normalized records\n  Reconciliation detail\n  Summary\n  Checks\n  Codex review rows"
+        },
+        inputs: {
+          eyebrow: "File letti",
+          title: "Che cosa legge",
+          copy: "Lavora su esportazioni e documenti già disponibili allo studio. Quando un PDF è scansionato, l'OCR è opzionale e locale.",
+          cards: [
+            ["Partite e mastrini", "Liste partite aperte, mastrini clienti/fornitori, saldi, movimenti e riferimenti documento."],
+            ["Giornale e banca", "Libro giornale, mastrini banca, estratti conto ufficiali o esportazioni bancarie."],
+            ["Supporti esterni", "Distinte pagamento, factoring, anticipi e operatori di incasso."],
+            ["Compensazioni", "Accordi o supporti documentali di compensazione e scritture collegate."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Output",
+          title: "Che cosa produce",
+          copy: "Il risultato è materiale di lavoro da aprire, filtrare e rivedere. Il dettaglio riga per riga resta nel file Excel.",
+          rows: [
+            ["riconciliazione_audit.xlsx", "File Excel con assunzioni, inventario fonti, righe normalizzate, dettaglio riconciliazione, controlli e righe da rivedere."],
+            ["relazione_riconciliazione_audit.docx", "Sintesi del lavoro svolto, perimetro, assunzioni, conclusioni operative e punti ancora aperti."],
+            ["Campione revisore", "Campione riproducibile su righe ad alto valore, righe con supporto obbligatorio e casi dubbi."],
+            ["Supporti mancanti", "Richieste operative per banca, allocazioni, factoring, compensazioni o file non leggibili."]
+          ]
+        },
+        review: {
+          title: "Facilita la revisione manuale delle eccezioni",
+          copy1: "Excel conserva il dettaglio riga per riga; Word riassume perimetro, assunzioni, conclusioni operative e punti aperti.",
+          copy2: "Ogni eccezione mantiene il percorso verso fonte, pagina, importo, data, regola applicata, supporto trovato e supporto mancante.",
+          copy3: "Le righe non chiuse restano raggruppate per controllo manuale, così il revisore parte dalle eccezioni invece di ricostruire il fascicolo.",
+          copy4: "Non sostituisce il giudizio professionale. Rende la riconciliazione riproducibile, ispezionabile e più semplice da rivedere."
+        },
+        use: {
+          eyebrow: "Come usarlo",
+          title: "Come si imposta la riconciliazione",
+          copy: "Apri la cartella del lavoro in Codex e conferma le sole assunzioni necessarie prima della riconciliazione.",
+          steps: [
+            ["Prepara", "Metti partite, mastrini, giornale, banche e supporti in una cartella di lavoro."],
+            ["Avvia", "Chiedi a Codex di usare Riconciliazione partite sulla cartella."],
+            ["Conferma", "Rispondi alle domande su cut-off, popolazione, supporti e assunzioni."],
+            ["Rivedi", "Apri Excel e Word, controlla eccezioni e righe che richiedono supporto."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompt pronti",
+          title: "Prompt pronti",
+          copy: "Parti da uno di questi prompt e sostituisci percorso, periodo e cut-off. Codex chiederà le assunzioni mancanti prima di procedere.",
+          rows: [
+            ["Riconciliazione completa", "Usa Riconciliazione partite sulla cartella /percorso/lavoro/input. Periodo 2025, cut-off 31/12/2025. Lingua: it. Prima di procedere chiedimi il file popolazione, le assunzioni sui supporti e ogni dato mancante; usa il default factoring salvo richiesta contraria."],
+            ["Mastrino vs banca/supporti", "Confronta mastrino, banca e supporti esterni. Evidenzia movimenti supportati da banca, distinte, factoring o compensazioni; tratta come chiudente il factor collegato a pagamento in estratto conto bancario."],
+            ["Richieste supporti mancanti", "Partendo dal file Excel già prodotto, genera richieste operative distinguendo cosa è già disponibile dal tassello che serve per chiudere o confermare aperta ogni riga."],
+            ["Campione revisore", "Crea un campione operativo con righe collegate, domande di verifica e criteri di scelta senza esporre codici tecnici del motore."],
+            ["Supporti post cut-off", "Segnala i candidati che spiegano chiusure successive, senza usarli per chiudere righe alla data di cut-off se gli eventi post cut-off sono esclusi."]
+          ]
+        },
+        download: {
+          eyebrow: "Installazione",
+          title: "Installa dal Plugin Pack",
+          copy: "Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.",
+          installTitle: "Installazione",
+          codexText: "Pagina ufficiale:",
+          button: "Scarica ZIP",
+          steps: [
+            "Decomprimi lo ZIP.",
+            "Sposta la cartella estratta, per esempio in Documents/CodexPlugins.",
+            "In Codex apri Plugins e scegli Add marketplace.",
+            "Nel campo Source incolla il percorso della cartella estratta, quella che contiene LEGGIMI_INSTALLAZIONE.txt.",
+            "Seleziona MP Vera e installa Vera."
+          ],
+          firstUseTitle: "Primo uso",
+          firstUseCopy: "In una chat Codex, indica la cartella contabile, il periodo e il cut-off.",
+          prompt: "Usa Riconciliazione partite sulla cartella /percorso/lavoro/input.\nPeriodo 2025, cut-off 31/12/2025.\nLingua: it.\nChiedimi le assunzioni mancanti e prepara Excel/Word con dettaglio righe, supporti, punti da rivedere e verifiche aperte.\nUsa il default factoring: factor/operatore collegato a pagamento in estratto conto bancario chiude, salvo mia richiesta contraria."
+        },
+      },
+      en: {
+        nav: { what: "What it does", inputs: "Inputs", outputs: "Outputs", use: "Use", prompts: "Prompts", download: "Download" },
+        hero: {
+          eyebrow: "Open-item reconciliation",
+          title: "Put open items, payments, ledgers and support documents into one reviewable workbook.",
+          subtitle: "See what closes, what remains open and which support is still missing.",
+          copy: "Give it open items, ledgers, bank files and support documents. Get back row status, cited support, missing-support requests and a Word summary for the reviewer.",
+          primary: "Download ZIP",
+          secondary: "How to use",
+          cardLabel: "Give it / get back",
+          bullets: [
+            "Give it open items, ledgers, journals, banks and support files.",
+            "Confirm period, cut-off and support assumptions.",
+            "Get back an Excel workbook, Word summary and missing-support requests."
+          ]
+        },
+        what: {
+          eyebrow: "What it does",
+          title: "From accounting files to a reviewable reconciliation",
+          copy: "Use it when the firm needs to compare open items, ledgers, bank movements and support documents while preserving the trace of what closes each row and what still needs review.",
+          inputTree: "input/\n  open_items.xlsx\n  customer_ledger.pdf\n  journal.csv\n  bank_statements/\n    bank_2025.pdf\n  payment_batches.zip\n  compensation_support.pdf",
+          resultTree: "out/\n  riconciliazione_audit.xlsx\n  relazione_riconciliazione_audit.docx\n\ninside the workbook:\n  Assumptions\n  Source inventory\n  Normalized records\n  Reconciliation detail\n  Summary\n  Checks\n  Codex review rows"
+        },
+        inputs: {
+          eyebrow: "Inputs",
+          title: "What it reads",
+          copy: "Works on exports and documents already available to the firm. For scanned PDFs, OCR is optional and local.",
+          cards: [
+            ["Open items and ledgers", "Open-item lists, customer/supplier ledgers, balances, movements and document references."],
+            ["Journals and banks", "General journal, bank ledgers, official bank statements or bank exports."],
+            ["External support", "Payment batches, remittance files, factoring, advances and collection operators."],
+            ["Compensations", "Netting agreements, document support and linked accounting entries."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Outputs",
+          title: "What it produces",
+          copy: "The result is working material that can be opened, filtered and reviewed. Row-level detail stays in Excel.",
+          rows: [
+            ["riconciliazione_audit.xlsx", "Workbook with assumptions, source inventory, normalized rows, reconciliation detail, checks and Codex review rows."],
+            ["relazione_riconciliazione_audit.docx", "Summary of the work performed, scope, assumptions, operational conclusions and open items."],
+            ["Review sample", "Reproducible sample over high-value rows, rows requiring support and doubtful cases."],
+            ["Missing support", "Operational requests for bank support, allocations, factoring, compensations or unreadable files."]
+          ]
+        },
+        review: {
+          title: "Makes manual exception review easier",
+          copy1: "Excel keeps the row-level detail; Word summarizes scope, assumptions, operating conclusions and open items.",
+          copy2: "Each exception keeps the path back to source file, page, amount, date, rule applied, support found and support still missing.",
+          copy3: "Rows that do not close stay grouped for manual review, so the reviewer starts from exceptions instead of rebuilding the file.",
+          copy4: "It does not replace professional judgment. It makes the reconciliation reproducible, inspectable and easier to review."
+        },
+        use: {
+          eyebrow: "Use",
+          title: "How to use it in Codex",
+          copy: "Open the work folder in Codex and let Codex ask only the questions needed before reconciliation.",
+          steps: [
+            ["Prepare", "Put open items, ledgers, journals, banks and support files in one work folder."],
+            ["Call", "Ask Codex to use Open-item reconciliation on the folder."],
+            ["Confirm", "Answer questions on cut-off, population, support and assumptions."],
+            ["Review", "Open Excel and Word, then check exceptions and rows that require support."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Ready prompts",
+          copy: "Start from one of these prompts and replace the folder path, period and cut-off. Codex will ask for missing assumptions before proceeding.",
+          rows: [
+            ["Full open-item reconciliation", "Use Open-item reconciliation on /path/to/work/input. Period 2025, cut-off 31/12/2025. Language: en. Ask for the population file, support assumptions and missing details before proceeding; use the factoring default unless I ask otherwise."],
+            ["Ledger vs bank/support", "Compare ledger, bank and external support. Treat factor/operator references tied to bank-statement payments as closing support by default."],
+            ["Missing-support requests", "Starting from the generated workbook, create operational requests that distinguish what is already available from the exact support needed for each row."],
+            ["Review sample", "Create an operational sample with linked rows, review questions and selection criteria without exposing internal rule codes."],
+            ["Post-cut-off support", "Report support candidates after cut-off that may explain later settlement, without using them to close rows at cut-off when post-cut-off events are excluded."]
+          ]
+        },
+        download: {
+          eyebrow: "Download",
+          title: "Install from Plugin Pack",
+          copy: "Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.",
+          installTitle: "Installation",
+          codexText: "Official page:",
+          button: "Download ZIP",
+          steps: [
+            "Unzip the file.",
+            "Move the extracted folder, for example to Documents/CodexPlugins.",
+            "In Codex open Plugins and choose Add marketplace.",
+            "Paste the extracted folder path into Source: the folder that contains LEGGIMI_INSTALLAZIONE.txt.",
+            "Select MP Vera and install Vera."
+          ],
+          firstUseTitle: "First use",
+          firstUseCopy: "In a Codex chat, provide the accounting folder, period and cut-off.",
+          prompt: "Use Open-item reconciliation on /path/to/work/input.\nPeriod 2025, cut-off 31/12/2025.\nLanguage: en.\nAsk me for missing assumptions and prepare Excel/Word with row detail, support, review sample and items to verify.\nUse the factoring default: factor/operator references tied to bank-statement payments close unless I ask otherwise."
+        },
+      },
+      fr: {
+        nav: { what: "Ce qu'il fait", inputs: "Entrées", outputs: "Sorties", use: "Utilisation", prompts: "Prompts", download: "Installation" },
+        hero: {
+          eyebrow: "Rapprochement comptable",
+          title: "Rapprocher postes ouverts, paiements et justificatifs dans un classeur révisable.",
+          subtitle: "Place postes ouverts, grands livres, banque et supports dans une vue ligne par ligne.",
+          copy: "Donnez postes ouverts, grands livres, banque et justificatifs. Recevez statut par ligne, justificatif cité, support manquant et synthèse Word pour le réviseur.",
+          primary: "Télécharger le ZIP",
+          secondary: "Comment l'utiliser",
+          cardLabel: "Données / résultat",
+          bullets: [
+            "Donnez postes ouverts, grands livres, journaux, banques et supports.",
+            "Confirmez période, cut-off et hypothèses sur les justificatifs.",
+            "Recevez classeur Excel, synthèse Word et demandes de support manquant."
+          ]
+        },
+        what: {
+          eyebrow: "Ce qu'il fait",
+          title: "Des fichiers comptables au rapprochement vérifiable",
+          copy: "Utile lorsque le cabinet doit comparer postes ouverts, grands livres, banque et justificatifs tout en conservant la trace de ce qui justifie chaque ligne.",
+          inputTree: "input/\n  postes_ouverts.xlsx\n  grand_livre_client.pdf\n  journal.csv\n  releves_bancaires/\n    banque_2025.pdf\n  lots_paiement.zip\n  compensations.pdf",
+          resultTree: "out/\n  riconciliazione_audit.xlsx\n  relazione_riconciliazione_audit.docx\n\ndans le classeur:\n  Assumptions\n  Source inventory\n  Normalized records\n  Reconciliation detail\n  Summary\n  Checks\n  Codex review rows"
+        },
+        inputs: {
+          eyebrow: "Entrées",
+          title: "Ce qu'il lit",
+          copy: "Le contrôle travaille sur les exports et documents déjà disponibles au cabinet. Pour les PDF scannés, l'OCR est optionnel et local.",
+          cards: [
+            ["Postes et grands livres", "Listes de postes ouverts, grands livres clients/fournisseurs, soldes, mouvements et références."],
+            ["Journaux et banques", "Journal comptable, comptes banque, relevés officiels ou exports bancaires."],
+            ["Supports externes", "Lots de paiement, remittances, factoring, avances et opérateurs d'encaissement."],
+            ["Compensations", "Accords de compensation, supports documentaires et écritures liées."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Sorties",
+          title: "Ce qu'il produit",
+          copy: "Le résultat est un matériel de travail ouvrable, filtrable et vérifiable. Le détail ligne par ligne reste dans Excel.",
+          rows: [
+            ["riconciliazione_audit.xlsx", "Classeur avec hypothèses, inventaire des sources, lignes normalisées, détail du rapprochement, contrôles et revue Codex."],
+            ["relazione_riconciliazione_audit.docx", "Synthèse du travail, périmètre, hypothèses, conclusions opérationnelles et points ouverts."],
+            ["Échantillon de revue", "Échantillon reproductible sur lignes à valeur élevée, lignes avec justificatif obligatoire et cas douteux."],
+            ["Justificatifs manquants", "Demandes opérationnelles pour banque, allocations, factoring, compensations ou fichiers illisibles."]
+          ]
+        },
+        review: {
+          title: "Facilite la revue manuelle des exceptions",
+          copy1: "Excel conserve le détail ligne par ligne; Word résume périmètre, hypothèses, conclusions opérationnelles et points ouverts.",
+          copy2: "Chaque exception garde le chemin vers fichier source, page, montant, date, règle appliquée, justificatif trouvé et justificatif encore manquant.",
+          copy3: "Les lignes non clôturées restent groupées pour revue manuelle, afin que le réviseur commence par les exceptions au lieu de reconstruire le dossier.",
+          copy4: "Il ne remplace pas le jugement professionnel. Il rend le rapprochement reproductible, inspectable et plus simple à revoir."
+        },
+        use: {
+          eyebrow: "Usage",
+          title: "Comment l'utiliser dans Codex",
+          copy: "Ouvrez le dossier de travail dans Codex et laissez Codex poser seulement les questions nécessaires avant le rapprochement.",
+          steps: [
+            ["Préparer", "Placez postes, grands livres, journaux, banques et supports dans un dossier de travail."],
+            ["Lancer", "Demandez à Codex d'utiliser Rapprochement des postes ouverts sur le dossier."],
+            ["Confirmer", "Répondez aux questions sur cut-off, population, justificatifs et hypothèses."],
+            ["Revoir", "Ouvrez Excel et Word, puis vérifiez exceptions et lignes à documenter."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts de départ",
+          copy: "Partez d'un de ces prompts et remplacez le chemin du dossier, la période et le cut-off. Codex demandera les hypothèses manquantes avant de procéder.",
+          rows: [
+            ["Rapprochement complet", "Utilise Rapprochement des postes ouverts sur /chemin/travail/input. Période 2025, cut-off 31/12/2025. Langue : fr. Demande le fichier population, les hypothèses sur les justificatifs et les détails manquants; applique le défaut factoring sauf demande contraire."],
+            ["Grand livre vs banque/justificatifs", "Compare grand livre, banque et supports externes. Traite par défaut comme clôturant le factor/opérateur lié à un paiement dans le relevé bancaire."],
+            ["Demandes de justificatifs manquants", "À partir du classeur généré, crée des demandes opérationnelles distinguant ce qui est déjà disponible du justificatif exact nécessaire pour chaque ligne."],
+            ["Échantillon de revue", "Crée un échantillon opérationnel avec lignes liées, questions de vérification et critères de choix sans exposer les codes techniques."],
+            ["Preuves post cut-off", "Signale les candidats après cut-off qui peuvent expliquer un règlement ultérieur, sans les utiliser pour clôturer les lignes au cut-off si ces événements sont exclus."]
+          ]
+        },
+        download: {
+          eyebrow: "Installation",
+          title: "Installer depuis le Plugin Pack",
+          copy: "Nécessite Codex desktop. Un seul ZIP installe Vera avec ses onze modules.",
+          installTitle: "Installation",
+          codexText: "Page officielle :",
+          button: "Télécharger le ZIP",
+          steps: [
+            "Décompressez le ZIP.",
+            "Déplacez le dossier extrait, par exemple dans Documents/CodexPlugins.",
+            "Dans Codex, ouvrez Plugins puis Add marketplace.",
+            "Collez dans Source le chemin du dossier extrait, celui qui contient LEGGIMI_INSTALLAZIONE.txt.",
+            "Sélectionnez MP Vera et installez Vera."
+          ],
+          firstUseTitle: "Premier usage",
+          firstUseCopy: "Dans une conversation Codex, indiquez le dossier comptable, la période et le cut-off.",
+          prompt: "Utilise Rapprochement des postes ouverts sur le dossier /chemin/travail/input.\nPériode 2025, cut-off 31/12/2025.\nLangue : fr.\nDemande-moi les hypothèses manquantes et prépare Excel/Word avec détail des lignes, justificatifs, échantillon de revue et points à vérifier.\nApplique le défaut factoring : factor/opérateur lié à un paiement dans le relevé bancaire clôture, sauf demande contraire."
+        },
+      },
+      de: {
+        nav: { what: "Funktion", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Download" },
+        hero: {
+          eyebrow: "Offene-Posten-Abstimmung",
+          title: "Offene Posten, Zahlungen und Nachweise in eine prüfbare Arbeitsmappe bringen.",
+          subtitle: "Offene Posten, Hauptbücher, Bank und Belege in eine zeilenweise Sicht bringen.",
+          copy: "Geben Sie Buchhaltungspopulationen und Nachweisdateien an. Zurück kommen Zeilenstatus, zitierter Nachweis, fehlende Belege und eine Word-Zusammenfassung für die Prüfung.",
+          primary: "ZIP herunterladen",
+          secondary: "So wird es genutzt",
+          cardLabel: "Eingabe / Ergebnis",
+          bullets: [
+            "Geben Sie offene Posten, Hauptbücher, Journale, Banken und Belege an.",
+            "Bestätigen Sie Zeitraum, Cut-off und Nachweisannahmen.",
+            "Zurück kommen Excel-Arbeitsmappe, Word-Zusammenfassung und Anforderungen fehlender Belege."
+          ]
+        },
+        what: {
+          eyebrow: "Funktion",
+          title: "Von Buchhaltungsdateien zur prüfbaren Abstimmung",
+          copy: "Gedacht für Fälle, in denen die Kanzlei Buchhaltungspopulationen, Banknachweise und Dokumentstützen vergleichen muss, ohne die Nachweisspur je Zeile zu verlieren.",
+          inputTree: "input/\n  offene_posten.xlsx\n  kundenkonto.pdf\n  journal.csv\n  kontoauszuege/\n    bank_2025.pdf\n  zahlungslaeufe.zip\n  kompensationen.pdf",
+          resultTree: "out/\n  riconciliazione_audit.xlsx\n  relazione_riconciliazione_audit.docx\n\nin der Arbeitsmappe:\n  Assumptions\n  Source inventory\n  Normalized records\n  Reconciliation detail\n  Summary\n  Checks\n  Codex review rows"
+        },
+        inputs: {
+          eyebrow: "Eingaben",
+          title: "Was gelesen wird",
+          copy: "Arbeitet mit Exporten und Dokumenten, die der Kanzlei bereits vorliegen. Für gescannte PDFs ist lokale OCR optional.",
+          cards: [
+            ["Posten und Hauptbücher", "Offene-Posten-Listen, Kunden-/Lieferantenkonten, Salden, Bewegungen und Belegreferenzen."],
+            ["Journale und Banken", "Hauptjournal, Bankkonten, offizielle Kontoauszüge oder Bankexporte."],
+            ["Externe Nachweise", "Zahlungsläufe, Remittance-Dateien, Factoring, Vorschüsse und Inkasso-Operatoren."],
+            ["Kompensationen", "Netting-Vereinbarungen, Dokumentnachweise und verbundene Buchungen."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Ergebnisse",
+          title: "Was erzeugt wird",
+          copy: "Das Ergebnis ist Arbeitsmaterial, das geöffnet, gefiltert und geprüft werden kann. Die zeilenweise Detailspur bleibt in Excel.",
+          rows: [
+            ["riconciliazione_audit.xlsx", "Arbeitsmappe mit Annahmen, Quelleninventar, normalisierten Zeilen, Abstimmungsdetail, Prüfungen und Codex-Review-Zeilen."],
+            ["relazione_riconciliazione_audit.docx", "Zusammenfassung von Arbeit, Umfang, Annahmen, operativen Ergebnissen und offenen Punkten."],
+            ["Codex-Review", "Reproduzierbare Stichprobe über wertstarke Zeilen, Zeilen mit Pflichtnachweis und Zweifelsfälle."],
+            ["Fehlende Nachweise", "Operative Anforderungen für Banknachweise, Zuordnungen, Factoring, Kompensationen oder unlesbare Dateien."]
+          ]
+        },
+        review: {
+          title: "Erleichtert die manuelle Prüfung von Ausnahmen",
+          copy1: "Excel hält das Zeilendetail; Word fasst Umfang, Annahmen, operative Ergebnisse und offene Punkte zusammen.",
+          copy2: "Jede Ausnahme behält den Pfad zu Quelldatei, Seite, Betrag, Datum, angewandter Regel, gefundenem und noch fehlendem Nachweis.",
+          copy3: "Nicht geschlossene Zeilen bleiben für die manuelle Prüfung gruppiert, damit die Prüfung bei den Ausnahmen beginnt statt das Dossier neu aufzubauen.",
+          copy4: "Es ersetzt kein professionelles Urteil. Es macht die Abstimmung reproduzierbar, prüfbar und leichter zu prüfen."
+        },
+        use: {
+          eyebrow: "Nutzung",
+          title: "So wird es in Codex genutzt",
+          copy: "Öffnen Sie den Arbeitsordner in Codex und lassen Sie Codex nur die nötigen Fragen vor der Abstimmung stellen.",
+          steps: [
+            ["Vorbereiten", "Posten, Hauptbücher, Journale, Banken und Nachweise in einen Arbeitsordner legen."],
+            ["Aufrufen", "Codex bitten, Offene-Posten-Abstimmung für den Ordner zu verwenden."],
+            ["Bestätigen", "Fragen zu Cut-off, Population, Nachweisen und Annahmen beantworten."],
+            ["Prüfen", "Excel und Word öffnen, Ausnahmen und Zeilen mit Nachweisbedarf prüfen."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts zur Nutzung",
+          copy: "Mit einem dieser Prompts starten und Ordnerpfad, Zeitraum und Cut-off ersetzen. Codex fragt fehlende Annahmen vor dem Fortfahren ab.",
+          rows: [
+            ["Vollständige Offene-Posten-Abstimmung", "Verwende Offene-Posten-Abstimmung für /pfad/arbeit/input. Zeitraum 2025, Cut-off 31/12/2025. Sprache: de. Frage vor dem Fortfahren nach Population, Nachweisannahmen und fehlenden Angaben; nutze den Factoring-Default, sofern ich nichts anderes verlange."],
+            ["Hauptbuch vs Bank/Nachweise", "Vergleiche Hauptbuch, Bank und externe Nachweise. Behandle Factor-/Operatorverweise, die mit Zahlungen im Kontoauszug verbunden sind, standardmäßig als schließend."],
+            ["Fehlende Nachweise anfordern", "Erstelle aus der erzeugten Arbeitsmappe operative Anforderungen, die vorhandene Unterlagen von genau fehlenden Nachweisen je Zeile unterscheiden."],
+            ["Prüfstichprobe", "Erstelle eine operative Stichprobe mit verbundenen Zeilen, Prüffragen und Auswahlkriterien, ohne interne Regelcodes offenzulegen."],
+            ["Post-Cut-off-Nachweise", "Melde Kandidaten nach dem Cut-off, die spätere Schließungen erklären können, ohne sie zum Schließen von Zeilen am Cut-off zu verwenden, wenn solche Ereignisse ausgeschlossen sind."]
+          ]
+        },
+        download: {
+          eyebrow: "Download",
+          title: "Aus Plugin Pack installieren",
+          copy: "Erfordert Codex Desktop. Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
+          installTitle: "Installation",
+          codexText: "Offizielle Seite:",
+          button: "ZIP herunterladen",
+          steps: [
+            "ZIP entpacken.",
+            "Den entpackten Ordner verschieben, zum Beispiel nach Documents/CodexPlugins.",
+            "In Codex Plugins öffnen und Add marketplace wählen.",
+            "In Source den Pfad des entpackten Ordners einfügen, der LEGGIMI_INSTALLAZIONE.txt enthält.",
+            "MP Vera auswählen und Vera installieren."
+          ],
+          firstUseTitle: "Erste Nutzung",
+          firstUseCopy: "In einem Codex-Chat den Buchhaltungsordner, Zeitraum und Cut-off angeben.",
+          prompt: "Verwende Offene-Posten-Abstimmung für den Ordner /pfad/arbeit/input.\nZeitraum 2025, Cut-off 31/12/2025.\nSprache: de.\nFrage nach fehlenden Annahmen und erstelle Excel/Word mit Zeilendetail, Nachweisen, Codex-Review und Prüfpunkten.\nNutze den Factoring-Default: Factor-/Operatorverweise, die mit Zahlungen im Kontoauszug verbunden sind, schließen, sofern ich nichts anderes verlange."
+        },
+      }
+    };
+
+    function getValue(data, path) {
+      return path.split(".").reduce((current, part) => current && current[part], data);
+    }
+
+    function renderList(container, rows, itemBuilder) {
+      container.innerHTML = "";
+      rows.forEach((row) => container.appendChild(itemBuilder(row)));
+    }
+
+    function setLanguage(lang) {
+      const safeLang = translations[lang] ? lang : "it";
+      const data = translations[safeLang];
+      document.documentElement.lang = safeLang;
+      document.title = data.hero.title + " | Vera";
+      document.getElementById("home-link").href = "/?lang=" + safeLang;
+      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
+        link.href = `/downloads/vera?lang=${safeLang}`;
+      });
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const value = getValue(data, node.dataset.i18n);
+        if (typeof value === "string") {
+          node.textContent = value;
+        }
+      });
+      renderList(document.getElementById("hero-list"), data.hero.bullets, (text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        return li;
+      });
+      document.getElementById("input-tree").textContent = data.what.inputTree;
+      document.getElementById("result-tree").textContent = data.what.resultTree;
+      document.getElementById("prompt-example").textContent = data.download.prompt;
+      renderList(document.getElementById("input-cards"), data.inputs.cards, ([title, copy]) => {
+        const article = document.createElement("article");
+        article.className = "card";
+        article.innerHTML = "<h3></h3><p></p>";
+        article.querySelector("h3").textContent = title;
+        article.querySelector("p").textContent = copy;
+        return article;
+      });
+      renderList(document.getElementById("output-list"), data.outputs.rows, ([title, copy]) => {
+        const li = document.createElement("li");
+        li.innerHTML = "<strong></strong><span></span>";
+        li.querySelector("strong").textContent = title;
+        li.querySelector("span").textContent = copy;
+        return li;
+      });
+      renderList(document.getElementById("prompt-list"), data.prompts.rows, ([title, copy]) => {
+        const li = document.createElement("li");
+        li.innerHTML = "<strong></strong><span></span>";
+        li.querySelector("strong").textContent = title;
+        li.querySelector("span").textContent = copy;
+        return li;
+      });
+      renderList(document.getElementById("usage-grid"), data.use.steps, ([title, copy]) => {
+        const article = document.createElement("article");
+        article.className = "usage-step";
+        article.innerHTML = "<strong></strong><p></p>";
+        article.querySelector("strong").textContent = title;
+        article.querySelector("p").textContent = copy;
+        return article;
+      });
+      renderList(document.getElementById("install-steps"), data.download.steps, (text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        return li;
+      });
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.lang === safeLang);
+      });
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", safeLang);
+      history.replaceState(null, "", url);
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    const initialLang = new URLSearchParams(window.location.search).get("lang") || "it";
+    setLanguage(translations[initialLang] ? initialLang : "it");
+  </script>
+</body>
+</html>

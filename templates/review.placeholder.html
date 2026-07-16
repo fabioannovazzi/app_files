@@ -1,0 +1,425 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_label or "Analyze attributes" }}{% endblock %}
+
+{% block head_extra %}
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 1.5rem;
+        background: #fafafa;
+        color: #111;
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      section {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      input,
+      select,
+      button {
+        border-radius: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        padding: 0.5rem 0.75rem;
+        background: #fff;
+        color: inherit;
+        font-size: 0.95rem;
+      }
+
+      button {
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+      }
+
+      button:hover {
+        background: #f0f0f0;
+      }
+
+      .row {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .row > * {
+        flex: 1 1 220px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+      }
+
+      .card h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.05rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      th,
+      td {
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        padding: 0.4rem 0.5rem;
+        text-align: left;
+      }
+
+      th {
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      pre {
+        background: #f4f4f4;
+        border-radius: 6px;
+        padding: 0.75rem;
+        overflow-x: auto;
+        font-size: 0.85rem;
+      }
+
+      .muted {
+        opacity: 0.7;
+        font-size: 0.9rem;
+      }
+
+      .error {
+        color: #ff6b6b;
+        margin-top: 0.5rem;
+      }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ (page_label or "Analyze attributes") ~ " (preview)" }}</h1>
+    <p class="muted">
+      This page calls the JSON API exposed at <code>/review/*</code> on the same origin.
+    </p>
+
+    <section>
+      <div class="row">
+        <div style="align-self: flex-end">
+          <button id="loadRetailersBtn">Load retailers</button>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 0.75rem">
+        <div>
+          <label for="retailerSelect">Retailer</label>
+          <select id="retailerSelect"></select>
+        </div>
+        <div>
+          <label for="brandSelect">Brand</label>
+          <select id="brandSelect">
+            <option value="">All brands</option>
+          </select>
+        </div>
+        <div style="align-self: flex-end">
+          <button id="loadCategoriesBtn">Load categories</button>
+        </div>
+      </div>
+      <div style="margin-top: 0.75rem">
+        <label for="categorySelect">Category</label>
+        <select id="categorySelect"></select>
+      </div>
+      <div style="margin-top: 0.75rem">
+        <button id="fetchParentsBtn">Fetch parent records</button>
+        <span id="statusMessage" class="muted"></span>
+      </div>
+      <div id="errorMessage" class="error"></div>
+    </section>
+
+    <section>
+      <h2>Parent products</h2>
+      <div id="recordsContainer" class="cards"></div>
+    </section>
+
+    <section>
+      <h2>Attribute stage snapshots</h2>
+      <p class="muted">
+        Select a product above to load deterministic, LLM, and merged attribute rows.
+      </p>
+      <div id="debugTables"></div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+      const apiBase = `${window.location.origin.replace(/\\/$/, "")}/review`;
+      const loadRetailersBtn = document.getElementById("loadRetailersBtn");
+      const retailerSelect = document.getElementById("retailerSelect");
+      const brandSelect = document.getElementById("brandSelect");
+      const loadCategoriesBtn = document.getElementById("loadCategoriesBtn");
+      const categorySelect = document.getElementById("categorySelect");
+      const fetchParentsBtn = document.getElementById("fetchParentsBtn");
+      const recordsContainer = document.getElementById("recordsContainer");
+      const statusMessage = document.getElementById("statusMessage");
+      const errorMessage = document.getElementById("errorMessage");
+      const debugTables = document.getElementById("debugTables");
+
+      async function fetchJSON(path) {
+        const response = await fetch(`${apiBase}${path}`, { credentials: "include" });
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(text || `Request failed (${response.status})`);
+        }
+        return response.json();
+      }
+
+      function setStatus(message) {
+        statusMessage.textContent = message || "";
+      }
+
+      function setError(message) {
+        errorMessage.textContent = message || "";
+      }
+
+      function populateSelect(select, values, emptyLabel = "Select an option") {
+        select.innerHTML = "";
+        if (!values.length) {
+          select.innerHTML = `<option value="">${emptyLabel}</option>`;
+          return;
+        }
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = emptyLabel;
+        select.appendChild(defaultOption);
+        for (const value of values) {
+          const option = document.createElement("option");
+          option.value = value.value || value;
+          option.textContent = value.label || value;
+          select.appendChild(option);
+        }
+      }
+
+      async function loadRetailers() {
+        try {
+          setError("");
+          setStatus("Loading retailers…");
+          const data = await fetchJSON("/retailers");
+          populateSelect(retailerSelect, data.retailers.map((r) => ({ value: r, label: r })), "Select retailer");
+          populateSelect(brandSelect, data.brands.map((b) => ({ value: b, label: b })), "All brands");
+          if (retailerSelect.options.length > 1) {
+            retailerSelect.selectedIndex = 1;
+          }
+          setStatus("");
+          return true;
+        } catch (error) {
+          setStatus("");
+          setError(error.message);
+          return false;
+        }
+      }
+
+      async function loadCategories() {
+        const retailer = retailerSelect.value || "";
+        const brand = brandSelect.value || "";
+        if (!retailer) {
+          setError("Select a retailer first.");
+          return false;
+        }
+        try {
+          setError("");
+          setStatus("Loading categories…");
+          const params = new URLSearchParams({ retailer });
+          if (brand) {
+            params.append("brands", brand);
+          }
+          const data = await fetchJSON(`/categories?${params.toString()}`);
+          if (!data.categories.length) {
+            populateSelect(categorySelect, [], "No categories");
+            setStatus("No categories available for this selection.");
+            return false;
+          } else {
+            populateSelect(
+              categorySelect,
+              data.categories.map((cat) => ({ value: cat.key, label: cat.label })),
+              "Select category"
+            );
+            if (categorySelect.options.length > 1) {
+              categorySelect.selectedIndex = 1;
+            }
+          }
+          setStatus("");
+          return true;
+        } catch (error) {
+          setStatus("");
+          setError(error.message);
+          return false;
+        }
+      }
+
+      function renderRecords(records) {
+        recordsContainer.innerHTML = "";
+        debugTables.innerHTML = "";
+        if (!records.length) {
+          recordsContainer.innerHTML = `<p class="muted">No records for the current selection.</p>`;
+          return;
+        }
+        for (const record of records) {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${record.product_name ?? "Unnamed product"}</h3>
+            <p class="muted">${record.product ?? ""}</p>
+            <p><strong>Brand:</strong> ${record.brand ?? "—"}</p>
+            <p>${record.description ? record.description.slice(0, 180) : ""}</p>
+            <div>
+              <button data-parent="${record.product}" data-variant="${record.variant ?? ""}">
+                View attribute stages
+              </button>
+            </div>
+          `;
+          card.querySelector("button").addEventListener("click", () => {
+            fetchDebugTables(record.product, record.variant ?? "");
+          });
+          recordsContainer.appendChild(card);
+        }
+      }
+
+      async function fetchParents() {
+        const retailer = retailerSelect.value || "";
+        const category = categorySelect.value || "";
+        const brand = brandSelect.value || "";
+        if (!retailer || !category) {
+          setError("Select retailer and category first.");
+          return;
+        }
+        try {
+          setError("");
+          setStatus("Loading parent records…");
+          const params = new URLSearchParams({
+            retailer,
+            category,
+            record_type: "parent",
+            limit: "30",
+          });
+          if (brand) {
+            params.append("brand", brand);
+          }
+          const data = await fetchJSON(`/records?${params.toString()}`);
+          renderRecords(data.records);
+          setStatus(`${data.total} parent rows available.`);
+        } catch (error) {
+          setStatus("");
+          setError(error.message);
+        }
+      }
+
+      async function fetchDebugTables(parentId, variantId) {
+        if (!parentId) {
+          return;
+        }
+        debugTables.innerHTML = "<p class=\"muted\">Loading attribute stages…</p>";
+        const retailer = retailerSelect.value || "";
+        const params = new URLSearchParams({ parent: parentId });
+        if (retailer) {
+          params.append("retailer", retailer);
+        }
+        if (variantId) {
+          params.append("variant", variantId);
+        }
+        const tables = [
+          { label: "Deterministic attributes", name: "pdp_attributes_deterministic" },
+          { label: "LLM attributes", name: "pdp_attributes_llm" },
+          { label: "Merged attribute values", name: "pdp_attribute_values" },
+        ];
+        const fragments = [];
+        for (const table of tables) {
+          try {
+            const data = await fetchJSON(`/debug?${params.toString()}&table=${table.name}`);
+            fragments.push(renderDebugTable(table.label, data.records));
+          } catch (error) {
+            fragments.push(`<div class="error">${table.label}: ${error.message}</div>`);
+          }
+        }
+        debugTables.innerHTML = fragments.join("");
+      }
+
+      function renderDebugTable(label, records) {
+        if (!records || !records.length) {
+          return `<div><h3>${label}</h3><p class="muted">No rows.</p></div>`;
+        }
+        const columns = Object.keys(records[0]);
+        const rows = records
+          .map(
+            (row) =>
+              "<tr>" +
+              columns
+                .map((col) => `<td>${row[col] !== null && row[col] !== undefined ? row[col] : "—"}</td>`)
+                .join("") +
+              "</tr>"
+          )
+          .join("");
+        const header = columns.map((col) => `<th>${col}</th>`).join("");
+        return `
+          <div style="margin-bottom:1rem;">
+            <h3>${label}</h3>
+            <div class="muted">${records.length} rows</div>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead><tr>${header}</tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }
+
+      function initFromQuery() {}
+
+      brandSelect.addEventListener("change", async () => {
+        const ok = await loadCategories();
+        if (ok) {
+          await fetchParents();
+        }
+      });
+      retailerSelect.addEventListener("change", async () => {
+        const ok = await loadCategories();
+        if (ok) {
+          await fetchParents();
+        }
+      });
+      categorySelect.addEventListener("change", fetchParents);
+      fetchParentsBtn.addEventListener("click", fetchParents);
+
+      initFromQuery();
+      loadRetailers().then(async (loaded) => {
+        if (loaded) {
+          const hasCategories = await loadCategories();
+          if (hasCategories) {
+            await fetchParents();
+          }
+        }
+      });
+    </script>
+{% endblock %}

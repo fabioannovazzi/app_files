@@ -1,0 +1,35 @@
+{
+  "plugin": "vera",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "vera-explicit",
+      "prompt": "Ask Vera to inspect this accounting folder and choose the right review module.",
+      "required_signals": ["Vera", "accounting folder", "review module"]
+    },
+    {
+      "id": "vera-commercialista-task",
+      "prompt": "Prepara l'istruttoria della cartella cliente e poi indicami i controlli contabili necessari.",
+      "required_signals": ["istruttoria", "cartella cliente", "controlli contabili"]
+    },
+    {
+      "id": "vera-previdenza-inps",
+      "prompt": "Chiedi a Vera di istruire il caso INPS del subagente assicurativo e preparare una bozza documentata per il commercialista.",
+      "required_signals": ["Vera", "INPS", "subagente assicurativo"]
+    },
+    {
+      "id": "vera-previdenza-inps-capture",
+      "prompt": "Vera, sono già autenticato con la delega corretta: acquisisci in sola lettura la pagina INPS aperta senza usare o salvare le mie credenziali.",
+      "required_signals": ["Vera", "INPS", "sola lettura"]
+    },
+    {
+      "id": "vera-registro-imprese-sari",
+      "prompt": "Vera, usa la Camera competente e SARI per preparare una bozza della pratica DIRE di apertura posizione, separando RI/REA, INPS e RUI.",
+      "required_signals": ["Vera", "SARI", "pratica DIRE"]
+    }
+  ],
+  "should_not_trigger": [
+    {"id": "clara-advisory", "prompt": "Use Clara to prepare a succession advisory decision pack."},
+    {"id": "generic-code", "prompt": "Review this Python pull request for security issues."}
+  ]
+}

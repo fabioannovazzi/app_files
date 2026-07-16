@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Registro Imprese e SARI" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#D89B3D"/>
+  <circle cx="51" cy="50" r="7" fill="#D89B3D"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M31 12 12 23h38z" fill="#F7F0DF"/>
+  <path d="M16 27h28M17 47h26" stroke="#F7F0DF" stroke-width="5" stroke-linecap="round"/>
+  <path d="M21 28v16M30 28v16M39 28v16" stroke="#F7F0DF" stroke-width="4" stroke-linecap="round"/>
+  <rect x="37" y="31" width="18" height="20" rx="4" fill="#D89B3D"/>
+  <path d="M42 37h8M42 42h8" stroke="#171816" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="m42 47 2 2 5-5" fill="none" stroke="#171816" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

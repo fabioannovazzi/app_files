@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Deterministic policy{% endblock %}
+
+{% block body %}
+  <header class="landing-header">
+    <a href="/" class="landing-logo-link" aria-label="Return to the home page">
+      <img class="landing-logo" src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza" />
+    </a>
+  </header>
+  <main id="reactRoot" class="app-main" style="padding: 24px;">
+    <div class="container">
+      <div id="reactDeterministicPolicyQueueApp"></div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ bundle_url }}" defer></script>
+{% endblock %}

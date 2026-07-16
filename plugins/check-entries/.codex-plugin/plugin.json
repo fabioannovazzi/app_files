@@ -1,0 +1,47 @@
+{
+  "name": "check-entries",
+  "version": "0.1.21",
+  "description": "Deterministic journal-entry support testing guided by Codex.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "audit",
+    "entries",
+    "supporting-documents",
+    "pdf",
+    "accounting",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Check Entries",
+    "shortDescription": "Compare sampled journal entries with supporting PDFs in Italian, English, French, or German.",
+    "longDescription": "Codex workflow for checking selected journal entries against supporting documents. Codex handles only non-inferable mapping ambiguity and review assumptions; deterministic scripts inspect journal files, inventory PDFs, match support files, compare amounts/dates/beneficiaries when available, and automatically export the natural full package: CSV/XLSX/JSON evidence, audit, diagnostics, review notes, and Codex review. Supports working locales it/en/fr/de and keeps all judgmental review in Codex rather than hidden API calls.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Check Entries on the journal and PDF folder I provide.",
+      "Infer language and mappings where possible, ask only for essential ambiguities, then run deterministic checks and prepare the complete natural review package.",
+      "Do not make direct OpenAI API calls from the plugin scripts; use Codex for review judgment and deterministic scripts for extraction/comparison."
+    ],
+    "brandColor": "#355f6f",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "previdenza-inps",
+  "version": "0.2.2",
+  "description": "Prepara un'istruttoria previdenziale INPS con OCR locale, esportazioni ufficiali registrate e revisione professionale.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/previdenza-inps/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "MIT",
+  "keywords": [
+    "previdenza",
+    "inps",
+    "contributi",
+    "istruttoria",
+    "evidenze",
+    "commercialisti",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Previdenza INPS",
+    "shortDescription": "Istruttoria INPS con OCR locale, export ufficiali hash-bound, fonti verificate e ricalcoli approvati.",
+    "longDescription": "Workflow Vera per casi previdenziali INPS document-driven. Registra con provenienza e hash le esportazioni ufficiali fornite dal titolare o dall'intermediario/delegato, inventaria i documenti locali e usa PaddleOCR sulle scansioni mantenendo pagina e provenienza. Una cattura browser in sola lettura è soltanto condizionale: richiede verifica separata del permesso del servizio, oltre ad accesso/delega e trattamento dati; l'approvazione dello studio da sola non basta. Vera non gestisce credenziali, cookie o invii. Convalida fatti e cronologie, esegue soltanto ricalcoli esplicitamente approvati e prepara una bozza per revisione professionale. OCR e testo browser restano parziali fino al controllo visivo umano; classificazione e conclusione finale restano al professionista.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Usa Previdenza INPS sulla cartella del caso che indico.",
+      "Conferma quesito, periodi, data normativa di riferimento e significato documentale delle espressioni ambigue prima dell'analisi.",
+      "Registra gli export ufficiali INPS con hash oppure usa la cattura browser solo se il permesso del servizio è stato verificato separatamente.",
+      "Prepara inventario, fatti con provenienza, cronologia, ricerca su fonti ufficiali, ricalcoli approvati e memo per revisione professionale."
+    ],
+    "brandColor": "#4B5F70",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

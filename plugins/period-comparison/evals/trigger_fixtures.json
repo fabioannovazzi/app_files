@@ -1,0 +1,35 @@
+{
+  "plugin": "period-comparison",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "year-over-year-sales",
+      "prompt": "Use Period Comparison on this sales Excel file and show year-over-year charts.",
+      "required_signals": ["Period Comparison", "sales Excel", "year-over-year"]
+    },
+    {
+      "id": "previous-year-chart-pack",
+      "prompt": "Compare current sales to previous year and generate the column, line and waterfall charts.",
+      "required_signals": ["current sales", "previous year", "charts"]
+    },
+    {
+      "id": "period-comparison-small-multiples",
+      "prompt": "Build period comparison small multiples by product line for this CSV.",
+      "required_signals": ["period comparison", "small multiples", "CSV"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "variance-pvm",
+      "prompt": "Run price volume mix variance and root-cause decomposition."
+    },
+    {
+      "id": "journal-reconciliation",
+      "prompt": "Reconcile this journal against the bank statement."
+    },
+    {
+      "id": "deep-research-validation",
+      "prompt": "Validate this Deep Research report against cited sources."
+    }
+  ]
+}

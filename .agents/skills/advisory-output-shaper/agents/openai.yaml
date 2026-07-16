@@ -1,0 +1,8 @@
+interface:
+  display_name: "Advisory Output Shaper"
+  short_description: "Turn analysis into meeting-ready advisory outputs"
+  brand_color: "#315F55"
+  default_prompt: "Use $advisory-output-shaper to turn these notes into a meeting-ready advisory output."
+
+policy:
+  allow_implicit_invocation: true

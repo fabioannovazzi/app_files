@@ -1,0 +1,11 @@
+{
+  "ignore_descriptions": [
+    "apertura conto",
+    "chiusura conto",
+    "saldo iniziale",
+    "saldo finale",
+    "apertura esercizio",
+    "chiusura esercizio",
+    "riporto saldi"
+  ]
+}

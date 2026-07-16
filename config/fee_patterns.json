@@ -1,0 +1,15 @@
+[
+  "STAMP DUTY",
+  "ACCOUNT FEE",
+  "SERVICE CHARGE",
+  "COMMISSION",
+  "LOAN FEE",
+  "(?i)commissione",
+  "(?i)commissioni",
+  "(?i)comm\\.",
+  "(?i)imposta\\s+di\\s+bollo",
+  "(?i)bollo",
+  "(?i)spese\\b",
+  "(?i)comm.*istan",
+  "(?i)comm.*cbill"
+]

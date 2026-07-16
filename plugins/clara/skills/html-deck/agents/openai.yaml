@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML Deck"
+  short_description: "Build or revise provenanced HTML decks"
+  default_prompt: "Use $html-deck to build or preservation-edit a source-faithful standalone HTML presentation through its structured deck plan, content ledger, layout composer, strict browser QA, and revision-fidelity gates."

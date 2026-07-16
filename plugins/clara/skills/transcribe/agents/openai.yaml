@@ -1,0 +1,4 @@
+interface:
+  display_name: "Transcribe"
+  short_description: "Transcribe and review voice evidence"
+  default_prompt: "Use $transcribe to capture or upload this discussion, import its local bundle, complete speaker attribution, and preserve a reviewed transcript without promoting it into advice."

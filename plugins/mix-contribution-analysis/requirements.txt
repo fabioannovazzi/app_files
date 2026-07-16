@@ -1,0 +1,6 @@
+polars>=1.0
+plotly
+kaleido
+Pillow
+openpyxl
+python-docx

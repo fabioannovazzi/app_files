@@ -1,0 +1,317 @@
+{
+  "schema_version": "clara.html_deck_benchmark_suite.v1",
+  "suite_id": "clara-html-deck-parity-2026-07",
+  "purpose": "Measure whether Clara HTML authoring and revision tooling lowers execution cost without reducing factual, visual, or mechanical quality.",
+  "candidate_skill_identity": {
+    "clara": {
+      "version": "0.1.73",
+      "skill_sha256": "ae9905cd1b70e83fcfc485da56f815f8dc3e1cab3bb7dbf6e9356a3b7962ba46",
+      "plugin_manifest_sha256": "8ca0ebe982eb2eb1980e22796c38634e603cad1d9242d49c87dcf641c67eb2d1",
+      "runtime_tree_sha256": "c2b0216b8b08d6c1de46074e5ec6a8351cda20352563613e20805cf1e57c0173"
+    },
+    "presentations": {
+      "version": "26.709.11516",
+      "skill_sha256": "2c7a19e3b20c3361139849d73920e94478922c3330e1bc3d0a477021a6d0ea62",
+      "skill_tree_sha256": "6058861f64a21595f0a1a236df91fd2263b9d90127f0b8b0d72cb498952aa5c7"
+    }
+  },
+  "baseline_limitations": {
+    "raw_prior_jsonl_available": false,
+    "historical_improvement_interpretation": "directional_and_audit_bound_to_preserved_summaries",
+    "primary_comparison": "current_runner_derived_html_vs_pptx"
+  },
+  "fixture_root": {
+    "environment_variable": "CLARA_DECK_BENCHMARK_FIXTURE_ROOT",
+    "default": "output",
+    "description": "Root containing the two sealed 2026-07-13 controlled experiment fixtures. The runner verifies every byte against the manifests below before copying anything."
+  },
+  "controls": {
+    "fresh_ephemeral_runs": true,
+    "same_model_and_reasoning_effort": true,
+    "concurrent_format_runs": true,
+    "prompts_differ_only_by_target_format": true,
+    "no_prior_run_or_opposite_format_reads": true,
+    "same_source_package": true,
+    "sealed_inputs_immutable": true
+  },
+  "semantic_judgement": {
+    "owner": "independent_blinded_model_review",
+    "required_reviewer_types": [
+      "model"
+    ],
+    "optional_reviewer_types": [
+      "human"
+    ],
+    "score_min": 1,
+    "score_max": 5,
+    "dimensions": [
+      "source_fidelity",
+      "narrative_quality",
+      "visual_hierarchy",
+      "decision_usefulness"
+    ]
+  },
+  "mechanical_gates": [
+    "artifact_exists",
+    "artifact_hash_recorded",
+    "exact_required_copy",
+    "slide_count",
+    "source_asset_hashes",
+    "rendered_slide_count",
+    "rendered_dimensions",
+    "output_root_isolated",
+    "static_validation",
+    "browser_qa",
+    "render_qa",
+    "revision_fidelity"
+  ],
+  "cases": [
+    {
+      "id": "create-two-slide-analytical-deck",
+      "mode": "create",
+      "fixture_subdirectory": "deck_format_controlled_experiment_20260713",
+      "instruction_file": "common/task_brief.txt",
+      "spec_file": "common/deck_spec.json",
+      "source_manifest": {
+        "algorithm": "sha256",
+        "manifest_sha256": "00849350ef7311a4314d194fb5c04ef33579784d536dc890dd0ad154e24c69bc",
+        "files": [
+          {
+            "path": "common/assets/slide-1-chart.png",
+            "sha256": "bddc25b22b4331468390ef693a6daa145a2ebcabcf358844b6d4b4aa09305932"
+          },
+          {
+            "path": "common/assets/slide-2-chart.png",
+            "sha256": "ffaca22150270bbe370c9fdc64a12f439736a70dac07e75217ad71ac1d1a63d8"
+          },
+          {
+            "path": "common/deck_spec.json",
+            "sha256": "c019e9a393496618440fc955271ca4e025af94e06fb87d4554def36038d64410"
+          },
+          {
+            "path": "common/experiment_manifest.json",
+            "sha256": "a630460842a32447e00c4a0fba9b5a3304d65149f1e1581ca983fabd46120792"
+          },
+          {
+            "path": "common/task_brief.txt",
+            "sha256": "f2c91203d5c5dc836be5813a7b8378e33da8e1b46403b2e36a499220aa5c8045"
+          }
+        ]
+      },
+      "baseline_evidence": {
+        "algorithm": "sha256",
+        "manifest_sha256": "8319bdedc10ca87c2e1248ecabfb5594fa7034a80de50a3c923ab72e90ef95ee",
+        "files": [
+          {"path": "comparison_metrics.json", "sha256": "ac1e298d4eba4cbf077c89bc51dcd3f048353643d93280392fde67dc1f9f45ac"},
+          {"path": "experiment_run.json", "sha256": "89d5c24e4b5bba4c0d67991f3c453b8aa4e4ba3a337795350a58fdc0c9aa7957"},
+          {"path": "html_output/assets/slide-1-chart.png", "sha256": "bddc25b22b4331468390ef693a6daa145a2ebcabcf358844b6d4b4aa09305932"},
+          {"path": "html_output/assets/slide-2-chart.png", "sha256": "ffaca22150270bbe370c9fdc64a12f439736a70dac07e75217ad71ac1d1a63d8"},
+          {"path": "html_output/deck.js", "sha256": "8dc3c91efadf8c426a8962d041d823afed36050616c73fe79056ae24d90256ec"},
+          {"path": "html_output/index.html", "sha256": "2b7ce367926f4706bcb641827e8104767efc2b00468e07cd418befe8f7addaf2"},
+          {"path": "html_output/rendered_slides/slide-1.png", "sha256": "f92dda4f5b4095d5f81b586cb692662609476721aeeff3fe0b00aeb3ea560d5f"},
+          {"path": "html_output/rendered_slides/slide-2.png", "sha256": "adb70f728873e182b1b3a9874143cd4bce54c63ee8ca51dd973dfc5af2aadbe2"},
+          {"path": "html_output/styles.css", "sha256": "9de918fd6e990627e2513e8a1b34445ff6549e343cbe9a0b8e16cd4762ab2705"},
+          {"path": "pptx_output/global_superstore_controlled.pptx", "sha256": "527cb843114fe257b17d7aa86bee112ddec6bc94e6c34188562479690edc8264"},
+          {"path": "pptx_output/rendered_slides/slide-1.png", "sha256": "3350f76e9e527a32b7729bf1e51061ecf6a396b36fb1374e17d1bb4812123b8d"},
+          {"path": "pptx_output/rendered_slides/slide-2.png", "sha256": "e3fbb7dcc81502154b4dfb16f1656c031852a958610b23ddebee168aa84bf90c"}
+        ]
+      },
+      "required_checks_by_format": {
+        "HTML": [
+          "artifact_exists",
+          "artifact_hash_recorded",
+          "exact_required_copy",
+          "slide_count",
+          "source_asset_hashes",
+          "rendered_slide_count",
+          "rendered_dimensions",
+          "output_root_isolated",
+          "static_validation",
+          "browser_qa"
+        ],
+        "PPTX": [
+          "artifact_exists",
+          "artifact_hash_recorded",
+          "exact_required_copy",
+          "slide_count",
+          "source_asset_hashes",
+          "rendered_slide_count",
+          "rendered_dimensions",
+          "output_root_isolated",
+          "render_qa"
+        ]
+      },
+      "required_formats": [
+        "HTML",
+        "PPTX"
+      ]
+    },
+    {
+      "id": "revise-two-slide-analytical-deck",
+      "mode": "revise",
+      "fixture_subdirectory": "deck_format_change_experiment_20260713",
+      "instruction_file": "common/task_brief.txt",
+      "spec_file": "common/change_spec.json",
+      "source_manifest": {
+        "algorithm": "sha256",
+        "manifest_sha256": "674d2b780ce9c6e5d320fb1095c6f6dbf5a28400f174b1f6bdbc8c824d3ea5d7",
+        "files": [
+          {
+            "path": "common/change_spec.json",
+            "sha256": "edbc7de4e7fe4b0230cb1406e18a608a71e572d73dd0e0b019ceb1b7aace3e85"
+          },
+          {
+            "path": "common/experiment_manifest.json",
+            "sha256": "6035d1599705b05169354ca3ed6963827dd2dee850f50f4b4e228b5ff6f1a28e"
+          },
+          {
+            "path": "common/protocol_amendment_01.json",
+            "sha256": "b45d7ded2467ea8b307bb0991194be17de48c9cce315ed0c59481d3faa8cb8c6"
+          },
+          {
+            "path": "common/protocol_amendment_02.json",
+            "sha256": "4be66ea29f77bee3b33745b2630d9f4f341c482acdde17a0666260ad5485399e"
+          },
+          {
+            "path": "common/task_brief.txt",
+            "sha256": "9f8e5d2e36c5a874c01f6c5149f73a552380138d6051a78174a0560b45a35083"
+          },
+          {
+            "path": "html_input/assets/slide-1-chart.png",
+            "sha256": "bddc25b22b4331468390ef693a6daa145a2ebcabcf358844b6d4b4aa09305932"
+          },
+          {
+            "path": "html_input/assets/slide-2-chart.png",
+            "sha256": "ffaca22150270bbe370c9fdc64a12f439736a70dac07e75217ad71ac1d1a63d8"
+          },
+          {
+            "path": "html_input/deck.js",
+            "sha256": "8dc3c91efadf8c426a8962d041d823afed36050616c73fe79056ae24d90256ec"
+          },
+          {
+            "path": "html_input/index.html",
+            "sha256": "2b7ce367926f4706bcb641827e8104767efc2b00468e07cd418befe8f7addaf2"
+          },
+          {
+            "path": "html_input/styles.css",
+            "sha256": "9de918fd6e990627e2513e8a1b34445ff6549e343cbe9a0b8e16cd4762ab2705"
+          },
+          {
+            "path": "pptx_input/global_superstore_controlled.pptx",
+            "sha256": "527cb843114fe257b17d7aa86bee112ddec6bc94e6c34188562479690edc8264"
+          }
+        ]
+      },
+      "baseline_evidence": {
+        "algorithm": "sha256",
+        "manifest_sha256": "165e877fc05fa879f3a0bba82df9c95869c6f917d7604284f4d46380f655cc72",
+        "files": [
+          {"path": "comparison_metrics.json", "sha256": "e332659c0b2b4d3d512a420e2cdbc17f0ce50997857021777b0b610d036c7964"},
+          {"path": "experiment_run.json", "sha256": "51090778a3301ab4013562ff49de39b43606e3114a9e0db30d70901a58fc5ceb"},
+          {"path": "html_output/assets/slide-1-chart.png", "sha256": "bddc25b22b4331468390ef693a6daa145a2ebcabcf358844b6d4b4aa09305932"},
+          {"path": "html_output/assets/slide-2-chart.png", "sha256": "ffaca22150270bbe370c9fdc64a12f439736a70dac07e75217ad71ac1d1a63d8"},
+          {"path": "html_output/deck.js", "sha256": "8dc3c91efadf8c426a8962d041d823afed36050616c73fe79056ae24d90256ec"},
+          {"path": "html_output/index.html", "sha256": "de0fc0d979492ff5bc54ca0f09cd7b6a9097b8e73fb917be2a33e317428d86f8"},
+          {"path": "html_output/rendered_slides/slide-1.png", "sha256": "567d134888cc987dd59bfa644787a78a06ddaf301b4231e6267a970f8015d579"},
+          {"path": "html_output/rendered_slides/slide-2.png", "sha256": "084d096e07221f01872565689a9073d9296a00ec8b1e7b2c10c91172095c1a08"},
+          {"path": "html_output/styles.css", "sha256": "090450cddc8a41512509066b16793c87c880eba301fabc7e1489c3b6e016d256"},
+          {"path": "pptx_output/global_superstore_revised.pptx", "sha256": "7d29c0ee6cdfc89f8b1776a32dcef726e50efd8c790ac918f57fa75c1c18567c"},
+          {"path": "pptx_output/rendered_slides/slide-1.png", "sha256": "5e4a95519ad0145d27e61f99d4114dc9a2ca1f8e8590812c877f65d55405ae0b"},
+          {"path": "pptx_output/rendered_slides/slide-2.png", "sha256": "64fa03b04ac4b89674c5b8dcf4b3ceff4df3a7638471001356efbb7e297c3b7e"}
+        ]
+      },
+      "required_checks_by_format": {
+        "HTML": [
+          "artifact_exists",
+          "artifact_hash_recorded",
+          "exact_required_copy",
+          "slide_count",
+          "source_asset_hashes",
+          "rendered_slide_count",
+          "rendered_dimensions",
+          "output_root_isolated",
+          "static_validation",
+          "browser_qa",
+          "revision_fidelity"
+        ],
+        "PPTX": [
+          "artifact_exists",
+          "artifact_hash_recorded",
+          "exact_required_copy",
+          "slide_count",
+          "source_asset_hashes",
+          "rendered_slide_count",
+          "rendered_dimensions",
+          "output_root_isolated",
+          "render_qa",
+          "revision_fidelity"
+        ]
+      },
+      "required_formats": [
+        "HTML",
+        "PPTX"
+      ]
+    }
+  ],
+  "recorded_baseline": {
+    "date": "2026-07-13",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "xhigh",
+    "runs": [
+      {
+        "case_id": "create-two-slide-analytical-deck",
+        "format": "HTML",
+        "duration_ms": 583869,
+        "total_tokens": 3177294,
+        "tool_calls": 44,
+        "artifact_sha256": "2b7ce367926f4706bcb641827e8104767efc2b00468e07cd418befe8f7addaf2",
+        "render_set_sha256": "cc0a1efaa932c1e7190deaadea38348da31c4fcb84adadd2dfa2433b2ed31dc8",
+        "artifact_validation": "pass"
+      },
+      {
+        "case_id": "create-two-slide-analytical-deck",
+        "format": "PPTX",
+        "duration_ms": 309637,
+        "total_tokens": 2711712,
+        "tool_calls": 38,
+        "artifact_sha256": "527cb843114fe257b17d7aa86bee112ddec6bc94e6c34188562479690edc8264",
+        "render_set_sha256": "85f1f738ececfd4920d59e4b54f1d01c2bdd074874dd38b9cbc4d871fd59da9d",
+        "artifact_validation": "pass"
+      },
+      {
+        "case_id": "revise-two-slide-analytical-deck",
+        "format": "HTML",
+        "duration_ms": 487100,
+        "total_tokens": 3195303,
+        "tool_calls": 44,
+        "artifact_sha256": "de0fc0d979492ff5bc54ca0f09cd7b6a9097b8e73fb917be2a33e317428d86f8",
+        "render_set_sha256": "09197a95d2884f618541a4f4a321a864d0266b22edeefbf754d68012bc5d55a5",
+        "artifact_validation": "pass"
+      },
+      {
+        "case_id": "revise-two-slide-analytical-deck",
+        "format": "PPTX",
+        "duration_ms": 854401,
+        "total_tokens": 10078555,
+        "tool_calls": 97,
+        "artifact_sha256": "7d29c0ee6cdfc89f8b1776a32dcef726e50efd8c790ac918f57fa75c1c18567c",
+        "render_set_sha256": "57d668ba2eb8adc9f253c9f9b38e47731b67eee0364b28aeb112f7ed4ccb43df",
+        "artifact_validation": "pass"
+      }
+    ]
+  },
+  "candidate_targets": {
+    "quality_regression_allowed": false,
+    "minimum_html_median_improvement_percent": 30.0,
+    "format_ratio_limits_by_mode": {
+      "create": {
+        "total_tokens_max": 1.05,
+        "duration_max": 1.2
+      },
+      "revise": {
+        "total_tokens_max": 1.0,
+        "duration_max": 1.0
+      }
+    }
+  }
+}

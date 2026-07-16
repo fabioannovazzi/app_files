@@ -1,0 +1,27 @@
+{
+  "name": "review-react",
+  "private": true,
+  "scripts": {
+    "build:all": "npm run build:review && npm run build:review-coverage && npm run build:review-brief && npm run build:review-explicit-rules && npm run build:review-taxonomy-governance && npm run build:review-taxonomy-queue && npm run build:review-deterministic-policy-queue && npm run build:slides-react && npm run build:research-validate-react && npm run build:research-prompt-react && npm run build:check-entries-react",
+    "build:review": "esbuild src/review-react/index.jsx --bundle --outfile=static/js/review-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:review-coverage": "esbuild src/review-react/coverage.jsx --bundle --outfile=static/js/review-coverage-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:review-brief": "esbuild src/review-react/brief.jsx --bundle --outfile=static/js/review-brief-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:review-explicit-rules": "esbuild src/review-react/explicit-rules.jsx --bundle --outfile=static/js/review-explicit-rules-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:review-taxonomy-governance": "esbuild src/review-react/taxonomy-governance.jsx --bundle --outfile=static/js/review-taxonomy-governance-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:review-taxonomy-queue": "esbuild src/review-react/taxonomy-queue.jsx --bundle --outfile=static/js/review-taxonomy-queue-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:review-deterministic-policy-queue": "esbuild src/review-react/deterministic-policy-queue.jsx --bundle --outfile=static/js/review-deterministic-policy-queue-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:slides-react": "esbuild src/slides-react/index.jsx --bundle --outfile=static/js/slides-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:research-validate-react": "esbuild src/research-validate-react/index.jsx --bundle --outfile=static/js/research-validate-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:research-prompt-react": "esbuild src/research-prompt-react/index.jsx --bundle --outfile=static/js/research-prompt-react.js --format=iife --minify --loader:.js=jsx --sourcemap",
+    "build:check-entries-react": "esbuild src/check-entries-react/index.jsx --bundle --outfile=static/js/check-entries-react.js --format=iife --minify --loader:.js=jsx --sourcemap"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.4",
+    "jszip": "^3.10.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "deckName": "Ulta lipstick launch signal experiment",
+  "templateKey": "uniform",
+  "promptStyle": "uniform",
+  "slides": [
+    {
+      "slideId": "s01",
+      "title": "Lipstick launches skew more care-led than the older base",
+      "body": [
+        "This is a narrow experiment on recent Ulta lipstick launches, not a full category strategy.",
+        "The point is to see what survives after the launch cohort is mechanically defined and manually audited."
+      ],
+      "footerText": "Ulta new-arrivals scrape | audited launch cohort"
+    },
+    {
+      "slideId": "s02",
+      "layoutVariant": "text_visual_bottom",
+      "title": "The included launches already show the split inside the cohort",
+      "body": "Three launches make the proposition visible without asking the reader to infer the story from a chart alone.",
+      "nativeVisual": {
+        "kind": "launch_product_tiles",
+        "tiles": [
+          {
+            "brand": "BRAND A",
+            "product": "Matte Lip Color",
+            "body": "Counterexample inside the cohort: matte, full and long-wear, but not overtly care-led.",
+            "tags": [
+              "matte",
+              "full",
+              "long-wear"
+            ],
+            "badge": "counterexample",
+            "accentRgb": [
+              83,
+              54,
+              48
+            ]
+          },
+          {
+            "brand": "BRAND C",
+            "product": "Comfort Lip Color",
+            "body": "Comfort and care are explicit in the proposition: moisturizing, non-drying, wearable as lipstick or stain.",
+            "tags": [
+              "hydrating",
+              "sheer",
+              "long-wear"
+            ],
+            "accentRgb": [
+              128,
+              84,
+              64
+            ]
+          },
+          {
+            "brand": "BRAND B",
+            "product": "Hydrating Lip Color",
+            "body": "Moisture and hydration sit at the center of the product story rather than at the edge of it.",
+            "tags": [
+              "hydrating",
+              "matte",
+              "long-wear"
+            ],
+            "accentRgb": [
+              103,
+              121,
+              88
+            ]
+          }
+        ]
+      },
+      "implication": "IMPLICATION: The launch signal is not universal, but the care-led direction is still visible enough to matter."
+    },
+    {
+      "slideId": "s03",
+      "title": "What survived vs what failed",
+      "body": "The value of the exercise is not that every first-pass pattern survives. It is that the surviving signal is inspectable and the false positive is explicit.",
+      "comparisonColumns": [
+        {
+          "title": "What survived",
+          "items": [
+            "Hydrating or moisturizing language over-indexes in launches.",
+            "Long-wear also over-indexes.",
+            "The products still look recognizably lipstick-shaped rather than category-breaking."
+          ]
+        },
+        {
+          "title": "What failed",
+          "items": [
+            "Refillable collapsed after product-level audit.",
+            "Retailer sustainability boilerplate created noise.",
+            "The result does not support a dramatic new lipstick era."
+          ]
+        }
+      ],
+      "calloutTitle": "Bottom line",
+      "calloutBody": "The system passes a narrow but important test: it can generate a specific product-level read after the cohort is cleaned."
+    }
+  ]
+}

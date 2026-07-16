@@ -1,0 +1,117 @@
+{
+  "profile_name": "vince_low_top_sneakers",
+  "display_name": "Vince · Low-Top Sneakers PDP",
+  "retailer": "vince",
+  "base_url": "https://www.vince.com",
+  "category_hints": [
+    "sneakers-for-women"
+  ],
+  "category_urls": [
+    "https://www.vince.com/sneakers-for-women/"
+  ],
+  "parent_rules": {
+    "min_color_variants": 1,
+    "disallow_kits_regex": "(?i)\\b(?:set|sets|bundle|bundles|gift|gifts)\\b",
+    "finish_split_tokens": []
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "/product/[^/?#]*-([A-Za-z0-9]+)\\.html",
+    "parent_json_paths": [
+      "$.parent.parent_product_id",
+      "$.sku",
+      "$.mpn"
+    ],
+    "variant_id_fields": [
+      "$.variant_id"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      {
+        "type": "script_jsonld",
+        "selector": "script[type='application/ld+json']"
+      },
+      {
+        "type": "dom_fallback",
+        "selector": "body"
+      }
+    ]
+  },
+  "field_paths": {
+    "brand": [
+      "$.parent.brand",
+      "$.brand"
+    ],
+    "parent_title": [
+      "$.parent.title",
+      "$.name"
+    ],
+    "parent_summary": [
+      "$.parent.summary",
+      "$.description"
+    ],
+    "series_label": [
+      "$.parent.style_id",
+      "$.isVariantOf.sku"
+    ],
+    "category_path": [
+      "$.parent.category_path[*]",
+      "$.categoryPath[*]"
+    ],
+    "variant_list": [
+      "$.variants[*]"
+    ],
+    "variant_fields": {
+      "variant_id": [
+        "$.variant_id"
+      ],
+      "shade_name": [
+        "$.color",
+        "$.shade"
+      ],
+      "size_text": [
+        "$.size"
+      ],
+      "price": [
+        "$.price"
+      ],
+      "currency": [
+        "$.currency"
+      ],
+      "barcode": [
+        "$.barcode"
+      ],
+      "swatch_image": [
+        "$.image"
+      ],
+      "hero_image": [
+        "$.image"
+      ],
+      "availability": [
+        "$.availability"
+      ]
+    }
+  },
+  "normalization": {
+    "brand": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "shade_name": {
+      "trim": true,
+      "collapse_spaces": true
+    },
+    "title": {
+      "trim": true,
+      "collapse_spaces": true,
+      "strip_trailing_shade_tokens": false,
+      "strip_pack_counts": false
+    }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": false
+  }
+}

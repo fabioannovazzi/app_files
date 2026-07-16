@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "plugin": "distribution-analysis",
+  "items": [
+    {
+      "legacy_id": "legacy.distribution.stripplot",
+      "status": "mapped_active",
+      "legacy_function": "SUPPORTED_DISTRIBUTION_CHARTS.stripplot",
+      "target_capability_id": "distribution.stripplot",
+      "reason": "The legacy stripplot chart type is exposed as a named distribution source capability."
+    },
+    {
+      "legacy_id": "legacy.distribution.kernel_density",
+      "status": "mapped_active",
+      "legacy_function": "SUPPORTED_DISTRIBUTION_CHARTS.kernel_density",
+      "target_capability_id": "distribution.kernel_density",
+      "reason": "The legacy kernel-density chart type is exposed as a named distribution source capability."
+    }
+  ]
+}

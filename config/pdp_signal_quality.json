@@ -1,0 +1,10 @@
+{
+  "observed_category_center": {
+    "rank_weight_alpha": 1.0,
+    "min_ranked_products": 3,
+    "min_assortment_products": 5,
+    "min_rank_weighted_presence": 0.12,
+    "min_assortment_presence": 0.12,
+    "max_rank_weighted_lift": 1.35
+  }
+}

@@ -1,0 +1,506 @@
+{
+    "id": "low_top_sneakers",
+    "label": "low-top sneakers",
+    "attributes": [
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "black",
+                    "label": "black"
+                },
+                {
+                    "id": "blue",
+                    "label": "blue"
+                },
+                {
+                    "id": "brown",
+                    "label": "brown"
+                },
+                {
+                    "id": "gold",
+                    "label": "gold"
+                },
+                {
+                    "id": "green",
+                    "label": "green"
+                },
+                {
+                    "id": "grey",
+                    "label": "grey",
+                    "synonyms": [
+                        "gray"
+                    ]
+                },
+                {
+                    "id": "multicolor",
+                    "label": "multicolor",
+                    "synonyms": [
+                        "multi color"
+                    ]
+                },
+                {
+                    "id": "neutrals",
+                    "label": "neutrals",
+                    "synonyms": [
+                        "neutral"
+                    ]
+                },
+                {
+                    "id": "orange",
+                    "label": "orange"
+                },
+                {
+                    "id": "pink",
+                    "label": "pink"
+                },
+                {
+                    "id": "purple",
+                    "label": "purple"
+                },
+                {
+                    "id": "red",
+                    "label": "red"
+                },
+                {
+                    "id": "silver",
+                    "label": "silver"
+                },
+                {
+                    "id": "white",
+                    "label": "white"
+                },
+                {
+                    "id": "yellow",
+                    "label": "yellow"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "material",
+            "label": "material",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "canvas",
+                    "label": "canvas"
+                },
+                {
+                    "id": "denim",
+                    "label": "denim"
+                },
+                {
+                    "id": "embellished",
+                    "label": "embellished material",
+                    "synonyms": [
+                        "embellished"
+                    ]
+                },
+                {
+                    "id": "leather",
+                    "label": "leather"
+                },
+                {
+                    "id": "mesh",
+                    "label": "mesh"
+                },
+                {
+                    "id": "patent_leather",
+                    "label": "patent leather",
+                    "synonyms": [
+                        "patent"
+                    ]
+                },
+                {
+                    "id": "raffia",
+                    "label": "raffia"
+                },
+                {
+                    "id": "satin",
+                    "label": "satin"
+                },
+                {
+                    "id": "shearling",
+                    "label": "shearling"
+                },
+                {
+                    "id": "suede",
+                    "label": "suede"
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "closure",
+            "label": "closure",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "lace_up",
+                    "label": "lace-up",
+                    "synonyms": [
+                        "lace up",
+                        "lace up style",
+                        "laces"
+                    ]
+                },
+                {
+                    "id": "slip_on",
+                    "label": "slip-on",
+                    "synonyms": [
+                        "pull on",
+                        "slip on"
+                    ]
+                },
+                {
+                    "id": "hook_and_loop",
+                    "label": "hook-and-loop strap",
+                    "synonyms": [
+                        "strap closure",
+                        "velcro"
+                    ]
+                },
+                {
+                    "id": "zip",
+                    "label": "zip",
+                    "synonyms": [
+                        "side zip",
+                        "zip closure"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "toe_shape",
+            "label": "toe shape",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "round_toe",
+                    "label": "round toe",
+                    "synonyms": [
+                        "rounded toe"
+                    ]
+                },
+                {
+                    "id": "cap_toe",
+                    "label": "cap toe",
+                    "synonyms": [
+                        "toe cap"
+                    ]
+                },
+                {
+                    "id": "almond_toe",
+                    "label": "almond toe"
+                },
+                {
+                    "id": "square_toe",
+                    "label": "square toe"
+                }
+            ]
+        },
+        {
+            "id": "sole_type",
+            "label": "sole type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "rubber_sole",
+                    "label": "rubber sole"
+                },
+                {
+                    "id": "eva_sole",
+                    "label": "EVA sole",
+                    "synonyms": [
+                        "eva outsole"
+                    ]
+                },
+                {
+                    "id": "platform_sole",
+                    "label": "platform sole"
+                },
+                {
+                    "id": "gum_sole",
+                    "label": "gum sole"
+                },
+                {
+                    "id": "lug_sole",
+                    "label": "lug sole",
+                    "synonyms": [
+                        "lugged sole"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "design_detail",
+            "label": "design detail",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "logo_detail",
+                    "label": "logo detail",
+                    "synonyms": [
+                        "brand logo",
+                        "logo"
+                    ]
+                },
+                {
+                    "id": "colorblock",
+                    "label": "colorblock",
+                    "synonyms": [
+                        "color block",
+                        "colour block"
+                    ]
+                },
+                {
+                    "id": "perforated",
+                    "label": "perforated"
+                },
+                {
+                    "id": "metallic",
+                    "label": "metallic"
+                },
+                {
+                    "id": "embellished",
+                    "label": "embellishment detail",
+                    "synonyms": [
+                        "crystal",
+                        "rhinestone",
+                        "stud"
+                    ]
+                },
+                {
+                    "id": "patterned",
+                    "label": "patterned",
+                    "synonyms": [
+                        "monogram",
+                        "print"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "silhouette",
+            "label": "silhouette",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "runner_inspired",
+                    "label": "runner-inspired",
+                    "synonyms": [
+                        "runner",
+                        "running sneaker"
+                    ]
+                },
+                {
+                    "id": "court_inspired",
+                    "label": "court-inspired",
+                    "synonyms": [
+                        "basketball sneaker",
+                        "tennis sneaker"
+                    ]
+                },
+                {
+                    "id": "skate_inspired",
+                    "label": "skate-inspired"
+                },
+                {
+                    "id": "chunky",
+                    "label": "chunky",
+                    "synonyms": [
+                        "dad sneaker",
+                        "oversized sole"
+                    ]
+                },
+                {
+                    "id": "minimal",
+                    "label": "minimal",
+                    "synonyms": [
+                        "clean",
+                        "low profile"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "fit_note",
+            "label": "fit note",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "runs_large",
+                    "label": "runs large",
+                    "synonyms": [
+                        "runs big",
+                        "take one size smaller"
+                    ]
+                },
+                {
+                    "id": "runs_small",
+                    "label": "runs small",
+                    "synonyms": [
+                        "take one size larger"
+                    ]
+                },
+                {
+                    "id": "true_to_size",
+                    "label": "true to size"
+                },
+                {
+                    "id": "narrow_fit",
+                    "label": "narrow fit"
+                },
+                {
+                    "id": "wide_fit",
+                    "label": "wide fit"
+                }
+            ]
+        },
+        {
+            "id": "usage_context",
+            "label": "usage context",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "multi",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "casual",
+                    "label": "casual"
+                },
+                {
+                    "id": "streetwear",
+                    "label": "streetwear"
+                },
+                {
+                    "id": "designer_luxury",
+                    "label": "designer/luxury",
+                    "synonyms": [
+                        "designer",
+                        "luxury"
+                    ]
+                },
+                {
+                    "id": "performance_sport",
+                    "label": "performance sport",
+                    "synonyms": [
+                        "athletic",
+                        "running",
+                        "training"
+                    ]
+                },
+                {
+                    "id": "dressy",
+                    "label": "dressy"
+                }
+            ]
+        }
+    ]
+}

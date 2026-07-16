@@ -1,0 +1,76 @@
+{
+  "profile_name": "amazon_face_primer",
+  "display_name": "Amazon · Face Primer PDP",
+  "retailer": "amazon",
+  "base_url": "https://www.amazon.com",
+  "category_hints": [
+    "beauty/makeup/primer"
+  ],
+  "category_urls": [
+    "https://www.amazon.com/s?i=beauty&k=face+primer+makeup"
+  ],
+  "parent_rules": {
+    "min_color_variants": 1,
+    "disallow_kits_regex": "(?i)\\b(set|sets|duo|duos|kit|kits|vault|vaults|gift|gifts)\\b",
+    "finish_split_tokens": [
+      "matte",
+      "hydrating",
+      "illuminating",
+      "pore",
+      "blur",
+      "oil control"
+    ]
+  },
+  "id_extractors": {
+    "parent_from_url_regex": "B0[0-9A-Z]{8}",
+    "parent_json_paths": [
+      "$.parent.parent_asin",
+      "$.parent.parentAsin",
+      "$.asin"
+    ],
+    "variant_id_fields": [
+      "$.asin",
+      "$.variantId",
+      "$.sku",
+      "$.id"
+    ]
+  },
+  "blob_sources": {
+    "ordered": [
+      { "type": "script_jsonld", "selector": "script[type='application/ld+json']" },
+      { "type": "script_a_state", "selector": "script[type='a-state']" },
+      { "type": "dom_fallback", "selector": "#dp" }
+    ]
+  },
+  "field_paths": {
+    "brand": ["$.parent.brand", "$.brand.name", "$.Brand"],
+    "parent_title": ["$.parent.title", "$.name", "$.title"],
+    "parent_summary": ["$.parent.summary", "$.description"],
+    "series_label": ["$.parent.series", "$.isPartOf.name"],
+    "category_path": ["$.parent.category_path[*]", "$.breadcrumb[*].name"],
+    "variant_list": ["$.variants[*]", "$.offers[*]"],
+    "variant_fields": {
+      "variant_id": ["$.asin", "$.variantId", "$.sku", "$.id"],
+      "shade_name": ["$.colorName", "$.variationValues.color_name", "$.shadeDescription"],
+      "size_text": ["$.sizeText", "$.variationValues.size_name"],
+      "price": ["$.price", "$.offers.price"],
+      "list_price": ["$.list_price", "$.listPrice", "$.offers.listPrice"],
+      "currency": ["$.currency", "$.currencyCode", "$.offers.priceCurrency"],
+      "barcode": ["$.upc", "$.ean", "$.asin"],
+      "swatch_image": ["$.swatchImage", "$.images.swatch", "$.images.swatchImage"],
+      "hero_image": ["$.heroImage", "$.images.hero", "$.image"],
+      "availability": ["$.availability", "$.offers.availability"]
+    }
+  },
+  "normalization": {
+    "brand": { "trim": true, "collapse_spaces": true },
+    "shade_name": { "trim": true, "collapse_spaces": true, "dedupe_symbols": true, "normalize_number_position": true },
+    "title": { "trim": true, "collapse_spaces": true, "strip_trailing_shade_tokens": true, "strip_pack_counts": true }
+  },
+  "validation": {
+    "require_brand": true,
+    "require_title": true,
+    "price_must_be_numeric": true,
+    "reject_if_zero_variants": true
+  }
+}

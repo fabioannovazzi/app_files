@@ -1,0 +1,141 @@
+# Legacy Chart Plugin Pattern
+
+Use this pattern when turning legacy Mparanza chart code into Codex plugins.
+
+## Architecture
+
+The plugin should have three layers:
+
+1. **Legacy data preparation/calculation**
+   - Reuse the vendored preparation code as the source of truth.
+   - Preserve period splitting, period windows, pivots, aggregation, top/Other handling, hierarchy logic, and any chart-family-specific transformations.
+   - Port only narrow implementation details when needed, such as replacing pandas calls with equivalent Polars calls without changing behavior.
+
+2. **Legacy chart generation**
+   - Reuse the chart-family renderer where it works.
+   - The plugin may standardize export paths, chart titles, period/scenario role colors, audit metadata, and headless fallbacks.
+   - Do not recode semantic chart behavior such as scale sharing, pinheads, hierarchy construction, or small-multiple panel generation unless the legacy function cannot run and the behavior is explicitly preserved.
+
+3. **Structured interpretation inputs**
+   - Generate deterministic analysis outputs, CSV/JSON context, diagnostics, and audit files first.
+   - Codex reviews those structured artifacts, chooses the business-relevant findings, and writes the client-facing narrative.
+   - The model interprets the result; deterministic scripts should not invent business causes beyond measured fields.
+   - Write structured source-data outputs so later consumers can use the chart-family
+     result without scraping filenames or pixels.
+
+## Foundational Product Principle
+
+This system is not chart automation with AI commentary. It is an iterative
+analysis and reporting harness built around a proven legacy analytical engine.
+
+The legacy Mparanza code owns both parts that must remain reliable:
+
+- the analytical preparation/calculation path that turns a raw dataset into the
+  few exact numbers required by each chart family;
+- the legacy Plotly rendering path that turns those same numbers into clear
+  human-facing charts.
+
+Codex owns the investigation loop around that engine. It reads structured
+numbers from many analytical angles, forms and tests hypotheses, requests
+filtered reruns or drilldowns when the analysis is incomplete, selects the
+findings that survive cross-checks, and writes the report. It should not infer
+business conclusions from chart pixels when the underlying chart-ready data is
+available.
+
+The reporting semantics are part of the analytical contract, not only visual
+style. Chart-ready contexts should make scenario, period, unit, total, variance,
+residual, and sign semantics explicit. That reduces ambiguity for both the model
+and the human reader, and it keeps the model's interpretation tied to
+deterministic Python outputs.
+
+## Analysis-First, Plot-Last
+
+The model's analytical source of truth is the structured chart-ready data, not
+the PNG or HTML chart image. Human consulting often means running many analyses
+and looking at many charts; in Codex workflows, run many deterministic analyses
+first and let Codex reason over the exact chart-ready data before deciding what
+humans need to see.
+
+Here, `legacy` means both sides of the old charting pipeline: the analytical
+data preparation/calculation code and the Plotly rendering code. This principle
+preserves the original behavior: the model receives the numbers and chart-ready
+tables used to build a chart, while the PNG/HTML output is produced for people.
+
+- Prepare data once, then generate reusable analytical results: grouped tables,
+  variance decompositions, root-cause sweeps, drilldowns, Pareto rankings,
+  concentration metrics, trend summaries, and chart-ready contexts.
+- Codex reads those structured results, decides what matters, requests follow-up
+  or drilldown when needed, builds a candidate story, and validates that story
+  against the generated source outputs.
+- The loop is intentionally recursive: broad scan, pattern detection,
+  hypothesis, filtered follow-up or drilldown, validation, and only then
+  report selection.
+- Render or embed charts only when the report needs a visual artifact for human
+  consumption. Charts travel with the finding, but they are not the source of
+  numerical truth for the model.
+- Use chart images for visual QA after the structured-output read: blank panels, label
+  overlap, wrong titles, unreadable layout, or mismatch between the selected
+  finding and the rendered chart.
+
+## Structured Output Contract
+
+Every chart-family plugin should write self-contained structured outputs when
+it can produce normal outputs. Use this shape unless the chart type has a
+concrete reason to extend it:
+
+- context JSON files with chart/table facts used for interpretation, not image
+  OCR;
+- CSV/XLSX files with the generated numbers;
+- audit JSON files with source mappings, preparation choices, failures, and
+  output status;
+- review payload files when the plugin has a local review UI;
+- PNG/HTML/DOCX artifacts only when they are naturally generated by the plugin.
+
+The structured outputs should describe the generated analysis, not choose the
+final executive story. They should contain enough context for Codex to interpret
+the analysis without chart OCR or image reading. A later reporting layer still
+decides what is material enough to show to the client and which chart artifacts
+should be rendered or embedded.
+
+## Headless Legacy Orchestration
+
+When a plugin needs a legacy chart, preserve the old orchestration boundary:
+
+1. Prepare the grouped/chart-ready data with legacy preparation code.
+2. Call the relevant `modules.charting.plot_charts.*` function, or the plugin's
+   vendored equivalent.
+3. Run that function inside `HeadlessChartCapture` from
+   `modules.utilities.ui_notifier` so Streamlit-style calls such as `tabs`,
+   `plotly_chart`, `dataframe`, `caption`, `markdown`, and `write` become
+   captured side effects instead of UI requirements.
+4. Capture the output at `set_up_tab_for_show_or_download_chart`: Plotly figure,
+   chart-ready dataframe, Plotly config, chart dictionary, title/key, run name,
+   and chosen dimension.
+5. Export PNG/DOCX-ready artifacts from the captured Plotly figure and write
+   audit metadata with both the top-level `plot_charts.*` function and the
+   lower-level renderer it invoked.
+
+Do not bypass `plot_charts.*` merely because direct calls to a lower-level draw
+function are easier. The point of the harness is to keep panel ordering,
+small-multiple behavior, titles, labels, downloads, and chart-ready data in
+the same legacy flow.
+
+## Plugin Boundaries
+
+Split plugins by business chart family rather than old module names.
+
+- **Period comparison / year-over-year charts** should include legacy `multitierColumnChart`, because the legacy name maps to `"year-over-year column"` and shares period-comparison preparation with year-over-year line and waterfall charts.
+- **Composition / hierarchy charts** should include legacy `multitierBarChart`, because it pivots one business dimension by another and applies top/Other composition logic.
+
+## Small Multiples
+
+Small multiples are a normal output, not an advanced user choice, for chart families that support them.
+
+- Generate the main chart and small multiples when a useful dimension can be inferred.
+- Keep shared scale where the chart type requires comparability.
+- Write chart context files so Codex can comment from data, not only from pixels.
+- Include small multiples in the report when they materially support or qualify the main reading.
+
+## Default UX
+
+Ask only for material missing mappings or ambiguous comparison choices. Do not ask users whether to produce charts, small multiples, audit files, diagnostics, Word reports, or rich output packages when those are natural outputs of the plugin.

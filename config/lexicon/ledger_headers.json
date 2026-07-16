@@ -1,0 +1,115 @@
+{
+  "date": [
+    "data",
+    "date",
+    "data operazione",
+    "data reg",
+    "data registrazione",
+    "fecha",
+    "fecha operacion",
+    "fecha registro",
+    "datum",
+    "daten",
+    "valuta",
+    "datavaluta",
+    "valuedate",
+    "data valuta"
+  ],
+  "description": [
+    "descrizione",
+    "descrizione causale",
+    "descrizione agg",
+    "causale",
+    "descr",
+    "desc",
+    "descrizione aggiuntiva",
+    "description",
+    "description causale",
+    "descripcion",
+    "beschreibung",
+    "descrizione deposito",
+    "narrative",
+    "riferimento",
+    "reference"
+  ],
+  "debit": [
+    "addebito",
+    "uscite",
+    "dare",
+    "debit",
+    "debe",
+    "débit",
+    "débito",
+    "lastschrift",
+    "prelievo"
+  ],
+  "credit": [
+    "accredito",
+    "entrate",
+    "avere",
+    "accrediti",
+    "accreditation",
+    "credit",
+    "credito",
+    "crédito",
+    "haber",
+    "gutschrift",
+    "versamento",
+    "deposito"
+  ],
+  "amount": [
+    "importo",
+    "amount",
+    "importe",
+    "betrag",
+    "montant",
+    "ammontare"
+  ],
+  "beneficiary": [
+    "benef",
+    "beneficiario",
+    "beneficiary",
+    "cliente",
+    "fornitore",
+    "cliente/fornitore",
+    "beneficiario/cliente",
+    "beneficiario/fornitore"
+  ],
+  "extra_desc": [
+    "descr. agg",
+    "descrizione agg",
+    "descrizione aggiuntiva",
+    "descrizione integrativa",
+    "descrizione supplementare",
+    "additional description",
+    "extra description"
+  ],
+  "account_desc": [
+    "descrizione conto",
+    "descr. conto",
+    "account description",
+    "account name",
+    "nome conto"
+  ],
+  "counter_account_desc": [
+    "descrizione contropartita",
+    "conto contropartita",
+    "descrizione sottoconto",
+    "sottoconto",
+    "descrizione cliente/fornitore",
+    "cliente/fornitore"
+  ],
+  "journal_id": [
+    "num. reg",
+    "num reg",
+    "n. reg",
+    "numero registrazione",
+    "n. registrazione",
+    "registrazione",
+    "id registrazione",
+    "protocollo",
+    "protocol",
+    "prima nota",
+    "pn"
+  ]
+}
