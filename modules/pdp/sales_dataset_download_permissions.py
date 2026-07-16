@@ -9,6 +9,7 @@ from pathlib import Path
 from modules.pdp.sales_dataset_paths import (
     get_sales_dataset_name,
 )
+from modules.utilities.private_config import resolve_private_config_path
 
 __all__ = [
     "get_sales_dataset_download_permissions",
@@ -34,10 +35,19 @@ _SALES_DATASET_DOWNLOAD_PERMISSIONS_FILE = _resolve_config_path(
 )
 
 
+def _sales_dataset_download_permissions_file() -> Path:
+    """Return the runtime path for the private download permission map."""
+
+    return resolve_private_config_path(
+        _SALES_DATASET_DOWNLOAD_PERMISSIONS_FILE,
+        filename="sales_dataset_download_permissions.json",
+    )
+
+
 def _sales_dataset_download_permissions_cache_key() -> tuple[str, int, int]:
     """Return a cache key that changes whenever the permissions file changes."""
 
-    path = _SALES_DATASET_DOWNLOAD_PERMISSIONS_FILE
+    path = _sales_dataset_download_permissions_file()
     try:
         stat_result = path.stat()
     except FileNotFoundError:

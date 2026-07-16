@@ -318,3 +318,63 @@ def test_require_site_permission_for_request_denies_unconfigured_mapped_page(
     finally:
         auth_dependencies._get_permission_structure.cache_clear()
         auth_dependencies._get_site_permissions.cache_clear()
+
+
+def test_site_permissions_use_private_config_directory(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    private_config_dir = tmp_path / "private-config"
+    private_config_dir.mkdir()
+    permissions_file = private_config_dir / "site_page_permissions.json"
+    permissions_file.write_text(
+        json.dumps({"clara": ["person@example.com"]}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("APP_PRIVATE_CONFIG_DIR", str(private_config_dir))
+    monkeypatch.delenv("SITE_PAGE_PERMISSIONS_FILE", raising=False)
+    auth_dependencies._get_site_permissions.cache_clear()
+
+    try:
+        permissions = auth_dependencies.get_site_permissions()
+        assert permissions == {"clara": {"person@example.com"}}
+    finally:
+        auth_dependencies._get_site_permissions.cache_clear()
+
+
+def test_require_site_permission_for_request_fails_closed_without_permissions(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    config = _config()
+    monkeypatch.setattr("modules.auth.dependencies.get_auth_config", lambda: config)
+    structure_file = tmp_path / "permission_structure.json"
+    structure_file.write_text(
+        json.dumps({"clara": ["/case-notes/voice"]}),
+        encoding="utf-8",
+    )
+    missing_permissions_file = tmp_path / "missing-site-page-permissions.json"
+    monkeypatch.setattr(auth_dependencies, "_PERMISSION_STRUCTURE_FILE", structure_file)
+    monkeypatch.setattr(
+        auth_dependencies, "_SITE_PERMISSIONS_FILE", missing_permissions_file
+    )
+    monkeypatch.delenv("APP_PRIVATE_CONFIG_DIR", raising=False)
+    monkeypatch.delenv("SITE_PAGE_PERMISSIONS_FILE", raising=False)
+    auth_dependencies._get_permission_structure.cache_clear()
+    auth_dependencies._get_site_permissions.cache_clear()
+    cookie_value, _ = create_session_cookie(
+        GoogleUserInfo(email="person@example.com"), config
+    )
+    request = _request_for_path(
+        "/case-notes/voice",
+        headers=[(b"cookie", f"{config.session_cookie_name}={cookie_value}".encode())],
+    )
+
+    try:
+        with pytest.raises(HTTPException) as excinfo:
+            require_site_permission_for_request(request)
+        assert excinfo.value.status_code == 503
+        assert excinfo.value.detail["error"] == "permissions_unavailable"
+    finally:
+        auth_dependencies._get_permission_structure.cache_clear()
+        auth_dependencies._get_site_permissions.cache_clear()

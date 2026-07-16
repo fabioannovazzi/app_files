@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from modules.utilities.private_config import resolve_private_config_path
+
 __all__ = [
     "get_concept_permissions",
     "PresentationDocumentInfo",
@@ -35,6 +37,12 @@ _PRESENTATION_PERMISSIONS_FILE = _resolve_config_path("presentation_permissions.
 _LAUNCH_REPORT_PERMISSIONS_FILE = _resolve_config_path("launch_report_permissions.json")
 _BRAND_REPORT_PERMISSIONS_FILE = _resolve_config_path("brand_report_permissions.json")
 _CONCEPT_PERMISSIONS_FILE = _resolve_config_path("concept_permissions.json")
+
+
+def _private_permissions_path(default_path: Path) -> Path:
+    """Return the runtime path for a deployment-private permission map."""
+
+    return resolve_private_config_path(default_path, filename=default_path.name)
 
 
 @dataclass(frozen=True, slots=True)
@@ -134,7 +142,9 @@ def get_presentation_permissions() -> dict[str, set[str]]:
     """Return the cached per-deck permission map."""
 
     return _load_presentation_permissions(
-        _permissions_cache_key(_PRESENTATION_PERMISSIONS_FILE)
+        _permissions_cache_key(
+            _private_permissions_path(_PRESENTATION_PERMISSIONS_FILE)
+        )
     )
 
 
@@ -142,7 +152,9 @@ def get_launch_report_permissions() -> dict[str, set[str]]:
     """Return the cached per-report permission map."""
 
     return _load_launch_report_permissions(
-        _permissions_cache_key(_LAUNCH_REPORT_PERMISSIONS_FILE)
+        _permissions_cache_key(
+            _private_permissions_path(_LAUNCH_REPORT_PERMISSIONS_FILE)
+        )
     )
 
 
@@ -150,14 +162,18 @@ def get_brand_report_permissions() -> dict[str, set[str]]:
     """Return the cached per-brand-report permission map."""
 
     return _load_brand_report_permissions(
-        _permissions_cache_key(_BRAND_REPORT_PERMISSIONS_FILE)
+        _permissions_cache_key(
+            _private_permissions_path(_BRAND_REPORT_PERMISSIONS_FILE)
+        )
     )
 
 
 def get_concept_permissions() -> dict[str, set[str]]:
     """Return the cached per-concept permission map."""
 
-    return _load_concept_permissions(_permissions_cache_key(_CONCEPT_PERMISSIONS_FILE))
+    return _load_concept_permissions(
+        _permissions_cache_key(_private_permissions_path(_CONCEPT_PERMISSIONS_FILE))
+    )
 
 
 def is_presentation_allowed(
