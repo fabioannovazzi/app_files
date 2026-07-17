@@ -1260,6 +1260,17 @@ def test_check_brand_fit_report_returns_correct_for_intact_independent_review(
     )
 
 
+def test_render_brand_fit_report_wraps_long_evidence_tokens_on_mobile(
+    tmp_path: Path,
+    brand_fit: ModuleType,
+) -> None:
+    output = _rendered_case(tmp_path, brand_fit)
+
+    report = (output / "report_draft.html").read_text(encoding="utf-8")
+
+    assert "overflow-wrap:anywhere" in report
+
+
 def test_check_brand_fit_report_accepts_measured_desktop_and_mobile_qa(
     tmp_path: Path,
     brand_fit: ModuleType,
