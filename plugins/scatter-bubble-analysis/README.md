@@ -1,6 +1,6 @@
 # Scatter & Bubble Analysis
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/scatter-bubble-analysis) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/scatter-bubble-analysis) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Codex plugin for legacy Plotly scatter and bubble charts. The plugin reads CSV
 or Excel data, infers or accepts chart mappings, canonicalizes the data once,

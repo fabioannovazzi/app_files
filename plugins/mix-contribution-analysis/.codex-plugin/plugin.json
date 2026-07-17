@@ -1,6 +1,6 @@
 {
   "name": "mix-contribution-analysis",
-  "version": "0.1.91",
+  "version": "0.1.92",
   "description": "Legacy-backed mix, composition and contribution chart-family workflow with source packs and Codex interpretation.",
   "author": {
     "name": "Mparanza",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://mparanza.com/static/shared/reporting/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "mix",
     "contribution",

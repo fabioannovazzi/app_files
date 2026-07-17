@@ -374,7 +374,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "apps" not in manifest
     assert "mcpServers" not in manifest
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
-    assert manifest["license"] == "MIT"
+    assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
     assert manifest["interface"]["shortDescription"] == ("AI companion for accountants")
     assert len(prompts) == 3
@@ -1210,7 +1210,7 @@ def test_all_repo_plugins_declare_canonical_open_source_metadata() -> None:
         )
 
         assert manifest["repository"] == canonical_repository, plugin_root.name
-        assert manifest["license"] == "MIT", plugin_root.name
+        assert manifest["license"] == "AGPL-3.0-only", plugin_root.name
 
 
 def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:

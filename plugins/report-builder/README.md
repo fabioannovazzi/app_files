@@ -1,6 +1,6 @@
 # Build Report Codex Plugin
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/report-builder) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/report-builder) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Build Report is a Codex-guided reporting workflow for variable finance and audit inputs. It replaces the old web report-builder flow with deterministic local scripts plus Codex review.
 

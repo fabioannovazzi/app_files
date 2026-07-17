@@ -1,6 +1,6 @@
 # Journal-Bank Reconciliation Codex Plugin
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/journal-bank-reconciliation) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/journal-bank-reconciliation) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Guided Codex workflow for deterministic reconciliation between bank statements and journal or ledger exports.
 

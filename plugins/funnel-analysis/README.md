@@ -1,6 +1,6 @@
 # Funnel Analysis
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/funnel-analysis) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/funnel-analysis) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Deterministic funnel-stage table plugin for ordered gates, readiness pipelines,
 conversion steps, and statement-like stage schemes.

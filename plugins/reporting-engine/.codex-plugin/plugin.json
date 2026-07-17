@@ -1,6 +1,6 @@
 {
   "name": "reporting-engine",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Clara component for chart capability manifests, dataset profiling, mechanical compatibility evidence, reporting runtime contracts, chart-family adapter resolution, and unified capability rendering.",
   "author": {
     "name": "Mparanza",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://mparanza.com/static/shared/reporting/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "reporting",
     "charts",

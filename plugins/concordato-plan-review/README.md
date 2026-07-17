@@ -1,6 +1,6 @@
 # Revisione Piano Concordato
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/concordato-plan-review) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/concordato-plan-review) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Plugin Codex per il tie-out numerico e la review contabile di un piano di concordato rispetto a bilancio provvisorio, mastrini, database rettificato e dettagli di supporto.
 

@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.6+codex.20260716173336",
+  "version": "0.1.7+codex.20260717084007",
   "description": "Vera prepara istruttorie e carte di lavoro rivedibili, inclusi casi INPS e pratiche Registro Imprese/DIRE da fonti SARI ufficiali.",
   "author": {
     "name": "Mparanza",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://mparanza.com/static/shared/vera/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "vera",
     "commercialisti",

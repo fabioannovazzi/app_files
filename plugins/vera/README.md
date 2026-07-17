@@ -1,6 +1,6 @@
 # Vera
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Vera is a bounded AI colleague and reviewer for professional accounting
 practices. She prepares, checks, and documents work across eleven specialist

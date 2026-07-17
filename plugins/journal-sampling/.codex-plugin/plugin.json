@@ -1,6 +1,6 @@
 {
   "name": "journal-sampling",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "Deterministic journal extraction and audit sample selection guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "audit",
     "journal",

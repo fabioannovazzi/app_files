@@ -1,6 +1,6 @@
 # Mix & Contribution Analysis
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/mix-contribution-analysis) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/mix-contribution-analysis) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Legacy-backed mix, composition and contribution chart workflow for sales CSV/XLSX
 files.
