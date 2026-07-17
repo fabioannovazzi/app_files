@@ -1,7 +1,7 @@
 {
   "name": "check-entries",
-  "version": "0.1.22",
-  "description": "Deterministic journal-entry support testing guided by Codex.",
+  "version": "0.1.23",
+  "description": "Journal-entry testing against FatturaPA XML and PDF support, guided by Codex.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -13,7 +13,9 @@
   "keywords": [
     "audit",
     "entries",
-    "supporting-documents",
+      "supporting-documents",
+      "fatturapa",
+      "xml",
     "pdf",
     "accounting",
     "deterministic"
@@ -23,8 +25,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Check Entries",
-    "shortDescription": "Compare sampled journal entries with supporting PDFs in Italian, English, French, or German.",
-    "longDescription": "Codex workflow for checking selected journal entries against supporting documents. Codex handles only non-inferable mapping ambiguity and review assumptions; deterministic scripts inspect journal files, inventory PDFs, match support files, compare amounts/dates/beneficiaries when available, and automatically export the natural full package: CSV/XLSX/JSON evidence, audit, diagnostics, review notes, and Codex review. Supports working locales it/en/fr/de and keeps all judgmental review in Codex rather than hidden API calls.",
+    "shortDescription": "Match sampled entries to FatturaPA XMLs, connector exports, or targeted PDFs.",
+    "longDescription": "Codex workflow for checking selected journal entries against supporting documents. It first accepts a bulk FatturaPA XML ZIP, can record a local export produced by an authorized accounting-system connector, and then falls back to PDFs only for unresolved sampled entries. Deterministic scripts parse structured fields, require a unique multi-signal invoice match, compare PDF evidence, and export CSV/XLSX/JSON evidence, audit, diagnostics, and review notes. Supports it/en/fr/de and leaves ambiguous professional judgment to Codex and the reviewer.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",
@@ -36,7 +38,7 @@
       "Analysis"
     ],
     "defaultPrompt": [
-      "Use Check Entries on the journal and PDF folder I provide.",
+      "Use Check Entries on the journal and the FatturaPA ZIP, authorized connector export, or PDF folder I provide.",
       "Infer language and mappings where possible, ask only for essential ambiguities, then run deterministic checks and prepare the complete natural review package.",
       "Do not make direct OpenAI API calls from the plugin scripts; use Codex for review judgment and deterministic scripts for extraction/comparison."
     ],

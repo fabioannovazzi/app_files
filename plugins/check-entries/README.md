@@ -2,12 +2,17 @@
 
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/check-entries) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
-Check Entries is a Codex workflow plugin for comparing selected journal entries with supporting PDF documents.
+Check Entries is a Codex workflow plugin for comparing selected journal entries
+with Italian FatturaPA XMLs and supporting PDF documents.
 
 The plugin keeps extraction and comparison deterministic:
 
-- `scripts/inspect_entries.py` inspects the journal columns and PDF support folder, then writes `inspection.json` and `suggested_recipe.json`.
-- `scripts/run_checks.py` normalizes entries, matches PDFs by movement number, compares amount/date/beneficiary evidence when available, and writes CSV/XLSX/JSON review outputs.
+- `scripts/inspect_entries.py` inspects the journal and a FatturaPA ZIP/XML,
+  authorized connector export, or PDF support folder, then writes
+  `inspection.json` and `suggested_recipe.json`.
+- `scripts/run_checks.py` normalizes entries, tries a unique multi-field XML
+  match first, falls back to PDFs by movement number, and writes CSV/XLSX/JSON
+  review outputs.
 - `scripts/run_checks.py` also writes `run_intake.json`, `review_payload.json`,
   `ui_decisions.json`, and `final_artifacts.json` so Codex can render an MCP
   HTML review surface for supported entries, missing support, mismatches,
@@ -17,6 +22,21 @@ The plugin keeps extraction and comparison deterministic:
 Run `python scripts/check_dependencies.py` from the plugin directory before using the helper scripts.
 
 Working locales: `it`, `en`, `fr`, `de`.
+
+## Support acquisition ladder
+
+1. Prefer a ZIP containing the client's FatturaPA XML archive. ZIP members are
+   parsed in memory and are not extracted into the workspace.
+2. If an authorized accounting-system connector materializes the same XML
+   export locally, pass that folder or ZIP and record its name with
+   `--connector-name`. The plugin never accepts credentials or logs into a
+   provider itself.
+3. Use PDFs for entries that have no unique XML match. Requests should be
+   limited to those unresolved sampled entries rather than the full population.
+
+An XML is accepted automatically only when exactly one invoice matches at
+least two independent fields among invoice number, amount, date, and party.
+Multiple candidates remain unresolved for professional review.
 
 ## UI review MCP
 

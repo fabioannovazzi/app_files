@@ -1934,6 +1934,11 @@ def test_vera_page_lists_all_eleven_modules() -> None:
     assert 'id="previdenza-inps"' in page
     assert 'id="registro-imprese-sari"' in page
     assert "La collega AI che prepara, controlla e documenta" in page
+    assert "Dalla scrittura campionata alla fattura, senza stampe massive" in page
+    assert "ZIP FatturaPA" in page
+    assert "Collegamento autorizzato" in page
+    assert "PDF solo per le eccezioni" in page
+    assert "data-invoice-link" in page
     assert "Install Vera from her official OpenAI listing." in page
     assert (
         "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" in page
@@ -2230,14 +2235,18 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
 
     for snippet in (
         "Check Entries",
-        "Test sampled entries against support PDFs.",
-        "Verifica le scritture campionate contro i PDF di supporto.",
-        "Tester les écritures échantillonnées contre les PDF justificatifs.",
-        "Stichprobenbuchungen gegen Beleg-PDFs prüfen.",
+        "Match invoices without asking for hundreds of printed copies.",
+        "Abbina le fatture senza chiedere a Maria di stamparne duecento.",
+        "Rapprocher les factures sans demander des centaines d'impressions.",
+        "Rechnungen zuordnen, ohne Hunderte Ausdrucke anzufordern.",
         "Entry checks tied to documents",
         "Controlli con supporto collegato",
-        "Create support checks from one folder",
+        "Start broad, finish with targeted requests",
+        "ZIP FatturaPA",
+        "Authorized connection",
+        "Targeted PDFs",
         "normalized_entries.csv",
+        "invoice_inventory.json",
         "pdf_inventory.json",
         "check_results.csv",
         "check_audit.json",

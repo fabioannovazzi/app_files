@@ -1,4 +1,4 @@
-"""Inspect journal entries and support PDFs for deterministic Codex review."""
+"""Inspect journal entries and FatturaPA XML/PDF support for Codex review."""
 
 from __future__ import annotations
 
@@ -16,7 +16,11 @@ def main() -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("journal", type=Path, help="Journal/sample-entry file.")
-    parser.add_argument("pdfs", type=Path, help="Supporting PDF file or folder.")
+    parser.add_argument(
+        "support",
+        type=Path,
+        help="FatturaPA ZIP/XML, authorized connector export, or supporting PDF folder.",
+    )
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -30,7 +34,7 @@ def main() -> int:
 
     result = inspect_entries(
         args.journal,
-        args.pdfs,
+        args.support,
         args.output_dir,
         args.recipe,
         language=args.language,
@@ -38,6 +42,7 @@ def main() -> int:
     )
     LOGGER.info("journal_rows=%s", result.journal["row_count"])
     LOGGER.info("support_pdfs=%s", len(result.pdfs))
+    LOGGER.info("fatturapa_invoices=%s", len(result.invoices))
     LOGGER.info("wrote %s", args.output_dir / "inspection.json")
     LOGGER.info("wrote %s", args.output_dir / "suggested_recipe.json")
     return 0

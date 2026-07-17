@@ -5,6 +5,7 @@ import json
 import shutil
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -37,6 +38,26 @@ def _save_workbook(path: Path, rows: list[list[Any]]) -> None:
         for col_idx, value in enumerate(row, start=1):
             sheet.cell(row=row_idx, column=col_idx, value=value)
     workbook.save(path)
+
+
+def _fatturapa_xml(
+    *,
+    number: str = "INV-42",
+    invoice_date: str = "2025-01-02",
+    amount: str = "123.45",
+    supplier: str = "ACME SPA",
+) -> bytes:
+    """Return the smallest representative FatturaPA invoice fixture."""
+
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<FatturaElettronica>
+  <FatturaElettronicaHeader>
+    <CedentePrestatore><DatiAnagrafici><IdFiscaleIVA><IdPaese>IT</IdPaese><IdCodice>01234567890</IdCodice></IdFiscaleIVA><Anagrafica><Denominazione>{supplier}</Denominazione></Anagrafica></DatiAnagrafici></CedentePrestatore>
+    <CessionarioCommittente><DatiAnagrafici><IdFiscaleIVA><IdPaese>IT</IdPaese><IdCodice>09876543210</IdCodice></IdFiscaleIVA><Anagrafica><Denominazione>CLIENTE SRL</Denominazione></Anagrafica></DatiAnagrafici></CessionarioCommittente>
+  </FatturaElettronicaHeader>
+  <FatturaElettronicaBody><DatiGenerali><DatiGeneraliDocumento><TipoDocumento>TD01</TipoDocumento><Divisa>EUR</Divisa><Data>{invoice_date}</Data><Numero>{number}</Numero><ImportoTotaleDocumento>{amount}</ImportoTotaleDocumento></DatiGeneraliDocumento></DatiGenerali></FatturaElettronicaBody>
+</FatturaElettronica>
+""".encode()
 
 
 def _call_mcp_server(messages: list[dict[str, object]]) -> list[dict[str, object]]:
@@ -256,6 +277,82 @@ def test_plugin_marks_missing_support_without_model_calls(tmp_path: Path) -> Non
     )
 
 
+def test_plugin_matches_sampled_entry_from_fatturapa_zip(tmp_path: Path) -> None:
+    core = load_core()
+    journal_path = tmp_path / "entries.xlsx"
+    invoice_zip = tmp_path / "all_invoices.zip"
+    output_dir = tmp_path / "out"
+    _save_workbook(
+        journal_path,
+        [
+            ["Movement", "Date", "Beneficiary", "Amount", "Description"],
+            ["3001", "2025-01-02", "ACME SPA", 123.45, "Invoice INV-42"],
+        ],
+    )
+    with zipfile.ZipFile(invoice_zip, "w") as archive:
+        archive.writestr("IT01234567890_INV42.xml", _fatturapa_xml())
+
+    inspection = core.inspect_entries(journal_path, invoice_zip, tmp_path / "inspect")
+    result = core.run_entry_checks(journal_path, invoice_zip, output_dir)
+
+    row = result.frame.to_dicts()[0]
+    inventory = json.loads((output_dir / "invoice_inventory.json").read_text())
+    assert len(inspection.invoices) == 1
+    assert inspection.suggested_recipe["acquisition_ladder"] == [
+        "fatturapa_zip",
+        "authorized_connector_export",
+        "targeted_pdf_fallback",
+    ]
+    assert row["status"] == "ok"
+    assert row["support_type"] == "fatturapa_xml"
+    assert row["matched_support"] == "IT01234567890_INV42.xml"
+    assert row["matched_pdf"] is None
+    assert set(row["checks_run"].split(",")) == {
+        "invoice_number",
+        "amount",
+        "date",
+        "beneficiary",
+    }
+    assert inventory["invoice_count"] == 1
+    assert inventory["errors"] == []
+
+
+def test_plugin_records_authorized_connector_and_requests_targeted_fallback(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    journal_path = tmp_path / "entries.xlsx"
+    connector_export = tmp_path / "connector_export"
+    output_dir = tmp_path / "out"
+    connector_export.mkdir()
+    _save_workbook(
+        journal_path,
+        [
+            ["Movement", "Date", "Beneficiary", "Amount", "Description"],
+            ["4001", "2025-01-02", "ACME SPA", 123.45, "Supplier invoice"],
+        ],
+    )
+    (connector_export / "invoice_a.xml").write_bytes(_fatturapa_xml(number="A"))
+    (connector_export / "invoice_b.xml").write_bytes(_fatturapa_xml(number="B"))
+
+    result = core.run_entry_checks(
+        journal_path,
+        connector_export,
+        output_dir,
+        connector_name="authorized-accounting-system",
+    )
+
+    row = result.frame.to_dicts()[0]
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    assert row["status"] == "missing_support"
+    assert row["mismatches"] == "ambiguous_invoice_support"
+    assert "targeted support" in row["review_notes"]
+    assert run_intake["data_posture"]["external_connectors_used"] == [
+        "authorized-accounting-system"
+    ]
+    assert run_intake["assumptions"]["invoice_count"] == 2
+
+
 def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     skill_text = (
         ROOT / "plugins" / "check-entries" / "skills" / "check-entries" / "SKILL.md"
@@ -288,10 +385,12 @@ def test_static_page_exposes_four_language_switch() -> None:
         'data-lang="en"',
         'data-lang="fr"',
         'data-lang="de"',
-        "Verifica le scritture campionate contro i PDF di supporto.",
-        "Test sampled entries against support PDFs.",
-        "Tester les écritures échantillonnées contre les PDF justificatifs.",
-        "Stichprobenbuchungen gegen Beleg-PDFs prüfen.",
+        "Abbina le fatture senza chiedere a Maria di stamparne duecento.",
+        "Match invoices without asking for hundreds of printed copies.",
+        "Rapprocher les factures sans demander des centaines d'impressions.",
+        "Rechnungen zuordnen, ohne Hunderte Ausdrucke anzufordern.",
+        "authorized_connector_export",
+        "invoice_inventory.json",
     ):
         assert snippet in page
 
