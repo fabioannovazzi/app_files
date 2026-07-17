@@ -98,6 +98,69 @@ def test_mapping_submission_sends_every_reviewed_artifact(
     ]
 
 
+def test_create_brand_fit_pack_sends_only_report_binding_and_supplied_aliases(
+    client_module: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = client_module.AttributeReportingServerClient(
+        object(), base_url="https://mparanza.com"
+    )
+    calls: list[dict[str, Any]] = []
+
+    def request_json(
+        path: str,
+        *,
+        method: str = "GET",
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        calls.append({"path": path, "method": method, "payload": payload})
+        return {"job_id": "brand-fit-job"}
+
+    monkeypatch.setattr(client, "_request_json", request_json)
+
+    result = client.create_brand_fit_pack(
+        source_evidence_job_id="e" * 32,
+        brand_source_retailer="brand-owned",
+        brand_name="Example Brand",
+        retailer_report_sha256="a" * 64,
+        retailer_report_verdict="Correct",
+        owned_category_keys=["sweaters"],
+    )
+
+    assert result == {"job_id": "brand-fit-job"}
+    assert calls == [
+        {
+            "path": "/brand-fit-packs",
+            "method": "POST",
+            "payload": {
+                "source_evidence_job_id": "e" * 32,
+                "brand_source_retailer": "brand-owned",
+                "brand_name": "Example Brand",
+                "retailer_report_sha256": "a" * 64,
+                "retailer_report_verdict": "Correct",
+                "owned_category_keys": ["sweaters"],
+            },
+        }
+    ]
+
+
+def test_create_brand_fit_pack_rejects_unchecked_source_report(
+    client_module: ModuleType,
+) -> None:
+    client = client_module.AttributeReportingServerClient(
+        object(), base_url="https://mparanza.com"
+    )
+
+    with pytest.raises(client_module.ServerBridgeClientError, match="must be Correct"):
+        client.create_brand_fit_pack(
+            source_evidence_job_id="e" * 32,
+            brand_source_retailer="brand-owned",
+            brand_name="Example Brand",
+            retailer_report_sha256="a" * 64,
+            retailer_report_verdict="Incorrect",
+        )
+
+
 def test_json_request_encoding_is_compact_at_payload_boundaries(
     client_module: ModuleType,
 ) -> None:

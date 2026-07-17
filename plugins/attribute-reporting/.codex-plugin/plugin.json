@@ -1,7 +1,7 @@
 {
   "name": "attribute-reporting",
-  "version": "0.1.5",
-  "description": "Local Codex workflow for product attribute mapping, cohort analysis, HTML reporting, and evidence-backed correctness review.",
+  "version": "0.1.6",
+  "description": "Local Codex workflow for product attribute mapping, retailer-signal analysis, Brand Fit, HTML reporting, and evidence-backed correctness review.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -15,14 +15,15 @@
     "retail",
     "taxonomy",
     "mapping",
+    "brand-fit",
     "html-report",
     "codex"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Attribute Reporting",
-    "shortDescription": "Map product attributes and turn cohort evidence into a locally reviewed HTML report.",
-    "longDescription": "A Codex-native workflow for current-database retail evidence, centrally governed attribute mapping, preserved new-versus-rest and best-seller-versus-other comparisons, private HTML report authoring, and a direct evidence-backed correctness verdict. Fresh local scraping is available only in the app_files development runtime. Deterministic scripts own calculations, evidence bindings, rendering, and integrity checks; Codex agents own semantic mapping, narrative, and independent review. Plugin scripts never call a model API.",
+    "shortDescription": "Map attributes, read retailer signals, and compare a brand's retailer presence and owned catalogue.",
+    "longDescription": "A Codex-native workflow for current-database retail evidence, centrally governed attribute mapping, preserved new-versus-rest and best-seller-versus-other comparisons, Brand Fit comparisons against the brand's current retailer presence and owned catalogue, private HTML report authoring, and a direct evidence-backed correctness verdict. Fresh local scraping is available only in the app_files development runtime. Deterministic scripts own calculations, evidence bindings, rendering, and integrity checks; Codex agents own semantic mapping, narrative, and independent review. Plugin scripts never call a model API.",
     "developerName": "Fabio",
     "category": "Productivity",
     "capabilities": [
@@ -35,7 +36,7 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
       "Use Attribute Reporting for this retailer and category.",
-      "Use the authenticated current-database snapshot by default; run a fresh local scrape only in the app_files development runtime. Preserve the existing cohort-comparison logic, write the report as private local HTML, and answer whether the report is correct.",
+      "Use the authenticated current-database snapshot by default; run a fresh local scrape only in the app_files development runtime. Preserve the existing cohort-comparison logic, write the report as private local HTML, and answer whether the report is correct. For Brand Fit, start from a completed checked Retailer Signals run and compare its signals with the brand's current presence at that retailer and its owned catalogue; never upload the local source report.",
       "Use Codex agents for semantic mapping, narrative, and independent review; never call a model API from plugin scripts."
     ],
     "brandColor": "#516254",

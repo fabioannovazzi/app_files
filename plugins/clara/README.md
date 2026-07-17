@@ -11,7 +11,9 @@ Word client outputs. It also maintains `case_brief.md`, a derived working brief
 for resuming the case without relying on chat history. Clara also embeds the
 Attribute Reporting specialist workflow for centrally governed retail taxonomy
 mapping, preserved cohort comparisons, private local HTML reports, and direct
-correctness verdicts. It also embeds Reporting Engine and eight chart-family
+correctness verdicts. Its distinct Brand Fit workflow compares completed
+retailer signals with the brand's current presence at that retailer and the
+brand-owned catalogue. It also embeds Reporting Engine and eight chart-family
 components for local business-data analysis and rendering.
 
 Clara is the plugin's AI consultant role. The senior partner keeps judgement;
@@ -20,7 +22,7 @@ turns validated understanding into working artifacts.
 
 ## Conversation Workflows
 
-Clara keeps five related capabilities separate:
+Clara keeps six related capabilities separate:
 
 - `interview` prepares an expiring browser link for an adaptive external
   participant interview, then retrieves the completed bundle and quality review;
@@ -32,6 +34,11 @@ Clara keeps five related capabilities separate:
   taxonomy, preserves the established new-versus-rest and
   best-seller-versus-other comparisons, creates a private local HTML report,
   and answers whether the report is correct.
+- `brand-fit` starts from a completed, checked Retailer Signals analysis and
+  compares those signals with the brand's current presence at the selected
+  retailer and the brand-owned catalogue in the stored database snapshot. It
+  creates a private local HTML report and answers whether that report is
+  correct; the snapshot is not represented as a live shelf check.
 - `reporting-engine` profiles a CSV/XLSX dataset, lets Codex select the useful
   analysis from the business question and actual fields, and runs the embedded
   distribution, funnel, mix, period, scatter, overlap, statement, or variance
@@ -47,6 +54,12 @@ structured scrape records, canonical taxonomy, accepted mappings, and image
 URLs remain server-authoritative; product images and report artifacts remain
 local. Do not add its report to a case or convert it into a 16:9 deck unless the
 user explicitly asks for that follow-on work.
+
+Brand Fit uses the same local-first boundary. The server prepares structured
+evidence from its stored product snapshot; the completed Retailer Signals
+report, downloaded product images, semantic interpretation, independent review,
+and final HTML report remain local. Neither the user nor the server supplies a
+model-provider API key for that work.
 
 The editable Attribute Reporting, Reporting Engine, and chart-family
 implementations remain in their `plugins/<component>` source folders. Clara's

@@ -451,6 +451,129 @@ def test_brand_filter_treats_purina_as_portfolio_brand() -> None:
     ]
 
 
+def test_brand_filter_uses_exact_aliases_without_substring_collisions() -> None:
+    products = pl.DataFrame(
+        [
+            {"product_name": "Target", "brand": "KIKO Milano"},
+            {"product_name": "Substring collision", "brand": "KIKO Milano Pro"},
+            {"product_name": "Short collision", "brand": "KIKO"},
+        ]
+    )
+
+    filtered = reference_builder._filter_brand_if_possible(
+        products,
+        "KIKO Milano",
+    )
+
+    assert filtered["product_name"].to_list() == ["Target"]
+
+
+def test_installed_brand_filter_fails_closed_without_brand_field() -> None:
+    products = pl.DataFrame([{"product_name": "Unattributed product"}])
+
+    with pytest.raises(ValueError, match="requires an explicit brand field"):
+        reference_builder._filter_brand_if_possible(
+            products,
+            "Example Brand",
+            require_brand_column=True,
+        )
+
+
+def test_installed_retailer_presence_loader_requires_brand_field(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_database_catalogs(
+        monkeypatch,
+        owned_rows=[],
+        retailer_rows=[
+            {
+                "parent_product_id": "retailer-one",
+                "product_name": "Unattributed product",
+                "category_key": "blush",
+            }
+        ],
+        owned_source="brand-owned",
+        retailer_source="ulta",
+    )
+
+    with pytest.raises(ValueError, match="requires an explicit brand field"):
+        reference_builder._load_retailer_brand_products(
+            category_key="blush",
+            brand_name="Example Brand",
+            source_label="ulta",
+            require_brand_column=True,
+        )
+
+
+def test_installed_owned_catalog_filters_mixed_source_to_exact_brand(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_database_catalogs(
+        monkeypatch,
+        owned_rows=[
+            {
+                "parent_product_id": "owned-target",
+                "product_name": "Target product",
+                "brand": "Example Brand",
+                "category_key": "blush",
+            },
+            {
+                "parent_product_id": "owned-other",
+                "product_name": "Other product",
+                "brand": "Example Brand Pro",
+                "category_key": "blush",
+            },
+        ],
+        retailer_rows=[],
+        owned_source="brand-owned",
+        retailer_source="ulta",
+    )
+
+    owned = reference_builder._load_owned_products(
+        category_key="blush",
+        source_label="brand-owned",
+        brand_name="Example Brand",
+        require_brand_column=True,
+    )
+
+    assert owned.get_column("product_name").to_list() == ["Target product"]
+
+
+def test_installed_owned_catalog_rejects_false_brand_source(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_database_catalogs(
+        monkeypatch,
+        owned_rows=[
+            {
+                "parent_product_id": "owned-other",
+                "product_name": "Other product",
+                "brand": "Other Brand",
+                "category_key": "blush",
+            }
+        ],
+        retailer_rows=[],
+        owned_source="multi-brand-retailer",
+        retailer_source="ulta",
+    )
+
+    owned = reference_builder._load_owned_products(
+        category_key="blush",
+        source_label="multi-brand-retailer",
+        brand_name="Example Brand",
+        require_brand_column=True,
+    )
+
+    with pytest.raises(ValueError, match="requires brand catalog products"):
+        reference_builder._require_owned_products(
+            owned,
+            brand_source_retailer="multi-brand-retailer",
+            brand_name="Example Brand",
+            category_key="blush",
+            category_keys=None,
+        )
+
+
 def test_brand_stripped_product_key_strips_purina_portfolio_alias() -> None:
     stripped_key = reference_builder._brand_stripped_product_key(
         "Fancy Feast Classic Pate Chicken Feast Wet Cat Food",
@@ -970,6 +1093,168 @@ def test_build_package_enriches_current_anchors_from_launch_matrix(
     )
 
 
+def test_build_package_installed_mode_is_url_only_and_report_bound(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    innovation_package_dir, _legacy_brief_path = _write_minimal_retailer_signal_source(
+        tmp_path=tmp_path,
+        category_key="blush",
+    )
+    url_fields = {
+        "hero_image_url": "https://cdn.example.com/hero.jpg",
+        "swatch_image_url": "https://cdn.example.com/swatch.jpg",
+        "og_image_url": "https://cdn.example.com/og.jpg",
+        "image_url": "https://cdn.example.com/image.jpg",
+    }
+    owned_rows = [
+        {
+            "parent_product_id": "owned-current",
+            "product_name": "Radiant Powder Blush",
+            "brand": "Example Brand",
+            "category_key": "blush",
+            "pdp_url": "https://brand.example/current",
+            "form": "powder",
+            "finish": "radiant",
+            **url_fields,
+        },
+        {
+            "parent_product_id": "owned-gap",
+            "product_name": "Second Radiant Powder Blush",
+            "brand": "Example Brand",
+            "category_key": "blush",
+            "pdp_url": "https://brand.example/gap",
+            "form": "powder",
+            "finish": "radiant",
+            **url_fields,
+        },
+    ]
+    retailer_rows = [
+        {
+            **owned_rows[0],
+            "parent_product_id": "retailer-current",
+            "pdp_url": "https://retailer.example/current",
+        }
+    ]
+    _patch_database_catalogs(
+        monkeypatch,
+        owned_rows=owned_rows,
+        retailer_rows=retailer_rows,
+        owned_source="brand-owned",
+        retailer_source="ulta",
+    )
+    report_binding = {"sha256": "d" * 64, "verdict": "Correct"}
+    source_evidence_binding = {
+        "job_id": "a" * 32,
+        "package_sha256": "e" * 64,
+    }
+    presence = {
+        "mode": "current_database_snapshot",
+        "read_at": "2026-07-17T10:00:00+00:00",
+    }
+    product_data_snapshot = {
+        "schema_version": "attribute_reporting.server_bridge.product_data_snapshot.v1",
+        "scope": {
+            "retailer": "ulta",
+            "retailer_category_keys": ["blush"],
+            "brand_source_retailer": "brand-owned",
+            "owned_category_keys": ["blush"],
+        },
+        "entries": [
+            {
+                "name": "parent_filtered",
+                "payload_sha256": "f" * 64,
+                "payload_size_bytes": 123,
+                "generated_at": "2026-07-17T09:00:00+00:00",
+            }
+        ],
+        "batch_generated_at": "2026-07-17T09:00:00+00:00",
+        "snapshot_sha256": "b" * 64,
+        "read_at": presence["read_at"],
+    }
+    mapping_state_snapshot = {
+        "schema_version": (
+            "attribute_reporting.server_bridge.brand_fit_mapping_state_snapshot.v1"
+        ),
+        "captured_at": "2026-07-17T10:00:00+00:00",
+        "scopes": [],
+        "state_sha256": "c" * 64,
+    }
+
+    output_dir = build_package(
+        brand_source_retailer="brand-owned",
+        brand_name="Example Brand",
+        category_key="blush",
+        retailer="ulta",
+        innovation_package_dir=innovation_package_dir,
+        output_root=tmp_path / "packages",
+        retailer_live_check=False,
+        require_innovation_brief=False,
+        include_image_bytes=False,
+        write_legacy_prompt=False,
+        source_retailer_report=report_binding,
+        source_retailer_evidence=source_evidence_binding,
+        retailer_presence_snapshot=presence,
+        product_data_snapshot=product_data_snapshot,
+        mapping_state_snapshot=mapping_state_snapshot,
+        require_retailer_brand_column=True,
+        require_owned_brand_column=True,
+        refresh_database_cache=True,
+    )
+
+    summary = json.loads((output_dir / "summary.json").read_text(encoding="utf-8"))
+    saved_mapping_state = json.loads(
+        (output_dir / "mapping_state_snapshot.json").read_text(encoding="utf-8")
+    )
+    manifest = json.loads(
+        (output_dir / "pack_manifest.json").read_text(encoding="utf-8")
+    )
+    anchors = pl.read_csv(output_dir / "retailer_brand_anchors.csv")
+    catalog = pl.read_csv(output_dir / "manufacturer_catalog_products.csv")
+    missing = pl.read_csv(output_dir / "manufacturer_products_not_at_retailer.csv")
+    candidates = pl.read_csv(output_dir / "reference_candidates.csv")
+    narrative = "\n".join(
+        [
+            (output_dir / "README.md").read_text(encoding="utf-8"),
+            (output_dir / "brand_fit_context.md").read_text(encoding="utf-8"),
+        ]
+    )
+    installed_text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in output_dir.rglob("*")
+        if path.is_file() and path.suffix in {".json", ".md", ".txt", ".csv"}
+    )
+
+    assert summary["source_retailer_report"] == report_binding
+    assert summary["source_retailer_evidence"] == source_evidence_binding
+    assert summary["retailer_presence"] == presence
+    assert summary["product_data_snapshot"] == product_data_snapshot
+    assert summary["mapping_state_snapshot_sha256"] == (
+        mapping_state_snapshot["state_sha256"]
+    )
+    assert saved_mapping_state == mapping_state_snapshot
+    assert manifest["summary"] == summary
+    assert manifest["files"] == sorted(
+        path.relative_to(output_dir).as_posix()
+        for path in output_dir.rglob("*")
+        if path.is_file() and path.name != "pack_manifest.json"
+    )
+    assert "mapping_state_snapshot.json" in manifest["files"]
+    assert summary["sources"]["retailer_live_check_enabled"] is False
+    assert summary["package_warning_count"] == 1
+    assert not (output_dir / "source_innovation_brief.md").exists()
+    assert not (output_dir / "prompt_for_pro.txt").exists()
+    assert not (output_dir / "images").exists()
+    assert "NotebookLM" not in narrative
+    assert "for Pro" not in narrative
+    assert "NotebookLM" not in installed_text
+    assert "Pro can" not in installed_text
+    assert "to Pro" not in installed_text
+    for frame in (anchors, catalog, missing, candidates):
+        assert set(url_fields).issubset(frame.columns)
+        assert frame.get_column("hero_image_url").drop_nulls().to_list()
+
+
 def test_build_package_creates_bundle_handoff_for_pro(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -1346,6 +1631,8 @@ def test_build_package_creates_bundle_handoff_for_pro(
     )
 
     assert summary["analysis_type"] == "brand_retailer_reference_handoff"
+    assert "mapping_state_snapshot_sha256" not in summary
+    assert not (output_dir / "mapping_state_snapshot.json").exists()
     assert summary["source_innovation_brief_file"] == "source_innovation_brief.md"
     assert summary["counts"]["signal_bundles"] == 2
     assert summary["counts"]["signal_bundles_with_rank_weighted_visibility"] == 1
@@ -2409,3 +2696,24 @@ def test_build_package_removes_cached_anchor_absent_from_live_brand_page(
     assert audit.item(0, "live_removed_from_retailer_products")
     assert anchors.height == 0
     assert missing.item(0, "product_name") == "Flawless Fusion Bronzer Powder"
+
+
+def test_bridge_mode_refreshes_process_database_cache_before_reading(
+    tmp_path: Path,
+) -> None:
+    reference_builder._DATABASE_ATTRIBUTE_CACHE_BY_RETAILER["stale"] = {
+        "parents": pl.DataFrame({"value": ["stale"]})
+    }
+
+    with pytest.raises(FileNotFoundError, match="Innovation package directory"):
+        build_package(
+            brand_source_retailer="brand-owned",
+            brand_name="Example Brand",
+            category_key="cashmere_sweaters",
+            retailer="saksfifthavenue",
+            innovation_package_dir=tmp_path / "absent-source-package",
+            output_root=tmp_path / "output",
+            refresh_database_cache=True,
+        )
+
+    assert reference_builder._DATABASE_ATTRIBUTE_CACHE_BY_RETAILER == {}

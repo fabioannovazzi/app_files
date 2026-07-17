@@ -59,14 +59,22 @@ MAX_JSON_DEPTH = 16
 MAX_JSON_STRING_LENGTH = 16_000
 MAX_JSON_NODES = 500_000
 MAX_ACTOR_EVIDENCE_JOBS = 25
+MAX_ACTOR_BRAND_FIT_JOBS = 25
 MAX_ACTOR_WORKSETS = 25
 MAX_ACTOR_SUBMISSIONS = 100
 MAX_ACTOR_RETAINED_BYTES = 8 * 1024 * 1024 * 1024
 MAX_GLOBAL_RETAINED_BYTES = 64 * 1024 * 1024 * 1024
 MAX_GLOBAL_CONCURRENT_EVIDENCE_BUILDS = 2
 EVIDENCE_JOB_TTL = timedelta(days=30)
+BRAND_FIT_JOB_TTL = timedelta(days=30)
 WORKSET_TTL = timedelta(days=7)
 SUBMISSION_TTL = timedelta(days=180)
+REQUIRED_PRODUCT_CACHE_ENTRIES = (
+    "parent_filtered",
+    "variant_result",
+    "combined",
+    "parents_all",
+)
 
 
 class BridgeValidationError(ValueError):
@@ -454,8 +462,40 @@ def _mapping_states_from_value_records(
 
 
 _PRIVATE_PATH_FIELDS = frozenset(
-    {"run_dir", "pdp_store_path", "local_image_path", "pack_image_path"}
+    {
+        "run_dir",
+        "pdp_store_path",
+        "local_image_path",
+        "pack_image_path",
+        "image_file",
+        "innovation_package_dir",
+        "innovation_brief_path",
+        "owned_cli_dir",
+        "owned_cli_dirs",
+        "output_dir",
+        "package_zip",
+    }
 )
+_EMBEDDED_IMAGE_FIELDS = frozenset(
+    {
+        "base64_image",
+        "image_base64",
+        "image_blob",
+        "image_bytes",
+        "image_data",
+        "image_data_uri",
+    }
+)
+_WINDOWS_ABSOLUTE_PATH_RE = re.compile(r"^(?:[A-Za-z]:[\\/]|\\\\|//)")
+_PRIVATE_PATH_SUBSTRING_RE = re.compile(
+    r"(?:^|[\s('`\"=:,])(?:/(?:srv|home|root|users|var|private|tmp|etc)(?:[\\/]|$)|[A-Za-z]:[\\/]|\\\\[^\s\\/]+[\\/])",
+    flags=re.IGNORECASE,
+)
+_PRIVATE_URI_SUBSTRING_RE = re.compile(
+    r"data:image/|blob:|file:(?://|[\\/])|(?:postgres(?:ql)?|mysql|mariadb|sqlite|mongodb|redis)://|database_url\s*=",
+    flags=re.IGNORECASE,
+)
+_PUBLIC_HTTP_URL_RE = re.compile(r"^https?://[^\s]+$", flags=re.IGNORECASE)
 _IMAGE_SUFFIXES = frozenset(
     {
         ".avif",
@@ -472,6 +512,7 @@ _IMAGE_SUFFIXES = frozenset(
         ".webp",
     }
 )
+_PORTABLE_TEXT_SUFFIXES = frozenset({".csv", ".html", ".json", ".md", ".txt"})
 _PROVENANCE_FILES = (
     "mapping_tasks.json",
     "mapping_decisions.json",
@@ -484,9 +525,34 @@ _SERVER_PROVENANCE_FILES = (
 )
 
 
+def _is_unsafe_portable_string(value: str) -> bool:
+    """Identify embedded image bytes, local URIs, and cross-platform paths."""
+
+    text = value.strip()
+    if _PUBLIC_HTTP_URL_RE.fullmatch(text):
+        return False
+    lowered = text.casefold()
+    return bool(
+        _PRIVATE_URI_SUBSTRING_RE.search(text)
+        or _PRIVATE_PATH_SUBSTRING_RE.search(text)
+        or lowered.startswith(("data:image/", "blob:", "file:"))
+        or _WINDOWS_ABSOLUTE_PATH_RE.match(text)
+        or Path(text).is_absolute()
+    )
+
+
 def _sanitize_json_paths(value: Any, *, key: str = "") -> tuple[Any, int]:
-    if key in _PRIVATE_PATH_FIELDS:
+    normalized_key = key.casefold()
+    if (
+        normalized_key in _PRIVATE_PATH_FIELDS
+        or normalized_key in _EMBEDDED_IMAGE_FIELDS
+    ):
         return None, int(value is not None and value != "")
+    if key == "image_source" and isinstance(value, str):
+        is_public_url = value.startswith(("https://", "http://"))
+        return (value if is_public_url else None), int(
+            bool(value) and not is_public_url
+        )
     if isinstance(value, dict):
         output: dict[str, Any] = {}
         changed = 0
@@ -506,6 +572,8 @@ def _sanitize_json_paths(value: Any, *, key: str = "") -> tuple[Any, int]:
             output_list.append(clean_value)
             changed += child_changed
         return output_list, changed
+    if isinstance(value, str) and _is_unsafe_portable_string(value):
+        return None, 1
     return value, 0
 
 
@@ -528,20 +596,91 @@ def _sanitize_csv_file(path: Path) -> int:
         reader = csv.DictReader(source)
         fieldnames = list(reader.fieldnames or [])
         rows = [dict(row) for row in reader]
-    private_columns = [name for name in fieldnames if name in _PRIVATE_PATH_FIELDS]
-    if not private_columns:
-        return 0
+    private_columns = [
+        name
+        for name in fieldnames
+        if name.casefold() in _PRIVATE_PATH_FIELDS
+        or name.casefold() in _EMBEDDED_IMAGE_FIELDS
+    ]
     changed = 0
     for row in rows:
         for column in private_columns:
             if row.get(column):
                 changed += 1
             row[column] = ""
+        if "image_source" in row:
+            image_source = str(row.get("image_source") or "")
+            if image_source and not image_source.startswith(("https://", "http://")):
+                row["image_source"] = ""
+                changed += 1
+        for column, value in row.items():
+            text = str(value or "")
+            if (
+                column not in private_columns
+                and text
+                and _is_unsafe_portable_string(text)
+            ):
+                row[column] = ""
+                changed += 1
+    if not changed:
+        return 0
     with path.open("w", encoding="utf-8", newline="") as target:
         writer = csv.DictWriter(target, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     return changed
+
+
+def _assert_no_unsafe_portable_values(root: Path) -> None:
+    """Independently verify that sanitization left no local/image-byte payloads."""
+
+    def assert_value(value: Any, *, key: str = "") -> None:
+        normalized_key = key.casefold()
+        if normalized_key in _PRIVATE_PATH_FIELDS and value is not None and value != "":
+            raise RuntimeError("Portable package still contains a local path field.")
+        if (
+            normalized_key in _EMBEDDED_IMAGE_FIELDS
+            and value is not None
+            and value != ""
+        ):
+            raise RuntimeError("Portable package still contains embedded image data.")
+        if isinstance(value, Mapping):
+            for child_key, child_value in value.items():
+                assert_value(child_value, key=str(child_key))
+        elif isinstance(value, list):
+            for child_value in value:
+                assert_value(child_value)
+        elif isinstance(value, str) and _is_unsafe_portable_string(value):
+            raise RuntimeError(
+                "Portable package still contains a local URI or private path."
+            )
+
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        suffix = path.suffix.casefold()
+        if suffix == ".json":
+            assert_value(_load_json(path))
+        elif suffix == ".csv":
+            with path.open(encoding="utf-8", newline="") as handle:
+                for row in csv.DictReader(handle):
+                    assert_value(dict(row))
+        elif suffix in {".html", ".md", ".txt"}:
+            text = path.read_text(encoding="utf-8", errors="replace")
+            if _is_unsafe_portable_string(text):
+                raise RuntimeError(
+                    "Portable package still contains embedded image data or a local URI."
+                )
+
+
+def _assert_portable_file_types(root: Path) -> None:
+    """Reject disguised binary payloads after known image files are removed."""
+
+    for path in sorted(root.rglob("*")):
+        if path.is_file() and path.suffix.casefold() not in _PORTABLE_TEXT_SUFFIXES:
+            raise RuntimeError(
+                f"Portable evidence package contains an unsupported file type: {path.name}"
+            )
 
 
 def _write_sorted_zip(source_dir: Path, output_path: Path) -> None:
@@ -581,12 +720,49 @@ def _write_sorted_zip(source_dir: Path, output_path: Path) -> None:
         raise RuntimeError("Portable evidence ZIP exceeds the server byte limit.")
 
 
+def _extract_server_package(source_zip: Path, destination: Path) -> None:
+    """Extract a checksum-verified server ZIP without accepting unsafe members."""
+
+    if destination.exists():
+        shutil.rmtree(destination)
+    destination.mkdir(parents=True)
+    file_count = 0
+    total_bytes = 0
+    with zipfile.ZipFile(source_zip) as archive:
+        for info in archive.infolist():
+            member = Path(info.filename)
+            if (
+                not info.filename
+                or "\\" in info.filename
+                or member.is_absolute()
+                or any(part in {"", ".", ".."} for part in member.parts)
+                or stat.S_ISLNK(info.external_attr >> 16)
+            ):
+                raise RuntimeError("Source evidence ZIP contains an unsafe member.")
+            if info.is_dir():
+                continue
+            file_count += 1
+            total_bytes += info.file_size
+            if (
+                file_count > MAX_EVIDENCE_TREE_FILES
+                or total_bytes > MAX_EVIDENCE_TREE_BYTES
+            ):
+                raise RuntimeError("Source evidence ZIP exceeds server limits.")
+            target = destination.joinpath(*member.parts)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with archive.open(info) as source, target.open("wb") as output:
+                shutil.copyfileobj(source, output, length=1024 * 1024)
+    _bounded_tree_stats(destination)
+
+
 def _build_portable_package(
     source_dir: Path,
     portable_dir: Path,
     output_zip: Path,
     *,
     provenance_dir: Path | None = None,
+    private_path_roots: Sequence[Path] = (),
+    regenerate_brand_fit_manifest: bool = False,
 ) -> dict[str, Any]:
     """Remove server paths/images and create a URL-only portable evidence ZIP."""
 
@@ -611,6 +787,11 @@ def _build_portable_package(
     for path in sorted(portable_dir.rglob("*"), reverse=True):
         if path.is_dir() and not any(path.iterdir()):
             path.rmdir()
+
+    # This legacy handoff prompt is not part of the installed Clara workflow.
+    # Codex creates and checks the report locally from the evidence tables.
+    legacy_prompt = portable_dir / "prompt_for_pro.txt"
+    legacy_prompt.unlink(missing_ok=True)
 
     sanitized_field_count = 0
     for path in sorted(portable_dir.rglob("*.json")):
@@ -639,6 +820,7 @@ def _build_portable_package(
         str(source_dir.resolve()),
         str(_repo_root().resolve()),
         str(DEFAULT_PDP_STORE_PATH.resolve()),
+        *(str(path.resolve()) for path in private_path_roots),
     }
     for path in sorted(portable_dir.rglob("*")):
         if not path.is_file() or path.suffix.casefold() not in {
@@ -665,6 +847,28 @@ def _build_portable_package(
         "package_integrity_status": "pass",
     }
     _atomic_write_json(portable_dir / "server_sanitization_receipt.json", sanitization)
+    if regenerate_brand_fit_manifest:
+        manifest_path = portable_dir / "pack_manifest.json"
+        manifest = _load_json(manifest_path)
+        package_type = str(manifest.get("package_type") or "").strip()
+        if not package_type:
+            raise RuntimeError("Brand Fit package manifest has no package type.")
+        # The portable manifest is a mechanical inventory of the final sanitized
+        # handoff, so build it only after the sanitization receipt exists.
+        _atomic_write_json(
+            manifest_path,
+            {
+                "package_type": package_type,
+                "files": sorted(
+                    path.relative_to(portable_dir).as_posix()
+                    for path in portable_dir.rglob("*")
+                    if path.is_file() and path != manifest_path
+                ),
+                "summary": _load_json(portable_dir / "summary.json"),
+            },
+        )
+    _assert_portable_file_types(portable_dir)
+    _assert_no_unsafe_portable_values(portable_dir)
     _write_sorted_zip(portable_dir, output_zip)
     return sanitization
 
@@ -750,6 +954,13 @@ def _clean_actor(actor_email: str) -> str:
 def _clean_scope_value(value: str, *, field: str) -> str:
     clean = value.strip()
     if not SAFE_ID_RE.fullmatch(clean):
+        raise BridgeValidationError(f"Invalid {field}.")
+    return clean
+
+
+def _clean_display_text(value: str, *, field: str, maximum: int = 256) -> str:
+    clean = " ".join(value.split())
+    if not clean or len(clean) > maximum or any(ord(char) < 32 for char in clean):
         raise BridgeValidationError(f"Invalid {field}.")
     return clean
 
@@ -1048,6 +1259,52 @@ def _default_package_builder(
     )
 
 
+def _default_brand_fit_builder(
+    *,
+    brand_source_retailer: str,
+    brand_name: str,
+    category_key: str,
+    retailer: str,
+    innovation_package_dir: Path,
+    output_root: Path,
+    owned_category_keys: Sequence[str],
+    retailer_category_keys: Sequence[str],
+    source_retailer_report: Mapping[str, str],
+    source_retailer_evidence: Mapping[str, str],
+    retailer_presence_snapshot: Mapping[str, str],
+    product_data_snapshot: Mapping[str, Any],
+    mapping_state_snapshot: Mapping[str, Any] | None = None,
+) -> Path:
+    """Run the deterministic Brand Fit builder in installed-plugin mode."""
+
+    from scripts.build_brand_retailer_reference_package import build_package
+
+    return build_package(
+        brand_source_retailer=brand_source_retailer,
+        brand_name=brand_name,
+        category_key=category_key,
+        retailer=retailer,
+        innovation_package_dir=innovation_package_dir,
+        innovation_brief_path=None,
+        owned_category_keys=owned_category_keys,
+        retailer_category_keys=retailer_category_keys,
+        output_root=output_root,
+        retailer_live_check=False,
+        allow_missing_brand_images=True,
+        require_innovation_brief=False,
+        include_image_bytes=False,
+        write_legacy_prompt=False,
+        source_retailer_report=source_retailer_report,
+        source_retailer_evidence=source_retailer_evidence,
+        retailer_presence_snapshot=retailer_presence_snapshot,
+        product_data_snapshot=product_data_snapshot,
+        mapping_state_snapshot=mapping_state_snapshot,
+        require_retailer_brand_column=True,
+        require_owned_brand_column=True,
+        refresh_database_cache=True,
+    )
+
+
 def _default_store_factory() -> PDPStore:
     return PDPStore(enforce_default_pdp_store_path(DEFAULT_PDP_STORE_PATH))
 
@@ -1061,6 +1318,7 @@ class AttributeReportingBridge:
         *,
         taxonomy_loader: Callable[[], dict[str, Any]] = _default_taxonomy_loader,
         package_builder: Callable[[str, str, Path], Path] = _default_package_builder,
+        brand_fit_builder: Callable[..., Path] = _default_brand_fit_builder,
         mapping_engine: MappingEngine | None = None,
         mapping_apply_engine: MappingApplyEngine | None = None,
         store_factory: Callable[[], PDPStore] = _default_store_factory,
@@ -1071,6 +1329,7 @@ class AttributeReportingBridge:
         os.chmod(self.root, 0o700)
         self.taxonomy_loader = taxonomy_loader
         self.package_builder = package_builder
+        self.brand_fit_builder = brand_fit_builder
         self.mapping_engine = mapping_engine or _default_mapping_engine()
         self.mapping_apply_engine = (
             mapping_apply_engine or _default_mapping_apply_engine()
@@ -1093,6 +1352,12 @@ class AttributeReportingBridge:
                 "requested_by",
                 "requested_at",
                 EVIDENCE_JOB_TTL,
+            ),
+            "brand_fit_jobs": (
+                "request.json",
+                "requested_by",
+                "requested_at",
+                BRAND_FIT_JOB_TTL,
             ),
             "worksets": (
                 "metadata.json",
@@ -1121,7 +1386,12 @@ class AttributeReportingBridge:
             if not acquired:
                 return
             now = _parse_timestamp(self.now())
-            for collection in ("evidence_jobs", "worksets", "submissions"):
+            for collection in (
+                "evidence_jobs",
+                "brand_fit_jobs",
+                "worksets",
+                "submissions",
+            ):
                 metadata_name, _owner_key, timestamp_key, ttl = self._retention_policy(
                     collection
                 )
@@ -1142,7 +1412,7 @@ class AttributeReportingBridge:
                         continue
                     if now - created_at <= ttl:
                         continue
-                    if collection == "evidence_jobs":
+                    if collection in {"evidence_jobs", "brand_fit_jobs"}:
                         if self._evidence_job_has_live_workset(
                             artifact_dir.name,
                             now=now,
@@ -1200,24 +1470,40 @@ class AttributeReportingBridge:
         """Keep source evidence while a non-expired workset still depends on it."""
 
         worksets_root = self.root / "worksets"
-        if not worksets_root.is_dir():
-            return False
-        for workset_dir in worksets_root.iterdir():
-            if workset_dir.is_symlink() or not workset_dir.is_dir():
-                continue
-            try:
-                metadata = _load_json(workset_dir / "metadata.json")
-                created_at = _parse_timestamp(metadata.get("created_at"))
-            except (BridgeNotFoundError, BridgeValidationError):
-                continue
-            if str(metadata.get("evidence_job_id") or "") == job_id and (
-                now - created_at <= WORKSET_TTL
-                or self._workset_has_pending_submission(
-                    workset_dir.name,
-                    now=now,
-                )
-            ):
-                return True
+        if worksets_root.is_dir():
+            for workset_dir in worksets_root.iterdir():
+                if workset_dir.is_symlink() or not workset_dir.is_dir():
+                    continue
+                try:
+                    metadata = _load_json(workset_dir / "metadata.json")
+                    created_at = _parse_timestamp(metadata.get("created_at"))
+                except (BridgeNotFoundError, BridgeValidationError):
+                    continue
+                if str(metadata.get("evidence_job_id") or "") == job_id and (
+                    now - created_at <= WORKSET_TTL
+                    or self._workset_has_pending_submission(
+                        workset_dir.name,
+                        now=now,
+                    )
+                ):
+                    return True
+        brand_fit_root = self.root / "brand_fit_jobs"
+        if brand_fit_root.is_dir():
+            for brand_fit_dir in brand_fit_root.iterdir():
+                if brand_fit_dir.is_symlink() or not brand_fit_dir.is_dir():
+                    continue
+                try:
+                    request = _load_json(brand_fit_dir / "request.json")
+                    requested_at = _parse_timestamp(request.get("requested_at"))
+                    status = _load_json(brand_fit_dir / "status.json")
+                except (BridgeNotFoundError, BridgeValidationError):
+                    continue
+                if (
+                    str(request.get("source_evidence_job_id") or "") == job_id
+                    and status.get("status") in {"pending", "running"}
+                    and now - requested_at <= BRAND_FIT_JOB_TTL
+                ):
+                    return True
         return False
 
     def _enforce_actor_quota(
@@ -1257,7 +1543,12 @@ class AttributeReportingBridge:
         """Count retained bridge bytes globally or for one normalized owner."""
 
         total_bytes = 0
-        for collection in ("evidence_jobs", "worksets", "submissions"):
+        for collection in (
+            "evidence_jobs",
+            "brand_fit_jobs",
+            "worksets",
+            "submissions",
+        ):
             metadata_name, owner_key, _timestamp_key, _ttl = self._retention_policy(
                 collection
             )
@@ -1353,6 +1644,112 @@ class AttributeReportingBridge:
             captured_at=self.now(),
             schema_suffix=schema_suffix,
         )
+
+    def _capture_brand_fit_mapping_state_snapshot(
+        self,
+        *,
+        retailer: str,
+        retailer_category_keys: Sequence[str],
+        brand_source_retailer: str,
+        owned_category_keys: Sequence[str],
+    ) -> dict[str, Any]:
+        """Pin accepted mappings for the retailer-presence and owned-catalog scopes."""
+
+        identities = sorted(
+            {
+                *((retailer, category) for category in retailer_category_keys),
+                *(
+                    (brand_source_retailer, category)
+                    for category in owned_category_keys
+                ),
+            }
+        )
+        scopes = [
+            self._capture_mapping_state_snapshot(
+                retailer=scope_retailer,
+                category_key=scope_category,
+            )
+            for scope_retailer, scope_category in identities
+        ]
+        state_core = [
+            {
+                "scope": dict(snapshot["scope"]),
+                "state_sha256": str(snapshot["state_sha256"]),
+            }
+            for snapshot in scopes
+        ]
+        payload = {
+            "schema_version": f"{SCHEMA_PREFIX}.brand_fit_mapping_state_snapshot.v1",
+            "captured_at": self.now(),
+            "scopes": scopes,
+        }
+        payload["state_sha256"] = _canonical_sha256({"scopes": state_core})
+        return payload
+
+    def _capture_product_data_snapshot(
+        self,
+        *,
+        retailer: str,
+        retailer_category_keys: Sequence[str],
+        brand_source_retailer: str,
+        owned_category_keys: Sequence[str],
+    ) -> dict[str, Any]:
+        """Hash the exact cached product/attribute blobs used by Brand Fit."""
+
+        entries = self.store_factory().read_attribute_cache_entries()
+        missing = [
+            name for name in REQUIRED_PRODUCT_CACHE_ENTRIES if name not in entries
+        ]
+        if missing:
+            raise BridgeConflictError(
+                "The product attribute cache is incomplete for Brand Fit."
+            )
+        entry_rows: list[dict[str, Any]] = []
+        for name in REQUIRED_PRODUCT_CACHE_ENTRIES:
+            raw_payload, generated_at = entries[name]
+            payload_bytes = bytes(raw_payload)
+            generated_text = str(generated_at or "").strip()
+            if not generated_text:
+                raise BridgeConflictError(
+                    "The product attribute cache has no generation timestamp."
+                )
+            try:
+                _parse_timestamp(generated_text)
+            except BridgeValidationError as exc:
+                raise BridgeConflictError(
+                    "The product attribute cache has an invalid generation timestamp."
+                ) from exc
+            entry_rows.append(
+                {
+                    "name": name,
+                    "payload_sha256": hashlib.sha256(payload_bytes).hexdigest(),
+                    "payload_size_bytes": len(payload_bytes),
+                    "generated_at": generated_text,
+                }
+            )
+        generated_at_values = {row["generated_at"] for row in entry_rows}
+        if len(generated_at_values) != 1:
+            raise BridgeConflictError(
+                "The product attribute cache entries are from different generations."
+            )
+        batch_generated_at = next(iter(generated_at_values))
+        scope = {
+            "retailer": retailer,
+            "retailer_category_keys": list(retailer_category_keys),
+            "brand_source_retailer": brand_source_retailer,
+            "owned_category_keys": list(owned_category_keys),
+        }
+        core = {
+            "scope": scope,
+            "batch_generated_at": batch_generated_at,
+            "entries": entry_rows,
+        }
+        return {
+            "schema_version": f"{SCHEMA_PREFIX}.product_data_snapshot.v1",
+            **core,
+            "snapshot_sha256": _canonical_sha256(core),
+            "read_at": self.now(),
+        }
 
     @staticmethod
     def _assert_submission_mapping_state_is_current(
@@ -1792,6 +2189,574 @@ class AttributeReportingBridge:
             "package_sha256"
         ):
             raise BridgeConflictError("The evidence package failed its checksum.")
+        return package_path, receipt
+
+    def create_brand_fit_job(
+        self,
+        *,
+        source_evidence_job_id: str,
+        brand_source_retailer: str,
+        brand_name: str,
+        retailer_report_sha256: str,
+        retailer_report_verdict: str,
+        actor_email: str,
+        owned_category_keys: Sequence[str] | None = None,
+        retailer_category_keys: Sequence[str] | None = None,
+    ) -> dict[str, Any]:
+        """Register an actor-owned Brand Fit build against checked retailer signals."""
+
+        actor = _clean_actor(actor_email)
+        with _blocking_file_lock(self._actor_operation_lock("brand-fit-jobs", actor)):
+            self._prune_expired_artifacts()
+            self._enforce_retained_byte_quotas(actor=actor)
+            self._enforce_actor_quota(
+                "brand_fit_jobs",
+                actor=actor,
+                maximum=MAX_ACTOR_BRAND_FIT_JOBS,
+            )
+            source_id = _clean_scope_value(
+                source_evidence_job_id,
+                field="source evidence job id",
+            )
+            source_dir = self._owned_artifact_dir(
+                "evidence_jobs",
+                source_id,
+                actor_email=actor,
+            )
+            source_status = _load_json(source_dir / "status.json")
+            if source_status.get("status") != "ready":
+                raise BridgeConflictError(
+                    "The source Retailer Signals evidence package is not ready."
+                )
+            source_request = _load_json(source_dir / "request.json")
+            self._assert_request_taxonomy_is_current(source_request)
+            _source_zip, source_receipt = self.evidence_download(
+                source_id,
+                actor_email=actor,
+            )
+            source_scope = source_request.get("scope")
+            taxonomy_snapshot = source_request.get("taxonomy_snapshot")
+            if not isinstance(source_scope, Mapping) or not isinstance(
+                taxonomy_snapshot,
+                Mapping,
+            ):
+                raise BridgeConflictError("Source evidence scope is invalid.")
+            retailer = _clean_scope_value(
+                str(source_scope.get("retailer") or ""),
+                field="retailer",
+            )
+            category_key = _clean_scope_value(
+                str(source_scope.get("category_key") or ""),
+                field="category key",
+            )
+            source_retailer = _clean_scope_value(
+                brand_source_retailer,
+                field="brand source retailer",
+            )
+            clean_brand_name = _clean_display_text(brand_name, field="brand name")
+            report_hash = retailer_report_sha256.strip().casefold()
+            if not re.fullmatch(r"[0-9a-f]{64}", report_hash):
+                raise BridgeValidationError("Invalid retailer report sha256.")
+            if retailer_report_verdict not in {
+                "Correct",
+                "Correct with caveats",
+            }:
+                raise BridgeValidationError(
+                    "Brand Fit requires a checked retailer report with verdict Correct or Correct with caveats."
+                )
+
+            def clean_category_scope(
+                values: Sequence[str] | None,
+                *,
+                field: str,
+            ) -> list[str]:
+                raw_values = list(values or (category_key,))
+                if not raw_values or len(raw_values) > 32:
+                    raise BridgeValidationError(f"Invalid {field}.")
+                return list(
+                    dict.fromkeys(
+                        _clean_scope_value(value, field=field) for value in raw_values
+                    )
+                )
+
+            owned_categories = clean_category_scope(
+                owned_category_keys,
+                field="owned category key",
+            )
+            retailer_categories = clean_category_scope(
+                retailer_category_keys,
+                field="retailer category key",
+            )
+            job_id = uuid.uuid4().hex
+            job_dir = self.root / "brand_fit_jobs" / job_id
+            requested_at = self.now()
+            request_payload = {
+                "schema_version": f"{SCHEMA_PREFIX}.brand_fit_request.v1",
+                "job_id": job_id,
+                "source_evidence_job_id": source_id,
+                "source_evidence_package_sha256": source_receipt["package_sha256"],
+                "scope": {
+                    "retailer": retailer,
+                    "category_key": category_key,
+                    "brand_source_retailer": source_retailer,
+                    "brand_name": clean_brand_name,
+                    "owned_category_keys": owned_categories,
+                    "retailer_category_keys": retailer_categories,
+                    "retailer_presence_mode": "current_database_snapshot",
+                },
+                "taxonomy_snapshot": {
+                    "version": str(taxonomy_snapshot.get("version") or ""),
+                    "sha256": str(taxonomy_snapshot.get("sha256") or ""),
+                },
+                "source_retailer_report": {
+                    "sha256": report_hash,
+                    "verdict": retailer_report_verdict,
+                },
+                "requested_by": actor,
+                "requested_at": requested_at,
+            }
+            with self._lock:
+                job_dir.mkdir(parents=True, exist_ok=False)
+                _atomic_write_json(job_dir / "request.json", request_payload)
+                status_payload = {
+                    "schema_version": f"{SCHEMA_PREFIX}.brand_fit_status.v1",
+                    "job_id": job_id,
+                    "status": "pending",
+                    "attempt": 0,
+                    "requested_at": requested_at,
+                }
+                _atomic_write_json(job_dir / "status.json", status_payload)
+            return status_payload
+
+    def build_brand_fit_job(self, job_id: str) -> None:
+        """Build Brand Fit when actor and shared evidence-worker capacity is free."""
+
+        job_dir = self._artifact_dir("brand_fit_jobs", job_id)
+        request_payload = _load_json(job_dir / "request.json")
+        actor = _clean_actor(str(request_payload.get("requested_by") or ""))
+        actor_lock = self._actor_operation_lock("brand-fit-builds", actor)
+        global_slots = [
+            self.root / ".build-slots" / f"global-{index}.lock"
+            for index in range(MAX_GLOBAL_CONCURRENT_EVIDENCE_BUILDS)
+        ]
+        with _nonblocking_file_lock(actor_lock) as actor_capacity:
+            if not actor_capacity:
+                return
+            with _first_available_file_lock(global_slots) as global_capacity:
+                if not global_capacity:
+                    return
+                self._build_brand_fit_job_locked(job_id)
+
+    def _build_brand_fit_job_locked(self, job_id: str) -> None:
+        """Build or resume one immutable Brand Fit package."""
+
+        job_dir = self._artifact_dir("brand_fit_jobs", job_id)
+        with _nonblocking_file_lock(job_dir / ".build.lock") as acquired:
+            if not acquired:
+                return
+            prior_status = _load_json(job_dir / "status.json")
+            if prior_status.get("status") == "ready":
+                return
+            request_payload = _load_json(job_dir / "request.json")
+            actor = _clean_actor(str(request_payload.get("requested_by") or ""))
+            status_path = job_dir / "status.json"
+            started_at = self.now()
+            attempt = int(prior_status.get("attempt") or 0) + 1
+            for directory in (
+                job_dir / "build",
+                job_dir / "portable",
+                job_dir / "source_retailer_package",
+            ):
+                shutil.rmtree(directory, ignore_errors=True)
+            for artifact in (
+                job_dir / "brand_fit_pack.zip",
+                job_dir / "receipt.json",
+                job_dir / "mapping_state_snapshot.json",
+                job_dir / "product_data_snapshot.json",
+            ):
+                artifact.unlink(missing_ok=True)
+            _atomic_write_json(
+                status_path,
+                {
+                    "schema_version": f"{SCHEMA_PREFIX}.brand_fit_status.v1",
+                    "job_id": job_id,
+                    "status": "running",
+                    "attempt": attempt,
+                    "started_at": started_at,
+                },
+            )
+            try:
+                self._assert_request_taxonomy_is_current(request_payload)
+                scope = request_payload.get("scope")
+                if not isinstance(scope, Mapping):
+                    raise BridgeValidationError("Brand Fit request scope is invalid.")
+                retailer = str(scope["retailer"])
+                category_key = str(scope["category_key"])
+                brand_source_retailer = str(scope["brand_source_retailer"])
+                owned_category_keys = [
+                    str(value) for value in scope["owned_category_keys"]
+                ]
+                retailer_category_keys = [
+                    str(value) for value in scope["retailer_category_keys"]
+                ]
+                source_id = str(request_payload["source_evidence_job_id"])
+                source_dir = self._owned_artifact_dir(
+                    "evidence_jobs",
+                    source_id,
+                    actor_email=actor,
+                )
+                source_request = _load_json(source_dir / "request.json")
+                source_scope = source_request.get("scope")
+                if not isinstance(source_scope, Mapping):
+                    raise BridgeConflictError(
+                        "The source Retailer Signals evidence scope is invalid."
+                    )
+                if (
+                    source_scope.get("retailer") != retailer
+                    or source_scope.get("category_key") != category_key
+                    or source_request.get("taxonomy_snapshot")
+                    != request_payload.get("taxonomy_snapshot")
+                ):
+                    raise BridgeConflictError(
+                        "The source Retailer Signals evidence scope changed."
+                    )
+                source_zip, source_receipt = self.evidence_download(
+                    source_id,
+                    actor_email=actor,
+                )
+                if source_receipt.get("package_sha256") != request_payload.get(
+                    "source_evidence_package_sha256"
+                ):
+                    raise BridgeConflictError(
+                        "The source Retailer Signals evidence package changed."
+                    )
+                product_data_before = self._capture_product_data_snapshot(
+                    retailer=retailer,
+                    retailer_category_keys=retailer_category_keys,
+                    brand_source_retailer=brand_source_retailer,
+                    owned_category_keys=owned_category_keys,
+                )
+                mapping_state_before = self._capture_brand_fit_mapping_state_snapshot(
+                    retailer=retailer,
+                    retailer_category_keys=retailer_category_keys,
+                    brand_source_retailer=brand_source_retailer,
+                    owned_category_keys=owned_category_keys,
+                )
+                source_package_dir = job_dir / "source_retailer_package"
+                _extract_server_package(source_zip, source_package_dir)
+                source_sanitization = _load_json(
+                    source_package_dir / "server_sanitization_receipt.json"
+                )
+                if source_sanitization.get("image_policy") != (
+                    "urls_only_no_image_bytes"
+                ):
+                    raise BridgeConflictError(
+                        "Source Retailer Signals package is not URL-only."
+                    )
+                report_payload = request_payload.get("source_retailer_report")
+                if not isinstance(report_payload, Mapping):
+                    raise BridgeValidationError(
+                        "Brand Fit retailer report binding is invalid."
+                    )
+                report_binding = dict(report_payload)
+                source_evidence_binding = {
+                    "job_id": source_id,
+                    "package_sha256": str(source_receipt["package_sha256"]),
+                }
+                presence_snapshot = {
+                    "mode": "current_database_snapshot",
+                    "read_at": str(product_data_before["read_at"]),
+                }
+                package_dir = self.brand_fit_builder(
+                    brand_source_retailer=brand_source_retailer,
+                    brand_name=str(scope["brand_name"]),
+                    category_key=category_key,
+                    retailer=retailer,
+                    innovation_package_dir=source_package_dir,
+                    output_root=job_dir / "build",
+                    owned_category_keys=owned_category_keys,
+                    retailer_category_keys=retailer_category_keys,
+                    source_retailer_report=report_binding,
+                    source_retailer_evidence=source_evidence_binding,
+                    retailer_presence_snapshot=presence_snapshot,
+                    product_data_snapshot=product_data_before,
+                    mapping_state_snapshot=mapping_state_before,
+                ).resolve()
+                if not package_dir.is_dir() or job_dir not in package_dir.parents:
+                    raise RuntimeError(
+                        "Brand Fit builder returned an invalid output path."
+                    )
+                integrity_path = package_dir / "package_integrity.json"
+                integrity = _load_json(integrity_path)
+                if str(integrity.get("status") or "").casefold() != "pass":
+                    raise RuntimeError("Brand Fit package integrity is not pass.")
+                summary = _load_json(package_dir / "summary.json")
+                if summary.get("source_retailer_report") != report_binding:
+                    raise RuntimeError(
+                        "Brand Fit package did not preserve the retailer report binding."
+                    )
+                if summary.get("source_retailer_evidence") != source_evidence_binding:
+                    raise RuntimeError(
+                        "Brand Fit package did not preserve the source evidence binding."
+                    )
+                if summary.get("retailer_presence") != presence_snapshot:
+                    raise RuntimeError(
+                        "Brand Fit package did not label the database presence snapshot."
+                    )
+                if summary.get("product_data_snapshot") != product_data_before:
+                    raise RuntimeError(
+                        "Brand Fit package did not preserve product-data snapshot provenance."
+                    )
+                built_mapping_state = _load_json(
+                    package_dir / "mapping_state_snapshot.json"
+                )
+                if (
+                    summary.get("mapping_state_snapshot_sha256")
+                    != mapping_state_before["state_sha256"]
+                    or built_mapping_state != mapping_state_before
+                ):
+                    raise RuntimeError(
+                        "Brand Fit package did not preserve accepted mapping-state provenance."
+                    )
+                built_manifest_path = package_dir / "pack_manifest.json"
+                built_manifest = _load_json(built_manifest_path)
+                built_manifest_files = sorted(
+                    path.relative_to(package_dir).as_posix()
+                    for path in package_dir.rglob("*")
+                    if path.is_file() and path != built_manifest_path
+                )
+                if (
+                    built_manifest.get("summary") != summary
+                    or built_manifest.get("files") != built_manifest_files
+                ):
+                    raise RuntimeError(
+                        "Brand Fit package manifest does not describe its exact builder output."
+                    )
+                summary_sources = summary.get("sources")
+                if not isinstance(summary_sources, Mapping) or (
+                    summary_sources.get("retailer_live_check_enabled") is not False
+                    or summary_sources.get("retailer_presence_mode")
+                    != "current_database_snapshot"
+                ):
+                    raise RuntimeError(
+                        "Brand Fit package mislabeled current retailer presence."
+                    )
+                self._assert_request_taxonomy_is_current(request_payload)
+                product_data_after = self._capture_product_data_snapshot(
+                    retailer=retailer,
+                    retailer_category_keys=retailer_category_keys,
+                    brand_source_retailer=brand_source_retailer,
+                    owned_category_keys=owned_category_keys,
+                )
+                if (
+                    product_data_before["snapshot_sha256"]
+                    != product_data_after["snapshot_sha256"]
+                ):
+                    raise BridgeConflictError(
+                        "Product or attribute cache data changed while Brand Fit was being built; create a fresh job."
+                    )
+                mapping_state_after = self._capture_brand_fit_mapping_state_snapshot(
+                    retailer=retailer,
+                    retailer_category_keys=retailer_category_keys,
+                    brand_source_retailer=brand_source_retailer,
+                    owned_category_keys=owned_category_keys,
+                )
+                if (
+                    mapping_state_before["state_sha256"]
+                    != mapping_state_after["state_sha256"]
+                ):
+                    raise BridgeConflictError(
+                        "Accepted mappings changed while Brand Fit was being built; create a fresh job."
+                    )
+                _atomic_write_json(
+                    job_dir / "mapping_state_snapshot.json",
+                    mapping_state_before,
+                )
+                _atomic_write_json(
+                    job_dir / "product_data_snapshot.json",
+                    product_data_before,
+                )
+                package_zip = job_dir / "brand_fit_pack.zip"
+                sanitization = _build_portable_package(
+                    package_dir,
+                    job_dir / "portable",
+                    package_zip,
+                    private_path_roots=(job_dir, source_package_dir),
+                    regenerate_brand_fit_manifest=True,
+                )
+                portable_summary = _load_json(job_dir / "portable" / "summary.json")
+                if portable_summary.get("source_retailer_report") != report_binding:
+                    raise RuntimeError(
+                        "Portable Brand Fit package lost the retailer report binding."
+                    )
+                if (
+                    portable_summary.get("source_retailer_evidence")
+                    != source_evidence_binding
+                ):
+                    raise RuntimeError(
+                        "Portable Brand Fit package lost the source evidence binding."
+                    )
+                if portable_summary.get("product_data_snapshot") != product_data_before:
+                    raise RuntimeError(
+                        "Portable Brand Fit package lost product-data snapshot provenance."
+                    )
+                portable_mapping_state = _load_json(
+                    job_dir / "portable" / "mapping_state_snapshot.json"
+                )
+                if (
+                    portable_summary.get("mapping_state_snapshot_sha256")
+                    != mapping_state_before["state_sha256"]
+                    or portable_mapping_state != mapping_state_before
+                ):
+                    raise RuntimeError(
+                        "Portable Brand Fit package lost accepted mapping-state provenance."
+                    )
+                portable_manifest_path = job_dir / "portable" / "pack_manifest.json"
+                portable_manifest = _load_json(portable_manifest_path)
+                portable_manifest_files = sorted(
+                    path.relative_to(job_dir / "portable").as_posix()
+                    for path in (job_dir / "portable").rglob("*")
+                    if path.is_file() and path != portable_manifest_path
+                )
+                if (
+                    portable_manifest.get("package_type")
+                    != built_manifest.get("package_type")
+                    or portable_manifest.get("summary") != portable_summary
+                    or portable_manifest.get("files") != portable_manifest_files
+                ):
+                    raise RuntimeError(
+                        "Portable Brand Fit package manifest does not describe the exact handoff."
+                    )
+                if (job_dir / "portable" / "prompt_for_pro.txt").exists():
+                    raise RuntimeError(
+                        "Portable Brand Fit package contains a legacy prompt."
+                    )
+                legacy_phrases = ("NotebookLM", "for Pro", "Pro can", "to Pro")
+                for text_path in (job_dir / "portable").rglob("*"):
+                    if not text_path.is_file() or text_path.suffix.casefold() not in {
+                        ".md",
+                        ".txt",
+                    }:
+                        continue
+                    text_value = text_path.read_text(
+                        encoding="utf-8",
+                        errors="replace",
+                    )
+                    if any(phrase in text_value for phrase in legacy_phrases):
+                        raise RuntimeError(
+                            "Portable Brand Fit package contains legacy report-service instructions."
+                        )
+                receipt = {
+                    "schema_version": f"{SCHEMA_PREFIX}.brand_fit_receipt.v1",
+                    "job_id": job_id,
+                    "source_evidence_job_id": source_id,
+                    "source_evidence_package_sha256": source_receipt["package_sha256"],
+                    "source_retailer_report": report_binding,
+                    "source_retailer_evidence": source_evidence_binding,
+                    "scope": dict(scope),
+                    "taxonomy_snapshot": dict(request_payload["taxonomy_snapshot"]),
+                    "retailer_presence": presence_snapshot,
+                    "product_data_snapshot": product_data_before,
+                    "product_data_snapshot_sha256": product_data_before[
+                        "snapshot_sha256"
+                    ],
+                    "mapping_state_snapshot_sha256": mapping_state_before[
+                        "state_sha256"
+                    ],
+                    "package_sha256": _file_sha256(package_zip),
+                    "package_size_bytes": package_zip.stat().st_size,
+                    "package_integrity_sha256": _file_sha256(integrity_path),
+                    "server_sanitization_receipt_sha256": _file_sha256(
+                        job_dir / "portable" / "server_sanitization_receipt.json"
+                    ),
+                    "image_policy": sanitization["image_policy"],
+                    "model_execution": "none",
+                    "built_at": self.now(),
+                }
+                _atomic_write_json(job_dir / "receipt.json", receipt)
+                self._enforce_retained_byte_quotas(actor=actor)
+                _atomic_write_json(
+                    status_path,
+                    {
+                        "schema_version": f"{SCHEMA_PREFIX}.brand_fit_status.v1",
+                        "job_id": job_id,
+                        "status": "ready",
+                        "attempt": attempt,
+                        "started_at": started_at,
+                        "completed_at": receipt["built_at"],
+                        "package_sha256": receipt["package_sha256"],
+                        "package_size_bytes": receipt["package_size_bytes"],
+                    },
+                )
+            except (
+                BridgeConflictError,
+                BridgeNotFoundError,
+                OSError,
+                RuntimeError,
+                KeyError,
+                TypeError,
+                ValueError,
+            ) as exc:
+                LOGGER.exception("Attribute Reporting Brand Fit job %s failed", job_id)
+                for directory in (
+                    job_dir / "build",
+                    job_dir / "portable",
+                    job_dir / "source_retailer_package",
+                ):
+                    shutil.rmtree(directory, ignore_errors=True)
+                for artifact in (
+                    job_dir / "brand_fit_pack.zip",
+                    job_dir / "receipt.json",
+                    job_dir / "mapping_state_snapshot.json",
+                    job_dir / "product_data_snapshot.json",
+                ):
+                    artifact.unlink(missing_ok=True)
+                _atomic_write_json(
+                    status_path,
+                    {
+                        "schema_version": f"{SCHEMA_PREFIX}.brand_fit_status.v1",
+                        "job_id": job_id,
+                        "status": "failed",
+                        "attempt": attempt,
+                        "started_at": started_at,
+                        "completed_at": self.now(),
+                        "error": "Brand Fit package build failed.",
+                        "error_type": type(exc).__name__,
+                    },
+                )
+
+    def brand_fit_status(self, job_id: str, *, actor_email: str) -> dict[str, Any]:
+        """Return public build status for one actor-owned Brand Fit job."""
+
+        job_dir = self._owned_artifact_dir(
+            "brand_fit_jobs",
+            job_id,
+            actor_email=actor_email,
+        )
+        return _load_json(job_dir / "status.json")
+
+    def brand_fit_download(
+        self,
+        job_id: str,
+        *,
+        actor_email: str,
+    ) -> tuple[Path, dict[str, Any]]:
+        """Return one checksum-verified URL-only Brand Fit package."""
+
+        job_dir = self._owned_artifact_dir(
+            "brand_fit_jobs",
+            job_id,
+            actor_email=actor_email,
+        )
+        status_payload = _load_json(job_dir / "status.json")
+        if status_payload.get("status") != "ready":
+            raise BridgeConflictError("The Brand Fit package is not ready.")
+        receipt = _load_json(job_dir / "receipt.json")
+        package_path = job_dir / "brand_fit_pack.zip"
+        if not package_path.is_file() or _file_sha256(package_path) != receipt.get(
+            "package_sha256"
+        ):
+            raise BridgeConflictError("The Brand Fit package failed its checksum.")
         return package_path, receipt
 
     def create_mapping_workset(
@@ -2564,7 +3529,9 @@ class AttributeReportingBridge:
         actor = _clean_actor(actor_email)
         path = self._artifact_dir(collection, artifact_id)
         metadata_name = (
-            "request.json" if collection == "evidence_jobs" else "metadata.json"
+            "request.json"
+            if collection in {"evidence_jobs", "brand_fit_jobs"}
+            else "metadata.json"
         )
         metadata = _load_json(path / metadata_name)
         owner = str(metadata.get("requested_by") or "").casefold()
