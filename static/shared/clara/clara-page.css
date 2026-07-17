@@ -173,6 +173,8 @@ p { margin: 0; }
 .promise + .promise { padding-left: 22px; border-left: 1px solid var(--cyan); }
 .promise__number { color: var(--cyan); font-size: 12px; font-weight: 650; letter-spacing: 0.08em; }
 .promise p { margin-top: 11px; color: var(--blue); }
+.retail-flow { border-top: 2px solid var(--navy); }
+.retail-paths { margin-top: 32px; }
 
 section { padding: 78px 0; border: 0; }
 section + section { border-top: 1px solid var(--cyan); }

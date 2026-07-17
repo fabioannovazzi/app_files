@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="clara-page.css?v=2026071501">
+  <link rel="stylesheet" href="clara-page.css?v=2026071701">
 </head>
 <body>
   <header class="topbar">
@@ -21,7 +21,7 @@
       <div class="nav-right">
         <nav class="nav-links" aria-label="Page navigation">
           <a href="#presentations" data-i18n="nav.presentations">Presentations</a>
-          <a href="#capabilities" data-i18n="nav.capabilities">Interviews, retail &amp; charts</a>
+          <a href="#retail-intelligence" data-i18n="nav.capabilities">Retail, interviews &amp; charts</a>
           <a href="#workflow" data-i18n="nav.workflow">Getting started</a>
           <a href="#download" data-i18n="nav.download">Installation</a>
           <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -163,6 +163,44 @@
       </div>
     </section>
 
+    <section id="retail-intelligence">
+      <div class="section-head">
+        <h2 data-i18n="retail.title">From product data to a checked retail report</h2>
+        <p data-i18n="retail.copy">Retailer Signals is available now. The server keeps structured product data, the central taxonomy, accepted mappings, and image URLs; model work runs in Codex without a user or server API key. User product images and reports remain local unless deliberately shared.</p>
+      </div>
+      <div class="promise-strip retail-flow">
+        <article class="promise">
+          <span class="promise__number">01</span>
+          <p data-i18n="retail.flow.collect">Collect product data. Retailer pages and images are captured locally; stored product records and image URLs feed the central product dataset. Fresh local scrape ingestion is not yet part of installed Clara.</p>
+        </article>
+        <article class="promise">
+          <span class="promise__number">02</span>
+          <p data-i18n="retail.flow.map">Map attributes. Lower-cost Codex agents map unresolved cells to the central taxonomy; independent agents review them and the server validates accepted mappings.</p>
+        </article>
+        <article class="promise">
+          <span class="promise__number">03</span>
+          <p data-i18n="retail.flow.analyze">Compare cohorts. New means labelled new by the retailer; new products and best sellers are compared with the remaining products using checked calculations.</p>
+        </article>
+        <article class="promise">
+          <span class="promise__number">04</span>
+          <p data-i18n="retail.flow.report">Create and check the report. Clara writes a private HTML report locally and checks its calculations, evidence, rendering, and readability.</p>
+        </article>
+      </div>
+      <div class="grid two-col retail-paths">
+        <article class="card">
+          <p class="kicker" data-i18n="retail.retailer_signals.kicker">Available now</p>
+          <h3 data-i18n="retail.retailer_signals.title">Retailer Signals</h3>
+          <p data-i18n="retail.retailer_signals.copy">For one retailer and category, compare new products and best sellers with the rest of the assortment, then create and check the report.</p>
+          <a class="quote" href="/static/shared/attribute-reporting/cashmere/index.html" target="_blank" rel="noopener noreferrer" data-i18n="retail.retailer_signals.example">Open the cashmere example report</a>
+        </article>
+        <article class="card">
+          <p class="kicker" data-i18n="retail.brand_fit.kicker">Not yet available in current Clara</p>
+          <h3 data-i18n="retail.brand_fit.title">Brand Fit</h3>
+          <p data-i18n="retail.brand_fit.copy">Start from a completed Retailer Signals report and compare its retailer signals with one brand catalogue; the result can support product hypotheses.</p>
+        </article>
+      </div>
+    </section>
+
     <section id="capabilities">
       <div class="section-head">
         <h2 data-i18n="capabilities.title">Other Clara workflows</h2>
@@ -235,7 +273,7 @@
       en: {
         title: "Clara",
         "nav.presentations": "Presentations",
-        "nav.capabilities": "Interviews, retail & charts",
+        "nav.capabilities": "Retail, interviews & charts",
         "nav.workflow": "Getting started",
         "nav.download": "Installation",
         "hero.eyebrow": "Clara · a Codex plugin for advisory, retail, and data analysis",
@@ -291,6 +329,19 @@
         "card.notes.copy": "Clara can keep track of missing information, points to confirm, and corrections that must be reflected in the next draft.",
         "card.judgement.title": "The work continues across sessions",
         "card.judgement.copy": "Close Codex, reopen the same folder in another session, and continue from the existing materials and drafts.",
+        "retail.title": "From product data to a checked retail report",
+        "retail.copy": "Retailer Signals is available now. The server keeps structured product data, the central taxonomy, accepted mappings, and image URLs; model work runs in Codex without a user or server API key. User product images and reports remain local unless deliberately shared.",
+        "retail.flow.collect": "Collect product data. Retailer pages and images are captured locally; stored product records and image URLs feed the central product dataset. Fresh local scrape ingestion is not yet part of installed Clara.",
+        "retail.flow.map": "Map attributes. Lower-cost Codex agents map unresolved cells to the central taxonomy; independent agents review them and the server validates accepted mappings.",
+        "retail.flow.analyze": "Compare cohorts. New means labelled new by the retailer; new products and best sellers are compared with the remaining products using checked calculations.",
+        "retail.flow.report": "Create and check the report. Clara writes a private HTML report locally and checks its calculations, evidence, rendering, and readability.",
+        "retail.retailer_signals.kicker": "Available now",
+        "retail.retailer_signals.title": "Retailer Signals",
+        "retail.retailer_signals.copy": "For one retailer and category, compare new products and best sellers with the rest of the assortment, then create and check the report.",
+        "retail.retailer_signals.example": "Open the cashmere example report",
+        "retail.brand_fit.kicker": "Not yet available in current Clara",
+        "retail.brand_fit.title": "Brand Fit",
+        "retail.brand_fit.copy": "Start from a completed Retailer Signals report and compare its retailer signals with one brand catalogue; the result can support product hypotheses.",
         "capabilities.title": "Other Clara workflows",
         "capabilities.copy": "Clara also handles interviews, recordings, retail attributes, and business-data charts as distinct workflows.",
         "capabilities.interview.kicker": "Remote interview",
@@ -327,7 +378,7 @@
       it: {
         title: "Clara",
         "nav.presentations": "Presentazioni",
-        "nav.capabilities": "Interviste, retail e grafici",
+        "nav.capabilities": "Retail, interviste e grafici",
         "nav.workflow": "Come iniziare",
         "nav.download": "Installazione",
         "hero.eyebrow": "Clara · il plugin Codex per consulenza, retail e analisi dati",
@@ -383,6 +434,19 @@
         "card.notes.copy": "Clara può tenere traccia delle informazioni mancanti, dei punti da confermare e delle correzioni da riportare nella bozza successiva.",
         "card.judgement.title": "Il lavoro continua tra sessioni",
         "card.judgement.copy": "Chiudi Codex, riapri la stessa cartella in un'altra sessione e continua dai materiali e dalle bozze esistenti.",
+        "retail.title": "Dai dati prodotto a un report retail verificato",
+        "retail.copy": "Retailer Signals è disponibile ora. Il server conserva dati prodotto strutturati, tassonomia centrale, mapping accettati e URL delle immagini; il lavoro dei modelli avviene in Codex senza chiavi API dell'utente o del server. Le immagini prodotto e i report dell'utente restano in locale, salvo condivisione intenzionale.",
+        "retail.flow.collect": "Raccogli i dati prodotto. Le pagine e le immagini dei retailer vengono acquisite in locale; i record prodotto archiviati e gli URL delle immagini alimentano il dataset centrale. L'ingestione di un nuovo scrape locale non fa ancora parte della versione installata di Clara.",
+        "retail.flow.map": "Mappa gli attributi. Agenti Codex a costo contenuto associano le celle irrisolte alla tassonomia centrale; agenti indipendenti le rivedono e il server convalida i mapping accettati.",
+        "retail.flow.analyze": "Confronta i gruppi. Nuovo significa etichettato come nuovo dal retailer; nuovi prodotti e best seller vengono confrontati con i prodotti rimanenti usando calcoli controllati.",
+        "retail.flow.report": "Crea e controlla il report. Clara scrive localmente un report HTML privato e ne verifica calcoli, evidenze, rendering e leggibilità.",
+        "retail.retailer_signals.kicker": "Disponibile ora",
+        "retail.retailer_signals.title": "Retailer Signals",
+        "retail.retailer_signals.copy": "Per un retailer e una categoria, confronta nuovi prodotti e best seller con il resto dell'assortimento, quindi crea e controlla il report.",
+        "retail.retailer_signals.example": "Apri il report di esempio sul cashmere",
+        "retail.brand_fit.kicker": "Non ancora disponibile nella versione attuale di Clara",
+        "retail.brand_fit.title": "Brand Fit",
+        "retail.brand_fit.copy": "Parte da un report Retailer Signals completato e confronta i segnali del retailer con il catalogo di un brand; il risultato può alimentare ipotesi di prodotto.",
         "capabilities.title": "Altri flussi di Clara",
         "capabilities.copy": "Clara gestisce anche interviste, registrazioni, attributi retail e grafici su dati aziendali come flussi distinti.",
         "capabilities.interview.kicker": "Intervista a distanza",
@@ -419,7 +483,7 @@
       fr: {
         title: "Clara",
         "nav.presentations": "Présentations",
-        "nav.capabilities": "Entretiens, retail et graphiques",
+        "nav.capabilities": "Retail, entretiens et graphiques",
         "nav.workflow": "Bien démarrer",
         "nav.download": "Installation",
         "hero.eyebrow": "Clara · le plugin Codex pour le conseil, le retail et l'analyse de données",
@@ -475,6 +539,19 @@
         "card.notes.copy": "Clara peut suivre les informations manquantes, les points à confirmer et les corrections à intégrer dans la prochaine version.",
         "card.judgement.title": "Le travail se poursuit d'une session à l'autre",
         "card.judgement.copy": "Fermez Codex, rouvrez le même dossier dans une autre session et reprenez le travail à partir des documents et versions existants.",
+        "retail.title": "Des données produit à un rapport retail vérifié",
+        "retail.copy": "Retailer Signals est disponible dès maintenant. Le serveur conserve les données produit structurées, la taxonomie centrale, les associations acceptées et les URL des images ; le travail des modèles s'effectue dans Codex, sans clé API côté utilisateur ni côté serveur. Les images produit et les rapports de l'utilisateur restent en local, sauf partage délibéré.",
+        "retail.flow.collect": "Collecter les données produit. Les pages et images des retailers sont collectées en local ; les fiches produit enregistrées et les URL des images alimentent le jeu de données central. L'ingestion d'un nouveau scrape local ne fait pas encore partie de la version installée de Clara.",
+        "retail.flow.map": "Mapper les attributs. Des agents Codex à coût modéré associent les cellules non résolues à la taxonomie centrale ; des agents indépendants les révisent et le serveur valide les correspondances acceptées.",
+        "retail.flow.analyze": "Comparer les groupes. Nouveau signifie signalé comme nouveau par le retailer ; nouveautés et meilleures ventes sont comparées aux autres produits à l'aide de calculs vérifiés.",
+        "retail.flow.report": "Créer et vérifier le rapport. Clara rédige localement un rapport HTML privé et en contrôle les calculs, les preuves, le rendu et la lisibilité.",
+        "retail.retailer_signals.kicker": "Disponible maintenant",
+        "retail.retailer_signals.title": "Retailer Signals",
+        "retail.retailer_signals.copy": "Pour un retailer et une catégorie, compare les nouveautés et les meilleures ventes au reste de l'assortiment, puis crée et vérifie le rapport.",
+        "retail.retailer_signals.example": "Ouvrir l'exemple de rapport sur le cachemire",
+        "retail.brand_fit.kicker": "Pas encore disponible dans la version actuelle de Clara",
+        "retail.brand_fit.title": "Brand Fit",
+        "retail.brand_fit.copy": "Part d'un rapport Retailer Signals terminé et compare les signaux du retailer au catalogue d'une marque ; le résultat peut alimenter des hypothèses produit.",
         "capabilities.title": "Autres workflows Clara",
         "capabilities.copy": "Clara traite également les entretiens, les enregistrements, les attributs retail et les graphiques métier comme des workflows distincts.",
         "capabilities.interview.kicker": "Entretien à distance",
@@ -511,7 +588,7 @@
       de: {
         title: "Clara",
         "nav.presentations": "Präsentationen",
-        "nav.capabilities": "Interviews, Retail & Charts",
+        "nav.capabilities": "Retail, Interviews & Charts",
         "nav.workflow": "Erste Schritte",
         "nav.download": "Installation",
         "hero.eyebrow": "Clara · das Codex-Plugin für Beratung, Retail und Datenanalyse",
@@ -567,6 +644,19 @@
         "card.notes.copy": "Clara kann fehlende Informationen, noch zu bestätigende Punkte und Korrekturen festhalten, die in den nächsten Entwurf einfließen müssen.",
         "card.judgement.title": "Die Arbeit lässt sich in einer späteren Sitzung fortsetzen",
         "card.judgement.copy": "Schließen Sie Codex, öffnen Sie denselben Ordner in einer anderen Sitzung erneut und arbeiten Sie mit den vorhandenen Unterlagen und Entwürfen weiter.",
+        "retail.title": "Von Produktdaten zum geprüften Retail-Bericht",
+        "retail.copy": "Retailer Signals ist jetzt verfügbar. Der Server speichert strukturierte Produktdaten, die zentrale Taxonomie, akzeptierte Zuordnungen und Bild-URLs; die Modellarbeit läuft in Codex, ohne API-Schlüssel des Nutzers oder Servers. Produktbilder und Berichte des Nutzers bleiben lokal, sofern sie nicht bewusst geteilt werden.",
+        "retail.flow.collect": "Produktdaten erfassen. Retailer-Seiten und Bilder werden lokal erfasst; gespeicherte Produktdatensätze und Bild-URLs speisen den zentralen Produktdatensatz. Die Aufnahme eines neuen lokalen Scrapes ist noch nicht Teil der installierten Clara-Version.",
+        "retail.flow.map": "Attribute zuordnen. Kostengünstige Codex-Agenten ordnen ungeklärte Zellen der zentralen Taxonomie zu; unabhängige Agenten prüfen sie und der Server validiert akzeptierte Zuordnungen.",
+        "retail.flow.analyze": "Gruppen vergleichen. Neu bedeutet vom Retailer als neu gekennzeichnet; Neuheiten und Bestseller werden mit den übrigen Produkten anhand geprüfter Berechnungen verglichen.",
+        "retail.flow.report": "Bericht erstellen und prüfen. Clara schreibt den privaten HTML-Bericht lokal und prüft Berechnungen, Belege, Darstellung und Lesbarkeit.",
+        "retail.retailer_signals.kicker": "Jetzt verfügbar",
+        "retail.retailer_signals.title": "Retailer Signals",
+        "retail.retailer_signals.copy": "Vergleicht für einen Retailer und eine Kategorie Neuheiten und Bestseller mit dem übrigen Sortiment und erstellt und prüft anschließend den Bericht.",
+        "retail.retailer_signals.example": "Beispielbericht zu Kaschmir öffnen",
+        "retail.brand_fit.kicker": "In der aktuellen Clara-Version noch nicht verfügbar",
+        "retail.brand_fit.title": "Brand Fit",
+        "retail.brand_fit.copy": "Beginnt mit einem abgeschlossenen Retailer-Signals-Bericht und vergleicht die Retailer-Signale mit dem Katalog einer Marke; das Ergebnis kann Produkthypothesen unterstützen.",
         "capabilities.title": "Weitere Clara-Workflows",
         "capabilities.copy": "Clara behandelt außerdem Interviews, Aufnahmen, Retail-Attribute und Geschäftsdaten-Charts als getrennte Workflows.",
         "capabilities.interview.kicker": "Interview aus der Ferne",
