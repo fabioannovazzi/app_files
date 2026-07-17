@@ -678,12 +678,13 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.86"
+    assert manifest["version"] == "0.1.88"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
     assert "voice-transcription" in manifest["keywords"]
     assert "deck-correction" in manifest["keywords"]
+    assert "brand-fit" in manifest["keywords"]
     assert "reporting-engine" in manifest["keywords"]
     assert "Conversation Workflow Router" in main_skill
     assert "Hosted-interview bundles and Hosted Voice bundles" in main_skill
@@ -693,6 +694,8 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "voice-note-transcription-import",
         "voice-led-pptx-correction",
         "one-command-deck-feedback-capture",
+        "brand-fit-current-presence-and-owned-catalogue",
+        "brand-fit-stored-snapshot-boundary",
         "reporting-engine-direct-chart-analysis",
         "reporting-engine-chart-contract",
     }.issubset(fixture_ids)
@@ -707,6 +710,10 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     assert expected_routes["one-command-deck-feedback-capture"] == (
         "clara:deck-correction"
     )
+    assert expected_routes["brand-fit-current-presence-and-owned-catalogue"] == (
+        "clara:brand-fit"
+    )
+    assert expected_routes["brand-fit-stored-snapshot-boundary"] == ("clara:brand-fit")
     assert expected_routes["reporting-engine-direct-chart-analysis"] == (
         "clara:reporting-engine"
     )

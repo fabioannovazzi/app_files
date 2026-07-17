@@ -26,3 +26,7 @@ its report in an advisory case, convert it into a 16:9 presentation, or upload
 it to Mparanza unless the user separately asks for that follow-on work. If the
 user asks for a presentation after the checked HTML report is complete, hand
 the finished report to Clara's `html-deck` workflow as a new, explicit step.
+
+Do not use this workflow for Brand Fit. When the user wants to compare completed
+retailer signals with both a brand's current presence at that retailer and the
+brand-owned catalogue, route to Clara's distinct `brand-fit` skill.

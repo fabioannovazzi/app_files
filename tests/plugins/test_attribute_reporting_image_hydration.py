@@ -258,6 +258,49 @@ def test_hydrate_product_images_uses_swatch_url_when_no_hero_is_available(
     assert result["products"][0]["source_field"] == "swatch_image_url"
 
 
+def test_brand_fit_image_hydration_keeps_retailer_and_owned_scopes_separate(
+    tmp_path: Path,
+) -> None:
+    package = tmp_path / "package"
+    package.mkdir()
+    (package / "pack_manifest.json").write_text(
+        json.dumps({"package_type": "brand_retailer_reference_handoff"}),
+        encoding="utf-8",
+    )
+    _write_csv(
+        package / "retailer_brand_anchors.csv",
+        [
+            {
+                "parent_product_id": "shared-id",
+                "product_scope": "brand_at_retailer",
+                "hero_image_url": "https://cdn.example.test/retailer.png",
+            }
+        ],
+    )
+    _write_csv(
+        package / "manufacturer_catalog_products.csv",
+        [
+            {
+                "parent_product_id": "shared-id",
+                "product_scope": "owned_catalogue",
+                "hero_image_url": "https://cdn.example.test/owned.png",
+            }
+        ],
+    )
+
+    result = hydration.hydrate_product_images(
+        package,
+        open_url=lambda request, timeout: _FakeResponse(
+            PNG_BYTES, url=request.full_url
+        ),
+    )
+
+    assert result["summary"]["product_count"] == 2
+    assert {item["product_id"] for item in result["products"]} == {"shared-id"}
+    assert len({item["record_id"] for item in result["products"]}) == 2
+    assert len({item["image_path"] for item in result["products"]}) == 2
+
+
 def test_hydrate_product_images_resumes_from_verified_manifest(tmp_path: Path) -> None:
     package = _package(
         tmp_path,

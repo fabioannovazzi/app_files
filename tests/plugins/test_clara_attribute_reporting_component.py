@@ -42,6 +42,7 @@ def test_clara_attribute_reporting_wrapper_delegates_to_single_source() -> None:
     assert "../../../attribute-reporting" in wrapper
     assert "skills/attribute-reporting/SKILL.md" in wrapper
     assert "check_dependencies.py --module attribute-reporting" in wrapper
+    assert "route to Clara's distinct `brand-fit` skill" in wrapper
     assert 'display_name: "Attribute Reporting"' in metadata
     assert "Use $attribute-reporting" in metadata
     assert (ATTRIBUTE_ROOT / "skills" / "attribute-reporting" / "SKILL.md").is_file()
@@ -61,10 +62,10 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
         if item.get("expected_skill") == "clara:attribute-reporting"
     }
 
-    assert manifest["version"] == "0.1.87"
+    assert manifest["version"] == "0.1.88"
     assert "retail-attribute-reporting" in manifest["keywords"]
-    assert "retail attribute reporting" in manifest["interface"]["longDescription"]
-    assert "Clara exposes five distinct conversation workflows" in router
+    assert "Retailer Signals" in manifest["interface"]["longDescription"]
+    assert "Clara exposes six distinct conversation workflows" in router
     assert "Use `attribute-reporting`" in router
     assert set(attribute_cases) == {
         "retail-attribute-report-from-current-data",
@@ -75,6 +76,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
             "clara:interview",
             "clara:transcribe",
             "clara:deck-correction",
+            "clara:brand-fit",
         }
 
 
@@ -144,7 +146,11 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
     assert 'href="/static/shared/attribute-reporting/cashmere/index.html"' in page
     assert "Fresh local scrape ingestion is not yet part of installed Clara." in page
     assert "New means labelled new by the retailer" in page
-    assert "Not yet available in current Clara" in page
+    assert "Retailer Signals and Brand Fit are available now" in page
+    assert "brand's current presence at the selected retailer" in page
+    assert "brand-owned catalogue in the stored database snapshot" in page
+    assert "not a live shelf check" in page
+    assert "neither the user nor the server needs a model API key" in page
     for key in (
         "retail.title",
         "retail.copy",
@@ -159,6 +165,7 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
         "retail.brand_fit.kicker",
         "retail.brand_fit.title",
         "retail.brand_fit.copy",
+        "retail.brand_fit.prompt",
         "capabilities.attributes.kicker",
         "capabilities.attributes.title",
         "capabilities.attributes.copy",

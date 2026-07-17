@@ -13,10 +13,39 @@ The pipeline is:
    as KIKO blush.
 3. Product Hypotheses: use the Brand Fit evidence to draft product routes.
 
-Required inputs
----------------
+Installed Clara and legacy builder
+----------------------------------
 
-A Brand Fit package must have both a retailer signal source and brand catalog
+There are two supported execution paths. They share the comparison logic but
+do not share the same transport contract.
+
+**Installed Clara** starts from a completed, checked local Retailer Signals
+analysis and its authenticated evidence-job receipt. Clara asks the server for
+a portable Brand Fit evidence package keyed to that source job, the selected
+brand, and the brand's owned-catalogue source. The server reads its stored
+database snapshot to assemble:
+
+- the retailer signals already pinned by the source evidence job;
+- the brand's current presence at that retailer; and
+- the brand-owned catalogue.
+
+The local Retailer Signals HTML report is not uploaded. The server performs no
+model call and needs no model-provider API key. After download, product images,
+Codex interpretation, independent semantic review, and the checked Brand Fit
+HTML report remain local. Database evidence is a stored snapshot, not a claim
+that the retailer's live shelf was checked at report time.
+
+**The legacy repository builder**
+(`scripts/build_brand_retailer_reference_package.py`) remains available for
+development and historical package generation. It reads repository-side input
+paths directly and therefore requires the matching retailer-signal brief file.
+That file-path requirement belongs to the legacy builder; it is not a reason to
+upload a user's local report in the installed Clara path.
+
+Legacy builder required inputs
+------------------------------
+
+The legacy builder must have both a retailer signal source and brand catalogue
 data:
 
 - A completed retailer-signal package for the same retailer/category.
@@ -26,13 +55,14 @@ data:
 - At least one brand catalog product after applying the requested category or
   owned-category aliases.
 
-The brief is not optional analytical context. It is the category interpretation
-layer that explains what the raw signal tables mean, which signals are robust,
-which signals are fragile, and which apparent matches should not be over-read.
+For the legacy builder, the brief is not optional analytical context. It is the
+category interpretation layer that explains what the raw signal tables mean,
+which signals are robust, which signals are fragile, and which apparent matches
+should not be over-read.
 
-Raw tables alone are not sufficient. Do not generate or use a Brand Fit package
-from `signal_bundles.csv`, PDP rows, or computed bundle tables if the source
-retailer-signal brief does not exist.
+In that path, raw tables alone are not sufficient. Do not generate or use a
+Brand Fit package from `signal_bundles.csv`, PDP rows, or computed bundle tables
+if the source retailer-signal brief does not exist.
 
 Brand data is also not optional. If the PDP database has no mapped brand catalog
 rows, or if the category filter leaves no brand products, the builder fails
@@ -53,7 +83,7 @@ final anchor rows, and that `retailer_brand_anchor_signal_fit.csv` is consistent
 with `brand_at_retailer_bundle_matches.csv`.
 
 If package integrity fails, repair the package inputs or builder logic before
-sending the package to Pro or validating report text.
+local Codex interpretation or report validation.
 
 Rank-weighted visibility metrics
 --------------------------------
@@ -86,8 +116,8 @@ may still use shelf position, filters, PDP copy, images, price, and brand spread
 as evidence, but they must explicitly say that consumer-review validation is not
 available.
 
-Non-example: eye categories
----------------------------
+Legacy non-example: eye categories
+----------------------------------
 
 If the Retailer Signals page has no eye-category report, then there is no valid
 Brand Fit source for:
@@ -101,8 +131,8 @@ Even if PDP discovery data exists or a script can compute bundle tables, those
 categories must be excluded until a proper retailer-signal report and brief have
 been produced.
 
-Builder behavior
-----------------
+Legacy builder behavior
+-----------------------
 
 `scripts/build_brand_retailer_reference_package.py` enforces this boundary. It
 fails when the source retailer-signal brief is missing, when mapped brand parent
@@ -124,4 +154,6 @@ For this to be valid, the matching source files must exist, including:
 - `data/pdp/reports/briefs/launch/blush/ulta.md`
 
 If the brief is missing, create the Retailer Signals report first. Do not bypass
-the check by pointing the builder at raw computed package tables.
+the legacy check by pointing the builder at raw computed package tables. In the
+installed Clara path, use the authenticated source evidence-job receipt and keep
+the checked Retailer Signals report local.

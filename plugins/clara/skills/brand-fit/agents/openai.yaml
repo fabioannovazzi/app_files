@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brand Fit"
+  short_description: "Compare retailer signals with brand presence and catalogue"
+  default_prompt: "Use $brand-fit to compare completed retailer signals with this brand's current retailer presence and owned catalogue, then create and check the private local HTML report."

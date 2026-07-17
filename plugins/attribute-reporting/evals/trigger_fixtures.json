@@ -32,6 +32,16 @@
         "evidence",
         "direct verdict"
       ]
+    },
+    {
+      "id": "brand-fit",
+      "prompt": "Use the completed retailer signals report to assess Brand Fit for this brand: compare the signals with its current presence at the retailer and its owned catalogue.",
+      "required_signals": [
+        "retailer signals report",
+        "Brand Fit",
+        "current presence",
+        "owned catalogue"
+      ]
     }
   ],
   "should_not_trigger": [

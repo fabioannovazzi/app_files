@@ -55,28 +55,42 @@
       "prompt": "Use Clara to map product attributes for this retailer and category from the current database snapshot, compare the retailer-defined new products with the rest of the assortment, create the private local HTML report, and tell me whether it is correct.",
       "required_signals": ["product attributes", "current database snapshot", "new products", "local HTML report", "correct"],
       "expected_skill": "clara:attribute-reporting",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction"]
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:brand-fit"]
     },
     {
       "id": "retail-attribute-report-fresh-scrape",
       "prompt": "Use Clara to scrape this retailer and category locally, map the products to the central taxonomy, compare best sellers with the other products, and produce a checked HTML attribute report.",
       "required_signals": ["scrape", "central taxonomy", "best sellers", "checked HTML attribute report"],
       "expected_skill": "clara:attribute-reporting",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction"]
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:brand-fit"]
+    },
+    {
+      "id": "brand-fit-current-presence-and-owned-catalogue",
+      "prompt": "Use Clara Brand Fit with this completed Retailer Signals analysis. Compare those retailer signals with KIKO's current presence at Ulta and KIKO's owned catalogue, create a private local HTML report, and tell me whether it is correct.",
+      "required_signals": ["Brand Fit", "completed Retailer Signals", "current presence at Ulta", "owned catalogue", "private local HTML report", "correct"],
+      "expected_skill": "clara:brand-fit",
+      "must_not_route_to": ["clara:attribute-reporting", "clara:reporting-engine", "clara:interview", "clara:transcribe", "clara:deck-correction"]
+    },
+    {
+      "id": "brand-fit-stored-snapshot-boundary",
+      "prompt": "Compare the checked retailer signals with this brand's current retailer presence and owned catalogue from the stored database snapshot. Keep images and the Brand Fit report local and do not claim this is a live shelf check.",
+      "required_signals": ["checked retailer signals", "current retailer presence", "owned catalogue", "stored database snapshot", "images", "report local", "not live"],
+      "expected_skill": "clara:brand-fit",
+      "must_not_route_to": ["clara:attribute-reporting", "clara:reporting-engine", "clara:interview", "clara:transcribe", "clara:deck-correction"]
     },
     {
       "id": "reporting-engine-direct-chart-analysis",
       "prompt": "Use Clara to analyze this spreadsheet, choose the most useful chart from the business question and actual fields, render it, and explain the result.",
       "required_signals": ["Clara", "analyze this spreadsheet", "most useful chart", "actual fields", "render", "explain"],
       "expected_skill": "clara:reporting-engine",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting"]
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
       "id": "reporting-engine-chart-contract",
       "prompt": "Use Clara to inspect the chart-selection manifest, profile this dataset into chart roles, and tell me which chart capabilities are mechanically compatible before semantic selection.",
       "required_signals": ["chart-selection manifest", "profile this dataset", "chart roles", "mechanically compatible", "semantic selection"],
       "expected_skill": "clara:reporting-engine",
-      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting"]
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
       "id": "deck-claim-basis-map",

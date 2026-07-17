@@ -11,6 +11,8 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 Use this workflow to preserve the existing scrape → map → compare → report logic while moving model judgment into Codex. The central server remains authoritative for structured scraped records, the single published taxonomy for each category, accepted mappings, and image URLs. Clara's installed workflow can now authenticate to Mparanza, build an immutable package from the current database, retrieve a public mapping workset, submit independently reviewed mappings, and rebuild the package with provenance. Image bytes and report artifacts remain local. Fresh local scrape ingestion is still available only in the `app_files` development runtime; do not imply that an installed plugin can upload a fresh scrape.
 
+When the user asks to compare a completed Retailer Signals result with a brand's current presence at that retailer and its owned catalogue, route to the sibling `brand-fit` skill. Brand Fit is downstream of this workflow: it requires this run's completed checked local report and the actor-owned evidence job pinned by its local download receipt. It never uploads the Retailer Signals report.
+
 The existing analytical cohorts remain authoritative:
 
 - `recent` means the retailer-defined newest or new-arrivals cohort already encoded by the pipeline;

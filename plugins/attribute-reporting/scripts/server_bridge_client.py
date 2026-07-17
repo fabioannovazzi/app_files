@@ -556,9 +556,81 @@ class AttributeReportingServerClient:
     def download_evidence_pack(self, job_id: str, output_path: Path) -> dict[str, Any]:
         """Download and checksum one ready package into the local workspace."""
 
+        return self._download_package(
+            f"/evidence-packs/{urllib.parse.quote(job_id, safe='')}/download",
+            job_id=job_id,
+            output_path=output_path,
+        )
+
+    def create_brand_fit_pack(
+        self,
+        *,
+        source_evidence_job_id: str,
+        brand_source_retailer: str,
+        brand_name: str,
+        retailer_report_sha256: str,
+        retailer_report_verdict: str,
+        owned_category_keys: list[str] | None = None,
+        retailer_category_keys: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Start a Brand Fit build without sending the local retailer report."""
+
+        if not re.fullmatch(r"[0-9a-f]{32}", source_evidence_job_id):
+            raise ServerBridgeClientError("Source evidence job id is invalid.")
+        if not re.fullmatch(r"[0-9a-f]{64}", retailer_report_sha256):
+            raise ServerBridgeClientError("Retailer report SHA-256 is invalid.")
+        if retailer_report_verdict not in {"Correct", "Correct with caveats"}:
+            raise ServerBridgeClientError(
+                "Retailer report must be Correct or Correct with caveats."
+            )
+        payload: dict[str, Any] = {
+            "source_evidence_job_id": source_evidence_job_id,
+            "brand_source_retailer": brand_source_retailer,
+            "brand_name": brand_name,
+            "retailer_report_sha256": retailer_report_sha256,
+            "retailer_report_verdict": retailer_report_verdict,
+        }
+        if owned_category_keys:
+            payload["owned_category_keys"] = owned_category_keys
+        if retailer_category_keys:
+            payload["retailer_category_keys"] = retailer_category_keys
+        return self._request_json(
+            "/brand-fit-packs",
+            method="POST",
+            payload=payload,
+        )
+
+    def brand_fit_status(self, job_id: str) -> dict[str, Any]:
+        """Poll one actor-owned Brand Fit build."""
+
+        return self._request_json(
+            f"/brand-fit-packs/{urllib.parse.quote(job_id, safe='')}"
+        )
+
+    def download_brand_fit_pack(
+        self,
+        job_id: str,
+        output_path: Path,
+    ) -> dict[str, Any]:
+        """Download and checksum one ready Brand Fit package."""
+
+        return self._download_package(
+            f"/brand-fit-packs/{urllib.parse.quote(job_id, safe='')}/download",
+            job_id=job_id,
+            output_path=output_path,
+        )
+
+    def _download_package(
+        self,
+        path: str,
+        *,
+        job_id: str,
+        output_path: Path,
+    ) -> dict[str, Any]:
+        """Download a bridge ZIP while pinning origin, media type, size, and hash."""
+
         request = urllib.request.Request(
-            f"{self.api_root}/evidence-packs/"
-            f"{urllib.parse.quote(job_id, safe='')}/download",
+            f"{self.api_root}{path}",
             method="GET",
             headers={"Accept": "application/zip"},
         )
@@ -777,6 +849,28 @@ def _parser() -> argparse.ArgumentParser:
     extract.add_argument("--output", type=Path, required=True)
     extract.add_argument("--receipt", type=Path, required=True)
 
+    brand_fit = subparsers.add_parser("create-brand-fit")
+    brand_fit.add_argument("--brand-source-retailer", required=True)
+    brand_fit.add_argument("--brand-name", required=True)
+    brand_fit.add_argument(
+        "--retailer-run",
+        type=Path,
+        required=True,
+        help="Completed checked local Retailer Signals report directory.",
+    )
+    brand_fit.add_argument("--owned-category-key", action="append", default=[])
+    brand_fit.add_argument("--retailer-category-key", action="append", default=[])
+    brand_fit.add_argument("--output", type=Path, required=True)
+
+    poll_brand_fit = subparsers.add_parser("poll-brand-fit")
+    poll_brand_fit.add_argument("job_id")
+    poll_brand_fit.add_argument("--output", type=Path, required=True)
+
+    download_brand_fit = subparsers.add_parser("download-brand-fit")
+    download_brand_fit.add_argument("job_id")
+    download_brand_fit.add_argument("--output", type=Path, required=True)
+    download_brand_fit.add_argument("--receipt", type=Path, required=True)
+
     workset = subparsers.add_parser("create-workset")
     workset.add_argument("--evidence-job-id", required=True)
     workset.add_argument("--taxonomy", type=Path, required=True)
@@ -876,6 +970,26 @@ def main() -> int:
             _write_json(args.output, result)
         elif args.command == "download-evidence":
             result = client.download_evidence_pack(args.job_id, args.output)
+            _write_json(args.receipt, result)
+        elif args.command == "create-brand-fit":
+            from brand_fit import completed_retailer_report  # noqa: PLC0415
+
+            retailer_report = completed_retailer_report(args.retailer_run)
+            result = client.create_brand_fit_pack(
+                source_evidence_job_id=retailer_report["job_id"],
+                brand_source_retailer=args.brand_source_retailer,
+                brand_name=args.brand_name,
+                retailer_report_sha256=retailer_report["sha256"],
+                retailer_report_verdict=retailer_report["verdict"],
+                owned_category_keys=args.owned_category_key,
+                retailer_category_keys=args.retailer_category_key,
+            )
+            _write_json(args.output, result)
+        elif args.command == "poll-brand-fit":
+            result = client.brand_fit_status(args.job_id)
+            _write_json(args.output, result)
+        elif args.command == "download-brand-fit":
+            result = client.download_brand_fit_pack(args.job_id, args.output)
             _write_json(args.receipt, result)
         elif args.command == "create-workset":
             taxonomy = _read_json(args.taxonomy)
