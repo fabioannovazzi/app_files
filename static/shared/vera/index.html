@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Vera prepara, controlla e documenta il lavoro dello studio. Il giudizio professionale resta al commercialista.">
+  <meta name="description" content="Vera prepara, controlla e documenta il lavoro dello studio, incluso l'abbinamento delle scritture a FatturaPA XML, collegamenti autorizzati e PDF mirati.">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
   <title>Vera · AI per commercialisti</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,6 +180,48 @@
 
     section { padding: 78px 0; }
 
+    .invoice-flow {
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 2px solid var(--navy);
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .flow-step {
+      min-height: 220px;
+      padding: 28px 28px 30px 0;
+    }
+
+    .flow-step + .flow-step {
+      padding-left: 28px;
+      border-left: 1px solid var(--cyan);
+    }
+
+    .flow-step__number {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+    }
+
+    .flow-step h3 { margin-top: 34px; font-size: 22px; }
+    .flow-step p { margin-top: 10px; color: var(--blue); }
+
+    .flow-note {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--blue);
+    }
+
+    .flow-note p { max-width: 760px; }
+
     .section-head {
       display: grid;
       grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
@@ -241,6 +283,11 @@
       .promise-strip { grid-template-columns: 1fr; }
       .promise { min-height: 0; padding: 25px 0; }
       .promise + .promise { padding-left: 0; border-top: 1px solid var(--cyan); border-left: 0; }
+      .flow-grid { grid-template-columns: 1fr; }
+      .flow-step { min-height: 0; padding: 25px 0; }
+      .flow-step + .flow-step { padding-left: 0; border-top: 1px solid var(--cyan); border-left: 0; }
+      .flow-step h3 { margin-top: 14px; }
+      .flow-note { align-items: flex-start; flex-direction: column; }
       .section-head { grid-template-columns: 1fr; gap: 16px; }
       .module-row { grid-template-columns: 1fr 28px; gap: 8px 18px; }
       .module-row p { grid-column: 1; }
@@ -323,6 +370,34 @@
       </div>
     </div>
 
+    <section class="invoice-flow" id="invoice-flow">
+      <div class="section-head">
+        <h2 data-i18n="invoice.title">Dalla scrittura campionata alla fattura, senza stampe massive</h2>
+        <p data-i18n="invoice.copy">Per il controllo delle scritture, Vera usa prima le fatture elettroniche già disponibili, prova poi un collegamento autorizzato e chiede documenti individuali solo per le eccezioni.</p>
+      </div>
+      <div class="flow-grid">
+        <article class="flow-step">
+          <span class="flow-step__number">01</span>
+          <h3 data-i18n="invoice.zip.title">ZIP FatturaPA</h3>
+          <p data-i18n="invoice.zip">Carica l'archivio XML completo: Vera indicizza le fatture e cerca gli abbinamenti con il campione.</p>
+        </article>
+        <article class="flow-step">
+          <span class="flow-step__number">02</span>
+          <h3 data-i18n="invoice.connect.title">Collegamento autorizzato</h3>
+          <p data-i18n="invoice.connect">Se lo ZIP non è disponibile, usa un connettore specifico del gestionale in sola lettura/export, con provenienza registrata.</p>
+        </article>
+        <article class="flow-step">
+          <span class="flow-step__number">03</span>
+          <h3 data-i18n="invoice.pdf.title">PDF solo per le eccezioni</h3>
+          <p data-i18n="invoice.pdf">Maria riceve una richiesta precisa solo per le scritture rimaste senza un supporto univoco.</p>
+        </article>
+      </div>
+      <div class="flow-note">
+        <p data-i18n="invoice.note">Gli abbinamenti ambigui non vengono forzati: restano nella coda di revisione del commercialista.</p>
+        <a class="button secondary" href="../check-entries/index.html?lang=it" data-invoice-link data-i18n="invoice.link">Scopri Check Entries</a>
+      </div>
+    </section>
+
     <section id="modules">
       <div class="section-head">
         <h2 data-i18n="modules.title">Il lavoro di Vera</h2>
@@ -342,7 +417,7 @@
         </a>
         <a class="module-row" href="../check-entries/index.html" data-module-link>
           <h3 data-i18n="module.entries.title">Controllo scritture</h3>
-          <p data-i18n="module.entries">Confronto delle scritture selezionate con i PDF di supporto e gestione delle eccezioni.</p>
+          <p data-i18n="module.entries">Abbinamento delle scritture a ZIP FatturaPA, export autorizzati e, solo per le eccezioni, PDF mirati.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link>
@@ -415,6 +490,12 @@
         "promise.prepare.title": "Prepara", "promise.prepare": "Organizza fascicoli e dati prima della revisione.",
         "promise.check.title": "Controlla", "promise.check": "Collega numeri, documenti e anomalie alle evidenze.",
         "promise.document.title": "Documenta", "promise.document": "Consegna carte di lavoro chiare e rivedibili.",
+        "invoice.title": "Dalla scrittura campionata alla fattura, senza stampe massive",
+        "invoice.copy": "Per il controllo delle scritture, Vera usa prima le fatture elettroniche già disponibili, prova poi un collegamento autorizzato e chiede documenti individuali solo per le eccezioni.",
+        "invoice.zip.title": "ZIP FatturaPA", "invoice.zip": "Carica l'archivio XML completo: Vera indicizza le fatture e cerca gli abbinamenti con il campione.",
+        "invoice.connect.title": "Collegamento autorizzato", "invoice.connect": "Se lo ZIP non è disponibile, usa un connettore specifico del gestionale in sola lettura/export, con provenienza registrata.",
+        "invoice.pdf.title": "PDF solo per le eccezioni", "invoice.pdf": "Maria riceve una richiesta precisa solo per le scritture rimaste senza un supporto univoco.",
+        "invoice.note": "Gli abbinamenti ambigui non vengono forzati: restano nella coda di revisione del commercialista.", "invoice.link": "Scopri Check Entries",
         "modules.title": "Il lavoro di Vera",
         "modules.copy": "Chiedi a Vera il lavoro per nome. Lei attiva le istruzioni e gli strumenti del modulo adatto, mantenendo controlli e fonti visibili.",
         "module.client.title": "Istruttoria cliente",
@@ -422,7 +503,7 @@
         "module.sampling.title": "Campionamento del giornale",
         "module.sampling": "Estrazione, normalizzazione e campionamento riproducibile del giornale contabile.",
         "module.entries.title": "Controllo scritture",
-        "module.entries": "Confronto delle scritture selezionate con i PDF di supporto e gestione delle eccezioni.",
+        "module.entries": "Abbinamento delle scritture a ZIP FatturaPA, export autorizzati e, solo per le eccezioni, PDF mirati.",
         "module.bank.title": "Riconciliazione banca-contabilità",
         "module.bank": "Riconciliazione tra estratti conto e giornale o mastrino con abbinamenti verificabili.",
         "module.reconciliation.title": "Riconciliazione partite",
@@ -452,6 +533,12 @@
         "promise.prepare.title": "Prepares", "promise.prepare": "Organizes client files and data before review.",
         "promise.check.title": "Checks", "promise.check": "Connects figures, documents and exceptions to evidence.",
         "promise.document.title": "Documents", "promise.document": "Delivers clear, reviewable workpapers.",
+        "invoice.title": "From sampled entry to invoice, without mass printing",
+        "invoice.copy": "Vera starts with available electronic invoices, then tries an authorized connection and requests individual documents only for exceptions.",
+        "invoice.zip.title": "FatturaPA ZIP", "invoice.zip": "Upload the full XML archive so Vera can index invoices and match them to the sample.",
+        "invoice.connect.title": "Authorized connection", "invoice.connect": "If the ZIP is unavailable, use a provider-specific connector in read/export mode and record its provenance.",
+        "invoice.pdf.title": "PDFs only for exceptions", "invoice.pdf": "Maria receives a precise request only for entries still lacking unique support.",
+        "invoice.note": "Ambiguous matches are never forced; they remain in the practitioner's review queue.", "invoice.link": "Explore Check Entries",
         "modules.title": "Vera at work",
         "modules.copy": "Ask Vera for the task by name. She activates the instructions and tools for the right module while keeping checks and sources visible.",
         "module.client.title": "Client Intake",
@@ -459,7 +546,7 @@
         "module.sampling.title": "Journal Sampling",
         "module.sampling": "Extraction, normalization and reproducible sampling of accounting journals.",
         "module.entries.title": "Check Entries",
-        "module.entries": "Compare selected entries with supporting PDFs and review the exceptions.",
+        "module.entries": "Match entries to a FatturaPA ZIP, authorized exports and targeted PDFs only for exceptions.",
         "module.bank.title": "Journal-Bank Reconciliation",
         "module.bank": "Reconcile bank statements with journal or ledger rows through reviewable matching.",
         "module.reconciliation.title": "Open-item reconciliation",
@@ -489,6 +576,12 @@
         "promise.prepare.title": "Prépare", "promise.prepare": "Organise les dossiers et les données avant la revue.",
         "promise.check.title": "Contrôle", "promise.check": "Relie chiffres, documents et anomalies aux justificatifs.",
         "promise.document.title": "Documente", "promise.document": "Produit des feuilles de travail claires et révisables.",
+        "invoice.title": "De l'écriture échantillonnée à la facture, sans impressions massives",
+        "invoice.copy": "Vera commence par les factures électroniques disponibles, tente ensuite une connexion autorisée et ne demande des documents individuels que pour les exceptions.",
+        "invoice.zip.title": "ZIP FatturaPA", "invoice.zip": "Chargez l'archive XML complète afin que Vera indexe les factures et les rapproche de l'échantillon.",
+        "invoice.connect.title": "Connexion autorisée", "invoice.connect": "Si le ZIP manque, utilisez un connecteur propre au logiciel en lecture/export et enregistrez sa provenance.",
+        "invoice.pdf.title": "PDF uniquement pour les exceptions", "invoice.pdf": "Maria reçoit une demande précise uniquement pour les écritures sans justificatif unique.",
+        "invoice.note": "Les rapprochements ambigus ne sont jamais forcés ; ils restent dans la file de revue du professionnel.", "invoice.link": "Découvrir Check Entries",
         "modules.title": "Le travail de Vera",
         "modules.copy": "Demandez la tâche à Vera par son nom. Elle active les instructions et outils du bon module en gardant contrôles et sources visibles.",
         "module.client.title": "Ouverture du dossier client",
@@ -496,7 +589,7 @@
         "module.sampling.title": "Échantillonnage du journal",
         "module.sampling": "Extraction, normalisation et échantillonnage reproductible du journal comptable.",
         "module.entries.title": "Contrôle des écritures",
-        "module.entries": "Comparaison des écritures sélectionnées avec les PDF justificatifs et revue des exceptions.",
+        "module.entries": "Rapprochement avec ZIP FatturaPA, exports autorisés et PDF ciblés uniquement pour les exceptions.",
         "module.bank.title": "Rapprochement banque-comptabilité",
         "module.bank": "Rapprochement des relevés bancaires avec le journal ou le grand livre.",
         "module.reconciliation.title": "Rapprochement des postes ouverts",
@@ -526,6 +619,12 @@
         "promise.prepare.title": "Bereitet vor", "promise.prepare": "Ordnet Akten und Daten vor der Prüfung.",
         "promise.check.title": "Prüft", "promise.check": "Verknüpft Zahlen, Dokumente und Auffälligkeiten mit Nachweisen.",
         "promise.document.title": "Dokumentiert", "promise.document": "Erstellt klare, nachvollziehbare Arbeitspapiere.",
+        "invoice.title": "Von der Stichprobenbuchung zur Rechnung, ohne Massenausdrucke",
+        "invoice.copy": "Vera beginnt mit vorhandenen elektronischen Rechnungen, versucht dann eine autorisierte Verbindung und fordert Einzeldokumente nur für Ausnahmen an.",
+        "invoice.zip.title": "FatturaPA-ZIP", "invoice.zip": "Das vollständige XML-Archiv hochladen, damit Vera Rechnungen indexiert und der Stichprobe zuordnet.",
+        "invoice.connect.title": "Autorisierte Verbindung", "invoice.connect": "Fehlt das ZIP, einen anbieterspezifischen Connector im Lese-/Exportmodus verwenden und die Herkunft erfassen.",
+        "invoice.pdf.title": "PDFs nur für Ausnahmen", "invoice.pdf": "Maria erhält nur für Buchungen ohne eindeutigen Nachweis eine präzise Anfrage.",
+        "invoice.note": "Mehrdeutige Treffer werden nie erzwungen; sie bleiben in der fachlichen Prüfwarteschlange.", "invoice.link": "Check Entries ansehen",
         "modules.title": "Vera bei der Arbeit",
         "modules.copy": "Nennen Sie Vera die Aufgabe. Sie aktiviert die Anweisungen und Werkzeuge des passenden Moduls und hält Kontrollen und Quellen sichtbar.",
         "module.client.title": "Mandantenaufnahme",
@@ -533,7 +632,7 @@
         "module.sampling.title": "Journalstichprobe",
         "module.sampling": "Extraktion, Normalisierung und reproduzierbare Stichproben aus Buchungsjournalen.",
         "module.entries.title": "Buchungen prüfen",
-        "module.entries": "Ausgewählte Buchungen mit Beleg-PDFs vergleichen und Ausnahmen prüfen.",
+        "module.entries": "Buchungen mit FatturaPA-ZIP, autorisierten Exporten und gezielten PDFs nur für Ausnahmen abgleichen.",
         "module.bank.title": "Bank und Buchhaltung abstimmen",
         "module.bank": "Kontoauszüge mit Journal- oder Hauptbuchzeilen nachvollziehbar abstimmen.",
         "module.reconciliation.title": "Offene-Posten-Abstimmung",
@@ -582,6 +681,8 @@
         if (!link.dataset.baseHref) link.dataset.baseHref = link.getAttribute("href");
         link.setAttribute("href", withLanguage(link.dataset.baseHref, lang));
       });
+      const invoiceLink = document.querySelector("[data-invoice-link]");
+      if (invoiceLink) invoiceLink.setAttribute("href", `../check-entries/index.html?lang=${lang}`);
       const home = document.querySelector("[data-home-link]");
       if (home) home.setAttribute("href", `/?lang=${lang}`);
       if (updateHistory) {

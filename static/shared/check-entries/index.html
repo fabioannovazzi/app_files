@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Vera abbina le scritture campionate alle fatture con ZIP FatturaPA, collegamenti autorizzati e PDF mirati solo per le eccezioni.">
+  <link rel="canonical" href="https://mparanza.com/static/shared/check-entries/index.html">
   <title>Check Entries | Vera</title>
   <style>
     :root {
@@ -277,6 +279,32 @@
 
     .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
+    .source-ladder {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .source-step {
+      min-height: 190px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .source-step__number {
+      display: block;
+      margin-bottom: 28px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .source-step p { margin-top: 10px; color: var(--muted); }
+
     .card {
       padding: 20px;
       border: 1px solid var(--line);
@@ -369,6 +397,7 @@
       .hero,
       .section-head,
       .split,
+      .source-ladder,
       .usage-grid,
       .download-panel,
       .output-list {
@@ -431,17 +460,17 @@
     <div class="hero" id="hero">
       <div>
         <p class="eyebrow" data-i18n="hero.eyebrow">Support testing</p>
-        <h1 data-i18n="hero.title">Test sampled entries against support PDFs.</h1>
-        <p class="subtitle" data-i18n="hero.subtitle">Compare selected journal rows with invoices, transfers, vouchers and other readable support.</p>
-        <p class="hero-copy" data-i18n="hero.copy">Give it the sampled entries and a folder of support PDFs. Get back row-level statuses, mismatches, missing support and manual-review cases.</p>
+        <h1 data-i18n="hero.title">Match sampled entries without asking for hundreds of printed invoices.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Start from the FatturaPA archive, try an authorized connection, then request PDFs only for unresolved entries.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Vera reads a bulk XML ZIP or an authorized connector export, matches invoices to the journal, and limits document requests to the exceptions.</p>
       </div>
 
       <aside class="hero-card" aria-label="Problem solved">
         <div class="label" data-i18n="hero.cardLabel">Give it / get back</div>
         <ul class="hero-list" id="hero-list">
-          <li>Give it sampled entries plus a folder of support PDFs.</li>
-          <li>Confirm fields, amount tolerance and date window.</li>
-          <li>Get back ok, mismatch, missing_support and manual_review rows.</li>
+          <li>First: upload the ZIP containing the relevant FatturaPA XMLs.</li>
+          <li>Second: use an authorized accounting-system connection when available.</li>
+          <li>Third: request PDFs only for entries still unresolved.</li>
         </ul>
       </aside>
     </div>
@@ -452,21 +481,24 @@
           <p class="eyebrow" data-i18n="what.eyebrow">What it does</p>
           <h2 data-i18n="what.title">From selected entries to support checks</h2>
         </div>
-        <p data-i18n="what.copy">Use it when sample rows are known but support is scattered across local PDFs. Codex asks only for field and tolerance choices that affect the check.</p>
+        <p data-i18n="what.copy">Use it after journal sampling. Vera follows a controlled source ladder and keeps ambiguous matches for professional review.</p>
       </div>
+
+      <div class="source-ladder" id="source-ladder"></div>
 
       <div class="split">
         <pre><code id="input-tree">input/
   entries.xlsx
-  support_pdfs/
-    1001_invoice.pdf
-    1002_payment.pdf</code></pre>
+  fatture_xml.zip
+  # or authorized_connector_export/
+  # or targeted_support_pdfs/</code></pre>
 
         <pre><code id="result-tree">out/
   inspection.json
   suggested_recipe.json
   checks/
     normalized_entries.csv
+    invoice_inventory.json
     pdf_inventory.json
     check_results.csv
     check_results.xlsx
@@ -481,7 +513,7 @@
           <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
           <h2 data-i18n="inputs.title">What it reads</h2>
         </div>
-        <p data-i18n="inputs.copy">Works with local files already available to the firm. OCR-only scanned PDFs are flagged for review rather than treated as checked.</p>
+        <p data-i18n="inputs.copy">The preferred source is structured FatturaPA XML. Connector exports remain read-only and authorized; PDFs are the final targeted fallback.</p>
       </div>
       <div class="grid four" id="input-cards"></div>
     </section>
@@ -492,14 +524,14 @@
           <p class="eyebrow" data-i18n="outputs.eyebrow">Outputs</p>
           <h2 data-i18n="outputs.title">What it produces</h2>
         </div>
-        <p data-i18n="outputs.copy">The result is a reviewable work folder: recipe, normalized entries, PDF inventory, result table, reading checks and review trail.</p>
+        <p data-i18n="outputs.copy">The result records XML and PDF inventories, connector provenance, row-level matches, exceptions and the complete review trail.</p>
       </div>
       <ul class="output-list" id="output-list"></ul>
       <div class="review-panel">
         <h3 data-i18n="review.title">Entry checks tied to documents</h3>
         <p data-i18n="review.copy1">The inspection step proposes movement number, date, amount, debit/credit and beneficiary fields, then asks only for unresolved choices.</p>
-        <p data-i18n="review.copy2">The result separates normalized entries, PDF inventory, comparison outcomes and review settings so mismatches can be reviewed row by row.</p>
-        <p data-i18n="review.copy3">Unreadable PDFs and weak matches are labeled for manual review instead of being treated as passed.</p>
+        <p data-i18n="review.copy2">A FatturaPA invoice is accepted automatically only when one candidate matches at least two independent fields.</p>
+        <p data-i18n="review.copy3">Multiple XML candidates, unreadable files and weak matches remain exceptions; Vera asks for a PDF only when that targeted evidence is still needed.</p>
       </div>
     </section>
 
@@ -507,9 +539,9 @@
       <div class="section-head">
         <div>
           <p class="eyebrow" data-i18n="use.eyebrow">Use</p>
-          <h2 data-i18n="use.title">Create support checks from one folder</h2>
+          <h2 data-i18n="use.title">Start broad, finish with targeted requests</h2>
         </div>
-        <p data-i18n="use.copy">Open the folder, confirm the entry fields and tolerances, then generate the check results, reading checks and review trail.</p>
+        <p data-i18n="use.copy">Provide the sample and the best available source. Vera narrows the population before asking anyone to retrieve individual documents.</p>
       </div>
       <div class="usage-grid" id="usage-grid"></div>
     </section>
@@ -546,11 +578,10 @@
         </div>
         <div>
           <h3 data-i18n="download.firstUseTitle">First use</h3>
-          <p data-i18n="download.firstUseCopy">In a Codex chat, provide the entry file, support PDF folder, language and tolerance assumptions.</p>
-          <pre style="margin-top: 10px;"><code id="prompt-example">Use Check Entries on /path/entries.xlsx and support PDFs in /path/pdfs.
-Language: en. Document language: auto.
-Inspect columns and PDFs, ask only for essential ambiguities, then generate results, reading checks and review trail.
-Amount tolerance: 0. Date window days: 0.</code></pre>
+          <p data-i18n="download.firstUseCopy">In a Codex chat, provide the sampled entries and, preferably, the ZIP containing the relevant FatturaPA XMLs.</p>
+          <pre style="margin-top: 10px;"><code id="prompt-example">Use Check Entries on /path/entries.xlsx.
+First use /path/fatture_xml.zip. If unavailable, try an authorized connector. Request PDFs only for unresolved entries.
+Language: en. Document language: it.</code></pre>
         </div>
       </div>
     </section>
@@ -562,42 +593,48 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
         nav: { what: "A cosa serve", inputs: "File letti", outputs: "Output", use: "Come usarlo", prompts: "Prompt pronti", download: "Installazione" },
         hero: {
           eyebrow: "Verifica supporti",
-          title: "Verifica le scritture campionate contro i PDF di supporto.",
-          subtitle: "Confronta righe selezionate con fatture, bonifici, voucher e altri supporti leggibili.",
-          copy: "Dagli le scritture campionate e una cartella di PDF. Ottieni esiti riga per riga, differenze, supporti mancanti e casi da rivedere.",
+          title: "Abbina le fatture senza chiedere a Maria di stamparne duecento.",
+          subtitle: "Parti dall'archivio FatturaPA, prova un collegamento autorizzato e chiedi i PDF solo per le scritture ancora irrisolte.",
+          copy: "Vera legge uno ZIP XML massivo o un export autorizzato, abbina le fatture al giornale e limita le richieste documentali alle sole eccezioni.",
           primary: "Scarica ZIP",
           secondary: "Come funziona",
           cardLabel: "Cosa dai / cosa ottieni",
           bullets: [
-            "Dagli scritture campionate e cartella PDF di supporto.",
-            "Conferma campi, tolleranza importo e finestra data.",
-            "Ottieni righe ok, mismatch, missing_support e manual_review."
+            "Prima: carica lo ZIP con le fatture elettroniche XML rilevanti.",
+            "Poi: usa un collegamento autorizzato al gestionale, quando disponibile.",
+            "Infine: chiedi i PDF solo per le scritture rimaste senza supporto."
           ]
         },
         what: {
           eyebrow: "A cosa serve",
-          title: "Dalle scritture selezionate al controllo dei supporti",
-          copy: "Serve quando le righe campione sono note ma i supporti sono sparsi tra PDF locali. Codex chiede solo le scelte su campi e tolleranza che cambiano l'esito del controllo."
+          title: "Tre strade, nello stesso ordine",
+          copy: "Dopo il campionamento, Vera usa la fonte più completa disponibile e mantiene gli abbinamenti ambigui nella coda di revisione professionale.",
+          steps: [
+            ["ZIP FatturaPA", "Carica in una volta l'archivio XML delle fatture emesse o ricevute. Vera lo indicizza senza estrarre i file nel workspace."],
+            ["Collegamento autorizzato", "Se lo ZIP non è disponibile, Vera usa un connettore specifico del gestionale con accesso autorizzato e sola lettura/export."],
+            ["PDF mirati", "Per le sole scritture ancora irrisolte, Vera prepara la richiesta del PDF o di un altro giustificativo pertinente."]
+          ]
         },
         inputs: {
           eyebrow: "File letti",
           title: "Che cosa legge",
-          copy: "Lavora su file locali già disponibili allo studio. I PDF solo scansionati vengono segnalati per revisione, non trattati come supporti verificati.",
+          copy: "La fonte preferita è l'XML FatturaPA strutturato. Gli export da connettore restano autorizzati e in sola lettura; i PDF sono il fallback mirato.",
           cards: [
             ["Excel e CSV", "Registrazioni campione con colonne mappabili."],
-            ["PDF di supporto", "Fatture, bonifici, ordini, contabili o altri documenti con testo leggibile."],
-            ["Mappatura flessibile", "Numero movimento, data, importo, dare/avere, descrizione e beneficiario."],
-            ["Tolleranze di controllo", "Soglia importo, finestra data e regole per mismatch e supporti mancanti."]
+            ["ZIP e XML FatturaPA", "Fatture elettroniche strutturate, anche in un archivio unico."],
+            ["Export da connettore", "Cartella o ZIP prodotto da un gestionale autorizzato, con provenienza registrata."],
+            ["PDF mirati", "Giustificativi richiesti solo dopo aver isolato le scritture irrisolte."]
           ]
         },
         outputs: {
           eyebrow: "Output",
           title: "Che cosa produce",
-          copy: "La cartella di lavoro contiene campi scelti, registrazioni normalizzate, inventario PDF, risultati, controlli di lettura e traccia di revisione.",
+          copy: "La cartella di lavoro registra inventari XML e PDF, provenienza del connettore, abbinamenti riga per riga, eccezioni e traccia di revisione.",
           items: [
-            ["inspection.json", "Controllo iniziale su colonne, campi e PDF."],
+            ["inspection.json", "Controllo iniziale su colonne e fonti XML/PDF."],
             ["suggested_recipe.json", "Mappatura modificabile nella cartella di lavoro."],
             ["normalized_entries.csv", "Righe canoniche usate per il controllo."],
+            ["invoice_inventory.json", "Inventario delle FatturaPA, errori di lettura e provenienza del connettore."],
             ["pdf_inventory.json", "Inventario PDF e testo estraibile."],
             ["check_results.csv / .xlsx", "Esiti riga per riga: ok, mismatch, missing_support, manual_review."],
             ["check_audit.json", "Parametri, conteggi e percorso degli output."]
@@ -606,18 +643,18 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
         review: {
           title: "Controlli con supporto collegato",
           copy1: "L'ispezione propone i campi per numero movimento, data, importo, dare/avere e beneficiario, poi chiede solo le scelte rimaste aperte.",
-          copy2: "Il risultato separa registrazioni normalizzate, inventario PDF, esiti di confronto e impostazioni di controllo, così le differenze si rivedono riga per riga.",
-          copy3: "PDF non leggibili e collegamenti deboli sono marcati per revisione manuale invece di essere trattati come superati."
+          copy2: "Una fattura FatturaPA viene accettata automaticamente solo quando esiste un unico candidato sostenuto da almeno due campi indipendenti.",
+          copy3: "Candidati XML multipli, file illeggibili e collegamenti deboli restano eccezioni; Vera chiede un PDF solo quando serve ancora quell'evidenza mirata."
         },
         use: {
           eyebrow: "Come usarlo",
-          title: "Esegui i controlli da una cartella",
-          copy: "Apri la cartella, conferma campi delle registrazioni e tolleranze, poi genera risultati e traccia di revisione.",
+          title: "Parti dall'archivio, finisci con richieste mirate",
+          copy: "Fornisci il campione e la migliore fonte disponibile. Vera restringe la popolazione prima di chiedere a qualcuno di recuperare singoli documenti.",
           steps: [
-            ["Contesto", "Indica file registrazioni, cartella PDF, lingua e tolleranze."],
-            ["Inventario", "Rivedi colonne e inventario dei PDF di supporto."],
-            ["Mappatura", "Conferma colonne e tolleranze rimaste aperte."],
-            ["Controllo", "Genera risultati, eccezioni e traccia di revisione."]
+            ["Campione", "Indica il file delle scritture selezionate e le tolleranze."],
+            ["Fonte", "Carica lo ZIP XML o autorizza il connettore disponibile."],
+            ["Abbinamento", "Vera usa numero fattura, importo, data e controparte senza forzare casi ambigui."],
+            ["Eccezioni", "Richiedi PDF o altri supporti solo per le righe rimaste irrisolte."]
           ]
         },
         prompts: {
@@ -625,9 +662,9 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
           title: "Prompt pronti",
           copy: "Sostituisci percorsi, lingua e tolleranze. Codex chiederà solo le ambiguità essenziali.",
           items: [
-            ["Verifica completa", "Usa Verifica supporti delle scritture sulla registrazione campione /percorso/entries.xlsx e sui PDF in /percorso/pdf. Lingua: it. Lingua documenti: auto. Ispeziona colonne e PDF, chiedimi solo le ambiguità essenziali e genera risultati, eccezioni e traccia di revisione."],
-            ["Con tolleranza", "Usa Verifica supporti delle scritture su /percorso/entries.xlsx e /percorso/pdf. Applica tolleranza importo 0,01 e finestra data 2 giorni. Segnala mismatch e missing_support."],
-            ["Dopo il campionamento", "Usa Verifica supporti delle scritture sul CSV normalizzato prodotto dal campionamento e sui PDF di supporto. Mantieni campi scelti e controlli rivedibili."]
+            ["Con ZIP FatturaPA", "Usa Check Entries su /percorso/entries.xlsx. Parti da /percorso/fatture_xml.zip, abbina le fatture e chiedi PDF solo per le scritture irrisolte. Lingua: it."],
+            ["Con collegamento", "Usa Check Entries sul campione e prova il connettore autorizzato del gestionale in sola lettura/export. Registra la provenienza e non chiedere credenziali in chat."],
+            ["Fallback PDF", "Usa Check Entries sul campione. Se ZIP e collegamento non sono disponibili, prepara l'elenco esatto dei PDF o altri giustificativi da richiedere per le sole righe senza supporto."]
           ]
         },
         download: {
@@ -638,7 +675,7 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
           codexText: "Pagina ufficiale:",
           button: "Scarica ZIP",
           firstUseTitle: "Primo uso",
-          firstUseCopy: "In una chat Codex, indica file registrazioni, cartella PDF, lingua e tolleranze.",
+          firstUseCopy: "In una chat Codex, indica le scritture campionate e, preferibilmente, lo ZIP con le FatturaPA XML rilevanti.",
           steps: [
             "Scarica e decomprimi lo ZIP.",
             "Apri Codex desktop e installa il marketplace locale incluso.",
@@ -650,42 +687,48 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
         nav: { what: "What it does", inputs: "Inputs", outputs: "Outputs", use: "Use", prompts: "Prompts", download: "Installation" },
         hero: {
           eyebrow: "Support testing",
-          title: "Test sampled entries against support PDFs.",
-          subtitle: "Compare selected journal rows with invoices, transfers, vouchers and other readable support.",
-          copy: "Give it the sampled entries and a folder of support PDFs. Get back row-level statuses, mismatches, missing support and manual-review cases.",
+          title: "Match invoices without asking for hundreds of printed copies.",
+          subtitle: "Start from the FatturaPA archive, try an authorized connection, then request PDFs only for unresolved entries.",
+          copy: "Vera reads a bulk XML ZIP or authorized connector export, matches invoices to the journal, and limits document requests to the exceptions.",
           primary: "Download ZIP",
           secondary: "How to use it",
           cardLabel: "Give it / get back",
           bullets: [
-            "Give it sampled entries plus a folder of support PDFs.",
-            "Confirm fields, amount tolerance and date window.",
-            "Get back ok, mismatch, missing_support and manual_review rows."
+            "First: upload the ZIP containing the relevant FatturaPA XMLs.",
+            "Then: use an authorized accounting-system connection when available.",
+            "Finally: request PDFs only for entries still unresolved."
           ]
         },
         what: {
           eyebrow: "What it does",
-          title: "From selected entries to support checks",
-          copy: "Use it when sample rows are known but support is scattered across local PDFs. Codex asks only for the field and tolerance choices that affect the check."
+          title: "Three routes, in a controlled order",
+          copy: "After journal sampling, Vera uses the richest available source and keeps ambiguous matches in professional review.",
+          steps: [
+            ["FatturaPA ZIP", "Upload the structured XML archive once. Vera indexes it without extracting its members into the workspace."],
+            ["Authorized connection", "If the ZIP is unavailable, use a provider-specific accounting connector with confirmed read/export authority."],
+            ["Targeted PDFs", "For the entries still unresolved, request only the PDF or other supporting document that remains necessary."]
+          ]
         },
         inputs: {
           eyebrow: "Inputs",
           title: "What it reads",
-          copy: "Works with local files already available to the firm. OCR-only scanned PDFs are flagged for review rather than treated as checked.",
+          copy: "Structured FatturaPA XML is preferred. Connector exports stay authorized and read-only; PDFs are the final targeted fallback.",
           cards: [
             ["Excel and CSV", "Sampled entries with mappable columns."],
-            ["Supporting PDFs", "Invoices, transfers, orders, vouchers or other text documents."],
-            ["Flexible field match", "Movement number, date, amount, debit/credit, description and beneficiary."],
-            ["Check tolerances", "Amount threshold, date window and rules for mismatches and missing support."]
+            ["FatturaPA ZIP and XML", "Structured electronic invoices, including one bulk archive."],
+            ["Connector export", "A folder or ZIP produced by an authorized accounting system, with provenance recorded."],
+            ["Targeted PDFs", "Documents requested only after the unresolved sample entries are isolated."]
           ]
         },
         outputs: {
           eyebrow: "Outputs",
           title: "What it produces",
-          copy: "The work folder contains the recipe, normalized entries, PDF inventory, results, reading checks and review trail.",
+          copy: "The work folder records XML and PDF inventories, connector provenance, row-level matches, exceptions and the review trail.",
           items: [
-            ["inspection.json", "Initial checks on columns, fields and PDFs."],
+            ["inspection.json", "Initial checks on columns and XML/PDF sources."],
             ["suggested_recipe.json", "Editable recipe in the work folder."],
             ["normalized_entries.csv", "Canonical rows used for checks."],
+            ["invoice_inventory.json", "FatturaPA inventory, parse errors and connector provenance."],
             ["pdf_inventory.json", "PDF inventory and extractable text status."],
             ["check_results.csv / .xlsx", "Row-level statuses: ok, mismatch, missing_support, manual_review."],
             ["check_audit.json", "Parameters, counts and output paths."]
@@ -694,18 +737,18 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
         review: {
           title: "Entry checks tied to documents",
           copy1: "The inspection step proposes movement number, date, amount, debit/credit and beneficiary fields, then asks only for unresolved choices.",
-          copy2: "The result separates normalized entries, PDF inventory, comparison outcomes and review settings so mismatches can be reviewed row by row.",
-          copy3: "Unreadable PDFs and weak matches are labeled for manual review instead of being treated as passed."
+          copy2: "A FatturaPA invoice is accepted automatically only when exactly one candidate matches at least two independent fields.",
+          copy3: "Multiple XML candidates, unreadable files and weak matches remain exceptions; Vera asks for a PDF only when that targeted evidence is still needed."
         },
         use: {
           eyebrow: "Use",
-          title: "Create support checks from one folder",
-          copy: "Open the folder, confirm the entry fields and tolerances, then generate the check results, reading checks and review trail.",
+          title: "Start broad, finish with targeted requests",
+          copy: "Provide the sample and the best available source. Vera narrows the population before anyone retrieves individual documents.",
           steps: [
-            ["Context", "Provide entry file, PDF folder, language and tolerances."],
-            ["Inventory", "Inspect columns and support PDF inventory."],
-            ["Fields", "Confirm the unresolved columns and tolerances."],
-            ["Checks", "Generate results, reading checks and review trail."]
+            ["Sample", "Provide the selected journal entries and tolerances."],
+            ["Source", "Upload the XML ZIP or authorize the available connector."],
+            ["Match", "Use invoice number, amount, date and party without forcing ambiguous cases."],
+            ["Exceptions", "Request PDFs or other support only for the remaining unresolved rows."]
           ]
         },
         prompts: {
@@ -713,9 +756,9 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
           title: "Ready prompts",
           copy: "Replace paths, language and tolerances. Codex will ask only for essential ambiguities.",
           items: [
-            ["Complete check", "Use Check Entries on /path/entries.xlsx and support PDFs in /path/pdfs. Language: en. Document language: auto. Inspect columns and PDFs, ask only for essential ambiguities, then generate results, reading checks and review trail."],
-            ["With tolerance", "Use Check Entries on /path/entries.xlsx and /path/pdfs. Apply amount tolerance 0.01 and date window 2 days. Highlight mismatch and missing_support rows."],
-            ["After Journal Sampling", "Use Check Entries on the normalized CSV produced by Journal Sampling and the support PDFs. Keep fields and checks deterministic."]
+            ["With FatturaPA ZIP", "Use Check Entries on /path/entries.xlsx. Start with /path/fatture_xml.zip, match invoices, and request PDFs only for unresolved entries."],
+            ["With a connection", "Use Check Entries on the sample and try the authorized accounting-system connector in read/export mode. Record provenance and never request credentials in chat."],
+            ["PDF fallback", "If the ZIP and connection are unavailable, prepare the exact list of PDFs or other evidence required only for unsupported rows."]
           ]
         },
         download: {
@@ -726,7 +769,7 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
           codexText: "Official page:",
           button: "Download ZIP",
           firstUseTitle: "First use",
-          firstUseCopy: "In a Codex chat, provide the entry file, support PDF folder, language and tolerance assumptions.",
+          firstUseCopy: "In a Codex chat, provide the sampled entries and preferably the ZIP containing the relevant FatturaPA XMLs.",
           steps: [
             "Download and unzip the package.",
             "Open Codex desktop and install the included local marketplace.",
@@ -738,22 +781,27 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
         nav: { what: "Ce qu'il fait", inputs: "Entrées", outputs: "Sorties", use: "Utilisation", prompts: "Prompts", download: "Installation" },
         hero: {
           eyebrow: "Contrôle des justificatifs",
-          title: "Tester les écritures échantillonnées contre les PDF justificatifs.",
-          subtitle: "Compare les lignes sélectionnées avec factures, virements, pièces et autres justificatifs lisibles.",
-          copy: "Donnez les écritures échantillonnées et un dossier de PDF. Recevez statuts ligne par ligne, écarts, justificatifs manquants et cas à revoir.",
+          title: "Rapprocher les factures sans demander des centaines d'impressions.",
+          subtitle: "Commencez par l'archive FatturaPA, essayez une connexion autorisée, puis demandez les PDF uniquement pour les écritures non résolues.",
+          copy: "Vera lit un ZIP XML ou un export autorisé, rapproche les factures du journal et limite les demandes documentaires aux exceptions.",
           primary: "Télécharger le ZIP",
           secondary: "Comment l'utiliser",
           cardLabel: "Données / résultat",
           bullets: [
-            "Donnez écritures échantillonnées et dossier de PDF justificatifs.",
-            "Confirmez champs, tolérance montant et fenêtre date.",
-            "Recevez lignes ok, mismatch, missing_support et manual_review."
+            "D'abord : chargez le ZIP des XML FatturaPA pertinents.",
+            "Ensuite : utilisez une connexion autorisée au logiciel comptable si disponible.",
+            "Enfin : demandez les PDF uniquement pour les écritures non résolues."
           ]
         },
         what: {
           eyebrow: "Ce qu'il fait",
-          title: "Des écritures sélectionnées au contrôle des justificatifs",
-          copy: "À utiliser quand les lignes d'échantillon sont connues mais que les justificatifs sont dispersés dans des PDF locaux. Codex demande seulement les choix de champs et de tolérance qui affectent le contrôle."
+          title: "Trois voies, dans un ordre contrôlé",
+          copy: "Après l'échantillonnage, Vera utilise la source la plus complète et conserve les rapprochements ambigus pour la revue professionnelle.",
+          steps: [
+            ["ZIP FatturaPA", "Chargez une fois l'archive XML structurée ; Vera l'indexe sans l'extraire dans le workspace."],
+            ["Connexion autorisée", "Si le ZIP manque, utilisez un connecteur propre au logiciel avec autorisation de lecture/export."],
+            ["PDF ciblés", "Pour les seules écritures non résolues, demandez le PDF ou l'autre justificatif encore nécessaire."]
+          ]
         },
         inputs: {
           eyebrow: "Entrées",
@@ -826,22 +874,27 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
         nav: { what: "Was es tut", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Installation" },
         hero: {
           eyebrow: "Belegprüfung",
-          title: "Stichprobenbuchungen gegen Beleg-PDFs prüfen.",
-          subtitle: "Vergleicht ausgewählte Journalzeilen mit Rechnungen, Überweisungen, Belegen und anderen lesbaren Nachweisen.",
-          copy: "Geben Sie Stichprobenbuchungen und einen Ordner mit Beleg-PDFs an. Zurück kommen zeilenweise Status, Differenzen, fehlende Belege und manuelle Prüffälle.",
+          title: "Rechnungen zuordnen, ohne Hunderte Ausdrucke anzufordern.",
+          subtitle: "Beginnen Sie mit dem FatturaPA-Archiv, versuchen Sie eine autorisierte Verbindung und fordern Sie PDFs nur für ungelöste Buchungen an.",
+          copy: "Vera liest ein XML-ZIP oder einen autorisierten Export, ordnet Rechnungen dem Journal zu und begrenzt Dokumentanfragen auf Ausnahmen.",
           primary: "ZIP herunterladen",
           secondary: "So funktioniert es",
           cardLabel: "Eingabe / Ergebnis",
           bullets: [
-            "Geben Sie Stichprobenbuchungen und einen Ordner mit Beleg-PDFs an.",
-            "Bestätigen Sie Felder, Betragstoleranz und Datumsfenster.",
-            "Zurück kommen ok-, mismatch-, missing_support- und manual_review-Zeilen."
+            "Zuerst: ZIP mit den relevanten FatturaPA-XMLs hochladen.",
+            "Dann: eine autorisierte Verbindung zum Buchhaltungssystem nutzen, falls verfügbar.",
+            "Zuletzt: PDFs nur für weiterhin ungelöste Buchungen anfordern."
           ]
         },
         what: {
           eyebrow: "Was es tut",
-          title: "Von ausgewählten Buchungen zur Belegprüfung",
-          copy: "Nutzen Sie es, wenn Stichprobenzeilen bekannt sind, die Belege aber über lokale PDFs verteilt sind. Codex fragt nur Feld- und Toleranzentscheidungen ab, die die Prüfung beeinflussen."
+          title: "Drei Wege in kontrollierter Reihenfolge",
+          copy: "Nach der Journalstichprobe nutzt Vera die vollständigste verfügbare Quelle und lässt mehrdeutige Treffer in der fachlichen Prüfung.",
+          steps: [
+            ["FatturaPA-ZIP", "Das strukturierte XML-Archiv einmal hochladen; Vera indexiert es ohne Extraktion in den Workspace."],
+            ["Autorisierte Verbindung", "Fehlt das ZIP, einen anbieterspezifischen Connector mit bestätigtem Lese-/Exportzugriff verwenden."],
+            ["Gezielte PDFs", "Nur für ungelöste Buchungen das noch benötigte PDF oder einen anderen Nachweis anfordern."]
+          ]
         },
         inputs: {
           eyebrow: "Eingaben",
@@ -927,6 +980,13 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
       });
     }
 
+    function renderSourceLadder(items) {
+      const target = document.getElementById("source-ladder");
+      target.innerHTML = items.map(([title, copy], index) => (
+        `<article class="source-step"><span class="source-step__number">0${index + 1}</span><h3>${title}</h3><p>${copy}</p></article>`
+      )).join("");
+    }
+
     function renderOutputList(targetId, items) {
       const target = document.getElementById(targetId);
       target.innerHTML = "";
@@ -951,6 +1011,7 @@ Amount tolerance: 0. Date window days: 0.</code></pre>
         if (typeof text === "string") node.textContent = text;
       });
       document.getElementById("hero-list").innerHTML = t.hero.bullets.map((item) => `<li>${item}</li>`).join("");
+      renderSourceLadder(t.what.steps);
       renderCards("input-cards", t.inputs.cards);
       renderOutputList("output-list", t.outputs.items);
       renderOutputList("prompt-list", t.prompts.items);

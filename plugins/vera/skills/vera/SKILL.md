@@ -22,7 +22,9 @@ with the commercialista.
 - `client-intake`: customer-folder intake, fiscal fields, XML checks, notices,
   and client email preparation;
 - `journal-sampling`: reproducible journal extraction and sampling;
-- `check-entries`: sampled journal entries against supporting PDFs;
+- `check-entries`: sampled journal entries against a FatturaPA ZIP, an
+  authorized connector export, then targeted supporting PDFs for unresolved
+  entries;
 - `journal-bank-reconciliation`: bank statements against journals or ledgers;
 - `report-builder`: financial source files into reviewable reports;
 - `concordato-plan-review`: numerical tie-out of an Italian concordato plan;
@@ -94,6 +96,12 @@ data permit them.
   one-time codes. An INPS browser capture requires a user-authenticated tab and
   remains read-only. Separately verify access/delegation authority, client-data
   processing authority, and portal permission for software-assisted capture.
+- For Check Entries invoice acquisition, try a bulk FatturaPA ZIP first. If the
+  user chooses connection, use only a callable provider-specific connector with
+  confirmed authority and read/export scope, then pass its local export to the
+  module with connector provenance. Never pretend that a generic SdI connector
+  exists. If none is callable, identify the missing provider integration and
+  offer the targeted-PDF fallback.
 - For SARI, use generic topical searches only and keep browser navigation
   read-only. Never export cookies or use support/contact forms. Do not use the
   conditional direct JSON connector without separately verified written reuse

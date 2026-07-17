@@ -9,7 +9,11 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 # Check Entries
 
-Use this skill when sampled journal entries must be checked against supporting documents. The plugin is a guided Codex workflow: Codex inspects the journal and PDFs, asks only for unresolved mapping or review assumptions, runs deterministic helper scripts, reviews diagnostics, and delivers outputs.
+Use this skill when sampled journal entries must be checked against supporting
+documents. The plugin is a guided Codex workflow: Codex inspects the journal
+and FatturaPA XML/PDF support, asks only for unresolved mapping or review
+assumptions, runs deterministic helper scripts, reviews diagnostics, and
+delivers outputs.
 
 The workflow is not Italian-only. Support the same four working locales used by the reconciliation plugin: `it`, `en`, `fr`, and `de`. Keep canonical output column names in English for stability, but speak to the user and write summaries in the chosen working language.
 
@@ -54,7 +58,8 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 Required:
 
 - a journal/sample-entry file in `.xlsx`, `.xls`, or `.csv` format;
-- a supporting PDF file or folder.
+- one support source: a FatturaPA ZIP/XML, a local export produced by an
+  authorized accounting-system connector, or a supporting PDF file/folder.
 
 Optional:
 
@@ -67,7 +72,19 @@ Text-PDF journals are not a v1 target for this plugin. If the source entries onl
 
 ## First Run Workflow
 
-1. Ask for the journal/sample-entry file, support PDF file or folder, working language, source-document language, and any known mapping hints only if they are not already provided or inferable. Do not ask for output richness. Use the script defaults for amount tolerance and date window unless the user provides stricter thresholds or the data requires a different assumption.
+1. Apply this acquisition ladder: ask first for the ZIP containing all relevant
+   FatturaPA XMLs; if unavailable, offer an authorized accounting-system
+   connection that materializes a local ZIP/folder export; otherwise request
+   PDFs only for unresolved sampled entries. Never request credentials, tokens,
+   cookies, or one-time codes. Ask for working language, source-document
+   language, and mapping hints only when not inferable.
+   When the user chooses connection, use a callable provider-specific connector
+   only after confirming the studio/client has authorized access. Restrict the
+   connector action to read/export for the selected client and period, record
+   the connector name, and pass its local ZIP/folder result to Check Entries.
+   If no connector for the named accounting system is callable, say so rather
+   than simulating a connection; ask which provider must be integrated or move
+   to the targeted-PDF fallback at the user's direction.
 2. Run dependency checks from the plugin directory:
 
 ```bash
@@ -79,7 +96,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_entries.py <journal-file> <pdf-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/inspect_entries.py <journal-file> <support-zip-xml-or-folder> --output-dir <output-dir> --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
 ```
 
 4. Read `inspection.json` and `suggested_recipe.json`. If required mappings are missing or confidence is low, ask the user the smallest needed decision, such as which column is movement number, debit, credit, amount, date, or beneficiary.
@@ -87,7 +104,7 @@ python scripts/inspect_entries.py <journal-file> <pdf-file-or-folder> --output-d
 6. Run deterministic checks:
 
 ```bash
-python scripts/run_checks.py <journal-file> <pdf-file-or-folder> --output-dir <output-dir>/checks --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/run_checks.py <journal-file> <support-zip-xml-or-folder> --output-dir <output-dir>/checks --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
 ```
 
 7. Review `check_audit.json`, `pdf_inventory.json`, `check_results.csv`, and `review_notes.md` before final delivery. Report support matching coverage, status counts, unresolved/manual-review rows, mismatches, and output paths.
@@ -109,6 +126,14 @@ Do not ask the user to edit JSON. Ask the user in business terms, then Codex upd
 ## Deterministic Check Rules
 
 - Support matching uses movement number in PDF filenames first, then movement number in extracted PDF text.
+- FatturaPA matching precedes PDF matching and requires exactly one candidate
+  supported by at least two independent fields among invoice number, amount,
+  date, and beneficiary/party. This is deterministic because parsing and exact
+  comparisons are mechanically verifiable; ambiguous semantic relevance stays
+  with Codex and the professional reviewer.
+- An authorized connector is an acquisition mechanism, not a matching rule.
+  Record the connector name with `--connector-name` after it has produced a
+  local export; the helper scripts do not authenticate or call provider APIs.
 - If there is exactly one entry and one PDF, the script may match them directly.
 - Amount checks compare absolute values with the configured tolerance.
 - Date checks compare extracted dates within the configured day window.
@@ -126,6 +151,7 @@ Codex may inspect individual support PDFs and explain the review outcome, but sh
 - `suggested_recipe.json`;
 - `checks/normalized_entries.csv`;
 - `checks/pdf_inventory.json`;
+- `checks/invoice_inventory.json`;
 - `checks/check_results.csv`;
 - `checks/check_results.xlsx` when XLSX dependencies are available;
 - `checks/check_audit.json`;

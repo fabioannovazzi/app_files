@@ -295,6 +295,8 @@ def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
                 "mismatches": row.get("mismatches"),
                 "review_notes": row.get("review_notes"),
                 "matched_pdf": row.get("matched_pdf"),
+                "matched_support": row.get("matched_support"),
+                "support_type": row.get("support_type"),
             }
         ]
         if row.get("amount_found") not in (None, ""):
@@ -308,7 +310,10 @@ def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
         if status == "missing_support":
             requested_document = _requested_support_document(row)
             data["requested_document"] = requested_document
-            data["reason"] = "No supporting PDF matched the movement number."
+            data["reason"] = (
+                row.get("review_notes")
+                or "No FatturaPA XML or supporting PDF uniquely matched the entry."
+            )
             evidence.append(
                 {
                     "kind": "missing_document_request",
@@ -443,6 +448,12 @@ def _artifact_items(output_dir: Path) -> list[dict[str, Any]]:
             "review_artifact",
             "PDF inventory",
             "pdf_inventory.json",
+        ),
+        (
+            "invoice-inventory-json",
+            "review_artifact",
+            "FatturaPA invoice inventory",
+            "invoice_inventory.json",
         ),
         ("check-audit-json", "review_artifact", "Check audit JSON", "check_audit.json"),
         ("review-notes-md", "review_artifact", "Review notes", "review_notes.md"),
@@ -602,6 +613,8 @@ def write_run_intake(
     mapping: dict[str, Any],
     journal_row_count: int,
     pdf_count: int,
+    invoice_count: int = 0,
+    connector_name: str | None = None,
 ) -> RunIntakeResult:
     """Write the run intake contract for review and replay."""
 
@@ -627,6 +640,8 @@ def write_run_intake(
             "mapping": mapping,
             "journal_row_count": journal_row_count,
             "pdf_count": pdf_count,
+            "invoice_count": invoice_count,
+            "connector_name": connector_name,
             "recipe_path": recipe_path.as_posix() if recipe_path else None,
         },
         "unresolved_questions": [
@@ -646,13 +661,13 @@ def write_run_intake(
         "data_posture": {
             "local_files_read": local_files_read,
             "model_excerpts_sent": [],
-            "external_connectors_used": [],
+            "external_connectors_used": [connector_name] if connector_name else [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
             "notes": [
-                "Deterministic scripts read the journal, support PDFs, and optional recipe locally.",
-                "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+                "Deterministic scripts read the journal, FatturaPA XML/PDF support, and optional recipe locally.",
+                "Connector provenance is recorded only when an authorized connector has already materialized a local export.",
             ],
         },
         "status": "ready_for_review",
@@ -700,13 +715,14 @@ def write_review_session_artifacts(
         "items": items,
         "item_count": len(items),
         "columns": _review_columns(),
-        "evidence": {
+        "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "recipe": _as_output_ref(recipe_path, output_dir),
             "normalized_entries": "normalized_entries.csv",
             "check_results_csv": "check_results.csv",
             "check_results_xlsx": "check_results.xlsx",
             "pdf_inventory": "pdf_inventory.json",
+            "invoice_inventory": "invoice_inventory.json",
             "check_audit": "check_audit.json",
             "review_notes": "review_notes.md",
         },

@@ -14,6 +14,7 @@ from typing import Any, Sequence
 
 import openpyxl
 import polars as pl
+from invoice_support import InvoiceRecord, load_invoice_records, match_invoice
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 
@@ -61,6 +62,8 @@ RESULT_COLUMNS = [
     "amount_found",
     "date_found",
     "beneficiary_found",
+    "matched_support",
+    "support_type",
 ]
 DATE_FORMATS = (
     "%Y-%m-%d",
@@ -95,10 +98,11 @@ __all__ = [
 
 @dataclass(frozen=True)
 class InspectionResult:
-    """Deterministic inspection output for journal entries and PDFs."""
+    """Deterministic inspection output for journal entries and support files."""
 
     journal: dict[str, Any]
     pdfs: list[dict[str, Any]]
+    invoices: list[dict[str, Any]]
     suggested_recipe: dict[str, Any]
 
 
@@ -662,6 +666,16 @@ def _pdf_inventory(pdf_path: Path) -> list[dict[str, Any]]:
     return inventory
 
 
+def _invoice_inventory(
+    support_path: Path,
+) -> tuple[list[InvoiceRecord], list[dict[str, str]]]:
+    """Load FatturaPA XML only where the supplied support path can contain it."""
+
+    if support_path.is_dir() or support_path.suffix.lower() in {".zip", ".xml", ".p7m"}:
+        return load_invoice_records(support_path)
+    return [], []
+
+
 def inspect_entries(
     journal: Path,
     pdf_path: Path,
@@ -671,7 +685,7 @@ def inspect_entries(
     language: object | None = None,
     document_language: object | None = None,
 ) -> InspectionResult:
-    """Inspect journal entries and support PDFs, then write Codex artifacts."""
+    """Inspect journal entries and PDF/XML support, then write Codex artifacts."""
 
     recipe = read_json(recipe_path)
     languages = language_assumptions(
@@ -679,10 +693,11 @@ def inspect_entries(
     )
     frame, journal_diag = _load_journal_entries(journal, recipe)
     pdfs = _pdf_inventory(pdf_path)
+    invoices, invoice_errors = _invoice_inventory(pdf_path)
     confidence = 0.9
     if journal_diag["missing_required_mapping"]:
         confidence -= 0.3
-    if not pdfs:
+    if not pdfs and not invoices:
         confidence -= 0.3
     if any(not item["extractable_text"] for item in pdfs):
         confidence -= 0.2
@@ -699,6 +714,16 @@ def inspect_entries(
             "mode": "filename_or_text_contains_movement_number",
             "allow_single_pdf_single_entry": True,
         },
+        "acquisition_ladder": [
+            "fatturapa_zip",
+            "authorized_connector_export",
+            "targeted_pdf_fallback",
+        ],
+        "xml_matching": {
+            "mode": "unique_two_signal_match",
+            "signals": ["invoice_number", "amount", "date", "beneficiary"],
+            "ambiguous_matches_require_review": True,
+        },
         "checks": {
             "amount_tolerance": 0.0,
             "date_window_days": 0,
@@ -713,12 +738,15 @@ def inspect_entries(
             "confidence": round(max(confidence, 0.0), 2),
             "journal": journal_diag,
             "pdfs": pdfs,
+            "invoices": [invoice.as_dict() for invoice in invoices],
+            "invoice_errors": invoice_errors,
         },
     )
     write_json(output_dir / "suggested_recipe.json", suggested_recipe)
     return InspectionResult(
         journal=journal_diag,
         pdfs=pdfs,
+        invoices=[invoice.as_dict() for invoice in invoices],
         suggested_recipe=suggested_recipe,
     )
 
@@ -833,6 +861,8 @@ def _check_one_entry(
             "amount_found": None,
             "date_found": None,
             "beneficiary_found": None,
+            "matched_support": None,
+            "support_type": None,
         }
 
     pdf_payload = pdfs[matched_pdf]
@@ -892,7 +922,68 @@ def _check_one_entry(
         "amount_found": amount_value,
         "date_found": date_value,
         "beneficiary_found": beneficiary_value,
+        "matched_support": matched_pdf,
+        "support_type": "pdf",
     }
+
+
+def _check_entry_with_support_ladder(
+    entry: dict[str, Any],
+    invoices: list[InvoiceRecord],
+    pdfs: dict[str, dict[str, Any]],
+    *,
+    amount_tolerance: float,
+    date_window_days: int,
+) -> dict[str, Any]:
+    """Try structured XML first and fall back to a matching PDF."""
+
+    invoice, signals, xml_issue = match_invoice(
+        entry,
+        invoices,
+        amount_tolerance=amount_tolerance,
+        date_window_days=date_window_days,
+    )
+    if invoice is not None:
+        mismatches: list[str] = []
+        for field, signal in (
+            ("amount_abs", "amount"),
+            ("entry_date", "date"),
+            ("beneficiary_expected", "beneficiary"),
+        ):
+            if entry.get(field) not in (None, "") and signal not in signals:
+                mismatches.append(signal)
+        status = "mismatch" if mismatches else "ok"
+        return {
+            **entry,
+            "status": status,
+            "matched_pdf": None,
+            "checks_run": ",".join(signals),
+            "mismatches": ",".join(mismatches),
+            "review_notes": (
+                "Matched a unique FatturaPA XML using at least two independent fields."
+                if not mismatches
+                else "Matched a unique FatturaPA XML, but one or more available fields differ."
+            ),
+            "amount_found": invoice.total_amount if "amount" in signals else None,
+            "date_found": invoice.invoice_date if "date" in signals else None,
+            "beneficiary_found": (
+                entry.get("beneficiary_expected") if "beneficiary" in signals else None
+            ),
+            "matched_support": invoice.source_name,
+            "support_type": "fatturapa_xml",
+        }
+    pdf_result = _check_one_entry(
+        entry,
+        pdfs,
+        amount_tolerance=amount_tolerance,
+        date_window_days=date_window_days,
+    )
+    if xml_issue and pdf_result["status"] == "missing_support":
+        pdf_result["review_notes"] = (
+            "Multiple FatturaPA XML candidates matched; targeted support or reviewer selection is required."
+        )
+        pdf_result["mismatches"] = "ambiguous_invoice_support"
+    return pdf_result
 
 
 def _status_counts(frame: pl.DataFrame) -> dict[str, int]:
@@ -909,6 +1000,7 @@ def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
         f"- Language: {audit['language']}",
         f"- Journal rows: {audit['journal_row_count']}",
         f"- Support PDFs: {audit['pdf_count']}",
+        f"- FatturaPA XMLs: {audit['invoice_count']}",
         f"- Result rows: {audit['result_row_count']}",
         "",
         "## Status Counts",
@@ -940,6 +1032,7 @@ def run_entry_checks(
     date_window_days: int = 0,
     language: object | None = None,
     document_language: object | None = None,
+    connector_name: str | None = None,
 ) -> CheckRunResult:
     """Run deterministic support checks and write reviewable artifacts."""
 
@@ -949,9 +1042,11 @@ def run_entry_checks(
     )
     entries, journal_diag = _load_journal_entries(journal, recipe)
     pdfs = _load_pdf_texts(pdf_path)
+    invoices, invoice_errors = _invoice_inventory(pdf_path)
     records = [
-        _check_one_entry(
+        _check_entry_with_support_ladder(
             row,
+            invoices,
             pdfs,
             amount_tolerance=amount_tolerance,
             date_window_days=date_window_days,
@@ -968,6 +1063,7 @@ def run_entry_checks(
     results_path = output_dir / "check_results.csv"
     xlsx_path = output_dir / "check_results.xlsx"
     inventory_path = output_dir / "pdf_inventory.json"
+    invoice_inventory_path = output_dir / "invoice_inventory.json"
     audit_path = output_dir / "check_audit.json"
     review_notes_path = output_dir / "review_notes.md"
 
@@ -999,8 +1095,22 @@ def run_entry_checks(
         mapping=journal_diag["mapping"],
         journal_row_count=entries.height,
         pdf_count=len(pdfs),
+        invoice_count=len(invoices),
+        connector_name=connector_name,
     )
     write_json(inventory_path, pdf_inventory)
+    write_json(
+        invoice_inventory_path,
+        {
+            "source_kind": (
+                "authorized_connector_export" if connector_name else "local_upload"
+            ),
+            "connector_name": connector_name,
+            "invoice_count": len(invoices),
+            "invoices": [invoice.as_dict() for invoice in invoices],
+            "errors": invoice_errors,
+        },
+    )
     audit = {
         **languages,
         "run_id": run_intake.run_id,
@@ -1008,6 +1118,9 @@ def run_entry_checks(
         "pdf_path": pdf_path.as_posix(),
         "journal_row_count": entries.height,
         "pdf_count": len(pdfs),
+        "invoice_count": len(invoices),
+        "invoice_error_count": len(invoice_errors),
+        "connector_name": connector_name,
         "result_row_count": result_frame.height,
         "status_counts": _status_counts(result_frame),
         "amount_tolerance": amount_tolerance,
@@ -1018,6 +1131,7 @@ def run_entry_checks(
             "check_results_csv": results_path.as_posix(),
             "check_results_xlsx": xlsx_path.as_posix() if xlsx_path.exists() else None,
             "pdf_inventory_json": inventory_path.as_posix(),
+            "invoice_inventory_json": invoice_inventory_path.as_posix(),
             "review_notes_md": review_notes_path.as_posix(),
         },
     }
