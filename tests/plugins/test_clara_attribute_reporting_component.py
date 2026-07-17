@@ -144,6 +144,10 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
     )
 
     assert 'href="/static/shared/attribute-reporting/cashmere/index.html"' in page
+    assert (
+        'href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html"'
+        in page
+    )
     assert "Fresh local scrape ingestion is not yet part of installed Clara." in page
     assert "New means labelled new by the retailer" in page
     assert "Retailer Signals and Brand Fit are available now" in page
@@ -165,7 +169,7 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
         "retail.brand_fit.kicker",
         "retail.brand_fit.title",
         "retail.brand_fit.copy",
-        "retail.brand_fit.prompt",
+        "retail.brand_fit.example",
         "capabilities.attributes.kicker",
         "capabilities.attributes.title",
         "capabilities.attributes.copy",
@@ -174,3 +178,13 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
     ):
         assert page.count(f'"{key}"') == 5
         assert f'data-i18n="{key}"' in page
+
+    retailer_example = (
+        ROOT / "static" / "shared" / "attribute-reporting" / "cashmere" / "index.html"
+    ).read_text(encoding="utf-8")
+    assert "Clara · Retailer Signals · public example" in retailer_example
+    assert "From retailer signal to brand review" in retailer_example
+    assert (
+        'href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html"'
+        in retailer_example
+    )
