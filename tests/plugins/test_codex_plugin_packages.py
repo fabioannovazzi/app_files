@@ -2368,8 +2368,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
 
     for snippet in (
         "Clara",
-        "Turn your materials into work you can use.",
-        "Trasforma i tuoi materiali in un lavoro pronto da usare.",
+        "Turn your sources into client-ready deliverables.",
+        "Trasforma le tue fonti in deliverable pronti per il cliente.",
         "Create, revise, or follow an existing style",
         "Crea, correggi o segui uno stile esistente",
         "Choose the final format",
