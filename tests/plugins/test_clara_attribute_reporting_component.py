@@ -61,7 +61,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
         if item.get("expected_skill") == "clara:attribute-reporting"
     }
 
-    assert manifest["version"] == "0.1.86"
+    assert manifest["version"] == "0.1.87"
     assert "retail-attribute-reporting" in manifest["keywords"]
     assert "retail attribute reporting" in manifest["interface"]["longDescription"]
     assert "Clara exposes five distinct conversation workflows" in router
@@ -136,16 +136,29 @@ def test_selecting_attribute_reporting_rebuilds_clara_package_only() -> None:
     assert {target.target_name for target in selected} == {"clara"}
 
 
-def test_clara_public_page_describes_attribute_reporting_without_company_report() -> (
-    None
-):
+def test_clara_public_page_describes_retail_pipeline_and_public_example() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert "/static/shared/attribute-reporting/" not in page
-    assert "capabilities.attributes.example" not in page
+    assert 'href="/static/shared/attribute-reporting/cashmere/index.html"' in page
+    assert "Fresh local scrape ingestion is not yet part of installed Clara." in page
+    assert "New means labelled new by the retailer" in page
+    assert "Not yet available in current Clara" in page
     for key in (
+        "retail.title",
+        "retail.copy",
+        "retail.flow.collect",
+        "retail.flow.map",
+        "retail.flow.analyze",
+        "retail.flow.report",
+        "retail.retailer_signals.kicker",
+        "retail.retailer_signals.title",
+        "retail.retailer_signals.copy",
+        "retail.retailer_signals.example",
+        "retail.brand_fit.kicker",
+        "retail.brand_fit.title",
+        "retail.brand_fit.copy",
         "capabilities.attributes.kicker",
         "capabilities.attributes.title",
         "capabilities.attributes.copy",
