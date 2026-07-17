@@ -24,7 +24,6 @@ def get_llm_step_config() -> dict[str, str]:
         "attributeScoringQuery": "live",
         "categoryWebsiteLookup": "live",
         "checkEntriesQuery": "live",
-        "deepResearchRun": "live",
         "inferColumnQuery": "live",
         "launchValidationReviewQuery": "live",
         "llmFallbackQuery": "live",

@@ -1946,7 +1946,7 @@ def test_concatenate_decks_preserves_shared_custom_template(
 ) -> None:
     _seed_custom_deck(deck_storage, "deckTemplateOne", ["One"])
     _seed_custom_deck(deck_storage, "deckTemplateTwo", ["Two"])
-    template_bytes = Path("src/review_brief/pptx_templates/uniform.pptx").read_bytes()
+    template_bytes = Path("src/slides/pptx_templates/uniform.pptx").read_bytes()
     for deck_id in ("deckTemplateOne", "deckTemplateTwo"):
         deck_path = deck_storage.root / deck_id
         template_path = deck_path / DECK_PPTX_TEMPLATE_FILENAME
@@ -3027,7 +3027,7 @@ def test_upload_pdf_rejects_mixed_notebooklm_dimensions(
 def test_upload_pptx_template_lists_and_sets_default(
     client: TestClient, deck_storage: DeckStorage
 ) -> None:
-    template_bytes = Path("src/review_brief/pptx_templates/uniform.pptx").read_bytes()
+    template_bytes = Path("src/slides/pptx_templates/uniform.pptx").read_bytes()
 
     upload_response = client.post(
         "/slides/pptx-templates/upload",
@@ -3064,7 +3064,7 @@ def test_upload_pdf_applies_selected_saved_pptx_template(
     deck_storage: DeckStorage,
     stub_uploaded_deck_processing: None,
 ) -> None:
-    template_bytes = Path("src/review_brief/pptx_templates/uniform.pptx").read_bytes()
+    template_bytes = Path("src/slides/pptx_templates/uniform.pptx").read_bytes()
     template_response = client.post(
         "/slides/pptx-templates/upload",
         data={"setDefault": "false"},
@@ -3106,7 +3106,7 @@ def test_upload_pdf_uses_default_saved_pptx_template_when_no_choice_provided(
     deck_storage: DeckStorage,
     stub_uploaded_deck_processing: None,
 ) -> None:
-    template_bytes = Path("src/review_brief/pptx_templates/uniform.pptx").read_bytes()
+    template_bytes = Path("src/slides/pptx_templates/uniform.pptx").read_bytes()
     client.post(
         "/slides/pptx-templates/upload",
         data={"setDefault": "true"},

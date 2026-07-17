@@ -65,6 +65,7 @@ def _make_authenticated_client(
 
 @pytest.fixture(autouse=True)
 def _reset_auth(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    monkeypatch.delenv("APP_PRIVATE_CONFIG_DIR", raising=False)
     yield
     _disable_auth_env(monkeypatch)
     get_auth_config.cache_clear()
@@ -107,9 +108,14 @@ def test_review_page_not_gated_by_sales_dataset_permissions(
         tmp_path / "sales_dataset_permissions.json",
         {"default": ["default-user@example.com"]},
     )
+    site_permissions_path = _write_site_permissions(
+        tmp_path / "site_page_permissions.json",
+        {"legacy_attribute_analysis": [AUTHORIZED_REVIEW_EMAIL]},
+    )
     monkeypatch.setattr(
         permissions_mod, "_SALES_DATASET_PERMISSIONS_FILE", permissions_path
     )
+    monkeypatch.setenv("SITE_PAGE_PERMISSIONS_FILE", str(site_permissions_path))
 
     client_iter = _make_authenticated_client(monkeypatch, email=AUTHORIZED_REVIEW_EMAIL)
     client = next(client_iter)
@@ -185,10 +191,9 @@ def test_review_sales_metrics_requires_authentication_when_auth_enabled(
     assert response.status_code == 401
 
 
-@pytest.mark.parametrize("path", ["/review/sales", "/legacy/review/sales"])
-def test_review_sales_page_routes_are_not_found(path: str) -> None:
+def test_review_sales_page_route_is_not_found() -> None:
     with TestClient(app) as client:
-        response = client.get(f"{path}?lang=en", follow_redirects=False)
+        response = client.get("/review/sales?lang=en", follow_redirects=False)
     assert response.status_code == 404
 
 

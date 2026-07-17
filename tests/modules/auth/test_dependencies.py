@@ -131,7 +131,7 @@ def test_get_permission_key_for_path_uses_column_groups(
                     "/review/reports",
                     "/review/product-hypotheses",
                 ],
-                "deck_toolkit": ["/presentations", "/slides", "/brief"],
+                "deck_toolkit": ["/presentations", "/slides"],
                 "clara": [
                     "/downloads/clara",
                     "/static/shared/clara/downloads",
@@ -173,7 +173,7 @@ def test_get_permission_key_for_path_uses_column_groups(
         )
         assert get_permission_key_for_path("/presentations/page") == "deck_toolkit"
         assert get_permission_key_for_path("/slides/page") == "deck_toolkit"
-        assert get_permission_key_for_path("/brief/page") == "deck_toolkit"
+        assert get_permission_key_for_path("/brief/page") is None
         assert get_permission_key_for_path("/check/page") is None
         assert (
             get_permission_key_for_path(
@@ -252,6 +252,8 @@ def test_get_allowed_page_keys_for_email_reads_grouped_permissions(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    monkeypatch.delenv("APP_PRIVATE_CONFIG_DIR", raising=False)
+    monkeypatch.delenv("SITE_PAGE_PERMISSIONS_FILE", raising=False)
     permissions_file = tmp_path / "site_page_permissions.json"
     permissions_file.write_text(
         json.dumps(
@@ -284,6 +286,8 @@ def test_require_site_permission_for_request_denies_unconfigured_mapped_page(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    monkeypatch.delenv("APP_PRIVATE_CONFIG_DIR", raising=False)
+    monkeypatch.delenv("SITE_PAGE_PERMISSIONS_FILE", raising=False)
     config = _config()
     monkeypatch.setattr("modules.auth.dependencies.get_auth_config", lambda: config)
 

@@ -1,6 +1,6 @@
 # LLM Call Staleness Audit
 
-Last audited: 2026-06-08
+Last audited: 2026-07-17
 
 This audit separates stale LLM paths from live calls that should not be removed.
 It uses the current production query steps in `modules.utilities.config`, direct
@@ -39,8 +39,7 @@ generation.
 | --- | --- | --- |
 | `checkEntriesQuery` | `modules/check_entries/logic.py`, `modules/check_entries/backend.py` | Check Entries plugin workflow. |
 | `quickRewriteQuery` | `modules/check_entries/audit_note.py` | Check Entries audit-note rewrite. |
-| `llmFallbackQuery` | `modules/llm/model_router.py`, `modules/llm/openai_batch.py`, `modules/conversation/chat_service.py` | Generic OpenAI fallback used by live wrappers. |
-| `deepResearchRun` | `src/deep_research_runner.py` | Deep Research runner. |
+| `llmFallbackQuery` | `modules/llm/model_router.py`, `modules/llm/openai_batch.py` | Generic OpenAI fallback used by live wrappers. |
 | `readImageTableQuery` | `src/slides/ocr_service.py` | Slide OCR/table extraction. |
 | `readImageTableStructureQuery` | `src/slides/ocr_service.py` | Slide OCR table-structure extraction. |
 | `launchValidationReviewQuery` | `src/slides/launch_pdf_validator.py` | Launch report validator; leave launch reports alone. |
@@ -50,8 +49,6 @@ generation.
 | `slideOcrVisualCorrectionQuery` | `src/slides/ocr_service.py` | Slide OCR visual correction. |
 | `slidesChartTypeQuery` | `src/slides/chart_type_classifier.py` | Slide chart-type classification. |
 | `slidesPptxRepairQuery` | `src/slides/pptx_post_render.py` | PPTX post-render repair. |
-| `reviewBriefChartInterpretationQuery` | `src/review_brief/generator.py` | Review brief generator; not the old GPT-PPT JSON loop. |
-| `reviewBriefNarrativeQuery` | `src/review_brief/generator.py` | Review brief narrative generation; not the old GPT-PPT JSON loop. |
 
 Hosted interviews use direct OpenAI Realtime HTTP calls in
 `modules/hosted_interviews/api.py`, shared through `modules/openai_realtime.py`.
@@ -110,8 +107,8 @@ mapping query steps to a model provider.
 The application runtime supports OpenAI only. Provider selection remains
 centralized so query steps have one auditable model mapping.
 
-The former generic fix fallback, report-chat query steps, and check-statements
-provider fallback steps were removed.
+The former generic fix fallback, report-chat, review-brief, server-hosted Deep
+Research, and check-statements provider fallback steps were removed.
 
 ## Verification Commands
 

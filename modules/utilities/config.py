@@ -20,10 +20,6 @@ def select_provider(task):
     readImageTableQuery = namingParams["readImageTableQuery"]
     readImageTableStructureQuery = namingParams["readImageTableStructureQuery"]
     quickRewriteQuery = namingParams["quickRewriteQuery"]
-    reviewBriefChartInterpretationQuery = namingParams[
-        "reviewBriefChartInterpretationQuery"
-    ]
-    reviewBriefNarrativeQuery = namingParams["reviewBriefNarrativeQuery"]
     llmFallbackQuery = namingParams["llmFallbackQuery"]
     randomMovementsQuery = namingParams["randomMovementsQuery"]
     checkEntriesQuery = namingParams["checkEntriesQuery"]
@@ -48,7 +44,6 @@ def select_provider(task):
     slideOcrVisualCorrectionQuery = namingParams["slideOcrVisualCorrectionQuery"]
     slidesChartTypeQuery = namingParams["slidesChartTypeQuery"]
     slidesPptxRepairQuery = namingParams["slidesPptxRepairQuery"]
-    deepResearchRun = namingParams["deepResearchRun"]
     model = namingParams["modelName"]
     provider = namingParams["providerName"]
     batchMode = namingParams["batchMode"]
@@ -79,7 +74,6 @@ def select_provider(task):
             batchMode: True,
         },
         checkEntriesQuery: {provider: openai, model: gpt5ThinkingMini, batchMode: True},
-        deepResearchRun: {provider: openai, model: deepResearchO4Mini, batchMode: True},
         inferColumnQuery: {provider: openai, model: gpt5ThinkingMini, batchMode: False},
         llmFallbackQuery: {provider: openai, model: gpt54Mini, batchMode: False},
         merchantBrandWebsiteLookup: {
@@ -164,16 +158,6 @@ def select_provider(task):
             model: gpt54Mini,
             batchMode: False,
         },
-        reviewBriefChartInterpretationQuery: {
-            provider: openai,
-            model: gpt5ThinkingMini,
-            batchMode: True,
-        },
-        reviewBriefNarrativeQuery: {
-            provider: openai,
-            model: gpt5Thinking,
-            batchMode: True,
-        },
         taxonomyGenerationQuery: {
             provider: openai,
             model: gpt52Thinking,
@@ -247,8 +231,6 @@ def get_naming_params():
         "slidesChartTypeQuery": "slidesChartTypeQuery",
         "slidesPptxRepairQuery": "slidesPptxRepairQuery",
         "quickRewriteQuery": "quickRewriteQuery",
-        "reviewBriefChartInterpretationQuery": "reviewBriefChartInterpretationQuery",
-        "reviewBriefNarrativeQuery": "reviewBriefNarrativeQuery",
         "inferColumnQuery": "inferColumnQuery",
         "attributeDiscoveryQuery": "attributeDiscoveryQuery",
         "attributeScoringQuery": "attributeScoringQuery",
@@ -418,7 +400,6 @@ def get_naming_params():
         "nextRunName": "nextRunName",
         "previousRunName": "previousRunName",
         "totalNberOfRunsName": "totalNberOfRunsName",
-        "deepResearchRun": "deepResearchRun",
         "runsDict": "runsDict",
         "promptUser": "promptUser",
         "promptSystem": "promptSystem",

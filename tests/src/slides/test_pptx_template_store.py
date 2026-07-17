@@ -21,7 +21,7 @@ def test_save_uploaded_pptx_template_persists_manifest_and_sets_default(
     tmp_path: Path,
 ) -> None:
     storage_root = tmp_path / "storage"
-    template_bytes = Path("src/review_brief/pptx_templates/uniform.pptx").read_bytes()
+    template_bytes = Path("src/slides/pptx_templates/uniform.pptx").read_bytes()
 
     record = save_uploaded_pptx_template(
         storage_root,
@@ -52,7 +52,7 @@ def test_apply_saved_pptx_template_to_deck_uses_selected_or_default_template(
     storage_root = tmp_path / "storage"
     deck_path = tmp_path / "deck"
     deck_path.mkdir(parents=True, exist_ok=True)
-    template_bytes = Path("src/review_brief/pptx_templates/uniform.pptx").read_bytes()
+    template_bytes = Path("src/slides/pptx_templates/uniform.pptx").read_bytes()
     saved = save_uploaded_pptx_template(
         storage_root,
         "user@example.com",

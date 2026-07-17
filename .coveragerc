@@ -11,7 +11,6 @@ omit =
     src/check_entries_review.py
     src/charting_logic.py
     src/bank_loader.py
-    src/load_report_logic.py
     src/ledger_loader.py
     src/reconcile.py
     src/statements/*

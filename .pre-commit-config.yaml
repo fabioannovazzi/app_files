@@ -30,22 +30,22 @@ repos:
         pass_filenames: false
       - id: no-len-df-modules
         name: "Forbid len(df usage"
-        entry: bash -c 'if grep -R -n "len(df" modules src ui tests; then echo "Use get_row_count instead of len(df)"; exit 1; fi'
+        entry: bash -c 'if grep -R -n "len(df" modules src tests; then echo "Use get_row_count instead of len(df)"; exit 1; fi'
         language: system
         pass_filenames: false
       - id: no-shape-df-modules
         name: "Forbid df.shape[0] usage"
-        entry: bash -c 'if grep -R -n "shape\[0\]" modules src ui tests; then echo "Use get_row_count instead of df.shape[0]"; exit 1; fi'
+        entry: bash -c 'if grep -R -n "shape\[0\]" modules src tests; then echo "Use get_row_count instead of df.shape[0]"; exit 1; fi'
         language: system
         pass_filenames: false
       - id: no-len-df-columns
         name: "Forbid len(df.columns) usage"
-        entry: bash -c 'if grep -R -n "len(.*\.columns" modules src ui tests; then echo "Use df.width instead of len(df.columns)"; exit 1; fi'
+        entry: bash -c 'if grep -R -n "len(.*\.columns" modules src tests; then echo "Use df.width instead of len(df.columns)"; exit 1; fi'
         language: system
         pass_filenames: false
       - id: no-streaming-true
         name: "Forbid streaming=True usage"
-        entry: bash -c 'if grep -R -n "streaming=True" modules src ui tests; then echo "Polars streaming mode is no longer required"; exit 1; fi'
+        entry: bash -c 'if grep -R -n "streaming=True" modules src tests; then echo "Polars streaming mode is no longer required"; exit 1; fi'
         language: system
         pass_filenames: false
       - id: no-pandas-import
