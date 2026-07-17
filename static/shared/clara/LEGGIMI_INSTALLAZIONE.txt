@@ -1,18 +1,20 @@
-Clara - installazione plugin Codex
+Clara - installazione ufficiale
 
 Codice sorgente: https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara
 Licenza GNU AGPLv3: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
 
-1. Scarica lo ZIP del plugin.
-2. Estrai la cartella in una posizione locale stabile.
-3. In Codex, aggiungi il marketplace locale incluso nello ZIP.
-4. Avvia una nuova chat e chiedi: "Use Clara on this advisory project".
+1. Apri la pagina ufficiale di Clara nel marketplace OpenAI:
+   https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a
+2. Usa il comando di installazione mostrato nella pagina.
+3. Apri Codex, vai in Plugins e verifica che Clara sia installata e attiva.
+4. Avvia una nuova chat nella cartella del progetto e chiedi:
+   "Use Clara in this folder. Show me the available workflows."
 
 Il plugin crea note di caso locali, indicizza materiali senza copiarli,
 registra judgement consulenziale con stato pending/approved/rejected e genera
 output Markdown e Word usando solo judgement approvato.
 
-Quattro flussi conversazionali restano distinti:
+Sei flussi conversazionali restano distinti:
 - Interview prepara link a scadenza per interviste adattive a partecipanti esterni
   e recupera bundle e review di qualita'.
 - Transcribe registra o carica note vocali, riunioni e chiamate e conserva una
@@ -22,6 +24,17 @@ Quattro flussi conversazionali restano distinti:
 - Attribute Reporting mappa i prodotti sulla tassonomia centrale della categoria,
   conserva i confronti new-versus-rest e best-seller-versus-other, crea un report
   HTML locale e risponde direttamente se il report e' corretto.
+- Brand Fit parte da un'analisi Retailer Signals completata e verificata e
+  confronta quei segnali con la presenza attuale del brand presso il retailer
+  selezionato e con il catalogo di proprieta' del brand nello snapshot del
+  database. Lo snapshot non e' una verifica live dello scaffale.
+- Reporting Engine analizza CSV/XLSX, sceglie con Codex il grafico utile e usa
+  componenti controllati per calcoli e rendering.
+
+Per Retailer Signals e Brand Fit, il server conserva dati prodotto strutturati,
+tassonomia centrale, mapping accettati e URL delle immagini. Immagini prodotto,
+interpretazione, review indipendente e report HTML restano locali. Ne' l'utente
+ne' il server devono fornire una chiave API per i modelli.
 
 Clara Voice Capture usa la pagina hosted per registrare o caricare audio e
 scaricare un bundle trascritto. Attribuzione speaker e review semantica restano

@@ -41,6 +41,10 @@ SOURCE_TABLES = (
     "product_filter_matrix.csv",
     "recent_products.csv",
     "top_seller_products.csv",
+    "retailer_brand_anchors.csv",
+    "manufacturer_catalog_products.csv",
+    "manufacturer_products_not_at_retailer.csv",
+    "reference_candidates.csv",
 )
 URL_FIELDS = (
     "hero_image_url",
@@ -134,13 +138,27 @@ def _source_rows(package: Path) -> tuple[list[dict[str, Any]], dict[str, str]]:
         source_hashes[name] = _sha256_file(path)
         for row in _read_rows(path):
             product_id = str(
-                row.get("parent_product_id") or row.get("listing_identity") or ""
+                row.get("parent_product_id")
+                or row.get("product_key")
+                or row.get("listing_identity")
+                or ""
             ).strip()
             if not product_id:
                 continue
-            current = records_by_product.get(product_id)
+            if name in {
+                "retailer_brand_anchors.csv",
+                "manufacturer_catalog_products.csv",
+                "manufacturer_products_not_at_retailer.csv",
+                "reference_candidates.csv",
+            }:
+                scope = str(row.get("product_scope") or name.removesuffix(".csv"))
+                record_id = f"{name}:{scope}:{product_id}"
+            else:
+                record_id = product_id
+            current = records_by_product.get(record_id)
             if current is None:
-                records_by_product[product_id] = {
+                records_by_product[record_id] = {
+                    "record_id": record_id,
                     "row": row,
                     "source_rows": {name: _canonical_row_sha256(row)},
                 }
@@ -487,6 +505,7 @@ def _reusable_entries(
         if not isinstance(raw, dict):
             continue
         product_id = str(raw.get("product_id") or "")
+        record_id = str(raw.get("record_id") or product_id)
         relative_value = str(raw.get("image_path") or "")
         expected_sha = str(raw.get("sha256") or "")
         if not product_id or not relative_value or not expected_sha:
@@ -502,7 +521,7 @@ def _reusable_entries(
             and candidate.is_relative_to(image_root)
             and _sha256_file(candidate) == expected_sha
         ):
-            entries[product_id] = dict(raw)
+            entries[record_id] = dict(raw)
     return entries
 
 
@@ -675,15 +694,20 @@ def hydrate_product_images(
     attempts = 0
     for record in rows:
         row = record["row"]
+        record_id = str(record["record_id"])
         source_rows = dict(record["source_rows"])
         product_id = str(
-            row.get("parent_product_id") or row.get("listing_identity") or ""
+            row.get("parent_product_id")
+            or row.get("product_key")
+            or row.get("listing_identity")
+            or ""
         ).strip()
         source_row_sha = _canonical_row_sha256(row)
         existing = _existing_pack_image(package, row)
         if existing is not None:
             products.append(
                 {
+                    "record_id": record_id,
                     "product_id": product_id,
                     "source_row_sha256": source_row_sha,
                     "source_rows": source_rows,
@@ -700,7 +724,7 @@ def hydrate_product_images(
             )
             continue
         source_field, url = _source_url(row)
-        prior_entry = reusable.get(product_id)
+        prior_entry = reusable.get(record_id)
         if (
             prior_entry is not None
             and str(prior_entry.get("source_row_sha256") or "") == source_row_sha
@@ -711,6 +735,7 @@ def hydrate_product_images(
         if not url:
             products.append(
                 {
+                    "record_id": record_id,
                     "product_id": product_id,
                     "source_row_sha256": source_row_sha,
                     "source_rows": source_rows,
@@ -729,6 +754,7 @@ def hydrate_product_images(
         if max_images and attempts >= max_images:
             products.append(
                 {
+                    "record_id": record_id,
                     "product_id": product_id,
                     "source_row_sha256": source_row_sha,
                     "source_rows": source_rows,
@@ -755,7 +781,7 @@ def hydrate_product_images(
             suffix = _raster_suffix(payload)
             url_token = hashlib.sha256(url.encode("utf-8")).hexdigest()[:12]
             target = (
-                image_root / f"{_safe_product_token(product_id)}-{url_token}{suffix}"
+                image_root / f"{_safe_product_token(record_id)}-{url_token}{suffix}"
             )
             target.parent.mkdir(parents=True, exist_ok=True)
             temporary = target.with_name(f".{target.name}.{uuid.uuid4().hex}.tmp")
@@ -766,6 +792,7 @@ def hydrate_product_images(
             finally:
                 temporary.unlink(missing_ok=True)
             entry = {
+                "record_id": record_id,
                 "product_id": product_id,
                 "source_row_sha256": source_row_sha,
                 "source_rows": source_rows,
@@ -781,6 +808,7 @@ def hydrate_product_images(
             }
         except (HydrationError, OSError, urllib.error.URLError) as exc:
             entry = {
+                "record_id": record_id,
                 "product_id": product_id,
                 "source_row_sha256": source_row_sha,
                 "source_rows": source_rows,

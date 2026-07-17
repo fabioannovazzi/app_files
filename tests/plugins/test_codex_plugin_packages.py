@@ -1259,6 +1259,7 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
                 continue
             if plugin_root.name == "clara" and skill_file.parent.name in {
                 "attribute-reporting",
+                "brand-fit",
                 "reporting-engine",
             }:
                 assert "Read that component's" in normalized_skill_text

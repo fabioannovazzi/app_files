@@ -119,6 +119,18 @@ class EvidencePackRequest(BaseModel):
     )
 
 
+class BrandFitPackRequest(BaseModel):
+    """Brand Fit evidence requested against a checked local retailer report."""
+
+    source_evidence_job_id: str = Field(pattern=r"^[0-9a-f]{32}$")
+    brand_source_retailer: str = Field(min_length=1, max_length=128)
+    brand_name: str = Field(min_length=1, max_length=256)
+    retailer_report_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    retailer_report_verdict: Literal["Correct", "Correct with caveats"]
+    owned_category_keys: list[str] | None = Field(default=None, max_length=32)
+    retailer_category_keys: list[str] | None = Field(default=None, max_length=32)
+
+
 class MappingWorksetRequest(BaseModel):
     """Pinned mapping workset derived from one ready evidence package."""
 
@@ -287,6 +299,100 @@ def download_evidence_pack(
         package_path,
         media_type="application/zip",
         filename=f"attribute-reporting-{job_id}.zip",
+        headers={
+            "X-Content-SHA256": str(receipt["package_sha256"]),
+            "Cache-Control": "private, no-store",
+        },
+    )
+
+
+@router.post("/brand-fit-packs", status_code=status.HTTP_202_ACCEPTED)
+def create_brand_fit_pack(
+    payload: BrandFitPackRequest,
+    background_tasks: BackgroundTasks,
+    user: AttributeReportingUser,
+    bridge: Bridge,
+) -> dict[str, Any]:
+    """Start Brand Fit from actor-owned signals and a checked local-report hash."""
+
+    try:
+        job = bridge.create_brand_fit_job(
+            source_evidence_job_id=payload.source_evidence_job_id,
+            brand_source_retailer=payload.brand_source_retailer,
+            brand_name=payload.brand_name,
+            retailer_report_sha256=payload.retailer_report_sha256,
+            retailer_report_verdict=payload.retailer_report_verdict,
+            actor_email=_actor_email(user),
+            owned_category_keys=payload.owned_category_keys,
+            retailer_category_keys=payload.retailer_category_keys,
+        )
+    except (
+        BridgeNotFoundError,
+        BridgeConflictError,
+        BridgeValidationError,
+        KeyError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        _raise_http_error(exc)
+        raise AssertionError("unreachable")
+    background_tasks.add_task(bridge.build_brand_fit_job, str(job["job_id"]))
+    return job
+
+
+@router.get("/brand-fit-packs/{job_id}")
+def poll_brand_fit_pack(
+    job_id: str,
+    background_tasks: BackgroundTasks,
+    user: AttributeReportingUser,
+    bridge: Bridge,
+) -> dict[str, Any]:
+    """Poll an actor-owned Brand Fit build and resume abandoned work."""
+
+    try:
+        result = bridge.brand_fit_status(job_id, actor_email=_actor_email(user))
+        if result.get("status") in {"pending", "running"}:
+            background_tasks.add_task(bridge.build_brand_fit_job, job_id)
+        return result
+    except (
+        BridgeNotFoundError,
+        BridgeConflictError,
+        BridgeValidationError,
+        KeyError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        _raise_http_error(exc)
+        raise AssertionError("unreachable")
+
+
+@router.get("/brand-fit-packs/{job_id}/download")
+def download_brand_fit_pack(
+    job_id: str,
+    user: AttributeReportingUser,
+    bridge: Bridge,
+) -> FileResponse:
+    """Download one checksum-verified URL-only Brand Fit evidence ZIP."""
+
+    try:
+        package_path, receipt = bridge.brand_fit_download(
+            job_id,
+            actor_email=_actor_email(user),
+        )
+    except (
+        BridgeNotFoundError,
+        BridgeConflictError,
+        BridgeValidationError,
+        KeyError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        _raise_http_error(exc)
+        raise AssertionError("unreachable")
+    return FileResponse(
+        package_path,
+        media_type="application/zip",
+        filename=f"attribute-reporting-brand-fit-{job_id}.zip",
         headers={
             "X-Content-SHA256": str(receipt["package_sha256"]),
             "Cache-Control": "private, no-store",

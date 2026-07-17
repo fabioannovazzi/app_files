@@ -1,6 +1,6 @@
 ---
 name: clara
-description: Use when a user wants Clara to organize advisory work or route a request for presentations, interviews, recordings, retail attribute reports, or business-data charts to the correct Clara workflow.
+description: Use when a user wants Clara to organize advisory work or route a request for presentations, interviews, recordings, Retailer Signals, Brand Fit, or business-data charts to the correct Clara workflow.
 ---
 
 ## Output Location Rule
@@ -23,7 +23,7 @@ drafting, and bottleneck surfacing around that judgement.
 
 ## Conversation Workflow Router
 
-Clara exposes five distinct conversation workflows. Do not collapse them into
+Clara exposes six distinct conversation workflows. Do not collapse them into
 one generic workflow:
 
 - Use `interview` when an external client, stakeholder, expert, or research
@@ -46,6 +46,11 @@ one generic workflow:
   create a private local HTML report, or ask whether that report is correct.
   This workflow preserves the existing cohort arithmetic and uses Codex agents
   for semantic mapping, report authorship, and independent review.
+- Use `brand-fit` when the user has a completed, checked Retailer Signals
+  analysis and wants to compare those retailer signals with both the brand's
+  current presence at that retailer and the brand-owned catalogue in the stored
+  database snapshot. It creates and checks a private local HTML Brand Fit
+  report; it must not present the stored snapshot as a live-shelf assertion.
 - Use `reporting-engine` when the user wants Clara to analyze a CSV/XLSX
   dataset, choose and render a useful business chart, inspect chart
   capabilities, or profile mechanical compatibility. Codex selects the
@@ -56,13 +61,15 @@ The main `clara` skill resumes after Interview, Transcribe, or Deck Correction
 when retrieved or reviewed evidence must update a case workspace, evidence map,
 advisory workpaper, or decision output. Attribute Reporting remains a
 self-contained analytical workflow unless the user separately asks to register
-its checked report in a Clara case or turn it into a presentation. Reporting
-Engine is also self-contained unless the user asks to place its reviewed chart
-or interpretation in an advisory output.
+its checked report in a Clara case or turn it into a presentation. Brand Fit is
+also self-contained: its local source report is not uploaded, its product images
+and HTML report stay local, and its semantic work runs in Codex without a user
+or server model API key. Reporting Engine is also self-contained unless the
+user asks to place its reviewed chart or interpretation in an advisory output.
 Hosted-interview bundles and Hosted Voice bundles use different schemas; never
 pass one to the other's importer.
 
-The five specialized skills are the sole procedural authority for their
+The six specialized skills are the sole procedural authority for their
 domains. If one of those requests appears during a main Clara case run, load and
 follow the specialized skill instead of executing the older voice or
 deck-revision detail retained later in this document for case-continuity

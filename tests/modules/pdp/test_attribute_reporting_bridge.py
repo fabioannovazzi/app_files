@@ -376,6 +376,13 @@ class _FakeStore:
         ] = {}
         self.operation_timestamps: dict[str, str] = {}
         self.operation_evidence_json: dict[str, str] = {}
+        self.attribute_cache_entries: dict[str, tuple[bytes, str]] = {
+            name: (f"payload:{name}".encode("utf-8"), "2026-07-15T11:00:00+00:00")
+            for name in bridge_module.REQUIRED_PRODUCT_CACHE_ENTRIES
+        }
+
+    def read_attribute_cache_entries(self) -> dict[str, tuple[bytes, str]]:
+        return dict(self.attribute_cache_entries)
 
     def read_attribute_mapping_states(
         self,
@@ -528,11 +535,134 @@ def _package_builder(retailer: str, category: str, output_root: Path) -> Path:
     return package
 
 
+def _brand_fit_builder(**kwargs: Any) -> Path:
+    output_root = Path(kwargs["output_root"])
+    package = (
+        output_root
+        / str(kwargs["category_key"])
+        / str(kwargs["retailer"])
+        / str(kwargs["brand_source_retailer"])
+    )
+    package.mkdir(parents=True)
+    mapping_state_snapshot = dict(kwargs["mapping_state_snapshot"])
+    summary = {
+        "source_retailer_report": dict(kwargs["source_retailer_report"]),
+        "source_retailer_evidence": dict(kwargs["source_retailer_evidence"]),
+        "retailer_presence": dict(kwargs["retailer_presence_snapshot"]),
+        "product_data_snapshot": dict(kwargs["product_data_snapshot"]),
+        "mapping_state_snapshot_sha256": mapping_state_snapshot["state_sha256"],
+        "sources": {
+            "retailer_live_check_enabled": False,
+            "retailer_presence_mode": "current_database_snapshot",
+            "innovation_package_dir": str(kwargs["innovation_package_dir"]),
+            "owned_cli_dirs": ["/srv/private/catalog"],
+        },
+        "unsafe_payloads": {
+            "image_data": "data:image/png;base64,cHJpdmF0ZS1pbWFnZQ==",
+            "blob_image": "blob:https://example.test/private-image",
+            "file_uri": "file:///srv/private/catalog/image.png",
+            "windows_path": r"C:\private\catalog\image.png",
+            "unc_path": r"\\server\private\image.png",
+            "embedded_server_path": "Loaded from /srv/private/catalog/source.csv",
+            "database_connection": (
+                "DATABASE_URL=postgresql://user:secret@db.internal/catalog"
+            ),
+        },
+    }
+    _write_json(package / "package_integrity.json", {"status": "pass"})
+    _write_json(package / "summary.json", summary)
+    _write_json(package / "mapping_state_snapshot.json", mapping_state_snapshot)
+    with (package / "manufacturer_catalog_products.csv").open(
+        "w", encoding="utf-8", newline=""
+    ) as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "product_name",
+                "hero_image_url",
+                "swatch_image_url",
+                "og_image_url",
+                "image_url",
+                "image_file",
+                "builder_source",
+                "image_base64",
+                "blob_uri",
+                "file_uri",
+                "windows_path",
+                "unc_path",
+                "source_note",
+                "database_note",
+            ],
+        )
+        writer.writeheader()
+        writer.writerow(
+            {
+                "product_name": "Brand sweater",
+                "hero_image_url": "https://cdn.example.com/hero.jpg",
+                "swatch_image_url": "https://cdn.example.com/swatch.jpg",
+                "og_image_url": "https://cdn.example.com/og.jpg",
+                "image_url": "https://cdn.example.com/image.jpg",
+                "image_file": "images/brand.jpg",
+                "builder_source": "/srv/private/catalog/source.csv",
+                "image_base64": "cHJpdmF0ZS1iaW5hcnk=",
+                "blob_uri": "blob:https://example.test/private",
+                "file_uri": "file:///srv/private/catalog/source.csv",
+                "windows_path": r"D:\private\source.csv",
+                "unc_path": r"\\server\private\source.csv",
+                "source_note": "Catalog copied from /Users/private/catalog.csv",
+                "database_note": (
+                    "Read via postgresql://user:secret@db.internal/catalog"
+                ),
+            }
+        )
+    with (package / "image_index.csv").open(
+        "w", encoding="utf-8", newline=""
+    ) as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=["product_name", "image_file", "image_source"],
+        )
+        writer.writeheader()
+        writer.writerow(
+            {
+                "product_name": "Local image",
+                "image_file": "images/brand.jpg",
+                "image_source": "/srv/private/catalog/brand.jpg",
+            }
+        )
+        writer.writerow(
+            {
+                "product_name": "Public image",
+                "image_file": "images/public.jpg",
+                "image_source": "https://cdn.example.com/public.jpg",
+            }
+        )
+    images = package / "images"
+    images.mkdir()
+    (images / "brand.jpg").write_bytes(b"private-brand-image")
+    (images / "public.jpg").write_bytes(b"private-public-image")
+    (package / "prompt_for_pro.txt").write_text("legacy", encoding="utf-8")
+    _write_json(
+        package / "pack_manifest.json",
+        {
+            "package_type": "brand_retailer_reference_handoff",
+            "files": sorted(
+                path.relative_to(package).as_posix()
+                for path in package.rglob("*")
+                if path.is_file()
+            ),
+            "summary": summary,
+        },
+    )
+    return package
+
+
 def _bridge(tmp_path: Path, store: _FakeStore) -> AttributeReportingBridge:
     return AttributeReportingBridge(
         tmp_path / "bridge",
         taxonomy_loader=_taxonomy,
         package_builder=_package_builder,
+        brand_fit_builder=_brand_fit_builder,
         mapping_engine=_FakeMappingEngine(),
         mapping_apply_engine=_FakeApplyEngine(),
         store_factory=lambda: store,
@@ -553,6 +683,34 @@ def _ready_job(
     )
     bridge.build_evidence_job(job["job_id"])
     return snapshot, job
+
+
+def _ready_brand_fit_job(
+    bridge: AttributeReportingBridge,
+    *,
+    actor: str = ACTOR,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    snapshot = bridge.taxonomy_snapshot("cashmere_sweaters", actor_email=actor)
+    source_job = bridge.create_evidence_job(
+        retailer="saksfifthavenue",
+        category_key="cashmere_sweaters",
+        taxonomy_version=snapshot["version"],
+        taxonomy_sha256=snapshot["sha256"],
+        actor_email=actor,
+    )
+    bridge.build_evidence_job(source_job["job_id"])
+    brand_fit_job = bridge.create_brand_fit_job(
+        source_evidence_job_id=source_job["job_id"],
+        brand_source_retailer="brand-owned",
+        brand_name="Example Brand",
+        retailer_report_sha256="d" * 64,
+        retailer_report_verdict="Correct with caveats",
+        actor_email=actor,
+        owned_category_keys=["cashmere_sweaters", "knitwear"],
+        retailer_category_keys=["cashmere_sweaters"],
+    )
+    bridge.build_brand_fit_job(brand_fit_job["job_id"])
+    return source_job, brand_fit_job
 
 
 def _mapping_artifacts(workset: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -739,6 +897,52 @@ def test_authenticated_attribute_reporting_response_is_not_cacheable(
     assert response.headers["cache-control"] == "private, no-store"
     assert response.headers["pragma"] == "no-cache"
     assert response.headers["vary"] == "Cookie"
+
+
+def test_brand_fit_api_starts_actor_owned_background_job(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _BrandFitBridge:
+        def __init__(self) -> None:
+            self.built: list[str] = []
+
+        def create_brand_fit_job(self, **kwargs: Any) -> dict[str, Any]:
+            assert kwargs == {
+                "source_evidence_job_id": "a" * 32,
+                "brand_source_retailer": "brand-owned",
+                "brand_name": "Example Brand",
+                "retailer_report_sha256": "d" * 64,
+                "retailer_report_verdict": "Correct",
+                "actor_email": "local-dev",
+                "owned_category_keys": ["cashmere_sweaters"],
+                "retailer_category_keys": None,
+            }
+            return {"job_id": "b" * 32, "status": "pending"}
+
+        def build_brand_fit_job(self, job_id: str) -> None:
+            self.built.append(job_id)
+
+    bridge = _BrandFitBridge()
+    app = _body_limit_test_app(monkeypatch)
+    app.dependency_overrides[attribute_reporting_api.get_attribute_reporting_bridge] = (
+        lambda: bridge
+    )
+
+    response = TestClient(app).post(
+        "/case-notes/api/attribute-reporting/brand-fit-packs",
+        json={
+            "source_evidence_job_id": "a" * 32,
+            "brand_source_retailer": "brand-owned",
+            "brand_name": "Example Brand",
+            "retailer_report_sha256": "d" * 64,
+            "retailer_report_verdict": "Correct",
+            "owned_category_keys": ["cashmere_sweaters"],
+        },
+    )
+
+    assert response.status_code == 202
+    assert response.json() == {"job_id": "b" * 32, "status": "pending"}
+    assert bridge.built == ["b" * 32]
 
 
 def test_attribute_reporting_rejects_user_with_only_general_clara_access(
@@ -1081,6 +1285,7 @@ def test_expired_artifacts_are_pruned_before_quota_is_checked(
 ) -> None:
     clock = {"now": "2026-07-15T12:00:00+00:00"}
     monkeypatch.setattr(bridge_module, "EVIDENCE_JOB_TTL", timedelta(seconds=1))
+    monkeypatch.setattr(bridge_module, "BRAND_FIT_JOB_TTL", timedelta(seconds=1))
     monkeypatch.setattr(bridge_module, "WORKSET_TTL", timedelta(seconds=1))
     monkeypatch.setattr(bridge_module, "SUBMISSION_TTL", timedelta(seconds=1))
     monkeypatch.setattr(bridge_module, "MAX_ACTOR_EVIDENCE_JOBS", 1)
@@ -1117,6 +1322,19 @@ def test_expired_artifacts_are_pruned_before_quota_is_checked(
             "submitted_at": clock["now"],
         },
     )
+    old_brand_fit_dir = bridge.root / "brand_fit_jobs" / "old-brand-fit"
+    _write_json(
+        old_brand_fit_dir / "request.json",
+        {
+            "source_evidence_job_id": old_job["job_id"],
+            "requested_by": ACTOR,
+            "requested_at": clock["now"],
+        },
+    )
+    _write_json(
+        old_brand_fit_dir / "status.json",
+        {"status": "pending"},
+    )
     clock["now"] = "2026-07-15T12:00:02+00:00"
 
     replacement = bridge.create_evidence_job(
@@ -1130,6 +1348,7 @@ def test_expired_artifacts_are_pruned_before_quota_is_checked(
     assert not (bridge.root / "evidence_jobs" / old_job["job_id"]).exists()
     assert not old_workset_dir.exists()
     assert not old_submission_dir.exists()
+    assert not old_brand_fit_dir.exists()
     assert (bridge.root / "evidence_jobs" / replacement["job_id"]).is_dir()
 
 
@@ -1274,6 +1493,377 @@ def test_evidence_download_is_url_only_portable_and_private(tmp_path: Path) -> N
     assert "private-image-bytes" not in all_bytes.decode("utf-8", errors="ignore")
     assert str(tmp_path).encode() not in all_bytes
     assert integrity["status"] == "pass"
+
+
+def test_brand_fit_download_binds_checked_report_and_is_url_only(
+    tmp_path: Path,
+) -> None:
+    bridge = _bridge(tmp_path, _FakeStore())
+    source_job, job = _ready_brand_fit_job(bridge)
+
+    package_path, receipt = bridge.brand_fit_download(
+        job["job_id"],
+        actor_email=ACTOR,
+    )
+
+    assert receipt["source_evidence_job_id"] == source_job["job_id"]
+    assert receipt["source_retailer_report"] == {
+        "sha256": "d" * 64,
+        "verdict": "Correct with caveats",
+    }
+    assert receipt["source_retailer_evidence"] == {
+        "job_id": source_job["job_id"],
+        "package_sha256": receipt["source_evidence_package_sha256"],
+    }
+    assert receipt["retailer_presence"]["mode"] == "current_database_snapshot"
+    assert (
+        receipt["retailer_presence"]["read_at"]
+        == receipt["product_data_snapshot"]["read_at"]
+    )
+    assert receipt["product_data_snapshot"]["snapshot_sha256"]
+    assert receipt["product_data_snapshot"]["batch_generated_at"] == (
+        "2026-07-15T11:00:00+00:00"
+    )
+    assert {row["name"] for row in receipt["product_data_snapshot"]["entries"]} == set(
+        bridge_module.REQUIRED_PRODUCT_CACHE_ENTRIES
+    )
+    assert all(
+        row["generated_at"] == "2026-07-15T11:00:00+00:00"
+        for row in receipt["product_data_snapshot"]["entries"]
+    )
+    assert receipt["image_policy"] == "urls_only_no_image_bytes"
+    assert receipt["model_execution"] == "none"
+    with zipfile.ZipFile(package_path) as archive:
+        names = archive.namelist()
+        summary = json.loads(archive.read("summary.json"))
+        mapping_state = json.loads(archive.read("mapping_state_snapshot.json"))
+        manifest = json.loads(archive.read("pack_manifest.json"))
+        products = archive.read("manufacturer_catalog_products.csv").decode("utf-8")
+        image_index = archive.read("image_index.csv").decode("utf-8")
+        all_bytes = b"".join(archive.read(name) for name in names)
+    assert "prompt_for_pro.txt" not in names
+    assert not any(name.startswith("images/") for name in names)
+    assert summary["source_retailer_report"] == receipt["source_retailer_report"]
+    assert summary["source_retailer_evidence"] == receipt["source_retailer_evidence"]
+    assert summary["retailer_presence"] == receipt["retailer_presence"]
+    assert summary["product_data_snapshot"] == receipt["product_data_snapshot"]
+    assert "mapping_state_snapshot.json" in names
+    assert mapping_state["state_sha256"] == receipt["mapping_state_snapshot_sha256"]
+    assert summary["mapping_state_snapshot_sha256"] == mapping_state["state_sha256"]
+    assert manifest["package_type"] == "brand_retailer_reference_handoff"
+    assert manifest["summary"] == summary
+    assert manifest["files"] == sorted(
+        name for name in names if name != "pack_manifest.json"
+    )
+    assert "mapping_state_snapshot.json" in manifest["files"]
+    assert "server_sanitization_receipt.json" in manifest["files"]
+    assert summary["sources"]["innovation_package_dir"] is None
+    assert summary["sources"]["owned_cli_dirs"] is None
+    assert set(summary["unsafe_payloads"].values()) == {None}
+    assert "https://cdn.example.com/hero.jpg" in products
+    assert "https://cdn.example.com/swatch.jpg" in products
+    assert "https://cdn.example.com/og.jpg" in products
+    assert "https://cdn.example.com/image.jpg" in products
+    assert "images/brand.jpg" not in products
+    assert "/srv/private" not in products
+    assert "/srv/private" not in image_index
+    assert "https://cdn.example.com/public.jpg" in image_index
+    assert b"private-brand-image" not in all_bytes
+    assert b"NotebookLM" not in all_bytes
+    assert b"for Pro" not in all_bytes
+    assert b"data:image/" not in all_bytes
+    assert b"cHJpdmF0ZS1iaW5hcnk=" not in all_bytes
+    assert b"blob:" not in all_bytes
+    assert b"file:" not in all_bytes
+    assert b"C:\\private" not in all_bytes
+    assert b"D:\\private" not in all_bytes
+    assert b"\\\\server\\private" not in all_bytes
+    assert str(tmp_path).encode() not in all_bytes
+    assert b"/srv/private" not in all_bytes
+    assert b"/Users/private" not in all_bytes
+    assert b"postgresql://" not in all_bytes
+    assert b"DATABASE_URL" not in all_bytes
+
+
+@pytest.mark.parametrize(
+    "unsafe_text",
+    [
+        "data:image/png;base64,cHJpdmF0ZQ==",
+        "blob:https://example.test/private",
+        "file:///srv/private/image.png",
+        "Loaded from /srv/private/catalog/source.csv",
+        "Loaded from /home/private/catalog/source.csv",
+        "Loaded from /root/private/catalog/source.csv",
+        "Loaded from /Users/private/catalog/source.csv",
+        "Read via postgresql://user:secret@db.internal/catalog",
+        "DATABASE_URL=mysql://user:secret@db.internal/catalog",
+        r"C:\private\image.png",
+        r"\\server\private\image.png",
+    ],
+)
+def test_portable_post_sanitize_scan_rejects_embedded_or_local_text(
+    tmp_path: Path,
+    unsafe_text: str,
+) -> None:
+    package = tmp_path / "portable"
+    package.mkdir()
+    (package / "README.md").write_text(unsafe_text, encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="embedded image data or a local URI"):
+        bridge_module._assert_no_unsafe_portable_values(package)
+
+
+def test_portable_post_sanitize_scan_allows_public_http_url_with_path_word(
+    tmp_path: Path,
+) -> None:
+    package = tmp_path / "portable"
+    package.mkdir()
+    (package / "README.md").write_text(
+        "https://cdn.example.com/Users/public/product.jpg",
+        encoding="utf-8",
+    )
+
+    bridge_module._assert_no_unsafe_portable_values(package)
+
+
+def test_portable_post_sanitize_scan_rejects_relative_private_path_field(
+    tmp_path: Path,
+) -> None:
+    package = tmp_path / "portable"
+    package.mkdir()
+    _write_json(package / "details.json", {"image_file": "assets/private.png"})
+
+    with pytest.raises(RuntimeError, match="local path field"):
+        bridge_module._assert_no_unsafe_portable_values(package)
+
+
+def test_portable_file_type_scan_rejects_disguised_png_binary(
+    tmp_path: Path,
+) -> None:
+    package = tmp_path / "portable"
+    package.mkdir()
+    (package / "payload.bin").write_bytes(b"\x89PNG\r\n\x1a\nprivate-image")
+
+    with pytest.raises(RuntimeError, match="unsupported file type"):
+        bridge_module._assert_portable_file_types(package)
+
+
+def test_brand_fit_requires_actor_owned_ready_source_and_checked_verdict(
+    tmp_path: Path,
+) -> None:
+    bridge = _bridge(tmp_path, _FakeStore())
+    _snapshot, source_job = _ready_job(bridge)
+
+    with pytest.raises(BridgeNotFoundError, match="unavailable"):
+        bridge.create_brand_fit_job(
+            source_evidence_job_id=source_job["job_id"],
+            brand_source_retailer="brand-owned",
+            brand_name="Example Brand",
+            retailer_report_sha256="d" * 64,
+            retailer_report_verdict="Correct",
+            actor_email="other@example.com",
+        )
+    with pytest.raises(BridgeValidationError, match="checked retailer report"):
+        bridge.create_brand_fit_job(
+            source_evidence_job_id=source_job["job_id"],
+            brand_source_retailer="brand-owned",
+            brand_name="Example Brand",
+            retailer_report_sha256="d" * 64,
+            retailer_report_verdict="Incorrect",
+            actor_email=ACTOR,
+        )
+
+
+def test_brand_fit_job_quota_is_enforced_per_actor(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bridge = _bridge(tmp_path, _FakeStore())
+    _snapshot, source_job = _ready_job(bridge)
+    monkeypatch.setattr(bridge_module, "MAX_ACTOR_BRAND_FIT_JOBS", 1)
+    request = {
+        "source_evidence_job_id": source_job["job_id"],
+        "brand_source_retailer": "brand-owned",
+        "brand_name": "Example Brand",
+        "retailer_report_sha256": "d" * 64,
+        "retailer_report_verdict": "Correct",
+        "actor_email": ACTOR,
+    }
+    bridge.create_brand_fit_job(**request)
+
+    with pytest.raises(BridgeConflictError, match="per-user.*quota"):
+        bridge.create_brand_fit_job(**request)
+
+
+def test_brand_fit_fails_if_owned_mapping_state_changes_during_build(
+    tmp_path: Path,
+) -> None:
+    store = _FakeStore()
+
+    def changing_brand_fit_builder(**kwargs: Any) -> Path:
+        package = _brand_fit_builder(**kwargs)
+        identity = AttributeMappingIdentity(
+            source="codex",
+            retailer="brand-owned",
+            row_type="parent",
+            parent_product_id="owned-one",
+            variant_id="",
+            category_key="cashmere_sweaters",
+            base_attribute_id="neckline",
+        )
+        store.states[identity] = (_mapping_state(value="Crew"),)
+        return package
+
+    bridge = AttributeReportingBridge(
+        tmp_path / "bridge",
+        taxonomy_loader=_taxonomy,
+        package_builder=_package_builder,
+        brand_fit_builder=changing_brand_fit_builder,
+        mapping_engine=_FakeMappingEngine(),
+        mapping_apply_engine=_FakeApplyEngine(),
+        store_factory=lambda: store,
+        now=lambda: "2026-07-15T12:00:00+00:00",
+    )
+    snapshot, source_job = _ready_job(bridge)
+    assert snapshot["category_key"] == "cashmere_sweaters"
+    job = bridge.create_brand_fit_job(
+        source_evidence_job_id=source_job["job_id"],
+        brand_source_retailer="brand-owned",
+        brand_name="Example Brand",
+        retailer_report_sha256="d" * 64,
+        retailer_report_verdict="Correct",
+        actor_email=ACTOR,
+    )
+
+    bridge.build_brand_fit_job(job["job_id"])
+
+    status_payload = bridge.brand_fit_status(job["job_id"], actor_email=ACTOR)
+    assert status_payload["status"] == "failed"
+    assert status_payload["error_type"] == "BridgeConflictError"
+
+
+def test_brand_fit_fails_closed_when_mapping_note_contains_private_path(
+    tmp_path: Path,
+) -> None:
+    store = _FakeStore()
+    identity = AttributeMappingIdentity(
+        source="codex",
+        retailer="brand-owned",
+        row_type="parent",
+        parent_product_id="owned-one",
+        variant_id="",
+        category_key="cashmere_sweaters",
+        base_attribute_id="neckline",
+    )
+    store.states[identity] = (
+        _mapping_state(
+            value="Crew",
+            note="Loaded from /srv/private/mapping-review.json",
+        ),
+    )
+    bridge = _bridge(tmp_path, store)
+    _snapshot, source_job = _ready_job(bridge)
+    job = bridge.create_brand_fit_job(
+        source_evidence_job_id=source_job["job_id"],
+        brand_source_retailer="brand-owned",
+        brand_name="Example Brand",
+        retailer_report_sha256="d" * 64,
+        retailer_report_verdict="Correct",
+        actor_email=ACTOR,
+    )
+
+    bridge.build_brand_fit_job(job["job_id"])
+
+    status_payload = bridge.brand_fit_status(job["job_id"], actor_email=ACTOR)
+    assert status_payload["status"] == "failed"
+    assert not (
+        bridge.root / "brand_fit_jobs" / job["job_id"] / "brand_fit_pack.zip"
+    ).exists()
+
+
+def test_brand_fit_fails_if_product_cache_changes_during_build(
+    tmp_path: Path,
+) -> None:
+    store = _FakeStore()
+
+    def changing_brand_fit_builder(**kwargs: Any) -> Path:
+        package = _brand_fit_builder(**kwargs)
+        store.attribute_cache_entries["parent_filtered"] = (
+            b"changed-product-cache",
+            "2026-07-15T12:30:00+00:00",
+        )
+        return package
+
+    bridge = AttributeReportingBridge(
+        tmp_path / "bridge",
+        taxonomy_loader=_taxonomy,
+        package_builder=_package_builder,
+        brand_fit_builder=changing_brand_fit_builder,
+        mapping_engine=_FakeMappingEngine(),
+        mapping_apply_engine=_FakeApplyEngine(),
+        store_factory=lambda: store,
+        now=lambda: "2026-07-15T12:00:00+00:00",
+    )
+    _snapshot, source_job = _ready_job(bridge)
+    job = bridge.create_brand_fit_job(
+        source_evidence_job_id=source_job["job_id"],
+        brand_source_retailer="brand-owned",
+        brand_name="Example Brand",
+        retailer_report_sha256="d" * 64,
+        retailer_report_verdict="Correct",
+        actor_email=ACTOR,
+    )
+
+    bridge.build_brand_fit_job(job["job_id"])
+
+    status_payload = bridge.brand_fit_status(job["job_id"], actor_email=ACTOR)
+    assert status_payload["status"] == "failed"
+    assert status_payload["error_type"] == "BridgeConflictError"
+    assert not (
+        bridge.root / "brand_fit_jobs" / job["job_id"] / "brand_fit_pack.zip"
+    ).exists()
+
+
+def test_brand_fit_rejects_incoherent_product_cache_generations(
+    tmp_path: Path,
+) -> None:
+    store = _FakeStore()
+    payload, _generated_at = store.attribute_cache_entries["variant_result"]
+    store.attribute_cache_entries["variant_result"] = (
+        payload,
+        "2026-07-15T11:30:00+00:00",
+    )
+    bridge = _bridge(tmp_path, store)
+
+    with pytest.raises(BridgeConflictError, match="different generations"):
+        bridge._capture_product_data_snapshot(
+            retailer="saksfifthavenue",
+            retailer_category_keys=["cashmere_sweaters"],
+            brand_source_retailer="brand-owned",
+            owned_category_keys=["cashmere_sweaters"],
+        )
+
+
+@pytest.mark.parametrize(
+    "generated_at",
+    ["not-a-timestamp", "2026-07-15T11:00:00"],
+)
+def test_brand_fit_rejects_invalid_or_timezone_naive_cache_timestamp(
+    tmp_path: Path,
+    generated_at: str,
+) -> None:
+    store = _FakeStore()
+    payload, _prior_generated_at = store.attribute_cache_entries["variant_result"]
+    store.attribute_cache_entries["variant_result"] = (payload, generated_at)
+    bridge = _bridge(tmp_path, store)
+
+    with pytest.raises(BridgeConflictError, match="invalid generation timestamp"):
+        bridge._capture_product_data_snapshot(
+            retailer="saksfifthavenue",
+            retailer_category_keys=["cashmere_sweaters"],
+            brand_source_retailer="brand-owned",
+            owned_category_keys=["cashmere_sweaters"],
+        )
 
 
 def test_mapping_workset_rejects_more_than_the_complete_task_limit(
@@ -2410,6 +3000,7 @@ def test_main_application_registers_attribute_reporting_bridge_routes() -> None:
 
     assert "/case-notes/api/attribute-reporting/taxonomies/{category_key}" in paths
     assert "/case-notes/api/attribute-reporting/evidence-packs" in paths
+    assert "/case-notes/api/attribute-reporting/brand-fit-packs" in paths
     assert (
         "/case-notes/api/attribute-reporting/mapping-worksets/{workset_id}/submissions"
         in paths

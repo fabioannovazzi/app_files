@@ -89,6 +89,10 @@ CORE_PRODUCT_COLUMNS = [
     "brand",
     "category_key",
     "variant_count",
+    "hero_image_url",
+    "swatch_image_url",
+    "og_image_url",
+    "image_url",
     "image_file",
 ]
 ANCHOR_OUTPUT_EXTRA_COLUMNS = [
@@ -1577,15 +1581,42 @@ def _brand_matches(value: Any, brand_key: str) -> bool:
     aliases = _brand_key_aliases(brand_key)
     if not aliases:
         return False
-    return any(alias in normalized or normalized in alias for alias in aliases)
+    return normalized in aliases
 
 
-def _filter_brand_if_possible(df: pl.DataFrame, brand_name: str) -> pl.DataFrame:
+def _brand_label_starts_with_alias(value: Any, brand_name: str) -> bool:
+    """Match a product-card label only when it starts with an explicit alias."""
+
+    normalized = _normalize_product_key(value)
+    if normalized is None:
+        return False
+    return any(
+        normalized == alias or normalized.startswith(f"{alias} ")
+        for alias in _brand_key_aliases(brand_name)
+    )
+
+
+def _filter_brand_if_possible(
+    df: pl.DataFrame,
+    brand_name: str,
+    *,
+    require_brand_column: bool = False,
+    required_scope_label: str = "current-retailer products",
+) -> pl.DataFrame:
     brand_column = _first_existing(_columns(df), BRAND_CANDIDATES)
     if brand_column is None:
+        if require_brand_column:
+            raise ValueError(
+                "Installed Brand Fit requires an explicit brand field for "
+                f"{required_scope_label}."
+            )
         return df
     brand_key = _normalize_product_key(brand_name)
     if brand_key is None:
+        if require_brand_column:
+            raise ValueError(
+                "Installed Brand Fit requires a valid explicit brand name."
+            )
         return df
     return df.filter(
         pl.col(brand_column)
@@ -1686,7 +1717,7 @@ def _parse_ulta_brand_page_products(
         )
         if not label:
             continue
-        if brand_key and not _brand_matches(label, brand_key):
+        if brand_key and not _brand_label_starts_with_alias(label, brand_name):
             continue
         product_keys = _brand_stripped_product_key_aliases(label, brand_name)
         url_slug = _ulta_product_slug_from_url(href)
@@ -1948,12 +1979,21 @@ def _load_owned_products(
     category_key: str,
     category_keys: Sequence[str] | None = None,
     source_label: str,
+    brand_name: str | None = None,
+    require_brand_column: bool = False,
 ) -> pl.DataFrame:
     raw_parents, raw_variants = _load_database_catalog_products(
         source_label=source_label,
         category_key=category_key,
         category_keys=category_keys,
     )
+    if brand_name is not None:
+        raw_parents = _filter_brand_if_possible(
+            raw_parents,
+            brand_name,
+            require_brand_column=require_brand_column,
+            required_scope_label="owned-catalog products",
+        )
     parents = _add_standard_columns(
         _filter_category(raw_parents, category_keys or (category_key,)),
         category_key=category_key,
@@ -1999,6 +2039,7 @@ def _load_retailer_brand_products(
     category_keys: Sequence[str] | None = None,
     brand_name: str,
     source_label: str,
+    require_brand_column: bool = False,
 ) -> pl.DataFrame:
     products, _variants = _load_database_catalog_products(
         source_label=source_label,
@@ -2006,7 +2047,11 @@ def _load_retailer_brand_products(
         category_keys=category_keys,
     )
     products = _filter_category(products, category_keys or (category_key,))
-    products = _filter_brand_if_possible(products, brand_name)
+    products = _filter_brand_if_possible(
+        products,
+        brand_name,
+        require_brand_column=require_brand_column,
+    )
     products = _add_standard_columns(
         products,
         category_key=category_key,
@@ -3263,7 +3308,13 @@ def _brand_fit_package_warning_payload(
         raw_source_integrity = sources.get("source_innovation_package_integrity")
         if isinstance(raw_source_integrity, Mapping):
             source_integrity = raw_source_integrity
-        if sources.get("retailer_live_check_enabled") is False:
+        current_snapshot_mode = (
+            sources.get("retailer_presence_mode") == "current_database_snapshot"
+        )
+        if (
+            sources.get("retailer_live_check_enabled") is False
+            and not current_snapshot_mode
+        ):
             warnings.append(
                 {
                     "source": "brand_fit_context",
@@ -5618,6 +5669,55 @@ manufacturer/catalog data so Pro can write the report.
 """
 
 
+def _installed_context_text(summary: Mapping[str, Any]) -> str:
+    """Explain the URL-only evidence contract used by installed Clara."""
+
+    report = summary.get("source_retailer_report")
+    evidence = summary.get("source_retailer_evidence")
+    presence = summary.get("retailer_presence")
+    product_snapshot = summary.get("product_data_snapshot")
+    return f"""# Brand Fit evidence context
+
+This package compares the selected retailer signals with two database scopes:
+the brand's current stored presence at {summary["retailer_label"]} and the
+brand-owned catalogue. Clara performs interpretation, report writing, and
+independent report checking locally in Codex; this package contains evidence,
+not a finished report.
+
+- Brand: {summary["brand_name"]}
+- Category: {summary["category_label"]}
+- Retailer report binding: {json.dumps(report, ensure_ascii=False, sort_keys=True)}
+- Retailer evidence binding: {json.dumps(evidence, ensure_ascii=False, sort_keys=True)}
+- Retailer presence snapshot: {json.dumps(presence, ensure_ascii=False, sort_keys=True)}
+- Product-data snapshot: {json.dumps(product_snapshot, ensure_ascii=False, sort_keys=True)}
+- Image policy: retain public image URLs only; fetch selected image bytes locally.
+
+Use `retailer_brand_anchors.csv` for current stored retailer presence,
+`manufacturer_catalog_products.csv` for the owned catalogue,
+`manufacturer_products_not_at_retailer.csv` for catalogue gaps, and the two
+bundle-match tables plus `reference_candidates.csv` to compare both scopes with
+the same source signal bundles. Treat deterministic candidate ordering as
+evidence for review, not as the final semantic Brand Fit judgment.
+"""
+
+
+def _installed_readme_text(summary: Mapping[str, Any]) -> str:
+    """Describe the installed Clara handoff without legacy service instructions."""
+
+    return f"""# {summary["brand_name"]} Brand Fit evidence
+
+This is a URL-only evidence package for Clara's installed Brand Fit workflow.
+It is derived from an actor-owned Retailer Signals evidence job and is bound to
+the checked local retailer report by SHA-256 and verdict in `summary.json`.
+
+Current retailer presence is explicitly a stored database snapshot. The owned
+catalogue and current-retailer mappings were pinned before and after the build.
+No model ran on the server, no report was generated on the server, and no image
+bytes are included. Clara downloads selected public image URLs into the user's
+local workspace when visual inspection is useful.
+"""
+
+
 def _write_zip(output_dir: Path) -> Path:
     zip_path = _package_zip_path(output_dir)
     legacy_zip_path = output_dir.with_suffix(".zip")
@@ -5952,9 +6052,22 @@ def _build_package_impl(
     retailer_live_check_timeout: float = 12.0,
     retailer_live_fetcher: Callable[[str], str | None] | None = None,
     allow_missing_brand_images: bool = False,
+    require_innovation_brief: bool = True,
+    include_image_bytes: bool = True,
+    write_legacy_prompt: bool = True,
+    source_retailer_report: Mapping[str, str] | None = None,
+    source_retailer_evidence: Mapping[str, str] | None = None,
+    retailer_presence_snapshot: Mapping[str, str] | None = None,
+    product_data_snapshot: Mapping[str, Any] | None = None,
+    mapping_state_snapshot: Mapping[str, Any] | None = None,
+    require_retailer_brand_column: bool = False,
+    require_owned_brand_column: bool = False,
+    refresh_database_cache: bool = False,
 ) -> Path:
     """Build a Brand Fit package from innovation, retailer, and catalog data."""
 
+    if refresh_database_cache:
+        _DATABASE_ATTRIBUTE_CACHE_BY_RETAILER.clear()
     _clear_existing_output_dir(
         output_root,
         brand_source_retailer=brand_source_retailer,
@@ -5969,15 +6082,19 @@ def _build_package_impl(
         raise FileNotFoundError(
             f"Innovation package directory does not exist: {innovation_package_dir}"
         )
-    innovation_brief_path = innovation_brief_path or _innovation_brief_path(
-        retailer,
-        category_key,
-    )
-    if not innovation_brief_path.exists():
+    if innovation_brief_path is None and require_innovation_brief:
+        innovation_brief_path = _innovation_brief_path(retailer, category_key)
+    if require_innovation_brief and (
+        innovation_brief_path is None or not innovation_brief_path.exists()
+    ):
         raise FileNotFoundError(
             "Brand Fit package generation requires an existing retailer signal "
             f"brief for {retailer}/{category_key}: {innovation_brief_path}. "
             "Do not generate a Brand Fit package from raw signal tables alone."
+        )
+    if innovation_brief_path is not None and not innovation_brief_path.exists():
+        raise FileNotFoundError(
+            f"Innovation brief path does not exist: {innovation_brief_path}"
         )
     default_owned_cli_dir = _default_owned_cli_dir(
         brand_source_retailer,
@@ -6013,6 +6130,8 @@ def _build_package_impl(
         category_key=category_key,
         category_keys=owned_category_keys,
         source_label=brand_source_retailer,
+        brand_name=brand_name if require_owned_brand_column else None,
+        require_brand_column=require_owned_brand_column,
     )
     _require_owned_products(
         owned,
@@ -6047,6 +6166,7 @@ def _build_package_impl(
         category_keys=retailer_category_keys,
         brand_name=brand_name,
         source_label=retailer,
+        require_brand_column=require_retailer_brand_column,
     )
     attribute_lookup, attribute_source_files = _load_retailer_product_attribute_lookup(
         innovation_package_dir,
@@ -6113,13 +6233,16 @@ def _build_package_impl(
         anchors=anchors,
         candidates=candidates,
     )
-    owned, manufacturer_image_rows = _copy_manufacturer_images(
-        owned,
-        cli_dir=owned_cli_dir,
-        cli_dirs=resolved_owned_cli_dirs,
-        output_dir=output_dir,
-        parent_ids=manufacturer_image_parent_ids,
-    )
+    if include_image_bytes:
+        owned, manufacturer_image_rows = _copy_manufacturer_images(
+            owned,
+            cli_dir=owned_cli_dir,
+            cli_dirs=resolved_owned_cli_dirs,
+            output_dir=output_dir,
+            parent_ids=manufacturer_image_parent_ids,
+        )
+    else:
+        manufacturer_image_rows = []
     anchors = _build_anchors(
         owned,
         retailer_products,
@@ -6142,16 +6265,17 @@ def _build_package_impl(
         anchor_matches,
         max_reference_candidates=max_reference_candidates,
     )
-    _validate_brand_image_coverage(
-        brand_source_retailer=brand_source_retailer,
-        brand_name=brand_name,
-        retailer=retailer,
-        category_key=category_key,
-        owned=owned,
-        candidates=candidates,
-        manufacturer_image_rows=manufacturer_image_rows,
-        allow_missing_brand_images=allow_missing_brand_images,
-    )
+    if include_image_bytes:
+        _validate_brand_image_coverage(
+            brand_source_retailer=brand_source_retailer,
+            brand_name=brand_name,
+            retailer=retailer,
+            category_key=category_key,
+            owned=owned,
+            candidates=candidates,
+            manufacturer_image_rows=manufacturer_image_rows,
+            allow_missing_brand_images=allow_missing_brand_images,
+        )
     pre_attribute_anchors = _build_anchors(
         owned,
         retailer_products_before_attribute_enrichment,
@@ -6187,10 +6311,14 @@ def _build_package_impl(
     )
     plain_signal_guide = _plain_language_signal_guide(signal_bundles)
     attribute_coverage = _combined_attribute_coverage(anchors=anchors, owned=owned)
-    innovation_image_rows = _copy_innovation_example_images(
-        innovation_package_dir,
-        output_dir=output_dir,
-        signal_bundles=signal_bundles,
+    innovation_image_rows = (
+        _copy_innovation_example_images(
+            innovation_package_dir,
+            output_dir=output_dir,
+            signal_bundles=signal_bundles,
+        )
+        if include_image_bytes
+        else []
     )
     anchor_image_rows = [
         {
@@ -6218,6 +6346,16 @@ def _build_package_impl(
         "owned_cli_dirs": [str(path) for path in resolved_owned_cli_dirs],
         "owned_category_keys": list(owned_category_keys or (category_key,)),
         "retailer_catalog_source": "pdp_database",
+        "retailer_presence_mode": (
+            str(retailer_presence_snapshot.get("mode"))
+            if retailer_presence_snapshot is not None
+            else "live_retailer_check" if retailer_live_check else "database_snapshot"
+        ),
+        "retailer_presence_read_at": (
+            str(retailer_presence_snapshot.get("read_at"))
+            if retailer_presence_snapshot is not None
+            else None
+        ),
         "retailer_category_keys": list(retailer_category_keys or (category_key,)),
         "retailer_live_check_enabled": retailer_live_check,
         "retailer_live_brand_page_url": retailer_live_brand_page_url,
@@ -6253,6 +6391,38 @@ def _build_package_impl(
         package_integrity=package_integrity,
         sources=sources,
     )
+    if source_retailer_report is not None:
+        summary["source_retailer_report"] = {
+            "sha256": str(source_retailer_report.get("sha256") or ""),
+            "verdict": str(source_retailer_report.get("verdict") or ""),
+        }
+    if source_retailer_evidence is not None:
+        summary["source_retailer_evidence"] = {
+            "job_id": str(source_retailer_evidence.get("job_id") or ""),
+            "package_sha256": str(source_retailer_evidence.get("package_sha256") or ""),
+        }
+    if retailer_presence_snapshot is not None:
+        summary["retailer_presence"] = {
+            "mode": str(retailer_presence_snapshot.get("mode") or ""),
+            "read_at": str(retailer_presence_snapshot.get("read_at") or ""),
+        }
+    if product_data_snapshot is not None:
+        summary["product_data_snapshot"] = json.loads(
+            json.dumps(dict(product_data_snapshot), ensure_ascii=False)
+        )
+    mapping_state_payload: dict[str, Any] | None = None
+    if mapping_state_snapshot is not None:
+        mapping_state_payload = json.loads(
+            json.dumps(dict(mapping_state_snapshot), ensure_ascii=False)
+        )
+        mapping_state_sha256 = str(
+            mapping_state_payload.get("state_sha256") or ""
+        ).strip()
+        if not mapping_state_sha256:
+            raise ValueError(
+                "Brand Fit mapping-state provenance requires state_sha256."
+            )
+        summary["mapping_state_snapshot_sha256"] = mapping_state_sha256
     package_warnings = _brand_fit_package_warning_payload(
         summary=summary,
         package_integrity=package_integrity,
@@ -6302,14 +6472,30 @@ def _build_package_impl(
     _write_json(output_dir / "package_integrity.json", package_integrity)
     _write_json(output_dir / "package_warnings.json", package_warnings)
     _write_json(output_dir / "summary.json", summary)
+    if mapping_state_payload is not None:
+        _write_json(
+            output_dir / "mapping_state_snapshot.json",
+            mapping_state_payload,
+        )
+    context_text = (
+        _brand_fit_context_text(summary, plain_signal_guide, attribute_coverage)
+        if write_legacy_prompt
+        else _installed_context_text(summary)
+    )
+    readme_text = (
+        _readme_text(summary)
+        if write_legacy_prompt
+        else _installed_readme_text(summary)
+    )
     (output_dir / "brand_fit_context.md").write_text(
-        _brand_fit_context_text(summary, plain_signal_guide, attribute_coverage),
+        context_text,
         encoding="utf-8",
     )
-    (output_dir / "README.md").write_text(_readme_text(summary), encoding="utf-8")
-    (output_dir / "prompt_for_pro.txt").write_text(
-        _build_prompt(summary), encoding="utf-8"
-    )
+    (output_dir / "README.md").write_text(readme_text, encoding="utf-8")
+    if write_legacy_prompt:
+        (output_dir / "prompt_for_pro.txt").write_text(
+            _build_prompt(summary), encoding="utf-8"
+        )
     _write_json(
         output_dir / "pack_manifest.json",
         {
@@ -6345,6 +6531,17 @@ def build_package(
     retailer_live_check_timeout: float = 12.0,
     retailer_live_fetcher: Callable[[str], str | None] | None = None,
     allow_missing_brand_images: bool = False,
+    require_innovation_brief: bool = True,
+    include_image_bytes: bool = True,
+    write_legacy_prompt: bool = True,
+    source_retailer_report: Mapping[str, str] | None = None,
+    source_retailer_evidence: Mapping[str, str] | None = None,
+    retailer_presence_snapshot: Mapping[str, str] | None = None,
+    product_data_snapshot: Mapping[str, Any] | None = None,
+    mapping_state_snapshot: Mapping[str, Any] | None = None,
+    require_retailer_brand_column: bool = False,
+    require_owned_brand_column: bool = False,
+    refresh_database_cache: bool = False,
 ) -> Path:
     """Build a Brand Fit package and remove partial output if generation fails."""
 
@@ -6373,6 +6570,17 @@ def build_package(
             retailer_live_check_timeout=retailer_live_check_timeout,
             retailer_live_fetcher=retailer_live_fetcher,
             allow_missing_brand_images=allow_missing_brand_images,
+            require_innovation_brief=require_innovation_brief,
+            include_image_bytes=include_image_bytes,
+            write_legacy_prompt=write_legacy_prompt,
+            source_retailer_report=source_retailer_report,
+            source_retailer_evidence=source_retailer_evidence,
+            retailer_presence_snapshot=retailer_presence_snapshot,
+            product_data_snapshot=product_data_snapshot,
+            mapping_state_snapshot=mapping_state_snapshot,
+            require_retailer_brand_column=require_retailer_brand_column,
+            require_owned_brand_column=require_owned_brand_column,
+            refresh_database_cache=refresh_database_cache,
         )
     except Exception:
         zip_path = _package_zip_path(output_dir)
