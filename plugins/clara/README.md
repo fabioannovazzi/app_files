@@ -1,6 +1,6 @@
 # Clara
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Clara is a Codex plugin for advisory and succession projects where the
 core asset is consultant judgement. It keeps a durable case map, indexes source

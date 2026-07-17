@@ -34,7 +34,7 @@ primary web experience. FastAPI only serves `templates/` and `static/`.
 ## Codex Plugins
 
 The Codex plugin source is maintained in this repository and licensed under
-the [MIT License](LICENSE). Every plugin manifest points to the canonical
+the [GNU Affero General Public License v3.0](LICENSE). Every plugin manifest points to the canonical
 [GitHub repository](https://github.com/fabioannovazzi/app_files), and each
 plugin README links directly to its source folder.
 
@@ -483,4 +483,4 @@ expected errors and handle or re‑raise the rest.
 ## License
 
 This project and its Codex plugins are available under the
-[MIT License](LICENSE).
+[GNU Affero General Public License v3.0](LICENSE).

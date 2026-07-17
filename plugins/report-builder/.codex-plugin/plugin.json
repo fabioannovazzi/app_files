@@ -1,6 +1,6 @@
 {
   "name": "report-builder",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "description": "Deterministic report-building workflow guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://mparanza.com/static/shared/report-builder/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "report",
     "finance",

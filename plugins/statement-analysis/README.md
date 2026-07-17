@@ -1,6 +1,6 @@
 # Statement Analysis
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/statement-analysis) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/statement-analysis) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Deterministic financial statement table plugin for profit-and-loss or income
 statement row schemes.

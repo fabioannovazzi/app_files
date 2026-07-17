@@ -1,6 +1,6 @@
 # Distribution Analysis Plugin
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/distribution-analysis) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/distribution-analysis) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Distribution Analysis wraps the legacy Mparanza Plotly distribution chart code
 for Codex runs. It supports histogram, boxplot, stripplot, ECDF and

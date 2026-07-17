@@ -1,6 +1,6 @@
 # Reporting Engine
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/reporting-engine) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/reporting-engine) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Reporting Engine is Clara's packaged non-semantic reporting contract.
 

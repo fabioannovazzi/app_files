@@ -1,6 +1,6 @@
 # Variance Analysis
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/variance-analysis) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/variance-analysis) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Variance Analysis is a Codex workflow plugin for sales variance analysis with
 Codex-led interpretation.

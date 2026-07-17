@@ -1,6 +1,6 @@
 # Period-over-Period Analysis
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/period-comparison) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/period-comparison) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Period-over-Period Analysis is a Codex workflow plugin for previous-year
 comparison analysis. It follows the chart-family plugin pattern: legacy
