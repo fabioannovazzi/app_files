@@ -1,6 +1,6 @@
 # Journal Sampling
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/journal-sampling) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/journal-sampling) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Journal Sampling is a Codex workflow plugin for extracting accounting journal entries from variable Excel, CSV, print-style Excel, and text PDF formats, then creating reproducible audit samples.
 

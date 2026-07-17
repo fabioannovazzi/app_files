@@ -1,6 +1,6 @@
 {
   "name": "attribute-reporting",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Local Codex workflow for product attribute mapping, cohort analysis, HTML reporting, and evidence-backed correctness review.",
   "author": {
     "name": "Mparanza",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://mparanza.com",
   "repository": "https://github.com/fabioannovazzi/app_files",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "attributes",
     "retail",

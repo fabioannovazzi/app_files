@@ -1,6 +1,6 @@
 # Set Overlap Analysis
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/set-overlap-analysis) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/set-overlap-analysis) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Deterministic Venn and UpSet chart plugin for CSV and Excel datasets.
 

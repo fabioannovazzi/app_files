@@ -1,6 +1,6 @@
 {
   "name": "check-entries",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "Deterministic journal-entry support testing guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -9,7 +9,7 @@
   },
   "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "audit",
     "entries",

@@ -1,6 +1,6 @@
 # Check Entries Codex Plugin
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/check-entries) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/check-entries) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Check Entries is a Codex workflow plugin for comparing selected journal entries with supporting PDF documents.
 

@@ -1,6 +1,6 @@
 # Client Intake
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/client-intake) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/client-intake) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Plugin Codex per trasformare una cartella cliente in una prima istruttoria operativa per lo studio: inventario, estrazioni locali, controlli formali, dati fiscali strutturati, memo operativo e bozza email cliente.
 

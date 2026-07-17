@@ -1,7 +1,7 @@
 Clara - installazione plugin Codex
 
 Codice sorgente: https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara
-Licenza MIT: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
+Licenza GNU AGPLv3: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
 
 1. Scarica lo ZIP del plugin.
 2. Estrai la cartella in una posizione locale stabile.

@@ -1,6 +1,6 @@
 # Riconciliazione partite
 
-[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/audit-reconciliation) · [MIT License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
+[Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/audit-reconciliation) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Plugin Codex per riconciliare partite aperte, mastrini, evidenze bancarie, distinte, factoring/anticipi e compensazioni in workpaper Excel/Word rivedibili.
 
