@@ -6,24 +6,17 @@
   ],
   "deck_toolkit": [
     "/presentations",
-    "/slides",
-    "/brief"
+    "/slides"
   ],
   "clara": [
     "/case-notes/voice",
     "/case-notes/api/voice",
     "/case-notes/api/attribute-reporting"
   ],
-  "legacy_sales": [
-    "/legacy/review/sales"
-  ],
   "legacy_attribute_analysis": [
     "/review/coverage",
     "/review/explicit-rules",
     "/review/issues",
     "/review"
-  ],
-  "reporting": [
-    "/conversation"
   ]
 }

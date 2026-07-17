@@ -22,7 +22,7 @@ from src.slides.semantic_pptx import (
 
 
 def test_build_pptx_template_manifest_extracts_supported_roles() -> None:
-    template_path = Path("src/review_brief/pptx_templates/uniform.pptx")
+    template_path = Path("src/slides/pptx_templates/uniform.pptx")
 
     manifest = build_pptx_template_manifest(template_path)
 
@@ -44,7 +44,7 @@ def test_ensure_deck_pptx_template_manifest_persists_manifest(tmp_path: Path) ->
     deck_path = tmp_path / "deckTemplate"
     deck_path.mkdir(parents=True, exist_ok=True)
     shutil.copy(
-        Path("src/review_brief/pptx_templates/uniform.pptx"),
+        Path("src/slides/pptx_templates/uniform.pptx"),
         deck_path / DECK_PPTX_TEMPLATE_FILENAME,
     )
 
@@ -60,7 +60,7 @@ def test_load_deck_pptx_template_manifest_preserves_zero_title_placeholder_idx(
     deck_path = tmp_path / "deckTemplateLoad"
     deck_path.mkdir(parents=True, exist_ok=True)
     shutil.copy(
-        Path("src/review_brief/pptx_templates/uniform.pptx"),
+        Path("src/slides/pptx_templates/uniform.pptx"),
         deck_path / DECK_PPTX_TEMPLATE_FILENAME,
     )
 
@@ -102,7 +102,7 @@ def test_render_slides_pptx_from_custom_template_uses_template_layouts(
     deck_path = tmp_path / "deckCustomTemplate"
     deck_path.mkdir(parents=True, exist_ok=True)
     shutil.copy(
-        Path("src/review_brief/pptx_templates/uniform.pptx"),
+        Path("src/slides/pptx_templates/uniform.pptx"),
         deck_path / DECK_PPTX_TEMPLATE_FILENAME,
     )
     image_path = deck_path / "pptx_assets" / "visual.png"
@@ -161,7 +161,7 @@ def test_render_slides_pptx_from_custom_template_uses_cached_manifest_for_title(
     deck_path = tmp_path / "deckCustomTemplateCachedManifest"
     deck_path.mkdir(parents=True, exist_ok=True)
     shutil.copy(
-        Path("src/review_brief/pptx_templates/uniform.pptx"),
+        Path("src/slides/pptx_templates/uniform.pptx"),
         deck_path / DECK_PPTX_TEMPLATE_FILENAME,
     )
     ensure_deck_pptx_template_manifest(deck_path)
@@ -208,7 +208,7 @@ def test_render_slides_pptx_from_custom_template_discards_template_sample_slides
     deck_path = tmp_path / "deckCustomTemplateWithSamples"
     deck_path.mkdir(parents=True, exist_ok=True)
     template_path = deck_path / DECK_PPTX_TEMPLATE_FILENAME
-    template = Presentation(str(Path("src/review_brief/pptx_templates/uniform.pptx")))
+    template = Presentation(str(Path("src/slides/pptx_templates/uniform.pptx")))
     sample_slide = template.slides.add_slide(template.slide_layouts[1])
     sample_slide.shapes.title.text = "TEMPLATE SAMPLE SLIDE"
     content_placeholder = sample_slide.placeholders[1]
@@ -304,7 +304,7 @@ def test_render_slides_pptx_from_custom_template_uses_text_visual_prototype(
 
 
 def _write_text_visual_prototype_template(template_path: Path) -> None:
-    presentation = Presentation(str(Path("src/review_brief/pptx_templates/uniform.pptx")))
+    presentation = Presentation(str(Path("src/slides/pptx_templates/uniform.pptx")))
     slide = presentation.slides.add_slide(presentation.slide_layouts[6])
     _add_test_textbox(
         slide,

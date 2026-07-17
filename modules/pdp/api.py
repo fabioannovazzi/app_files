@@ -8390,18 +8390,6 @@ def create_app() -> FastAPI:
         return await call_next(request)
 
     app.mount("/static", StaticFiles(directory="static"), name="static")
-    notebooklm_styles_path = Path("notebooklm_styles")
-    if notebooklm_styles_path.exists():
-        app.mount(
-            "/notebooklm-styles",
-            StaticFiles(directory=notebooklm_styles_path),
-            name="notebooklm_styles",
-        )
-    else:
-        LOGGER.warning(
-            "NotebookLM style examples directory not found at %s",
-            notebooklm_styles_path.resolve(),
-        )
     app.include_router(auth_router)
     app.include_router(auth_site_router)
     app.include_router(site_router)

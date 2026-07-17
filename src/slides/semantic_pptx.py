@@ -3678,10 +3678,7 @@ def _read_text_list(value: object) -> list[str]:
 
 def _load_template_presentation(presentation_cls, template_key: str):
     template_path = (
-        Path(__file__).resolve().parents[1]
-        / "review_brief"
-        / "pptx_templates"
-        / f"{template_key}.pptx"
+        Path(__file__).resolve().parent / "pptx_templates" / f"{template_key}.pptx"
     )
     if template_path.exists():
         return presentation_cls(str(template_path))

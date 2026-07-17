@@ -18,7 +18,6 @@ Key files and subdirectories
 - `attribute_classifications/attribute_classifications.parquet`: persisted attribute classification progress.
 - `product_attribute_cache/product_attributes.json`: product attribute cache.
 - `llm/record.json`: serialized LLM calls for write/replay modes.
-- `vr_cache/pages.db`: cached HTML/text fetches for validation/research.
 
 Overrides and environment variables
 - Cache locations are fixed; environment variables do not move cache files.

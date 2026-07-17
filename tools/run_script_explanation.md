@@ -15,7 +15,7 @@ Totally fine—here’s the “press‑this‑button” version.
 3. **Put the two list files in place** (one for app code, one for tests):
 
    ```bash
-   printf "modules/\nsrc/\nui/\n" > modules_to_scan.txt
+   printf "modules/\nsrc/\n" > modules_to_scan.txt
    printf "tests/\n" > tests_to_scan.txt
    ```
 

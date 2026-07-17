@@ -93,22 +93,6 @@ helpers used for Excel ingestion, ensuring numeric and date consistency across
 formats. Ambiguous Series truth values are logged and skipped, ensuring the UI
 never receives the exception.
 
-### Period aggregators
-
-`src.period_aggregators` contains helpers for period selection and labelling.
-Functions like `calculate_periods`, `calculate_rolling_period` and
-`filter_out_useless_periods` accept both eager and lazy frames and return lazy
-output when the input is lazy.
-
-```python
-import datetime as dt
-import polars as pl
-from src.period_aggregators import calculate_periods
-
-lf = pl.DataFrame({"Date": [dt.date(2024, 1, 31)]}).lazy()
-calculate_periods(lf, "Date")
-```
-
 ### Explanation and context columns
 
 Validation checks return a `status` field and an `explanation` column. When the
@@ -412,13 +396,10 @@ that page or API. When a route prefix is mapped to a key in
 
 | `page_key` | Routes guarded | Purpose |
 | --- | --- | --- |
-| `research_toolkit` | `GET /research/prompt/page`, `GET /research/validate/page` plus the Deep Research prompt and validation APIs under `/research` | Deep Research prompt creation and validation flows. |
-| `presentations` | `GET /presentations/page`, `GET /presentations/**` | Presentation landing page plus downloadable decks served by `_build_presentations_router`. |
-| `attribute_analysis` | `GET /review/page`, `GET /review/sales`, the `/review` API, plus the review brief launcher | Attribute review UI defined in `modules.pdp.api`. |
-| `attribute_coverage` | `GET /review/coverage/page`, the `/review/coverage` API | Attribute coverage workflows. |
-| `notebooklm_prompt` | `GET /review/brief`, `GET /brief/page` | NotebookLM brief generation pages. |
-| `sales_analysis` | `GET /sales/page`, the entire `/sales` API | Sales analysis tooling covering uploads, previews, and session endpoints. |
-| `slide_editor` | `GET /slides/page` | Slide editor UI served by `modules.slides.site_router`. |
+| `attribute_analysis` | `/review/reports`, `/review/brand-reports`, `/review/product-hypotheses` | Generated attribute-analysis report surfaces. |
+| `deck_toolkit` | `/presentations`, `/slides` | Presentation downloads and the slide editor. |
+| `clara` | `/case-notes/voice`, `/case-notes/api/voice`, `/case-notes/api/attribute-reporting` | Clara voice notes and attribute-reporting APIs. |
+| `legacy_attribute_analysis` | `/review`, `/review/coverage`, `/review/explicit-rules`, `/review/issues` | Current attribute review, coverage, and governance interfaces. |
 
 To grant access add the user’s Google address to the corresponding list. Use
 `"*"` to allow every authenticated user while retaining the route mapping for
