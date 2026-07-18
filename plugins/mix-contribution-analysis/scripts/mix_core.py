@@ -2581,12 +2581,17 @@ def build_chart_specs(
         artifact: str,
         *,
         base_chart: str | None = None,
+        select_with_base_chart: bool = True,
         **extra: Any,
     ) -> None:
         if (
             requested
             and name not in requested
-            and (base_chart is None or base_chart not in requested)
+            and not (
+                select_with_base_chart
+                and base_chart is not None
+                and base_chart in requested
+            )
         ):
             return
         spec = {
@@ -2779,6 +2784,7 @@ def build_chart_specs(
             "stackedColumnChart",
             "column_total_with_overlay.png",
             base_chart="column_total",
+            select_with_base_chart=False,
             dimensions=[LEGACY_TOTAL_COLUMN_DIMENSION],
             x_dimension=LEGACY_TOTAL_COLUMN_DIMENSION,
             y_dimension=LEGACY_TOTAL_COLUMN_DIMENSION,
@@ -2803,6 +2809,7 @@ def build_chart_specs(
             "stackedColumnChart",
             "like_for_like_column_total.png",
             base_chart="column_total",
+            select_with_base_chart=False,
             dimensions=[LEGACY_TOTAL_COLUMN_DIMENSION],
             x_dimension=LEGACY_TOTAL_COLUMN_DIMENSION,
             y_dimension=LEGACY_TOTAL_COLUMN_DIMENSION,
@@ -3134,6 +3141,7 @@ def build_chart_specs(
             "stackedColumnChart",
             "like_for_like_stacked_column.png",
             base_chart="stacked_column",
+            select_with_base_chart=False,
             dimensions=[primary],
             x_dimension=primary,
             y_dimension=primary,

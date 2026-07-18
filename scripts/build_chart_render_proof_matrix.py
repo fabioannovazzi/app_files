@@ -104,6 +104,66 @@ def _render_proof_status(
     return "proof_fixture_gap"
 
 
+def _period_scope_record(
+    capability: dict[str, Any],
+    compatibility: dict[str, Any],
+) -> dict[str, Any]:
+    """Surface manifest/profile period-scope evidence without semantic judgment."""
+
+    compatibility_scope = compatibility.get("period_scope") or {}
+    capability_scope = capability.get("period_scope_contract") or {}
+    role = str(
+        compatibility_scope.get("role")
+        or capability_scope.get("role")
+        or (capability.get("period_semantics") or {}).get("role")
+        or "none"
+    )
+    if compatibility_scope:
+        status = str(compatibility_scope.get("status") or "not_checked")
+        warning = compatibility_scope.get("pre_render_warning") or ""
+        period_candidates = compatibility_scope.get("period_candidates") or []
+    elif role == "none":
+        status = "not_applicable"
+        warning = ""
+        period_candidates = []
+    elif capability_scope.get("scope_required_for_render"):
+        status = "not_checked_scope_required"
+        warning = (
+            "Manifest requires period scope before render, but compatibility "
+            "audit did not provide period-scope evidence."
+        )
+        period_candidates = []
+    else:
+        status = "not_checked_scope_optional"
+        warning = ""
+        period_candidates = []
+    return {
+        "role": role,
+        "status": status,
+        "scope_required_for_render": bool(
+            compatibility_scope.get(
+                "scope_required_for_render",
+                capability_scope.get("scope_required_for_render", False),
+            )
+        ),
+        "explicit_all_data_allowed": bool(
+            compatibility_scope.get(
+                "explicit_all_data_allowed",
+                capability_scope.get("explicit_all_data_allowed", False),
+            )
+        ),
+        "accepted_scope_controls": list(
+            compatibility_scope.get("accepted_scope_controls")
+            or capability_scope.get("accepted_scope_controls")
+            or []
+        ),
+        "period_candidates": period_candidates,
+        "unscoped_default": compatibility_scope.get("unscoped_default")
+        or capability_scope.get("unscoped_default"),
+        "pre_render_warning": warning,
+    }
+
+
 def _capability_record(
     capability_id: str,
     capability: dict[str, Any],
@@ -121,6 +181,7 @@ def _capability_record(
         stress=stress,
         invocation_status=invocation_status,
     )
+    period_scope = _period_scope_record(capability, compatibility)
     return {
         "capability_id": capability_id,
         "family": capability.get("family"),
@@ -138,6 +199,8 @@ def _capability_record(
             stress=stress,
             invocation_status=invocation_status,
         ),
+        "period_scope_status": period_scope["status"],
+        "period_scope": period_scope,
         "mechanical_issues": compatibility.get("issues") or [],
         "missing_invocation_roles": invocation.get("missing_roles") or [],
         "artifact_labels": invocation.get("artifact_labels")
@@ -182,6 +245,9 @@ def build_chart_render_proof_matrix(
         "fixture_requirement": dict(
             sorted(Counter(record["fixture_requirement"] for record in records).items())
         ),
+        "period_scope_status": dict(
+            sorted(Counter(record["period_scope_status"] for record in records).items())
+        ),
     }
     payload = {
         "schema_version": "0.1",
@@ -222,15 +288,22 @@ def _markdown(payload: dict[str, Any]) -> str:
     lines.extend(["", "### Fixture Requirement", ""])
     for status, count in payload["counts"]["fixture_requirement"].items():
         lines.append(f"- `{status}`: `{count}`")
+    lines.extend(["", "### Period Scope Status", ""])
+    for status, count in payload["counts"]["period_scope_status"].items():
+        lines.append(f"- `{status}`: `{count}`")
     lines.extend(["", "## Capability Matrix", ""])
     for record in payload["records"]:
         lines.append(
             f"- `{record['capability_id']}`: "
             f"`{record['render_proof_status']}`"
             f" / fixture `{record['fixture_requirement']}`"
+            f" / period scope `{record['period_scope_status']}`"
         )
         if record["mechanical_issues"]:
             lines.append(f"  - Issues: `{', '.join(record['mechanical_issues'])}`")
+        warning = (record.get("period_scope") or {}).get("pre_render_warning")
+        if warning:
+            lines.append(f"  - Period scope: {warning}")
     lines.append("")
     return "\n".join(lines)
 

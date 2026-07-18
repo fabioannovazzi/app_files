@@ -167,6 +167,48 @@ def test_funnel_stage_table_rejects_missing_predicate_column(tmp_path: Path) -> 
         core.run_funnel_analysis(source_file, tmp_path / "funnel")
 
 
+def test_funnel_stage_table_accepts_explicit_stage_count_mappings(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    source_file = tmp_path / "stage_counts.csv"
+    source_file.write_text(
+        "funnel_stage,entered,passed\n"
+        "Awareness,100,70\n"
+        "Consideration,70,30\n"
+        "Purchase,30,12\n",
+        encoding="utf-8",
+    )
+    recipe_path = tmp_path / "recipe.json"
+    recipe_path.write_text(
+        json.dumps(
+            {
+                "stage_table_mappings": {
+                    "stage_column": "funnel_stage",
+                    "start_count_column": "entered",
+                    "pass_count_column": "passed",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = core.run_funnel_analysis(
+        source_file, tmp_path / "mapped_funnel", recipe_path
+    )
+
+    assert [row["stage"] for row in result.rows] == [
+        "Awareness",
+        "Consideration",
+        "Purchase",
+    ]
+    assert result.rows[0]["drop_off"] == -30
+    assert result.rows[-1]["stage_conversion"] == pytest.approx(0.4)
+    assert {stage["source"] for stage in result.context["stage_definitions"]} == {
+        "stage_table_mappings"
+    }
+
+
 def test_dependency_checker_accepts_explicit_requirements() -> None:
     checker = load_dependency_checker()
 

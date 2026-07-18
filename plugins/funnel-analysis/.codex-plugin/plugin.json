@@ -1,6 +1,6 @@
 {
   "name": "funnel-analysis",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Deterministic funnel-stage reporting table workflow.",
   "author": {
     "name": "Mparanza",

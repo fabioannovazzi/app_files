@@ -38,6 +38,23 @@ def test_build_chart_render_proof_matrix_classifies_fixture_needs(
                         "missing_roles": [],
                     },
                 },
+                "test.period_filter": {
+                    "family": "test",
+                    "selection_emphasis": "period_filter",
+                    "period_scope_contract": {
+                        "role": "filter",
+                        "scope_required_for_render": True,
+                        "explicit_all_data_allowed": True,
+                        "accepted_scope_controls": ["options.selected_periods"],
+                        "unscoped_default": "all_available_records",
+                    },
+                    "normalized_invocation_contract": {
+                        "status": "parameter_contract_ready",
+                        "artifact_labels": ["period-filter"],
+                        "output_forms": ["chart_png"],
+                        "missing_roles": [],
+                    },
+                },
             }
         },
     )
@@ -53,6 +70,10 @@ def test_build_chart_render_proof_matrix_classifies_fixture_needs(
                     "capability_id": "test.semantic",
                     "status": "parameter_contract_ready",
                 },
+                {
+                    "capability_id": "test.period_filter",
+                    "status": "parameter_contract_ready",
+                },
             ]
         },
     )
@@ -65,6 +86,25 @@ def test_build_chart_render_proof_matrix_classifies_fixture_needs(
                     "capability_id": "test.semantic",
                     "status": "mechanically_incomplete",
                     "issues": ["requires_semantic_or_package_role"],
+                },
+                {
+                    "capability_id": "test.period_filter",
+                    "status": "mechanically_compatible",
+                    "issues": [],
+                    "period_scope": {
+                        "role": "filter",
+                        "status": "caller_scope_required_before_render",
+                        "scope_required_for_render": True,
+                        "explicit_all_data_allowed": True,
+                        "accepted_scope_controls": ["options.selected_periods"],
+                        "period_candidates": ["date"],
+                        "unscoped_default": "all_available_records",
+                        "pre_render_warning": (
+                            "This chart has a period filter. A caller must pass "
+                            "a bounded analysis period or explicitly request all "
+                            "available data."
+                        ),
+                    },
                 },
             ]
         },
@@ -82,6 +122,11 @@ def test_build_chart_render_proof_matrix_classifies_fixture_needs(
                     "capability_id": "test.semantic",
                     "status": "semantic_gap",
                     "png_evidence": {"status": "gallery_png"},
+                },
+                {
+                    "capability_id": "test.period_filter",
+                    "status": "dataset_gap",
+                    "png_evidence": {"status": "missing"},
                 },
             ]
         },
@@ -105,6 +150,16 @@ def test_build_chart_render_proof_matrix_classifies_fixture_needs(
     assert (
         records["test.semantic"]["fixture_requirement"] == "semantic_or_package_fixture"
     )
-    assert payload["counts"]["capabilities"] == 2
+    assert records["test.period_filter"]["period_scope_status"] == (
+        "caller_scope_required_before_render"
+    )
+    assert records["test.period_filter"]["period_scope"]["period_candidates"] == [
+        "date"
+    ]
+    assert (
+        payload["counts"]["period_scope_status"]["caller_scope_required_before_render"]
+        == 1
+    )
+    assert payload["counts"]["capabilities"] == 3
     assert (tmp_path / "matrix.json").exists()
     assert (tmp_path / "matrix.md").exists()

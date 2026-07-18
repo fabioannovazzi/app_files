@@ -1,6 +1,6 @@
 {
   "name": "clara",
-  "version": "0.1.91",
+  "version": "0.1.92",
   "description": "Clara runs interviews, transcribes evidence, corrects decks, creates checked Retailer Signals and Brand Fit reports, analyzes business data, and prepares reviewed advisory outputs.",
   "author": {
     "name": "Mparanza",
@@ -27,6 +27,7 @@
     "brand-fit",
     "brand-catalogue-comparison",
     "reporting-engine",
+    "dataset-semantic-layer",
     "data-analysis",
     "business-charts",
     "product-taxonomy",
@@ -41,7 +42,7 @@
   "interface": {
     "displayName": "Clara",
     "shortDescription": "AI companion for consultants",
-    "longDescription": "Clara handles interviews, transcripts, deck correction, Retailer Signals, Brand Fit, and business-data analysis. Brand Fit compares completed retailer signals with a brand's current presence at that retailer and its owned catalogue in the stored database snapshot; Codex performs semantic interpretation and independent review locally. Its Reporting Engine profiles a dataset, selects a suitable analysis with Codex, and runs embedded chart components. For advisory projects, Clara organizes evidence, separates sources from judgement, and prepares reviewed workpapers and decision outputs. The user keeps professional judgement.",
+    "longDescription": "Clara handles interviews, transcripts, deck correction, Retailer Signals, Brand Fit, and business-data analysis. Brand Fit compares completed retailer signals with a brand's current presence at that retailer and its owned catalogue in the stored database snapshot; Codex performs semantic interpretation and independent review locally. Its Reporting Engine profiles a dataset, creates and validates source-backed dataset semantics, selects a suitable analysis with Codex, and runs embedded chart components. For advisory projects, Clara organizes evidence, separates sources from judgement, and prepares reviewed workpapers and decision outputs. The user keeps professional judgement.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -56,7 +57,7 @@
     "defaultPrompt": [
       "Use Clara to organize this advisory project, update the evidence map, surface gaps, and identify decisions that cannot wait.",
       "Use Clara to run this interview, transcribe this recording, or correct this deck while preserving approved content.",
-      "Use Clara to run Retailer Signals or Brand Fit, or choose and render the right business chart, then check the report."
+      "Use Clara for Retailer Signals, Brand Fit, or reviewed dataset semantics; render the right business chart and check it."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

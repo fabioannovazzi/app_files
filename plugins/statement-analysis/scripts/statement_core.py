@@ -205,6 +205,12 @@ def default_recipe() -> dict[str, Any]:
         "statement_label": "Profit and loss statement",
         "unit": "mUSD",
         "scope_label": "2012..2015 PL and AC (FC)",
+        "mappings": {
+            "row_key_column": "row_key",
+            "period_column": "period",
+            "scenario_column": "scenario",
+            "value_column": "value",
+        },
         "periods": list(DEFAULT_PERIODS),
         "scenarios_by_period": dict(DEFAULT_SCENARIOS_BY_PERIOD),
         "statement_rows": [dict(item) for item in DEFAULT_STATEMENT_ROWS],
@@ -220,7 +226,15 @@ def load_recipe(recipe_path: Path | None) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"Recipe must be a JSON object: {recipe_path}")
     merged = default_recipe()
+    default_mappings = dict(merged["mappings"])
+    payload_mappings = payload.get("mappings")
+    if payload_mappings is not None and not isinstance(payload_mappings, dict):
+        raise ValueError("Recipe mappings must be an object.")
     merged.update(payload)
+    merged["mappings"] = {
+        **default_mappings,
+        **(payload_mappings or {}),
+    }
     return merged
 
 
@@ -232,13 +246,34 @@ def _parse_number(value: Any) -> float:
     return float(cleaned)
 
 
-def _read_values(source_file: Path) -> dict[tuple[str, str, str], float]:
+def _source_columns(recipe: dict[str, Any]) -> dict[str, str]:
+    mappings = recipe.get("mappings")
+    if not isinstance(mappings, dict):
+        raise ValueError("Recipe mappings must be an object.")
+    columns: dict[str, str] = {}
+    for role, default in {
+        "row_key_column": "row_key",
+        "period_column": "period",
+        "scenario_column": "scenario",
+        "value_column": "value",
+    }.items():
+        value = str(mappings.get(role) or default).strip()
+        if not value:
+            raise ValueError(f"Recipe mapping {role} must name a source column.")
+        columns[role] = value
+    return columns
+
+
+def _read_values(
+    source_file: Path, recipe: dict[str, Any]
+) -> dict[tuple[str, str, str], float]:
     if not source_file.exists():
         raise FileNotFoundError(f"Source file does not exist: {source_file}")
+    columns = _source_columns(recipe)
     with source_file.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         fieldnames = set(reader.fieldnames or [])
-        required = {"row_key", "period", "scenario", "value"}
+        required = set(columns.values())
         missing = sorted(required - fieldnames)
         if missing:
             raise ValueError(
@@ -246,14 +281,16 @@ def _read_values(source_file: Path) -> dict[tuple[str, str, str], float]:
             )
         values: dict[tuple[str, str, str], float] = {}
         for line_number, row in enumerate(reader, start=2):
-            row_key = str(row.get("row_key") or "").strip()
-            period = str(row.get("period") or "").strip()
-            scenario = str(row.get("scenario") or "").strip()
+            row_key = str(row.get(columns["row_key_column"]) or "").strip()
+            period = str(row.get(columns["period_column"]) or "").strip()
+            scenario = str(row.get(columns["scenario_column"]) or "").strip()
             if not row_key or not period or not scenario:
                 raise ValueError(
                     f"Blank row_key, period, or scenario at line {line_number}."
                 )
-            values[(row_key, period, scenario)] = _parse_number(row.get("value"))
+            values[(row_key, period, scenario)] = _parse_number(
+                row.get(columns["value_column"])
+            )
     return values
 
 
@@ -687,7 +724,7 @@ def run_statement_analysis(
 
     recipe = load_recipe(recipe_path)
     recipe["language"] = language
-    values = _read_values(source_file)
+    values = _read_values(source_file, recipe)
     rows = resolve_statement_rows(values, recipe)
     output_dir.mkdir(parents=True, exist_ok=True)
 
