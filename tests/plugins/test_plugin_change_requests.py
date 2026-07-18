@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import multiprocessing
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -37,6 +39,40 @@ class FakeResponse:
 
     def read(self, amount: int = -1) -> bytes:
         return self.body if amount < 0 else self.body[:amount]
+
+
+def _concurrent_submit_worker(
+    plugin_root: str,
+    request_path: str,
+    stable_root: str,
+    change_request_id: str,
+    posted_event: Any,
+    release_event: Any,
+) -> None:
+    os.environ["MPARANZA_CHANGE_REQUEST_DATA"] = stable_root
+    client = load_client()
+
+    def opener(*_args: object, **_kwargs: object) -> FakeResponse:
+        posted_event.set()
+        if release_event is not None:
+            assert release_event.wait(5)
+        return FakeResponse(
+            {
+                "change_request_id": change_request_id,
+                "status_token": f"token-{change_request_id}",
+                "status": "open",
+                "fixed": False,
+                "fixed_version": None,
+                "install_url": None,
+            }
+        )
+
+    client.submit_problem(
+        Path(plugin_root),
+        Path(request_path),
+        base_url="http://localhost:8080",
+        opener=opener,
+    )
 
 
 def write_plugin(root: Path, name: str, version: str = "1.2.3") -> Path:
@@ -182,6 +218,61 @@ def test_submit_problem_retries_with_same_persisted_submission_id(
         now=202.0,
     )
     assert repeated == receipt
+
+
+def test_parallel_processes_preserve_both_receipts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    if "fork" not in multiprocessing.get_all_start_methods():
+        pytest.skip("This regression test requires fork-capable process locking.")
+    context = multiprocessing.get_context("fork")
+    stable_root = tmp_path / "stable"
+    plugin_root = write_plugin(tmp_path, "clara")
+    first_request = tmp_path / "first.json"
+    second_request = tmp_path / "second.json"
+    first_request.write_text(json.dumps({"actual": "First"}), encoding="utf-8")
+    second_request.write_text(json.dumps({"actual": "Second"}), encoding="utf-8")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    first_posted = context.Event()
+    second_posted = context.Event()
+    release_first = context.Event()
+    first_process = context.Process(
+        target=_concurrent_submit_worker,
+        args=(
+            str(plugin_root),
+            str(first_request),
+            str(stable_root),
+            "CR-1",
+            first_posted,
+            release_first,
+        ),
+    )
+    second_process = context.Process(
+        target=_concurrent_submit_worker,
+        args=(
+            str(plugin_root),
+            str(second_request),
+            str(stable_root),
+            "CR-2",
+            second_posted,
+            None,
+        ),
+    )
+
+    first_process.start()
+    assert first_posted.wait(5)
+    second_process.start()
+    second_process.join(5)
+    release_first.set()
+    first_process.join(5)
+
+    assert first_process.exitcode == 0
+    assert second_process.exitcode == 0
+    state = read_state(stable_root / "clara" / "state.json")
+    assert {entry["change_request_id"] for entry in state["requests"]} == {
+        "CR-1",
+        "CR-2",
+    }
 
 
 def test_start_interview_persists_receipt_before_opening_browser(

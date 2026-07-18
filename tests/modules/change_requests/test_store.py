@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import contextmanager
 from pathlib import Path
 from uuid import uuid4
 
 import pytest
 
+import modules.change_requests.store as store_module
 from modules.change_requests.store import (
+    ChangeRequestCapacityError,
     ChangeRequestConflictError,
     ChangeRequestManifestError,
     ChangeRequestStore,
@@ -19,17 +22,21 @@ def _submission(
     submission_id: str | None = None,
     plugin: str = "clara",
     kind: str = "problem",
+    voice_interview: bool = False,
 ) -> dict[str, object]:
+    request = {
+        "observed": "The synthetic input was rejected.",
+        "expected": "The synthetic input should be accepted.",
+    }
+    if voice_interview:
+        request["source"] = "voice_interview"
     return {
         "schema_version": 1,
         "submission_id": submission_id or str(uuid4()),
         "kind": kind,
         "plugin": plugin,
         "plugin_version": "1.0.0",
-        "request": {
-            "observed": "The synthetic input was rejected.",
-            "expected": "The synthetic input should be accepted.",
-        },
+        "request": request,
     }
 
 
@@ -96,20 +103,27 @@ def test_interview_link_and_completion_are_idempotently_bound(
     tmp_path: Path,
 ) -> None:
     store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
-    record = store.submit(_submission(kind="capability"))
+    record = store.submit(_submission(kind="capability", voice_interview=True))
+    interview_url = "https://mparanza.com/case-notes/interview/first"
 
     linked = store.set_interview_url_if_absent(
         record.change_request_id,
-        "https://mparanza.com/case-notes/interview/first",
+        interview_url,
     )
     retried_link = store.set_interview_url_if_absent(
         record.change_request_id,
         "https://mparanza.com/case-notes/interview/retry",
     )
     completion = {"summary": "Add a compact comparison table."}
-    completed = store.attach_interview_completion(record.change_request_id, completion)
+    completed = store.attach_interview_completion(
+        record.change_request_id,
+        completion,
+        interview_url=interview_url,
+    )
     retried_completion = store.attach_interview_completion(
-        record.change_request_id, completion
+        record.change_request_id,
+        completion,
+        interview_url=interview_url,
     )
 
     assert linked.interview_url.endswith("/first")
@@ -120,7 +134,128 @@ def test_interview_link_and_completion_are_idempotently_bound(
         store.attach_interview_completion(
             record.change_request_id,
             {"summary": "A conflicting completion."},
+            interview_url=interview_url,
         )
+
+
+def test_interview_completion_requires_voice_kind_and_exact_bound_url(
+    tmp_path: Path,
+) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    problem = store.submit(_submission())
+    capability = store.submit(_submission(kind="capability", voice_interview=True))
+    interview_url = "https://mparanza.com/case-notes/interview/owned"
+    store.set_interview_url_if_absent(capability.change_request_id, interview_url)
+
+    with pytest.raises(ChangeRequestConflictError, match="not a voice-interview"):
+        store.set_interview_url_if_absent(problem.change_request_id, interview_url)
+    with pytest.raises(ChangeRequestConflictError, match="does not match"):
+        store.attach_interview_completion(
+            capability.change_request_id,
+            {"summary": "Injected"},
+            interview_url="https://mparanza.com/case-notes/interview/attacker",
+        )
+
+
+def test_submit_enforces_capacity_but_keeps_idempotent_retry(tmp_path: Path) -> None:
+    store = ChangeRequestStore(
+        sqlite_path=tmp_path / "change-requests.sqlite3", max_records=1
+    )
+    payload = _submission()
+    first = store.submit(payload)
+
+    retried = store.submit(payload)
+
+    assert retried == first
+    with pytest.raises(ChangeRequestCapacityError, match="at capacity"):
+        store.submit(_submission())
+
+
+def test_submit_disables_postgres_replay_before_capacity_transaction(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    events: list[str] = []
+
+    class Result:
+        def __init__(self, row: dict[str, object] | None = None) -> None:
+            self._row = row
+
+        def fetchone(self) -> dict[str, object] | None:
+            return self._row
+
+    class Connection:
+        def disable_transaction_replay(self) -> None:
+            events.append("disable_replay")
+
+        def execute(self, sql: str, params: tuple[object, ...] | None = None) -> Result:
+            del params
+            statement = " ".join(sql.split())
+            if statement.startswith("LOCK TABLE"):
+                events.append("lock")
+                return Result()
+            if "WHERE submission_id = ?" in statement:
+                events.append("select_submission")
+                return Result()
+            if statement.startswith("SELECT COUNT(*)"):
+                events.append("count")
+                return Result({"record_count": 0})
+            if statement.startswith("INSERT INTO"):
+                events.append("insert")
+                raise store_module.psycopg.OperationalError("connection lost")
+            raise AssertionError(f"Unexpected SQL: {statement}")
+
+    connection = Connection()
+
+    @contextmanager
+    def fake_connect():
+        yield connection
+
+    monkeypatch.setattr(store_module, "is_postgres_enabled", lambda: True)
+    store = ChangeRequestStore()
+    store._schema_ready = True
+    monkeypatch.setattr(store, "_connect", fake_connect)
+
+    with pytest.raises(store_module.ChangeRequestStoreUnavailableError):
+        store.submit(_submission())
+
+    assert events == [
+        "disable_replay",
+        "lock",
+        "select_submission",
+        "count",
+        "insert",
+    ]
+
+
+def test_poll_many_preserves_order_and_uses_one_connection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    first = store.submit(_submission())
+    second = store.submit(_submission())
+    original_connect = store._connect
+    connection_count = 0
+
+    @contextmanager
+    def counted_connect():
+        nonlocal connection_count
+        connection_count += 1
+        with original_connect() as connection:
+            yield connection
+
+    monkeypatch.setattr(store, "_connect", counted_connect)
+
+    results = store.poll_many(
+        [
+            (second.change_request_id, second.status_token),
+            (first.change_request_id, "wrong-token"),
+            (first.change_request_id, first.status_token),
+            ("CR-999", "missing-token"),
+        ]
+    )
+
+    assert results == [second, None, first, None]
+    assert connection_count == 1
 
 
 def test_mark_fixed_requires_exact_local_published_manifest(tmp_path: Path) -> None:
