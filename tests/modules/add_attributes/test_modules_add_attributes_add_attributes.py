@@ -4,16 +4,15 @@ from typing import Any, Dict
 
 import polars as pl
 import pytest
-from modules.utilities.session_context import get_session_state
 
 from modules.add_attributes.add_attributes import (
     EnrichAttributesResult,
     column_inference,
-    resolve_domains_for_dataset,
     enrich_attributes,
+    resolve_domains_for_dataset,
 )
 from modules.add_attributes.normalization import normalize_product_key
-
+from modules.utilities.session_context import get_session_state
 
 session_state = get_session_state()
 
@@ -190,6 +189,40 @@ def test_resolve_domains_for_dataset_brand_and_merchant_only(monkeypatch):
         "https://shopb.com",
         "https://shopc.com",
     ]
+
+
+def test_resolve_domains_for_dataset_uses_tracked_brand_aliases(monkeypatch):
+    captured: dict[str, set[str]] = {}
+
+    def fake_lookup_websites(llm_wrapper, names, aliases=None, service_tier=None):
+        captured["names"] = set(names)
+        return {"dior": "https://dior.com"}
+
+    import importlib
+
+    mod = importlib.import_module("modules.add_attributes.add_attributes")
+    monkeypatch.setattr(mod, "lookup_websites", fake_lookup_websites)
+    df = pl.DataFrame(
+        {
+            "product_col": ["Product A", "Product B"],
+            "brand": ["DIOR", "Christian Dior"],
+        }
+    )
+
+    domains = resolve_domains_for_dataset(
+        df,
+        brand_col="brand",
+        merchant_col=None,
+        category_col=None,
+        default_category="general",
+        llm_wrapper=object(),
+    )
+
+    assert captured["names"] == {"dior"}
+    assert domains == {
+        "product a": ["https://dior.com"],
+        "product b": ["https://dior.com"],
+    }
 
 
 def test_resolve_domains_for_dataset_canonicalizes_product_keys():

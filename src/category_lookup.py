@@ -17,6 +17,7 @@ import json
 import logging
 import os
 from itertools import islice
+from pathlib import Path
 from typing import Dict, Iterable, List
 
 from modules.llm.batch_runner import run_step_json
@@ -25,6 +26,7 @@ from modules.utilities.config import get_naming_params
 from modules.utilities.session_context import session_state
 from modules.utilities.ui_notifier import ui
 
+SEED_PATH = Path(__file__).resolve().parents[1] / "config" / "category_websites.json"
 FILE_PATH = get_cache_path("category_websites.json")
 _WEBSITE_CACHE: Dict[str, List[str]] | None = None
 logger = logging.getLogger(__name__)
@@ -35,21 +37,33 @@ _CLI_CATEGORY_CONTEXT: Dict[str, str | None] = {
 }
 
 
+def _load_mapping_file(path: Path) -> Dict[str, List[str]]:
+    """Load and normalize a category website mapping from ``path``."""
+
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        logger.warning("Failed to load category website mapping: %s", path)
+        return {}
+    if not isinstance(data, dict):
+        logger.warning("Category website mapping is not a JSON object: %s", path)
+        return {}
+    raw: Dict[str, list[str] | str] = data
+    return {
+        key: value if isinstance(value, list) else [value] for key, value in raw.items()
+    }
+
+
 def load_mapping() -> Dict[str, List[str]]:
-    """Return the cached category website mapping."""
+    """Return the tracked seed overlaid with the writable runtime cache."""
 
     global _WEBSITE_CACHE
     if _WEBSITE_CACHE is None:
-        if FILE_PATH.exists():
-            try:
-                raw: Dict[str, list[str] | str] = json.loads(FILE_PATH.read_text())
-                _WEBSITE_CACHE = {
-                    k: v if isinstance(v, list) else [v] for k, v in raw.items()
-                }
-            except json.JSONDecodeError:
-                _WEBSITE_CACHE = {}
-        else:
-            _WEBSITE_CACHE = {}
+        mapping = _load_mapping_file(SEED_PATH)
+        mapping.update(_load_mapping_file(FILE_PATH))
+        _WEBSITE_CACHE = mapping
     return _WEBSITE_CACHE
 
 
@@ -131,7 +145,9 @@ def lookup_category_websites(
     missing = []
     for c in categories_set:
         val = mapping.get(c)
-        if not (isinstance(val, list) and any(isinstance(s, str) and s.strip() for s in val)):
+        if not (
+            isinstance(val, list) and any(isinstance(s, str) and s.strip() for s in val)
+        ):
             missing.append(c)
     if missing:
         naming = get_naming_params()
@@ -162,7 +178,9 @@ def lookup_category_websites(
                 context_bits.append(f"industry description: {industry_desc}")
             if context_bits:
                 parts.append(
-                    "Context: this is about the product's market (" + ", ".join(context_bits) + ")."
+                    "Context: this is about the product's market ("
+                    + ", ".join(context_bits)
+                    + ")."
                 )
             parts.append(
                 "Rules: choose official brand/company category sites (not retailers or trade associations). "
