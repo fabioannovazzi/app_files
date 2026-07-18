@@ -564,6 +564,75 @@ def _check_json_schema(
         )
 
 
+def _schema_invalid_report(
+    layer: dict[str, Any],
+    profile: dict[str, Any],
+    manifest: dict[str, Any],
+    errors: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Return a stable report without traversing schema-invalid structures."""
+
+    profile_binding = layer.get("dataset_profile")
+    expected_fingerprint = (
+        profile_binding.get("profile_fingerprint")
+        if isinstance(profile_binding, dict)
+        else None
+    )
+    actual_fingerprint = canonical_profile_fingerprint(profile)
+    catalog_index = _analysis_catalog_index(manifest)
+    unassessed_selection_emphases = sorted(catalog_index)
+
+    record_keys = (
+        "sources",
+        "evidence",
+        "metrics",
+        "dimensions",
+        "periods",
+        "period_scopes",
+        "analysis_policies",
+        "open_questions",
+    )
+    record_counts = {
+        key: len(value) if isinstance((value := layer.get(key)), list) else 0
+        for key in record_keys
+    }
+    return {
+        "schema_version": SEMANTIC_LAYER_SCHEMA_VERSION,
+        "semantic_layer_id": layer.get("semantic_layer_id"),
+        "status": "contract_invalid",
+        "semantic_readiness": "contract_invalid",
+        "dataset_profile": {
+            "dataset_id": profile.get("dataset_id"),
+            "expected_fingerprint": expected_fingerprint,
+            "actual_fingerprint": actual_fingerprint,
+            "matches": expected_fingerprint == actual_fingerprint,
+        },
+        "counts": {
+            **record_counts,
+            "assessed_selection_emphases": 0,
+            "unassessed_selection_emphases": len(unassessed_selection_emphases),
+            "unknown_concepts": 0,
+            "analysis_validities": {value: 0 for value in sorted(ANALYSIS_VALIDITIES)},
+            "errors": len(errors),
+            "warnings": 0,
+        },
+        "policy_results": [],
+        "analysis_coverage": {
+            "manifest_selection_emphasis_count": len(catalog_index),
+            "assessed_selection_emphases": [],
+            "unassessed_selection_emphases": unassessed_selection_emphases,
+            "unlisted_policy_default": "unknown",
+        },
+        "errors": errors,
+        "warnings": [],
+        "boundary": (
+            "Schema-invalid documents are rejected before semantic wiring is "
+            "evaluated. Passing schema validation would not prove that business "
+            "judgments are true."
+        ),
+    }
+
+
 def _records(
     layer: dict[str, Any],
     key: str,
@@ -952,6 +1021,8 @@ def validate_semantic_layer(
         semantic_schema or _load_json(DEFAULT_SEMANTIC_SCHEMA),
         errors,
     )
+    if errors:
+        return _schema_invalid_report(layer, profile, manifest, errors)
     if layer.get("schema_version") != SEMANTIC_LAYER_SCHEMA_VERSION:
         _issue(
             errors,
