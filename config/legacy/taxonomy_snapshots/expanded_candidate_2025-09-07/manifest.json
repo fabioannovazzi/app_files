@@ -1,0 +1,66 @@
+{
+    "archive_format": "one_json_per_category",
+    "source_file": "attribute_taxonomy_new.json",
+    "source_ref": "d2d3a1de7a5d1492d5f5d1079b5ed2157eb54ef9^:attribute_taxonomy_new.json",
+    "source_git_blob": "c6cc6a7a7d1b6f63106a04e62010ac15d7ea92f0",
+    "source_sha256": "489920b5a3d514237771be12fb4178a1e460474474037b6752c6ba8d4dcacb5e",
+    "source_top_level": {
+        "version": "2025-09-02"
+    },
+    "deleted_by_commit": "d2d3a1de7a5d1492d5f5d1079b5ed2157eb54ef9",
+    "deleted_at": "2025-09-07T15:29:24+02:00",
+    "category_count": 7,
+    "attribute_count": 80,
+    "recursive_node_count": 1031,
+    "category_files": [
+        {
+            "id": "lipstick",
+            "file": "categories/lipstick.json",
+            "source_index": 0,
+            "archived_file_sha256": "cc79a28b490a0498cfde53cf5ca77ae85954fc3449a932608cad7c46909e3dd8",
+            "canonical_sha256": "dab40cc53241a54a113015b9ecc40a7a35fcda1aba990967b0d2f76d635e0442"
+        },
+        {
+            "id": "liquid lipstick",
+            "file": "categories/liquid_lipstick.json",
+            "source_index": 1,
+            "archived_file_sha256": "b1ae217da6c60f86518588dd2a6e6549d21b4d06ecc698abc5235e23be9c833c",
+            "canonical_sha256": "c7bd2d4bd35d2b551e57865b78ca7a00c6d851145a3055bd5cad4cb5f0401018"
+        },
+        {
+            "id": "lip gloss",
+            "file": "categories/lip_gloss.json",
+            "source_index": 2,
+            "archived_file_sha256": "6a85ad6cc6a1d0c9f4df001dc2358aff1451d4d74c81d1487eb475228cafc746",
+            "canonical_sha256": "f77ca8cd7cb7cb64d383e0b036fd22e2bde1ddbd13e4df3f24419793cd97f160"
+        },
+        {
+            "id": "lip oil",
+            "file": "categories/lip_oil.json",
+            "source_index": 3,
+            "archived_file_sha256": "6c234bc9d15a16ba74e39d79bd47f5c855c738b9bbb945a8e6eb55bf03514cb3",
+            "canonical_sha256": "cead0f6d2fc891930db5c1e5dcf7103d300bca0161e8ff6b27d9915f3c5cf555"
+        },
+        {
+            "id": "blush",
+            "file": "categories/blush.json",
+            "source_index": 4,
+            "archived_file_sha256": "d71715af1c51b39ec39cfdd917c4615bf656a7f3a040c698d67a4716359553bd",
+            "canonical_sha256": "533b5bf47c346e860feeba5f7751073bd06456662a879ebd4addc2b3be8f139c"
+        },
+        {
+            "id": "bronzer",
+            "file": "categories/bronzer.json",
+            "source_index": 5,
+            "archived_file_sha256": "bf3901b0cea75df4a5c0456199931b07e195f1c6c3c5c3a765783b8b79f913c2",
+            "canonical_sha256": "5adc85a4f813915599164fdae01a86ef81879fe0a323ed38d7753bfc7c0d8ad1"
+        },
+        {
+            "id": "foundation",
+            "file": "categories/foundation.json",
+            "source_index": 6,
+            "archived_file_sha256": "bfaf352f90c9357510ad8c2ad8f8f9ee9afe648b7bc73bd12156774526a67682",
+            "canonical_sha256": "04079d9b11d88decf1dcd79a7f5bed69f01f127a3cc66d37d5530c3f5fa6ccae"
+        }
+    ]
+}

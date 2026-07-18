@@ -1,0 +1,913 @@
+{
+    "id": "eyebrow",
+    "label": "eyebrow",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "pencil_sharpenable",
+                    "label": "sharpenable pencil",
+                    "synonyms": [
+                        "sharpenable brow pencil",
+                        "traditional pencil",
+                        "wood pencil",
+                        "wooden pencil"
+                    ]
+                },
+                {
+                    "id": "pencil_retractable",
+                    "label": "retractable pencil",
+                    "synonyms": [
+                        "auto pencil",
+                        "automatic brow pencil",
+                        "mechanical pencil",
+                        "twist up brow pencil",
+                        "twist up pencil"
+                    ]
+                },
+                {
+                    "id": "pomade",
+                    "label": "pomade",
+                    "synonyms": [
+                        "brow pomade",
+                        "cream brow color",
+                        "cream pomade",
+                        "gel pomade",
+                        "potted pomade"
+                    ]
+                },
+                {
+                    "id": "powder",
+                    "label": "powder",
+                    "synonyms": [
+                        "brow powder",
+                        "loose powder",
+                        "powder compact",
+                        "pressed powder"
+                    ]
+                },
+                {
+                    "id": "clear_gel",
+                    "label": "clear gel",
+                    "synonyms": [
+                        "clear brow gel",
+                        "clear mascara",
+                        "clear setting gel",
+                        "invisible gel",
+                        "transparent gel"
+                    ]
+                },
+                {
+                    "id": "tinted_gel",
+                    "label": "tinted gel",
+                    "synonyms": [
+                        "brow mascara",
+                        "colored brow gel",
+                        "fiber brow gel",
+                        "tinted brow gel",
+                        "tinted setting gel"
+                    ]
+                },
+                {
+                    "id": "marker_pen",
+                    "label": "marker/pen",
+                    "synonyms": [
+                        "brow marker",
+                        "brow pen",
+                        "felt tip pen",
+                        "ink brow pen",
+                        "microblading pen"
+                    ]
+                },
+                {
+                    "id": "wax_or_soap",
+                    "label": "wax/soap",
+                    "synonyms": [
+                        "brow soap",
+                        "brow wax",
+                        "styling soap",
+                        "styling wax",
+                        "wax stick"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "shade_family",
+            "label": "shade family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "clear",
+                    "label": "clear",
+                    "synonyms": [
+                        "colorless",
+                        "no tint",
+                        "transparent",
+                        "untinted"
+                    ]
+                },
+                {
+                    "id": "blonde",
+                    "label": "blonde",
+                    "synonyms": [
+                        "ash blonde",
+                        "blond",
+                        "dark blonde",
+                        "golden blonde",
+                        "light blonde"
+                    ]
+                },
+                {
+                    "id": "taupe",
+                    "label": "taupe",
+                    "synonyms": [
+                        "ash",
+                        "ash brown",
+                        "ashy taupe",
+                        "cool taupe",
+                        "grey brown"
+                    ]
+                },
+                {
+                    "id": "auburn",
+                    "label": "auburn/red",
+                    "synonyms": [
+                        "auburn",
+                        "copper brown",
+                        "red brown",
+                        "reddish brown",
+                        "warm auburn"
+                    ]
+                },
+                {
+                    "id": "soft_brown",
+                    "label": "soft brown (light brown)",
+                    "synonyms": [
+                        "light brown",
+                        "light brunette",
+                        "soft brown",
+                        "soft brunette",
+                        "soft light brown"
+                    ]
+                },
+                {
+                    "id": "medium_brown",
+                    "label": "medium brown",
+                    "synonyms": [
+                        "brunette",
+                        "medium brunette",
+                        "mid brown",
+                        "neutral brown",
+                        "neutral brunette"
+                    ]
+                },
+                {
+                    "id": "dark_brown",
+                    "label": "dark brown",
+                    "synonyms": [
+                        "chocolate brown",
+                        "dark brunette",
+                        "deep brown",
+                        "espresso",
+                        "rich brown"
+                    ]
+                },
+                {
+                    "id": "black",
+                    "label": "black",
+                    "synonyms": [
+                        "deep black",
+                        "ebony",
+                        "jet black",
+                        "soft black",
+                        "true black"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "undertone",
+            "label": "undertone",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "warm",
+                    "label": "warm",
+                    "synonyms": [
+                        "golden",
+                        "golden undertone",
+                        "red toned",
+                        "warm toned",
+                        "yellow based"
+                    ]
+                },
+                {
+                    "id": "neutral",
+                    "label": "neutral",
+                    "synonyms": [
+                        "balanced",
+                        "neither warm nor cool",
+                        "neutral toned",
+                        "neutral undertone",
+                        "true neutral"
+                    ]
+                },
+                {
+                    "id": "cool",
+                    "label": "cool",
+                    "synonyms": [
+                        "ash toned",
+                        "ashy",
+                        "blue based",
+                        "cool toned",
+                        "cool undertone"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat",
+                        "matte look",
+                        "no shine",
+                        "shine free"
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "natural finish",
+                        "realistic",
+                        "soft finish",
+                        "undetectable"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "satin finish",
+                        "satin sheen",
+                        "semi matte",
+                        "soft sheen"
+                    ]
+                },
+                {
+                    "id": "glossy",
+                    "label": "glossy",
+                    "synonyms": [
+                        "gloss finish",
+                        "glossy finish",
+                        "high shine",
+                        "shine",
+                        "wet look"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "hold_level",
+            "label": "hold level",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "light_flexible",
+                    "label": "light/flexible",
+                    "synonyms": [
+                        "brushable hold",
+                        "flexible hold",
+                        "light hold",
+                        "movable",
+                        "soft hold"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium",
+                    "synonyms": [
+                        "balanced hold",
+                        "controlled hold",
+                        "medium control",
+                        "medium hold",
+                        "moderate hold"
+                    ]
+                },
+                {
+                    "id": "strong_firm",
+                    "label": "strong/firm",
+                    "synonyms": [
+                        "extreme hold",
+                        "firm hold",
+                        "high hold",
+                        "max hold",
+                        "strong hold"
+                    ]
+                },
+                {
+                    "id": "laminated",
+                    "label": "laminated effect",
+                    "synonyms": [
+                        "brow lamination",
+                        "brow lift effect",
+                        "extra hold",
+                        "laminated",
+                        "lamination effect"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "resistance",
+            "label": "resistance/transfer claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "waterproof",
+                    "label": "waterproof",
+                    "synonyms": [
+                        "rain proof",
+                        "swim proof",
+                        "tear proof",
+                        "water proof"
+                    ]
+                },
+                {
+                    "id": "smudge_proof",
+                    "label": "smudge-proof",
+                    "synonyms": [
+                        "budge proof",
+                        "smear proof",
+                        "smudge proof",
+                        "smudgeproof",
+                        "won't smudge"
+                    ]
+                },
+                {
+                    "id": "sweat_resistant",
+                    "label": "sweat-resistant",
+                    "synonyms": [
+                        "gym proof",
+                        "perspiration resistant",
+                        "sweat resistant",
+                        "sweatproof",
+                        "workout proof"
+                    ]
+                },
+                {
+                    "id": "transfer_resistant",
+                    "label": "transfer-resistant",
+                    "synonyms": [
+                        "mask proof",
+                        "no transfer",
+                        "transfer proof",
+                        "transfer resistant",
+                        "won't transfer"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "longwear",
+                    "label": "longwear/long-lasting",
+                    "synonyms": [
+                        "24 hour wear",
+                        "all day wear",
+                        "long lasting",
+                        "long wear",
+                        "longwearing"
+                    ]
+                },
+                {
+                    "id": "humidity_resistant",
+                    "label": "humidity-resistant",
+                    "synonyms": [
+                        "anti humidity",
+                        "humid weather proof",
+                        "humidity proof",
+                        "humidity resistant"
+                    ]
+                },
+                {
+                    "id": "water_resistant",
+                    "label": "water-resistant",
+                    "synonyms": [
+                        "rain resistant",
+                        "splash proof",
+                        "splashproof",
+                        "water resistant"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "pigmentation",
+            "label": "pigmentation",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "sheer",
+                    "label": "sheer",
+                    "synonyms": [
+                        "light tint",
+                        "low pigment",
+                        "sheer tint",
+                        "soft color",
+                        "subtle color"
+                    ]
+                },
+                {
+                    "id": "medium_buildable",
+                    "label": "medium/buildable",
+                    "synonyms": [
+                        "adjustable coverage",
+                        "buildable",
+                        "buildable color",
+                        "layerable",
+                        "medium pigment"
+                    ]
+                },
+                {
+                    "id": "full_pigment",
+                    "label": "full pigment",
+                    "synonyms": [
+                        "full coverage color",
+                        "high color payoff",
+                        "highly pigmented",
+                        "intense pigment",
+                        "opaque"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "applicator_type",
+            "label": "applicator type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "spoolie",
+                    "label": "spoolie",
+                    "synonyms": [
+                        "brow spoolie",
+                        "brow wand",
+                        "mascara wand",
+                        "micro spoolie",
+                        "small spoolie"
+                    ]
+                },
+                {
+                    "id": "pencil_tip",
+                    "label": "pencil tip",
+                    "synonyms": [
+                        "crayon tip",
+                        "fine tip",
+                        "micro pencil tip",
+                        "teardrop tip",
+                        "triangular tip"
+                    ]
+                },
+                {
+                    "id": "felt_tip",
+                    "label": "felt tip",
+                    "synonyms": [
+                        "brush pen tip",
+                        "fork tip",
+                        "ink tip",
+                        "marker tip",
+                        "micro fork tip"
+                    ]
+                },
+                {
+                    "id": "brush",
+                    "label": "brush",
+                    "synonyms": [
+                        "brow brush",
+                        "flat brush",
+                        "precision brush"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "doe_foot",
+                    "label": "doe-foot",
+                    "synonyms": [
+                        "doe foot",
+                        "doe foot applicator",
+                        "doe foot wand"
+                    ]
+                },
+                {
+                    "id": "stamp",
+                    "label": "stamp",
+                    "synonyms": [
+                        "brow stamp",
+                        "sponge stamp",
+                        "stamping applicator"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "purpose",
+            "label": "purpose/primary benefit",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "fill",
+                    "label": "fill",
+                    "synonyms": [
+                        "densify",
+                        "fill gaps",
+                        "filling"
+                    ]
+                },
+                {
+                    "id": "define_shape",
+                    "label": "define/shape",
+                    "synonyms": [
+                        "define",
+                        "edge",
+                        "outline",
+                        "shape"
+                    ]
+                },
+                {
+                    "id": "hold_laminate",
+                    "label": "hold/laminate",
+                    "synonyms": [
+                        "hold",
+                        "laminate",
+                        "set brows",
+                        "tame"
+                    ]
+                },
+                {
+                    "id": "growth_condition",
+                    "label": "growth/conditioning",
+                    "synonyms": [
+                        "condition",
+                        "growth",
+                        "growth serum",
+                        "nourish"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "tint_stain",
+                    "label": "tint/stain",
+                    "synonyms": [
+                        "brow tint",
+                        "stain",
+                        "temporary brow dye",
+                        "tint brows"
+                    ]
+                },
+                {
+                    "id": "volumize_thicken",
+                    "label": "volumize/thicken",
+                    "synonyms": [
+                        "add fullness",
+                        "add volume",
+                        "fiber effect",
+                        "fuller brows",
+                        "thicken"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "certifications_claims",
+            "label": "certifications and claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "vegan",
+                    "label": "vegan",
+                    "synonyms": [
+                        "100% vegan",
+                        "no animal ingredients",
+                        "plant based",
+                        "vegan formula",
+                        "vegan friendly"
+                    ]
+                },
+                {
+                    "id": "cruelty_free",
+                    "label": "cruelty-free",
+                    "synonyms": [
+                        "cruelty free",
+                        "leaping bunny",
+                        "no animal testing",
+                        "not tested on animals",
+                        "peta certified"
+                    ]
+                },
+                {
+                    "id": "ophthalmologist_tested",
+                    "label": "ophthalmologist-tested",
+                    "synonyms": [
+                        "eye doctor tested",
+                        "eye safe tested",
+                        "ophthalmic tested",
+                        "ophthalmologist approved",
+                        "ophthalmologist tested"
+                    ]
+                },
+                {
+                    "id": "hypoallergenic",
+                    "label": "hypoallergenic",
+                    "synonyms": [
+                        "allergy tested",
+                        "hypo allergenic",
+                        "low allergen",
+                        "sensitive skin safe"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "dermatologist_tested",
+                    "label": "dermatologist-tested",
+                    "synonyms": [
+                        "derm tested",
+                        "dermatologically tested",
+                        "dermatologist approved",
+                        "dermatologist tested"
+                    ]
+                },
+                {
+                    "id": "non_comedogenic",
+                    "label": "non-comedogenic",
+                    "synonyms": [
+                        "non comedogenic",
+                        "non pore clogging",
+                        "noncomedogenic",
+                        "won't clog pores"
+                    ]
+                },
+                {
+                    "id": "suitable_for_contact_lens_wearers",
+                    "label": "suitable for contact lens wearers",
+                    "synonyms": [
+                        "contact lens friendly",
+                        "contact lens safe",
+                        "safe for contact lens wearers"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "fragrance",
+            "label": "fragrance",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "fragrance_free",
+                    "label": "fragrance-free",
+                    "synonyms": [
+                        "fragrance free",
+                        "no fragrance",
+                        "no perfume",
+                        "unscented",
+                        "without fragrance"
+                    ]
+                },
+                {
+                    "id": "lightly_scented",
+                    "label": "lightly scented",
+                    "synonyms": [
+                        "light fragrance",
+                        "light scent",
+                        "mildly scented",
+                        "scented",
+                        "subtle fragrance"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "set_includes",
+            "label": "set includes",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "spoolie_brush",
+                    "label": "spoolie brush",
+                    "synonyms": [
+                        "grooming brush"
+                    ]
+                },
+                {
+                    "id": "angled_brush",
+                    "label": "angled brush",
+                    "synonyms": [
+                        "angled applicator",
+                        "angled brow brush",
+                        "angled liner brush",
+                        "brow definer brush",
+                        "slanted brush"
+                    ]
+                },
+                {
+                    "id": "brow_stencils",
+                    "label": "brow stencils",
+                    "synonyms": [
+                        "brow guide",
+                        "brow template",
+                        "stencil guides",
+                        "stencil kit",
+                        "stencil shapes"
+                    ]
+                },
+                {
+                    "id": "sharpener",
+                    "label": "pencil sharpener",
+                    "synonyms": [
+                        "built in sharpener",
+                        "cap sharpener",
+                        "sharpener",
+                        "sharpener tool"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "tweezers",
+                    "label": "tweezers",
+                    "synonyms": [
+                        "mini tweezers",
+                        "precision tweezers",
+                        "slant tweezers",
+                        "tweezer"
+                    ]
+                },
+                {
+                    "id": "brow_scissors",
+                    "label": "brow scissors",
+                    "synonyms": [
+                        "brow trimming scissors",
+                        "small scissors",
+                        "trimming scissors"
+                    ]
+                },
+                {
+                    "id": "brow_razor",
+                    "label": "brow razor",
+                    "synonyms": [
+                        "brow shaper",
+                        "dermaplaning razor",
+                        "eyebrow razor"
+                    ]
+                }
+            ]
+        }
+    ]
+}

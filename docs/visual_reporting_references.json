@@ -237,6 +237,7 @@
       ],
       "source_url": "https://www.ibcs.com/resource/chart-template-01/",
       "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/01A-500x500.png",
+      "local_asset": "docs/reporting_visual_references/assets/ibcs/c01_stacked_column_01a.png",
       "asset_type": "image/png",
       "primary_use": "Stacked vertical columns over time with period totals and segment labels.",
       "look_at": [
@@ -271,6 +272,7 @@
       ],
       "source_url": "https://www.ibcs.com/resource/ibcs-stacked-bar-excel-chart/",
       "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/02A-500x500.png",
+      "local_asset": "docs/reporting_visual_references/assets/ibcs/c02_stacked_bar_02a.png",
       "asset_type": "image/png",
       "primary_use": "Horizontal stacked structure with totals outside bars.",
       "look_at": [
@@ -306,6 +308,7 @@
       ],
       "source_url": "https://www.ibcs.com/resource/multi-tier-column-chart/",
       "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/03A-500x500.png",
+      "local_asset": "docs/reporting_visual_references/assets/ibcs/c03_multitier_column_03a.png",
       "asset_type": "image/png",
       "primary_use": "Column chart with scenario comparison and variance tiers.",
       "look_at": [
@@ -341,6 +344,7 @@
       ],
       "source_url": "https://www.ibcs.com/resource/multi-tier-bar-charts/",
       "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/04A-500x500.png",
+      "local_asset": "docs/reporting_visual_references/assets/ibcs/c04_multitier_bar_04a.png",
       "asset_type": "image/png",
       "primary_use": "Horizontal bar chart with scenario comparison and variance tiers.",
       "look_at": [
@@ -374,6 +378,7 @@
       ],
       "source_url": "https://www.ibcs.com/resource/chart-template-09/",
       "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/09A-500x500.png",
+      "local_asset": "docs/reporting_visual_references/assets/ibcs/c09_scattergram_09a.png",
       "asset_type": "image/png",
       "primary_use": "Scattergram with two value axes, selective labels, and grouped marks.",
       "look_at": [
@@ -407,6 +412,7 @@
       ],
       "source_url": "https://www.ibcs.com/resource/chart-template-12/",
       "asset_url": "https://www.ibcs.com/wp-content/uploads/2025/07/12A-1-500x500.png",
+      "local_asset": "docs/reporting_visual_references/assets/ibcs/c12_waterfall_12a.png",
       "asset_type": "image/png",
       "primary_use": "Vertical waterfall/bridge with positive and negative variance contributions.",
       "look_at": [
@@ -441,6 +447,7 @@
       ],
       "source_url": "https://www.ibcs.com/resource/table-template-02/",
       "asset_url": "https://www.ibcs.com/wp-content/uploads/2016/08/IBCS_table_template_02-3_500px.png",
+      "local_asset": "docs/reporting_visual_references/assets/ibcs/t02_reporting_table_02_3.png",
       "asset_type": "image/png",
       "primary_use": "Reporting table with hierarchy, comparison columns, integrated bars, and pins.",
       "look_at": [
@@ -475,6 +482,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9c48932d-72a2-4031-a01f-37801e712a28",
       "asset_url": "https://uniformchart.com/storage/examples/Columns_stacked_001.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/columns_stacked_001.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Stacked column reference with compact standardized notation.",
       "look_at": [
@@ -505,6 +513,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9c48932d-7376-4eb4-ac71-dfc0dbe8965f",
       "asset_url": "https://uniformchart.com/storage/examples/Columns_variances_001.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/columns_variances_001.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Column chart with standardized variance notation.",
       "look_at": [
@@ -535,6 +544,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9c48932d-8224-4b26-87e6-c95e03c46b96",
       "asset_url": "https://uniformchart.com/storage/examples/Bars_001.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/bars_001.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Horizontal bar reference for labels, spacing, and ranking.",
       "look_at": [
@@ -566,6 +576,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9fa2b0f3-a699-4a18-bc62-550a8462a5dd",
       "asset_url": "https://uniformchart.com/storage/examples/5abd284b-5a88-461d-b074-1f551d2f5d31.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/c12a_waterfall.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Waterfall bridge reference from UniformChart's C12A example.",
       "look_at": [
@@ -596,6 +607,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9c48932d-7dee-41b3-a142-b714007cd41d",
       "asset_url": "https://uniformchart.com/storage/examples/Bubbles_001.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/bubbles_001.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Bubble reference for size encoding and point labeling.",
       "look_at": [
@@ -626,6 +638,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9c48932d-7eea-488f-a095-db8d5f182794",
       "asset_url": "https://uniformchart.com/storage/examples/Bubbles_002.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/scatter_bubbles_002.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Scatter/bubble reference for axis discipline and label selection.",
       "look_at": [
@@ -656,6 +669,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9c48932d-855b-46a5-bb86-171943c33167",
       "asset_url": "https://uniformchart.com/storage/examples/Table_001.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/table_001.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Scenario/reporting table reference.",
       "look_at": [
@@ -687,6 +701,7 @@
       ],
       "source_url": "https://uniformchart.com/example/9c48932d-7867-4088-be5a-e897f08a1cb1",
       "asset_url": "https://uniformchart.com/storage/examples/Small_multiples_001.jpg",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/small_multiples_001.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Small-multiples reference for repeated panel layout and consistent scaling.",
       "look_at": [
@@ -718,6 +733,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/table_variance_compact_001.png",
       "asset_type": "image/png",
       "primary_use": "Compact table reference for scenario values, sorted variance columns, and embedded positive/negative bars.",
       "look_at": [
@@ -752,6 +768,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/table_statement_variance_bars_001.png",
       "asset_type": "image/png",
       "primary_use": "Dense reporting-table reference for financial statement rows, subtotal hierarchy, and embedded actual/forecast/variance marks.",
       "look_at": [
@@ -787,6 +804,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/bar_variance_sorted_percent_001.png",
       "asset_type": "image/png",
       "primary_use": "Horizontal bar reference combining absolute values with percent variance sorting and compact positive/negative markers.",
       "look_at": [
@@ -821,6 +839,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/scatter_bubble_reference_curves_003.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Scatter/bubble reference for using reference curves, sparse labels, and meaningful color grouping.",
       "look_at": [
@@ -854,6 +873,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/stacked_bar_total_sorted_value_001.png",
       "asset_type": "image/png",
       "primary_use": "Horizontal stacked-bar reference with composition segments plus separate absolute-total bars.",
       "look_at": [
@@ -888,6 +908,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/stacked_bar_total_sorted_share_001.png",
       "asset_type": "image/png",
       "primary_use": "Horizontal stacked-bar reference where composition sorting is the main message and absolute totals are shown separately.",
       "look_at": [
@@ -922,6 +943,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/waterfall_variance_combo_001.png",
       "asset_type": "image/png",
       "primary_use": "Combined actual/forecast and variance-bridge reference for compact positive/negative variance notation.",
       "look_at": [
@@ -956,6 +978,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/time_series_direct_lines_001.png",
       "asset_type": "image/png",
       "primary_use": "Line-chart reference for direct labels, sparse anchor values, and restrained monthly guides.",
       "look_at": [
@@ -989,6 +1012,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/time_series_indexed_lines_001.png",
       "asset_type": "image/png",
       "primary_use": "Line-chart reference for indexed-to-100 comparison across multiple series.",
       "look_at": [
@@ -1022,6 +1046,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/time_series_area_small_multiples_001.jpg",
       "asset_type": "image/jpeg",
       "primary_use": "Small-multiple stacked-area reference for repeated region panels with consistent time axes.",
       "look_at": [
@@ -1055,6 +1080,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/stacked_column_connectors_001.png",
       "asset_type": "image/png",
       "primary_use": "Stacked-column reference for showing segment continuity across periods with connector lines.",
       "look_at": [
@@ -1088,6 +1114,7 @@
       ],
       "source_url": "https://uniformchart.com/",
       "asset_url": "https://uniformchart.com/",
+      "local_asset": "docs/reporting_visual_references/assets/uniformchart/column_time_series_simple_001.png",
       "asset_type": "image/png",
       "primary_use": "Simple column time-series reference for period labels, top value labels, and restrained axes.",
       "look_at": [

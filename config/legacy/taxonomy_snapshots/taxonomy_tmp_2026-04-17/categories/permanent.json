@@ -1,0 +1,291 @@
+{
+    "id": "permanent",
+    "label": "permanent haircolor",
+    "attributes": [
+        {
+            "id": "benefit",
+            "label": "product benefit",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "bonding",
+                    "label": "bonding",
+                    "synonyms": [
+                        "bonder"
+                    ]
+                },
+                {
+                    "id": "color_balancing",
+                    "label": "color balancing"
+                },
+                {
+                    "id": "color_care",
+                    "label": "color care",
+                    "synonyms": [
+                        "colorcare"
+                    ]
+                },
+                {
+                    "id": "color_depositing",
+                    "label": "color depositing",
+                    "synonyms": [
+                        "colordepositing"
+                    ]
+                },
+                {
+                    "id": "curl_definition",
+                    "label": "curl definition",
+                    "synonyms": [
+                        "curldefinition"
+                    ]
+                },
+                {
+                    "id": "detangling",
+                    "label": "detangling"
+                },
+                {
+                    "id": "dryness_relief",
+                    "label": "dryness relief",
+                    "synonyms": [
+                        "dryness"
+                    ]
+                },
+                {
+                    "id": "dullness_relief",
+                    "label": "dullness relief",
+                    "synonyms": [
+                        "dullness"
+                    ]
+                },
+                {
+                    "id": "express_color",
+                    "label": "express color",
+                    "synonyms": [
+                        "expresscolor"
+                    ]
+                },
+                {
+                    "id": "fragrance_free",
+                    "label": "fragrance-free",
+                    "synonyms": [
+                        "fragrancefree"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "form",
+            "label": "product form",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "brush_on",
+                    "label": "brush-on",
+                    "synonyms": [
+                        "brush on",
+                        "brushon"
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "synonyms": [
+                        "creme"
+                    ]
+                },
+                {
+                    "id": "gel",
+                    "label": "gel"
+                },
+                {
+                    "id": "liquid",
+                    "label": "liquid"
+                },
+                {
+                    "id": "powder",
+                    "label": "powder"
+                },
+                {
+                    "id": "tube",
+                    "label": "tube",
+                    "synonyms": [
+                        "tubes"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ingredient_preference",
+            "label": "ingredient preference",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "ammonia_free",
+                    "label": "ammonia-free",
+                    "synonyms": [
+                        "ammonia free",
+                        "ammoniafree"
+                    ]
+                },
+                {
+                    "id": "clean",
+                    "label": "clean"
+                },
+                {
+                    "id": "cruelty_free",
+                    "label": "cruelty-free",
+                    "synonyms": [
+                        "cruelty free",
+                        "crueltyfree"
+                    ]
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "gluten-free",
+                    "synonyms": [
+                        "gluten free",
+                        "glutenfree"
+                    ]
+                },
+                {
+                    "id": "mineral",
+                    "label": "mineral"
+                },
+                {
+                    "id": "natural",
+                    "label": "natural"
+                },
+                {
+                    "id": "oil_free",
+                    "label": "oil-free",
+                    "synonyms": [
+                        "oil free",
+                        "oilfree"
+                    ]
+                },
+                {
+                    "id": "organic",
+                    "label": "organic"
+                },
+                {
+                    "id": "paraben_free",
+                    "label": "paraben-free",
+                    "synonyms": [
+                        "paraben free",
+                        "parabenfree"
+                    ]
+                },
+                {
+                    "id": "silicone_free",
+                    "label": "silicone-free",
+                    "synonyms": [
+                        "silicone free",
+                        "siliconefree"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "hair_condition",
+            "label": "hair condition",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "breakage",
+                    "label": "breakage"
+                },
+                {
+                    "id": "chemically_treated",
+                    "label": "chemically treated",
+                    "synonyms": [
+                        "chemically treated hair",
+                        "chemicallytreated"
+                    ]
+                },
+                {
+                    "id": "color_treated",
+                    "label": "color treated",
+                    "synonyms": [
+                        "colortreated"
+                    ]
+                },
+                {
+                    "id": "damaged",
+                    "label": "damaged"
+                },
+                {
+                    "id": "dry",
+                    "label": "dry"
+                },
+                {
+                    "id": "dull",
+                    "label": "dull"
+                },
+                {
+                    "id": "frizzy",
+                    "label": "frizzy"
+                },
+                {
+                    "id": "hair_integrity",
+                    "label": "hair integrity"
+                },
+                {
+                    "id": "normal",
+                    "label": "normal"
+                },
+                {
+                    "id": "oily",
+                    "label": "oily"
+                }
+            ]
+        }
+    ]
+}

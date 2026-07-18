@@ -1,0 +1,867 @@
+{
+    "id": "palette",
+    "label": "palette",
+    "attributes": [
+        {
+            "id": "palette_type",
+            "label": "palette type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "eyeshadow_palette",
+                    "label": "eyeshadow palette",
+                    "synonyms": [
+                        "eye palette",
+                        "eye shadow palette",
+                        "eyeshadow set",
+                        "palette for eyes",
+                        "shadow palette"
+                    ]
+                },
+                {
+                    "id": "face_combo_palette",
+                    "label": "face combo palette",
+                    "synonyms": [
+                        "cheek trio",
+                        "complexion palette",
+                        "face kit",
+                        "face palette",
+                        "multi face palette"
+                    ]
+                },
+                {
+                    "id": "blush_palette",
+                    "label": "blush palette",
+                    "synonyms": [
+                        "blusher palette",
+                        "cheek color palette",
+                        "cheek palette",
+                        "cheek powder palette",
+                        "rouge palette"
+                    ]
+                },
+                {
+                    "id": "contour_bronzer_palette",
+                    "label": "contour/bronzer palette",
+                    "synonyms": [
+                        "bronze & contour palette",
+                        "bronzer palette",
+                        "contour kit",
+                        "contouring palette",
+                        "sculpt palette"
+                    ]
+                },
+                {
+                    "id": "highlighter_palette",
+                    "label": "highlighter palette",
+                    "synonyms": [
+                        "glow palette",
+                        "highlight palette",
+                        "highlighter kit",
+                        "illuminator palette",
+                        "strobing palette"
+                    ]
+                },
+                {
+                    "id": "lip_palette",
+                    "label": "lip palette",
+                    "synonyms": [
+                        "lip color palette",
+                        "lip colour palette",
+                        "lip cream palette",
+                        "lip kit palette",
+                        "lipstick palette"
+                    ]
+                },
+                {
+                    "id": "brow_palette",
+                    "label": "brow palette",
+                    "synonyms": [
+                        "brow kit",
+                        "brow powder palette",
+                        "brow shaping palette",
+                        "eyebrow kit",
+                        "eyebrow palette"
+                    ]
+                },
+                {
+                    "id": "concealer_corrector_palette",
+                    "label": "concealer/corrector palette",
+                    "synonyms": [
+                        "camouflage palette",
+                        "color corrector palette",
+                        "concealer palette",
+                        "corrector palette",
+                        "cream corrector kit"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "formula_type",
+            "label": "formula type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "pressed_powder",
+                    "label": "pressed powder",
+                    "synonyms": [
+                        "compact powder",
+                        "pressed",
+                        "pressed formula"
+                    ]
+                },
+                {
+                    "id": "baked_powder",
+                    "label": "baked powder",
+                    "synonyms": [
+                        "baked",
+                        "domed powder",
+                        "oven baked"
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "synonyms": [
+                        "cream based",
+                        "cream formula",
+                        "pan cream"
+                    ]
+                },
+                {
+                    "id": "gel",
+                    "label": "gel",
+                    "synonyms": [
+                        "gel cream",
+                        "gel formula",
+                        "jelly"
+                    ]
+                },
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "synonyms": [
+                        "fluid",
+                        "liquid formula",
+                        "liquid pigment"
+                    ]
+                },
+                {
+                    "id": "loose_powder",
+                    "label": "loose powder",
+                    "synonyms": [
+                        "loose",
+                        "loose pigment",
+                        "loose shadow"
+                    ]
+                },
+                {
+                    "id": "hybrid_texture",
+                    "label": "hybrid texture",
+                    "synonyms": [
+                        "bouncy",
+                        "cream to powder",
+                        "creme to powder",
+                        "mousse",
+                        "putty"
+                    ]
+                },
+                {
+                    "id": "balm",
+                    "label": "balm",
+                    "synonyms": [
+                        "balm formula",
+                        "balmy texture",
+                        "solid balm"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish_mix",
+            "label": "finish mix",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "all_matte",
+                    "label": "all matte",
+                    "synonyms": [
+                        "100% matte",
+                        "entirely matte",
+                        "fully matte",
+                        "matte only"
+                    ]
+                },
+                {
+                    "id": "mostly_matte",
+                    "label": "mostly matte",
+                    "synonyms": [
+                        "mostly matte finish",
+                        "primarily matte"
+                    ]
+                },
+                {
+                    "id": "mixed_finishes",
+                    "label": "mixed finishes",
+                    "synonyms": [
+                        "matte and shimmer",
+                        "mixed textures",
+                        "variety of finishes"
+                    ]
+                },
+                {
+                    "id": "mostly_shimmer_metallic",
+                    "label": "mostly shimmer/metallic",
+                    "synonyms": [
+                        "mostly luminous",
+                        "mostly shimmer",
+                        "primarily shimmer",
+                        "shimmer leaning"
+                    ]
+                },
+                {
+                    "id": "all_shimmer_metallic",
+                    "label": "all shimmer/metallic",
+                    "synonyms": [
+                        "all shimmer",
+                        "entirely shimmer",
+                        "fully metallic",
+                        "shimmer only"
+                    ]
+                },
+                {
+                    "id": "glitter_heavy",
+                    "label": "glitter-heavy",
+                    "synonyms": [
+                        "glitter dominant",
+                        "glitter focused",
+                        "glitter forward"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "all_satin",
+                    "label": "all satin",
+                    "synonyms": [
+                        "100% satin",
+                        "entirely satin",
+                        "satin only"
+                    ]
+                },
+                {
+                    "id": "mostly_satin",
+                    "label": "mostly satin",
+                    "synonyms": [
+                        "mostly satin finish",
+                        "primarily satin",
+                        "satin leaning"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "finish_types",
+            "label": "finish types present",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat finish",
+                        "no shimmer",
+                        "velvet matte"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "satin finish",
+                        "satiny",
+                        "silky finish",
+                        "soft sheen"
+                    ]
+                },
+                {
+                    "id": "shimmer",
+                    "label": "shimmer",
+                    "synonyms": [
+                        "luminous",
+                        "pearl",
+                        "pearlescent",
+                        "shimmer finish"
+                    ]
+                },
+                {
+                    "id": "metallic",
+                    "label": "metallic",
+                    "synonyms": [
+                        "chrome",
+                        "foil",
+                        "metal sheen",
+                        "metallic finish"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "glitter",
+                    "label": "glitter",
+                    "synonyms": [
+                        "glitter finish",
+                        "glittery",
+                        "micro glitter",
+                        "pressed glitter"
+                    ]
+                },
+                {
+                    "id": "duochrome",
+                    "label": "duochrome",
+                    "synonyms": [
+                        "color shift",
+                        "dual shift",
+                        "flip shade",
+                        "two tone"
+                    ]
+                },
+                {
+                    "id": "multichrome",
+                    "label": "multichrome",
+                    "synonyms": [
+                        "multi chrome",
+                        "multi shift",
+                        "polychrome",
+                        "trichrome"
+                    ]
+                },
+                {
+                    "id": "topper",
+                    "label": "topper",
+                    "synonyms": [
+                        "sheer topper",
+                        "top coat",
+                        "topper shade",
+                        "transformer shade"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "color_story",
+            "label": "color story",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "warm_neutrals",
+                    "label": "warm neutrals",
+                    "synonyms": [
+                        "golden neutrals",
+                        "toasty neutrals",
+                        "warm browns",
+                        "warm taupes"
+                    ]
+                },
+                {
+                    "id": "cool_neutrals",
+                    "label": "cool neutrals",
+                    "synonyms": [
+                        "ashy neutrals",
+                        "cool browns",
+                        "cool nudes",
+                        "cool taupes"
+                    ]
+                },
+                {
+                    "id": "rosy_mauve",
+                    "label": "rosy/mauve",
+                    "synonyms": [
+                        "dusty rose",
+                        "mauve tones",
+                        "pink mauves",
+                        "rose tones",
+                        "rosy neutrals"
+                    ]
+                },
+                {
+                    "id": "smoky_greys",
+                    "label": "smoky/greys",
+                    "synonyms": [
+                        "charcoal tones",
+                        "grey tones",
+                        "smokey grays",
+                        "smoky"
+                    ]
+                },
+                {
+                    "id": "bronze_copper",
+                    "label": "bronze/copper",
+                    "synonyms": [
+                        "bronze tones",
+                        "copper tones",
+                        "warm metallics"
+                    ]
+                },
+                {
+                    "id": "colorful_brights",
+                    "label": "colorful/brights",
+                    "synonyms": [
+                        "bold colors",
+                        "bright colors",
+                        "rainbow brights",
+                        "rainbow palette",
+                        "vivid shades"
+                    ]
+                },
+                {
+                    "id": "jewel_tones",
+                    "label": "jewel tones",
+                    "synonyms": [
+                        "deep colors",
+                        "emerald sapphire ruby tones",
+                        "gem tones",
+                        "gemstone hues",
+                        "rich jewel tones"
+                    ]
+                },
+                {
+                    "id": "pastels",
+                    "label": "pastels",
+                    "synonyms": [
+                        "light pastels",
+                        "pastel hues",
+                        "soft pastels",
+                        "sorbet shades",
+                        "spring pastels"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "undertone",
+            "label": "undertone",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "warm",
+                    "label": "warm",
+                    "synonyms": [
+                        "golden undertone",
+                        "warm toned",
+                        "warm undertone",
+                        "yellow undertone"
+                    ]
+                },
+                {
+                    "id": "cool",
+                    "label": "cool",
+                    "synonyms": [
+                        "cool toned",
+                        "cool undertone",
+                        "pink undertone",
+                        "rosy undertone"
+                    ]
+                },
+                {
+                    "id": "neutral",
+                    "label": "neutral",
+                    "synonyms": [
+                        "balanced undertone",
+                        "neither warm nor cool",
+                        "neutral toned",
+                        "neutral undertone"
+                    ]
+                },
+                {
+                    "id": "universal_mixed",
+                    "label": "universal/mixed",
+                    "synonyms": [
+                        "all undertones",
+                        "mixed undertones",
+                        "universal",
+                        "varied undertones"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "intended_use_areas",
+            "label": "intended use areas",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "eyes",
+                    "label": "eyes",
+                    "synonyms": [
+                        "eye area",
+                        "eye use",
+                        "eyelid",
+                        "for eyes"
+                    ]
+                },
+                {
+                    "id": "face",
+                    "label": "face",
+                    "synonyms": [
+                        "cheeks and face",
+                        "complexion",
+                        "face use",
+                        "facial use"
+                    ]
+                },
+                {
+                    "id": "lips",
+                    "label": "lips",
+                    "synonyms": [
+                        "for lips",
+                        "lip area",
+                        "lip use",
+                        "mouth"
+                    ]
+                },
+                {
+                    "id": "brows",
+                    "label": "brows",
+                    "synonyms": [
+                        "brow area",
+                        "eyebrow use",
+                        "for brows"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "body",
+                    "label": "body",
+                    "synonyms": [
+                        "body highlight",
+                        "body use",
+                        "for body",
+                        "shoulders and collarbone"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "shade_opacity",
+            "label": "shade opacity",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "sheer",
+                    "label": "sheer",
+                    "synonyms": [
+                        "light coverage",
+                        "sheer payoff",
+                        "transparent color",
+                        "wash of color"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium",
+                    "synonyms": [
+                        "medium coverage",
+                        "medium pigment",
+                        "moderate payoff"
+                    ]
+                },
+                {
+                    "id": "opaque_high_pigment",
+                    "label": "opaque/high pigment",
+                    "synonyms": [
+                        "full coverage",
+                        "fully opaque",
+                        "high pigment",
+                        "intense payoff",
+                        "opaque color"
+                    ]
+                },
+                {
+                    "id": "buildable",
+                    "label": "buildable",
+                    "synonyms": [
+                        "adjustable payoff",
+                        "buildable coverage",
+                        "builds up",
+                        "layerable",
+                        "sheer to full"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "mirror_included",
+            "label": "mirror included",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "mirror_included_yes",
+                    "label": "mirror included",
+                    "synonyms": [
+                        "built in mirror",
+                        "includes compact mirror",
+                        "includes mirror",
+                        "with mirror"
+                    ]
+                },
+                {
+                    "id": "mirror_included_no",
+                    "label": "mirror not included",
+                    "synonyms": [
+                        "mirrorless",
+                        "no built in mirror",
+                        "no mirror",
+                        "without mirror"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "applicator_included",
+            "label": "applicator included",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "applicator_included_yes",
+                    "label": "applicator included",
+                    "synonyms": [
+                        "brush included",
+                        "dual ended brush included",
+                        "with brush",
+                        "with sponge applicator"
+                    ]
+                },
+                {
+                    "id": "applicator_included_no",
+                    "label": "applicator not included",
+                    "synonyms": [
+                        "brush not included",
+                        "no applicator",
+                        "no sponge",
+                        "no tools included",
+                        "without brush"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "edition",
+            "label": "edition",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "permanent",
+                    "label": "permanent",
+                    "synonyms": [
+                        "always available",
+                        "core line",
+                        "permanent range",
+                        "regular line",
+                        "standard line"
+                    ]
+                },
+                {
+                    "id": "limited_edition",
+                    "label": "limited edition",
+                    "synonyms": [
+                        "le",
+                        "limited quantity",
+                        "limited run",
+                        "limited time",
+                        "one time release"
+                    ]
+                },
+                {
+                    "id": "collaboration",
+                    "label": "collaboration",
+                    "synonyms": [
+                        "artist collab",
+                        "brand collab",
+                        "co branded",
+                        "collab",
+                        "x collection"
+                    ]
+                },
+                {
+                    "id": "holiday",
+                    "label": "holiday",
+                    "synonyms": [
+                        "festive collection",
+                        "holiday collection",
+                        "holiday edition",
+                        "holiday release",
+                        "seasonal"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "cruelty_free_claim",
+            "label": "cruelty-free claim",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "cruelty_free_claimed",
+                    "label": "cruelty-free claimed",
+                    "synonyms": [
+                        "cruelty free",
+                        "no animal testing",
+                        "not tested on animals"
+                    ]
+                },
+                {
+                    "id": "animal_testing_disclosed",
+                    "label": "animal testing disclosed",
+                    "synonyms": [
+                        "animal tested",
+                        "not cruelty free",
+                        "subject to animal testing",
+                        "tested on animals",
+                        "tests on animals"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

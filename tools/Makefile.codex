@@ -1,11 +1,11 @@
 # Nightly Codex Refactor & Detector Runner
 # ----------------------------------------
 # Targets:
-#   make -f Makefile.codex nightly          -> run detectors, then all refactors in safe order
-#   make -f Makefile.codex detectors        -> run detector-only scanners (never fail the build)
-#   make -f Makefile.codex codex-refactors  -> run refactors; default best-effort; configurable gates
+#   make -f tools/Makefile.codex nightly          -> run detectors, then all refactors in safe order
+#   make -f tools/Makefile.codex detectors        -> run detector-only scanners (never fail the build)
+#   make -f tools/Makefile.codex codex-refactors  -> run refactors; default best-effort; configurable gates
 #
-# Controls (override at CLI, e.g. FAILFAST=1 make -f Makefile.codex codex-refactors):
+# Controls (override at CLI, e.g. FAILFAST=1 make -f tools/Makefile.codex codex-refactors):
 #   PATHS_FROM   : list of dirs/files/globs for app code (default: modules_to_scan.txt)
 #   TESTS_FROM   : list of dirs/files/globs for tests     (default: tests_to_scan.txt)
 #   REF_FLAGS    : extra flags passed to ALL refactor scripts (e.g., --model custom-model; defaults come from config)
@@ -17,13 +17,15 @@
 #
 # Example overnight run with logging:
 #   mkdir -p logs
-#   nohup make -f Makefile.codex nightly > logs/nightly_$(date +%F_%H%M).log 2>&1 &
+#   nohup make -f tools/Makefile.codex nightly > logs/nightly_$(date +%F_%H%M).log 2>&1 &
 #
 SHELL := /bin/bash
 .ONESHELL:
 # Paths & flags
-PATHS_FROM ?= modules_to_scan.txt
-TESTS_FROM ?= tests_to_scan.txt
+TOOLS_DIR  := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+PYTHON     ?= python
+PATHS_FROM ?= $(TOOLS_DIR)modules_to_scan.txt
+TESTS_FROM ?= $(TOOLS_DIR)tests_to_scan.txt
 REF_FLAGS  ?=
 REF_GIT    ?= --git-commit
 FAILFAST   ?= 0
@@ -43,9 +45,9 @@ UILOGIC_TXT    := $(REPORT_DIR)/ui_logic.txt
 detectors:
 	@mkdir -p $(REPORT_DIR)
 	@echo ">> Running detectors (will not fail the build)"
-	@./scan_vectorization_candidates.py --paths-from $(PATHS_FROM) \
+	@$(PYTHON) $(TOOLS_DIR)scan_vectorization_candidates.py --paths-from $(PATHS_FROM) \
 		--report-out $(VECTORIZE_TXT) --json-out $(VECTORIZE_JSON) || true
-	@./scan_ui_vs_logic_misplacements.py --paths-from $(PATHS_FROM) \
+	@$(PYTHON) $(TOOLS_DIR)scan_ui_vs_logic_misplacements.py --paths-from $(PATHS_FROM) \
 		--ui-roots ui pages app --report-out $(UILOGIC_TXT) --json-out $(UILOGIC_JSON) || true
 	@echo ">> Detector reports written to $(REPORT_DIR)/"
 
@@ -55,30 +57,29 @@ codex-refactors:
 	run() { cmd="$$1"; echo "==> $$cmd"; eval "$$cmd"; ec=$$?; if [ $$ec -ne 0 ]; then echo "!! failed: $$ec"; rc_total=1; if [ "$(FAILFAST)" = "1" ]; then exit $$ec; fi; fi; }; \
 	\
 	# 1) Low-risk mechanical edits (detector-only)
-	run "./run_codex_pathlib_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
-	run "./run_codex_print_to_logging_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
-	run "./run_codex_except_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
-	run "./run_codex_streaming_engine_arg_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_pathlib_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_print_to_logging_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_except_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_streaming_engine_arg_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
 	\
 	# 2) Pandas -> Polars leftovers (broad sweep on selected paths)
-	run "./run_codex_pandas_polar_refactor.py --paths-from $(PATHS_FROM) --all $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_pandas_polar_refactor.py --paths-from $(PATHS_FROM) --all $(REF_FLAGS) $(REF_GIT)"; \
 	\
 	# 3) Polars helpers (detector-only)
-	run "./run_codex_schema_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
-	run "./run_codex_row_count_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_schema_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_row_count_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
 	\
 	# 4) LLM integration (detector-only). Gate tests between steps if enabled.
-	run "./run_codex_llm_wrapper_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_llm_wrapper_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
 	if [ "$(LLM_GATES)" = "1" ]; then echo "==> Test gate after LLM wrapper"; $(PYTEST) || { ec=$$?; echo "!! tests failed: $$ec"; rc_total=1; if [ "$(FAILFAST)" = "1" ]; then exit $$ec; fi; }; fi; \
-	run "./run_codex_llm_naming_params_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_llm_naming_params_refactor.py --paths-from $(PATHS_FROM) $(REF_FLAGS) $(REF_GIT)"; \
 	if [ "$(LLM_GATES)" = "1" ]; then echo "==> Test gate after LLM naming"; $(PYTEST) || { ec=$$?; echo "!! tests failed: $$ec"; rc_total=1; if [ "$(FAILFAST)" = "1" ]; then exit $$ec; fi; }; fi; \
 	\
 	# 5) Tests repair (broad sweep but scoped to tests)
-	run "./run_codex_test_repair.py --paths-from $(TESTS_FROM) --all $(REF_FLAGS) $(REF_GIT)"; \
+	run "$(PYTHON) $(TOOLS_DIR)run_codex_test_repair.py --paths-from $(TESTS_FROM) --all $(REF_FLAGS) $(REF_GIT)"; \
 	\
 	if [ "$(STRICT)" = "1" ] && [ $$rc_total -ne 0 ]; then exit $$rc_total; else exit 0; fi
 
 nightly: detectors codex-refactors
 	@echo "Nightly run complete."
-
 

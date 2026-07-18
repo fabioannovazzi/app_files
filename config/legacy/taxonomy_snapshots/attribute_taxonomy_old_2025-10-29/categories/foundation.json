@@ -1,0 +1,871 @@
+{
+    "id": "foundation",
+    "label": "foundation",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "synonyms": [
+                        "fluid",
+                        "liquid base",
+                        "liquid formula",
+                        "liquid foundation",
+                        "liquid makeup"
+                    ]
+                },
+                {
+                    "id": "powder_pressed",
+                    "label": "powder (pressed)",
+                    "synonyms": [
+                        "compact powder",
+                        "pan powder",
+                        "pressed compact",
+                        "pressed foundation",
+                        "pressed powder"
+                    ]
+                },
+                {
+                    "id": "powder_loose",
+                    "label": "powder (loose)",
+                    "synonyms": [
+                        "loose base",
+                        "loose foundation",
+                        "loose mineral",
+                        "loose mineral foundation",
+                        "loose powder"
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick",
+                    "synonyms": [
+                        "crayon foundation",
+                        "foundation stick",
+                        "solid stick",
+                        "stick foundation",
+                        "twist-up stick"
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "synonyms": [
+                        "compact cream",
+                        "cream compact",
+                        "cream foundation",
+                        "creme foundation",
+                        "pan cream"
+                    ]
+                },
+                {
+                    "id": "cushion_compact",
+                    "label": "cushion compact",
+                    "synonyms": [
+                        "air cushion compact",
+                        "cushion",
+                        "cushion foundation",
+                        "cushion makeup",
+                        "sponge compact"
+                    ]
+                },
+                {
+                    "id": "serum",
+                    "label": "serum",
+                    "synonyms": [
+                        "dropper foundation",
+                        "fluid serum",
+                        "serum foundation",
+                        "serum tint",
+                        "skin serum foundation"
+                    ]
+                },
+                {
+                    "id": "tint",
+                    "label": "tint",
+                    "synonyms": [
+                        "bb cream",
+                        "sheer tint",
+                        "skin tint",
+                        "tinted moisturizer",
+                        "tinted skin veil"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat matte",
+                        "oil-control finish",
+                        "powdery matte",
+                        "shine-free",
+                        "true matte"
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "natural finish",
+                        "second skin",
+                        "skin-like",
+                        "soft natural",
+                        "true-to-skin"
+                    ]
+                },
+                {
+                    "id": "dewy",
+                    "label": "dewy",
+                    "synonyms": [
+                        "dewy finish",
+                        "fresh glow",
+                        "glossy skin",
+                        "hydrated glow",
+                        "moist glow"
+                    ]
+                },
+                {
+                    "id": "radiant_luminous",
+                    "label": "radiant/luminous",
+                    "synonyms": [
+                        "glowy",
+                        "illumination",
+                        "lit-from-within",
+                        "luminous",
+                        "radiant"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "natural satin",
+                        "satin finish",
+                        "satin sheen",
+                        "semi matte",
+                        "semi-matte"
+                    ]
+                },
+                {
+                    "id": "velvet",
+                    "label": "velvet",
+                    "synonyms": [
+                        "cushiony finish",
+                        "soft matte",
+                        "velvet finish",
+                        "velvet skin",
+                        "velvety"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "soft_focus_blur",
+                    "label": "soft-focus/blurring",
+                    "synonyms": [
+                        "airbrushed",
+                        "blurring",
+                        "diffused",
+                        "photo-filter",
+                        "soft-focus"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "no_coverage",
+                    "label": "no_coverage",
+                    "synonyms": [
+                        "no-coverage",
+                        "setting spray"
+                    ]
+                },
+                {
+                    "id": "sheer",
+                    "label": "sheer",
+                    "synonyms": [
+                        "barely-there",
+                        "sheer coverage",
+                        "transparent",
+                        "veil coverage",
+                        "very sheer"
+                    ]
+                },
+                {
+                    "id": "light",
+                    "label": "light",
+                    "synonyms": [
+                        "light coverage",
+                        "light finish",
+                        "lightweight coverage",
+                        "low coverage",
+                        "natural coverage"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium",
+                    "synonyms": [
+                        "builds to medium",
+                        "medium coverage",
+                        "medium finish",
+                        "mid coverage",
+                        "moderate coverage"
+                    ]
+                },
+                {
+                    "id": "full",
+                    "label": "full",
+                    "synonyms": [
+                        "complete coverage",
+                        "full coverage",
+                        "high coverage",
+                        "maximum coverage",
+                        "total coverage"
+                    ]
+                },
+                {
+                    "id": "sheer_to_full",
+                    "label": "sheer to full",
+                    "synonyms": [
+                        "full to sheer",
+                        "full-to-sheer",
+                        "sheer-to-full"
+                    ]
+                },
+                {
+                    "id": "sheer_to_light",
+                    "label": "sheer to light",
+                    "synonyms": [
+                        "light to sheer",
+                        "light-to-sheer",
+                        "sheer-to-light"
+                    ]
+                },
+                {
+                    "id": "sheer_to_medium",
+                    "label": "sheer to medium",
+                    "synonyms": [
+                        "medium to sheer",
+                        "medium-to-sheer",
+                        "sheer-to-medium"
+                    ]
+                },
+                {
+                    "id": "light_to_medium",
+                    "label": "light to medium",
+                    "synonyms": [
+                        "light-to-medium",
+                        "medium to light",
+                        "medium-to-light"
+                    ]
+                },
+                {
+                    "id": "medium_to_full",
+                    "label": "medium to full",
+                    "synonyms": [
+                        "full to medium",
+                        "full-to-medium",
+                        "medium-to-full"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage_buildable",
+            "label": "buildable coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "buildable_yes",
+                    "label": "yes",
+                    "synonyms": [
+                        "buildable",
+                        "builds easily",
+                        "coverage adjustable",
+                        "layerable"
+                    ]
+                },
+                {
+                    "id": "buildable_no",
+                    "label": "no",
+                    "synonyms": [
+                        "fixed coverage",
+                        "non-buildable",
+                        "not buildable",
+                        "one-layer",
+                        "set coverage"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "suitable_skin_type",
+            "label": "suitable skin type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "dry",
+                    "label": "dry",
+                    "synonyms": [
+                        "dehydrated skin",
+                        "dry skin",
+                        "dryness",
+                        "flaky-prone",
+                        "very dry"
+                    ]
+                },
+                {
+                    "id": "sensitive",
+                    "label": "sensitive",
+                    "synonyms": [
+                        "problem-prone",
+                        "sensitive/problem-prone"
+                    ]
+                },
+                {
+                    "id": "oily",
+                    "label": "oily",
+                    "synonyms": [
+                        "greasy skin",
+                        "oiliness",
+                        "oily skin",
+                        "sebum control",
+                        "shine-prone"
+                    ]
+                },
+                {
+                    "id": "combination",
+                    "label": "combination",
+                    "synonyms": [
+                        "combination skin",
+                        "combo",
+                        "combo skin",
+                        "mixed skin",
+                        "t-zone oily"
+                    ]
+                },
+                {
+                    "id": "normal",
+                    "label": "normal",
+                    "synonyms": [
+                        "balanced",
+                        "normal skin",
+                        "normal-balanced",
+                        "regular skin",
+                        "typical skin"
+                    ]
+                },
+                {
+                    "id": "normal_to_oily",
+                    "label": "normal to oily",
+                    "synonyms": [
+                        "normal-to-oily"
+                    ]
+                },
+                {
+                    "id": "all_skin_types",
+                    "label": "all skin types",
+                    "synonyms": [
+                        "all skin types (including mature and sensitive)",
+                        "all skins",
+                        "dry, oily and combination",
+                        "every skin",
+                        "normal, combination and oily"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "sensitive_skin_compatible",
+            "label": "sensitive-skin compatible",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "sensitive_yes",
+                    "label": "yes",
+                    "synonyms": [
+                        "dermatologist tested",
+                        "for sensitive skin",
+                        "gentle on skin",
+                        "hypoallergenic",
+                        "sensitive-skin safe"
+                    ]
+                },
+                {
+                    "id": "sensitive_no",
+                    "label": "no",
+                    "synonyms": [
+                        "fragrance present",
+                        "may irritate",
+                        "not for sensitive skin",
+                        "not gentle",
+                        "not hypoallergenic"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "formula_base",
+            "label": "formula base",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "water_based",
+                    "label": "water-based",
+                    "synonyms": [
+                        "aqua base",
+                        "aqueous base",
+                        "h2o base",
+                        "water first",
+                        "water formula"
+                    ]
+                },
+                {
+                    "id": "silicone_based",
+                    "label": "silicone-based",
+                    "synonyms": [
+                        "dimethicone base",
+                        "silicone formula",
+                        "silicone heavy",
+                        "silicone-rich",
+                        "siloxane base"
+                    ]
+                },
+                {
+                    "id": "oil_based",
+                    "label": "oil-based",
+                    "synonyms": [
+                        "emollient base",
+                        "oil formula",
+                        "oil-forward",
+                        "oil-rich",
+                        "oily base"
+                    ]
+                },
+                {
+                    "id": "water_and_oil_based",
+                    "label": "water-and-oil-based",
+                    "synonyms": [
+                        "combination water + oil",
+                        "water and oil",
+                        "water and oil emulsion",
+                        "water and oil emulsion (combination water + oil)"
+                    ]
+                },
+                {
+                    "id": "mineral_based",
+                    "label": "mineral-based",
+                    "synonyms": [
+                        "all-mineral",
+                        "mineral formula",
+                        "mineral makeup",
+                        "mineral powder",
+                        "pure mineral"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "resistance_features",
+            "label": "resistance features",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "transfer_resistant",
+                    "label": "transfer-resistant",
+                    "synonyms": [
+                        "budge-proof",
+                        "mask-proof",
+                        "no transfer",
+                        "smudge-proof",
+                        "transfer proof"
+                    ]
+                },
+                {
+                    "id": "waterproof",
+                    "label": "waterproof",
+                    "synonyms": [
+                        "resists water",
+                        "swim-proof",
+                        "water resistant",
+                        "water-resistant",
+                        "won't wash off"
+                    ]
+                },
+                {
+                    "id": "sweat_resistant",
+                    "label": "sweat-resistant",
+                    "synonyms": [
+                        "gym-proof",
+                        "perspiration resistant",
+                        "perspiration-proof",
+                        "sweatproof",
+                        "workout proof"
+                    ]
+                },
+                {
+                    "id": "humidity_resistant",
+                    "label": "humidity-resistant",
+                    "synonyms": [
+                        "anti-humidity",
+                        "heat + humidity",
+                        "humid-proof",
+                        "humidity-proof",
+                        "moisture resistant"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "long_wear",
+                    "label": "long-wear"
+                }
+            ]
+        },
+        {
+            "id": "packaging_type",
+            "label": "packaging type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "pump_bottle",
+                    "label": "pump bottle",
+                    "synonyms": [
+                        "airless pump",
+                        "pump dispenser",
+                        "pump pack",
+                        "pumped bottle"
+                    ]
+                },
+                {
+                    "id": "squeeze_tube",
+                    "label": "squeeze tube",
+                    "synonyms": [
+                        "flip-cap tube",
+                        "soft tube",
+                        "squeezy tube",
+                        "tube"
+                    ]
+                },
+                {
+                    "id": "compact",
+                    "label": "compact",
+                    "synonyms": [
+                        "compact case",
+                        "cushion compact",
+                        "mirror compact",
+                        "pact",
+                        "pressed case"
+                    ]
+                },
+                {
+                    "id": "stick_twist",
+                    "label": "stick (twist-up)",
+                    "synonyms": [
+                        "solid stick tube",
+                        "stick packaging",
+                        "swivel stick",
+                        "twist stick",
+                        "twist-up stick"
+                    ]
+                },
+                {
+                    "id": "dropper_bottle",
+                    "label": "dropper bottle",
+                    "synonyms": [
+                        "dropper",
+                        "glass dropper",
+                        "pipette bottle",
+                        "pipette dropper",
+                        "serum bottle"
+                    ]
+                },
+                {
+                    "id": "aerosol_spray_can",
+                    "label": "aerosol/spray can",
+                    "synonyms": [
+                        "aerosol",
+                        "spray can"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "jar",
+                    "label": "jar",
+                    "synonyms": [
+                        "glass jar",
+                        "pot",
+                        "screw-top jar",
+                        "wide-mouth jar"
+                    ]
+                },
+                {
+                    "id": "bottle_pour",
+                    "label": "bottle (pour)",
+                    "synonyms": [
+                        "open-neck bottle",
+                        "pour bottle",
+                        "screw-cap bottle",
+                        "shake-and-pour",
+                        "spatula bottle"
+                    ]
+                },
+                {
+                    "id": "bottle_with_wand",
+                    "label": "bottle (wand applicator)",
+                    "synonyms": [
+                        "doe-foot applicator",
+                        "giant doe-foot",
+                        "oversized applicator",
+                        "paddle applicator",
+                        "wand applicator"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "spf",
+            "label": "SPF",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "sun_filter_type",
+            "label": "sun filter type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "none",
+                    "label": "none",
+                    "synonyms": [
+                        "no spf",
+                        "no sunscreen",
+                        "spf 0",
+                        "no sun protection",
+                        "no spf listed",
+                        "non spf"
+                    ]
+                },
+                {
+                    "id": "mineral",
+                    "label": "mineral",
+                    "synonyms": [
+                        "inorganic filters",
+                        "mineral sunscreen",
+                        "non-chemical",
+                        "physical",
+                        "zinc/titanium"
+                    ]
+                },
+                {
+                    "id": "chemical",
+                    "label": "chemical",
+                    "synonyms": [
+                        "absorber filters",
+                        "avobenzone/oxybenzone",
+                        "chemical sunscreen",
+                        "organic filters",
+                        "uv chemical filters"
+                    ]
+                },
+                {
+                    "id": "hybrid",
+                    "label": "hybrid",
+                    "synonyms": [
+                        "blended filters",
+                        "combo filters",
+                        "hybrid sunscreen",
+                        "mineral-chemical",
+                        "mixed filters"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "broad_spectrum",
+            "label": "broad spectrum (UVA/UVB)",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "broad_spectrum_yes",
+                    "label": "yes",
+                    "synonyms": [
+                        "broad spectrum",
+                        "broad-spectrum",
+                        "full spectrum",
+                        "pa rating",
+                        "uva/uvb"
+                    ]
+                },
+                {
+                    "id": "broad_spectrum_no",
+                    "label": "no",
+                    "synonyms": [
+                        "narrow spectrum",
+                        "no uva claim",
+                        "not broad spectrum",
+                        "not broad-spectrum",
+                        "uvb only"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

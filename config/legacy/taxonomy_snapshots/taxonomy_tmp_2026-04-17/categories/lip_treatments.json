@@ -1,0 +1,763 @@
+{
+    "id": "lip_treatments",
+    "label": "lip treatments",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "balm",
+                    "label": "balm",
+                    "synonyms": [
+                        "treatment balm"
+                    ]
+                },
+                {
+                    "id": "mask",
+                    "label": "mask",
+                    "synonyms": [
+                        "lip mask",
+                        "sleeping mask"
+                    ]
+                },
+                {
+                    "id": "oil",
+                    "label": "oil formula",
+                    "synonyms": [
+                        "conditioning oil",
+                        "treatment oil"
+                    ]
+                },
+                {
+                    "id": "serum",
+                    "label": "serum",
+                    "synonyms": [
+                        "lip serum",
+                        "treatment serum"
+                    ]
+                },
+                {
+                    "id": "scrub",
+                    "label": "scrub",
+                    "synonyms": [
+                        "sugar scrub"
+                    ]
+                },
+                {
+                    "id": "patch",
+                    "label": "patch",
+                    "synonyms": [
+                        "hydrogel patch",
+                        "lip patch"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "treatment_type",
+            "label": "treatment type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "overnight_mask",
+                    "label": "overnight mask",
+                    "synonyms": [
+                        "night mask"
+                    ]
+                },
+                {
+                    "id": "repair_balm",
+                    "label": "repair balm",
+                    "synonyms": [
+                        "barrier balm",
+                        "restorative balm"
+                    ]
+                },
+                {
+                    "id": "exfoliating_scrub",
+                    "label": "exfoliating scrub",
+                    "synonyms": [
+                        "lip polish"
+                    ]
+                },
+                {
+                    "id": "plumping_treatment",
+                    "label": "plumping treatment",
+                    "synonyms": [
+                        "line plumping care",
+                        "volumizing treatment"
+                    ]
+                },
+                {
+                    "id": "spf_treatment",
+                    "label": "SPF treatment",
+                    "synonyms": [
+                        "sun care lip treatment",
+                        "uv balm"
+                    ]
+                },
+                {
+                    "id": "line_smoothing_treatment",
+                    "label": "line-smoothing treatment",
+                    "synonyms": [
+                        "anti wrinkle lip care",
+                        "smoothing treatment"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish_effect",
+            "label": "finish effect",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "bare finish",
+                        "natural look"
+                    ]
+                },
+                {
+                    "id": "glossy",
+                    "label": "glossy",
+                    "synonyms": [
+                        "healthy shine",
+                        "wet sheen"
+                    ]
+                },
+                {
+                    "id": "balm_sheen",
+                    "label": "balm sheen",
+                    "synonyms": [
+                        "soft sheen",
+                        "subtle balm shine"
+                    ]
+                },
+                {
+                    "id": "dewy",
+                    "label": "dewy",
+                    "synonyms": [
+                        "dewy glow",
+                        "moist sheen"
+                    ]
+                },
+                {
+                    "id": "none_invisible",
+                    "label": "none/invisible",
+                    "synonyms": [
+                        "clear finish",
+                        "invisible treatment"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_payoff",
+            "label": "color payoff",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "none_transparent",
+                    "label": "none/transparent",
+                    "synonyms": [
+                        "clear",
+                        "untinted"
+                    ]
+                },
+                {
+                    "id": "sheer_tint",
+                    "label": "sheer tint",
+                    "synonyms": [
+                        "hint of color",
+                        "wash of color"
+                    ]
+                },
+                {
+                    "id": "light_tint",
+                    "label": "light tint",
+                    "synonyms": [
+                        "lightly tinted",
+                        "soft tint"
+                    ]
+                },
+                {
+                    "id": "buildable_tint",
+                    "label": "buildable tint",
+                    "synonyms": [
+                        "layerable tint",
+                        "sheer to medium tint"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "scent_flavor",
+            "label": "scent/flavor",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unscented",
+                    "label": "unscented",
+                    "synonyms": [
+                        "fragrance free",
+                        "no added fragrance",
+                        "no fragrance",
+                        "no scent",
+                        "unfragranced"
+                    ]
+                },
+                {
+                    "id": "vanilla",
+                    "label": "vanilla",
+                    "synonyms": [
+                        "bourbon vanilla",
+                        "creamy vanilla",
+                        "sweet vanilla",
+                        "vanilla bean",
+                        "vanilla sugar"
+                    ]
+                },
+                {
+                    "id": "mint",
+                    "label": "mint",
+                    "synonyms": [
+                        "menthol",
+                        "minty",
+                        "peppermint",
+                        "spearmint"
+                    ]
+                },
+                {
+                    "id": "coconut",
+                    "label": "coconut",
+                    "synonyms": [
+                        "coco",
+                        "coconut cream",
+                        "coconut milk",
+                        "coconutty",
+                        "cocos nucifera"
+                    ]
+                },
+                {
+                    "id": "citrus",
+                    "label": "citrus",
+                    "synonyms": [
+                        "grapefruit",
+                        "lemon",
+                        "lime",
+                        "mandarin",
+                        "orange"
+                    ]
+                },
+                {
+                    "id": "berry",
+                    "label": "berry",
+                    "synonyms": [
+                        "blackberry",
+                        "blueberry",
+                        "mixed berry",
+                        "raspberry",
+                        "strawberry"
+                    ]
+                },
+                {
+                    "id": "cherry",
+                    "label": "cherry",
+                    "synonyms": [
+                        "black cherry",
+                        "cherry candy",
+                        "maraschino",
+                        "sour cherry",
+                        "wild cherry"
+                    ]
+                },
+                {
+                    "id": "watermelon",
+                    "label": "watermelon",
+                    "synonyms": [
+                        "fresh watermelon",
+                        "juicy watermelon",
+                        "melon",
+                        "pink watermelon",
+                        "watermelon candy"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "primary_treatment_active",
+            "label": "primary treatment active",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "hyaluronic_acid",
+                    "label": "hyaluronic acid",
+                    "synonyms": [
+                        "ha",
+                        "sodium hyaluronate"
+                    ]
+                },
+                {
+                    "id": "peptides",
+                    "label": "peptides",
+                    "synonyms": [
+                        "peptide complex",
+                        "signal peptides"
+                    ]
+                },
+                {
+                    "id": "ceramides",
+                    "label": "ceramides",
+                    "synonyms": [
+                        "barrier ceramides",
+                        "lipid complex"
+                    ]
+                },
+                {
+                    "id": "alpha_hydroxy_acids",
+                    "label": "alpha hydroxy acids",
+                    "synonyms": [
+                        "aha",
+                        "glycolic acid",
+                        "lactic acid"
+                    ]
+                },
+                {
+                    "id": "botanical_oils_butters",
+                    "label": "botanical oils/butters",
+                    "synonyms": [
+                        "nourishing oils",
+                        "plant butters"
+                    ]
+                },
+                {
+                    "id": "spf_filters",
+                    "label": "SPF filters",
+                    "synonyms": [
+                        "sun filters",
+                        "uv filters"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "treatment_benefits",
+            "label": "treatment benefits",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "repair",
+                    "label": "repair",
+                    "synonyms": [
+                        "repairs barrier",
+                        "restores lips"
+                    ]
+                },
+                {
+                    "id": "hydration",
+                    "label": "hydration",
+                    "synonyms": [
+                        "deep moisture",
+                        "intense hydration"
+                    ]
+                },
+                {
+                    "id": "exfoliation",
+                    "label": "exfoliation",
+                    "synonyms": [
+                        "buffs flakes",
+                        "smooths texture"
+                    ]
+                },
+                {
+                    "id": "plumping",
+                    "label": "plumping",
+                    "synonyms": [
+                        "fuller look",
+                        "volumizing care"
+                    ]
+                },
+                {
+                    "id": "smoothing_lines",
+                    "label": "smoothing lines",
+                    "synonyms": [
+                        "line smoothing",
+                        "softens wrinkles"
+                    ]
+                },
+                {
+                    "id": "barrier_support",
+                    "label": "barrier support",
+                    "synonyms": [
+                        "barrier strengthening",
+                        "protective care"
+                    ]
+                },
+                {
+                    "id": "sun_protection",
+                    "label": "sun protection",
+                    "synonyms": [
+                        "uv defense",
+                        "with spf"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "texture_feel",
+            "label": "texture feel",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "lightweight",
+                    "label": "lightweight",
+                    "synonyms": [
+                        "airy",
+                        "featherlight",
+                        "light feel",
+                        "ultra light",
+                        "weightless"
+                    ]
+                },
+                {
+                    "id": "non_sticky",
+                    "label": "non-sticky",
+                    "synonyms": [
+                        "no stickiness",
+                        "non sticky",
+                        "non tacky",
+                        "not sticky",
+                        "tack free"
+                    ]
+                },
+                {
+                    "id": "cushiony",
+                    "label": "cushiony",
+                    "synonyms": [
+                        "bouncy feel",
+                        "cushion feel",
+                        "cushy",
+                        "pillowy"
+                    ]
+                },
+                {
+                    "id": "rich_thick",
+                    "label": "rich/thick",
+                    "synonyms": [
+                        "dense",
+                        "rich texture",
+                        "thick",
+                        "thicker oil",
+                        "viscous"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "tingly",
+                    "label": "tingly",
+                    "synonyms": [
+                        "cool tingle",
+                        "mint tingle",
+                        "peppery tingle",
+                        "tingling sensation",
+                        "warming tingle"
+                    ]
+                },
+                {
+                    "id": "silky_slip",
+                    "label": "silky slip",
+                    "synonyms": [
+                        "glides easily",
+                        "silicone like slip",
+                        "silky feel",
+                        "slick feel",
+                        "smooth slip"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "clean_standard",
+            "label": "clean standard",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "clean_at_sephora",
+                    "label": "Clean at Sephora",
+                    "synonyms": [
+                        "clean badge",
+                        "clean seal",
+                        "sephora clean",
+                        "sephora clean program"
+                    ]
+                },
+                {
+                    "id": "ulta_clean",
+                    "label": "Conscious Beauty at Ulta",
+                    "synonyms": [
+                        "conscious at ulta",
+                        "conscious beauty",
+                        "ulta certification",
+                        "ulta clean"
+                    ]
+                },
+                {
+                    "id": "ewg_verified",
+                    "label": "EWG Verified",
+                    "synonyms": [
+                        "environmental working group",
+                        "ewg",
+                        "ewg certification",
+                        "ewg verified seal"
+                    ]
+                },
+                {
+                    "id": "none",
+                    "label": "no clean certification",
+                    "synonyms": [
+                        "no clean claim",
+                        "no clean label",
+                        "no clean standard",
+                        "no program",
+                        "not clean certified"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "credo_clean_standard",
+                    "label": "Credo Clean Standard",
+                    "synonyms": [
+                        "credo beauty clean",
+                        "credo clean",
+                        "credo clean seal",
+                        "credo program",
+                        "credo standard"
+                    ]
+                },
+                {
+                    "id": "target_clean",
+                    "label": "Target Clean",
+                    "synonyms": [
+                        "clean at target",
+                        "target clean badge",
+                        "target clean program",
+                        "target clean seal"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "vegan_status",
+            "label": "vegan status",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "vegan",
+                    "label": "vegan",
+                    "synonyms": [
+                        "certified vegan",
+                        "no animal derived",
+                        "plant based",
+                        "vegan formula",
+                        "vegan friendly"
+                    ]
+                },
+                {
+                    "id": "not_vegan",
+                    "label": "not vegan",
+                    "synonyms": [
+                        "animal derived",
+                        "carmine present",
+                        "contains beeswax",
+                        "contains lanolin",
+                        "non vegan"
+                    ]
+                },
+                {
+                    "id": "not_claimed",
+                    "label": "no vegan claim",
+                    "synonyms": [
+                        "no vegan label",
+                        "no vegan statement",
+                        "unspecified vegan",
+                        "vegan not stated"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "cruelty_free_claim",
+            "label": "cruelty-free claim",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "cruelty_free",
+                    "label": "cruelty-free",
+                    "synonyms": [
+                        "cruelty free",
+                        "leaping bunny",
+                        "never tested on animals",
+                        "no animal testing",
+                        "peta cruelty free"
+                    ]
+                },
+                {
+                    "id": "not_cruelty_free",
+                    "label": "not cruelty-free",
+                    "synonyms": [
+                        "animal tested",
+                        "not cruelty free",
+                        "required animal testing",
+                        "tests on animals",
+                        "third party animal testing"
+                    ]
+                },
+                {
+                    "id": "not_claimed",
+                    "label": "no cruelty-free claim",
+                    "synonyms": [
+                        "no animal testing label",
+                        "no cf claim",
+                        "no cf statement",
+                        "no cruelty free claim",
+                        "unspecified cruelty free"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}
