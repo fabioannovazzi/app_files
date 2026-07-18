@@ -1,0 +1,347 @@
+{
+    "id": "liquid_lipstick",
+    "label": "liquid lipstick",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": null,
+            "scope": null,
+            "kind": null,
+            "nodes": [
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "children": [
+                        {
+                            "id": "doefoot_liquid",
+                            "label": "Tube with doe-foot wand",
+                            "synonyms": [
+                                "doe foot",
+                                "flocked applicator",
+                                "wand"
+                            ]
+                        },
+                        {
+                            "id": "cushion_tint",
+                            "label": "Cushion-tip \"blur\" tint",
+                            "synonyms": [
+                                "blur tint",
+                                "cushion tip",
+                                "sponge tip"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": null,
+            "scope": null,
+            "kind": null,
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "children": [
+                        {
+                            "id": "classic_matte",
+                            "label": "Classic / opaque matte"
+                        },
+                        {
+                            "id": "powder_matte",
+                            "label": "Powder-matte"
+                        },
+                        {
+                            "id": "velvet_matte",
+                            "label": "Comfort / velvet matte",
+                            "synonyms": [
+                                "soft-matte"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "children": [
+                        {
+                            "id": "true_satin",
+                            "label": "True satin"
+                        },
+                        {
+                            "id": "semi_matte",
+                            "label": "Semi-matte cream"
+                        }
+                    ]
+                },
+                {
+                    "id": "shine",
+                    "label": "shine",
+                    "children": [
+                        {
+                            "id": "glossy",
+                            "label": "Glossy lacquer"
+                        },
+                        {
+                            "id": "vinyl",
+                            "label": "Vinyl / patent shine"
+                        },
+                        {
+                            "id": "sheer_shine",
+                            "label": "Sheer-shine balm"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": null,
+            "scope": null,
+            "kind": null,
+            "nodes": [
+                {
+                    "id": "full",
+                    "label": "Full / opaque",
+                    "children": [
+                        {
+                            "id": "high_pigment",
+                            "label": "High-pigment full"
+                        },
+                        {
+                            "id": "single_swipe",
+                            "label": "One-swipe opaque"
+                        }
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "Medium / buildable",
+                    "children": [
+                        {
+                            "id": "buildable",
+                            "label": "Buildable medium"
+                        },
+                        {
+                            "id": "semi_opaque",
+                            "label": "Semi-opaque"
+                        }
+                    ]
+                },
+                {
+                    "id": "sheer",
+                    "label": "Sheer / light",
+                    "children": [
+                        {
+                            "id": "tint",
+                            "label": "Tint / stain",
+                            "synonyms": [
+                                "ink tint",
+                                "juice tint",
+                                "lip stain",
+                                "water tint"
+                            ]
+                        },
+                        {
+                            "id": "balm_sheer",
+                            "label": "Balm-like sheer"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "formula",
+            "label": "formula",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": null,
+            "scope": null,
+            "kind": null,
+            "nodes": [
+                {
+                    "id": "performance",
+                    "label": "Performance",
+                    "children": [
+                        {
+                            "id": "long_wear",
+                            "label": "Long-wear"
+                        },
+                        {
+                            "id": "transfer_proof",
+                            "label": "Transfer-proof"
+                        },
+                        {
+                            "id": "waterproof",
+                            "label": "Waterproof"
+                        }
+                    ]
+                },
+                {
+                    "id": "care",
+                    "label": "Care / Treatment",
+                    "children": [
+                        {
+                            "id": "hydrating",
+                            "label": "Hydrating"
+                        },
+                        {
+                            "id": "plumping",
+                            "label": "Plumping"
+                        },
+                        {
+                            "id": "spf",
+                            "label": "SPF-infused"
+                        }
+                    ]
+                },
+                {
+                    "id": "ethos",
+                    "label": "Ethos & Sustainability",
+                    "children": [
+                        {
+                            "id": "clean_vegan",
+                            "label": "Clean / vegan"
+                        },
+                        {
+                            "id": "cruelty_free",
+                            "label": "Cruelty-free"
+                        },
+                        {
+                            "id": "refillable_formula",
+                            "label": "Refillable-compatible"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "packaging",
+            "label": "Packaging",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": null,
+            "scope": null,
+            "kind": null,
+            "nodes": [
+                {
+                    "id": "component_type",
+                    "label": "Component Type",
+                    "children": [
+                        {
+                            "id": "refillable_case",
+                            "label": "Refillable case"
+                        },
+                        {
+                            "id": "dual_ended",
+                            "label": "Dual-ended component"
+                        },
+                        {
+                            "id": "slim_case",
+                            "label": "Slim case"
+                        }
+                    ]
+                },
+                {
+                    "id": "package_size",
+                    "label": "Size & Pack",
+                    "children": [
+                        {
+                            "id": "mini",
+                            "label": "Mini / travel size"
+                        },
+                        {
+                            "id": "jumbo",
+                            "label": "Jumbo size"
+                        },
+                        {
+                            "id": "multipack",
+                            "label": "Multi-pack / kit"
+                        }
+                    ]
+                },
+                {
+                    "id": "eco_material",
+                    "label": "Eco Material",
+                    "children": [
+                        {
+                            "id": "recycled_plastic",
+                            "label": "Recycled plastic"
+                        },
+                        {
+                            "id": "metal_case",
+                            "label": "Metal case",
+                            "synonyms": [
+                                "aluminum",
+                                "metal"
+                            ]
+                        },
+                        {
+                            "id": "paper_tube",
+                            "label": "Paper-based tube",
+                            "synonyms": [
+                                "cardboard",
+                                "paper"
+                            ]
+                        },
+                        {
+                            "id": "recycled_glass",
+                            "label": "Recycled glass"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ],
+    "guidance": "Liquid-only category. Pick a child under 'liquid' format."
+}

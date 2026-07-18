@@ -1,0 +1,21 @@
+{
+    "archive_format": "one_json_per_category",
+    "source_file": "taxonomy_review_queue.json",
+    "source_ref": "737ff12bc364ab50952b0e14cf989deb5baca44f^:taxonomy_review_queue.json",
+    "source_git_blob": "8541455bf4bd6b3aad8d7204f54ca3072dccbc1c",
+    "source_sha256": "0e6e685b5ac879fae601d3455aae9307040c58ef364c080a2d869191c9b859d3",
+    "source_top_level_type": "array",
+    "deleted_by_commit": "737ff12bc364ab50952b0e14cf989deb5baca44f",
+    "deleted_at": "2025-09-04T15:42:26+02:00",
+    "row_count": 20,
+    "category_count": 1,
+    "category_files": [
+        {
+            "id": "foundation",
+            "file": "categories/foundation.json",
+            "row_count": 20,
+            "archived_file_sha256": "0e6e685b5ac879fae601d3455aae9307040c58ef364c080a2d869191c9b859d3",
+            "canonical_sha256": "fd95f90898167352445c46c46b6836f16833e64733fd079d63f7c40475c60942"
+        }
+    ]
+}

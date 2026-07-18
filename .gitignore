@@ -103,6 +103,8 @@ dist/
 .codex_targets.txt
 tests_to_scan.txt
 modules_to_scan.txt
+!tools/tests_to_scan.txt
+!tools/modules_to_scan.txt
 
 # Private local deployment instructions and server connection details.
 /.agents/skills/deploy-app-files/

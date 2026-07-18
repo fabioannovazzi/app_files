@@ -1,0 +1,12 @@
+{
+    "source_file": "category_websites.json",
+    "source_ref": "fb2d419554c0cc2032a36c5fee0635faafcd8c8f^:category_websites.json",
+    "source_git_blob": "a9253f3a59abcff48be73e849004340d59ba193b",
+    "source_sha256": "89a4996d8de39207b18d5147095cf1acefba86826895805d6fc743276a7fadac",
+    "archived_file": "category_websites_legacy_2025-08-11.json",
+    "archived_file_sha256": "89a4996d8de39207b18d5147095cf1acefba86826895805d6fc743276a7fadac",
+    "deleted_by_commit": "fb2d419554c0cc2032a36c5fee0635faafcd8c8f",
+    "deleted_at": "2025-08-11T13:43:08+02:00",
+    "category_count": 1,
+    "url_count": 3
+}

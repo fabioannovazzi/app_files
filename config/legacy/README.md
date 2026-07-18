@@ -13,10 +13,27 @@ must not be mistaken for the active taxonomy or a reviewed website catalog.
 - `taxonomy_snapshots/pre_split_2026-04-03/` preserves the final taxonomy
   before the split-file migration, with 6 categories and 69 attributes. Source
   SHA-256: `9502024648cde2da87c67e9489396604977eb8b27accbb4fb22c07e69558d455`.
+- `taxonomy_snapshots/expanded_candidate_2025-09-07/` preserves the deleted
+  `attribute_taxonomy_new.json` candidate with 7 categories and 80 attributes.
+  Source SHA-256:
+  `489920b5a3d514237771be12fb4178a1e460474474037b6752c6ba8d4dcacb5e`.
+- `taxonomy_snapshots/attribute_taxonomy_old_2025-10-29/` preserves the final
+  deleted `attribute_taxonomy_old.json` variant with 7 categories and 56
+  attributes. Source SHA-256:
+  `d5bf895efb3a7d3345e0299eb2dd74a46d3b5635610d6685ba6b2649424d60e9`.
+- `taxonomy_snapshots/taxonomy_tmp_2026-04-17/` preserves the final deleted
+  split staging tree with 22 categories and 239 attributes. Each archived
+  category file is byte-identical to its historical source.
 
 Every taxonomy snapshot follows the same rule as the active taxonomy: one JSON
 file per category plus a small manifest. No all-category taxonomy file is
 tracked in these recovery archives.
+- `taxonomy_review_queue_2025-09-04/` preserves the deleted 20-row foundation
+  taxonomy review queue as one category file plus a manifest. Source SHA-256:
+  `0e6e685b5ac879fae601d3455aae9307040c58ef364c080a2d869191c9b859d3`.
+- `category_websites_legacy_2025-08-11.json` preserves three deleted lip-oil
+  PDP source URLs. Its adjacent manifest records the source blob, commit, and
+  SHA-256.
 - `product_line_catalog.json` preserves the deleted catalog of 214 lipstick and
   foundation product-line names. Its canonical JSON content matches source
   SHA-256 `755d37760d447add33ba6ce87bf24aacaf41deeae604e1b8f8a88f90cde9348c`.
