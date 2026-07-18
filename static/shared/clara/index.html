@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Create or correct presentations, run interviews, organize advisory work, build checked retail attribute reports, and analyze business data in Codex.">
+  <meta name="description" content="Create or correct presentations, run interviews, organize advisory work, build checked retail attribute reports, and analyze business data in Codex." data-i18n-content="meta.description">
   <link rel="canonical" href="https://mparanza.com/static/shared/clara/index.html">
   <title>Clara</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,14 +19,14 @@
         <span>Clara</span>
       </a>
       <div class="nav-right">
-        <nav class="nav-links" aria-label="Page navigation">
+        <nav class="nav-links" aria-label="Page navigation" data-i18n-aria-label="aria.page_navigation">
           <a href="#presentations" data-i18n="nav.presentations">Presentations</a>
           <a href="#retail-intelligence" data-i18n="nav.capabilities">Retail, interviews &amp; charts</a>
           <a href="#workflow" data-i18n="nav.workflow">Getting started</a>
           <a href="#download" data-i18n="nav.download">Installation</a>
           <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-        <div class="lang-switch" aria-label="Language">
+        <div class="lang-switch" aria-label="Language" data-i18n-aria-label="aria.language">
           <button type="button" data-lang="en">EN</button>
           <button type="button" data-lang="it">IT</button>
           <button type="button" data-lang="fr">FR</button>
@@ -52,7 +52,7 @@
       </figure>
     </section>
 
-    <div class="promise-strip" aria-label="What you can do with Clara">
+    <div class="promise-strip" aria-label="What you can do with Clara" data-i18n-aria-label="aria.promise_strip">
       <a class="promise" href="#presentations">
         <p data-i18n="hero.summary1">Create or correct PowerPoint and browser presentations.</p>
       </a>
@@ -271,6 +271,10 @@
     const copy = {
       en: {
         title: "Clara",
+        "meta.description": "Create or correct presentations, run interviews, organize advisory work, build checked retail attribute reports, and analyze business data in Codex.",
+        "aria.page_navigation": "Page navigation",
+        "aria.language": "Language",
+        "aria.promise_strip": "What you can do with Clara",
         "nav.presentations": "Presentations",
         "nav.capabilities": "Retail, interviews & charts",
         "nav.workflow": "Getting started",
@@ -377,108 +381,112 @@
       },
       it: {
         title: "Clara",
+        "meta.description": "Clara è l'AI companion per consulenti: organizza le fonti, conduce o trascrive interviste, crea o corregge presentazioni e analizza assortimenti retail e dati aziendali in Codex.",
+        "aria.page_navigation": "Navigazione della pagina",
+        "aria.language": "Lingua",
+        "aria.promise_strip": "Cosa puoi fare con Clara",
         "nav.presentations": "Presentazioni",
-        "nav.capabilities": "Retail, interviste e grafici",
-        "nav.workflow": "Come iniziare",
-        "nav.download": "Installazione",
+        "nav.capabilities": "Retail, interviste e dati",
+        "nav.workflow": "Come funziona",
+        "nav.download": "Installa",
         "hero.eyebrow": "Clara AI companion for consultants",
-        "hero.title": "Trasforma le tue fonti in deliverable pronti per il cliente.",
-        "hero.lead": "Chiedi a Clara di creare o correggere una presentazione, fare o trascrivere un'intervista, confrontare assortimenti retail o analizzare dati aziendali. Lavora dentro Codex.",
+        "hero.title": "Clara prepara il lavoro. Il giudizio resta tuo.",
+        "hero.lead": "Organizza le fonti, fa emergere lacune e contraddizioni e trasforma materiali, conversazioni e dati in presentazioni, documenti e analisi da rivedere. Lavora con te dentro Codex.",
         "hero.summary1": "Crea e correggi deck HTML di impatto e presentazioni PowerPoint.",
         "hero.summary2": "Conduci interviste e trasforma registrazioni in trascrizioni riviste.",
-        "hero.summary3": "Mappa gli attributi retail e confronta nuovi prodotti o best seller con il resto.",
-        "hero.summary4": "Analizza dati aziendali con grafici verificati ed evidenze strutturate.",
-        "presentations.title": "Crea, correggi o segui uno stile esistente",
-        "presentations.copy": "Spiega a Clara che cosa deve ottenere la presentazione. Puoi partire dai materiali oppure da una presentazione già esistente.",
+        "hero.summary3": "Mappa gli attributi retail e confronta novità e best seller con il resto dell'assortimento.",
+        "hero.summary4": "Analizza file Excel e CSV con calcoli controllati e grafici scelti in base alla domanda.",
+        "presentations.title": "Crea o correggi una presentazione nel tuo stile",
+        "presentations.copy": "Descrivi il risultato che vuoi ottenere. Puoi partire dai materiali del progetto o da una presentazione esistente.",
         "presentations.create.kicker": "Nuova presentazione",
-        "presentations.create.title": "Parti dai tuoi materiali",
-        "presentations.create.copy": "Aggiungi Word, PDF, PowerPoint, immagini, fogli di calcolo, appunti o registrazioni. Indica il pubblico, l'obiettivo e la durata: Clara propone la struttura e prepara la presentazione.",
+        "presentations.create.title": "Parti dai materiali del progetto",
+        "presentations.create.copy": "Aggiungi documenti Word, PDF e PowerPoint, immagini, fogli di calcolo, appunti o registrazioni. Indica pubblico, obiettivo e durata: Clara propone la struttura e prepara la presentazione.",
         "presentations.create.prompt": "\"Prepara una presentazione di 20 minuti per questo pubblico usando i materiali nella cartella.\"",
         "presentations.correct.kicker": "Presentazione esistente",
-        "presentations.correct.title": "Descrivi che cosa deve cambiare",
-        "presentations.correct.copy": "Scrivi le correzioni oppure registrale a voce. Clara lavora su una copia, modifica ciò che hai indicato e controlla che il resto sia rimasto invariato.",
+        "presentations.correct.title": "Correggi ciò che serve",
+        "presentations.correct.copy": "Scrivi le correzioni o registrale a voce. Clara modifica una copia e verifica che tutto il resto rimanga invariato.",
         "presentations.correct.prompt": "\"Registra il mio feedback, applicalo a una copia e lascia invariato tutto il resto.\"",
-        "presentations.style.kicker": "Il tuo stile visivo",
-        "presentations.style.title": "Usa gli esempi che hai già",
-        "presentations.style.copy": "Aggiungi un modello, una presentazione rappresentativa, il logo o le indicazioni grafiche esistenti. Clara usa questi riferimenti per l'impaginazione e lo stile visivo.",
+        "presentations.style.kicker": "Riferimenti visivi",
+        "presentations.style.title": "Riprendi il tuo stile visivo",
+        "presentations.style.copy": "Aggiungi un modello PowerPoint, una presentazione di riferimento, il logo o le linee guida grafiche. Clara li usa per l'impaginazione e lo stile.",
         "presentations.style.prompt": "\"Usa questo PowerPoint come riferimento visivo per la nuova presentazione.\"",
-        "formats.title": "Scegli il formato finale",
-        "formats.copy": "Scegli PowerPoint quando il file deve restare modificabile. Scegli un deck HTML quando vuoi una presentazione interattiva.",
+        "formats.title": "Scegli il formato che ti serve",
+        "formats.copy": "Scegli un deck HTML interattivo; scegli PowerPoint quando il file deve restare modificabile.",
         "formats.pptx.kicker": "PowerPoint PPTX",
-        "formats.pptx.title": "Un PowerPoint editabile",
-        "formats.pptx.copy": "Un normale file .pptx che puoi aprire e modificare in PowerPoint. È la scelta giusta quando devi seguire un modello esistente o passare il file ad altre persone.",
-        "formats.pptx.prompt": "\"Consegna un PowerPoint editabile e controlla tutte le slide.\"",
+        "formats.pptx.title": "Un PowerPoint modificabile",
+        "formats.pptx.copy": "Un file .pptx da aprire e modificare in PowerPoint. Sceglilo quando devi rispettare un modello esistente o consegnare il file a chi lo modificherà.",
+        "formats.pptx.prompt": "\"Consegna un PowerPoint modificabile e controlla tutte le slide.\"",
         "formats.html.kicker": "Formato HTML",
         "formats.html.title.before": "Un deck HTML ",
         "formats.html.title.link": "interattivo",
         "formats.html.title.after": "",
-        "formats.html.copy": "Un deck autonomo in formato 16:9, con note per chi presenta, schermo intero, navigazione da tastiera o touch e animazioni. Non richiede PowerPoint.",
+        "formats.html.copy": "Un deck 16:9 con note per chi presenta, modalità schermo intero, navigazione da tastiera o touch e animazioni. Non richiede PowerPoint.",
         "formats.html.prompt": "\"Consegna un deck HTML interattivo con le note per chi presenta.\"",
-        "workflow.title": "Parti da una cartella e da una richiesta normale",
-        "workflow.copy": "Resti dentro Codex. Non servono comandi, un'applicazione separata per Clara o una chiave API.",
-        "workflow.open.title": "Apri la cartella del progetto",
-        "workflow.open.copy": "Metti documenti, vecchie presentazioni, immagini e appunti in una cartella e apri quella cartella in Codex.",
+        "workflow.title": "Apri la cartella del progetto e descrivi ciò che ti serve",
+        "workflow.copy": "Scrivi con parole tue: non devi imparare comandi e non serve una chiave API.",
+        "workflow.open.title": "Raccogli i materiali del progetto",
+        "workflow.open.copy": "Metti nella cartella documenti, presentazioni, dati, immagini, appunti o registrazioni, poi aprila in Codex.",
         "workflow.open.quote": "\"Usa Clara in questa cartella.\"",
-        "workflow.materials.title": "Descrivi il risultato",
-        "workflow.materials.copy": "Spiega che cosa ti serve, per chi, quanto deve durare la presentazione e se vuoi PowerPoint o una presentazione web.",
-        "workflow.materials.quote": "\"Crea un PowerPoint editabile di 20 minuti per questo pubblico.\"",
-        "workflow.notes.title": "Indica i riferimenti",
-        "workflow.notes.copy": "Spiega a Clara quali documenti fanno fede e quale modello o vecchia presentazione deve guidare lo stile visivo.",
-        "workflow.notes.quote": "\"Usa questo Word per il contenuto e questo PowerPoint per lo stile.\"",
+        "workflow.materials.title": "Descrivi cosa vuoi ottenere",
+        "workflow.materials.copy": "Spiega cosa ti serve, per chi e in quale formato. Per una presentazione, indica anche la durata.",
+        "workflow.materials.quote": "\"Crea un PowerPoint modificabile di 20 minuti per questo pubblico.\"",
+        "workflow.notes.title": "Indica contenuti e stile da seguire",
+        "workflow.notes.copy": "Indica quali documenti usare per i contenuti e quale modello o presentazione usare per lo stile.",
+        "workflow.notes.quote": "\"Usa questo file Word per i contenuti e questo PowerPoint per lo stile.\"",
         "workflow.review.title": "Rivedi e correggi",
-        "workflow.review.copy": "Apri il risultato e descrivi le modifiche in linguaggio normale. Clara lavora su una copia e controlla la presentazione corretta.",
+        "workflow.review.copy": "Apri il risultato e descrivi le modifiche con parole tue. Clara lavora su una copia e verifica la versione aggiornata.",
         "workflow.review.quote": "\"Accorcia la slide 4 e aggiungi i miei contatti nell'ultima slide.\"",
-        "handles.title": "Quando il progetto non è solo una presentazione",
-        "handles.copy": "Se il lavoro comprende molti documenti, conversazioni e versioni, Clara tiene insieme il progetto nella sua cartella, così puoi continuare in una sessione Codex successiva.",
-        "card.materials.title": "Le fonti restano riconoscibili",
-        "card.materials.copy": "Indica a Clara quali documenti fanno fede e quali file servono solo come riferimento visivo o di contesto.",
-        "card.notes.title": "Le domande aperte restano visibili",
-        "card.notes.copy": "Clara può tenere traccia delle informazioni mancanti, dei punti da confermare e delle correzioni da riportare nella bozza successiva.",
-        "card.judgement.title": "Il lavoro continua tra sessioni",
-        "card.judgement.copy": "Chiudi Codex, riapri la stessa cartella in un'altra sessione e continua dai materiali e dalle bozze esistenti.",
-        "retail.title": "Dai dati prodotto a un report retail verificato",
-        "retail.copy": "Retailer Signals e Brand Fit sono disponibili ora. Il server conserva dati prodotto strutturati, tassonomia centrale, mapping accettati e URL delle immagini; il lavoro dei modelli avviene in Codex senza chiavi API dell'utente o del server. Le immagini prodotto e i report dell'utente restano in locale, salvo condivisione intenzionale.",
-        "retail.flow.collect": "Raccogli i dati prodotto. Le pagine e le immagini dei retailer vengono acquisite in locale; i record prodotto archiviati e gli URL delle immagini alimentano il dataset centrale. L'ingestione di un nuovo scrape locale non fa ancora parte della versione installata di Clara.",
-        "retail.flow.map": "Mappa gli attributi. Agenti Codex a costo contenuto associano le celle irrisolte alla tassonomia centrale; agenti indipendenti le rivedono e il server convalida i mapping accettati.",
-        "retail.flow.analyze": "Confronta i gruppi. Nuovo significa etichettato come nuovo dal retailer; nuovi prodotti e best seller vengono confrontati con i prodotti rimanenti usando calcoli controllati.",
-        "retail.flow.report": "Crea e controlla il report. Clara scrive localmente un report HTML privato e ne verifica calcoli, evidenze, rendering e leggibilità.",
-        "retail.retailer_signals.kicker": "Disponibile ora",
+        "handles.title": "Mantieni il controllo sulle conclusioni",
+        "handles.copy": "Clara organizza le fonti, distingue fatti, inferenze e giudizio professionale e fa emergere lacune e contraddizioni. Sei tu a decidere che cosa entra nel materiale per il cliente.",
+        "card.materials.title": "Fonti e conclusioni restano collegate",
+        "card.materials.copy": "Clara mantiene riconoscibile ciò che viene dai documenti e ciò che deriva da interpretazioni o giudizio professionale.",
+        "card.notes.title": "Ciò che manca resta visibile",
+        "card.notes.copy": "Clara mantiene visibili le informazioni mancanti, le contraddizioni e le decisioni ancora da prendere.",
+        "card.judgement.title": "Riprendi da dove eri arrivato",
+        "card.judgement.copy": "Riapri la stessa cartella in una nuova sessione Codex e continua dai materiali, dalle note e dalle bozze già presenti.",
+        "retail.title": "Dai dati di prodotto a un report retail verificato",
+        "retail.copy": "Retailer Signals confronta novità e best seller con il resto dell'assortimento. Brand Fit mette questi segnali in relazione con la presenza e il catalogo del brand. Clara usa i dati archiviati disponibili; immagini e report restano sul tuo computer.",
+        "retail.flow.collect": "Usa i dati già archiviati. Clara parte dai record disponibili per il retailer e la categoria scelti. La versione installata non acquisisce ancora nuovi dati dalle pagine del retailer.",
+        "retail.flow.map": "Uniforma e verifica gli attributi. Clara riconduce i valori a una tassonomia comune; una seconda revisione controlla le associazioni.",
+        "retail.flow.analyze": "Confronta i gruppi. “Nuovi” sono i prodotti che il retailer presenta come tali. Clara confronta novità e best seller con il resto dell'assortimento usando calcoli verificati.",
+        "retail.flow.report": "Crea il report. Clara prepara sul tuo computer un report HTML privato e ne verifica i calcoli, la leggibilità e la resa visiva.",
+        "retail.retailer_signals.kicker": "Analisi dell'assortimento",
         "retail.retailer_signals.title": "Retailer Signals",
-        "retail.retailer_signals.copy": "Per un retailer e una categoria, confronta nuovi prodotti e best seller con il resto dell'assortimento, quindi crea e controlla il report.",
-        "retail.brand_fit.kicker": "Disponibile ora",
+        "retail.retailer_signals.copy": "Confronta, per un retailer e una categoria, novità e best seller con il resto dell'assortimento e genera un report verificato.",
+        "retail.brand_fit.kicker": "Confronto del brand",
         "retail.brand_fit.title": "Brand Fit",
-        "retail.brand_fit.copy": "Parte da un'analisi Retailer Signals completata e verificata. Clara confronta quei segnali con la presenza attuale del brand presso il retailer selezionato e con il catalogo di proprietà del brand, usando lo snapshot archiviato nel database, non una verifica live dello scaffale. L'interpretazione avviene in Codex; immagini prodotto e report HTML restano locali e non serve una chiave API né all'utente né al server.",
-        "capabilities.title": "Altri flussi di Clara",
-        "capabilities.copy": "Clara gestisce anche interviste, registrazioni, attributi retail e grafici su dati aziendali come flussi distinti.",
-        "capabilities.interview.kicker": "Intervista a distanza",
-        "capabilities.interview.title": "Intervista una persona con un link personale",
-        "capabilities.interview.copy": "Il partecipante apre il link senza accedere, autorizza il microfono e parla con un intervistatore AI per un massimo di 15 minuti. Le domande si adattano alle risposte; le risposte vocali vengono registrate e trascritte.",
+        "retail.brand_fit.copy": "Parte da un'analisi Retailer Signals verificata e confronta ciò che emerge dall'assortimento con la presenza del brand presso il retailer e con il suo catalogo. Usa i dati archiviati, non una verifica in tempo reale dello scaffale.",
+        "capabilities.title": "Interviste, documenti e analisi dati",
+        "capabilities.copy": "Clara conduce interviste, trascrive registrazioni, prepara documenti di lavoro e analizza dati aziendali.",
+        "capabilities.interview.kicker": "Intervista da remoto",
+        "capabilities.interview.title": "Conduci un'intervista con un link dedicato",
+        "capabilities.interview.copy": "Il partecipante apre il link senza registrarsi, autorizza il microfono e risponde per un massimo di 15 minuti. Le domande si adattano alle risposte; l'audio viene registrato e trascritto.",
         "capabilities.interview.prompt": "\"Prepara un'intervista di 15 minuti in italiano per questa persona.\"",
         "capabilities.transcribe.kicker": "Trascrizione",
-        "capabilities.transcribe.title": "Trascrivi una riunione o un debrief",
-        "capabilities.transcribe.copy": "Registra la conversazione oppure aggiungi un file audio esistente. Clara prepara la trascrizione, aiuta a identificare chi parla e aggiunge il materiale rivisto al progetto.",
+        "capabilities.transcribe.title": "Trascrivi una riunione o una registrazione",
+        "capabilities.transcribe.copy": "Registra la conversazione o aggiungi un file audio. Clara prepara la trascrizione, aiuta a identificare chi parla e aggiunge al progetto la versione rivista.",
         "capabilities.transcribe.prompt": "\"Trascrivi questa registrazione e identifica chi parla.\"",
-        "capabilities.attributes.kicker": "Analisi retail",
-        "capabilities.attributes.title": "Mappa gli attributi e confronta gli assortimenti",
-        "capabilities.attributes.copy": "Codex mappa i prodotti sulla tassonomia centrale, confronta i nuovi prodotti o i best seller con il resto e controlla il report HTML privato.",
-        "capabilities.attributes.local": "Oggi usa i dati prodotto già disponibili; le immagini e il report restano sul tuo computer.",
-        "capabilities.attributes.prompt": "\"Confronta i nuovi prodotti di questo retailer con il resto e dimmi se il report è corretto.\"",
+        "capabilities.attributes.kicker": "Lavoro di consulenza",
+        "capabilities.attributes.title": "Dalle fonti al documento da rivedere",
+        "capabilities.attributes.copy": "Con documenti, note e conversazioni nella cartella del progetto, Clara prepara una prima bozza in Word o una presentazione e segnala ciò che manca prima della revisione.",
+        "capabilities.attributes.local": "Le fonti, le domande aperte e le versioni restano nella cartella del progetto.",
+        "capabilities.attributes.prompt": "\"Organizza le fonti, indica ciò che manca e prepara un documento Word da rivedere.\"",
         "capabilities.charts.kicker": "Dati aziendali",
-        "capabilities.charts.title": "Analizza un dataset e crea grafici utili",
-        "capabilities.charts.copy": "Codex sceglie l'analisi in base alla domanda e ai campi reali; Clara esegue calcoli e rendering verificabili per distribuzioni, funnel, mix, confronti temporali, scatter, overlap, prospetti e varianze.",
+        "capabilities.charts.title": "Dai dati a una risposta chiara",
+        "capabilities.charts.copy": "Parti da un file Excel o CSV e descrivi la domanda di business. Clara sceglie l'analisi, esegue calcoli controllati, crea il grafico più utile e ne spiega il risultato.",
         "capabilities.charts.prompt": "\"Analizza questo file, scegli il grafico più utile e spiegami il risultato.\"",
-        "download.title": "Installa Clara in Codex",
-        "download.copy": "Installa la versione pubblicata di Clara dalla sua pagina ufficiale nel marketplace OpenAI.",
-        "download.step1": "Apri la pagina ufficiale di Clara nel marketplace OpenAI.",
-        "download.step2": "Usa l'azione di installazione mostrata nella pagina.",
-        "download.step3": "Apri Codex, vai in Plugins e controlla che Clara sia installata e attiva.",
-        "download.step4": "Apri una nuova chat Codex nella cartella del progetto e chiedi a Clara di iniziare da lì.",
+        "download.title": "Installa Clara e apri il primo progetto",
+        "download.copy": "La trovi nel Marketplace di OpenAI. Dopo l'installazione, apri in Codex la cartella del progetto e descrivi il risultato che vuoi ottenere.",
+        "download.step1": "Apri la pagina ufficiale di Clara nel Marketplace di OpenAI.",
+        "download.step2": "Avvia l'installazione dalla pagina.",
+        "download.step3": "Apri Codex, vai in Plugins e verifica che Clara sia installata e attiva.",
+        "download.step4": "Apri la cartella del progetto e descrivi ciò che vuoi ottenere.",
         "download.help.title": "Se l'installazione non funziona",
-        "download.help.marketplace.title": "Azione di installazione non disponibile",
-        "download.help.marketplace.copy": "Controlla di avere effettuato l'accesso a OpenAI, poi riapri la pagina ufficiale di Clara nel marketplace.",
+        "download.help.marketplace.title": "L'installazione non è disponibile",
+        "download.help.marketplace.copy": "Verifica di aver effettuato l'accesso a OpenAI, poi riapri la pagina ufficiale di Clara.",
         "download.help.plugin.title": "Clara non compare",
         "download.help.plugin.copy": "Controlla che Clara sia installata e attiva, poi apri una nuova chat Codex nella cartella del progetto.",
-        "download.prompt": "\"Usa Clara in questa cartella. Mostrami i flussi disponibili.\"",
+        "download.prompt": "\"Usa Clara in questa cartella.\"",
         "install.button": "Installa Clara",
       },
       fr: {
@@ -703,6 +711,14 @@
     document.querySelectorAll("[data-i18n]").forEach((node) => {
       const value = activeCopy[node.dataset.i18n];
       if (typeof value === "string") node.textContent = value;
+    });
+    document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+      const value = activeCopy[node.dataset.i18nAriaLabel];
+      if (typeof value === "string") node.setAttribute("aria-label", value);
+    });
+    document.querySelectorAll("[data-i18n-content]").forEach((node) => {
+      const value = activeCopy[node.dataset.i18nContent];
+      if (typeof value === "string") node.setAttribute("content", value);
     });
     document.querySelectorAll("[data-lang]").forEach((button) => {
       const isActive = button.dataset.lang === safeLang;
