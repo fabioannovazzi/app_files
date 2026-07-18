@@ -115,6 +115,6 @@ def test_support_page_is_public_when_auth_enabled(
     page = context["page"]
     assert isinstance(page, dict)
     assert page["title"] == "Customer Support"
-    assert page["contact_email"] == "hello@mparanza.com"
+    assert page["contact_email"] == "fabio@mparanza.com"
     assert "no automatic access" in str(page)
     assert context["active_legal_page"] == "support"

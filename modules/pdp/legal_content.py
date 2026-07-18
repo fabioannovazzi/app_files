@@ -12,8 +12,8 @@ __all__ = [
     "get_legal_page",
 ]
 
-CONTACT_EMAIL = "hello@mparanza.com"
-SUPPORT_EMAIL = "hello@mparanza.com"
+CONTACT_EMAIL = "fabio@mparanza.com"
+SUPPORT_EMAIL = "fabio@mparanza.com"
 LEGAL_EFFECTIVE_DATE = "July 14, 2026"
 
 LEGAL_PAGES: dict[str, dict[str, Any]] = {
