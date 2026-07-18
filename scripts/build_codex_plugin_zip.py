@@ -59,9 +59,13 @@ RUNTIME_SUPPORT_FILES = {
         Path(".agents/skills/advisory-output-shaper/SKILL.md"),
     ),
 }
-REQUIRED_FEEDBACK_SNIPPETS = (
-    "## Plugin Improvement Feedback",
-    "Keep the improvement note local to chat or run artifacts.",
+REQUIRED_FEEDBACK_HEADING = "## Plugin Improvement Feedback"
+LOCAL_FEEDBACK_SNIPPET = "Keep the improvement note local to chat or run artifacts."
+TRANSMITTED_FEEDBACK_PLUGINS = frozenset({"clara", "vera"})
+TRANSMITTED_FEEDBACK_SNIPPETS = (
+    "Should I transmit this to the developer so we fix it?",
+    "scripts/change_requests.py submit-problem",
+    "scripts/change_requests.py start-interview",
 )
 REQUIRED_OUTPUT_LOCATION_SNIPPET = "Never write run outputs inside this Git workspace"
 REQUIRED_INTERFACE_FIELDS = (
@@ -484,7 +488,12 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
             errors.append(
                 f"{plugin_name}: skill instructions must mention requirements/dependency handling"
             )
-        for snippet in REQUIRED_FEEDBACK_SNIPPETS:
+        feedback_snippets = (
+            (REQUIRED_FEEDBACK_HEADING, *TRANSMITTED_FEEDBACK_SNIPPETS)
+            if plugin_name in TRANSMITTED_FEEDBACK_PLUGINS
+            else (REQUIRED_FEEDBACK_HEADING, LOCAL_FEEDBACK_SNIPPET)
+        )
+        for snippet in feedback_snippets:
             if snippet not in combined_skill_text:
                 errors.append(
                     f"{plugin_name}: skill instructions must include plugin improvement feedback policy"

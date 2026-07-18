@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "python3 \"$PLUGIN_ROOT/scripts/check_for_update.py\"",
-            "timeout": 5
+            "timeout": 8
           }
         ]
       }
