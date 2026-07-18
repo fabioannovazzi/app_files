@@ -75,6 +75,9 @@ def test_category_website_seed_preserves_production_catalog() -> None:
         ("pre_wipe_2025-08-21", 8, 36),
         ("production_backup_2025-10-06", 7, 56),
         ("pre_split_2026-04-03", 6, 69),
+        ("expanded_candidate_2025-09-07", 7, 80),
+        ("attribute_taxonomy_old_2025-10-29", 7, 56),
+        ("taxonomy_tmp_2026-04-17", 22, 239),
     ],
 )
 def test_preserved_taxonomy_snapshot_has_one_file_per_category(
@@ -113,8 +116,16 @@ def test_preserved_legacy_reference_catalogs_remain_available() -> None:
     legacy_website_meta = _load_json(
         "config/legacy/merchant_brand_websites_meta_legacy_2026-05-10.json"
     )
+    legacy_category_websites = _load_json(
+        "config/legacy/category_websites_legacy_2025-08-11.json"
+    )
+    foundation_review_queue = _load_json(
+        "config/legacy/taxonomy_review_queue_2025-09-04/categories/foundation.json"
+    )
 
     assert sum(len(lines) for lines in product_lines.values()) == 214
     assert len(legacy_websites) == 87
     assert len(production_website_meta) == 144
     assert len(legacy_website_meta) == 56
+    assert len(legacy_category_websites["lip oil"]) == 3
+    assert len(foundation_review_queue) == 20

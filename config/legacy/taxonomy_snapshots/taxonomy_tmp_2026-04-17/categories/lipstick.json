@@ -1,0 +1,854 @@
+{
+    "id": "lipstick",
+    "label": "lipstick",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "bullet_lipstick",
+                    "label": "bullet lipstick",
+                    "synonyms": [
+                        "bullet",
+                        "classic lipstick",
+                        "solid lipstick",
+                        "stick lipstick",
+                        "tube lipstick"
+                    ]
+                },
+                {
+                    "id": "liquid_lipstick",
+                    "label": "liquid lipstick",
+                    "synonyms": [
+                        "doe foot lipstick",
+                        "lip cream",
+                        "liquid",
+                        "liquid lip color",
+                        "liquid matte lipstick"
+                    ]
+                },
+                {
+                    "id": "lip_crayon",
+                    "label": "lip crayon/pencil",
+                    "synonyms": [
+                        "chubby stick",
+                        "crayon",
+                        "jumbo pencil",
+                        "lipstick pencil",
+                        "twist up crayon"
+                    ]
+                },
+                {
+                    "id": "lip_tint_stain",
+                    "label": "lip tint/stain",
+                    "synonyms": [
+                        "ink tint",
+                        "lip stain",
+                        "lip tint",
+                        "stain tint",
+                        "water tint"
+                    ]
+                },
+                {
+                    "id": "tinted_balm",
+                    "label": "tinted lip balm",
+                    "synonyms": [
+                        "balm",
+                        "conditioning balm",
+                        "sheer balm",
+                        "sheer tinted balm",
+                        "tinted balm"
+                    ]
+                },
+                {
+                    "id": "lip_lacquer",
+                    "label": "lip lacquer",
+                    "synonyms": [
+                        "high pigment gloss",
+                        "lacquer formula",
+                        "lacquered lip",
+                        "lip vinyl",
+                        "vinyl lipstick"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "lip_palette",
+                    "label": "lip palette/compact",
+                    "synonyms": [
+                        "compact lip palette",
+                        "lip color palette",
+                        "lipstick palette",
+                        "multi pan lip palette",
+                        "palette of lip colors"
+                    ]
+                },
+                {
+                    "id": "lip_powder",
+                    "label": "lip powder",
+                    "synonyms": [
+                        "lip powder tint",
+                        "powder lip stain",
+                        "powder lipstick",
+                        "powder to cream lip color"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat matte",
+                        "powdery finish",
+                        "shine free",
+                        "true matte"
+                    ]
+                },
+                {
+                    "id": "semi_matte",
+                    "label": "semi-matte",
+                    "synonyms": [
+                        "semi matte",
+                        "soft matte",
+                        "velvet finish",
+                        "velvet matte"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "satin finish",
+                        "satin sheen",
+                        "soft sheen"
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "synonyms": [
+                        "buttery",
+                        "cream finish",
+                        "creamy",
+                        "creamy finish",
+                        "creme"
+                    ]
+                },
+                {
+                    "id": "glossy",
+                    "label": "glossy/high-shine",
+                    "synonyms": [
+                        "glass shine",
+                        "high shine",
+                        "mirror like shine",
+                        "vinyl finish",
+                        "wet look"
+                    ]
+                },
+                {
+                    "id": "metallic",
+                    "label": "metallic",
+                    "synonyms": [
+                        "chrome",
+                        "foil",
+                        "metal sheen",
+                        "metallic finish"
+                    ]
+                },
+                {
+                    "id": "shimmer_pearlescent",
+                    "label": "shimmer/pearlescent",
+                    "synonyms": [
+                        "glittery",
+                        "iridescent",
+                        "micro shimmer",
+                        "pearlescent",
+                        "shimmer"
+                    ]
+                },
+                {
+                    "id": "sheer",
+                    "label": "sheer finish",
+                    "synonyms": [
+                        "see through look",
+                        "sheer tint",
+                        "transparent finish",
+                        "veil"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "sheer",
+                    "label": "sheer coverage",
+                    "synonyms": [
+                        "light coverage",
+                        "translucent",
+                        "wash of color"
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "medium",
+                    "synonyms": [
+                        "everyday coverage",
+                        "medium opacity",
+                        "moderate coverage"
+                    ]
+                },
+                {
+                    "id": "full",
+                    "label": "full",
+                    "synonyms": [
+                        "full coverage",
+                        "high coverage",
+                        "maximum coverage",
+                        "opaque"
+                    ]
+                },
+                {
+                    "id": "buildable",
+                    "label": "buildable",
+                    "synonyms": [
+                        "builds coverage",
+                        "customizable coverage",
+                        "flexible coverage",
+                        "layerable",
+                        "sheer to full"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "red",
+                    "label": "red",
+                    "synonyms": [
+                        "brick red",
+                        "crimson",
+                        "ruby",
+                        "scarlet"
+                    ]
+                },
+                {
+                    "id": "pink",
+                    "label": "pink",
+                    "synonyms": [
+                        "fuchsia",
+                        "hot pink",
+                        "magenta",
+                        "rose"
+                    ]
+                },
+                {
+                    "id": "nude_beige",
+                    "label": "nude/beige",
+                    "synonyms": [
+                        "beige",
+                        "buff",
+                        "nude",
+                        "sand"
+                    ]
+                },
+                {
+                    "id": "brown",
+                    "label": "brown",
+                    "synonyms": [
+                        "chocolate",
+                        "cocoa",
+                        "espresso",
+                        "mocha",
+                        "taupe"
+                    ]
+                },
+                {
+                    "id": "coral_peach",
+                    "label": "coral/peach",
+                    "synonyms": [
+                        "apricot",
+                        "coral",
+                        "orange",
+                        "papaya",
+                        "peach"
+                    ]
+                },
+                {
+                    "id": "mauve",
+                    "label": "mauve",
+                    "synonyms": [
+                        "dusty rose",
+                        "muted pink",
+                        "rosewood"
+                    ]
+                },
+                {
+                    "id": "berry_wine",
+                    "label": "berry/wine",
+                    "synonyms": [
+                        "berry",
+                        "burgundy",
+                        "merlot",
+                        "oxblood",
+                        "wine"
+                    ]
+                },
+                {
+                    "id": "plum_purple",
+                    "label": "plum/purple",
+                    "synonyms": [
+                        "aubergine",
+                        "eggplant",
+                        "plum",
+                        "purple",
+                        "violet"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "undertone",
+            "label": "undertone",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "warm",
+                    "label": "warm",
+                    "synonyms": [
+                        "golden",
+                        "peach undertone",
+                        "warm toned",
+                        "yellow undertone"
+                    ]
+                },
+                {
+                    "id": "cool",
+                    "label": "cool",
+                    "synonyms": [
+                        "blue based",
+                        "blue undertone",
+                        "cool toned",
+                        "pink undertone"
+                    ]
+                },
+                {
+                    "id": "neutral",
+                    "label": "neutral",
+                    "synonyms": [
+                        "balanced undertone",
+                        "mid undertone",
+                        "neutral toned",
+                        "true neutral"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "wear_claims",
+            "label": "wear claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "long_wear",
+                    "label": "long-wear",
+                    "synonyms": [
+                        "all day wear",
+                        "extended wear",
+                        "long lasting",
+                        "longwear",
+                        "up to 16h"
+                    ]
+                },
+                {
+                    "id": "transfer_proof",
+                    "label": "transfer-proof",
+                    "synonyms": [
+                        "kiss proof",
+                        "mask proof",
+                        "no transfer",
+                        "transfer proof",
+                        "transfer resistant"
+                    ]
+                },
+                {
+                    "id": "smudge_resistant",
+                    "label": "smudge-resistant",
+                    "synonyms": [
+                        "budge proof",
+                        "no budge",
+                        "no smudge",
+                        "smear resistant",
+                        "smudge proof"
+                    ]
+                },
+                {
+                    "id": "waterproof",
+                    "label": "waterproof",
+                    "synonyms": [
+                        "rain proof",
+                        "resists water",
+                        "water resistant"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "fade_resistant",
+                    "label": "fade-resistant",
+                    "synonyms": [
+                        "color stays true",
+                        "fade proof",
+                        "no fading"
+                    ]
+                },
+                {
+                    "id": "feather_resistant",
+                    "label": "feather-resistant",
+                    "synonyms": [
+                        "bleed resistant",
+                        "feather proof",
+                        "no bleeding",
+                        "no feathering"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "benefits",
+            "label": "benefits",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "hydrating_moisturizing",
+                    "label": "hydrating/moisturizing",
+                    "synonyms": [
+                        "hydrating",
+                        "locks in moisture",
+                        "moisture rich",
+                        "moisturizing"
+                    ]
+                },
+                {
+                    "id": "plumping",
+                    "label": "plumping",
+                    "synonyms": [
+                        "fuller lips",
+                        "lip plumper",
+                        "plumps lips",
+                        "tingle effect",
+                        "volumizing"
+                    ]
+                },
+                {
+                    "id": "nourishing_conditioning",
+                    "label": "nourishing/conditioning",
+                    "synonyms": [
+                        "conditioning",
+                        "lip care",
+                        "nourishing",
+                        "repairing",
+                        "softening"
+                    ]
+                },
+                {
+                    "id": "lightweight",
+                    "label": "lightweight feel",
+                    "synonyms": [
+                        "air light",
+                        "barely there",
+                        "comfortable wear",
+                        "featherlight",
+                        "weightless"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "smoothing_blur",
+                    "label": "smoothing/blur",
+                    "synonyms": [
+                        "blurring",
+                        "blurs lines",
+                        "smooths appearance",
+                        "soft focus effect"
+                    ]
+                },
+                {
+                    "id": "non_sticky",
+                    "label": "non-sticky",
+                    "synonyms": [
+                        "no stickiness",
+                        "non sticky",
+                        "not sticky"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "scent_flavor",
+            "label": "scent/flavor",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "unscented",
+                    "label": "unscented",
+                    "synonyms": [
+                        "no fragrance",
+                        "no scent",
+                        "odorless"
+                    ]
+                },
+                {
+                    "id": "vanilla",
+                    "label": "vanilla",
+                    "synonyms": [
+                        "sweet vanilla",
+                        "vanilla bean",
+                        "vanilla flavored",
+                        "vanilla scent"
+                    ]
+                },
+                {
+                    "id": "mint",
+                    "label": "mint",
+                    "synonyms": [
+                        "mentholated",
+                        "mint scent",
+                        "minty",
+                        "peppermint",
+                        "spearmint"
+                    ]
+                },
+                {
+                    "id": "fruity",
+                    "label": "fruity",
+                    "synonyms": [
+                        "berry scent",
+                        "citrus scent",
+                        "fruit scent",
+                        "mixed fruit",
+                        "tropical scent"
+                    ]
+                },
+                {
+                    "id": "floral",
+                    "label": "floral",
+                    "synonyms": [
+                        "bouquet",
+                        "floral aroma",
+                        "flower scent",
+                        "jasmine scent",
+                        "rose scent"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "chocolate_cocoa",
+                    "label": "chocolate/cocoa",
+                    "synonyms": [
+                        "chocolate scent",
+                        "cocoa scent"
+                    ]
+                },
+                {
+                    "id": "coconut",
+                    "label": "coconut",
+                    "synonyms": [
+                        "coconut aroma",
+                        "coconut scent",
+                        "coconutty"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ethical_free_from",
+            "label": "ethical/regulatory claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "vegan",
+                    "label": "vegan",
+                    "synonyms": [
+                        "no animal derived ingredients",
+                        "plant based",
+                        "vegan formula",
+                        "vegan friendly"
+                    ]
+                },
+                {
+                    "id": "cruelty_free",
+                    "label": "cruelty-free",
+                    "synonyms": [
+                        "cruelty free certified",
+                        "cruelty free formula",
+                        "leaping bunny",
+                        "no animal testing",
+                        "not tested on animals"
+                    ]
+                },
+                {
+                    "id": "paraben_free",
+                    "label": "paraben-free",
+                    "synonyms": [
+                        "no parabens",
+                        "paraben free",
+                        "paraben free formula"
+                    ]
+                },
+                {
+                    "id": "fragrance_free",
+                    "label": "fragrance-free",
+                    "synonyms": [
+                        "fragrance free claim",
+                        "no fragrance added",
+                        "unscented claim"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "gluten_free",
+                    "label": "gluten-free",
+                    "synonyms": [
+                        "gluten free",
+                        "gluten free formula",
+                        "no gluten"
+                    ]
+                },
+                {
+                    "id": "phthalate_free",
+                    "label": "phthalate-free",
+                    "synonyms": [
+                        "no phthalates",
+                        "phthalate free",
+                        "phthalate free formula"
+                    ]
+                },
+                {
+                    "id": "mineral_oil_free",
+                    "label": "mineral oil-free",
+                    "synonyms": [
+                        "mineral oil free",
+                        "mineral oil free formula",
+                        "no mineral oil"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "packaging_features",
+            "label": "packaging features",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "refillable",
+                    "label": "refillable",
+                    "synonyms": [
+                        "lipstick refill",
+                        "refill compatible",
+                        "refill system",
+                        "reusable case"
+                    ]
+                },
+                {
+                    "id": "magnetic_closure",
+                    "label": "magnetic closure",
+                    "synonyms": [
+                        "magnetic cap",
+                        "magnetic case",
+                        "magnetic click",
+                        "snap close"
+                    ]
+                },
+                {
+                    "id": "click_pen",
+                    "label": "click pen mechanism",
+                    "synonyms": [
+                        "click dispenser",
+                        "click to advance",
+                        "click up",
+                        "push button"
+                    ]
+                },
+                {
+                    "id": "dual_ended",
+                    "label": "dual-ended",
+                    "synonyms": [
+                        "2 in 1",
+                        "double sided",
+                        "dual tip",
+                        "two in one"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "twist_up_retractable",
+                    "label": "twist-up/retractable",
+                    "synonyms": [
+                        "retractable",
+                        "twist mechanism",
+                        "twist to advance",
+                        "twist up"
+                    ]
+                },
+                {
+                    "id": "built_in_sharpener",
+                    "label": "built-in sharpener",
+                    "synonyms": [
+                        "in cap sharpener",
+                        "integrated sharpener",
+                        "self sharpening",
+                        "sharpenable"
+                    ]
+                },
+                {
+                    "id": "built_in_applicator",
+                    "label": "built-in applicator/brush",
+                    "synonyms": [
+                        "applicator included",
+                        "attached applicator",
+                        "built in brush",
+                        "in cap brush"
+                    ]
+                },
+                {
+                    "id": "glass_container",
+                    "label": "glass container",
+                    "synonyms": [
+                        "glass bottle",
+                        "glass tube",
+                        "glass vial"
+                    ]
+                }
+            ]
+        }
+    ]
+}

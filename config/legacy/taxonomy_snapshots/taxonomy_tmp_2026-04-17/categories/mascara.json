@@ -1,0 +1,766 @@
+{
+    "id": "mascara",
+    "label": "mascara",
+    "attributes": [
+        {
+            "id": "formula_type",
+            "label": "formula type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "classic_emulsion",
+                    "label": "classic emulsion"
+                },
+                {
+                    "id": "tubing",
+                    "label": "tubing",
+                    "synonyms": [
+                        "film forming tubes",
+                        "polymer tubes",
+                        "tube forming",
+                        "tubing mascara",
+                        "warm water removal"
+                    ]
+                },
+                {
+                    "id": "fiber_infused",
+                    "label": "fiber-infused",
+                    "synonyms": [
+                        "fiber extension",
+                        "fiber mascara",
+                        "fibrous formula",
+                        "lash fibers",
+                        "microfibers"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "water_resistance",
+            "label": "water resistance",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "washable",
+                    "label": "washable",
+                    "synonyms": [
+                        "easily washable",
+                        "non waterproof",
+                        "rinses off",
+                        "standard washable",
+                        "washable formula"
+                    ]
+                },
+                {
+                    "id": "water_resistant",
+                    "label": "water-resistant",
+                    "synonyms": [
+                        "humidity proof",
+                        "humidity resistant",
+                        "moisture resistant",
+                        "splash resistant",
+                        "sweat resistant"
+                    ]
+                },
+                {
+                    "id": "waterproof",
+                    "label": "waterproof",
+                    "synonyms": [
+                        "beach proof",
+                        "rain proof",
+                        "swim proof",
+                        "waterproof formula",
+                        "waterproofed"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "effect",
+            "label": "effect",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "volumizing",
+                    "label": "volumizing",
+                    "synonyms": [
+                        "fuller lashes",
+                        "mega volume",
+                        "plumping",
+                        "thickening",
+                        "volume"
+                    ]
+                },
+                {
+                    "id": "lengthening",
+                    "label": "lengthening",
+                    "synonyms": [
+                        "elongating",
+                        "extend lashes",
+                        "extension effect",
+                        "length",
+                        "longer lashes"
+                    ]
+                },
+                {
+                    "id": "curling_lifting",
+                    "label": "curling/lifting",
+                    "synonyms": [
+                        "curl enhancing",
+                        "curling effect",
+                        "lash lift effect",
+                        "lift",
+                        "uplifting"
+                    ]
+                },
+                {
+                    "id": "defining_separating",
+                    "label": "defining/separating",
+                    "synonyms": [
+                        "defined lashes",
+                        "definition",
+                        "fanned out",
+                        "precision separation",
+                        "separating"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "applicator_shape",
+            "label": "applicator shape",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "shape",
+                    "label": "shape",
+                    "children": [
+                        {
+                            "id": "straight_classic",
+                            "label": "straight/classic",
+                            "synonyms": [
+                                "classic brush",
+                                "linear brush",
+                                "straight brush",
+                                "straight wand",
+                                "traditional wand"
+                            ]
+                        },
+                        {
+                            "id": "curved",
+                            "label": "curved",
+                            "synonyms": [
+                                "arched brush",
+                                "banana brush",
+                                "curved brush",
+                                "curved wand",
+                                "spoon brush"
+                            ]
+                        },
+                        {
+                            "id": "hourglass",
+                            "label": "hourglass",
+                            "synonyms": [
+                                "figure 8 brush",
+                                "hourglass brush",
+                                "hourglass wand",
+                                "peanut brush"
+                            ]
+                        },
+                        {
+                            "id": "tapered_cone",
+                            "label": "tapered/cone",
+                            "synonyms": [
+                                "christmas tree brush",
+                                "cone brush",
+                                "conical wand",
+                                "pointed tip",
+                                "tapered brush"
+                            ]
+                        },
+                        {
+                            "id": "ball_spherical",
+                            "label": "ball/spherical",
+                            "synonyms": [
+                                "ball tip",
+                                "ball wand",
+                                "round tip",
+                                "spherical brush"
+                            ]
+                        },
+                        {
+                            "id": "comb",
+                            "label": "comb",
+                            "synonyms": [
+                                "comb brush",
+                                "comb wand",
+                                "fine tooth comb",
+                                "lash comb",
+                                "toothed comb"
+                            ]
+                        },
+                        {
+                            "id": "micro_skinny",
+                            "label": "micro/skinny",
+                            "synonyms": [
+                                "micro wand",
+                                "precision wand",
+                                "skinny brush",
+                                "slim brush",
+                                "thin wand"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "bristle_material",
+            "label": "bristle material",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "synthetic_fiber",
+                    "label": "synthetic fiber",
+                    "synonyms": [
+                        "fiber bristles",
+                        "nylon bristles",
+                        "pbt bristles",
+                        "polyamide bristles",
+                        "synthetic bristles"
+                    ]
+                },
+                {
+                    "id": "elastomer_silicone",
+                    "label": "elastomer/silicone",
+                    "synonyms": [
+                        "elastomer brush",
+                        "flex tip",
+                        "rubber bristles",
+                        "silicone bristles",
+                        "tpe bristles"
+                    ]
+                },
+                {
+                    "id": "plastic_comb",
+                    "label": "plastic comb",
+                    "synonyms": [
+                        "comb style",
+                        "hard plastic comb",
+                        "molded comb",
+                        "rigid plastic comb"
+                    ]
+                },
+                {
+                    "id": "natural_fiber",
+                    "label": "natural fiber",
+                    "synonyms": [
+                        "natural bristle",
+                        "natural hair bristles"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat finish",
+                        "matte finish"
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "natural finish",
+                        "natural look",
+                        "soft finish",
+                        "subtle finish"
+                    ]
+                },
+                {
+                    "id": "glossy",
+                    "label": "glossy",
+                    "synonyms": [
+                        "glossy finish",
+                        "sheen",
+                        "shiny finish",
+                        "wet look"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "low sheen",
+                        "satin finish",
+                        "satin look",
+                        "semi matte",
+                        "soft sheen"
+                    ]
+                },
+                {
+                    "id": "shimmer",
+                    "label": "shimmer",
+                    "synonyms": [
+                        "glitter",
+                        "metallic",
+                        "pearlescent",
+                        "shimmery",
+                        "sparkly"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "color_family",
+            "label": "color family",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "variant",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "black",
+                    "label": "black",
+                    "synonyms": [
+                        "blackest black",
+                        "jet black",
+                        "true black",
+                        "ultra black"
+                    ]
+                },
+                {
+                    "id": "brown",
+                    "label": "brown",
+                    "synonyms": [
+                        "dark brown",
+                        "deep brown",
+                        "espresso",
+                        "soft brown"
+                    ]
+                },
+                {
+                    "id": "clear",
+                    "label": "clear",
+                    "synonyms": [
+                        "clear gel",
+                        "colorless",
+                        "invisible",
+                        "no color",
+                        "transparent"
+                    ]
+                },
+                {
+                    "id": "blue",
+                    "label": "blue",
+                    "synonyms": [
+                        "cobalt",
+                        "electric blue",
+                        "indigo",
+                        "navy",
+                        "royal blue"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "purple",
+                    "label": "purple",
+                    "synonyms": [
+                        "aubergine",
+                        "burgundy",
+                        "eggplant",
+                        "plum",
+                        "violet"
+                    ]
+                },
+                {
+                    "id": "green",
+                    "label": "green",
+                    "synonyms": [
+                        "emerald",
+                        "forest green",
+                        "hunter green",
+                        "jade",
+                        "olive"
+                    ]
+                },
+                {
+                    "id": "gray",
+                    "label": "gray",
+                    "synonyms": [
+                        "ash gray",
+                        "charcoal",
+                        "graphite",
+                        "gunmetal",
+                        "slate"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "wear_claims",
+            "label": "wear claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "smudge_resistant",
+                    "label": "smudge-resistant",
+                    "synonyms": [
+                        "anti smear",
+                        "non smudging",
+                        "smear resistant",
+                        "smudge proof"
+                    ]
+                },
+                {
+                    "id": "flake_resistant",
+                    "label": "flake-resistant",
+                    "synonyms": [
+                        "anti flake",
+                        "flake proof",
+                        "no flaking",
+                        "non flaking"
+                    ]
+                },
+                {
+                    "id": "clump_resistant",
+                    "label": "clump-resistant",
+                    "synonyms": [
+                        "anti clump",
+                        "clump free",
+                        "clump proof",
+                        "no clumps",
+                        "won't clump"
+                    ]
+                },
+                {
+                    "id": "long_wear",
+                    "label": "long-wear",
+                    "synonyms": [
+                        "12 hour wear",
+                        "24 hour wear",
+                        "all day wear",
+                        "long lasting",
+                        "longwear"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "transfer_resistant",
+                    "label": "transfer-resistant",
+                    "synonyms": [
+                        "no transfer",
+                        "transfer proof",
+                        "transfer resistant formula",
+                        "won't transfer"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "suitability",
+            "label": "suitability",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "contact_lens_safe",
+                    "label": "contact lens safe",
+                    "synonyms": [
+                        "contact lens friendly",
+                        "contact safe",
+                        "contacts friendly",
+                        "safe for contacts"
+                    ]
+                },
+                {
+                    "id": "sensitive_eyes",
+                    "label": "sensitive eyes",
+                    "synonyms": [
+                        "delicate eyes",
+                        "for sensitive eyes",
+                        "gentle on eyes"
+                    ]
+                },
+                {
+                    "id": "hypoallergenic",
+                    "label": "hypoallergenic",
+                    "synonyms": [
+                        "allergy friendly",
+                        "hypo allergenic",
+                        "low allergen",
+                        "reduced allergen"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "lash_extension_safe",
+                    "label": "lash extension safe",
+                    "synonyms": [
+                        "extension safe",
+                        "extensions compatible",
+                        "lash extensions friendly",
+                        "safe for lash extensions"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "safety_testing",
+            "label": "safety testing",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "ophthalmologist_tested",
+                    "label": "ophthalmologist tested",
+                    "synonyms": [
+                        "eye doctor tested",
+                        "eye safety tested",
+                        "ophthalmologist approved",
+                        "tested by ophthalmologists"
+                    ]
+                },
+                {
+                    "id": "dermatologist_tested",
+                    "label": "dermatologist tested",
+                    "synonyms": [
+                        "derm tested",
+                        "dermatologist approved",
+                        "skin doctor tested",
+                        "tested by dermatologists"
+                    ]
+                },
+                {
+                    "id": "allergy_tested",
+                    "label": "allergy tested",
+                    "synonyms": [
+                        "allergen tested",
+                        "allergy screened",
+                        "sensitivity tested"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "clinically_tested",
+                    "label": "clinically tested",
+                    "synonyms": [
+                        "clinical testing",
+                        "in clinical tests",
+                        "lab tested"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "removal_method",
+            "label": "removal method",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "warm_water",
+                    "label": "warm water",
+                    "synonyms": [
+                        "removes with warm water",
+                        "slides off",
+                        "tubes off with water",
+                        "water only removal",
+                        "water removal"
+                    ]
+                },
+                {
+                    "id": "makeup_remover",
+                    "label": "makeup remover",
+                    "synonyms": [
+                        "cleansing balm",
+                        "dual phase remover",
+                        "micellar remover",
+                        "oil based remover",
+                        "requires makeup remover"
+                    ]
+                },
+                {
+                    "id": "soap_and_water",
+                    "label": "soap and water",
+                    "synonyms": [
+                        "cleanser removal",
+                        "face cleanser",
+                        "face wash removal",
+                        "soap and water removal"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "fragrance",
+            "label": "fragrance",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "fragrance_free",
+                    "label": "fragrance-free",
+                    "synonyms": [
+                        "fragrance free",
+                        "no added fragrance",
+                        "no fragrance",
+                        "scent free",
+                        "unscented"
+                    ]
+                },
+                {
+                    "id": "scented",
+                    "label": "scented",
+                    "synonyms": [
+                        "lightly scented",
+                        "perfumed",
+                        "scented formula",
+                        "with fragrance",
+                        "with scent"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}
