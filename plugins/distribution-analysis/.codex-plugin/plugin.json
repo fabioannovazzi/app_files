@@ -1,13 +1,13 @@
 {
   "name": "distribution-analysis",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Legacy-backed distribution chart workflow with standard and small-multiple Plotly outputs.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "homepage": "https://mparanza.com/static/shared/clara/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [

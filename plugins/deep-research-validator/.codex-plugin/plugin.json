@@ -1,13 +1,13 @@
 {
   "name": "deep-research-validator",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Validate Deep Research reports against cited sources with Codex-guided review and deterministic evidence checks.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/research/index.html",
+  "homepage": "https://mparanza.com/static/shared/deep-research-validator/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
