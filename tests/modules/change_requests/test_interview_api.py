@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -100,3 +101,249 @@ def test_completing_improvement_interview_attaches_transcript_to_request(
     completion = json.loads(request_record.interview_json)
     assert completion["user_transcript"].startswith("I need the plugin")
     assert completion["elapsed_seconds"] == 42
+
+
+def test_post_call_transcript_is_finalized_before_change_request_attachment(
+    tmp_path: Path, monkeypatch
+) -> None:
+    interviews_root = tmp_path / "interviews"
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(interviews_root))
+    store = ChangeRequestStore(sqlite_path=tmp_path / "requests.sqlite3")
+    client = _client(store)
+    created = client.post("/api/change-requests/interviews", json=_payload()).json()
+    token = created["interview_url"].rsplit("/", 1)[-1]
+    record = hosted_interview_api._load_record_for_token(token)
+    record_path = interviews_root / "sessions" / record["token_hash"] / "interview.json"
+    persisted = json.loads(record_path.read_text(encoding="utf-8"))
+    persisted["status"] = hosted_interview_api.INTERVIEW_STATUS_STARTED
+    persisted["started_at"] = hosted_interview_api._iso(hosted_interview_api._now())
+    persisted["active_attempt_id"] = "attempt-final"
+    record_path.write_text(json.dumps(persisted), encoding="utf-8")
+    monkeypatch.setattr(change_request_store, "get_change_request_store", lambda: store)
+    monkeypatch.setattr(
+        hosted_interview_api,
+        "_should_run_post_call_interviewee_transcription",
+        lambda *_args: True,
+    )
+
+    def finalize_transcript(**kwargs):
+        completion = kwargs["completion"]
+        completion["user_transcript"] = "Final transcript from recorded audio."
+        completion["transcript_source"] = "post_call_interviewee_audio"
+        return completion
+
+    monkeypatch.setattr(
+        hosted_interview_api,
+        "_apply_post_call_interviewee_transcription",
+        finalize_transcript,
+    )
+    monkeypatch.setattr(
+        hosted_interview_api, "_run_interview_quality_review_task", lambda *_args: None
+    )
+
+    response = client.post(
+        f"/case-notes/api/interviews/{token}/complete",
+        json={
+            "attempt_id": "attempt-final",
+            "user_transcript": "Provisional live transcript.",
+            "assistant_transcript": "What should the capability do?",
+            "elapsed_seconds": 42,
+            "transcript_words": 3,
+            "audio_chunks": 1,
+        },
+    )
+
+    assert response.status_code == 200
+    request_record = store.get("CR-1")
+    assert request_record is not None
+    completion = json.loads(request_record.interview_json or "{}")
+    assert completion["user_transcript"] == "Final transcript from recorded audio."
+    assert completion["transcript_source"] == "post_call_interviewee_audio"
+
+
+def test_concurrent_post_call_task_cannot_attach_provisional_transcript(
+    tmp_path: Path, monkeypatch
+) -> None:
+    interviews_root = tmp_path / "interviews"
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(interviews_root))
+    store = ChangeRequestStore(sqlite_path=tmp_path / "requests.sqlite3")
+    client = _client(store)
+    created = client.post("/api/change-requests/interviews", json=_payload()).json()
+    token = created["interview_url"].rsplit("/", 1)[-1]
+    record = hosted_interview_api._load_record_for_token(token)
+    record_path = interviews_root / "sessions" / record["token_hash"] / "interview.json"
+    persisted = json.loads(record_path.read_text(encoding="utf-8"))
+    persisted["status"] = hosted_interview_api.INTERVIEW_STATUS_STARTED
+    persisted["started_at"] = hosted_interview_api._iso(hosted_interview_api._now())
+    persisted["active_attempt_id"] = "attempt-concurrent"
+    record_path.write_text(json.dumps(persisted), encoding="utf-8")
+    transcription_started = threading.Event()
+    release_transcription = threading.Event()
+    final_transcript = (
+        "The final recorded-audio transcript explains the requested capability, "
+        "its intended users, the reviewed output, the evidence requirements, and "
+        "the concrete workflow in enough detail to replace provisional live text."
+    )
+
+    def transcribe(**_kwargs):
+        transcription_started.set()
+        assert release_transcription.wait(timeout=2)
+        return {
+            "text": final_transcript,
+            "metadata": {"status": "complete"},
+            "audio_files": [],
+        }
+
+    monkeypatch.setattr(change_request_store, "get_change_request_store", lambda: store)
+    monkeypatch.setattr(
+        hosted_interview_api,
+        "_post_call_interviewee_transcription_enabled",
+        lambda: True,
+    )
+    monkeypatch.setattr(
+        hosted_interview_api, "_transcribe_interviewee_audio_chunks", transcribe
+    )
+    monkeypatch.setattr(
+        hosted_interview_api, "_run_interview_quality_review_task", lambda *_args: None
+    )
+    monkeypatch.setattr(
+        hosted_interview_api, "_send_completion_notification", lambda *_args: False
+    )
+    response_holder: dict[str, int] = {}
+
+    def complete_interview() -> None:
+        response = client.post(
+            f"/case-notes/api/interviews/{token}/complete",
+            json={
+                "attempt_id": "attempt-concurrent",
+                "user_transcript": "Provisional live transcript.",
+                "assistant_transcript": "What should the capability do?",
+                "elapsed_seconds": 42,
+                "transcript_words": 3,
+                "audio_chunks": 1,
+            },
+        )
+        response_holder["status_code"] = response.status_code
+
+    completion_thread = threading.Thread(target=complete_interview)
+    completion_thread.start()
+    assert transcription_started.wait(timeout=2)
+
+    hosted_interview_api._run_interview_post_completion_task(token)
+
+    pending_record = store.get("CR-1")
+    assert pending_record is not None
+    assert pending_record.interview_json is None
+    release_transcription.set()
+    completion_thread.join(timeout=2)
+    assert not completion_thread.is_alive()
+
+    assert response_holder["status_code"] == 200
+    completed_record = store.get("CR-1")
+    assert completed_record is not None
+    completion = json.loads(completed_record.interview_json or "{}")
+    assert completion["user_transcript"] == final_transcript
+    assert completion["transcript_source"] == "post_call_interviewee_audio"
+
+
+def test_concurrent_completion_request_cannot_bypass_final_transcript_lock(
+    tmp_path: Path, monkeypatch
+) -> None:
+    interviews_root = tmp_path / "interviews"
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(interviews_root))
+    store = ChangeRequestStore(sqlite_path=tmp_path / "requests.sqlite3")
+    first_client = _client(store)
+    second_client = _client(store)
+    created = first_client.post(
+        "/api/change-requests/interviews", json=_payload()
+    ).json()
+    token = created["interview_url"].rsplit("/", 1)[-1]
+    record = hosted_interview_api._load_record_for_token(token)
+    record_path = interviews_root / "sessions" / record["token_hash"] / "interview.json"
+    persisted = json.loads(record_path.read_text(encoding="utf-8"))
+    persisted["status"] = hosted_interview_api.INTERVIEW_STATUS_STARTED
+    persisted["started_at"] = hosted_interview_api._iso(hosted_interview_api._now())
+    persisted["active_attempt_id"] = "attempt-http-race"
+    record_path.write_text(json.dumps(persisted), encoding="utf-8")
+    active_attempt_checked = threading.Event()
+    release_first_completion = threading.Event()
+    original_active_attempt_record = hosted_interview_api._active_attempt_record
+    final_transcript = (
+        "The recorded-audio transcript describes the requested capability, the "
+        "intended workflow, the reviewed evidence, the expected output, and the "
+        "user decision in enough detail to supersede both provisional payloads."
+    )
+
+    def pause_after_active_attempt_check(*args, **kwargs):
+        active_record = original_active_attempt_record(*args, **kwargs)
+        active_attempt_checked.set()
+        assert release_first_completion.wait(timeout=2)
+        return active_record
+
+    def transcribe(**_kwargs):
+        return {
+            "text": final_transcript,
+            "metadata": {"status": "complete"},
+            "audio_files": [],
+        }
+
+    monkeypatch.setattr(change_request_store, "get_change_request_store", lambda: store)
+    monkeypatch.setattr(
+        hosted_interview_api, "_active_attempt_record", pause_after_active_attempt_check
+    )
+    monkeypatch.setattr(
+        hosted_interview_api,
+        "_post_call_interviewee_transcription_enabled",
+        lambda: True,
+    )
+    monkeypatch.setattr(
+        hosted_interview_api, "_transcribe_interviewee_audio_chunks", transcribe
+    )
+    monkeypatch.setattr(
+        hosted_interview_api, "_run_interview_quality_review_task", lambda *_args: None
+    )
+    response_holder: dict[str, int] = {}
+
+    def complete_with_recorded_audio() -> None:
+        response = first_client.post(
+            f"/case-notes/api/interviews/{token}/complete",
+            json={
+                "attempt_id": "attempt-http-race",
+                "user_transcript": "First provisional live transcript.",
+                "assistant_transcript": "What should the capability do?",
+                "elapsed_seconds": 42,
+                "transcript_words": 4,
+                "audio_chunks": 1,
+            },
+        )
+        response_holder["status_code"] = response.status_code
+
+    first_completion = threading.Thread(target=complete_with_recorded_audio)
+    first_completion.start()
+    assert active_attempt_checked.wait(timeout=2)
+
+    competing_response = second_client.post(
+        f"/case-notes/api/interviews/{token}/complete",
+        json={
+            "attempt_id": "attempt-http-race",
+            "user_transcript": "Competing provisional transcript.",
+            "assistant_transcript": "Competing question.",
+            "elapsed_seconds": 10,
+            "transcript_words": 3,
+            "audio_chunks": 0,
+        },
+    )
+
+    assert competing_response.status_code == 409
+    pending_record = store.get("CR-1")
+    assert pending_record is not None
+    assert pending_record.interview_json is None
+    release_first_completion.set()
+    first_completion.join(timeout=2)
+    assert not first_completion.is_alive()
+    assert response_holder["status_code"] == 200
+    completed_record = store.get("CR-1")
+    assert completed_record is not None
+    completion = json.loads(completed_record.interview_json or "{}")
+    assert completion["user_transcript"] == final_transcript
+    assert completion["transcript_source"] == "post_call_interviewee_audio"

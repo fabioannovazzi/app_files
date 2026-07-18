@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib
 import json
 import logging
 import os
 import re
+import sys
 import tempfile
 import time
 import urllib.error
@@ -16,7 +18,8 @@ import urllib.parse
 import urllib.request
 import uuid
 import webbrowser
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -145,6 +148,36 @@ def _state_paths(plugin_name: str, plugin_data: Path | None) -> list[Path]:
         if explicit not in paths:
             paths.append(explicit)
     return paths
+
+
+@contextmanager
+def _locked_state(plugin_name: str) -> Iterator[None]:
+    """Serialize receipt mutations across parallel local Codex processes."""
+
+    lock_path = _stable_state_dir(plugin_name) / ".state.lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+b") as lock_file:
+        lock_path.chmod(0o600)
+        if sys.platform == "win32":
+            msvcrt = importlib.import_module("msvcrt")
+            lock_file.seek(0)
+            if not lock_file.read(1):
+                lock_file.write(b"\0")
+                lock_file.flush()
+            lock_file.seek(0)
+            msvcrt.locking(lock_file.fileno(), msvcrt.LK_LOCK, 1)
+            try:
+                yield
+            finally:
+                lock_file.seek(0)
+                msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+            return
+        fcntl = importlib.import_module("fcntl")
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
 def _empty_state(plugin_name: str) -> dict[str, Any]:
@@ -433,6 +466,29 @@ def _find_or_create_entry(
     return entry, True
 
 
+def _reserve_entry(
+    *,
+    kind: str,
+    plugin_name: str,
+    plugin_version: str,
+    plugin_data: Path | None,
+    request_without_id: Mapping[str, Any],
+    now: float,
+) -> dict[str, Any]:
+    with _locked_state(plugin_name):
+        state = _load_state(plugin_name, plugin_data)
+        entry, _created = _find_or_create_entry(
+            state,
+            kind=kind,
+            plugin_name=plugin_name,
+            plugin_version=plugin_version,
+            request_without_id=request_without_id,
+            now=now,
+        )
+        _write_state(state, plugin_name, plugin_data)
+        return dict(entry)
+
+
 def _stored_receipt(entry: Mapping[str, Any]) -> dict[str, Any] | None:
     request_id = entry.get("change_request_id")
     token = entry.get("status_token")
@@ -466,6 +522,34 @@ def _save_receipt(
     return stored
 
 
+def _persist_receipt(
+    *,
+    plugin_name: str,
+    plugin_data: Path | None,
+    submission_id: str,
+    receipt: Mapping[str, Any],
+    now: float,
+) -> dict[str, Any]:
+    with _locked_state(plugin_name):
+        state = _load_state(plugin_name, plugin_data)
+        entry = next(
+            (
+                candidate
+                for candidate in state["requests"]
+                if candidate.get("submission_id") == submission_id
+            ),
+            None,
+        )
+        if entry is None:
+            raise ChangeRequestError("The reserved change request is missing.")
+        existing = _stored_receipt(entry)
+        if existing is not None:
+            return existing
+        stored = _save_receipt(entry, receipt, now=now)
+        _write_state(state, plugin_name, plugin_data)
+        return stored
+
+
 def submit_problem(
     plugin_root: Path,
     request_path: Path,
@@ -481,7 +565,6 @@ def submit_problem(
     plugin_name, plugin_version = _read_plugin_identity(plugin_root)
     request_payload = _read_request_file(request_path)
     checked_at = time.time() if now is None else now
-    state = _load_state(plugin_name, plugin_data)
     body_without_id = {
         "schema_version": 1,
         "kind": "problem",
@@ -489,15 +572,14 @@ def submit_problem(
         "plugin_version": plugin_version,
         "request": request_payload,
     }
-    entry, _created = _find_or_create_entry(
-        state,
+    entry = _reserve_entry(
         kind="problem",
         plugin_name=plugin_name,
         plugin_version=plugin_version,
+        plugin_data=plugin_data,
         request_without_id=body_without_id,
         now=checked_at,
     )
-    _write_state(state, plugin_name, plugin_data)
     existing = _stored_receipt(entry)
     if existing is not None:
         return existing
@@ -511,9 +593,13 @@ def submit_problem(
         opener=opener,
         timeout_seconds=timeout_seconds,
     )
-    receipt = _save_receipt(entry, _validate_receipt(response), now=checked_at)
-    _write_state(state, plugin_name, plugin_data)
-    return receipt
+    return _persist_receipt(
+        plugin_name=plugin_name,
+        plugin_data=plugin_data,
+        submission_id=str(entry["submission_id"]),
+        receipt=_validate_receipt(response),
+        now=checked_at,
+    )
 
 
 def start_interview(
@@ -537,7 +623,6 @@ def start_interview(
         raise ChangeRequestError("Unsupported interview language.")
     plugin_name, plugin_version = _read_plugin_identity(plugin_root)
     checked_at = time.time() if now is None else now
-    state = _load_state(plugin_name, plugin_data)
     body_without_id = {
         "schema_version": 1,
         "plugin": plugin_name,
@@ -545,15 +630,14 @@ def start_interview(
         "opportunity": clean_opportunity,
         "language": language,
     }
-    entry, _created = _find_or_create_entry(
-        state,
+    entry = _reserve_entry(
         kind="capability",
         plugin_name=plugin_name,
         plugin_version=plugin_version,
+        plugin_data=plugin_data,
         request_without_id=body_without_id,
         now=checked_at,
     )
-    _write_state(state, plugin_name, plugin_data)
     receipt = _stored_receipt(entry)
     if receipt is None:
         pending_payload = entry.get("pending_payload")
@@ -566,10 +650,13 @@ def start_interview(
             opener=opener,
             timeout_seconds=timeout_seconds,
         )
-        receipt = _save_receipt(
-            entry, _validate_interview_receipt(response), now=checked_at
+        receipt = _persist_receipt(
+            plugin_name=plugin_name,
+            plugin_data=plugin_data,
+            submission_id=str(entry["submission_id"]),
+            receipt=_validate_interview_receipt(response),
+            now=checked_at,
         )
-        _write_state(state, plugin_name, plugin_data)
     interview_url = receipt.get("interview_url")
     if not isinstance(interview_url, str):
         raise ChangeRequestError("The stored interview receipt has no interview URL.")
@@ -636,19 +723,21 @@ def check_fixed_requests(
 
     try:
         plugin_name, _plugin_version = _read_plugin_identity(plugin_root)
-        state = _load_state(plugin_name, plugin_data)
-        pending = [
-            entry
-            for entry in state["requests"]
-            if isinstance(entry.get("change_request_id"), str)
-            and isinstance(entry.get("status_token"), str)
-            and entry.get("fixed_notified_at") is None
-        ]
+        with _locked_state(plugin_name):
+            state = _load_state(plugin_name, plugin_data)
+            pending = [
+                dict(entry)
+                for entry in state["requests"]
+                if isinstance(entry.get("change_request_id"), str)
+                and isinstance(entry.get("status_token"), str)
+                and entry.get("fixed_notified_at") is None
+            ]
+            if not pending:
+                _write_state(state, plugin_name, plugin_data)
         if not pending:
-            _write_state(state, plugin_name, plugin_data)
             return None
         checked_at = time.time() if now is None else now
-        by_id = {entry["change_request_id"]: entry for entry in pending}
+        updates_by_id: dict[str, dict[str, Any]] = {}
         for start in range(0, len(pending), MAX_STATUS_BATCH):
             batch = pending[start : start + MAX_STATUS_BATCH]
             response = _post_json(
@@ -667,22 +756,24 @@ def check_fixed_requests(
                 timeout_seconds=timeout_seconds,
             )
             for row in _status_rows(response):
-                entry = by_id.get(row["change_request_id"])
-                if entry is None or not row.get("found"):
+                if row.get("found"):
+                    updates_by_id[row["change_request_id"]] = row
+        newly_fixed: list[dict[str, Any]] = []
+        with _locked_state(plugin_name):
+            state = _load_state(plugin_name, plugin_data)
+            for entry in state["requests"]:
+                request_id = entry.get("change_request_id")
+                row = updates_by_id.get(str(request_id))
+                if row is None or entry.get("fixed_notified_at") is not None:
                     continue
                 entry.update(
                     {key: value for key, value in row.items() if key != "found"}
                 )
                 entry["updated_at"] = checked_at
-        newly_fixed = [
-            entry
-            for entry in pending
-            if entry.get("status") == "fixed" and entry.get("fixed_notified_at") is None
-        ]
-        for entry in newly_fixed:
-            entry["fixed_notified_at"] = checked_at
-            entry["updated_at"] = checked_at
-        _write_state(state, plugin_name, plugin_data)
+                if entry.get("status") == "fixed":
+                    entry["fixed_notified_at"] = checked_at
+                    newly_fixed.append(dict(entry))
+            _write_state(state, plugin_name, plugin_data)
     except (ChangeRequestError, OSError, TypeError, ValueError):
         return None
     if not newly_fixed:

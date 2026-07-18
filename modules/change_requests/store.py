@@ -10,7 +10,7 @@ import re
 import secrets
 import sqlite3
 import threading
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -30,6 +30,7 @@ from modules.utilities.cache import get_cache_dir
 
 __all__ = [
     "ChangeRequestConflictError",
+    "ChangeRequestCapacityError",
     "ChangeRequestManifestError",
     "ChangeRequestNotFoundError",
     "ChangeRequestRecord",
@@ -42,6 +43,8 @@ __all__ = [
 ChangeRequestStatus = Literal["open", "fixed"]
 
 _CHANGE_REQUEST_ID_PATTERN = re.compile(r"^CR-(?P<number>[1-9][0-9]*)$")
+_DEFAULT_MAX_RECORDS = 10_000
+_MAX_RECORDS_ENV = "CHANGE_REQUEST_MAX_RECORDS"
 _DEFAULT_SQLITE_FILENAME = "change_requests.sqlite3"
 _SQLITE_PATH_ENV = "CHANGE_REQUEST_DB_PATH"
 _POSTGRES_SCHEMA_SQL = """
@@ -97,6 +100,10 @@ class ChangeRequestStoreUnavailableError(ChangeRequestStoreError):
 
 class ChangeRequestConflictError(ChangeRequestStoreError):
     """Raised when an idempotency key is reused for different content."""
+
+
+class ChangeRequestCapacityError(ChangeRequestStoreError):
+    """Raised when the public intake has reached its configured durable bound."""
 
 
 class ChangeRequestNotFoundError(ChangeRequestStoreError):
@@ -175,6 +182,16 @@ def _default_sqlite_path() -> Path:
     return get_cache_dir("change_requests") / _DEFAULT_SQLITE_FILENAME
 
 
+def _default_max_records() -> int:
+    raw = os.getenv(_MAX_RECORDS_ENV, "").strip()
+    if not raw:
+        return _DEFAULT_MAX_RECORDS
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return _DEFAULT_MAX_RECORDS
+
+
 def _repo_root() -> Path:
     here = Path(__file__).resolve()
     for parent in here.parents:
@@ -226,9 +243,18 @@ def _published_install_url(
 class ChangeRequestStore:
     """Postgres-backed store with a SQLite fallback for local use and tests."""
 
-    def __init__(self, *, sqlite_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        sqlite_path: Path | None = None,
+        max_records: int | None = None,
+    ) -> None:
         self._use_postgres = sqlite_path is None and is_postgres_enabled()
         self._sqlite_path = sqlite_path or _default_sqlite_path()
+        configured_max_records = (
+            _default_max_records() if max_records is None else max_records
+        )
+        self._max_records = max(1, configured_max_records)
         self._schema_ready = False
         self._schema_lock = threading.Lock()
 
@@ -373,6 +399,38 @@ class ChangeRequestStore:
             (submission_id,),
         ).fetchone()
 
+    def _lock_submission_admission(self, connection: Any) -> None:
+        """Serialize capacity checks because the public intake needs a hard bound."""
+
+        if self._use_postgres:
+            connection.disable_transaction_replay()
+            connection.execute(
+                "LOCK TABLE mparanza_change_requests IN SHARE ROW EXCLUSIVE MODE"
+            )
+            return
+        connection.execute("BEGIN IMMEDIATE")
+
+    @staticmethod
+    def _require_voice_interview_record(
+        record: ChangeRequestRecord,
+        *,
+        interview_url: str | None = None,
+    ) -> None:
+        details = record.request.get("request")
+        is_voice_interview = (
+            record.kind == "capability"
+            and isinstance(details, Mapping)
+            and details.get("source") == "voice_interview"
+        )
+        if not is_voice_interview:
+            raise ChangeRequestConflictError(
+                "Change request is not a voice-interview capability request."
+            )
+        if interview_url is not None and record.interview_url != interview_url:
+            raise ChangeRequestConflictError(
+                "Interview completion does not match the bound change request."
+            )
+
     def submit(self, payload: Mapping[str, Any]) -> ChangeRequestRecord:
         """Insert *payload* once and return its stable receipt record."""
 
@@ -397,6 +455,23 @@ class ChangeRequestStore:
         """
         try:
             with self._connect() as connection:
+                self._lock_submission_admission(connection)
+                existing_row = self._select_submission(connection, submission_id)
+                if existing_row is not None:
+                    existing = self._record_from_row(existing_row)
+                    if not hmac.compare_digest(existing.request_sha256, request_sha256):
+                        raise ChangeRequestConflictError(
+                            "submission_id was already used for different content."
+                        )
+                    return existing
+                count_row = connection.execute(
+                    "SELECT COUNT(*) AS record_count FROM mparanza_change_requests"
+                ).fetchone()
+                record_count = int(dict(count_row)["record_count"])
+                if record_count >= self._max_records:
+                    raise ChangeRequestCapacityError(
+                        "Change-request intake is temporarily at capacity."
+                    )
                 inserted = connection.execute(
                     insert_sql,
                     (
@@ -465,12 +540,60 @@ class ChangeRequestStore:
     ) -> ChangeRequestRecord | None:
         """Return a record only when its private status token matches."""
 
-        record = self.get(change_request_id)
-        if record is None:
-            return None
-        if not hmac.compare_digest(record.status_token, status_token):
-            return None
-        return record
+        return self.poll_many([(change_request_id, status_token)])[0]
+
+    def poll_many(
+        self, lookups: Sequence[tuple[str, str]]
+    ) -> list[ChangeRequestRecord | None]:
+        """Resolve a bounded status batch with one database connection."""
+
+        parsed_numbers: list[int | None] = []
+        for change_request_id, _status_token in lookups:
+            try:
+                parsed_numbers.append(_request_number(change_request_id))
+            except ChangeRequestNotFoundError:
+                parsed_numbers.append(None)
+        request_numbers = sorted(
+            {number for number in parsed_numbers if number is not None}
+        )
+        if not request_numbers:
+            return [None for _lookup in lookups]
+        self._ensure_schema()
+        placeholders = ", ".join("?" for _number in request_numbers)
+        try:
+            with self._connect() as connection:
+                # The interpolation contains only generated ``?`` placeholders;
+                # request numbers remain driver-bound parameters.
+                rows = connection.execute(
+                    "SELECT * FROM mparanza_change_requests "
+                    f"WHERE request_no IN ({placeholders})",  # nosec B608
+                    tuple(request_numbers),
+                ).fetchall()
+                records = {
+                    record.request_no: record
+                    for record in (self._record_from_row(row) for row in rows)
+                }
+        except (
+            OSError,
+            sqlite3.Error,
+            psycopg.Error,
+            PostgresCommitStateUnknownError,
+        ) as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Change-request storage is unavailable."
+            ) from exc
+        results: list[ChangeRequestRecord | None] = []
+        for number, (_change_request_id, status_token) in zip(
+            parsed_numbers, lookups, strict=True
+        ):
+            record = records.get(number) if number is not None else None
+            if record is None or not hmac.compare_digest(
+                record.status_token, status_token
+            ):
+                results.append(None)
+            else:
+                results.append(record)
+        return results
 
     def list_open(self, *, limit: int = 100) -> list[ChangeRequestRecord]:
         """Return the oldest open requests for operator processing."""
@@ -512,6 +635,11 @@ class ChangeRequestStore:
         timestamp = _utc_now()
         try:
             with self._connect() as connection:
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                current = self._record_from_row(row)
+                self._require_voice_interview_record(current)
                 connection.execute(
                     """
                     UPDATE mparanza_change_requests
@@ -535,16 +663,28 @@ class ChangeRequestStore:
             ) from exc
 
     def attach_interview_completion(
-        self, change_request_id: str, payload: Mapping[str, Any]
+        self,
+        change_request_id: str,
+        payload: Mapping[str, Any],
+        *,
+        interview_url: str,
     ) -> ChangeRequestRecord:
         """Attach one idempotent hosted-interview completion to its request."""
 
         request_no = _request_number(change_request_id)
+        clean_url = interview_url.strip()
+        if not clean_url:
+            raise ValueError("Interview URL is required.")
         interview_json = _canonical_json(payload)
         self._ensure_schema()
         timestamp = _utc_now()
         try:
             with self._connect() as connection:
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                current = self._record_from_row(row)
+                self._require_voice_interview_record(current, interview_url=clean_url)
                 connection.execute(
                     """
                     UPDATE mparanza_change_requests
