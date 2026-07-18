@@ -97,13 +97,18 @@ def test_clara_public_page_marks_brand_fit_available_with_honest_boundary() -> N
     assert "Non ancora disponibile nella versione attuale di Clara" not in page
     assert "Pas encore disponible dans la version actuelle de Clara" not in page
     assert "In der aktuellen Clara-Version noch nicht verfügbar" not in page
-    assert "brand's current presence at the selected retailer" in page
-    assert "brand-owned catalogue in the stored database snapshot" in page
-    assert "not a live shelf check" in page
-    assert "product images and the HTML report stay on your computer" in page
-    assert "neither the user nor the server needs a model API key" in page
-    assert page.count('"retail.brand_fit.example"') == 5
-    assert 'data-i18n="retail.brand_fit.example"' in page
+    assert "brand's presence at the retailer and its catalogue" in page
+    assert "It uses stored data, not a live shelf check." in page
+    assert "brand-owned catalogue in the stored database snapshot" not in page
+    assert "neither the user nor the server needs a model API key" not in page
+    for key in (
+        "retail.brand_fit.title",
+        "retail.brand_fit.copy.before",
+        "retail.brand_fit.copy.link",
+        "retail.brand_fit.copy.after",
+    ):
+        assert page.count(f'"{key}"') == 5
+        assert f'data-i18n="{key}"' in page
     assert (
         'href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html"'
         in page
