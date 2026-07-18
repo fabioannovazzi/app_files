@@ -1,13 +1,13 @@
 {
   "name": "funnel-analysis",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Deterministic funnel-stage reporting table workflow.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "homepage": "https://mparanza.com/static/shared/clara/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [

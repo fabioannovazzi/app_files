@@ -181,9 +181,7 @@ def test_get_permission_key_for_path_uses_column_groups(
             )
             is None
         )
-        assert (
-            get_permission_key_for_path("/static/shared/reporting/index.html") is None
-        )
+        assert get_permission_key_for_path("/static/shared/clara/index.html") is None
         assert (
             get_permission_key_for_path(
                 "/static/shared/deep-research-validator/downloads/package.zip"

@@ -1,13 +1,13 @@
 {
   "name": "scatter-bubble-analysis",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "Legacy-backed scatter and bubble chart workflow with reusable prepared-data caching and audit outputs.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "homepage": "https://mparanza.com/static/shared/clara/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [

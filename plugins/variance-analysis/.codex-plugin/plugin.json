@@ -1,13 +1,13 @@
 {
   "name": "variance-analysis",
-  "version": "0.1.83",
+  "version": "0.1.84",
   "description": "Sales variance analysis workflow with reviewable charts, exploded drilldowns, root-cause outputs, and driver interpretation.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/reporting/index.html",
+  "homepage": "https://mparanza.com/static/shared/clara/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [

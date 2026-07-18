@@ -1,13 +1,13 @@
 {
   "name": "prompt-optimizer",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Legal, tax, and compliance Deep Research prompt optimization guided by Codex.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/research/index.html",
+  "homepage": "https://mparanza.com/static/shared/prompt-optimizer/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [

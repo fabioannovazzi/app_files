@@ -1,13 +1,13 @@
 {
   "name": "check-entries",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "Journal-entry testing against FatturaPA XML and PDF support, guided by Codex.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "homepage": "https://mparanza.com/static/shared/check-entries/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
