@@ -1,0 +1,24 @@
+{
+    "id": "clothes",
+    "label": "Clothes",
+    "attributes": [
+        {
+            "id": "color",
+            "label": "Color",
+            "hierarchical": false,
+            "nodes": []
+        },
+        {
+            "id": "size",
+            "label": "Size",
+            "hierarchical": false,
+            "nodes": []
+        },
+        {
+            "id": "color_dup",
+            "label": "Color",
+            "hierarchical": false,
+            "nodes": []
+        }
+    ]
+}

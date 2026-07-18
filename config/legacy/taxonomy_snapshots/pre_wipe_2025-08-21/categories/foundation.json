@@ -1,0 +1,430 @@
+{
+    "id": "foundation",
+    "label": "foundation",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "synonyms": [
+                        "liquid",
+                        "bottle",
+                        "tube"
+                    ],
+                    "children": [
+                        {
+                            "id": "pump_bottle",
+                            "label": "Pump bottle"
+                        },
+                        {
+                            "id": "squeeze_tube",
+                            "label": "Squeeze tube"
+                        },
+                        {
+                            "id": "dropper_bottle",
+                            "label": "Dropper bottle"
+                        }
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick",
+                    "synonyms": [
+                        "stick"
+                    ],
+                    "children": [
+                        {
+                            "id": "twist_up_stick",
+                            "label": "Twist-up stick"
+                        },
+                        {
+                            "id": "pan_stick",
+                            "label": "Pan stick"
+                        }
+                    ]
+                },
+                {
+                    "id": "cushion",
+                    "label": "cushion",
+                    "synonyms": [
+                        "cushion"
+                    ],
+                    "children": [
+                        {
+                            "id": "cushion_compact",
+                            "label": "Cushion compact"
+                        },
+                        {
+                            "id": "cream_pan",
+                            "label": "Cream pan compact"
+                        }
+                    ]
+                },
+                {
+                    "id": "powder",
+                    "label": "powder",
+                    "synonyms": [
+                        "powder"
+                    ],
+                    "children": [
+                        {
+                            "id": "loose_powder",
+                            "label": "Loose powder"
+                        },
+                        {
+                            "id": "pressed_powder",
+                            "label": "Pressed powder"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "matte"
+                    ],
+                    "children": [
+                        {
+                            "id": "true_matte",
+                            "label": "True matte"
+                        },
+                        {
+                            "id": "soft_matte",
+                            "label": "Soft matte"
+                        }
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "natural",
+                        "satin"
+                    ],
+                    "children": [
+                        {
+                            "id": "skin_like",
+                            "label": "Skin-like"
+                        },
+                        {
+                            "id": "satin",
+                            "label": "Satin natural"
+                        }
+                    ]
+                },
+                {
+                    "id": "radiant",
+                    "label": "radiant",
+                    "synonyms": [
+                        "radiant",
+                        "luminous"
+                    ],
+                    "children": [
+                        {
+                            "id": "luminous",
+                            "label": "Luminous"
+                        },
+                        {
+                            "id": "glass_skin",
+                            "label": "Glass-skin dewy"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "Coverage",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "full",
+                    "label": "Full",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "camouflage_full",
+                            "label": "Camouflage full"
+                        }
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "Medium / Buildable",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "buildable_medium",
+                            "label": "Buildable medium"
+                        }
+                    ]
+                },
+                {
+                    "id": "sheer",
+                    "label": "Sheer / Tint",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "skin_tint",
+                            "label": "Skin tint"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "shade",
+            "label": "Shade",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "cool",
+                    "label": "Cool",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "pink",
+                            "label": "Pink"
+                        },
+                        {
+                            "id": "rosy",
+                            "label": "Rosy"
+                        }
+                    ]
+                },
+                {
+                    "id": "neutral",
+                    "label": "Neutral",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "true_neutral",
+                            "label": "True neutral"
+                        }
+                    ]
+                },
+                {
+                    "id": "warm",
+                    "label": "Warm",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "yellow",
+                            "label": "Yellow"
+                        },
+                        {
+                            "id": "golden",
+                            "label": "Golden"
+                        }
+                    ]
+                },
+                {
+                    "id": "olive",
+                    "label": "Olive",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "greenish",
+                            "label": "Greenish olive"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "skin",
+            "label": "Skin-Type Suitability",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "oily",
+                    "label": "Oily",
+                    "synonyms": [],
+                    "children": []
+                },
+                {
+                    "id": "dry",
+                    "label": "Dry",
+                    "synonyms": [],
+                    "children": []
+                },
+                {
+                    "id": "combination",
+                    "label": "Combination",
+                    "synonyms": [],
+                    "children": []
+                },
+                {
+                    "id": "sensitive",
+                    "label": "Sensitive",
+                    "synonyms": [],
+                    "children": []
+                },
+                {
+                    "id": "normal",
+                    "label": "Normal",
+                    "synonyms": [],
+                    "children": []
+                }
+            ]
+        },
+        {
+            "id": "formula",
+            "label": "Formula",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "performance",
+                    "label": "Performance",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "long_wear",
+                            "label": "Long-wear"
+                        },
+                        {
+                            "id": "transfer_proof",
+                            "label": "Transfer-proof"
+                        },
+                        {
+                            "id": "waterproof",
+                            "label": "Waterproof"
+                        },
+                        {
+                            "id": "sweat_resistant",
+                            "label": "Sweat-resistant"
+                        }
+                    ]
+                },
+                {
+                    "id": "care",
+                    "label": "Care",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "hydrating",
+                            "label": "Hydrating"
+                        },
+                        {
+                            "id": "spf",
+                            "label": "SPF-infused"
+                        },
+                        {
+                            "id": "brightening",
+                            "label": "Brightening"
+                        },
+                        {
+                            "id": "anti_aging",
+                            "label": "Anti-aging"
+                        }
+                    ]
+                },
+                {
+                    "id": "ethos",
+                    "label": "Ethos",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "clean_vegan",
+                            "label": "Clean / Vegan"
+                        },
+                        {
+                            "id": "cruelty_free",
+                            "label": "Cruelty-free"
+                        },
+                        {
+                            "id": "fragrance_free",
+                            "label": "Fragrance-free"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "packaging",
+            "label": "Packaging",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "component",
+                    "label": "Component",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "glass_bottle",
+                            "label": "Glass bottle"
+                        },
+                        {
+                            "id": "airless_pump",
+                            "label": "Airless pump"
+                        },
+                        {
+                            "id": "cushion_compact_component",
+                            "label": "Cushion compact"
+                        },
+                        {
+                            "id": "stick_component",
+                            "label": "Stick component"
+                        }
+                    ]
+                },
+                {
+                    "id": "size",
+                    "label": "Size & Pack",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "mini",
+                            "label": "Mini / Travel size"
+                        },
+                        {
+                            "id": "standard",
+                            "label": "Standard 30-50 ml"
+                        },
+                        {
+                            "id": "jumbo",
+                            "label": "Jumbo / Value size"
+                        }
+                    ]
+                },
+                {
+                    "id": "eco",
+                    "label": "Eco Material",
+                    "synonyms": [],
+                    "children": [
+                        {
+                            "id": "recycled_plastic",
+                            "label": "Recycled plastic"
+                        },
+                        {
+                            "id": "recycled_glass",
+                            "label": "Recycled glass"
+                        },
+                        {
+                            "id": "refillable_compact",
+                            "label": "Refillable compact"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

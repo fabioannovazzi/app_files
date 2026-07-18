@@ -1,9 +1,8 @@
 import json
-from pathlib import Path
-from typing import Dict
-
 import sys
 import types
+from pathlib import Path
+from typing import Dict
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -42,6 +41,12 @@ import pytest
 
 import src.merchant_brand_lookup as mbl
 
+LOOKUP_NAMING = {
+    "merchantBrandWebsiteLookup": "step",
+    "industry": "industry",
+    "industryDescription": "industry_description",
+}
+
 
 @pytest.fixture(autouse=True)
 def _market_context():
@@ -56,6 +61,7 @@ def _patch_storage(monkeypatch, tmp_path: Path) -> Path:
     """Point module storage to a temp file and reset cache."""
     fp = tmp_path / "web.json"
     monkeypatch.setattr(mbl, "FILE_PATH", fp, raising=False)
+    monkeypatch.setattr(mbl, "SEED_PATH", tmp_path / "seed.json", raising=False)
     monkeypatch.setattr(mbl, "_WEBSITE_CACHE", None, raising=False)
     meta_fp = tmp_path / "web_meta.json"
     monkeypatch.setattr(mbl, "META_PATH", meta_fp, raising=False)
@@ -67,7 +73,10 @@ def _patch_storage(monkeypatch, tmp_path: Path) -> Path:
     [
         (None, {}),  # file missing
         ("{not json", {}),  # invalid JSON
-        (json.dumps({"acme": "https://acme.com", "globex": None}), {"acme": "https://acme.com", "globex": None}),
+        (
+            json.dumps({"acme": "https://acme.com", "globex": None}),
+            {"acme": "https://acme.com", "globex": None},
+        ),
     ],
 )
 def test_load_mapping_handles_file_states(tmp_path, monkeypatch, content, expected):
@@ -83,15 +92,52 @@ def test_load_mapping_handles_file_states(tmp_path, monkeypatch, content, expect
     assert mapping == expected
 
 
+def test_load_mapping_overlays_writable_cache_on_tracked_seed(tmp_path, monkeypatch):
+    fp = _patch_storage(monkeypatch, tmp_path)
+    mbl.SEED_PATH.write_text(
+        json.dumps(
+            {
+                "seed only": "https://seed.example",
+                "shared": "https://seed-shared.example",
+            }
+        ),
+        encoding="utf-8",
+    )
+    fp.write_text(
+        json.dumps(
+            {
+                "cache only": "https://cache.example",
+                "shared": "https://cache-shared.example",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    mapping = mbl.load_mapping()
+
+    assert mapping == {
+        "cache only": "https://cache.example",
+        "seed only": "https://seed.example",
+        "shared": "https://cache-shared.example",
+    }
+
+
 def test_lookup_websites_adds_and_persists_new_entries(tmp_path, monkeypatch):
     # Arrange
     fp = _patch_storage(monkeypatch, tmp_path)
     # Stub config resolution used by lookup
-    monkeypatch.setattr(mbl, "get_naming_params", lambda: {"merchantBrandWebsiteLookup": "step"}, raising=False)
+    monkeypatch.setattr(
+        mbl,
+        "get_naming_params",
+        lambda: LOOKUP_NAMING,
+        raising=False,
+    )
 
     called = {}
 
-    def fake_run_step_json(llm_wrapper, step, system, prompts, tools, tool_choice, service_tier):
+    def fake_run_step_json(
+        llm_wrapper, step, system, prompts, tools, tool_choice, service_tier
+    ):
         # record call parameters for assertions
         called["step"] = step
         called["prompts_len"] = len(prompts)
@@ -108,7 +154,9 @@ def test_lookup_websites_adds_and_persists_new_entries(tmp_path, monkeypatch):
     monkeypatch.setattr(mbl, "run_step_json", fake_run_step_json, raising=False)
 
     # Act
-    out = mbl.lookup_websites(llm_wrapper=object(), names=["Acme", "Globex"])  # two new entries
+    out = mbl.lookup_websites(
+        llm_wrapper=object(), names=["Acme", "Globex"]
+    )  # two new entries
 
     # Assert
     assert out["acme"] == "https://acme.com"
@@ -129,15 +177,24 @@ def test_lookup_websites_uses_aliases_and_skips_existing(tmp_path, monkeypatch):
     # Ensure subsequent load reads from file
     monkeypatch.setattr(mbl, "_WEBSITE_CACHE", None, raising=False)
     # Stub config
-    monkeypatch.setattr(mbl, "get_naming_params", lambda: {"merchantBrandWebsiteLookup": "step"}, raising=False)
+    monkeypatch.setattr(
+        mbl,
+        "get_naming_params",
+        lambda: LOOKUP_NAMING,
+        raising=False,
+    )
 
     def should_not_be_called(*args, **kwargs):  # no lookups expected
-        raise AssertionError("run_step_json should not be called when nothing is missing")
+        raise AssertionError(
+            "run_step_json should not be called when nothing is missing"
+        )
 
     monkeypatch.setattr(mbl, "run_step_json", should_not_be_called, raising=False)
 
     # Act
-    out = mbl.lookup_websites(llm_wrapper=None, names=[" ACME ", "acme"], aliases={"acme": "acme corp"})
+    out = mbl.lookup_websites(
+        llm_wrapper=None, names=[" ACME ", "acme"], aliases={"acme": "acme corp"}
+    )
 
     # Assert
     assert out == existing  # no changes

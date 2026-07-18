@@ -19,6 +19,7 @@ import os
 import re
 from datetime import datetime, timedelta, timezone
 from itertools import islice
+from pathlib import Path
 from typing import Dict, Iterable
 from urllib.parse import urlparse
 
@@ -32,6 +33,9 @@ from modules.utilities.session_context import session_state
 from modules.utilities.ui_notifier import ui
 from src.file_lock import FileLock
 
+SEED_PATH = (
+    Path(__file__).resolve().parents[1] / "config" / "merchant_brand_websites.json"
+)
 FILE_PATH = get_cache_path("merchant_brand_websites.json")
 _WEBSITE_CACHE: Dict[str, str | None] | None = None
 
@@ -96,18 +100,34 @@ def _extract_website_from_text(text: str) -> str | None:
     return None
 
 
+def _load_mapping_file(path: Path) -> Dict[str, str | None]:
+    """Load a validated website mapping from ``path``."""
+
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        logger.warning("Failed to load website mapping: %s", path)
+        return {}
+    if not isinstance(data, dict):
+        logger.warning("Website mapping is not a JSON object: %s", path)
+        return {}
+    return {
+        name: website
+        for name, website in data.items()
+        if isinstance(name, str) and (isinstance(website, str) or website is None)
+    }
+
+
 def load_mapping() -> Dict[str, str | None]:
-    """Return the cached website mapping, loading it from disk if needed."""
+    """Return the tracked seed overlaid with the writable runtime cache."""
 
     global _WEBSITE_CACHE
     if _WEBSITE_CACHE is None:
-        if FILE_PATH.exists():
-            try:
-                _WEBSITE_CACHE = json.loads(FILE_PATH.read_text())
-            except json.JSONDecodeError:
-                _WEBSITE_CACHE = {}
-        else:
-            _WEBSITE_CACHE = {}
+        mapping = _load_mapping_file(SEED_PATH)
+        mapping.update(_load_mapping_file(FILE_PATH))
+        _WEBSITE_CACHE = mapping
     return _WEBSITE_CACHE
 
 
@@ -327,13 +347,17 @@ def lookup_websites(
                 context_bits.append(f"industry description: {industry_desc}")
             if context_bits:
                 parts.append(
-                    "Context: this is about the product's market (" + ", ".join(context_bits) + ")."
+                    "Context: this is about the product's market ("
+                    + ", ".join(context_bits)
+                    + ")."
                 )
             parts.append(
                 "Rules: choose the official brand/company site (not retailers, marketplaces, or associations). "
                 "If the site does not clearly belong to this market/industry, return null."
             )
-            parts.append('Return JSON {"website": "https://example.com"} where website can be null.')
+            parts.append(
+                'Return JSON {"website": "https://example.com"} where website can be null.'
+            )
             return " ".join(parts)
 
         # Process in small chunks to persist progress incrementally
@@ -365,7 +389,11 @@ def lookup_websites(
                 if isinstance(resp, dict):
                     website = _normalize_website(resp.get("website"))
                     if website is None:
-                        raw_text = resp.get("raw") if isinstance(resp.get("raw"), str) else None
+                        raw_text = (
+                            resp.get("raw")
+                            if isinstance(resp.get("raw"), str)
+                            else None
+                        )
                         if raw_text:
                             website = _extract_website_from_text(raw_text)
                 elif isinstance(resp, str):
@@ -381,9 +409,8 @@ def lookup_websites(
                             strict_system,
                             (
                                 "Extract the official website from the text below. "
-                                "Return JSON {\"website\": \"https://example.com\"} "
-                                "or {\"website\": null}.\n\nTEXT:\n"
-                                + raw_text
+                                'Return JSON {"website": "https://example.com"} '
+                                'or {"website": null}.\n\nTEXT:\n' + raw_text
                             ),
                             tools=None,
                             tool_choice="none",

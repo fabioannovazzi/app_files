@@ -55,8 +55,9 @@ attribute_taxonomy_old.json
 attribute_taxonomy.json
 attribute_activity.json
 attribute_taxonomy_new.json
-brand_aliases.json
-merchant_brand_websites.json
+# brand_aliases.json is curated runtime configuration and is intentionally tracked.
+# The runtime cache is covered by caches/; the tracked seed lives under config/.
+/merchant_brand_websites.json
 product_attributes.json
 record.json
 taxonomy_review_queue.json

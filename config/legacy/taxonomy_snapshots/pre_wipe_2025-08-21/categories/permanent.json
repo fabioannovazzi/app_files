@@ -1,0 +1,24 @@
+{
+    "id": "permanent",
+    "label": "Permanent",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "Format",
+            "hierarchical": false,
+            "nodes": []
+        },
+        {
+            "id": "developer_strength",
+            "label": "Developer Strength",
+            "hierarchical": false,
+            "nodes": []
+        },
+        {
+            "id": "coverage",
+            "label": "Coverage",
+            "hierarchical": false,
+            "nodes": []
+        }
+    ]
+}

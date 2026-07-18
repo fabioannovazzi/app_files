@@ -7,9 +7,12 @@ import src.category_lookup as category_lookup
 
 
 @pytest.fixture(autouse=True)
-def _category_market_context():
+def _category_market_context(monkeypatch, tmp_path):
     """Provide industry context for category website lookups."""
 
+    monkeypatch.setattr(
+        category_lookup, "SEED_PATH", tmp_path / "seed.json", raising=False
+    )
     category_lookup.set_category_market_context(industry="cosmetics")
     yield
     category_lookup.set_category_market_context()
@@ -59,6 +62,49 @@ def test_load_mapping_invalid_json_returns_empty(tmp_path, monkeypatch):
 
     # Assert
     assert mapping == {}
+
+
+def test_load_mapping_non_object_returns_empty(tmp_path, monkeypatch):
+    mapping_file = tmp_path / "category_websites.json"
+    mapping_file.write_text("[]", encoding="utf-8")
+    monkeypatch.setattr(category_lookup, "FILE_PATH", mapping_file, raising=False)
+    monkeypatch.setattr(category_lookup, "_WEBSITE_CACHE", None, raising=False)
+
+    mapping = category_lookup.load_mapping()
+
+    assert mapping == {}
+
+
+def test_load_mapping_overlays_writable_cache_on_tracked_seed(tmp_path, monkeypatch):
+    mapping_file = tmp_path / "category_websites.json"
+    category_lookup.SEED_PATH.write_text(
+        json.dumps(
+            {
+                "Seed": ["https://seed.example"],
+                "Shared": ["https://seed-shared.example"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    mapping_file.write_text(
+        json.dumps(
+            {
+                "Cache": ["https://cache.example"],
+                "Shared": ["https://cache-shared.example"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(category_lookup, "FILE_PATH", mapping_file, raising=False)
+    monkeypatch.setattr(category_lookup, "_WEBSITE_CACHE", None, raising=False)
+
+    mapping = category_lookup.load_mapping()
+
+    assert mapping == {
+        "Cache": ["https://cache.example"],
+        "Seed": ["https://seed.example"],
+        "Shared": ["https://cache-shared.example"],
+    }
 
 
 def test_lookup_category_websites_populates_and_persists_and_ignores_bad(
