@@ -2685,6 +2685,9 @@ def _template_context(**extra: Any) -> dict[str, Any]:
     base_context = {
         "auth_enabled": config.authentication_enabled,
         "app_css_asset_version": _static_asset_version("static/css/app.css"),
+        "thesis_image_asset_version": _static_asset_version(
+            "static/icons/power_control.png"
+        ),
         "google_client_id": config.google_client_id,
     }
     base_context.update(extra)

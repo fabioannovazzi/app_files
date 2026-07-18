@@ -3015,7 +3015,8 @@ body.landing-body.landing-home {
 
 .landing-home .landing-opening {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 5fr) minmax(420px, 7fr);
+  gap: clamp(48px, 7vw, 104px);
   align-items: center;
   min-height: min(790px, calc(100svh - 150px));
   padding: clamp(56px, 8vw, 112px) 0;
@@ -3027,7 +3028,6 @@ body.landing-body.landing-home {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 760px;
   gap: 0;
   animation: landing-rise 680ms var(--landing-ease) both;
 }
@@ -3051,6 +3051,18 @@ body.landing-body.landing-home {
   line-height: 1.58;
   letter-spacing: -0.018em;
   text-wrap: pretty;
+}
+
+.landing-home .landing-opening__plate {
+  margin: 0;
+  animation: landing-rise 760ms 80ms var(--landing-ease) both;
+}
+
+.landing-home .landing-opening__plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: contrast(1.08) brightness(1.045);
 }
 
 .landing-home .landing-harness {
@@ -3317,6 +3329,11 @@ body.landing-body.landing-home {
     max-width: 720px;
   }
 
+  .landing-home .landing-opening__plate {
+    width: min(100%, 760px);
+    justify-self: center;
+  }
+
   .landing-home .landing-product {
     grid-template-columns: minmax(120px, 1fr) minmax(0, 3fr);
   }
@@ -3445,7 +3462,8 @@ body.landing-body.landing-home {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing-home .landing-opening__copy {
+  .landing-home .landing-opening__copy,
+  .landing-home .landing-opening__plate {
     animation: none;
   }
 
