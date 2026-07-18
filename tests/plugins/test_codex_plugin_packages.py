@@ -1224,10 +1224,18 @@ def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:
         )
 
         assert "## Plugin Improvement Feedback" in combined_skill_text, plugin_name
-        assert (
-            "Keep the improvement note local to chat or run artifacts."
-            in combined_skill_text
-        ), plugin_name
+        if plugin_name in {"clara", "vera"}:
+            assert (
+                "Should I transmit this to the developer so we fix it?"
+                in combined_skill_text
+            ), plugin_name
+            assert "scripts/change_requests.py submit-problem" in combined_skill_text
+            assert "scripts/change_requests.py start-interview" in combined_skill_text
+        else:
+            assert (
+                "Keep the improvement note local to chat or run artifacts."
+                in combined_skill_text
+            ), plugin_name
         assert "email those suggestions" not in combined_skill_text, plugin_name
         assert "personal email address" not in combined_skill_text, plugin_name
 

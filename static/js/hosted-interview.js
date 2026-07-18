@@ -20,6 +20,12 @@
     60,
     Number.parseInt(body.dataset.maxSeconds || "900", 10) || 900
   );
+  const maxInterviewMinutes = Math.max(
+    1,
+    Math.ceil(maxInterviewSeconds / 60)
+  );
+  const interviewLimitMessage = `The ${maxInterviewMinutes}-minute limit was reached and the interview was saved.`;
+  const italianInterviewLimitMessage = `È stato raggiunto il limite di ${maxInterviewMinutes} minuti e l'intervista è stata salvata.`;
 
   const workspace = document.getElementById("workspace");
   const startButton = document.getElementById("startButton");
@@ -100,8 +106,7 @@
     "This attempt did not produce a usable interview. You can start again with this link.":
       "Questo tentativo non ha prodotto un'intervista utilizzabile. Puoi ricominciare con lo stesso link.",
     "Interview completed": "Intervista completata",
-    "The 15-minute limit was reached and the interview was saved.":
-      "È stato raggiunto il limite di 15 minuti e l'intervista è stata salvata.",
+    [interviewLimitMessage]: italianInterviewLimitMessage,
     "Thank you. You may now close this page.":
       "Grazie. Ora puoi chiudere questa pagina.",
     "Microphone access requires a secure connection.":
@@ -1235,7 +1240,7 @@
       setStatus(
         "Interview completed",
         reason === "time_limit"
-          ? "The 15-minute limit was reached and the interview was saved."
+          ? interviewLimitMessage
           : "Thank you. You may now close this page."
       );
       notice.textContent = "";

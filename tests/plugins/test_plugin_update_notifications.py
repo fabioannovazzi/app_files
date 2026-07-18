@@ -214,9 +214,31 @@ def test_plugins_declare_trusted_session_start_update_hook(plugin_root: Path) ->
         {
             "type": "command",
             "command": 'python3 "$PLUGIN_ROOT/scripts/check_for_update.py"',
-            "timeout": 5,
+            "timeout": 8,
         }
     ]
+
+
+def test_session_start_prioritizes_exact_fixed_request_message(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    checker = load_update_checker()
+    plugin_root = tmp_path / "plugin"
+    plugin_data = tmp_path / "data"
+    write_plugin_manifest(plugin_root, "clara", "1.0.0")
+    fixed_message = "The problem you reported as CR-123 is fixed. Update now?"
+    monkeypatch.setenv("PLUGIN_ROOT", str(plugin_root))
+    monkeypatch.setenv("PLUGIN_DATA", str(plugin_data))
+    monkeypatch.setattr(
+        checker,
+        "_check_fixed_change_requests",
+        lambda *_args: fixed_message,
+    )
+
+    result = checker.main()
+
+    assert result == 0
+    assert json.loads(capsys.readouterr().out) == {"systemMessage": fixed_message}
 
 
 def test_plugin_update_scripts_stay_identical() -> None:
