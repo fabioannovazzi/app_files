@@ -1,0 +1,3 @@
+openpyxl
+jsonschema>=4.23,<5
+polars>=1.0

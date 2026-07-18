@@ -1,0 +1,532 @@
+{
+  "schema_version": "0.2",
+  "result": "pass",
+  "semantic_layer_id": "retail_monthly.reporting_semantics",
+  "semantic_version": 1,
+  "inputs": {
+    "manifest": {
+      "path": "catalog/selection_manifest.json",
+      "sha256": "f80be1b0db1dd18a2de53054e47a45096e48f14b2c9f09361d797eeed3a386cb"
+    },
+    "semantic_schema": {
+      "path": "catalog/semantic_layer.schema.json",
+      "sha256": "1a5e6640d2cf49d8d7b08d0eb7b39d69d8f230ea5905ed1610f719b4634433b6"
+    },
+    "dataset": {
+      "path": "fixtures/semantic_layer/retail_monthly.csv",
+      "sha256": "5473abf694a0a40a04be245bcff25b875c6b42cf9f1da85097fd4f8ffbd7d59a"
+    },
+    "semantic_layer": {
+      "path": "fixtures/semantic_layer/retail_monthly.semantic.json",
+      "sha256": "38e15002322510e59409c1dd83f77feeb0f969c4116f793267a9d8807d9e4202"
+    },
+    "semantic_sources": [
+      {
+        "path": "fixtures/semantic_layer/retail_monthly_source_notes.md",
+        "sha256": "7d0343001f2c612d6bc69f411737a9671b1043da02925d9c46295422ab714ca7"
+      }
+    ],
+    "snapshot_suite": {
+      "path": "fixtures/semantic_layer/retail_monthly.snapshot_cases.json",
+      "sha256": "c93fea39f49c11c4cc99d5576e8e00f4f551341e34c151eaf2346ba560b06aa1"
+    },
+    "snapshot_cases": [
+      {
+        "case_id": "origin_snapshot",
+        "path": "fixtures/semantic_layer/retail_monthly.csv",
+        "sha256": "5473abf694a0a40a04be245bcff25b875c6b42cf9f1da85097fd4f8ffbd7d59a"
+      },
+      {
+        "case_id": "changed_values_new_months_and_members",
+        "path": "fixtures/semantic_layer/retail_monthly_refresh.csv",
+        "sha256": "d174c933cf05ed6ea24c6abf2f495b6d37379da0f3459e61360d7943360f8a69"
+      },
+      {
+        "case_id": "new_unclassified_column",
+        "path": "fixtures/semantic_layer/retail_monthly_extension.csv",
+        "sha256": "5765d9edfc127148e0348e0b24dc0b2c266410b5f9c0fa99e9bdf37bac8a0cc4"
+      },
+      {
+        "case_id": "bound_metrics_removed",
+        "path": "fixtures/semantic_layer/retail_monthly_incompatible.csv",
+        "sha256": "1b155727834d2f145c415e9e210a14d2a2c84106254200fd68fc97b12bfda55b"
+      }
+    ]
+  },
+  "dataset_contract": {
+    "dataset_contract_id": "retail_monthly",
+    "contract_version": 1
+  },
+  "validation": {
+    "status": "contract_valid",
+    "semantic_readiness": "ready_as_scoped_semantic_input",
+    "counts": {
+      "sources": 2,
+      "evidence": 8,
+      "metrics": 4,
+      "dimensions": 4,
+      "periods": 1,
+      "period_rules": 3,
+      "analysis_policies": 10,
+      "assessed_selection_emphases": 10,
+      "unassessed_selection_emphases": 38,
+      "open_questions": 0,
+      "unknown_concepts": 0,
+      "analysis_validities": {
+        "conditional": 0,
+        "invalid": 1,
+        "unknown": 0,
+        "valid": 9
+      },
+      "errors": 0,
+      "warnings": 0
+    },
+    "analysis_coverage": {
+      "manifest_selection_emphasis_count": 48,
+      "assessed_selection_emphases": [
+        "composition_change_over_periods",
+        "frequency_shape",
+        "period_by_period_gap",
+        "pvm_decomposition_comparison",
+        "ranked_single_metric_comparison",
+        "relationship_between_two_metrics",
+        "single_metric_trend_shape",
+        "structured_statement_values",
+        "two_dimension_share_and_size",
+        "two_metric_relationship_plus_size"
+      ],
+      "unassessed_selection_emphases": [
+        "additive_reconciliation",
+        "bundle_share_and_index_evidence",
+        "compact_side_by_side_period_comparison",
+        "component_level_root_cause",
+        "composition_within_ranked_totals",
+        "concentration_with_component_breakdown",
+        "cumulative_distribution_and_percentiles",
+        "current_vs_emerging_signal_alignment",
+        "dimension_period_values_and_delta",
+        "endpoint_direction_and_relative_change",
+        "exact_values",
+        "gap_between_two_values",
+        "individual_observations",
+        "intersection_patterns_across_panels",
+        "lost_cohort_contribution",
+        "many_set_intersections",
+        "parent_bridge_with_child_drilldowns",
+        "primary_rank_plus_secondary_marker",
+        "product_level_grounding",
+        "rank_weighted_visibility",
+        "ranked_contribution_and_cumulative_share",
+        "root_cause_path_with_nested_drilldowns",
+        "root_cause_total_movement",
+        "same_population_composition_change",
+        "same_population_total_change",
+        "scenario_reconciliation",
+        "simple_two_or_three_set_overlap",
+        "since_cohort_contribution",
+        "smoothed_distribution_shape",
+        "spread_and_outliers_summary",
+        "stage_counts_and_conversion",
+        "summary_exact_values",
+        "total_delta_split_by_dimension",
+        "total_metric_by_period_or_scope",
+        "total_plus_related_marker",
+        "trajectory_shape",
+        "trend_with_cumulative_or_share_area",
+        "width_metric_times_height_metric"
+      ],
+      "unlisted_policy_default": "unknown"
+    },
+    "errors": [],
+    "warnings": []
+  },
+  "policy_proof": [
+    {
+      "analysis_id": "analysis.monthly_sales_trajectory",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "mix.timeline"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.sales_current_vs_prior_by_month",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "period_comparison.by_period"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.current_brand_sales_ranking",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "mix.bar"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.category_sales_mix_over_time",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "mix.stacked_column"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.brand_sales_margin_relationship",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "scatter.scatter"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.brand_sales_margin_units_bubble",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "scatter.bubble"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.margin_rate_distribution",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "distribution.histogram"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.sales_price_volume_mix",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "variance.price_volume_mix"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.category_region_sales_composition",
+      "validity": "valid",
+      "candidate_capability_ids": [
+        "mix.marimekko"
+      ],
+      "has_complete_manifest_role_set": true,
+      "data_preparation_requirements": []
+    },
+    {
+      "analysis_id": "analysis.structured_statement",
+      "validity": "invalid",
+      "candidate_capability_ids": [
+        "statement.pnl_table"
+      ],
+      "has_complete_manifest_role_set": false,
+      "data_preparation_requirements": []
+    }
+  ],
+  "snapshot_reuse_proof": [
+    {
+      "case_id": "origin_snapshot",
+      "expected_status": "compatible",
+      "actual_status": "compatible",
+      "semantic_layer_reusable": true,
+      "snapshot_fingerprint": "18e4481730ada16b90f9adef037b3b2776547801b40a2ed6489416f4700fd3d3",
+      "extension_columns": [],
+      "available_policy_count": 9,
+      "period_resolution_counts": {
+        "resolved": 3,
+        "requires_runtime_input": 0,
+        "unavailable": 0
+      },
+      "resolved_period_rules": [
+        {
+          "period_rule_id": "period_rule.all_available",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.all_available",
+            "scope_type": "all_available",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2025-01-01 to 2026-02-28",
+                "start": "2025-01-01",
+                "end": "2026-02-28"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd",
+            "scope_type": "single",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-02-28",
+                "start": "2026-01-01",
+                "end": "2026-02-28"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+            "scope_type": "comparison_pair",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-02-28",
+                "start": "2026-01-01",
+                "end": "2026-02-28"
+              },
+              {
+                "role": "baseline",
+                "label": "2025-01-01 to 2025-02-28",
+                "start": "2025-01-01",
+                "end": "2025-02-28"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "changed_values_new_months_and_members",
+      "expected_status": "compatible",
+      "actual_status": "compatible",
+      "semantic_layer_reusable": true,
+      "snapshot_fingerprint": "789f0c1ad16486484868fd9319091fe21c4212804f1362319e1559179a2912e4",
+      "extension_columns": [],
+      "available_policy_count": 9,
+      "period_resolution_counts": {
+        "resolved": 3,
+        "requires_runtime_input": 0,
+        "unavailable": 0
+      },
+      "resolved_period_rules": [
+        {
+          "period_rule_id": "period_rule.all_available",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.all_available",
+            "scope_type": "all_available",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2025-01-01 to 2026-03-31",
+                "start": "2025-01-01",
+                "end": "2026-03-31"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd",
+            "scope_type": "single",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-03-31",
+                "start": "2026-01-01",
+                "end": "2026-03-31"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+            "scope_type": "comparison_pair",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-03-31",
+                "start": "2026-01-01",
+                "end": "2026-03-31"
+              },
+              {
+                "role": "baseline",
+                "label": "2025-01-01 to 2025-03-31",
+                "start": "2025-01-01",
+                "end": "2025-03-31"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "new_unclassified_column",
+      "expected_status": "compatible_with_extensions",
+      "actual_status": "compatible_with_extensions",
+      "semantic_layer_reusable": true,
+      "snapshot_fingerprint": "225fcc696de276a3eaf734de0a9f78cade10de48404cd96ff76f012420d39273",
+      "extension_columns": [
+        "Channel"
+      ],
+      "available_policy_count": 9,
+      "period_resolution_counts": {
+        "resolved": 3,
+        "requires_runtime_input": 0,
+        "unavailable": 0
+      },
+      "resolved_period_rules": [
+        {
+          "period_rule_id": "period_rule.all_available",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.all_available",
+            "scope_type": "all_available",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2025-01-01 to 2026-02-28",
+                "start": "2025-01-01",
+                "end": "2026-02-28"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd",
+            "scope_type": "single",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-02-28",
+                "start": "2026-01-01",
+                "end": "2026-02-28"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+            "scope_type": "comparison_pair",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-02-28",
+                "start": "2026-01-01",
+                "end": "2026-02-28"
+              },
+              {
+                "role": "baseline",
+                "label": "2025-01-01 to 2025-02-28",
+                "start": "2025-01-01",
+                "end": "2025-02-28"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "bound_metrics_removed",
+      "expected_status": "incompatible",
+      "actual_status": "incompatible",
+      "semantic_layer_reusable": false,
+      "snapshot_fingerprint": "3879da854990dc670a41ec0623f4586865ade0c09781a96970568a2434b31cdb",
+      "extension_columns": [],
+      "available_policy_count": 0,
+      "period_resolution_counts": {
+        "resolved": 3,
+        "requires_runtime_input": 0,
+        "unavailable": 0
+      },
+      "resolved_period_rules": [
+        {
+          "period_rule_id": "period_rule.all_available",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.all_available",
+            "scope_type": "all_available",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2025-01-01 to 2026-02-28",
+                "start": "2025-01-01",
+                "end": "2026-02-28"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd",
+            "scope_type": "single",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-02-28",
+                "start": "2026-01-01",
+                "end": "2026-02-28"
+              }
+            ]
+          }
+        },
+        {
+          "period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+          "resolution_status": "resolved",
+          "resolved_scope": {
+            "source_period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+            "scope_type": "comparison_pair",
+            "period_column": "Date",
+            "windows": [
+              {
+                "role": "current",
+                "label": "2026-01-01 to 2026-02-28",
+                "start": "2026-01-01",
+                "end": "2026-02-28"
+              },
+              {
+                "role": "baseline",
+                "label": "2025-01-01 to 2025-02-28",
+                "start": "2025-01-01",
+                "end": "2025-02-28"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "boundary": "This acceptance proves stable semantic-contract wiring and expected reuse outcomes for exact packaged snapshots. It does not infer dataset identity, prove semantic truth, select an analysis, or render a chart."
+}

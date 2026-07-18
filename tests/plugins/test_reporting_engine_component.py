@@ -12,7 +12,7 @@ from typing import Any
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-PLUGIN_ROOT = ROOT / "plugins" / "reporting-engine"
+PLUGIN_ROOT = ROOT / "plugins" / "clara" / "modules" / "reporting-engine"
 
 
 def _load_module(name: str, path: Path) -> Any:
@@ -53,6 +53,7 @@ def test_reporting_engine_catalog_summary_matches_packaged_manifest() -> None:
 
     summary = contract.summarize_contract(PLUGIN_ROOT / "catalog")
 
+    assert summary["schema_version"] == "0.4"
     assert summary["capability_count"] == len(manifest["capabilities"])
     assert summary["artifact_count"] == len(manifest["artifacts"])
     assert summary["artifact_count"] == 73
@@ -80,7 +81,7 @@ def test_reporting_engine_catalog_summary_matches_packaged_manifest() -> None:
         "counts": {"component_executed": 48},
         "manifest_digest_matches": True,
     }
-    assert summary["semantic_layer"]["schema_version"] == "0.1"
+    assert summary["semantic_layer"]["schema_version"] == "0.2"
     assert summary["semantic_layer"]["workflow_script"] == ("scripts/semantic_layer.py")
     assert summary["semantic_layer"]["reviewed_fixture"] == (
         "fixtures/semantic_layer/retail_monthly.semantic.json"
@@ -89,6 +90,8 @@ def test_reporting_engine_catalog_summary_matches_packaged_manifest() -> None:
     assert summary["semantic_layer"]["acceptance"] == {
         "result": "pass",
         "semantic_layer_id": "retail_monthly.reporting_semantics",
+        "semantic_version": 1,
+        "dataset_contract_id": "retail_monthly",
         "semantic_readiness": "ready_as_scoped_semantic_input",
         "analysis_validities": {
             "conditional": 0,
@@ -97,6 +100,12 @@ def test_reporting_engine_catalog_summary_matches_packaged_manifest() -> None:
             "valid": 9,
         },
         "input_digests_match": True,
+        "snapshot_reuse_statuses": {
+            "origin_snapshot": "compatible",
+            "changed_values_new_months_and_members": "compatible",
+            "new_unclassified_column": "compatible_with_extensions",
+            "bound_metrics_removed": "incompatible",
+        },
     }
     assert "semantic" in summary["boundary"]
 
@@ -135,6 +144,30 @@ def test_reporting_engine_catalog_keeps_gallery_artifact_manifest() -> None:
             ]["artifact_invocation_contracts"]
         )
         == 2
+    )
+
+
+def test_reporting_engine_registry_exposes_semantic_snapshot_lifecycle() -> None:
+    registry = json.loads(
+        (PLUGIN_ROOT / "catalog" / "adapter_registry.json").read_text(encoding="utf-8")
+    )
+
+    runtime = registry["runtime_contract"]
+
+    assert runtime["semantic_scaffold"] == (
+        "scripts/semantic_layer.py:build_semantic_layer_scaffold"
+    )
+    assert runtime["semantic_validator"] == (
+        "scripts/semantic_layer.py:validate_semantic_layer"
+    )
+    assert runtime["snapshot_compatibility"] == (
+        "scripts/semantic_layer.py:assess_snapshot_compatibility"
+    )
+    assert runtime["snapshot_attachment"] == (
+        "scripts/semantic_layer.py:build_snapshot_attachment"
+    )
+    assert runtime["period_rule_resolver"] == (
+        "scripts/semantic_layer.py:resolve_period_rules"
     )
 
 
@@ -626,9 +659,9 @@ def test_render_proof_requires_the_selected_chart_artifact() -> None:
     assert rendered["status"] == "rendered"
 
 
-def test_render_proof_accepts_declared_distribution_variant() -> None:
+def test_render_proof_requires_requested_distribution_variant() -> None:
     renderer = _load_module(
-        "reporting_engine_renderer_variant_artifact_proof_test",
+        "reporting_engine_renderer_distribution_variant_proof_test",
         PLUGIN_ROOT / "scripts" / "render_capability.py",
     )
 

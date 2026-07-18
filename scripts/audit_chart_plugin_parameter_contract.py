@@ -18,12 +18,11 @@ __all__ = [
 ]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+REPORTING_ENGINE_ROOT = REPO_ROOT / "plugins" / "clara" / "modules" / "reporting-engine"
 DEFAULT_SELECTION_MANIFEST = (
-    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "selection_manifest.json"
+    REPORTING_ENGINE_ROOT / "catalog" / "selection_manifest.json"
 )
-ADAPTER_REGISTRY_PATH = (
-    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "adapter_registry.json"
-)
+ADAPTER_REGISTRY_PATH = REPORTING_ENGINE_ROOT / "catalog" / "adapter_registry.json"
 DEFAULT_OUTPUT_JSON = (
     REPO_ROOT
     / "runs"
