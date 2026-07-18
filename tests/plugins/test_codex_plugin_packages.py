@@ -2368,28 +2368,34 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
 
     for snippet in (
         "Clara",
-        "Turn your sources into client-ready deliverables.",
-        "Trasforma le tue fonti in deliverable pronti per il cliente.",
-        "Create, revise, or follow an existing style",
-        "Crea, correggi o segui uno stile esistente",
-        "Choose the final format",
-        "Scegli il formato finale",
-        "Start with a folder and a normal request",
-        "Parti da una cartella e da una richiesta normale",
-        "When the project is more than a presentation",
-        "Other Clara workflows",
-        "Altri flussi di Clara",
-        "Interview someone with a personal link",
-        "Transcribe a meeting or debrief",
-        "Map attributes and compare assortments",
-        "Mappa gli attributi e confronta gli assortimenti",
-        "product images and the report stay on your computer",
-        "le immagini e il report restano sul tuo computer",
-        "a separate Clara application, or an API key",
-        "Install Clara in Codex",
-        "Installa Clara in Codex",
-        "Install the published Clara release from its official OpenAI Marketplace page.",
-        "Installa la versione pubblicata di Clara dalla sua pagina ufficiale nel marketplace OpenAI.",
+        "Clara prepares the work. The judgment remains yours.",
+        "Clara prepara il lavoro. Il giudizio resta tuo.",
+        "Create or correct a presentation in your corporate style",
+        "Crea o correggi una presentazione nel tuo stile aziendale",
+        "Choose the format for how it will be used",
+        "Scegli il formato in base a come verrà usato",
+        "Open the project folder and describe what you need",
+        "Apri la cartella del progetto e descrivi ciò che ti serve",
+        "The project is not just a presentation",
+        "Il progetto non è solo una presentazione",
+        "Interviews, documents, and data analysis",
+        "Interviste, documenti e analisi dati",
+        "Conduct an interview with a dedicated link",
+        "Conduci un'intervista con un link dedicato",
+        "Transcribe a meeting or recording",
+        "Trascrivi una riunione o una registrazione",
+        "From sources to a document for review",
+        "Dalle fonti al documento da rivedere",
+        "From data to a clear answer",
+        "Dai dati a una risposta chiara",
+        "images and reports stay on your computer",
+        "immagini e report restano sul tuo computer",
+        "no API key is required",
+        "non serve una chiave API",
+        "Install Clara and open your first project",
+        "Installa Clara e apri il primo progetto",
+        "You can find Clara in the OpenAI Marketplace.",
+        "La trovi nel Marketplace di OpenAI.",
         "Install Clara",
         "Installa Clara",
         "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a",
@@ -2426,6 +2432,19 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "font-size: clamp",
         "Download not authorized",
         "Download non autorizzato",
+        "Turn your sources into client-ready deliverables.",
+        "Trasforma le tue fonti in deliverable pronti per il cliente.",
+        "Create, revise, or follow an existing style",
+        "Crea, correggi o segui uno stile esistente",
+        "Choose the final format",
+        "Scegli il formato finale",
+        "Start with a folder and a normal request",
+        "Parti da una cartella e da una richiesta normale",
+        "When the project is more than a presentation",
+        "Other Clara workflows",
+        "Altri flussi di Clara",
+        "Install the published Clara release",
+        "Installa la versione pubblicata di Clara",
     ):
         assert stale_snippet not in page
     assert (
@@ -2447,6 +2466,54 @@ def test_clara_public_page_browser_title_is_clara() -> None:
     assert "<title>Clara</title>" in page
     assert page.count('title: "Clara"') == 4
     assert "Clara | Mparanza" not in page
+
+
+def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (
+        "Create or correct high-impact HTML decks and PowerPoint presentations.",
+        "Crea e correggi deck HTML di impatto e presentazioni PowerPoint.",
+        "Créez ou corrigez des decks HTML percutants et des présentations PowerPoint.",
+        "Erstellen oder korrigieren Sie wirkungsvolle HTML-Decks und PowerPoint-Präsentationen.",
+        "The project is not just a presentation",
+        "Il progetto non è solo una presentazione",
+        "Le projet n'est pas seulement une présentation",
+        "Das Projekt ist nicht nur eine Präsentation",
+    ):
+        assert text in page
+
+    for key in (
+        "meta.description",
+        "aria.page_navigation",
+        "aria.language",
+        "aria.promise_strip",
+        "formats.html.title.link",
+        "retail.retailer_signals.copy.link",
+        "retail.brand_fit.copy.link",
+    ):
+        assert page.count(f'"{key}"') == 5
+
+    for stale_text in (
+        "browser presentations",
+        "Start with a folder and a normal request",
+        "Parti da una cartella e da una richiesta normale",
+        "Retailer Signals and Brand Fit are available now",
+        "PowerPoint PPTX",
+        "Formato HTML",
+        '"retail.retailer_signals.kicker"',
+        '"retail.brand_fit.kicker"',
+        'href="#workflow" class="button',
+    ):
+        assert stale_text not in page
+
+    assert (
+        '<a href="/static/shared/4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9/'
+        'index.html#cover" target="_blank" rel="noopener noreferrer" '
+        'data-i18n="formats.html.title.link">interactive</a>'
+    ) in page
 
 
 def test_homepage_routes_report_builder_through_vera() -> None:

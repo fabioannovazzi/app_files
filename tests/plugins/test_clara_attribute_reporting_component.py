@@ -148,13 +148,13 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
         'href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html"'
         in page
     )
-    assert "Fresh local scrape ingestion is not yet part of installed Clara." in page
-    assert "New means labelled new by the retailer" in page
-    assert "Retailer Signals and Brand Fit are available now" in page
-    assert "brand's current presence at the selected retailer" in page
-    assert "brand-owned catalogue in the stored database snapshot" in page
-    assert "not a live shelf check" in page
-    assert "neither the user nor the server needs a model API key" in page
+    assert "The installed version does not yet collect new data" in page
+    assert "New products are those the retailer presents as new" in page
+    assert "Retailer Signals and Brand Fit are available now" not in page
+    assert "brand's presence at the retailer and its catalogue" in page
+    assert "brand-owned catalogue in the stored database snapshot" not in page
+    assert "It uses stored data, not a live shelf check." in page
+    assert "neither the user nor the server needs a model API key" not in page
     for key in (
         "retail.title",
         "retail.copy",
@@ -162,14 +162,14 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
         "retail.flow.map",
         "retail.flow.analyze",
         "retail.flow.report",
-        "retail.retailer_signals.kicker",
         "retail.retailer_signals.title",
-        "retail.retailer_signals.copy",
-        "retail.retailer_signals.example",
-        "retail.brand_fit.kicker",
+        "retail.retailer_signals.copy.before",
+        "retail.retailer_signals.copy.link",
+        "retail.retailer_signals.copy.after",
         "retail.brand_fit.title",
-        "retail.brand_fit.copy",
-        "retail.brand_fit.example",
+        "retail.brand_fit.copy.before",
+        "retail.brand_fit.copy.link",
+        "retail.brand_fit.copy.after",
         "capabilities.attributes.kicker",
         "capabilities.attributes.title",
         "capabilities.attributes.copy",
