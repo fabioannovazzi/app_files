@@ -26,5 +26,9 @@ Cleaning
 - Prefer the script at the repo root: `python3 delete_caches.py` (removes known caches safely).
 
 Notes
+- Category website lookups start from the tracked seed at
+  `config/category_websites.json`; the writable cache overlays and extends it.
+- Merchant/brand website lookups start from the tracked seed at
+  `config/merchant_brand_websites.json`; the writable cache overlays and extends it.
 - LLM records are standardized to `llm/record.json` across the codebase.
 - Modules never create a directory with a file name (e.g., no `alias_index.json/` folders); file paths are constructed with `get_cache_path()`.

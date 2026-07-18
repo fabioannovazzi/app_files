@@ -1,13 +1,8 @@
 import math
-from pathlib import Path
 
 import polars as pl
 import pytest
 from polars.testing import assert_frame_equal
-
-brand_aliases = Path(__file__).resolve().parents[3] / "brand_aliases.json"
-if not brand_aliases.exists():
-    brand_aliases.write_text("{}", encoding="utf-8")
 
 import modules.add_attributes.pareto as pareto
 from modules.add_attributes.pareto import (

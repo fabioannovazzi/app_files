@@ -1,0 +1,37 @@
+{
+    "id": "temporary",
+    "label": "Temporary",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "Format",
+            "hierarchical": false,
+            "nodes": []
+        },
+        {
+            "id": "shade_family",
+            "label": "Shade Family",
+            "hierarchical": true,
+            "nodes": [
+                {
+                    "id": "natural",
+                    "label": "Natural Shades",
+                    "hierarchical": false,
+                    "nodes": []
+                },
+                {
+                    "id": "fashion",
+                    "label": "Fashion Shades",
+                    "hierarchical": false,
+                    "nodes": []
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "Coverage",
+            "hierarchical": false,
+            "nodes": []
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+  "blush": [
+    "https://www.maccosmetics.com",
+    "https://www.narscosmetics.com",
+    "https://www.maybelline.com"
+  ],
+  "bronzer": [
+    "https://www.sephora.com/shop/bronzer-makeup",
+    "https://www.ulta.com/shop/makeup/face/bronzer",
+    "https://www.narscosmetics.com/USA/bronzer"
+  ],
+  "foundation": [
+    "https://www.esteelauder.com/products/643/product-catalog/makeup/face/foundation",
+    "https://www.maybelline.com/face-makeup/foundation-makeup",
+    "https://www.clinique.com/products/1599/makeup/foundations"
+  ],
+  "lip gloss": [
+    "https://www.maybelline.com/lip-makeup/lip-gloss",
+    "https://www.maccosmetics.com/products/13853/products/makeup/lips/lip-gloss",
+    "https://www.nyxcosmetics.com/lip/lip-gloss/"
+  ],
+  "lipstick": [
+    "https://www.maccosmetics.com",
+    "https://www.maybelline.com",
+    "https://www.narscosmetics.com"
+  ]
+}

@@ -22,19 +22,11 @@ if str(ROOT) not in filtered_path:
     filtered_path.insert(0, str(ROOT))
 sys.path = filtered_path
 
-brand_aliases = ROOT / "brand_aliases.json"
-if not brand_aliases.exists():
-    brand_aliases.write_text("{}", encoding="utf-8")
-
-taxonomy_json = ROOT / "attribute_taxonomy.json"
-if not taxonomy_json.exists():
-    taxonomy_json.write_text(json.dumps({"categories": []}), encoding="utf-8")
-
 import polars as pl
 import pytest
 
-import modules.add_attributes.attribute_taxonomy as attr_tax
 import modules.add_attributes.attribute_classification as attr_cls
+import modules.add_attributes.attribute_taxonomy as attr_tax
 from modules.add_attributes.attribute_classification import (
     _deterministic_guess,
     _deterministic_multi_hits,
