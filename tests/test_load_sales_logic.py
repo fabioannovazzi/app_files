@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import types
+from io import BytesIO
 from pathlib import Path
 
 import polars as pl
@@ -11,6 +12,7 @@ from src.load_sales_logic import (
     convert_decimal_columns_lazy,
     encode_uploaded_file,
     parse_csv,
+    parse_parquet,
 )
 
 
@@ -123,7 +125,7 @@ def test_encode_uploaded_file_rejects_unknown_type_and_populates_messages(monkey
     assert out["uploadedFileType"] == "txt"
     assert out["uploadedFileName"] == "weird"
     assert out["messages"] == [
-        "Unrecognized file type. The uploaded file must be either CSV or XLSX.",
+        "Unrecognized file type. The uploaded file must be CSV, XLSX, or Parquet.",
         "Bad type",
         "Choose csv/xlsx",
     ]
@@ -161,6 +163,25 @@ def test_parse_csv_reads_content_and_returns_lazyframe(monkeypatch):
     df = lf.collect()
     expected = pl.DataFrame({"a": [1, 3], "b": [2, 4]})
     assert_frame_equal(df, expected)
+    assert out_param is param
+    assert parse_msg == ""
+
+
+def test_parse_parquet_reads_content_and_returns_lazyframe(monkeypatch):
+    monkeypatch.setattr(
+        "src.load_sales_logic.find_and_parse_datecolumns",
+        lambda df, pd: (df, pd),
+    )
+    parquet_buffer = BytesIO()
+    expected = pl.DataFrame({"a": [1, 3], "b": [2, 4]})
+    expected.write_parquet(parquet_buffer)
+    data = DummyUpload("data.parquet", parquet_buffer.getvalue())
+    param: dict = {}
+
+    lazy_frame, out_param, parse_msg = parse_parquet(data, param)
+
+    assert isinstance(lazy_frame, pl.LazyFrame)
+    assert_frame_equal(lazy_frame.collect(), expected)
     assert out_param is param
     assert parse_msg == ""
 

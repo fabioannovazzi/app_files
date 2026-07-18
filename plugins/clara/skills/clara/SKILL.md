@@ -51,7 +51,7 @@ one generic workflow:
   current presence at that retailer and the brand-owned catalogue in the stored
   database snapshot. It creates and checks a private local HTML Brand Fit
   report; it must not present the stored snapshot as a live-shelf assertion.
-- Use `reporting-engine` when the user wants Clara to analyze a CSV/XLSX
+- Use `reporting-engine` when the user wants Clara to analyze a CSV/XLSX/Parquet
   dataset, choose and render a useful business chart, inspect chart
   capabilities, or profile mechanical compatibility. Codex selects the
   meaningful analysis from the user's question and actual fields; deterministic
