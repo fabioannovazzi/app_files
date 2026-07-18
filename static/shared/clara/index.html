@@ -110,6 +110,7 @@
           <p class="kicker" data-i18n="formats.html.kicker">Browser presentation</p>
           <h3 data-i18n="formats.html.title">A presentation that opens in Chrome</h3>
           <p data-i18n="formats.html.copy">A self-contained 16:9 presentation with speaker notes, fullscreen mode, keyboard or touch navigation, and optional animation. It does not require PowerPoint.</p>
+          <a class="quote" href="/static/shared/4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9/index.html#cover" target="_blank" rel="noopener noreferrer" data-i18n="formats.html.example">Open an example HTML deck</a>
           <span class="quote" data-i18n="formats.html.prompt">"Deliver a browser presentation with speaker notes."</span>
         </article>
       </div>
@@ -307,6 +308,7 @@
         "formats.html.kicker": "Browser presentation",
         "formats.html.title": "A presentation that opens in Chrome",
         "formats.html.copy": "A self-contained 16:9 presentation with speaker notes, fullscreen mode, keyboard or touch navigation, and optional animation. It does not require PowerPoint.",
+        "formats.html.example": "Open an example HTML deck",
         "formats.html.prompt": "\"Deliver a browser presentation with speaker notes.\"",
         "workflow.title": "Start with a folder and a normal request",
         "workflow.copy": "You stay inside Codex. You do not need commands, a separate Clara application, or an API key.",
@@ -413,6 +415,7 @@
         "formats.html.kicker": "Presentazione web",
         "formats.html.title": "Una presentazione che si apre in Chrome",
         "formats.html.copy": "Una presentazione autonoma in formato 16:9, con note, schermo intero, navigazione da tastiera o touch e animazioni facoltative. Non richiede PowerPoint.",
+        "formats.html.example": "Guarda un esempio di deck HTML",
         "formats.html.prompt": "\"Consegna una presentazione web con le note per chi presenta.\"",
         "workflow.title": "Parti da una cartella e da una richiesta normale",
         "workflow.copy": "Resti dentro Codex. Non servono comandi, un'applicazione separata per Clara o una chiave API.",
@@ -519,6 +522,7 @@
         "formats.html.kicker": "Présentation web",
         "formats.html.title": "Une présentation qui s'ouvre dans Chrome",
         "formats.html.copy": "Une présentation autonome au format 16:9, avec notes, mode plein écran, navigation au clavier ou tactile et animations facultatives. PowerPoint n'est pas nécessaire.",
+        "formats.html.example": "Voir un exemple de deck HTML",
         "formats.html.prompt": "\"Livre une présentation web avec des notes pour la personne qui la présentera.\"",
         "workflow.title": "Commencez par un dossier et une demande simple",
         "workflow.copy": "Vous restez dans Codex. Vous n'avez besoin ni de commandes, ni d'une application Clara séparée, ni d'une clé API.",
@@ -625,6 +629,7 @@
         "formats.html.kicker": "Webpräsentation",
         "formats.html.title": "Eine Präsentation, die sich in Chrome öffnet",
         "formats.html.copy": "Eine eigenständige Präsentation im Format 16:9 mit Sprechernotizen, Vollbildmodus, Tastatur- oder Touch-Navigation und optionalen Animationen. PowerPoint ist nicht erforderlich.",
+        "formats.html.example": "Beispiel für ein HTML-Deck öffnen",
         "formats.html.prompt": "\"Liefere eine Webpräsentation mit Sprechernotizen.\"",
         "workflow.title": "Beginnen Sie mit einem Ordner und einer einfachen Anfrage",
         "workflow.copy": "Sie bleiben in Codex. Sie benötigen weder Befehle noch eine separate Clara-Anwendung oder einen API-Schlüssel.",
@@ -706,23 +711,6 @@
       const value = activeCopy[node.dataset.i18n];
       if (value) node.textContent = value;
     });
-    const deckExampleCopy = activeCopy["hero.summary1"];
-    const deckExampleNode = document.querySelector('[data-i18n="hero.summary1"]');
-    const htmlMarker = "HTML";
-    const htmlMarkerIndex = deckExampleCopy?.indexOf(htmlMarker) ?? -1;
-    if (deckExampleNode && htmlMarkerIndex >= 0) {
-      const deckExampleLink = document.createElement("a");
-      deckExampleLink.href = "/static/shared/4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9/index.html#cover";
-      deckExampleLink.target = "_blank";
-      deckExampleLink.rel = "noopener noreferrer";
-      deckExampleLink.textContent = htmlMarker;
-      deckExampleLink.setAttribute("aria-label", "Apri l’esempio di deck HTML");
-      deckExampleNode.replaceChildren(
-        document.createTextNode(deckExampleCopy.slice(0, htmlMarkerIndex)),
-        deckExampleLink,
-        document.createTextNode(deckExampleCopy.slice(htmlMarkerIndex + htmlMarker.length)),
-      );
-    }
     document.querySelectorAll("[data-lang]").forEach((button) => {
       const isActive = button.dataset.lang === safeLang;
       button.classList.toggle("is-active", isActive);
