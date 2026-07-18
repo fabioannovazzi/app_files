@@ -173,11 +173,15 @@ p { margin: 0; }
 .promise + .promise { padding-left: 22px; border-left: 1px solid var(--cyan); }
 .promise__number { color: var(--cyan); font-size: 12px; font-weight: 650; letter-spacing: 0.08em; }
 .promise p { margin-top: 11px; color: var(--blue); }
+.promise[href] { text-decoration: none; transition: background-color 160ms ease; }
+.promise[href]:hover, .promise[href]:focus-visible { background: var(--pale-blue); }
+.promise[href]:hover p, .promise[href]:focus-visible p { color: var(--navy); }
 .retail-flow { border-top: 2px solid var(--navy); }
 .retail-paths { margin-top: 32px; }
 
 section { padding: 78px 0; border: 0; }
 section + section { border-top: 1px solid var(--cyan); }
+section[id], .card[id] { scroll-margin-top: 92px; }
 
 .section-head {
   max-width: none;
