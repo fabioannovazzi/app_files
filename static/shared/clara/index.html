@@ -386,7 +386,7 @@
         "hero.eyebrow": "Clara · il plugin Codex per consulenza, retail e analisi dati",
         "hero.title": "Trasforma le tue fonti in deliverable pronti per il cliente.",
         "hero.lead": "Chiedi a Clara di creare o correggere una presentazione, fare o trascrivere un'intervista, confrontare assortimenti retail o analizzare dati aziendali. Lavora dentro Codex.",
-        "hero.summary1": "Crea o correggi presentazioni PowerPoint e web.",
+        "hero.summary1": "Crea e correggi deck HTML di impatto e presentazioni PowerPoint.",
         "hero.summary2": "Conduci interviste e trasforma registrazioni in trascrizioni riviste.",
         "hero.summary3": "Mappa gli attributi retail e confronta nuovi prodotti o best seller con il resto.",
         "hero.summary4": "Analizza dati aziendali con grafici verificati ed evidenze strutturate.",
@@ -706,6 +706,23 @@
       const value = activeCopy[node.dataset.i18n];
       if (value) node.textContent = value;
     });
+    const deckExampleCopy = activeCopy["hero.summary1"];
+    const deckExampleNode = document.querySelector('[data-i18n="hero.summary1"]');
+    const htmlMarker = "HTML";
+    const htmlMarkerIndex = deckExampleCopy?.indexOf(htmlMarker) ?? -1;
+    if (deckExampleNode && htmlMarkerIndex >= 0) {
+      const deckExampleLink = document.createElement("a");
+      deckExampleLink.href = "/static/shared/4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9/index.html#cover";
+      deckExampleLink.target = "_blank";
+      deckExampleLink.rel = "noopener noreferrer";
+      deckExampleLink.textContent = htmlMarker;
+      deckExampleLink.setAttribute("aria-label", "Apri l’esempio di deck HTML");
+      deckExampleNode.replaceChildren(
+        document.createTextNode(deckExampleCopy.slice(0, htmlMarkerIndex)),
+        deckExampleLink,
+        document.createTextNode(deckExampleCopy.slice(htmlMarkerIndex + htmlMarker.length)),
+      );
+    }
     document.querySelectorAll("[data-lang]").forEach((button) => {
       const isActive = button.dataset.lang === safeLang;
       button.classList.toggle("is-active", isActive);
