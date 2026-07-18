@@ -108,7 +108,7 @@
         </article>
         <article class="card">
           <p class="kicker" data-i18n="formats.html.kicker">HTML format</p>
-          <h3><span data-i18n="formats.html.title.before">An interactive </span><a href="/static/shared/4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9/index.html#cover" target="_blank" rel="noopener noreferrer">HTML</a><span data-i18n="formats.html.title.after"> deck</span></h3>
+          <h3><span data-i18n="formats.html.title.before">An </span><a href="/static/shared/4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9/index.html#cover" target="_blank" rel="noopener noreferrer" data-i18n="formats.html.title.link">interactive</a><span data-i18n="formats.html.title.after"> HTML deck</span></h3>
           <p data-i18n="formats.html.copy">A self-contained 16:9 deck with speaker notes, fullscreen mode, keyboard or touch navigation, and animations. It does not require PowerPoint.</p>
           <span class="quote" data-i18n="formats.html.prompt">"Deliver an interactive HTML deck with speaker notes."</span>
         </article>
@@ -305,8 +305,9 @@
         "formats.pptx.copy": "A normal .pptx file that can be opened and changed in PowerPoint. It is the right choice when you must follow an existing template or hand the file to someone else.",
         "formats.pptx.prompt": "\"Deliver an editable PowerPoint and check every slide.\"",
         "formats.html.kicker": "HTML format",
-        "formats.html.title.before": "An interactive ",
-        "formats.html.title.after": " deck",
+        "formats.html.title.before": "An ",
+        "formats.html.title.link": "interactive",
+        "formats.html.title.after": " HTML deck",
         "formats.html.copy": "A self-contained 16:9 deck with speaker notes, fullscreen mode, keyboard or touch navigation, and animations. It does not require PowerPoint.",
         "formats.html.prompt": "\"Deliver an interactive HTML deck with speaker notes.\"",
         "workflow.title": "Start with a folder and a normal request",
@@ -412,8 +413,9 @@
         "formats.pptx.copy": "Un normale file .pptx che puoi aprire e modificare in PowerPoint. È la scelta giusta quando devi seguire un modello esistente o passare il file ad altre persone.",
         "formats.pptx.prompt": "\"Consegna un PowerPoint editabile e controlla tutte le slide.\"",
         "formats.html.kicker": "Formato HTML",
-        "formats.html.title.before": "Un deck ",
-        "formats.html.title.after": " interattivo",
+        "formats.html.title.before": "Un deck HTML ",
+        "formats.html.title.link": "interattivo",
+        "formats.html.title.after": "",
         "formats.html.copy": "Un deck autonomo in formato 16:9, con note per chi presenta, schermo intero, navigazione da tastiera o touch e animazioni. Non richiede PowerPoint.",
         "formats.html.prompt": "\"Consegna un deck HTML interattivo con le note per chi presenta.\"",
         "workflow.title": "Parti da una cartella e da una richiesta normale",
@@ -519,8 +521,9 @@
         "formats.pptx.copy": "Un fichier .pptx ordinaire, que vous pouvez ouvrir et modifier dans PowerPoint. C'est le bon choix lorsque vous devez respecter un modèle existant ou transmettre le fichier à quelqu'un d'autre.",
         "formats.pptx.prompt": "\"Livre un PowerPoint modifiable et vérifie chaque diapositive.\"",
         "formats.html.kicker": "Format HTML",
-        "formats.html.title.before": "Un deck ",
-        "formats.html.title.after": " interactif",
+        "formats.html.title.before": "Un deck HTML ",
+        "formats.html.title.link": "interactif",
+        "formats.html.title.after": "",
         "formats.html.copy": "Un deck autonome au format 16:9, avec notes, mode plein écran, navigation au clavier ou tactile et animations. PowerPoint n'est pas nécessaire.",
         "formats.html.prompt": "\"Livre un deck HTML interactif avec des notes pour la personne qui le présentera.\"",
         "workflow.title": "Commencez par un dossier et une demande simple",
@@ -626,8 +629,9 @@
         "formats.pptx.copy": "Eine normale .pptx-Datei, die Sie in PowerPoint öffnen und bearbeiten können. Das ist die richtige Wahl, wenn Sie einer vorhandenen Vorlage folgen oder die Datei an jemand anderen weitergeben müssen.",
         "formats.pptx.prompt": "\"Liefere eine editierbare PowerPoint-Datei und prüfe jede Folie.\"",
         "formats.html.kicker": "HTML-Format",
-        "formats.html.title.before": "Ein interaktives ",
-        "formats.html.title.after": "-Deck",
+        "formats.html.title.before": "Ein ",
+        "formats.html.title.link": "interaktives",
+        "formats.html.title.after": " HTML-Deck",
         "formats.html.copy": "Ein eigenständiges Deck im Format 16:9 mit Sprechernotizen, Vollbildmodus, Tastatur- oder Touch-Navigation und Animationen. PowerPoint ist nicht erforderlich.",
         "formats.html.prompt": "\"Liefere ein interaktives HTML-Deck mit Sprechernotizen.\"",
         "workflow.title": "Beginnen Sie mit einem Ordner und einer einfachen Anfrage",
@@ -708,7 +712,7 @@
     document.title = activeCopy.title || copy.en.title;
     document.querySelectorAll("[data-i18n]").forEach((node) => {
       const value = activeCopy[node.dataset.i18n];
-      if (value) node.textContent = value;
+      if (typeof value === "string") node.textContent = value;
     });
     document.querySelectorAll("[data-lang]").forEach((button) => {
       const isActive = button.dataset.lang === safeLang;
