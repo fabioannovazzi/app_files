@@ -978,6 +978,7 @@ Produci tabulato Excel, Word riassuntivo e memo delle differenze.</code></pre>
       const safeLang = translations[lang] ? lang : "it";
       const t = translations[safeLang];
       document.documentElement.lang = safeLang;
+      document.title = `${t.hero.title} | Vera`;
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
       document.querySelectorAll("[data-free-download-link]").forEach((link) => {
         link.href = `/downloads/vera?lang=${safeLang}`;
