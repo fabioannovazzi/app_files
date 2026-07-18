@@ -1,0 +1,9 @@
+period,region,subregion,product,sales,units
+2023,North,North,A,100,10
+2024,North,North,A,130,13
+2023,South,South,A,80,8
+2024,South,South,A,70,7
+2023,North,North,B,150,15
+2024,North,North,B,120,10
+2023,South,South,B,90,9
+2024,South,South,B,150,15

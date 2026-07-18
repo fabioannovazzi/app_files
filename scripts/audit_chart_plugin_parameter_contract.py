@@ -4,10 +4,12 @@ import argparse
 import json
 import logging
 from collections import Counter, defaultdict
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 __all__ = [
+    "CAPABILITY_ROLE_PARAMETER_CANDIDATES",
     "ROLE_PARAMETER_CANDIDATES",
     "build_normalized_invocation_contract",
     "build_role_registry",
@@ -17,7 +19,10 @@ __all__ = [
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SELECTION_MANIFEST = (
-    REPO_ROOT / "runs" / "chart_selection_manifest_rebuild" / "selection_manifest.json"
+    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "selection_manifest.json"
+)
+ADAPTER_REGISTRY_PATH = (
+    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "adapter_registry.json"
 )
 DEFAULT_OUTPUT_JSON = (
     REPO_ROOT
@@ -74,6 +79,7 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
         {"kind": "contract", "parameters": ["metric"]},
     ],
     "value_metric": [{"kind": "explicit", "paths": ["mappings.amount_column"]}],
+    "area_metric": [{"kind": "explicit", "paths": ["mappings.amount_column"]}],
     "volume_metric": [
         {"kind": "explicit", "paths": ["mappings.units_column"]},
         {"kind": "explicit", "paths": ["mappings.width_metric_column"]},
@@ -112,9 +118,13 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
     "size_metric": [
         {"kind": "explicit", "paths": ["mappings.bubble_size_metric_column"]}
     ],
-    "stage_start_count": [{"kind": "schema", "paths": ["stage_definitions"]}],
-    "stage_pass_count": [{"kind": "schema", "paths": ["stage_definitions"]}],
-    "statement_value": [{"kind": "schema", "paths": ["statement_rows"]}],
+    "stage_start_count": [
+        {"kind": "explicit", "paths": ["stage_table_mappings.start_count_column"]}
+    ],
+    "stage_pass_count": [
+        {"kind": "explicit", "paths": ["stage_table_mappings.pass_count_column"]}
+    ],
+    "statement_value": [{"kind": "explicit", "paths": ["mappings.value_column"]}],
     "category": [{"kind": "collection", "paths": ["mappings.dimensions"]}],
     "component_category": [{"kind": "collection", "paths": ["mappings.dimensions"]}],
     "component_dimension": [{"kind": "collection", "paths": ["mappings.dimensions"]}],
@@ -157,20 +167,20 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
             "paths": ["options.exploded_variance_bridge_child_dimension"],
         }
     ],
-    "variance_component": [
-        {"kind": "explicit", "paths": ["options.root_cause_component_bridge"]},
-        {"kind": "collection", "paths": ["mappings.dimensions"]},
-    ],
-    "component_root_cause_driver": [
+    "component_root_cause_driver_sequence": [
         {"kind": "collection", "paths": ["mappings.dimensions"]}
     ],
     "root_cause_driver_sequence": [
-        {"kind": "explicit", "paths": ["options.root_cause_bridge"]},
         {"kind": "collection", "paths": ["mappings.dimensions"]},
     ],
-    "optional_nested_root_cause_driver_sequence": [
-        {"kind": "explicit", "paths": ["options.root_cause_bridge_drilldown_rows"]},
-        {"kind": "collection", "paths": ["mappings.dimensions"]},
+    "optional_drilldown_selection": [
+        {
+            "kind": "compound",
+            "paths": [
+                "options.root_cause_bridge_alternative_result",
+                "options.root_cause_bridge_drilldown_rows",
+            ],
+        }
     ],
     "set_membership_fields": [
         {"kind": "compound", "paths": ["mappings.item_column", "mappings.set_column"]}
@@ -178,8 +188,17 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
     "two_or_three_set_membership_fields": [
         {"kind": "compound", "paths": ["mappings.item_column", "mappings.set_column"]}
     ],
-    "ordered_stage": [{"kind": "schema", "paths": ["stage_definitions"]}],
-    "statement_line_item": [{"kind": "schema", "paths": ["statement_rows"]}],
+    "ordered_stage": [
+        {"kind": "explicit", "paths": ["stage_table_mappings.stage_column"]}
+    ],
+    "statement_line_item": [{"kind": "explicit", "paths": ["mappings.row_key_column"]}],
+    "statement_scenario": [{"kind": "explicit", "paths": ["mappings.scenario_column"]}],
+    "statement_structure": [
+        {
+            "kind": "compound",
+            "paths": ["statement_rows", "periods", "scenarios_by_period"],
+        }
+    ],
     "product": [{"kind": "package_contract", "parameters": ["package_dir"]}],
     "signal_bundle": [{"kind": "package_contract", "parameters": ["package_dir"]}],
     "cohort_layer": [{"kind": "package_contract", "parameters": ["package_dir"]}],
@@ -192,6 +211,7 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
                 "mappings.period_column",
                 "mappings.dimensions",
                 "options.period_selection",
+                "options.like_for_like",
             ],
         }
     ],
@@ -202,6 +222,7 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
                 "mappings.period_column",
                 "mappings.dimensions",
                 "options.period_selection",
+                "options.derived_dimensions",
             ],
         }
     ],
@@ -212,6 +233,7 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
                 "mappings.period_column",
                 "mappings.dimensions",
                 "options.period_selection",
+                "options.derived_dimensions",
             ],
         }
     ],
@@ -223,13 +245,191 @@ ROLE_PARAMETER_CANDIDATES: dict[str, list[dict[str, Any]]] = {
         {"kind": "derived_from_period", "role": "period_filter"}
     ],
     "drilldown_selection": [
-        {"kind": "explicit", "paths": ["options.root_cause_bridge_drilldown_rows"]},
+        {
+            "kind": "compound",
+            "paths": [
+                "options.root_cause_bridge_alternative_result",
+                "options.root_cause_bridge_drilldown_rows",
+            ],
+        },
         {
             "kind": "explicit",
             "paths": ["options.exploded_variance_bridge_max_drilldowns"],
         },
     ],
 }
+
+
+# These mappings are supported directly by component runtimes rather than
+# inferred from gallery examples. Capability scope prevents a generic period
+# role from being mapped to a parameter that another component does not accept.
+CAPABILITY_ROLE_PARAMETER_CANDIDATES: dict[str, dict[str, list[dict[str, Any]]]] = {
+    "set_overlap.upset_small_multiples": {
+        "panel_or_segment": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["options.small_multiples_dimension"],
+                "verified_by": "plugins/set-overlap-analysis/scripts/set_overlap_core.py",
+            }
+        ],
+    },
+    "funnel.stage_table": {
+        "stage_start_count": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["stage_table_mappings.start_count_column"],
+                "verified_by": "plugins/funnel-analysis/scripts/funnel_core.py:compute_funnel_rows_from_stage_table",
+            }
+        ],
+        "stage_pass_count": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["stage_table_mappings.pass_count_column"],
+                "verified_by": "plugins/funnel-analysis/scripts/funnel_core.py:compute_funnel_rows_from_stage_table",
+            }
+        ],
+        "ordered_stage": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["stage_table_mappings.stage_column"],
+                "verified_by": "plugins/funnel-analysis/scripts/funnel_core.py:compute_funnel_rows_from_stage_table",
+            }
+        ],
+    },
+    "statement.pnl_table": {
+        "period_axis": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["mappings.period_column"],
+                "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values",
+            }
+        ],
+        "statement_value": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["mappings.value_column"],
+                "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values",
+            }
+        ],
+        "statement_line_item": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["mappings.row_key_column"],
+                "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values",
+            }
+        ],
+        "statement_scenario": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["mappings.scenario_column"],
+                "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values",
+            }
+        ],
+        "statement_structure": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["statement_rows", "periods", "scenarios_by_period"],
+                "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_validate_recipe",
+            }
+        ],
+    },
+}
+
+_MIX_PERIOD_AXIS_CAPABILITIES = (
+    "mix.area",
+    "mix.cohort_lost_stacked_column",
+    "mix.cohort_since_stacked_column",
+    "mix.column",
+    "mix.column_overlay",
+    "mix.like_for_like_column",
+    "mix.like_for_like_stacked_column",
+    "mix.multitier_bar",
+    "mix.stacked_column",
+    "mix.timeline",
+)
+for _capability_id in _MIX_PERIOD_AXIS_CAPABILITIES:
+    CAPABILITY_ROLE_PARAMETER_CANDIDATES.setdefault(_capability_id, {})[
+        "period_axis"
+    ] = [
+        {
+            "kind": "runtime_contract",
+            "paths": ["mappings.date_column", "mappings.period_column"],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame",
+        }
+    ]
+
+CAPABILITY_ROLE_PARAMETER_CANDIDATES.setdefault("mix.barmekko", {}).update(
+    {
+        "area_metric": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["mappings.amount_column"],
+                "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame",
+            }
+        ],
+        "width_metric": [
+            {
+                "kind": "runtime_contract",
+                "paths": ["mappings.width_metric_column"],
+                "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame",
+            }
+        ],
+    }
+)
+
+for _capability_id, _role, _option_path in (
+    ("mix.like_for_like_column", "stable_population_flag", "options.like_for_like"),
+    (
+        "mix.like_for_like_stacked_column",
+        "stable_population_flag",
+        "options.like_for_like",
+    ),
+    (
+        "mix.cohort_since_stacked_column",
+        "first_active_cohort",
+        "options.derived_dimensions",
+    ),
+    (
+        "mix.cohort_lost_stacked_column",
+        "lost_or_last_active_cohort",
+        "options.derived_dimensions",
+    ),
+):
+    CAPABILITY_ROLE_PARAMETER_CANDIDATES.setdefault(_capability_id, {})[_role] = [
+        {
+            "kind": "runtime_contract",
+            "paths": [
+                "mappings.period_column",
+                "mappings.dimensions",
+                "options.period_selection",
+                _option_path,
+            ],
+            "verified_by": "plugins/_shared/vendor/modules/chart_harness/period_derivations.py",
+        }
+    ]
+
+for _capability_id in (
+    "variance.exploded_variance_bridge",
+    "variance.price_volume_mix",
+    "variance.root_cause_component_bridge",
+    "variance.root_cause_exploded_bridge",
+    "variance.root_cause_total_bridge",
+    "variance.scenario_bridge",
+    "variance.total_by_dimension_bridge",
+):
+    CAPABILITY_ROLE_PARAMETER_CANDIDATES.setdefault(_capability_id, {})[
+        "period_filter"
+    ] = [
+        {
+            "kind": "runtime_contract",
+            "paths": [
+                "mappings.period_column",
+                "mappings.baseline_period",
+                "mappings.comparison_period",
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe",
+        }
+    ]
 
 PROFILE_ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
     "period": {
@@ -276,6 +476,10 @@ PROFILE_ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
         "description": "Financial statement line item candidate.",
         "produced_by": "dataset_profile.role_candidates.statement_line_item",
     },
+    "statement_scenario": {
+        "description": "Scenario column candidate for structured statement values.",
+        "produced_by": "dataset_profile.role_candidates.statement_scenario",
+    },
 }
 
 
@@ -289,6 +493,15 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _resolve_sidecar(href: str) -> Path:
     return (GALLERY_DIR / href).resolve()
+
+
+def _display_path(path: Path | None) -> str | None:
+    if path is None:
+        return None
+    try:
+        return str(path.resolve().relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def _has_value(value: Any) -> bool:
@@ -335,6 +548,20 @@ def _contract_parameters(contract: dict[str, Any]) -> set[str]:
     return parameters
 
 
+@lru_cache(maxsize=1)
+def _adapter_registry() -> dict[str, Any]:
+    return _load_json(ADAPTER_REGISTRY_PATH)
+
+
+def _runtime_recipe_contract(plugin_source: str) -> dict[str, Any]:
+    adapters = _adapter_registry().get("adapters") or {}
+    adapter = adapters.get(plugin_source)
+    if not isinstance(adapter, dict):
+        return {}
+    contract = adapter.get("recipe_contract")
+    return contract if isinstance(contract, dict) else {}
+
+
 def _recipe_path(artifact: dict[str, Any]) -> Path | None:
     for sidecar in artifact.get("sidecars") or []:
         if sidecar.get("label") == "recipe":
@@ -346,6 +573,8 @@ def _recipe_path(artifact: dict[str, Any]) -> Path | None:
 
 def _parameter_sources(artifact: dict[str, Any]) -> dict[str, Any]:
     contract = artifact.get("original_artifact_contract") or {}
+    plugin_source = str(artifact.get("plugin_source") or "")
+    runtime_contract = _runtime_recipe_contract(plugin_source)
     recipe = {}
     recipe_path = _recipe_path(artifact)
     if recipe_path is not None:
@@ -353,43 +582,79 @@ def _parameter_sources(artifact: dict[str, Any]) -> dict[str, Any]:
     return {
         "artifact_label": artifact.get("label"),
         "capability_id": artifact.get("capability_id"),
-        "recipe_path": str(recipe_path) if recipe_path is not None else None,
+        "plugin_source": plugin_source,
+        "recipe_path": _display_path(recipe_path),
         "recipe_exists": bool(recipe_path and recipe_path.exists()),
         "available_paths": sorted(_flatten_available_paths(recipe)),
         "contract_parameters": sorted(_contract_parameters(contract)),
+        "runtime_contract_paths": sorted(
+            str(path) for path in runtime_contract.get("accepted_paths") or []
+        ),
+        "runtime_contract_parameters": sorted(
+            str(parameter)
+            for parameter in runtime_contract.get("accepted_parameters") or []
+        ),
+        "runtime_contract_verified_by": list(runtime_contract.get("verified_by") or []),
     }
 
 
-def _required_manifest_roles(capability: dict[str, Any]) -> list[dict[str, str]]:
-    roles: list[dict[str, str]] = []
-    period_role = (capability.get("period_semantics") or {}).get("role")
+def _required_manifest_roles(capability: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return every capability role, preserving required versus optional status."""
+
+    roles: list[dict[str, Any]] = []
+    period_semantics = capability.get("period_semantics") or {}
+    period_role = period_semantics.get("role")
+    period_required = bool(
+        period_semantics.get("requires_period_column", period_role != "none")
+    )
     if period_role in {"axis", "axis_or_table"}:
-        roles.append({"kind": "period", "role": "period_axis"})
+        roles.append(
+            {
+                "kind": "period",
+                "role": "period_axis",
+                "required": period_required,
+            }
+        )
     elif period_role == "filter":
-        roles.append({"kind": "period", "role": "period_filter"})
+        roles.append(
+            {
+                "kind": "period",
+                "role": "period_filter",
+                "required": period_required,
+            }
+        )
 
     metric_requirements = capability.get("metric_requirements") or {}
     for role in metric_requirements.get("source_metric_roles") or []:
         role_name = role.get("role")
-        if isinstance(role_name, str) and role.get("required", True):
-            roles.append({"kind": "metric", "role": role_name})
+        if isinstance(role_name, str):
+            roles.append(
+                {
+                    "kind": "metric",
+                    "role": role_name,
+                    "required": bool(role.get("required", True)),
+                }
+            )
 
     dimensions = (
         (capability.get("selection_contract") or {}).get("dataset_requirements") or {}
     ).get("dimensions") or {}
     for role_name in dimensions.get("required_roles") or []:
         if isinstance(role_name, str):
-            roles.append({"kind": "dimension", "role": role_name})
+            roles.append({"kind": "dimension", "role": role_name, "required": True})
+    for role_name in dimensions.get("optional_roles") or []:
+        if isinstance(role_name, str):
+            roles.append({"kind": "dimension", "role": role_name, "required": False})
 
     return roles
 
 
-def _artifact_variant_roles(artifact: dict[str, Any]) -> list[dict[str, str]]:
+def _artifact_variant_roles(artifact: dict[str, Any]) -> list[dict[str, Any]]:
     variant = artifact.get("rendering_variant") or {}
-    roles: list[dict[str, str]] = []
+    roles: list[dict[str, Any]] = []
     for role_name in variant.get("adds_parameter_roles") or []:
         if isinstance(role_name, str):
-            roles.append({"kind": "variant", "role": role_name})
+            roles.append({"kind": "variant", "role": role_name, "required": True})
     return roles
 
 
@@ -413,12 +678,18 @@ def _matches_candidate(
 
 
 def _role_mapping(
-    role: dict[str, str],
+    role: dict[str, Any],
     sources: list[dict[str, Any]],
     resolved_roles: dict[str, dict[str, Any]] | None = None,
+    capability_id: str | None = None,
 ) -> dict[str, Any]:
     role_name = role["role"]
-    candidates = ROLE_PARAMETER_CANDIDATES.get(role_name, [])
+    capability_candidates = CAPABILITY_ROLE_PARAMETER_CANDIDATES.get(
+        str(capability_id or ""), {}
+    )
+    candidates = capability_candidates.get(
+        role_name, ROLE_PARAMETER_CANDIDATES.get(role_name, [])
+    )
     if not candidates:
         return {
             **role,
@@ -429,12 +700,29 @@ def _role_mapping(
         }
 
     for candidate in candidates:
+        if candidate.get("kind") == "runtime_contract":
+            return {
+                **role,
+                "status": "mapped",
+                "mapping_kind": "runtime_contract",
+                "evidence": [
+                    {
+                        "artifact_label": None,
+                        "recipe_path": None,
+                        "paths": candidate.get("paths", []),
+                        "parameters": candidate.get("parameters", []),
+                        "source": "verified_runtime_contract",
+                        "verified_by": candidate.get("verified_by"),
+                    }
+                ],
+            }
         if candidate.get("kind") == "derived_from_period":
             source_role = str(candidate["role"])
             source_mapping = (resolved_roles or {}).get(source_role) or _role_mapping(
                 {"kind": "period", "role": source_role},
                 sources,
                 resolved_roles=resolved_roles,
+                capability_id=capability_id,
             )
             if source_mapping["status"] == "mapped":
                 return {
@@ -446,16 +734,26 @@ def _role_mapping(
                 }
 
     for source in sources:
-        available_paths = set(source.get("available_paths") or [])
-        contract_parameters = set(source.get("contract_parameters") or [])
+        gallery_paths = set(source.get("available_paths") or [])
+        runtime_paths = set(source.get("runtime_contract_paths") or [])
+        available_paths = gallery_paths | runtime_paths
+        artifact_parameters = set(source.get("contract_parameters") or [])
+        runtime_parameters = set(source.get("runtime_contract_parameters") or [])
+        contract_parameters = artifact_parameters | runtime_parameters
         for candidate in candidates:
             if candidate.get("kind") == "derived_from_period":
+                continue
+            if candidate.get("kind") == "runtime_contract":
                 continue
             if _matches_candidate(
                 candidate,
                 available_paths=available_paths,
                 contract_parameters=contract_parameters,
             ):
+                runtime_match = bool(
+                    set(candidate.get("paths") or []) & runtime_paths
+                    or set(candidate.get("parameters") or []) & runtime_parameters
+                )
                 return {
                     **role,
                     "status": "mapped",
@@ -463,9 +761,19 @@ def _role_mapping(
                     "evidence": [
                         {
                             "artifact_label": source.get("artifact_label"),
-                            "recipe_path": source.get("recipe_path"),
+                            "recipe_path": (
+                                None if runtime_match else source.get("recipe_path")
+                            ),
                             "paths": candidate.get("paths", []),
                             "parameters": candidate.get("parameters", []),
+                            "source": (
+                                "verified_runtime_contract"
+                                if runtime_match
+                                else "gallery_or_artifact_contract"
+                            ),
+                            "verified_by": source.get(
+                                "runtime_contract_verified_by", []
+                            ),
                         }
                     ],
                 }
@@ -479,12 +787,12 @@ def _role_mapping(
     }
 
 
-def _role_key(role: dict[str, str]) -> tuple[str, str]:
+def _role_key(role: dict[str, Any]) -> tuple[str, str]:
     return role["kind"], role["role"]
 
 
-def _dedupe_roles(roles: list[dict[str, str]]) -> list[dict[str, str]]:
-    deduped: dict[tuple[str, str], dict[str, str]] = {}
+def _dedupe_roles(roles: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    deduped: dict[tuple[str, str], dict[str, Any]] = {}
     for role in roles:
         deduped.setdefault(_role_key(role), role)
     return list(deduped.values())
@@ -500,14 +808,23 @@ def _capability_audit(
     resolved: dict[str, dict[str, Any]] = {}
     role_mappings: list[dict[str, Any]] = []
     for role in required_roles:
-        mapping = _role_mapping(role, sources, resolved_roles=resolved)
+        mapping = _role_mapping(
+            role,
+            sources,
+            resolved_roles=resolved,
+            capability_id=capability_id,
+        )
         role_mappings.append(mapping)
         resolved[role["role"]] = mapping
 
     variant_mappings: list[dict[str, Any]] = []
     for artifact in artifacts:
         for role in _artifact_variant_roles(artifact):
-            mapping = _role_mapping(role, [_parameter_sources(artifact)])
+            mapping = _role_mapping(
+                role,
+                [_parameter_sources(artifact)],
+                capability_id=capability_id,
+            )
             mapping["artifact_label"] = artifact.get("label")
             variant_mappings.append(mapping)
 
@@ -562,8 +879,10 @@ def _normalized_role_contract(mapping: dict[str, Any]) -> dict[str, Any]:
     return {
         "kind": mapping["kind"],
         "role": mapping["role"],
+        "required": bool(mapping.get("required", True)),
         "status": mapping["status"],
         "mapping_kind": mapping.get("mapping_kind"),
+        "caller_binding_required": not bool(mapping.get("depends_on_role")),
         "parameter_targets": _parameter_targets(mapping),
         "depends_on_role": mapping.get("depends_on_role"),
         "issue": mapping.get("issue"),
@@ -589,7 +908,9 @@ def build_normalized_invocation_contract(
         variant_roles = _dedupe_roles(_artifact_variant_roles(artifact))
         sources = [_parameter_sources(artifact)]
         mappings = [
-            _normalized_role_contract(_role_mapping(role, sources))
+            _normalized_role_contract(
+                _role_mapping(role, sources, capability_id=capability_id)
+            )
             for role in variant_roles
         ]
         missing = [mapping for mapping in mappings if mapping["status"] != "mapped"]
@@ -618,6 +939,12 @@ def build_normalized_invocation_contract(
     role_contracts = [
         _normalized_role_contract(mapping) for mapping in audit["role_mappings"]
     ]
+    required_role_contracts = [
+        contract for contract in role_contracts if contract["required"]
+    ]
+    optional_role_contracts = [
+        contract for contract in role_contracts if not contract["required"]
+    ]
     variant_role_contracts = [
         _normalized_role_contract(mapping) for mapping in audit["variant_role_mappings"]
     ]
@@ -645,7 +972,8 @@ def build_normalized_invocation_contract(
         "plugin_sources": plugin_sources,
         "artifact_labels": audit["artifact_labels"],
         "output_forms": output_forms,
-        "required_role_contracts": role_contracts,
+        "required_role_contracts": required_role_contracts,
+        "optional_role_contracts": optional_role_contracts,
         "variant_role_contracts": variant_role_contracts,
         "artifact_invocation_contracts": artifact_contracts,
         "missing_roles": missing_roles,
@@ -724,6 +1052,7 @@ def build_role_registry(
         ),
         "chart_roles": chart_roles,
         "profile_roles": PROFILE_ROLE_DEFINITIONS,
+        "capability_parameter_overrides": CAPABILITY_ROLE_PARAMETER_CANDIDATES,
         "counts": {
             "chart_roles": len(chart_roles),
             "profile_roles": len(PROFILE_ROLE_DEFINITIONS),

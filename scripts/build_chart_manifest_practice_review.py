@@ -169,7 +169,11 @@ def _role_lists(capability: dict[str, Any]) -> dict[str, Any]:
 
 def _role_to_parameter_map(invocation: dict[str, Any]) -> list[dict[str, Any]]:
     rows = []
-    for bucket in ("required_role_contracts", "variant_role_contracts"):
+    for bucket in (
+        "required_role_contracts",
+        "optional_role_contracts",
+        "variant_role_contracts",
+    ):
         for contract in invocation.get(bucket) or []:
             rows.append(
                 {

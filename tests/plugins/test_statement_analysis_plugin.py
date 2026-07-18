@@ -209,6 +209,43 @@ def test_pnl_statement_table_rejects_missing_source_value(tmp_path: Path) -> Non
         core.run_statement_analysis(source_file, tmp_path / "statement", recipe_path)
 
 
+def test_pnl_statement_table_honors_source_column_mappings(tmp_path: Path) -> None:
+    core = load_core()
+    source_file = tmp_path / "mapped_values.csv"
+    source_file.write_text(
+        "line_item,fiscal_period,case_name,amount\n"
+        "product_revenue,2025,PL,100\n"
+        "product_revenue,2025,AC,120\n"
+        "service_revenue,2025,PL,25\n"
+        "service_revenue,2025,AC,30\n"
+        "cost_of_sales,2025,PL,40\n"
+        "cost_of_sales,2025,AC,48\n"
+        "income_tax,2025,PL,17\n"
+        "income_tax,2025,AC,20\n",
+        encoding="utf-8",
+    )
+    recipe_path = tmp_path / "mapped_recipe.json"
+    _write_recipe(recipe_path)
+    recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+    recipe["mappings"] = {
+        "row_key_column": "line_item",
+        "period_column": "fiscal_period",
+        "scenario_column": "case_name",
+        "value_column": "amount",
+    }
+    recipe_path.write_text(json.dumps(recipe), encoding="utf-8")
+
+    result = core.run_statement_analysis(
+        source_file, tmp_path / "mapped_statement", recipe_path
+    )
+
+    assert result.rows[2]["values"] == {"2025_PL": 125.0, "2025_AC": 150.0}
+    used_recipe = json.loads(
+        (result.output_dir / "used_recipe.json").read_text(encoding="utf-8")
+    )
+    assert used_recipe["mappings"]["value_column"] == "amount"
+
+
 def test_dependency_checker_accepts_explicit_requirements() -> None:
     checker = load_dependency_checker()
 

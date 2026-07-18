@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import html
 import json
 from collections import Counter
@@ -613,11 +614,36 @@ def _html_png(png: dict[str, Any]) -> str:
     return '<div class="missing">No PNG evidence for this capability yet.</div>'
 
 
-def main() -> int:
-    payload = build_chart_selection_stress_test()
-    print(DEFAULT_OUTPUT_JSON)
-    print(DEFAULT_OUTPUT_MD)
-    print(DEFAULT_OUTPUT_HTML)
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--selection-manifest", type=Path, default=DEFAULT_SELECTION_MANIFEST
+    )
+    parser.add_argument(
+        "--compatibility-audit", type=Path, default=DEFAULT_COMPATIBILITY_AUDIT
+    )
+    parser.add_argument("--proof", type=Path, default=DEFAULT_PROOF)
+    parser.add_argument(
+        "--gallery-manifest", type=Path, default=DEFAULT_GALLERY_MANIFEST
+    )
+    parser.add_argument("--rendered-assets", type=Path, default=DEFAULT_RENDERED_ASSETS)
+    parser.add_argument("--output-json", type=Path, default=DEFAULT_OUTPUT_JSON)
+    parser.add_argument("--output-md", type=Path, default=DEFAULT_OUTPUT_MD)
+    parser.add_argument("--output-html", type=Path, default=DEFAULT_OUTPUT_HTML)
+    args = parser.parse_args(argv)
+    payload = build_chart_selection_stress_test(
+        selection_manifest_path=args.selection_manifest,
+        compatibility_audit_path=args.compatibility_audit,
+        proof_path=args.proof,
+        gallery_manifest_path=args.gallery_manifest,
+        rendered_assets_path=args.rendered_assets,
+        output_json_path=args.output_json,
+        output_md_path=args.output_md,
+        output_html_path=args.output_html,
+    )
+    print(args.output_json)
+    print(args.output_md)
+    print(args.output_html)
     print(json.dumps(payload["counts"], sort_keys=True))
     return 0
 

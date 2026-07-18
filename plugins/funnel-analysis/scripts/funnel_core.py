@@ -14,6 +14,7 @@ __all__ = [
     "DEFAULT_STAGE_DEFINITIONS",
     "FunnelRunResult",
     "compute_funnel_rows",
+    "compute_funnel_rows_from_stage_table",
     "default_recipe",
     "load_recipe",
     "run_funnel_analysis",
@@ -249,6 +250,70 @@ def compute_funnel_rows(
             }
         )
         remaining = passed
+    return output_rows
+
+
+def compute_funnel_rows_from_stage_table(
+    rows: list[dict[str, str]], mappings: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Return funnel rows from explicit stage/start/pass columns."""
+
+    stage_column = str(mappings.get("stage_column") or "").strip()
+    start_column = str(mappings.get("start_count_column") or "").strip()
+    pass_column = str(mappings.get("pass_count_column") or "").strip()
+    if not stage_column or not start_column or not pass_column:
+        raise ValueError(
+            "stage_table_mappings requires stage_column, start_count_column, "
+            "and pass_count_column."
+        )
+    required = {stage_column, start_column, pass_column}
+    available = set(rows[0]) if rows else set()
+    missing = sorted(required - available)
+    if missing:
+        raise ValueError("Missing stage table columns: " + ", ".join(missing))
+
+    stage_order: list[str] = []
+    totals: dict[str, dict[str, float]] = {}
+    for row_number, row in enumerate(rows, start=2):
+        stage = str(row.get(stage_column) or "").strip()
+        if not stage:
+            raise ValueError(f"Blank stage at source row {row_number}.")
+        start_count = _parse_number(row.get(start_column))
+        pass_count = _parse_number(row.get(pass_column))
+        if start_count is None or pass_count is None:
+            raise ValueError(f"Non-numeric stage count at source row {row_number}.")
+        if start_count < 0 or pass_count < 0:
+            raise ValueError(f"Negative stage count at source row {row_number}.")
+        if pass_count > start_count:
+            raise ValueError(
+                f"Pass count exceeds start count at source row {row_number}."
+            )
+        if stage not in totals:
+            stage_order.append(stage)
+            totals[stage] = {"start": 0.0, "pass": 0.0}
+        totals[stage]["start"] += start_count
+        totals[stage]["pass"] += pass_count
+
+    first_start = totals[stage_order[0]]["start"] if stage_order else 0.0
+    output_rows: list[dict[str, Any]] = []
+    for position, stage in enumerate(stage_order, start=1):
+        start_count = totals[stage]["start"]
+        pass_count = totals[stage]["pass"]
+        output_rows.append(
+            {
+                "stage_id": _stage_id(stage),
+                "stage": stage,
+                "position": position,
+                "start_count": start_count,
+                "pass_count": pass_count,
+                "drop_off": pass_count - start_count,
+                "stage_conversion": (pass_count / start_count if start_count else None),
+                "cumulative_conversion": (
+                    pass_count / first_start if first_start else None
+                ),
+                "note": "Counts supplied by mapped stage table columns.",
+            }
+        )
     return output_rows
 
 
@@ -573,7 +638,8 @@ def _build_context(
         },
         "source_file": source_file.name,
         "row_grain": "One row per ordered stage definition; each row filters the rows that passed the prior stage.",
-        "stage_definitions": recipe["stage_definitions"],
+        "stage_definitions": recipe.get("resolved_stage_definitions")
+        or recipe["stage_definitions"],
         "table_rows": rows,
     }
 
@@ -585,7 +651,8 @@ def _build_manifest(
 ) -> dict[str, Any]:
     resolved_parameters = {
         "source_file": source_file.name,
-        "stage_definitions": recipe["stage_definitions"],
+        "stage_definitions": recipe.get("resolved_stage_definitions")
+        or recipe["stage_definitions"],
         "metric_label": recipe["metric_label"],
         "unit": recipe["unit"],
         "scope_label": recipe["scope_label"],
@@ -629,11 +696,22 @@ def run_funnel_analysis(
 
     recipe = load_recipe(recipe_path)
     recipe["language"] = language
-    stage_definitions = recipe.get("stage_definitions")
-    if not isinstance(stage_definitions, list):
-        raise ValueError("Recipe stage_definitions must be a list.")
     rows = _read_rows(source_file)
-    funnel_rows = compute_funnel_rows(rows, stage_definitions)
+    stage_table_mappings = recipe.get("stage_table_mappings")
+    if isinstance(stage_table_mappings, dict):
+        funnel_rows = compute_funnel_rows_from_stage_table(rows, stage_table_mappings)
+        recipe["resolved_stage_definitions"] = [
+            {
+                "stage": row["stage"],
+                "source": "stage_table_mappings",
+            }
+            for row in funnel_rows
+        ]
+    else:
+        stage_definitions = recipe.get("stage_definitions")
+        if not isinstance(stage_definitions, list):
+            raise ValueError("Recipe stage_definitions must be a list.")
+        funnel_rows = compute_funnel_rows(rows, stage_definitions)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     html_path = output_dir / "funnel_stage_table.html"

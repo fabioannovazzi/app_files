@@ -5079,6 +5079,44 @@ def test_like_for_like_column_specs_use_population_prepared_column_grammar() -> 
     assert specs["like_for_like_stacked_column"]["max_items"] == 6
 
 
+def test_overlay_and_like_for_like_columns_require_explicit_capability_selection() -> (
+    None
+):
+    core = load_core()
+    canonical = pl.DataFrame(
+        {
+            "Period": ["PY", "AC"],
+            "Sales": [10.0, 12.0],
+            "Units": [5.0, 6.0],
+            "Productline": ["Common", "Common"],
+            "Company": ["A", "A"],
+        }
+    )
+    recipe = {
+        "mappings": {
+            "amount_column": "Sales",
+            "period_column": "Period",
+            "related_marker_metric_column": "Units",
+            "dimensions": ["Productline", "Company"],
+        },
+        "options": {
+            "charts": ["column_total", "stacked_column"],
+            "current_period_label": "AC",
+            "previous_period_label": "PY",
+            "small_multiples": False,
+            "like_for_like": {"source_dimension": "Productline"},
+        },
+    }
+
+    specs = {spec["name"]: spec for spec in core.build_chart_specs(canonical, recipe)}
+
+    assert "column_total" in specs
+    assert "stacked_column" in specs
+    assert "column_total_with_overlay" not in specs
+    assert "like_for_like_column_total" not in specs
+    assert "like_for_like_stacked_column" not in specs
+
+
 def test_like_for_like_reporting_title_uses_separate_population_line() -> None:
     legacy = load_legacy_charting()
 
@@ -6991,7 +7029,6 @@ def test_cohort_stacked_column_adapter_uses_metric_activity_for_fallback() -> No
     assert labels == {"Common": names["activeName"], "Lost": "Lost after PY"}
 
 
-
 def test_all_mode_pareto_threshold_annotations_are_rendered() -> None:
     legacy = load_legacy_charting()
     legacy._ensure_legacy_import_path()
@@ -7232,11 +7269,6 @@ def test_pareto_secondary_metric_uses_primary_metric_rank_breaks() -> None:
         "3 (75%) Products for 90% of Units",
         "4 Products for 100% of Units",
     ]
-
-
-
-
-
 
 
 def test_stacked_column_synthesis_spec_uses_multiple_dimensions() -> None:
@@ -7938,10 +7970,6 @@ def test_legacy_stacked_bar_horizontal_axis_hides_scale_labels() -> None:
     assert figure.layout.xaxis.showticklabels is False
 
 
-
-
-
-
 def test_mix_contribution_applies_like_for_like_recipe_cohort(
     tmp_path: Path,
     monkeypatch: Any,
@@ -8009,8 +8037,6 @@ def test_mix_contribution_applies_like_for_like_recipe_cohort(
     assert cohort_audit["like_for_like"]["retained_entity_count"] == 1
     assert cohort_audit["like_for_like"]["removed_entity_count"] == 3
     assert used_recipe["options"]["cohort_definition"]["activity_rule"] == "Sales > 0.0"
-
-
 
 
 def test_mix_contribution_keeps_legacy_failures_without_substitute(
