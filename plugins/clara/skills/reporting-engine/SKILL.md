@@ -1,6 +1,6 @@
 ---
 name: reporting-engine
-description: Use when a user wants Clara to analyze a CSV/XLSX dataset, choose and render an appropriate business chart, inspect reporting capabilities, or check dataset compatibility.
+description: Use when a user wants Clara to analyze a CSV/XLSX/Parquet dataset, choose and render an appropriate business chart, inspect reporting capabilities, or check dataset compatibility.
 ---
 
 # Reporting Engine

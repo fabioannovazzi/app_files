@@ -85,7 +85,8 @@ def encode_uploaded_file(
             result = uploaded_file
         else:
             first_message = (
-                "Unrecognized file type. The uploaded file must be either CSV or XLSX."
+                "Unrecognized file type. The uploaded file must be CSV, XLSX, or "
+                "Parquet."
             )
             param_dict = add_app_message_to_paramdict(
                 first_message,
