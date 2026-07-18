@@ -95,6 +95,7 @@ from modules.case_notes_voice.api import (
     start_voice_retention_cleanup,
     stop_voice_retention_cleanup,
 )
+from modules.change_requests import router as change_requests_router
 from modules.charting import plot_horizontal_bar
 from modules.check_entries.api import router as check_router
 from modules.check_entries.api import site_router as check_site_router
@@ -8395,6 +8396,7 @@ def create_app() -> FastAPI:
     app.include_router(site_router)
     app.include_router(hosted_interviews_site_router)
     app.include_router(hosted_interviews_public_router)
+    app.include_router(change_requests_router)
     protected_site_routers = [
         (check_site_router, AUDIT_SITE_DEPENDENCIES),
         (hierarchy_site_router, SITE_AUTH_DEPENDENCIES),

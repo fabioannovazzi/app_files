@@ -146,6 +146,43 @@ def test_prepared_interview_is_case_agnostic(tmp_path: Path, monkeypatch) -> Non
     assert record["notification_email"] == TEST_NOTIFICATION_EMAIL
 
 
+def test_prepared_interview_can_use_three_minute_improvement_brief(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path))
+    payload = api.PreparedInterviewRequest(
+        interview_campaign_id="plugin-improvement-v1",
+        case_id="CR-123",
+        case_name="Clara improvement",
+        interview_title="Three-minute improvement interview",
+        purpose="Understand one concrete plugin capability request.",
+        interviewer_name="Mparanza",
+        max_duration_seconds=180,
+        change_request_id="CR-123",
+    )
+
+    _token, record = api.create_prepared_interview(payload)
+
+    assert record["interviewer_name"] == "Mparanza"
+    assert record["max_duration_seconds"] == 180
+    assert record["change_request_id"] == "CR-123"
+
+
+def test_three_minute_improvement_interview_uses_its_actual_limit() -> None:
+    record = {
+        "interviewer_name": "Mparanza",
+        "max_duration_seconds": 180,
+        "interview_mode": api.INTERVIEW_MODE_CASE,
+    }
+
+    instructions = api._interview_instructions(record, "it")
+
+    assert "You are Mparanza's hosted interview voice interviewer." in instructions
+    assert "hard 3-minute browser limit" in instructions
+    assert "minute 2" in instructions
+    assert "hard 15-minute browser limit" not in instructions
+
+
 @pytest.mark.parametrize(
     ("path_template", "viewer_email", "expected_status"),
     [
