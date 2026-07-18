@@ -665,7 +665,9 @@ def test_plotting_plugins_are_embedded_in_clara_package_only() -> None:
     ]
     clara_components = set(builder.embedded_plugin_names(ROOT / "plugins" / "clara"))
     assert REPORTING_ENGINE_PLUGIN_NAMES <= clara_components
-    assert "reporting-engine" in clara_components
+    assert "reporting-engine" not in clara_components
+    assert not (ROOT / "plugins" / "reporting-engine").exists()
+    assert (ROOT / "plugins" / "clara" / "modules" / "reporting-engine").is_dir()
     clara_entries = builder.expected_zip_entries(clara_package)
     component_prefix = f"{clara_package.package_root}/plugins/clara/modules"
     for plugin_name in REPORTING_ENGINE_PLUGIN_NAMES:
@@ -703,6 +705,14 @@ def test_plotting_plugins_are_embedded_in_clara_package_only() -> None:
     )
     assert (
         f"{component_prefix}/reporting-engine/fixtures/semantic_layer/retail_monthly.semantic.json"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/fixtures/semantic_layer/retail_monthly.snapshot_cases.json"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/fixtures/semantic_layer/retail_monthly_refresh.csv"
         in clara_entries
     )
 
@@ -811,6 +821,8 @@ def test_extracted_clara_semantic_acceptance_cli(
             str(fixture_root / "retail_monthly.semantic.json"),
             "--source",
             str(fixture_root / "retail_monthly_source_notes.md"),
+            "--snapshot-suite",
+            str(fixture_root / "retail_monthly.snapshot_cases.json"),
             "--output",
             str(output_path),
         ],
@@ -829,6 +841,67 @@ def test_extracted_clara_semantic_acceptance_cli(
         "ready_as_scoped_semantic_input"
     )
     assert report["validation"]["counts"]["analysis_validities"]["valid"] == 9
+    assert {
+        case["case_id"]: case["actual_status"]
+        for case in report["snapshot_reuse_proof"]
+    } == {
+        "origin_snapshot": "compatible",
+        "changed_values_new_months_and_members": "compatible",
+        "new_unclassified_column": "compatible_with_extensions",
+        "bound_metrics_removed": "incompatible",
+    }
+
+
+def test_extracted_clara_attaches_refresh_to_existing_semantic_version(
+    extracted_clara_plugin: Path,
+    tmp_path: Path,
+) -> None:
+    component_root = extracted_clara_plugin / "modules" / "reporting-engine"
+    fixture_root = component_root / "fixtures" / "semantic_layer"
+    profiler_spec = importlib.util.spec_from_file_location(
+        "extracted_reporting_engine_refresh_profiler",
+        component_root / "scripts" / "profile_dataset.py",
+    )
+    assert profiler_spec and profiler_spec.loader
+    profiler = importlib.util.module_from_spec(profiler_spec)
+    profiler_spec.loader.exec_module(profiler)
+    profile_path = tmp_path / "refresh_profile.json"
+    profile_path.write_text(
+        json.dumps(
+            profiler.profile_dataset(
+                fixture_root / "retail_monthly_refresh.csv",
+                dataset_id="retail_monthly",
+            )
+        ),
+        encoding="utf-8",
+    )
+    output_path = tmp_path / "snapshot_attachment.json"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(component_root / "scripts" / "semantic_layer.py"),
+            "attach",
+            "--profile",
+            str(profile_path),
+            "--layer",
+            str(fixture_root / "retail_monthly.semantic.json"),
+            "--output",
+            str(output_path),
+        ],
+        cwd=tmp_path,
+        env=isolated_plugin_env(),
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=60,
+    )
+
+    attachment = json.loads(output_path.read_text(encoding="utf-8"))
+    assert result.returncode == 0, result.stderr
+    assert attachment["attachment_status"] == "attached"
+    assert attachment["compatibility"]["status"] == "compatible"
+    assert attachment["semantic_version"] == 1
 
 
 def test_extracted_clara_renders_known_period_comparison(
@@ -1375,7 +1448,6 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
             if plugin_root.name == "clara" and skill_file.parent.name in {
                 "attribute-reporting",
                 "brand-fit",
-                "reporting-engine",
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
@@ -2022,7 +2094,7 @@ def test_client_intake_query_routes_to_localized_page(
     )
 
     assert f'{language}: "{localized_page}"' in page
-    assert 'window.location.replace(localizedPage)' in page
+    assert "window.location.replace(localizedPage)" in page
 
 
 def test_vera_page_lists_all_eleven_modules() -> None:
@@ -2618,7 +2690,7 @@ def test_old_plotting_plugin_pages_are_removed() -> None:
 
 
 def test_reporting_component_manifests_use_clara_homepage() -> None:
-    for plugin_name in REPORTING_ENGINE_PLUGIN_NAMES | {"reporting-engine"}:
+    for plugin_name in REPORTING_ENGINE_PLUGIN_NAMES:
         manifest = json.loads(
             (
                 ROOT / "plugins" / plugin_name / ".codex-plugin" / "plugin.json"
@@ -2877,7 +2949,7 @@ def test_vera_module_links_preserve_language() -> None:
     assert 'en: "../client-intake/uk.html"' in page
     assert 'fr: "../client-intake/geneva.html"' in page
     assert 'de: "../client-intake/zurich.html"' in page
-    assert 'withLanguage(clientIntakePages[lang], lang)' in page
+    assert "withLanguage(clientIntakePages[lang], lang)" in page
 
 
 @pytest.mark.parametrize(

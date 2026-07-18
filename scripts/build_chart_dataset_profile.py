@@ -12,7 +12,13 @@ __all__ = ["build_dataset_profile", "profile_dataset", "main"]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PACKAGED_PROFILER = (
-    REPO_ROOT / "plugins" / "reporting-engine" / "scripts" / "profile_dataset.py"
+    REPO_ROOT
+    / "plugins"
+    / "clara"
+    / "modules"
+    / "reporting-engine"
+    / "scripts"
+    / "profile_dataset.py"
 )
 
 

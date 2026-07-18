@@ -1,0 +1,995 @@
+{
+  "schema_version": "0.2",
+  "semantic_layer_id": "retail_monthly.reporting_semantics",
+  "semantic_version": 1,
+  "dataset_contract": {
+    "dataset_contract_id": "retail_monthly",
+    "contract_version": 1,
+    "identity": {
+      "method": "caller_assigned",
+      "value": "fixture.retail_monthly"
+    },
+    "origin_snapshot": {
+      "profile_schema_version": "0.4",
+      "snapshot_fingerprint": "18e4481730ada16b90f9adef037b3b2776547801b40a2ed6489416f4700fd3d3"
+    },
+    "unknown_column_policy": "allow_as_unclassified_extension"
+  },
+  "scope": {
+    "title": "Synthetic monthly retail reporting semantics",
+    "business_area": "Synthetic retail performance",
+    "purpose": "Define reviewed metric, dimension, period, and analysis-validity semantics for the packaged Reporting Engine fixture.",
+    "coverage_level": "strong",
+    "included_subjects": [
+      "sales and units performance",
+      "margin-rate analysis",
+      "average selling price",
+      "monthly current-versus-prior comparison",
+      "brand, category, region, and SKU analysis"
+    ],
+    "excluded_subjects": [
+      "cohort lifecycle",
+      "funnel conversion",
+      "root-cause hierarchy",
+      "set membership",
+      "structured financial statements"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "source.dataset_profile",
+      "source_type": "dataset_profile",
+      "locator": "generated profile for fixtures/semantic_layer/retail_monthly.csv",
+      "authority": "mechanical",
+      "supports": [
+        "physical columns",
+        "types and cardinality",
+        "mechanical metric, dimension, and period candidates"
+      ],
+      "caveats": [
+        "The profile does not establish business meaning or analysis validity."
+      ],
+      "last_checked": "2026-07-18"
+    },
+    {
+      "source_id": "source.fixture_notes",
+      "source_type": "data_dictionary",
+      "locator": "fixtures/semantic_layer/retail_monthly_source_notes.md",
+      "authority": "canonical",
+      "supports": [
+        "row grain",
+        "metric definitions and aggregation",
+        "dimension meaning",
+        "period scope",
+        "reviewed analysis rules"
+      ],
+      "caveats": [
+        "The source describes a synthetic test fixture, not a real business."
+      ],
+      "last_checked": "2026-07-18"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence.dataset_profile",
+      "source_id": "source.dataset_profile",
+      "locator": "dataset profile root",
+      "claim": "The referenced physical fields and mechanical role candidates exist in the profiled dataset.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": [
+        "Mechanical evidence does not approve a business interpretation."
+      ]
+    },
+    {
+      "evidence_id": "evidence.grain_and_period",
+      "source_id": "source.fixture_notes",
+      "locator": "Grain And Scope",
+      "claim": "Each row is one SKU-brand observation for one calendar month; current YTD and aligned prior-year YTD are valid reusable period rules.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": []
+    },
+    {
+      "evidence_id": "evidence.sales",
+      "source_id": "source.fixture_notes",
+      "locator": "Metrics / Sales",
+      "claim": "Sales is additive net invoiced sales in US dollars.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": []
+    },
+    {
+      "evidence_id": "evidence.units",
+      "source_id": "source.fixture_notes",
+      "locator": "Metrics / Units",
+      "claim": "Units is additive sold unit volume.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": []
+    },
+    {
+      "evidence_id": "evidence.margin_rate",
+      "source_id": "source.fixture_notes",
+      "locator": "Metrics / MarginRate",
+      "claim": "MarginRate is non-additive and must be aggregated as a sales-weighted mean.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": []
+    },
+    {
+      "evidence_id": "evidence.average_selling_price",
+      "source_id": "source.fixture_notes",
+      "locator": "Metrics / Average selling price",
+      "claim": "Average selling price is sum(Sales) divided by sum(Units) for the selected scope.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": []
+    },
+    {
+      "evidence_id": "evidence.dimensions",
+      "source_id": "source.fixture_notes",
+      "locator": "Dimensions",
+      "claim": "Brand, Category, Region, and SKU have the documented reporting and entity roles.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": [
+        "Brand and SKU are redundant as simultaneous decomposition dimensions in this fixture."
+      ]
+    },
+    {
+      "evidence_id": "evidence.analysis_rules",
+      "source_id": "source.fixture_notes",
+      "locator": "Reviewed Analysis Rules",
+      "claim": "The listed time, ranking, mix, relationship, distribution, and PVM analyses are supported; funnel, statement, cohort, set, and root-cause analyses are not established.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": []
+    }
+  ],
+  "metrics": [
+    {
+      "metric_id": "metric.sales",
+      "label": "Sales",
+      "binding": {
+        "binding_type": "column",
+        "column": "Sales",
+        "expression": null,
+        "input_metric_ids": []
+      },
+      "definition": "Net invoiced sales value at the monthly SKU-brand row grain.",
+      "metric_class": "additive_value",
+      "aggregation": {
+        "default": "sum",
+        "allowed": [
+          "sum"
+        ],
+        "forbidden": [
+          "unweighted_mean"
+        ],
+        "weight_metric_id": null
+      },
+      "unit": {
+        "kind": "currency",
+        "currency": "USD",
+        "symbol": "$"
+      },
+      "directionality": "descriptive_increase",
+      "valid_period_grains": [
+        "month",
+        "quarter",
+        "year",
+        "ytd"
+      ],
+      "compatible_dimension_ids": [
+        "dimension.brand",
+        "dimension.category",
+        "dimension.region",
+        "dimension.sku"
+      ],
+      "forbidden_dimension_ids": [],
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The canonical fixture notes define Sales as additive USD value.",
+      "evidence_ids": [
+        "evidence.sales"
+      ],
+      "caveats": [
+        "An increase is descriptive; the fixture does not assert that it is always favorable."
+      ],
+      "origin_profile_observation": {
+        "source_role": "metric",
+        "metric_class": "additive_value",
+        "aggregation": "sum",
+        "confidence": "high",
+        "inference_reasons": [
+          "name suggests additive value"
+        ]
+      }
+    },
+    {
+      "metric_id": "metric.units",
+      "label": "Units",
+      "binding": {
+        "binding_type": "column",
+        "column": "Units",
+        "expression": null,
+        "input_metric_ids": []
+      },
+      "definition": "Sold unit volume at the monthly SKU-brand row grain.",
+      "metric_class": "additive_volume",
+      "aggregation": {
+        "default": "sum",
+        "allowed": [
+          "sum"
+        ],
+        "forbidden": [
+          "unweighted_mean"
+        ],
+        "weight_metric_id": null
+      },
+      "unit": {
+        "kind": "count",
+        "currency": null,
+        "symbol": null
+      },
+      "directionality": "descriptive_increase",
+      "valid_period_grains": [
+        "month",
+        "quarter",
+        "year",
+        "ytd"
+      ],
+      "compatible_dimension_ids": [
+        "dimension.brand",
+        "dimension.category",
+        "dimension.region",
+        "dimension.sku"
+      ],
+      "forbidden_dimension_ids": [],
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The canonical fixture notes define Units as additive sold volume.",
+      "evidence_ids": [
+        "evidence.units"
+      ],
+      "caveats": [],
+      "origin_profile_observation": {
+        "source_role": "metric",
+        "metric_class": "additive_volume",
+        "aggregation": "sum",
+        "confidence": "high",
+        "inference_reasons": [
+          "name suggests additive volume"
+        ]
+      }
+    },
+    {
+      "metric_id": "metric.sales_per_units",
+      "label": "Sales_per_Units",
+      "binding": {
+        "binding_type": "derived",
+        "column": null,
+        "expression": "sum(Sales) / sum(Units)",
+        "input_metric_ids": [
+          "metric.sales",
+          "metric.units"
+        ]
+      },
+      "definition": "Average selling price for the selected scope, calculated as the ratio of aggregate sales to aggregate units.",
+      "metric_class": "rate",
+      "aggregation": {
+        "default": "ratio_of_sums",
+        "allowed": [
+          "ratio_of_sums"
+        ],
+        "forbidden": [
+          "sum",
+          "unweighted_mean_of_row_ratios"
+        ],
+        "weight_metric_id": "metric.units"
+      },
+      "unit": {
+        "kind": "currency_per_unit",
+        "currency": "USD",
+        "symbol": "$/unit"
+      },
+      "directionality": "descriptive_increase",
+      "valid_period_grains": [
+        "month",
+        "quarter",
+        "year",
+        "ytd"
+      ],
+      "compatible_dimension_ids": [
+        "dimension.brand",
+        "dimension.category",
+        "dimension.region",
+        "dimension.sku"
+      ],
+      "forbidden_dimension_ids": [],
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The source notes define average selling price as a ratio of sums, correcting the profiler's generic derived-rate candidate into a reviewed metric.",
+      "evidence_ids": [
+        "evidence.average_selling_price"
+      ],
+      "caveats": [
+        "Requires non-zero aggregate units in the selected scope."
+      ],
+      "origin_profile_observation": {
+        "source_role": "derived_metric",
+        "metric_class": "derived_rate",
+        "aggregation": "derived_from_value_and_volume",
+        "confidence": "medium",
+        "inference_reasons": [
+          "additive value metric divided by additive volume metric"
+        ]
+      }
+    },
+    {
+      "metric_id": "metric.marginrate",
+      "label": "MarginRate",
+      "binding": {
+        "binding_type": "column",
+        "column": "MarginRate",
+        "expression": null,
+        "input_metric_ids": []
+      },
+      "definition": "Gross margin divided by sales at the monthly SKU-brand row grain.",
+      "metric_class": "rate",
+      "aggregation": {
+        "default": "weighted_mean",
+        "allowed": [
+          "weighted_mean"
+        ],
+        "forbidden": [
+          "sum",
+          "unweighted_mean"
+        ],
+        "weight_metric_id": "metric.sales"
+      },
+      "unit": {
+        "kind": "percentage",
+        "currency": null,
+        "symbol": "%"
+      },
+      "directionality": "descriptive_increase",
+      "valid_period_grains": [
+        "month",
+        "quarter",
+        "year",
+        "ytd"
+      ],
+      "compatible_dimension_ids": [
+        "dimension.brand",
+        "dimension.category",
+        "dimension.region",
+        "dimension.sku"
+      ],
+      "forbidden_dimension_ids": [],
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The canonical source defines MarginRate and its sales-weighted aggregation rule.",
+      "evidence_ids": [
+        "evidence.margin_rate"
+      ],
+      "caveats": [
+        "Do not sum rates or use an unweighted mean across unequal sales values."
+      ],
+      "origin_profile_observation": {
+        "source_role": "metric",
+        "metric_class": "rate",
+        "aggregation": "semantic_layer_defined",
+        "confidence": "high",
+        "inference_reasons": [
+          "name suggests price, rate, or ratio"
+        ]
+      }
+    }
+  ],
+  "dimensions": [
+    {
+      "dimension_id": "dimension.brand",
+      "label": "Brand",
+      "column": "Brand",
+      "definition": "Commercial brand used for reporting and aggregation.",
+      "semantic_type": "entity",
+      "valid_uses": [
+        "group",
+        "filter",
+        "panel",
+        "point"
+      ],
+      "hierarchy_parent_id": "dimension.category",
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The source notes define Brand as a reporting dimension grouped by Category.",
+      "evidence_ids": [
+        "evidence.dimensions"
+      ],
+      "caveats": [
+        "Brand and SKU are one-to-one in this fixture and must not be treated as independent decomposition axes."
+      ],
+      "origin_profile_observation": {
+        "source_role": "dimension",
+        "confidence": "high",
+        "distinct_count": 4,
+        "cardinality_class": "low"
+      }
+    },
+    {
+      "dimension_id": "dimension.category",
+      "label": "Category",
+      "column": "Category",
+      "definition": "Product category grouping brands into Color and Care.",
+      "semantic_type": "categorical",
+      "valid_uses": [
+        "group",
+        "filter",
+        "panel",
+        "composition"
+      ],
+      "hierarchy_parent_id": null,
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The canonical source defines Category as a brand grouping.",
+      "evidence_ids": [
+        "evidence.dimensions"
+      ],
+      "caveats": [],
+      "origin_profile_observation": {
+        "source_role": "dimension",
+        "confidence": "high",
+        "distinct_count": 2,
+        "cardinality_class": "low"
+      }
+    },
+    {
+      "dimension_id": "dimension.region",
+      "label": "Region",
+      "column": "Region",
+      "definition": "Reporting geography for North and South.",
+      "semantic_type": "geography",
+      "valid_uses": [
+        "group",
+        "filter",
+        "panel",
+        "composition"
+      ],
+      "hierarchy_parent_id": null,
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The canonical source defines Region as a reporting geography that cross-classifies Category.",
+      "evidence_ids": [
+        "evidence.dimensions"
+      ],
+      "caveats": [],
+      "origin_profile_observation": {
+        "source_role": "dimension",
+        "confidence": "high",
+        "distinct_count": 2,
+        "cardinality_class": "low"
+      }
+    },
+    {
+      "dimension_id": "dimension.sku",
+      "label": "SKU",
+      "column": "SKU",
+      "definition": "Stock-keeping-unit identifier for the observation entity.",
+      "semantic_type": "identifier",
+      "valid_uses": [
+        "filter",
+        "detail",
+        "point"
+      ],
+      "hierarchy_parent_id": "dimension.brand",
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The canonical source defines SKU as the row entity under Brand.",
+      "evidence_ids": [
+        "evidence.dimensions"
+      ],
+      "caveats": [
+        "One SKU per brand makes SKU redundant with Brand in this fixture."
+      ],
+      "origin_profile_observation": {
+        "source_role": "identifier",
+        "confidence": "high",
+        "distinct_count": 4,
+        "cardinality_class": "low"
+      }
+    }
+  ],
+  "periods": [
+    {
+      "period_id": "period.date",
+      "label": "Calendar month",
+      "column": "Date",
+      "definition": "The calendar month represented by the row; stored as the first day of that month.",
+      "grain": "month",
+      "calendar": "gregorian",
+      "timezone": null,
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The source notes define Date as a calendar-month key rather than a transaction timestamp.",
+      "evidence_ids": [
+        "evidence.grain_and_period"
+      ],
+      "caveats": [
+        "Display month labels, not the literal first-day storage convention."
+      ],
+      "origin_profile_observation": {
+        "confidence": "high",
+        "grain": "month"
+      }
+    }
+  ],
+  "period_rules": [
+    {
+      "period_rule_id": "period_rule.all_available",
+      "label": "All available calendar months",
+      "period_id": "period.date",
+      "rule_type": "all_available",
+      "scope_type": "all_available",
+      "parameters": {
+        "window_length": null,
+        "fiscal_year_start_month": 1,
+        "comparison_offset_years": 1,
+        "requires_runtime_bounds": false
+      },
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "Ordered monthly trajectory and composition analyses may use the complete available snapshot range.",
+      "evidence_ids": [
+        "evidence.grain_and_period"
+      ],
+      "caveats": [
+        "The concrete start and end are resolved from each snapshot."
+      ]
+    },
+    {
+      "period_rule_id": "period_rule.current_ytd",
+      "label": "Current calendar year to latest available month",
+      "period_id": "period.date",
+      "rule_type": "current_ytd",
+      "scope_type": "single",
+      "parameters": {
+        "window_length": null,
+        "fiscal_year_start_month": 1,
+        "comparison_offset_years": 1,
+        "requires_runtime_bounds": false
+      },
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "Current-period ranking, relationship, distribution, and composition analyses use calendar YTD through the latest available month.",
+      "evidence_ids": [
+        "evidence.grain_and_period"
+      ],
+      "caveats": [
+        "The snapshot supplies the current year and latest available month."
+      ]
+    },
+    {
+      "period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+      "label": "Current calendar YTD versus aligned prior-year YTD",
+      "period_id": "period.date",
+      "rule_type": "current_ytd_vs_prior_ytd",
+      "scope_type": "comparison_pair",
+      "parameters": {
+        "window_length": null,
+        "fiscal_year_start_month": 1,
+        "comparison_offset_years": 1,
+        "requires_runtime_bounds": false
+      },
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "Current and prior periods must cover aligned calendar months and are resolved from the latest available snapshot month.",
+      "evidence_ids": [
+        "evidence.grain_and_period"
+      ],
+      "caveats": [
+        "The comparison is unavailable when the snapshot lacks aligned prior-year history."
+      ]
+    }
+  ],
+  "analysis_policies": [
+    {
+      "analysis_id": "analysis.monthly_sales_trajectory",
+      "label": "Monthly sales trajectory",
+      "question_family": "How did total sales move across the available calendar months?",
+      "analysis_task_ids": [
+        "time_and_period_movement"
+      ],
+      "selection_emphases": [
+        "single_metric_trend_shape"
+      ],
+      "validity": "valid",
+      "business_purpose": "Inspect the ordered monthly path of total sales.",
+      "role_bindings": {
+        "period_axis": {
+          "binding_type": "concept",
+          "concept_id": "period.date"
+        },
+        "primary_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        }
+      },
+      "period_rule_id": "period_rule.all_available",
+      "conditions": [
+        "Aggregate Sales by calendar month before rendering."
+      ],
+      "rationale": "Sales is additive and Date is a reviewed ordered monthly axis.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.grain_and_period",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "Only four months are present, so seasonality cannot be inferred."
+      ]
+    },
+    {
+      "analysis_id": "analysis.sales_current_vs_prior_by_month",
+      "label": "Current versus prior sales by month",
+      "question_family": "Where were the monthly sales gaps between the reviewed current and prior-year windows?",
+      "analysis_task_ids": [
+        "time_and_period_movement"
+      ],
+      "selection_emphases": [
+        "period_by_period_gap"
+      ],
+      "validity": "valid",
+      "business_purpose": "Compare January and February sales with the same months in the prior year.",
+      "role_bindings": {
+        "period_axis": {
+          "binding_type": "concept",
+          "concept_id": "period.date"
+        },
+        "comparison_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        }
+      },
+      "period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+      "conditions": [
+        "Align months by calendar month number within the two reviewed windows."
+      ],
+      "rationale": "The metric is additive and the source defines equal current and prior-year month windows.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.grain_and_period",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": []
+    },
+    {
+      "analysis_id": "analysis.current_brand_sales_ranking",
+      "label": "Current brand sales ranking",
+      "question_family": "Which brands generated the most sales in the reviewed current period?",
+      "analysis_task_ids": [
+        "ranking_and_comparison"
+      ],
+      "selection_emphases": [
+        "ranked_single_metric_comparison"
+      ],
+      "validity": "valid",
+      "business_purpose": "Rank brands by current calendar-YTD sales through the snapshot's latest month.",
+      "role_bindings": {
+        "primary_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        },
+        "category": {
+          "binding_type": "concept",
+          "concept_id": "dimension.brand"
+        }
+      },
+      "period_rule_id": "period_rule.current_ytd",
+      "conditions": [
+        "Sum Sales by Brand within the current scope."
+      ],
+      "rationale": "Brand is a reviewed grouping dimension and Sales is additive.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.dimensions",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": []
+    },
+    {
+      "analysis_id": "analysis.category_sales_mix_over_time",
+      "label": "Category sales mix over time",
+      "question_family": "How did total sales and category composition change across months?",
+      "analysis_task_ids": [
+        "composition_and_mix",
+        "time_and_period_movement"
+      ],
+      "selection_emphases": [
+        "composition_change_over_periods"
+      ],
+      "validity": "valid",
+      "business_purpose": "Show monthly total sales together with Color and Care contribution.",
+      "role_bindings": {
+        "period_axis": {
+          "binding_type": "concept",
+          "concept_id": "period.date"
+        },
+        "primary_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        },
+        "component_dimension": {
+          "binding_type": "concept",
+          "concept_id": "dimension.category"
+        }
+      },
+      "period_rule_id": "period_rule.all_available",
+      "conditions": [
+        "Sum Sales by calendar month and Category."
+      ],
+      "rationale": "Sales is additive and Category is a reviewed composition dimension.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.dimensions",
+        "evidence.grain_and_period",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": []
+    },
+    {
+      "analysis_id": "analysis.brand_sales_margin_relationship",
+      "label": "Brand sales and margin relationship",
+      "question_family": "Which current-period brands combine higher sales with higher or lower margin rate?",
+      "analysis_task_ids": [
+        "metric_relationship"
+      ],
+      "selection_emphases": [
+        "relationship_between_two_metrics"
+      ],
+      "validity": "valid",
+      "business_purpose": "Compare current-period brand scale with sales-weighted margin rate.",
+      "role_bindings": {
+        "x_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        },
+        "y_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.marginrate"
+        },
+        "point_dimension": {
+          "binding_type": "concept",
+          "concept_id": "dimension.brand"
+        }
+      },
+      "period_rule_id": "period_rule.current_ytd",
+      "conditions": [
+        "Create one point per Brand.",
+        "Sum Sales by Brand and calculate MarginRate as a Sales-weighted mean."
+      ],
+      "rationale": "The source explicitly supports a Brand-level sales-versus-margin relationship after reviewed aggregation.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.margin_rate",
+        "evidence.dimensions",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "The four-point fixture is illustrative and cannot establish statistical association."
+      ]
+    },
+    {
+      "analysis_id": "analysis.brand_sales_margin_units_bubble",
+      "label": "Brand sales, margin, and units bubble view",
+      "question_family": "How do current brands compare on sales, margin rate, and unit scale?",
+      "analysis_task_ids": [
+        "metric_relationship"
+      ],
+      "selection_emphases": [
+        "two_metric_relationship_plus_size"
+      ],
+      "validity": "valid",
+      "business_purpose": "Add current unit scale to the Brand sales-versus-margin relationship.",
+      "role_bindings": {
+        "x_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        },
+        "y_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.marginrate"
+        },
+        "size_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.units"
+        },
+        "point_dimension": {
+          "binding_type": "concept",
+          "concept_id": "dimension.brand"
+        }
+      },
+      "period_rule_id": "period_rule.current_ytd",
+      "conditions": [
+        "Create one point per Brand.",
+        "Aggregate Sales and Units by sum and MarginRate by Sales-weighted mean."
+      ],
+      "rationale": "Sales, Units, MarginRate, and Brand have compatible reviewed semantics for a scoped entity-level relationship.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.units",
+        "evidence.margin_rate",
+        "evidence.dimensions",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "Bubble area is descriptive magnitude, not a fourth causal claim."
+      ]
+    },
+    {
+      "analysis_id": "analysis.margin_rate_distribution",
+      "label": "Margin-rate distribution",
+      "question_family": "What is the distribution shape of row-level margin rates across the available brand-month observations?",
+      "analysis_task_ids": [
+        "distribution"
+      ],
+      "selection_emphases": [
+        "frequency_shape"
+      ],
+      "validity": "valid",
+      "business_purpose": "Inspect spread and concentration of observed row-level margin rates.",
+      "role_bindings": {
+        "distribution_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.marginrate"
+        }
+      },
+      "period_rule_id": "period_rule.all_available",
+      "conditions": [
+        "Use the sixteen row-level brand-month observations without aggregating MarginRate first."
+      ],
+      "rationale": "MarginRate is a numeric observation at the documented row grain and the question explicitly concerns that observation distribution.",
+      "evidence_ids": [
+        "evidence.margin_rate",
+        "evidence.grain_and_period",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "The sample is small; a smoothed density interpretation is not approved."
+      ]
+    },
+    {
+      "analysis_id": "analysis.sales_price_volume_mix",
+      "label": "Sales price-volume-mix decomposition",
+      "question_family": "How did the sales change between the reviewed current and prior-year windows decompose into price, volume, and mix effects?",
+      "analysis_task_ids": [
+        "variance_and_bridge"
+      ],
+      "selection_emphases": [
+        "pvm_decomposition_comparison"
+      ],
+      "validity": "valid",
+      "business_purpose": "Decompose the comparable-window sales movement using additive value and volume semantics.",
+      "role_bindings": {
+        "period_filter": {
+          "binding_type": "concept",
+          "concept_id": "period.date"
+        },
+        "value_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        },
+        "volume_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.units"
+        }
+      },
+      "period_rule_id": "period_rule.current_ytd_vs_prior_ytd",
+      "conditions": [
+        "Use identical Brand-SKU population and equal calendar-month windows.",
+        "Derive price as the ratio of aggregate Sales to aggregate Units at the required decomposition grain."
+      ],
+      "rationale": "The source defines compatible additive value, additive volume, derived price, and comparable period windows.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.units",
+        "evidence.average_selling_price",
+        "evidence.grain_and_period",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "The fixture supports a mechanical example; business interpretation of mix effects remains context-dependent."
+      ]
+    },
+    {
+      "analysis_id": "analysis.category_region_sales_composition",
+      "label": "Category and region sales composition",
+      "question_family": "How is current sales distributed jointly across Region and Category?",
+      "analysis_task_ids": [
+        "composition_and_mix"
+      ],
+      "selection_emphases": [
+        "two_dimension_share_and_size"
+      ],
+      "validity": "valid",
+      "business_purpose": "Show current sales size and composition across two cross-classifying dimensions.",
+      "role_bindings": {
+        "primary_metric": {
+          "binding_type": "concept",
+          "concept_id": "metric.sales"
+        },
+        "width_category": {
+          "binding_type": "concept",
+          "concept_id": "dimension.region"
+        },
+        "stack_category": {
+          "binding_type": "concept",
+          "concept_id": "dimension.category"
+        }
+      },
+      "period_rule_id": "period_rule.current_ytd",
+      "conditions": [
+        "Sum Sales by Region and Category within the current scope."
+      ],
+      "rationale": "Region and Category cross-classify in the fixture and Sales is additive.",
+      "evidence_ids": [
+        "evidence.sales",
+        "evidence.dimensions",
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "Do not substitute Brand and SKU as the two dimensions because they are redundant in this fixture."
+      ]
+    },
+    {
+      "analysis_id": "analysis.structured_statement",
+      "label": "Structured statement reporting",
+      "question_family": "Show a structured financial statement with line items and scenarios.",
+      "analysis_task_ids": [
+        "evidence_and_reporting_tables"
+      ],
+      "selection_emphases": [
+        "structured_statement_values"
+      ],
+      "validity": "invalid",
+      "business_purpose": "Record that the dataset cannot support a statement table despite containing numeric values.",
+      "role_bindings": {},
+      "period_rule_id": null,
+      "conditions": [],
+      "rationale": "The source explicitly states that no statement structure, statement line, or scenario semantics are present.",
+      "evidence_ids": [
+        "evidence.analysis_rules"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "A different prepared package with reviewed statement roles would require a separate semantic layer or revision."
+      ]
+    }
+  ],
+  "open_questions": [],
+  "review": {
+    "status": "human_reviewed",
+    "reviewed_by": "Reporting Engine fixture author",
+    "reviewed_at": "2026-07-18",
+    "notes": [
+      "Review applies only to the synthetic fixture and its canonical source notes.",
+      "Contract validation proves wiring, not the truth of semantic judgments in another dataset."
+    ]
+  },
+  "boundaries": {
+    "semantic_judgment_owner": "model_or_human_review",
+    "deterministic_validation_scope": "Schema, identifiers, evidence references, profile bindings, manifest intent references, and required role coverage only.",
+    "chart_selection_included": false,
+    "rendering_included": false
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "clara",
-  "version": "0.1.92",
+  "version": "0.1.93",
   "description": "Clara runs interviews, transcribes evidence, corrects decks, creates checked Retailer Signals and Brand Fit reports, analyzes business data, and prepares reviewed advisory outputs.",
   "author": {
     "name": "Mparanza",
@@ -42,7 +42,7 @@
   "interface": {
     "displayName": "Clara",
     "shortDescription": "AI companion for consultants",
-    "longDescription": "Clara handles interviews, transcripts, deck correction, Retailer Signals, Brand Fit, and business-data analysis. Brand Fit compares completed retailer signals with a brand's current presence at that retailer and its owned catalogue in the stored database snapshot; Codex performs semantic interpretation and independent review locally. Its Reporting Engine profiles a dataset, creates and validates source-backed dataset semantics, selects a suitable analysis with Codex, and runs embedded chart components. For advisory projects, Clara organizes evidence, separates sources from judgement, and prepares reviewed workpapers and decision outputs. The user keeps professional judgement.",
+    "longDescription": "Clara handles interviews, transcripts, deck correction, Retailer Signals, Brand Fit, and business-data analysis. Brand Fit compares completed retailer signals with a brand's current presence at that retailer and its owned catalogue in the stored database snapshot; Codex performs semantic interpretation and independent review locally. Its internal Reporting Engine creates source-backed semantics once for an explicit dataset identity, reuses them across compatible recurring snapshots, resolves current period bounds, selects a suitable analysis with Codex, and runs embedded chart components. For advisory projects, Clara organizes evidence, separates sources from judgement, and prepares reviewed workpapers and decision outputs. The user keeps professional judgement.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [

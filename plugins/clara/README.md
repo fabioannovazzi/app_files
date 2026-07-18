@@ -61,11 +61,11 @@ report, downloaded product images, semantic interpretation, independent review,
 and final HTML report remain local. Neither the user nor the server supplies a
 model-provider API key for that work.
 
-The editable Attribute Reporting, Reporting Engine, and chart-family
-implementations remain in their `plugins/<component>` source folders. Clara's
-package builder embeds them under `modules/`, while the thin Clara skills own
-discovery and routing. This keeps one implementation for standalone development
-tests and the installed Clara workflow.
+Reporting Engine's canonical implementation lives inside Clara at
+`modules/reporting-engine`; it has no standalone plugin identity. Editable
+Attribute Reporting and chart-family implementations remain in their
+`plugins/<component>` source folders and Clara's package builder embeds them
+under `modules/`. Clara's skills own discovery and routing.
 
 The scripts are intentionally mechanical. They validate JSON shape, preserve
 source provenance, enforce the client-pack inclusion gate, and render outputs. Codex handles

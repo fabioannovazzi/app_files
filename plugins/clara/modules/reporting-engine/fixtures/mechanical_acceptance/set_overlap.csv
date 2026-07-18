@@ -1,0 +1,13 @@
+Date,ItemID,SetName,Segment
+2026-06-01,N1,Retailer A,North
+2026-06-01,N1,Retailer B,North
+2026-06-01,N2,Retailer A,North
+2026-06-01,N2,Retailer C,North
+2026-06-01,N3,Retailer B,North
+2026-06-01,N3,Retailer C,North
+2026-06-01,S1,Retailer A,South
+2026-06-01,S1,Retailer B,South
+2026-06-01,S2,Retailer A,South
+2026-06-01,S2,Retailer C,South
+2026-06-01,S3,Retailer B,South
+2026-06-01,S3,Retailer C,South

@@ -38,9 +38,6 @@
         "utilities/utils.py"
       ]
     },
-    "reporting-engine": {
-      "source_root": "plugins/_shared/vendor/modules"
-    },
     "vera": {
       "module_roots": [
         "vera_ocr"

@@ -1,0 +1,17 @@
+Date,Brand,Category,Region,SKU,Sales,Units,MarginRate,Channel
+2025-01-01,Aurora,Color,North,AUR-01,121500,12100,0.311,Retail
+2025-01-01,Bloom,Care,North,BLO-01,91000,7600,0.271,Online
+2025-01-01,Cinder,Color,South,CIN-01,81500,8050,0.291,Retail
+2025-01-01,Dune,Care,South,DUN-01,70500,5650,0.251,Online
+2025-02-01,Aurora,Color,North,AUR-01,127500,12150,0.316,Retail
+2025-02-01,Bloom,Care,North,BLO-01,97000,8050,0.276,Online
+2025-02-01,Cinder,Color,South,CIN-01,85000,8100,0.296,Retail
+2025-02-01,Dune,Care,South,DUN-01,74500,5700,0.256,Online
+2026-01-01,Aurora,Color,North,AUR-01,140000,12600,0.327,Retail
+2026-01-01,Bloom,Care,North,BLO-01,101000,7900,0.282,Online
+2026-01-01,Cinder,Color,South,CIN-01,94000,8600,0.307,Retail
+2026-01-01,Dune,Care,South,DUN-01,78000,5850,0.262,Online
+2026-02-01,Aurora,Color,North,AUR-01,147500,12900,0.332,Retail
+2026-02-01,Bloom,Care,North,BLO-01,106000,8200,0.287,Online
+2026-02-01,Cinder,Color,South,CIN-01,99000,8800,0.312,Retail
+2026-02-01,Dune,Care,South,DUN-01,82000,6000,0.267,Online

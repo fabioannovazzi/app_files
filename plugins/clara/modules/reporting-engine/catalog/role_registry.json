@@ -1,0 +1,1873 @@
+{
+  "schema_version": "0.1",
+  "role_registry": {
+    "schema_version": "0.1",
+    "purpose": "Canonical mechanical role vocabulary for chart selection. These roles constrain dataset/profile and plugin-parameter matching; they do not decide analysis validity.",
+    "chart_roles": {
+      "area_metric": {
+        "role": "area_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.amount_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.barmekko"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "attribute_bundle": {
+        "role": "attribute_bundle",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "package_contract",
+            "parameters": [
+              "package_dir"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "attributes.attribute_bundle_comparison_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "bridge_component_period": {
+        "role": "bridge_component_period",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "derived_from_period",
+            "role": "period_axis"
+          }
+        ],
+        "used_by_capabilities": [
+          "period_comparison.horizontal_waterfall"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "category": {
+        "role": "category",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.bar",
+          "mix.pareto",
+          "mix.stacked_bar",
+          "mix.stacked_bar_overlay",
+          "mix.stacked_pareto"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "child_driver": {
+        "role": "child_driver",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.exploded_variance_bridge_child_dimension"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.exploded_variance_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "cohort_layer": {
+        "role": "cohort_layer",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "package_contract",
+            "parameters": [
+              "package_dir"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "attributes.attribute_bridge_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "comparison_item": {
+        "role": "comparison_item",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "period_comparison.dot",
+          "period_comparison.slope"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "comparison_metric": {
+        "role": "comparison_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.amount_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.metric_column"
+            ]
+          },
+          {
+            "kind": "contract",
+            "parameters": [
+              "metric"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.multitier_bar",
+          "period_comparison.by_period",
+          "period_comparison.comparison_table",
+          "period_comparison.dot",
+          "period_comparison.horizontal_waterfall",
+          "period_comparison.multitier_column",
+          "period_comparison.slope",
+          "period_comparison.time_series_table",
+          "period_comparison.trend"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "comparison_series": {
+        "role": "comparison_series",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "derived_from_period",
+            "role": "period_axis"
+          }
+        ],
+        "used_by_capabilities": [
+          "period_comparison.by_period",
+          "period_comparison.multitier_column",
+          "period_comparison.trend"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "comparison_window": {
+        "role": "comparison_window",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "derived_from_period",
+            "role": "period_filter"
+          }
+        ],
+        "used_by_capabilities": [
+          "period_comparison.comparison_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "component_category": {
+        "role": "component_category",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.stacked_bar"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "component_dimension": {
+        "role": "component_dimension",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.like_for_like_stacked_column",
+          "mix.stacked_column",
+          "mix.stacked_pareto"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "component_root_cause_driver_sequence": {
+        "role": "component_root_cause_driver_sequence",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.root_cause_component_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "dimension_member": {
+        "role": "dimension_member",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.total_by_dimension_bridge_dimension"
+            ]
+          },
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          },
+          {
+            "kind": "contract",
+            "parameters": [
+              "dimension",
+              "dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.multitier_bar",
+          "variance.total_by_dimension_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "distribution_metric": {
+        "role": "distribution_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.metric_column"
+            ]
+          },
+          {
+            "kind": "contract",
+            "parameters": [
+              "metric"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "distribution.boxplot",
+          "distribution.ecdf",
+          "distribution.histogram",
+          "distribution.kernel_density",
+          "distribution.stripplot"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "drilldown_selection": {
+        "role": "drilldown_selection",
+        "kinds": [
+          "dimension",
+          "variant"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "options.root_cause_bridge_alternative_result",
+              "options.root_cause_bridge_drilldown_rows"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.exploded_variance_bridge_max_drilldowns"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.root_cause_exploded_bridge"
+        ],
+        "used_by_artifacts": [
+          "variance / exploded_variance_bridge",
+          "variance / root_cause_exploded_bridge"
+        ],
+        "registry_status": "defined"
+      },
+      "first_active_cohort": {
+        "role": "first_active_cohort",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.period_column",
+              "mappings.dimensions",
+              "options.period_selection",
+              "options.derived_dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.cohort_since_stacked_column"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "height_category": {
+        "role": "height_category",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.barmekko"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "height_metric": {
+        "role": "height_metric",
+        "kinds": [],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.amount_column",
+              "mappings.width_metric_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "lost_or_last_active_cohort": {
+        "role": "lost_or_last_active_cohort",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.period_column",
+              "mappings.dimensions",
+              "options.period_selection",
+              "options.derived_dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.cohort_lost_stacked_column"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "optional_component_dimension": {
+        "role": "optional_component_dimension",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.area"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "optional_drilldown_selection": {
+        "role": "optional_drilldown_selection",
+        "kinds": [],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "options.root_cause_bridge_alternative_result",
+              "options.root_cause_bridge_drilldown_rows"
+            ]
+          }
+        ],
+        "used_by_capabilities": [],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "optional_panel": {
+        "role": "optional_panel",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.small_multiples_dimension"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.small_multiples_dimension"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.waterfall_small_multiples_dimension"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.marimekko",
+          "mix.multitier_bar",
+          "scatter.bubble",
+          "scatter.scatter"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "ordered_stage": {
+        "role": "ordered_stage",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "stage_table_mappings.stage_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "funnel.stage_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "panel_dimension": {
+        "role": "panel_dimension",
+        "kinds": [
+          "variant"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.small_multiples_dimension"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.small_multiples_dimension"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.waterfall_small_multiples_dimension"
+            ]
+          }
+        ],
+        "used_by_capabilities": [],
+        "used_by_artifacts": [
+          "distribution / boxplot_small_multiples",
+          "distribution / ecdf_small_multiples",
+          "distribution / histogram_small_multiples",
+          "distribution / kernel_density_small_multiples",
+          "distribution / stripplot_small_multiples",
+          "mix_comparison / bar_small_multiples",
+          "mix_comparison / line_small_multiples",
+          "mix_comparison / mix_regular / stacked_column_small_multiples",
+          "mix_comparison / multitier_bar_dimension_panels",
+          "mix_comparison / multitier_bar_two_dimension",
+          "mix_comparison / related_metrics_bar_small_multiples",
+          "mix_current / barmekko_small_multiples",
+          "mix_current / marimekko_small_multiples",
+          "mix_current / stacked_bar_small_multiples",
+          "period / year_over_year_by_recency_window_small_multiples",
+          "period / year_over_year_column_small_multiples",
+          "period / year_over_year_dot_small_multiples",
+          "period / year_over_year_slope_small_multiples",
+          "period / year_over_year_small_multiples",
+          "period / year_over_year_waterfall_small_multiples",
+          "scatter / scatter_bubble / bubble_small_multiples",
+          "scatter / scatter_bubble / scatter_small_multiples",
+          "set_overlap / set_overlap_small_multiples / upset_small_multiples",
+          "variance / waterfall_small_multiples"
+        ],
+        "registry_status": "defined"
+      },
+      "panel_or_segment": {
+        "role": "panel_or_segment",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.small_multiples_dimension"
+            ]
+          },
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "set_overlap.upset_small_multiples"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "parent_driver": {
+        "role": "parent_driver",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.exploded_variance_bridge_parent_dimension"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.exploded_variance_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "period_axis": {
+        "role": "period_axis",
+        "kinds": [
+          "period"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.date_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.period_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.period_window"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "periods"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.area",
+          "mix.cohort_lost_stacked_column",
+          "mix.cohort_since_stacked_column",
+          "mix.column",
+          "mix.column_overlay",
+          "mix.like_for_like_column",
+          "mix.like_for_like_stacked_column",
+          "mix.multitier_bar",
+          "mix.stacked_column",
+          "mix.timeline",
+          "period_comparison.by_period",
+          "period_comparison.dot",
+          "period_comparison.horizontal_waterfall",
+          "period_comparison.multitier_column",
+          "period_comparison.slope",
+          "period_comparison.time_series_table",
+          "period_comparison.trend",
+          "statement.pnl_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "period_filter": {
+        "role": "period_filter",
+        "kinds": [
+          "period"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.period_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.date_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.baseline_period"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.comparison_period"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.selected_period"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.selected_periods"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "options.period_window"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "periods"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "distribution.boxplot",
+          "distribution.ecdf",
+          "distribution.histogram",
+          "distribution.kernel_density",
+          "distribution.stripplot",
+          "mix.bar",
+          "mix.barmekko",
+          "mix.marimekko",
+          "mix.pareto",
+          "mix.stacked_bar",
+          "mix.stacked_bar_overlay",
+          "mix.stacked_pareto",
+          "period_comparison.comparison_table",
+          "scatter.bubble",
+          "scatter.scatter",
+          "set_overlap.upset",
+          "set_overlap.upset_small_multiples",
+          "set_overlap.venn",
+          "variance.exploded_variance_bridge",
+          "variance.price_volume_mix",
+          "variance.root_cause_component_bridge",
+          "variance.root_cause_exploded_bridge",
+          "variance.root_cause_total_bridge",
+          "variance.scenario_bridge",
+          "variance.total_by_dimension_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "period_or_scenario_pair": {
+        "role": "period_or_scenario_pair",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "derived_from_period",
+            "role": "period_filter"
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.price_volume_mix"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "point_dimension": {
+        "role": "point_dimension",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.dot_dimension"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "scatter.bubble",
+          "scatter.scatter"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "price_or_rate_metric": {
+        "role": "price_or_rate_metric",
+        "kinds": [],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.price_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.rate_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.price_or_rate_metric_column"
+            ]
+          },
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.amount_column",
+              "mappings.units_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "primary_additive_metric": {
+        "role": "primary_additive_metric",
+        "kinds": [],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.amount_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.source_amount_column"
+            ]
+          },
+          {
+            "kind": "contract",
+            "parameters": [
+              "metric"
+            ]
+          }
+        ],
+        "used_by_capabilities": [],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "primary_metric": {
+        "role": "primary_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.amount_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.metric_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.source_amount_column"
+            ]
+          },
+          {
+            "kind": "contract",
+            "parameters": [
+              "metric"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.area",
+          "mix.bar",
+          "mix.cohort_lost_stacked_column",
+          "mix.cohort_since_stacked_column",
+          "mix.column",
+          "mix.column_overlay",
+          "mix.like_for_like_column",
+          "mix.like_for_like_stacked_column",
+          "mix.marimekko",
+          "mix.pareto",
+          "mix.stacked_bar",
+          "mix.stacked_bar_overlay",
+          "mix.stacked_column",
+          "mix.stacked_pareto",
+          "mix.timeline"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "product": {
+        "role": "product",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "package_contract",
+            "parameters": [
+              "package_dir"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "attributes.product_signal_evidence_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "rank_or_lane": {
+        "role": "rank_or_lane",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "package_contract",
+            "parameters": [
+              "package_dir"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "attributes.rank_weighted_visibility_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "related_marker_metric": {
+        "role": "related_marker_metric",
+        "kinds": [
+          "metric",
+          "variant"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.related_marker_metric_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.margin_percent_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.margin_column"
+            ]
+          },
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.amount_column",
+              "options.period_selection"
+            ]
+          },
+          {
+            "kind": "contract",
+            "parameters": [
+              "related_marker_metric"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.column_overlay",
+          "mix.stacked_bar_overlay"
+        ],
+        "used_by_artifacts": [
+          "mix_comparison / mix_comparison_column_total / column_total_with_overlay",
+          "mix_comparison / related_metrics_bar",
+          "mix_comparison / related_metrics_bar_small_multiples"
+        ],
+        "registry_status": "defined"
+      },
+      "root_cause_driver_sequence": {
+        "role": "root_cause_driver_sequence",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.root_cause_exploded_bridge",
+          "variance.root_cause_total_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "set_membership_fields": {
+        "role": "set_membership_fields",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.item_column",
+              "mappings.set_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "set_overlap.upset",
+          "set_overlap.upset_small_multiples"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "signal_bundle": {
+        "role": "signal_bundle",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "package_contract",
+            "parameters": [
+              "package_dir"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "attributes.attribute_bridge_table",
+          "attributes.product_signal_evidence_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "size_metric": {
+        "role": "size_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.bubble_size_metric_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "scatter.bubble"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "stable_population_flag": {
+        "role": "stable_population_flag",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.period_column",
+              "mappings.dimensions",
+              "options.period_selection",
+              "options.like_for_like"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.like_for_like_column",
+          "mix.like_for_like_stacked_column"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "stack_category": {
+        "role": "stack_category",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.marimekko"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "stage_pass_count": {
+        "role": "stage_pass_count",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "stage_table_mappings.pass_count_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "funnel.stage_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "stage_start_count": {
+        "role": "stage_start_count",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "stage_table_mappings.start_count_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "funnel.stage_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "statement_line_item": {
+        "role": "statement_line_item",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.row_key_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "statement.pnl_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "statement_scenario": {
+        "role": "statement_scenario",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.scenario_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "statement.pnl_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "statement_structure": {
+        "role": "statement_structure",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "statement_rows",
+              "periods",
+              "scenarios_by_period"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "statement.pnl_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "statement_value": {
+        "role": "statement_value",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.value_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "statement.pnl_table"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "two_or_three_set_membership_fields": {
+        "role": "two_or_three_set_membership_fields",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "compound",
+            "paths": [
+              "mappings.item_column",
+              "mappings.set_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "set_overlap.venn"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "value_metric": {
+        "role": "value_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.amount_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.price_volume_mix",
+          "variance.root_cause_component_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "variance_metric": {
+        "role": "variance_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.amount_column"
+            ]
+          },
+          {
+            "kind": "contract",
+            "parameters": [
+              "metric"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.exploded_variance_bridge",
+          "variance.root_cause_exploded_bridge",
+          "variance.root_cause_total_bridge",
+          "variance.scenario_bridge",
+          "variance.total_by_dimension_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "variance_step": {
+        "role": "variance_step",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "derived_from_period",
+            "role": "period_filter"
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.scenario_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "volume_metric": {
+        "role": "volume_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.units_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.width_metric_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "variance.price_volume_mix",
+          "variance.root_cause_component_bridge"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "width_category": {
+        "role": "width_category",
+        "kinds": [
+          "dimension"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "collection",
+            "paths": [
+              "mappings.dimensions"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.barmekko",
+          "mix.marimekko"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "width_metric": {
+        "role": "width_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.width_metric_column"
+            ]
+          },
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.units_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "mix.barmekko"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "x_metric": {
+        "role": "x_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.x_metric_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "scatter.bubble",
+          "scatter.scatter"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      },
+      "y_metric": {
+        "role": "y_metric",
+        "kinds": [
+          "metric"
+        ],
+        "parameter_candidates": [
+          {
+            "kind": "explicit",
+            "paths": [
+              "mappings.y_metric_column"
+            ]
+          }
+        ],
+        "used_by_capabilities": [
+          "scatter.bubble",
+          "scatter.scatter"
+        ],
+        "used_by_artifacts": [],
+        "registry_status": "defined"
+      }
+    },
+    "profile_roles": {
+      "period": {
+        "description": "Dataset column that can order or filter observations by time or period.",
+        "produced_by": "dataset_profile.roles.period"
+      },
+      "metric": {
+        "description": "Dataset column or derived metric candidate usable as a numeric measure.",
+        "produced_by": "dataset_profile.roles.metric and dataset_profile.metric_classes"
+      },
+      "dimension": {
+        "description": "Dataset column usable for grouping, ranking, panels, or composition.",
+        "produced_by": "dataset_profile.roles.dimension"
+      },
+      "identifier": {
+        "description": "Dataset column that mechanically identifies entities such as products or customers.",
+        "produced_by": "dataset_profile.roles.identifier"
+      },
+      "direct_dimension": {
+        "description": "Categorical grouping candidate; not a semantic endorsement.",
+        "produced_by": "dataset_profile.role_candidates.direct_dimension"
+      },
+      "entity_key": {
+        "description": "Entity candidate for cohorts, like-for-like populations, or set membership derivation.",
+        "produced_by": "dataset_profile.role_candidates.entity_key"
+      },
+      "ordered_stage": {
+        "description": "Ordered funnel stage candidate.",
+        "produced_by": "dataset_profile.role_candidates.ordered_stage"
+      },
+      "rank_or_lane": {
+        "description": "Rank, lane, band, bucket, or tier candidate.",
+        "produced_by": "dataset_profile.role_candidates.rank_or_lane"
+      },
+      "set_dimension": {
+        "description": "Low-cardinality set/group candidate for overlap analysis.",
+        "produced_by": "dataset_profile.role_candidates.set_dimension"
+      },
+      "set_item": {
+        "description": "Item/entity candidate for set membership aggregation.",
+        "produced_by": "dataset_profile.role_candidates.set_item"
+      },
+      "statement_line_item": {
+        "description": "Financial statement line item candidate.",
+        "produced_by": "dataset_profile.role_candidates.statement_line_item"
+      },
+      "statement_scenario": {
+        "description": "Scenario column candidate for structured statement values.",
+        "produced_by": "dataset_profile.role_candidates.statement_scenario"
+      }
+    },
+    "capability_parameter_overrides": {
+      "set_overlap.upset_small_multiples": {
+        "panel_or_segment": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "options.small_multiples_dimension"
+            ],
+            "verified_by": "plugins/set-overlap-analysis/scripts/set_overlap_core.py"
+          }
+        ]
+      },
+      "funnel.stage_table": {
+        "stage_start_count": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "stage_table_mappings.start_count_column"
+            ],
+            "verified_by": "plugins/funnel-analysis/scripts/funnel_core.py:compute_funnel_rows_from_stage_table"
+          }
+        ],
+        "stage_pass_count": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "stage_table_mappings.pass_count_column"
+            ],
+            "verified_by": "plugins/funnel-analysis/scripts/funnel_core.py:compute_funnel_rows_from_stage_table"
+          }
+        ],
+        "ordered_stage": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "stage_table_mappings.stage_column"
+            ],
+            "verified_by": "plugins/funnel-analysis/scripts/funnel_core.py:compute_funnel_rows_from_stage_table"
+          }
+        ]
+      },
+      "statement.pnl_table": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values"
+          }
+        ],
+        "statement_value": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.value_column"
+            ],
+            "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values"
+          }
+        ],
+        "statement_line_item": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.row_key_column"
+            ],
+            "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values"
+          }
+        ],
+        "statement_scenario": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.scenario_column"
+            ],
+            "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_read_values"
+          }
+        ],
+        "statement_structure": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "statement_rows",
+              "periods",
+              "scenarios_by_period"
+            ],
+            "verified_by": "plugins/statement-analysis/scripts/statement_core.py:_validate_recipe"
+          }
+        ]
+      },
+      "mix.area": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ]
+      },
+      "mix.cohort_lost_stacked_column": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ],
+        "lost_or_last_active_cohort": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.dimensions",
+              "options.period_selection",
+              "options.derived_dimensions"
+            ],
+            "verified_by": "plugins/_shared/vendor/modules/chart_harness/period_derivations.py"
+          }
+        ]
+      },
+      "mix.cohort_since_stacked_column": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ],
+        "first_active_cohort": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.dimensions",
+              "options.period_selection",
+              "options.derived_dimensions"
+            ],
+            "verified_by": "plugins/_shared/vendor/modules/chart_harness/period_derivations.py"
+          }
+        ]
+      },
+      "mix.column": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ]
+      },
+      "mix.column_overlay": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ]
+      },
+      "mix.like_for_like_column": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ],
+        "stable_population_flag": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.dimensions",
+              "options.period_selection",
+              "options.like_for_like"
+            ],
+            "verified_by": "plugins/_shared/vendor/modules/chart_harness/period_derivations.py"
+          }
+        ]
+      },
+      "mix.like_for_like_stacked_column": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ],
+        "stable_population_flag": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.dimensions",
+              "options.period_selection",
+              "options.like_for_like"
+            ],
+            "verified_by": "plugins/_shared/vendor/modules/chart_harness/period_derivations.py"
+          }
+        ]
+      },
+      "mix.multitier_bar": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ]
+      },
+      "mix.stacked_column": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ]
+      },
+      "mix.timeline": {
+        "period_axis": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.date_column",
+              "mappings.period_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ]
+      },
+      "mix.barmekko": {
+        "area_metric": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.amount_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ],
+        "width_metric": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.width_metric_column"
+            ],
+            "verified_by": "plugins/mix-contribution-analysis/scripts/mix_core.py:prepare_canonical_frame"
+          }
+        ]
+      },
+      "variance.exploded_variance_bridge": {
+        "period_filter": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.baseline_period",
+              "mappings.comparison_period"
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe"
+          }
+        ]
+      },
+      "variance.price_volume_mix": {
+        "period_filter": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.baseline_period",
+              "mappings.comparison_period"
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe"
+          }
+        ]
+      },
+      "variance.root_cause_component_bridge": {
+        "period_filter": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.baseline_period",
+              "mappings.comparison_period"
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe"
+          }
+        ]
+      },
+      "variance.root_cause_exploded_bridge": {
+        "period_filter": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.baseline_period",
+              "mappings.comparison_period"
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe"
+          }
+        ]
+      },
+      "variance.root_cause_total_bridge": {
+        "period_filter": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.baseline_period",
+              "mappings.comparison_period"
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe"
+          }
+        ]
+      },
+      "variance.scenario_bridge": {
+        "period_filter": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.baseline_period",
+              "mappings.comparison_period"
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe"
+          }
+        ]
+      },
+      "variance.total_by_dimension_bridge": {
+        "period_filter": [
+          {
+            "kind": "runtime_contract",
+            "paths": [
+              "mappings.period_column",
+              "mappings.baseline_period",
+              "mappings.comparison_period"
+            ],
+            "verified_by": "plugins/variance-analysis/scripts/variance_core.py:validate_recipe"
+          }
+        ]
+      }
+    },
+    "counts": {
+      "chart_roles": 58,
+      "profile_roles": 12,
+      "used_chart_roles": 54,
+      "chart_roles_missing_mapping": 0
+    }
+  }
+}

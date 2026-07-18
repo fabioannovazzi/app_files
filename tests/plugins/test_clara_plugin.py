@@ -678,7 +678,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.92"
+    assert manifest["version"] == "0.1.93"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -700,6 +700,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "reporting-engine-direct-chart-analysis",
         "reporting-engine-chart-contract",
         "reporting-engine-semantic-layer",
+        "reporting-engine-recurring-snapshot",
     }.issubset(fixture_ids)
     expected_routes = {
         item["id"]: item.get("expected_skill")
@@ -723,6 +724,9 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "clara:reporting-engine"
     )
     assert expected_routes["reporting-engine-semantic-layer"] == (
+        "clara:reporting-engine"
+    )
+    assert expected_routes["reporting-engine-recurring-snapshot"] == (
         "clara:reporting-engine"
     )
     main_description = main_skill.split("---", 2)[1]
