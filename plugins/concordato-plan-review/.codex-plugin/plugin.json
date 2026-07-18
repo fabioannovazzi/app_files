@@ -1,13 +1,13 @@
 {
   "name": "concordato-plan-review",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "Tie-out and auditor-oriented Word/Excel review workflow for Italian concordato plan numerical sections against accounting evidence.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "homepage": "https://mparanza.com/static/shared/concordato-plan-review/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [

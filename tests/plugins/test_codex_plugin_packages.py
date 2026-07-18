@@ -30,7 +30,6 @@ STANDALONE_PLUGIN_NAMES = {"attribute-reporting", "clara"}
 PRIVATE_STANDALONE_PLUGIN_NAMES = {"attribute-reporting"}
 UNIFIED_PLUGIN_NAMES = {"vera"}
 VERA_PUBLIC_PAGE_PATHS = (
-    Path("static/shared/audit-reconciliation/index.html"),
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/client-intake/geneva.html"),
     Path("static/shared/client-intake/index.html"),
@@ -45,7 +44,6 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/registro-imprese-sari/index.html"),
     Path("static/shared/riconciliazione-partite/index.html"),
     Path("static/shared/report-builder/index.html"),
-    Path("static/shared/research/index.html"),
 )
 REPORTING_ENGINE_PLUGIN_NAMES = {
     "distribution-analysis",
@@ -250,12 +248,10 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "prompt-optimizer" / "index.html",
     ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
-    ROOT / "static" / "shared" / "reporting" / "index.html",
 )
 STANDALONE_STATIC_PLUGIN_PAGES = (ROOT / "static" / "shared" / "clara" / "index.html",)
 STATIC_PLUGIN_PAGES = ACCOUNTING_STATIC_PLUGIN_PAGES + STANDALONE_STATIC_PLUGIN_PAGES
 PUBLIC_PLUGIN_EXPLAINER_PAGES = (
-    ROOT / "static" / "shared" / "audit-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "clara" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "client-intake" / "index.html",
@@ -267,10 +263,8 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "previdenza-inps" / "index.html",
-    ROOT / "static" / "shared" / "reporting" / "index.html",
     ROOT / "static" / "shared" / "prompt-optimizer" / "index.html",
     ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html",
-    ROOT / "static" / "shared" / "research" / "index.html",
     ROOT / "static" / "shared" / "report-builder" / "index.html",
     ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html",
 )
@@ -1389,7 +1383,7 @@ def test_static_plugin_pages_download_accounting_bundle() -> None:
     standard_pages = tuple(
         page_path
         for page_path in ACCOUNTING_STATIC_PLUGIN_PAGES
-        if page_path.parent.name not in {"reporting", "vera"}
+        if page_path.parent.name != "vera"
     )
     for page_path in standard_pages:
         page = page_path.read_text(encoding="utf-8")
@@ -1408,28 +1402,6 @@ def test_static_plugin_pages_download_accounting_bundle() -> None:
         for snippet in stale_download_snippets:
             assert snippet not in page, page_path.as_posix()
 
-    reporting_page = (
-        ROOT / "static" / "shared" / "reporting" / "index.html"
-    ).read_text(encoding="utf-8")
-    for stale_download_copy in (
-        "/downloads/accounting-plugin-pack/pro",
-        ACCOUNTING_BUNDLE_LINK,
-        "data-reporting-download-link",
-        "data-pro-download-link",
-        "Download ZIP",
-        "Scarica ZIP",
-        "Install Reporting",
-        "Installa Reporting",
-        'href="#download"',
-    ):
-        assert stale_download_copy not in reporting_page
-    assert "Reporting that starts from verifiable analysis." in reporting_page
-    assert 'href="#engines" data-i18n="hero.secondary"' in reporting_page
-    assert "Deep Research Validator" not in reporting_page
-    assert 'id="deep-research-validator"' not in reporting_page
-    assert "Pro pack" not in reporting_page
-    assert "Word report" not in reporting_page
-    assert "tag-list" not in reporting_page
     for plugin_name in REPORTING_ENGINE_PLUGIN_NAMES:
         assert not (
             ROOT
@@ -1555,7 +1527,7 @@ def test_manual_vera_download_is_public() -> None:
         assert response.headers["content-type"] == "application/zip"
 
 
-def test_reporting_and_clara_downloads_are_public(
+def test_clara_downloads_are_public_and_removed_explainers_return_404(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -1623,9 +1595,12 @@ def test_reporting_and_clara_downloads_are_public(
         )
         public_plugin_pages = (
             "/static/shared/deep-research-validator/index.html",
-            "/static/shared/reporting/index.html",
+            "/static/shared/clara/index.html",
         )
-        removed_plotting_pages = (
+        removed_plugin_pages = (
+            "/static/shared/audit-reconciliation/index.html",
+            "/static/shared/reporting/index.html",
+            "/static/shared/research/index.html",
             "/static/shared/mix-contribution-analysis/index.html",
             "/static/shared/period-comparison/index.html",
             "/static/shared/scatter-bubble-analysis/index.html",
@@ -1643,7 +1618,7 @@ def test_reporting_and_clara_downloads_are_public(
                 response = free_client.get(page_path, follow_redirects=False)
                 assert response.status_code == 200
 
-            for page_path in removed_plotting_pages:
+            for page_path in removed_plugin_pages:
                 response = free_client.get(page_path, follow_redirects=False)
                 assert response.status_code == 404
 
@@ -1996,153 +1971,13 @@ def test_vera_page_localizes_every_module_title() -> None:
         assert untranslated_italian_copy not in page
 
 
-def test_audit_reconciliation_family_page_explains_grouped_plugins() -> None:
-    page = (
-        ROOT / "static" / "shared" / "audit-reconciliation" / "index.html"
-    ).read_text(encoding="utf-8")
-
-    for snippet in (
-        "Audit and reconciliation",
-        "Controlli contabili e riconciliazioni",
-        "Choose the accounting check you need.",
-        "Available checks",
-        "Scegli il controllo contabile da fare.",
-        "Le verifiche disponibili",
-        "Prepare the files before interpreting the result.",
-        "Prima prepara i riscontri, poi valuta.",
-        "Journal sampling",
-        "Campionamento scritture contabili",
-        "Entry support testing",
-        "Verifica supporti delle scritture",
-        "Journal-bank reconciliation",
-        "Riconciliazione banca-contabilit",
-        "Open-item reconciliation",
-        "Riconciliazione partite",
-        "Plan support review",
-        "Supporto numeri di piano",
-        "../journal-sampling/index.html",
-        "../check-entries/index.html",
-        "../journal-bank-reconciliation/index.html",
-        "../riconciliazione-partite/index.html",
-        "../concordato-plan-review/index.html",
-        'new URL(link.getAttribute("href"), window.location.href)',
-        "/?lang=${safeLang}",
+def test_unlinked_family_explainer_pages_are_removed() -> None:
+    for page_path in (
+        ROOT / "static" / "shared" / "audit-reconciliation" / "index.html",
+        ROOT / "static" / "shared" / "reporting" / "index.html",
+        ROOT / "static" / "shared" / "research" / "index.html",
     ):
-        assert snippet in page
-    for hidden_snippet in (
-        "Plugin engine",
-        "Motore plugin",
-        "Moteur plugin",
-        "Plugin-Engine",
-        'class="plugin-id"',
-    ):
-        assert hidden_snippet not in page
-
-
-def test_research_family_page_explains_grouped_plugins() -> None:
-    page = (ROOT / "static" / "shared" / "research" / "index.html").read_text(
-        encoding="utf-8"
-    )
-
-    for snippet in (
-        "Research",
-        "Ricerca",
-        "Recherche",
-        "Two research jobs",
-        "Due lavori di ricerca",
-        "Use Deep Research with a clearer brief",
-        "Optimize prompt",
-        "Ottimizza prompt",
-        "Validate Deep Research",
-        "Valida Deep Research",
-        "Valider Deep Research",
-        "Deep Research validieren",
-        "../prompt-optimizer/index.html",
-        "../deep-research-validator/index.html",
-        'new URL(link.getAttribute("href"), window.location.href)',
-        "/?lang=${safeLang}",
-    ):
-        assert snippet in page
-    for hidden_snippet in (
-        "Plugin engine",
-        "Motore plugin",
-        "Moteur plugin",
-        "Plugin-Engine",
-        'class="plugin-id"',
-        "Build report",
-        "Genera report",
-        "Générer un rapport",
-        "Bericht erstellen",
-        "../report-builder/index.html",
-    ):
-        assert hidden_snippet not in page
-
-
-def test_public_explanation_pages_account_for_every_plugin() -> None:
-    page_by_family = {
-        "audit": (
-            ROOT / "static" / "shared" / "audit-reconciliation" / "index.html"
-        ).read_text(encoding="utf-8"),
-        "research": (ROOT / "static" / "shared" / "research" / "index.html").read_text(
-            encoding="utf-8"
-        ),
-        "report": (
-            ROOT / "static" / "shared" / "report-builder" / "index.html"
-        ).read_text(encoding="utf-8"),
-        "client": (
-            ROOT / "static" / "shared" / "client-intake" / "index.html"
-        ).read_text(encoding="utf-8"),
-        "reporting": (
-            ROOT / "static" / "shared" / "reporting" / "index.html"
-        ).read_text(encoding="utf-8"),
-        "case_notes": (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
-            encoding="utf-8"
-        ),
-        "previdenza": (
-            ROOT / "static" / "shared" / "previdenza-inps" / "index.html"
-        ).read_text(encoding="utf-8"),
-        "registro": (
-            ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html"
-        ).read_text(encoding="utf-8"),
-    }
-    expected_family_markers = {
-        "audit-reconciliation": ("audit", "Open-item reconciliation"),
-        "clara": ("case_notes", "Clara"),
-        "check-entries": ("audit", "Entry support testing"),
-        "concordato-plan-review": ("audit", "Plan support review"),
-        "journal-bank-reconciliation": ("audit", "Journal-bank reconciliation"),
-        "journal-sampling": ("audit", "Journal sampling"),
-        "client-intake": ("client", "Client Intake"),
-        "deep-research-validator": ("research", "Validate Deep Research"),
-        "prompt-optimizer": ("research", "Optimize prompt"),
-        "report-builder": ("report", "Build report"),
-        "distribution-analysis": (
-            "reporting",
-            "Relationship, spread and overlap sources",
-        ),
-        "funnel-analysis": ("reporting", "Structured table sources"),
-        "mix-contribution-analysis": ("reporting", "Mix and composition sources"),
-        "period-comparison": ("reporting", "Movement and period sources"),
-        "previdenza-inps": ("previdenza", "INPS Social Security Review"),
-        "registro-imprese-sari": (
-            "registro",
-            "Business Register and SARI",
-        ),
-        "scatter-bubble-analysis": (
-            "reporting",
-            "Relationship, spread and overlap sources",
-        ),
-        "set-overlap-analysis": (
-            "reporting",
-            "Relationship, spread and overlap sources",
-        ),
-        "statement-analysis": ("reporting", "Structured table sources"),
-        "variance-analysis": ("reporting", "Movement and period sources"),
-    }
-
-    assert set(expected_family_markers) == WORKFLOW_PLUGIN_NAMES
-    for _plugin_name, (family, marker) in expected_family_markers.items():
-        assert marker in page_by_family[family]
+        assert not page_path.exists()
 
 
 def test_deep_research_validator_page_matches_plugin_site_pattern() -> None:
@@ -2609,95 +2444,6 @@ def test_homepage_routes_concordato_plan_review_through_vera() -> None:
     assert "../concordato-plan-review/index.html" in page
 
 
-def test_reporting_page_replaces_plotting_plugin_pages() -> None:
-    page = (ROOT / "static" / "shared" / "reporting" / "index.html").read_text(
-        encoding="utf-8"
-    )
-
-    for snippet in (
-        "Reporting that starts from verifiable analysis.",
-        "Reporting basato su analisi verificabili.",
-        "Generate the views before writing the explanation.",
-        "Prepara le viste prima di scrivere la spiegazione.",
-        "Repeatable analysis",
-        "Analisi ripetibile",
-        "Reviewable sources",
-        "Evidenze rivedibili",
-        "Commentary tied to outputs",
-        "Commento collegato agli output",
-        "Source families for the report.",
-        "Famiglie di evidenze per il report.",
-        "Reporting chooses the charts, tables and checks",
-        "Reporting sceglie i grafici, le tabelle e i controlli",
-        "Movement and period sources",
-        "Evidenze di movimento e periodo",
-        "Mix and composition sources",
-        "Evidenze di mix e composizione",
-        "Relationship, spread and overlap sources",
-        "Structured table sources",
-        "Written explanation starts from selected views.",
-        "La spiegazione parte dalle viste selezionate.",
-        "/?lang=${safeLang}",
-    ):
-        assert snippet in page
-    for download_snippet in (
-        "/downloads/accounting-plugin-pack/pro",
-        "data-reporting-download-link",
-        "Download ZIP",
-        "Scarica ZIP",
-        "Install Reporting",
-        "Installa Reporting",
-        'href="#download"',
-    ):
-        assert download_snippet not in page
-    assert 'class="plugin-id"' not in page
-    assert 'src="data:image/png;base64,' not in page
-    assert 'href="#examples"' not in page
-    assert 'id="examples"' not in page
-    assert "Reporting Pro" not in page
-    assert "Scegli l'analisi in base alla domanda." not in page
-    assert "png-gallery" not in page
-    assert "engines.gallery" not in page
-    for engine_label in (
-        "Variance analysis",
-        "Analisi varianza",
-        "Period comparison",
-        "Confronto periodi",
-        "Scatter and bubble analysis",
-        "Distribution analysis",
-        "Funnel analysis",
-        "Statement analysis",
-        "Set overlap analysis",
-    ):
-        assert engine_label not in page
-    for gallery_label in (
-        "Movement examples",
-        "Period examples",
-        "Composition examples",
-        "Relationship examples",
-        "Spread examples",
-        "Overlap examples",
-        "Stage examples",
-        "Statement examples",
-        "Open gallery",
-        "Apri gallery",
-        "Apri la gallery",
-        "Ouvrez la galerie",
-        "Öffnen Sie die Galerie",
-        "Drivers",
-        "Periods",
-        "Relationships",
-        "Distributions",
-        "Sovrapposizioni",
-    ):
-        assert gallery_label not in page
-    assert "/static/shared/variance-analysis/examples/" not in page
-    assert "../variance-analysis/examples/" not in page
-    assert "Prompt pronti" not in page
-    assert "Chart families" not in page
-    assert "gradient" not in page.lower()
-
-
 def test_old_plotting_plugin_pages_are_removed() -> None:
     for page_path in (
         ROOT / "static" / "shared" / "mix-contribution-analysis" / "index.html",
@@ -2713,49 +2459,44 @@ def test_old_plotting_plugin_pages_are_removed() -> None:
         assert not page_path.exists()
 
 
-def test_plotting_plugin_manifests_use_single_reporting_homepage() -> None:
-    for plugin_name in (
-        "distribution-analysis",
-        "mix-contribution-analysis",
-        "period-comparison",
-        "scatter-bubble-analysis",
-        "set-overlap-analysis",
-        "variance-analysis",
-        "funnel-analysis",
-        "statement-analysis",
-    ):
+def test_reporting_component_manifests_use_clara_homepage() -> None:
+    for plugin_name in REPORTING_ENGINE_PLUGIN_NAMES | {"reporting-engine"}:
         manifest = json.loads(
             (
                 ROOT / "plugins" / plugin_name / ".codex-plugin" / "plugin.json"
             ).read_text(encoding="utf-8")
         )
-        assert (
-            manifest["homepage"]
-            == "https://mparanza.com/static/shared/reporting/index.html"
+        assert manifest["homepage"] == (
+            "https://mparanza.com/static/shared/clara/index.html"
         )
 
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
         "audit-reconciliation": (
-            "https://mparanza.com/static/shared/audit-reconciliation/index.html"
+            "https://mparanza.com/static/shared/riconciliazione-partite/index.html"
         ),
         "check-entries": (
-            "https://mparanza.com/static/shared/audit-reconciliation/index.html"
+            "https://mparanza.com/static/shared/check-entries/index.html"
+        ),
+        "client-intake": (
+            "https://mparanza.com/static/shared/client-intake/index.html"
         ),
         "concordato-plan-review": (
-            "https://mparanza.com/static/shared/audit-reconciliation/index.html"
+            "https://mparanza.com/static/shared/concordato-plan-review/index.html"
         ),
         "journal-bank-reconciliation": (
-            "https://mparanza.com/static/shared/audit-reconciliation/index.html"
+            "https://mparanza.com/static/shared/journal-bank-reconciliation/index.html"
         ),
         "journal-sampling": (
-            "https://mparanza.com/static/shared/audit-reconciliation/index.html"
+            "https://mparanza.com/static/shared/journal-sampling/index.html"
         ),
         "deep-research-validator": (
-            "https://mparanza.com/static/shared/research/index.html"
+            "https://mparanza.com/static/shared/deep-research-validator/index.html"
         ),
-        "prompt-optimizer": ("https://mparanza.com/static/shared/research/index.html"),
+        "prompt-optimizer": (
+            "https://mparanza.com/static/shared/prompt-optimizer/index.html"
+        ),
         "previdenza-inps": (
             "https://mparanza.com/static/shared/previdenza-inps/index.html"
         ),
@@ -2769,6 +2510,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "clara": ("https://mparanza.com/static/shared/clara/index.html"),
     }
 
+    assert set(expected_homepages) | REPORTING_ENGINE_PLUGIN_NAMES == (
+        WORKFLOW_PLUGIN_NAMES | {"vera"}
+    )
     for plugin_name, expected_homepage in expected_homepages.items():
         manifest = json.loads(
             (

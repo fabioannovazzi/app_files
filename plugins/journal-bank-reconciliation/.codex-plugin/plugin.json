@@ -1,13 +1,13 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Deterministic journal-to-bank reconciliation guided by Codex.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/audit-reconciliation/index.html",
+  "homepage": "https://mparanza.com/static/shared/journal-bank-reconciliation/index.html",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
