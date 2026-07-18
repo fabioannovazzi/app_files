@@ -1,0 +1,39 @@
+{
+    "source_file": "attribute_taxonomy.json",
+    "source_sha256": "c3f1584fdd3a962d97e0dc488206011fb7eff5c5215e6351be4228635ba3ad2a",
+    "source_version": "2025-06-23",
+    "category_files": [
+        {
+            "id": "lipstick",
+            "file": "categories/lipstick.json"
+        },
+        {
+            "id": "lip oil",
+            "file": "categories/lip_oil.json"
+        },
+        {
+            "id": "lip gloss",
+            "file": "categories/lip_gloss.json"
+        },
+        {
+            "id": "liquid lipstick",
+            "file": "categories/liquid_lipstick.json"
+        },
+        {
+            "id": "foundation",
+            "file": "categories/foundation.json"
+        },
+        {
+            "id": "temporary",
+            "file": "categories/temporary.json"
+        },
+        {
+            "id": "clothes",
+            "file": "categories/clothes.json"
+        },
+        {
+            "id": "permanent",
+            "file": "categories/permanent.json"
+        }
+    ]
+}
