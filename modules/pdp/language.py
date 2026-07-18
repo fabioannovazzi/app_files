@@ -99,6 +99,12 @@ PAGE_LABELS = {
 
 PAGE_COPY: Dict[str, Dict[str, Any]] = {
     "landing": {
+        "thesis_alt": {
+            "en": "Power is nothing without control.",
+            "it": "La potenza è nulla senza controllo.",
+            "fr": "La puissance n'est rien sans le contrôle.",
+            "de": "Leistung ist nichts ohne Kontrolle.",
+        },
         "primary_navigation_label": {
             "en": "Primary navigation",
             "it": "Navigazione principale",

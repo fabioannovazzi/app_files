@@ -3279,9 +3279,16 @@ def test_homepage_app_css_link_is_cache_busted() -> None:
     )
 
 
-def test_homepage_has_no_third_party_thesis_image() -> None:
+def test_homepage_thesis_image_is_valid_and_cache_busted() -> None:
+    from PIL import Image
+
     template = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
     source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    image_path = ROOT / "static" / "icons" / "power_control.png"
 
-    assert "power_control" not in template
-    assert "thesis_image_asset_version" not in source
+    assert image_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+    with Image.open(image_path) as image:
+        image.verify()
+
+    assert "/static/icons/power_control.png?v={{ thesis_image_asset_version" in template
+    assert '"thesis_image_asset_version": _static_asset_version(' in source
