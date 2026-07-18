@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from modules.change_requests.api import router
 from modules.change_requests.store import (
+    ChangeRequestCapacityError,
     ChangeRequestConflictError,
     ChangeRequestManifestError,
     ChangeRequestNotFoundError,
@@ -13,6 +14,7 @@ from modules.change_requests.store import (
 )
 
 __all__ = [
+    "ChangeRequestCapacityError",
     "ChangeRequestConflictError",
     "ChangeRequestManifestError",
     "ChangeRequestNotFoundError",

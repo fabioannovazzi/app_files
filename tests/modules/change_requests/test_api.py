@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from uuid import uuid4
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -133,6 +134,62 @@ def test_batch_poll_does_not_reveal_missing_or_wrong_token(tmp_path: Path) -> No
             "install_url": None,
         },
     ]
+
+
+def test_public_intake_rate_limit_returns_retry_after(tmp_path: Path) -> None:
+    client, _store = _client(tmp_path)
+    limiter = api.ChangeRequestRateLimiter(
+        window_seconds=30,
+        intake_per_source=1,
+        intake_global=1,
+    )
+    client.app.dependency_overrides[api.get_change_request_rate_limiter] = (
+        lambda: limiter
+    )
+
+    first = client.post("/api/change-requests", json=_payload())
+    limited = client.post("/api/change-requests", json=_payload())
+
+    assert first.status_code == 201
+    assert limited.status_code == 429
+    assert limited.headers["retry-after"] == "30"
+
+
+def test_rate_limiter_separates_sources_and_expires_fixed_window() -> None:
+    current_time = [0.0]
+    limiter = api.ChangeRequestRateLimiter(
+        window_seconds=30,
+        intake_per_source=1,
+        intake_global=2,
+        clock=lambda: current_time[0],
+    )
+
+    limiter.check("source-a", "intake")
+    with pytest.raises(api.ChangeRequestRateLimitError):
+        limiter.check("source-a", "intake")
+    limiter.check("source-b", "intake")
+    with pytest.raises(api.ChangeRequestRateLimitError):
+        limiter.check("source-c", "intake")
+    current_time[0] = 31.0
+
+    limiter.check("source-a", "intake")
+
+
+def test_public_intake_capacity_is_bounded(tmp_path: Path) -> None:
+    client, _store = _client(tmp_path)
+    bounded_store = ChangeRequestStore(
+        sqlite_path=tmp_path / "bounded.sqlite3", max_records=1
+    )
+    client.app.dependency_overrides[api.get_change_request_store] = (
+        lambda: bounded_store
+    )
+
+    first = client.post("/api/change-requests", json=_payload())
+    full = client.post("/api/change-requests", json=_payload())
+
+    assert first.status_code == 201
+    assert full.status_code == 429
+    assert full.headers["retry-after"] == "3600"
 
 
 def test_submit_rejects_oversized_body_before_json_parsing(tmp_path: Path) -> None:

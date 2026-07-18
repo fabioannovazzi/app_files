@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import threading
+import time
+from collections import OrderedDict, deque
 from collections.abc import Callable, Coroutine
+from functools import lru_cache
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
@@ -12,6 +16,7 @@ from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, Field
 
 from modules.change_requests.store import (
+    ChangeRequestCapacityError,
     ChangeRequestConflictError,
     ChangeRequestRecord,
     ChangeRequestStore,
@@ -26,6 +31,7 @@ from modules.hosted_interviews.api import (
 
 __all__ = [
     "MAX_REQUEST_BODY_BYTES",
+    "ChangeRequestRateLimiter",
     "ChangeRequestReceipt",
     "ChangeRequestInterviewReceipt",
     "ChangeRequestInterviewSubmission",
@@ -33,11 +39,88 @@ __all__ = [
     "ChangeRequestStatusBatchRequest",
     "ChangeRequestStatusBatchResponse",
     "get_change_request_store",
+    "get_change_request_rate_limiter",
     "router",
 ]
 
 MAX_REQUEST_BODY_BYTES = 1024 * 1024
 MAX_STATUS_REQUESTS = 100
+RATE_LIMIT_WINDOW_SECONDS = 60.0
+INTAKE_PER_SOURCE_LIMIT = 20
+INTAKE_GLOBAL_LIMIT = 120
+STATUS_PER_SOURCE_LIMIT = 120
+STATUS_GLOBAL_LIMIT = 600
+MAX_RATE_LIMIT_SOURCES = 4_096
+
+
+class ChangeRequestRateLimitError(RuntimeError):
+    """Raised when one public source exceeds a mechanically auditable quota."""
+
+    def __init__(self, retry_after_seconds: int) -> None:
+        super().__init__("Change-request rate limit exceeded.")
+        self.retry_after_seconds = retry_after_seconds
+
+
+class ChangeRequestRateLimiter:
+    """Bound public work with fixed rules required for security and auditability."""
+
+    def __init__(
+        self,
+        *,
+        window_seconds: float = RATE_LIMIT_WINDOW_SECONDS,
+        intake_per_source: int = INTAKE_PER_SOURCE_LIMIT,
+        intake_global: int = INTAKE_GLOBAL_LIMIT,
+        status_per_source: int = STATUS_PER_SOURCE_LIMIT,
+        status_global: int = STATUS_GLOBAL_LIMIT,
+        max_sources: int = MAX_RATE_LIMIT_SOURCES,
+        clock: Callable[[], float] = time.monotonic,
+    ) -> None:
+        self._window_seconds = max(float(window_seconds), 1.0)
+        self._limits = {
+            "intake": (max(intake_per_source, 1), max(intake_global, 1)),
+            "status": (max(status_per_source, 1), max(status_global, 1)),
+        }
+        self._max_sources = max(int(max_sources), 1)
+        self._clock = clock
+        self._source_events: OrderedDict[tuple[str, str], deque[float]] = OrderedDict()
+        self._global_events = {action: deque() for action in self._limits}
+        self._lock = threading.Lock()
+
+    def check(self, source: str, action: str) -> None:
+        """Admit one request or raise with a bounded retry interval."""
+
+        per_source_limit, global_limit = self._limits[action]
+        now = self._clock()
+        cutoff = now - self._window_seconds
+        source_key = (source or "unknown", action)
+        with self._lock:
+            global_events = self._global_events[action]
+            while global_events and global_events[0] <= cutoff:
+                global_events.popleft()
+            source_events = self._source_events.get(source_key)
+            if source_events is None:
+                if len(self._source_events) >= self._max_sources:
+                    self._source_events.popitem(last=False)
+                source_events = deque()
+                self._source_events[source_key] = source_events
+            else:
+                self._source_events.move_to_end(source_key)
+            while source_events and source_events[0] <= cutoff:
+                source_events.popleft()
+            if (
+                len(source_events) >= per_source_limit
+                or len(global_events) >= global_limit
+            ):
+                raise ChangeRequestRateLimitError(int(self._window_seconds))
+            source_events.append(now)
+            global_events.append(now)
+
+
+@lru_cache(maxsize=1)
+def get_change_request_rate_limiter() -> ChangeRequestRateLimiter:
+    """Return the process-wide public intake limiter."""
+
+    return ChangeRequestRateLimiter()
 
 
 class _BoundedChangeRequestRoute(APIRoute):
@@ -91,6 +174,9 @@ router = APIRouter(
     route_class=_BoundedChangeRequestRoute,
 )
 Store = Annotated[ChangeRequestStore, Depends(get_change_request_store)]
+RateLimiter = Annotated[
+    ChangeRequestRateLimiter, Depends(get_change_request_rate_limiter)
+]
 
 
 class ChangeRequestSubmission(BaseModel):
@@ -210,12 +296,32 @@ def _raise_http_store_error(exc: Exception) -> None:
             status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
         ) from exc
+    if isinstance(exc, ChangeRequestCapacityError):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Change-request intake is temporarily at capacity.",
+            headers={"Retry-After": "3600"},
+        ) from exc
     if isinstance(exc, ChangeRequestStoreUnavailableError):
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Change-request service is temporarily unavailable.",
         ) from exc
     raise exc
+
+
+def _enforce_rate_limit(
+    request: Request, rate_limiter: ChangeRequestRateLimiter, action: str
+) -> None:
+    source = request.client.host if request.client is not None else "unknown"
+    try:
+        rate_limiter.check(source, action)
+    except ChangeRequestRateLimitError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many change-request operations. Try again shortly.",
+            headers={"Retry-After": str(exc.retry_after_seconds)},
+        ) from exc
 
 
 @router.post(
@@ -225,13 +331,20 @@ def _raise_http_store_error(exc: Exception) -> None:
 )
 def submit_change_request(
     payload: ChangeRequestSubmission,
+    request: Request,
     store: Store,
+    rate_limiter: RateLimiter,
 ) -> ChangeRequestReceipt:
     """Persist one user-approved Codex change request and return its receipt."""
 
+    _enforce_rate_limit(request, rate_limiter, "intake")
     try:
         record = store.submit(payload.model_dump(mode="json"))
-    except (ChangeRequestConflictError, ChangeRequestStoreUnavailableError) as exc:
+    except (
+        ChangeRequestCapacityError,
+        ChangeRequestConflictError,
+        ChangeRequestStoreUnavailableError,
+    ) as exc:
         _raise_http_store_error(exc)
         raise AssertionError("unreachable")
     return _receipt(record)
@@ -246,9 +359,11 @@ def start_change_request_interview(
     payload: ChangeRequestInterviewSubmission,
     request: Request,
     store: Store,
+    rate_limiter: RateLimiter,
 ) -> ChangeRequestInterviewReceipt:
     """Create or recover one three-minute voice interview request."""
 
+    _enforce_rate_limit(request, rate_limiter, "intake")
     envelope = ChangeRequestSubmission(
         submission_id=payload.submission_id,
         kind="capability",
@@ -299,14 +414,18 @@ def start_change_request_interview(
                     ],
                     interviewer_name="Mparanza",
                     max_duration_seconds=180,
-                    change_request_id=record.change_request_id,
                 ),
                 public_url_base=url_base,
+                change_request_id=record.change_request_id,
             )
             record = store.set_interview_url_if_absent(
                 record.change_request_id, str(interview["public_url"])
             )
-    except (ChangeRequestConflictError, ChangeRequestStoreUnavailableError) as exc:
+    except (
+        ChangeRequestCapacityError,
+        ChangeRequestConflictError,
+        ChangeRequestStoreUnavailableError,
+    ) as exc:
         _raise_http_store_error(exc)
         raise AssertionError("unreachable")
     if record.interview_url is None:  # pragma: no cover - defensive store guard
@@ -324,16 +443,26 @@ def start_change_request_interview(
 @router.post("/status", response_model=ChangeRequestStatusBatchResponse)
 def poll_change_request_statuses(
     payload: ChangeRequestStatusBatchRequest,
+    request: Request,
     store: Store,
+    rate_limiter: RateLimiter,
 ) -> ChangeRequestStatusBatchResponse:
     """Poll known receipts without requiring a user account."""
 
-    results: list[ChangeRequestStatusItem] = []
+    _enforce_rate_limit(request, rate_limiter, "status")
     try:
-        for lookup in payload.requests:
-            record = store.poll(lookup.change_request_id, lookup.status_token)
-            results.append(_status_item(lookup.change_request_id, record))
+        records = store.poll_many(
+            [
+                (lookup.change_request_id, lookup.status_token)
+                for lookup in payload.requests
+            ]
+        )
     except ChangeRequestStoreUnavailableError as exc:
         _raise_http_store_error(exc)
         raise AssertionError("unreachable")
-    return ChangeRequestStatusBatchResponse(requests=results)
+    return ChangeRequestStatusBatchResponse(
+        requests=[
+            _status_item(lookup.change_request_id, record)
+            for lookup, record in zip(payload.requests, records, strict=True)
+        ]
+    )
