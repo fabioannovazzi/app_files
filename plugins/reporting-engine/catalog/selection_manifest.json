@@ -713,6 +713,7 @@
           "attribute_bridge_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -1159,6 +1160,7 @@
           "attribute_bundle_comparison_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -1568,6 +1570,7 @@
           "product_signal_evidence_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -2004,6 +2007,7 @@
           "rank_weighted_visibility_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -2425,6 +2429,9 @@
           "boxplot"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "boxplot_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -2965,6 +2972,9 @@
           "ecdf"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "ecdf_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -3505,6 +3515,9 @@
           "histogram"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "histogram_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -4045,6 +4058,9 @@
           "kernel_density"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "kernel_density_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -4585,6 +4601,9 @@
           "stripplot"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "stripplot_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -5126,6 +5145,7 @@
           "funnel_stage_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -5564,6 +5584,7 @@
           "area_share"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -6129,6 +6150,9 @@
           "bar"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "bar_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -6772,6 +6796,9 @@
           "barmekko"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "barmekko_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -7441,6 +7468,7 @@
           "cohort_lost_stacked_column"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -7999,6 +8027,7 @@
           "cohort_since_stacked_column"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -8556,6 +8585,7 @@
           "column_total"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -9103,6 +9133,7 @@
           "column_total_with_overlay"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -9685,6 +9716,7 @@
           "like_for_like_column_total"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -10252,6 +10284,7 @@
           "like_for_like_stacked_column"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -10849,6 +10882,9 @@
           "marimekko"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "marimekko_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -11559,6 +11595,10 @@
           "multitier_bar"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "multitier_bar_dimension_panels",
+          "multitier_bar_two_dimension"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -12293,6 +12333,7 @@
           "pareto"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -12834,6 +12875,9 @@
           "stacked_bar"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "stacked_bar_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -13506,6 +13550,9 @@
           "related_metrics_bar"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "related_metrics_bar_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -14243,6 +14290,9 @@
           "stacked_column"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "stacked_column_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -14889,6 +14939,7 @@
           "stacked_pareto_by_dimension"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -15475,6 +15526,9 @@
           "line"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "line_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -16089,6 +16143,9 @@
           "year_over_year_by_period"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "year_over_year_by_period_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -16775,6 +16832,7 @@
           "comparison_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -17389,6 +17447,9 @@
           "year_over_year_dot"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "year_over_year_dot_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -18066,6 +18127,9 @@
           "year_over_year_waterfall"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "year_over_year_waterfall_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -18733,6 +18797,9 @@
           "year_over_year_column"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "year_over_year_column_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -19406,6 +19473,9 @@
           "year_over_year_slope"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "year_over_year_slope_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -20080,6 +20150,7 @@
           "time_series_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -20674,6 +20745,9 @@
           "year_over_year_line"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "year_over_year_small_multiples"
+        ],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -21392,6 +21466,9 @@
           "bubble"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "bubble_small_multiples"
+        ],
         "allowed_support_artifact_stems": [
           "scatter_bubble_review"
         ],
@@ -22109,6 +22186,9 @@
           "scatter"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [
+          "scatter_small_multiples"
+        ],
         "allowed_support_artifact_stems": [
           "scatter_bubble_review"
         ],
@@ -22747,6 +22827,7 @@
           "upset"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -23145,6 +23226,7 @@
           "upset_small_multiples"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -23599,6 +23681,7 @@
           "venn"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -23992,6 +24075,7 @@
           "pnl_statement_table"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -24528,6 +24612,7 @@
           "exploded_variance_bridge"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -25201,6 +25286,7 @@
           "pvm_decomposition_ladder"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -25812,6 +25898,7 @@
           "root_cause_component_bridge"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [
           "root_cause_total_bridge"
         ],
@@ -26431,6 +26518,7 @@
             "for_each": true
           }
         ],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [
           "root_cause_total_bridge"
         ],
@@ -27101,6 +27189,7 @@
           "root_cause_total_bridge"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -27692,6 +27781,7 @@
           "waterfall"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {
@@ -28330,6 +28420,7 @@
           "total_by_dimension_bridge"
         ],
         "expected_artifact_stem_templates": [],
+        "expected_variant_artifact_stems": [],
         "allowed_support_artifact_stems": [],
         "renderer_managed_parameters": [
           {

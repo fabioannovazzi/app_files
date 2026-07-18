@@ -1,7 +1,7 @@
 {
   "name": "reporting-engine",
-  "version": "0.1.7",
-  "description": "Clara component for chart capability manifests, dataset profiling, mechanical compatibility evidence, reporting runtime contracts, chart-family adapter resolution, and unified capability rendering.",
+  "version": "0.1.8",
+  "description": "Clara component for chart capability manifests, dataset profiling, source-backed semantic-layer contracts, mechanical compatibility evidence, adapter resolution, and unified rendering.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -15,6 +15,7 @@
     "charts",
     "manifest",
     "dataset-profiling",
+    "semantic-layer",
     "compatibility-audit",
     "adapter-registry",
     "clara"
@@ -22,8 +23,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Reporting Engine",
-    "shortDescription": "Expose chart capability contracts, adapter resolution, dataset profiling, and rendering for Clara reports.",
-    "longDescription": "A Clara-embedded reporting contract component. It packages the reviewed chart-selection manifest, role registry, dataset-profile examples, mechanical compatibility audits, render-proof matrix, family selector playbooks, and Clara adapter registry. It also provides local scripts for reading the reporting contract, resolving capabilities to reporting-engine adapter ids, profiling datasets into chart-useful role candidates, and rendering a chosen capability through the embedded family component. This component is not an orchestrator and does not decide semantic business validity; it surfaces the mechanical evidence needed before a future selector or report workflow chooses and renders charts.",
+    "shortDescription": "Expose chart contracts, dataset profiles, reviewed semantic layers, compatibility evidence, and rendering for Clara reports.",
+    "longDescription": "A Clara-embedded reporting contract component. It packages the reviewed chart-selection manifest, gallery artifact metadata, role registry, dataset-profile examples, mechanical compatibility audits, render-proof matrix, family selector playbooks, Clara adapter registry, and a dataset-specific semantic-layer schema and workflow. Local scripts profile datasets, create explicitly unreviewed semantic scaffolds, package model-facing authoring context, validate source and role bindings, resolve capabilities to reporting-engine adapter ids, and render a chosen capability through the embedded family component. This component is not an orchestrator: a model or human owns semantic truth, and deterministic validation proves contract coherence only.",
     "developerName": "Fabio",
     "category": "Productivity",
     "capabilities": [
@@ -36,8 +37,8 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
       "Use Reporting Engine to inspect chart capabilities and dataset mechanical compatibility.",
-      "Read the packaged chart-selection manifest, profile the dataset into role candidates, and report which chart capabilities are mechanically possible or incomplete.",
-      "Do not claim semantic validity or choose a final chart without an explicit semantic layer or user instruction."
+      "Profile the dataset and create or load its source-backed semantic layer before making semantic claims.",
+      "Validate semantic and mechanical contracts; coherent wiring is not proof of semantic truth or automatic chart selection."
     ],
     "brandColor": "#455E68",
     "composerIcon": "./assets/icon.svg",
