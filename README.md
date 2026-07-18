@@ -5,6 +5,7 @@ FastAPI-first application for accounting data analysis with a Polars-first backe
 ## Table of Contents
 - [Overview](#overview)
 - [Codex Plugins](#codex-plugins)
+- [OpenAI Build Week 2026: Vera](#openai-build-week-2026-vera)
 - [Key Features](#key-features)
   - [Polars-first backend](#polars-first-backend)
   - [PDF journal ingestion](#pdf-journal-ingestion)
@@ -40,6 +41,68 @@ plugin README links directly to its source folder.
 
 - Clara and reporting: [Clara](plugins/clara), [Attribute Reporting](plugins/attribute-reporting), [Reporting Engine](plugins/reporting-engine), [Distribution Analysis](plugins/distribution-analysis), [Funnel Analysis](plugins/funnel-analysis), [Mix & Contribution Analysis](plugins/mix-contribution-analysis), [Period Comparison](plugins/period-comparison), [Scatter & Bubble Analysis](plugins/scatter-bubble-analysis), [Set Overlap Analysis](plugins/set-overlap-analysis), [Statement Analysis](plugins/statement-analysis), and [Variance Analysis](plugins/variance-analysis).
 - Vera and accounting: [Vera](plugins/vera), [Audit Reconciliation](plugins/audit-reconciliation), [Check Entries](plugins/check-entries), [Client Intake](plugins/client-intake), [Concordato Plan Review](plugins/concordato-plan-review), [Deep Research Validator](plugins/deep-research-validator), [Journal-Bank Reconciliation](plugins/journal-bank-reconciliation), [Journal Sampling](plugins/journal-sampling), [Previdenza INPS](plugins/previdenza-inps), [Prompt Optimizer](plugins/prompt-optimizer), [Registro Imprese e SARI](plugins/registro-imprese-sari), and [Report Builder](plugins/report-builder).
+
+## OpenAI Build Week 2026: Vera
+
+[Vera](plugins/vera) is a pre-existing, review-first Codex plugin for accounting
+practices. The work submitted for OpenAI Build Week is the electronic-invoice
+evidence workflow added after the event began and committed on July 17, 2026.
+It adds:
+
+- in-memory Italian FatturaPA XML/ZIP parsing;
+- unique invoice matching only when one candidate agrees on at least two
+  independent signals among invoice number, amount, date, and party;
+- provenance for local exports produced by an authorized accounting-system
+  connector, without accepting provider credentials;
+- targeted PDF fallback only for sampled entries that remain unresolved; and
+- local review payloads, audit artifacts, and reviewer-action persistence.
+
+The extension was developed in Codex with `gpt-5.6-sol`. Build evidence:
+
+- Codex session: `019f7116-974f-7381-a934-e67739047504`
+- qualifying commit: [`05b99c52d263ef81104e44f8bd85fa66a0c6de33`](https://github.com/fabioannovazzi/app_files/commit/05b99c52d263ef81104e44f8bd85fa66a0c6de33)
+- implementation: [Check Entries](plugins/check-entries)
+- synthetic test data: [examples/vera-build-week](examples/vera-build-week)
+- primary Vera install page: [OpenAI plugin listing](https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d)
+
+GPT-5.6 was the Codex development collaborator; Vera does not pin GPT-5.6 as
+a runtime model or call the OpenAI API directly. Deterministic Python owns XML
+parsing and mechanically verifiable comparison. Codex owns the conversation,
+non-inferable mapping questions, review explanation, and professional handoff.
+The commercialista retains judgment and responsibility.
+
+### Reproduce the synthetic Build Week flow
+
+The source path below was verified on macOS with Python 3.12. The deterministic
+check can run without an accounting-system account or customer data. Node.js is
+needed only to open the local MCP review workbench.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r plugins/check-entries/requirements.txt
+
+demo_dir="$(mktemp -d)"
+python plugins/check-entries/scripts/inspect_entries.py \
+  examples/vera-build-week/journal.csv \
+  examples/vera-build-week/invoice_INV-42.xml \
+  --output-dir "$demo_dir/inspection" \
+  --language en \
+  --document-language it
+python plugins/check-entries/scripts/run_checks.py \
+  examples/vera-build-week/journal.csv \
+  examples/vera-build-week/invoice_INV-42.xml \
+  --output-dir "$demo_dir/checks" \
+  --recipe "$demo_dir/inspection/suggested_recipe.json" \
+  --language en \
+  --document-language it
+python scripts/serve_review_workbench.py \
+  "$demo_dir/checks" \
+  --plugin check-entries
+```
+
+Expected result: entry `1001` is supported by a unique FatturaPA match and
+entry `1002` remains visibly unresolved with a targeted document request.
 
 ## Key Features
 
