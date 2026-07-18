@@ -301,6 +301,15 @@
       <h1 id="landing-title">{{ hero.headline }}</h1>
       <p class="landing-opening__intro">{{ hero.subheadline }}</p>
     </div>
+
+    <figure class="landing-opening__plate">
+      <img src="/static/icons/power_control.png?v={{ thesis_image_asset_version | default('0') }}"
+           alt="{{ (copy | default({})).get('thesis_alt', 'Power is nothing without control.') }}"
+           width="768"
+           height="512"
+           decoding="async"
+           fetchpriority="high" />
+    </figure>
   </section>
 
   {% if harness %}
