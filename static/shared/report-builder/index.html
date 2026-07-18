@@ -607,6 +607,7 @@
     function setLanguage(lang) {
       const safeLang = supported.has(lang) ? lang : "en";
       document.documentElement.lang = safeLang;
+      document.title = `${copy[safeLang]["hero.title"]} | Vera`;
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const key = node.dataset.i18n;
         if (copy[safeLang] && copy[safeLang][key]) {

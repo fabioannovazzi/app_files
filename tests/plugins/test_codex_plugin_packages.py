@@ -2006,6 +2006,25 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
+@pytest.mark.parametrize(
+    ("language", "localized_page"),
+    (
+        ("en", "uk.html"),
+        ("fr", "geneva.html"),
+        ("de", "zurich.html"),
+    ),
+)
+def test_client_intake_query_routes_to_localized_page(
+    language: str, localized_page: str
+) -> None:
+    page = (ROOT / "static" / "shared" / "client-intake" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert f'{language}: "{localized_page}"' in page
+    assert 'window.location.replace(localizedPage)' in page
+
+
 def test_vera_page_lists_all_eleven_modules() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
@@ -2025,7 +2044,7 @@ def test_vera_page_lists_all_eleven_modules() -> None:
         "../deep-research-validator/index.html",
     ):
         assert page.count(f'href="{module_link}"') == 1
-    assert page.count(" data-module-link>") == 11
+    assert page.count(" data-module-link") == 11
     assert page.count('class="module-row"') == 11
     assert 'id="previdenza-inps"' in page
     assert 'id="registro-imprese-sari"' in page
@@ -2314,6 +2333,31 @@ def test_report_builder_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
+@pytest.mark.parametrize(
+    ("relative_path", "title_assignment"),
+    (
+        (
+            "vera/index.html",
+            'document.title = strings["hero.eyebrow"]',
+        ),
+        (
+            "report-builder/index.html",
+            'document.title = `${copy[safeLang]["hero.title"]} | Vera`',
+        ),
+        (
+            "concordato-plan-review/index.html",
+            "document.title = `${t.hero.title} | Vera`",
+        ),
+    ),
+)
+def test_vera_pages_set_browser_title_from_active_locale(
+    relative_path: str, title_assignment: str
+) -> None:
+    page = (ROOT / "static" / "shared" / relative_path).read_text(encoding="utf-8")
+
+    assert title_assignment in page
+
+
 def test_clara_page_matches_plugin_site_pattern() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
@@ -2407,7 +2451,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         '<a class="button" href="https://chatgpt.com/plugins/'
         'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
         'rel="noopener noreferrer" data-clara-install-link '
-        'data-i18n="install.button">Install Clara</a>'
+        'data-i18n="install.open">Open Clara\'s listing</a>'
     ) in page
     assert "font-size: clamp(58px, 8vw, 92px)" in styles
     assert "font-size: clamp(30px, 4vw, 43px)" in styles
@@ -2829,6 +2873,90 @@ def test_vera_module_links_preserve_language() -> None:
     assert 'href="../client-intake/index.html" data-module-link' in page
     assert 'url.searchParams.set("lang", lang)' in page
     assert 'link.setAttribute("href", withLanguage' in page
+    assert 'en: "../client-intake/uk.html"' in page
+    assert 'fr: "../client-intake/geneva.html"' in page
+    assert 'de: "../client-intake/zurich.html"' in page
+    assert 'withLanguage(clientIntakePages[lang], lang)' in page
+
+
+@pytest.mark.parametrize(
+    ("page_name", "plugin_id", "install_marker"),
+    (
+        (
+            "clara",
+            "plugins_6a57b17fb5848191be710192d93fe03a",
+            "data-clara-install-link",
+        ),
+        (
+            "vera",
+            "plugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
+            "data-vera-install-link",
+        ),
+    ),
+)
+def test_companion_install_flow_routes_login_to_same_listing(
+    page_name: str, plugin_id: str, install_marker: str
+) -> None:
+    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+        encoding="utf-8"
+    )
+    listing_url = f"https://chatgpt.com/plugins/{plugin_id}"
+    login_url = f"https://chatgpt.com/auth/login?next=%2Fplugins%2F{plugin_id}"
+
+    assert 'href="#download"' in page
+    assert page.count(listing_url) == 1
+    assert install_marker in page
+    assert f'href="{login_url}"' in page
+    assert 'data-i18n="install.signin"' in page
+    assert 'data-i18n="install.open"' in page
+    assert 'data-i18n="install.signed_out"' in page
+
+
+@pytest.mark.parametrize(
+    ("page_name", "localized_guidance"),
+    (
+        (
+            "clara",
+            "Not signed in? Use Sign in to ChatGPT; after authentication, ChatGPT opens Clara's listing.",
+        ),
+        (
+            "clara",
+            "Non hai effettuato l'accesso? Usa Accedi a ChatGPT: al termine dell'autenticazione, ChatGPT apre la pagina di Clara.",
+        ),
+        (
+            "clara",
+            "Vous n'êtes pas connecté ? Utilisez Se connecter à ChatGPT : après l'authentification, ChatGPT ouvre la fiche de Clara.",
+        ),
+        (
+            "clara",
+            "Noch nicht angemeldet? Wählen Sie Bei ChatGPT anmelden; nach der Anmeldung öffnet ChatGPT Claras Eintrag.",
+        ),
+        (
+            "vera",
+            "Not signed in? Use Sign in to ChatGPT; after authentication, ChatGPT opens Vera's listing.",
+        ),
+        (
+            "vera",
+            "Non hai effettuato l'accesso? Usa Accedi a ChatGPT: al termine dell'autenticazione, ChatGPT apre la pagina di Vera.",
+        ),
+        (
+            "vera",
+            "Vous n'êtes pas connecté ? Utilisez Se connecter à ChatGPT : après l'authentification, ChatGPT ouvre la fiche de Vera.",
+        ),
+        (
+            "vera",
+            "Noch nicht angemeldet? Wählen Sie Bei ChatGPT anmelden; nach der Anmeldung öffnet ChatGPT Veras Eintrag.",
+        ),
+    ),
+)
+def test_companion_install_flow_localizes_logged_out_guidance(
+    page_name: str, localized_guidance: str
+) -> None:
+    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert localized_guidance in page
 
 
 def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
