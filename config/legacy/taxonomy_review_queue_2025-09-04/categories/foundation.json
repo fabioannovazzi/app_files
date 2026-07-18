@@ -1,0 +1,122 @@
+[
+    {
+        "category": "foundation",
+        "attribute": "packaging",
+        "value": "glass bottle, standard 30-50 ml",
+        "count": 29
+    },
+    {
+        "category": "foundation",
+        "attribute": "skin-type suitability",
+        "value": "oily, dry, combination, sensitive, normal",
+        "count": 14
+    },
+    {
+        "category": "foundation",
+        "attribute": "skin-type suitability",
+        "value": "oily, combination, normal",
+        "count": 7
+    },
+    {
+        "category": "foundation",
+        "attribute": "skin-type suitability",
+        "value": "oily, dry, combination, normal",
+        "count": 7
+    },
+    {
+        "category": "foundation",
+        "attribute": "skin-type suitability",
+        "value": "oily, combination",
+        "count": 4
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "hydrating, brightening, clean / vegan, fragrance-free",
+        "count": 3
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "long-wear, spf-infused, clean / vegan, cruelty-free, fragrance-free",
+        "count": 3
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "long-wear, waterproof, sweat-resistant, fragrance-free",
+        "count": 3
+    },
+    {
+        "category": "foundation",
+        "attribute": "shade",
+        "value": "rosy, true neutral, golden, greenish olive",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "hydrating, spf-infused, clean / vegan, cruelty-free, fragrance-free",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "hydrating, brightening, clean / vegan, cruelty-free, fragrance-free",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "shade",
+        "value": "pink, true neutral, yellow, golden, greenish olive",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "long-wear, sweat-resistant, clean / vegan, cruelty-free",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "shade",
+        "value": "rosy, true neutral, golden",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "long-wear, waterproof, sweat-resistant, hydrating, clean / vegan, cruelty-free",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "long-wear, sweat-resistant, fragrance-free",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "shade",
+        "value": "pink, rosy, true neutral, yellow, golden, greenish olive",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "skin-type suitability",
+        "value": "dry, normal",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "packaging",
+        "value": "standard 30-50 ml, mini / travel size",
+        "count": 2
+    },
+    {
+        "category": "foundation",
+        "attribute": "formula",
+        "value": "long-wear, clean / vegan, cruelty-free",
+        "count": 2
+    }
+]

@@ -1,0 +1,880 @@
+{
+    "id": "face_primer",
+    "label": "face primer",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "gel",
+                    "label": "gel",
+                    "synonyms": [
+                        "gel based",
+                        "gel primer",
+                        "gel texture",
+                        "jelly"
+                    ]
+                },
+                {
+                    "id": "cream",
+                    "label": "cream",
+                    "synonyms": [
+                        "cream based",
+                        "cream texture",
+                        "creamy",
+                        "mousse",
+                        "rich cream"
+                    ]
+                },
+                {
+                    "id": "lotion",
+                    "label": "lotion",
+                    "synonyms": [
+                        "emulsion",
+                        "fluid",
+                        "lotion formula",
+                        "milk texture",
+                        "milky"
+                    ]
+                },
+                {
+                    "id": "serum",
+                    "label": "serum",
+                    "synonyms": [
+                        "ampoule",
+                        "essence",
+                        "liquid serum",
+                        "serum like",
+                        "watery"
+                    ]
+                },
+                {
+                    "id": "balm",
+                    "label": "balm",
+                    "synonyms": [
+                        "balm texture",
+                        "balmy",
+                        "melting balm",
+                        "putty",
+                        "solid balm"
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick",
+                    "synonyms": [
+                        "solid stick",
+                        "stick applicator",
+                        "twist up"
+                    ]
+                },
+                {
+                    "id": "spray_mist",
+                    "label": "spray/mist",
+                    "synonyms": [
+                        "aerosol",
+                        "fine mist",
+                        "mist",
+                        "spray",
+                        "spritz"
+                    ]
+                },
+                {
+                    "id": "oil",
+                    "label": "oil formula",
+                    "synonyms": [
+                        "beauty oil",
+                        "dry oil",
+                        "facial oil",
+                        "primer oil"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "matte",
+                    "label": "matte",
+                    "synonyms": [
+                        "flat finish",
+                        "oil control finish",
+                        "shine free",
+                        "soft matte",
+                        "velvet matte"
+                    ]
+                },
+                {
+                    "id": "natural",
+                    "label": "natural",
+                    "synonyms": [
+                        "balanced",
+                        "second skin",
+                        "skin like",
+                        "soft finish",
+                        "true to skin"
+                    ]
+                },
+                {
+                    "id": "dewy",
+                    "label": "dewy",
+                    "synonyms": [
+                        "fresh",
+                        "glossy glow",
+                        "juicy",
+                        "moist glow",
+                        "wet look"
+                    ]
+                },
+                {
+                    "id": "radiant",
+                    "label": "radiant",
+                    "synonyms": [
+                        "glowy",
+                        "illumination",
+                        "lit from within",
+                        "luminous",
+                        "radiance"
+                    ]
+                },
+                {
+                    "id": "satin",
+                    "label": "satin",
+                    "synonyms": [
+                        "satin finish",
+                        "semi matte",
+                        "soft sheen",
+                        "velvety"
+                    ]
+                },
+                {
+                    "id": "blurring",
+                    "label": "blurring",
+                    "synonyms": [
+                        "airbrushed",
+                        "diffused",
+                        "pore blur",
+                        "smoothing finish",
+                        "soft focus"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "skin_type",
+            "label": "skin type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "normal",
+                    "label": "normal",
+                    "synonyms": [
+                        "average skin",
+                        "balanced complexion",
+                        "balanced skin",
+                        "no specific concern",
+                        "normal skin"
+                    ]
+                },
+                {
+                    "id": "dry",
+                    "label": "dry",
+                    "synonyms": [
+                        "dehydrated",
+                        "flaky",
+                        "parched",
+                        "very dry"
+                    ]
+                },
+                {
+                    "id": "oily",
+                    "label": "oily",
+                    "synonyms": [
+                        "greasy",
+                        "oil prone",
+                        "sebum rich",
+                        "shiny",
+                        "very oily"
+                    ]
+                },
+                {
+                    "id": "combination",
+                    "label": "combination",
+                    "synonyms": [
+                        "combo",
+                        "combo skin",
+                        "mixed skin",
+                        "oily t zone"
+                    ]
+                },
+                {
+                    "id": "sensitive",
+                    "label": "sensitive",
+                    "synonyms": [
+                        "delicate",
+                        "easily irritated",
+                        "hypersensitive",
+                        "reactive",
+                        "sensitized"
+                    ]
+                },
+                {
+                    "id": "mature",
+                    "label": "mature",
+                    "synonyms": [
+                        "age defying",
+                        "ageing",
+                        "aging",
+                        "mature skin"
+                    ]
+                },
+                {
+                    "id": "acne_prone",
+                    "label": "acne-prone",
+                    "synonyms": [
+                        "acne prone",
+                        "blemish prone",
+                        "breakout prone",
+                        "congested",
+                        "problem skin"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "base_type",
+            "label": "base type",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "silicone_based",
+                    "label": "silicone-based",
+                    "synonyms": [
+                        "cyclopentasiloxane",
+                        "dimethicone base",
+                        "silicone based",
+                        "silicone rich",
+                        "siloxane base"
+                    ]
+                },
+                {
+                    "id": "water_based",
+                    "label": "water-based",
+                    "synonyms": [
+                        "aqua base",
+                        "water based",
+                        "water formula",
+                        "water rich"
+                    ]
+                },
+                {
+                    "id": "oil_based",
+                    "label": "oil-based",
+                    "synonyms": [
+                        "lipid rich",
+                        "oil base",
+                        "oil based",
+                        "oily base"
+                    ]
+                },
+                {
+                    "id": "hybrid",
+                    "label": "hybrid",
+                    "synonyms": [
+                        "dual phase base",
+                        "hybrid base",
+                        "mixed base",
+                        "silicone water blend",
+                        "water silicone mix"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "performance_benefits_control",
+            "label": "performance benefits (control)",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "mattifying",
+                    "label": "mattifying",
+                    "synonyms": [
+                        "anti shine",
+                        "grease free",
+                        "oil control",
+                        "sebum control",
+                        "shine control"
+                    ]
+                },
+                {
+                    "id": "pore_minimizing",
+                    "label": "pore minimizing",
+                    "synonyms": [
+                        "minimize pores",
+                        "pore blurring",
+                        "pore filling",
+                        "pore refining",
+                        "tightens pores"
+                    ]
+                },
+                {
+                    "id": "smoothing_texture",
+                    "label": "smoothing texture",
+                    "synonyms": [
+                        "line filling",
+                        "silky feel",
+                        "smoothing base",
+                        "softening texture",
+                        "texture smoothing"
+                    ]
+                },
+                {
+                    "id": "long_wear_grip",
+                    "label": "long-wear/grip",
+                    "synonyms": [
+                        "adhesion boost",
+                        "gripping",
+                        "long wear",
+                        "makeup lock",
+                        "transfer resistant"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "performance_benefits_care",
+            "label": "performance benefits (care)",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "hydrating",
+                    "label": "hydrating",
+                    "synonyms": [
+                        "moisture boosting",
+                        "moisture lock",
+                        "moisturizing",
+                        "quenching"
+                    ]
+                },
+                {
+                    "id": "illuminating",
+                    "label": "illuminating",
+                    "synonyms": [
+                        "brightening effect",
+                        "glow boosting",
+                        "luminous boost",
+                        "radiance boosting",
+                        "strobing base"
+                    ]
+                },
+                {
+                    "id": "redness_soothing",
+                    "label": "redness soothing",
+                    "synonyms": [
+                        "anti redness",
+                        "calming",
+                        "redness relief",
+                        "soothing effect",
+                        "tone down redness"
+                    ]
+                },
+                {
+                    "id": "antioxidant_protection",
+                    "label": "antioxidant protection",
+                    "synonyms": [
+                        "antioxidant",
+                        "environmental shield",
+                        "free radical defense",
+                        "oxidation protection",
+                        "pollution defense"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "color_correction",
+            "label": "color correction",
+            "hierarchical": true,
+            "levels": 2,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "tinted",
+                    "label": "tinted",
+                    "children": [
+                        {
+                            "id": "green",
+                            "label": "green",
+                            "synonyms": [
+                                "jade",
+                                "mint",
+                                "pistachio",
+                                "red neutralizer"
+                            ]
+                        },
+                        {
+                            "id": "peach",
+                            "label": "peach",
+                            "synonyms": [
+                                "apricot",
+                                "coral peach",
+                                "orange",
+                                "peachy",
+                                "salmon"
+                            ]
+                        },
+                        {
+                            "id": "lavender",
+                            "label": "lavender",
+                            "synonyms": [
+                                "lilac",
+                                "purple",
+                                "violet",
+                                "yellow neutralizer"
+                            ]
+                        },
+                        {
+                            "id": "yellow",
+                            "label": "yellow",
+                            "synonyms": [
+                                "banana",
+                                "butter",
+                                "canary",
+                                "lemon yellow"
+                            ]
+                        },
+                        {
+                            "id": "nude",
+                            "label": "nude",
+                            "synonyms": [
+                                "beige",
+                                "neutral tint",
+                                "skin tone",
+                                "tan nude"
+                            ]
+                        },
+                        {
+                            "id": "pink",
+                            "label": "pink",
+                            "synonyms": [
+                                "baby pink",
+                                "blush pink",
+                                "rose",
+                                "rosy"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "clear_translucent",
+                    "label": "clear/translucent",
+                    "synonyms": [
+                        "clear",
+                        "colorless",
+                        "no tint",
+                        "translucent",
+                        "transparent"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "sunscreen_presence",
+            "label": "sunscreen",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "contains_spf",
+                    "label": "contains SPF",
+                    "synonyms": [
+                        "broad spectrum",
+                        "spf included",
+                        "spf primer",
+                        "sun protection",
+                        "with sunscreen"
+                    ]
+                },
+                {
+                    "id": "no_spf",
+                    "label": "no SPF",
+                    "synonyms": [
+                        "no spf included",
+                        "no sun protection",
+                        "no uv filters",
+                        "spf free",
+                        "without sunscreen"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "free_from_core",
+            "label": "free-from (core)",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "silicone_free",
+                    "label": "silicone-free",
+                    "synonyms": [
+                        "free of silicones",
+                        "no silicone",
+                        "silicone free",
+                        "without silicone"
+                    ]
+                },
+                {
+                    "id": "oil_free",
+                    "label": "oil-free",
+                    "synonyms": [
+                        "free of oils",
+                        "no oil",
+                        "oil free",
+                        "without oil"
+                    ]
+                },
+                {
+                    "id": "fragrance_free",
+                    "label": "fragrance-free",
+                    "synonyms": [
+                        "fragrance free",
+                        "free of perfume",
+                        "no fragrance",
+                        "unscented",
+                        "without fragrance"
+                    ]
+                },
+                {
+                    "id": "alcohol_free",
+                    "label": "alcohol-free",
+                    "synonyms": [
+                        "alcohol free",
+                        "free of alcohol",
+                        "no alcohol",
+                        "without alcohol"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "paraben_free",
+                    "label": "paraben-free",
+                    "synonyms": [
+                        "free of parabens",
+                        "no parabens",
+                        "paraben 0%",
+                        "paraben free",
+                        "without parabens"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "claims_marketing",
+            "label": "marketing claims",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "regulatory",
+            "nodes": [
+                {
+                    "id": "vegan",
+                    "label": "vegan",
+                    "synonyms": [
+                        "100% vegan",
+                        "no animal derived",
+                        "no animal ingredients",
+                        "plant based",
+                        "vegan friendly"
+                    ]
+                },
+                {
+                    "id": "cruelty_free",
+                    "label": "cruelty-free",
+                    "synonyms": [
+                        "cruelty free",
+                        "leaping bunny",
+                        "no animal testing",
+                        "not tested on animals",
+                        "peta certified"
+                    ]
+                },
+                {
+                    "id": "clean_label",
+                    "label": "clean",
+                    "synonyms": [
+                        "clean beauty",
+                        "no harsh chemicals",
+                        "non toxic"
+                    ]
+                },
+                {
+                    "id": "non_comedogenic",
+                    "label": "non-comedogenic",
+                    "synonyms": [
+                        "acne safe",
+                        "non comedogenic",
+                        "non pore clogging",
+                        "pore safe",
+                        "won't clog pores"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                },
+                {
+                    "id": "hypoallergenic",
+                    "label": "hypoallergenic",
+                    "synonyms": [
+                        "allergy tested",
+                        "suitable for sensitive skin"
+                    ]
+                },
+                {
+                    "id": "dermatologist_tested",
+                    "label": "dermatologist tested",
+                    "synonyms": [
+                        "derm tested",
+                        "dermatologically tested",
+                        "tested by dermatologists"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "optical_effect",
+            "label": "optical effect",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "composition",
+            "nodes": [
+                {
+                    "id": "none",
+                    "label": "none",
+                    "synonyms": [
+                        "matte only",
+                        "no glitter",
+                        "no particles",
+                        "no shimmer",
+                        "no sparkle"
+                    ]
+                },
+                {
+                    "id": "pearl",
+                    "label": "pearl",
+                    "synonyms": [
+                        "pearl sheen",
+                        "pearlescent",
+                        "pearlized",
+                        "soft pearly"
+                    ]
+                },
+                {
+                    "id": "shimmer",
+                    "label": "shimmer",
+                    "synonyms": [
+                        "fine shimmer",
+                        "micro shimmer",
+                        "shimmery",
+                        "subtle sparkle"
+                    ]
+                },
+                {
+                    "id": "glitter",
+                    "label": "glitter",
+                    "synonyms": [
+                        "chunky glitter",
+                        "glittery",
+                        "sparkle",
+                        "sparkly"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        },
+        {
+            "id": "application_area",
+            "label": "application area",
+            "hierarchical": false,
+            "levels": 1,
+            "selection": "single",
+            "scope": "product",
+            "kind": "performance",
+            "nodes": [
+                {
+                    "id": "face_allover",
+                    "label": "face (all-over)",
+                    "synonyms": [
+                        "all over",
+                        "entire face",
+                        "face",
+                        "full face",
+                        "whole face"
+                    ]
+                },
+                {
+                    "id": "t_zone",
+                    "label": "T-zone",
+                    "synonyms": [
+                        "center face",
+                        "t area",
+                        "t zone",
+                        "t zone only"
+                    ]
+                },
+                {
+                    "id": "under_eye",
+                    "label": "under-eye",
+                    "synonyms": [
+                        "beneath eyes",
+                        "eye area",
+                        "periorbital",
+                        "under eye",
+                        "undereye"
+                    ]
+                },
+                {
+                    "id": "lips",
+                    "label": "lips",
+                    "synonyms": [
+                        "around mouth",
+                        "lip area",
+                        "lip base",
+                        "lip prep"
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "not in taxonomy"
+                }
+            ]
+        }
+    ]
+}

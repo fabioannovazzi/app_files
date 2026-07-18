@@ -1,0 +1,346 @@
+{
+    "id": "lip gloss",
+    "label": "lip gloss",
+    "guidance": "Gloss is typically liquid; include stick only when copy clearly says 'crayon/bullet/stick'. Default to liquid when uncertain.",
+    "attributes": [
+        {
+            "id": "format",
+            "label": "format",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "liquid",
+                    "label": "liquid",
+                    "synonyms": [
+                        "liquid",
+                        "gloss tube",
+                        "lacquer",
+                        "vinyl gloss"
+                    ],
+                    "children": [
+                        {
+                            "id": "doefoot_liquid",
+                            "label": "Tube with doe-foot wand",
+                            "synonyms": [
+                                "doe foot",
+                                "wand",
+                                "flocked applicator"
+                            ]
+                        },
+                        {
+                            "id": "squeeze_gloss",
+                            "label": "Gloss / oil squeeze tube",
+                            "synonyms": [
+                                "squeezy tube",
+                                "slant-tip tube",
+                                "squeeze tube"
+                            ]
+                        },
+                        {
+                            "id": "cushion_tint",
+                            "label": "Cushion-tip \"blur\" tint",
+                            "synonyms": [
+                                "cushion tip",
+                                "sponge tip",
+                                "blur tint"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "stick",
+                    "label": "stick",
+                    "synonyms": [
+                        "gloss stick",
+                        "shine stick",
+                        "lacquer balm"
+                    ],
+                    "children": [
+                        {
+                            "id": "classic_bullet",
+                            "label": "Classic swivel bullet"
+                        },
+                        {
+                            "id": "slim_bullet",
+                            "label": "Slim / skinny bullet"
+                        },
+                        {
+                            "id": "crayon",
+                            "label": "Crayon / jumbo pencil"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "Other (not in list)"
+                }
+            ]
+        },
+        {
+            "id": "finish",
+            "label": "finish",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "shine",
+                    "label": "shine",
+                    "children": [
+                        {
+                            "id": "glossy",
+                            "label": "Glossy lacquer",
+                            "synonyms": [
+                                "high-shine",
+                                "glass-like"
+                            ]
+                        },
+                        {
+                            "id": "vinyl",
+                            "label": "Vinyl / patent shine",
+                            "synonyms": [
+                                "patent",
+                                "vinyl shine"
+                            ]
+                        },
+                        {
+                            "id": "sheer_shine",
+                            "label": "Sheer-shine balm"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "Other (not in list)"
+                }
+            ]
+        },
+        {
+            "id": "coverage",
+            "label": "coverage",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "sheer",
+                    "label": "Sheer / light",
+                    "children": [
+                        {
+                            "id": "tint",
+                            "label": "Tint / stain",
+                            "synonyms": [
+                                "sheer tint",
+                                "tint gloss"
+                            ]
+                        },
+                        {
+                            "id": "balm_sheer",
+                            "label": "Balm-like sheer"
+                        }
+                    ]
+                },
+                {
+                    "id": "medium",
+                    "label": "Medium / buildable",
+                    "children": [
+                        {
+                            "id": "buildable",
+                            "label": "Buildable medium"
+                        },
+                        {
+                            "id": "semi_opaque",
+                            "label": "Semi-opaque"
+                        }
+                    ]
+                },
+                {
+                    "id": "full",
+                    "label": "Full / opaque",
+                    "children": [
+                        {
+                            "id": "high_pigment",
+                            "label": "High-pigment full"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "Other (not in list)"
+                }
+            ]
+        },
+        {
+            "id": "formula",
+            "label": "formula",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "performance",
+                    "label": "Performance",
+                    "children": [
+                        {
+                            "id": "long_wear",
+                            "label": "Long-wear"
+                        },
+                        {
+                            "id": "transfer_proof",
+                            "label": "Transfer-proof"
+                        },
+                        {
+                            "id": "waterproof",
+                            "label": "Waterproof"
+                        }
+                    ]
+                },
+                {
+                    "id": "care",
+                    "label": "Care / Treatment",
+                    "children": [
+                        {
+                            "id": "hydrating",
+                            "label": "Hydrating"
+                        },
+                        {
+                            "id": "plumping",
+                            "label": "Plumping"
+                        },
+                        {
+                            "id": "spf",
+                            "label": "SPF-infused"
+                        }
+                    ]
+                },
+                {
+                    "id": "ethos",
+                    "label": "Ethos & Sustainability",
+                    "children": [
+                        {
+                            "id": "clean_vegan",
+                            "label": "Clean / vegan"
+                        },
+                        {
+                            "id": "cruelty_free",
+                            "label": "Cruelty-free"
+                        },
+                        {
+                            "id": "refillable_formula",
+                            "label": "Refillable-compatible"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "Other (not in list)"
+                }
+            ]
+        },
+        {
+            "id": "packaging",
+            "label": "Packaging",
+            "hierarchical": "true",
+            "levels": 2,
+            "nodes": [
+                {
+                    "id": "component_type",
+                    "label": "Component Type",
+                    "children": [
+                        {
+                            "id": "standard_case",
+                            "label": "Standard case / vial",
+                            "synonyms": [
+                                "tube",
+                                "vial",
+                                "bottle"
+                            ]
+                        },
+                        {
+                            "id": "refillable_case",
+                            "label": "Refillable case"
+                        },
+                        {
+                            "id": "dual_ended",
+                            "label": "Dual-ended component"
+                        },
+                        {
+                            "id": "slim_case",
+                            "label": "Slim case"
+                        }
+                    ]
+                },
+                {
+                    "id": "package_size",
+                    "label": "Size & Pack",
+                    "children": [
+                        {
+                            "id": "mini",
+                            "label": "Mini / travel size"
+                        },
+                        {
+                            "id": "jumbo",
+                            "label": "Jumbo size"
+                        },
+                        {
+                            "id": "multipack",
+                            "label": "Multi-pack / kit"
+                        }
+                    ]
+                },
+                {
+                    "id": "eco_material",
+                    "label": "Eco Material",
+                    "children": [
+                        {
+                            "id": "recycled_plastic",
+                            "label": "Recycled plastic"
+                        },
+                        {
+                            "id": "metal_case",
+                            "label": "Metal case",
+                            "synonyms": [
+                                "aluminum",
+                                "metal"
+                            ]
+                        },
+                        {
+                            "id": "paper_tube",
+                            "label": "Paper-based tube",
+                            "synonyms": [
+                                "paper",
+                                "cardboard"
+                            ]
+                        },
+                        {
+                            "id": "recycled_glass",
+                            "label": "Recycled glass"
+                        }
+                    ]
+                },
+                {
+                    "id": "unknown",
+                    "label": "N/A (not stated)"
+                },
+                {
+                    "id": "other",
+                    "label": "Other (not in list)"
+                }
+            ]
+        }
+    ]
+}

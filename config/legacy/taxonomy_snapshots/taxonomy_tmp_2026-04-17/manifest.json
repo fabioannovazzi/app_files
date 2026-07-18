@@ -1,0 +1,244 @@
+{
+    "archive_format": "one_json_per_category",
+    "source_directory": "config/attribute_taxonomy.tmp",
+    "source_ref": "5e552743b6e014792027c6317ec56d7f5e436e33^:config/attribute_taxonomy.tmp",
+    "source_git_tree": "df8827725dddebd893f0fec38052b4cc986e8f15",
+    "source_manifest_file": "config/attribute_taxonomy.tmp/manifest.json",
+    "source_manifest_git_blob": "609b25af1c98ba287112d8fee3a953341ce99c03",
+    "source_manifest_sha256": "adf8d7ad636e007beb325e4cee5e6250c5572203d15d764289fd93385e9ca678",
+    "source_top_level": {
+        "version": "2025-10-07",
+        "no_image_categories": [
+            "liquid_lipstick",
+            "mascara",
+            "lip_oil"
+        ]
+    },
+    "deleted_by_commit": "5e552743b6e014792027c6317ec56d7f5e436e33",
+    "deleted_at": "2026-04-17T16:22:04+02:00",
+    "category_count": 22,
+    "attribute_count": 239,
+    "recursive_node_count": 1835,
+    "category_files": [
+        {
+            "id": "blush",
+            "file": "categories/blush.json",
+            "source_index": 0,
+            "source_file": "config/attribute_taxonomy.tmp/categories/blush.json",
+            "source_git_blob": "0ed9cf80f1ebf4f37f15e00fbea7d703c87d3ef9",
+            "source_sha256": "963c4fd3738665f8d98d323f7222408fccc5ee1e6e0236e2400ff539674fc227",
+            "archived_file_sha256": "963c4fd3738665f8d98d323f7222408fccc5ee1e6e0236e2400ff539674fc227",
+            "canonical_sha256": "9a053ea0d050b50793b54852a7a39344a129f667abde11c2f29b339a133ed2e7"
+        },
+        {
+            "id": "foundation",
+            "file": "categories/foundation.json",
+            "source_index": 1,
+            "source_file": "config/attribute_taxonomy.tmp/categories/foundation.json",
+            "source_git_blob": "028405eacae52cec931fed700171fa2bd239f497",
+            "source_sha256": "7c9bfb0740d2ab2b93cd38acd5f2246672e26f40cde03dc40716dc39712e81c8",
+            "archived_file_sha256": "7c9bfb0740d2ab2b93cd38acd5f2246672e26f40cde03dc40716dc39712e81c8",
+            "canonical_sha256": "217b60e3542e72b41f36ca5142bf3909ecbf0ad88b8bc42b8fc924f42aa87fdb"
+        },
+        {
+            "id": "bronzer",
+            "file": "categories/bronzer.json",
+            "source_index": 2,
+            "source_file": "config/attribute_taxonomy.tmp/categories/bronzer.json",
+            "source_git_blob": "318c287056571fc5f1b2d0c251b3015dae55a5ea",
+            "source_sha256": "edd3c3edaa504214da08a8f8c763e70b16bf7acd549384bca936e0ae6e792d26",
+            "archived_file_sha256": "edd3c3edaa504214da08a8f8c763e70b16bf7acd549384bca936e0ae6e792d26",
+            "canonical_sha256": "1d8ba4ec8f64d6a7b08def5b5c101a18879d7d56250e42e99a161c8547eaca09"
+        },
+        {
+            "id": "lipstick",
+            "file": "categories/lipstick.json",
+            "source_index": 3,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lipstick.json",
+            "source_git_blob": "aff6a0ab9671bdf362583e5ec7c04c8efa937d7a",
+            "source_sha256": "0c5f254dfe26ddae86f53c747073e1ddfd6dbc3a46073d3a025a396fb580e7a4",
+            "archived_file_sha256": "0c5f254dfe26ddae86f53c747073e1ddfd6dbc3a46073d3a025a396fb580e7a4",
+            "canonical_sha256": "7ba39c27aae02c377b0717a041c2638e2a3855de49925c32a36c2cf20e3577cc"
+        },
+        {
+            "id": "liquid_lipstick",
+            "file": "categories/liquid_lipstick.json",
+            "source_index": 4,
+            "source_file": "config/attribute_taxonomy.tmp/categories/liquid_lipstick.json",
+            "source_git_blob": "4e005829ea4acce6db03da3b0befcfe579ffc488",
+            "source_sha256": "b8546320f56279d6fad935943fed141e8ee3a45466620eb32fa22ec4e8dd4ff8",
+            "archived_file_sha256": "b8546320f56279d6fad935943fed141e8ee3a45466620eb32fa22ec4e8dd4ff8",
+            "canonical_sha256": "db7d44f0cba4644c958319aa1f62b39958bae88a8d2e50e7450be72700550113"
+        },
+        {
+            "id": "lip_gloss",
+            "file": "categories/lip_gloss.json",
+            "source_index": 5,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lip_gloss.json",
+            "source_git_blob": "a0bcf27152dc4c024950316b8ac62cd6d106e14c",
+            "source_sha256": "65e8e702af449cf7d9458e2bbb29b28f89b1256a704cd140654b6458dbe60715",
+            "archived_file_sha256": "65e8e702af449cf7d9458e2bbb29b28f89b1256a704cd140654b6458dbe60715",
+            "canonical_sha256": "52bb1b12139693f2e607f120d33c5fcda028d99cd67450b0fbd7bfbedab29b68"
+        },
+        {
+            "id": "concealer",
+            "file": "categories/concealer.json",
+            "source_index": 6,
+            "source_file": "config/attribute_taxonomy.tmp/categories/concealer.json",
+            "source_git_blob": "448d7b197e533f294cf6c516bb65140424f3f618",
+            "source_sha256": "fc6e758eee9e7113fae577e74b1fd7c0b31e81a918d15af2b1784fdd67d0455c",
+            "archived_file_sha256": "fc6e758eee9e7113fae577e74b1fd7c0b31e81a918d15af2b1784fdd67d0455c",
+            "canonical_sha256": "641eced542042fd4ddc0ab02a9bb32a4e69c02d7526fafe0f8922052160d3d71"
+        },
+        {
+            "id": "highlighter",
+            "file": "categories/highlighter.json",
+            "source_index": 7,
+            "source_file": "config/attribute_taxonomy.tmp/categories/highlighter.json",
+            "source_git_blob": "05adc01350f483da385fda4efdea39a04b9459cd",
+            "source_sha256": "d11459680125665572c1c7bf93570787c158489f076167fdfc38840ac988e156",
+            "archived_file_sha256": "d11459680125665572c1c7bf93570787c158489f076167fdfc38840ac988e156",
+            "canonical_sha256": "a02f7559db75c5fcdf5ae6b36c0ff07dd8f104388b9edda2c0a24fde79b305bd"
+        },
+        {
+            "id": "palette",
+            "file": "categories/palette.json",
+            "source_index": 8,
+            "source_file": "config/attribute_taxonomy.tmp/categories/palette.json",
+            "source_git_blob": "6251644da92676b8aef254c5208f35595b863646",
+            "source_sha256": "ab3be147e02d4ecde39d05770d55a749383b1dd38519e8ef643816ba5dea3f38",
+            "archived_file_sha256": "ab3be147e02d4ecde39d05770d55a749383b1dd38519e8ef643816ba5dea3f38",
+            "canonical_sha256": "855a019c479ceb2d7bbed0557cdfd77e64e3724bfbf00234ccf10cafe2799e63"
+        },
+        {
+            "id": "mascara",
+            "file": "categories/mascara.json",
+            "source_index": 9,
+            "source_file": "config/attribute_taxonomy.tmp/categories/mascara.json",
+            "source_git_blob": "01f84c3850530609bc775cd821515d7e81f79ed8",
+            "source_sha256": "ce6266d8c251987e1e0f8130ed61e84d74ae5b2107d0a6343c8d39690b493c44",
+            "archived_file_sha256": "ce6266d8c251987e1e0f8130ed61e84d74ae5b2107d0a6343c8d39690b493c44",
+            "canonical_sha256": "524dfc76bec13ee2876e40f7445cecdef2e5ddbf6b9bb873247134e053200127"
+        },
+        {
+            "id": "eyeshadow",
+            "file": "categories/eyeshadow.json",
+            "source_index": 10,
+            "source_file": "config/attribute_taxonomy.tmp/categories/eyeshadow.json",
+            "source_git_blob": "aeaad06c5695ac0d2db7aac7e54694ba5ef9c48d",
+            "source_sha256": "e345c1c8e70385c1f054dfc45069094e5837d0f249ae5ae21cdcb18e8f51efd0",
+            "archived_file_sha256": "e345c1c8e70385c1f054dfc45069094e5837d0f249ae5ae21cdcb18e8f51efd0",
+            "canonical_sha256": "9c4e2eba7d0d14122b7c5aaaba37997ac3fa2fc6603e79e961d9f7011b4a35a3"
+        },
+        {
+            "id": "eyeliner",
+            "file": "categories/eyeliner.json",
+            "source_index": 11,
+            "source_file": "config/attribute_taxonomy.tmp/categories/eyeliner.json",
+            "source_git_blob": "3bd45631289e37fee3fdf58725146e6da16d4e5c",
+            "source_sha256": "06b808c7c14872a03627ead37b3112c4207dd1aa4f67aca3ef04f9f86d3ebfee",
+            "archived_file_sha256": "06b808c7c14872a03627ead37b3112c4207dd1aa4f67aca3ef04f9f86d3ebfee",
+            "canonical_sha256": "843478e17e12b9f41ca45f2df37748cae57f3255773c422468cca56ff993fe9b"
+        },
+        {
+            "id": "eyebrow",
+            "file": "categories/eyebrow.json",
+            "source_index": 12,
+            "source_file": "config/attribute_taxonomy.tmp/categories/eyebrow.json",
+            "source_git_blob": "8866a96dad76697f7b4ab19c19b78c836c90fbe6",
+            "source_sha256": "34c2d2b08ce11e77668ffe61c48e2a86ac1310e96804a03fcdbcf0500afdf617",
+            "archived_file_sha256": "34c2d2b08ce11e77668ffe61c48e2a86ac1310e96804a03fcdbcf0500afdf617",
+            "canonical_sha256": "1b06525ad09ada0d79e21f57f90a020b6992ed6054290672bf2ea9a143cf991f"
+        },
+        {
+            "id": "lip_oil",
+            "file": "categories/lip_oil.json",
+            "source_index": 13,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lip_oil.json",
+            "source_git_blob": "efbcfaa12612358956ce8654697b7ec0e4c55e34",
+            "source_sha256": "2335aa0dc3011ef821f9b93b4fe5d7ebeaae59b5e291696381862a49999b2c35",
+            "archived_file_sha256": "2335aa0dc3011ef821f9b93b4fe5d7ebeaae59b5e291696381862a49999b2c35",
+            "canonical_sha256": "0ab8ebd013b5b9ff81a650e4475638f2fbec72eff991dc46f19172bf1edd648d"
+        },
+        {
+            "id": "setting_spray_and_powder",
+            "file": "categories/setting_spray_and_powder.json",
+            "source_index": 14,
+            "source_file": "config/attribute_taxonomy.tmp/categories/setting_spray_and_powder.json",
+            "source_git_blob": "acc3394aec656d537f20a43f6bda075c8b1672ef",
+            "source_sha256": "911c2b1fcc8b0dc6237469779846b60551e181e1af760d8496e0ee5f96467dd0",
+            "archived_file_sha256": "911c2b1fcc8b0dc6237469779846b60551e181e1af760d8496e0ee5f96467dd0",
+            "canonical_sha256": "f298cf3930aa14d5f3d32fddaa4efbc89034537dde5c93b6d4b28583cc08d24c"
+        },
+        {
+            "id": "face_primer",
+            "file": "categories/face_primer.json",
+            "source_index": 15,
+            "source_file": "config/attribute_taxonomy.tmp/categories/face_primer.json",
+            "source_git_blob": "d306fed7020e4eef1e9a31d01dbb8569a8323ffc",
+            "source_sha256": "b40f777b20a5696ab331cf76d0da3b1a1b7e60e8365ac0f51df917045224affd",
+            "archived_file_sha256": "b40f777b20a5696ab331cf76d0da3b1a1b7e60e8365ac0f51df917045224affd",
+            "canonical_sha256": "a9915a5849c745959535ca7a71a20ed849f6698794c4e15beac4ca7b422be48c"
+        },
+        {
+            "id": "lip_balms",
+            "file": "categories/lip_balms.json",
+            "source_index": 16,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lip_balms.json",
+            "source_git_blob": "1798d57e0d0e601d847b69f388b70658783ea7ff",
+            "source_sha256": "5aa8c4f38681c4a89f46227e287b26b7a6c1d132bb059ef752e82192ff699e18",
+            "archived_file_sha256": "5aa8c4f38681c4a89f46227e287b26b7a6c1d132bb059ef752e82192ff699e18",
+            "canonical_sha256": "37d8254c1cede0298a655d3e0cc61e99a7d84699faceedd3380d1c64df05680e"
+        },
+        {
+            "id": "lip_liner",
+            "file": "categories/lip_liner.json",
+            "source_index": 17,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lip_liner.json",
+            "source_git_blob": "5c44876ee889e38aa0b81686c28194977b64dbd9",
+            "source_sha256": "a91f7b521807024fecd9bb636cb34b3d7fea676aa0173bed499d8109de673458",
+            "archived_file_sha256": "a91f7b521807024fecd9bb636cb34b3d7fea676aa0173bed499d8109de673458",
+            "canonical_sha256": "6a05bdb64659c4c1be010a1ed55508cd3c47e4938c242ad8e144e9874ebc7c5f"
+        },
+        {
+            "id": "lip_plumpers",
+            "file": "categories/lip_plumpers.json",
+            "source_index": 18,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lip_plumpers.json",
+            "source_git_blob": "ce2f06837f294ad3b729d57d159df578b8c36686",
+            "source_sha256": "3840e23ba89d87f472659012742b2d5ad0093c542e02e18e3d3f380319bf6eea",
+            "archived_file_sha256": "3840e23ba89d87f472659012742b2d5ad0093c542e02e18e3d3f380319bf6eea",
+            "canonical_sha256": "f9641adc719cd708bffb37028a8d8697eea3a469d9ebdbe801f26b9c79983334"
+        },
+        {
+            "id": "lip_stain",
+            "file": "categories/lip_stain.json",
+            "source_index": 19,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lip_stain.json",
+            "source_git_blob": "2d1bc1078bc59138379c4ef51132e5dddcbba9fa",
+            "source_sha256": "78bf68c26caf0cd4cb49a7261909fe6d9c3ada10b52f3b32da61c54f318262d6",
+            "archived_file_sha256": "78bf68c26caf0cd4cb49a7261909fe6d9c3ada10b52f3b32da61c54f318262d6",
+            "canonical_sha256": "7c0c1c48df8c0f2cab551f7cdafd2d3883ae8fdf3217fba344eb80981817927e"
+        },
+        {
+            "id": "lip_treatments",
+            "file": "categories/lip_treatments.json",
+            "source_index": 20,
+            "source_file": "config/attribute_taxonomy.tmp/categories/lip_treatments.json",
+            "source_git_blob": "c96471e3819ee051c8b999c11c27baa65394a14f",
+            "source_sha256": "7dc6bb73dd8276a22e10686645354bfd61f3159f1d18a852df780501e192f650",
+            "archived_file_sha256": "7dc6bb73dd8276a22e10686645354bfd61f3159f1d18a852df780501e192f650",
+            "canonical_sha256": "5fc62a8611f0095fa36110f399d3365046522f0c399789a54d9d78f2f3462aa2"
+        },
+        {
+            "id": "permanent",
+            "file": "categories/permanent.json",
+            "source_index": 21,
+            "source_file": "config/attribute_taxonomy.tmp/categories/permanent.json",
+            "source_git_blob": "a584a3817effd44edd5a79fc0c2c9c694cf60ff2",
+            "source_sha256": "80e7af6977144463eefcedfeac018ce19d61cc0488da80318187b2a18776847b",
+            "archived_file_sha256": "80e7af6977144463eefcedfeac018ce19d61cc0488da80318187b2a18776847b",
+            "canonical_sha256": "7a62101f959f267b883bef048d641738404acb9ce25bcbdb5a636fbf204393d2"
+        }
+    ]
+}
