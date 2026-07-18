@@ -878,6 +878,7 @@ def capability_render_proof(
     artifacts: list[str],
     *,
     artifact_mode: str,
+    include_variants: bool = False,
     role_bindings: dict[str, Any] | None = None,
     root: Path | None = None,
 ) -> dict[str, Any]:
@@ -885,6 +886,11 @@ def capability_render_proof(
 
     contract = _render_contract(capability_id, root=root)
     expected_tokens = list(contract.get("expected_artifact_stems") or [])
+    if include_variants:
+        expected_tokens.extend(
+            str(token)
+            for token in contract.get("expected_variant_artifact_stems") or []
+        )
     for template_contract in contract.get("expected_artifact_stem_templates") or []:
         role = str(template_contract.get("role") or "")
         binding = _binding_for_role(role_bindings or {}, role)
@@ -1025,6 +1031,7 @@ def render_capability(
         request.capability_id,
         current_run_artifacts,
         artifact_mode=request.artifact_mode,
+        include_variants=request.include_variants,
         role_bindings=request.role_bindings,
         root=resolved_root,
     )

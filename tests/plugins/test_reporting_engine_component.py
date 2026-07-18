@@ -626,6 +626,26 @@ def test_render_proof_requires_the_selected_chart_artifact() -> None:
     assert rendered["status"] == "rendered"
 
 
+def test_render_proof_accepts_declared_distribution_variant() -> None:
+    renderer = _load_module(
+        "reporting_engine_renderer_variant_artifact_proof_test",
+        PLUGIN_ROOT / "scripts" / "render_capability.py",
+    )
+
+    proof = renderer.capability_render_proof(
+        "distribution.boxplot",
+        ["boxplot.html", "boxplot_small_multiples.html"],
+        artifact_mode="data_and_render",
+        include_variants=True,
+    )
+
+    assert proof["status"] == "rendered"
+    assert proof["expected_chart_tokens"] == [
+        "boxplot",
+        "boxplot_small_multiples",
+    ]
+
+
 def test_render_proof_resolves_root_cause_drilldown_from_role_binding() -> None:
     renderer = _load_module(
         "reporting_engine_renderer_dynamic_artifact_proof_test",

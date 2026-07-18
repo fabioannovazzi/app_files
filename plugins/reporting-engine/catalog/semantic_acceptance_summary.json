@@ -5,7 +5,7 @@
   "inputs": {
     "manifest": {
       "path": "catalog/selection_manifest.json",
-      "sha256": "ef706fdb72a633649d28cbca2cd8139aa9902213bc315e6f01b26295e8fb79dc"
+      "sha256": "746106facc219f1db75fda50359b84c81b40574996192bfe6c6d4b497a3c7183"
     },
     "semantic_schema": {
       "path": "catalog/semantic_layer.schema.json",

@@ -77,6 +77,14 @@ EXPECTED_ARTIFACT_STEM_TEMPLATES: dict[str, list[dict[str, Any]]] = {
     ]
 }
 
+EXPECTED_VARIANT_ARTIFACT_STEMS: dict[str, list[str]] = {
+    "distribution.boxplot": ["boxplot_small_multiples"],
+    "distribution.ecdf": ["ecdf_small_multiples"],
+    "distribution.histogram": ["histogram_small_multiples"],
+    "distribution.kernel_density": ["kernel_density_small_multiples"],
+    "distribution.stripplot": ["stripplot_small_multiples"],
+}
+
 ALLOWED_SUPPORT_ARTIFACT_STEMS: dict[str, list[str]] = {
     "scatter.bubble": ["scatter_bubble_review"],
     "scatter.scatter": ["scatter_bubble_review"],
@@ -194,6 +202,12 @@ def build_render_contract(capability_id: str) -> dict[str, Any]:
         "fixed_option_overrides": dict(OPTION_OVERRIDES.get(capability_id, {})),
         "expected_artifact_stems": expected_stems,
         "expected_artifact_stem_templates": expected_templates,
+        "expected_variant_artifact_stems": list(
+            EXPECTED_VARIANT_ARTIFACT_STEMS.get(
+                capability_id,
+                VARIANT_CHART_OPTIONS.get(capability_id, []),
+            )
+        ),
         "allowed_support_artifact_stems": list(
             ALLOWED_SUPPORT_ARTIFACT_STEMS.get(capability_id, [])
         ),

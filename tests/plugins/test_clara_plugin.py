@@ -678,7 +678,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.88"
+    assert manifest["version"] == "0.1.92"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -686,6 +686,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     assert "deck-correction" in manifest["keywords"]
     assert "brand-fit" in manifest["keywords"]
     assert "reporting-engine" in manifest["keywords"]
+    assert "dataset-semantic-layer" in manifest["keywords"]
     assert "Conversation Workflow Router" in main_skill
     assert "Hosted-interview bundles and Hosted Voice bundles" in main_skill
     fixture_ids = {item["id"] for item in fixture["should_trigger"]}
@@ -698,6 +699,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "brand-fit-stored-snapshot-boundary",
         "reporting-engine-direct-chart-analysis",
         "reporting-engine-chart-contract",
+        "reporting-engine-semantic-layer",
     }.issubset(fixture_ids)
     expected_routes = {
         item["id"]: item.get("expected_skill")
@@ -718,6 +720,9 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "clara:reporting-engine"
     )
     assert expected_routes["reporting-engine-chart-contract"] == (
+        "clara:reporting-engine"
+    )
+    assert expected_routes["reporting-engine-semantic-layer"] == (
         "clara:reporting-engine"
     )
     main_description = main_skill.split("---", 2)[1]
