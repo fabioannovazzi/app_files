@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FatturaElettronica>
+  <FatturaElettronicaHeader>
+    <CedentePrestatore>
+      <DatiAnagrafici>
+        <IdFiscaleIVA>
+          <IdPaese>IT</IdPaese>
+          <IdCodice>01234567890</IdCodice>
+        </IdFiscaleIVA>
+        <Anagrafica><Denominazione>ACME SPA</Denominazione></Anagrafica>
+      </DatiAnagrafici>
+    </CedentePrestatore>
+    <CessionarioCommittente>
+      <DatiAnagrafici>
+        <IdFiscaleIVA>
+          <IdPaese>IT</IdPaese>
+          <IdCodice>09876543210</IdCodice>
+        </IdFiscaleIVA>
+        <Anagrafica><Denominazione>CLIENTE SRL</Denominazione></Anagrafica>
+      </DatiAnagrafici>
+    </CessionarioCommittente>
+  </FatturaElettronicaHeader>
+  <FatturaElettronicaBody>
+    <DatiGenerali>
+      <DatiGeneraliDocumento>
+        <TipoDocumento>TD01</TipoDocumento>
+        <Divisa>EUR</Divisa>
+        <Data>2026-07-17</Data>
+        <Numero>INV-42</Numero>
+        <ImportoTotaleDocumento>123.45</ImportoTotaleDocumento>
+      </DatiGeneraliDocumento>
+    </DatiGenerali>
+  </FatturaElettronicaBody>
+</FatturaElettronica>
