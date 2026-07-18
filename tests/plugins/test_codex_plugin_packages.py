@@ -673,6 +673,38 @@ def test_plotting_plugins_are_embedded_in_clara_package_only() -> None:
             f"{component_prefix}/{plugin_name}/.codex-plugin/plugin.json"
             in clara_entries
         )
+    assert (
+        f"{component_prefix}/reporting-engine/catalog/png_gallery_manifest.json"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/catalog/mechanical_acceptance_summary.json"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/fixtures/mechanical_acceptance/universal_complete.csv"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/catalog/semantic_layer.schema.json"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/catalog/semantic_acceptance_summary.json"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/scripts/semantic_layer.py"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/references/semantic_layer.md"
+        in clara_entries
+    )
+    assert (
+        f"{component_prefix}/reporting-engine/fixtures/semantic_layer/retail_monthly.semantic.json"
+        in clara_entries
+    )
 
     for target in [*builder.load_packages(), *builder.load_bundles()]:
         entries = builder.expected_zip_entries(target)
@@ -719,6 +751,86 @@ def test_extracted_clara_chart_components_import_without_repository_paths(
     assert "ImportError" not in result.stderr
 
 
+def test_extracted_clara_semantic_fixture_validates(
+    extracted_clara_plugin: Path,
+) -> None:
+    component_root = extracted_clara_plugin / "modules" / "reporting-engine"
+    profiler_spec = importlib.util.spec_from_file_location(
+        "extracted_reporting_engine_profiler",
+        component_root / "scripts" / "profile_dataset.py",
+    )
+    semantic_spec = importlib.util.spec_from_file_location(
+        "extracted_reporting_engine_semantic",
+        component_root / "scripts" / "semantic_layer.py",
+    )
+    assert profiler_spec and profiler_spec.loader
+    assert semantic_spec and semantic_spec.loader
+    profiler = importlib.util.module_from_spec(profiler_spec)
+    semantic = importlib.util.module_from_spec(semantic_spec)
+    profiler_spec.loader.exec_module(profiler)
+    semantic_spec.loader.exec_module(semantic)
+    fixture_root = component_root / "fixtures" / "semantic_layer"
+    profile = profiler.profile_dataset(
+        fixture_root / "retail_monthly.csv", dataset_id="retail_monthly"
+    )
+    layer = json.loads(
+        (fixture_root / "retail_monthly.semantic.json").read_text(encoding="utf-8")
+    )
+    manifest = json.loads(
+        (component_root / "catalog" / "selection_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    report = semantic.validate_semantic_layer(layer, profile, manifest)
+
+    assert report["status"] == "contract_valid"
+    assert report["semantic_readiness"] == "ready_as_scoped_semantic_input"
+    assert report["counts"]["analysis_validities"]["valid"] == 9
+    assert report["errors"] == []
+
+
+def test_extracted_clara_semantic_acceptance_cli(
+    extracted_clara_plugin: Path,
+    tmp_path: Path,
+) -> None:
+    component_root = extracted_clara_plugin / "modules" / "reporting-engine"
+    fixture_root = component_root / "fixtures" / "semantic_layer"
+    output_path = tmp_path / "semantic_acceptance.json"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(component_root / "scripts" / "semantic_layer.py"),
+            "acceptance",
+            "--dataset",
+            str(fixture_root / "retail_monthly.csv"),
+            "--dataset-id",
+            "retail_monthly",
+            "--layer",
+            str(fixture_root / "retail_monthly.semantic.json"),
+            "--source",
+            str(fixture_root / "retail_monthly_source_notes.md"),
+            "--output",
+            str(output_path),
+        ],
+        cwd=tmp_path,
+        env=isolated_plugin_env(),
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stderr
+    report = json.loads(output_path.read_text(encoding="utf-8"))
+    assert report["result"] == "pass"
+    assert report["validation"]["semantic_readiness"] == (
+        "ready_as_scoped_semantic_input"
+    )
+    assert report["validation"]["counts"]["analysis_validities"]["valid"] == 9
+
+
 def test_extracted_clara_renders_known_period_comparison(
     extracted_clara_plugin: Path,
     tmp_path: Path,
@@ -751,6 +863,8 @@ def test_extracted_clara_renders_known_period_comparison(
                         "current": {"year": 2026, "month_cutoff": 6},
                         "previous": {"year": 2025, "month_cutoff": 6},
                     },
+                    "current_period_label": "2026",
+                    "previous_period_label": "2025",
                     "reporting_entity": "Clara smoke test",
                 }
             ),
@@ -815,7 +929,6 @@ def test_extracted_clara_renders_distribution_with_variant(
             "--role-bindings-json",
             json.dumps(
                 {
-                    "period_filter": "Date",
                     "distribution_metric": "Sales",
                     "panel_dimension": "Brand",
                 }

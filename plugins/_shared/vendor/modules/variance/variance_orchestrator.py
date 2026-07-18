@@ -358,7 +358,9 @@ def process_index_combinations(dfCopy, resultArray, indexCols, valueCols, paramD
     processIndexCombinationName = namingParams["processIndexCombinationName"]
     metConditionValue = namingParams["metConditionValue"]
     notMetConditionValue = namingParams["notMetConditionValue"]
-    dfCopy, valueCols = add_random_key(dfCopy, valueCols, False)
+    randomKey = namingParams["randomKey"]
+    aggregationValueCols = [column for column in valueCols if column != randomKey]
+    dfCopy = drop_columns(dfCopy, [randomKey])
     use_lazy = isinstance(dfCopy, pl.LazyFrame)
     if use_lazy:
         frameArray = []
@@ -370,7 +372,7 @@ def process_index_combinations(dfCopy, resultArray, indexCols, valueCols, paramD
         df = duplicate_dataframe(dfCopy)
         if is_valid_lazyframe(df):
             df, paramDict = group_by_df_on_index_cols(
-                df, indexCol, valueCols, "sum", paramDict, False
+                df, indexCol, aggregationValueCols, "sum", paramDict, False
             )
             if is_valid_lazyframe(df):
                 if use_lazy:
@@ -389,7 +391,22 @@ def process_index_combinations(dfCopy, resultArray, indexCols, valueCols, paramD
         paramDict = check_if_duplicates_in_all_columns(
             dfResult, "Process index combinations", paramDict
         )
+        columns, _ = get_schema_and_column_names(dfResult)
+        stableSortCols = [
+            column
+            for column in [*indexCols, *aggregationValueCols]
+            if column in columns
+        ]
+        if stableSortCols:
+            dfResult = dfResult.sort(stableSortCols, nulls_last=True)
         dfResult = dfResult.unique(subset=indexCols, maintain_order=True)
+        # A row key identifies one completed node combination. Summing source
+        # row indexes during aggregation creates collisions between parent and
+        # child nodes and can attach the wrong metrics to a dimension label.
+        keyValueCols = list(aggregationValueCols)
+        dfResult, keyValueCols = add_random_key(dfResult, keyValueCols, False)
+        if randomKey not in valueCols:
+            valueCols.append(randomKey)
         statusMessage = "collect but not cached"
         paramDict = add_status_message_to_paramDict(paramDict, statusMessage, 0)
         if not use_lazy and isinstance(dfResult, pl.LazyFrame):

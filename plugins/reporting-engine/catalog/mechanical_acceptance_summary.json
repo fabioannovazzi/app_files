@@ -1,0 +1,1018 @@
+{
+  "schema_version": "0.1",
+  "result": "pass",
+  "boundary": "Mechanical acceptance only. Dataset selection and fixture bindings exercise explicit contracts and do not endorse a business analysis.",
+  "manifest": {
+    "file_name": "selection_manifest.json",
+    "sha256": "746106facc219f1db75fda50359b84c81b40574996192bfe6c6d4b497a3c7183"
+  },
+  "fixture_datasets": [
+    {
+      "dataset_id": "universal_complete",
+      "file_name": "universal_complete.csv",
+      "sha256": "bfe18a56603ad5232eba10a45c2cbceec383e40867048ae54e8b27d8fd90b65b"
+    },
+    {
+      "dataset_id": "variance_root_cause",
+      "file_name": "variance_root_cause.csv",
+      "sha256": "5420f77921111b36d03caaf99bca154cf5c6ce622f27e37d23c06b24c0348446"
+    },
+    {
+      "dataset_id": "funnel_stage",
+      "file_name": "funnel_stage.csv",
+      "sha256": "96eed2b9c134da17083fc73b5b62b4045b8192e974995408d7a51b3897669ff7"
+    },
+    {
+      "dataset_id": "set_overlap",
+      "file_name": "set_overlap.csv",
+      "sha256": "2f32e7d56be56b176a8c98174461953dabeaa45c3b98a70c803c2f8263854cca"
+    },
+    {
+      "dataset_id": "statement",
+      "file_name": "statement.csv",
+      "sha256": "fc6ade94610244df7abac89824807d8f5ba115f10a7a842344c1c30a2c6dbd87"
+    }
+  ],
+  "fixture_recipes": [
+    {
+      "file_name": "attribute_recipe.json",
+      "sha256": "971394607f98994feb5a6d3f2028410fd06197a3d6bcfb0ba40cde006fd422f6"
+    },
+    {
+      "file_name": "statement_recipe.json",
+      "sha256": "89263148fb08ad7a3122a86d2d82489f0864f89aa7ceeb12e711c4f4571659e1"
+    }
+  ],
+  "artifact_mode": "data_and_render",
+  "execute": true,
+  "selected_capability_count": 48,
+  "counts": {
+    "component_executed": 48
+  },
+  "records": [
+    {
+      "capability_id": "attributes.attribute_bridge_table",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_incomplete",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "package_dir"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "not_applicable",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "attribute_bridge_table"
+      ],
+      "rendered_artifacts": [
+        "attribute_tables/attribute_bridge_table.html"
+      ]
+    },
+    {
+      "capability_id": "attributes.attribute_bundle_comparison_table",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_incomplete",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "package_dir"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "not_applicable",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "attribute_bundle_comparison_table"
+      ],
+      "rendered_artifacts": [
+        "attribute_tables/attribute_bundle_comparison_table.html"
+      ]
+    },
+    {
+      "capability_id": "attributes.product_signal_evidence_table",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_incomplete",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "package_dir",
+        "product"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "not_applicable",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "product_signal_evidence_table"
+      ],
+      "rendered_artifacts": [
+        "attribute_tables/product_signal_evidence_table.html"
+      ]
+    },
+    {
+      "capability_id": "attributes.rank_weighted_visibility_table",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_incomplete",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "package_dir",
+        "rank_or_lane"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "not_applicable",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "rank_weighted_visibility_table"
+      ],
+      "rendered_artifacts": [
+        "attribute_tables/rank_weighted_visibility_table.html"
+      ]
+    },
+    {
+      "capability_id": "distribution.boxplot",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "distribution_metric",
+        "period_filter"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "boxplot"
+      ],
+      "rendered_artifacts": [
+        "boxplot.html"
+      ]
+    },
+    {
+      "capability_id": "distribution.ecdf",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "distribution_metric",
+        "period_filter"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "ecdf"
+      ],
+      "rendered_artifacts": [
+        "ecdf.html"
+      ]
+    },
+    {
+      "capability_id": "distribution.histogram",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "distribution_metric",
+        "period_filter"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "histogram"
+      ],
+      "rendered_artifacts": [
+        "histogram.html"
+      ]
+    },
+    {
+      "capability_id": "distribution.kernel_density",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "distribution_metric",
+        "period_filter"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "kernel_density"
+      ],
+      "rendered_artifacts": [
+        "kernel_density.html"
+      ]
+    },
+    {
+      "capability_id": "distribution.stripplot",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "distribution_metric",
+        "period_filter"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "stripplot"
+      ],
+      "rendered_artifacts": [
+        "stripplot.html"
+      ]
+    },
+    {
+      "capability_id": "funnel.stage_table",
+      "dataset_id": "funnel_stage",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "ordered_stage",
+        "stage_pass_count",
+        "stage_start_count"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "not_applicable",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "funnel_stage_table"
+      ],
+      "rendered_artifacts": [
+        "funnel_stage_table.html"
+      ]
+    },
+    {
+      "capability_id": "mix.area",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "optional_component_dimension",
+        "period_axis",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "area_absolute",
+        "area_share"
+      ],
+      "rendered_artifacts": [
+        "area_absolute.html",
+        "area_share.html"
+      ]
+    },
+    {
+      "capability_id": "mix.bar",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "category",
+        "period_filter",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "bar"
+      ],
+      "rendered_artifacts": [
+        "bar.html"
+      ]
+    },
+    {
+      "capability_id": "mix.barmekko",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "area_metric",
+        "height_category",
+        "period_filter",
+        "width_category",
+        "width_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "barmekko"
+      ],
+      "rendered_artifacts": [
+        "barmekko.html"
+      ]
+    },
+    {
+      "capability_id": "mix.cohort_lost_stacked_column",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "lost_or_last_active_cohort",
+        "period_axis",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "cohort_lost_stacked_column"
+      ],
+      "rendered_artifacts": [
+        "cohort_lost_stacked_column.html"
+      ]
+    },
+    {
+      "capability_id": "mix.cohort_since_stacked_column",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "first_active_cohort",
+        "period_axis",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "cohort_since_stacked_column"
+      ],
+      "rendered_artifacts": [
+        "cohort_since_stacked_column.html"
+      ]
+    },
+    {
+      "capability_id": "mix.column",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_axis",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "column_total"
+      ],
+      "rendered_artifacts": [
+        "column_total.html"
+      ]
+    },
+    {
+      "capability_id": "mix.column_overlay",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_axis",
+        "primary_metric",
+        "related_marker_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "column_total_with_overlay"
+      ],
+      "rendered_artifacts": [
+        "column_total_with_overlay.html"
+      ]
+    },
+    {
+      "capability_id": "mix.like_for_like_column",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_axis",
+        "primary_metric",
+        "stable_population_flag"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "like_for_like_column_total"
+      ],
+      "rendered_artifacts": [
+        "like_for_like_column_total.html"
+      ]
+    },
+    {
+      "capability_id": "mix.like_for_like_stacked_column",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "component_dimension",
+        "period_axis",
+        "primary_metric",
+        "stable_population_flag"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "like_for_like_stacked_column"
+      ],
+      "rendered_artifacts": [
+        "like_for_like_stacked_column.html"
+      ]
+    },
+    {
+      "capability_id": "mix.marimekko",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "optional_panel",
+        "period_filter",
+        "primary_metric",
+        "stack_category",
+        "width_category"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "marimekko"
+      ],
+      "rendered_artifacts": [
+        "marimekko.html"
+      ]
+    },
+    {
+      "capability_id": "mix.multitier_bar",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_metric",
+        "dimension_member",
+        "optional_panel",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "multitier_bar"
+      ],
+      "rendered_artifacts": [
+        "multitier_bar.html"
+      ]
+    },
+    {
+      "capability_id": "mix.pareto",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "category",
+        "period_filter",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "pareto"
+      ],
+      "rendered_artifacts": [
+        "pareto.html"
+      ]
+    },
+    {
+      "capability_id": "mix.stacked_bar",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "category",
+        "component_category",
+        "period_filter",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "stacked_bar"
+      ],
+      "rendered_artifacts": [
+        "stacked_bar.html"
+      ]
+    },
+    {
+      "capability_id": "mix.stacked_bar_overlay",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "category",
+        "period_filter",
+        "primary_metric",
+        "related_marker_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "related_metrics_bar"
+      ],
+      "rendered_artifacts": [
+        "related_metrics_bar.html"
+      ]
+    },
+    {
+      "capability_id": "mix.stacked_column",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "component_dimension",
+        "period_axis",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "stacked_column"
+      ],
+      "rendered_artifacts": [
+        "stacked_column.html"
+      ]
+    },
+    {
+      "capability_id": "mix.stacked_pareto",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "category",
+        "component_dimension",
+        "period_filter",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "stacked_pareto_abc",
+        "stacked_pareto_by_dimension"
+      ],
+      "rendered_artifacts": [
+        "stacked_pareto_abc.html",
+        "stacked_pareto_by_dimension.html"
+      ]
+    },
+    {
+      "capability_id": "mix.timeline",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_axis",
+        "primary_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "line"
+      ],
+      "rendered_artifacts": [
+        "line.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.by_period",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_metric",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "year_over_year_by_period"
+      ],
+      "rendered_artifacts": [
+        "year_over_year_by_period.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.comparison_table",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_metric",
+        "period_filter"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "comparison_table"
+      ],
+      "rendered_artifacts": [
+        "comparison_table.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.dot",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_item",
+        "comparison_metric",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "year_over_year_dot"
+      ],
+      "rendered_artifacts": [
+        "year_over_year_dot.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.horizontal_waterfall",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_metric",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "year_over_year_waterfall"
+      ],
+      "rendered_artifacts": [
+        "year_over_year_waterfall.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.multitier_column",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_metric",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "year_over_year_column"
+      ],
+      "rendered_artifacts": [
+        "year_over_year_column.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.slope",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_item",
+        "comparison_metric",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "year_over_year_slope"
+      ],
+      "rendered_artifacts": [
+        "year_over_year_slope.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.time_series_table",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_metric",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "time_series_table"
+      ],
+      "rendered_artifacts": [
+        "time_series_table.html"
+      ]
+    },
+    {
+      "capability_id": "period_comparison.trend",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "comparison_metric",
+        "period_axis"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "year_over_year_line"
+      ],
+      "rendered_artifacts": [
+        "year_over_year_line.html"
+      ]
+    },
+    {
+      "capability_id": "scatter.bubble",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "optional_panel",
+        "period_filter",
+        "point_dimension",
+        "size_metric",
+        "x_metric",
+        "y_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "bubble"
+      ],
+      "rendered_artifacts": [
+        "bubble.html",
+        "scatter_bubble_review.html"
+      ]
+    },
+    {
+      "capability_id": "scatter.scatter",
+      "dataset_id": "universal_complete",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "optional_panel",
+        "period_filter",
+        "point_dimension",
+        "x_metric",
+        "y_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "scatter"
+      ],
+      "rendered_artifacts": [
+        "scatter.html",
+        "scatter_bubble_review.html"
+      ]
+    },
+    {
+      "capability_id": "set_overlap.upset",
+      "dataset_id": "set_overlap",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_filter",
+        "set_membership_fields"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "upset"
+      ],
+      "rendered_artifacts": [
+        "upset.html"
+      ]
+    },
+    {
+      "capability_id": "set_overlap.upset_small_multiples",
+      "dataset_id": "set_overlap",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "panel_or_segment",
+        "period_filter",
+        "set_membership_fields"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "upset_small_multiples"
+      ],
+      "rendered_artifacts": [
+        "upset_small_multiples.html"
+      ]
+    },
+    {
+      "capability_id": "set_overlap.venn",
+      "dataset_id": "set_overlap",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_filter",
+        "two_or_three_set_membership_fields"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "venn"
+      ],
+      "rendered_artifacts": [
+        "venn.png"
+      ]
+    },
+    {
+      "capability_id": "statement.pnl_table",
+      "dataset_id": "statement",
+      "compatibility_status": "mechanically_incomplete",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_axis",
+        "statement_line_item",
+        "statement_scenario",
+        "statement_value"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "unscoped_period_axis_uses_available_range",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "pnl_statement_table"
+      ],
+      "rendered_artifacts": [
+        "pnl_statement_table.html"
+      ]
+    },
+    {
+      "capability_id": "variance.exploded_variance_bridge",
+      "dataset_id": "variance_root_cause",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "child_driver",
+        "parent_driver",
+        "period_filter",
+        "variance_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "exploded_variance_bridge"
+      ],
+      "rendered_artifacts": [
+        "exploded_variance_bridge.png"
+      ]
+    },
+    {
+      "capability_id": "variance.price_volume_mix",
+      "dataset_id": "variance_root_cause",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_filter",
+        "value_metric",
+        "volume_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "pvm_decomposition_ladder"
+      ],
+      "rendered_artifacts": [
+        "pvm_decomposition_ladder.png"
+      ]
+    },
+    {
+      "capability_id": "variance.root_cause_component_bridge",
+      "dataset_id": "variance_root_cause",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "component_root_cause_driver_sequence",
+        "period_filter",
+        "value_metric",
+        "volume_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "root_cause_component_bridge"
+      ],
+      "rendered_artifacts": [
+        "root_cause_component_bridge.png",
+        "root_cause_total_bridge.png"
+      ]
+    },
+    {
+      "capability_id": "variance.root_cause_exploded_bridge",
+      "dataset_id": "variance_root_cause",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "drilldown_selection",
+        "period_filter",
+        "root_cause_driver_sequence",
+        "variance_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "root_cause_total_bridge_drilldown_row_1"
+      ],
+      "rendered_artifacts": [
+        "root_cause_total_bridge.png",
+        "root_cause_total_bridge_drilldown_row_1.png"
+      ]
+    },
+    {
+      "capability_id": "variance.root_cause_total_bridge",
+      "dataset_id": "variance_root_cause",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_filter",
+        "root_cause_driver_sequence",
+        "variance_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "root_cause_total_bridge"
+      ],
+      "rendered_artifacts": [
+        "root_cause_total_bridge.png"
+      ]
+    },
+    {
+      "capability_id": "variance.scenario_bridge",
+      "dataset_id": "variance_root_cause",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "period_filter",
+        "variance_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "waterfall"
+      ],
+      "rendered_artifacts": [
+        "waterfall.png"
+      ]
+    },
+    {
+      "capability_id": "variance.total_by_dimension_bridge",
+      "dataset_id": "variance_root_cause",
+      "compatibility_status": "mechanically_compatible",
+      "acceptance_status": "component_executed",
+      "bound_roles": [
+        "dimension_member",
+        "period_filter",
+        "variance_metric"
+      ],
+      "missing_bindings": [],
+      "period_scope_status": "explicit_scope",
+      "render_proof_status": "rendered",
+      "expected_artifact_stems": [
+        "total_by_dimension_bridge"
+      ],
+      "rendered_artifacts": [
+        "total_by_dimension_bridge.png"
+      ]
+    }
+  ]
+}

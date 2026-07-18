@@ -53,9 +53,11 @@ one generic workflow:
   report; it must not present the stored snapshot as a live-shelf assertion.
 - Use `reporting-engine` when the user wants Clara to analyze a CSV/XLSX/Parquet
   dataset, choose and render a useful business chart, inspect chart
-  capabilities, or profile mechanical compatibility. Codex selects the
-  meaningful analysis from the user's question and actual fields; deterministic
-  components own exact calculations and rendering.
+  capabilities, profile mechanical compatibility, or create and validate a
+  dataset-specific semantic layer. Codex selects the meaningful analysis from
+  the user's question, reviewed source-backed semantics, and actual fields;
+  deterministic components own profiling, contract checks, exact calculations,
+  and rendering.
 
 The main `clara` skill resumes after Interview, Transcribe, or Deck Correction
 when retrieved or reviewed evidence must update a case workspace, evidence map,

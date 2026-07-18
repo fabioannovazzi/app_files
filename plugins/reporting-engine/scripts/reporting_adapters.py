@@ -4,8 +4,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from check_compatibility import check_capability_compatibility
 
 __all__ = [
     "adapter_registry_path",
@@ -141,10 +148,13 @@ def _dataset_candidates_for_role(
 ) -> list[str]:
     if not dataset_profile:
         return []
+    role_candidate_columns = dataset_profile.get("role_candidate_columns") or {}
     role_candidates = dataset_profile.get("role_candidates") or {}
     role = str(role_contract.get("role") or "")
+    if role in role_candidate_columns:
+        return [str(item) for item in role_candidate_columns.get(role) or []]
     if role in role_candidates:
-        return [str(item) for item in role_candidates.get(role) or []]
+        return _candidate_columns(role_candidates.get(role) or [])
     kind = str(role_contract.get("kind") or "")
     fallback_roles = {
         "period": "period_axis",
@@ -155,29 +165,94 @@ def _dataset_candidates_for_role(
     fallback = fallback_roles.get(kind)
     if fallback is None:
         return []
-    return [str(item) for item in role_candidates.get(fallback) or []]
+    if fallback in role_candidate_columns:
+        return [str(item) for item in role_candidate_columns.get(fallback) or []]
+    candidates = _candidate_columns(role_candidates.get(fallback) or [])
+    if candidates:
+        return candidates
+    source_roles = dataset_profile.get("roles") or {}
+    source_role = {
+        "period_axis": "period",
+        "comparison_metric": "metric",
+        "dimension_member": "dimension",
+        "identifier": "identifier",
+    }.get(fallback)
+    return (
+        [str(item) for item in source_roles.get(source_role, [])] if source_role else []
+    )
+
+
+def _candidate_columns(candidates: list[Any]) -> list[str]:
+    columns: list[str] = []
+    for candidate in candidates:
+        if isinstance(candidate, dict) and candidate.get("column"):
+            columns.append(str(candidate["column"]))
+        elif isinstance(candidate, str):
+            columns.append(candidate)
+    return columns
+
+
+def _compatibility_matches(
+    compatibility: dict[str, Any] | None,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    if not compatibility:
+        return {}
+    return {
+        (str(match.get("kind") or ""), str(match.get("role") or "")): match
+        for match in compatibility.get("mechanical_role_matches") or []
+        if isinstance(match, dict)
+    }
 
 
 def _role_plan(
     contracts: list[dict[str, Any]],
     dataset_profile: dict[str, Any] | None,
+    compatibility: dict[str, Any] | None,
 ) -> list[dict[str, Any]]:
     plan: list[dict[str, Any]] = []
+    matches = _compatibility_matches(compatibility)
     for contract in contracts:
-        candidates = _dataset_candidates_for_role(dataset_profile, contract)
+        kind = str(contract.get("kind") or "")
+        role = str(contract.get("role") or "")
+        match = matches.get((kind, role))
+        candidates = (
+            [str(item) for item in match.get("candidate_columns") or []]
+            if match
+            else _dataset_candidates_for_role(dataset_profile, contract)
+        )
+        if dataset_profile is None:
+            dataset_match_status = "not_checked"
+        elif match and match.get("fit_status") == "semantic_or_package_gap":
+            dataset_match_status = "semantic_or_package_gap"
+        elif match and match.get("fit_status") == "optional_not_matched":
+            dataset_match_status = "optional_not_available"
+        elif match and match.get("fit_status") != "satisfied":
+            dataset_match_status = "missing_candidate"
+        elif match and str(match.get("resolution_type") or "").startswith("derived_"):
+            dataset_match_status = "derivable"
+        elif match and match.get("resolution_type") == "structural_variance_step":
+            dataset_match_status = "derivable"
+        elif match and match.get("ambiguity_status") == "ambiguous":
+            dataset_match_status = "candidate_ambiguous"
+        elif candidates:
+            dataset_match_status = "candidate_available"
+        else:
+            dataset_match_status = "missing_candidate"
         plan.append(
             {
-                "kind": contract.get("kind"),
-                "role": contract.get("role"),
+                "kind": kind,
+                "role": role,
+                "required": bool(contract.get("required", True)),
                 "mapping_kind": contract.get("mapping_kind"),
                 "status": contract.get("status"),
                 "parameter_targets": contract.get("parameter_targets") or [],
                 "dataset_candidates": candidates,
-                "dataset_match_status": (
-                    "not_checked"
-                    if dataset_profile is None
-                    else "candidate_available" if candidates else "missing_candidate"
-                ),
+                "dataset_match_status": dataset_match_status,
+                "fit_status": match.get("fit_status") if match else None,
+                "ambiguity_status": (match.get("ambiguity_status") if match else None),
+                "resolution_type": match.get("resolution_type") if match else None,
+                "issue": match.get("issue") if match else None,
+                "scope_binding": contract.get("scope_binding"),
             }
         )
     return plan
@@ -196,7 +271,17 @@ def prepare_invocation_plan(
     contract = capability.get("normalized_invocation_contract") or {}
     adapter = resolve_capability_adapter(capability_id, root=root)
     required_contracts = contract.get("required_role_contracts") or []
+    optional_contracts = contract.get("optional_role_contracts") or []
     variant_contracts = contract.get("variant_role_contracts") or []
+    compatibility = (
+        check_capability_compatibility(
+            capability_id,
+            dataset_profile,
+            manifest=manifest,
+        )
+        if dataset_profile is not None
+        else None
+    )
     return {
         "schema_version": "0.1",
         "capability_id": capability_id,
@@ -212,8 +297,15 @@ def prepare_invocation_plan(
         ),
         "render_api_status": adapter.get("render_api_status"),
         "entrypoints": adapter.get("entrypoints") or {},
-        "required_roles": _role_plan(required_contracts, dataset_profile),
-        "variant_roles": _role_plan(variant_contracts, dataset_profile),
+        "required_roles": _role_plan(
+            required_contracts, dataset_profile, compatibility
+        ),
+        "optional_roles": _role_plan(
+            optional_contracts, dataset_profile, compatibility
+        ),
+        "variant_roles": _role_plan(variant_contracts, dataset_profile, None),
+        "compatibility": compatibility,
+        "period_scope": capability.get("period_scope_contract") or {},
         "artifact_invocation_contracts": (
             contract.get("artifact_invocation_contracts") or []
         ),

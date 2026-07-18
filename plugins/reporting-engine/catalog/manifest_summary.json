@@ -1,9 +1,10 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.3",
   "manifest_schema_version": "0.1",
   "capability_count": 48,
-  "artifact_count": 0,
-  "role_registry_count": 5,
+  "artifact_count": 73,
+  "role_registry_count": 58,
+  "profile_role_count": 12,
   "plugin_sources": [
     "attribute-tables",
     "distribution-analysis",
@@ -69,9 +70,38 @@
     "result": "pass",
     "capabilities_checked": 48,
     "duplicate_selector_signatures": 0,
-    "high_overlap_pair_count": 21,
+    "high_overlap_pair_count": 22,
     "unresolved_pair_count": 0,
     "generated_manifest_only_capabilities": 0
   },
-  "boundary": "Non-semantic chart capability and mechanical parameter contract. Clara owns the reporting-engine adapter registry; legacy plugin sources are provenance only. This does not choose semantically valid analyses."
+  "mechanical_acceptance": {
+    "result": "pass",
+    "selected_capability_count": 48,
+    "counts": {
+      "component_executed": 48
+    },
+    "manifest_digest_matches": true
+  },
+  "semantic_layer": {
+    "schema_version": "0.1",
+    "schema_id": "https://mparanza.com/schemas/reporting-engine-semantic-layer-0.1.json",
+    "schema_sha256": "ef0d895142670724486924a26855031f1f7b611c1b18a85174320e6845edfaeb",
+    "workflow_script": "scripts/semantic_layer.py",
+    "reviewed_fixture": "fixtures/semantic_layer/retail_monthly.semantic.json",
+    "judgment_owner": "model_or_human_review",
+    "deterministic_scope": "Scaffolding and contract validation only; semantic assertions remain source-backed model or human judgments.",
+    "acceptance": {
+      "result": "pass",
+      "semantic_layer_id": "retail_monthly.reporting_semantics",
+      "semantic_readiness": "ready_as_scoped_semantic_input",
+      "analysis_validities": {
+        "conditional": 0,
+        "invalid": 1,
+        "unknown": 0,
+        "valid": 9
+      },
+      "input_digests_match": true
+    }
+  },
+  "boundary": "Chart capability, mechanical parameter, dataset profile, and dataset-specific semantic-layer contracts. Clara owns the reporting-engine adapter registry; legacy plugin sources are provenance only. The component validates semantic wiring but does not author semantic truth or choose a final chart."
 }

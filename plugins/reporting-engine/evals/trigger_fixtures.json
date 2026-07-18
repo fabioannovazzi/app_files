@@ -21,6 +21,16 @@
         "mechanically compatible",
         "semantic selection"
       ]
+    },
+    {
+      "id": "dataset-semantic-layer",
+      "prompt": "Create a source-backed semantic layer for this dataset, define valid metrics and analyses, and validate its bindings to the chart manifest.",
+      "required_signals": [
+        "source-backed semantic layer",
+        "valid metrics and analyses",
+        "validate",
+        "chart manifest"
+      ]
     }
   ],
   "should_not_trigger": [
