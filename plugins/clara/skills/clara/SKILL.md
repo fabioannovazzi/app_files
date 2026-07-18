@@ -1231,19 +1231,38 @@ structured judgement, but must not ask the user to edit JSON by hand.
 
 ## Plugin Improvement Feedback
 
-At the end of every completed or blocked plugin run, after reporting the
-deliverables, briefly identify concrete improvements that would have made this
-plugin run better. Base suggestions on the actual session, such as a missing
-material type, unclear inclusion step, brittle DOCX rendering, missing import
-format, needed fixture, output gap, installation friction, or repeated manual
-step.
+Improvement reporting is optional and based on this run. Do not prompt on
+plugin startup, on a schedule, or merely because a run ended. Stay silent
+unless Codex can name either a concrete failure it just observed or a concrete
+capability that would have materially improved the work.
 
-When there is something useful to report, write a short improvement note with:
+For an observed failure, use the run context to draft the smallest useful
+engineering request: what happened, what should have happened, exact steps to
+reproduce it, the relevant error or output shape, and the plugin version. Do
+not attach the run, source documents, or client material. Replace any necessary
+example with a synthetic equivalent. Show the user the exact short request that
+would be sent, then ask exactly:
 
-- observed gap;
-- proposed improvement;
-- why it matters;
-- relevant input/output file names when available;
-- suggested next engineering action.
+> Should I transmit this to the developer so we fix it?
 
-Keep the improvement note local to chat or run artifacts.
+Transmit only after the user says yes. Save the approved request as JSON and
+run from the Clara root:
+
+```bash
+python scripts/change_requests.py submit-problem --request <approved-request.json>
+```
+
+Report the returned `CR-N` receipt. A retry after a network failure must reuse
+the saved submission and return the same receipt; it is not a new request.
+
+For a concrete new capability, Codex may instead offer a three-minute voice
+interview. If the user accepts, run:
+
+```bash
+python scripts/change_requests.py start-interview --opportunity "<concrete opportunity>" --language <language>
+```
+
+Open the returned interview link. The adaptive interview replaces a
+questionnaire, and completing it transmits the request; do not ask for another
+review or confirmation afterward. If there is no concrete opportunity, do not
+offer the interview.

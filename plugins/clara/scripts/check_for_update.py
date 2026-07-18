@@ -215,6 +215,23 @@ def check_for_update(
     )
 
 
+def _check_fixed_change_requests(
+    plugin_root: Path, plugin_data: Path | None
+) -> str | None:
+    """Poll stored CR receipts without making the SessionStart hook fragile."""
+
+    try:
+        from change_requests import check_fixed_requests
+
+        return check_fixed_requests(
+            plugin_root,
+            plugin_data,
+            timeout_seconds=2.0,
+        )
+    except (ImportError, OSError, RuntimeError, ValueError):
+        return None
+
+
 def main() -> int:
     """Run the fail-open SessionStart update check."""
 
@@ -223,7 +240,9 @@ def main() -> int:
     ).resolve()
     plugin_data_value = os.environ.get("PLUGIN_DATA")
     plugin_data = Path(plugin_data_value).resolve() if plugin_data_value else None
-    message = check_for_update(plugin_root, plugin_data)
+    message = _check_fixed_change_requests(plugin_root, plugin_data)
+    if message is None:
+        message = check_for_update(plugin_root, plugin_data)
     if message is not None:
         print(json.dumps({"systemMessage": message}))
     return 0

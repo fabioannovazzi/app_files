@@ -274,6 +274,17 @@ class PreparedInterviewRequest(BaseModel):
     questions: list[str] = Field(default_factory=list)
     red_flags: list[str] = Field(default_factory=list)
     boundaries: list[str] = Field(default_factory=list)
+    interviewer_name: str = Field(default="Clara", min_length=1, max_length=80)
+    max_duration_seconds: int = Field(
+        default=DEFAULT_INTERVIEW_DURATION_SECONDS,
+        ge=60,
+        le=DEFAULT_INTERVIEW_DURATION_SECONDS,
+    )
+    change_request_id: str = Field(
+        default="",
+        max_length=40,
+        pattern=r"^(?:|CR-[1-9][0-9]*)$",
+    )
     expires_in_hours: int = Field(default=DEFAULT_TOKEN_TTL_HOURS, ge=1, le=24 * 30)
 
 
@@ -679,6 +690,10 @@ def _prepared_payload(
         "questions": _clean_list(payload.questions),
         "red_flags": _clean_list(payload.red_flags),
         "boundaries": _clean_list(payload.boundaries),
+        "interviewer_name": _clean_text(payload.interviewer_name, max_chars=80)
+        or "Clara",
+        "max_duration_seconds": payload.max_duration_seconds,
+        "change_request_id": _clean_text(payload.change_request_id, max_chars=40),
     }
 
 
@@ -843,9 +858,18 @@ def _interview_mode_instructions(record: Mapping[str, Any]) -> list[str]:
 def _interview_instructions(record: Mapping[str, Any], language: str) -> str:
     brief = "\n".join(_brief_lines(record))
     thinking_bridge_examples = _thinking_bridge_examples(language)
+    interviewer_name = (
+        _clean_text(str(record.get("interviewer_name", "")), max_chars=80) or "Clara"
+    )
+    max_duration_seconds = int(
+        record.get("max_duration_seconds", DEFAULT_INTERVIEW_DURATION_SECONDS)
+    )
+    duration_minutes = max(1, (max_duration_seconds + 59) // 60)
+    synthesis_minute = max(1, duration_minutes - 3)
+    closing_minute = max(synthesis_minute, duration_minutes - 1)
     return "\n\n".join(
         [
-            "You are Clara's hosted interview voice interviewer.",
+            f"You are {interviewer_name}'s hosted interview voice interviewer.",
             "You are speaking directly with an external interviewee who opened a public browser link. Be calm, respectful, concise, and professional.",
             "This is a structured interview, not an interrogation. Your job is to build a faithful understanding of the interviewee's point of view.",
             "Use examples, facts, roles, timings, metrics, decisions, risks, and exceptions only when they help clarify or verify that understanding. Do not collect them as a proof checklist.",
@@ -874,7 +898,10 @@ def _interview_instructions(record: Mapping[str, Any], language: str) -> str:
             "If you propose a framing and the interviewee merely agrees, do not treat the agreement as evidence. Ask one follow-up that has them apply, revise, or challenge the framing in their own words or against a real case.",
             "Before closing, make sure the conversation contains enough concrete detail to satisfy the prepared purpose. Ask for a mechanism, artifact, episode, decision rule, or uncertainty only when it is relevant to this brief and the participant's answers; do not force every interview to contain each one.",
             "Do not run a fixed questionnaire. Cover the priority topics naturally and stop when the purpose is satisfied.",
-            "The interview has a hard 15-minute browser limit. Manage time actively: by minute 12 move to synthesis or final priority gaps, and by minute 14 ask the closing question.",
+            f"The interview has a hard {duration_minutes}-minute browser limit. "
+            f"Manage time actively: by minute {synthesis_minute} move to synthesis "
+            f"or final priority gaps and ask the closing question no later than "
+            f"minute {closing_minute}.",
             "If the browser sends a private session-management message about sustained silence or the final time window, treat it as a timing fact. Recover naturally: reassure, simplify the current question, prioritize, or close. Do not scold the interviewee or expose the browser message.",
             "Respect the boundaries. If the interviewee moves into an out-of-scope or sensitive area, acknowledge briefly and redirect to the prepared scope.",
             "Do not approve conclusions. Do not say an answer is client-ready. Evidence will be reviewed later.",
@@ -2415,7 +2442,9 @@ def hosted_interview_page(token: str, request: Request):
             "interview_mode": record.get("interview_mode", INTERVIEW_MODE_CASE),
             "language": language,
             "default_model": DEFAULT_MODEL,
-            "max_duration_seconds": DEFAULT_INTERVIEW_DURATION_SECONDS,
+            "max_duration_seconds": int(
+                record.get("max_duration_seconds", DEFAULT_INTERVIEW_DURATION_SECONDS)
+            ),
         },
     )
     response.headers["Cache-Control"] = "no-store"
@@ -2670,6 +2699,37 @@ def public_interview_complete(
         completion=completion,
         events=events,
     )
+    change_request_id = str(updated.get("change_request_id", "") or "").strip()
+    if change_request_id:
+        from modules.change_requests.store import (
+            ChangeRequestConflictError,
+            ChangeRequestNotFoundError,
+            ChangeRequestStoreUnavailableError,
+            get_change_request_store,
+        )
+
+        try:
+            get_change_request_store().attach_interview_completion(
+                change_request_id,
+                {
+                    "schema_version": 1,
+                    "completed_at": completion["completed_at"],
+                    "language": updated.get("language", ""),
+                    "user_transcript": completion["user_transcript"],
+                    "assistant_transcript": completion["assistant_transcript"],
+                    "elapsed_seconds": completion["elapsed_seconds"],
+                },
+            )
+        except (
+            ChangeRequestConflictError,
+            ChangeRequestNotFoundError,
+            ChangeRequestStoreUnavailableError,
+        ) as exc:
+            LOGGER.error(
+                "Unable to attach hosted interview completion to %s: %s",
+                change_request_id,
+                exc,
+            )
     final_status = str(completion.get("completion_status", ""))
     status_reason = str(completion.get("completion_status_reason", ""))
     should_run_post_call_task = _should_run_post_call_interviewee_transcription(
