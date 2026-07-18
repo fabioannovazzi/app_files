@@ -41,14 +41,18 @@ The approach has four separate layers.
    candidates, and rejected/accepted mechanical evidence. It does not decide
    that an analysis makes business sense.
 
-3. Analysis-validity layer
+3. Stable dataset semantic and analysis-validity layer
 
-   Implemented as the dataset-specific semantic-layer contract at
-   `plugins/reporting-engine/catalog/semantic_layer.schema.json` with workflow
-   support in `plugins/reporting-engine/scripts/semantic_layer.py`. It records
-   source-backed metric definitions, aggregation, dimensions, periods, explicit
-   scopes, and valid/conditional/invalid analysis policies. A model or human
-   authors the semantics; deterministic code scaffolds and validates wiring.
+   Implemented as the stable dataset-contract semantic layer at
+   `plugins/clara/modules/reporting-engine/catalog/semantic_layer.schema.json`
+   with workflow support in
+   `plugins/clara/modules/reporting-engine/scripts/semantic_layer.py`. It records
+   source-backed metric definitions, aggregation, dimensions, periods, reusable
+   period rules, and valid/conditional/invalid analysis policies. One reviewed
+   semantic version is reused across compatible snapshots of the same explicit
+   dataset contract id. A model or human authors semantics; deterministic code
+   scaffolds, validates wiring, checks snapshot compatibility, and resolves
+   concrete period bounds.
 
 4. Selector or future caller
 
@@ -59,7 +63,8 @@ The approach has four separate layers.
 ## Manifest Objects
 
 The packaged manifest lives at
-`plugins/reporting-engine/catalog/selection_manifest.json`. Rebuild outputs are
+`plugins/clara/modules/reporting-engine/catalog/selection_manifest.json`.
+Rebuild outputs are
 written to `runs/chart_selection_manifest_rebuild/selection_manifest.json` by
 `scripts/build_chart_selection_manifest.py`.
 
@@ -254,7 +259,8 @@ missing artifact evidence. The audit also writes normalized invocation
 contracts and the shared role registry to JSON.
 
 The durable acceptance evidence is packaged at
-`plugins/reporting-engine/catalog/mechanical_acceptance_summary.json`. The
+`plugins/clara/modules/reporting-engine/catalog/mechanical_acceptance_summary.json`.
+The
 current summary is bound to the manifest digest and records all 48 capabilities
 as `component_executed` with `rendered` output proof. Of those records, 43 are
 mechanically compatible directly from profiled dataset roles and 5 use an
@@ -357,11 +363,14 @@ the digest-bound summary current when a capability contract changes, and to add
 variant-level execution cases where an optional rendering mode has enough risk
 to justify separate proof.
 
-The semantic layer remains a separate dataset-specific project object. Its
+The semantic layer remains a separate stable dataset-contract project object;
+profiles remain per-snapshot run artifacts. Its
 contract and workflow are documented in
-`plugins/reporting-engine/references/semantic_layer.md`. A `contract_valid`
-result proves profile, evidence, period-scope, manifest-intent, and role-binding
-coherence; it does not prove semantic truth.
+`plugins/clara/modules/reporting-engine/references/semantic_layer.md`. A
+`contract_valid`
+result proves evidence, reusable-period-rule, manifest-intent, and role-binding
+coherence. Snapshot attachment separately checks explicit identity and
+mechanical compatibility; neither proves semantic truth.
 
 ## Useful Commands
 
@@ -389,7 +398,7 @@ python scripts/build_chart_question_png_review.py
 Run the packaged end-to-end mechanical acceptance suite:
 
 ```bash
-python plugins/reporting-engine/scripts/mechanical_acceptance.py \
+python plugins/clara/modules/reporting-engine/scripts/mechanical_acceptance.py \
   --suite \
   --output-dir /tmp/reporting-engine-acceptance \
   --execute \
@@ -399,19 +408,25 @@ python plugins/reporting-engine/scripts/mechanical_acceptance.py \
 Create and validate a dataset-specific semantic layer:
 
 ```bash
-python plugins/reporting-engine/scripts/profile_dataset.py <dataset.csv> \
+python plugins/clara/modules/reporting-engine/scripts/profile_dataset.py <dataset.csv> \
+  --dataset-id <stable-dataset-contract-id> \
   --output <run>/dataset_profile.json
-python plugins/reporting-engine/scripts/semantic_layer.py init \
+python plugins/clara/modules/reporting-engine/scripts/semantic_layer.py init \
   --profile <run>/dataset_profile.json \
+  --dataset-contract-id <stable-dataset-contract-id> \
   --output <run>/semantic_layer.json
-python plugins/reporting-engine/scripts/semantic_layer.py context \
+python plugins/clara/modules/reporting-engine/scripts/semantic_layer.py context \
   --profile <run>/dataset_profile.json \
   --layer <run>/semantic_layer.json \
   --output <run>/semantic_authoring_context.json
-python plugins/reporting-engine/scripts/semantic_layer.py validate \
+python plugins/clara/modules/reporting-engine/scripts/semantic_layer.py validate \
   --profile <run>/dataset_profile.json \
   --layer <run>/semantic_layer.json \
   --output <run>/semantic_validation.json
+python plugins/clara/modules/reporting-engine/scripts/semantic_layer.py attach \
+  --profile <run>/new_snapshot_profile.json \
+  --layer <run>/semantic_layer.json \
+  --output <run>/snapshot_attachment.json
 ```
 
 Run focused tests:

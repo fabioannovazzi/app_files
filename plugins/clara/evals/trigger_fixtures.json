@@ -100,6 +100,13 @@
       "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
+      "id": "reporting-engine-recurring-snapshot",
+      "prompt": "Use Clara to attach today's refreshed sales file to the existing dataset semantic contract and reuse its reviewed definitions.",
+      "required_signals": ["Clara", "refreshed sales file", "existing dataset semantic contract", "reuse"],
+      "expected_skill": "clara:reporting-engine",
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
+    },
+    {
       "id": "deck-claim-basis-map",
       "prompt": "Use Clara to create a readable sidecar that maps each PPTX slide claim to its source, calculation, prior-slide claim, reasoning, assumption, or ungrounded status without adding visible citations to the deck.",
       "required_signals": ["PPTX", "slide claim", "prior-slide claim", "ungrounded"]

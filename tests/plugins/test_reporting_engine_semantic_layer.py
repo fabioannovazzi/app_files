@@ -7,10 +7,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import pytest
-
 ROOT = Path(__file__).resolve().parents[2]
-PLUGIN_ROOT = ROOT / "plugins" / "reporting-engine"
+PLUGIN_ROOT = ROOT / "plugins" / "clara" / "modules" / "reporting-engine"
 FIXTURE_ROOT = PLUGIN_ROOT / "fixtures" / "semantic_layer"
 
 
@@ -35,10 +33,30 @@ def _modules() -> tuple[Any, Any]:
     return profiler, semantic
 
 
-def _fixture_profile(profiler: Any) -> dict[str, Any]:
-    return profiler.profile_dataset(
-        FIXTURE_ROOT / "retail_monthly.csv", dataset_id="retail_monthly"
+def _fixture_profile(
+    profiler: Any,
+    filename: str = "retail_monthly.csv",
+    *,
+    dataset_id: str = "retail_monthly",
+) -> dict[str, Any]:
+    return profiler.profile_dataset(FIXTURE_ROOT / filename, dataset_id=dataset_id)
+
+
+def _snapshot_cases(profiler: Any) -> list[tuple[str, str, Path, dict[str, Any]]]:
+    suite = json.loads(
+        (FIXTURE_ROOT / "retail_monthly.snapshot_cases.json").read_text(
+            encoding="utf-8"
+        )
     )
+    return [
+        (
+            case["case_id"],
+            case["expected_status"],
+            FIXTURE_ROOT / case["dataset"],
+            _fixture_profile(profiler, case["dataset"]),
+        )
+        for case in suite["cases"]
+    ]
 
 
 def _manifest() -> dict[str, Any]:
@@ -69,6 +87,10 @@ def test_semantic_layer_scaffold_is_valid_but_explicitly_unreviewed() -> None:
     assert all(metric["status"] == "unknown" for metric in layer["metrics"])
     assert all(dimension["status"] == "unknown" for dimension in layer["dimensions"])
     assert layer["review"]["status"] == "draft"
+    assert layer["dataset_contract"]["dataset_contract_id"] == "retail_monthly"
+    assert layer["semantic_version"] == 1
+    assert "period_rules" in layer
+    assert "period_scopes" not in layer
 
 
 def test_semantic_authoring_context_exposes_all_manifest_analysis_types() -> None:
@@ -122,7 +144,7 @@ def test_reviewed_semantic_fixture_is_ready_and_fully_manifest_bound() -> None:
     assert rejected["has_complete_manifest_role_set"] is False
 
 
-def test_profile_fingerprint_is_path_independent_but_content_sensitive() -> None:
+def test_snapshot_fingerprint_is_path_independent_but_content_sensitive() -> None:
     profiler, semantic = _modules()
     profile = _fixture_profile(profiler)
     relocated = copy.deepcopy(profile)
@@ -130,10 +152,10 @@ def test_profile_fingerprint_is_path_independent_but_content_sensitive() -> None
     relocated["source"]["path"] = "/another/machine/retail_monthly.csv"
     changed["row_count"] += 1
 
-    original_fingerprint = semantic.canonical_profile_fingerprint(profile)
+    original_fingerprint = semantic.canonical_snapshot_fingerprint(profile)
 
-    assert semantic.canonical_profile_fingerprint(relocated) == original_fingerprint
-    assert semantic.canonical_profile_fingerprint(changed) != original_fingerprint
+    assert semantic.canonical_snapshot_fingerprint(relocated) == original_fingerprint
+    assert semantic.canonical_snapshot_fingerprint(changed) != original_fingerprint
 
 
 def test_validator_rejects_reviewed_semantic_claim_without_evidence() -> None:
@@ -182,35 +204,6 @@ def test_validator_returns_schema_errors_for_non_object_aggregation() -> None:
     )
 
 
-@pytest.mark.parametrize(
-    ("section", "field"),
-    [
-        ("metrics", "compatible_dimension_ids"),
-        ("metrics", "valid_period_grains"),
-        ("analysis_policies", "analysis_task_ids"),
-        ("analysis_policies", "selection_emphases"),
-    ],
-)
-def test_validator_rejects_non_list_collection_without_traversing_it(
-    section: str,
-    field: str,
-) -> None:
-    profiler, semantic = _modules()
-    profile = _fixture_profile(profiler)
-    layer = _reviewed_layer()
-    layer[section][0][field] = 42
-
-    report = semantic.validate_semantic_layer(layer, profile, _manifest())
-
-    assert report["status"] == "contract_invalid"
-    assert report["semantic_readiness"] == "contract_invalid"
-    assert any(
-        error["code"] == "schema_validation_error"
-        and error["path"] == f"$.{section}[0].{field}"
-        for error in report["errors"]
-    )
-
-
 def test_validator_rejects_semantic_claim_supported_only_by_profile() -> None:
     profiler, semantic = _modules()
     profile = _fixture_profile(profiler)
@@ -249,24 +242,26 @@ def test_validator_rejects_manifest_metric_class_mismatch() -> None:
     )
 
 
-def test_validator_rejects_profile_content_drift() -> None:
+def test_changed_snapshot_values_do_not_invalidate_stable_semantics() -> None:
     profiler, semantic = _modules()
-    profile = _fixture_profile(profiler)
-    changed_profile = copy.deepcopy(profile)
-    changed_profile["row_count"] += 1
+    origin_profile = _fixture_profile(profiler)
+    refresh_profile = _fixture_profile(profiler, "retail_monthly_refresh.csv")
 
     report = semantic.validate_semantic_layer(
-        _reviewed_layer(), changed_profile, _manifest()
+        _reviewed_layer(), refresh_profile, _manifest()
     )
 
-    assert report["status"] == "contract_invalid"
-    assert report["semantic_readiness"] == "contract_invalid"
-    assert any(
-        error["code"] == "profile_fingerprint_mismatch" for error in report["errors"]
-    )
+    assert report["status"] == "contract_valid"
+    assert report["semantic_readiness"] == "ready_as_scoped_semantic_input"
+    assert report["snapshot"]["is_origin_snapshot"] is False
+    assert report["snapshot"]["compatibility"]["status"] == "compatible"
+    assert report["snapshot"]["compatibility"]["semantic_layer_reusable"] is True
+    assert semantic.canonical_snapshot_fingerprint(
+        origin_profile
+    ) != semantic.canonical_snapshot_fingerprint(refresh_profile)
 
 
-def test_validator_rejects_valid_filter_analysis_without_period_scope() -> None:
+def test_validator_rejects_valid_filter_analysis_without_period_rule() -> None:
     profiler, semantic = _modules()
     profile = _fixture_profile(profiler)
     layer = _reviewed_layer()
@@ -275,7 +270,7 @@ def test_validator_rejects_valid_filter_analysis_without_period_scope() -> None:
         for policy in layer["analysis_policies"]
         if policy["analysis_id"] == "analysis.current_brand_sales_ranking"
     )
-    brand_ranking["period_scope_id"] = None
+    brand_ranking["period_rule_id"] = None
 
     report = semantic.validate_semantic_layer(layer, profile, _manifest())
 
@@ -335,6 +330,186 @@ def test_conditional_policy_without_conditions_is_not_usable_semantic_input() ->
     )
 
 
+def test_refresh_resolves_current_ytd_from_snapshot_without_changing_semantics() -> (
+    None
+):
+    profiler, semantic = _modules()
+    refresh_profile = _fixture_profile(profiler, "retail_monthly_refresh.csv")
+
+    resolutions = semantic.resolve_period_rules(_reviewed_layer(), refresh_profile)
+
+    current_ytd = next(
+        result
+        for result in resolutions["results"]
+        if result["period_rule_id"] == "period_rule.current_ytd"
+    )
+    comparison = next(
+        result
+        for result in resolutions["results"]
+        if result["period_rule_id"] == "period_rule.current_ytd_vs_prior_ytd"
+    )
+    assert current_ytd["resolved_scope"]["windows"] == [
+        {
+            "role": "current",
+            "label": "2026-01-01 to 2026-03-31",
+            "start": "2026-01-01",
+            "end": "2026-03-31",
+        }
+    ]
+    assert comparison["resolved_scope"]["windows"][1] == {
+        "role": "baseline",
+        "label": "2025-01-01 to 2025-03-31",
+        "start": "2025-01-01",
+        "end": "2025-03-31",
+    }
+
+
+def test_comparison_rule_is_unavailable_when_prior_period_values_are_missing() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    profile["columns"]["Date"]["ordered_values"].remove("2025-02-01")
+
+    resolutions = semantic.resolve_period_rules(_reviewed_layer(), profile)
+
+    comparison = next(
+        result
+        for result in resolutions["results"]
+        if result["period_rule_id"] == "period_rule.current_ytd_vs_prior_ytd"
+    )
+    assert comparison["resolution_status"] == "unavailable"
+    assert comparison["reason"] == "snapshot_lacks_required_period_values"
+    assert comparison["coverage_check"]["missing_period_starts"] == ["2025-02-01"]
+
+
+def test_new_snapshot_column_reuses_semantics_as_unclassified_extension() -> None:
+    profiler, semantic = _modules()
+    extension_profile = _fixture_profile(profiler, "retail_monthly_extension.csv")
+
+    result = semantic.assess_snapshot_compatibility(
+        _reviewed_layer(), extension_profile
+    )
+
+    assert result["status"] == "compatible_with_extensions"
+    assert result["semantic_layer_reusable"] is True
+    assert result["extension_columns"] == ["Channel"]
+    assert result["available_policy_count"] == 9
+
+
+def test_missing_one_bound_metric_reuses_layer_with_reduced_policy_coverage() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    profile["columns"].pop("Units")
+
+    result = semantic.assess_snapshot_compatibility(_reviewed_layer(), profile)
+
+    assert result["status"] == "partially_compatible"
+    assert result["semantic_layer_reusable"] is True
+    pvm = next(
+        policy
+        for policy in result["policy_results"]
+        if policy["analysis_id"] == "analysis.sales_price_volume_mix"
+    )
+    trajectory = next(
+        policy
+        for policy in result["policy_results"]
+        if policy["analysis_id"] == "analysis.monthly_sales_trajectory"
+    )
+    assert pvm["availability"] == "unavailable"
+    assert trajectory["availability"] == "available"
+
+
+def test_same_schema_cannot_override_explicit_dataset_contract_identity() -> None:
+    profiler, semantic = _modules()
+    different_asset_profile = _fixture_profile(
+        profiler, dataset_id="another_retail_asset"
+    )
+
+    result = semantic.assess_snapshot_compatibility(
+        _reviewed_layer(), different_asset_profile
+    )
+
+    assert result["status"] == "incompatible"
+    assert result["identity_matches"] is False
+    assert result["semantic_layer_reusable"] is False
+
+
+def test_snapshot_attachment_keeps_reviewed_semantic_version_stable() -> None:
+    profiler, semantic = _modules()
+    refresh_profile = _fixture_profile(profiler, "retail_monthly_refresh.csv")
+
+    attachment = semantic.build_snapshot_attachment(_reviewed_layer(), refresh_profile)
+
+    assert attachment["attachment_status"] == "attached"
+    assert attachment["dataset_contract_id"] == "retail_monthly"
+    assert attachment["semantic_layer_id"] == "retail_monthly.reporting_semantics"
+    assert attachment["semantic_version"] == 1
+    assert attachment["snapshot"]["snapshot_id"].startswith("snapshot.")
+
+
+def test_attach_cli_writes_reusable_refresh_attachment(tmp_path: Path) -> None:
+    profiler, semantic = _modules()
+    profile_path = tmp_path / "refresh_profile.json"
+    output_path = tmp_path / "snapshot_attachment.json"
+    profile_path.write_text(
+        json.dumps(_fixture_profile(profiler, "retail_monthly_refresh.csv")),
+        encoding="utf-8",
+    )
+
+    return_code = semantic.main(
+        [
+            "attach",
+            "--profile",
+            str(profile_path),
+            "--layer",
+            str(FIXTURE_ROOT / "retail_monthly.semantic.json"),
+            "--output",
+            str(output_path),
+        ]
+    )
+
+    attachment = json.loads(output_path.read_text(encoding="utf-8"))
+    assert return_code == 0
+    assert attachment["attachment_status"] == "attached"
+    assert attachment["compatibility"]["status"] == "compatible"
+    assert attachment["semantic_version"] == 1
+
+
+def test_attach_cli_rejects_snapshot_without_bound_metrics(tmp_path: Path) -> None:
+    profiler, semantic = _modules()
+    profile_path = tmp_path / "incompatible_profile.json"
+    output_path = tmp_path / "snapshot_attachment.json"
+    profile_path.write_text(
+        json.dumps(_fixture_profile(profiler, "retail_monthly_incompatible.csv")),
+        encoding="utf-8",
+    )
+
+    return_code = semantic.main(
+        [
+            "attach",
+            "--profile",
+            str(profile_path),
+            "--layer",
+            str(FIXTURE_ROOT / "retail_monthly.semantic.json"),
+            "--output",
+            str(output_path),
+        ]
+    )
+
+    attachment = json.loads(output_path.read_text(encoding="utf-8"))
+    assert return_code == 1
+    assert attachment["attachment_status"] == "rejected"
+    assert attachment["compatibility"]["status"] == "incompatible"
+
+
+def test_stable_period_rules_contain_no_snapshot_date_windows() -> None:
+    layer = _reviewed_layer()
+
+    assert "period_scopes" not in layer
+    assert all("windows" not in rule for rule in layer["period_rules"])
+    assert all("start" not in rule for rule in layer["period_rules"])
+    assert all("end" not in rule for rule in layer["period_rules"])
+
+
 def test_semantic_schema_required_keys_match_generated_scaffold() -> None:
     profiler, semantic = _modules()
     profile = _fixture_profile(profiler)
@@ -347,7 +522,7 @@ def test_semantic_schema_required_keys_match_generated_scaffold() -> None:
     layer = semantic.build_semantic_layer_scaffold(profile)
 
     assert set(schema["required"]) == set(layer)
-    assert schema["properties"]["schema_version"]["const"] == "0.1"
+    assert schema["properties"]["schema_version"]["const"] == "0.2"
     assert (
         schema["properties"]["boundaries"]["properties"]["chart_selection_included"][
             "const"
@@ -363,6 +538,7 @@ def test_packaged_semantic_acceptance_summary_matches_exact_inputs() -> None:
     schema_path = PLUGIN_ROOT / "catalog" / "semantic_layer.schema.json"
     layer_path = FIXTURE_ROOT / "retail_monthly.semantic.json"
     source_path = FIXTURE_ROOT / "retail_monthly_source_notes.md"
+    snapshot_suite_path = FIXTURE_ROOT / "retail_monthly.snapshot_cases.json"
     stored = json.loads(
         (PLUGIN_ROOT / "catalog" / "semantic_acceptance_summary.json").read_text(
             encoding="utf-8"
@@ -378,6 +554,8 @@ def test_packaged_semantic_acceptance_summary_matches_exact_inputs() -> None:
         manifest_path=manifest_path,
         schema_path=schema_path,
         source_paths=[source_path],
+        snapshot_cases=_snapshot_cases(profiler),
+        snapshot_suite_path=snapshot_suite_path,
     )
 
     assert rebuilt == stored

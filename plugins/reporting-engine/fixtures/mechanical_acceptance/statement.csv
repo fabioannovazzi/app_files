@@ -1,9 +1,0 @@
-row_key,period,scenario,value
-product_revenue,2025,PL,100
-product_revenue,2025,AC,120
-service_revenue,2025,PL,25
-service_revenue,2025,AC,30
-cost_of_sales,2025,PL,40
-cost_of_sales,2025,AC,48
-income_tax,2025,PL,17
-income_tax,2025,AC,20

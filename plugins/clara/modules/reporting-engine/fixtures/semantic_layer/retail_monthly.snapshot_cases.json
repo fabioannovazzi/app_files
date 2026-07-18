@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "dataset_contract_id": "retail_monthly",
+  "cases": [
+    {
+      "case_id": "changed_values_new_months_and_members",
+      "dataset": "retail_monthly_refresh.csv",
+      "expected_status": "compatible"
+    },
+    {
+      "case_id": "new_unclassified_column",
+      "dataset": "retail_monthly_extension.csv",
+      "expected_status": "compatible_with_extensions"
+    },
+    {
+      "case_id": "bound_metrics_removed",
+      "dataset": "retail_monthly_incompatible.csv",
+      "expected_status": "incompatible"
+    }
+  ]
+}

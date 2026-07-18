@@ -18,7 +18,8 @@ from scripts.audit_chart_plugin_parameter_contract import (
     build_role_registry,
 )
 
-REPORTING_ENGINE_SCRIPTS = REPO_ROOT / "plugins" / "reporting-engine" / "scripts"
+REPORTING_ENGINE_ROOT = REPO_ROOT / "plugins" / "clara" / "modules" / "reporting-engine"
+REPORTING_ENGINE_SCRIPTS = REPORTING_ENGINE_ROOT / "scripts"
 if str(REPORTING_ENGINE_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(REPORTING_ENGINE_SCRIPTS))
 
@@ -26,14 +27,12 @@ from render_contract_registry import build_render_contract
 
 SOURCE_MANIFEST = REPO_ROOT / "static" / "shared" / "png-gallery" / "manifest.json"
 CATALOG_SOURCE_MANIFEST = (
-    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "png_gallery_manifest.json"
+    REPORTING_ENGINE_ROOT / "catalog" / "png_gallery_manifest.json"
 )
 PACKAGED_SELECTION_MANIFEST = (
-    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "selection_manifest.json"
+    REPORTING_ENGINE_ROOT / "catalog" / "selection_manifest.json"
 )
-ADAPTER_REGISTRY = (
-    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "adapter_registry.json"
-)
+ADAPTER_REGISTRY = REPORTING_ENGINE_ROOT / "catalog" / "adapter_registry.json"
 PACKAGED_ROLE_REGISTRY = PACKAGED_SELECTION_MANIFEST.with_name("role_registry.json")
 DEFAULT_OUTPUT = PACKAGED_SELECTION_MANIFEST
 DEFAULT_ASSESSMENT = PACKAGED_SELECTION_MANIFEST.with_name("manifest_assessment.md")

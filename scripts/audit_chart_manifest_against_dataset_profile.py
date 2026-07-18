@@ -17,7 +17,13 @@ __all__ = [
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PACKAGED_CHECKER = (
-    REPO_ROOT / "plugins" / "reporting-engine" / "scripts" / "check_compatibility.py"
+    REPO_ROOT
+    / "plugins"
+    / "clara"
+    / "modules"
+    / "reporting-engine"
+    / "scripts"
+    / "check_compatibility.py"
 )
 
 
