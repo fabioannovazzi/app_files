@@ -2056,7 +2056,8 @@ def test_vera_page_lists_all_eleven_modules() -> None:
     assert "data-invoice-link" in page
     assert "Install Vera from her official OpenAI listing." in page
     assert (
-        "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" in page
+        "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
+        in page
     )
     assert "data-vera-install-link" in page
     for stale_snippet in (
@@ -2398,7 +2399,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "La trovi nel Marketplace di OpenAI.",
         "Install Clara",
         "Installa Clara",
-        "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a",
+        "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
         "data-clara-install-link",
         "/?lang=${safeLang}",
     ):
@@ -2448,7 +2449,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     ):
         assert stale_snippet not in page
     assert (
-        '<a class="button" href="https://chatgpt.com/plugins/'
+        '<a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2F'
         'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
         'rel="noopener noreferrer" data-clara-install-link '
         'data-i18n="install.open">Open Clara\'s listing</a>'
@@ -2903,11 +2904,9 @@ def test_companion_install_flow_routes_login_to_same_listing(
     listing_url = f"https://chatgpt.com/plugins/{plugin_id}"
     login_url = f"https://chatgpt.com/auth/login?next=%2Fplugins%2F{plugin_id}"
 
-    assert 'href="#download"' in page
-    assert page.count(listing_url) == 1
-    assert install_marker in page
-    assert f'href="{login_url}"' in page
-    assert 'data-i18n="install.signin"' in page
+    assert page.count(login_url) == 2
+    assert listing_url not in page
+    assert page.count(install_marker) == 2
     assert 'data-i18n="install.open"' in page
     assert 'data-i18n="install.signed_out"' in page
 
@@ -2917,35 +2916,35 @@ def test_companion_install_flow_routes_login_to_same_listing(
     (
         (
             "clara",
-            "Not signed in? Use Sign in to ChatGPT; after authentication, ChatGPT opens Clara's listing.",
+            "Not signed in? ChatGPT asks you to sign in, then opens Clara's listing.",
         ),
         (
             "clara",
-            "Non hai effettuato l'accesso? Usa Accedi a ChatGPT: al termine dell'autenticazione, ChatGPT apre la pagina di Clara.",
+            "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Clara.",
         ),
         (
             "clara",
-            "Vous n'êtes pas connecté ? Utilisez Se connecter à ChatGPT : après l'authentification, ChatGPT ouvre la fiche de Clara.",
+            "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Clara.",
         ),
         (
             "clara",
-            "Noch nicht angemeldet? Wählen Sie Bei ChatGPT anmelden; nach der Anmeldung öffnet ChatGPT Claras Eintrag.",
+            "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Claras Eintrag.",
         ),
         (
             "vera",
-            "Not signed in? Use Sign in to ChatGPT; after authentication, ChatGPT opens Vera's listing.",
+            "Not signed in? ChatGPT asks you to sign in, then opens Vera's listing.",
         ),
         (
             "vera",
-            "Non hai effettuato l'accesso? Usa Accedi a ChatGPT: al termine dell'autenticazione, ChatGPT apre la pagina di Vera.",
+            "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Vera.",
         ),
         (
             "vera",
-            "Vous n'êtes pas connecté ? Utilisez Se connecter à ChatGPT : après l'authentification, ChatGPT ouvre la fiche de Vera.",
+            "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Vera.",
         ),
         (
             "vera",
-            "Noch nicht angemeldet? Wählen Sie Bei ChatGPT anmelden; nach der Anmeldung öffnet ChatGPT Veras Eintrag.",
+            "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Veras Eintrag.",
         ),
     ),
 )
