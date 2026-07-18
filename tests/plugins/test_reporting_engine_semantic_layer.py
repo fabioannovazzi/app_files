@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "reporting-engine"
 FIXTURE_ROOT = PLUGIN_ROOT / "fixtures" / "semantic_layer"
@@ -176,6 +178,35 @@ def test_validator_returns_schema_errors_for_non_object_aggregation() -> None:
     assert any(
         error["code"] == "schema_validation_error"
         and error["path"] == "$.metrics[0].aggregation"
+        for error in report["errors"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("section", "field"),
+    [
+        ("metrics", "compatible_dimension_ids"),
+        ("metrics", "valid_period_grains"),
+        ("analysis_policies", "analysis_task_ids"),
+        ("analysis_policies", "selection_emphases"),
+    ],
+)
+def test_validator_rejects_non_list_collection_without_traversing_it(
+    section: str,
+    field: str,
+) -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    layer = _reviewed_layer()
+    layer[section][0][field] = 42
+
+    report = semantic.validate_semantic_layer(layer, profile, _manifest())
+
+    assert report["status"] == "contract_invalid"
+    assert report["semantic_readiness"] == "contract_invalid"
+    assert any(
+        error["code"] == "schema_validation_error"
+        and error["path"] == f"$.{section}[0].{field}"
         for error in report["errors"]
     )
 
