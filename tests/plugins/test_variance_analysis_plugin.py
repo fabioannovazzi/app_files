@@ -385,8 +385,6 @@ def test_ibcs_title_html_emphasizes_only_sales_measure_subject() -> None:
     )
 
 
-
-
 def test_variance_plugin_can_disable_waterfall_chart(tmp_path: Path) -> None:
     core = load_core()
     input_path = tmp_path / "sales.csv"
@@ -403,8 +401,6 @@ def test_variance_plugin_can_disable_waterfall_chart(tmp_path: Path) -> None:
     assert not (variance_dir / "waterfall.png").exists()
     assert "waterfall.png" not in result.audit["outputs"]
     assert result.audit["legacy_runtime"]["waterfall_chart"]["status"] == "disabled"
-
-
 
 
 def test_variance_plugin_applies_like_for_like_recipe_cohort(tmp_path: Path) -> None:
@@ -629,7 +625,6 @@ def test_variance_plugin_writes_waterfall_small_multiples(tmp_path: Path) -> Non
     assert summary_frame.filter(pl.col("is_residual_balance")).height == 2
 
 
-
 def test_variance_exploded_bridge_clamps_dense_dataset_for_readability(
     tmp_path: Path,
 ) -> None:
@@ -692,7 +687,6 @@ def test_variance_exploded_bridge_clamps_dense_dataset_for_readability(
     assert quality_checks["child_rows_readable_drilldown_2"]["status"] == "pass"
     assert quality_checks["rendered_png_not_blank"]["status"] == "pass"
     assert quality_checks["rendered_png_not_cropped"]["status"] == "pass"
-
 
 
 def test_waterfall_fallback_renders_plan_total_as_white_bar(tmp_path: Path) -> None:
@@ -1348,10 +1342,6 @@ def test_variance_plugin_does_not_treat_actual_prior_year_as_scenario() -> None:
     assert recipe["options"]["comparison_basis"] == "period"
 
 
-
-
-
-
 def test_root_cause_bridge_chart_uses_mixed_legacy_rows() -> None:
     chart = load_root_cause_bridge_chart()
     bridge = pl.DataFrame(
@@ -1746,6 +1736,74 @@ def test_variance_plugin_root_cause_reports_selected_dimension_sequence(
     )
 
 
+def test_variance_root_cause_candidates_keep_parent_and_leaf_metrics(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    input_path = tmp_path / "sales.csv"
+    output_dir = tmp_path / "variance"
+    recipe_path = tmp_path / "recipe.json"
+    _write_variable_bridge_fixture(input_path)
+    recipe_path.write_text(
+        json.dumps(
+            {
+                "mappings": {
+                    "period_column": "period",
+                    "baseline_period": "2023",
+                    "comparison_period": "2024",
+                    "amount_column": "sales",
+                    "units_column": "units",
+                    "dimensions": ["region", "subregion", "product"],
+                    "calculation_grain": ["region", "subregion", "product"],
+                },
+                "options": {"root_cause_bridge_alternative_result": 3},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    core.run_variance_analysis(
+        input_path,
+        output_dir,
+        recipe_path,
+        root_cause_bridge=True,
+        language="en",
+    )
+
+    candidates = pl.read_csv(output_dir / "root_cause_bridge_candidates.csv")
+    parent_a = candidates.filter(
+        (pl.col("product") == "A") & (pl.col("subregion") == "All")
+    ).row(0, named=True)
+    leaf_a_south = candidates.filter(
+        (pl.col("product") == "A") & (pl.col("subregion") == "South")
+    ).row(0, named=True)
+    parent_north = candidates.filter(
+        (pl.col("product") == "All") & (pl.col("subregion") == "North")
+    ).row(0, named=True)
+    leaf_b_north = candidates.filter(
+        (pl.col("product") == "B") & (pl.col("subregion") == "North")
+    ).row(0, named=True)
+    assert candidates.height == 8
+    assert (
+        parent_a["amount_baseline"],
+        parent_a["amount_comparison"],
+        parent_a["variance_amount"],
+    ) == (180.0, 200.0, 20.0)
+    assert (
+        leaf_a_south["amount_baseline"],
+        leaf_a_south["amount_comparison"],
+        leaf_a_south["variance_amount"],
+    ) == (80.0, 70.0, -10.0)
+    assert (
+        parent_north["amount_baseline"],
+        parent_north["amount_comparison"],
+        parent_north["variance_amount"],
+    ) == (250.0, 250.0, 0.0)
+    assert (
+        leaf_b_north["amount_baseline"],
+        leaf_b_north["amount_comparison"],
+        leaf_b_north["variance_amount"],
+    ) == (150.0, 120.0, -30.0)
 
 
 def test_variance_plugin_root_cause_drilldown_unavailable_rows_are_audited(

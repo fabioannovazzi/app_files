@@ -1667,6 +1667,8 @@ def write_native_reporting_tables(
     by_period: pl.DataFrame,
     recipe: dict[str, Any],
     output_dir: Path,
+    *,
+    enabled_tables: set[str] | None = None,
 ) -> tuple[list[str], dict[str, Any]]:
     """Write native reporting-table artifacts for period comparison."""
 
@@ -1709,6 +1711,12 @@ def write_native_reporting_tables(
     ]
     for spec in table_specs:
         table_key = str(spec["table_key"])
+        if enabled_tables is not None and table_key not in enabled_tables:
+            audit_tables[table_key] = {
+                "status": "skipped",
+                "reason": "not enabled in recipe options.charts",
+            }
+            continue
         rows = _table_rows_from_frame(
             spec["frame"],
             label_column=str(spec["label_column"]),
@@ -2457,6 +2465,7 @@ def run_period_comparison(
             by_period,
             recipe,
             output_dir,
+            enabled_tables=enabled_charts,
         )
         artifact_paths.extend(table_paths)
         canonical_path = output_dir / "period_comparison_canonical.csv"

@@ -1,7 +1,6 @@
 plotly
 kaleido
 Pillow
-openpyxl
 python-docx
 numpy>=2.0
 python-dateutil>=2.9

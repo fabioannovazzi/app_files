@@ -7,7 +7,7 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any
 
-__all__ = ["build_chart_selection_manifest", "main"]
+__all__ = ["build_chart_selection_manifest", "write_chart_selection_catalog", "main"]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -18,12 +18,83 @@ from scripts.audit_chart_plugin_parameter_contract import (
     build_role_registry,
 )
 
+REPORTING_ENGINE_SCRIPTS = REPO_ROOT / "plugins" / "reporting-engine" / "scripts"
+if str(REPORTING_ENGINE_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(REPORTING_ENGINE_SCRIPTS))
+
+from render_contract_registry import build_render_contract
+
 SOURCE_MANIFEST = REPO_ROOT / "static" / "shared" / "png-gallery" / "manifest.json"
-DEFAULT_OUTPUT = (
-    REPO_ROOT / "runs" / "chart_selection_manifest_rebuild" / "selection_manifest.json"
+CATALOG_SOURCE_MANIFEST = (
+    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "png_gallery_manifest.json"
 )
-DEFAULT_ASSESSMENT = DEFAULT_OUTPUT.with_name("assessment.md")
+PACKAGED_SELECTION_MANIFEST = (
+    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "selection_manifest.json"
+)
+ADAPTER_REGISTRY = (
+    REPO_ROOT / "plugins" / "reporting-engine" / "catalog" / "adapter_registry.json"
+)
+PACKAGED_ROLE_REGISTRY = PACKAGED_SELECTION_MANIFEST.with_name("role_registry.json")
+DEFAULT_OUTPUT = PACKAGED_SELECTION_MANIFEST
+DEFAULT_ASSESSMENT = PACKAGED_SELECTION_MANIFEST.with_name("manifest_assessment.md")
 MAX_NEGATIVE_SELECTION_EXAMPLES = 5
+PERIOD_SCOPE_CONTROLS_BY_FAMILY = {
+    "distribution": [
+        "options.selected_periods",
+        "options.period_type",
+        "options.period_grain",
+        "options.fiscal_start_month",
+        "options.rolling_window_months",
+        "filters",
+        "options.filters",
+    ],
+    "mix": [
+        "options.period_selection",
+        "options.period_type",
+        "options.period_grain",
+        "options.period_comparison_mode",
+        "options.fiscal_start_month",
+        "options.rolling_window_months",
+        "options.current_period_label",
+        "options.previous_period_label",
+        "filters",
+        "options.filters",
+    ],
+    "period_comparison": [
+        "options.period_type",
+        "options.period_grain",
+        "options.period_comparison_mode",
+        "options.fiscal_start_month",
+        "options.rolling_window_months",
+        "options.rolling_window_days",
+        "options.current_period_label",
+        "options.previous_period_label",
+        "filters",
+        "options.filters",
+    ],
+    "scatter_bubble": [
+        "options.period_type",
+        "options.period_grain",
+        "options.period_comparison_mode",
+        "options.fiscal_start_month",
+        "options.rolling_window_months",
+        "options.rolling_window_days",
+        "options.current_period_label",
+        "options.previous_period_label",
+        "filters",
+        "options.filters",
+    ],
+    "set_overlap": ["options.selected_period", "filters", "options.filters"],
+    "statement": ["periods"],
+    "variance": [
+        "options.period_type",
+        "options.period_grain",
+        "options.period_comparison_mode",
+        "options.fiscal_start_month",
+        "filters",
+        "options.filters",
+    ],
+}
 
 ARTIFACT_CAPABILITY_OVERRIDES: dict[str, dict[str, str]] = {
     "period / year_over_year_small_multiples": {
@@ -90,7 +161,7 @@ POSITIVE_SELECTION_QUESTIONS: dict[str, str] = {
     "statement.pnl_table": "Build a P&L line-item table.",
     "variance.exploded_variance_bridge": "Which categories drove variance, and which brands explain the selected category moves?",
     "variance.price_volume_mix": "How much of the sales movement is due to price, units, and mix?",
-    "variance.root_cause_component_bridge": "Which drivers explain the selected root-cause component of sales movement?",
+    "variance.root_cause_component_bridge": "Which dimension combinations explain the price component of sales movement?",
     "variance.root_cause_exploded_bridge": "Which ordered root-cause path explains the total sales movement, and what explains the selected root-cause driver?",
     "variance.root_cause_total_bridge": "Which ordered root-cause path explains the total sales movement?",
     "variance.scenario_bridge": "Reconcile total sales from baseline to current with a plain bridge.",
@@ -727,10 +798,10 @@ DECISION_CUES_BY_EMPHASIS: dict[str, dict[str, Any]] = {
         ],
     },
     "component_level_root_cause": {
-        "primary_decision_cue": "Question asks which drivers explain a selected component-level variance.",
+        "primary_decision_cue": "Question asks which dimension-and-component combinations explain movement through price, units, and mix effects.",
         "requires_question_focus": [
             "component_root_cause",
-            "selected_variance_component",
+            "price_units_mix_components",
         ],
         "reject_decision_cues": [
             "asks for total root-cause path",
@@ -876,10 +947,15 @@ def _cap(
     avoid_when: str,
     axis_roles: dict[str, str],
     period_role: str = "none",
+    period_required: bool | None = None,
+    requires_comparison_pair: bool | None = None,
+    minimum_distinct_period_values: int | None = None,
+    period_scope_controls: list[str] | None = None,
     metric_roles: list[str] | None = None,
     metric_requirements: dict[str, Any] | None = None,
     dimension_roles: list[str] | None = None,
     dimension_contract: dict[str, Any] | None = None,
+    minimum_observation_count: int = 1,
     competitors: list[str] | None = None,
 ) -> dict[str, Any]:
     analysis_task_ids = _analysis_task_ids(
@@ -888,6 +964,22 @@ def _cap(
         emphasis=emphasis,
     )
     resolved_metric_roles = ["primary_metric"] if metric_roles is None else metric_roles
+    resolved_period_required = (
+        period_role != "none" if period_required is None else period_required
+    )
+    resolved_requires_comparison_pair = (
+        family in {"period_comparison", "variance"}
+        if requires_comparison_pair is None
+        else requires_comparison_pair
+    )
+    if minimum_distinct_period_values is None:
+        resolved_minimum_distinct_period_values = (
+            2
+            if resolved_requires_comparison_pair
+            else 1 if resolved_period_required else 0
+        )
+    else:
+        resolved_minimum_distinct_period_values = minimum_distinct_period_values
     return {
         "family": family,
         "visual_grammar": grammar,
@@ -902,6 +994,18 @@ def _cap(
             "supports_period_axis": period_role in {"axis", "axis_or_table"},
             "supports_period_filter": period_role
             in {"axis", "axis_or_table", "filter"},
+            "requires_period_column": resolved_period_required,
+            "requires_comparison_pair": resolved_requires_comparison_pair,
+            "minimum_distinct_values": resolved_minimum_distinct_period_values,
+            "accepted_scope_controls": (
+                list(period_scope_controls)
+                if period_scope_controls is not None
+                else (
+                    list(PERIOD_SCOPE_CONTROLS_BY_FAMILY.get(family, []))
+                    if period_role != "none"
+                    else []
+                )
+            ),
         },
         "display_metric_roles": resolved_metric_roles,
         "metric_requirements": metric_requirements
@@ -912,6 +1016,10 @@ def _cap(
         ),
         "dimension_roles": [] if dimension_roles is None else dimension_roles,
         "dimension_contract": dimension_contract,
+        "observation_requirements": {
+            "minimum_non_null_rows": minimum_observation_count,
+            "scope": "rendered_analysis_scope",
+        },
         "competing_capability_ids": competitors or [],
     }
 
@@ -959,7 +1067,6 @@ DIRECT_DIMENSION_ROLES = {
     "comparison_item",
     "component_category",
     "component_dimension",
-    "component_root_cause_driver",
     "dimension_member",
     "height_category",
     "mix_dimension",
@@ -971,7 +1078,6 @@ DIRECT_DIMENSION_ROLES = {
     "point_dimension",
     "product",
     "stack_category",
-    "variance_component",
     "width_category",
 }
 
@@ -1015,14 +1121,38 @@ DIMENSION_ROLE_REQUIREMENTS: dict[str, dict[str, Any]] = {
     "root_cause_driver_sequence": {
         "resolution_type": "derived_root_cause_sequence",
         "requires_profile_roles": ["period", "direct_dimension"],
+        "minimum_candidate_count": 2,
+        "requires_non_bijective_dimension_pair": True,
         "output_role": "ordered mixed-dimension driver sequence",
         "notes": "The candidate driver dimensions are mechanical; ordering and business validity are selected later.",
     },
     "nested_root_cause_driver_sequence": {
         "resolution_type": "derived_root_cause_sequence",
         "requires_profile_roles": ["period", "direct_dimension"],
+        "minimum_candidate_count": 2,
+        "requires_non_bijective_dimension_pair": True,
         "output_role": "row-specific nested root-cause driver sequence",
         "notes": "Used only for selected rows in the root-cause exploded variant.",
+    },
+    "component_root_cause_driver_sequence": {
+        "resolution_type": "derived_root_cause_sequence",
+        "requires_profile_roles": ["period", "direct_dimension"],
+        "minimum_candidate_count": 2,
+        "requires_non_bijective_dimension_pair": True,
+        "output_role": "ordered mixed-dimension component-variance driver sequence",
+        "notes": "The runtime derives price, units, and mix component rows from value and units, then orders component-by-dimension candidates across at least two driver dimensions.",
+    },
+    "drilldown_selection": {
+        "resolution_type": "structural_row_selection",
+        "requires_profile_roles": [],
+        "output_role": (
+            "selected root-cause alternative plus one-based rows to drill into"
+        ),
+        "notes": (
+            "A caller selects an alternative sequence and rows only after finding "
+            "a sequence with available child detail; these are runtime structural "
+            "values, not dataset columns."
+        ),
     },
     "set_membership_fields": {
         "resolution_type": "derived_set_membership",
@@ -1083,6 +1213,18 @@ DIMENSION_ROLE_REQUIREMENTS: dict[str, dict[str, Any]] = {
         "requires_profile_roles": ["statement_line_item"],
         "output_role": "financial statement line item",
         "notes": "Requires a structured statement table, not generic dimensions.",
+    },
+    "statement_scenario": {
+        "resolution_type": "schema_role",
+        "requires_profile_roles": ["statement_scenario"],
+        "output_role": "statement scenario such as actual, plan, or forecast",
+        "notes": "Requires an explicit scenario column in the statement value table.",
+    },
+    "statement_structure": {
+        "resolution_type": "semantic_or_package_role",
+        "requires_profile_roles": ["statement_recipe"],
+        "output_role": "ordered statement rows, formulas, periods, and scenarios",
+        "notes": "Requires an explicit statement recipe; column names alone do not define P&L ordering or formulas.",
     },
 }
 
@@ -1237,13 +1379,13 @@ def _pvm_metric_requirements() -> dict[str, Any]:
                 accepted_metric_classes=["additive_volume"],
                 aggregation="sum",
             ),
-            _source_metric_role(
-                "price_or_rate_metric",
-                accepted_metric_classes=["rate", "derived_rate"],
-                aggregation="weighted_or_derived_from_value_and_volume",
-            ),
         ],
         derived_metric_roles=[
+            _derived_metric_role(
+                "price_or_rate_metric",
+                produced_from=["value_metric", "volume_metric"],
+                derivation="value_metric divided by volume_metric at the analysis grain",
+            ),
             _derived_metric_role(
                 "price_effect",
                 produced_from=["value_metric", "volume_metric", "price_or_rate_metric"],
@@ -1269,7 +1411,42 @@ def _pvm_metric_requirements() -> dict[str, Any]:
             ),
         ],
         notes=[
-            "PVM is valid only when value, volume, and price/rate semantics are available for the same grain; no business dimension is required as a chart parameter."
+            "PVM requires additive value and volume at the same grain; the plugin derives price/rate and the price, volume, and mix effects."
+        ],
+    )
+
+
+def _component_root_cause_metric_requirements() -> dict[str, Any]:
+    return _metric_requirements(
+        source_metric_roles=[
+            _source_metric_role(
+                "value_metric",
+                accepted_metric_classes=["additive_value"],
+                aggregation="sum",
+            ),
+            _source_metric_role(
+                "volume_metric",
+                accepted_metric_classes=["additive_volume"],
+                aggregation="sum",
+            ),
+        ],
+        derived_metric_roles=[
+            _derived_metric_role(
+                "component_delta",
+                produced_from=[
+                    "value_metric",
+                    "volume_metric",
+                    "baseline_period_or_scenario",
+                    "current_period_or_scenario",
+                ],
+                derivation=(
+                    "plugin component-variance calculation producing price, units, "
+                    "and mix component rows"
+                ),
+            )
+        ],
+        notes=[
+            "The component root-cause bridge requires additive value and units/volume at the same grain; component labels and deltas are calculated by the plugin."
         ],
     )
 
@@ -1278,25 +1455,25 @@ def _barmekko_metric_requirements() -> dict[str, Any]:
     return _metric_requirements(
         source_metric_roles=[
             _source_metric_role(
-                "width_metric",
-                accepted_metric_classes=ADDITIVE_METRIC_CLASSES,
-                aggregation="sum_or_count",
+                "area_metric",
+                accepted_metric_classes=["additive_value"],
+                aggregation="sum",
             ),
             _source_metric_role(
-                "height_metric",
-                accepted_metric_classes=NUMERIC_METRIC_CLASSES,
-                aggregation="semantic_layer_defined",
+                "width_metric",
+                accepted_metric_classes=["additive_volume", "additive_count"],
+                aggregation="sum_or_count",
             ),
         ],
         derived_metric_roles=[
             _derived_metric_role(
-                "area_metric",
-                produced_from=["width_metric", "height_metric"],
-                derivation="visual area implied by width_metric times height_metric",
+                "height_metric",
+                produced_from=["area_metric", "width_metric"],
+                derivation="area_metric divided by width_metric",
             )
         ],
         notes=[
-            "The area role is visual/derived; the dataset needs width and height metrics, not a precomputed area column."
+            "The plugin uses an additive value as area, an additive width metric such as units, and derives height as area divided by width."
         ],
     )
 
@@ -1461,6 +1638,170 @@ def _default_metric_requirements(
     )
 
 
+def _period_scope_contract(capability: dict[str, Any]) -> dict[str, Any]:
+    """Describe whether period selection needs an explicit render scope."""
+
+    period_semantics = capability.get("period_semantics") or {}
+    role = str(period_semantics.get("role") or "none")
+    period_column_required = bool(
+        period_semantics.get("requires_period_column", role != "none")
+    )
+    accepted_scope_controls = list(
+        period_semantics.get("accepted_scope_controls") or []
+    )
+    comparison_pair_required = bool(
+        period_semantics.get("requires_comparison_pair", False)
+    )
+    minimum_distinct_values = int(period_semantics.get("minimum_distinct_values") or 0)
+    if role == "none":
+        return {
+            "role": "none",
+            "status": "not_applicable",
+            "period_column_required": False,
+            "comparison_pair_required_for_render": False,
+            "minimum_distinct_period_values": 0,
+            "scope_required_for_render": False,
+            "accepted_scope_controls": [],
+            "explicit_all_data_allowed": False,
+            "unscoped_default": "not_applicable",
+            "selector_warning": "",
+        }
+    if role == "filter":
+        return {
+            "role": role,
+            "status": (
+                "scope_required_or_explicit_all_data"
+                if period_column_required
+                else "optional_filter_scope_or_explicit_all_data"
+            ),
+            "period_column_required": period_column_required,
+            "comparison_pair_required_for_render": comparison_pair_required,
+            "minimum_distinct_period_values": minimum_distinct_values,
+            "scope_required_for_render": True,
+            "accepted_scope_controls": accepted_scope_controls,
+            "explicit_all_data_allowed": True,
+            "unscoped_default": "all_available_records",
+            "selector_warning": (
+                "A period-filter chart needs an explicit analysis period scope "
+                "or an explicit all-data scope; a date column by itself can "
+                "render every row in the dataset."
+            ),
+        }
+    return {
+        "role": role,
+        "status": "scope_optional_bounded_question",
+        "period_column_required": period_column_required,
+        "comparison_pair_required_for_render": comparison_pair_required,
+        "minimum_distinct_period_values": minimum_distinct_values,
+        "scope_required_for_render": False,
+        "accepted_scope_controls": accepted_scope_controls,
+        "explicit_all_data_allowed": True,
+        "unscoped_default": "available_period_axis",
+        "selector_warning": (
+            "A period-axis chart may intentionally show the available time "
+            "range; pass a period scope when the requested analysis is bounded."
+        ),
+    }
+
+
+def _scope_control_target(path: str) -> dict[str, Any]:
+    return {
+        "target_type": "recipe_path",
+        "target": path,
+        "recipe_path": None,
+        "scope_control": True,
+    }
+
+
+def _add_period_scope_targets(
+    contract: dict[str, Any],
+    capability: dict[str, Any],
+) -> dict[str, Any]:
+    """Expose period-scope controls without changing base role mappings."""
+
+    scope_contract = capability.get("period_scope_contract") or {}
+    scope_targets = [
+        _scope_control_target(path)
+        for path in scope_contract.get("accepted_scope_controls") or []
+    ]
+    if not scope_targets:
+        return contract
+    period_role = {
+        "filter": "period_filter",
+        "axis": "period_axis",
+        "axis_or_table": "period_axis",
+    }.get(str(scope_contract.get("role") or ""))
+    if period_role is None:
+        return contract
+
+    updated = dict(contract)
+    for contract_key in ("required_role_contracts", "optional_role_contracts"):
+        role_contracts = []
+        for role_contract in updated.get(contract_key) or []:
+            item = dict(role_contract)
+            if item.get("kind") == "period" and item.get("role") == period_role:
+                existing_targets = {
+                    str(target.get("target") or "")
+                    for target in item.get("parameter_targets") or []
+                }
+                parameter_targets = list(item.get("parameter_targets") or [])
+                parameter_targets.extend(
+                    target
+                    for target in scope_targets
+                    if target["target"] not in existing_targets
+                )
+                item["parameter_targets"] = parameter_targets
+                item["scope_binding"] = {
+                    "status": "supported",
+                    "period_column_required": scope_contract["period_column_required"],
+                    "scope_required_for_render": scope_contract[
+                        "scope_required_for_render"
+                    ],
+                    "accepted_scope_controls": scope_contract[
+                        "accepted_scope_controls"
+                    ],
+                    "explicit_all_data_allowed": scope_contract[
+                        "explicit_all_data_allowed"
+                    ],
+                }
+            role_contracts.append(item)
+        updated[contract_key] = role_contracts
+    return updated
+
+
+def _add_clara_adapter_annotation(
+    contract: dict[str, Any],
+    adapter_registry: dict[str, Any],
+) -> dict[str, Any]:
+    """Attach the Clara-owned render adapter for a normalized contract."""
+
+    plugin_sources = contract.get("plugin_sources") or []
+    if len(plugin_sources) != 1:
+        raise ValueError(
+            "Invocation contract must have exactly one plugin source to attach "
+            f"a Clara adapter: {plugin_sources}"
+        )
+    source = str(plugin_sources[0])
+    adapters = adapter_registry.get("adapters") or {}
+    adapter = adapters.get(source)
+    if not isinstance(adapter, dict):
+        raise ValueError(f"Missing Reporting Engine adapter for {source}")
+    updated = dict(contract)
+    updated["clara_adapter"] = {
+        "owner": adapter_registry.get("owner"),
+        "adapter_id": adapter["adapter_id"],
+        "legacy_plugin_source": source,
+        "component_name": adapter["component_name"],
+        "legacy_plugin_source_policy": "provenance_only",
+        "render_api_status": adapter.get("render_api_status"),
+        "renderer": "scripts/render_capability.py:render_capability",
+        "prepare_invocation": "scripts/reporting_adapters.py:prepare_invocation_plan",
+        "prepare_render_recipe": "scripts/render_capability.py:build_render_recipe",
+        "period_scope_contract": adapter.get("period_scope_contract") or {},
+    }
+    return updated
+
+
 def _selection_contract(
     capability_id: str,
     capability: dict[str, Any],
@@ -1493,6 +1834,7 @@ def _selection_contract(
     )
     dimension_contract = capability.get("dimension_contract")
     period_semantics = capability["period_semantics"]
+    period_scope_contract = capability["period_scope_contract"]
     tie_breakers = []
     for competitor_id in capability.get("competing_capability_ids") or []:
         competitor = all_capabilities.get(competitor_id)
@@ -1521,8 +1863,14 @@ def _selection_contract(
         "dataset_requirements": {
             "period": {
                 "role": period_semantics["role"],
+                "required": period_semantics["requires_period_column"],
+                "comparison_pair_required": period_semantics[
+                    "requires_comparison_pair"
+                ],
+                "minimum_distinct_values": period_semantics["minimum_distinct_values"],
                 "requires_period_axis": period_semantics["supports_period_axis"],
                 "allows_period_filter": period_semantics["supports_period_filter"],
+                "scope_contract": period_scope_contract,
             },
             "metrics": {
                 "minimum_source_metric_count": metric_requirements[
@@ -1540,6 +1888,7 @@ def _selection_contract(
                 "role_requirements": dimension_role_requirements,
                 "dimension_contract": dimension_contract,
             },
+            "observations": capability["observation_requirements"],
             "visual_role_bindings": capability["axis_roles"],
         },
         "implementation_evidence": {
@@ -1968,6 +2317,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid when composition, hierarchy, time movement, or a second metric relationship is the point.",
         axis_roles={"x": "metric", "y": "category"},
         period_role="filter",
+        period_required=False,
+        metric_roles=["primary_additive_metric"],
         dimension_roles=["category"],
         competitors=["mix.stacked_bar", "mix.stacked_bar_overlay", "mix.multitier_bar"],
     ),
@@ -1984,6 +2335,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "stack": "component_dimension",
         },
         period_role="filter",
+        period_required=False,
+        metric_roles=["primary_additive_metric"],
         dimension_roles=["category", "component_category"],
         competitors=["mix.bar", "mix.multitier_bar", "mix.stacked_bar_overlay"],
     ),
@@ -1996,6 +2349,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid when the secondary metric deserves a full relationship plot or when composition is the point.",
         axis_roles={"x": "primary_metric", "y": "category", "marker": "related_metric"},
         period_role="filter",
+        period_required=False,
         metric_roles=["primary_additive_metric", "related_marker_metric"],
         dimension_roles=["category"],
         competitors=["mix.bar", "scatter.scatter", "scatter.bubble"],
@@ -2020,6 +2374,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "panel": "optional_second_dimension",
         },
         period_role="axis",
+        requires_comparison_pair=True,
         metric_roles=[
             "baseline_period_metric",
             "current_period_metric",
@@ -2088,6 +2443,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid when population churn or mix composition is the main finding.",
         axis_roles={"x": "comparison_period", "y": "metric"},
         period_role="axis",
+        requires_comparison_pair=True,
         metric_roles=["primary_additive_metric"],
         dimension_roles=["stable_population_flag"],
         competitors=[
@@ -2110,6 +2466,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "stack": "component_dimension",
         },
         period_role="axis",
+        requires_comparison_pair=True,
         metric_roles=["primary_additive_metric"],
         dimension_roles=["stable_population_flag", "component_dimension"],
         competitors=["mix.like_for_like_column", "mix.stacked_column"],
@@ -2123,6 +2480,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid for simple time trend or non-cohort composition.",
         axis_roles={"x": "period", "y": "metric_total", "stack": "first_active_cohort"},
         period_role="axis",
+        requires_comparison_pair=True,
         metric_roles=["primary_additive_metric"],
         dimension_roles=["first_active_cohort"],
         competitors=[
@@ -2144,6 +2502,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "stack": "lost_or_last_active_cohort",
         },
         period_role="axis",
+        requires_comparison_pair=True,
         metric_roles=["primary_additive_metric"],
         dimension_roles=["lost_or_last_active_cohort"],
         competitors=[
@@ -2199,25 +2558,57 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "area": "metric",
         },
         period_role="filter",
+        period_required=False,
+        metric_roles=["primary_additive_metric"],
         dimension_roles=["width_category", "stack_category", "optional_panel"],
-        competitors=["mix.barmekko", "mix.stacked_bar", "mix.multitier_bar"],
+        dimension_contract={
+            "required_roles": ["width_category", "stack_category"],
+            "distinct_dimensions_required": True,
+            "requires_non_bijective_dimension_pair": True,
+            "pair_behavior": (
+                "The two dimensions must form an observed cross-classification or "
+                "hierarchy with more than a one-to-one alias relationship."
+            ),
+        },
+        competitors=[
+            "mix.barmekko",
+            "mix.stacked_bar",
+            "mix.stacked_pareto",
+            "mix.multitier_bar",
+        ],
     ),
     "mix.barmekko": _cap(
         family="mix",
         grammar="barmekko",
         task_ids=["two_metric_composition", "price_volume_mix_view"],
         emphasis="width_metric_times_height_metric",
-        best_when="The reader needs a variable-width composition where width and height represent different metrics.",
-        avoid_when="Avoid without a meaningful width metric or when the area encoding would be hard to read.",
+        best_when=(
+            "The reader needs variable-width categories where width is an additive "
+            "quantity, area is an additive value, and height is their derived ratio."
+        ),
+        avoid_when=(
+            "Avoid without a meaningful additive width denominator, when area is not "
+            "additive, or when the derived ratio encoding would be hard to read."
+        ),
         axis_roles={
             "x_width": "width_metric",
             "y_height": "height_metric",
             "area": "combined_metric",
         },
         period_role="filter",
+        period_required=False,
         metric_roles=["width_metric", "height_metric", "area_metric"],
         metric_requirements=_barmekko_metric_requirements(),
         dimension_roles=["width_category", "height_category"],
+        dimension_contract={
+            "required_roles": ["width_category", "height_category"],
+            "distinct_dimensions_required": True,
+            "requires_non_bijective_dimension_pair": True,
+            "pair_behavior": (
+                "The two dimensions must form an observed cross-classification or "
+                "hierarchy with more than a one-to-one alias relationship."
+            ),
+        },
         competitors=["mix.marimekko", "scatter.bubble", "mix.stacked_bar_overlay"],
     ),
     "mix.pareto": _cap(
@@ -2233,6 +2624,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "line": "cumulative_share_optional",
         },
         period_role="filter",
+        period_required=False,
         metric_roles=["primary_additive_metric"],
         dimension_roles=["category"],
         competitors=["mix.bar", "mix.stacked_pareto"],
@@ -2250,6 +2642,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "stack": "component_dimension",
         },
         period_role="filter",
+        period_required=False,
         metric_roles=["primary_additive_metric"],
         dimension_roles=["category", "component_dimension"],
         competitors=["mix.pareto", "mix.stacked_bar"],
@@ -2263,6 +2656,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid for time trends, one-dimensional ranking, or exact tables.",
         axis_roles={"x": "metric", "y": "metric", "color_or_panel": "dimension"},
         period_role="filter",
+        period_required=False,
         metric_roles=["x_metric", "y_metric"],
         dimension_roles=["point_dimension", "optional_panel"],
         competitors=["scatter.bubble", "mix.stacked_bar_overlay", "mix.bar"],
@@ -2281,6 +2675,7 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
             "color_or_panel": "dimension",
         },
         period_role="filter",
+        period_required=False,
         metric_roles=["x_metric", "y_metric", "size_metric"],
         dimension_roles=["point_dimension", "optional_panel"],
         competitors=["scatter.scatter", "mix.stacked_bar_overlay"],
@@ -2294,6 +2689,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid when exact percentile comparison or individual points are needed.",
         axis_roles={"x": "metric_bins", "y": "count_or_frequency"},
         period_role="filter",
+        period_required=False,
+        minimum_observation_count=3,
         competitors=[
             "distribution.boxplot",
             "distribution.kernel_density",
@@ -2309,6 +2706,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid when distribution shape details or individual observations matter.",
         axis_roles={"x": "group_optional", "y": "metric_distribution"},
         period_role="filter",
+        period_required=False,
+        minimum_observation_count=3,
         competitors=[
             "distribution.stripplot",
             "distribution.histogram",
@@ -2325,6 +2724,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid with too many points or when an aggregate distribution shape is enough.",
         axis_roles={"x": "group_optional", "y": "metric_points"},
         period_role="filter",
+        period_required=False,
+        minimum_observation_count=3,
         competitors=[
             "distribution.boxplot",
             "distribution.histogram",
@@ -2341,6 +2742,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid when frequency bins or individual observations are easier for the reader.",
         axis_roles={"x": "metric", "y": "cumulative_share"},
         period_role="filter",
+        period_required=False,
+        minimum_observation_count=3,
         competitors=[
             "distribution.histogram",
             "distribution.boxplot",
@@ -2356,6 +2759,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         avoid_when="Avoid when sample size is small or exact bins/observations are important.",
         axis_roles={"x": "metric", "y": "estimated_density"},
         period_role="filter",
+        period_required=False,
+        minimum_observation_count=3,
         competitors=[
             "distribution.histogram",
             "distribution.ecdf",
@@ -2496,13 +2901,13 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         period_role="filter",
         metric_roles=["baseline_metric", "current_metric", "delta_metric"],
         metric_requirements=_variance_metric_requirements(),
-        dimension_roles=[
-            "root_cause_driver_sequence",
-            "optional_nested_root_cause_driver_sequence",
-        ],
+        dimension_roles=["root_cause_driver_sequence", "drilldown_selection"],
         dimension_contract={
-            "required_roles": ["root_cause_driver_sequence"],
-            "optional_roles": ["nested_root_cause_driver_sequence"],
+            "required_roles": [
+                "root_cause_driver_sequence",
+                "drilldown_selection",
+            ],
+            "optional_roles": [],
             "left_panel_behavior": (
                 "Left panel shows a variable mixed-dimension root-cause bridge "
                 "sequence."
@@ -2512,6 +2917,10 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
                 "selected left-row slices."
             ),
             "nested_dimension_scope": "row_specific",
+            "drilldown_binding_phase": "after_candidate_sequence_review",
+            "drilldown_candidate_source": (
+                "alternative sequences and left-sequence rows with available detail rows"
+            ),
             "selector_responsibility": (
                 "Use only when the question asks for root causes plus explanation "
                 "of selected drivers. Do not select a fixed child dimension for "
@@ -2561,19 +2970,36 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         task_ids=["root_cause_variance"],
         emphasis="component_level_root_cause",
         best_when=(
-            "Use when the question asks why one variance component changed, not why "
-            "the overall total changed; the chart drills into the drivers of that "
-            "component-level variance."
+            "Use when the question asks which price, units, and mix component-by-"
+            "dimension combinations explain movement, rather than which dimensions "
+            "explain the total variance."
         ),
         avoid_when=(
-            "Avoid when the report needs the total movement root-cause sequence, a "
-            "simple dimension split, the plain total bridge, or PVM mechanics."
+            "Avoid when units/volume is unavailable, when fewer than two candidate "
+            "driver dimensions exist, when the report needs the total-variance "
+            "root-cause sequence, or when a simple PVM ladder is sufficient."
         ),
-        axis_roles={"x": "component_root_cause_driver", "y": "component_delta"},
+        axis_roles={
+            "x": "component_and_root_cause_driver_sequence",
+            "y": "component_delta",
+        },
         period_role="filter",
-        metric_roles=["baseline_metric", "current_metric", "delta_metric"],
-        metric_requirements=_variance_metric_requirements(),
-        dimension_roles=["variance_component", "component_root_cause_driver"],
+        metric_roles=["component_delta"],
+        metric_requirements=_component_root_cause_metric_requirements(),
+        dimension_roles=["component_root_cause_driver_sequence"],
+        dimension_contract={
+            "required_roles": ["component_root_cause_driver_sequence"],
+            "minimum_driver_dimensions": 2,
+            "component_behavior": (
+                "Price, units, and mix components are calculated from the selected "
+                "value metric, units/volume metric, and comparison periods; they "
+                "are not selected from a dataset dimension."
+            ),
+            "driver_behavior": (
+                "The plugin ranks component-by-dimension candidates across the "
+                "available driver dimensions and returns an ordered sequence."
+            ),
+        },
         competitors=[
             "variance.root_cause_total_bridge",
             "variance.total_by_dimension_bridge",
@@ -2613,6 +3039,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         best_when="The reader needs to compare intersections across more than two sets.",
         avoid_when="Avoid when only two or three simple sets need a familiar Venn view.",
         axis_roles={"x": "set_intersection", "y": "count"},
+        period_role="filter",
+        period_required=False,
         metric_roles=[],
         dimension_roles=["set_membership_fields"],
         competitors=["set_overlap.venn", "set_overlap.upset_small_multiples"],
@@ -2625,6 +3053,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         best_when="The reader needs to compare overlap structures across panels or segments.",
         avoid_when="Avoid when one aggregate overlap view is enough.",
         axis_roles={"x": "set_intersection", "y": "count", "panel": "segment"},
+        period_role="filter",
+        period_required=False,
         metric_roles=[],
         dimension_roles=["set_membership_fields", "panel_or_segment"],
         competitors=["set_overlap.upset"],
@@ -2637,6 +3067,8 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         best_when="The reader needs an intuitive overlap picture for two or three sets.",
         avoid_when="Avoid with more than three sets or many intersections.",
         axis_roles={"areas": "set_counts_and_intersections"},
+        period_role="filter",
+        period_required=False,
         metric_roles=[],
         dimension_roles=["two_or_three_set_membership_fields"],
         competitors=["set_overlap.upset"],
@@ -2670,7 +3102,11 @@ CAPABILITY_SEMANTICS: dict[str, dict[str, Any]] = {
         period_role="axis_or_table",
         metric_roles=["statement_value"],
         metric_requirements=_statement_metric_requirements(),
-        dimension_roles=["statement_line_item"],
+        dimension_roles=[
+            "statement_line_item",
+            "statement_scenario",
+            "statement_structure",
+        ],
     ),
     "attributes.attribute_bundle_comparison_table": _cap(
         family="attributes",
@@ -3079,7 +3515,7 @@ SEMANTIC_PROBES = [
     },
     {
         "probe_id": "variance_root_cause_component",
-        "question": "Which drivers explain the selected root-cause component?",
+        "question": "Which dimension combinations explain the price component of sales movement?",
         "task_id": "variance_and_bridge",
         "required_capability_ids": ["variance.root_cause_component_bridge"],
         "forbidden_capability_ids": [
@@ -3119,21 +3555,35 @@ SEMANTIC_PROBES = [
 
 
 def _load_source_manifest() -> dict[str, Any]:
-    payload = json.loads(SOURCE_MANIFEST.read_text(encoding="utf-8"))
+    manifest_path = _source_manifest_path()
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Source manifest must be a JSON object.")
     return payload
 
 
-def _generated_manifest_capability_ids() -> set[str]:
-    """Return capability IDs evidenced by generated static artifact records.
+def _load_adapter_registry() -> dict[str, Any]:
+    payload = json.loads(ADAPTER_REGISTRY.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Adapter registry must be a JSON object.")
+    return payload
 
-    This is deterministic because it only extracts exact schema fields and a
-    small legacy plugin/stem map for generated artifacts whose source files
-    exist but whose older manifests did not carry capability IDs.
+
+def _source_manifest_path() -> Path:
+    if CATALOG_SOURCE_MANIFEST.exists():
+        return CATALOG_SOURCE_MANIFEST
+    return SOURCE_MANIFEST
+
+
+def _generated_manifest_capability_ids() -> set[str]:
+    """Return capability IDs from reviewed semantics and static artifact records.
+
+    This is deterministic because the reviewed capability table is the canonical
+    generated manifest surface. Static artifact records can add corroborating
+    evidence when generated example folders are present locally.
     """
 
-    capability_ids: set[str] = set()
+    capability_ids: set[str] = set(CAPABILITY_SEMANTICS)
     for manifest_path in (REPO_ROOT / "static" / "shared").glob("**/manifest.json"):
         if manifest_path == SOURCE_MANIFEST:
             continue
@@ -3156,6 +3606,46 @@ def _generated_manifest_capability_ids() -> set[str]:
                 capability_ids.add(capability_id)
     capability_ids.update(_legacy_static_artifact_capability_ids())
     return capability_ids
+
+
+def _reviewed_invocation_contract(
+    capability_id: str, artifacts: list[dict[str, Any]]
+) -> dict[str, Any] | None:
+    if not PACKAGED_SELECTION_MANIFEST.exists():
+        return None
+    try:
+        payload = json.loads(PACKAGED_SELECTION_MANIFEST.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    capability = (payload.get("capabilities") or {}).get(capability_id)
+    if not isinstance(capability, dict):
+        return None
+    contract = capability.get("normalized_invocation_contract")
+    if not isinstance(contract, dict):
+        return None
+    current_labels = [artifact.get("label") for artifact in artifacts]
+    reviewed_labels = contract.get("artifact_labels") or []
+    if current_labels != reviewed_labels:
+        return None
+    return dict(contract)
+
+
+def _normalized_invocation_contract(
+    capability_id: str,
+    capability: dict[str, Any],
+    artifacts: list[dict[str, Any]],
+) -> dict[str, Any]:
+    generated = build_normalized_invocation_contract(
+        capability_id,
+        capability,
+        artifacts,
+    )
+    if generated.get("status") == "parameter_contract_ready":
+        return generated
+    reviewed = _reviewed_invocation_contract(capability_id, artifacts)
+    if reviewed and reviewed.get("status") == "parameter_contract_ready":
+        return reviewed
+    return generated
 
 
 def _source_manifest_plugin(payload: dict[str, Any], manifest_path: Path) -> str:
@@ -3451,10 +3941,13 @@ def _validate(manifest: dict[str, Any]) -> list[dict[str, str]]:
             "avoid_when",
             "axis_roles",
             "period_semantics",
+            "period_scope_contract",
             "metric_requirements",
+            "observation_requirements",
             "selection_contract",
             "selection_examples",
             "normalized_invocation_contract",
+            "render_contract",
             "primary_decision_cue",
             "requires_question_focus",
             "reject_decision_cues",
@@ -3500,6 +3993,19 @@ def _validate(manifest: dict[str, Any]) -> list[dict[str, str]]:
             )
         contract = capability.get("selection_contract")
         metric_requirements = capability.get("metric_requirements")
+        observation_requirements = capability.get("observation_requirements") or {}
+        if (
+            not isinstance(observation_requirements.get("minimum_non_null_rows"), int)
+            or observation_requirements.get("minimum_non_null_rows", 0) < 1
+            or observation_requirements.get("scope") != "rendered_analysis_scope"
+        ):
+            issues.append(
+                {
+                    "severity": "error",
+                    "code": "invalid_observation_requirements",
+                    "detail": capability_id,
+                }
+            )
         if isinstance(metric_requirements, dict):
             for field in (
                 "source_metric_roles",
@@ -3593,6 +4099,68 @@ def _validate(manifest: dict[str, Any]) -> list[dict[str, str]]:
                     "detail": capability_id,
                 }
             )
+        period = capability.get("period_semantics") or {}
+        period_scope = capability.get("period_scope_contract") or {}
+        if period.get("role") != period_scope.get("role"):
+            issues.append(
+                {
+                    "severity": "error",
+                    "code": "period_scope_role_mismatch",
+                    "detail": capability_id,
+                }
+            )
+        if period.get("role") == "filter":
+            if period_scope.get("scope_required_for_render") is not True:
+                issues.append(
+                    {
+                        "severity": "error",
+                        "code": "period_filter_without_required_scope",
+                        "detail": capability_id,
+                    }
+                )
+            if not period_scope.get("explicit_all_data_allowed"):
+                issues.append(
+                    {
+                        "severity": "error",
+                        "code": "period_filter_without_all_data_escape",
+                        "detail": capability_id,
+                    }
+                )
+        if period.get("role") in {"filter", "axis", "axis_or_table"}:
+            if not period_scope.get("accepted_scope_controls"):
+                issues.append(
+                    {
+                        "severity": "error",
+                        "code": "period_scope_without_controls",
+                        "detail": capability_id,
+                    }
+                )
+            adapter_scope = (
+                (invocation_contract or {}).get("clara_adapter") or {}
+            ).get("period_scope_contract") or {}
+            accepted_by_runtime = set(adapter_scope.get("accepted_paths") or [])
+            claimed_by_capability = set(
+                period_scope.get("accepted_scope_controls") or []
+            )
+            unsupported_controls = sorted(claimed_by_capability - accepted_by_runtime)
+            if unsupported_controls:
+                issues.append(
+                    {
+                        "severity": "error",
+                        "code": "period_scope_control_without_runtime_evidence",
+                        "detail": (
+                            f"{capability_id}: {', '.join(unsupported_controls)}"
+                        ),
+                    }
+                )
+            if not adapter_scope.get("verified_by"):
+                issues.append(
+                    {
+                        "severity": "error",
+                        "code": "period_scope_without_runtime_verifier",
+                        "detail": capability_id,
+                    }
+                )
         for competitor in capability.get("competing_capability_ids") or []:
             if competitor not in capability_ids:
                 issues.append(
@@ -4206,6 +4774,7 @@ def _selector_audit(manifest: dict[str, Any]) -> dict[str, Any]:
 
 def build_chart_selection_manifest() -> dict[str, Any]:
     source = _load_source_manifest()
+    adapter_registry = _load_adapter_registry()
     raw_items = source.get("items")
     if not isinstance(raw_items, list):
         raise ValueError("Source manifest must contain an items list.")
@@ -4265,6 +4834,10 @@ def build_chart_selection_manifest() -> dict[str, Any]:
         capability.update(_decision_cues(capability_id, capability))
 
     for capability_id, capability in capabilities.items():
+        capability["period_scope_contract"] = _period_scope_contract(capability)
+        capability["render_contract"] = build_render_contract(capability_id)
+
+    for capability_id, capability in capabilities.items():
         capability["selection_contract"] = _selection_contract(
             capability_id,
             capability,
@@ -4272,12 +4845,16 @@ def build_chart_selection_manifest() -> dict[str, Any]:
         )
 
     for capability_id, capability in capabilities.items():
-        capability["normalized_invocation_contract"] = (
-            build_normalized_invocation_contract(
-                capability_id,
+        capability["normalized_invocation_contract"] = _add_clara_adapter_annotation(
+            _add_period_scope_targets(
+                _normalized_invocation_contract(
+                    capability_id,
+                    capability,
+                    artifacts_by_capability.get(capability_id, []),
+                ),
                 capability,
-                artifacts_by_capability.get(capability_id, []),
-            )
+            ),
+            adapter_registry,
         )
 
     tasks_by_id: dict[str, dict[str, Any]] = {}
@@ -4323,7 +4900,7 @@ def build_chart_selection_manifest() -> dict[str, Any]:
 
     manifest = {
         "schema_version": "0.1",
-        "source_manifest": str(SOURCE_MANIFEST.relative_to(REPO_ROOT)),
+        "source_manifest": str(_source_manifest_path().relative_to(REPO_ROOT)),
         "purpose": (
             "Selection-oriented rebuild of the PNG gallery manifest. Artifacts "
             "remain examples; capability records carry chart-selection semantics."
@@ -4360,16 +4937,35 @@ def build_chart_selection_manifest() -> dict[str, Any]:
     return manifest
 
 
-def main() -> int:
-    manifest = build_chart_selection_manifest()
+def write_chart_selection_catalog(manifest: dict[str, Any]) -> None:
+    """Write the canonical packaged manifest and its derived review records."""
+
     DEFAULT_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     DEFAULT_OUTPUT.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
     DEFAULT_ASSESSMENT.write_text(_assessment_markdown(manifest), encoding="utf-8")
+    PACKAGED_ROLE_REGISTRY.write_text(
+        json.dumps(
+            {
+                "schema_version": "0.1",
+                "role_registry": manifest["role_registry"],
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def main() -> int:
+    manifest = build_chart_selection_manifest()
+    write_chart_selection_catalog(manifest)
     print(DEFAULT_OUTPUT)
     print(DEFAULT_ASSESSMENT)
+    print(PACKAGED_ROLE_REGISTRY)
     print(json.dumps(manifest["counts"], sort_keys=True))
     print(f"validation_issues={len(manifest['validation_issues'])}")
     return 1 if manifest["validation_issues"] else 0

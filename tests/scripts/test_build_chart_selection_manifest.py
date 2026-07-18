@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
+import pytest
+
+from scripts import build_chart_selection_manifest as manifest_builder
 from scripts.build_chart_selection_manifest import build_chart_selection_manifest
 
 
@@ -7,6 +13,44 @@ def _artifact_by_label(manifest: dict, label: str) -> dict:
     return next(
         artifact for artifact in manifest["artifacts"] if artifact["label"] == label
     )
+
+
+def test_load_source_manifest_falls_back_to_reporting_engine_catalog(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fallback_manifest = tmp_path / "png_gallery_manifest.json"
+    fallback_manifest.write_text(json.dumps({"items": []}), encoding="utf-8")
+
+    monkeypatch.setattr(
+        manifest_builder,
+        "SOURCE_MANIFEST",
+        tmp_path / "missing" / "manifest.json",
+    )
+    monkeypatch.setattr(
+        manifest_builder,
+        "CATALOG_SOURCE_MANIFEST",
+        fallback_manifest,
+    )
+
+    assert manifest_builder._source_manifest_path() == fallback_manifest
+    assert manifest_builder._load_source_manifest() == {"items": []}
+
+
+def test_source_manifest_prefers_reporting_engine_catalog(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source_manifest = tmp_path / "static" / "manifest.json"
+    catalog_manifest = tmp_path / "catalog" / "png_gallery_manifest.json"
+    source_manifest.parent.mkdir(parents=True)
+    catalog_manifest.parent.mkdir(parents=True)
+    source_manifest.write_text(json.dumps({"items": [{"label": "source"}]}))
+    catalog_manifest.write_text(json.dumps({"items": [{"label": "catalog"}]}))
+
+    monkeypatch.setattr(manifest_builder, "SOURCE_MANIFEST", source_manifest)
+    monkeypatch.setattr(manifest_builder, "CATALOG_SOURCE_MANIFEST", catalog_manifest)
+
+    assert manifest_builder._source_manifest_path() == catalog_manifest
+    assert manifest_builder._load_source_manifest()["items"][0]["label"] == "catalog"
 
 
 def test_build_chart_selection_manifest_has_selection_examples_for_every_capability() -> (
@@ -71,7 +115,7 @@ def test_build_chart_selection_manifest_pairwise_ambiguity_audit_passes() -> Non
 
     assert pairwise["result"] == "pass"
     assert pairwise["unresolved_pair_count"] == 0
-    assert pairwise["high_overlap_pair_count"] == 21
+    assert pairwise["high_overlap_pair_count"] == 22
 
     groups = {tuple(group["capability_ids"]) for group in pairwise["signature_groups"]}
     assert (
@@ -79,10 +123,13 @@ def test_build_chart_selection_manifest_pairwise_ambiguity_audit_passes() -> Non
         "period_comparison.multitier_column",
         "period_comparison.trend",
     ) in groups
-    assert (
-        "variance.exploded_variance_bridge",
-        "variance.root_cause_component_bridge",
-    ) in groups
+    assert not any(
+        {
+            "variance.exploded_variance_bridge",
+            "variance.root_cause_exploded_bridge",
+        }.issubset(group)
+        for group in groups
+    )
     assert (
         "mix.cohort_lost_stacked_column",
         "mix.cohort_since_stacked_column",
@@ -237,11 +284,30 @@ def test_funnel_stage_table_does_not_claim_period_filtering() -> None:
         "role": "none",
         "supports_period_axis": False,
         "supports_period_filter": False,
+        "requires_period_column": False,
+        "requires_comparison_pair": False,
+        "minimum_distinct_values": 0,
+        "accepted_scope_controls": [],
     }
     assert requirements["period"] == {
         "role": "none",
+        "required": False,
+        "comparison_pair_required": False,
+        "minimum_distinct_values": 0,
         "requires_period_axis": False,
         "allows_period_filter": False,
+        "scope_contract": {
+            "role": "none",
+            "status": "not_applicable",
+            "period_column_required": False,
+            "comparison_pair_required_for_render": False,
+            "minimum_distinct_period_values": 0,
+            "scope_required_for_render": False,
+            "accepted_scope_controls": [],
+            "explicit_all_data_allowed": False,
+            "unscoped_default": "not_applicable",
+            "selector_warning": "",
+        },
     }
 
 
@@ -270,6 +336,7 @@ def test_manifest_exposes_role_registry_and_invocation_contracts() -> None:
     assert role_registry["counts"]["chart_roles_missing_mapping"] == 0
     assert "primary_metric" in role_registry["chart_roles"]
     assert "direct_dimension" in role_registry["profile_roles"]
+    assert "statement_scenario" in role_registry["profile_roles"]
 
     for capability_id, capability in manifest["capabilities"].items():
         invocation = capability["normalized_invocation_contract"]
@@ -286,6 +353,178 @@ def test_manifest_exposes_role_registry_and_invocation_contracts() -> None:
         for contract in overlay["required_role_contracts"]
         + overlay["variant_role_contracts"]
     )
+
+    funnel = manifest["capabilities"]["funnel.stage_table"][
+        "normalized_invocation_contract"
+    ]
+    assert {
+        contract["role"]: [target["target"] for target in contract["parameter_targets"]]
+        for contract in funnel["required_role_contracts"]
+    } == {
+        "stage_start_count": ["stage_table_mappings.start_count_column"],
+        "stage_pass_count": ["stage_table_mappings.pass_count_column"],
+        "ordered_stage": ["stage_table_mappings.stage_column"],
+    }
+
+    statement = manifest["capabilities"]["statement.pnl_table"][
+        "normalized_invocation_contract"
+    ]
+    statement_targets = {
+        contract["role"]: [
+            target["target"]
+            for target in contract["parameter_targets"]
+            if not target.get("scope_control")
+        ]
+        for contract in statement["required_role_contracts"]
+    }
+    assert statement_targets["period_axis"] == ["mappings.period_column"]
+    assert statement_targets["statement_value"] == ["mappings.value_column"]
+    assert statement_targets["statement_line_item"] == ["mappings.row_key_column"]
+    assert statement_targets["statement_scenario"] == ["mappings.scenario_column"]
+    assert statement_targets["statement_structure"] == [
+        "statement_rows",
+        "periods",
+        "scenarios_by_period",
+    ]
+
+    for capability_id, capability in manifest["capabilities"].items():
+        optional_roles = set(
+            capability["selection_contract"]["dataset_requirements"]["dimensions"].get(
+                "optional_roles", []
+            )
+        )
+        invocation_optional_roles = {
+            contract["role"]
+            for contract in capability["normalized_invocation_contract"][
+                "optional_role_contracts"
+            ]
+            if contract["kind"] == "dimension"
+        }
+        assert optional_roles <= invocation_optional_roles, capability_id
+
+
+def test_root_cause_exploded_bridge_requires_explicit_two_phase_binding() -> None:
+    manifest = build_chart_selection_manifest()
+    capability = manifest["capabilities"]["variance.root_cause_exploded_bridge"]
+    dimensions = capability["selection_contract"]["dataset_requirements"]["dimensions"]
+    role_contracts = {
+        contract["role"]: contract
+        for contract in capability["normalized_invocation_contract"][
+            "required_role_contracts"
+        ]
+    }
+    render_contract = capability["render_contract"]
+
+    assert dimensions["required_roles"] == [
+        "root_cause_driver_sequence",
+        "drilldown_selection",
+    ]
+    assert (
+        dimensions["role_requirements"]["drilldown_selection"]["resolution_type"]
+        == "structural_row_selection"
+    )
+    assert {
+        target["target"]
+        for target in role_contracts["drilldown_selection"]["parameter_targets"]
+    } == {
+        "options.root_cause_bridge_alternative_result",
+        "options.root_cause_bridge_drilldown_rows",
+    }
+    assert (
+        "root_cause_bridge_alternative_result"
+        not in render_contract["fixed_option_overrides"]
+    )
+    assert (
+        "root_cause_bridge_drilldown_rows"
+        not in render_contract["fixed_option_overrides"]
+    )
+    assert render_contract["expected_artifact_stem_templates"] == [
+        {
+            "template": "root_cause_total_bridge_drilldown_row_{value}",
+            "role": "drilldown_selection",
+            "binding_key": "root_cause_bridge_drilldown_rows",
+            "for_each": True,
+        }
+    ]
+
+
+def test_period_filter_capabilities_require_explicit_scope_or_all_data() -> None:
+    manifest = build_chart_selection_manifest()
+
+    for capability_id, capability in manifest["capabilities"].items():
+        scope_contract = capability["period_scope_contract"]
+        period_role = capability["period_semantics"]["role"]
+        assert scope_contract["role"] == period_role, capability_id
+        if period_role != "filter":
+            continue
+        assert scope_contract["scope_required_for_render"] is True, capability_id
+        assert scope_contract["explicit_all_data_allowed"] is True, capability_id
+        assert scope_contract["accepted_scope_controls"], capability_id
+        assert (
+            scope_contract["period_column_required"]
+            is capability["period_semantics"]["requires_period_column"]
+        )
+
+        invocation = capability["normalized_invocation_contract"]
+        period_contracts = (
+            invocation["required_role_contracts"]
+            + invocation["optional_role_contracts"]
+        )
+        period_contract = next(
+            contract for contract in period_contracts if contract["kind"] == "period"
+        )
+        scope_targets = [
+            target
+            for target in period_contract["parameter_targets"]
+            if target.get("scope_control")
+        ]
+        assert {target["target"] for target in scope_targets} == set(
+            scope_contract["accepted_scope_controls"]
+        )
+        assert period_contract["required"] is scope_contract["period_column_required"]
+        assert period_contract["scope_binding"]["status"] == "supported"
+
+
+def test_cross_sectional_capabilities_expose_optional_period_filters() -> None:
+    manifest = build_chart_selection_manifest()
+    optional_filter_ids = {
+        "distribution.histogram",
+        "scatter.scatter",
+        "mix.bar",
+        "set_overlap.upset",
+    }
+    required_filter_ids = {
+        "period_comparison.comparison_table",
+        "variance.scenario_bridge",
+    }
+
+    for capability_id in optional_filter_ids:
+        capability = manifest["capabilities"][capability_id]
+        assert capability["period_semantics"]["role"] == "filter"
+        assert capability["period_semantics"]["requires_period_column"] is False
+        optional_roles = capability["normalized_invocation_contract"][
+            "optional_role_contracts"
+        ]
+        assert ("period", "period_filter") in [
+            (role["kind"], role["role"]) for role in optional_roles
+        ]
+
+    for capability_id in required_filter_ids:
+        capability = manifest["capabilities"][capability_id]
+        assert capability["period_semantics"]["requires_period_column"] is True
+        assert any(
+            role["role"] == "period_filter" and role["required"]
+            for role in capability["normalized_invocation_contract"][
+                "required_role_contracts"
+            ]
+        )
+
+    assert manifest["capabilities"]["distribution.histogram"][
+        "observation_requirements"
+    ] == {
+        "minimum_non_null_rows": 3,
+        "scope": "rendered_analysis_scope",
+    }
 
 
 def test_small_multiples_are_rendering_variants_unless_panel_is_the_capability() -> (

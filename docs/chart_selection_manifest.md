@@ -1,7 +1,8 @@
 # Chart Selection Manifest Approach
 
-Status: draft current approach, expected to change as the selector and semantic
-layer are built.
+Status: draft current approach. The manifest, dataset profile, and first
+dataset-specific semantic-layer contract are implemented; automatic selection
+is not.
 
 This document describes how the chart selection manifest is intended to work.
 It is not a claim that automatic chart selection is solved. It is the current
@@ -42,10 +43,12 @@ The approach has four separate layers.
 
 3. Analysis-validity layer
 
-   Not implemented yet. This is the future dataset-specific semantic layer. It
-   should say which analyses make sense for a dataset and why. For example, it
-   should distinguish a mechanically plottable relationship from a meaningful
-   business question.
+   Implemented as the dataset-specific semantic-layer contract at
+   `plugins/reporting-engine/catalog/semantic_layer.schema.json` with workflow
+   support in `plugins/reporting-engine/scripts/semantic_layer.py`. It records
+   source-backed metric definitions, aggregation, dimensions, periods, explicit
+   scopes, and valid/conditional/invalid analysis policies. A model or human
+   authors the semantics; deterministic code scaffolds and validates wiring.
 
 4. Selector or future caller
 
@@ -55,9 +58,10 @@ The approach has four separate layers.
 
 ## Manifest Objects
 
-The generated manifest lives at
-`runs/chart_selection_manifest_rebuild/selection_manifest.json` and is produced
-by `scripts/build_chart_selection_manifest.py`.
+The packaged manifest lives at
+`plugins/reporting-engine/catalog/selection_manifest.json`. Rebuild outputs are
+written to `runs/chart_selection_manifest_rebuild/selection_manifest.json` by
+`scripts/build_chart_selection_manifest.py`.
 
 Top-level objects:
 
@@ -96,6 +100,10 @@ Important fields:
   bridge, dot gap, table, or scatter.
 - `period_semantics`: whether period is an axis, comparison pair, filter,
   scenario, or not applicable.
+- `period_scope_contract`: whether the renderer needs an explicit bounded
+  analysis period, may use the full available period axis, or must receive an
+  explicit all-data request. This prevents a chart from treating a date column
+  as if it were also the selected analysis period.
 - `metric_requirements`: metric role requirements, including source metric
   count and accepted metric classes.
 - `dimension_roles`: dimension roles needed by the chart.
@@ -122,6 +130,23 @@ For many IBCS/reporting tasks, multiple charts can answer the same question but
 emphasize different details. The manifest must expose the differences so the
 future caller can pick a defensible treatment, or keep several candidates when
 the question is broad.
+
+## Period Scope
+
+Period handling has two separate mechanical questions:
+
+1. Which dataset column provides period information?
+2. Which period scope should the chart render?
+
+For period-axis charts, an unscoped render can be valid because the visible time
+range is the chart. A bounded question should still pass scope controls such as
+`options.selected_periods`, `options.period_window`, or rolling/fiscal period
+options.
+
+For period-filter charts, a period column alone is not enough. The caller must
+pass either an explicit bounded analysis period or an explicit all-data request.
+Otherwise the renderer can include every available record, which may be valid
+only if the caller deliberately asked for that.
 
 ## Artifacts And Rendering Variants
 
@@ -161,8 +186,8 @@ A future caller should use the manifest roughly like this:
 2. Read the dataset profile to identify available period, metric, and dimension
    candidates.
 3. Filter capabilities whose required roles cannot be satisfied mechanically.
-4. Apply the future analysis-validity layer to remove semantically invalid
-   analyses for this dataset.
+4. Apply the reviewed analysis-validity layer to remove invalid analyses and
+   bind approved analysis roles for this dataset.
 5. Rank remaining capabilities by `selection_emphasis`, structured decision
    cues, `best_when`, `avoid_when`, and competing capability differences.
 6. Map selected semantic roles to concrete dataset columns and plugin
@@ -170,10 +195,12 @@ A future caller should use the manifest roughly like this:
 7. Render the chart and compare the output against the capability's stated
    purpose and available gallery evidence.
 
-The manifest currently supports steps 2, 3, part of 5, and a mechanical check
-for step 6. Step 4 is explicitly outside the manifest until the semantic layer
-exists. Step 6 is now audited through recipe, catalog, and artifact-contract
-evidence, but the plugins still do not expose one normalized invocation schema.
+The manifest supports steps 3, part of 5, and the chart-side part of step 6. The
+dataset profiler supports step 2. The semantic-layer contract supports the
+persisted evidence, validity, and role bindings needed for step 4, but does not
+author those judgments automatically. Step 6 is audited through normalized
+invocation contracts and executed through the single
+`scripts/render_capability.py` adapter boundary.
 
 ## Current Evidence Checks
 
@@ -187,15 +214,24 @@ Generated checks currently include:
 - role registry coverage;
 - normalized invocation contract coverage;
 - plugin parameter contract audit;
+- optional-role candidate, ambiguity, and rejection evidence without treating
+  an unavailable optional role as a compatibility failure;
 - selection example quality audit;
 - per-family selector playbooks;
 - per-family selector review;
 - dataset profile compatibility audits;
+- period-scope preflight in compatibility audits, so period-filter charts can be
+  mechanically compatible while still requiring a bounded period or explicit
+  all-data request before render;
 - question plus PNG review pages;
 - stress tests that combine question, manifest, profile compatibility, and PNG
   evidence;
 - render/proof matrix that consolidates invocation contract status, dataset
-  compatibility, stress-test status, PNG evidence, and remaining fixture gaps.
+  compatibility, period-scope status, stress-test status, PNG evidence, and
+  remaining fixture gaps;
+- packaged synthetic mechanical acceptance that profiles datasets, checks every
+  capability, binds its roles, executes its component, and validates expected
+  rendered artifacts.
 
 The current assessment is written to
 `runs/chart_selection_manifest_rebuild/assessment.md`.
@@ -217,32 +253,51 @@ of the latest audit, all 48 capabilities have role-to-parameter evidence and no
 missing artifact evidence. The audit also writes normalized invocation
 contracts and the shared role registry to JSON.
 
-The render/proof matrix is written to
-`runs/chart_selection_manifest_rebuild/chart_render_proof_matrix.md`. As of the
-latest matrix, the 48 capabilities are classified as 32 dataset-rendered PNG
-proofs, 10 gallery-PNG-plus-parameter proofs, 2 correct dataset rejections, and
-4 semantic/package gaps.
+The durable acceptance evidence is packaged at
+`plugins/reporting-engine/catalog/mechanical_acceptance_summary.json`. The
+current summary is bound to the manifest digest and records all 48 capabilities
+as `component_executed` with `rendered` output proof. Of those records, 43 are
+mechanically compatible directly from profiled dataset roles and 5 use an
+explicit recipe or packaged-table contract to satisfy roles that cannot come
+from an ordinary tabular profile. This is capability-level proof; the 73
+artifacts include optional and alternate variants that are not all requested by
+one acceptance run.
+
+The render/proof matrix remains a useful development report at
+`runs/chart_selection_manifest_rebuild/chart_render_proof_matrix.md`, but the
+packaged acceptance summary is the stable release evidence.
 
 The dataset profiles are written to
-`runs/chart_selection_manifest_rebuild/dataset_profiles/`. As of schema `0.2`,
-period candidates include explicit `period_parseability` with parser type,
-sample count, parse-success count, parse-success ratio, parsed min/max, and
-inferred grain.
+`runs/chart_selection_manifest_rebuild/dataset_profiles/`. Schema `0.4`
+includes period parseability and ordered period values, metric classes and
+derived metric candidates, dimension cardinality and missingness, canonical
+role candidates with confidence and reason, and exact pairwise dimension
+relationships. A bijective label alias is distinguished from a parent-child or
+cross-classifying pair so a multidimensional chart cannot satisfy its contract
+with two names for the same grouping.
 
 The dataset compatibility audits are written to
 `runs/chart_selection_manifest_rebuild/*_dataset_profile_chart_compatibility.md`.
-They now include `mechanical_role_matches`, `unmatched_required_roles`,
-`ambiguous_required_roles`, and `rejected_column_evidence` for every checked
-capability. Rejected-column evidence is mechanical only: for example, a metric
-can be rejected because its metric class is not accepted by the chart role, or a
-dimension can be rejected because it does not match a required schema/profile
-role.
+They include `mechanical_role_matches`, `unmatched_required_roles`,
+`ambiguous_required_roles`, optional-role matches and ambiguity, and
+`rejected_column_evidence` for every checked capability. Rejected-column
+evidence is mechanical only: for example, a metric can be rejected because its
+metric class is not accepted by the chart role, or a dimension can be rejected
+because it does not match a required schema/profile role.
 
 The standalone pairwise ambiguity audit is written to
 `runs/chart_selection_manifest_rebuild/pairwise_ambiguity_audit.md`. As of the
-latest audit, it finds 8 high-overlap signature groups and 21 high-overlap
-pairs; all 21 pairs are resolved with explicit competitor links, ambiguous
+latest audit, it finds 7 high-overlap signature groups and 22 high-overlap
+pairs; all 22 pairs are resolved with explicit competitor links, ambiguous
 example links, negative example links, and no errors or warnings.
+
+`variance.root_cause_exploded_bridge` has a deliberately two-stage structural
+contract. First the variance component generates alternative mixed-dimension
+driver sequences. The caller binds one alternative through
+`options.root_cause_bridge_alternative_result`; it then binds one or more
+one-based detail rows through `options.root_cause_bridge_drilldown_rows`. The
+manifest and render proof derive the expected drilldown artifact from those
+bindings; the renderer does not silently choose an alternative or row.
 
 The selection example quality audit is written to
 `runs/chart_selection_manifest_rebuild/selection_example_quality_audit.md`. As
@@ -291,23 +346,22 @@ The manifest cannot say by itself:
 - whether the final report story should choose one valid treatment over another
   without additional context.
 
-Those decisions belong to the dataset profile plus the future analysis-validity
-layer plus the caller.
+Those decisions belong to the reviewed dataset semantic layer plus the caller.
+The profile contributes mechanical evidence but cannot make those decisions.
 
-## Known Gaps
+## Remaining Boundary
 
-The next manifest-side gaps are:
+There is no known base-capability render gap in the current mechanical
+acceptance suite. Remaining manifest-side maintenance is to keep fixtures and
+the digest-bound summary current when a capability contract changes, and to add
+variant-level execution cases where an optional rendering mode has enough risk
+to justify separate proof.
 
-- hardening the generated invocation contracts into a stable plugin API schema
-  if/when plugins expose one shared callable surface;
-- continuing to convert gallery-PNG-plus-parameter proofs into dataset-rendered
-  question PNG proofs where a suitable fixture exists. After the current pass,
-  10 capabilities still need additional non-semantic render fixtures;
-- keeping generated audit outputs linked from stable docs rather than making
-  users discover them in `runs/`.
-
-The semantic layer is deliberately left out of this document except for its
-boundary, because it is a separate project object and has not been rebuilt yet.
+The semantic layer remains a separate dataset-specific project object. Its
+contract and workflow are documented in
+`plugins/reporting-engine/references/semantic_layer.md`. A `contract_valid`
+result proves profile, evidence, period-scope, manifest-intent, and role-binding
+coherence; it does not prove semantic truth.
 
 ## Useful Commands
 
@@ -332,6 +386,34 @@ python scripts/build_chart_selection_stress_test.py
 python scripts/build_chart_question_png_review.py
 ```
 
+Run the packaged end-to-end mechanical acceptance suite:
+
+```bash
+python plugins/reporting-engine/scripts/mechanical_acceptance.py \
+  --suite \
+  --output-dir /tmp/reporting-engine-acceptance \
+  --execute \
+  --artifact-mode data_and_render
+```
+
+Create and validate a dataset-specific semantic layer:
+
+```bash
+python plugins/reporting-engine/scripts/profile_dataset.py <dataset.csv> \
+  --output <run>/dataset_profile.json
+python plugins/reporting-engine/scripts/semantic_layer.py init \
+  --profile <run>/dataset_profile.json \
+  --output <run>/semantic_layer.json
+python plugins/reporting-engine/scripts/semantic_layer.py context \
+  --profile <run>/dataset_profile.json \
+  --layer <run>/semantic_layer.json \
+  --output <run>/semantic_authoring_context.json
+python plugins/reporting-engine/scripts/semantic_layer.py validate \
+  --profile <run>/dataset_profile.json \
+  --layer <run>/semantic_layer.json \
+  --output <run>/semantic_validation.json
+```
+
 Run focused tests:
 
 ```bash
@@ -342,5 +424,6 @@ python -m pytest -q \
   tests/scripts/test_build_chart_selection_manifest.py \
   tests/scripts/test_build_png_examples_gallery.py \
   tests/scripts/test_static_png_gallery.py \
-  tests/scripts/test_validate_png_gallery_manifest.py
+  tests/scripts/test_validate_png_gallery_manifest.py \
+  tests/plugins/test_reporting_engine_semantic_layer.py
 ```
