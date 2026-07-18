@@ -772,7 +772,7 @@ def _forbidden_message(detail: Any) -> str:
             return message
     if isinstance(detail, str) and detail.strip():
         return detail
-    return "You are not authorized to see this page. Please contact hello@mparanza.com."
+    return "You are not authorized to see this page. Please contact fabio@mparanza.com."
 
 
 def _request_prefers_html(request: Request) -> bool:
