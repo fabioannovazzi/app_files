@@ -102,6 +102,9 @@ dist/
 .codex_targets.txt
 tests_to_scan.txt
 modules_to_scan.txt
+
+# Private local deployment instructions and server connection details.
+/.agents/skills/deploy-app-files/
 /presentations/*
 !/presentations/.gitkeep
 !/presentations/demo/
