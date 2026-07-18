@@ -82,6 +82,49 @@ def _prepare_test_interview(
     )
 
 
+def test_post_completion_lock_uses_windows_nonblocking_backend(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock_modes: list[int] = []
+    fake_msvcrt = types.SimpleNamespace(LK_NBLCK=1, LK_UNLCK=2)
+    fake_msvcrt.locking = lambda _fd, mode, _length: lock_modes.append(mode)
+    real_import_module = api.importlib.import_module
+
+    def import_lock_backend(name: str):
+        if name == "msvcrt":
+            return fake_msvcrt
+        return real_import_module(name)
+
+    monkeypatch.setattr(api.sys, "platform", "win32")
+    monkeypatch.setattr(api.importlib, "import_module", import_lock_backend)
+
+    with api._try_post_completion_task_lock(tmp_path) as acquired:
+        assert acquired is True
+
+    assert lock_modes == [fake_msvcrt.LK_NBLCK, fake_msvcrt.LK_UNLCK]
+    assert (tmp_path / ".post-completion.lock").read_bytes() == b"\0"
+
+
+def test_prepare_interview_rejects_external_change_request_binding(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path))
+    monkeypatch.setenv("AUTH_ENABLED", "0")
+    get_auth_config.cache_clear()
+    client = _client()
+
+    response = client.post(
+        "/case-notes/api/voice/interviews",
+        json={
+            "interview_campaign_id": "external-test-v1",
+            "change_request_id": "CR-1",
+        },
+    )
+
+    assert response.status_code == 422
+    assert not (tmp_path / "sessions").exists()
+
+
 def _mark_started_attempt(
     tmp_path: Path, record: dict, *, attempt_id: str = "attempt-test"
 ) -> str:
@@ -158,10 +201,9 @@ def test_prepared_interview_can_use_three_minute_improvement_brief(
         purpose="Understand one concrete plugin capability request.",
         interviewer_name="Mparanza",
         max_duration_seconds=180,
-        change_request_id="CR-123",
     )
 
-    _token, record = api.create_prepared_interview(payload)
+    _token, record = api.create_prepared_interview(payload, change_request_id="CR-123")
 
     assert record["interviewer_name"] == "Mparanza"
     assert record["max_duration_seconds"] == 180

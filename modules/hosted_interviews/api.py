@@ -2,18 +2,22 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import importlib
 import json
 import logging
 import os
+import re
 import secrets
 import shutil
+import sys
 import tempfile
 import threading
 import urllib.error
 import urllib.request
+from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Iterator, Mapping
 
 from fastapi import (
     APIRouter,
@@ -28,7 +32,7 @@ from fastapi import (
 )
 from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from modules.auth.dependencies import (
     require_site_permission,
@@ -253,6 +257,13 @@ class VoiceSessionError(RuntimeError):
 class PreparedInterviewRequest(BaseModel):
     """Server-side package used to prepare one public interview link."""
 
+    @model_validator(mode="before")
+    @classmethod
+    def _reject_external_change_request_binding(cls, value: Any) -> Any:
+        if isinstance(value, Mapping) and "change_request_id" in value:
+            raise ValueError("change_request_id is reserved for internal binding.")
+        return value
+
     interview_campaign_id: str = Field(
         min_length=1,
         max_length=120,
@@ -279,11 +290,6 @@ class PreparedInterviewRequest(BaseModel):
         default=DEFAULT_INTERVIEW_DURATION_SECONDS,
         ge=60,
         le=DEFAULT_INTERVIEW_DURATION_SECONDS,
-    )
-    change_request_id: str = Field(
-        default="",
-        max_length=40,
-        pattern=r"^(?:|CR-[1-9][0-9]*)$",
     )
     expires_in_hours: int = Field(default=DEFAULT_TOKEN_TTL_HOURS, ge=1, le=24 * 30)
 
@@ -660,6 +666,7 @@ def _prepared_payload(
     created_by: str,
     public_url: str,
     now: datetime,
+    change_request_id: str,
 ) -> dict[str, Any]:
     expires_at = now + timedelta(hours=payload.expires_in_hours)
     return {
@@ -693,7 +700,7 @@ def _prepared_payload(
         "interviewer_name": _clean_text(payload.interviewer_name, max_chars=80)
         or "Clara",
         "max_duration_seconds": payload.max_duration_seconds,
-        "change_request_id": _clean_text(payload.change_request_id, max_chars=40),
+        "change_request_id": change_request_id,
     }
 
 
@@ -703,10 +710,17 @@ def create_prepared_interview(
     created_by: str = "",
     public_url_base: str = "https://mparanza.com/case-notes/interview",
     now: datetime | None = None,
+    change_request_id: str = "",
 ) -> tuple[str, dict[str, Any]]:
     """Create and persist one no-login public interview link."""
 
     timestamp = now or _now()
+    clean_change_request_id = change_request_id.strip().upper()
+    if (
+        clean_change_request_id
+        and re.fullmatch(r"CR-[1-9][0-9]*", clean_change_request_id) is None
+    ):
+        raise ValueError("Invalid internal change-request binding.")
     token = secrets.token_urlsafe(32)
     token_hash = _token_hash(token)
     clean_base = public_url_base.rstrip("/")
@@ -721,6 +735,7 @@ def create_prepared_interview(
         created_by=created_by,
         public_url=public_url,
         now=timestamp,
+        change_request_id=clean_change_request_id,
     )
     _write_json(_record_path(session_dir), record)
     return token, record
@@ -1645,7 +1660,7 @@ def _should_run_post_call_interviewee_transcription(
     metadata = completion.get("interviewee_audio_transcription", {})
     if not isinstance(metadata, Mapping):
         return True
-    if str(metadata.get("status", "")).strip().lower() in {"complete", "running"}:
+    if str(metadata.get("status", "")).strip().lower() == "complete":
         return False
     return not _has_media_upload_failure(completion, events)
 
@@ -2125,6 +2140,84 @@ def _run_interview_quality_review_task(token: str) -> None:
     )
 
 
+def _attach_change_request_completion(
+    record: Mapping[str, Any], completion: Mapping[str, Any]
+) -> None:
+    """Attach a finalized transcript only through its server-created URL binding."""
+
+    change_request_id = str(record.get("change_request_id", "") or "").strip()
+    interview_url = str(record.get("public_url", "") or "").strip()
+    if not change_request_id:
+        return
+    from modules.change_requests.store import (
+        ChangeRequestConflictError,
+        ChangeRequestNotFoundError,
+        ChangeRequestStoreUnavailableError,
+        get_change_request_store,
+    )
+
+    try:
+        get_change_request_store().attach_interview_completion(
+            change_request_id,
+            {
+                "schema_version": 1,
+                "completed_at": completion["completed_at"],
+                "language": record.get("language", ""),
+                "user_transcript": completion["user_transcript"],
+                "assistant_transcript": completion["assistant_transcript"],
+                "elapsed_seconds": completion["elapsed_seconds"],
+                "transcript_source": completion.get("transcript_source", ""),
+            },
+            interview_url=interview_url,
+        )
+    except (
+        ChangeRequestConflictError,
+        ChangeRequestNotFoundError,
+        ChangeRequestStoreUnavailableError,
+    ) as exc:
+        LOGGER.error(
+            "Unable to attach hosted interview completion to %s: %s",
+            change_request_id,
+            exc,
+        )
+
+
+@contextmanager
+def _try_post_completion_task_lock(session_dir: Path) -> Iterator[bool]:
+    """Admit only one post-completion task for a session across workers."""
+
+    lock_path = session_dir / ".post-completion.lock"
+    with lock_path.open("a+b") as lock_file:
+        if sys.platform == "win32":
+            msvcrt = importlib.import_module("msvcrt")
+            lock_file.seek(0)
+            if not lock_file.read(1):
+                lock_file.write(b"\0")
+                lock_file.flush()
+            lock_file.seek(0)
+            try:
+                msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+            except OSError:
+                yield False
+                return
+            try:
+                yield True
+            finally:
+                lock_file.seek(0)
+                msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+            return
+        fcntl = importlib.import_module("fcntl")
+        try:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            yield False
+            return
+        try:
+            yield True
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+
+
 def _run_interview_post_completion_task(token: str) -> None:
     try:
         record = _load_record_for_token(token)
@@ -2132,6 +2225,18 @@ def _run_interview_post_completion_task(token: str) -> None:
         LOGGER.info("Hosted interview post-completion task skipped: %s", exc)
         return
     session_dir = _session_dir(token)
+    with _try_post_completion_task_lock(session_dir) as acquired:
+        if not acquired:
+            LOGGER.info(
+                "Hosted interview post-completion task skipped: already running"
+            )
+            return
+        _run_interview_post_completion_task_locked(token, session_dir, record)
+
+
+def _run_interview_post_completion_task_locked(
+    token: str, session_dir: Path, record: Mapping[str, Any]
+) -> None:
     completion = _completion_for_session(session_dir)
     if not completion:
         LOGGER.info("Hosted interview post-completion task skipped: no completion")
@@ -2152,6 +2257,7 @@ def _run_interview_post_completion_task(token: str) -> None:
             completion=dict(completion),
             events=events,
         )
+    _attach_change_request_completion(record, completion)
     if str(completion.get("completion_status", "")) == INTERVIEW_STATUS_COMPLETED:
         _run_interview_quality_review_task(token)
         return
@@ -2662,12 +2768,41 @@ def public_interview_complete(
     """End a public interview and classify whether it produced usable output."""
 
     try:
-        record = _active_attempt_record(token, payload.attempt_id)
+        _load_record_for_token(token)
     except HostedInterviewError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
         ) from exc
     session_dir = _session_dir(token)
+    with _try_post_completion_task_lock(session_dir) as acquired:
+        if not acquired:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Interview completion is already being processed.",
+            )
+        return _public_interview_complete_locked(
+            token,
+            payload,
+            background_tasks,
+            session_dir=session_dir,
+        )
+
+
+def _public_interview_complete_locked(
+    token: str,
+    payload: CompleteInterviewRequest,
+    background_tasks: BackgroundTasks,
+    *,
+    session_dir: Path,
+) -> JSONResponse:
+    """Persist one completion while holding its cross-worker session lock."""
+
+    try:
+        record = _active_attempt_record(token, payload.attempt_id)
+    except HostedInterviewError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
+        ) from exc
     post_call_transcription_enabled = _post_call_interviewee_transcription_enabled()
     completion = {
         "schema_version": 1,
@@ -2699,43 +2834,14 @@ def public_interview_complete(
         completion=completion,
         events=events,
     )
-    change_request_id = str(updated.get("change_request_id", "") or "").strip()
-    if change_request_id:
-        from modules.change_requests.store import (
-            ChangeRequestConflictError,
-            ChangeRequestNotFoundError,
-            ChangeRequestStoreUnavailableError,
-            get_change_request_store,
-        )
-
-        try:
-            get_change_request_store().attach_interview_completion(
-                change_request_id,
-                {
-                    "schema_version": 1,
-                    "completed_at": completion["completed_at"],
-                    "language": updated.get("language", ""),
-                    "user_transcript": completion["user_transcript"],
-                    "assistant_transcript": completion["assistant_transcript"],
-                    "elapsed_seconds": completion["elapsed_seconds"],
-                },
-            )
-        except (
-            ChangeRequestConflictError,
-            ChangeRequestNotFoundError,
-            ChangeRequestStoreUnavailableError,
-        ) as exc:
-            LOGGER.error(
-                "Unable to attach hosted interview completion to %s: %s",
-                change_request_id,
-                exc,
-            )
     final_status = str(completion.get("completion_status", ""))
     status_reason = str(completion.get("completion_status_reason", ""))
     should_run_post_call_task = _should_run_post_call_interviewee_transcription(
         completion,
         events,
     )
+    if not should_run_post_call_task:
+        _attach_change_request_completion(updated, completion)
     review_status = "skipped"
     if should_run_post_call_task:
         review_status = "queued_after_post_call_transcription"
