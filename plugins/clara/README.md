@@ -39,7 +39,7 @@ Clara keeps six related capabilities separate:
   retailer and the brand-owned catalogue in the stored database snapshot. It
   creates a private local HTML report and answers whether that report is
   correct; the snapshot is not represented as a live shelf check.
-- `reporting-engine` profiles a CSV/XLSX dataset, lets Codex select the useful
+- `reporting-engine` profiles a CSV/XLSX/Parquet dataset, lets Codex select the useful
   analysis from the business question and actual fields, and runs the embedded
   distribution, funnel, mix, period, scatter, overlap, statement, or variance
   component.
