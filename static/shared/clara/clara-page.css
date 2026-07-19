@@ -96,7 +96,8 @@ main {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 250px;
   align-items: center;
-  gap: min(9vw, 112px);
+  column-gap: min(9vw, 112px);
+  row-gap: 36px;
   border: 0;
   border-bottom: 1px solid var(--cyan);
 }
@@ -207,6 +208,8 @@ section[id], .card[id] { scroll-margin-top: 92px; }
   text-decoration: none;
   transition: border-color 160ms ease, transform 160ms ease;
 }
+
+.hero > .video-story { grid-column: 1 / -1; margin: 0; }
 
 .video-story:hover { border-color: var(--blue); transform: translateY(-1px); }
 
