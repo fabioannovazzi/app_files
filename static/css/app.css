@@ -1,5 +1,5 @@
 :root {
-  font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Instrument Sans", sans-serif;
   font-size: 17px;
   line-height: 1.6;
   color: #0e1525;
@@ -7,7 +7,7 @@
   --focus-border-color: rgba(107, 114, 128, 0.95);
   --focus-ring-color: rgba(107, 114, 128, 0.28);
   --mparanza-pill-font-size: 14px;
-  --mparanza-pill-font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mparanza-pill-font-family: "Instrument Sans", sans-serif;
   --mparanza-pill-font-weight: 400;
   --mparanza-pill-line-height: 1.2;
 }
@@ -26,6 +26,14 @@
 
 * {
   box-sizing: border-box;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
 }
 
 body {
@@ -2118,19 +2126,6 @@ body.landing-body {
   text-rendering: optimizeLegibility;
 }
 
-body.landing-body,
-body.auth-login-page {
-  font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-  --mparanza-pill-font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-body.landing-body input,
-body.landing-body button,
-body.auth-login-page input,
-body.auth-login-page button {
-  font-family: inherit;
-}
-
 .landing-header {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -2368,7 +2363,7 @@ body.auth-login-page button {
   border: 1px solid rgba(191, 205, 224, 0.95);
   border-radius: 6px;
   padding: 7px 10px;
-  font-family: "Roboto", "Arial", sans-serif;
+  font-family: inherit;
   font-size: 14px;
   line-height: 1.4;
   font-kerning: normal;
@@ -2407,7 +2402,7 @@ body.auth-login-page button {
   border-radius: 6px;
   background: rgba(39, 49, 58, 0.96);
   color: #ffffff;
-  font-family: "Roboto", "Arial", sans-serif;
+  font-family: inherit;
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 0;
@@ -2446,7 +2441,6 @@ body.landing-body .landing-auth__input,
 body.landing-body .landing-auth__submit,
 body.auth-login-page .landing-auth__input,
 body.auth-login-page .landing-auth__submit {
-  font-family: "Roboto", "Arial", sans-serif;
   font-size: 13px;
 }
 
