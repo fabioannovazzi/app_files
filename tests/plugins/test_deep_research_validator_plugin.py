@@ -16,6 +16,10 @@ ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "deep-research-validator"
 SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
+VERA_MARKETPLACE_LINK = (
+    "https://chatgpt.com/auth/login?next="
+    "%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
+)
 
 
 def load_script(module_name: str, script_name: str):
@@ -299,7 +303,8 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "validation_audit.json",
         "validated_document.md",
         "validation_package.md",
-        "Un unico ZIP installa Vera con tutti i suoi undici moduli",
+        VERA_MARKETPLACE_LINK,
+        "Installa Vera dal marketplace",
         "/?lang=${lang}",
     ):
         assert snippet in page

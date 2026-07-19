@@ -664,10 +664,11 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "Prompt pronti",
         "brief di ricerca per Deep Research",
         "File prodotti",
-        "Installa dal Plugin Pack",
-        "Un unico ZIP installa Vera con tutti i suoi undici moduli",
+        "Installa Vera dal marketplace",
+        "Install Vera from the marketplace",
         "question_inventory.json",
         "prompt_audit.json",
+        "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
         "/?lang=${safeLang}",
     ):
         assert snippet in page
