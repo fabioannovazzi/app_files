@@ -2175,11 +2175,9 @@ def test_vera_page_lists_all_eleven_modules() -> None:
     assert 'id="previdenza-inps"' in page
     assert 'id="registro-imprese-sari"' in page
     assert "La collega AI che prepara, controlla e documenta" in page
-    assert "Dalla scrittura campionata alla fattura, senza stampe massive" in page
-    assert "ZIP FatturaPA" in page
-    assert "Collegamento autorizzato" in page
-    assert "PDF solo per le eccezioni" in page
-    assert "data-invoice-link" in page
+    assert (
+        "ZIP FatturaPA, export autorizzati e, solo per le eccezioni, PDF mirati" in page
+    )
     assert "Install Vera from her official OpenAI listing." in page
     assert (
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
@@ -2570,10 +2568,10 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         assert stale_snippet not in page
     assert (
         '<a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2F'
-            'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
-            'rel="noopener noreferrer" data-clara-install-link '
-            'data-i18n="install.open">Install Clara</a>'
-        ) in page
+        'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
+        'rel="noopener noreferrer" data-clara-install-link '
+        'data-i18n="install.open">Install Clara</a>'
+    ) in page
     assert "font-size: clamp(58px, 8vw, 92px)" in styles
     assert "font-size: clamp(30px, 4vw, 43px)" in styles
     assert "font-size: clamp(21px, 2.4vw, 27px)" in styles
@@ -2870,9 +2868,9 @@ def test_companion_overview_video_follows_install_action_in_hero(
     video_id: str,
     expected_video_count: int,
 ) -> None:
-    page = (
-        ROOT / "static" / "shared" / companion / "index.html"
-    ).read_text(encoding="utf-8")
+    page = (ROOT / "static" / "shared" / companion / "index.html").read_text(
+        encoding="utf-8"
+    )
     hero_start = page.index('<section class="hero">')
     hero_end = page.index("</section>", hero_start)
     hero = page[hero_start:hero_end]
@@ -3135,6 +3133,7 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     narrative_markers = (
         'class="landing-opening"',
         'class="landing-harness"',
+        'class="landing-open-source"',
         'class="landing-bridge"',
         'class="landing-products"',
     )
@@ -3151,11 +3150,46 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     assert "landing-grid--single" not in template
     assert "body.landing-body.landing-home" in css
     assert ".landing-home .landing-harness" in css
+    assert ".landing-home .landing-open-source" in css
+    open_source_heading_css = css.split(
+        ".landing-home .landing-open-source h2 {", maxsplit=1
+    )[1].split("}", maxsplit=1)[0]
+    assert "color: var(--landing-ink);" in open_source_heading_css
     assert "harness.consequence" not in template
     assert "landing-harness__consequence" not in css
     assert ".landing-home .landing-bridge" in css
     assert ".landing-home .landing-product" in css
     assert "@media (prefers-reduced-motion: reduce)" in css
+
+
+@pytest.mark.parametrize(
+    ("lang", "expected_title", "free_install_fragment", "inspect_fragment"),
+    (
+        ("en", "Open by design.", "free to install", "inspect"),
+        ("it", "Aperti per scelta progettuale.", "gratuiti da installare", "esaminare"),
+        ("fr", "Ouverts par conception.", "gratuits à l'installation", "examiner"),
+        ("de", "Offen konzipiert.", "kostenlos installierbare", "prüfen"),
+    ),
+)
+def test_homepage_makes_open_source_and_free_install_explicit(
+    lang: str,
+    expected_title: str,
+    free_install_fragment: str,
+    inspect_fragment: str,
+) -> None:
+    _restore_application_import_path()
+
+    from modules.pdp import api as pdp_api
+
+    open_source = pdp_api._get_landing_page_content(lang)["open_source"]
+
+    assert open_source["title"] == expected_title
+    assert free_install_fragment in open_source["description"]
+    assert inspect_fragment in open_source["description"].casefold()
+    normalized_description = open_source["description"].casefold().replace("-", " ")
+    assert "open source" in normalized_description
+    assert open_source["links"][0]["href"].startswith("https://github.com/")
+    assert open_source["links"][1]["href"].endswith("/LICENSE")
 
 
 def test_homepage_does_not_repeat_audience_labels_below_product_icons() -> None:
@@ -3169,12 +3203,12 @@ def test_homepage_does_not_repeat_audience_labels_below_product_icons() -> None:
     assert '<p class="landing-product__role">{{ group.title }}</p>' in template
 
 
-def test_homepage_localizes_header_controls_and_language_links() -> None:
+def test_homepage_localizes_navigation_and_language_links() -> None:
     template = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
 
     assert "copy.primary_navigation_label" in template
     assert "copy.language_selector_label" in template
-    assert "copy.sign_out_button" in template
+    assert "copy.sign_out_button" not in template
     assert 'aria-label="{{ language_names[code] }}"' in template
     assert 'lang="{{ code }}"' in template
     assert 'hreflang="{{ code }}"' in template

@@ -2858,6 +2858,26 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "open_source": {
+            "id": "open-source",
+            "title": "Open by design.",
+            "description": (
+                "Vera and Clara are free to install and open-source Codex plugins. "
+                "You can inspect the methods, controls, and code before using them—and "
+                "adapt them to your work."
+            ),
+            "links_label": "Open-source information",
+            "links": [
+                {
+                    "label": "Inspect the source on GitHub",
+                    "href": "https://github.com/fabioannovazzi/app_files",
+                },
+                {
+                    "label": "Read the GNU AGPLv3 license",
+                    "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
+                },
+            ],
+        },
         "bridge": {
             "id": "plugins",
             "eyebrow": "Mparanza",
@@ -2982,6 +3002,26 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "Un plugin Codex definisce il metodo specialistico e i risultati "
                         "da produrre."
                     ),
+                },
+            ],
+        },
+        "open_source": {
+            "id": "open-source",
+            "title": "Aperti per scelta progettuale.",
+            "description": (
+                "Vera e Clara sono plugin Codex open source e gratuiti da installare. "
+                "Puoi esaminare i metodi, i controlli e il codice prima di usarli, e "
+                "adattarli al tuo lavoro."
+            ),
+            "links_label": "Informazioni open source",
+            "links": [
+                {
+                    "label": "Esamina il codice su GitHub",
+                    "href": "https://github.com/fabioannovazzi/app_files",
+                },
+                {
+                    "label": "Leggi la licenza GNU AGPLv3",
+                    "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
         },
@@ -3111,6 +3151,26 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "Un plugin Codex définit la méthode spécialisée et les livrables "
                         "à produire."
                     ),
+                },
+            ],
+        },
+        "open_source": {
+            "id": "open-source",
+            "title": "Ouverts par conception.",
+            "description": (
+                "Vera et Clara sont des plugins Codex open source, gratuits à "
+                "l'installation. Vous pouvez examiner leurs méthodes, leurs contrôles "
+                "et leur code avant de les utiliser — et les adapter à votre travail."
+            ),
+            "links_label": "Informations open source",
+            "links": [
+                {
+                    "label": "Examiner le code sur GitHub",
+                    "href": "https://github.com/fabioannovazzi/app_files",
+                },
+                {
+                    "label": "Lire la licence GNU AGPLv3",
+                    "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
         },
@@ -3244,6 +3304,26 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "open_source": {
+            "id": "open-source",
+            "title": "Offen konzipiert.",
+            "description": (
+                "Vera und Clara sind kostenlos installierbare Open-Source-Plugins für "
+                "Codex. Sie können Methoden, Kontrollen und Code vor der Verwendung "
+                "prüfen und an Ihre Arbeit anpassen."
+            ),
+            "links_label": "Open-Source-Informationen",
+            "links": [
+                {
+                    "label": "Quellcode auf GitHub prüfen",
+                    "href": "https://github.com/fabioannovazzi/app_files",
+                },
+                {
+                    "label": "GNU-AGPLv3-Lizenz lesen",
+                    "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
+                },
+            ],
+        },
         "bridge": {
             "id": "plugins",
             "eyebrow": "Mparanza",
@@ -3323,6 +3403,7 @@ def landing_page(request: Request) -> Any:
             menu_links=menu_links,
             hero=landing_page_content["hero"],
             harness=landing_page_content["harness"],
+            open_source=landing_page_content["open_source"],
             bridge=landing_page_content["bridge"],
             copy=get_page_copy("landing", lang),
             lang=lang,
@@ -8469,5 +8550,6 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
         "menu_links": content.get("menu_links", []),
         "hero": content.get("hero"),
         "harness": content.get("harness", {}),
+        "open_source": content.get("open_source", {}),
         "bridge": content.get("bridge", {}),
     }

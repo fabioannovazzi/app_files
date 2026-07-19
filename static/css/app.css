@@ -2972,6 +2972,7 @@ body.landing-body.landing-home {
 .landing-home .landing-logo-link,
 .landing-home .landing-lang__link,
 .landing-home .landing-product__link,
+.landing-home .landing-open-source__links a,
 .landing-home .landing-bridge__links a {
   outline: none;
 }
@@ -2979,6 +2980,7 @@ body.landing-body.landing-home {
 .landing-home .landing-logo-link:focus-visible,
 .landing-home .landing-lang__link:focus-visible,
 .landing-home .landing-product__link:focus-visible,
+.landing-home .landing-open-source__links a:focus-visible,
 .landing-home .landing-bridge__links a:focus-visible {
   outline: 2px solid var(--landing-blue-dark);
   outline-offset: 4px;
@@ -3131,6 +3133,55 @@ body.landing-body.landing-home {
   color: var(--landing-muted);
   font-size: 0.875rem;
   line-height: 1.55;
+}
+
+.landing-home .landing-open-source {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(40px, 7vw, 104px);
+  align-items: start;
+  padding: clamp(92px, 11vw, 156px) 0;
+  border-bottom: 1px solid var(--landing-rule);
+  scroll-margin-top: 24px;
+}
+
+.landing-home .landing-open-source h2 {
+  margin: 0;
+  max-width: 8ch;
+  color: var(--landing-ink);
+  font-size: clamp(3.6rem, 6.7vw, 7rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+  text-wrap: balance;
+}
+
+.landing-home .landing-open-source__body > p {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--landing-ink);
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+  line-height: 1.45;
+  letter-spacing: -0.032em;
+  text-wrap: pretty;
+}
+
+.landing-home .landing-open-source__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-top: clamp(36px, 4vw, 52px);
+}
+
+.landing-home .landing-open-source__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  border-bottom: 1px solid var(--landing-blue);
+  color: var(--landing-blue-dark);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .landing-home .landing-products {
@@ -3396,6 +3447,7 @@ body.landing-body.landing-home {
   }
 
   .landing-home .landing-harness,
+  .landing-home .landing-open-source,
   .landing-home .landing-bridge {
     grid-template-columns: minmax(0, 1fr);
     gap: 40px;
@@ -3403,6 +3455,15 @@ body.landing-body.landing-home {
 
   .landing-home .landing-harness {
     padding: 80px 0;
+  }
+
+  .landing-home .landing-open-source {
+    padding: 84px 0;
+  }
+
+  .landing-home .landing-open-source h2 {
+    max-width: 9ch;
+    font-size: clamp(3.5rem, 18vw, 5.25rem);
   }
 
   .landing-home .landing-harness__layers {
