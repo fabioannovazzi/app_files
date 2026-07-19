@@ -3309,11 +3309,6 @@ def landing_page(request: Request) -> Any:
     primary_section = landing_page_content["primary"]
     other_sections = landing_page_content["sections"]
     menu_links = landing_page_content["menu_links"]
-    site_permission_keys = sorted(get_site_permissions().keys())
-    user = maybe_current_user(request)
-    allowed_page_keys = (
-        sorted(get_allowed_page_keys_for_email(user.email)) if user else []
-    )
     if templates is None:  # pragma: no cover - defensive fallback
         raise HTTPException(
             status_code=503, detail="Templating support is not available."
@@ -3336,8 +3331,8 @@ def landing_page(request: Request) -> Any:
             language_order=LANGUAGE_ORDER,
             language_tooltips=tooltip_map,
             beta_links=BETA_LINKS,
-            site_permission_keys=site_permission_keys,
-            allowed_page_keys=allowed_page_keys,
+            auth_enabled=False,
+            google_client_id="",
         ),
     )
     cookie_lang = request.cookies.get("lang")
