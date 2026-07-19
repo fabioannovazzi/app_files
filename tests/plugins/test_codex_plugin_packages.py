@@ -1676,6 +1676,10 @@ def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
     assert "prefers-reduced-motion" in shell
     assert "linear-gradient" not in shell.lower()
     assert "radial-gradient" not in shell.lower()
+    for color in ("#002060", "#0070c0", "#00b0f0", "#f3fbff"):
+        assert color in shell
+    for stale_accent in ("#496a60", "#27313a", "#e7eee9"):
+        assert stale_accent not in shell
 
     for page_path in PUBLIC_PLUGIN_EXPLAINER_PAGES:
         page = page_path.read_text(encoding="utf-8")
