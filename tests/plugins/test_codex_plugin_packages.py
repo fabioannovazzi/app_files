@@ -1968,6 +1968,24 @@ def test_vera_public_page_browser_title_uses_vera_brand(
     assert "| Mparanza" not in page
 
 
+def test_vera_public_page_routes_general_video_by_language_and_limits_xml_video_to_italian() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for language, video_id in {
+        "it": "2q4o2djeSmg",
+        "en": "Lqt3odBszD0",
+        "fr": "sjYBTUUguR4",
+        "de": "XV2KOGKZuYM",
+    }.items():
+        assert f'{language}: {{ id: "{video_id}"' in page
+    assert 'id="general-video-thumbnail"' in page
+    assert 'id="invoice-video-link"' in page
+    assert 'document.getElementById("invoice-video-link").hidden = lang !== "it";' in page
+    assert ".video-story[hidden] { display: none; }" in page
+
+
 def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
     pages = {
         "geneva.html": (
@@ -2550,6 +2568,22 @@ def test_clara_public_page_browser_title_is_clara() -> None:
     assert "<title>Clara</title>" in page
     assert page.count('title: "Clara"') == 4
     assert "Clara | Mparanza" not in page
+
+
+def test_clara_public_page_routes_presentation_video_by_language() -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for language, video_id in {
+        "en": "3zvFm3fGdQ8",
+        "it": "mU-QhOp7EOk",
+        "fr": "Qe8rbIh8fhg",
+        "de": "BPp_fcfYRS8",
+    }.items():
+        assert f'{language}: {{ id: "{video_id}"' in page
+    assert 'id="presentation-video-thumbnail"' in page
+    assert 'id="presentation-video-duration"' in page
 
 
 def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:

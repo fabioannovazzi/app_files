@@ -71,11 +71,11 @@
         <h2 data-i18n="presentations.title">Create or correct a presentation in your corporate style</h2>
         <p data-i18n="presentations.copy">Describe the result you want. You can start from the project materials or an existing presentation.</p>
       </div>
-      <a class="video-story" href="https://youtu.be/3zvFm3fGdQ8" target="_blank" rel="noopener noreferrer">
+      <a class="video-story" id="presentation-video-link" href="https://youtu.be/3zvFm3fGdQ8" target="_blank" rel="noopener noreferrer">
         <span class="video-story__thumb" aria-hidden="true">
-          <img src="https://i.ytimg.com/vi/3zvFm3fGdQ8/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+          <img id="presentation-video-thumbnail" src="https://i.ytimg.com/vi/3zvFm3fGdQ8/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
           <span class="video-story__play">▶</span>
-          <span class="video-story__duration">0:37</span>
+          <span class="video-story__duration" id="presentation-video-duration">0:37</span>
         </span>
         <span class="video-story__body">
           <span class="video-story__kicker" data-i18n="presentations.video.kicker">36-second overview</span>
@@ -409,9 +409,9 @@
         "hero.summary4": "Analizza file Excel, CSV e Parquet con calcoli controllati e grafici scelti in base alla domanda.",
         "presentations.title": "Crea o correggi una presentazione nel tuo stile aziendale",
         "presentations.copy": "Descrivi il risultato che vuoi ottenere. Puoi partire dai materiali del progetto o da una presentazione esistente.",
-        "presentations.video.kicker": "Panoramica di 36 secondi",
+        "presentations.video.kicker": "Panoramica di 48 secondi",
         "presentations.video.title": "Guarda: dai materiali di progetto a una presentazione pronta per decidere",
-        "presentations.video.meta": "Narrazione in inglese · Si apre su YouTube",
+        "presentations.video.meta": "Narrazione in italiano · Si apre su YouTube",
         "presentations.create.kicker": "Nuova presentazione",
         "presentations.create.title": "Parti dai materiali del progetto",
         "presentations.create.copy": "Aggiungi documenti Word, PDF e PowerPoint, immagini, fogli di calcolo, appunti o registrazioni. Indica pubblico, obiettivo e durata: Clara propone la struttura e prepara la presentazione.",
@@ -526,9 +526,9 @@
         "hero.summary4": "Analysez des fichiers Excel, CSV et Parquet avec des calculs vérifiés et des graphiques choisis en fonction de la question.",
         "presentations.title": "Créez ou corrigez une présentation selon votre identité visuelle",
         "presentations.copy": "Décrivez le résultat que vous voulez obtenir. Vous pouvez partir des éléments du projet ou d'une présentation existante.",
-        "presentations.video.kicker": "Aperçu de 36 secondes",
+        "presentations.video.kicker": "Aperçu de 50 secondes",
         "presentations.video.title": "Voir : des documents du projet à une présentation prête pour la décision",
-        "presentations.video.meta": "Narration en anglais · S’ouvre sur YouTube",
+        "presentations.video.meta": "Narration en français · S’ouvre sur YouTube",
         "presentations.create.kicker": "Nouvelle présentation",
         "presentations.create.title": "Partez des éléments du projet",
         "presentations.create.copy": "Ajoutez des fichiers Word, PDF ou PowerPoint, des images, des feuilles de calcul, des notes ou des enregistrements. Indiquez le public, l'objectif et la durée : Clara propose une structure et prépare la présentation.",
@@ -643,9 +643,9 @@
         "hero.summary4": "Analysieren Sie Excel-, CSV- und Parquet-Dateien mit geprüften Berechnungen und Diagrammen, die zur Fragestellung passen.",
         "presentations.title": "Erstellen oder korrigieren Sie eine Präsentation in Ihrem Unternehmensstil",
         "presentations.copy": "Beschreiben Sie das gewünschte Ergebnis. Sie können mit den Projektmaterialien oder einer vorhandenen Präsentation beginnen.",
-        "presentations.video.kicker": "36-Sekunden-Überblick",
+        "presentations.video.kicker": "46-Sekunden-Überblick",
         "presentations.video.title": "Ansehen: von Projektunterlagen zur entscheidungsreifen Präsentation",
-        "presentations.video.meta": "Englische Sprecherstimme · Öffnet YouTube",
+        "presentations.video.meta": "Deutsche Sprecherstimme · Öffnet YouTube",
         "presentations.create.kicker": "Neue Präsentation",
         "presentations.create.title": "Beginnen Sie mit den Projektmaterialien",
         "presentations.create.copy": "Fügen Sie Word-, PDF- und PowerPoint-Dateien, Bilder, Tabellenkalkulationen, Notizen oder Aufnahmen hinzu. Geben Sie Zielgruppe, Ziel und Dauer an: Clara schlägt die Struktur vor und bereitet die Präsentation vor.",
@@ -746,6 +746,16 @@
     const lang = ["en", "it", "fr", "de"].includes(params.get("lang")) ? params.get("lang") : "en";
     const safeLang = lang || "en";
     const activeCopy = { ...copy.en, ...(copy[safeLang] || {}) };
+    const presentationVideos = {
+      en: { id: "3zvFm3fGdQ8", duration: "0:37" },
+      it: { id: "mU-QhOp7EOk", duration: "0:48" },
+      fr: { id: "Qe8rbIh8fhg", duration: "0:50" },
+      de: { id: "BPp_fcfYRS8", duration: "0:46" },
+    };
+    const activePresentationVideo = presentationVideos[safeLang];
+    document.getElementById("presentation-video-link").href = `https://youtu.be/${activePresentationVideo.id}`;
+    document.getElementById("presentation-video-thumbnail").src = `https://i.ytimg.com/vi/${activePresentationVideo.id}/maxresdefault.jpg`;
+    document.getElementById("presentation-video-duration").textContent = activePresentationVideo.duration;
     document.documentElement.lang = safeLang;
     document.title = activeCopy.title || copy.en.title;
     document.querySelectorAll("[data-i18n]").forEach((node) => {

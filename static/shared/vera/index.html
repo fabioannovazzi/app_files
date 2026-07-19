@@ -256,6 +256,7 @@
     }
 
     .video-story:hover { border-color: var(--blue); transform: translateY(-1px); }
+    .video-story[hidden] { display: none; }
 
     .video-story__thumb {
       position: relative;
@@ -442,11 +443,11 @@
     </div>
 
     <section class="general-intro" id="overview-video">
-      <a class="video-story" href="https://youtu.be/2q4o2djeSmg" target="_blank" rel="noopener noreferrer">
+      <a class="video-story" id="general-video-link" href="https://youtu.be/2q4o2djeSmg" target="_blank" rel="noopener noreferrer">
         <span class="video-story__thumb" aria-hidden="true">
-          <img src="https://i.ytimg.com/vi/2q4o2djeSmg/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+          <img id="general-video-thumbnail" src="https://i.ytimg.com/vi/2q4o2djeSmg/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
           <span class="video-story__play">▶</span>
-          <span class="video-story__duration">0:54</span>
+          <span class="video-story__duration" id="general-video-duration">0:54</span>
         </span>
         <span class="video-story__body">
           <span class="video-story__kicker" data-i18n="general.video.kicker">Vera in 54 secondi</span>
@@ -461,7 +462,7 @@
         <h2 data-i18n="invoice.title">Dalla scrittura campionata alla fattura, senza stampe massive</h2>
         <p data-i18n="invoice.copy">Per il controllo delle scritture, Vera usa prima le fatture elettroniche già disponibili, prova poi un collegamento autorizzato e chiede documenti individuali solo per le eccezioni.</p>
       </div>
-      <a class="video-story" href="https://youtu.be/zxDXbCcQ-L0" target="_blank" rel="noopener noreferrer">
+      <a class="video-story" id="invoice-video-link" href="https://youtu.be/zxDXbCcQ-L0" target="_blank" rel="noopener noreferrer">
         <span class="video-story__thumb" aria-hidden="true">
           <img src="https://i.ytimg.com/vi/zxDXbCcQ-L0/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
           <span class="video-story__play">▶</span>
@@ -640,9 +641,9 @@
         "promise.prepare.title": "Prepares", "promise.prepare": "Organizes client files and data before review.",
         "promise.check.title": "Checks", "promise.check": "Connects figures, documents and exceptions to evidence.",
         "promise.document.title": "Documents", "promise.document": "Delivers clear, reviewable workpapers.",
-        "general.video.kicker": "Vera in 54 seconds",
+        "general.video.kicker": "Vera in 45 seconds",
         "general.video.title": "Watch: from a request to the next prepared step",
-        "general.video.meta": "Italian narration · Opens on YouTube",
+        "general.video.meta": "English narration · Opens on YouTube",
         "invoice.title": "From sampled entry to invoice, without mass printing",
         "invoice.copy": "Vera starts with available electronic invoices, then tries an authorized connection and requests individual documents only for exceptions.",
         "invoice.video.kicker": "Check Entries · FatturaPA XML",
@@ -691,9 +692,9 @@
         "promise.prepare.title": "Prépare", "promise.prepare": "Organise les dossiers et les données avant la revue.",
         "promise.check.title": "Contrôle", "promise.check": "Relie chiffres, documents et anomalies aux justificatifs.",
         "promise.document.title": "Documente", "promise.document": "Produit des feuilles de travail claires et révisables.",
-        "general.video.kicker": "Vera en 54 secondes",
+        "general.video.kicker": "Vera en 51 secondes",
         "general.video.title": "Voir : d’une demande à la prochaine étape préparée",
-        "general.video.meta": "Narration en italien · S’ouvre sur YouTube",
+        "general.video.meta": "Narration en français · S’ouvre sur YouTube",
         "invoice.title": "De l'écriture échantillonnée à la facture, sans impressions massives",
         "invoice.copy": "Vera commence par les factures électroniques disponibles, tente ensuite une connexion autorisée et ne demande des documents individuels que pour les exceptions.",
         "invoice.video.kicker": "Check Entries · FatturaPA XML",
@@ -742,9 +743,9 @@
         "promise.prepare.title": "Bereitet vor", "promise.prepare": "Ordnet Akten und Daten vor der Prüfung.",
         "promise.check.title": "Prüft", "promise.check": "Verknüpft Zahlen, Dokumente und Auffälligkeiten mit Nachweisen.",
         "promise.document.title": "Dokumentiert", "promise.document": "Erstellt klare, nachvollziehbare Arbeitspapiere.",
-        "general.video.kicker": "Vera in 54 Sekunden",
+        "general.video.kicker": "Vera in 55 Sekunden",
         "general.video.title": "Ansehen: von der Anfrage zum vorbereiteten nächsten Schritt",
-        "general.video.meta": "Italienische Sprecherstimme · Öffnet YouTube",
+        "general.video.meta": "Deutsche Sprecherstimme · Öffnet YouTube",
         "invoice.title": "Von der Stichprobenbuchung zur Rechnung, ohne Massenausdrucke",
         "invoice.copy": "Vera beginnt mit vorhandenen elektronischen Rechnungen, versucht dann eine autorisierte Verbindung und fordert Einzeldokumente nur für Ausnahmen an.",
         "invoice.video.kicker": "Check Entries · FatturaPA XML",
@@ -793,6 +794,12 @@
       fr: "../client-intake/geneva.html",
       de: "../client-intake/zurich.html",
     };
+    const generalVideos = {
+      it: { id: "2q4o2djeSmg", duration: "0:54" },
+      en: { id: "Lqt3odBszD0", duration: "0:45" },
+      fr: { id: "sjYBTUUguR4", duration: "0:51" },
+      de: { id: "XV2KOGKZuYM", duration: "0:55" },
+    };
 
     function withLanguage(rawHref, lang) {
       const url = new URL(rawHref, window.location.href);
@@ -824,6 +831,11 @@
       }
       const invoiceLink = document.querySelector("[data-invoice-link]");
       if (invoiceLink) invoiceLink.setAttribute("href", `../check-entries/index.html?lang=${lang}`);
+      const activeGeneralVideo = generalVideos[lang];
+      document.getElementById("general-video-link").href = `https://youtu.be/${activeGeneralVideo.id}`;
+      document.getElementById("general-video-thumbnail").src = `https://i.ytimg.com/vi/${activeGeneralVideo.id}/maxresdefault.jpg`;
+      document.getElementById("general-video-duration").textContent = activeGeneralVideo.duration;
+      document.getElementById("invoice-video-link").hidden = lang !== "it";
       const home = document.querySelector("[data-home-link]");
       if (home) home.setAttribute("href", `/?lang=${lang}`);
       if (updateHistory) {
