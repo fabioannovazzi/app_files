@@ -1102,10 +1102,19 @@ def test_concept_site_overlay_targets_figure_hero_images() -> None:
     assert "overflow: visible !important" in injected
     assert "height: auto !important" in injected
     assert soup.select_one("#mparanza-hypothesis-review-style") is not None
-    assert (
-        'font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif !important'
-        in injected
+    instrument_sans_stylesheet = (
+        "https://fonts.googleapis.com/css2?"
+        "family=Instrument+Sans:wght@400;500;600;700&display=swap"
     )
+    font_link = soup.find("link", href=instrument_sans_stylesheet)
+    assert font_link is not None
+    assert font_link.get("rel") == ["stylesheet"]
+    assert 'font-family: "Instrument Sans", sans-serif !important' in injected
+    assert (
+        "button,\ninput,\noptgroup,\nselect,\ntextarea {\n"
+        "  font-family: inherit !important;\n}" in injected
+    )
+    assert 'font: 500 12px/1.2 "Instrument Sans", sans-serif' in injected
     assert (
         "--mparanza-hypothesis-review-bg: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%)"
         in injected

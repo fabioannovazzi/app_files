@@ -496,9 +496,15 @@ def _render_magic_error_page(
       <head>
         <meta charset="utf-8" />
         <title>Magic link expired</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
         <style>
           body {{
-            font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: "Instrument Sans", sans-serif;
             background: #f8fafc;
             color: #0f172a;
             display: flex;

@@ -60,6 +60,10 @@ _AI_ACCURACY_DISCLAIMER = "AI can be inaccurate; please double-check its respons
 _CONCEPT_SITE_IMAGE_OVERLAY_TEXT = (
     "Signal-informed hypothesis artifact \u00b7 non-operational"
 )
+_INSTRUMENT_SANS_STYLESHEET = (
+    "https://fonts.googleapis.com/css2?"
+    "family=Instrument+Sans:wght@400;500;600;700&display=swap"
+)
 _DEFAULT_CONCEPT_SITES_ROOT = Path("concept_sites")
 _CONCEPT_SITE_IMAGE_SUFFIXES = frozenset(
     {".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"}
@@ -2119,6 +2123,22 @@ def _append_concept_site_style(
         soup.insert(0, style_tag)
 
 
+def _append_concept_site_font(soup: BeautifulSoup) -> None:
+    """Load Instrument Sans in a served concept-site document once."""
+
+    if soup.find("link", href=_INSTRUMENT_SANS_STYLESHEET) is not None:
+        return
+    link = soup.new_tag(
+        "link",
+        href=_INSTRUMENT_SANS_STYLESHEET,
+        rel="stylesheet",
+    )
+    if soup.head is not None:
+        soup.head.append(link)
+    else:
+        soup.insert(0, link)
+
+
 def _concept_site_media_type(path: Path) -> str:
     """Return the response media type for a concept-site static asset."""
 
@@ -2237,7 +2257,7 @@ def _inject_concept_site_image_overlay(
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.54);
   color: rgba(80, 80, 80, 0.62);
-  font: 500 12px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 500 12px/1.2 "Instrument Sans", sans-serif;
   letter-spacing: 0.02em;
   pointer-events: none;
   text-align: right;
@@ -2265,11 +2285,18 @@ def _inject_concept_site_image_overlay(
 body {
   background: var(--mparanza-hypothesis-review-bg) !important;
   color: var(--mparanza-hypothesis-review-ink) !important;
-  font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: "Instrument Sans", sans-serif !important;
   font-size: 1rem !important;
   font-kerning: normal !important;
   line-height: 1.55 !important;
   text-rendering: optimizeLegibility !important;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit !important;
 }
 .topbar,
 header.topbar {
@@ -2311,7 +2338,7 @@ h1,
 h2,
 h3,
 .productTitle {
-  font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: "Instrument Sans", sans-serif !important;
   letter-spacing: -0.015em !important;
 }
 h1 {
@@ -2471,6 +2498,7 @@ footer {
     ]
 
     soup = BeautifulSoup(html, "html.parser")
+    _append_concept_site_font(soup)
     _inline_concept_site_image_assets(
         soup,
         image_selectors=selectors,

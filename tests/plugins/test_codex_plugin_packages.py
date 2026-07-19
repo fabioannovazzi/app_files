@@ -1672,6 +1672,41 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
         assert "background: rgba(251, 252, 251" not in page, page_path.as_posix()
 
 
+@pytest.mark.parametrize(
+    "page_path",
+    (
+        ROOT / "static" / "shared" / "vera" / "index.html",
+        ROOT / "static" / "shared" / "clara" / "index.html",
+        *VERA_PUBLIC_PAGE_PATHS,
+    ),
+)
+def test_public_product_pages_load_instrument_sans(page_path: Path) -> None:
+    page = page_path.read_text(encoding="utf-8")
+
+    assert "family=Instrument+Sans" in page, page_path.as_posix()
+
+
+@pytest.mark.parametrize(
+    "stylesheet_path",
+    (
+        ROOT / "static" / "shared" / "plugin-page-shell.css",
+        ROOT / "static" / "shared" / "vera" / "index.html",
+        ROOT / "static" / "shared" / "clara" / "clara-page.css",
+    ),
+)
+def test_public_product_styles_apply_instrument_sans_to_form_controls(
+    stylesheet_path: Path,
+) -> None:
+    stylesheet = stylesheet_path.read_text(encoding="utf-8")
+
+    assert 'font-family: "Instrument Sans"' in stylesheet
+    assert re.search(
+        r"button,\s*input,\s*optgroup,\s*select,\s*textarea\s*"
+        r"\{\s*font-family:\s*inherit;",
+        stylesheet,
+    )
+
+
 def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
     shell = (ROOT / "static" / "shared" / "plugin-page-shell.css").read_text(
         encoding="utf-8"
