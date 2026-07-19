@@ -220,17 +220,6 @@
     .flow-step h3 { margin-top: 34px; font-size: 22px; }
     .flow-step p { margin-top: 10px; color: var(--blue); }
 
-    .flow-note {
-      margin-top: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      color: var(--blue);
-    }
-
-    .flow-note p { max-width: 760px; }
-
     .section-head {
       display: grid;
       grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
@@ -357,7 +346,6 @@
       .flow-step { min-height: 0; padding: 25px 0; }
       .flow-step + .flow-step { padding-left: 0; border-top: 1px solid var(--cyan); border-left: 0; }
       .flow-step h3 { margin-top: 14px; }
-      .flow-note { align-items: flex-start; flex-direction: column; }
       .section-head { grid-template-columns: 1fr; gap: 16px; }
       .video-story { max-width: 540px; grid-template-columns: 1fr; }
       .video-story__thumb { min-height: 0; aspect-ratio: 16 / 9; }
@@ -491,10 +479,6 @@
           <p data-i18n="invoice.pdf">Maria riceve una richiesta precisa solo per le scritture rimaste senza un supporto univoco.</p>
         </article>
       </div>
-      <div class="flow-note">
-        <p data-i18n="invoice.note">Gli abbinamenti ambigui non vengono forzati: restano nella coda di revisione del commercialista.</p>
-        <a class="button secondary" href="../check-entries/index.html?lang=it" data-invoice-link data-i18n="invoice.link">Scopri Check Entries</a>
-      </div>
     </section>
 
     <section id="modules">
@@ -601,7 +585,6 @@
         "invoice.zip.title": "ZIP FatturaPA", "invoice.zip": "Carica l'archivio XML completo: Vera indicizza le fatture e cerca gli abbinamenti con il campione.",
         "invoice.connect.title": "Collegamento autorizzato", "invoice.connect": "Se lo ZIP non è disponibile, usa un connettore specifico del gestionale in sola lettura/export, con provenienza registrata.",
         "invoice.pdf.title": "PDF solo per le eccezioni", "invoice.pdf": "Maria riceve una richiesta precisa solo per le scritture rimaste senza un supporto univoco.",
-        "invoice.note": "Gli abbinamenti ambigui non vengono forzati: restano nella coda di revisione del commercialista.", "invoice.link": "Scopri Check Entries",
         "modules.title": "Il lavoro di Vera",
         "modules.copy": "Chiedi a Vera il lavoro per nome. Lei attiva le istruzioni e gli strumenti del modulo adatto, mantenendo controlli e fonti visibili.",
         "module.client.title": "Istruttoria cliente",
@@ -652,7 +635,6 @@
         "invoice.zip.title": "FatturaPA ZIP", "invoice.zip": "Upload the full XML archive so Vera can index invoices and match them to the sample.",
         "invoice.connect.title": "Authorized connection", "invoice.connect": "If the ZIP is unavailable, use a provider-specific connector in read/export mode and record its provenance.",
         "invoice.pdf.title": "PDFs only for exceptions", "invoice.pdf": "Maria receives a precise request only for entries still lacking unique support.",
-        "invoice.note": "Ambiguous matches are never forced; they remain in the practitioner's review queue.", "invoice.link": "Explore Check Entries",
         "modules.title": "Vera at work",
         "modules.copy": "Ask Vera for the task by name. She activates the instructions and tools for the right module while keeping checks and sources visible.",
         "module.client.title": "Client Intake",
@@ -703,7 +685,6 @@
         "invoice.zip.title": "ZIP FatturaPA", "invoice.zip": "Chargez l'archive XML complète afin que Vera indexe les factures et les rapproche de l'échantillon.",
         "invoice.connect.title": "Connexion autorisée", "invoice.connect": "Si le ZIP manque, utilisez un connecteur propre au logiciel en lecture/export et enregistrez sa provenance.",
         "invoice.pdf.title": "PDF uniquement pour les exceptions", "invoice.pdf": "Maria reçoit une demande précise uniquement pour les écritures sans justificatif unique.",
-        "invoice.note": "Les rapprochements ambigus ne sont jamais forcés ; ils restent dans la file de revue du professionnel.", "invoice.link": "Découvrir Check Entries",
         "modules.title": "Le travail de Vera",
         "modules.copy": "Demandez la tâche à Vera par son nom. Elle active les instructions et outils du bon module en gardant contrôles et sources visibles.",
         "module.client.title": "Ouverture du dossier client",
@@ -754,7 +735,6 @@
         "invoice.zip.title": "FatturaPA-ZIP", "invoice.zip": "Das vollständige XML-Archiv hochladen, damit Vera Rechnungen indexiert und der Stichprobe zuordnet.",
         "invoice.connect.title": "Autorisierte Verbindung", "invoice.connect": "Fehlt das ZIP, einen anbieterspezifischen Connector im Lese-/Exportmodus verwenden und die Herkunft erfassen.",
         "invoice.pdf.title": "PDFs nur für Ausnahmen", "invoice.pdf": "Maria erhält nur für Buchungen ohne eindeutigen Nachweis eine präzise Anfrage.",
-        "invoice.note": "Mehrdeutige Treffer werden nie erzwungen; sie bleiben in der fachlichen Prüfwarteschlange.", "invoice.link": "Check Entries ansehen",
         "modules.title": "Vera bei der Arbeit",
         "modules.copy": "Nennen Sie Vera die Aufgabe. Sie aktiviert die Anweisungen und Werkzeuge des passenden Moduls und hält Kontrollen und Quellen sichtbar.",
         "module.client.title": "Mandantenaufnahme",
@@ -829,8 +809,6 @@
       if (clientIntakeLink) {
         clientIntakeLink.setAttribute("href", withLanguage(clientIntakePages[lang], lang));
       }
-      const invoiceLink = document.querySelector("[data-invoice-link]");
-      if (invoiceLink) invoiceLink.setAttribute("href", `../check-entries/index.html?lang=${lang}`);
       const activeGeneralVideo = generalVideos[lang];
       document.getElementById("general-video-link").href = `https://youtu.be/${activeGeneralVideo.id}`;
       document.getElementById("general-video-thumbnail").src = `https://i.ytimg.com/vi/${activeGeneralVideo.id}/maxresdefault.jpg`;
