@@ -252,6 +252,75 @@
       font-size: 16px;
     }
 
+    .video-story {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.95fr) minmax(0, 1.05fr);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      color: inherit;
+      text-decoration: none;
+      transition: border-color 160ms ease, transform 160ms ease;
+    }
+
+    .video-story:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .video-story__thumb {
+      position: relative;
+      min-height: 250px;
+      overflow: hidden;
+      background: var(--accent-soft);
+    }
+
+    .video-story__thumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .video-story__play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(24, 35, 32, 0.9);
+      color: #ffffff;
+      font-size: 20px;
+      transform: translate(-50%, -50%);
+    }
+
+    .video-story__duration {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: rgba(24, 35, 32, 0.88);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .video-story__body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .video-story__body h2 { font-size: clamp(26px, 3vw, 36px); }
+    .video-story__copy { margin-top: 14px; color: var(--muted); }
+    .video-story__meta { margin-top: 18px; color: var(--accent); font-size: 14px; font-weight: 620; }
+
     .split {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -400,9 +469,12 @@
       .source-ladder,
       .usage-grid,
       .download-panel,
-      .output-list {
+      .output-list,
+      .video-story {
         grid-template-columns: 1fr;
       }
+
+      .video-story__thumb { min-height: 0; aspect-ratio: 16 / 9; }
 
       .grid,
       .grid.four {
@@ -474,6 +546,22 @@
         </ul>
       </aside>
     </div>
+
+    <section class="section-block" id="video">
+      <a class="video-story" href="https://youtu.be/9DbJsoUg0Vo" target="_blank" rel="noopener noreferrer">
+        <span class="video-story__thumb" aria-hidden="true">
+          <img src="https://i.ytimg.com/vi/9DbJsoUg0Vo/maxresdefault.jpg" alt="" width="1280" height="720">
+          <span class="video-story__play">▶</span>
+          <span class="video-story__duration">0:47</span>
+        </span>
+        <span class="video-story__body">
+          <span class="eyebrow" data-i18n="video.eyebrow">Short walkthrough</span>
+          <h2 data-i18n="video.title">From a journal sample to FatturaPA XML support</h2>
+          <span class="video-story__copy" data-i18n="video.copy">See how Check Entries indexes the invoice archive, separates coherent matches from exceptions, and leaves ambiguous links in a clear review queue.</span>
+          <span class="video-story__meta" data-i18n="video.meta">47 seconds · Italian narration · Opens on YouTube</span>
+        </span>
+      </a>
+    </section>
 
     <section class="section-block" id="cosa-fa">
       <div class="section-head">
@@ -602,6 +690,12 @@ Language: en. Document language: it.</code></pre>
             "Infine: chiedi i PDF solo per le scritture rimaste senza supporto."
           ]
         },
+        video: {
+          eyebrow: "Video breve",
+          title: "Dal campione alle fatture elettroniche XML",
+          copy: "Guarda come Check Entries indicizza l'archivio delle fatture, separa gli abbinamenti coerenti dalle eccezioni e lascia i collegamenti ambigui in una coda di revisione chiara.",
+          meta: "47 secondi · Narrazione in italiano · Si apre su YouTube"
+        },
         what: {
           eyebrow: "A cosa serve",
           title: "Tre strade, nello stesso ordine",
@@ -695,6 +789,12 @@ Language: en. Document language: it.</code></pre>
             "Then: use an authorized accounting-system connection when available.",
             "Finally: request PDFs only for entries still unresolved."
           ]
+        },
+        video: {
+          eyebrow: "Short walkthrough",
+          title: "From a journal sample to FatturaPA XML support",
+          copy: "See how Check Entries indexes the invoice archive, separates coherent matches from exceptions, and leaves ambiguous links in a clear review queue.",
+          meta: "47 seconds · Italian narration · Opens on YouTube"
         },
         what: {
           eyebrow: "What it does",
@@ -790,6 +890,12 @@ Language: en. Document language: it.</code></pre>
             "Enfin : demandez les PDF uniquement pour les écritures non résolues."
           ]
         },
+        video: {
+          eyebrow: "Vidéo courte",
+          title: "De l'échantillon aux factures électroniques XML",
+          copy: "Découvrez comment Check Entries indexe l'archive de factures, sépare les rapprochements cohérents des exceptions et conserve les liens ambigus dans une file de revue claire.",
+          meta: "47 secondes · Narration en italien · S'ouvre sur YouTube"
+        },
         what: {
           eyebrow: "Ce qu'il fait",
           title: "Trois voies, dans un ordre contrôlé",
@@ -882,6 +988,12 @@ Language: en. Document language: it.</code></pre>
             "Dann: eine autorisierte Verbindung zum Buchhaltungssystem nutzen, falls verfügbar.",
             "Zuletzt: PDFs nur für weiterhin ungelöste Buchungen anfordern."
           ]
+        },
+        video: {
+          eyebrow: "Kurzes Video",
+          title: "Von der Journalstichprobe zum FatturaPA-XML-Nachweis",
+          copy: "Sehen Sie, wie Check Entries das Rechnungsarchiv indexiert, stimmige Zuordnungen von Ausnahmen trennt und mehrdeutige Verknüpfungen in einer klaren Prüfwarteschlange hält.",
+          meta: "47 Sekunden · Italienische Sprecherstimme · Öffnet YouTube"
         },
         what: {
           eyebrow: "Was es tut",
