@@ -3158,6 +3158,8 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     assert "harness.consequence" not in template
     assert "landing-harness__consequence" not in css
     assert ".landing-home .landing-bridge" in css
+    assert "harness.eyebrow" not in template
+    assert "bridge.eyebrow" not in template
     assert ".landing-home .landing-product" in css
     assert "@media (prefers-reduced-motion: reduce)" in css
 
@@ -3190,6 +3192,18 @@ def test_homepage_makes_open_source_and_free_install_explicit(
     assert "open source" in normalized_description
     assert open_source["links"][0]["href"].startswith("https://github.com/")
     assert open_source["links"][1]["href"].endswith("/LICENSE")
+
+
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de"))
+def test_homepage_sections_omit_redundant_eyebrows(lang: str) -> None:
+    _restore_application_import_path()
+
+    from modules.pdp import api as pdp_api
+
+    content = pdp_api._get_landing_page_content(lang)
+
+    assert "eyebrow" not in content["harness"]
+    assert "eyebrow" not in content["bridge"]
 
 
 def test_homepage_does_not_repeat_audience_labels_below_product_icons() -> None:
