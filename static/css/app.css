@@ -3170,7 +3170,7 @@ body.landing-body.landing-home {
 
 .landing-home .landing-product h2 {
   margin: 0;
-  color: var(--landing-ink);
+  color: var(--landing-product-blue);
   font-size: clamp(4rem, 7vw, 7.5rem);
   font-weight: 600;
   line-height: 0.84;
