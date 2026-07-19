@@ -16,12 +16,8 @@
         <h1>{% if clara_access_required %}{{ forbidden_title or "Clara access" }}{% else %}Access restricted{% endif %}</h1>
         <p>{{ message or "You are not authorized to see this page." }}</p>
         {% if clara_access_required %}
-          <p>{{ standard_plugin_pack_copy or "You can still download Vera for free." }}</p>
           <div class="forbidden-actions">
-            <a class="primary-button" href="{{ standard_plugin_pack_href }}">
-              {{ standard_plugin_pack_label or "Download Vera" }}
-            </a>
-            <a class="secondary-button" href="/?lang={{ lang or 'en' }}">{{ return_home_label or "Return home" }}</a>
+            <a class="primary-button" href="/?lang={{ lang or 'en' }}">{{ return_home_label or "Return home" }}</a>
           </div>
         {% else %}
           <p class="forbidden-contact">
