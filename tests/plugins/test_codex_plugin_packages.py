@@ -1972,7 +1972,7 @@ def test_vera_public_page_browser_title_uses_vera_brand(
     assert "| Mparanza" not in page
 
 
-def test_vera_public_page_routes_general_video_by_language_and_limits_xml_video_to_italian() -> None:
+def test_vera_public_page_routes_general_video_by_language() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -1985,9 +1985,6 @@ def test_vera_public_page_routes_general_video_by_language_and_limits_xml_video_
     }.items():
         assert f'{language}: {{ id: "{video_id}"' in page
     assert 'id="general-video-thumbnail"' in page
-    assert 'id="invoice-video-link"' in page
-    assert 'document.getElementById("invoice-video-link").hidden = lang !== "it";' in page
-    assert ".video-story[hidden] { display: none; }" in page
 
 
 def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
@@ -2845,7 +2842,7 @@ def test_vera_public_page_uses_deck_blue_palette_without_black() -> None:
     ("companion", "install_attribute", "video_id", "expected_video_count"),
     (
         ("clara", "data-clara-install-link", "presentation-video-link", 1),
-        ("vera", "data-vera-install-link", "general-video-link", 2),
+        ("vera", "data-vera-install-link", "general-video-link", 1),
     ),
 )
 def test_companion_overview_video_follows_install_action_in_hero(
@@ -2865,15 +2862,14 @@ def test_companion_overview_video_follows_install_action_in_hero(
     assert page.count('class="video-story"') == expected_video_count
 
 
-def test_vera_invoice_video_remains_in_invoice_flow() -> None:
+def test_vera_page_leaves_check_entries_explanation_to_detail_page() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
-    invoice_start = page.index('<section class="invoice-flow"')
-    invoice_end = page.index("</section>", invoice_start)
-    invoice_flow = page[invoice_start:invoice_end]
 
-    assert 'id="invoice-video-link"' in invoice_flow
+    assert '<section class="invoice-flow"' not in page
+    assert 'id="invoice-video-link"' not in page
+    assert 'href="../check-entries/index.html"' in page
 
 
 def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
