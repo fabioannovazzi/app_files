@@ -347,9 +347,11 @@ share one blue visual identity.
 
 Default to light mode and a clean white canvas. Favor strong live typography,
 generous whitespace, thin rules, disciplined spacing, and restrained neutrals.
-Use `Instrument Sans` as the shared type family for the Mparanza homepage and
-the Vera and Clara public pages; create hierarchy through deliberate weight,
-scale, spacing, and color rather than substituting unrelated typefaces.
+Use `Instrument Sans` throughout the Mparanza website and workflow UI,
+including form controls. Preserve monospace only where code or structured data
+requires it. Presentations and generated reports may follow their own
+output-specific typography. Create hierarchy through deliberate weight, scale,
+spacing, and color rather than substituting unrelated typefaces.
 
 The homepage should feel like a continuous editorial argument, not a SaaS
 landing page, dashboard, or plugin marketplace. Detailed Vera and Clara pages,

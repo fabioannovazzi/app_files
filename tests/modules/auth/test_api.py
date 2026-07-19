@@ -204,6 +204,9 @@ def test_magic_link_consume_invalid_token_renders_page(
 
     assert response.status_code == 400
     assert "Request a new link" in response.text
+    assert "family=Instrument+Sans" in response.text
+    assert 'font-family: "Instrument Sans", sans-serif' in response.text
+    assert 'font-family: "Inter"' not in response.text
 
 
 def test_auth_page_embeds_redirect_target(monkeypatch: pytest.MonkeyPatch) -> None:
