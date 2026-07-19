@@ -5,6 +5,8 @@ description: Capture, transcribe, import, attribute, and review advisor voice no
 
 # Transcribe
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`,

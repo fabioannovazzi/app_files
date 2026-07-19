@@ -27,8 +27,10 @@ __all__ = [
     "ChangeRequestError",
     "check_fixed_requests",
     "main",
+    "reserve_suggestion_prompt",
     "start_interview",
     "submit_problem",
+    "submit_suggestion",
 ]
 
 DEFAULT_BASE_URL = "https://mparanza.com"
@@ -38,6 +40,8 @@ MAX_WIRE_BYTES = 64 * 1024
 MAX_RESPONSE_BYTES = 64 * 1024
 MAX_OPPORTUNITY_CHARS = 4_000
 MAX_STATUS_BATCH = 100
+PROMPT_COOLDOWN_SECONDS = 14 * 24 * 60 * 60
+PROMPT_RESERVED_AT_FIELD = "suggestion_prompt_reserved_at"
 STATE_SCHEMA_VERSION = 1
 STATE_FILE_NAME = "state.json"
 ALLOWED_REMOTE_HOSTS = frozenset({"mparanza.com", "www.mparanza.com"})
@@ -225,10 +229,20 @@ def _merge_entry(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
 
 def _load_state(plugin_name: str, plugin_data: Path | None) -> dict[str, Any]:
     entries: dict[str, dict[str, Any]] = {}
+    prompt_reservations: list[float] = []
     for path in _state_paths(plugin_name, plugin_data):
         state = _read_state(path, plugin_name)
         if state is None:
             continue
+        prompt_reserved_at = state.get(PROMPT_RESERVED_AT_FIELD)
+        if prompt_reserved_at is not None:
+            if (
+                isinstance(prompt_reserved_at, bool)
+                or not isinstance(prompt_reserved_at, (int, float))
+                or prompt_reserved_at < 0
+            ):
+                raise ChangeRequestError(f"Invalid prompt reservation in {path}")
+            prompt_reservations.append(float(prompt_reserved_at))
         for raw_entry in state["requests"]:
             if not isinstance(raw_entry, dict):
                 raise ChangeRequestError(f"Invalid request entry in {path}")
@@ -248,6 +262,8 @@ def _load_state(plugin_name: str, plugin_data: Path | None) -> dict[str, Any]:
     state["requests"] = sorted(
         entries.values(), key=lambda entry: float(entry.get("created_at", 0) or 0)
     )
+    if prompt_reservations:
+        state[PROMPT_RESERVED_AT_FIELD] = max(prompt_reservations)
     return state
 
 
@@ -550,30 +566,63 @@ def _persist_receipt(
         return stored
 
 
-def submit_problem(
+def reserve_suggestion_prompt(
+    plugin_root: Path,
+    *,
+    plugin_data: Path | None = None,
+    now: float | None = None,
+) -> dict[str, Any]:
+    """Atomically reserve one ask; fixed timing prevents concurrent prompt spam."""
+
+    plugin_name, _plugin_version = _read_plugin_identity(plugin_root)
+    checked_at = time.time() if now is None else now
+    with _locked_state(plugin_name):
+        state = _load_state(plugin_name, plugin_data)
+        reserved_at = state.get(PROMPT_RESERVED_AT_FIELD)
+        ask = (
+            reserved_at is None
+            or checked_at - float(reserved_at) >= PROMPT_COOLDOWN_SECONDS
+        )
+        if ask:
+            reserved_at = checked_at
+            state[PROMPT_RESERVED_AT_FIELD] = checked_at
+        # These paths are replicas: one durable write preserves the cooldown, and
+        # the next successful load/write cycle repairs a temporarily failed replica.
+        _write_state(state, plugin_name, plugin_data)
+    next_eligible_at = float(reserved_at) + PROMPT_COOLDOWN_SECONDS
+    return {
+        "ask": ask,
+        "cooldown_seconds": PROMPT_COOLDOWN_SECONDS,
+        "reserved_at": float(reserved_at),
+        "next_eligible_at": next_eligible_at,
+    }
+
+
+def _submit_text_request(
     plugin_root: Path,
     request_path: Path,
     *,
+    kind: str,
     plugin_data: Path | None = None,
     base_url: str = DEFAULT_BASE_URL,
     opener: Callable[..., Any] = urllib.request.urlopen,
     now: float | None = None,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
-    """Submit one approved problem report and return its durable receipt."""
+    """Submit one approved text request and return its durable receipt."""
 
     plugin_name, plugin_version = _read_plugin_identity(plugin_root)
     request_payload = _read_request_file(request_path)
     checked_at = time.time() if now is None else now
     body_without_id = {
         "schema_version": 1,
-        "kind": "problem",
+        "kind": kind,
         "plugin": plugin_name,
         "plugin_version": plugin_version,
         "request": request_payload,
     }
     entry = _reserve_entry(
-        kind="problem",
+        kind=kind,
         plugin_name=plugin_name,
         plugin_version=plugin_version,
         plugin_data=plugin_data,
@@ -585,7 +634,7 @@ def submit_problem(
         return existing
     pending_payload = entry.get("pending_payload")
     if not isinstance(pending_payload, dict):
-        raise ChangeRequestError("The pending problem request cannot be retried.")
+        raise ChangeRequestError(f"The pending {kind} request cannot be retried.")
     response = _post_json(
         base_url,
         "/api/change-requests",
@@ -602,6 +651,54 @@ def submit_problem(
     )
 
 
+def submit_problem(
+    plugin_root: Path,
+    request_path: Path,
+    *,
+    plugin_data: Path | None = None,
+    base_url: str = DEFAULT_BASE_URL,
+    opener: Callable[..., Any] = urllib.request.urlopen,
+    now: float | None = None,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
+    """Submit one approved problem report and return its durable receipt."""
+
+    return _submit_text_request(
+        plugin_root,
+        request_path,
+        kind="problem",
+        plugin_data=plugin_data,
+        base_url=base_url,
+        opener=opener,
+        now=now,
+        timeout_seconds=timeout_seconds,
+    )
+
+
+def submit_suggestion(
+    plugin_root: Path,
+    request_path: Path,
+    *,
+    plugin_data: Path | None = None,
+    base_url: str = DEFAULT_BASE_URL,
+    opener: Callable[..., Any] = urllib.request.urlopen,
+    now: float | None = None,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
+    """Submit one approved capability suggestion and return its durable receipt."""
+
+    return _submit_text_request(
+        plugin_root,
+        request_path,
+        kind="capability",
+        plugin_data=plugin_data,
+        base_url=base_url,
+        opener=opener,
+        now=now,
+        timeout_seconds=timeout_seconds,
+    )
+
+
 def start_interview(
     plugin_root: Path,
     opportunity: str,
@@ -614,7 +711,7 @@ def start_interview(
     now: float | None = None,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
-    """Create or resume a three-minute capability interview and open it."""
+    """Create or resume a one-minute capability interview and open it."""
 
     clean_opportunity = opportunity.strip()
     if not clean_opportunity or len(clean_opportunity) > MAX_OPPORTUNITY_CHARS:
@@ -805,16 +902,31 @@ def main() -> int:
         help=argparse.SUPPRESS,
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers.add_parser("reserve-suggestion-prompt")
     problem_parser = subparsers.add_parser("submit-problem")
     problem_parser.add_argument("--request", type=Path, required=True)
+    suggestion_parser = subparsers.add_parser("submit-suggestion")
+    suggestion_parser.add_argument("--request", type=Path, required=True)
     interview_parser = subparsers.add_parser("start-interview")
     interview_parser.add_argument("--opportunity", required=True)
     interview_parser.add_argument("--language", choices=LANGUAGES, default="it")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     try:
-        if args.command == "submit-problem":
+        if args.command == "reserve-suggestion-prompt":
+            receipt = reserve_suggestion_prompt(
+                args.plugin_root,
+                plugin_data=_plugin_data_from_env(),
+            )
+        elif args.command == "submit-problem":
             receipt = submit_problem(
+                args.plugin_root,
+                args.request,
+                plugin_data=_plugin_data_from_env(),
+                base_url=args.base_url,
+            )
+        elif args.command == "submit-suggestion":
+            receipt = submit_suggestion(
                 args.plugin_root,
                 args.request,
                 plugin_data=_plugin_data_from_env(),

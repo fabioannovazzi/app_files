@@ -67,7 +67,7 @@ def test_clara_routes_brand_fit_separately_from_retailer_signals_and_charts() ->
         if item.get("expected_skill") == "clara:brand-fit"
     }
 
-    assert manifest["version"] == "0.1.88"
+    assert manifest["version"] == "0.1.94"
     assert manifest["name"] == "clara"
     assert manifest["interface"]["displayName"] == "Clara"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")

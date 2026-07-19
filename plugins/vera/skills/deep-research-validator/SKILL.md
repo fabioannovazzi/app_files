@@ -5,6 +5,8 @@ description: Use when a user wants Codex to validate a Deep Research answer or r
 
 # Validate Deep Research
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/deep-research-validator` from this skill directory when
 it exists; otherwise resolve `../../../deep-research-validator` in the
 repository. Read that module's `skills/deep-research-validator/SKILL.md`

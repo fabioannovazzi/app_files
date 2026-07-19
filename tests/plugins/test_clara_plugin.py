@@ -678,7 +678,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.93"
+    assert manifest["version"] == "0.1.94"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
