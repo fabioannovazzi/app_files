@@ -353,7 +353,7 @@
               {% set product_link = group.links[0] if group.links else {} %}
               {% if product_link and product_link.href %}
                 <a href="#{{ group.id }}">
-                  <span>{{ product_link.label }}</span>
+                  <span class="landing-product-name">{{ product_link.label }}</span>
                   <small>{{ group.audience }}</small>
                 </a>
               {% endif %}
