@@ -3159,10 +3159,10 @@ body.landing-body.landing-home {
 .landing-home .landing-open-source__body > p {
   margin: 0;
   max-width: 46ch;
-  color: var(--landing-ink);
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-  line-height: 1.45;
-  letter-spacing: -0.032em;
+  color: var(--landing-muted);
+  font-size: clamp(1.1rem, 1.65vw, 1.35rem);
+  line-height: 1.62;
+  letter-spacing: -0.02em;
   text-wrap: pretty;
 }
 

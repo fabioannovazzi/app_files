@@ -3155,6 +3155,13 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
         ".landing-home .landing-open-source h2 {", maxsplit=1
     )[1].split("}", maxsplit=1)[0]
     assert "color: var(--landing-ink);" in open_source_heading_css
+    open_source_body_css = css.split(
+        ".landing-home .landing-open-source__body > p {", maxsplit=1
+    )[1].split("}", maxsplit=1)[0]
+    assert "color: var(--landing-muted);" in open_source_body_css
+    assert "font-size: clamp(1.1rem, 1.65vw, 1.35rem);" in open_source_body_css
+    assert "line-height: 1.62;" in open_source_body_css
+    assert "letter-spacing: -0.02em;" in open_source_body_css
     assert "harness.consequence" not in template
     assert "landing-harness__consequence" not in css
     assert ".landing-home .landing-bridge" in css
