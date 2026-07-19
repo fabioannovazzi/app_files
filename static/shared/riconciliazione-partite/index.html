@@ -662,9 +662,6 @@ nel file Excel:
         <div>
           <h3 data-i18n="download.installTitle">Installazione</h3>
           <p><span data-i18n="download.codexText">Pagina ufficiale:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
-          <div class="action-row">
-            <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Scarica ZIP</a>
-          </div>
           <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
           <pre style="margin-top: 18px;"><code id="install-path">/Users/nome/Documents/CodexPlugins/vera-codex-plugin</code></pre>
         </div>
@@ -1076,9 +1073,6 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
       document.documentElement.lang = safeLang;
       document.title = data.hero.title + " | Vera";
       document.getElementById("home-link").href = "/?lang=" + safeLang;
-      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
-        link.href = `/downloads/vera?lang=${safeLang}`;
-      });
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const value = getValue(data, node.dataset.i18n);
         if (typeof value === "string") {

@@ -504,9 +504,6 @@
         <div>
           <h3 data-i18n="download.installTitle">Installation</h3>
           <p><span data-i18n="download.codexText">Official page:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
-          <div class="action-row">
-            <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Download Vera</a>
-          </div>
           <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
         </div>
         <div>
@@ -867,9 +864,6 @@ Inspect columns and files, ask only for essential ambiguities, then generate rec
       document.documentElement.lang = safeLang;
       document.title = `${t.hero.title} | Vera`;
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
-      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
-        link.href = `/downloads/vera?lang=${safeLang}`;
-      });
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const text = valueAt(t, node.dataset.i18n);
         if (typeof text === "string") node.textContent = text;

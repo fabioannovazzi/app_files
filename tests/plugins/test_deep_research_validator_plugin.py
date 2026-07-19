@@ -16,7 +16,6 @@ ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "deep-research-validator"
 SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
-FREE_PACK_LINK = "/downloads/vera"
 
 
 def load_script(module_name: str, script_name: str):
@@ -300,7 +299,6 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "validation_audit.json",
         "validated_document.md",
         "validation_package.md",
-        FREE_PACK_LINK,
         "Un unico ZIP installa Vera con tutti i suoi undici moduli",
         "/?lang=${lang}",
     ):

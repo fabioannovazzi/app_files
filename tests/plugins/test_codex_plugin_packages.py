@@ -268,7 +268,7 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "report-builder" / "index.html",
     ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html",
 )
-ACCOUNTING_BUNDLE_ZIP = ROOT / "protected_downloads" / "vera" / "vera-plugin.zip"
+ACCOUNTING_BUNDLE_ZIP = ROOT / "plugin_packages" / "vera" / "vera-plugin.zip"
 VERA_DOWNLOAD_HREF = "/downloads/vera"
 ACCOUNTING_BUNDLE_LINK = VERA_DOWNLOAD_HREF
 
@@ -1304,16 +1304,13 @@ def test_standard_accounting_bundle_marketplace_contains_public_plugins() -> Non
         ) in names
 
 
-def test_only_clara_and_vera_have_downloadable_zip_artifacts() -> None:
+def test_only_clara_and_vera_have_private_zip_artifacts() -> None:
     builder = load_builder()
     configured_targets = [*builder.load_packages(), *builder.load_bundles()]
     configured_zip_paths = sorted(
         target.output_zip.relative_to(ROOT).as_posix() for target in configured_targets
     )
-    plugin_zip_paths = [
-        *(ROOT / "protected_downloads").glob("*/*.zip"),
-        *(ROOT / "static" / "shared").glob("*/downloads/*.zip"),
-    ]
+    plugin_zip_paths = list((ROOT / "plugin_packages").glob("*/*.zip"))
     zip_paths = sorted(path.relative_to(ROOT).as_posix() for path in plugin_zip_paths)
 
     assert {target.target_name for target in configured_targets} == {"clara", "vera"}
@@ -1321,8 +1318,8 @@ def test_only_clara_and_vera_have_downloadable_zip_artifacts() -> None:
         configured_zip_paths
         == zip_paths
         == [
-            "protected_downloads/vera/vera-plugin.zip",
-            "static/shared/clara/downloads/clara-plugin.zip",
+            "plugin_packages/clara/clara-plugin.zip",
+            "plugin_packages/vera/vera-plugin.zip",
         ]
     )
 
@@ -1590,7 +1587,7 @@ def test_static_plugin_pages_do_not_show_feedback_mailto_footer() -> None:
             assert snippet not in page, page_path.as_posix()
 
 
-def test_static_plugin_pages_download_accounting_bundle() -> None:
+def test_static_plugin_pages_do_not_offer_plugin_downloads() -> None:
     stale_download_snippets = (
         'href="downloads/check-entries-plugin.zip',
         'href="downloads/concordato-plan-review-plugin.zip',
@@ -1616,15 +1613,11 @@ def test_static_plugin_pages_download_accounting_bundle() -> None:
     for page_path in standard_pages:
         page = page_path.read_text(encoding="utf-8")
 
-        assert ACCOUNTING_BUNDLE_LINK in page, page_path.as_posix()
+        assert ACCOUNTING_BUNDLE_LINK not in page, page_path.as_posix()
         assert "Plugins4Accountants" not in page, page_path.as_posix()
         assert "Vera" in page, page_path.as_posix()
-        assert ("ten" in page and "modules" in page) or (
-            "undici" in page and "moduli" in page
-        ), page_path.as_posix()
         assert "bundle" not in page.lower(), page_path.as_posix()
-        assert "data-free-download-link" in page, page_path.as_posix()
-        assert 'href="#download"' in page or 'href="#scarica"' in page
+        assert "data-free-download-link" not in page, page_path.as_posix()
         assert 'href="#download" data-i18n="hero.primary"' not in page
         assert 'href="#scarica" data-i18n="hero.primary"' not in page
         for snippet in stale_download_snippets:
@@ -1693,7 +1686,7 @@ def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
             assert 'href="../plugin-page-shell.css"' in page, page_path.as_posix()
 
 
-def test_static_plugin_pages_and_plugin_downloads_are_public() -> None:
+def test_static_plugin_pages_are_public_and_plugin_downloads_are_removed() -> None:
     _restore_application_import_path()
 
     from fastapi.testclient import TestClient
@@ -1704,7 +1697,7 @@ def test_static_plugin_pages_and_plugin_downloads_are_public() -> None:
     paths = [
         path.relative_to(ROOT).as_posix() for path in ACCOUNTING_STATIC_PLUGIN_PAGES
     ]
-    download_paths = ("/downloads/vera",)
+    download_paths = ("/downloads/vera", "/downloads/clara")
     old_individual_free_download_paths = (
         "/static/shared/check-entries/downloads/check-entries-plugin.zip",
         "/static/shared/prompt-optimizer/downloads/prompt-optimizer-plugin.zip",
@@ -1716,13 +1709,11 @@ def test_static_plugin_pages_and_plugin_downloads_are_public() -> None:
     for path in download_paths:
         response = client.get(path, follow_redirects=False)
 
-        assert response.status_code == 200, path
+        assert response.status_code == 404, path
     removed_pro_response = client.get(
         "/downloads/accounting-plugin-pack/pro", follow_redirects=False
     )
     assert removed_pro_response.status_code == 404
-    clara_response = client.get("/downloads/clara", follow_redirects=False)
-    assert clara_response.status_code == 200
     for clara_asset in (
         "/static/shared/clara/index.html",
         "/static/shared/clara/clara-page.css",
@@ -1734,11 +1725,10 @@ def test_static_plugin_pages_and_plugin_downloads_are_public() -> None:
     for path in old_individual_free_download_paths:
         response = client.get(path, follow_redirects=False)
 
-        assert response.status_code == 307, path
-        assert response.headers["location"] == (f"{VERA_DOWNLOAD_HREF}?lang=en")
+        assert response.status_code == 404, path
 
 
-def test_manual_vera_download_is_public() -> None:
+def test_manual_vera_download_is_removed() -> None:
     _restore_application_import_path()
 
     from fastapi.testclient import TestClient
@@ -1751,11 +1741,10 @@ def test_manual_vera_download_is_public() -> None:
             follow_redirects=False,
         )
 
-        assert response.status_code == 200
-        assert response.headers["content-type"] == "application/zip"
+        assert response.status_code == 404
 
 
-def test_clara_downloads_are_public_and_removed_explainers_return_404(
+def test_clara_downloads_and_removed_explainers_return_404(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -1799,7 +1788,7 @@ def test_clara_downloads_are_public_and_removed_explainers_return_404(
     get_auth_config.cache_clear()
     try:
         config = get_auth_config()
-        public_download_paths = (
+        removed_plugin_download_paths = (
             "/downloads/clara",
             "/static/shared/clara/downloads/clara-plugin.zip",
         )
@@ -1850,19 +1839,17 @@ def test_clara_downloads_are_public_and_removed_explainers_return_404(
                 response = free_client.get(page_path, follow_redirects=False)
                 assert response.status_code == 404
 
-            for download_path in public_download_paths:
+            for download_path in removed_plugin_download_paths:
                 response = free_client.get(
                     f"{download_path}?lang=en", follow_redirects=False
                 )
-                assert response.status_code == 200
-                assert response.headers["content-type"] == "application/zip"
+                assert response.status_code == 404
             for download_path in removed_download_paths:
                 response = free_client.get(download_path, follow_redirects=False)
                 assert response.status_code == 404
             for download_path in studio_redirect_paths:
                 response = free_client.get(download_path, follow_redirects=False)
-                assert response.status_code == 307
-                assert response.headers["location"] == (f"{VERA_DOWNLOAD_HREF}?lang=en")
+                assert response.status_code == 404
             for download_path in old_engine_download_paths:
                 response = free_client.get(download_path, follow_redirects=False)
                 assert response.status_code == 404
@@ -1871,17 +1858,15 @@ def test_clara_downloads_are_public_and_removed_explainers_return_404(
             token, _ = create_session_cookie(GoogleUserInfo(email=pro_email), config)
             pro_client.cookies.set(config.session_cookie_name, token)
 
-            for download_path in public_download_paths:
+            for download_path in removed_plugin_download_paths:
                 response = pro_client.get(download_path, follow_redirects=False)
-                assert response.status_code == 200
-                assert response.headers["content-type"] == "application/zip"
+                assert response.status_code == 404
             for download_path in removed_download_paths:
                 response = pro_client.get(download_path, follow_redirects=False)
                 assert response.status_code == 404
             for download_path in studio_redirect_paths:
                 response = pro_client.get(download_path, follow_redirects=False)
-                assert response.status_code == 307
-                assert response.headers["location"] == (f"{VERA_DOWNLOAD_HREF}?lang=en")
+                assert response.status_code == 404
             for download_path in old_engine_download_paths:
                 response = pro_client.get(download_path, follow_redirects=False)
                 assert response.status_code == 404
@@ -1891,17 +1876,17 @@ def test_clara_downloads_are_public_and_removed_explainers_return_404(
         get_auth_config.cache_clear()
 
 
-def test_clara_forbidden_page_links_vera_download() -> None:
+def test_clara_forbidden_page_has_no_vera_download() -> None:
     template = (ROOT / "templates" / "forbidden.html").read_text(encoding="utf-8")
     api_source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
     page_copy = f"{template}\n{api_source}"
 
     assert "Clara access" in template
     assert "Clara is available only to authorized users." in api_source
-    assert "Download Vera" in template
+    assert "Download Vera" not in template
     assert "Pro Accounting Plugin Pack" not in api_source
     assert "standard Accounting Plugin Pack" not in template
-    assert "standard_plugin_pack_href" in template
+    assert "standard_plugin_pack_href" not in template
     assert "accredited accountant access" not in page_copy
     assert "Pro Plugin Pack" not in page_copy
 
@@ -1991,21 +1976,18 @@ def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
             "Premi&egrave;re revue d'un dossier fiscal genevois",
             "Ce que le cabinet obtient",
             "m&eacute;mo cabinet",
-            "T&eacute;l&eacute;charger le ZIP",
         ),
         "zurich.html": (
             "Mandanten-Erstpr&uuml;fung f&uuml;r Z&uuml;rcher Treuh&auml;nder",
             "Erste Durchsicht eines Mandantendossiers",
             "Was die Kanzlei erh&auml;lt",
             "Interne Notiz",
-            "ZIP herunterladen",
         ),
         "uk.html": (
             "Self Assessment client intake",
             "First review of a Self Assessment folder",
             "What the intake produces",
             "Accountant memo",
-            "Download ZIP",
         ),
     }
 
@@ -2047,7 +2029,6 @@ def test_journal_sampling_page_matches_plugin_site_pattern() -> None:
         "suggested_recipe.json",
         "normalized_journal.csv",
         "sampling_audit.json",
-        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2115,7 +2096,6 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         "source_domains.txt",
         "source_domains_comma.txt",
         "README_HUMAN.md",
-        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2178,7 +2158,6 @@ def test_vera_page_lists_all_eleven_modules() -> None:
     for stale_snippet in (
         "/downloads/vera",
         "data-download-link",
-        "data-free-download-link",
         "manual ZIP",
         "ZIP manuale",
         "ZIP manuel",
@@ -2254,9 +2233,7 @@ def test_deep_research_validator_page_matches_plugin_site_pattern() -> None:
         "validation_audit.json",
         "validated_document.md",
         "validation_package.md",
-        ACCOUNTING_BUNDLE_LINK,
         "Un unico ZIP installa Vera con tutti i suoi undici moduli",
-        "data-free-download-link",
         "/?lang=${lang}",
     ):
         assert snippet in page
@@ -2279,8 +2256,6 @@ def test_previdenza_inps_page_explains_evidence_and_access_boundaries() -> None:
         "case_records_validated.json",
         "claims_review_normalized.json",
         "studio_memo.docx",
-        ACCOUNTING_BUNDLE_LINK,
-        "data-free-download-link",
     ):
         assert snippet in page
 
@@ -2302,8 +2277,6 @@ def test_registro_imprese_sari_page_explains_read_only_draft_boundary() -> None:
         "practice_plan_validated.json",
         "dire_practice_plan.json",
         "review_handoff.md",
-        ACCOUNTING_BUNDLE_LINK,
-        "data-free-download-link",
     ):
         assert snippet in page
 
@@ -2341,7 +2314,6 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
         "pdf_inventory.json",
         "check_results.csv",
         "check_audit.json",
-        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2390,7 +2362,6 @@ def test_journal_bank_reconciliation_page_matches_plugin_site_pattern() -> None:
         "unmatched_bank.csv",
         "unmatched_journal.csv",
         "reconciliation_audit.json",
-        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2443,7 +2414,6 @@ def test_report_builder_page_matches_plugin_site_pattern() -> None:
         "report_draft.md",
         "report.docx",
         "report_audit.json",
-        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2530,7 +2500,6 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Client-pack inclusion gate",
         "Pending consultant judgement is never silently promoted",
         "Download Pro ZIP",
-        "data-free-download-link",
         "data-reporting-download-link",
         "data-pro-download-link",
         "data-clara-download-link",
@@ -2543,7 +2512,6 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "alternativa manuale",
         "Pro Plugin Pack",
         "/downloads/accounting-plugin-pack/pro",
-        ACCOUNTING_BUNDLE_LINK,
         'href="downloads/clara-plugin.zip',
         "font-size: clamp",
         "Download not authorized",
@@ -2565,10 +2533,10 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         assert stale_snippet not in page
     assert (
         '<a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2F'
-        'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
-        'rel="noopener noreferrer" data-clara-install-link '
-        'data-i18n="install.open">Open Clara\'s listing</a>'
-    ) in page
+            'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
+            'rel="noopener noreferrer" data-clara-install-link '
+            'data-i18n="install.open">Install Clara</a>'
+        ) in page
     assert "font-size: clamp(58px, 8vw, 92px)" in styles
     assert "font-size: clamp(30px, 4vw, 43px)" in styles
     assert "font-size: clamp(21px, 2.4vw, 27px)" in styles
@@ -2690,7 +2658,6 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
         "concordato_review_summary.docx",
         "run_audit.json",
         "codex_run_review.md",
-        ACCOUNTING_BUNDLE_LINK,
         "Un unico ZIP installa Vera con tutti i suoi undici moduli",
         "One ZIP installs Vera with all eleven of her modules",
         "/?lang=${safeLang}",

@@ -451,7 +451,6 @@
           <h2 data-i18n="download.title">Install from Plugin Pack</h2>
           <p data-i18n="download.copy">One ZIP installs Vera with all eleven of her modules; then ask Vera to build a report from your files.</p>
         </div>
-        <a class="button" href="/downloads/vera?lang=en" data-free-download-link data-i18n="download.button">Download Vera</a>
       </div>
     </section>
   </main>
@@ -621,9 +620,6 @@
       if (home) {
         home.href = `/?lang=${safeLang}`;
       }
-      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
-        link.href = `/downloads/vera?lang=${safeLang}`;
-      });
       const url = new URL(window.location.href);
       url.searchParams.set("lang", safeLang);
       window.history.replaceState({}, "", url.toString());

@@ -668,7 +668,6 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "Un unico ZIP installa Vera con tutti i suoi undici moduli",
         "question_inventory.json",
         "prompt_audit.json",
-        "/downloads/vera",
         "/?lang=${safeLang}",
     ):
         assert snippet in page
