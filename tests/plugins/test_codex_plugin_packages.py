@@ -270,7 +270,11 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
 )
 ACCOUNTING_BUNDLE_ZIP = ROOT / "plugin_packages" / "vera" / "vera-plugin.zip"
 VERA_DOWNLOAD_HREF = "/downloads/vera"
-ACCOUNTING_BUNDLE_LINK = VERA_DOWNLOAD_HREF
+VERA_MARKETPLACE_HREF = (
+    "https://chatgpt.com/auth/login?next="
+    "%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
+)
+ACCOUNTING_BUNDLE_LINK = VERA_MARKETPLACE_HREF
 
 
 def load_builder():
@@ -1587,7 +1591,7 @@ def test_static_plugin_pages_do_not_show_feedback_mailto_footer() -> None:
             assert snippet not in page, page_path.as_posix()
 
 
-def test_static_plugin_pages_do_not_offer_plugin_downloads() -> None:
+def test_static_plugin_pages_install_vera_from_marketplace() -> None:
     stale_download_snippets = (
         'href="downloads/check-entries-plugin.zip',
         'href="downloads/concordato-plan-review-plugin.zip',
@@ -1613,11 +1617,16 @@ def test_static_plugin_pages_do_not_offer_plugin_downloads() -> None:
     for page_path in standard_pages:
         page = page_path.read_text(encoding="utf-8")
 
-        assert ACCOUNTING_BUNDLE_LINK not in page, page_path.as_posix()
+        assert ACCOUNTING_BUNDLE_LINK in page, page_path.as_posix()
         assert "Plugins4Accountants" not in page, page_path.as_posix()
         assert "Vera" in page, page_path.as_posix()
         assert "bundle" not in page.lower(), page_path.as_posix()
         assert "data-free-download-link" not in page, page_path.as_posix()
+        assert VERA_DOWNLOAD_HREF not in page, page_path.as_posix()
+        assert "Plugin Pack" not in page, page_path.as_posix()
+        assert "Download ZIP" not in page, page_path.as_posix()
+        assert "Scarica ZIP" not in page, page_path.as_posix()
+        assert 'href="#download"' in page or 'href="#scarica"' in page
         assert 'href="#download" data-i18n="hero.primary"' not in page
         assert 'href="#scarica" data-i18n="hero.primary"' not in page
         for snippet in stale_download_snippets:
@@ -1995,18 +2004,21 @@ def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
             "Premi&egrave;re revue d'un dossier fiscal genevois",
             "Ce que le cabinet obtient",
             "m&eacute;mo cabinet",
+            "Installer Vera",
         ),
         "zurich.html": (
             "Mandanten-Erstpr&uuml;fung f&uuml;r Z&uuml;rcher Treuh&auml;nder",
             "Erste Durchsicht eines Mandantendossiers",
             "Was die Kanzlei erh&auml;lt",
             "Interne Notiz",
+            "Vera installieren",
         ),
         "uk.html": (
             "Self Assessment client intake",
             "First review of a Self Assessment folder",
             "What the intake produces",
             "Accountant memo",
+            "Install Vera",
         ),
     }
 
@@ -2252,7 +2264,9 @@ def test_deep_research_validator_page_matches_plugin_site_pattern() -> None:
         "validation_audit.json",
         "validated_document.md",
         "validation_package.md",
-        "Un unico ZIP installa Vera con tutti i suoi undici moduli",
+        ACCOUNTING_BUNDLE_LINK,
+        "Installa Vera dal marketplace",
+        "Install Vera from the marketplace",
         "/?lang=${lang}",
     ):
         assert snippet in page
@@ -2275,6 +2289,8 @@ def test_previdenza_inps_page_explains_evidence_and_access_boundaries() -> None:
         "case_records_validated.json",
         "claims_review_normalized.json",
         "studio_memo.docx",
+        ACCOUNTING_BUNDLE_LINK,
+        "Installa Vera dal marketplace",
     ):
         assert snippet in page
 
@@ -2296,6 +2312,8 @@ def test_registro_imprese_sari_page_explains_read_only_draft_boundary() -> None:
         "practice_plan_validated.json",
         "dire_practice_plan.json",
         "review_handoff.md",
+        ACCOUNTING_BUNDLE_LINK,
+        "Installa Vera dal marketplace",
     ):
         assert snippet in page
 
@@ -2693,8 +2711,9 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
         "concordato_review_summary.docx",
         "run_audit.json",
         "codex_run_review.md",
-        "Un unico ZIP installa Vera con tutti i suoi undici moduli",
-        "One ZIP installs Vera with all eleven of her modules",
+        ACCOUNTING_BUNDLE_LINK,
+        "Installa Vera dal marketplace",
+        "Install Vera from the marketplace",
         "/?lang=${safeLang}",
     ):
         assert snippet in page
