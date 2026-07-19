@@ -3170,11 +3170,15 @@ body.landing-body.landing-home {
 
 .landing-home .landing-product h2 {
   margin: 0;
-  color: var(--landing-product-blue);
+  color: var(--landing-ink);
   font-size: clamp(4rem, 7vw, 7.5rem);
   font-weight: 600;
   line-height: 0.84;
   letter-spacing: -0.075em;
+}
+
+.landing-home .landing-product-name {
+  color: var(--landing-product-blue);
 }
 
 .landing-home .landing-product__lead {
@@ -3288,7 +3292,7 @@ body.landing-body.landing-home {
 @media (hover: hover) and (pointer: fine) {
   .landing-home .landing-bridge__links a:hover span,
   .landing-home .landing-bridge__links a:focus-visible span {
-    color: var(--landing-blue-dark);
+    color: var(--landing-product-blue);
   }
 }
 
