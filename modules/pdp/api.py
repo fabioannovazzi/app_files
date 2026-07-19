@@ -2932,8 +2932,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_consultants_group",
                         "audience": "Per consulenti",
                         "lead": (
-                            "Un plugin Codex per creare presentazioni e lavorare sui "
-                            "progetti nel tempo."
+                            "Un plugin Codex per creare presentazioni e dare continuità "
+                            "al lavoro sui progetti."
                         ),
                         "description": (
                             "Clara riunisce documenti, note, interviste e registrazioni "
@@ -3078,8 +3078,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_consultants_group",
                         "audience": "Pour les consultants",
                         "lead": (
-                            "Un plugin Codex pour créer des présentations et conserver le "
-                            "contexte des projets dans la durée."
+                            "Un plugin Codex pour créer des présentations et poursuivre "
+                            "le travail sur les projets dans la durée."
                         ),
                         "description": (
                             "Clara réunit dans le dossier du projet les documents, notes, "
@@ -3225,7 +3225,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_consultants_group",
                         "audience": "Für Beraterinnen und Berater",
                         "lead": (
-                            "Ein Codex-Plugin für Präsentationen und fortlaufende Projektarbeit."
+                            "Ein Codex-Plugin für Präsentationen und die fortlaufende "
+                            "Arbeit an Projekten."
                         ),
                         "description": (
                             "Clara bündelt Dokumente, Notizen, Interviews und Aufzeichnungen "

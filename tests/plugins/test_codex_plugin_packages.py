@@ -2928,6 +2928,41 @@ def test_homepage_content_exposes_clara_without_reporting_or_pro_badges(
 
 
 @pytest.mark.parametrize(
+    ("lang", "expected_lead"),
+    (
+        ("en", "A Codex plugin for presentations and ongoing project work."),
+        (
+            "it",
+            "Un plugin Codex per creare presentazioni e dare continuità "
+            "al lavoro sui progetti.",
+        ),
+        (
+            "fr",
+            "Un plugin Codex pour créer des présentations et poursuivre "
+            "le travail sur les projets dans la durée.",
+        ),
+        (
+            "de",
+            "Ein Codex-Plugin für Präsentationen und die fortlaufende "
+            "Arbeit an Projekten.",
+        ),
+    ),
+)
+def test_homepage_clara_lead_localizes_ongoing_project_work(
+    lang: str,
+    expected_lead: str,
+) -> None:
+    _restore_application_import_path()
+
+    from modules.pdp import api as pdp_api
+
+    clara = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"][1]
+
+    assert clara["id"] == "clara"
+    assert clara["lead"] == expected_lead
+
+
+@pytest.mark.parametrize(
     ("lang", "expected_group_titles", "removed_section_titles"),
     (
         (
