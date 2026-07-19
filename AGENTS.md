@@ -321,3 +321,58 @@ result = check_entry_against_text(
 ```
 
 Inside `check_entry_against_text`, the logic layer calls `query_llm_return_json`, which uses `select_provider(query_step)` to resolve the actual provider/model and determine whether batching is supported.
+
+## Design Context
+
+### Users
+
+The primary homepage visitor is a professional who is curious about applying
+Codex to serious work. The homepage must explain the Mparanza point of view,
+make the Codex harness concrete, and show whether Vera or Clara fits the
+visitor's profession. Inside product surfaces, users arrive with a focused task
+and need a calm, reliable, reviewable workflow rather than novelty or broad
+exploration.
+
+### Brand Personality
+
+Elegant, professional, restrained. The desired emotional result is confidence,
+calm, and agency. Mparanza should feel edited and considered rather than salesy,
+playful, ornamental, or like a generic AI startup.
+
+Mparanza is Vera and Clara together. They are the complete product pair, not
+unrelated products inside a visually separate parent brand. Vera and Clara
+share one blue visual identity.
+
+### Aesthetic Direction
+
+Default to light mode and a clean white canvas. Favor strong live typography,
+generous whitespace, thin rules, disciplined spacing, and restrained neutrals.
+Use `Instrument Sans` as the shared type family for the Mparanza homepage and
+the Vera and Clara public pages; create hierarchy through deliberate weight,
+scale, spacing, and color rather than substituting unrelated typefaces.
+
+The homepage should feel like a continuous editorial argument, not a SaaS
+landing page, dashboard, or plugin marketplace. Detailed Vera and Clara pages,
+including pages that explain their functions, must confidently use their shared
+navy/blue/cyan identity. The homepage may use blue more selectively, but it must
+make the connection to Vera and Clara perceptible rather than implying that
+Mparanza is an unrelated black-only brand.
+
+Avoid gimmicky gradients, glossy cards, decorative shadows, noisy pills,
+overloaded status chips, generic AI motifs, tinted homepage backgrounds, and
+unnecessary decoration.
+
+### Design Principles
+
+1. Present Mparanza as Vera and Clara together, with blue as their shared
+   identity and black/neutral typography providing editorial hierarchy.
+2. Use the shared blue system consistently on all detailed Vera and Clara
+   product and function pages.
+3. Preserve the homepage's quieter editorial character while using blue as a
+   meaningful identity signal, not generic decoration.
+4. Lead with professional work, specialist method, and useful output before
+   technical package mechanics.
+5. Prefer concrete proof, typography, spacing, and alignment over broad claims
+   or decorative emphasis.
+6. Make every word and visual signal earn its place; interfaces should feel
+   stable, intentional, and professionally trustworthy.

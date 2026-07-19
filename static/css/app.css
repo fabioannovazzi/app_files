@@ -2934,6 +2934,7 @@ body.landing-body.landing-home {
   --landing-rule: oklch(85% 0.016 252);
   --landing-blue: oklch(40% 0.12 250);
   --landing-blue-dark: oklch(31% 0.09 250);
+  --landing-product-blue: #0070c0;
   --landing-ease: cubic-bezier(0.16, 1, 0.3, 1);
   padding: clamp(24px, 3vw, 44px) clamp(24px, 4vw, 64px) 0;
   overflow-x: clip;
@@ -3169,7 +3170,7 @@ body.landing-body.landing-home {
 
 .landing-home .landing-product h2 {
   margin: 0;
-  color: var(--landing-ink);
+  color: var(--landing-product-blue);
   font-size: clamp(4rem, 7vw, 7.5rem);
   font-weight: 600;
   line-height: 0.84;
