@@ -2,11 +2,11 @@
   "schema_version": 1,
   "plugins": {
     "clara": {
-      "published_version": "0.1.85",
+      "published_version": "0.1.94",
       "install_url": "https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a?q=clara"
     },
     "vera": {
-      "published_version": "0.1.1+codex.20260715132000",
+      "published_version": "0.1.11",
       "install_url": "https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
     }
   }
