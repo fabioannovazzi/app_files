@@ -700,7 +700,7 @@ def test_static_page_exposes_four_language_switch_and_prompts() -> None:
         "Prompt pronti",
         "File prodotti rivedibili",
         "Usa Genera report sui file in /percorso/report.",
-        "Un unico ZIP installa Vera con tutti i suoi undici moduli",
+        "Installa Vera dal marketplace",
     ):
         assert snippet in page
 

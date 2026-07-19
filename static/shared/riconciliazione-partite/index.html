@@ -653,17 +653,18 @@ nel file Excel:
       <div class="section-head">
         <div>
           <p class="eyebrow" data-i18n="download.eyebrow">Download</p>
-          <h2 data-i18n="download.title">Installa dal Plugin Pack</h2>
+          <h2 data-i18n="download.title">Installa Vera dal marketplace</h2>
         </div>
-        <p data-i18n="download.copy">Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.</p>
+        <p data-i18n="download.copy">Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.</p>
       </div>
 
       <div class="download-panel">
         <div>
-          <h3 data-i18n="download.installTitle">Installazione</h3>
-          <p><span data-i18n="download.codexText">Pagina ufficiale:</span> <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex desktop</a>.</p>
-          <ol class="plain-list" id="install-steps" style="margin-top: 22px;"></ol>
-          <pre style="margin-top: 18px;"><code id="install-path">/Users/nome/Documents/CodexPlugins/vera-codex-plugin</code></pre>
+          <h3 data-i18n="download.installTitle">Marketplace</h3>
+          <p data-i18n="download.codexText">Vera si installa direttamente dalla sua pagina ufficiale su ChatGPT.</p>
+          <div class="action-row">
+            <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="download.button">Installa Vera</a>
+          </div>
         </div>
         <div>
           <h3 data-i18n="download.firstUseTitle">Primo uso</h3>
@@ -687,7 +688,7 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
           title: "Riconcilia partite, pagamenti e supporti in un file Excel rivedibile.",
           subtitle: "Metti partite aperte, mastrini, banca e supporti in una vista riga per riga.",
           copy: "Fornisci partite, mastrini, banca e documenti di supporto. Ottieni stato riga, supporto citato, supporti mancanti e una sintesi Word per il revisore.",
-          primary: "Scarica ZIP",
+          primary: "Installa Vera",
           secondary: "Come si usa",
           cardLabel: "Cosa dai / cosa ottieni",
           bullets: [
@@ -757,18 +758,11 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
         },
         download: {
           eyebrow: "Installazione",
-          title: "Installa dal Plugin Pack",
-          copy: "Richiede Codex desktop. Un unico ZIP installa Vera con tutti i suoi undici moduli.",
-          installTitle: "Installazione",
-          codexText: "Pagina ufficiale:",
-          button: "Scarica ZIP",
-          steps: [
-            "Decomprimi lo ZIP.",
-            "Sposta la cartella estratta, per esempio in Documents/CodexPlugins.",
-            "In Codex apri Plugins e scegli Add marketplace.",
-            "Nel campo Source incolla il percorso della cartella estratta, quella che contiene LEGGIMI_INSTALLAZIONE.txt.",
-            "Seleziona MP Vera e installa Vera."
-          ],
+          title: "Installa Vera dal marketplace",
+          copy: "Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.",
+          installTitle: "Marketplace",
+          codexText: "Vera si installa direttamente dalla sua pagina ufficiale su ChatGPT.",
+          button: "Installa Vera",
           firstUseTitle: "Primo uso",
           firstUseCopy: "In una chat Codex, indica la cartella contabile, il periodo e il cut-off.",
           prompt: "Usa Riconciliazione partite sulla cartella /percorso/lavoro/input.\nPeriodo 2025, cut-off 31/12/2025.\nLingua: it.\nChiedimi le assunzioni mancanti e prepara Excel/Word con dettaglio righe, supporti, punti da rivedere e verifiche aperte.\nUsa il default factoring: factor/operatore collegato a pagamento in estratto conto bancario chiude, salvo mia richiesta contraria."
@@ -781,7 +775,7 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
           title: "Put open items, payments, ledgers and support documents into one reviewable workbook.",
           subtitle: "See what closes, what remains open and which support is still missing.",
           copy: "Give it open items, ledgers, bank files and support documents. Get back row status, cited support, missing-support requests and a Word summary for the reviewer.",
-          primary: "Download ZIP",
+          primary: "Install Vera",
           secondary: "How to use",
           cardLabel: "Give it / get back",
           bullets: [
@@ -851,18 +845,11 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
         },
         download: {
           eyebrow: "Download",
-          title: "Install from Plugin Pack",
-          copy: "Requires Codex desktop. One ZIP installs Vera with all eleven of her modules.",
-          installTitle: "Installation",
-          codexText: "Official page:",
-          button: "Download ZIP",
-          steps: [
-            "Unzip the file.",
-            "Move the extracted folder, for example to Documents/CodexPlugins.",
-            "In Codex open Plugins and choose Add marketplace.",
-            "Paste the extracted folder path into Source: the folder that contains LEGGIMI_INSTALLAZIONE.txt.",
-            "Select MP Vera and install Vera."
-          ],
+          title: "Install Vera from the marketplace",
+          copy: "Open Vera's official ChatGPT listing and select Install. All modules are included.",
+          installTitle: "Marketplace",
+          codexText: "Vera is installed directly from her official ChatGPT listing.",
+          button: "Install Vera",
           firstUseTitle: "First use",
           firstUseCopy: "In a Codex chat, provide the accounting folder, period and cut-off.",
           prompt: "Use Open-item reconciliation on /path/to/work/input.\nPeriod 2025, cut-off 31/12/2025.\nLanguage: en.\nAsk me for missing assumptions and prepare Excel/Word with row detail, support, review sample and items to verify.\nUse the factoring default: factor/operator references tied to bank-statement payments close unless I ask otherwise."
@@ -875,7 +862,7 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
           title: "Rapprocher postes ouverts, paiements et justificatifs dans un classeur révisable.",
           subtitle: "Place postes ouverts, grands livres, banque et supports dans une vue ligne par ligne.",
           copy: "Donnez postes ouverts, grands livres, banque et justificatifs. Recevez statut par ligne, justificatif cité, support manquant et synthèse Word pour le réviseur.",
-          primary: "Télécharger le ZIP",
+          primary: "Installer Vera",
           secondary: "Comment l'utiliser",
           cardLabel: "Données / résultat",
           bullets: [
@@ -945,18 +932,11 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
         },
         download: {
           eyebrow: "Installation",
-          title: "Installer depuis le Plugin Pack",
-          copy: "Nécessite Codex desktop. Un seul ZIP installe Vera avec ses onze modules.",
-          installTitle: "Installation",
-          codexText: "Page officielle :",
-          button: "Télécharger le ZIP",
-          steps: [
-            "Décompressez le ZIP.",
-            "Déplacez le dossier extrait, par exemple dans Documents/CodexPlugins.",
-            "Dans Codex, ouvrez Plugins puis Add marketplace.",
-            "Collez dans Source le chemin du dossier extrait, celui qui contient LEGGIMI_INSTALLAZIONE.txt.",
-            "Sélectionnez MP Vera et installez Vera."
-          ],
+          title: "Installer Vera depuis la marketplace",
+          copy: "Ouvrez la fiche officielle de Vera sur ChatGPT et sélectionnez Installer. Tous les modules sont inclus.",
+          installTitle: "Marketplace",
+          codexText: "Vera s'installe directement depuis sa fiche officielle sur ChatGPT.",
+          button: "Installer Vera",
           firstUseTitle: "Premier usage",
           firstUseCopy: "Dans une conversation Codex, indiquez le dossier comptable, la période et le cut-off.",
           prompt: "Utilise Rapprochement des postes ouverts sur le dossier /chemin/travail/input.\nPériode 2025, cut-off 31/12/2025.\nLangue : fr.\nDemande-moi les hypothèses manquantes et prépare Excel/Word avec détail des lignes, justificatifs, échantillon de revue et points à vérifier.\nApplique le défaut factoring : factor/opérateur lié à un paiement dans le relevé bancaire clôture, sauf demande contraire."
@@ -969,7 +949,7 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
           title: "Offene Posten, Zahlungen und Nachweise in eine prüfbare Arbeitsmappe bringen.",
           subtitle: "Offene Posten, Hauptbücher, Bank und Belege in eine zeilenweise Sicht bringen.",
           copy: "Geben Sie Buchhaltungspopulationen und Nachweisdateien an. Zurück kommen Zeilenstatus, zitierter Nachweis, fehlende Belege und eine Word-Zusammenfassung für die Prüfung.",
-          primary: "ZIP herunterladen",
+          primary: "Vera installieren",
           secondary: "So wird es genutzt",
           cardLabel: "Eingabe / Ergebnis",
           bullets: [
@@ -1039,18 +1019,11 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
         },
         download: {
           eyebrow: "Download",
-          title: "Aus Plugin Pack installieren",
-          copy: "Erfordert Codex Desktop. Eine ZIP-Datei installiert Vera mit allen elf Modulen.",
-          installTitle: "Installation",
-          codexText: "Offizielle Seite:",
-          button: "ZIP herunterladen",
-          steps: [
-            "ZIP entpacken.",
-            "Den entpackten Ordner verschieben, zum Beispiel nach Documents/CodexPlugins.",
-            "In Codex Plugins öffnen und Add marketplace wählen.",
-            "In Source den Pfad des entpackten Ordners einfügen, der LEGGIMI_INSTALLAZIONE.txt enthält.",
-            "MP Vera auswählen und Vera installieren."
-          ],
+          title: "Vera über den Marketplace installieren",
+          copy: "Öffnen Sie Veras offiziellen ChatGPT-Eintrag und wählen Sie Installieren. Alle Module sind enthalten.",
+          installTitle: "Marketplace",
+          codexText: "Vera wird direkt über ihren offiziellen ChatGPT-Eintrag installiert.",
+          button: "Vera installieren",
           firstUseTitle: "Erste Nutzung",
           firstUseCopy: "In einem Codex-Chat den Buchhaltungsordner, Zeitraum und Cut-off angeben.",
           prompt: "Verwende Offene-Posten-Abstimmung für den Ordner /pfad/arbeit/input.\nZeitraum 2025, Cut-off 31/12/2025.\nSprache: de.\nFrage nach fehlenden Annahmen und erstelle Excel/Word mit Zeilendetail, Nachweisen, Codex-Review und Prüfpunkten.\nNutze den Factoring-Default: Factor-/Operatorverweise, die mit Zahlungen im Kontoauszug verbunden sind, schließen, sofern ich nichts anderes verlange."
@@ -1116,11 +1089,6 @@ Usa il default factoring: factor/operatore collegato a pagamento in estratto con
         article.querySelector("strong").textContent = title;
         article.querySelector("p").textContent = copy;
         return article;
-      });
-      renderList(document.getElementById("install-steps"), data.download.steps, (text) => {
-        const li = document.createElement("li");
-        li.textContent = text;
-        return li;
       });
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.classList.toggle("active", button.dataset.lang === safeLang);

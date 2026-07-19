@@ -427,11 +427,12 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "concordato_tie_out_workpaper.xlsx",
         "concordato_review_summary.docx",
         "codex_run_review.md",
+        "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
         "Concordato Plan Review",
         "Révision du plan de concordat",
         "Concordato-Plan prüfen",
-        "Un unico ZIP installa Vera con tutti i suoi undici moduli",
-        "One ZIP installs Vera with all eleven of her modules",
+        "Installa Vera dal marketplace",
+        "Install Vera from the marketplace",
     ):
         assert snippet in page
 
