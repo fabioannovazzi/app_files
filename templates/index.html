@@ -109,6 +109,27 @@
     </section>
   {% endif %}
 
+  {% if open_source %}
+    <section id="{{ open_source.id }}"
+             class="landing-open-source"
+             aria-labelledby="landing-open-source-title">
+      <h2 id="landing-open-source-title">{{ open_source.title }}</h2>
+      <div class="landing-open-source__body">
+        <p>{{ open_source.description }}</p>
+        {% if open_source.links %}
+          <nav class="landing-open-source__links"
+               aria-label="{{ open_source.links_label }}">
+            {% for item in open_source.links %}
+              <a href="{{ item.href }}" target="_blank" rel="noopener noreferrer">
+                {{ item.label }}
+              </a>
+            {% endfor %}
+          </nav>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+
   {% if bridge %}
     <section id="{{ bridge.id }}"
              class="landing-bridge"
