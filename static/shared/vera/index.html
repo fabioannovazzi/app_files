@@ -103,7 +103,8 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) 250px;
       align-items: center;
-      gap: clamp(48px, 9vw, 112px);
+      column-gap: clamp(48px, 9vw, 112px);
+      row-gap: 36px;
       border-bottom: 1px solid var(--cyan);
     }
 
@@ -181,14 +182,6 @@
 
     section { padding: 78px 0; }
 
-    .general-intro { border-bottom: 1px solid var(--cyan); }
-
-    .general-intro .video-story {
-      max-width: none;
-      margin: 0;
-      grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
-    }
-
     .invoice-flow {
       border-bottom: 1px solid var(--cyan);
     }
@@ -253,6 +246,13 @@
       background: var(--pale-blue);
       text-decoration: none;
       transition: border-color 160ms ease, transform 160ms ease;
+    }
+
+    .hero > .video-story {
+      max-width: none;
+      grid-column: 1 / -1;
+      grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+      margin: 0;
     }
 
     .video-story:hover { border-color: var(--blue); transform: translateY(-1px); }
@@ -352,7 +352,6 @@
       .promise-strip { grid-template-columns: 1fr; }
       .promise { min-height: 0; padding: 25px 0; }
       .promise + .promise { padding-left: 0; border-top: 1px solid var(--cyan); border-left: 0; }
-      .general-intro .video-story { grid-template-columns: 1fr; }
       .flow-grid { grid-template-columns: 1fr; }
       .flow-step { min-height: 0; padding: 25px 0; }
       .flow-step + .flow-step { padding-left: 0; border-top: 1px solid var(--cyan); border-left: 0; }
@@ -360,6 +359,7 @@
       .flow-note { align-items: flex-start; flex-direction: column; }
       .section-head { grid-template-columns: 1fr; gap: 16px; }
       .video-story { max-width: 540px; grid-template-columns: 1fr; }
+      .hero > .video-story { grid-template-columns: 1fr; }
       .video-story__thumb { min-height: 0; aspect-ratio: 16 / 9; }
       .video-story__body { padding: 22px 24px; }
       .module-row { grid-template-columns: 1fr 28px; gap: 8px 18px; }
@@ -422,6 +422,18 @@
       <figure class="vera-mark" aria-hidden="true">
         <img src="icon.svg" alt="">
       </figure>
+      <a class="video-story" id="general-video-link" href="https://youtu.be/2q4o2djeSmg" target="_blank" rel="noopener noreferrer">
+        <span class="video-story__thumb" aria-hidden="true">
+          <img id="general-video-thumbnail" src="https://i.ytimg.com/vi/2q4o2djeSmg/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+          <span class="video-story__play">▶</span>
+          <span class="video-story__duration" id="general-video-duration">0:54</span>
+        </span>
+        <span class="video-story__body">
+          <span class="video-story__kicker" data-i18n="general.video.kicker">Vera in 54 secondi</span>
+          <strong data-i18n="general.video.title">Guarda: da una richiesta al prossimo passo preparato</strong>
+          <span class="video-story__meta" data-i18n="general.video.meta">Narrazione in italiano · Si apre su YouTube</span>
+        </span>
+      </a>
     </section>
 
     <div class="promise-strip" aria-label="Vera at work">
@@ -441,21 +453,6 @@
         <p data-i18n="promise.document">Consegna carte di lavoro chiare e rivedibili.</p>
       </div>
     </div>
-
-    <section class="general-intro" id="overview-video">
-      <a class="video-story" id="general-video-link" href="https://youtu.be/2q4o2djeSmg" target="_blank" rel="noopener noreferrer">
-        <span class="video-story__thumb" aria-hidden="true">
-          <img id="general-video-thumbnail" src="https://i.ytimg.com/vi/2q4o2djeSmg/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
-          <span class="video-story__play">▶</span>
-          <span class="video-story__duration" id="general-video-duration">0:54</span>
-        </span>
-        <span class="video-story__body">
-          <span class="video-story__kicker" data-i18n="general.video.kicker">Vera in 54 secondi</span>
-          <strong data-i18n="general.video.title">Guarda: da una richiesta al prossimo passo preparato</strong>
-          <span class="video-story__meta" data-i18n="general.video.meta">Narrazione in italiano · Si apre su YouTube</span>
-        </span>
-      </a>
-    </section>
 
     <section class="invoice-flow" id="invoice-flow">
       <div class="section-head">
