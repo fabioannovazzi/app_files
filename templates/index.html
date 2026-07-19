@@ -14,200 +14,6 @@
   />
 {% endblock %}
 
-{% block scripts %}
-  {{ super() }}
-  {% if auth_enabled %}
-    <script>
-      (function () {
-        const config = window.authConfig || {};
-        const copy = window.appCopy || {};
-        const buttonEl = document.getElementById("landingAuthButton");
-        const logoutEl = document.getElementById("landingAuthLogout");
-        const authContainer = document.getElementById("landingAuth");
-        const guardedLinks = document.querySelectorAll("[data-requires-auth='true']");
-        const magicForm = document.getElementById("landingMagicForm");
-        const magicEmailInput = document.getElementById("landingMagicEmail");
-        const magicSubmit = document.getElementById("landingMagicSubmit");
-        const magicStatus = document.getElementById("landingMagicStatus");
-        const permissionKeys = new Set({{ site_permission_keys | default([]) | tojson }});
-        const initialAllowedKeys = new Set({{ allowed_page_keys | default([]) | tojson }});
-        function showButton() {
-          if (!buttonEl) return;
-          buttonEl.hidden = false;
-          buttonEl.style.display = "";
-          buttonEl.removeAttribute("aria-hidden");
-          ensureButton();
-        }
-
-        function hideButton() {
-          if (!buttonEl) return;
-          buttonEl.hidden = true;
-          buttonEl.style.display = "none";
-          buttonEl.setAttribute("aria-hidden", "true");
-        }
-
-        function showLogout() {
-          if (!logoutEl) return;
-          logoutEl.hidden = false;
-          logoutEl.style.display = "inline-flex";
-          logoutEl.removeAttribute("aria-hidden");
-        }
-
-        function hideLogout() {
-          if (!logoutEl) return;
-          logoutEl.hidden = true;
-          logoutEl.style.display = "none";
-          logoutEl.setAttribute("aria-hidden", "true");
-        }
-
-        function disableLinks() {
-          guardedLinks.forEach((link) => {
-            if (!link.dataset.href) {
-              link.dataset.href = link.getAttribute("href") || "";
-            }
-            link.removeAttribute("href");
-            link.classList.add("landing-link--disabled");
-            link.setAttribute("aria-disabled", "true");
-          });
-        }
-
-        function isLinkAllowed(link, allowedKeys) {
-          const permissionKey = link.dataset.permissionKey;
-          if (!permissionKey) return true;
-          if (!permissionKeys.has(permissionKey)) return true;
-          return allowedKeys.has(permissionKey);
-        }
-
-        function enableLinks(allowedKeys) {
-          guardedLinks.forEach((link) => {
-            if (!isLinkAllowed(link, allowedKeys)) {
-              link.removeAttribute("href");
-              link.classList.add("landing-link--disabled");
-              link.setAttribute("aria-disabled", "true");
-              return;
-            }
-            if (link.dataset.href) {
-              link.setAttribute("href", link.dataset.href);
-            }
-            link.classList.remove("landing-link--disabled");
-            link.removeAttribute("aria-disabled");
-          });
-        }
-
-        function ensureButton() {
-          if (!buttonEl) return;
-          if (typeof window.renderAuthButton === "function") {
-            window.renderAuthButton(buttonEl);
-          } else {
-            window.setTimeout(ensureButton, 120);
-          }
-        }
-
-        function setMagicStatus(message, tone) {
-          if (!magicStatus) return;
-          magicStatus.textContent = message || "";
-          if (tone) magicStatus.dataset.tone = tone;
-          else magicStatus.removeAttribute("data-tone");
-        }
-
-        function setMagicPending(pending) {
-          if (magicSubmit) {
-            magicSubmit.disabled = pending;
-            pending
-              ? magicSubmit.setAttribute("aria-busy", "true")
-              : magicSubmit.removeAttribute("aria-busy");
-          }
-          if (magicEmailInput) magicEmailInput.disabled = pending;
-        }
-
-        function getMagicRedirectPath() {
-          if (window.magicLinkRedirect) return window.magicLinkRedirect;
-          const path = window.location?.pathname || "/";
-          const query = window.location?.search || "";
-          return `${path}${query}`;
-        }
-
-        async function handleMagicSubmit(event) {
-          event.preventDefault();
-          if (!magicEmailInput) return;
-
-          const email = magicEmailInput.value.trim();
-          if (!email || !/@/.test(email)) {
-            setMagicStatus(copy.magic_link_invalid_email || "Enter a valid email address.", "error");
-            magicEmailInput.focus();
-            return;
-          }
-
-          setMagicPending(true);
-          setMagicStatus(copy.magic_link_sending || "Sending link...", "info");
-
-          try {
-            const response = await fetch("/auth/magic/request", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              body: JSON.stringify({
-                email,
-                redirect_path: getMagicRedirectPath() || `/?lang=${window.appLanguage || "en"}`,
-              }),
-            });
-
-            if (!response.ok) {
-              throw new Error("magic_link_request_failed");
-            }
-
-            setMagicStatus(
-              copy.magic_link_sent || "Check your inbox for the sign-in link. It stays valid for 15 minutes. If you don't see it, check Spam or Junk.",
-              "success"
-            );
-            magicEmailInput.value = "";
-          } catch {
-            setMagicStatus(
-              copy.magic_link_error_generic || "Unable to send link. Try again.",
-              "error"
-            );
-          } finally {
-            setMagicPending(false);
-          }
-        }
-
-        if (config.enabled) {
-          disableLinks();
-          hideLogout();
-          showButton();
-        }
-
-        document.addEventListener("auth:change", (event) => {
-          const detail = event.detail || {};
-          const allowedKeys = new Set(detail.user?.allowed_page_keys || []);
-          if (!allowedKeys.size && initialAllowedKeys.size) {
-            initialAllowedKeys.forEach((key) => allowedKeys.add(key));
-          }
-
-          if (detail.authenticated) {
-            enableLinks(allowedKeys);
-            hideButton();
-            showLogout();
-            authContainer && (authContainer.dataset.state = "authenticated");
-            setMagicStatus("");
-          } else {
-            disableLinks();
-            showButton();
-            hideLogout();
-            authContainer && (authContainer.dataset.state = "signed-out");
-          }
-        });
-
-        logoutEl?.addEventListener("click", () => {
-          window.authClient?.signOut?.();
-        });
-
-        magicForm?.addEventListener("submit", handleMagicSubmit);
-      })();
-    </script>
-  {% endif %}
-{% endblock %}
-
 {% block body %}
 <a class="landing-skip-link" href="#main-content">
   {{ hero.skip_label | default('Skip to main content') }}
@@ -256,39 +62,6 @@
       {% endfor %}
     </nav>
 
-    {% if auth_enabled %}
-      <div class="landing-auth" id="landingAuth">
-        <div class="landing-auth__button" id="landingAuthButton"></div>
-        <button class="landing-auth__logout" id="landingAuthLogout" hidden>
-          {{ copy.sign_out_button | default('Sign out') }}
-        </button>
-
-        <div
-          class="landing-auth__magic"
-          data-tooltip="{{ copy.magic_link_tooltip | default('Enter your email and we will send a one-time sign-in link.') }}"
-        >
-          <p class="landing-auth__copy">
-            {{ copy.magic_link_helper | default("Use your email to receive a sign-in link.") }}
-          </p>
-          <form id="landingMagicForm" class="landing-auth__form" novalidate>
-            <label class="sr-only" for="landingMagicEmail">
-              {{ copy.magic_link_email_label | default("Email") }}
-            </label>
-            <input id="landingMagicEmail"
-                   class="landing-auth__input"
-                   type="email"
-                   placeholder="{{ copy.magic_link_placeholder | default('name@example.com') }}"
-                   aria-label="{{ copy.magic_link_email_label | default('Email') }}"
-                   autocomplete="email"
-                   required />
-            <button id="landingMagicSubmit" class="landing-auth__submit" type="submit">
-              {{ copy.magic_link_button | default("Send link") }}
-            </button>
-          </form>
-          <p id="landingMagicStatus" class="landing-auth__status" role="status" aria-live="polite"></p>
-        </div>
-      </div>
-    {% endif %}
   </div>
 </header>
 
@@ -369,7 +142,6 @@
       {% for group in product_groups %}
         {% set product_link = group.links[0] if group.links else {} %}
         {% if product_link and product_link.active and product_link.href %}
-          {% set public_link = product_link.public | default(false) %}
           <section id="{{ group.id }}"
                    class="landing-product"
                    aria-labelledby="landing-product-{{ group.id }}">
@@ -398,9 +170,7 @@
             <div class="landing-product__detail">
               <p>{{ group.description }}</p>
               <a class="landing-product__link"
-                 href="{{ product_link.href }}{% if product_link.add_lang | default(true) %}?lang={{ lang }}{% endif %}"
-                 data-requires-auth="{{ 'false' if public_link else 'true' }}"
-                 data-permission-key="{{ product_link.permission_key | default('') }}">
+                 href="{{ product_link.href }}{% if product_link.add_lang | default(true) %}?lang={{ lang }}{% endif %}">
                 {{ group.cta_label }}
               </a>
             </div>
