@@ -4,18 +4,19 @@
   --surface: #ffffff;
   --panel: #ffffff;
   --panel-soft: #ffffff;
-  --soft: #f7f9f6;
-  --code: #f7f9f6;
-  --ink: #243027;
-  --text: #465148;
-  --muted: #6d776f;
-  --accent: #496a60;
-  --accent-ink: #263b34;
-  --accent-soft: #e7eee9;
-  --green: #496a60;
-  --blue: #27313a;
-  --line: #dfe6dd;
-  --line-strong: #cfd9d0;
+  --soft: #f3fbff;
+  --code: #f3fbff;
+  --ink: #002060;
+  --text: #183765;
+  --muted: #52698d;
+  --accent: #0070c0;
+  --accent-ink: #002060;
+  --accent-soft: #f3fbff;
+  --green: #0070c0;
+  --blue: #0070c0;
+  --cyan: #00b0f0;
+  --line: #b7dded;
+  --line-strong: #7ec9e7;
   --radius: 8px;
   --content: 1120px;
   --shadow: none;
@@ -376,7 +377,7 @@ pre,
 .prompt,
 .terminal,
 .snippet {
-  background: #f7f9f6 !important;
+  background: var(--code) !important;
   color: var(--ink) !important;
   border: 1px solid var(--line) !important;
   box-shadow: none !important;
@@ -384,7 +385,7 @@ pre,
 }
 
 code {
-  background: #f7f9f6;
+  background: var(--code);
   color: var(--ink);
   border-radius: 5px;
   overflow-wrap: anywhere;
@@ -392,7 +393,7 @@ code {
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--accent) !important;
+  outline: 2px solid var(--cyan) !important;
   outline-offset: 3px !important;
 }
 
