@@ -65,7 +65,20 @@ TRANSMITTED_FEEDBACK_PLUGINS = frozenset({"clara", "vera"})
 TRANSMITTED_FEEDBACK_SNIPPETS = (
     "Should I transmit this to the developer so we fix it?",
     "scripts/change_requests.py submit-problem",
+    "scripts/change_requests.py reserve-suggestion-prompt",
+    "scripts/change_requests.py submit-suggestion",
     "scripts/change_requests.py start-interview",
+    "Always use the generic client-free string below",
+    "at most one minute",
+)
+GENERIC_VOICE_OPPORTUNITY_TEMPLATE = (
+    'python scripts/change_requests.py start-interview --opportunity "General '
+    "{display_name} improvement suggestion; no client, customer, source, run, or "
+    'case details supplied." --language <language>'
+)
+SPECIALIST_FEEDBACK_HANDOFF_TEMPLATE = (
+    "After substantive use of this workflow, read and follow the "
+    "`Plugin Improvement Feedback` section in `../{plugin}/SKILL.md`."
 )
 REQUIRED_OUTPUT_LOCATION_SNIPPET = "Never write run outputs inside this Git workspace"
 REQUIRED_INTERFACE_FIELDS = (
@@ -489,7 +502,13 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
                 f"{plugin_name}: skill instructions must mention requirements/dependency handling"
             )
         feedback_snippets = (
-            (REQUIRED_FEEDBACK_HEADING, *TRANSMITTED_FEEDBACK_SNIPPETS)
+            (
+                REQUIRED_FEEDBACK_HEADING,
+                *TRANSMITTED_FEEDBACK_SNIPPETS,
+                GENERIC_VOICE_OPPORTUNITY_TEMPLATE.format(
+                    display_name=plugin_name.title()
+                ),
+            )
             if plugin_name in TRANSMITTED_FEEDBACK_PLUGINS
             else (REQUIRED_FEEDBACK_HEADING, LOCAL_FEEDBACK_SNIPPET)
         )
@@ -499,6 +518,20 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
                     f"{plugin_name}: skill instructions must include plugin improvement feedback policy"
                 )
                 break
+        if plugin_name in TRANSMITTED_FEEDBACK_PLUGINS:
+            # Specialists can trigger without the main skill. Requiring its exact
+            # relative path makes the post-run handoff mechanically resolvable.
+            specialist_handoff = SPECIALIST_FEEDBACK_HANDOFF_TEMPLATE.format(
+                plugin=plugin_name
+            )
+            for skill_path in skill_files:
+                if skill_path.parent.name == plugin_name:
+                    continue
+                if specialist_handoff not in skill_path.read_text(encoding="utf-8"):
+                    relative_path = skill_path.relative_to(plugin_dir)
+                    errors.append(
+                        f"{plugin_name}: {relative_path} must hand off plugin improvement feedback to the main skill"
+                    )
         if REQUIRED_OUTPUT_LOCATION_SNIPPET not in combined_skill_text:
             errors.append(
                 f"{plugin_name}: skill instructions must include the run output location policy"

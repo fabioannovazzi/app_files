@@ -5,6 +5,8 @@ description: Use when a user wants Codex to reconcile bank statements with journ
 
 # Journal-Bank Reconciliation
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/journal-bank-reconciliation` from this skill directory
 when it exists; otherwise resolve `../../../journal-bank-reconciliation` in the
 repository. Read that module's `skills/journal-bank-reconciliation/SKILL.md`

@@ -5,6 +5,8 @@ description: "Prepare and operate Clara-hosted external voice interviews: select
 
 # Interview
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`,

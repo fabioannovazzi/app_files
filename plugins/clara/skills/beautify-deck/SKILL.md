@@ -5,6 +5,8 @@ description: "Use when Clara or Codex needs to turn a final editable PPTX or PDF
 
 # Beautify Deck
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 Use this only after the editable deck is structurally final enough to justify a
 non-editable image treatment. The output is a polished raster-image PDF for
 review or client use. It is not a replacement for the editable PPTX.

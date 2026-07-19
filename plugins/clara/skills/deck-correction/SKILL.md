@@ -5,6 +5,8 @@ description: "Correct, revise, or rebuild an existing PPTX or Clara HTML deck fr
 
 # Deck Correction
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`,

@@ -5,6 +5,8 @@ description: Use when Vera must prepare an Italian Registro Imprese, REA, Comuni
 
 # Registro Imprese e SARI
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/registro-imprese-sari` from this skill directory when it
 exists; otherwise resolve `../../../registro-imprese-sari` in the repository.
 Read that module's `skills/registro-imprese-sari/SKILL.md` completely and follow

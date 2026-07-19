@@ -5,6 +5,8 @@ description: Use when a user wants Clara to compare completed retailer signals w
 
 # Brand Fit
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 Resolve `../../modules/attribute-reporting` from this skill directory when it
 exists; otherwise resolve `../../../attribute-reporting` in the repository.
 Read that component's `skills/brand-fit/SKILL.md` completely and follow it.

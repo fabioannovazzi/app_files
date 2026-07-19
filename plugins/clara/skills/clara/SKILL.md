@@ -1235,10 +1235,7 @@ structured judgement, but must not ask the user to edit JSON by hand.
 
 ## Plugin Improvement Feedback
 
-Improvement reporting is optional and based on this run. Do not prompt on
-plugin startup, on a schedule, or merely because a run ended. Stay silent
-unless Codex can name either a concrete failure it just observed or a concrete
-capability that would have materially improved the work.
+Keep failures and suggestions as two separate paths.
 
 For an observed failure, use the run context to draft the smallest useful
 engineering request: what happened, what should have happened, exact steps to
@@ -1259,14 +1256,48 @@ python scripts/change_requests.py submit-problem --request <approved-request.jso
 Report the returned `CR-N` receipt. A retry after a network failure must reuse
 the saved submission and return the same receipt; it is not a new request.
 
-For a concrete new capability, Codex may instead offer a three-minute voice
-interview. If the user accepts, run:
+For suggestions, do not require Codex to notice the opportunity first. After a
+substantive Clara use, Codex may choose a natural, non-disruptive moment to ask.
+Never ask on startup, after a trivial action, while handling a failure, or more
+than once in the same conversation. Immediately before asking, run:
 
 ```bash
-python scripts/change_requests.py start-interview --opportunity "<concrete opportunity>" --language <language>
+python scripts/change_requests.py reserve-suggestion-prompt
 ```
 
-Open the returned interview link. The adaptive interview replaces a
-questionnaire, and completing it transmits the request; do not ask for another
-review or confirmation afterward. If there is no concrete opportunity, do not
-offer the interview.
+This is a persistent anti-spam check, not a reason to ask. If it returns
+`"ask": false`, stay silent. If it returns `"ask": true`, ask only:
+
+> Do you have any suggestion for improving Clara?
+
+If the answer is no, there is no answer, or the user does not want to continue,
+stop. Do not present a questionnaire.
+
+If the user says yes without giving the suggestion, ask only whether they want
+to say it here or use the short voice conversation.
+
+If the user gives a suggestion in text, draft the smallest useful request,
+without client or customer material, show the exact text, and ask:
+
+> Should I transmit this to the developer so we fix it?
+
+Transmit only after yes, using:
+
+```bash
+python scripts/change_requests.py submit-suggestion --request <approved-request.json>
+```
+
+Report the returned `CR-N` receipt. If the user would rather explain the
+suggestion by voice, offer the optional short voice conversation only after
+they have said they have a suggestion. If accepted, do not put the suggestion
+or any client, customer, source-document, run, or case detail in
+`--opportunity`. Always use the generic client-free string below, then run:
+
+```bash
+python scripts/change_requests.py start-interview --opportunity "General Clara improvement suggestion; no client, customer, source, run, or case details supplied." --language <language>
+```
+
+Open the returned link. The conversation lasts at most one minute: one opening
+question and, only if needed, one short follow-up. Starting it creates the
+request; completing it adds the user's explanation. Do not ask for another
+review or confirmation afterward.

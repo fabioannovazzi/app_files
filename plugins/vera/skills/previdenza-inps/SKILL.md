@@ -5,6 +5,8 @@ description: Use when Vera must prepare an evidence-backed Italian INPS social-s
 
 # Previdenza INPS
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/previdenza-inps` from this skill directory when it
 exists; otherwise resolve `../../../previdenza-inps` in the repository. Read
 that module's `skills/previdenza-inps/SKILL.md` completely and follow it. Treat

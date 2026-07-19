@@ -5,6 +5,8 @@ description: Use when a user wants Clara to map retail product attributes, prese
 
 # Attribute Reporting
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 Resolve `../../modules/attribute-reporting` from this skill directory when it
 exists; otherwise resolve `../../../attribute-reporting` in the repository.
 Read that component's `skills/attribute-reporting/SKILL.md` completely and

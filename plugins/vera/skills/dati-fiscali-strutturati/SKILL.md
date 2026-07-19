@@ -5,6 +5,8 @@ description: "Use when Codex needs to extract or review structured fiscal fields
 
 # Dati fiscali strutturati
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/client-intake` from this skill directory when it exists;
 otherwise resolve `../../../client-intake` in the repository. Read that
 module's `skills/dati-fiscali-strutturati/SKILL.md` completely and follow it.

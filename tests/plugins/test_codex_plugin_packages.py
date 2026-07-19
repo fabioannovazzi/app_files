@@ -384,6 +384,22 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert not any(name.endswith("marketplace.json") for name in entries)
 
 
+@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
+    plugin_name: str,
+) -> None:
+    builder = load_builder()
+    targets = {package.plugin: package for package in builder.load_packages()}
+    targets.update({bundle.name: bundle for bundle in builder.load_bundles()})
+
+    entries = builder.chatgpt_upload_entries(targets[plugin_name])
+    manifest = json.loads(entries[".codex-plugin/plugin.json"])
+
+    assert manifest["name"] == plugin_name
+    assert ".codex-plugin/plugin.json" in entries
+    assert not any(name.startswith(f"{plugin_name}-codex-plugin/") for name in entries)
+
+
 def test_chatgpt_manifest_rejects_more_than_three_default_prompts() -> None:
     builder = load_builder()
     source_path = ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json"
@@ -1410,7 +1426,34 @@ def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:
                 in combined_skill_text
             ), plugin_name
             assert "scripts/change_requests.py submit-problem" in combined_skill_text
+            assert (
+                "scripts/change_requests.py reserve-suggestion-prompt"
+                in combined_skill_text
+            )
+            assert "scripts/change_requests.py submit-suggestion" in combined_skill_text
             assert "scripts/change_requests.py start-interview" in combined_skill_text
+            assert (
+                "Always use the generic client-free string below" in combined_skill_text
+            )
+            generic_voice_command = (
+                'python scripts/change_requests.py start-interview --opportunity "General '
+                f"{plugin_name.title()} improvement suggestion; no client, customer, "
+                'source, run, or case details supplied." --language <language>'
+            )
+            assert generic_voice_command in combined_skill_text
+            assert "at most one minute" in combined_skill_text
+            assert "only if needed, one short follow-up" in combined_skill_text
+            specialist_handoff = (
+                "After substantive use of this workflow, read and follow the "
+                "`Plugin Improvement Feedback` section in "
+                f"`../{plugin_name}/SKILL.md`."
+            )
+            for skill_file in skill_files:
+                if skill_file.parent.name == plugin_name:
+                    continue
+                assert specialist_handoff in skill_file.read_text(
+                    encoding="utf-8"
+                ), skill_file
         else:
             assert (
                 "Keep the improvement note local to chat or run artifacts."

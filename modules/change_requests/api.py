@@ -24,6 +24,8 @@ from modules.change_requests.store import (
     get_change_request_store,
 )
 from modules.hosted_interviews.api import (
+    INTERVIEW_MODE_PLUGIN_IMPROVEMENT,
+    PLUGIN_IMPROVEMENT_CAMPAIGN_ID,
     PUBLIC_URL_TOKEN_PLACEHOLDER,
     PreparedInterviewRequest,
     create_prepared_interview,
@@ -218,7 +220,7 @@ class ChangeRequestInterviewSubmission(BaseModel):
 
 
 class ChangeRequestInterviewReceipt(ChangeRequestReceipt):
-    """Stable request receipt plus its three-minute interview link."""
+    """Stable request receipt plus its one-minute interview link."""
 
     interview_url: str
 
@@ -361,7 +363,7 @@ def start_change_request_interview(
     store: Store,
     rate_limiter: RateLimiter,
 ) -> ChangeRequestInterviewReceipt:
-    """Create or recover one three-minute voice interview request."""
+    """Create or recover one short voice interview request."""
 
     _enforce_rate_limit(request, rate_limiter, "intake")
     envelope = ChangeRequestSubmission(
@@ -384,18 +386,38 @@ def start_change_request_interview(
                 )
             ).removesuffix(f"/{PUBLIC_URL_TOKEN_PLACEHOLDER}")
             participant_intro = {
-                "it": "In tre minuti, racconta il miglioramento concreto che vorresti.",
-                "en": "In three minutes, explain the concrete improvement you want.",
-                "fr": "En trois minutes, expliquez l'amélioration concrète souhaitée.",
-                "de": "Erklären Sie in drei Minuten die gewünschte konkrete Verbesserung.",
+                "it": (
+                    "In un minuto, chiarisci il risultato concreto che vorresti. "
+                    "Non nominare clienti né condividere i loro dati."
+                ),
+                "en": (
+                    "In one minute, clarify the concrete result you want. "
+                    "Do not name clients or customers or share their data."
+                ),
+                "fr": (
+                    "En une minute, précisez le résultat concret souhaité. "
+                    "Ne nommez aucun client et ne partagez pas ses données."
+                ),
+                "de": (
+                    "Klären Sie in einer Minute das gewünschte konkrete Ergebnis. "
+                    "Nennen Sie keine Kunden und teilen Sie keine Kundendaten."
+                ),
+            }[payload.language]
+            plugin_name = payload.plugin.title()
+            opening_question = {
+                "it": f"Cosa dovrebbe fare meglio {plugin_name}?",
+                "en": f"What should {plugin_name} do better?",
+                "fr": f"Que devrait mieux faire {plugin_name} ?",
+                "de": f"Was sollte {plugin_name} besser machen?",
             }[payload.language]
             _token, interview = create_prepared_interview(
                 PreparedInterviewRequest(
-                    interview_campaign_id="plugin-improvement-v1",
+                    interview_campaign_id=PLUGIN_IMPROVEMENT_CAMPAIGN_ID,
                     case_id=record.change_request_id,
                     case_name=f"{payload.plugin.title()} improvement",
-                    interview_title="Three-minute improvement interview",
+                    interview_title="One-minute improvement interview",
                     interviewee_role="Plugin user",
+                    interview_mode=INTERVIEW_MODE_PLUGIN_IMPROVEMENT,
                     language=payload.language,
                     purpose=(
                         "Understand one concrete plugin capability request well enough "
@@ -403,17 +425,13 @@ def start_change_request_interview(
                     ),
                     participant_intro=participant_intro,
                     background_context=payload.opportunity,
-                    priority_topics=[
-                        "What the user wants the plugin to do",
-                        "What happens today",
-                        "What a useful result would look like",
-                    ],
+                    questions=[opening_question],
                     boundaries=[
                         "Do not ask for client or customer names or identifying details.",
                         "Do not ask for source documents, files, credentials, or secrets.",
                     ],
                     interviewer_name="Mparanza",
-                    max_duration_seconds=180,
+                    max_duration_seconds=60,
                 ),
                 public_url_base=url_base,
                 change_request_id=record.change_request_id,

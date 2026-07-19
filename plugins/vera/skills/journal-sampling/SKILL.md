@@ -5,6 +5,8 @@ description: Use when a user wants Codex to extract accounting journal entries f
 
 # Journal Sampling
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/journal-sampling` from this skill directory when it
 exists; otherwise resolve `../../../journal-sampling` in the repository. Read
 that module's `skills/journal-sampling/SKILL.md` completely and follow it. Treat

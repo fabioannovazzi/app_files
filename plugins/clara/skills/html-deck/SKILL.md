@@ -5,6 +5,8 @@ description: Build or revise source-faithful, cinematic, animated standalone HTM
 
 # HTML Deck
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 Create a decision-ready HTML presentation with bespoke editorial craft and a
 repeatable authoring, provenance, revision, and browser-QA system. Keep source
 material authoritative. Use motion to clarify meaning, not decorate it.

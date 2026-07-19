@@ -5,6 +5,8 @@ description: "Use when Clara or Codex generates, revises, or audits a clean PPTX
 
 # Claim Basis Map
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 Create a clean companion file for a deck:
 
 ```text

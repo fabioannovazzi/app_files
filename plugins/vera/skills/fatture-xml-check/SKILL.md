@@ -5,6 +5,8 @@ description: "Use when formally checking Italian FatturaPA XML files in a custom
 
 # Fatture XML Check
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/client-intake` from this skill directory when it exists;
 otherwise resolve `../../../client-intake` in the repository. Read that
 module's `skills/fatture-xml-check/SKILL.md` completely and follow it. Treat the
