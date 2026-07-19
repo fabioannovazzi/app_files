@@ -2831,7 +2831,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "harness": {
             "id": "codex",
-            "eyebrow": "Why only Codex",
             "title": "The harness changes what AI can do.",
             "description": (
                 "AI provides the capabilities. Codex puts them in a working environment "
@@ -2880,7 +2879,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "eyebrow": "Mparanza",
             "title": "Only Codex. On purpose.",
             "description": (
                 "Mparanza is Vera and Clara: two plugins that apply the same Codex "
@@ -2977,7 +2975,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "harness": {
             "id": "codex",
-            "eyebrow": "Perché solo Codex",
             "title": "L'ambiente operativo cambia ciò che l'AI può fare.",
             "description": (
                 "Le capacità vengono dall'AI. Codex le mette al lavoro in un ambiente "
@@ -3027,7 +3024,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "eyebrow": "Mparanza",
             "title": "Solo Codex. Per scelta.",
             "description": (
                 "Mparanza è Vera e Clara: due plugin che applicano lo stesso ambiente "
@@ -3125,7 +3121,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "harness": {
             "id": "codex",
-            "eyebrow": "Pourquoi uniquement Codex",
             "title": "L'environnement de travail change ce que l'IA peut faire.",
             "description": (
                 "Les capacités viennent de l'IA. Codex les rend opérationnelles dans un "
@@ -3176,7 +3171,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "eyebrow": "Mparanza",
             "title": "Uniquement pour Codex. Par choix.",
             "description": (
                 "Mparanza, c'est Vera et Clara : deux plugins qui appliquent le même "
@@ -3273,7 +3267,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "harness": {
             "id": "codex",
-            "eyebrow": "Warum nur Codex",
             "title": "Die Arbeitsumgebung verändert, was KI leisten kann.",
             "description": (
                 "KI bringt die Fähigkeiten mit. Codex stellt eine Arbeitsumgebung "
@@ -3326,7 +3319,6 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "eyebrow": "Mparanza",
             "title": "Nur Codex. Ganz bewusst.",
             "description": (
                 "Mparanza, das sind Vera und Clara: zwei Plugins, die dieselbe "
