@@ -2841,6 +2841,41 @@ def test_vera_public_page_uses_deck_blue_palette_without_black() -> None:
         assert black not in page
 
 
+@pytest.mark.parametrize(
+    ("companion", "install_attribute", "video_id", "expected_video_count"),
+    (
+        ("clara", "data-clara-install-link", "presentation-video-link", 1),
+        ("vera", "data-vera-install-link", "general-video-link", 2),
+    ),
+)
+def test_companion_overview_video_follows_install_action_in_hero(
+    companion: str,
+    install_attribute: str,
+    video_id: str,
+    expected_video_count: int,
+) -> None:
+    page = (
+        ROOT / "static" / "shared" / companion / "index.html"
+    ).read_text(encoding="utf-8")
+    hero_start = page.index('<section class="hero">')
+    hero_end = page.index("</section>", hero_start)
+    hero = page[hero_start:hero_end]
+
+    assert hero.index(install_attribute) < hero.index(f'id="{video_id}"')
+    assert page.count('class="video-story"') == expected_video_count
+
+
+def test_vera_invoice_video_remains_in_invoice_flow() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    invoice_start = page.index('<section class="invoice-flow"')
+    invoice_end = page.index("</section>", invoice_start)
+    invoice_flow = page[invoice_start:invoice_end]
+
+    assert 'id="invoice-video-link"' in invoice_flow
+
+
 def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
     source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
 
