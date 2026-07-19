@@ -3007,7 +3007,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "open_source": {
             "id": "open-source",
-            "title": "Aperti per scelta progettuale.",
+            "title": "Aperti per principio.",
             "description": (
                 "Vera e Clara sono plugin Codex open source e gratuiti da installare. "
                 "Puoi esaminare i metodi, i controlli e il codice prima di usarli, e "

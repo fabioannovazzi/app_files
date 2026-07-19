@@ -3166,7 +3166,7 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     ("lang", "expected_title", "free_install_fragment", "inspect_fragment"),
     (
         ("en", "Open by design.", "free to install", "inspect"),
-        ("it", "Aperti per scelta progettuale.", "gratuiti da installare", "esaminare"),
+        ("it", "Aperti per principio.", "gratuiti da installare", "esaminare"),
         ("fr", "Ouverts par conception.", "gratuits à l'installation", "examiner"),
         ("de", "Offen konzipiert.", "kostenlos installierbare", "prüfen"),
     ),
