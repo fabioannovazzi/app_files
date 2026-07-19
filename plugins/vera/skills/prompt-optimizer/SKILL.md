@@ -5,6 +5,8 @@ description: Use when a user wants Codex to turn a legal, tax, or compliance que
 
 # Optimize Prompt
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/prompt-optimizer` from this skill directory when it
 exists; otherwise resolve `../../../prompt-optimizer` in the repository. Read
 that module's `skills/prompt-optimizer/SKILL.md` completely and follow it. Treat

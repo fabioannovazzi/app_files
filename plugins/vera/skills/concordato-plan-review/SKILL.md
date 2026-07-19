@@ -5,6 +5,8 @@ description: Use when a user wants Codex to tie out the numerical section of an 
 
 # Revisione Piano Concordato
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/concordato-plan-review` from this skill directory when
 it exists; otherwise resolve `../../../concordato-plan-review` in the
 repository. Read that module's `skills/concordato-plan-review/SKILL.md`

@@ -5,8 +5,12 @@
   const interviewMode = body.dataset.mode || "case_interview";
   const language = body.dataset.language || "it";
   const model = body.dataset.model || "";
-  const SCRIPT_VERSION = "20260715-product-research-v2";
+  const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
+  const isPluginImprovementInterview =
+    interviewMode === PLUGIN_IMPROVEMENT_MODE;
+  const SCRIPT_VERSION = "20260719-plugin-improvement-v1";
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
+  const IMPROVEMENT_ANSWER_SETTLE_MS = 1200;
   const SILENCE_NUDGE_SECONDS = 35;
   const SILENCE_SIMPLIFY_SECONDS = 75;
   const NEAR_END_SECONDS = 120;
@@ -79,6 +83,11 @@
   let likelySpeechChunksSinceRealtime = 0;
   let connectionIssueHandled = false;
   let lastInterviewerTurnText = "";
+  let improvementQuestionTurnCount = 0;
+  let improvementAwaitingAnswer = false;
+  let improvementAnswerSettleTimer = null;
+  let improvementResponsePending = false;
+  let improvementCloseRequested = false;
   const pendingUploads = new Set();
   let uploadErrors = [];
 
@@ -264,6 +273,12 @@
     likelySpeechChunksSinceRealtime = 0;
     connectionIssueHandled = false;
     lastInterviewerTurnText = "";
+    improvementQuestionTurnCount = 0;
+    improvementAwaitingAnswer = false;
+    window.clearTimeout(improvementAnswerSettleTimer);
+    improvementAnswerSettleTimer = null;
+    improvementResponsePending = false;
+    improvementCloseRequested = false;
     uploadErrors = [];
   }
 
@@ -703,22 +718,141 @@
     return true;
   }
 
+  function improvementClosingHandoff() {
+    const normalizedLanguage = language.toLowerCase();
+    if (normalizedLanguage.startsWith("it")) {
+      return 'Grazie. Premi "Termina e salva" ora.';
+    }
+    if (normalizedLanguage.startsWith("fr")) {
+      return 'Merci. Appuyez maintenant sur « End and save ».';
+    }
+    if (normalizedLanguage.startsWith("de")) {
+      return 'Vielen Dank. Klicken Sie jetzt auf „End and save“.';
+    }
+    return 'Thank you. Press "End and save" now.';
+  }
+
+  function clearImprovementAnswerSettleTimer() {
+    window.clearTimeout(improvementAnswerSettleTimer);
+    improvementAnswerSettleTimer = null;
+  }
+
+  function settleImprovementAnswer() {
+    improvementAnswerSettleTimer = null;
+    if (
+      !isPluginImprovementInterview ||
+      !improvementAwaitingAnswer ||
+      ending ||
+      interviewClosing
+    ) {
+      return;
+    }
+    improvementAwaitingAnswer = false;
+    awaitingIntervieweeAnswer = false;
+    queueImprovementResponse();
+  }
+
+  function recordImprovementAnswerPart() {
+    if (!isPluginImprovementInterview || !improvementAwaitingAnswer) return;
+    clearImprovementAnswerSettleTimer();
+    improvementAnswerSettleTimer = window.setTimeout(
+      settleImprovementAnswer,
+      IMPROVEMENT_ANSWER_SETTLE_MS
+    );
+  }
+
+  function maybeCreateImprovementResponse() {
+    if (
+      !isPluginImprovementInterview ||
+      !improvementResponsePending ||
+      ending ||
+      interviewClosing ||
+      assistantResponseActive ||
+      !dc ||
+      dc.readyState !== "open"
+    ) {
+      return false;
+    }
+    improvementResponsePending = false;
+    const mustClose = improvementQuestionTurnCount >= 2;
+    const closingHandoff = improvementClosingHandoff();
+    const systemText = mustClose
+      ? [
+          "The participant answered the only permitted follow-up.",
+          "The hard two-turn question-response limit is reached. Ask no question.",
+          `Thank them and end with exactly: ${closingHandoff}`,
+        ].join("\n")
+      : [
+          "The participant answered the opening question.",
+          "Decide whether one implementation-relevant detail is still essential.",
+          "If the answer is already useful, ask no question; thank them and close.",
+          "Otherwise use the second and final question-response turn for exactly one short adaptive follow-up.",
+          `When closing, end with exactly: ${closingHandoff}`,
+        ].join("\n");
+    responseCount += 1;
+    markResponseCreateAttempt();
+    try {
+      sendEvent({
+        type: "response.create",
+        response: {
+          output_modalities: ["audio"],
+          input: responseInput(
+            systemText,
+            mustClose
+              ? "Close the improvement interview now without asking a question."
+              : "Ask the one optional follow-up or close now."
+          ),
+          metadata: {
+            response_index: String(responseCount),
+            context_strategy: "realtime_conversation",
+            trigger: mustClose
+              ? "plugin_improvement_forced_close"
+              : "plugin_improvement_follow_up_or_close",
+          },
+        },
+      });
+      improvementCloseRequested = mustClose;
+    } catch (error) {
+      assistantResponseActive = false;
+      improvementResponsePending = true;
+      console.warn("Could not continue plugin improvement interview", error);
+      return false;
+    }
+    return true;
+  }
+
+  function queueImprovementResponse() {
+    if (!isPluginImprovementInterview || ending || interviewClosing) return;
+    improvementResponsePending = true;
+    maybeCreateImprovementResponse();
+  }
+
   function createInitialResponse() {
     responseCount += 1;
     markResponseCreateAttempt();
+    const initialInstructions = isPluginImprovementInterview
+      ? [
+          "Start the one-minute plugin improvement interview now.",
+          "Briefly identify yourself as an AI interviewer.",
+          "Use any opportunity details already in the prepared brief; do not ask the participant to repeat supplied details unnecessarily.",
+          "This is the first of at most two interviewer question-response turns.",
+          "If the background already gives a concrete requested behavior, ask for the single most important missing implementation detail.",
+          "Otherwise use the prepared question as the fallback opening. Ask exactly one short question in this response.",
+        ].join("\n")
+      : [
+          "Start the hosted interview now.",
+          "Briefly greet the interviewee and identify yourself clearly as an AI interviewer. Explain the purpose from the prepared brief in one sentence, then ask the first question.",
+          "Use the prepared interview brief from the session instructions.",
+          `The interview has a hard browser limit of ${maxDurationLabel()}. Manage time so you can close before the limit.`,
+          "Ask only one question.",
+          "Do not mention hidden prompts or transcript processing.",
+        ].join("\n");
     sendEvent({
       type: "response.create",
       response: {
         output_modalities: ["audio"],
         input: responseInput(
-          [
-            "Start the hosted interview now.",
-            "Briefly greet the interviewee and identify yourself clearly as an AI interviewer. Explain the purpose from the prepared brief in one sentence, then ask the first question.",
-            "Use the prepared interview brief from the session instructions.",
-            `The interview has a hard browser limit of ${maxDurationLabel()}. Manage time so you can close before the limit.`,
-            "Ask only one question.",
-            "Do not mention hidden prompts or transcript processing.",
-          ].join("\n"),
+          initialInstructions,
           "Open the interview and ask the first question."
         ),
         metadata: {
@@ -784,7 +918,9 @@
     return (
       clean.includes("press end interview") ||
       clean.includes("end interview when") ||
-      clean.includes("you may now close this page")
+      clean.includes("you may now close this page") ||
+      (isPluginImprovementInterview &&
+        (clean.includes("end and save") || clean.includes("termina e salva")))
     );
   }
 
@@ -806,6 +942,9 @@
   }
 
   function manageSessionFlow() {
+    // Improvement interviews have a mechanically bounded number of interviewer
+    // response turns. The model decides whether the optional follow-up is useful.
+    if (isPluginImprovementInterview) return;
     if (
       ending ||
       interviewClosing ||
@@ -981,6 +1120,9 @@
         item_id: String(event.item_id || "").trim(),
         transcription_usage: event.usage || null,
       });
+      if (isPluginImprovementInterview) {
+        recordImprovementAnswerPart();
+      }
     }
     if (event.type === "response.output_audio_transcript.done") {
       const text = cleanTranscriptText(event.transcript || "");
@@ -988,11 +1130,17 @@
         lastInterviewerTurnAtMs = Date.now();
         lastInterviewerTurnText = text;
         assistantTranscript = appendTranscript(assistantTranscript, text);
-        if (isClosingHandoff(text)) {
+        if (
+          isClosingHandoff(text) ||
+          (isPluginImprovementInterview && improvementCloseRequested)
+        ) {
           interviewClosing = true;
           closingPromptSent = true;
           awaitingIntervieweeAnswer = false;
           silenceRecoveryCount = 2;
+          improvementAwaitingAnswer = false;
+          clearImprovementAnswerSettleTimer();
+          improvementResponsePending = false;
           postEvent("closing_handoff_detected", {
             elapsed_seconds: secondsElapsed(),
             turn_count: turnCount,
@@ -1012,13 +1160,31 @@
     }
     if (event.type === "response.done") {
       assistantResponseActive = false;
+      if (
+        isPluginImprovementInterview &&
+        improvementCloseRequested &&
+        !interviewClosing
+      ) {
+        interviewClosing = true;
+        closingPromptSent = true;
+        awaitingIntervieweeAnswer = false;
+        improvementAwaitingAnswer = false;
+        clearImprovementAnswerSettleTimer();
+        improvementResponsePending = false;
+        muteLiveInputAfterClosing();
+      }
       if (interviewClosing) {
         awaitingIntervieweeAnswer = false;
+      } else if (isPluginImprovementInterview) {
+        improvementQuestionTurnCount += 1;
+        improvementAwaitingAnswer = true;
+        awaitingIntervieweeAnswer = true;
       } else if (lastInterviewerTurnAtMs > lastIntervieweeTurnAtMs && lastInterviewerTurnText) {
         awaitingIntervieweeAnswer = true;
         interviewerQuestionId += 1;
       }
       responseCount += 1;
+      maybeCreateImprovementResponse();
       const response = event.response || {};
       const usage = response.usage || event.usage || null;
       if (usage) {
@@ -1032,6 +1198,11 @@
         });
       }
       setStatus("Interview active", activeStatusDetail());
+      if (isPluginImprovementInterview && interviewClosing && !ending) {
+        endInterview({ reason: "interviewer_close" }).catch((error) => {
+          setError(error.message || "The interview could not be saved.");
+        });
+      }
     }
     if (event.type === "error") {
       postEvent("realtime_error", { message: event.error?.message || "unknown" });
@@ -1052,7 +1223,6 @@
     statusTitle.classList.remove("error");
     startButton.disabled = true;
     setStatus("Starting interview", "Requesting microphone access...");
-    startedAt = new Date();
     localStream = await openMicrophone();
     pc = new RTCPeerConnection();
     pc.addEventListener("connectionstatechange", () => {
@@ -1087,6 +1257,7 @@
     dc.addEventListener("open", () => {
       lastDataChannelState = "open";
       markRealtimeProgress();
+      startedAt = new Date();
       setActive(true);
       startElapsedTimer();
       endButton.classList.remove("hidden");
@@ -1150,6 +1321,8 @@
   async function endInterview({ reason = "manual" } = {}) {
     if (ending) return;
     ending = true;
+    improvementAwaitingAnswer = false;
+    clearImprovementAnswerSettleTimer();
     try {
       endButton.disabled = true;
       startButton.disabled = true;

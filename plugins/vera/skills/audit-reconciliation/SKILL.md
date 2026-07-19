@@ -5,6 +5,8 @@ description: Use when a user wants Codex to reconcile accounting evidence across
 
 # Riconciliazione partite
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
 Resolve `../../modules/audit-reconciliation` from this skill directory when it
 exists; otherwise resolve `../../../audit-reconciliation` in the repository.
 Read that module's `skills/audit-reconciliation/SKILL.md` completely and follow

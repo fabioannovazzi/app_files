@@ -13,6 +13,8 @@ folder next to the user-provided input folder.
 
 # Reporting Engine
 
+After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
 Reporting Engine is Clara's reporting contract component. It packages the
 reviewed chart-selection manifest, gallery artifact metadata, role registry,
 family selector playbooks, Clara adapter registry, stable dataset semantic
@@ -166,12 +168,3 @@ shown, and any missing role must be visible. If a run creates persistent
 artifacts, include a `codex_run_review.md` file that links the manifest, dataset
 profile, semantic layer, semantic validation, compatibility table, and any final
 JSON outputs.
-
-## Plugin Improvement Feedback
-
-At the end of every completed or blocked run, briefly identify concrete
-improvements that would make this component more useful, such as missing render
-adapter coverage, weak role profiling, stale manifest evidence, missing dataset
-fixture type, or ambiguous capability wording.
-
-Keep the improvement note local to chat or run artifacts.

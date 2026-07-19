@@ -75,6 +75,27 @@ def _concurrent_submit_worker(
     )
 
 
+def _concurrent_prompt_reservation_worker(
+    plugin_root: str,
+    stable_root: str,
+    plugin_data: str,
+    checked_at: float,
+    ready_event: Any,
+    start_event: Any,
+    result_queue: Any,
+) -> None:
+    os.environ["MPARANZA_CHANGE_REQUEST_DATA"] = stable_root
+    client = load_client()
+    ready_event.set()
+    assert start_event.wait(5)
+    result = client.reserve_suggestion_prompt(
+        Path(plugin_root),
+        plugin_data=Path(plugin_data),
+        now=checked_at,
+    )
+    result_queue.put(result["ask"])
+
+
 def write_plugin(root: Path, name: str, version: str = "1.2.3") -> Path:
     plugin_root = root / name
     manifest_path = plugin_root / ".codex-plugin" / "plugin.json"
@@ -91,6 +112,82 @@ def read_state(path: Path) -> dict[str, Any]:
 
 def test_clara_and_vera_change_request_clients_stay_identical() -> None:
     assert CLARA_CLIENT.read_bytes() == VERA_CLIENT.read_bytes()
+
+
+def test_reserve_suggestion_prompt_cli_returns_machine_readable_decision(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_data = tmp_path / "plugin-data"
+    plugin_root = write_plugin(tmp_path, "clara")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    monkeypatch.setenv("PLUGIN_DATA", str(plugin_data))
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "change_requests.py",
+            "--plugin-root",
+            str(plugin_root),
+            "reserve-suggestion-prompt",
+        ],
+    )
+
+    exit_code = client.main()
+
+    output = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert output["ask"] is True
+    assert output["cooldown_seconds"] == 14 * 24 * 60 * 60
+    assert read_state(stable_root / "clara" / "state.json") == read_state(
+        plugin_data / "change-requests" / "state.json"
+    )
+
+
+def test_submit_suggestion_cli_dispatches_capability_request_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera")
+    request_path = tmp_path / "suggestion.json"
+    request_path.write_text(
+        json.dumps({"desired": "A deadline view"}), encoding="utf-8"
+    )
+    calls: list[tuple[Path, Path]] = []
+
+    def submit_suggestion(
+        plugin: Path, request: Path, **_kwargs: object
+    ) -> dict[str, Any]:
+        calls.append((plugin, request))
+        return {
+            "change_request_id": "CR-9",
+            "status": "open",
+        }
+
+    monkeypatch.setattr(client, "submit_suggestion", submit_suggestion)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "change_requests.py",
+            "--plugin-root",
+            str(plugin_root),
+            "submit-suggestion",
+            "--request",
+            str(request_path),
+        ],
+    )
+
+    exit_code = client.main()
+
+    assert exit_code == 0
+    assert calls == [(plugin_root, request_path)]
+    assert json.loads(capsys.readouterr().out)["change_request_id"] == "CR-9"
 
 
 def test_submit_problem_persists_before_post_and_syncs_both_state_stores(
@@ -218,6 +315,239 @@ def test_submit_problem_retries_with_same_persisted_submission_id(
         now=202.0,
     )
     assert repeated == receipt
+
+
+def test_submit_suggestion_posts_capability_and_reuses_durable_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_data = tmp_path / "plugin-data"
+    plugin_root = write_plugin(tmp_path, "clara")
+    request_path = tmp_path / "suggestion.json"
+    request_payload = {
+        "title": "Add a consolidated deadline view",
+        "desired": "Show every client deadline in one reviewed table",
+    }
+    request_path.write_text(json.dumps(request_payload), encoding="utf-8")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    posted: list[dict[str, Any]] = []
+
+    def opener(request: Any, **_kwargs: object) -> FakeResponse:
+        stable_state = read_state(stable_root / "clara" / "state.json")
+        explicit_state = read_state(plugin_data / "change-requests" / "state.json")
+        assert stable_state == explicit_state
+        assert stable_state["requests"][0]["kind"] == "capability"
+        posted.append(json.loads(request.data.decode("utf-8")))
+        return FakeResponse(
+            {
+                "change_request_id": "CR-124",
+                "status_token": "suggestion-secret",
+                "status": "open",
+                "fixed": False,
+                "fixed_version": None,
+                "install_url": None,
+            }
+        )
+
+    receipt = client.submit_suggestion(
+        plugin_root,
+        request_path,
+        plugin_data=plugin_data,
+        base_url="http://localhost:8080",
+        opener=opener,
+        now=250.0,
+    )
+
+    assert posted == [
+        {
+            "schema_version": 1,
+            "submission_id": receipt["submission_id"],
+            "kind": "capability",
+            "plugin": "clara",
+            "plugin_version": "1.2.3",
+            "request": request_payload,
+        }
+    ]
+
+    def must_not_post(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("A stored suggestion receipt should make a retry local")
+
+    repeated = client.submit_suggestion(
+        plugin_root,
+        request_path,
+        plugin_data=plugin_data,
+        base_url="http://localhost:8080",
+        opener=must_not_post,
+        now=251.0,
+    )
+    assert repeated == receipt
+
+
+def test_first_suggestion_prompt_reservation_persists_to_both_state_stores(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_data = tmp_path / "plugin-data"
+    plugin_root = write_plugin(tmp_path, "vera")
+    first_at = 1_000.0
+    cooldown = 14 * 24 * 60 * 60
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+
+    result = client.reserve_suggestion_prompt(
+        plugin_root,
+        plugin_data=plugin_data,
+        now=first_at,
+    )
+
+    assert result == {
+        "ask": True,
+        "cooldown_seconds": cooldown,
+        "reserved_at": first_at,
+        "next_eligible_at": first_at + cooldown,
+    }
+    stable_state = read_state(stable_root / "vera" / "state.json")
+    explicit_state = read_state(plugin_data / "change-requests" / "state.json")
+    assert stable_state == explicit_state
+    assert stable_state["suggestion_prompt_reserved_at"] == first_at
+    assert (stable_root / "vera" / "state.json").stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize("failed_store", ["stable", "plugin_data"])
+def test_suggestion_prompt_reservation_succeeds_with_one_writable_state_store(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failed_store: str,
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_data = tmp_path / "plugin-data"
+    plugin_root = write_plugin(tmp_path, "clara")
+    first_at = 2_000.0
+    stable_path = stable_root / "clara" / "state.json"
+    plugin_data_path = plugin_data / "change-requests" / "state.json"
+    failed_path = stable_path if failed_store == "stable" else plugin_data_path
+    successful_path = plugin_data_path if failed_store == "stable" else stable_path
+    original_write = client._write_one_state
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+
+    def fail_one_replica(path: Path, state: dict[str, Any]) -> None:
+        if path == failed_path:
+            raise OSError("replica unavailable")
+        original_write(path, state)
+
+    monkeypatch.setattr(client, "_write_one_state", fail_one_replica)
+
+    result = client.reserve_suggestion_prompt(
+        plugin_root,
+        plugin_data=plugin_data,
+        now=first_at,
+    )
+
+    assert result["ask"] is True
+    assert read_state(successful_path)["suggestion_prompt_reserved_at"] == first_at
+    assert not failed_path.exists()
+
+
+@pytest.mark.parametrize(
+    ("elapsed_seconds", "expected_ask", "expected_reserved_at"),
+    [
+        (14 * 24 * 60 * 60 - 1, False, 1_000.0),
+        (14 * 24 * 60 * 60, True, 1_000.0 + 14 * 24 * 60 * 60),
+    ],
+)
+def test_suggestion_prompt_reservation_enforces_exact_fourteen_day_boundary(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    elapsed_seconds: int,
+    expected_ask: bool,
+    expected_reserved_at: float,
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_data = tmp_path / "plugin-data"
+    plugin_root = write_plugin(tmp_path, "clara")
+    first_at = 1_000.0
+    cooldown = 14 * 24 * 60 * 60
+    stable_path = stable_root / "clara" / "state.json"
+    stable_path.parent.mkdir(parents=True)
+    stable_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "plugin": "clara",
+                "requests": [],
+                "suggestion_prompt_reserved_at": first_at,
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+
+    result = client.reserve_suggestion_prompt(
+        plugin_root,
+        plugin_data=plugin_data,
+        now=first_at + elapsed_seconds,
+    )
+
+    assert result == {
+        "ask": expected_ask,
+        "cooldown_seconds": cooldown,
+        "reserved_at": expected_reserved_at,
+        "next_eligible_at": expected_reserved_at + cooldown,
+    }
+    assert read_state(stable_path) == read_state(
+        plugin_data / "change-requests" / "state.json"
+    )
+
+
+def test_parallel_prompt_reservations_admit_exactly_one_ask(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    if "fork" not in multiprocessing.get_all_start_methods():
+        pytest.skip("This regression test requires fork-capable process locking.")
+    context = multiprocessing.get_context("fork")
+    stable_root = tmp_path / "stable"
+    plugin_data = tmp_path / "plugin-data"
+    plugin_root = write_plugin(tmp_path, "clara")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    first_ready = context.Event()
+    second_ready = context.Event()
+    start_event = context.Event()
+    result_queue = context.Queue()
+    args = (
+        str(plugin_root),
+        str(stable_root),
+        str(plugin_data),
+        5_000.0,
+    )
+    first_process = context.Process(
+        target=_concurrent_prompt_reservation_worker,
+        args=(*args, first_ready, start_event, result_queue),
+    )
+    second_process = context.Process(
+        target=_concurrent_prompt_reservation_worker,
+        args=(*args, second_ready, start_event, result_queue),
+    )
+
+    first_process.start()
+    second_process.start()
+    assert first_ready.wait(5)
+    assert second_ready.wait(5)
+    start_event.set()
+    first_process.join(5)
+    second_process.join(5)
+
+    assert first_process.exitcode == 0
+    assert second_process.exitcode == 0
+    assert sorted([result_queue.get(timeout=5), result_queue.get(timeout=5)]) == [
+        False,
+        True,
+    ]
+    assert read_state(stable_root / "clara" / "state.json") == read_state(
+        plugin_data / "change-requests" / "state.json"
+    )
 
 
 def test_parallel_processes_preserve_both_receipts(

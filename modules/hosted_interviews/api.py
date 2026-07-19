@@ -65,7 +65,9 @@ from modules.utilities.cache import get_cache_dir
 from modules.utilities.secrets_loader import load_env_from_secrets_file
 
 __all__ = [
+    "INTERVIEW_MODE_PLUGIN_IMPROVEMENT",
     "NOTIFICATION_EMAIL_ENV",
+    "PLUGIN_IMPROVEMENT_CAMPAIGN_ID",
     "PreparedCampaignInterviewRequest",
     "PreparedInterviewRequest",
     "admin_router",
@@ -119,6 +121,7 @@ POST_COMPLETION_EVENT_TYPES = {
     "post_call_completion_reclassified",
 }
 MIN_COMPLETED_INTERVIEWEE_WORDS = 25
+MIN_PLUGIN_IMPROVEMENT_INTERVIEWEE_WORDS = 3
 NON_SUBSTANTIVE_INTERVIEWER_TURN_NORMALIZED = {
     "daccord je vois",
     "d accord je vois",
@@ -132,7 +135,9 @@ NON_SUBSTANTIVE_INTERVIEWER_TURN_NORMALIZED = {
     "un instant",
 }
 INTERVIEW_MODE_CASE = "case_interview"
+INTERVIEW_MODE_PLUGIN_IMPROVEMENT = "plugin_improvement_interview"
 INTERVIEW_MODE_RESEARCH = "research_interview"
+PLUGIN_IMPROVEMENT_CAMPAIGN_ID = "plugin-improvement-v1"
 INTERVIEW_REVIEW_RESPONSE_FORMAT = {
     "type": "json_schema",
     "name": "hosted_interview_quality_review",
@@ -487,6 +492,11 @@ def _clean_interview_mode(value: str) -> str:
     normalized = "_".join(normalized.split())
     if normalized in {"research", "research_interview", "survey"}:
         return INTERVIEW_MODE_RESEARCH
+    if normalized in {
+        "plugin_improvement",
+        "plugin_improvement_interview",
+    }:
+        return INTERVIEW_MODE_PLUGIN_IMPROVEMENT
     return INTERVIEW_MODE_CASE
 
 
@@ -870,7 +880,48 @@ def _interview_mode_instructions(record: Mapping[str, Any]) -> list[str]:
     ]
 
 
+def _plugin_improvement_closing_handoff(language: str) -> str:
+    normalized = language.strip().lower()
+    if normalized.startswith("it"):
+        return 'Grazie. Premi "Termina e salva" ora.'
+    if normalized.startswith("fr"):
+        return "Merci. Appuyez maintenant sur « End and save »."
+    if normalized.startswith("de"):
+        return "Vielen Dank. Klicken Sie jetzt auf „End and save“."
+    return 'Thank you. Press "End and save" now.'
+
+
+def _plugin_improvement_instructions(record: Mapping[str, Any], language: str) -> str:
+    """Return the short, two-question-response-turn suggestion contract."""
+
+    brief = "\n".join(_brief_lines(record))
+    closing_handoff = _plugin_improvement_closing_handoff(language)
+    return "\n\n".join(
+        [
+            "You are Mparanza's hosted AI interviewer for one plugin improvement suggestion.",
+            "Use any concrete opportunity details already present in the prepared brief. Do not make the participant repeat details they have already supplied.",
+            "There is a hard maximum of two interviewer question-response turns for the whole interview.",
+            "Each question-response turn must contain exactly one short question.",
+            "For the opening, inspect the background context. If it already contains a concrete requested behavior, ask for the single most important missing implementation detail. Otherwise use the single prepared question as the fallback opening.",
+            "After the first answer, decide whether one implementation-relevant detail is still essential. If not, close immediately. If so, ask one short adaptive follow-up and no other question.",
+            "A clarification or rephrasing uses the optional follow-up. After any follow-up answer, close immediately without another question.",
+            "Do not ask a generic final question, ask whether anything was missed, summarize as a question, or cover the priority topics as a checklist.",
+            f"Every closing must contain no question and end with exactly: {closing_handoff}",
+            "The browser has a hard one-minute limit. Finish earlier as soon as the answer is usable.",
+            "Respect every prepared boundary. Never request client material, identifying details, files, credentials, or secrets.",
+            f"Use this configured language for the whole interview: {language}.",
+            "Prepared interview brief:",
+            brief or "(No prepared brief supplied.)",
+        ]
+    )
+
+
 def _interview_instructions(record: Mapping[str, Any], language: str) -> str:
+    if (
+        _clean_interview_mode(str(record.get("interview_mode", "")))
+        == INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+    ):
+        return _plugin_improvement_instructions(record, language)
     brief = "\n".join(_brief_lines(record))
     thinking_bridge_examples = _thinking_bridge_examples(language)
     interviewer_name = (
@@ -938,6 +989,7 @@ def _build_realtime_session_config(
     language: str,
     model: str,
 ) -> dict[str, Any]:
+    interview_mode = _clean_interview_mode(str(record.get("interview_mode", "")))
     return {
         "type": "realtime",
         "model": model or DEFAULT_MODEL,
@@ -948,8 +1000,12 @@ def _build_realtime_session_config(
                 "turn_detection": {
                     "type": "semantic_vad",
                     "eagerness": "low",
-                    "create_response": True,
-                    "interrupt_response": True,
+                    "create_response": (
+                        interview_mode != INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+                    ),
+                    "interrupt_response": (
+                        interview_mode != INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+                    ),
                 },
                 "transcription": {
                     "model": DEFAULT_TRANSCRIPTION_MODEL,
@@ -1604,6 +1660,7 @@ def _has_media_upload_failure(
 
 
 def _classify_completion_status(
+    record: Mapping[str, Any],
     completion: Mapping[str, Any],
     events: list[dict[str, Any]],
     dialog_turns: list[dict[str, str]],
@@ -1618,13 +1675,26 @@ def _classify_completion_status(
         events,
         interviewee_words=interviewee_words,
     )
-    if interviewee_words < MIN_COMPLETED_INTERVIEWEE_WORDS:
+    is_plugin_improvement = (
+        _clean_interview_mode(str(record.get("interview_mode", "")))
+        == INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+    )
+    # This deliberately low mechanical gate rejects empty or one-word attempts.
+    # It does not claim semantic usefulness; central triage owns that judgment.
+    minimum_words = (
+        MIN_PLUGIN_IMPROVEMENT_INTERVIEWEE_WORDS
+        if is_plugin_improvement
+        else MIN_COMPLETED_INTERVIEWEE_WORDS
+    )
+    if interviewee_words < minimum_words:
         if has_failure:
             return (
                 INTERVIEW_STATUS_FAILED_TECHNICAL,
                 "connection_or_transcription_failed_before_usable_interview",
             )
         return INTERVIEW_STATUS_INCOMPLETE, "too_little_interviewee_substance"
+    if is_plugin_improvement and interviewee_words < MIN_COMPLETED_INTERVIEWEE_WORDS:
+        return INTERVIEW_STATUS_COMPLETED, "completed_short_plugin_improvement"
     return INTERVIEW_STATUS_COMPLETED, "completed_with_minimum_substance"
 
 
@@ -1741,6 +1811,7 @@ def _write_completion_status(
     session_dir = _session_dir(token)
     dialog_turns = _dialog_turns_for_session(events, completion)
     final_status, status_reason = _classify_completion_status(
+        record,
         completion,
         events,
         dialog_turns,
@@ -2101,6 +2172,12 @@ def _run_interview_quality_review_task(token: str) -> None:
     except HostedInterviewError as exc:
         LOGGER.info("Hosted interview quality review task skipped: %s", exc)
         return
+    if (
+        _clean_interview_mode(str(record.get("interview_mode", "")))
+        == INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+    ):
+        LOGGER.info("Hosted interview quality review skipped for plugin improvement")
+        return
     session_dir = _session_dir(token)
     completion = _completion_for_session(session_dir)
     if not completion:
@@ -2257,9 +2334,15 @@ def _run_interview_post_completion_task_locked(
             completion=dict(completion),
             events=events,
         )
-    _attach_change_request_completion(record, completion)
     if str(completion.get("completion_status", "")) == INTERVIEW_STATUS_COMPLETED:
-        _run_interview_quality_review_task(token)
+        _attach_change_request_completion(record, completion)
+        if (
+            _clean_interview_mode(str(record.get("interview_mode", "")))
+            == INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+        ):
+            _send_completion_notification(record, completion)
+        else:
+            _run_interview_quality_review_task(token)
         return
     _send_completion_notification(record, completion)
 
@@ -2630,13 +2713,17 @@ def public_interview_session(
             updated.pop("completion_status_reason", None)
             _save_record_for_token(token, updated)
             record = updated
-        _start_partner_sideband(
-            token=token,
-            record=record,
-            call_id=realtime_call.call_id,
-            api_key=api_key,
-            language=language,
-        )
+        if (
+            _clean_interview_mode(str(record.get("interview_mode", "")))
+            != INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+        ):
+            _start_partner_sideband(
+                token=token,
+                record=record,
+                call_id=realtime_call.call_id,
+                api_key=api_key,
+                language=language,
+            )
     except HostedInterviewError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
@@ -2836,15 +2923,21 @@ def _public_interview_complete_locked(
     )
     final_status = str(completion.get("completion_status", ""))
     status_reason = str(completion.get("completion_status_reason", ""))
+    is_plugin_improvement = (
+        _clean_interview_mode(str(updated.get("interview_mode", "")))
+        == INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+    )
     should_run_post_call_task = _should_run_post_call_interviewee_transcription(
         completion,
         events,
     )
-    if not should_run_post_call_task:
+    if not should_run_post_call_task and final_status == INTERVIEW_STATUS_COMPLETED:
         _attach_change_request_completion(updated, completion)
     review_status = "skipped"
     if should_run_post_call_task:
         review_status = "queued_after_post_call_transcription"
+    elif final_status == INTERVIEW_STATUS_COMPLETED and is_plugin_improvement:
+        review_status = "skipped_for_plugin_improvement"
     elif final_status == INTERVIEW_STATUS_COMPLETED:
         review_status = "queued"
     _append_event(
@@ -2872,6 +2965,9 @@ def _public_interview_complete_locked(
         background_tasks.add_task(_run_interview_post_completion_task, token)
         notification_sent = False
         notification_status = "queued_after_post_call_transcription"
+    elif final_status == INTERVIEW_STATUS_COMPLETED and is_plugin_improvement:
+        notification_sent = _send_completion_notification(updated, completion)
+        notification_status = "sent" if notification_sent else "failed"
     elif final_status == INTERVIEW_STATUS_COMPLETED:
         background_tasks.add_task(_run_interview_quality_review_task, token)
         notification_sent = False

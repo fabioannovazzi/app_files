@@ -189,7 +189,7 @@ def test_prepared_interview_is_case_agnostic(tmp_path: Path, monkeypatch) -> Non
     assert record["notification_email"] == TEST_NOTIFICATION_EMAIL
 
 
-def test_prepared_interview_can_use_three_minute_improvement_brief(
+def test_prepared_interview_can_use_one_minute_improvement_brief(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path))
@@ -197,31 +197,46 @@ def test_prepared_interview_can_use_three_minute_improvement_brief(
         interview_campaign_id="plugin-improvement-v1",
         case_id="CR-123",
         case_name="Clara improvement",
-        interview_title="Three-minute improvement interview",
+        interview_title="One-minute improvement interview",
+        interview_mode=api.INTERVIEW_MODE_PLUGIN_IMPROVEMENT,
         purpose="Understand one concrete plugin capability request.",
         interviewer_name="Mparanza",
-        max_duration_seconds=180,
+        max_duration_seconds=60,
     )
 
     _token, record = api.create_prepared_interview(payload, change_request_id="CR-123")
 
     assert record["interviewer_name"] == "Mparanza"
-    assert record["max_duration_seconds"] == 180
+    assert record["max_duration_seconds"] == 60
+    assert record["interview_mode"] == api.INTERVIEW_MODE_PLUGIN_IMPROVEMENT
     assert record["change_request_id"] == "CR-123"
 
 
-def test_three_minute_improvement_interview_uses_its_actual_limit() -> None:
+def test_plugin_improvement_instructions_enforce_short_two_turn_contract() -> None:
     record = {
         "interviewer_name": "Mparanza",
-        "max_duration_seconds": 180,
-        "interview_mode": api.INTERVIEW_MODE_CASE,
+        "max_duration_seconds": 60,
+        "interview_mode": api.INTERVIEW_MODE_PLUGIN_IMPROVEMENT,
+        "questions": ["Cosa dovrebbe succedere con questo miglioramento?"],
     }
 
     instructions = api._interview_instructions(record, "it")
 
-    assert "You are Mparanza's hosted interview voice interviewer." in instructions
-    assert "hard 3-minute browser limit" in instructions
-    assert "minute 2" in instructions
+    assert "hard maximum of two interviewer question-response turns" in instructions
+    assert (
+        "Each question-response turn must contain exactly one short question"
+        in instructions
+    )
+    assert (
+        "ask for the single most important missing implementation detail"
+        in instructions
+    )
+    assert "prepared question as the fallback opening" in instructions
+    assert "ask one short adaptive follow-up and no other question" in instructions
+    assert "After any follow-up answer, close immediately" in instructions
+    assert "hard one-minute limit" in instructions
+    assert "private coverage tracker" not in instructions
+    assert "anything important you did not ask" not in instructions
     assert "hard 15-minute browser limit" not in instructions
 
 
@@ -534,6 +549,9 @@ def test_public_session_uses_prepared_context(tmp_path: Path, monkeypatch) -> No
     assert session_config["reasoning"] == {"effort": "high"}
     assert session_config["audio"]["input"]["turn_detection"]["eagerness"] == "low"
     assert session_config["audio"]["input"]["turn_detection"]["create_response"] is True
+    assert (
+        session_config["audio"]["input"]["turn_detection"]["interrupt_response"] is True
+    )
     assert started_sidebands
     assert started_sidebands[0]["call_id"] == "rtc_test123"
     assert started_sidebands[0]["api_key"] == "test-key"
@@ -543,6 +561,51 @@ def test_public_session_uses_prepared_context(tmp_path: Path, monkeypatch) -> No
         )
     )
     assert updated_record["status"] == "started"
+
+
+def test_plugin_improvement_session_disables_auto_response_and_sideband(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path))
+    token, _record = api.create_prepared_interview(
+        api.PreparedInterviewRequest(
+            interview_campaign_id=api.PLUGIN_IMPROVEMENT_CAMPAIGN_ID,
+            interview_mode=api.INTERVIEW_MODE_PLUGIN_IMPROVEMENT,
+            questions=["What should happen when you use this improvement?"],
+            max_duration_seconds=60,
+        )
+    )
+    captured: dict[str, object] = {}
+    started_sidebands: list[dict[str, object]] = []
+
+    def fake_realtime_call(**kwargs):
+        captured.update(kwargs)
+        return RealtimeCallResult(sdp="answer-sdp", call_id="rtc_improvement")
+
+    monkeypatch.setattr(api, "_resolve_openai_api_key", lambda: "test-key")
+    monkeypatch.setattr(api, "create_realtime_call_with_metadata", fake_realtime_call)
+    monkeypatch.setattr(
+        api,
+        "_start_partner_sideband",
+        lambda **kwargs: started_sidebands.append(kwargs),
+    )
+
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/session",
+        json={"sdp": "offer-sdp", "language": "en"},
+    )
+
+    assert response.status_code == 200
+    session_config = captured["session_config"]
+    assert isinstance(session_config, dict)
+    assert (
+        session_config["audio"]["input"]["turn_detection"]["create_response"] is False
+    )
+    assert (
+        session_config["audio"]["input"]["turn_detection"]["interrupt_response"]
+        is False
+    )
+    assert started_sidebands == []
 
 
 def test_legacy_record_without_campaign_uses_its_embedded_brief(
@@ -1687,6 +1750,67 @@ def test_completion_accepts_video_chunk_count_without_uploaded_video_file(
     assert response.status_code == 200
 
 
+@pytest.mark.parametrize(
+    ("answer", "expected_status", "expected_reason"),
+    [
+        (
+            "Export every table",
+            api.INTERVIEW_STATUS_COMPLETED,
+            "completed_short_plugin_improvement",
+        ),
+        (
+            "yes",
+            api.INTERVIEW_STATUS_INCOMPLETE,
+            "too_little_interviewee_substance",
+        ),
+    ],
+)
+def test_plugin_improvement_completion_uses_low_effort_word_threshold(
+    tmp_path: Path,
+    monkeypatch,
+    answer: str,
+    expected_status: str,
+    expected_reason: str,
+) -> None:
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path))
+    token, record = api.create_prepared_interview(
+        api.PreparedInterviewRequest(
+            interview_campaign_id=api.PLUGIN_IMPROVEMENT_CAMPAIGN_ID,
+            interview_mode=api.INTERVIEW_MODE_PLUGIN_IMPROVEMENT,
+            questions=["What should happen when you use this improvement?"],
+            max_duration_seconds=60,
+        )
+    )
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    review_calls: list[str] = []
+    monkeypatch.setattr(api, "send_plain_text_email", lambda *_args, **_kwargs: True)
+    monkeypatch.setattr(
+        api,
+        "_run_interview_quality_review_task",
+        lambda called_token: review_calls.append(called_token),
+    )
+
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/complete",
+        json={
+            "attempt_id": attempt_id,
+            "user_transcript": answer,
+            "assistant_transcript": "What should happen?",
+            "elapsed_seconds": 20,
+            "transcript_words": 999,
+            "audio_chunks": 0,
+            "telemetry": {"turns": 1, "completion_reason": "manual"},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["status"] == expected_status
+    assert response.json()["completion_status_reason"] == expected_reason
+    assert review_calls == []
+    if expected_status == api.INTERVIEW_STATUS_COMPLETED:
+        assert response.json()["review_status"] == "skipped_for_plugin_improvement"
+
+
 def test_short_manual_completion_is_marked_incomplete_without_review(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -2011,7 +2135,27 @@ def test_browser_script_records_turns_without_driving_followups() -> None:
     assert 'postEvent("interviewee_turn"' in script
     assert 'postEvent("interviewer_turn"' in script
     assert "pendingAnswerParts" not in script
-    assert "follow_up_" not in script
+
+
+def test_browser_script_bounds_plugin_improvement_question_response_turns() -> None:
+    script = Path("static/js/hosted-interview.js").read_text(encoding="utf-8")
+
+    assert 'PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview"' in script
+    assert "improvementAnswerCount" not in script
+    assert "improvementQuestionTurnCount += 1" in script
+    assert "improvementQuestionTurnCount >= 2" in script
+    assert "improvementAwaitingAnswer" in script
+    assert "recordImprovementAnswerPart();" in script
+    assert "IMPROVEMENT_ANSWER_SETTLE_MS" in script
+    assert "trigger: mustClose" in script
+    assert '"plugin_improvement_forced_close"' in script
+    assert '"plugin_improvement_follow_up_or_close"' in script
+    assert "if (isPluginImprovementInterview) return;" in script
+    assert "queueImprovementResponse();" in script
+    assert 'endInterview({ reason: "interviewer_close" })' in script
+    assert "isPluginImprovementInterview &&" in script
+    assert 'clean.includes("end and save")' in script
+    assert "single most important missing implementation detail" in script
 
 
 def test_browser_script_has_no_short_answer_completion_gate() -> None:
@@ -2023,7 +2167,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert 'postJson("/complete"' in script
-    assert "20260715-product-research-v2" in template
+    assert "20260719-plugin-improvement-v1" in template
 
 
 def test_browser_script_uses_attempt_id_for_attempt_writes() -> None:
@@ -2048,6 +2192,13 @@ def test_browser_script_uses_attempt_id_for_attempt_writes() -> None:
     assert start_function.index(
         'const response = await postJson("/session"'
     ) < start_function.index("startAudioRecorder(localStream);")
+    assert start_function.count("startedAt = new Date();") == 1
+    assert start_function.index('dc.addEventListener("open"') < start_function.index(
+        "startedAt = new Date();"
+    )
+    assert start_function.index(
+        "localStream = await openMicrophone();"
+    ) < start_function.index("startedAt = new Date();")
 
 
 def test_browser_script_keeps_screen_recording_out_of_interview_start() -> None:
@@ -2156,7 +2307,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260715-product-research-v2" in script
+    assert "20260719-plugin-improvement-v1" in script
     assert 'postEvent("client_metadata", clientMetadata())' in script
     assert 'postEvent("speech_started"' in script
     assert 'postEvent("speech_stopped"' in script

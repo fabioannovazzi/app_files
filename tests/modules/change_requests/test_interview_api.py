@@ -11,6 +11,7 @@ from modules.change_requests import api as change_request_api
 from modules.change_requests import store as change_request_store
 from modules.change_requests.store import ChangeRequestStore
 from modules.hosted_interviews import api as hosted_interview_api
+from modules.openai_realtime import RealtimeCallResult
 
 
 def _client(store: ChangeRequestStore) -> TestClient:
@@ -35,7 +36,7 @@ def _payload() -> dict[str, object]:
     }
 
 
-def test_interview_submission_returns_same_three_minute_link_on_retry(
+def test_interview_submission_returns_same_one_minute_link_on_retry(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path / "interviews"))
@@ -51,10 +52,48 @@ def test_interview_submission_returns_same_three_minute_link_on_retry(
     assert first.json()["change_request_id"] == "CR-1"
     token = first.json()["interview_url"].rsplit("/", 1)[-1]
     interview = hosted_interview_api._load_record_for_token(token)
-    assert interview["max_duration_seconds"] == 180
+    assert interview["max_duration_seconds"] == 60
     assert interview["interviewer_name"] == "Mparanza"
+    assert (
+        interview["interview_mode"]
+        == hosted_interview_api.INTERVIEW_MODE_PLUGIN_IMPROVEMENT
+    )
+    assert interview["priority_topics"] == []
+    assert interview["questions"] == ["Cosa dovrebbe fare meglio Clara?"]
+    assert "Non nominare clienti" in interview["participant_intro"]
     assert interview["change_request_id"] == "CR-1"
+    instructions = hosted_interview_api._interview_instructions(interview, "it")
+    assert "hard maximum of two interviewer question-response turns" in instructions
+    assert (
+        "ask for the single most important missing implementation detail"
+        in instructions
+    )
+    assert "prepared question as the fallback opening" in instructions
+    assert "Do not ask a generic final question" in instructions
+    assert "anything important you did not ask as its own turn" not in instructions
+    assert "private coverage tracker" not in instructions
     assert len(store.list_open()) == 1
+
+
+def test_interview_opening_question_names_vera(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path / "interviews"))
+    store = ChangeRequestStore(sqlite_path=tmp_path / "requests.sqlite3")
+    payload = _payload()
+    payload.update(
+        {
+            "submission_id": "79a4759f-57bf-416b-8834-e93263307133",
+            "plugin": "vera",
+            "language": "en",
+        }
+    )
+
+    response = _client(store).post("/api/change-requests/interviews", json=payload)
+
+    assert response.status_code == 201
+    token = response.json()["interview_url"].rsplit("/", 1)[-1]
+    interview = hosted_interview_api._load_record_for_token(token)
+    assert interview["questions"] == ["What should Vera do better?"]
+    assert "Do not name clients or customers" in interview["participant_intro"]
 
 
 def test_completing_improvement_interview_attaches_transcript_to_request(
@@ -101,6 +140,81 @@ def test_completing_improvement_interview_attaches_transcript_to_request(
     completion = json.loads(request_record.interview_json)
     assert completion["user_transcript"].startswith("I need the plugin")
     assert completion["elapsed_seconds"] == 42
+
+
+def test_successful_retry_replaces_no_change_request_completion(
+    tmp_path: Path, monkeypatch
+) -> None:
+    interviews_root = tmp_path / "interviews"
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(interviews_root))
+    store = ChangeRequestStore(sqlite_path=tmp_path / "requests.sqlite3")
+    client = _client(store)
+    created = client.post("/api/change-requests/interviews", json=_payload()).json()
+    token = created["interview_url"].rsplit("/", 1)[-1]
+    record = hosted_interview_api._load_record_for_token(token)
+    record_path = interviews_root / "sessions" / record["token_hash"] / "interview.json"
+    persisted = json.loads(record_path.read_text(encoding="utf-8"))
+    persisted["status"] = hosted_interview_api.INTERVIEW_STATUS_STARTED
+    persisted["started_at"] = hosted_interview_api._iso(hosted_interview_api._now())
+    persisted["active_attempt_id"] = "attempt-incomplete"
+    record_path.write_text(json.dumps(persisted), encoding="utf-8")
+    monkeypatch.setattr(change_request_store, "get_change_request_store", lambda: store)
+    monkeypatch.setattr(
+        hosted_interview_api,
+        "_post_call_interviewee_transcription_enabled",
+        lambda: False,
+    )
+    monkeypatch.setattr(
+        hosted_interview_api, "_send_completion_notification", lambda *_args: False
+    )
+
+    incomplete = client.post(
+        f"/case-notes/api/interviews/{token}/complete",
+        json={
+            "attempt_id": "attempt-incomplete",
+            "user_transcript": "yes",
+            "assistant_transcript": "What should Clara do better?",
+            "elapsed_seconds": 10,
+            "transcript_words": 1,
+        },
+    )
+    after_incomplete = store.get("CR-1")
+    monkeypatch.setattr(hosted_interview_api, "_resolve_openai_api_key", lambda: "key")
+    monkeypatch.setattr(
+        hosted_interview_api,
+        "create_realtime_call_with_metadata",
+        lambda **_kwargs: RealtimeCallResult(sdp="answer-sdp", call_id="rtc-retry"),
+    )
+    retry_session = client.post(
+        f"/case-notes/api/interviews/{token}/session",
+        json={"sdp": "offer-sdp", "language": "it"},
+    )
+    retry_attempt_id = retry_session.json()["attempt_id"]
+    completed = client.post(
+        f"/case-notes/api/interviews/{token}/complete",
+        json={
+            "attempt_id": retry_attempt_id,
+            "user_transcript": "Esporta ogni tabella",
+            "assistant_transcript": "Quale formato deve avere?",
+            "elapsed_seconds": 20,
+            "transcript_words": 3,
+        },
+    )
+
+    assert incomplete.status_code == 200
+    assert (
+        incomplete.json()["status"] == hosted_interview_api.INTERVIEW_STATUS_INCOMPLETE
+    )
+    assert after_incomplete is not None
+    assert after_incomplete.interview_json is None
+    assert retry_session.status_code == 200
+    assert completed.status_code == 200
+    assert completed.json()["status"] == hosted_interview_api.INTERVIEW_STATUS_COMPLETED
+    final_request = store.get("CR-1")
+    assert final_request is not None
+    assert final_request.interview_json is not None
+    attached = json.loads(final_request.interview_json)
+    assert attached["user_transcript"] == "Esporta ogni tabella"
 
 
 def test_post_call_transcript_is_finalized_before_change_request_attachment(
