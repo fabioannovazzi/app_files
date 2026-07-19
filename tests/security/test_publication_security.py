@@ -2,23 +2,10 @@ from __future__ import annotations
 
 import subprocess
 import tomllib
-import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SECRET_FILE = Path(".secrets/secrets.toml")
-EXPECTED_PLUGIN_ZIPS = {
-    "protected_downloads/vera/vera-plugin.zip",
-    "static/shared/clara/downloads/clara-plugin.zip",
-}
-FORBIDDEN_ARCHIVE_PARTS = {".secrets", "credentials.toml"}
-OBSOLETE_PROVIDER_MARKERS = (
-    "anthropickey",
-    "geminikey",
-    "deepseekkey",
-    "waba_token",
-    "waba_number_id",
-)
 
 
 def _git(*args: str) -> subprocess.CompletedProcess[str]:
@@ -53,29 +40,55 @@ def test_sanitized_secret_example_contains_only_safe_values() -> None:
             assert value == ""
 
 
-def test_only_clara_and_vera_plugin_zips_are_tracked() -> None:
-    result = _git("ls-files", "-z", "--", "*.zip")
-    assert result.returncode == 0
-    tracked_zips = {path for path in result.stdout.split("\0") if path}
+def test_clara_and_vera_plugin_zips_are_absent() -> None:
+    plugin_zips = (
+        ROOT / "protected_downloads" / "vera" / "vera-plugin.zip",
+        ROOT / "static" / "shared" / "clara" / "downloads" / "clara-plugin.zip",
+    )
 
-    assert tracked_zips == EXPECTED_PLUGIN_ZIPS
+    assert all(not path.exists() for path in plugin_zips)
 
 
-def test_plugin_zips_exclude_secrets_and_obsolete_providers() -> None:
-    for relative_path in sorted(EXPECTED_PLUGIN_ZIPS):
-        with zipfile.ZipFile(ROOT / relative_path) as archive:
-            for entry in archive.infolist():
-                entry_path = Path(entry.filename)
-                lowered_parts = {part.lower() for part in entry_path.parts}
-                assert not lowered_parts.intersection(FORBIDDEN_ARCHIVE_PARTS)
-                assert not any(part.startswith(".env") for part in lowered_parts)
-                assert entry_path.suffix.lower() not in {".key", ".pem"}
+def test_public_pages_have_no_clara_or_vera_download_links() -> None:
+    html = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (ROOT / "static").rglob("*.html")
+    ).lower()
 
-                if entry.is_dir():
-                    continue
-                payload = archive.read(entry)
-                try:
-                    text = payload.decode("utf-8").lower()
-                except UnicodeDecodeError:
-                    continue
-                assert not any(marker in text for marker in OBSOLETE_PROVIDER_MARKERS)
+    assert "/downloads/vera" not in html
+    assert "/downloads/clara" not in html
+    assert "clara-plugin.zip" not in html
+    assert "vera-plugin.zip" not in html
+
+
+def test_only_main_pages_have_marketplace_install_buttons() -> None:
+    install_button_pages = {
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "static" / "shared").rglob("*.html")
+        if "data-clara-install-link" in path.read_text(encoding="utf-8")
+        or "data-vera-install-link" in path.read_text(encoding="utf-8")
+    }
+
+    assert install_button_pages == {
+        "static/shared/clara/index.html",
+        "static/shared/vera/index.html",
+    }
+
+
+def test_retired_clara_and_vera_download_urls_return_not_found() -> None:
+    from fastapi.testclient import TestClient
+
+    from src.fastapi_app_entry import app
+
+    client = TestClient(app)
+    retired_paths = (
+        "/downloads/clara",
+        "/downloads/vera",
+        "/static/shared/clara/downloads/clara-plugin.zip",
+        "/static/shared/journal-sampling/downloads/journal-sampling-plugin.zip",
+    )
+
+    for path in retired_paths:
+        response = client.get(path, follow_redirects=False)
+
+        assert response.status_code == 404, path

@@ -427,7 +427,6 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "concordato_tie_out_workpaper.xlsx",
         "concordato_review_summary.docx",
         "codex_run_review.md",
-        "/downloads/vera",
         "Concordato Plan Review",
         "Révision du plan de concordat",
         "Concordato-Plan prüfen",

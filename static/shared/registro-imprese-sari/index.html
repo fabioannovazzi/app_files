@@ -320,7 +320,6 @@
           <h2 data-i18n="download.title">Installazione</h2>
           <p data-i18n="download.copy">Un unico ZIP installa Vera con tutti i suoi undici moduli.</p>
         </div>
-        <a class="button" href="/downloads/vera?lang=it" data-free-download-link data-i18n="download.button">Scarica Vera</a>
       </section>
     </main>
   </div>
@@ -497,9 +496,6 @@
       document.documentElement.lang = safeLang;
       document.title = data.title || translations.it.title;
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
-      document.querySelectorAll("[data-free-download-link]").forEach((link) => {
-        link.href = `/downloads/vera?lang=${safeLang}`;
-      });
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const key = node.getAttribute("data-i18n");
         if (data[key]) node.textContent = data[key];

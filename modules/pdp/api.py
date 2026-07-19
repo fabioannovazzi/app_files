@@ -2309,71 +2309,29 @@ AUDIT_SITE_DEPENDENCIES = [AUDIT_PERMISSION]
 AUDIT_API_DEPENDENCIES = [*AUTH_DEPENDENCIES, AUDIT_PERMISSION]
 BETA_LINKS: set[str] = set()
 CLARA_PERMISSION_KEY = "clara"
-VERA_DOWNLOAD_HREF = "/downloads/vera"
-STANDARD_PLUGIN_DOWNLOAD_HREF = VERA_DOWNLOAD_HREF
-CLARA_PLUGIN_DOWNLOAD_HREF = "/downloads/clara"
-VERA_ZIP_PATH = Path("protected_downloads") / "vera" / "vera-plugin.zip"
-CLARA_PLUGIN_ZIP_PATH = (
-    Path("static") / "shared" / "clara" / "downloads" / "clara-plugin.zip"
-)
 CLARA_FORBIDDEN_COPY: dict[str, dict[str, str]] = {
     "en": {
         "title": "Clara access",
         "message": "Clara is available only to authorized users.",
-        "standard_pack_copy": "You can still download Vera for free.",
-        "standard_pack_label": "Download Vera",
         "return_home_label": "Return home",
     },
     "it": {
         "title": "Accesso Clara",
         "message": "Clara è disponibile solo per gli utenti autorizzati.",
-        "standard_pack_copy": "Puoi comunque scaricare Vera gratuitamente.",
-        "standard_pack_label": "Scarica Vera",
         "return_home_label": "Torna alla home",
     },
     "fr": {
         "title": "Accès Clara",
         "message": "Clara est disponible uniquement pour les utilisateurs autorisés.",
-        "standard_pack_copy": "Vous pouvez toujours télécharger Vera gratuitement.",
-        "standard_pack_label": "Télécharger Vera",
         "return_home_label": "Retour à l'accueil",
     },
     "de": {
         "title": "Clara-Zugang",
         "message": "Clara ist nur für autorisierte Nutzer verfügbar.",
-        "standard_pack_copy": "Vera können Sie weiterhin kostenlos herunterladen.",
-        "standard_pack_label": "Vera herunterladen",
         "return_home_label": "Zur Startseite",
     },
 }
-STANDARD_STATIC_PLUGIN_DOWNLOAD_PREFIXES: tuple[str, ...] = (
-    "/static/shared/riconciliazione-partite/downloads",
-    "/static/shared/client-intake/downloads",
-    "/static/shared/journal-sampling/downloads",
-    "/static/shared/check-entries/downloads",
-    "/static/shared/journal-bank-reconciliation/downloads",
-    "/static/shared/report-builder/downloads",
-    "/static/shared/concordato-plan-review/downloads",
-    "/static/shared/prompt-optimizer/downloads",
-    "/static/shared/deep-research-validator/downloads",
-)
 _DEFAULT_PRESENTATIONS_ROOT = Path("presentations")
-
-
-def _standard_static_download_redirect_response(request: Request) -> Response | None:
-    normalized_path = (
-        request.url.path if request.url.path.startswith("/") else f"/{request.url.path}"
-    )
-    if not any(
-        normalized_path.startswith(prefix)
-        for prefix in STANDARD_STATIC_PLUGIN_DOWNLOAD_PREFIXES
-    ):
-        return None
-    lang = resolve_language(request)
-    return RedirectResponse(
-        f"{VERA_DOWNLOAD_HREF}?{urlencode({'lang': lang})}",
-        status_code=status.HTTP_307_TEMPORARY_REDIRECT,
-    )
 
 
 def _site_auth_exception_response(request: Request, exc: HTTPException) -> Response:
@@ -2399,13 +2357,6 @@ def _site_auth_exception_response(request: Request, exc: HTTPException) -> Respo
                 "message": message,
                 "clara_access_required": clara_access_required,
                 "forbidden_title": clara_forbidden_copy["title"],
-                "standard_plugin_pack_copy": clara_forbidden_copy["standard_pack_copy"],
-                "standard_plugin_pack_href": (
-                    f"{STANDARD_PLUGIN_DOWNLOAD_HREF}?{urlencode({'lang': lang})}"
-                ),
-                "standard_plugin_pack_label": clara_forbidden_copy[
-                    "standard_pack_label"
-                ],
                 "return_home_label": clara_forbidden_copy["return_home_label"],
             },
             status_code=exc.status_code,
@@ -2436,9 +2387,6 @@ def _require_plugin_download_user(request: Request) -> AuthenticatedUser:
 
 
 def _static_site_permission_response(request: Request) -> Response | None:
-    standard_download_response = _standard_static_download_redirect_response(request)
-    if standard_download_response is not None:
-        return standard_download_response
     return None
 
 
@@ -2474,55 +2422,6 @@ def _clara_permission_response(
                 "email": user.email,
             },
         ),
-    )
-
-
-def _plugin_download_file_response(
-    path: Path,
-    *,
-    filename: str,
-) -> FileResponse:
-    if not path.exists():
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Plugin download is not available.",
-        )
-    return FileResponse(
-        path=str(path),
-        media_type="application/zip",
-        filename=filename,
-        headers={"Cache-Control": "no-store"},
-    )
-
-
-@site_router.get(
-    CLARA_PLUGIN_DOWNLOAD_HREF,
-    include_in_schema=False,
-    response_class=FileResponse,
-)
-def download_clara_plugin() -> Response:
-    if not CLARA_PLUGIN_ZIP_PATH.exists():
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Clara plugin is not available.",
-        )
-    return FileResponse(
-        path=str(CLARA_PLUGIN_ZIP_PATH),
-        media_type="application/zip",
-        filename="clara-plugin.zip",
-        headers={"Cache-Control": "public, max-age=300"},
-    )
-
-
-@site_router.get(
-    VERA_DOWNLOAD_HREF,
-    include_in_schema=False,
-    response_class=FileResponse,
-)
-def download_vera_plugin() -> Response:
-    return _plugin_download_file_response(
-        VERA_ZIP_PATH,
-        filename="vera-plugin.zip",
     )
 
 
