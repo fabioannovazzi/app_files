@@ -3244,15 +3244,10 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
 @pytest.mark.parametrize(
     ("lang", "expected_title", "free_install_fragment", "inspect_fragment"),
     (
-        ("en", "Open. By design.", "free to install", "inspect"),
-        ("it", "Aperti. Per principio.", "gratuiti da installare", "esaminare"),
-        (
-            "fr",
-            "Ouverts. Dès la conception.",
-            "gratuits à l'installation",
-            "examiner",
-        ),
-        ("de", "Offen. Aus Prinzip.", "kostenlos installierbare", "prüfen"),
+        ("en", "Open by design.", "free to install", "inspect"),
+        ("it", "Aperti per principio.", "gratuiti da installare", "esaminare"),
+        ("fr", "Ouverts par conception.", "gratuits à l'installation", "examiner"),
+        ("de", "Offen konzipiert.", "kostenlos installierbare", "prüfen"),
     ),
 )
 def test_homepage_makes_open_source_and_free_install_explicit(
