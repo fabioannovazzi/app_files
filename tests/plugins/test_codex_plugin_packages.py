@@ -1723,7 +1723,7 @@ def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
         if page_path == ROOT / "static" / "shared" / "clara" / "index.html":
             assert 'href="clara-page.css?v=' in page, page_path.as_posix()
         else:
-            assert 'href="../plugin-page-shell.css"' in page, page_path.as_posix()
+            assert 'href="../plugin-page-shell.css' in page, page_path.as_posix()
 
 
 @pytest.mark.parametrize("relative_path", VERA_PUBLIC_PAGE_PATHS)
@@ -1731,6 +1731,9 @@ def test_vera_downstream_pages_show_mparanza_logo(relative_path: Path) -> None:
     page = (ROOT / relative_path).read_text(encoding="utf-8")
     header_match = re.search(r"<header(?:\s[^>]*)?>.*?</header>", page, re.DOTALL)
 
+    assert (
+        'href="../plugin-page-shell.css?v=20260720-logo"' in page
+    ), relative_path.as_posix()
     assert header_match is not None, relative_path.as_posix()
     header = header_match.group(0)
     assert 'class="brand"' in header
