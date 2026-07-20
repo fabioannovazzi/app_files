@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../video-library.css?v=2026072001">
   <style>
     :root {
       --navy: #002060;
@@ -484,6 +485,14 @@
       </div>
     </section>
 
+    <section id="videos">
+      <div class="section-head">
+        <h2 data-i18n="videos.title">Guarda Vera al lavoro</h2>
+        <p data-i18n="videos.copy">Guide brevi alle principali funzioni di Vera, narrate nella lingua di questa pagina.</p>
+      </div>
+      <div class="video-library" data-video-library="vera"></div>
+    </section>
+
     <section id="download">
       <div class="download-panel">
         <div>
@@ -500,6 +509,7 @@
 
   <footer>Vera · AI per commercialisti</footer>
 
+  <script src="../video-library.js?v=2026072001"></script>
   <script>
     const copy = {
       it: {
@@ -515,6 +525,9 @@
         "general.video.kicker": "Vera in 54 secondi",
         "general.video.title": "Guarda: da una richiesta al prossimo passo preparato",
         "general.video.meta": "Narrazione in italiano · Si apre su YouTube",
+        "videos.title": "Guarda Vera al lavoro",
+        "videos.copy": "Guide brevi alle principali funzioni di Vera, narrate nella lingua di questa pagina.",
+        "videos.open": "Si apre su YouTube",
         "modules.title": "Il lavoro di Vera",
         "modules.copy": "Chiedi a Vera il lavoro per nome. Lei attiva le istruzioni e gli strumenti del modulo adatto, mantenendo controlli e fonti visibili.",
         "module.client.title": "Istruttoria cliente",
@@ -557,6 +570,9 @@
         "general.video.kicker": "Vera in 45 seconds",
         "general.video.title": "Watch: from a request to the next prepared step",
         "general.video.meta": "English narration · Opens on YouTube",
+        "videos.title": "See Vera at work",
+        "videos.copy": "Short guides to Vera's main capabilities, narrated in the language of this page.",
+        "videos.open": "Opens on YouTube",
         "modules.title": "Vera at work",
         "modules.copy": "Ask Vera for the task by name. She activates the instructions and tools for the right module while keeping checks and sources visible.",
         "module.client.title": "Client Intake",
@@ -599,6 +615,9 @@
         "general.video.kicker": "Vera en 51 secondes",
         "general.video.title": "Voir : d’une demande à la prochaine étape préparée",
         "general.video.meta": "Narration en français · S’ouvre sur YouTube",
+        "videos.title": "Voir Vera à l’œuvre",
+        "videos.copy": "De courtes vidéos sur les principales fonctions de Vera, dans la langue de cette page.",
+        "videos.open": "S’ouvre sur YouTube",
         "modules.title": "Le travail de Vera",
         "modules.copy": "Demandez la tâche à Vera par son nom. Elle active les instructions et outils du bon module en gardant contrôles et sources visibles.",
         "module.client.title": "Ouverture du dossier client",
@@ -641,6 +660,9 @@
         "general.video.kicker": "Vera in 55 Sekunden",
         "general.video.title": "Ansehen: von der Anfrage zum vorbereiteten nächsten Schritt",
         "general.video.meta": "Deutsche Sprecherstimme · Öffnet YouTube",
+        "videos.title": "Vera bei der Arbeit",
+        "videos.copy": "Kurze Einblicke in Veras wichtigste Funktionen, in der Sprache dieser Seite.",
+        "videos.open": "Öffnet YouTube",
         "modules.title": "Vera bei der Arbeit",
         "modules.copy": "Nennen Sie Vera die Aufgabe. Sie aktiviert die Anweisungen und Werkzeuge des passenden Moduls und hält Kontrollen und Quellen sichtbar.",
         "module.client.title": "Mandantenaufnahme",
@@ -721,6 +743,7 @@
       document.getElementById("general-video-duration").textContent = activeGeneralVideo.duration;
       const home = document.querySelector("[data-home-link]");
       if (home) home.setAttribute("href", `/?lang=${lang}`);
+      window.MparanzaVideos?.mount({ product: "vera", lang, openLabel: strings["videos.open"] });
       if (updateHistory) {
         const next = new URL(window.location.href);
         next.searchParams.set("lang", lang);
