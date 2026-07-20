@@ -1703,8 +1703,12 @@ def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
     assert "--paper: #ffffff;" in shell
     assert "--bg: #ffffff;" in shell
     assert "--shadow: none;" in shell
-    assert 'content: "Home";' in shell
-    assert 'content: "Mparanza";' not in shell
+    assert "display: block !important;" in shell
+    assert "width: auto;" in shell
+    assert "max-width: none;" in shell
+    assert "height: 34px;" in shell
+    assert ".brand::before" not in shell
+    assert 'content: "Home";' not in shell
     assert "prefers-reduced-motion" in shell
     assert "linear-gradient" not in shell.lower()
     assert "radial-gradient" not in shell.lower()
@@ -1720,6 +1724,20 @@ def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
             assert 'href="clara-page.css?v=' in page, page_path.as_posix()
         else:
             assert 'href="../plugin-page-shell.css"' in page, page_path.as_posix()
+
+
+@pytest.mark.parametrize("relative_path", VERA_PUBLIC_PAGE_PATHS)
+def test_vera_downstream_pages_show_mparanza_logo(relative_path: Path) -> None:
+    page = (ROOT / relative_path).read_text(encoding="utf-8")
+    header_match = re.search(r"<header(?:\s[^>]*)?>.*?</header>", page, re.DOTALL)
+
+    assert header_match is not None, relative_path.as_posix()
+    header = header_match.group(0)
+    assert 'class="brand"' in header
+    assert (
+        '<img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" '
+        'alt="Mparanza">' in header
+    )
 
 
 def test_static_plugin_pages_are_public_and_plugin_downloads_are_removed() -> None:
