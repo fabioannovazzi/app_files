@@ -53,3 +53,24 @@ def test_homepage_security_lead_uses_body_typography() -> None:
         "  text-wrap: pretty;\n"
         "}" in css
     )
+
+
+def test_homepage_design_headings_share_the_display_scale() -> None:
+    css = (ROOT / "static" / "css" / "app.css").read_text(encoding="utf-8")
+    desktop_selector = (
+        ".landing-home .landing-open-source h2,\n"
+        ".landing-home .landing-security h2,\n"
+        ".landing-home .landing-bridge h2"
+    )
+    responsive_selector = (
+        "  .landing-home .landing-open-source h2,\n"
+        "  .landing-home .landing-security h2,\n"
+        "  .landing-home .landing-bridge h2"
+    )
+
+    assert desktop_selector in css
+    assert responsive_selector in css
+    assert (
+        ".landing-home .landing-section-heading h2,\n"
+        ".landing-home .landing-bridge h2" not in css
+    )
