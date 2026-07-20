@@ -3207,25 +3207,19 @@ body.landing-body.landing-home {
   align-items: flex-start;
 }
 
-.landing-home .landing-security__lead {
-  margin: 0;
-  max-width: 35ch;
-  color: var(--landing-ink);
-  font-size: clamp(1.25rem, 2vw, 1.65rem);
-  font-weight: 500;
-  line-height: 1.28;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
+.landing-home .landing-security__lead,
 .landing-home .landing-security__description {
-  margin: clamp(26px, 3vw, 40px) 0 0;
+  margin: 0;
   max-width: 49ch;
   color: var(--landing-muted);
   font-size: clamp(1.05rem, 1.5vw, 1.25rem);
   line-height: 1.62;
   letter-spacing: -0.02em;
   text-wrap: pretty;
+}
+
+.landing-home .landing-security__description {
+  margin: clamp(26px, 3vw, 40px) 0 0;
 }
 
 .landing-home .landing-security__link {
