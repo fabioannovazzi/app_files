@@ -84,19 +84,31 @@ def test_data_handling_page_is_public_and_localized(
 
 
 @pytest.mark.parametrize(
-    ("lang", "security_title"),
+    ("lang", "security_title", "bridge_title"),
     (
-        ("en", "Secure by design."),
-        ("it", "Sicuri fin dalla progettazione."),
-        ("fr", "Sécurisés dès la conception."),
-        ("de", "Sicher konzipiert."),
+        ("en", "Secure by design.", "Only Codex by design"),
+        (
+            "it",
+            "Sicuri fin dalla progettazione.",
+            "Solo Codex fin dalla progettazione",
+        ),
+        (
+            "fr",
+            "Sécurisés dès la conception.",
+            "Exclusivement pour Codex dès la conception",
+        ),
+        ("de", "Sicher konzipiert.", "Nur für Codex konzipiert"),
     ),
 )
-def test_homepage_security_copy_is_localized(lang: str, security_title: str) -> None:
-    security = _get_landing_page_content(lang)["security"]
+def test_homepage_security_and_bridge_copy_is_localized(
+    lang: str, security_title: str, bridge_title: str
+) -> None:
+    content = _get_landing_page_content(lang)
+    security = content["security"]
 
     assert security["title"] == security_title
     assert security["cta_href"] == "/data-handling"
+    assert content["bridge"]["title"] == bridge_title
 
 
 def test_homepage_uses_the_approved_english_security_copy() -> None:
