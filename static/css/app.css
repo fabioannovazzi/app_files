@@ -3073,8 +3073,7 @@ body.landing-body.landing-home {
   scroll-margin-top: 24px;
 }
 
-.landing-home .landing-section-heading h2,
-.landing-home .landing-bridge h2 {
+.landing-home .landing-section-heading h2 {
   margin: 0;
   color: var(--landing-ink);
   font-size: clamp(2.6rem, 4.8vw, 4.8rem);
@@ -3141,7 +3140,9 @@ body.landing-body.landing-home {
   scroll-margin-top: 24px;
 }
 
-.landing-home .landing-open-source h2 {
+.landing-home .landing-open-source h2,
+.landing-home .landing-security h2,
+.landing-home .landing-bridge h2 {
   margin: 0;
   max-width: 8ch;
   color: var(--landing-ink);
@@ -3188,17 +3189,6 @@ body.landing-body.landing-home {
   padding: clamp(92px, 11vw, 156px) 0;
   border-bottom: 1px solid var(--landing-rule);
   scroll-margin-top: 24px;
-}
-
-.landing-home .landing-security h2 {
-  margin: 0;
-  max-width: 8ch;
-  color: var(--landing-ink);
-  font-size: clamp(3.6rem, 6.7vw, 7rem);
-  font-weight: 600;
-  line-height: 0.9;
-  letter-spacing: -0.07em;
-  text-wrap: balance;
 }
 
 .landing-home .landing-security__body {
@@ -3518,7 +3508,8 @@ body.landing-body.landing-home {
   }
 
   .landing-home .landing-open-source h2,
-  .landing-home .landing-security h2 {
+  .landing-home .landing-security h2,
+  .landing-home .landing-bridge h2 {
     max-width: 9ch;
     font-size: clamp(2.6rem, 4.8vw, 4.8rem);
     line-height: 1;

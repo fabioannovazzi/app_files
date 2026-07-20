@@ -2894,7 +2894,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Only Codex by design",
+            "title": "Only Codex by design.",
             "description": (
                 "Mparanza is Vera and Clara: two plugins that apply the same Codex "
                 "harness to two different professions."
@@ -3051,7 +3051,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Solo Codex per scelta",
+            "title": "Solo Codex per scelta.",
             "description": (
                 "Mparanza è Vera e Clara: due plugin che applicano lo stesso ambiente "
                 "operativo Codex a due professioni diverse."
@@ -3212,7 +3212,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Exclusivement pour Codex par conception",
+            "title": "Exclusivement pour Codex par conception.",
             "description": (
                 "Mparanza, c'est Vera et Clara : deux plugins qui appliquent le même "
                 "environnement Codex à deux métiers différents."
@@ -3375,7 +3375,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Nur für Codex konzipiert",
+            "title": "Nur für Codex konzipiert.",
             "description": (
                 "Mparanza, das sind Vera und Clara: zwei Plugins, die dieselbe "
                 "Codex-Arbeitsumgebung auf zwei Berufsgruppen ausrichten."
