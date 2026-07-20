@@ -28,15 +28,7 @@ def test_plugin_manifest_and_marketplace_entry_are_valid():
     ):
         assert snippet in manifest_text
 
-    entries = {entry["name"]: entry for entry in marketplace["plugins"]}
-    assert "audit-reconciliation" not in entries
-    entry = entries["vera"]
-    assert entry["source"] == {
-        "source": "local",
-        "path": "./plugins/vera",
-    }
-    assert entry["policy"]["installation"] == "AVAILABLE"
-    assert entry["policy"]["authentication"] == "ON_INSTALL"
+    assert marketplace["plugins"] == []
 
 
 def test_plugin_contains_no_customer_specific_artifacts_or_terms():
