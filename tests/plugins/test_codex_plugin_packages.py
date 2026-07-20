@@ -642,25 +642,13 @@ def test_changed_plugin_sources_bump_manifest_version() -> None:
         )
 
 
-def test_repo_local_marketplace_matches_repo_plugins() -> None:
-    builder = load_builder()
+def test_repo_local_marketplace_has_no_plugins() -> None:
     marketplace_path = ROOT / ".agents" / "plugins" / "marketplace.json"
     marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
 
-    entries = marketplace["plugins"]
-    marketplace_plugins = {entry["name"] for entry in entries}
-
     assert marketplace["name"] == "mp"
     assert marketplace["interface"]["displayName"] == "Mparanza"
-    assert marketplace_plugins == UNIFIED_PLUGIN_NAMES | STANDALONE_PLUGIN_NAMES
-    assert COMMERCIALISTA_MODULE_NAMES.isdisjoint(marketplace_plugins)
-    assert REPORTING_ENGINE_PLUGIN_NAMES.isdisjoint(marketplace_plugins)
-    for entry in entries:
-        plugin_dir = ROOT / entry["source"]["path"]
-        assert entry["source"]["source"] == "local"
-        assert plugin_dir.exists(), entry["name"]
-        assert entry["policy"]["installation"] == "AVAILABLE"
-        assert entry["policy"]["authentication"] == "ON_INSTALL"
+    assert marketplace["plugins"] == []
 
 
 def test_configured_plugin_zips_do_not_include_local_junk() -> None:
