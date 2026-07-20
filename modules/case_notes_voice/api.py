@@ -113,7 +113,8 @@ MIN_TRANSCRIPTION_OVERLAP_DEDUP_WORDS = 10
 TRANSCRIPTION_OVERLAP_DEDUP_SIMILARITY = 0.72
 MAX_TRANSCRIPTION_PROMPT_GLOSSARY_TERMS = 24
 MAX_TRANSCRIPTION_PROMPT_GLOSSARY_TERM_CHARS = 96
-SUPPORTED_LANGUAGES = {"it", "en", "fr", "de"}
+# These codes describe spoken audio, independently of Clara's report language.
+SUPPORTED_TRANSCRIPTION_LANGUAGES = {"it", "en", "fr", "de", "es"}
 SUPPORTED_AUDIO_EXTENSIONS = {"mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"}
 FFMPEG_DURATION_RE = re.compile(
     r"Duration:\s*(?P<hours>\d+):(?P<minutes>\d+):(?P<seconds>\d+(?:\.\d+)?)"
@@ -2110,7 +2111,7 @@ def _create_single_audio_transcription(
         chunk_note=chunk_note,
         include_case_context=include_case_context,
     )
-    if language in SUPPORTED_LANGUAGES:
+    if language in SUPPORTED_TRANSCRIPTION_LANGUAGES:
         fields["language"] = language
     body, boundary = _multipart_form_data(
         fields,
@@ -2903,7 +2904,7 @@ def _validate_uploaded_audio_request_fields(
     *,
     language: str,
 ) -> None:
-    if language not in SUPPORTED_LANGUAGES:
+    if language not in SUPPORTED_TRANSCRIPTION_LANGUAGES:
         raise VoiceSessionError(f"Unsupported language: {language}")
 
 
