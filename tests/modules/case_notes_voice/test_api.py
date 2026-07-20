@@ -432,7 +432,7 @@ def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> 
         audio_bytes=b"fake-audio",
         filename="note.mp3",
         content_type="audio/mpeg",
-        language="it",
+        language="es",
         case_context="Cliente: ExampleCo",
     )
     upload_body = captured[0]["body"]
@@ -458,6 +458,8 @@ def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> 
     assert b'name="chunking_strategy"' not in upload_body
     assert b'name="temperature"' in upload_body
     assert b"\r\n0\r\n" in upload_body
+    assert b'name="language"' in upload_body
+    assert b"\r\nes\r\n" in upload_body
     assert b'name="prompt"' in upload_body
     assert b"Preferred spellings / case glossary" in upload_body
     assert b"- ExampleCo" in upload_body
@@ -1283,7 +1285,10 @@ def test_write_upload_file_to_path_rejects_oversized_stream(tmp_path: Path) -> N
     assert list(tmp_path.glob("*.uploading")) == []
 
 
-def test_upload_audio_route_returns_background_job(tmp_path: Path, monkeypatch) -> None:
+def test_upload_audio_route_accepts_spanish_source_language(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
     monkeypatch.setenv("CASE_NOTES_VOICE_TOKEN_ROOT", str(tmp_path))
     monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path))
     _patch_voice_retention_roots(tmp_path, monkeypatch)
@@ -1312,7 +1317,7 @@ def test_upload_audio_route_returns_background_job(tmp_path: Path, monkeypatch) 
         api.upload_audio(
             background_tasks=background_tasks,
             launch_token=token,
-            language="it",
+            language="es",
             source_metadata_json=json.dumps(
                 {
                     "source_type": "interview",
@@ -1336,6 +1341,31 @@ def test_upload_audio_route_returns_background_job(tmp_path: Path, monkeypatch) 
     job_payload = api._read_upload_job(body["job_id"], user)
     assert job_payload["status"] == "queued"
     assert len(background_tasks.tasks) == 1
+    assert background_tasks.tasks[0].kwargs["language"] == "es"
+
+
+def test_upload_audio_route_rejects_unsupported_source_language() -> None:
+    class FakeUpload:
+        filename = "meeting.wav"
+        content_type = "audio/wav"
+
+        async def read(self, _size: int = -1):
+            return b"fake-audio"
+
+    with pytest.raises(HTTPException) as error:
+        asyncio.run(
+            api.upload_audio(
+                background_tasks=BackgroundTasks(),
+                launch_token="unused",
+                language="xx",
+                source_metadata_json="{}",
+                audio_file=FakeUpload(),
+                user=None,
+            )
+        )
+
+    assert error.value.status_code == 400
+    assert error.value.detail == "Unsupported language: xx"
 
 
 def test_chunked_audio_upload_route_returns_background_job(
