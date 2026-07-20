@@ -123,6 +123,23 @@
     </section>
   {% endif %}
 
+  {% if security %}
+    <section id="{{ security.id }}"
+             class="landing-security"
+             aria-labelledby="landing-security-title">
+      <h2 id="landing-security-title">{{ security.title }}</h2>
+      <div class="landing-security__body">
+        <p class="landing-security__lead">{{ security.lead }}</p>
+        <p class="landing-security__description">{{ security.description }}</p>
+        <a class="landing-security__link"
+           href="{{ security.cta_href }}?lang={{ lang }}">
+          <span>{{ security.cta_label }}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  {% endif %}
+
   {% if bridge %}
     <section id="{{ bridge.id }}"
              class="landing-bridge"
