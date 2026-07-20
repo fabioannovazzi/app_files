@@ -36,3 +36,20 @@ def test_shared_app_css_applies_instrument_sans_to_native_controls() -> None:
     )
     assert 'font-family: "Inter"' not in css
     assert 'font-family: "Roboto"' not in css
+
+
+def test_homepage_security_lead_uses_body_typography() -> None:
+    css = (ROOT / "static" / "css" / "app.css").read_text(encoding="utf-8")
+
+    assert (
+        ".landing-home .landing-security__lead,\n"
+        ".landing-home .landing-security__description {\n"
+        "  margin: 0;\n"
+        "  max-width: 49ch;\n"
+        "  color: var(--landing-muted);\n"
+        "  font-size: clamp(1.05rem, 1.5vw, 1.25rem);\n"
+        "  line-height: 1.62;\n"
+        "  letter-spacing: -0.02em;\n"
+        "  text-wrap: pretty;\n"
+        "}" in css
+    )
