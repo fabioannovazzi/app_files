@@ -3042,31 +3042,43 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
 
 
 @pytest.mark.parametrize(
-    ("lang", "expected_group_titles", "removed_section_titles"),
+    (
+        "lang",
+        "expected_group_titles",
+        "expected_audiences",
+        "removed_section_titles",
+    ),
     (
         (
             "en",
-            ("Codex for accounting firms", "Codex for consultants"),
+            ("Codex for accountants", "Codex for consultants"),
+            ("For accountants", "For consultants"),
             ("Attribute Analysis", "Deck Toolkit"),
         ),
         (
             "it",
             ("Codex per commercialisti", "Codex per consulenti"),
+            ("Per commercialisti", "Per consulenti"),
             ("Analisi attributi", "Toolkit presentazioni"),
         ),
         (
             "fr",
             (
-                "Codex pour les cabinets d'expertise comptable",
+                "Codex pour les experts-comptables",
                 "Codex pour les consultants",
             ),
+            ("Pour les experts-comptables", "Pour les consultants"),
             ("Analyse des attributs", "Toolkit deck"),
         ),
         (
             "de",
             (
-                "Codex für Steuerkanzleien",
+                "Codex für Steuerberaterinnen und Steuerberater",
                 "Codex für Beraterinnen und Berater",
+            ),
+            (
+                "Für Steuerberaterinnen und Steuerberater",
+                "Für Beraterinnen und Berater",
             ),
             ("Attributanalyse", "Deck-Toolkit"),
         ),
@@ -3075,6 +3087,7 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
 def test_homepage_only_exposes_codex_role_groups(
     lang: str,
     expected_group_titles: tuple[str, str],
+    expected_audiences: tuple[str, str],
     removed_section_titles: tuple[str, str],
 ) -> None:
     _restore_application_import_path()
@@ -3089,6 +3102,8 @@ def test_homepage_only_exposes_codex_role_groups(
     assert sections[0]["preserve_order"] is True
     assert sections[0]["groups"][0]["title"] == expected_group_titles[0]
     assert sections[0]["groups"][1]["title"] == expected_group_titles[1]
+    assert sections[0]["groups"][0]["audience"] == expected_audiences[0]
+    assert sections[0]["groups"][1]["audience"] == expected_audiences[1]
     assert sections[0]["groups"][0]["links"][0]["href"] == (
         "/static/shared/vera/index.html"
     )
@@ -3109,7 +3124,7 @@ def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
 
     expected_orders = (
         (
-            '"title": "Codex for accounting firms"',
+            '"title": "Codex for accountants"',
             ("Vera",),
         ),
         (
@@ -3125,7 +3140,7 @@ def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
             ("Clara",),
         ),
         (
-            '"title": "Codex pour les cabinets d\'expertise comptable"',
+            '"title": "Codex pour les experts-comptables"',
             ("Vera",),
         ),
         (
@@ -3133,7 +3148,7 @@ def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
             ("Clara",),
         ),
         (
-            '"title": "Codex für Steuerkanzleien"',
+            '"title": "Codex für Steuerberaterinnen und Steuerberater"',
             ("Vera",),
         ),
         (
@@ -3248,6 +3263,8 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
         'class="landing-opening"',
         'class="landing-harness"',
         'class="landing-open-source"',
+        'class="landing-free"',
+        'class="landing-security"',
         'class="landing-bridge"',
         'class="landing-products"',
     )
@@ -3267,6 +3284,7 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     assert ".landing-home .landing-open-source" in css
     design_heading_selector = (
         ".landing-home .landing-open-source h2,\n"
+        ".landing-home .landing-free h2,\n"
         ".landing-home .landing-security h2,\n"
         ".landing-home .landing-bridge h2 {"
     )
@@ -3274,13 +3292,17 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
         "}", maxsplit=1
     )[0]
     assert "color: var(--landing-ink);" in design_heading_css
-    open_source_body_css = css.split(
-        ".landing-home .landing-open-source__body > p {", maxsplit=1
-    )[1].split("}", maxsplit=1)[0]
-    assert "color: var(--landing-muted);" in open_source_body_css
-    assert "font-size: clamp(1.1rem, 1.65vw, 1.35rem);" in open_source_body_css
-    assert "line-height: 1.62;" in open_source_body_css
-    assert "letter-spacing: -0.02em;" in open_source_body_css
+    principle_body_selector = (
+        ".landing-home .landing-open-source__body > p,\n"
+        ".landing-home .landing-free__body > p {"
+    )
+    principle_body_css = css.split(principle_body_selector, maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    assert "color: var(--landing-muted);" in principle_body_css
+    assert "font-size: clamp(1.1rem, 1.65vw, 1.35rem);" in principle_body_css
+    assert "line-height: 1.62;" in principle_body_css
+    assert "letter-spacing: -0.02em;" in principle_body_css
     assert "harness.consequence" not in template
     assert "landing-harness__consequence" not in css
     assert ".landing-home .landing-bridge" in css
@@ -3291,18 +3313,17 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
 
 
 @pytest.mark.parametrize(
-    ("lang", "expected_title", "free_install_fragment", "inspect_fragment"),
+    ("lang", "expected_title", "inspect_fragment"),
     (
-        ("en", "Open by design.", "free to install", "inspect"),
-        ("it", "Aperti per scelta.", "gratuiti da installare", "esaminare"),
-        ("fr", "Ouverts par conception.", "gratuits à l'installation", "examiner"),
-        ("de", "Offen konzipiert.", "kostenlos installierbare", "prüfen"),
+        ("en", "Open by design.", "inspect"),
+        ("it", "Aperti per scelta.", "esaminare"),
+        ("fr", "Ouverts par conception.", "examiner"),
+        ("de", "Offen konzipiert.", "prüfen"),
     ),
 )
-def test_homepage_makes_open_source_and_free_install_explicit(
+def test_homepage_makes_open_source_explicit(
     lang: str,
     expected_title: str,
-    free_install_fragment: str,
     inspect_fragment: str,
 ) -> None:
     _restore_application_import_path()
@@ -3312,12 +3333,66 @@ def test_homepage_makes_open_source_and_free_install_explicit(
     open_source = pdp_api._get_landing_page_content(lang)["open_source"]
 
     assert open_source["title"] == expected_title
-    assert free_install_fragment in open_source["description"]
     assert inspect_fragment in open_source["description"].casefold()
     normalized_description = open_source["description"].casefold().replace("-", " ")
     assert "open source" in normalized_description
     assert open_source["links"][0]["href"].startswith("https://github.com/")
     assert open_source["links"][1]["href"].endswith("/LICENSE")
+
+
+@pytest.mark.parametrize(
+    ("lang", "expected_title", "expected_description"),
+    (
+        (
+            "en",
+            "Free by design.",
+            "Vera and Clara are free to install and use. We welcome contributions "
+            "to their development. Your expertise helps make Vera and Clara more "
+            "useful. Mparanza charges for consulting, implementation, and optional "
+            "hosted services—not for the plugins themselves.",
+        ),
+        (
+            "it",
+            "Gratuiti per scelta.",
+            "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
+            "volentieri contributi al loro sviluppo. La tua competenza aiuta a "
+            "rendere Vera e Clara più utili. Mparanza offre a pagamento consulenza, "
+            "implementazione e servizi di hosting opzionali, non i plugin stessi.",
+        ),
+        (
+            "fr",
+            "Gratuits par conception.",
+            "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
+            "volontiers les contributions à leur développement. Votre expertise "
+            "contribue à rendre Vera et Clara plus utiles. Mparanza facture ses "
+            "prestations de conseil et de mise en œuvre, ainsi que ses services "
+            "d'hébergement optionnels — pas les plugins eux-mêmes.",
+        ),
+        (
+            "de",
+            "Kostenlos konzipiert.",
+            "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
+            "freuen uns über Beiträge zu ihrer Weiterentwicklung. Ihr Fachwissen "
+            "hilft, Vera und Clara nützlicher zu machen. Mparanza berechnet "
+            "Beratungs- und Implementierungsleistungen sowie optionale "
+            "Hosting-Dienste – nicht die Plugins selbst.",
+        ),
+    ),
+)
+def test_homepage_makes_free_business_model_explicit(
+    lang: str, expected_title: str, expected_description: str
+) -> None:
+    _restore_application_import_path()
+
+    from modules.pdp import api as pdp_api
+
+    free = pdp_api._get_landing_page_content(lang)["free"]
+
+    assert free == {
+        "id": "free",
+        "title": expected_title,
+        "description": expected_description,
+    }
 
 
 @pytest.mark.parametrize("lang", ("en", "it", "fr", "de"))

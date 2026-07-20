@@ -59,11 +59,13 @@ def test_homepage_design_headings_share_the_display_scale() -> None:
     css = (ROOT / "static" / "css" / "app.css").read_text(encoding="utf-8")
     desktop_selector = (
         ".landing-home .landing-open-source h2,\n"
+        ".landing-home .landing-free h2,\n"
         ".landing-home .landing-security h2,\n"
         ".landing-home .landing-bridge h2"
     )
     responsive_selector = (
         "  .landing-home .landing-open-source h2,\n"
+        "  .landing-home .landing-free h2,\n"
         "  .landing-home .landing-security h2,\n"
         "  .landing-home .landing-bridge h2"
     )

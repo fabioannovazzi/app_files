@@ -84,39 +84,69 @@ def test_data_handling_page_is_public_and_localized(
 
 
 @pytest.mark.parametrize(
-    ("lang", "open_title", "security_title", "bridge_title"),
+    ("lang", "open_title", "free_title", "security_title", "bridge_title"),
     (
-        ("en", "Open by design.", "Secure by design.", "Codex by design."),
+        (
+            "en",
+            "Open by design.",
+            "Free by design.",
+            "Secure by design.",
+            "Codex by design.",
+        ),
         (
             "it",
             "Aperti per scelta.",
+            "Gratuiti per scelta.",
             "Sicuri per scelta.",
             "Codex per scelta.",
         ),
         (
             "fr",
             "Ouverts par conception.",
+            "Gratuits par conception.",
             "Sécurisés par conception.",
             "Codex par conception.",
         ),
         (
             "de",
             "Offen konzipiert.",
+            "Kostenlos konzipiert.",
             "Sicher konzipiert.",
             "Für Codex konzipiert.",
         ),
     ),
 )
 def test_homepage_design_copy_is_localized(
-    lang: str, open_title: str, security_title: str, bridge_title: str
+    lang: str,
+    open_title: str,
+    free_title: str,
+    security_title: str,
+    bridge_title: str,
 ) -> None:
     content = _get_landing_page_content(lang)
     security = content["security"]
 
     assert content["open_source"]["title"] == open_title
+    assert content["free"]["title"] == free_title
     assert security["title"] == security_title
     assert security["cta_href"] == "/data-handling"
     assert content["bridge"]["title"] == bridge_title
+
+
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de"))
+def test_homepage_passes_free_section_to_template(
+    monkeypatch: pytest.MonkeyPatch, lang: str
+) -> None:
+    captured = _capture_template_response(monkeypatch)
+    client = TestClient(app)
+
+    response = client.get(f"/?lang={lang}")
+
+    assert response.status_code == 200
+    assert captured["name"] == "index.html"
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["free"] == _get_landing_page_content(lang)["free"]
 
 
 @pytest.mark.parametrize(
@@ -168,11 +198,12 @@ def test_homepage_uses_the_approved_english_security_copy() -> None:
     assert security["cta_label"] == "See how your data is handled"
 
 
-def test_homepage_places_security_after_open_by_design() -> None:
+def test_homepage_places_free_and_security_after_open_by_design() -> None:
     template = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
 
     narrative_markers = (
         'class="landing-open-source"',
+        'class="landing-free"',
         'class="landing-security"',
         'class="landing-bridge"',
     )
