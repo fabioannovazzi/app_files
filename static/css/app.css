@@ -3211,7 +3211,7 @@ body.landing-body.landing-home {
   margin: 0;
   max-width: 35ch;
   color: var(--landing-ink);
-  font-size: clamp(1.35rem, 2.35vw, 2rem);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
   font-weight: 500;
   line-height: 1.28;
   letter-spacing: -0.035em;
