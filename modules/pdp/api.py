@@ -134,6 +134,7 @@ from modules.pdp.attribute_review_logic import (
     prepare_attribute_filters,
     repair_text_encoding,
 )
+from modules.pdp.data_handling_content import get_data_handling_content
 from modules.pdp.deterministic_policy_api import router as deterministic_policy_router
 from modules.pdp.deterministic_policy_api import (
     site_router as deterministic_policy_site_router,
@@ -2877,6 +2878,20 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "security": {
+            "id": "security",
+            "title": "Secure by design.",
+            "lead": (
+                "You do not have to trust us with your work. We do not receive it."
+            ),
+            "description": (
+                "In local workflows, Vera and Clara run inside your existing Codex "
+                "environment. Your prompts, files, and outputs do not pass through "
+                "Mparanza."
+            ),
+            "cta_label": "See how your data is handled",
+            "cta_href": "/data-handling",
+        },
         "bridge": {
             "id": "plugins",
             "title": "Only Codex. On purpose.",
@@ -3021,6 +3036,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
+        },
+        "security": {
+            "id": "security",
+            "title": "Sicuri fin dalla progettazione.",
+            "lead": "Non devi affidarci il tuo lavoro. Non lo riceviamo.",
+            "description": (
+                "Nei flussi di lavoro locali, Vera e Clara operano nell'ambiente "
+                "Codex che già usi. I tuoi prompt, file e risultati non passano "
+                "attraverso Mparanza."
+            ),
+            "cta_label": "Scopri come vengono gestiti i tuoi dati",
+            "cta_href": "/data-handling",
         },
         "bridge": {
             "id": "plugins",
@@ -3168,6 +3195,20 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
+        },
+        "security": {
+            "id": "security",
+            "title": "Sécurisés dès la conception.",
+            "lead": (
+                "Vous n'avez pas à nous confier votre travail. Nous ne le recevons pas."
+            ),
+            "description": (
+                "Dans les flux de travail locaux, Vera et Clara fonctionnent dans "
+                "l'environnement Codex que vous utilisez déjà. Vos prompts, fichiers "
+                "et livrables ne transitent pas par Mparanza."
+            ),
+            "cta_label": "Voir comment vos données sont traitées",
+            "cta_href": "/data-handling",
         },
         "bridge": {
             "id": "plugins",
@@ -3318,6 +3359,20 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "security": {
+            "id": "security",
+            "title": "Sicher konzipiert.",
+            "lead": (
+                "Sie müssen uns Ihre Arbeit nicht anvertrauen. Wir erhalten sie nicht."
+            ),
+            "description": (
+                "Bei lokalen Arbeitsabläufen laufen Vera und Clara in Ihrer bestehenden "
+                "Codex-Umgebung. Ihre Prompts, Dateien und Ergebnisse laufen nicht über "
+                "Mparanza."
+            ),
+            "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
+            "cta_href": "/data-handling",
+        },
         "bridge": {
             "id": "plugins",
             "title": "Nur Codex. Ganz bewusst.",
@@ -3372,6 +3427,35 @@ def support_page(request: Request) -> Response:
     return _render_legal_page(request, "support")
 
 
+@site_router.get("/data-handling", include_in_schema=False)
+def data_handling_page(request: Request) -> Response:
+    """Render Mparanza's localized public data-handling position."""
+
+    lang = resolve_language(request)
+    if templates is None:  # pragma: no cover - defensive fallback
+        raise HTTPException(
+            status_code=503, detail="Templating support is not available."
+        )
+    response = templates.TemplateResponse(
+        request,
+        "data_handling.html",
+        _template_context(
+            page=get_data_handling_content(lang),
+            copy={},
+            lang=lang,
+            language_labels=LANDING_LANGUAGE_LABELS,
+            language_names=LANGUAGE_LABELS,
+            language_order=LANGUAGE_ORDER,
+            auth_enabled=False,
+            google_client_id="",
+        ),
+    )
+    response.headers["Cache-Control"] = "public, max-age=300"
+    if lang != request.cookies.get("lang"):
+        response.set_cookie("lang", lang, max_age=30 * 24 * 60 * 60, httponly=False)
+    return response
+
+
 @site_router.get("/", include_in_schema=False)
 def landing_page(request: Request) -> Any:
     try:
@@ -3397,6 +3481,7 @@ def landing_page(request: Request) -> Any:
             hero=landing_page_content["hero"],
             harness=landing_page_content["harness"],
             open_source=landing_page_content["open_source"],
+            security=landing_page_content["security"],
             bridge=landing_page_content["bridge"],
             copy=get_page_copy("landing", lang),
             lang=lang,
@@ -8544,5 +8629,6 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
         "hero": content.get("hero"),
         "harness": content.get("harness", {}),
         "open_source": content.get("open_source", {}),
+        "security": content.get("security", {}),
         "bridge": content.get("bridge", {}),
     }

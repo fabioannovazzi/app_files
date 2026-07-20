@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} - Mparanza{% endblock %}
+
+{% block body_attrs %}class="landing-body data-handling-body"{% endblock %}
+
+{% block head_extra %}
+  <meta name="description" content="{{ page.meta_description }}" />
+{% endblock %}
+
+{% block body %}
+<a class="data-handling-skip-link" href="#main-content">
+  {{ page.skip_label }}
+</a>
+
+<header class="landing-header data-handling-header">
+  <a class="landing-logo-link"
+     href="/?lang={{ lang }}"
+     aria-label="{{ page.home_label }}">
+    <img class="landing-logo"
+         src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png"
+         alt="Mparanza" />
+  </a>
+
+  <nav class="landing-lang" aria-label="{{ page.language_selector_label }}">
+    {% for code in language_order %}
+      <a href="?lang={{ code }}"
+         class="landing-lang__link{% if lang == code %} is-active{% endif %}"
+         lang="{{ code }}"
+         hreflang="{{ code }}"
+         aria-label="{{ language_names[code] }}"
+         title="{{ language_names[code] }}"
+         {% if lang == code %}aria-current="page"{% endif %}>
+        {{ language_labels[code] }}
+      </a>
+    {% endfor %}
+  </nav>
+</header>
+
+<main id="main-content" class="data-handling-page">
+  <section class="data-handling-hero" aria-labelledby="data-handling-title">
+    <p class="data-handling-eyebrow">{{ page.eyebrow }}</p>
+    <h1 id="data-handling-title">{{ page.title }}</h1>
+    <p class="data-handling-summary">{{ page.summary }}</p>
+  </section>
+
+  <section class="data-boundary" aria-labelledby="data-boundary-title">
+    <div class="data-boundary__heading">
+      <h2 id="data-boundary-title">{{ page.boundary.title }}</h2>
+      <p>{{ page.boundary.intro }}</p>
+    </div>
+
+    <div class="data-boundary__map">
+      <div class="data-boundary__node">
+        <strong>{{ page.boundary.local_label }}</strong>
+        <span>{{ page.boundary.local_detail }}</span>
+      </div>
+      <span class="data-boundary__arrow" aria-hidden="true">→</span>
+      <div class="data-boundary__node">
+        <strong>{{ page.boundary.account_label }}</strong>
+        <span>{{ page.boundary.account_detail }}</span>
+      </div>
+      <p class="data-boundary__exclusion">{{ page.boundary.exclusion }}</p>
+    </div>
+  </section>
+
+  <div class="data-handling-sections">
+    {% for section in page.sections %}
+      <section id="{{ section.id }}"
+               class="data-handling-section"
+               aria-labelledby="data-handling-{{ section.id }}-title">
+        <h2 id="data-handling-{{ section.id }}-title">{{ section.title }}</h2>
+        <div class="data-handling-section__copy">
+          {% for paragraph in section.paragraphs %}
+            <p>{{ paragraph }}</p>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+  <section class="data-resources" aria-labelledby="data-resources-title">
+    <div>
+      <h2 id="data-resources-title">{{ page.resources.title }}</h2>
+      <p>{{ page.resources.intro }}</p>
+    </div>
+    <nav class="data-resources__links" aria-label="{{ page.resources.links_label }}">
+      {% for item in page.resources.links %}
+        <a href="{{ item.href }}">
+          <span>{{ item.label }}</span>
+          <span aria-hidden="true">{{ "↗" if item.external else "→" }}</span>
+        </a>
+      {% endfor %}
+    </nav>
+  </section>
+
+  <p class="data-handling-closing">{{ page.closing }}</p>
+</main>
+{% endblock %}
