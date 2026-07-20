@@ -3336,7 +3336,7 @@ body.landing-body.landing-home {
 
 .landing-home .landing-bridge {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   gap: clamp(40px, 7vw, 104px);
   padding: clamp(92px, 11vw, 156px) 0;
   border-bottom: 1px solid var(--landing-rule);
