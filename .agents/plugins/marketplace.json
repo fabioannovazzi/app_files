@@ -3,42 +3,5 @@
   "interface": {
     "displayName": "Mparanza"
   },
-  "plugins": [
-    {
-      "name": "vera",
-      "source": {
-        "source": "local",
-        "path": "./plugins/vera"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "clara",
-      "source": {
-        "source": "local",
-        "path": "./plugins/clara"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "attribute-reporting",
-      "source": {
-        "source": "local",
-        "path": "./plugins/attribute-reporting"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    }
-  ]
+  "plugins": []
 }
