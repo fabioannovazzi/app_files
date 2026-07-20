@@ -61,8 +61,7 @@
       text-decoration: none;
     }
 
-    .brand { gap: 10px; color: var(--navy); font-weight: 650; }
-    .brand img { width: 34px; height: 34px; }
+    .brand img { display: block; width: auto; height: 34px; }
     .nav-right, .nav-links, .lang-switch { display: flex; align-items: center; }
     .nav-right { gap: 20px; }
     .nav-links { gap: 18px; color: var(--blue); font-size: 14px; }
@@ -326,11 +325,23 @@
 
     @media (max-width: 480px) {
       .nav-shell, main, footer { width: calc(100% - 32px); }
-      .brand span { display: none; }
+      .brand img { height: 30px; }
       .lang-switch button { min-width: 36px; }
       h1 { font-size: 56px; }
       section { padding: 58px 0; }
       .download-panel { padding: 28px 24px; }
+    }
+
+    @media (max-width: 360px) {
+      .nav-shell {
+        min-height: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 0;
+      }
+      .nav-right, .lang-switch { width: 100%; }
+      .lang-switch button { min-width: 0; flex: 1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -343,9 +354,8 @@
 <body>
   <header class="topbar">
     <div class="nav-shell">
-      <a class="brand" href="/?lang=it" data-home-link>
-        <img src="icon.svg" alt="">
-        <span>Vera</span>
+      <a class="brand" href="/?lang=it" data-home-link aria-label="Mparanza">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
       <div class="nav-right">
         <nav class="nav-links" aria-label="Page navigation">

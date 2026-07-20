@@ -2862,6 +2862,41 @@ def test_clara_public_icon_matches_plugin_source() -> None:
     ).read_bytes()
 
 
+@pytest.mark.parametrize(
+    ("page_name", "style_path", "expected_home_link"),
+    (
+        (
+            "vera",
+            "static/shared/vera/index.html",
+            '<a class="brand" href="/?lang=it" data-home-link aria-label="Mparanza">',
+        ),
+        (
+            "clara",
+            "static/shared/clara/clara-page.css",
+            '<a class="brand" href="/" aria-label="Mparanza">',
+        ),
+    ),
+)
+def test_companion_header_home_link_uses_mparanza_logo(
+    page_name: str, style_path: str, expected_home_link: str
+) -> None:
+    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+        encoding="utf-8"
+    )
+    header = page.split('<header class="topbar">', maxsplit=1)[1].split(
+        "</header>", maxsplit=1
+    )[0]
+
+    assert expected_home_link in header
+    assert (
+        '<img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" '
+        'alt="Mparanza">' in header
+    )
+    assert 'src="icon.svg"' not in header
+    styles = (ROOT / style_path).read_text(encoding="utf-8")
+    assert "width: auto; height: 34px;" in styles
+
+
 def test_clara_public_page_uses_vera_visual_system() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
