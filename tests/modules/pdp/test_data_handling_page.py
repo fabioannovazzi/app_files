@@ -86,24 +86,24 @@ def test_data_handling_page_is_public_and_localized(
 @pytest.mark.parametrize(
     ("lang", "open_title", "security_title", "bridge_title"),
     (
-        ("en", "Open by design.", "Secure by design.", "Only Codex by design"),
+        ("en", "Open by design.", "Secure by design.", "Only Codex by design."),
         (
             "it",
             "Aperti per scelta.",
             "Sicuri per scelta.",
-            "Solo Codex per scelta",
+            "Solo Codex per scelta.",
         ),
         (
             "fr",
             "Ouverts par conception.",
             "Sécurisés par conception.",
-            "Exclusivement pour Codex par conception",
+            "Exclusivement pour Codex par conception.",
         ),
         (
             "de",
             "Offen konzipiert.",
             "Sicher konzipiert.",
-            "Nur für Codex konzipiert",
+            "Nur für Codex konzipiert.",
         ),
     ),
 )

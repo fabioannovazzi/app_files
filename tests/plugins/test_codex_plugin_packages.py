@@ -3221,10 +3221,15 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     assert "body.landing-body.landing-home" in css
     assert ".landing-home .landing-harness" in css
     assert ".landing-home .landing-open-source" in css
-    open_source_heading_css = css.split(
-        ".landing-home .landing-open-source h2 {", maxsplit=1
-    )[1].split("}", maxsplit=1)[0]
-    assert "color: var(--landing-ink);" in open_source_heading_css
+    design_heading_selector = (
+        ".landing-home .landing-open-source h2,\n"
+        ".landing-home .landing-security h2,\n"
+        ".landing-home .landing-bridge h2 {"
+    )
+    design_heading_css = css.split(design_heading_selector, maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    assert "color: var(--landing-ink);" in design_heading_css
     open_source_body_css = css.split(
         ".landing-home .landing-open-source__body > p {", maxsplit=1
     )[1].split("}", maxsplit=1)[0]
