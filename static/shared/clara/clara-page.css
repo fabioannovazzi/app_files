@@ -50,14 +50,7 @@ a { color: inherit; }
   text-decoration: none;
 }
 
-.brand {
-  gap: 10px;
-  color: var(--navy);
-  font-size: 16px;
-  font-weight: 650;
-}
-
-.brand img { display: block; width: 34px; height: 34px; }
+.brand img { display: block; width: auto; height: 34px; }
 .nav-right, .nav-links, .lang-switch { display: flex; align-items: center; }
 .nav-right { gap: 20px; }
 .nav-links { gap: 18px; color: var(--blue); font-size: 14px; }
@@ -454,11 +447,23 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
 @media (max-width: 480px) {
   .nav, main, footer { width: calc(100% - 32px); }
   .nav-right { gap: 10px; }
-  .brand span { display: none; }
+  .brand img { height: 30px; }
   .lang-switch button { min-width: 36px; padding: 0 7px; }
   h1 { font-size: 42px; }
   section { padding: 58px 0; }
   .approval-section .section-head, .download-panel { padding: 28px 24px; }
+}
+
+@media (max-width: 360px) {
+  .nav {
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 0;
+  }
+  .nav-right, .lang-switch { width: 100%; }
+  .lang-switch button { min-width: 0; flex: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

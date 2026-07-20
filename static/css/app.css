@@ -2926,8 +2926,6 @@ body.landing-body.landing-home {
   --landing-ink: oklch(23% 0.018 252);
   --landing-muted: oklch(48% 0.018 252);
   --landing-rule: oklch(85% 0.016 252);
-  --landing-blue: oklch(40% 0.12 250);
-  --landing-blue-dark: oklch(31% 0.09 250);
   --landing-product-blue: #002060;
   --landing-ease: cubic-bezier(0.16, 1, 0.3, 1);
   padding: clamp(24px, 3vw, 44px) clamp(24px, 4vw, 64px) 0;
@@ -2974,11 +2972,15 @@ body.landing-body.landing-home {
 
 .landing-home .landing-logo-link:focus-visible,
 .landing-home .landing-lang__link:focus-visible,
-.landing-home .landing-product__link:focus-visible,
 .landing-home .landing-open-source__links a:focus-visible,
-.landing-home .landing-security__link:focus-visible,
+.landing-home .landing-security__link:focus-visible {
+  outline: 2px solid var(--landing-ink);
+  outline-offset: 4px;
+}
+
+.landing-home .landing-product__link:focus-visible,
 .landing-home .landing-bridge__links a:focus-visible {
-  outline: 2px solid var(--landing-blue-dark);
+  outline: 2px solid var(--landing-product-blue);
   outline-offset: 4px;
 }
 
@@ -3174,8 +3176,8 @@ body.landing-body.landing-home {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  border-bottom: 1px solid var(--landing-blue);
-  color: var(--landing-blue-dark);
+  border-bottom: 1px solid var(--landing-ink);
+  color: var(--landing-ink);
   font-size: 0.9375rem;
   font-weight: 600;
   text-decoration: none;
@@ -3218,8 +3220,8 @@ body.landing-body.landing-home {
   gap: 10px;
   min-height: 44px;
   margin-top: clamp(34px, 4vw, 50px);
-  border-bottom: 1px solid var(--landing-blue);
-  color: var(--landing-blue-dark);
+  border-bottom: 1px solid var(--landing-ink);
+  color: var(--landing-ink);
   font-size: 0.9375rem;
   font-weight: 600;
   text-decoration: none;
@@ -3327,8 +3329,8 @@ body.landing-body.landing-home {
   gap: 12px;
   min-height: 44px;
   margin-top: 30px;
-  border-bottom: 1px solid var(--landing-blue);
-  color: var(--landing-blue-dark);
+  border-bottom: 1px solid var(--landing-product-blue);
+  color: var(--landing-product-blue);
   font-size: 0.9375rem;
   font-weight: 600;
   text-decoration: none;
@@ -3594,7 +3596,6 @@ body.data-handling-body {
   --data-ink: oklch(23% 0.018 252);
   --data-muted: oklch(48% 0.018 252);
   --data-rule: oklch(85% 0.016 252);
-  --data-blue: oklch(35% 0.11 250);
   --data-ease: cubic-bezier(0.16, 1, 0.3, 1);
   padding: clamp(24px, 3vw, 44px) clamp(24px, 4vw, 64px) 0;
   overflow-x: clip;
@@ -3638,7 +3639,7 @@ body.data-handling-body .landing-lang__link,
 body.data-handling-body .landing-logo-link:focus-visible,
 body.data-handling-body .landing-lang__link:focus-visible,
 .data-resources__links a:focus-visible {
-  outline: 2px solid var(--data-blue);
+  outline: 2px solid var(--data-ink);
   outline-offset: 4px;
 }
 
@@ -3771,7 +3772,7 @@ body.data-handling-body .landing-lang__link.is-active {
 }
 
 .data-boundary__arrow {
-  color: var(--data-blue);
+  color: var(--data-ink);
   font-size: clamp(1.6rem, 3vw, 2.5rem);
 }
 
@@ -3780,7 +3781,7 @@ body.data-handling-body .landing-lang__link.is-active {
   margin: 0;
   padding: 22px 0 24px;
   border-top: 1px solid var(--data-rule);
-  color: var(--data-blue);
+  color: var(--data-ink);
   font-size: clamp(1.05rem, 1.55vw, 1.3rem);
   font-weight: 600;
   line-height: 1.45;
@@ -3857,7 +3858,7 @@ body.data-handling-body .landing-lang__link.is-active {
   align-items: center;
   min-height: 58px;
   border-bottom: 1px solid var(--data-rule);
-  color: var(--data-blue);
+  color: var(--data-ink);
   font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.4;
@@ -3868,7 +3869,7 @@ body.data-handling-body .landing-lang__link.is-active {
   margin: 0;
   max-width: 17ch;
   padding: clamp(92px, 12vw, 172px) 0;
-  color: var(--data-blue);
+  color: var(--data-ink);
   font-size: clamp(2.8rem, 6.4vw, 6.5rem);
   font-weight: 600;
   line-height: 0.94;
