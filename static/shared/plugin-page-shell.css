@@ -111,19 +111,10 @@ body > .page > main {
 }
 
 .brand img {
-  max-width: 140px;
-  height: auto;
-}
-
-.brand img {
-  display: none !important;
-}
-
-.brand::before {
-  content: "Home";
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 650;
+  display: block !important;
+  width: auto;
+  max-width: none;
+  height: 34px;
 }
 
 .nav-links a,
@@ -447,6 +438,10 @@ button:focus-visible {
 }
 
 @media (max-width: 640px) {
+  .brand img {
+    height: 30px;
+  }
+
   .nav-shell,
   .nav,
   main,
