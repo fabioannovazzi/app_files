@@ -119,6 +119,39 @@ def test_homepage_design_copy_is_localized(
     assert content["bridge"]["title"] == bridge_title
 
 
+@pytest.mark.parametrize(
+    ("lang", "subheadline"),
+    (
+        (
+            "en",
+            "Mparanza builds Codex plugins. Each gives Codex a specialist way of "
+            "working for professional tasks.",
+        ),
+        (
+            "it",
+            "Mparanza crea plugin Codex. Ogni plugin dà a Codex un metodo "
+            "specialistico per il lavoro professionale.",
+        ),
+        (
+            "fr",
+            "Mparanza crée des plugins Codex. Chacun donne à Codex une méthode "
+            "spécialisée pour le travail professionnel.",
+        ),
+        (
+            "de",
+            "Mparanza entwickelt Codex-Plugins. Jedes gibt Codex eine fachliche "
+            "Arbeitsweise für professionelle Aufgaben.",
+        ),
+    ),
+)
+def test_homepage_describes_mparanza_as_codex_plugins(
+    lang: str, subheadline: str
+) -> None:
+    content = _get_landing_page_content(lang)
+
+    assert content["hero"]["subheadline"] == subheadline
+
+
 def test_homepage_uses_the_approved_english_security_copy() -> None:
     security = _get_landing_page_content("en")["security"]
 
