@@ -2826,7 +2826,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "eyebrow": "Codex plugins for professional work",
             "headline": "AI has the power. Codex provides the control.",
             "subheadline": (
-                "Mparanza builds plugins exclusively for Codex. Each gives Codex a "
+                "Mparanza builds Codex plugins. Each gives Codex a "
                 "specialist way of working for professional tasks."
             ),
         },
@@ -2984,7 +2984,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "eyebrow": "Plugin Codex per il lavoro professionale",
             "headline": "La potenza viene dall'AI. Il controllo, da Codex.",
             "subheadline": (
-                "Mparanza crea plugin esclusivamente per Codex. Ogni plugin dà a Codex "
+                "Mparanza crea plugin Codex. Ogni plugin dà a Codex "
                 "un metodo specialistico per il lavoro professionale."
             ),
         },
@@ -3142,7 +3142,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "eyebrow": "Plugins Codex pour les professionnels",
             "headline": "L'IA apporte la puissance. Codex apporte le contrôle.",
             "subheadline": (
-                "Mparanza crée exclusivement des plugins pour Codex. Chacun donne à "
+                "Mparanza crée des plugins Codex. Chacun donne à "
                 "Codex une méthode spécialisée pour le travail professionnel."
             ),
         },
@@ -3303,7 +3303,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "eyebrow": "Codex-Plugins für professionelle Arbeit",
             "headline": "KI liefert die Leistung. Codex sorgt für Kontrolle.",
             "subheadline": (
-                "Mparanza entwickelt ausschließlich Plugins für Codex. Jedes gibt "
+                "Mparanza entwickelt Codex-Plugins. Jedes gibt "
                 "Codex eine fachliche Arbeitsweise für professionelle Aufgaben."
             ),
         },
