@@ -3019,7 +3019,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "open_source": {
             "id": "open-source",
-            "title": "Aperti per principio.",
+            "title": "Aperti per scelta.",
             "description": (
                 "Vera e Clara sono plugin Codex open source e gratuiti da installare. "
                 "Puoi esaminare i metodi, i controlli e il codice prima di usarli, e "
@@ -3039,7 +3039,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "security": {
             "id": "security",
-            "title": "Sicuri fin dalla progettazione.",
+            "title": "Sicuri per scelta.",
             "lead": "Non devi affidarci il tuo lavoro. Non lo riceviamo.",
             "description": (
                 "Nei flussi di lavoro locali, Vera e Clara operano nell'ambiente "
@@ -3051,7 +3051,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Solo Codex fin dalla progettazione",
+            "title": "Solo Codex per scelta",
             "description": (
                 "Mparanza è Vera e Clara: due plugin che applicano lo stesso ambiente "
                 "operativo Codex a due professioni diverse."
@@ -3198,7 +3198,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "security": {
             "id": "security",
-            "title": "Sécurisés dès la conception.",
+            "title": "Sécurisés par conception.",
             "lead": (
                 "Vous n'avez pas à nous confier votre travail. Nous ne le recevons pas."
             ),
@@ -3212,7 +3212,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Exclusivement pour Codex dès la conception",
+            "title": "Exclusivement pour Codex par conception",
             "description": (
                 "Mparanza, c'est Vera et Clara : deux plugins qui appliquent le même "
                 "environnement Codex à deux métiers différents."
