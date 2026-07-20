@@ -2859,7 +2859,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "open_source": {
             "id": "open-source",
-            "title": "Open. By design.",
+            "title": "Open by design.",
             "description": (
                 "Vera and Clara are free to install and open-source Codex plugins. "
                 "You can inspect the methods, controls, and code before using them—and "
@@ -3004,7 +3004,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "open_source": {
             "id": "open-source",
-            "title": "Aperti. Per principio.",
+            "title": "Aperti per principio.",
             "description": (
                 "Vera e Clara sono plugin Codex open source e gratuiti da installare. "
                 "Puoi esaminare i metodi, i controlli e il codice prima di usarli, e "
@@ -3151,7 +3151,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "open_source": {
             "id": "open-source",
-            "title": "Ouverts. Dès la conception.",
+            "title": "Ouverts par conception.",
             "description": (
                 "Vera et Clara sont des plugins Codex open source, gratuits à "
                 "l'installation. Vous pouvez examiner leurs méthodes, leurs contrôles "
@@ -3300,7 +3300,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "open_source": {
             "id": "open-source",
-            "title": "Offen. Aus Prinzip.",
+            "title": "Offen konzipiert.",
             "description": (
                 "Vera und Clara sind kostenlos installierbare Open-Source-Plugins für "
                 "Codex. Sie können Methoden, Kontrollen und Code vor der Verwendung "
