@@ -3348,14 +3348,14 @@ def test_homepage_makes_open_source_explicit(
             "Free by design.",
             "Vera and Clara are free to install and use. We welcome contributions "
             "to their development. Mparanza charges for consulting, implementation, "
-            "and optional hosted services.",
+            "and hosted services.",
         ),
         (
             "it",
             "Gratuiti per scelta.",
             "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
             "volentieri contributi al loro sviluppo. Mparanza offre a pagamento "
-            "consulenza, implementazione e servizi di hosting opzionali.",
+            "consulenza, implementazione e servizi hosted.",
         ),
         (
             "fr",
@@ -3363,15 +3363,14 @@ def test_homepage_makes_open_source_explicit(
             "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
             "volontiers les contributions à leur développement. Mparanza facture ses "
             "prestations de conseil et de mise en œuvre, ainsi que ses services "
-            "d'hébergement optionnels.",
+            "hébergés.",
         ),
         (
             "de",
             "Kostenlos konzipiert.",
             "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
             "freuen uns über Beiträge zu ihrer Weiterentwicklung. Mparanza berechnet "
-            "Beratungs- und Implementierungsleistungen sowie optionale "
-            "Hosting-Dienste.",
+            "Beratungs- und Implementierungsleistungen sowie gehostete Services.",
         ),
     ),
 )
