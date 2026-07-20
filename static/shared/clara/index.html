@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="clara-page.css?v=2026072001">
+  <link rel="stylesheet" href="../video-library.css?v=2026072001">
 </head>
 <body>
   <header class="topbar">
@@ -236,6 +237,14 @@
       </div>
     </section>
 
+    <section id="videos">
+      <div class="section-head">
+        <h2 data-i18n="videos.title">See Clara at work</h2>
+        <p data-i18n="videos.copy">Short guides to Clara's main capabilities, narrated in the language of this page.</p>
+      </div>
+      <div class="video-library" data-video-library="clara"></div>
+    </section>
+
     <section id="download">
       <div class="download-panel">
         <h2 data-i18n="download.title">Install Clara and open your first project</h2>
@@ -270,6 +279,7 @@
 
   <footer data-i18n="hero.eyebrow">Clara AI companion for consultants</footer>
 
+  <script src="../video-library.js?v=2026072001"></script>
   <script>
     const copy = {
       en: {
@@ -294,6 +304,9 @@
         "presentations.video.kicker": "36-second overview",
         "presentations.video.title": "Watch: from project materials to a decision-ready presentation",
         "presentations.video.meta": "English narration · Opens on YouTube",
+        "videos.title": "See Clara at work",
+        "videos.copy": "Short guides to Clara's main capabilities, narrated in the language of this page.",
+        "videos.open": "Opens on YouTube",
         "presentations.create.kicker": "New presentation",
         "presentations.create.title": "Start from the project materials",
         "presentations.create.copy": "Add Word, PDF, and PowerPoint documents, images, spreadsheets, notes, or recordings. State the audience, objective, and duration: Clara proposes the structure and prepares the presentation.",
@@ -411,6 +424,9 @@
         "presentations.video.kicker": "Panoramica di 48 secondi",
         "presentations.video.title": "Guarda: dai materiali di progetto a una presentazione pronta per decidere",
         "presentations.video.meta": "Narrazione in italiano · Si apre su YouTube",
+        "videos.title": "Guarda Clara al lavoro",
+        "videos.copy": "Guide brevi alle principali funzioni di Clara, narrate nella lingua di questa pagina.",
+        "videos.open": "Si apre su YouTube",
         "presentations.create.kicker": "Nuova presentazione",
         "presentations.create.title": "Parti dai materiali del progetto",
         "presentations.create.copy": "Aggiungi documenti Word, PDF e PowerPoint, immagini, fogli di calcolo, appunti o registrazioni. Indica pubblico, obiettivo e durata: Clara propone la struttura e prepara la presentazione.",
@@ -528,6 +544,9 @@
         "presentations.video.kicker": "Aperçu de 50 secondes",
         "presentations.video.title": "Voir : des documents du projet à une présentation prête pour la décision",
         "presentations.video.meta": "Narration en français · S’ouvre sur YouTube",
+        "videos.title": "Voir Clara à l’œuvre",
+        "videos.copy": "De courtes vidéos sur les principales fonctions de Clara, dans la langue de cette page.",
+        "videos.open": "S’ouvre sur YouTube",
         "presentations.create.kicker": "Nouvelle présentation",
         "presentations.create.title": "Partez des éléments du projet",
         "presentations.create.copy": "Ajoutez des fichiers Word, PDF ou PowerPoint, des images, des feuilles de calcul, des notes ou des enregistrements. Indiquez le public, l'objectif et la durée : Clara propose une structure et prépare la présentation.",
@@ -645,6 +664,9 @@
         "presentations.video.kicker": "46-Sekunden-Überblick",
         "presentations.video.title": "Ansehen: von Projektunterlagen zur entscheidungsreifen Präsentation",
         "presentations.video.meta": "Deutsche Sprecherstimme · Öffnet YouTube",
+        "videos.title": "Clara bei der Arbeit",
+        "videos.copy": "Kurze Einblicke in Claras wichtigste Funktionen, in der Sprache dieser Seite.",
+        "videos.open": "Öffnet YouTube",
         "presentations.create.kicker": "Neue Präsentation",
         "presentations.create.title": "Beginnen Sie mit den Projektmaterialien",
         "presentations.create.copy": "Fügen Sie Word-, PDF- und PowerPoint-Dateien, Bilder, Tabellenkalkulationen, Notizen oder Aufnahmen hinzu. Geben Sie Zielgruppe, Ziel und Dauer an: Clara schlägt die Struktur vor und bereitet die Präsentation vor.",
@@ -782,6 +804,7 @@
     document.querySelectorAll('a[href="/"]').forEach((link) => {
       link.href = `/?lang=${safeLang}`;
     });
+    window.MparanzaVideos?.mount({ product: "clara", lang: safeLang, openLabel: activeCopy["videos.open"] });
   </script>
 </body>
 </html>
