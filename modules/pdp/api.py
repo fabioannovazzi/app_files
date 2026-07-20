@@ -2883,9 +2883,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Free by design.",
             "description": (
                 "Vera and Clara are free to install and use. We welcome contributions "
-                "to their development. Your expertise helps make Vera and Clara more "
-                "useful. Mparanza charges for consulting, implementation, and optional "
-                "hosted services—not for the plugins themselves."
+                "to their development. Mparanza charges for consulting, implementation, "
+                "and optional hosted services."
             ),
         },
         "security": {
@@ -3052,9 +3051,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Gratuiti per scelta.",
             "description": (
                 "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
-                "volentieri contributi al loro sviluppo. La tua competenza aiuta a "
-                "rendere Vera e Clara più utili. Mparanza offre a pagamento consulenza, "
-                "implementazione e servizi di hosting opzionali, non i plugin stessi."
+                "volentieri contributi al loro sviluppo. Mparanza offre a pagamento "
+                "consulenza, implementazione e servizi di hosting opzionali."
             ),
         },
         "security": {
@@ -3221,10 +3219,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Gratuits par conception.",
             "description": (
                 "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
-                "volontiers les contributions à leur développement. Votre expertise "
-                "contribue à rendre Vera et Clara plus utiles. Mparanza facture ses "
+                "volontiers les contributions à leur développement. Mparanza facture ses "
                 "prestations de conseil et de mise en œuvre, ainsi que ses services "
-                "d'hébergement optionnels — pas les plugins eux-mêmes."
+                "d'hébergement optionnels."
             ),
         },
         "security": {
@@ -3394,10 +3391,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Kostenlos konzipiert.",
             "description": (
                 "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
-                "freuen uns über Beiträge zu ihrer Weiterentwicklung. Ihr Fachwissen "
-                "hilft, Vera und Clara nützlicher zu machen. Mparanza berechnet "
+                "freuen uns über Beiträge zu ihrer Weiterentwicklung. Mparanza berechnet "
                 "Beratungs- und Implementierungsleistungen sowie optionale "
-                "Hosting-Dienste – nicht die Plugins selbst."
+                "Hosting-Dienste."
             ),
         },
         "security": {
