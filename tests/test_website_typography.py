@@ -74,3 +74,13 @@ def test_homepage_design_headings_share_the_display_scale() -> None:
         ".landing-home .landing-section-heading h2,\n"
         ".landing-home .landing-bridge h2" not in css
     )
+
+
+def test_homepage_bridge_reserves_room_for_long_localized_heading() -> None:
+    css = (ROOT / "static" / "css" / "app.css").read_text(encoding="utf-8")
+
+    assert (
+        ".landing-home .landing-bridge {\n"
+        "  display: grid;\n"
+        "  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);" in css
+    )
