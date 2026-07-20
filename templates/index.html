@@ -123,6 +123,17 @@
     </section>
   {% endif %}
 
+  {% if free %}
+    <section id="{{ free.id }}"
+             class="landing-free"
+             aria-labelledby="landing-free-title">
+      <h2 id="landing-free-title">{{ free.title }}</h2>
+      <div class="landing-free__body">
+        <p>{{ free.description }}</p>
+      </div>
+    </section>
+  {% endif %}
+
   {% if security %}
     <section id="{{ security.id }}"
              class="landing-security"

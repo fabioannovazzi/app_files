@@ -2756,9 +2756,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex for accounting firms",
+                        "title": "Codex for accountants",
                         "tooltip_key": "codex_accountants_group",
-                        "audience": "For accounting firms",
+                        "audience": "For accountants",
                         "lead": (
                             "A Codex plugin for client files, accounting checks, "
                             "reconciliations and reporting."
@@ -2862,7 +2862,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Open by design.",
             "description": (
-                "Vera and Clara are free to install and open-source Codex plugins. "
+                "Vera and Clara are open-source Codex plugins. "
                 "You can inspect the methods, controls, and code before using them—and "
                 "adapt them to your work."
             ),
@@ -2877,6 +2877,16 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
+        },
+        "free": {
+            "id": "free",
+            "title": "Free by design.",
+            "description": (
+                "Vera and Clara are free to install and use. We welcome contributions "
+                "to their development. Your expertise helps make Vera and Clara more "
+                "useful. Mparanza charges for consulting, implementation, and optional "
+                "hosted services—not for the plugins themselves."
+            ),
         },
         "security": {
             "id": "security",
@@ -2914,7 +2924,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "id": "vera",
                         "title": "Codex per commercialisti",
                         "tooltip_key": "codex_accountants_group",
-                        "audience": "Per gli studi di commercialisti",
+                        "audience": "Per commercialisti",
                         "lead": (
                             "Un plugin Codex per lavorare su fascicoli, controlli contabili, "
                             "riconciliazioni e report."
@@ -3021,7 +3031,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Aperti per scelta.",
             "description": (
-                "Vera e Clara sono plugin Codex open source e gratuiti da installare. "
+                "Vera e Clara sono plugin Codex open source. "
                 "Puoi esaminare i metodi, i controlli e il codice prima di usarli, e "
                 "adattarli al tuo lavoro."
             ),
@@ -3036,6 +3046,16 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
+        },
+        "free": {
+            "id": "free",
+            "title": "Gratuiti per scelta.",
+            "description": (
+                "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
+                "volentieri contributi al loro sviluppo. La tua competenza aiuta a "
+                "rendere Vera e Clara più utili. Mparanza offre a pagamento consulenza, "
+                "implementazione e servizi di hosting opzionali, non i plugin stessi."
+            ),
         },
         "security": {
             "id": "security",
@@ -3069,9 +3089,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex pour les cabinets d'expertise comptable",
+                        "title": "Codex pour les experts-comptables",
                         "tooltip_key": "codex_accountants_group",
-                        "audience": "Pour les cabinets d'expertise comptable",
+                        "audience": "Pour les experts-comptables",
                         "lead": (
                             "Un plugin Codex pour les dossiers clients, les contrôles "
                             "comptables, les rapprochements et les rapports."
@@ -3180,9 +3200,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Ouverts par conception.",
             "description": (
-                "Vera et Clara sont des plugins Codex open source, gratuits à "
-                "l'installation. Vous pouvez examiner leurs méthodes, leurs contrôles "
-                "et leur code avant de les utiliser — et les adapter à votre travail."
+                "Vera et Clara sont des plugins Codex open source. Vous pouvez examiner "
+                "leurs méthodes, leurs contrôles et leur code avant de les utiliser — "
+                "et les adapter à votre travail."
             ),
             "links_label": "Informations open source",
             "links": [
@@ -3195,6 +3215,17 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
+        },
+        "free": {
+            "id": "free",
+            "title": "Gratuits par conception.",
+            "description": (
+                "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
+                "volontiers les contributions à leur développement. Votre expertise "
+                "contribue à rendre Vera et Clara plus utiles. Mparanza facture ses "
+                "prestations de conseil et de mise en œuvre, ainsi que ses services "
+                "d'hébergement optionnels — pas les plugins eux-mêmes."
+            ),
         },
         "security": {
             "id": "security",
@@ -3230,9 +3261,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex für Steuerkanzleien",
+                        "title": "Codex für Steuerberaterinnen und Steuerberater",
                         "tooltip_key": "codex_accountants_group",
-                        "audience": "Für Steuerkanzleien",
+                        "audience": "Für Steuerberaterinnen und Steuerberater",
                         "lead": (
                             "Ein Codex-Plugin für Mandantendateien, Buchungsprüfungen, "
                             "Abstimmungen und Berichte."
@@ -3343,9 +3374,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Offen konzipiert.",
             "description": (
-                "Vera und Clara sind kostenlos installierbare Open-Source-Plugins für "
-                "Codex. Sie können Methoden, Kontrollen und Code vor der Verwendung "
-                "prüfen und an Ihre Arbeit anpassen."
+                "Vera und Clara sind Open-Source-Plugins für Codex. Sie können Methoden, "
+                "Kontrollen und Code vor der Verwendung prüfen und an Ihre Arbeit anpassen."
             ),
             "links_label": "Open-Source-Informationen",
             "links": [
@@ -3358,6 +3388,17 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
+        },
+        "free": {
+            "id": "free",
+            "title": "Kostenlos konzipiert.",
+            "description": (
+                "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
+                "freuen uns über Beiträge zu ihrer Weiterentwicklung. Ihr Fachwissen "
+                "hilft, Vera und Clara nützlicher zu machen. Mparanza berechnet "
+                "Beratungs- und Implementierungsleistungen sowie optionale "
+                "Hosting-Dienste – nicht die Plugins selbst."
+            ),
         },
         "security": {
             "id": "security",
@@ -3481,6 +3522,7 @@ def landing_page(request: Request) -> Any:
             hero=landing_page_content["hero"],
             harness=landing_page_content["harness"],
             open_source=landing_page_content["open_source"],
+            free=landing_page_content["free"],
             security=landing_page_content["security"],
             bridge=landing_page_content["bridge"],
             copy=get_page_copy("landing", lang),
@@ -8629,6 +8671,7 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
         "hero": content.get("hero"),
         "harness": content.get("harness", {}),
         "open_source": content.get("open_source", {}),
+        "free": content.get("free", {}),
         "security": content.get("security", {}),
         "bridge": content.get("bridge", {}),
     }

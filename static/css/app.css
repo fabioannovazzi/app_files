@@ -3132,7 +3132,8 @@ body.landing-body.landing-home {
   line-height: 1.55;
 }
 
-.landing-home .landing-open-source {
+.landing-home .landing-open-source,
+.landing-home .landing-free {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   gap: clamp(40px, 7vw, 104px);
@@ -3143,6 +3144,7 @@ body.landing-body.landing-home {
 }
 
 .landing-home .landing-open-source h2,
+.landing-home .landing-free h2,
 .landing-home .landing-security h2,
 .landing-home .landing-bridge h2 {
   margin: 0;
@@ -3155,7 +3157,8 @@ body.landing-body.landing-home {
   text-wrap: balance;
 }
 
-.landing-home .landing-open-source__body > p {
+.landing-home .landing-open-source__body > p,
+.landing-home .landing-free__body > p {
   margin: 0;
   max-width: 46ch;
   color: var(--landing-muted);
@@ -3491,6 +3494,7 @@ body.landing-body.landing-home {
 
   .landing-home .landing-harness,
   .landing-home .landing-open-source,
+  .landing-home .landing-free,
   .landing-home .landing-security,
   .landing-home .landing-bridge {
     grid-template-columns: minmax(0, 1fr);
@@ -3501,7 +3505,8 @@ body.landing-body.landing-home {
     padding: 80px 0;
   }
 
-  .landing-home .landing-open-source {
+  .landing-home .landing-open-source,
+  .landing-home .landing-free {
     padding: 84px 0;
   }
 
@@ -3510,6 +3515,7 @@ body.landing-body.landing-home {
   }
 
   .landing-home .landing-open-source h2,
+  .landing-home .landing-free h2,
   .landing-home .landing-security h2,
   .landing-home .landing-bridge h2 {
     max-width: 9ch;
