@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "workstream": "prompt-optimizer",
+  "display_name": "Prompt Optimizer",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "The user's legal, tax or compliance question and optional local reference material"
+    ],
+    "local_processing": [
+      "Validate prompt structure and required sections",
+      "Check deterministic citation and source-hierarchy rules"
+    ],
+    "codex_context": [
+      {
+        "id": "user-question",
+        "purpose": "Understand and restructure the research request",
+        "content": "The question and facts typed or attached by the user",
+        "minimum_necessary": "The workflow cannot remove material already typed into Codex; ask the user to provide only facts needed for the research question",
+        "semantic_reasoning_required": true,
+        "full_source_expected": true
+      },
+      {
+        "id": "prompt-drafting",
+        "purpose": "Produce the source-backed Deep Research prompt",
+        "content": "Necessary facts, legal or tax scope, source hierarchy and citation requirements",
+        "minimum_necessary": "Carry forward only facts that materially constrain the research request",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Names or case facts entered in the initial Codex prompt are already in model context before Vera can minimize them",
+      "mitigation": "State this boundary explicitly and instruct the user to omit unnecessary identifiers; do not claim deterministic anonymization"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Il testo già inserito nella conversazione è già nel contesto di Codex. Per ottimizzare il prompt, includi solo i fatti necessari alla ricerca ed evita identificativi non pertinenti.",
+    "message_en": "Text already entered in the conversation is already in Codex context. For prompt optimization, include only facts necessary for the research and omit irrelevant identifiers.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "Vera cannot retroactively remove content already sent in the conversation",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "49a1214830a6a890df162e74fd1ad92f0f295a9a0ede086be9c5bcf37e1e61a1"
+  }
+}

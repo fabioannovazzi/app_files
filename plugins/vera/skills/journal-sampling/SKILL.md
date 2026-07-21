@@ -5,6 +5,13 @@ description: Use when a user wants Codex to extract accounting journal entries f
 
 # Journal Sampling
 
+## Privacy Boundary
+
+Before reading customer source or module-generated evidence, read
+`../../privacy/workstreams/journal-sampling.json`. Show its notice in the
+conversation language in the Run Intake. Continue without a redundant consent
+question unless the manifest explicitly requires confirmation.
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 Resolve `../../modules/journal-sampling` from this skill directory when it

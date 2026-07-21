@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "workstream": "new-client",
+  "display_name": "New Client",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "schemas"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Validated file-preparation outputs and evidence for identity, ownership, engagement, privacy, AI applicability, AML and monitoring"
+    ],
+    "local_processing": [
+      "Validate source-bound records",
+      "Calculate approved AML factors",
+      "Check evidence coverage and provenance",
+      "Package owner-only review artifacts"
+    ],
+    "codex_context": [
+      {
+        "id": "professional-setup",
+        "purpose": "Assess missing evidence and prepare decisions reserved to the commercialista",
+        "content": "Validated case records, ownership and mandate facts, privacy and AML evidence, provenance anchors and unresolved decisions",
+        "minimum_necessary": "Use validated structured records and targeted evidence anchors; avoid reopening complete source folders unless a material ambiguity requires it",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      },
+      {
+        "id": "review-draft",
+        "purpose": "Prepare the professional-review dossier and monitoring plan",
+        "content": "Case-specific decision records, gaps, calculations and selected evidence excerpts",
+        "minimum_necessary": "Include only facts and excerpts supporting the proposed review item",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "The professional setup necessarily includes identity, ownership, mandate, privacy and AML facts about identifiable people",
+      "mitigation": "Use owner-only outputs, validated structured records, targeted evidence and explicit professional review gates"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "La preparazione tecnica dei documenti resta locale. Per predisporre identità, incarico, privacy e AML, Codex esamina i dati strutturati e le evidenze pertinenti del cliente; il fascicolo completo non viene incluso automaticamente.",
+    "message_en": "Technical document preparation remains local. To prepare identity, engagement, privacy and AML review, Codex examines the client's structured facts and relevant evidence; the complete file is not included automatically.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "The exact personal data needed depends on the relationship and professional decisions under review",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "80b8a5d4b2f25d902abfe1621a1abcc06861e2e350a25720cf3ec5be38f8d629"
+  }
+}

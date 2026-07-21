@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "workstream": "concordato-plan-review",
+  "display_name": "Concordato Plan Review",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Concordato plan, financial schedules and supporting accounting evidence"
+    ],
+    "local_processing": [
+      "Extract plan tables",
+      "Recalculate totals and roll-forwards",
+      "Tie schedules to source evidence",
+      "Build discrepancy diagnostics"
+    ],
+    "codex_context": [
+      {
+        "id": "plan-interpretation",
+        "purpose": "Interpret plan assertions and explain numerical discrepancies",
+        "content": "Extracted plan sections, calculated tables, discrepancies, evidence locators and relevant original passages",
+        "minimum_necessary": "Use extracted tables and discrepancy-linked passages; consult broader plan language only when interpretation depends on surrounding terms",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Plan passages and schedules can contain debtor, creditor and transaction-specific information",
+      "mitigation": "Perform numerical tie-outs locally and expose only discrepancy-linked tables and passages"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Tabelle e quadrature del piano vengono elaborate localmente. Codex esamina risultati, scostamenti e i passaggi del piano necessari a interpretarli, non l'intero fascicolo per impostazione predefinita.",
+    "message_en": "Plan tables and tie-outs are processed locally. Codex reviews results, discrepancies and the plan passages needed to interpret them, not the complete file by default.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "Some plan conclusions depend on language distributed across multiple sections",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "8f7f5cbe0ce0f4efc7ba2f5a5f8093881e420d054b5f71be61840827986ea53a"
+  }
+}

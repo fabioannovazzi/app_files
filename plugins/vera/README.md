@@ -17,6 +17,13 @@ delegation, MCP server dispatch, and a shared local PaddleOCR adapter used by
 modules that preserve their own page-level evidence. Each specialist workflow
 retains its own deterministic checks, evidence trail, and review surfaces.
 
+Every registered workstream also has a versioned privacy-surface manifest under
+`privacy/workstreams/`. It records what remains local, what Codex may read, the
+minimum useful context, residual risks, and the notice shown to the
+commercialista. The `privacy-surface-review` skill supplies the semantic review;
+its deterministic validator enforces complete coverage and fails when governed
+workflow source changes without a refreshed review.
+
 The New Client workflow verifies a final-ready document-preparation phase—or an
 explicit standalone-evidence posture—and turns studio instructions into an
 owner-only review dossier for identity, engagement, per-subject screening,
