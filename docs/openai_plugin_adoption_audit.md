@@ -52,8 +52,8 @@ Main groups:
   `scripts/audit_openai_pattern_adoption_readiness.py` and
   `tests/scripts/test_audit_openai_pattern_adoption_readiness.py`.
 - Packaging:
-  `static/shared/clara/downloads/clara-plugin.zip` and
-  `protected_downloads/vera/vera-plugin.zip`.
+  `plugin_packages/clara/clara-plugin.zip` and
+  `plugin_packages/vera/vera-plugin.zip`.
   Some archive entries changed because generated workbench assets changed;
   others are content-identical deterministic refreshes kept so the current
   package builder's byte-for-byte `--check` passes.

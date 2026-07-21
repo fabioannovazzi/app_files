@@ -106,6 +106,7 @@ a {
 }
 
 .nav-right {
+  min-width: 0;
   gap: 18px;
 }
 
@@ -441,6 +442,55 @@ body[data-vera-module="new-client"] .journey-step {
   align-items: center;
 }
 
+.prepare-result {
+  max-width: 820px;
+  margin-top: clamp(44px, 7vw, 72px);
+}
+
+.country-transition {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.52fr) minmax(0, 0.48fr);
+  gap: clamp(36px, 8vw, 96px);
+  padding: clamp(64px, 9vw, 108px) 0;
+  border-bottom: 1px solid var(--vj-line);
+  scroll-margin-top: 92px;
+}
+
+.country-transition__head {
+  border-top: 2px solid var(--vj-ink);
+  padding-top: 24px;
+}
+
+.country-transition__head h2 {
+  margin-top: 14px;
+}
+
+.country-transition__head > p:last-child {
+  max-width: 62ch;
+  margin-top: 20px;
+  color: var(--vj-muted);
+}
+
+.country-transition__lines {
+  border-top: 1px solid var(--vj-line-strong);
+}
+
+.country-transition__lines p {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.36fr) minmax(0, 0.64fr);
+  gap: 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--vj-line);
+}
+
+.country-transition__lines strong {
+  color: var(--vj-ink);
+}
+
+.country-transition__lines span {
+  color: var(--vj-muted);
+}
+
 .video-proof {
   min-width: 0;
   margin: 0;
@@ -687,7 +737,22 @@ footer {
 
 @media (max-width: 840px) {
   .nav-links {
+    min-width: 0;
+    max-width: min(52vw, 520px);
+    flex-wrap: nowrap;
+    gap: 14px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
     display: none;
+  }
+
+  .nav-links a {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 
   .hero,
@@ -695,7 +760,8 @@ footer {
   .proof-layout,
   .next-workflow,
   .prompt-layout,
-  .install-band {
+  .install-band,
+  .country-transition {
     grid-template-columns: 1fr;
   }
 
@@ -742,13 +808,27 @@ footer {
   }
 
   .nav-right,
-  .lang-switch {
+  .nav-links {
     width: 100%;
   }
 
+  .nav-right {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .nav-links {
+    max-width: none;
+  }
+
+  .lang-switch {
+    width: auto;
+  }
+
   .lang-switch button {
-    min-width: 0;
-    flex: 1;
+    min-width: 36px;
+    padding-inline: 6px;
   }
 
   .market-bar {
@@ -758,6 +838,11 @@ footer {
 
   .hero {
     padding-block: 52px 60px;
+  }
+
+  .content-section,
+  .country-transition {
+    scroll-margin-top: 132px;
   }
 
   h1 {
@@ -782,7 +867,8 @@ footer {
   }
 
   .document-line,
-  .technical-list {
+  .technical-list,
+  .country-transition__lines p {
     grid-template-columns: 1fr;
   }
 
