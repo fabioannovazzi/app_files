@@ -17,7 +17,7 @@ from typing import Any, Sequence
 
 from playwright.sync_api import Browser, Page, sync_playwright
 
-__all__ = ["build_vera_local_video_guides", "main"]
+__all__ = ["build_vera_local_video_guides", "main", "partition_narration_scenes"]
 
 LOGGER = logging.getLogger(__name__)
 
@@ -49,6 +49,10 @@ TARGET_LOUDNESS_LUFS = -16
 CAPTION_MAX_CHARACTERS = 84
 CAPTION_MIN_SECONDS = 1.0
 CAPTION_MAX_CHARACTERS_PER_SECOND = 20.0
+MIN_INTER_SCENE_PAUSE_SECONDS = 0.8
+MAX_INTER_SCENE_PAUSE_SECONDS = 4.0
+TRANSITION_SILENCE_MARGIN_SECONDS = 0.2
+TRANSITION_MAX_VOLUME_DB = -45.0
 EXPECTED_LOCALIZATIONS = {
     ("new-client", "core", "it"),
     ("new-client", "core", "en"),
@@ -185,18 +189,17 @@ def _sentences(text: str) -> list[str]:
     return [part for part in parts if part]
 
 
-def _partition_sentences(text: str, group_count: int) -> list[str]:
-    """Partition narration into contiguous, near-balanced scene captions."""
+def partition_narration_scenes(text: str, group_count: int) -> list[str]:
+    """Mechanically keep scene breaks at explicit sentence punctuation."""
 
     sentences = _sentences(text)
     if len(sentences) < group_count:
-        words = text.split()
-        groups: list[str] = []
-        for index in range(group_count):
-            start = round(index * len(words) / group_count)
-            end = round((index + 1) * len(words) / group_count)
-            groups.append(" ".join(words[start:end]))
-        return groups
+        raise ValueError(
+            "Narration must contain at least one complete sentence per scene: "
+            f"found {len(sentences)} sentences for {group_count} scenes"
+        )
+    if any(not re.search(r"[.!?]$", sentence) for sentence in sentences):
+        raise ValueError("Every narration sentence must end with terminal punctuation")
 
     groups = []
     cursor = 0
@@ -229,28 +232,38 @@ def _partition_sentences(text: str, group_count: int) -> list[str]:
 
 
 def _scene_durations(
-    captions: Sequence[str],
+    scene_speech_durations: Sequence[float],
     target_seconds: float,
-    effective_pause_seconds: float,
+    inter_scene_pause_seconds: float,
 ) -> list[float]:
-    """Allocate visual time by narration weight with fixed lead and tail."""
+    """Place each visual transition at the midpoint of measured audio silence."""
 
-    pause_count = len(captions) - 1
-    spoken_seconds = (
-        target_seconds
-        - LEAD_SECONDS
-        - TAIL_SECONDS
-        - effective_pause_seconds * pause_count
+    if not scene_speech_durations or any(
+        duration <= 0 for duration in scene_speech_durations
+    ):
+        raise ValueError("Every scene must have a positive measured speech duration")
+    pause_count = len(scene_speech_durations) - 1
+    expected_seconds = (
+        LEAD_SECONDS
+        + sum(scene_speech_durations)
+        + inter_scene_pause_seconds * pause_count
+        + TAIL_SECONDS
     )
-    if spoken_seconds <= 0:
-        raise ValueError("Inter-scene pauses leave no time for narration")
-    weights = [max(1, len(caption)) for caption in captions]
-    weight_total = sum(weights)
-    durations = [spoken_seconds * weight / weight_total for weight in weights]
-    for index in range(pause_count):
-        durations[index] += effective_pause_seconds
-    durations[0] += LEAD_SECONDS
-    durations[-1] += TAIL_SECONDS
+    if abs(expected_seconds - target_seconds) > 0.05:
+        raise ValueError(
+            "Measured speech and inter-scene pauses do not match the target: "
+            f"{expected_seconds:.3f}s vs {target_seconds:.3f}s"
+        )
+
+    half_pause = inter_scene_pause_seconds / 2
+    durations: list[float] = []
+    for index, speech_duration in enumerate(scene_speech_durations):
+        duration = speech_duration
+        duration += LEAD_SECONDS if index == 0 else half_pause
+        duration += (
+            TAIL_SECONDS if index == len(scene_speech_durations) - 1 else half_pause
+        )
+        durations.append(duration)
     correction = target_seconds - sum(durations)
     durations[-1] += correction
     return durations
@@ -397,7 +410,7 @@ def _write_captions(
     scene_durations: Sequence[float],
     effective_pause_seconds: float,
 ) -> int:
-    """Write proportionally timed cues within the existing scene intervals."""
+    """Write cues inside the measured speech interval for every scene."""
 
     if len(scene_narration_parts) != len(scene_durations):
         raise ValueError("Caption scenes and visual scene durations must align")
@@ -409,11 +422,12 @@ def _write_captions(
         zip(scene_narration_parts, scene_durations, strict=True)
     ):
         scene_end = scene_start + scene_duration
-        spoken_start = scene_start + (LEAD_SECONDS if scene_index == 0 else 0.0)
+        half_pause = effective_pause_seconds / 2
+        spoken_start = scene_start + (LEAD_SECONDS if scene_index == 0 else half_pause)
         spoken_end = scene_end - (
             TAIL_SECONDS
             if scene_index == len(scene_narration_parts) - 1
-            else effective_pause_seconds
+            else half_pause
         )
         if spoken_end <= spoken_start:
             raise ValueError("Caption scene has no positive spoken interval")
@@ -473,70 +487,144 @@ def _write_captions(
 def _render_speech(
     *,
     say: str,
+    ffmpeg: str,
     ffprobe: str,
     voice: str,
     narration_parts: Sequence[str],
     target_seconds: float,
+    work_root: Path,
     output_path: Path,
-) -> tuple[int, int, float, float]:
-    """Synthesize narration at a measured rate without trimming spoken text."""
+) -> tuple[int, int, float, float, list[float]]:
+    """Synthesize sentence-safe scenes and join them with measured silence."""
 
     desired_seconds = target_seconds - LEAD_SECONDS - TAIL_SECONDS
+    pause_count = len(narration_parts) - 1
+    if pause_count < 1:
+        raise ValueError("A guide must contain at least two narrated scenes")
+
     rate = 100
-    plain_narration = " ".join(narration_parts)
-    duration = 0.0
-    for _ in range(6):
-        _run(
-            [
-                say,
-                "-v",
-                voice,
-                "-r",
-                str(rate),
-                "-o",
-                str(output_path),
-                plain_narration,
-            ]
-        )
-        duration = _probe_duration(ffprobe, output_path)
-        if duration <= desired_seconds:
-            break
-        rate = min(220, max(rate + 1, math.ceil(rate * duration / desired_seconds)))
+    scene_paths = [
+        work_root / f"narration-scene-{index + 1:02d}.aiff"
+        for index in range(len(narration_parts))
+    ]
+    scene_durations: list[float] = []
+    minimum_spoken_seconds = (
+        desired_seconds - MAX_INTER_SCENE_PAUSE_SECONDS * pause_count
+    )
+    maximum_spoken_seconds = (
+        desired_seconds - MIN_INTER_SCENE_PAUSE_SECONDS * pause_count
+    )
+    for _ in range(8):
+        scene_durations = []
+        for narration_part, scene_path in zip(
+            narration_parts, scene_paths, strict=True
+        ):
+            _run(
+                [
+                    say,
+                    "-v",
+                    voice,
+                    "-r",
+                    str(rate),
+                    "-o",
+                    str(scene_path),
+                    narration_part,
+                ]
+            )
+            scene_durations.append(_probe_duration(ffprobe, scene_path))
 
-    plain_duration = duration
-    pause_count = max(1, len(narration_parts) - 1)
-    pause_ms = max(0, round((desired_seconds - duration) * 1000 / pause_count))
-    pause_ms = min(3500, pause_ms)
-    for _ in range(6):
-        narrated_text = f" [[slnc {pause_ms}]] ".join(narration_parts)
-        _run(
-            [
-                say,
-                "-v",
-                voice,
-                "-r",
-                str(rate),
-                "-o",
-                str(output_path),
-                narrated_text,
-            ]
-        )
-        duration = _probe_duration(ffprobe, output_path)
-        delta_seconds = desired_seconds - duration
-        if -0.15 <= delta_seconds <= 0.25:
+        spoken_seconds = sum(scene_durations)
+        if minimum_spoken_seconds <= spoken_seconds <= maximum_spoken_seconds:
             break
-        pause_ms = min(
-            3500,
-            max(0, pause_ms + round(delta_seconds * 1000 / pause_count)),
-        )
+        if spoken_seconds > maximum_spoken_seconds:
+            rate = min(
+                220,
+                max(
+                    rate + 2,
+                    math.ceil(rate * spoken_seconds / maximum_spoken_seconds),
+                ),
+            )
+        else:
+            rate = max(
+                80,
+                min(
+                    rate - 2,
+                    math.floor(rate * spoken_seconds / minimum_spoken_seconds),
+                ),
+            )
 
-    if duration > desired_seconds + 0.15 or duration < desired_seconds - 0.35:
+    spoken_seconds = sum(scene_durations)
+    if not minimum_spoken_seconds <= spoken_seconds <= maximum_spoken_seconds:
         raise ValueError(
-            f"Narration did not converge on its target: {duration:.3f}s vs "
-            f"{desired_seconds:.3f}s ({voice}, rate {rate}, pause {pause_ms}ms)"
+            "Narration did not leave a safe inter-scene pause: "
+            f"{spoken_seconds:.3f}s of speech for {desired_seconds:.3f}s "
+            f"({voice}, rate {rate})"
         )
-    effective_pause_seconds = max(0.0, (duration - plain_duration) / pause_count)
-    return rate, pause_ms, effective_pause_seconds, duration
+
+    inter_scene_pause_seconds = (desired_seconds - spoken_seconds) / pause_count
+    pause_ms = round(inter_scene_pause_seconds * 1000)
+    silence_path = work_root / "inter-scene-silence.wav"
+    _run(
+        [
+            ffmpeg,
+            "-y",
+            "-v",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "anullsrc=r=48000:cl=mono",
+            "-t",
+            f"{inter_scene_pause_seconds:.6f}",
+            "-c:a",
+            "pcm_s16le",
+            str(silence_path),
+        ]
+    )
+
+    concat_inputs: list[Path] = []
+    for index, scene_path in enumerate(scene_paths):
+        concat_inputs.append(scene_path)
+        if index < pause_count:
+            concat_inputs.append(silence_path)
+    command: list[str] = [ffmpeg, "-y", "-v", "error"]
+    for media_path in concat_inputs:
+        command.extend(["-i", str(media_path)])
+    labels: list[str] = []
+    filters: list[str] = []
+    for index in range(len(concat_inputs)):
+        label = f"a{index}"
+        labels.append(f"[{label}]")
+        filters.append(
+            f"[{index}:a]aresample=48000,"
+            f"aformat=sample_fmts=s16:channel_layouts=mono[{label}]"
+        )
+    filters.append(f"{''.join(labels)}concat=n={len(concat_inputs)}:v=0:a=1[narration]")
+    command.extend(
+        [
+            "-filter_complex",
+            ";".join(filters),
+            "-map",
+            "[narration]",
+            "-c:a",
+            "pcm_s16le",
+            str(output_path),
+        ]
+    )
+    _run(command)
+    duration = _probe_duration(ffprobe, output_path)
+    if abs(duration - desired_seconds) > 0.05:
+        raise ValueError(
+            "Joined narration drifted from its target: "
+            f"{duration:.3f}s vs {desired_seconds:.3f}s"
+        )
+    return (
+        rate,
+        pause_ms,
+        inter_scene_pause_seconds,
+        duration,
+        scene_durations,
+    )
 
 
 def _render_frames(
@@ -748,6 +836,55 @@ def _mux_guide(
     )
 
 
+def _validate_transition_silence(
+    *,
+    ffmpeg: str,
+    video_path: Path,
+    scene_durations: Sequence[float],
+) -> list[float]:
+    """Verify every encoded frame transition remains inside silent audio."""
+
+    transition_seconds: list[float] = []
+    elapsed = 0.0
+    for scene_duration in scene_durations[:-1]:
+        elapsed += scene_duration
+        transition_seconds.append(elapsed)
+
+    window_seconds = TRANSITION_SILENCE_MARGIN_SECONDS * 2
+    for transition in transition_seconds:
+        result = _run(
+            [
+                ffmpeg,
+                "-ss",
+                f"{transition - TRANSITION_SILENCE_MARGIN_SECONDS:.6f}",
+                "-i",
+                str(video_path),
+                "-t",
+                f"{window_seconds:.6f}",
+                "-map",
+                "0:a:0",
+                "-af",
+                "volumedetect",
+                "-f",
+                "null",
+                "-",
+            ],
+            capture_output=True,
+        )
+        match = re.search(r"max_volume:\s+(-?inf|-?\d+(?:\.\d+)?) dB", result.stderr)
+        if not match:
+            raise ValueError(
+                f"Could not measure audio at visual transition {transition:.3f}s"
+            )
+        measured = match.group(1)
+        if measured != "-inf" and float(measured) > TRANSITION_MAX_VOLUME_DB:
+            raise ValueError(
+                "Visual transition overlaps audible narration: "
+                f"{transition:.3f}s at {float(measured):.1f} dB"
+            )
+    return transition_seconds
+
+
 def _validate_media(
     *,
     ffmpeg: str,
@@ -859,7 +996,7 @@ def _build_one_guide(
     poster_path = output_dir / "poster.jpg"
     captions_path = output_dir / "captions.vtt"
     transcript_path = output_dir / "transcript.txt"
-    scene_narration_parts = _partition_sentences(
+    scene_narration_parts = partition_narration_scenes(
         localization["narration"],
         len(concept["scenes"]),
     )
@@ -877,23 +1014,26 @@ def _build_one_guide(
             work_root=work_root,
             poster_path=poster_path,
         )
-        narration_path = work_root / "narration.aiff"
+        narration_path = work_root / "narration.wav"
         voice = VOICE_BY_LANGUAGE[language]
         (
             speech_rate,
             inter_scene_pause_ms,
             effective_pause_seconds,
             speech_duration,
+            scene_speech_durations,
         ) = _render_speech(
             say=say,
+            ffmpeg=ffmpeg,
             ffprobe=ffprobe,
             voice=voice,
             narration_parts=scene_narration_parts,
             target_seconds=target_seconds,
+            work_root=work_root,
             output_path=narration_path,
         )
         scene_durations = _scene_durations(
-            scene_narration_parts,
+            scene_speech_durations,
             target_seconds,
             effective_pause_seconds,
         )
@@ -937,6 +1077,11 @@ def _build_one_guide(
         poster_path=poster_path,
         target_seconds=target_seconds,
     )
+    transition_seconds = _validate_transition_silence(
+        ffmpeg=ffmpeg,
+        video_path=video_path,
+        scene_durations=scene_durations,
+    )
     files = {
         "video": _artifact_record(video_path, "video/mp4"),
         "poster": _artifact_record(poster_path, "image/jpeg"),
@@ -963,7 +1108,18 @@ def _build_one_guide(
         },
         "pageTargets": concept["pageTargets"],
         "cueCount": cue_count,
+        "sceneSpeechDurationsSeconds": [
+            round(value, 3) for value in scene_speech_durations
+        ],
         "sceneDurationsSeconds": [round(value, 3) for value in scene_durations],
+        "transitionSafety": {
+            "sentenceBoundaryOnly": True,
+            "visualCutPlacement": "inter-scene-silence-midpoint",
+            "minimumInterSceneSilenceSeconds": MIN_INTER_SCENE_PAUSE_SECONDS,
+            "validatedSilenceMarginSeconds": TRANSITION_SILENCE_MARGIN_SECONDS,
+            "maximumValidatedVolumeDb": TRANSITION_MAX_VOLUME_DB,
+            "transitionSeconds": [round(value, 3) for value in transition_seconds],
+        },
         "files": files,
         "media": media,
     }
@@ -1007,7 +1163,7 @@ def _build_captions_only_entry(
             f"render {identity!r} in full"
         )
 
-    scene_narration_parts = _partition_sentences(
+    scene_narration_parts = partition_narration_scenes(
         localization["narration"],
         len(concept["scenes"]),
     )

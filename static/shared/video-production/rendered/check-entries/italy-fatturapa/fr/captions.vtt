@@ -1,25 +1,45 @@
 WEBVTT
 
 1
-00:00:00.800 --> 00:00:06.903
+00:00:00.800 --> 00:00:05.844
 Contrôler une écriture consiste à comprendre si le bon document la justifie.
 
 2
-00:00:06.903 --> 00:00:16.413
-Vera part de la ligne sélectionnée dans le journal et cherche d’abord dans les XML FatturaPA et les exports autorisés.
+00:00:07.101 --> 00:00:12.607
+Vera part de la ligne sélectionnée dans le journal et cherche d’abord dans les XML
 
 3
-00:00:16.413 --> 00:00:23.794
-Elle compare montant, date, numéro de document et contrepartie tout en gardant chaque source visible.
+00:00:12.607 --> 00:00:14.958
+FatturaPA et les exports autorisés.
 
 4
-00:00:23.794 --> 00:00:35.432
-Les correspondances solides rejoignent les écritures étayées. Les cas ambigus restent dans la file de revue avec le motif et le document précis à examiner.
+00:00:16.215 --> 00:00:18.154
+Elle compare montant, date,
 
 5
-00:00:35.432 --> 00:00:44.516
-Le résultat est un dossier de travail qui relie chaque écriture contrôlée à sa preuve et sépare les exceptions.
+00:00:18.154 --> 00:00:23.396
+numéro de document et contrepartie tout en gardant chaque source visible.
 
 6
-00:00:44.516 --> 00:00:49.200
+00:00:24.653 --> 00:00:28.632
+Les correspondances solides rejoignent les écritures étayées.
+
+7
+00:00:28.632 --> 00:00:31.567
+Les cas ambigus restent dans la file de revue
+
+8
+00:00:31.567 --> 00:00:34.632
+avec le motif et le document précis à examiner.
+
+9
+00:00:35.889 --> 00:00:40.841
+Le résultat est un dossier de travail qui relie chaque écriture contrôlée à sa
+
+10
+00:00:40.841 --> 00:00:42.873
+preuve et sépare les exceptions.
+
+11
+00:00:44.130 --> 00:00:49.200
 D’une ligne sélectionnée à un justificatif que le réviseur peut suivre.

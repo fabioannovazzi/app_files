@@ -1,49 +1,41 @@
 WEBVTT
 
 1
-00:00:00.800 --> 00:00:06.601
-This Core edition shows how to build a new client’s file from source evidence.
+00:00:00.800 --> 00:00:05.823
+This Core edition shows how to build a new client’s file from documents and other
 
 2
-00:00:06.601 --> 00:00:07.940
-The model connects
+00:00:05.823 --> 00:00:07.435
+available source evidence.
 
 3
-00:00:10.968 --> 00:00:14.538
-five elements: incoming documents and where they came from;
+00:00:10.641 --> 00:00:15.116
+The first step records the incoming documents and where they came from.
 
 4
-00:00:14.538 --> 00:00:18.108
-client identity and the people involved; requested services
+00:00:18.322 --> 00:00:22.182
+The second connects client identity with the people involved.
 
 5
-00:00:21.136 --> 00:00:25.046
-and engagement facts; open requests with their next actions;
+00:00:25.388 --> 00:00:29.701
+The third organizes requested services and engagement facts.
 
 6
-00:00:25.046 --> 00:00:28.696
-and dates and history maintained over time. The elements
+00:00:32.907 --> 00:00:38.066
+Open requests, actions, dates and history remain distinct but connected,
 
 7
-00:00:31.724 --> 00:00:33.955
-remain distinct but connected,
+00:00:38.066 --> 00:00:42.939
+so every fact can be traced to its source or the decision behind it.
 
 8
-00:00:33.955 --> 00:00:38.864
-so every fact can be traced to the document or decision behind it.
+00:00:46.145 --> 00:00:51.049
+Each country maps its own documents, checks and rules onto this structure,
 
 9
-00:00:41.892 --> 00:00:47.916
-Each country maps its own documents, checks and rules onto this shared structure.
+00:00:51.049 --> 00:00:54.892
+producing a readable client file that shows what is known,
 
 10
-00:00:47.916 --> 00:00:49.032
-The result is a
-
-11
-00:00:52.060 --> 00:00:55.019
-readable client file that shows what is known,
-
-12
-00:00:55.019 --> 00:00:59.200
+00:00:54.892 --> 00:00:59.200
 what remains open and how the professional relationship develops.
