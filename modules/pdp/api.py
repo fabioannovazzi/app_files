@@ -3488,7 +3488,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "compliance": {
             "id": "compliance",
-            "title": "Compliance by Design.",
+            "title": "Für Compliance konzipiert.",
             "lead": "Datenschutz hängt davon ab, was das Modell erreicht – nicht davon, was auf Ihrem Computer verbleibt.",
             "description": "Vera und Clara können Informationen lokal extrahieren, berechnen, abgleichen, filtern und aggregieren, bevor Codex sie interpretieren muss. Das LLM kann häufig mit einem gezielten Ergebnis arbeiten, anstatt die vollständigen Quelldateien zu erhalten.",
             "principles": [

@@ -13,7 +13,7 @@ from modules.pdp.api import _get_landing_page_content
         ("en", "Compliant by design."),
         ("it", "Conformi per scelta."),
         ("fr", "Conformes par conception."),
-        ("de", "Compliance by Design."),
+        ("de", "Für Compliance konzipiert."),
     ],
 )
 def test_homepage_content_includes_localized_compliance_section(
