@@ -288,11 +288,12 @@
 
     .workstream-head {
       display: grid;
-      grid-template-columns: 64px minmax(230px, 0.8fr) minmax(0, 1.2fr);
-      gap: 28px;
+      grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.2fr);
+      gap: 12px 28px;
       align-items: baseline;
     }
 
+    .stream-number { grid-column: 1 / -1; }
     .workstream-head p { max-width: 650px; color: var(--blue); }
     .module-directory { border-top: 2px solid var(--navy); }
 
@@ -524,7 +525,7 @@
       .journey-layout { grid-template-columns: 1fr; }
       .journey-aside { position: static; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
       .journey-aside p { max-width: 52ch; }
-      .workstream-head { grid-template-columns: 48px minmax(200px, 0.8fr) minmax(0, 1.2fr); }
+      .workstream-head { grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr); }
       .country-pack-head { grid-template-columns: 1fr; gap: 20px; }
     }
 
@@ -554,8 +555,8 @@
       .journey-aside { grid-template-columns: 1fr; }
       .journey-step { grid-template-columns: 48px 1fr; gap: 12px 18px; }
       .journey-step p { grid-column: 2; }
-      .workstream-head { grid-template-columns: 48px 1fr; gap: 12px 18px; }
-      .workstream-head p { grid-column: 2; }
+      .workstream-head { grid-template-columns: 1fr; gap: 10px; }
+      .workstream-head p { grid-column: 1; }
       .country-pack-note { grid-template-columns: 1fr; gap: 8px; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
       .module-row p { grid-column: 1; }
@@ -691,7 +692,7 @@
       <div class="workstreams">
         <article class="workstream">
           <header class="workstream-head">
-            <span class="stream-number">01</span>
+            <span class="stream-number" data-i18n="stream.clients.index">Area di lavoro 1 di 3</span>
             <h3 data-i18n="stream.clients.title">Avvia e organizza il lavoro cliente</h3>
             <p data-i18n="stream.clients.copy">Dalla cartella ricevuta a un fascicolo operativo riutilizzabile.</p>
           </header>
@@ -706,7 +707,7 @@
 
         <article class="workstream">
           <header class="workstream-head">
-            <span class="stream-number">02</span>
+            <span class="stream-number" data-i18n="stream.accounting.index">Area di lavoro 2 di 3</span>
             <h3 data-i18n="stream.accounting.title">Controlla numeri, movimenti e supporti</h3>
             <p data-i18n="stream.accounting.copy">Dal giornale alle scritture, alle banche e alle partite aperte.</p>
           </header>
@@ -736,7 +737,7 @@
 
         <article class="workstream">
           <header class="workstream-head">
-            <span class="stream-number">03</span>
+            <span class="stream-number" data-i18n="stream.outputs.index">Area di lavoro 3 di 3</span>
             <h3 data-i18n="stream.outputs.title">Costruisci risultati e ricerca</h3>
             <p data-i18n="stream.outputs.copy">Dalle fonti al report, dal quesito alla validazione.</p>
           </header>
@@ -925,10 +926,13 @@
         "work.index": "Dodici funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
+        "stream.clients.index": "Area di lavoro 1 di 3",
         "stream.clients.title": "Avvia e organizza il lavoro cliente",
         "stream.clients.copy": "Dalla cartella ricevuta a un primo fascicolo riutilizzabile.",
+        "stream.accounting.index": "Area di lavoro 2 di 3",
         "stream.accounting.title": "Controlla numeri, movimenti e supporti",
         "stream.accounting.copy": "Dal giornale alle scritture, alle banche e alle partite aperte.",
+        "stream.outputs.index": "Area di lavoro 3 di 3",
         "stream.outputs.title": "Costruisci risultati e ricerca",
         "stream.outputs.copy": "Dalle fonti al report, dal quesito alla validazione.",
         "stream.research.title": "Formula e verifica la ricerca",
@@ -1020,10 +1024,13 @@
         "work.index": "Twelve capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
+        "stream.clients.index": "Work area 1 of 3",
         "stream.clients.title": "Start and organize client work",
         "stream.clients.copy": "From the incoming folder to a reusable first work file.",
+        "stream.accounting.index": "Work area 2 of 3",
         "stream.accounting.title": "Check figures, movements and support",
         "stream.accounting.copy": "From the journal to entries, banks and open items.",
+        "stream.outputs.index": "Work area 3 of 3",
         "stream.outputs.title": "Build outputs and research",
         "stream.outputs.copy": "From sources to a report, from the question to validation.",
         "stream.research.title": "Frame and verify research",
@@ -1115,10 +1122,13 @@
         "work.index": "Douze fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
+        "stream.clients.index": "Domaine de travail 1 sur 3",
         "stream.clients.title": "Démarrer et organiser le travail client",
         "stream.clients.copy": "Du dossier reçu à un premier dossier de travail réutilisable.",
+        "stream.accounting.index": "Domaine de travail 2 sur 3",
         "stream.accounting.title": "Contrôler chiffres, mouvements et justificatifs",
         "stream.accounting.copy": "Du journal aux écritures, aux banques et aux postes ouverts.",
+        "stream.outputs.index": "Domaine de travail 3 sur 3",
         "stream.outputs.title": "Construire les résultats et la recherche",
         "stream.outputs.copy": "Des sources au rapport, de la question à la validation.",
         "stream.research.title": "Cadrer et vérifier la recherche",
@@ -1210,10 +1220,13 @@
         "work.index": "Zwölf Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
+        "stream.clients.index": "Arbeitsbereich 1 von 3",
         "stream.clients.title": "Mandantenarbeit beginnen und organisieren",
         "stream.clients.copy": "Vom eingegangenen Ordner zur wiederverwendbaren ersten Arbeitsakte.",
+        "stream.accounting.index": "Arbeitsbereich 2 von 3",
         "stream.accounting.title": "Zahlen, Bewegungen und Belege prüfen",
         "stream.accounting.copy": "Vom Journal zu Buchungen, Banken und offenen Posten.",
+        "stream.outputs.index": "Arbeitsbereich 3 von 3",
         "stream.outputs.title": "Ergebnisse und Recherche aufbauen",
         "stream.outputs.copy": "Von den Quellen zum Bericht, von der Frage zur Validierung.",
         "stream.research.title": "Recherche eingrenzen und prüfen",
