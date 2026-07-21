@@ -3263,9 +3263,6 @@ body.landing-body.landing-home {
 
 .landing-home .landing-compliance__lead {
   color: var(--landing-ink);
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-  line-height: 1.36;
-  letter-spacing: -0.035em;
 }
 
 .landing-home .landing-compliance__description {
