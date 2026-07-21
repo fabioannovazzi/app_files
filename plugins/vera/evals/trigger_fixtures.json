@@ -13,6 +13,11 @@
       "required_signals": ["istruttoria", "cartella cliente", "controlli contabili"]
     },
     {
+      "id": "vera-client-onboarding",
+      "prompt": "Vera, prepara il dossier di onboarding del nuovo cliente con titolari effettivi, mandato, privacy, AML e piano dei riesami, lasciando le decisioni al commercialista.",
+      "required_signals": ["Vera", "onboarding", "AML"]
+    },
+    {
       "id": "vera-previdenza-inps",
       "prompt": "Chiedi a Vera di istruire il caso INPS del subagente assicurativo e preparare una bozza documentata per il commercialista.",
       "required_signals": ["Vera", "INPS", "subagente assicurativo"]

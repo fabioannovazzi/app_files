@@ -13,6 +13,7 @@ SAVE_TOOLS = {
     "check-entries": "save_check_entries_decisions",
     "deep-research-validator": "save_deep_research_decisions",
     "client-intake": "save_client_intake_decisions",
+    "client-onboarding": "save_client_onboarding_decisions",
     "audit-reconciliation": "save_audit_reconciliation_decisions",
     "journal-sampling": "save_journal_sampling_decisions",
     "journal-bank-reconciliation": "save_journal_bank_decisions",
@@ -24,6 +25,7 @@ APPLY_TOOLS = {
     "check-entries": "apply_check_entries_decisions",
     "deep-research-validator": "apply_deep_research_decisions",
     "client-intake": "apply_client_intake_decisions",
+    "client-onboarding": "apply_client_onboarding_decisions",
     "audit-reconciliation": "apply_audit_reconciliation_decisions",
     "journal-sampling": "apply_journal_sampling_decisions",
     "journal-bank-reconciliation": "apply_journal_bank_decisions",
@@ -367,6 +369,167 @@ TARGETS: list[dict[str, Any]] = [
                     },
                     "evidence": [
                         {"kind": "missing_document_queue", "requested_document": "F24"}
+                    ],
+                },
+            ],
+        },
+    },
+    {
+        "plugin": "client-onboarding",
+        "schemaVersion": "1.1",
+        "asset": "client-onboarding-review-widget.html",
+        "title": "Client Onboarding Review",
+        "reviewTitle": "Professional Onboarding Review",
+        "queueTitle": "Onboarding Decisions",
+        "detailTitle": "Evidence, Basis, Decision",
+        "detailMode": "onboarding-compliance-desk",
+        "detailHelp": "Review the minimized fact, cited basis, and downstream dossier impact before recording a professional decision.",
+        "persistDecisionTextInWidgetState": False,
+        "useDecisionRevision": True,
+        "detailGroups": [
+            {
+                "title": "Client and Engagement",
+                "variant": "document",
+                "fields": [
+                    "client_reference",
+                    "fact_code",
+                    "service_id",
+                    "relationship_kind",
+                    "confirmation_status",
+                ],
+                "empty": "No client or engagement fields.",
+            },
+            {
+                "title": "AML and Applicability",
+                "variant": "finding",
+                "fields": [
+                    "factor_code",
+                    "score",
+                    "proposed_value",
+                    "risk_band",
+                    "verification_type",
+                    "rationale",
+                ],
+                "empty": "No AML or applicability fields.",
+            },
+            {
+                "title": "Evidence and Output Impact",
+                "variant": "checklist",
+                "fields": [
+                    "evidence_status",
+                    "source_ids",
+                    "case_fact_ids",
+                    "requested_document",
+                    "target_artifact",
+                    "edit_hint",
+                ],
+                "empty": "No evidence or output-impact fields.",
+            },
+        ],
+        "search": "Search fact, service, AML factor, document, source, blocker",
+        "panels": [
+            "Client and engagement",
+            "AML and applicability",
+            "Evidence and output impact",
+        ],
+        "demo": {
+            "review_type": "client_onboarding_professional_review",
+            "items": [
+                {
+                    "id": "aml-client-geography",
+                    "item_type": "aml_risk_factor",
+                    "title": "AML factor: client geography",
+                    "output_path": "aml_assessment_draft.json",
+                    "allowed_actions": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "skip",
+                    ],
+                    "recommended_action": "mark_unclear",
+                    "data": {
+                        "client_reference": "CLIENT-001",
+                        "factor_code": "client_geography",
+                        "score": 2,
+                        "risk_band": "little_significant",
+                        "rationale": "Proposed from the recorded operating territories; professional confirmation is pending.",
+                        "evidence_status": "needs_professional_confirmation",
+                        "source_ids": ["CNDCEC-AML-GUIDANCE-2026"],
+                        "case_fact_ids": ["FACT-TERRITORY-01"],
+                        "target_artifact": "aml_assessment_draft.json",
+                        "target_records_key": "client_factors",
+                        "target_id_field": "factor_code",
+                        "target_record_id": "client_geography",
+                        "target_field": "score",
+                        "edit_hint": "Editing records a proposed replacement score and requires AML recalculation before acceptance.",
+                    },
+                    "evidence": [
+                        {
+                            "kind": "source_bound_factor_proposal",
+                            "source_ids": ["CNDCEC-AML-GUIDANCE-2026"],
+                            "case_fact_ids": ["FACT-TERRITORY-01"],
+                            "evidence_status": "needs_professional_confirmation",
+                        }
+                    ],
+                },
+                {
+                    "id": "document-article28",
+                    "item_type": "document_applicability",
+                    "title": "Article 28 appointment applicability",
+                    "output_path": "applicability_plan_validated.json",
+                    "allowed_actions": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "skip",
+                    ],
+                    "recommended_action": "accept",
+                    "data": {
+                        "client_reference": "CLIENT-001",
+                        "proposed_value": "not_applicable",
+                        "rationale": "The role analysis is recorded as a proposal and must be confirmed for the actual service.",
+                        "source_ids": ["CNDCEC-PRIVACY-GUIDANCE-2025"],
+                        "case_fact_ids": ["SERVICE-BOOKKEEPING-01"],
+                        "evidence_status": "source_bound_proposal",
+                    },
+                    "evidence": [
+                        {
+                            "kind": "applicability_basis",
+                            "source_ids": ["CNDCEC-PRIVACY-GUIDANCE-2025"],
+                            "case_fact_ids": ["SERVICE-BOOKKEEPING-01"],
+                        }
+                    ],
+                },
+                {
+                    "id": "missing-identity-evidence",
+                    "item_type": "missing_evidence",
+                    "title": "Missing verified identity evidence for executor EXEC-01",
+                    "output_path": "missing_evidence.json",
+                    "allowed_actions": [
+                        "accept",
+                        "reject",
+                        "mark_unclear",
+                        "request_more_documents",
+                        "skip",
+                    ],
+                    "recommended_action": "request_more_documents",
+                    "data": {
+                        "client_reference": "CLIENT-001",
+                        "fact_code": "executor_identity",
+                        "confirmation_status": "unknown",
+                        "requested_document": "Readable identity evidence for executor EXEC-01",
+                        "evidence_status": "missing",
+                        "case_fact_ids": ["EXEC-01"],
+                        "target_artifact": "missing_evidence.json",
+                    },
+                    "evidence": [
+                        {
+                            "kind": "mechanical_completeness_gate",
+                            "case_fact_ids": ["EXEC-01"],
+                            "evidence_status": "missing",
+                        }
                     ],
                 },
             ],
@@ -1979,6 +2142,32 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen",
         },
     },
+    "client-onboarding": {
+        "it": {
+            "title": "Revisione Onboarding Cliente",
+            "reviewTitle": "Revisione professionale onboarding",
+            "queueTitle": "Decisioni onboarding",
+            "detailTitle": "Evidenza, base e decisione",
+            "detailHelp": "Rivedi il fatto minimizzato, la base citata e l'impatto sul dossier prima di registrare la decisione professionale.",
+            "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco",
+        },
+        "fr": {
+            "title": "Revue onboarding client",
+            "reviewTitle": "Revue professionnelle de l'onboarding",
+            "queueTitle": "Decisions d'onboarding",
+            "detailTitle": "Preuve, fondement et decision",
+            "detailHelp": "Examinez le fait minimise, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision professionnelle.",
+            "search": "Chercher fait, service, facteur AML, document, source, blocage",
+        },
+        "de": {
+            "title": "Mandanten-Onboarding Review",
+            "reviewTitle": "Professionelles Onboarding-Review",
+            "queueTitle": "Onboarding-Entscheidungen",
+            "detailTitle": "Nachweis, Grundlage und Entscheidung",
+            "detailHelp": "Minimierten Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der professionellen Entscheidung pruefen.",
+            "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen",
+        },
+    },
     "audit-reconciliation": {
         "it": {
             "title": "Revisione riconciliazione audit",
@@ -3227,7 +3416,7 @@ TEMPLATE = """<!doctype html>
     const DEMO_PAYLOAD = {{
       widget_type: CONFIG.widgetType,
       run_intake: {{
-        schema_version: \"1.0\",
+        schema_version: {schema_version_json},
         plugin: CONFIG.plugin,
         workflow: CONFIG.plugin,
         run_id: \"sample-review\",
@@ -3256,7 +3445,7 @@ TEMPLATE = """<!doctype html>
         status: \"ready_for_review\",
       }},
       review_payload: {{
-        schema_version: \"1.0\",
+        schema_version: {schema_version_json},
         plugin: CONFIG.plugin,
         workflow: CONFIG.plugin,
         run_id: \"sample-review\",
@@ -3266,8 +3455,8 @@ TEMPLATE = """<!doctype html>
         item_count: CONFIG.demo.items.length,
         summary: {{ result_row_count: CONFIG.demo.items.length, issue_count: CONFIG.demo.items.filter((item) => item.recommended_action !== \"accept\").length, artifact_count: 2 }},
       }},
-      ui_decisions: {{ schema_version: \"1.0\", plugin: CONFIG.plugin, workflow: CONFIG.plugin, run_id: \"sample-review\", review_payload_path: \"review_payload.json\", decisions: [], decision_count: 0, status: \"pending_review\" }},
-      final_artifacts: {{ schema_version: \"1.0\", plugin: CONFIG.plugin, workflow: CONFIG.plugin, run_id: \"sample-review\", outputs: [
+      ui_decisions: {{ schema_version: {schema_version_json}, plugin: CONFIG.plugin, workflow: CONFIG.plugin, run_id: \"sample-review\", review_payload_path: \"review_payload.json\", decisions: [], decision_count: 0, status: \"pending_review\" }},
+      final_artifacts: {{ schema_version: {schema_version_json}, plugin: CONFIG.plugin, workflow: CONFIG.plugin, run_id: \"sample-review\", outputs: [
         {{ path: \"review_payload.json\", kind: \"json\", status: \"written\", row_count: CONFIG.demo.items.length, records_key: \"items\", required_columns: [\"id\", \"item_type\", \"title\"], qa_checks: [\"json_parse\", \"row_count\", \"required_columns\"] }},
         {{ path: \"review_summary.md\", kind: \"md\", status: \"written\", required_text: [CONFIG.reviewTitle, \"local_codex_workspace\", \"Sample payload is bounded for review.\"], qa_checks: [\"nonempty_text\", \"required_text\"] }},
         {{ path: \"evidence_workbook.xlsx\", kind: \"xlsx\", status: \"written\", required_sheets: [\"summary\"], required_sheet_headers: {{ summary: [\"item_id\", \"recommended_action\", \"status\"] }}, required_cells: {{ summary: {{ A1: \"item_id\", A2: CONFIG.demo.items[0]?.id || \"sample-1\", B1: \"recommended_action\", B2: CONFIG.demo.items[0]?.recommended_action || \"accept\" }} }}, qa_checks: [\"office_zip\", \"workbook_xml\", \"required_sheets\", \"required_sheet_headers\", \"required_cells\"] }},
@@ -3278,7 +3467,7 @@ TEMPLATE = """<!doctype html>
     const FALLBACK = {{
       widget_type: CONFIG.widgetType,
       run_intake: null,
-      review_payload: {{ schema_version: \"1.0\", plugin: CONFIG.plugin, workflow: CONFIG.plugin, run_id: \"preview\", status: \"empty\", items: [], item_count: 0, summary: {{}} }},
+      review_payload: {{ schema_version: {schema_version_json}, plugin: CONFIG.plugin, workflow: CONFIG.plugin, run_id: \"preview\", status: \"empty\", items: [], item_count: 0, summary: {{}} }},
       ui_decisions: null,
       final_artifacts: null,
       decision_policy: {{ save_tool: CONFIG.saveTool, apply_tool: CONFIG.applyTool, can_persist: false, fallback: \"copy_json\" }},
@@ -3400,7 +3589,7 @@ TEMPLATE = """<!doctype html>
       const payload = reviewPayload();
       const summary = payload.summary || {{}};
       const issueCount = summary.issue_count ?? items().filter((item) => item.recommended_action && item.recommended_action !== \"accept\").length;
-      const artifactCount = summary.artifact_count ?? items().filter((item) => String(item.item_type || \"\").includes(\"artifact\")).length;
+{artifact_count_js}
       document.getElementById(\"subtitle\").textContent = `${{uiText(\"runLabel\", \"Run\")}} ${{payload.run_id || \"n/a\"}}`;
       document.getElementById(\"status-pill\").textContent = statusLabel(payload.status || \"ready_for_review\");
       document.getElementById(\"summary\").innerHTML = [
@@ -4073,39 +4262,8 @@ TEMPLATE = """<!doctype html>
       node.style.display = \"\";
       node.innerHTML = `<div class=\"artifact-header\"><h2>${{esc(uiText(\"finalOutputs\", \"Final outputs\"))}}</h2><span>${{records.length}} ${{esc(records.length === 1 ? uiText(\"fileSingular\", \"file\") : uiText(\"filePlural\", \"files\"))}}</span></div>${{artifactNotesHtml()}}<div class=\"artifact-grid\">${{records.length ? records.map(artifactRecordHtml).join(\"\") : `<div class=\"empty\">${{esc(uiText(\"outputsPending\", \"Outputs appear after the run writes final artifacts.\"))}}</div>`}}</div>`;
     }}
-    function ensureDecision(item, action = null) {{
-      if (!item) return null;
-      const current = state.decisions[item.id] || {{}};
-      const nextAction = action || current.action || item.recommended_action || item.allowed_actions?.[0] || \"mark_unclear\";
-      const requestedDocuments = Array.isArray(current.requested_documents) && current.requested_documents.length
-        ? current.requested_documents
-        : (nextAction === \"request_more_documents\" ? requestedDocumentHints(item) : []);
-      state.decisions[item.id] = {{ item_id: item.id, action: nextAction, reviewer_note: current.reviewer_note || \"\", edit_value: current.edit_value || \"\", requested_documents: requestedDocuments }};
-      return state.decisions[item.id];
-    }}
-    function setDecisionAction(item, action) {{ if (!item || !action) return; ensureDecision(item, action); persistWidgetState(); renderRows(); }}
-    function setDecisionField(item, field, value) {{
-      const decision = ensureDecision(item);
-      if (!decision) return;
-      if (field === \"requested_documents\") decision.requested_documents = String(value || \"\").split(/\\r?\\n/).map((entry) => entry.trim()).filter(Boolean);
-      else decision[field] = String(value || \"\");
-      persistWidgetState();
-      renderRows();
-    }}
-    function collectDecisionInputs() {{
-      return Object.values(state.decisions).filter((decision) => decision?.item_id && decision?.action && itemById(decision.item_id)).map((decision) => {{
-        const payload = {{ item_id: decision.item_id, action: decision.action }};
-        if (decision.reviewer_note) payload.reviewer_note = decision.reviewer_note.trim();
-        if (decision.edit_value) payload.edit_value = decision.edit_value.trim();
-        if (Array.isArray(decision.requested_documents) && decision.requested_documents.length) payload.requested_documents = decision.requested_documents;
-        return payload;
-      }});
-    }}
-    function validateDecisionInputs(decisions) {{
-      for (const decision of decisions) {{
-        if (decision.action === \"edit\" && !decision.edit_value) throw new Error(uiText(\"editRequired\", \"Edit value required for {{item}}.\").replace(\"{{item}}\", itemById(decision.item_id)?.title || decision.item_id));
-      }}
-    }}
+{decision_input_js}
+{validate_decision_inputs_js}
     function fallbackUiDecisions() {{
       const payload = reviewPayload();
       const now = new Date().toISOString();
@@ -4113,27 +4271,9 @@ TEMPLATE = """<!doctype html>
         const item = itemById(decision.item_id);
         return {{ item_id: decision.item_id, item_type: item?.item_type || \"\", title: item?.title || \"\", action: decision.action, status: ACTION_STATUSES[decision.action] || \"reviewed\", decided_at: now, ...(decision.reviewer_note ? {{ reviewer_note: decision.reviewer_note }} : {{}}), ...(decision.edit_value ? {{ edit_value: decision.edit_value }} : {{}}), ...(decision.requested_documents?.length ? {{ requested_documents: decision.requested_documents }} : {{}}) }};
       }});
-      return {{ schema_version: payload.schema_version || \"1.0\", plugin: payload.plugin || CONFIG.plugin, workflow: payload.workflow || CONFIG.plugin, run_id: payload.run_id || \"preview\", decided_at: decisions.length ? now : null, decision_source: \"mcp_widget_export\", review_payload_path: state.payload.ui_decisions?.review_payload_path || \"review_payload.json\", decisions, decision_count: decisions.length, item_count: items().length, status: decisions.length === 0 ? \"pending_review\" : decisions.length === items().length ? \"reviewed\" : \"partial_review\" }};
+      return {{ schema_version: payload.schema_version || {schema_version_json}, plugin: payload.plugin || CONFIG.plugin, workflow: payload.workflow || CONFIG.plugin, run_id: payload.run_id || \"preview\", decided_at: decisions.length ? now : null, decision_source: \"mcp_widget_export\", review_payload_path: state.payload.ui_decisions?.review_payload_path || \"review_payload.json\", decisions, decision_count: decisions.length, item_count: items().length, status: decisions.length === 0 ? \"pending_review\" : decisions.length === items().length ? \"reviewed\" : \"partial_review\" }};
     }}
-    function saveToolArgs() {{
-      return {{
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
-        decisions: collectDecisionInputs(),
-        decision_source: \"mcp_widget\",
-      }};
-    }}
-    function applyToolArgs() {{
-      return {{
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
-        final_artifacts: state.payload.final_artifacts || null,
-        decisions: collectDecisionInputs(),
-        decision_source: \"mcp_widget\",
-      }};
-    }}
+{tool_args_js}
     function parseToolResult(result) {{
       if (result?.structuredContent) return result.structuredContent;
       if (result?.ui_decisions || result?.ok != null) return result;
@@ -4201,7 +4341,7 @@ TEMPLATE = """<!doctype html>
         const applyTool = state.payload.decision_policy?.apply_tool || CONFIG.applyTool;
         const result = parseToolResult(await window.openai.callTool(applyTool, applyToolArgs()));
         if (!result?.ok) throw new Error(result?.error || uiText(\"applyFailed\", \"Decision apply failed.\"));
-        if (result.final_artifacts) state.payload.final_artifacts = result.final_artifacts;
+{apply_ui_decisions_js}        if (result.final_artifacts) state.payload.final_artifacts = result.final_artifacts;
         if (result.applied_decisions) state.payload.applied_decisions = result.applied_decisions;
         clearRecoveryIssue();
         setSaveStatus(result.message || uiText(\"decisionsApplied\", \"Decisions applied.\"), \"ok\");
@@ -4218,16 +4358,13 @@ TEMPLATE = """<!doctype html>
       anchor.href = url; anchor.download = \"ui_decisions.json\"; document.body.appendChild(anchor); anchor.click(); anchor.remove(); URL.revokeObjectURL(url);
       setSaveStatus(uiText(\"jsonDownloaded\", \"JSON downloaded.\"), \"ok\");
     }}
-    function applyRecommendedToVisible() {{ for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || \"mark_unclear\"); persistWidgetState(); renderRows(); }}
-    function persistWidgetState() {{
-      try {{ window.openai?.setWidgetState?.({{ run_id: reviewPayload().run_id || null, decisions: state.decisions }}); }} catch {{ }}
-    }}
+{widget_state_js}
     function loadInitialDecisions() {{
       const current = {{}};
       let savedDecisionCount = 0;
       for (const decision of (Array.isArray(state.payload.ui_decisions?.decisions) ? state.payload.ui_decisions.decisions : [])) {{
         if (decision?.item_id && decision?.action && itemById(decision.item_id)) {{
-          current[decision.item_id] = {{ item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || \"\", edit_value: decision.edit_value || \"\", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] }};
+{saved_decision_load_js}
           savedDecisionCount += 1;
         }}
       }}
@@ -4235,7 +4372,7 @@ TEMPLATE = """<!doctype html>
       let draftDecisionCount = 0;
       if (widgetState?.run_id === reviewPayload().run_id && widgetState.decisions && typeof widgetState.decisions === \"object\") {{
         for (const [itemId, decision] of Object.entries(widgetState.decisions)) if (itemById(itemId) && decision?.action) {{
-          current[itemId] = decision;
+{widget_state_load_js}
           draftDecisionCount += 1;
         }}
       }}
@@ -4291,6 +4428,176 @@ TEMPLATE = """<!doctype html>
 """
 
 
+def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
+    legacy = {
+        "artifact_count_js": (
+            "      const artifactCount = summary.artifact_count ?? items().filter((item) => "
+            'String(item.item_type || "").includes("artifact")).length;'
+        ),
+        "decision_input_js": r"""    function ensureDecision(item, action = null) {
+      if (!item) return null;
+      const current = state.decisions[item.id] || {};
+      const nextAction = action || current.action || item.recommended_action || item.allowed_actions?.[0] || "mark_unclear";
+      const requestedDocuments = Array.isArray(current.requested_documents) && current.requested_documents.length
+        ? current.requested_documents
+        : (nextAction === "request_more_documents" ? requestedDocumentHints(item) : []);
+      state.decisions[item.id] = { item_id: item.id, action: nextAction, reviewer_note: current.reviewer_note || "", edit_value: current.edit_value || "", requested_documents: requestedDocuments };
+      return state.decisions[item.id];
+    }
+    function setDecisionAction(item, action) { if (!item || !action) return; ensureDecision(item, action); persistWidgetState(); renderRows(); }
+    function setDecisionField(item, field, value) {
+      const decision = ensureDecision(item);
+      if (!decision) return;
+      if (field === "requested_documents") decision.requested_documents = String(value || "").split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
+      else decision[field] = String(value || "");
+      persistWidgetState();
+      renderRows();
+    }
+    function collectDecisionInputs() {
+      return Object.values(state.decisions).filter((decision) => decision?.item_id && decision?.action && itemById(decision.item_id)).map((decision) => {
+        const payload = { item_id: decision.item_id, action: decision.action };
+        if (decision.reviewer_note) payload.reviewer_note = decision.reviewer_note.trim();
+        if (decision.edit_value) payload.edit_value = decision.edit_value.trim();
+        if (Array.isArray(decision.requested_documents) && decision.requested_documents.length) payload.requested_documents = decision.requested_documents;
+        return payload;
+      });
+    }""",
+        "validate_decision_inputs_js": """    function validateDecisionInputs(decisions) {
+      for (const decision of decisions) {
+        if (decision.action === "edit" && !decision.edit_value) throw new Error(uiText("editRequired", "Edit value required for {item}.").replace("{item}", itemById(decision.item_id)?.title || decision.item_id));
+      }
+    }""",
+        "tool_args_js": """    function saveToolArgs() {
+      return {
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }
+    function applyToolArgs() {
+      return {
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        final_artifacts: state.payload.final_artifacts || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }""",
+        "apply_ui_decisions_js": "",
+        "widget_state_js": """    function applyRecommendedToVisible() { for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear"); persistWidgetState(); renderRows(); }
+    function persistWidgetState() {
+      try { window.openai?.setWidgetState?.({ run_id: reviewPayload().run_id || null, decisions: state.decisions }); } catch { }
+    }""",
+        "saved_decision_load_js": '          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };',
+        "widget_state_load_js": "          current[itemId] = decision;",
+    }
+    if target["plugin"] != "client-onboarding":
+        return legacy
+
+    return {
+        "artifact_count_js": """      const writtenArtifactCount = artifactRecords().length;
+      const artifactCount = summary.artifact_count ?? (writtenArtifactCount || items().filter((item) => String(item.item_type || "").includes("artifact")).length);""",
+        "decision_input_js": r"""    function ensureDecision(item, action = null) {
+      if (!item) return null;
+      const current = state.decisions[item.id] || {};
+      const nextAction = action || current.action || item.recommended_action || item.allowed_actions?.[0] || "mark_unclear";
+      const requestedDocuments = Array.isArray(current.requested_documents) && current.requested_documents.length
+        ? current.requested_documents
+        : (nextAction === "request_more_documents" ? requestedDocumentHints(item) : []);
+      const reuseSavedDetails = current.reuse_saved_details === true && (action == null || nextAction === current.action);
+      state.decisions[item.id] = { item_id: item.id, action: nextAction, reviewer_note: current.reviewer_note || "", edit_value: current.edit_value || "", requested_documents: requestedDocuments, ...(reuseSavedDetails ? { reuse_saved_details: true } : {}) };
+      return state.decisions[item.id];
+    }
+    function setDecisionAction(item, action) { if (!item || !action) return; ensureDecision(item, action); persistWidgetState(); renderRows(); }
+    function setDecisionField(item, field, value) {
+      const decision = ensureDecision(item);
+      if (!decision) return;
+      if (field === "requested_documents") decision.requested_documents = String(value || "").split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
+      else decision[field] = String(value || "");
+      delete decision.reuse_saved_details;
+      persistWidgetState();
+      renderRows();
+    }
+    function collectDecisionInputs() {
+      return Object.values(state.decisions).filter((decision) => decision?.item_id && decision?.action && itemById(decision.item_id)).map((decision) => {
+        const payload = { item_id: decision.item_id, action: decision.action };
+        if (decision.reuse_saved_details === true) {
+          payload.reuse_saved_details = true;
+          return payload;
+        }
+        if (decision.reviewer_note) payload.reviewer_note = decision.reviewer_note.trim();
+        if (decision.edit_value) payload.edit_value = decision.edit_value.trim();
+        if (Array.isArray(decision.requested_documents) && decision.requested_documents.length) payload.requested_documents = decision.requested_documents;
+        return payload;
+      });
+    }""",
+        "validate_decision_inputs_js": """    function validateDecisionInputs(decisions) {
+      for (const decision of decisions) {
+        if (decision.action === "edit" && !decision.edit_value && decision.reuse_saved_details !== true) throw new Error(uiText("editRequired", "Edit value required for {item}.").replace("{item}", itemById(decision.item_id)?.title || decision.item_id));
+      }
+    }""",
+        "tool_args_js": """    function saveToolArgs() {
+      return {
+        run_intake: state.payload.run_intake || null,
+        persistence_token: state.payload.decision_policy?.persistence_token || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        reviewer: state.payload.ui_decisions?.reviewer || null,
+        ...(CONFIG.useDecisionRevision ? { expected_decision_revision: Number(state.payload.ui_decisions?.decision_revision || 0) } : {}),
+      };
+    }
+    function applyToolArgs() {
+      return {
+        run_intake: state.payload.run_intake || null,
+        persistence_token: state.payload.decision_policy?.persistence_token || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        ...(state.payload.decision_policy?.persistence_token
+          ? {}
+          : { final_artifacts: state.payload.final_artifacts || null }),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        reviewer: state.payload.ui_decisions?.reviewer || null,
+        ...(CONFIG.useDecisionRevision ? { expected_decision_revision: Number(state.payload.ui_decisions?.decision_revision || 0) } : {}),
+      };
+    }""",
+        "apply_ui_decisions_js": (
+            "        if (result.ui_decisions) "
+            "state.payload.ui_decisions = result.ui_decisions;\n"
+        ),
+        "widget_state_js": """    function applyRecommendedToVisible() { for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear"); persistWidgetState(); renderRows(); }
+    function widgetStateDecision(decision) {
+      if (!decision || !decision.item_id || !decision.action) return null;
+      return { item_id: decision.item_id, action: decision.action };
+    }
+    function decisionsForWidgetState() {
+      return Object.fromEntries(
+        Object.entries(state.decisions)
+          .map(([itemId, decision]) => [itemId, widgetStateDecision(decision)])
+          .filter(([, decision]) => decision),
+      );
+    }
+    function persistWidgetState() {
+      try {
+        window.openai?.setWidgetState?.({
+          run_id: reviewPayload().run_id || null,
+          decisions: decisionsForWidgetState(),
+        });
+      } catch { }
+    }""",
+        "saved_decision_load_js": '          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [], reuse_saved_details: true };',
+        "widget_state_load_js": """          const saved = current[itemId] || null;
+          const recovered = widgetStateDecision(decision);
+          current[itemId] = { ...(saved || {}), ...(recovered || {}) };
+          if (saved?.reuse_saved_details === true && recovered?.action !== saved.action) delete current[itemId].reuse_saved_details;""",
+    }
+
+
 def render_target(target: dict[str, Any]) -> str:
     config = adapter_config(target)
     return TEMPLATE.format(
@@ -4301,12 +4608,14 @@ def render_target(target: dict[str, Any]) -> str:
         group_i18n_json=json.dumps(
             GROUP_I18N, ensure_ascii=True, separators=(",", ":")
         ),
+        schema_version_json=json.dumps(target.get("schemaVersion", "1.0")),
+        **_widget_snippets(target),
     )
 
 
 def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
     config = {
-        "schemaVersion": "1.0",
+        "schemaVersion": target.get("schemaVersion", "1.0"),
         "plugin": target["plugin"],
         "title": target["title"],
         "reviewTitle": target["reviewTitle"],
@@ -4331,6 +4640,11 @@ def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
         ),
         "demo": target["demo"],
     }
+    if target["plugin"] == "client-onboarding":
+        config["persistDecisionTextInWidgetState"] = target.get(
+            "persistDecisionTextInWidgetState", False
+        )
+        config["useDecisionRevision"] = target.get("useDecisionRevision", True)
     if target["plugin"] == "deep-research-validator":
         config["widgetType"] = "deep_research_review"
     if target["plugin"] == "report-builder":

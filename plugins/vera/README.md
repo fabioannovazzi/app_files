@@ -3,7 +3,7 @@
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Vera is a bounded AI colleague and reviewer for professional accounting
-practices. She prepares, checks, and documents work across eleven specialist
+practices. She prepares, checks, and documents work across twelve specialist
 modules while keeping evidence and review steps visible. Vera does not replace
 professional judgement: decisions and responsibility remain with the
 commercialista.
@@ -16,6 +16,15 @@ Vera's umbrella layer owns discovery, routing, the shared icon, dependency
 delegation, MCP server dispatch, and a shared local PaddleOCR adapter used by
 modules that preserve their own page-level evidence. Each specialist module
 retains its own deterministic checks, evidence trail, and review surfaces.
+
+The Client Onboarding module verifies a final-ready Client Intake binding—or an
+explicit standalone-evidence posture—and turns studio instructions into an
+owner-only review dossier for identity, engagement, per-subject screening,
+privacy decisions, mandate/privacy/AI applicability, AML, template-reference
+planning, missing evidence, and monitoring. It does not render client legal
+documents and never equates an exportable internal dossier with a compliant,
+complete, signed, or active client relationship; those decisions and actions
+remain with the commercialista.
 
 The Previdenza INPS module registers hash-bound official portal exports and can,
 only when the particular service's terms or another applicable permission have

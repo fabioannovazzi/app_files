@@ -16,6 +16,7 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 COMPONENTS = (
     "audit-reconciliation",
     "client-intake",
+    "client-onboarding",
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
