@@ -1,3 +1,3 @@
-Vera | Des documents sources au dossier client complet
+Vera | Des documents sources au dossier client de travail
 
 Cette édition Core montre comment construire le dossier d’un nouveau client à partir des preuves sources. Le modèle relie cinq éléments : les documents reçus et leur provenance ; l’identité du client et les personnes impliquées ; les services demandés et les faits de la mission ; les demandes ouvertes avec les actions suivantes ; enfin les dates et l’historique conservés dans le temps. Les éléments restent distincts mais connectés, afin de rattacher chaque information au document ou à la décision dont elle provient. Chaque pays associe ses documents, contrôles et règles à cette structure commune. Le résultat est un dossier lisible qui montre ce qui est connu, ce qui reste ouvert et comment la relation professionnelle évolue.
