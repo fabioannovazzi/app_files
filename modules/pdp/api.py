@@ -3100,7 +3100,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "compliance": {
             "id": "compliance",
-            "title": "Conformità per progettazione.",
+            "title": "Conformi per scelta.",
             "lead": "La privacy dipende da ciò che arriva al modello, non da ciò che rimane sul tuo computer.",
             "description": "Vera e Clara possono usare script locali per estrarre, calcolare, riconciliare, filtrare e aggregare le informazioni prima che Codex debba ragionarci. Spesso l'LLM può lavorare su un risultato mirato invece di ricevere i file sorgente completi.",
             "principles": [
