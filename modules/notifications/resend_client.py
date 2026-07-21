@@ -259,7 +259,7 @@ def send_email(
     resolved_key = _clean(api_key) or _clean(os.getenv(_ENV_API_KEY))
     if not (resolved_sender and resolved_key):
         LOGGER.debug(
-            "Skipping Resend send: RESEND_API_KEY or RESEND_FROM_EMAIL not configured."
+            "Skipping Resend send: credentials are missing or sender identity is a placeholder."
         )
         return False
 
