@@ -1,6 +1,6 @@
 {
   "name": "client-file-preparation",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Motore interno della fase New Client che prepara i documenti in ingresso: inventario, controlli formali, dati fiscali strutturati, memo e bozza email.",
   "author": {
     "name": "Mparanza",

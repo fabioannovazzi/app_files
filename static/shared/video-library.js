@@ -220,10 +220,6 @@
       },
       "videos": [
         {
-          "id": "hLhP6x00ghQ",
-          "title": "Vera | From a client folder to a case file you can start from"
-        },
-        {
           "id": "Qn9YTSX388I",
           "title": "Vera | From bank statement to a reviewable reconciliation"
         },
@@ -280,10 +276,6 @@
           "title": "Vera | Dalla scrittura campionata al supporto verificato"
         },
         {
-          "id": "z32cIdqyXCk",
-          "title": "Vera | Dalla cartella cliente a un fascicolo da cui partire"
-        },
-        {
           "id": "x2u-AAAuxfc",
           "title": "Vera | Dall’estratto conto a una riconciliazione verificabile"
         },
@@ -335,10 +327,6 @@
         "duration": "0:51"
       },
       "videos": [
-        {
-          "id": "d9S4SA63sVw",
-          "title": "Vera | Du dossier client à un dossier exploitable"
-        },
         {
           "id": "mQWMfsHGZtE",
           "title": "Vera | Du relevé bancaire à un rapprochement vérifiable"
@@ -392,10 +380,6 @@
       },
       "videos": [
         {
-          "id": "Mjfz1e98oIw",
-          "title": "Vera | Vom Mandantenordner zu einer arbeitsfähigen Akte"
-        },
-        {
           "id": "lV7LIqFotpI",
           "title": "Vera | Vom Kontoauszug zur nachvollziehbaren Abstimmung"
         },
@@ -444,7 +428,7 @@
   }
 };
 
-  const catalogVersion = "3.0.0";
+  const catalogVersion = "3.1.0";
   const lastVerifiedAt = "2026-07-21";
 
   const veraYoutubeDefinitions = Object.freeze([
@@ -455,11 +439,6 @@
       descriptions: {
         it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto."
       }
-    },
-    {
-      module: "new-client", edition: "core", scope: "core",
-      jurisdiction: null, kind: "guide",
-      localizations: { en: "hLhP6x00ghQ", it: "z32cIdqyXCk", fr: "d9S4SA63sVw", de: "Mjfz1e98oIw" }
     },
     {
       module: "journal-bank-reconciliation", edition: "core", scope: "core",
@@ -555,7 +534,7 @@
 
   const veraModuleCopy = {
     en: {
-      "new-client": ["New Client", "Move from source documents to a complete client file and maintained professional relationship."],
+      "new-client": ["New Client", "Move from source documents to a working client file with connected actions and history."],
       "journal-sampling": ["Journal Sampling", "Move from the full journal to a reproducible review sample."],
       "check-entries": ["Check Entries", "Connect sampled entries to the evidence that supports them."],
       "journal-bank-reconciliation": ["Bank reconciliation", "Bring bank and ledger movements into a reviewable reconciliation."],
@@ -571,7 +550,7 @@
       "deep-research-validator": ["Research Validator", "Test material claims against the sources cited for them."]
     },
     it: {
-      "new-client": ["Nuovo cliente", "Dai documenti al fascicolo completo e a un rapporto professionale mantenuto nel tempo."],
+      "new-client": ["Nuovo cliente", "Dai documenti a un fascicolo di lavoro con azioni e storico collegati."],
       "journal-sampling": ["Campionamento del giornale", "Dal giornale completo a un campione di revisione riproducibile."],
       "check-entries": ["Controllo scritture", "Collega le scritture campionate alle evidenze che le supportano."],
       "journal-bank-reconciliation": ["Riconciliazione banca", "Porta movimenti bancari e contabili in una riconciliazione rivedibile."],
@@ -587,7 +566,7 @@
       "deep-research-validator": ["Valida Deep Research", "Verifica le affermazioni rilevanti rispetto alle fonti citate."]
     },
     fr: {
-      "new-client": ["Nouveau client", "Des documents au dossier complet et à une relation professionnelle suivie dans le temps."],
+      "new-client": ["Nouveau client", "Des documents au dossier client de travail, avec actions et historique reliés."],
       "journal-sampling": ["Échantillonnage du journal", "Du journal complet à un échantillon de revue reproductible."],
       "check-entries": ["Contrôle des écritures", "Relie les écritures sélectionnées aux justificatifs correspondants."],
       "journal-bank-reconciliation": ["Rapprochement bancaire", "Réunit mouvements bancaires et comptables dans un rapprochement révisable."],
@@ -603,7 +582,7 @@
       "deep-research-validator": ["Valider la recherche", "Vérifie les affirmations importantes face aux sources citées."]
     },
     de: {
-      "new-client": ["Neuer Mandant", "Von den Quelldokumenten zur vollständigen Akte und dauerhaft gepflegten Auftragsbeziehung."],
+      "new-client": ["Neuer Mandant", "Von Quelldokumenten zur Arbeitsakte mit verknüpften Aufgaben und Historie."],
       "journal-sampling": ["Journal-Stichprobe", "Vom vollständigen Journal zur reproduzierbaren Prüfstichprobe."],
       "check-entries": ["Buchungen prüfen", "Verbindet ausgewählte Buchungen mit ihren Nachweisen."],
       "journal-bank-reconciliation": ["Bankabstimmung", "Bringt Bank- und Buchungsbewegungen in eine prüfbare Abstimmung."],
@@ -651,9 +630,15 @@
       ],
       titles: {
         it: "Vera | Dai documenti al fascicolo cliente",
-        en: "Vera | From source documents to a complete client file",
-        fr: "Vera | Des documents sources au dossier client complet",
-        de: "Vera | Von Quelldokumenten zur vollständigen Mandantenakte"
+        en: "Vera | From source documents to a working client file",
+        fr: "Vera | Des documents sources au dossier client de travail",
+        de: "Vera | Von Quelldokumenten zur arbeitsfähigen Mandantenakte"
+      },
+      moduleLabels: {
+        it: "Nuovo cliente · Modello comune",
+        en: "New Client · Common model",
+        fr: "Nouveau client · Modèle commun",
+        de: "Neuer Mandant · Gemeinsames Modell"
       },
       descriptions: {
         it: "Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.",
@@ -671,7 +656,7 @@
       duration: "1:10",
       pageTargets: [
         "/static/shared/vera/index.html",
-        "/static/shared/new-client/index.html#italy-pack"
+        "/static/shared/new-client/index.html#italy"
       ],
       titles: {
         it: "Vera | Incarico, privacy e AML per il nuovo cliente",
@@ -679,11 +664,17 @@
         fr: "Vera | Mission, confidentialité et LCB-FT pour un nouveau client",
         de: "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten"
       },
+      moduleLabels: {
+        it: "Nuovo cliente · Edizione Italia",
+        en: "New Client · Italy edition",
+        fr: "Nouveau client · Édition Italie",
+        de: "Neuer Mandant · Italien-Edition"
+      },
       descriptions: {
-        it: "Applica il percorso italiano per incarico, privacy, informativa AI, AML e monitoraggio.",
-        en: "Apply the Italy workflow for engagement, privacy, AI information, AML and monitoring.",
-        fr: "Applique le parcours italien de mission, privacy, information IA, AML et suivi.",
-        de: "Wendet den Italien-Ablauf für Auftrag, Datenschutz, KI-Information, AML und Monitoring an."
+        it: "Illustra il percorso Italia per piani di incarico, privacy e informativa AI, bozza di valutazione AML e monitoraggio del fascicolo di lavoro.",
+        en: "Explain the Italy workflow for engagement, privacy and AI-information plans, a draft AML assessment, and working-file monitoring.",
+        fr: "Explique le parcours Italie pour les plans de mission, de confidentialité et d’information IA, un projet d’évaluation LCB-FT et le suivi du dossier de travail.",
+        de: "Erläutert den Italien-Ablauf für Auftrags-, Datenschutz- und KI-Informationspläne, den Entwurf einer AML-Bewertung und die Pflege der Arbeitsakte."
       }
     },
     {
@@ -824,7 +815,8 @@
           module, conceptId, edition, scope, jurisdiction, duration, pageTargets
         } = definition;
         const title = definition.titles[lang];
-        const [moduleLabel, defaultDescription] = veraModuleCopy[lang][module];
+        const [defaultModuleLabel, defaultDescription] = veraModuleCopy[lang][module];
+        const moduleLabel = definition.moduleLabels?.[lang] || defaultModuleLabel;
         const description = definition.descriptions?.[lang] || defaultDescription;
         const base = `/static/shared/video-production/rendered/${module}/${edition}/${lang}`;
         return {

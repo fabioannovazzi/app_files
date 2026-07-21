@@ -92,24 +92,12 @@
           ],
         ],
       },
-      video: {
-        eyebrow: "Vera al lavoro",
-        title: "Dalla cartella cliente a un dossier pronto da usare",
-        copy:
-          "Una breve dimostrazione del percorso tra documenti ricevuti, punti aperti e dossier di lavoro.",
-        narration: {
-          fr: "Guida breve · Narrazione francese",
-          de: "Guida breve · Narrazione tedesca",
-          en: "Guida breve · Narrazione inglese",
-        },
-        thumbnailAlt: "Anteprima della guida video sul nuovo cliente",
-      },
       next: {
-        eyebrow: "Passaggio successivo",
-        title: "Continua con il rapporto professionale.",
+        eyebrow: "Modello comune",
+        title: "Continua dal modello condiviso di Nuovo cliente.",
         copy:
-          "Riusa dati, memo e fonti per strutturare persone, servizi, piani documentali, attività aperte e monitoraggio nello stesso percorso Nuovo cliente.",
-        button: "Continua il percorso",
+          "Torna alla struttura comune per vedere come evidenze, persone e servizi, attività aperte e storico restano collegati in ogni mercato.",
+        button: "Vedi il modello comune",
       },
       download: {
         eyebrow: "Installazione",
@@ -197,24 +185,12 @@
           ],
         ],
       },
-      video: {
-        eyebrow: "Vera at work",
-        title: "From a client folder to a case file you can start from",
-        copy:
-          "A short demonstration of the path from incoming records and open points to a usable work pack.",
-        narration: {
-          fr: "Short guide · French narration",
-          de: "Short guide · German narration",
-          en: "Short guide · English narration",
-        },
-        thumbnailAlt: "Preview of the new-client video guide",
-      },
       next: {
-        eyebrow: "Next step",
-        title: "Continue with the professional relationship.",
+        eyebrow: "Common model",
+        title: "Continue from the shared New Client model.",
         copy:
-          "Reuse the data, memo and sources to structure people, services, document plans, open actions and monitoring in the same New Client journey.",
-        button: "Continue the journey",
+          "Return to the common structure to see how evidence, people and services, open actions and history stay connected in every market.",
+        button: "See the common model",
       },
       download: {
         eyebrow: "Installation",
@@ -302,24 +278,12 @@
           ],
         ],
       },
-      video: {
-        eyebrow: "Vera au travail",
-        title: "Du dossier client à un dossier prêt à traiter",
-        copy:
-          "Une courte démonstration du passage entre les pièces reçues, les points ouverts et le dossier de travail.",
-        narration: {
-          fr: "Guide court · Narration française",
-          de: "Guide court · Narration allemande",
-          en: "Guide court · Narration anglaise",
-        },
-        thumbnailAlt: "Aperçu du guide vidéo sur le nouveau client",
-      },
       next: {
-        eyebrow: "Étape suivante",
-        title: "Poursuivez avec la relation professionnelle.",
+        eyebrow: "Modèle commun",
+        title: "Poursuivez avec le modèle partagé Nouveau client.",
         copy:
-          "Réutilisez les données, le mémo et les sources pour structurer personnes, services, plans documentaires, actions ouvertes et suivi dans le même parcours Nouveau client.",
-        button: "Continuer le parcours",
+          "Revenez à la structure commune pour voir comment les pièces, les personnes et services, les actions ouvertes et l’historique restent reliés dans chaque marché.",
+        button: "Voir le modèle commun",
       },
       download: {
         eyebrow: "Installation",
@@ -407,24 +371,12 @@
           ],
         ],
       },
-      video: {
-        eyebrow: "Vera bei der Arbeit",
-        title: "Vom Mandantenordner zur arbeitsfähigen Akte",
-        copy:
-          "Eine kurze Demonstration vom eingegangenen Material über offene Punkte bis zur Arbeitsakte.",
-        narration: {
-          fr: "Kurzanleitung · Französische Sprecherstimme",
-          de: "Kurzanleitung · Deutsche Sprecherstimme",
-          en: "Kurzanleitung · Englische Sprecherstimme",
-        },
-        thumbnailAlt: "Vorschau der Videoanleitung für neue Mandanten",
-      },
       next: {
-        eyebrow: "Nächster Schritt",
-        title: "Mit der Mandatsbeziehung fortfahren.",
+        eyebrow: "Gemeinsames Modell",
+        title: "Mit dem gemeinsamen Modell für neue Mandanten fortfahren.",
         copy:
-          "Nutzen Sie Daten, Notiz und Quellen weiter, um Personen, Leistungen, Dokumentpläne, offene Aufgaben und Monitoring im selben Ablauf Neuer Mandant zu strukturieren.",
-        button: "Ablauf fortsetzen",
+          "Im gemeinsamen Aufbau sehen Sie, wie Nachweise, Personen und Leistungen, offene Aufgaben und Historie in jedem Markt verbunden bleiben.",
+        button: "Gemeinsames Modell ansehen",
       },
       download: {
         eyebrow: "Installation",
@@ -440,8 +392,6 @@
       defaultLanguage: "fr",
       documentSectionId: "documents",
       outputSectionId: "outputs",
-      videoId: "d9S4SA63sVw",
-      videoLanguage: "fr",
       copy: {
         it: {
           metaTitle: "Nuovo cliente · Ginevra | Vera",
@@ -456,7 +406,7 @@
           subtitle:
             "Ordina i documenti ricevuti, isola ciò che manca e prepara le domande da inviare al cliente prima della revisione fiscale.",
           heroCopy:
-            "Usalo quando i giustificativi arrivano come PDF, immagini, estratti o file diversi. Codex legge la cartella localmente, prepara l'inventario, evidenzia i punti incerti e produce un memo dello studio con una bozza di email al cliente.",
+            "Usalo quando i giustificativi arrivano come PDF, immagini, estratti o file diversi. Vera legge la cartella localmente, prepara l'inventario, evidenzia i punti incerti e produce un memo dello studio con una bozza di email al cliente.",
           scopeInput:
             "PDF, immagini, estratti bancari e documenti fiscali",
           scopeFocus: "Dossier fiscali di Ginevra",
@@ -508,7 +458,7 @@
           subtitle:
             "Organise the documents received, isolate what is missing and prepare the questions to send the client before the tax review.",
           heroCopy:
-            "Use it when supporting records arrive as PDFs, images, exports or mixed files. Codex reads the folder locally, prepares the inventory, identifies uncertain points and produces a practice memo with a draft client email.",
+            "Use it when supporting records arrive as PDFs, images, exports or mixed files. Vera reads the folder locally, prepares the inventory, identifies uncertain points and produces a practice memo with a draft client email.",
           scopeInput:
             "PDFs, images, bank exports and tax supporting records",
           scopeFocus: "Geneva tax files",
@@ -560,7 +510,7 @@
           subtitle:
             "Classe les pièces reçues, isole les manques et prépare les questions à envoyer au client avant la revue fiscale.",
           heroCopy:
-            "Utilisez-le quand les justificatifs arrivent en PDF, images, exports ou fichiers divers. Codex lit le dossier localement, prépare l'inventaire, signale les points incertains et produit un mémo cabinet avec un brouillon d'email client.",
+            "Utilisez-le quand les justificatifs arrivent en PDF, images, exports ou fichiers divers. Vera lit le dossier localement, prépare l'inventaire, signale les points incertains et produit un mémo cabinet avec un brouillon d'email client.",
           scopeInput:
             "PDF, images, exports bancaires et justificatifs fiscaux",
           scopeFocus: "Dossiers fiscaux genevois",
@@ -612,7 +562,7 @@
           subtitle:
             "Eingegangene Unterlagen ordnen, Lücken erkennen und Mandantenfragen vor der steuerlichen Prüfung vorbereiten.",
           heroCopy:
-            "Nutzen Sie diesen Ablauf, wenn Nachweise als PDF, Bilder, Exporte oder gemischte Dateien eintreffen. Codex liest den Ordner lokal, erstellt das Inventar, kennzeichnet unklare Punkte und bereitet eine Kanzleinotiz mit E-Mail-Entwurf vor.",
+            "Nutzen Sie diesen Ablauf, wenn Nachweise als PDF, Bilder, Exporte oder gemischte Dateien eintreffen. Vera liest den Ordner lokal, erstellt das Inventar, kennzeichnet unklare Punkte und bereitet eine Kanzleinotiz mit E-Mail-Entwurf vor.",
           scopeInput:
             "PDF-Dateien, Bilder, Bankexporte und Steuerbelege",
           scopeFocus: "Genfer Steuerdossiers",
@@ -658,8 +608,6 @@
       defaultLanguage: "de",
       documentSectionId: "belege",
       outputSectionId: "output",
-      videoId: "Mjfz1e98oIw",
-      videoLanguage: "de",
       copy: {
         it: {
           metaTitle: "Nuovo cliente · Zurigo | Vera",
@@ -876,8 +824,6 @@
       defaultLanguage: "en",
       documentSectionId: "documents",
       outputSectionId: "outputs",
-      videoId: "hLhP6x00ghQ",
-      videoLanguage: "en",
       copy: {
         it: {
           metaTitle: "Istruttoria Self Assessment · Regno Unito | Vera",
@@ -1173,6 +1119,7 @@
 
   function setMetadata(page, pageCopy, language) {
     const canonicalUrl = `https://mparanza.com/static/shared/new-client/${page.slug}`;
+    const corePosterUrl = `https://mparanza.com/static/shared/video-production/rendered/new-client/core/${language}/poster.jpg`;
     document.title = pageCopy.metaTitle;
     document.documentElement.lang = language;
     document.body.dataset.presentationLanguage = language;
@@ -1191,6 +1138,9 @@
     document
       .querySelector('meta[property="og:url"]')
       .setAttribute("content", `${canonicalUrl}?lang=${language}`);
+    document
+      .querySelector('meta[property="og:image"]')
+      .setAttribute("content", corePosterUrl);
   }
 
   function renderPage(page, language) {
@@ -1198,8 +1148,6 @@
     const copy = page.copy[language];
     const header = document.querySelector(".topbar");
     const main = document.getElementById("page-content");
-    const narration = ui.video.narration[page.videoLanguage];
-
     header.innerHTML = `<div class="nav-shell">
       <a class="brand" href="/?lang=${language}" aria-label="${escapeHtml(
         ui.homeAria,
@@ -1309,27 +1257,6 @@
         ${renderOutputTable(ui.outputs)}
       </section>
 
-      <section class="section-block" aria-labelledby="video-title">
-        <a class="inline-video" href="https://youtu.be/${escapeHtml(
-          page.videoId,
-        )}" target="_blank" rel="noopener noreferrer">
-          <span class="inline-video__thumb">
-            <img src="https://i.ytimg.com/vi/${escapeHtml(
-              page.videoId,
-            )}/maxresdefault.jpg" alt="${escapeHtml(
-              ui.video.thumbnailAlt,
-            )}" width="1280" height="720" loading="lazy">
-            <span class="inline-video__play" aria-hidden="true">▶</span>
-          </span>
-          <span>
-            <span class="eyebrow">${escapeHtml(ui.video.eyebrow)}</span>
-            <span class="video-language">${escapeHtml(narration)}</span>
-            <h2 id="video-title">${escapeHtml(ui.video.title)}</h2>
-            <p>${escapeHtml(ui.video.copy)}</p>
-          </span>
-        </a>
-      </section>
-
       <section class="section-block" aria-labelledby="next-title">
         <div class="connected-panel">
           <div><p class="eyebrow">${escapeHtml(
@@ -1337,7 +1264,7 @@
           )}</p><h2 id="next-title">${escapeHtml(
             ui.next.title,
           )}</h2><p>${escapeHtml(ui.next.copy)}</p></div>
-          <a class="button" href="index.html?lang=${language}#relationship">${escapeHtml(
+          <a class="button" href="index.html?lang=${language}#core-model">${escapeHtml(
             ui.next.button,
           )}</a>
         </div>

@@ -35,7 +35,6 @@ VERA_MODULE_PAGES = {
 }
 VERA_CORE_PAGES = (SHARED_ROOT / "vera" / "index.html", *VERA_MODULE_PAGES.values())
 VERA_SCOPE_BY_MODULE = {
-    "new-client": "mixed",
     "journal-sampling": "core",
     "check-entries": "mixed",
     "journal-bank-reconciliation": "core",
@@ -104,6 +103,27 @@ VERA_CONNECTED_JOURNEYS = (
     ("report-builder", "../concordato-plan-review/index.html?lang=it"),
     ("report-builder", "../deep-research-validator/index.html?lang=it"),
 )
+
+
+def _vtt_seconds(timestamp: str) -> float:
+    """Convert one WebVTT timestamp to seconds."""
+
+    hours, minutes, seconds = timestamp.split(":")
+    return int(hours) * 3600 + int(minutes) * 60 + float(seconds)
+
+
+def _read_vtt_cues(path: Path) -> list[tuple[float, float, str]]:
+    """Read ordered cue timing and text from a generated WebVTT file."""
+
+    blocks = path.read_text(encoding="utf-8").strip().split("\n\n")
+    cues: list[tuple[float, float, str]] = []
+    for block in blocks[1:]:
+        _, timing, *text_lines = block.splitlines()
+        start, end = timing.split(" --> ")
+        cues.append((_vtt_seconds(start), _vtt_seconds(end), " ".join(text_lines)))
+    return cues
+
+
 DISCARDED_PUBLIC_PHRASES = (
     "official openai listing",
     "openai marketplace",
@@ -403,9 +423,23 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     assert "01 ·" not in new_client
     assert "02 ·" not in new_client
     assert "03 ·" not in new_client
+    assert 'data-vera-module="new-client"' in new_client
+    assert "data-vera-scope=" not in new_client
+    assert "vera-scope.css" not in new_client
+    assert "vera-scope.js" not in new_client
+    assert 'id="italy"' in new_client
+    assert 'href="#italy"' in new_client
+    assert 'id="italy-pack"' not in new_client
+    assert "z32cIdqyXCk" not in new_client
+    assert "hLhP6x00ghQ" not in new_client
+    assert "d9S4SA63sVw" not in new_client
+    assert "Mjfz1e98oIw" not in new_client
+    assert "youtu" not in new_client.casefold()
+    assert '"documents.privacy.title": "Protection des données"' in new_client
 
     journey_css = (SHARED_ROOT / "vera-journey.css").read_text(encoding="utf-8")
     assert 'body[data-vera-module="new-client"] .journey-step' in journey_css
+    assert "flex-wrap: nowrap;" in journey_css
     assert "grid-template-columns: minmax(210px, 0.42fr) minmax(0, 0.58fr);" in (
         journey_css
     )
@@ -499,8 +533,10 @@ def test_new_client_jurisdiction_and_presentation_language_are_independent() -> 
         assert 'src="jurisdiction-pages.js?v=' in page
         for language in ("it", "en", "fr", "de"):
             assert f'hreflang="{language}"' in page
+        assert 'hreflang="x-default"' in page
         assert f'slug: "{filename}"' in jurisdiction_script
         assert f'defaultLanguage: "{default_language}"' in jurisdiction_script
+        assert "youtu" not in page.casefold()
 
     assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de"]' in (
         jurisdiction_script
@@ -513,7 +549,8 @@ def test_new_client_jurisdiction_and_presentation_language_are_independent() -> 
         jurisdiction_script
     )
     assert "const copy = page.copy[language]" in jurisdiction_script
-    assert 'href="index.html?lang=${language}#relationship"' in jurisdiction_script
+    assert 'href="index.html?lang=${language}#core-model"' in jurisdiction_script
+    assert "youtube" not in jurisdiction_script.casefold()
     assert "Report Builder" not in jurisdiction_script
     assert not re.search(r'title: "[123]\. ', jurisdiction_script)
     assert "dataset.jurisdiction =" not in jurisdiction_script
@@ -523,7 +560,7 @@ def test_new_client_jurisdiction_and_presentation_language_are_independent() -> 
 def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
-    assert 'src="../video-library.js?v=2026072002"' in page
+    assert re.search(r'src="\.\./video-library\.js\?v=[^"]+"', page)
     assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
     assert (
         'const curatedVideoModules = ["new-client", '
@@ -531,6 +568,10 @@ def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
     ) in page
     assert page.count("data-video-index=") == 4
     assert page.count('class="overview-video"') == 1
+    assert "../video-production/rendered/new-client/core/it/guide.mp4" in page
+    assert "../video-production/rendered/new-client/core/it/poster.jpg" in page
+    assert "item.src || `https://youtu.be/${item.id}`" in page
+    assert "item.poster || thumbnailUrl(item.id)" in page
 
 
 def test_vera_video_catalog_v3_separates_edition_language_and_jurisdiction() -> None:
@@ -589,7 +630,7 @@ process.stdout.write(JSON.stringify(catalogs));
         language = catalog["language"]
         published_modules = {video["module"] for video in catalog["videos"]}
 
-        assert catalog["version"] == "3.0.0"
+        assert catalog["version"] == "3.1.0"
         assert catalog["featured"]["kind"] == "overview"
         assert catalog["featured"]["language"] == language
         assert catalog["featured"]["edition"] == "core"
@@ -650,6 +691,15 @@ process.stdout.write(JSON.stringify(catalogs));
                 assert video["status"] == "published"
                 assert video["id"]
 
+        new_client_guides = [
+            video for video in catalog["videos"] if video["module"] == "new-client"
+        ]
+        assert len(new_client_guides) == 2
+        assert {video["edition"] for video in new_client_guides} == {"core", "italy"}
+        assert {video["sourceKind"] for video in new_client_guides} == {"local"}
+        assert len({video["moduleLabel"] for video in new_client_guides}) == 2
+        assert all("id" not in video for video in new_client_guides)
+
     assert rendered_identities == VERA_RENDERED_VIDEO_IDENTITIES
     italian_fatturapa = next(
         video
@@ -703,6 +753,49 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
                     assert phrase not in core_script
                 assert not re.search(r"\baml\b", core_script)
 
+    italy = next(
+        concept
+        for concept in concepts
+        if concept["module"] == "new-client" and concept["edition"] == "italy"
+    )
+    required_italy_phrases = {
+        "it": (
+            "bozza di valutazione",
+            "documentato",
+            "resta aperto",
+            "richiede riesame",
+            "fascicolo cliente di lavoro",
+        ),
+        "en": (
+            "draft aml assessment",
+            "documented",
+            "remains open",
+            "needs professional review",
+            "working client file",
+        ),
+        "fr": (
+            "projet d’évaluation lcb-ft",
+            "documenté",
+            "reste ouvert",
+            "nécessite une revue",
+            "dossier client de travail",
+        ),
+        "de": (
+            "entwurf einer aml-bewertung",
+            "dokumentiert",
+            "offen bleibt",
+            "fachlich geprüft",
+            "mandanten-arbeitsakte",
+        ),
+    }
+    for language, required_phrases in required_italy_phrases.items():
+        localization = italy["localizations"][language]
+        localized_script = " ".join(
+            (localization["narration"], *localization["onScreen"])
+        ).casefold()
+        for phrase in required_phrases:
+            assert phrase in localized_script
+
     check_entries = next(
         concept
         for concept in concepts
@@ -741,7 +834,10 @@ def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
         else:
             assert asset["scope"] == "country"
             assert asset["jurisdiction"] == "IT"
-        assert asset["cueCount"] == 6
+        if asset["module"] == "new-client":
+            assert asset["cueCount"] > 6
+        else:
+            assert asset["cueCount"] == 6
         assert asset["media"]["videoCodec"] == "h264"
         assert asset["media"]["audioCodec"] == "aac"
         assert asset["media"]["width"] == 1280
@@ -776,6 +872,17 @@ def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
         assert poster_path.read_bytes()[:2] == b"\xff\xd8"
         assert captions_path.read_text(encoding="utf-8").startswith("WEBVTT\n")
         assert " --> " in captions_path.read_text(encoding="utf-8")
+        if asset["module"] == "new-client":
+            cues = _read_vtt_cues(captions_path)
+            assert len(cues) == asset["cueCount"]
+            previous_end = 0.0
+            for start, end, text in cues:
+                duration = end - start
+                assert start >= previous_end
+                assert duration >= 1.0
+                assert len(text) <= 84
+                assert len(text) / duration <= 20.0
+                previous_end = end
         transcript = transcript_path.read_text(encoding="utf-8")
         assert asset["title"] in transcript
         if asset["scope"] == "core":
