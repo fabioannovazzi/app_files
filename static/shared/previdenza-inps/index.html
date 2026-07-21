@@ -1,508 +1,507 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Previdenza INPS | Vera</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta id="meta-description" name="description" content="Nel perimetro previdenziale italiano, Vera trasforma documenti ed esportazioni INPS in un fascicolo con cronologia, evidenze citate, calcoli e memo per la revisione professionale.">
+  <link rel="canonical" href="https://mparanza.com/static/shared/previdenza-inps/index.html">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/previdenza-inps/index.html?lang=it">
+  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/previdenza-inps/index.html?lang=en">
+  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/previdenza-inps/index.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/previdenza-inps/index.html?lang=de">
+  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/previdenza-inps/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta id="og-title" property="og:title" content="Previdenza INPS — Italia | Vera">
+  <meta id="og-description" property="og:description" content="Workflow Italia: da documenti previdenziali dispersi a un fascicolo INPS pronto da rivedere.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/previdenza-inps/index.html">
+  <meta id="og-image" property="og:image" content="https://i.ytimg.com/vi/qsuHqT9KGBI/hqdefault.jpg">
+  <meta id="og-locale" property="og:locale" content="it_IT">
+  <title>Previdenza INPS — Italia | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../vera-scope.css?v=20260721">
+  <script src="../vera-scope.js?v=20260721" defer></script>
   <style>
     :root {
-      --ink: #223026;
-      --muted: #5e6a61;
-      --line: #d9e0d8;
-      --panel: #ffffff;
-      --accent: #4b5f70;
-      --accent-ink: #293943;
-      --bg: #ffffff;
+      --navy: #002060;
+      --blue: #0070c0;
+      --cyan: #00b0f0;
+      --ink: #142b4a;
+      --text: #344b69;
+      --muted: #64748b;
+      --line: #d8e4ef;
+      --pale: #f3faff;
+      --white: #ffffff;
+      --content: 1120px;
     }
-    * { box-sizing: border-box; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--ink);
+      color: var(--text);
+      background: var(--white);
+      font-family: "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
       line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; }
-    .page {
-      width: min(100% - 48px, 1180px);
-      margin: 0 auto;
+    button { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
     }
-    header {
+    .nav-shell {
+      width: min(var(--content), calc(100% - 48px));
+      min-height: 72px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-      padding: 28px 0 18px;
-      border-bottom: 1px solid var(--line);
+      gap: 28px;
     }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      color: var(--accent-ink);
-    }
-    .brand img {
-      height: 34px;
-      width: auto;
-      display: block;
-    }
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-    nav a { text-decoration: none; }
-    nav a:hover { color: var(--ink); }
-    .lang {
-      display: inline-flex;
-      gap: 10px;
-      margin-left: 8px;
-      font-weight: 600;
-    }
-    .lang button {
+    .brand img { display: block; width: 142px; height: auto; }
+    .nav-right, .nav-links, .lang-switch { display: flex; align-items: center; }
+    .nav-right { gap: 22px; }
+    .nav-links { gap: 20px; color: var(--muted); font-size: 13px; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--blue); }
+    .lang-switch { gap: 3px; }
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 34px;
       border: 0;
+      border-radius: 999px;
       background: transparent;
-      padding: 2px 0;
       color: var(--muted);
       cursor: pointer;
-      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
     }
-    .lang button[aria-pressed="true"] { color: var(--ink); }
+    .lang-switch button[aria-pressed="true"] { background: var(--pale); color: var(--blue); }
+
+    main { width: min(var(--content), calc(100% - 48px)); margin: 0 auto; }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .breadcrumb a { color: var(--blue); text-decoration: none; }
+    .breadcrumb a:hover, .breadcrumb a:focus-visible { text-decoration: underline; }
+
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: clamp(32px, 5vw, 72px);
+      grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+      gap: clamp(44px, 8vw, 112px);
       align-items: end;
-      padding: clamp(56px, 8vw, 110px) 0 48px;
+      padding: clamp(58px, 9vw, 112px) 0 clamp(58px, 7vw, 84px);
     }
     .eyebrow {
-      margin: 0 0 16px;
-      color: var(--muted);
-      font-size: 0.78rem;
+      margin: 0 0 15px;
+      color: var(--blue);
+      font-size: 12px;
       font-weight: 700;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
-    h1 {
-      margin: 0;
-      max-width: 780px;
-      font-size: clamp(42px, 5vw, 58px);
-      font-weight: 600;
-      line-height: 1.08;
-      color: var(--ink);
-    }
-    .lead {
-      margin: 28px 0 0;
-      max-width: 720px;
-      color: #405047;
-      font-size: clamp(1.08rem, 2vw, 1.42rem);
-      line-height: 1.42;
-    }
-    .summary {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-      padding: 20px;
-    }
-    .summary h2 {
-      margin: 0 0 14px;
-      font-size: 1rem;
-    }
-    .summary ul {
-      margin: 0;
-      padding-left: 20px;
-      color: var(--muted);
-    }
-    section {
-      padding: 42px 0;
-      border-top: 1px solid var(--line);
-    }
+    h1, h2, h3 { margin: 0; color: var(--navy); line-height: 1.12; }
+    h1 { max-width: 820px; font-size: clamp(42px, 5.5vw, 68px); font-weight: 600; letter-spacing: -0.035em; }
+    h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 600; letter-spacing: -0.025em; }
+    h3 { font-size: 18px; font-weight: 600; }
+    p { margin: 0; }
+    .lead { max-width: 760px; margin-top: 24px; color: var(--text); font-size: clamp(18px, 2vw, 23px); line-height: 1.45; }
+    .hero-outcome { border-top: 3px solid var(--cyan); padding-top: 20px; }
+    .hero-outcome strong { display: block; color: var(--navy); font-size: 19px; line-height: 1.35; }
+    .hero-outcome p { margin-top: 10px; color: var(--muted); }
+
+    .section { padding: clamp(54px, 7vw, 84px) 0; border-top: 1px solid var(--line); }
     .section-head {
       display: grid;
-      grid-template-columns: minmax(180px, 0.34fr) minmax(0, 0.66fr);
-      gap: 28px;
-      margin-bottom: 24px;
+      grid-template-columns: minmax(220px, 0.38fr) minmax(0, 0.62fr);
+      gap: clamp(28px, 6vw, 80px);
+      align-items: start;
+      margin-bottom: 34px;
     }
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(28px, 3.4vw, 42px);
-    }
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 760px;
-    }
-    .grid {
+    .section-head > p { max-width: 700px; color: var(--muted); font-size: 17px; }
+
+    .journey {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .item {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
-    }
-    .item h3 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-    }
-    .item p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.96rem;
-    }
-    .output-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px 18px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .output-list li {
+      border-top: 1px solid var(--navy);
       border-bottom: 1px solid var(--line);
-      padding: 10px 0;
-      color: var(--muted);
     }
-    pre {
-      margin: 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      background: #1f2a24;
-      color: #edf3ee;
-      border-radius: 8px;
-      padding: 18px;
-      font-size: 0.9rem;
-      line-height: 1.48;
+    .journey article { min-height: 190px; padding: 24px 28px 28px 0; }
+    .journey article + article { border-left: 1px solid var(--line); padding-left: 28px; }
+    .journey-number { display: block; margin-bottom: 28px; color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+    .journey h3 { margin-bottom: 10px; font-size: 22px; }
+    .journey p { color: var(--muted); }
+
+    .workflow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; counter-reset: workflow; }
+    .workflow-step { border-top: 2px solid var(--line); padding-top: 18px; counter-increment: workflow; }
+    .workflow-step::before { content: "0" counter(workflow); display: block; margin-bottom: 24px; color: var(--blue); font-size: 13px; font-weight: 700; }
+    .workflow-step h3 { margin-bottom: 9px; }
+    .workflow-step p { color: var(--muted); font-size: 15px; }
+
+    .proof-grid { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1.18fr); gap: clamp(36px, 7vw, 88px); align-items: center; }
+    .proof-list { margin: 30px 0 0; padding: 0; list-style: none; }
+    .proof-list li { padding: 15px 0; border-top: 1px solid var(--line); }
+    .proof-list strong { display: block; margin-bottom: 3px; color: var(--navy); }
+    .proof-list span { color: var(--muted); }
+    .video-guide { display: block; border: 1px solid var(--line); color: inherit; text-decoration: none; }
+    .video-guide:hover, .video-guide:focus-visible { border-color: var(--blue); }
+    .video-thumb { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--pale); }
+    .video-thumb img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .play {
+      position: absolute;
+      left: 22px;
+      bottom: 20px;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 17px;
+      line-height: 1;
     }
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 11px 18px;
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      background: var(--accent);
-      color: white;
-      text-decoration: none;
-      font-weight: 700;
+    .video-copy { display: block; padding: 22px 24px 24px; }
+    .video-copy small { display: block; margin-bottom: 8px; color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+    .video-copy strong { display: block; color: var(--navy); font-size: 20px; line-height: 1.3; }
+    .video-copy span { display: block; margin-top: 9px; color: var(--muted); font-size: 14px; }
+
+    .next-workflow { display: grid; grid-template-columns: minmax(0, 0.76fr) minmax(280px, 0.24fr); gap: 34px; align-items: end; padding: 34px; background: var(--pale); }
+    .next-workflow h2 { margin-top: 8px; font-size: clamp(26px, 3vw, 36px); }
+    .next-workflow p { max-width: 720px; margin-top: 12px; color: var(--text); }
+    .text-link { justify-self: end; color: var(--blue); font-weight: 700; text-decoration: none; }
+    .text-link:hover, .text-link:focus-visible { text-decoration: underline; }
+
+    .prompt-box { border: 1px solid var(--line); }
+    pre { margin: 0; padding: 24px; overflow-x: auto; white-space: pre-wrap; color: #eaf5ff; background: var(--navy); font: 500 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .technical-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 42px; }
+    .technical-item { display: grid; grid-template-columns: minmax(150px, 0.45fr) minmax(0, 0.55fr); gap: 18px; padding: 16px 0; border-top: 1px solid var(--line); }
+    .technical-item code { color: var(--navy); font-size: 13px; overflow-wrap: anywhere; }
+    .technical-item span { color: var(--muted); font-size: 14px; }
+
+    .install { margin-bottom: 72px; padding: clamp(34px, 5vw, 54px); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center; background: var(--navy); color: #d8ecff; }
+    .install h2 { color: var(--white) !important; }
+    .install p { max-width: 690px; margin-top: 10px; }
+    .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 11px 19px; border: 1px solid var(--cyan); background: var(--cyan); color: var(--navy); text-decoration: none; font-size: 14px; font-weight: 700; }
+    .button:hover, .button:focus-visible { background: var(--white); border-color: var(--white); }
+
+    @media (max-width: 900px) {
+      .nav-shell, main { width: min(100% - 32px, var(--content)); }
+      .nav-links { display: none; }
+      .hero, .section-head, .proof-grid, .next-workflow { grid-template-columns: 1fr; }
+      .hero { gap: 38px; }
+      .journey { grid-template-columns: 1fr; }
+      .journey article { min-height: 0; padding: 24px 0; }
+      .journey article + article { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+      .journey-number { margin-bottom: 12px; }
+      .workflow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .text-link { justify-self: start; }
     }
-    @media (max-width: 820px) {
-      .page { width: min(100% - 32px, 1180px); }
-      header, nav { align-items: flex-start; }
-      header, .hero, .section-head { grid-template-columns: 1fr; }
-      header { flex-direction: column; }
-      nav { flex-wrap: wrap; }
-      .hero { padding-top: 44px; }
-      .grid, .output-list { grid-template-columns: 1fr; }
+    @media (max-width: 600px) {
+      .brand img { width: 126px; }
+      .nav-shell { min-height: 64px; }
+      .lang-switch button { min-width: 30px; padding: 0; }
+      .breadcrumb { padding-top: 22px; }
+      .hero { padding-top: 42px; }
+      .workflow-grid, .technical-grid { grid-template-columns: 1fr; }
+      .technical-item { grid-template-columns: 1fr; gap: 5px; }
+      .proof-grid { gap: 30px; }
+      .install { grid-template-columns: 1fr; margin-bottom: 32px; }
+      .button { width: fit-content; }
     }
   </style>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
 </head>
-<body>
-  <div class="page">
-    <header>
-      <a class="brand" id="home-link" href="/?lang=it">
+<body data-vera-module="previdenza-inps" data-vera-scope="italy">
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza">
         <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
-      <nav>
-        <a href="#workflow" data-i18n="nav.workflow">Come funziona</a>
-        <a href="#boundaries" data-i18n="nav.boundaries">Perimetro</a>
-        <a href="#outputs" data-i18n="nav.outputs">File prodotti</a>
-        <a href="#prompts" data-i18n="nav.prompts">Prompt</a>
-        <a href="#download" data-i18n="nav.download">Installazione</a>
-        <span class="lang" aria-label="Language">
-          <button type="button" data-lang="en">En</button>
-          <button type="button" data-lang="it">It</button>
-          <button type="button" data-lang="fr">Fr</button>
-          <button type="button" data-lang="de">De</button>
-        </span>
-      </nav>
-    </header>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Page">
+          <a href="#workflow" data-i18n="nav.workflow">Percorso</a>
+          <a href="#result" data-i18n="nav.result">Risultato</a>
+          <a href="#prompt" data-i18n="nav.prompt">Prompt</a>
+          <a href="#install" data-i18n="nav.install">Apri Vera</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="false">En</button>
+          <button type="button" data-lang="it" aria-pressed="true">It</button>
+          <button type="button" data-lang="fr" aria-pressed="false">Fr</button>
+          <button type="button" data-lang="de" aria-pressed="false">De</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-    <main>
-      <section class="hero" aria-labelledby="hero-title">
+  <main>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a id="vera-link" href="../vera/index.html?lang=it">Vera</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page" data-i18n="breadcrumb.current">Pacchetto Italia · Previdenza INPS</span>
+    </nav>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Pacchetto Italia · Previdenza INPS · Vera</p>
+        <h1 id="hero-title" data-i18n="hero.title">Porta un caso INPS disperso a un fascicolo pronto da rivedere.</h1>
+        <p class="lead" data-i18n="hero.lead">Nel perimetro previdenziale italiano, Vera collega estratti, avvisi, pagamenti e scansioni in una cronologia citata, con evidenze, calcoli e punti di decisione ordinati per il professionista.</p>
+      </div>
+      <aside class="hero-outcome">
+        <p class="eyebrow" data-i18n="hero.outcomeLabel">Risultato</p>
+        <strong data-i18n="hero.outcomeTitle">Un fascicolo previdenziale leggibile e verificabile.</strong>
+        <p data-i18n="hero.outcomeCopy">Cronologia, matrice delle evidenze, calcoli documentati, memo studio e richieste documentali in un’unica cartella di lavoro.</p>
+      </aside>
+    </section>
+
+    <section class="section" aria-labelledby="journey-title">
+      <div class="section-head">
+        <h2 id="journey-title" data-i18n="journey.title">Dal materiale al lavoro rivedibile</h2>
+        <p data-i18n="journey.copy">Un passaggio lineare mantiene insieme il quesito, le fonti del caso e il risultato consegnato allo studio.</p>
+      </div>
+      <div class="journey">
+        <article>
+          <span class="journey-number">01</span>
+          <h3 data-i18n="journey.provide.title">Fornisci</h3>
+          <p data-i18n="journey.provide.copy">La cartella del caso, gli export INPS, il periodo da esaminare e il quesito professionale.</p>
+        </article>
+        <article>
+          <span class="journey-number">02</span>
+          <h3 data-i18n="journey.prepare.title">Vera prepara</h3>
+          <p data-i18n="journey.prepare.copy">Inventario, fatti con pagina e fonte, cronologia, matrice delle evidenze e calcoli concordati.</p>
+        </article>
+        <article>
+          <span class="journey-number">03</span>
+          <h3 data-i18n="journey.receive.title">Ricevi</h3>
+          <p data-i18n="journey.receive.copy">Un memo professionale con fatti, fonti, valori, questioni aperte e prossime richieste già organizzati.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="workflow" aria-labelledby="workflow-title">
+      <div class="section-head">
+        <h2 id="workflow-title" data-i18n="workflow.title">Quattro passaggi guidati dal professionista</h2>
+        <p data-i18n="workflow.copy">Il lavoro parte dal quesito dello studio e procede per conferme brevi, così ogni passaggio resta collegato al contesto del caso.</p>
+      </div>
+      <div class="workflow-grid">
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step1.title">Definisci il quesito</h3>
+          <p data-i18n="workflow.step1.copy">Indica periodo, posizione, obiettivo e data di riferimento della ricerca.</p>
+        </article>
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step2.title">Aggiungi i materiali</h3>
+          <p data-i18n="workflow.step2.copy">Riunisci export, estratti, avvisi, quietanze e scansioni nella cartella del caso.</p>
+        </article>
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step3.title">Conferma i passaggi chiave</h3>
+          <p data-i18n="workflow.step3.copy">Rivedi identità, periodi, significato delle voci e ipotesi dei calcoli proposti.</p>
+        </article>
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step4.title">Rivedi il fascicolo</h3>
+          <p data-i18n="workflow.step4.copy">Apri cronologia, citazioni e memo, registra le decisioni e definisci il seguito.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="result" aria-labelledby="result-title">
+      <div class="proof-grid">
         <div>
-          <p class="eyebrow" data-i18n="hero.eyebrow">Istruttoria previdenziale</p>
-          <h1 id="hero-title" data-i18n="hero.title">Previdenza INPS</h1>
-          <p class="lead" data-i18n="hero.lead">Organizza documenti ed esportazioni ufficiali INPS, usa OCR locale sulle scansioni e prepara fatti tracciabili, cronologia, fonti ufficiali ed eventuali ricalcoli approvati per la revisione professionale.</p>
-        </div>
-        <aside class="summary">
-          <h2 data-i18n="summary.title">Quando usarlo</h2>
-          <ul>
-            <li data-i18n="summary.item1">Periodi contributivi mancanti, contestati o incoerenti</li>
-            <li data-i18n="summary.item2">Pagamenti, estratti, avvisi o classificazioni da ricondurre alle evidenze</li>
-            <li data-i18n="summary.item3">Espressioni ambigue da comprendere nel documento che le definisce, senza inferirle per parole chiave</li>
+          <p class="eyebrow" data-i18n="result.eyebrow">Il risultato, prima di iniziare</p>
+          <h2 id="result-title" data-i18n="result.title">Vedi come i documenti diventano un fascicolo verificabile.</h2>
+          <p class="lead" data-i18n="result.copy">La guida mostra il passaggio dal materiale previdenziale alla cartella che il professionista può leggere, controllare e annotare.</p>
+          <ul class="proof-list">
+            <li><strong data-i18n="result.item1.title">Cronologia del caso</strong><span data-i18n="result.item1.copy">Periodi, eventi e valori con riferimento al documento.</span></li>
+            <li><strong data-i18n="result.item2.title">Matrice delle evidenze</strong><span data-i18n="result.item2.copy">Ogni fatto collegato a file, pagina e citazione.</span></li>
+            <li><strong data-i18n="result.item3.title">Memo per lo studio</strong><span data-i18n="result.item3.copy">Sintesi, calcoli concordati, decisioni e prossime richieste.</span></li>
           </ul>
-        </aside>
-      </section>
+        </div>
+        <a class="video-guide" id="guide-link" href="https://youtu.be/qsuHqT9KGBI" target="_blank" rel="noopener noreferrer">
+          <span class="video-thumb">
+            <img id="guide-thumb" src="https://i.ytimg.com/vi/qsuHqT9KGBI/maxresdefault.jpg" alt="" loading="lazy">
+            <span class="play" aria-hidden="true">▶</span>
+          </span>
+          <span class="video-copy">
+            <small data-i18n="guide.label">Guida al risultato</small>
+            <strong data-i18n="guide.title">Vera | Da documenti sparsi a un fascicolo previdenziale verificabile</strong>
+            <span data-i18n="guide.meta">Narrazione in italiano · Si apre su YouTube</span>
+          </span>
+        </a>
+      </div>
+    </section>
 
-      <section id="workflow">
-        <div class="section-head">
-          <h2 data-i18n="workflow.title">Dai documenti a un fascicolo verificabile</h2>
-          <p data-i18n="workflow.copy">Registra gli export con hash e provenienza, conserva pagina e citazione per ogni fatto, separa conflitti e incertezze, verifica le affermazioni su fonti correnti e prepara il memo per il professionista.</p>
+    <section class="section" aria-labelledby="next-title">
+      <div class="next-workflow">
+        <div>
+          <p class="eyebrow" data-i18n="next.eyebrow">Flusso collegato</p>
+          <h2 id="next-title" data-i18n="next.title">Dal fascicolo approvato alla relazione Word.</h2>
+          <p data-i18n="next.copy">Quando cronologia, calcoli e decisioni sono pronti, Report Builder li trasforma in una bozza Word coerente con le fonti del caso.</p>
         </div>
-        <div class="grid">
-          <article class="item">
-            <h3 data-i18n="workflow.item1.title">Raccoglie le evidenze</h3>
-            <p data-i18n="workflow.item1.copy">Inventaria file, esportazioni ufficiali e scansioni mantenendo provenienza, hash e localizzatori di pagina.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="workflow.item2.title">Struttura fatti e fonti</h3>
-            <p data-i18n="workflow.item2.copy">Costruisce cronologia e matrice delle evidenze, lasciando visibili fatti mancanti, conflitti e questioni aperte.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="workflow.item3.title">Prepara la revisione</h3>
-            <p data-i18n="workflow.item3.copy">Controlla le affermazioni su fonti ufficiali, esegue solo ricalcoli approvati e consegna una bozza rivedibile.</p>
-          </article>
-        </div>
-      </section>
+        <a class="text-link" id="next-link" href="../report-builder/index.html?lang=it" data-i18n="next.link">Scopri Report Builder →</a>
+      </div>
+    </section>
 
-      <section id="boundaries">
-        <div class="section-head">
-          <h2 data-i18n="boundaries.title">Accesso e giudizio restano separati</h2>
-          <p data-i18n="boundaries.copy">Vera non accede autonomamente a INPS e non dispone di un'API generale per la posizione contributiva individuale. Lavora di norma su esportazioni ufficiali scaricate da una persona autorizzata. L'eventuale cattura in sola lettura di una scheda INPS già autenticata resta bloccata finché accesso o delega, autorizzazione al trattamento dei dati e permesso del servizio non siano verificati separatamente.</p>
-        </div>
-        <div class="grid">
-          <article class="item">
-            <h3 data-i18n="boundaries.item1.title">Niente credenziali o invii</h3>
-            <p data-i18n="boundaries.item1.copy">Non riceve credenziali o cookie, non attiva deleghe, non naviga il portale e non invia nulla.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="boundaries.item2.title">OCR da confermare</h3>
-            <p data-i18n="boundaries.item2.copy">OCR e testo browser restano evidenza parziale fino al confronto visivo con la pagina originale.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="boundaries.item3.title">Conclusione professionale</h3>
-            <p data-i18n="boundaries.item3.copy">Classificazione, formula applicabile e conclusione finale restano al professionista.</p>
-          </article>
-        </div>
-      </section>
+    <section class="section" id="prompt" aria-labelledby="prompt-title">
+      <div class="section-head">
+        <h2 id="prompt-title" data-i18n="prompt.title">Un prompt per iniziare</h2>
+        <p data-i18n="prompt.copy">Indica la cartella e il quesito. Vera organizza il primo passaggio e ti chiede le conferme che cambiano il percorso.</p>
+      </div>
+      <div class="prompt-box"><pre><code id="prompt-example">Usa Previdenza INPS sulla cartella /percorso/caso. Il quesito riguarda [tema] per il periodo [periodo], con data di riferimento [data]. Prepara inventario, fatti con fonte e pagina, cronologia, matrice delle evidenze, calcoli concordati e memo per la revisione professionale.</code></pre></div>
+    </section>
 
-      <section id="outputs">
-        <div class="section-head">
-          <h2 data-i18n="outputs.title">File prodotti</h2>
-          <p data-i18n="outputs.copy">Il fascicolo separa evidenze, fatti, cronologia, ricerca, ricalcoli approvati e decisioni di revisione.</p>
-        </div>
-        <ul class="output-list">
-          <li>file_inventory.json</li>
-          <li>extraction_report.json</li>
-          <li>case_records_validated.json</li>
-          <li>timeline.csv</li>
-          <li>evidence_matrix.csv</li>
-          <li>claims_review_normalized.json</li>
-          <li>calculation_results.csv</li>
-          <li>studio_memo.docx</li>
-          <li>document_requests.md</li>
-          <li>review_handoff.md</li>
-          <li>final_artifacts.json</li>
-        </ul>
-      </section>
+    <section class="section" aria-labelledby="technical-title">
+      <div class="section-head">
+        <h2 id="technical-title" data-i18n="technical.title">Dettaglio tecnico</h2>
+        <p data-i18n="technical.copy">La cartella conserva dati strutturati e documenti leggibili insieme, così il percorso dal file originale alla sintesi resta consultabile.</p>
+      </div>
+      <div class="technical-grid">
+        <div class="technical-item"><code>file_inventory.json</code><span data-i18n="technical.item1">File, impronte e provenienza.</span></div>
+        <div class="technical-item"><code>extraction_report.json</code><span data-i18n="technical.item7">Esito dell’estrazione e punti da verificare.</span></div>
+        <div class="technical-item"><code>case_records_validated.json</code><span data-i18n="technical.item2">Fatti strutturati con localizzatori.</span></div>
+        <div class="technical-item"><code>timeline.csv</code><span data-i18n="technical.item3">Periodi ed eventi in ordine.</span></div>
+        <div class="technical-item"><code>evidence_matrix.csv</code><span data-i18n="technical.item4">Fatti collegati alle evidenze.</span></div>
+        <div class="technical-item"><code>claims_review_normalized.json</code><span data-i18n="technical.item8">Affermazioni e fonti normalizzate per la revisione.</span></div>
+        <div class="technical-item"><code>calculation_results.csv</code><span data-i18n="technical.item5">Calcoli e ipotesi registrate.</span></div>
+        <div class="technical-item"><code>studio_memo.docx</code><span data-i18n="technical.item6">Bozza leggibile per la revisione.</span></div>
+        <div class="technical-item"><code>document_requests.md</code><span data-i18n="technical.item9">Richieste documentali collegate ai punti aperti.</span></div>
+        <div class="technical-item"><code>review_handoff.md</code><span data-i18n="technical.item10">Passaggio strutturato alla revisione.</span></div>
+        <div class="technical-item"><code>final_artifacts.json</code><span data-i18n="technical.item11">Indice degli artefatti finali.</span></div>
+      </div>
+    </section>
 
-      <section id="prompts">
-        <div class="section-head">
-          <h2 data-i18n="prompts.title">Prompt pronto</h2>
-          <p data-i18n="prompts.copy">Usalo quando hai una cartella documentale o esportazioni ufficiali e vuoi predisporre l'istruttoria senza trasformare l'evidenza in una conclusione automatica.</p>
-        </div>
-        <pre><code id="prompt-example">Usa Previdenza INPS sulla cartella del caso. Conferma quesito, periodi, data normativa di riferimento e significato documentale delle espressioni ambigue. Registra gli export ufficiali INPS con hash; usa la cattura browser solo dopo la verifica separata dei permessi. Prepara inventario, fatti con provenienza, cronologia, fonti ufficiali, eventuali ricalcoli approvati e memo per revisione professionale.</code></pre>
-      </section>
-
-      <section id="download">
-        <div class="section-head">
-          <h2 data-i18n="download.title">Installa Vera dal marketplace</h2>
-          <p data-i18n="download.copy">Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.</p>
-        </div>
-        <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="download.button">Installa Vera</a>
-      </section>
-    </main>
-  </div>
+    <section class="install" id="install" aria-labelledby="install-title">
+      <div>
+        <h2 id="install-title" data-i18n="install.title">Vera include questo flusso.</h2>
+        <p data-i18n="install.copy">Apri Vera e affidale la cartella del caso previdenziale.</p>
+      </div>
+      <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="install.button">Apri Vera</a>
+    </section>
+  </main>
 
   <script>
     const translations = {
       it: {
-        title: "Previdenza INPS | Vera",
-        "nav.workflow": "Come funziona",
-        "nav.boundaries": "Perimetro",
-        "nav.outputs": "File prodotti",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installazione",
-        "hero.eyebrow": "Istruttoria previdenziale",
-        "hero.title": "Previdenza INPS",
-        "hero.lead": "Organizza documenti ed esportazioni ufficiali INPS, usa OCR locale sulle scansioni e prepara fatti tracciabili, cronologia, fonti ufficiali ed eventuali ricalcoli approvati per la revisione professionale.",
-        "summary.title": "Quando usarlo",
-        "summary.item1": "Periodi contributivi mancanti, contestati o incoerenti",
-        "summary.item2": "Pagamenti, estratti, avvisi o classificazioni da ricondurre alle evidenze",
-        "summary.item3": "Espressioni ambigue da comprendere nel documento che le definisce, senza inferirle per parole chiave",
-        "workflow.title": "Dai documenti a un fascicolo verificabile",
-        "workflow.copy": "Registra gli export con hash e provenienza, conserva pagina e citazione per ogni fatto, separa conflitti e incertezze, verifica le affermazioni su fonti correnti e prepara il memo per il professionista.",
-        "workflow.item1.title": "Raccoglie le evidenze",
-        "workflow.item1.copy": "Inventaria file, esportazioni ufficiali e scansioni mantenendo provenienza, hash e localizzatori di pagina.",
-        "workflow.item2.title": "Struttura fatti e fonti",
-        "workflow.item2.copy": "Costruisce cronologia e matrice delle evidenze, lasciando visibili fatti mancanti, conflitti e questioni aperte.",
-        "workflow.item3.title": "Prepara la revisione",
-        "workflow.item3.copy": "Controlla le affermazioni su fonti ufficiali, esegue solo ricalcoli approvati e consegna una bozza rivedibile.",
-        "boundaries.title": "Accesso e giudizio restano separati",
-        "boundaries.copy": "Vera non accede autonomamente a INPS e non dispone di un'API generale per la posizione contributiva individuale. Lavora di norma su esportazioni ufficiali scaricate da una persona autorizzata. L'eventuale cattura in sola lettura di una scheda INPS già autenticata resta bloccata finché accesso o delega, autorizzazione al trattamento dei dati e permesso del servizio non siano verificati separatamente.",
-        "boundaries.item1.title": "Niente credenziali o invii",
-        "boundaries.item1.copy": "Non riceve credenziali o cookie, non attiva deleghe, non naviga il portale e non invia nulla.",
-        "boundaries.item2.title": "OCR da confermare",
-        "boundaries.item2.copy": "OCR e testo browser restano evidenza parziale fino al confronto visivo con la pagina originale.",
-        "boundaries.item3.title": "Conclusione professionale",
-        "boundaries.item3.copy": "Classificazione, formula applicabile e conclusione finale restano al professionista.",
-        "outputs.title": "File prodotti",
-        "outputs.copy": "Il fascicolo separa evidenze, fatti, cronologia, ricerca, ricalcoli approvati e decisioni di revisione.",
-        "prompts.title": "Prompt pronto",
-        "prompts.copy": "Usalo quando hai una cartella documentale o esportazioni ufficiali e vuoi predisporre l'istruttoria senza trasformare l'evidenza in una conclusione automatica.",
-        "download.title": "Installa Vera dal marketplace",
-        "download.copy": "Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.",
-        "download.button": "Installa Vera",
-        prompt: "Usa Previdenza INPS sulla cartella del caso. Conferma quesito, periodi, data normativa di riferimento e significato documentale delle espressioni ambigue. Registra gli export ufficiali INPS con hash; usa la cattura browser solo dopo la verifica separata dei permessi. Prepara inventario, fatti con provenienza, cronologia, fonti ufficiali, eventuali ricalcoli approvati e memo per revisione professionale."
+        meta: { title: "Previdenza INPS — Italia | Vera", description: "Nel perimetro previdenziale italiano, Vera trasforma documenti ed esportazioni INPS in un fascicolo con cronologia, evidenze citate, calcoli e memo per la revisione professionale.", og: "Workflow Italia: da documenti previdenziali dispersi a un fascicolo INPS pronto da rivedere.", locale: "it_IT" },
+        guide: { id: "qsuHqT9KGBI", title: "Vera | Da documenti sparsi a un fascicolo previdenziale verificabile" },
+        "nav.workflow": "Percorso", "nav.result": "Risultato", "nav.prompt": "Prompt", "nav.install": "Apri Vera",
+        "breadcrumb.current": "Pacchetto Italia · Previdenza INPS",
+        "hero.eyebrow": "Pacchetto Italia · Previdenza INPS · Vera", "hero.title": "Porta un caso INPS disperso a un fascicolo pronto da rivedere.", "hero.lead": "Nel perimetro previdenziale italiano, Vera collega estratti, avvisi, pagamenti e scansioni in una cronologia citata, con evidenze, calcoli e punti di decisione ordinati per il professionista.",
+        "hero.outcomeLabel": "Risultato", "hero.outcomeTitle": "Un fascicolo previdenziale leggibile e verificabile.", "hero.outcomeCopy": "Cronologia, matrice delle evidenze, calcoli documentati, memo studio e richieste documentali in un’unica cartella di lavoro.",
+        "journey.title": "Dal materiale al lavoro rivedibile", "journey.copy": "Un passaggio lineare mantiene insieme il quesito, le fonti del caso e il risultato consegnato allo studio.",
+        "journey.provide.title": "Fornisci", "journey.provide.copy": "La cartella del caso, gli export INPS, il periodo da esaminare e il quesito professionale.", "journey.prepare.title": "Vera prepara", "journey.prepare.copy": "Inventario, fatti con pagina e fonte, cronologia, matrice delle evidenze e calcoli concordati.", "journey.receive.title": "Ricevi", "journey.receive.copy": "Un memo professionale con fatti, fonti, valori, questioni aperte e prossime richieste già organizzati.",
+        "workflow.title": "Quattro passaggi guidati dal professionista", "workflow.copy": "Il lavoro parte dal quesito dello studio e procede per conferme brevi, così ogni passaggio resta collegato al contesto del caso.",
+        "workflow.step1.title": "Definisci il quesito", "workflow.step1.copy": "Indica periodo, posizione, obiettivo e data di riferimento della ricerca.", "workflow.step2.title": "Aggiungi i materiali", "workflow.step2.copy": "Riunisci export, estratti, avvisi, quietanze e scansioni nella cartella del caso.", "workflow.step3.title": "Conferma i passaggi chiave", "workflow.step3.copy": "Rivedi identità, periodi, significato delle voci e ipotesi dei calcoli proposti.", "workflow.step4.title": "Rivedi il fascicolo", "workflow.step4.copy": "Apri cronologia, citazioni e memo, registra le decisioni e definisci il seguito.",
+        "result.eyebrow": "Il risultato, prima di iniziare", "result.title": "Vedi come i documenti diventano un fascicolo verificabile.", "result.copy": "La guida mostra il passaggio dal materiale previdenziale alla cartella che il professionista può leggere, controllare e annotare.",
+        "result.item1.title": "Cronologia del caso", "result.item1.copy": "Periodi, eventi e valori con riferimento al documento.", "result.item2.title": "Matrice delle evidenze", "result.item2.copy": "Ogni fatto collegato a file, pagina e citazione.", "result.item3.title": "Memo per lo studio", "result.item3.copy": "Sintesi, calcoli concordati, decisioni e prossime richieste.",
+        "guide.label": "Guida al risultato", "guide.title": "Vera | Da documenti sparsi a un fascicolo previdenziale verificabile", "guide.meta": "Narrazione in italiano · Si apre su YouTube",
+        "next.eyebrow": "Flusso collegato", "next.title": "Dal fascicolo approvato alla relazione Word.", "next.copy": "Quando cronologia, calcoli e decisioni sono pronti, Report Builder li trasforma in una bozza Word coerente con le fonti del caso.", "next.link": "Scopri Report Builder →",
+        "prompt.title": "Un prompt per iniziare", "prompt.copy": "Indica la cartella e il quesito. Vera organizza il primo passaggio e ti chiede le conferme che cambiano il percorso.", prompt: "Usa Previdenza INPS sulla cartella /percorso/caso. Il quesito riguarda [tema] per il periodo [periodo], con data di riferimento [data]. Prepara inventario, fatti con fonte e pagina, cronologia, matrice delle evidenze, calcoli concordati e memo per la revisione professionale.",
+        "technical.title": "Dettaglio tecnico", "technical.copy": "La cartella conserva dati strutturati e documenti leggibili insieme, così il percorso dal file originale alla sintesi resta consultabile.", "technical.item1": "File, impronte e provenienza.", "technical.item2": "Fatti strutturati con localizzatori.", "technical.item3": "Periodi ed eventi in ordine.", "technical.item4": "Fatti collegati alle evidenze.", "technical.item5": "Calcoli e ipotesi registrate.", "technical.item6": "Bozza leggibile per la revisione.", "technical.item7": "Esito dell’estrazione e punti da verificare.", "technical.item8": "Affermazioni e fonti normalizzate per la revisione.", "technical.item9": "Richieste documentali collegate ai punti aperti.", "technical.item10": "Passaggio strutturato alla revisione.", "technical.item11": "Indice degli artefatti finali.",
+        "install.title": "Vera include questo flusso.", "install.copy": "Apri Vera e affidale la cartella del caso previdenziale.", "install.button": "Apri Vera"
       },
       en: {
-        title: "INPS Social Security Review | Vera",
-        "nav.workflow": "How it works",
-        "nav.boundaries": "Boundaries",
-        "nav.outputs": "Files produced",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Social-security case review",
-        "hero.title": "INPS Social Security Review",
-        "hero.lead": "Organizes local documents and official INPS exports, uses local OCR on scans, and prepares traceable facts, a chronology, official-source research and only approved recalculations for professional review.",
-        "summary.title": "Use it when",
-        "summary.item1": "Contribution periods are missing, disputed or inconsistent",
-        "summary.item2": "Payments, extracts, notices or classifications need to be tied back to evidence",
-        "summary.item3": "Ambiguous labels must be understood from the document that defines them, not guessed from keywords",
-        "workflow.title": "From documents to a verifiable case file",
-        "workflow.copy": "Registers exports with hashes and provenance, preserves a page and quote for every fact, keeps conflicts and uncertainty visible, checks claims against current sources and prepares the professional memo.",
-        "workflow.item1.title": "Collect evidence",
-        "workflow.item1.copy": "Inventories files, official exports and scans while preserving provenance, hashes and page locators.",
-        "workflow.item2.title": "Structure facts and sources",
-        "workflow.item2.copy": "Builds the chronology and evidence matrix while keeping missing facts, conflicts and open questions visible.",
-        "workflow.item3.title": "Prepare the review",
-        "workflow.item3.copy": "Checks claims against official sources, runs only approved recalculations and delivers a reviewable draft.",
-        "boundaries.title": "Access and judgement stay separate",
-        "boundaries.copy": "Vera does not log in to INPS autonomously and has no general API for an individual contribution position. It normally works from official exports downloaded by an authorized person. Any read-only capture of an already authenticated INPS tab remains blocked until access or delegation, data-processing authority and the service's permission are verified separately.",
-        "boundaries.item1.title": "No credentials or submissions",
-        "boundaries.item1.copy": "It never receives credentials or cookies, activates delegations, navigates the portal or submits anything.",
-        "boundaries.item2.title": "OCR needs confirmation",
-        "boundaries.item2.copy": "OCR and browser text remain partial evidence until a human visually compares them with the original page.",
-        "boundaries.item3.title": "Professional conclusion",
-        "boundaries.item3.copy": "Classification, the applicable formula and the final conclusion remain with the professional.",
-        "outputs.title": "Files produced",
-        "outputs.copy": "The case file keeps evidence, facts, chronology, research, approved recalculations and review decisions separate.",
-        "prompts.title": "Prompt ready",
-        "prompts.copy": "Use it with a case folder or official exports when you want to prepare the review without turning evidence into an automatic conclusion.",
-        "download.title": "Install Vera from the marketplace",
-        "download.copy": "Open Vera's official ChatGPT listing and select Install. All modules are included.",
-        "download.button": "Install Vera",
-        prompt: "Use INPS Social Security Review on this case folder. Confirm the question, periods, legal research cut-off and documentary meaning of ambiguous expressions. Register official INPS exports with hashes; use browser capture only after permissions have been verified separately. Prepare the inventory, provenance-backed facts, chronology, official-source research, any approved recalculations and a memo for professional review."
+        meta: { title: "INPS Social Security Review — Italy | Vera", description: "For Italian social-security cases, Vera turns INPS documents and exports into a case file with a chronology, cited evidence, calculations and a professional-review memo.", og: "Italy workflow: from scattered social-security documents to an INPS case file ready for review.", locale: "en_US" },
+        guide: { id: "jbZ34kOeQRc", title: "Vera | From scattered documents to a reviewable INPS case file" },
+        "nav.workflow": "Journey", "nav.result": "Result", "nav.prompt": "Prompt", "nav.install": "Open Vera",
+        "breadcrumb.current": "Italy pack · INPS Social Security Review",
+        "hero.eyebrow": "Italy pack · INPS Social Security · Vera", "hero.title": "Turn a scattered INPS case into a file ready for review.", "hero.lead": "For Italian social-security cases, Vera connects extracts, notices, payments and scans in a cited chronology, with evidence, calculations and decision points organized for the professional.",
+        "hero.outcomeLabel": "Outcome", "hero.outcomeTitle": "A readable, verifiable social-security case file.", "hero.outcomeCopy": "Chronology, evidence matrix, documented calculations, firm memo and document requests in one work folder.",
+        "journey.title": "From source material to reviewable work", "journey.copy": "A direct journey keeps the firm’s question, case sources and delivered result together.",
+        "journey.provide.title": "Provide", "journey.provide.copy": "The case folder, INPS exports, review period and the professional question.", "journey.prepare.title": "Vera prepares", "journey.prepare.copy": "Inventory, page-linked facts, chronology, evidence matrix and agreed calculations.", "journey.receive.title": "Receive", "journey.receive.copy": "A professional memo with facts, sources, values, open questions and next requests already organized.",
+        "workflow.title": "Four practitioner-led steps", "workflow.copy": "The work begins with the firm’s question and advances through short confirmations, keeping every step connected to the case context.",
+        "workflow.step1.title": "Define the question", "workflow.step1.copy": "State the period, position, objective and research cut-off date.", "workflow.step2.title": "Add the material", "workflow.step2.copy": "Gather exports, extracts, notices, receipts and scans in the case folder.", "workflow.step3.title": "Confirm key choices", "workflow.step3.copy": "Review identities, periods, the meaning of labels and proposed calculation assumptions.", "workflow.step4.title": "Review the case file", "workflow.step4.copy": "Open the chronology, citations and memo, record decisions and set the next action.",
+        "result.eyebrow": "See the outcome first", "result.title": "See documents become a verifiable case file.", "result.copy": "The guide shows the journey from social-security material to a folder the professional can read, check and annotate.",
+        "result.item1.title": "Case chronology", "result.item1.copy": "Periods, events and values linked to the supporting document.", "result.item2.title": "Evidence matrix", "result.item2.copy": "Every fact connected to its file, page and quotation.", "result.item3.title": "Firm memo", "result.item3.copy": "Summary, agreed calculations, decisions and next requests.",
+        "guide.label": "Outcome guide", "guide.title": "Vera | From scattered documents to a reviewable INPS case file", "guide.meta": "English narration · Opens on YouTube",
+        "next.eyebrow": "Connected workflow", "next.title": "From the approved case file to a Word report.", "next.copy": "Once the chronology, calculations and decisions are ready, Report Builder turns them into a Word draft aligned with the case sources.", "next.link": "Explore Report Builder →",
+        "prompt.title": "One prompt to begin", "prompt.copy": "Point Vera to the folder and state the question. She organizes the first pass and asks for the confirmations that change the path.", prompt: "Use INPS Social Security Review on /path/case. The question concerns [topic] for [period], with research cut-off [date]. Prepare the inventory, source- and page-linked facts, chronology, evidence matrix, agreed calculations and memo for professional review.",
+        "technical.title": "Technical detail", "technical.copy": "The folder keeps structured data and readable documents together, so the path from original file to summary stays easy to inspect.", "technical.item1": "Files, hashes and provenance.", "technical.item2": "Structured facts with locators.", "technical.item3": "Periods and events in order.", "technical.item4": "Facts linked to evidence.", "technical.item5": "Calculations and recorded assumptions.", "technical.item6": "Readable draft for review.", "technical.item7": "Extraction results and review points.", "technical.item8": "Claims and sources normalized for review.", "technical.item9": "Document requests linked to open points.", "technical.item10": "Structured handoff for review.", "technical.item11": "Index of final artifacts.",
+        "install.title": "Vera includes this workflow.", "install.copy": "Open Vera and give her the social-security case folder.", "install.button": "Open Vera"
       },
       fr: {
-        title: "Revue de prévoyance INPS | Vera",
-        "nav.workflow": "Fonctionnement",
-        "nav.boundaries": "Périmètre",
-        "nav.outputs": "Fichiers produits",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Instruction prévoyance",
-        "hero.title": "Revue de prévoyance INPS",
-        "hero.lead": "Organise les documents locaux et exports officiels INPS, applique un OCR local aux scans et prépare des faits traçables, une chronologie, une recherche sur sources officielles et uniquement les recalculs approuvés pour la revue professionnelle.",
-        "summary.title": "Quand l'utiliser",
-        "summary.item1": "Périodes contributives manquantes, contestées ou incohérentes",
-        "summary.item2": "Paiements, relevés, avis ou qualifications à relier aux justificatifs",
-        "summary.item3": "Mentions ambiguës à comprendre dans le document qui les définit, sans les déduire de mots-clés",
-        "workflow.title": "Des documents au dossier vérifiable",
-        "workflow.copy": "Enregistre les exports avec empreinte et provenance, conserve page et citation pour chaque fait, rend visibles conflits et incertitudes, contrôle les affirmations sur des sources à jour et prépare le mémo professionnel.",
-        "workflow.item1.title": "Réunir les éléments",
-        "workflow.item1.copy": "Inventorie fichiers, exports officiels et scans tout en conservant provenance, empreintes et repères de page.",
-        "workflow.item2.title": "Structurer faits et sources",
-        "workflow.item2.copy": "Construit chronologie et matrice des justificatifs en gardant visibles les faits manquants, conflits et questions ouvertes.",
-        "workflow.item3.title": "Préparer la revue",
-        "workflow.item3.copy": "Contrôle les affirmations sur les sources officielles, n'exécute que les recalculs approuvés et livre un projet révisable.",
-        "boundaries.title": "Accès et jugement restent séparés",
-        "boundaries.copy": "Vera ne se connecte pas de façon autonome à l'INPS et ne dispose d'aucune API générale donnant accès à la position contributive d'une personne. Elle travaille normalement à partir d'exports officiels téléchargés par une personne autorisée. Toute capture en lecture seule d'un onglet INPS déjà authentifié reste bloquée tant que l'accès ou la délégation, l'autorisation de traitement des données et l'autorisation du service ne sont pas vérifiés séparément.",
-        "boundaries.item1.title": "Aucun identifiant ni envoi",
-        "boundaries.item1.copy": "Elle ne reçoit jamais d'identifiants ni de cookies, n'active aucune délégation, ne navigue pas sur le portail et n'effectue aucun envoi.",
-        "boundaries.item2.title": "OCR à confirmer",
-        "boundaries.item2.copy": "L'OCR et le texte du navigateur restent des éléments partiels jusqu'au contrôle visuel de la page originale.",
-        "boundaries.item3.title": "Conclusion professionnelle",
-        "boundaries.item3.copy": "La qualification, la formule applicable et la conclusion finale appartiennent au professionnel.",
-        "outputs.title": "Fichiers produits",
-        "outputs.copy": "Le dossier sépare justificatifs, faits, chronologie, recherche, recalculs approuvés et décisions de revue.",
-        "prompts.title": "Prompt prêt",
-        "prompts.copy": "Utilisez-le avec un dossier ou des exports officiels pour préparer l'instruction sans transformer les éléments en conclusion automatique.",
-        "download.title": "Installer Vera depuis la marketplace",
-        "download.copy": "Ouvrez la fiche officielle de Vera sur ChatGPT et sélectionnez Installer. Tous les modules sont inclus.",
-        "download.button": "Installer Vera",
-        prompt: "Utilise Revue de prévoyance INPS sur ce dossier. Confirme la question, les périodes, la date de référence juridique et le sens documentaire des expressions ambiguës. Enregistre les exports officiels INPS avec leur empreinte ; n'utilise la capture navigateur qu'après vérification séparée des autorisations. Prépare inventaire, faits avec provenance, chronologie, sources officielles, éventuels recalculs approuvés et mémo pour revue professionnelle."
+        meta: { title: "Revue de prévoyance INPS — Italie | Vera", description: "Pour les dossiers relevant du système social italien, Vera transforme documents et exports INPS en dossier avec chronologie, justificatifs cités, calculs et mémo pour la revue professionnelle.", og: "Workflow Italie : des documents de prévoyance dispersés à un dossier INPS prêt à réviser.", locale: "fr_FR" },
+        guide: { id: "114s9E9NOac", title: "Vera | Des documents dispersés à un dossier INPS vérifiable" },
+        "nav.workflow": "Parcours", "nav.result": "Résultat", "nav.prompt": "Prompt", "nav.install": "Ouvrir Vera",
+        "breadcrumb.current": "Pack Italie · Prévoyance INPS",
+        "hero.eyebrow": "Pack Italie · Prévoyance INPS · Vera", "hero.title": "Transformez un dossier INPS dispersé en dossier prêt à réviser.", "hero.lead": "Pour les dossiers relevant du système social italien, Vera relie relevés, avis, paiements et scans dans une chronologie citée, avec justificatifs, calculs et points de décision organisés pour le professionnel.",
+        "hero.outcomeLabel": "Résultat", "hero.outcomeTitle": "Un dossier de prévoyance lisible et vérifiable.", "hero.outcomeCopy": "Chronologie, matrice des justificatifs, calculs documentés, mémo cabinet et demandes de pièces dans un même dossier de travail.",
+        "journey.title": "Des pièces au travail révisable", "journey.copy": "Un parcours direct rassemble la question du cabinet, les sources du dossier et le résultat livré.",
+        "journey.provide.title": "Fournissez", "journey.provide.copy": "Le dossier, les exports INPS, la période examinée et la question professionnelle.", "journey.prepare.title": "Vera prépare", "journey.prepare.copy": "Inventaire, faits liés aux pages, chronologie, matrice des justificatifs et calculs convenus.", "journey.receive.title": "Recevez", "journey.receive.copy": "Un mémo professionnel avec faits, sources, valeurs, questions ouvertes et prochaines demandes déjà organisés.",
+        "workflow.title": "Quatre étapes guidées par le professionnel", "workflow.copy": "Le travail part de la question du cabinet et avance par confirmations courtes, en gardant chaque étape liée au contexte du dossier.",
+        "workflow.step1.title": "Définissez la question", "workflow.step1.copy": "Indiquez la période, la position, l’objectif et la date de référence de la recherche.", "workflow.step2.title": "Ajoutez les pièces", "workflow.step2.copy": "Réunissez exports, relevés, avis, reçus et scans dans le dossier.", "workflow.step3.title": "Confirmez les choix clés", "workflow.step3.copy": "Révisez identités, périodes, sens des libellés et hypothèses des calculs proposés.", "workflow.step4.title": "Révisez le dossier", "workflow.step4.copy": "Ouvrez chronologie, citations et mémo, consignez les décisions et fixez la suite.",
+        "result.eyebrow": "Le résultat avant de commencer", "result.title": "Voyez les documents devenir un dossier vérifiable.", "result.copy": "Le guide montre le passage des pièces de prévoyance au dossier que le professionnel peut lire, contrôler et annoter.",
+        "result.item1.title": "Chronologie du dossier", "result.item1.copy": "Périodes, événements et valeurs reliés au document justificatif.", "result.item2.title": "Matrice des justificatifs", "result.item2.copy": "Chaque fait relié à son fichier, sa page et sa citation.", "result.item3.title": "Mémo cabinet", "result.item3.copy": "Synthèse, calculs convenus, décisions et prochaines demandes.",
+        "guide.label": "Guide du résultat", "guide.title": "Vera | Des documents dispersés à un dossier INPS vérifiable", "guide.meta": "Narration en français · S’ouvre sur YouTube",
+        "next.eyebrow": "Flux associé", "next.title": "Du dossier approuvé au rapport Word.", "next.copy": "Lorsque chronologie, calculs et décisions sont prêts, Report Builder les transforme en projet Word cohérent avec les sources du dossier.", "next.link": "Découvrir Report Builder →",
+        "prompt.title": "Un prompt pour commencer", "prompt.copy": "Indiquez le dossier et la question. Vera organise le premier passage et demande les confirmations qui modifient le parcours.", prompt: "Utilise Revue de prévoyance INPS sur /chemin/dossier. La question porte sur [sujet] pour [période], avec date de référence [date]. Prépare inventaire, faits liés aux sources et pages, chronologie, matrice des justificatifs, calculs convenus et mémo pour revue professionnelle.",
+        "technical.title": "Détail technique", "technical.copy": "Le dossier conserve ensemble données structurées et documents lisibles, afin que le parcours du fichier original à la synthèse reste facile à consulter.", "technical.item1": "Fichiers, empreintes et provenance.", "technical.item2": "Faits structurés avec repères.", "technical.item3": "Périodes et événements ordonnés.", "technical.item4": "Faits reliés aux justificatifs.", "technical.item5": "Calculs et hypothèses consignées.", "technical.item6": "Projet lisible pour la revue.", "technical.item7": "Résultats de l’extraction et points à vérifier.", "technical.item8": "Affirmations et sources normalisées pour la revue.", "technical.item9": "Demandes de documents reliées aux points ouverts.", "technical.item10": "Transmission structurée pour la revue.", "technical.item11": "Index des livrables finaux.",
+        "install.title": "Vera inclut ce flux.", "install.copy": "Ouvrez Vera et confiez-lui le dossier de prévoyance.", "install.button": "Ouvrir Vera"
       },
       de: {
-        title: "INPS-Sozialversicherung prüfen | Vera",
-        "nav.workflow": "Ablauf",
-        "nav.boundaries": "Grenzen",
-        "nav.outputs": "Dateien",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Sozialversicherungsprüfung",
-        "hero.title": "INPS-Sozialversicherung prüfen",
-        "hero.lead": "Ordnet lokale Dokumente und offizielle INPS-Exporte, nutzt lokale OCR für Scans und erstellt nachvollziehbare Fakten, Chronologie, Recherche aus offiziellen Quellen sowie nur freigegebene Neuberechnungen zur fachlichen Prüfung.",
-        "summary.title": "Wann es hilft",
-        "summary.item1": "Beitragszeiträume fehlen, sind strittig oder widersprüchlich",
-        "summary.item2": "Zahlungen, Auszüge, Bescheide oder Einordnungen müssen mit Nachweisen verknüpft werden",
-        "summary.item3": "Unklare Bezeichnungen müssen aus dem definierenden Dokument verstanden und dürfen nicht aus Stichwörtern erraten werden",
-        "workflow.title": "Von Dokumenten zur prüfbaren Fallakte",
-        "workflow.copy": "Registriert Exporte mit Hash und Herkunft, bewahrt für jeden Fakt Seite und Zitat, hält Konflikte und Unsicherheiten sichtbar, prüft Aussagen an aktuellen Quellen und erstellt das fachliche Memo.",
-        "workflow.item1.title": "Nachweise sammeln",
-        "workflow.item1.copy": "Erfasst Dateien, offizielle Exporte und Scans mit Herkunft, Hashes und Seitenfundstellen.",
-        "workflow.item2.title": "Fakten und Quellen ordnen",
-        "workflow.item2.copy": "Erstellt Chronologie und Nachweismatrix und hält fehlende Fakten, Konflikte und offene Fragen sichtbar.",
-        "workflow.item3.title": "Prüfung vorbereiten",
-        "workflow.item3.copy": "Prüft Aussagen an offiziellen Quellen, führt nur freigegebene Neuberechnungen aus und liefert einen prüfbaren Entwurf.",
-        "boundaries.title": "Zugang und Urteil bleiben getrennt",
-        "boundaries.copy": "Vera meldet sich nicht selbstständig bei INPS an und verfügt über keine allgemeine API für individuelle Beitragspositionen. Sie arbeitet normalerweise mit offiziellen Exporten, die eine berechtigte Person heruntergeladen hat. Eine schreibgeschützte Erfassung eines bereits authentifizierten INPS-Tabs bleibt gesperrt, bis Zugriffs- oder Vollmachtsberechtigung, Datenverarbeitungsbefugnis und Erlaubnis des Dienstes getrennt geprüft sind.",
-        "boundaries.item1.title": "Keine Zugangsdaten oder Übermittlung",
-        "boundaries.item1.copy": "Sie erhält keine Zugangsdaten oder Cookies, aktiviert keine Vollmacht, navigiert nicht im Portal und übermittelt nichts.",
-        "boundaries.item2.title": "OCR muss bestätigt werden",
-        "boundaries.item2.copy": "OCR- und Browsertext bleiben Teilnachweise, bis sie visuell mit der Originalseite verglichen wurden.",
-        "boundaries.item3.title": "Fachliche Schlussfolgerung",
-        "boundaries.item3.copy": "Einordnung, anwendbare Formel und Schlussfolgerung bleiben beim Berufsangehörigen.",
-        "outputs.title": "Dateien",
-        "outputs.copy": "Die Fallakte trennt Nachweise, Fakten, Chronologie, Recherche, freigegebene Neuberechnungen und Prüfentscheidungen.",
-        "prompts.title": "Promptvorlage",
-        "prompts.copy": "Nutzen Sie sie für einen Fallordner oder offizielle Exporte, um die Prüfung vorzubereiten, ohne Nachweise automatisch in eine Schlussfolgerung umzuwandeln.",
-        "download.title": "Vera über den Marketplace installieren",
-        "download.copy": "Öffnen Sie Veras offiziellen ChatGPT-Eintrag und wählen Sie Installieren. Alle Module sind enthalten.",
-        "download.button": "Vera installieren",
-        prompt: "Verwende INPS-Sozialversicherung prüfen für diesen Fallordner. Bestätige Fragestellung, Zeiträume, rechtlichen Recherche-Stichtag und die dokumentarische Bedeutung unklarer Begriffe. Registriere offizielle INPS-Exporte mit Hash; nutze Browser-Erfassung erst nach getrennter Prüfung der Berechtigungen. Erstelle Inventar, herkunftsgebundene Fakten, Chronologie, Recherche aus offiziellen Quellen, gegebenenfalls freigegebene Neuberechnungen und ein Memo zur fachlichen Prüfung."
+        meta: { title: "INPS-Sozialversicherung prüfen — Italien | Vera", description: "Für Fälle der italienischen Sozialversicherung überführt Vera INPS-Dokumente und Exporte in eine Akte mit Chronologie, zitierten Nachweisen, Berechnungen und Prüfvermerk.", og: "Italien-Workflow: von verstreuten Sozialversicherungsunterlagen zur prüfbaren INPS-Akte.", locale: "de_DE" },
+        guide: { id: "SG59SaDJj2M", title: "Vera | Von verstreuten Dokumenten zur prüfbaren INPS-Akte" },
+        "nav.workflow": "Ablauf", "nav.result": "Ergebnis", "nav.prompt": "Prompt", "nav.install": "Vera öffnen",
+        "breadcrumb.current": "Italien-Paket · INPS-Sozialversicherung",
+        "hero.eyebrow": "Italien-Paket · INPS-Sozialversicherung · Vera", "hero.title": "Machen Sie aus einem verstreuten INPS-Fall eine prüfbare Akte.", "hero.lead": "Für Fälle der italienischen Sozialversicherung verbindet Vera Auszüge, Bescheide, Zahlungen und Scans in einer zitierten Chronologie und ordnet Nachweise, Berechnungen und Entscheidungspunkte für die fachliche Prüfung.",
+        "hero.outcomeLabel": "Ergebnis", "hero.outcomeTitle": "Eine lesbare, nachvollziehbare Sozialversicherungsakte.", "hero.outcomeCopy": "Chronologie, Nachweismatrix, dokumentierte Berechnungen, Kanzleivermerk und Unterlagenanfragen in einem Arbeitsordner.",
+        "journey.title": "Von den Unterlagen zur prüfbaren Arbeit", "journey.copy": "Ein direkter Ablauf hält Fragestellung, Fallquellen und Arbeitsergebnis zusammen.",
+        "journey.provide.title": "Bereitstellen", "journey.provide.copy": "Fallordner, INPS-Exporte, Prüfzeitraum und fachliche Fragestellung.", "journey.prepare.title": "Vera bereitet vor", "journey.prepare.copy": "Inventar, seitenbezogene Fakten, Chronologie, Nachweismatrix und abgestimmte Berechnungen.", "journey.receive.title": "Erhalten", "journey.receive.copy": "Einen fachlichen Vermerk mit Fakten, Quellen, Werten, offenen Fragen und geordneten nächsten Anfragen.",
+        "workflow.title": "Vier fachlich geführte Schritte", "workflow.copy": "Die Arbeit beginnt mit der Fragestellung der Kanzlei und geht über kurze Bestätigungen weiter, sodass jeder Schritt mit dem Fallkontext verbunden bleibt.",
+        "workflow.step1.title": "Fragestellung definieren", "workflow.step1.copy": "Zeitraum, Position, Ziel und Recherche-Stichtag angeben.", "workflow.step2.title": "Unterlagen hinzufügen", "workflow.step2.copy": "Exporte, Auszüge, Bescheide, Belege und Scans im Fallordner zusammenführen.", "workflow.step3.title": "Kernpunkte bestätigen", "workflow.step3.copy": "Identitäten, Zeiträume, Bedeutung der Angaben und vorgeschlagene Berechnungsannahmen prüfen.", "workflow.step4.title": "Fallakte prüfen", "workflow.step4.copy": "Chronologie, Zitate und Vermerk öffnen, Entscheidungen festhalten und Folgeschritt bestimmen.",
+        "result.eyebrow": "Das Ergebnis vorab", "result.title": "Sehen Sie, wie Dokumente zur prüfbaren Akte werden.", "result.copy": "Die Anleitung zeigt den Weg von Sozialversicherungsunterlagen zu einem Ordner, den der Berufsangehörige lesen, prüfen und kommentieren kann.",
+        "result.item1.title": "Fallchronologie", "result.item1.copy": "Zeiträume, Ereignisse und Werte mit Dokumentbezug.", "result.item2.title": "Nachweismatrix", "result.item2.copy": "Jeder Fakt mit Datei, Seite und Zitat verbunden.", "result.item3.title": "Kanzleivermerk", "result.item3.copy": "Zusammenfassung, abgestimmte Berechnungen, Entscheidungen und nächste Anfragen.",
+        "guide.label": "Ergebnis-Anleitung", "guide.title": "Vera | Von verstreuten Dokumenten zur prüfbaren INPS-Akte", "guide.meta": "Deutsche Erzählung · Öffnet auf YouTube",
+        "next.eyebrow": "Verbundener Ablauf", "next.title": "Von der freigegebenen Akte zum Word-Bericht.", "next.copy": "Sobald Chronologie, Berechnungen und Entscheidungen bereitstehen, erstellt Report Builder daraus einen Word-Entwurf, der zu den Fallquellen passt.", "next.link": "Report Builder entdecken →",
+        "prompt.title": "Ein Prompt zum Start", "prompt.copy": "Verweisen Sie Vera auf den Ordner und nennen Sie die Frage. Sie ordnet den ersten Durchlauf und fragt nach den Bestätigungen, die den Ablauf verändern.", prompt: "Verwende INPS-Sozialversicherung prüfen für /pfad/fall. Die Frage betrifft [Thema] im Zeitraum [Zeitraum] mit Recherche-Stichtag [Datum]. Erstelle Inventar, quellen- und seitenbezogene Fakten, Chronologie, Nachweismatrix, abgestimmte Berechnungen und Vermerk zur fachlichen Prüfung.",
+        "technical.title": "Technische Details", "technical.copy": "Der Ordner hält strukturierte Daten und lesbare Dokumente zusammen, sodass der Weg von der Originaldatei zur Zusammenfassung leicht nachvollziehbar bleibt.", "technical.item1": "Dateien, Hashes und Herkunft.", "technical.item2": "Strukturierte Fakten mit Fundstellen.", "technical.item3": "Zeiträume und Ereignisse in Reihenfolge.", "technical.item4": "Fakten mit Nachweisen verknüpft.", "technical.item5": "Berechnungen und dokumentierte Annahmen.", "technical.item6": "Lesbarer Entwurf zur Prüfung.", "technical.item7": "Extraktionsergebnis und Prüfpunkte.", "technical.item8": "Aussagen und Quellen für die Prüfung normalisiert.", "technical.item9": "Unterlagenanforderungen mit offenen Punkten verknüpft.", "technical.item10": "Strukturierte Übergabe zur Prüfung.", "technical.item11": "Verzeichnis der finalen Artefakte.",
+        "install.title": "Vera enthält diesen Ablauf.", "install.copy": "Öffnen Sie Vera und übergeben Sie ihr den Sozialversicherungsfallordner.", "install.button": "Vera öffnen"
       }
     };
 
     function getLang() {
-      const params = new URLSearchParams(window.location.search);
-      const fromQuery = params.get("lang");
-      return translations[fromQuery] ? fromQuery : "it";
+      const requested = new URLSearchParams(window.location.search).get("lang");
+      return translations[requested] ? requested : "it";
     }
 
     function applyLanguage(lang) {
       const safeLang = translations[lang] ? lang : "it";
       const data = translations[safeLang];
       document.documentElement.lang = safeLang;
-      document.title = data.title || translations.it.title;
+      document.title = data.meta.title;
+      document.getElementById("meta-description").content = data.meta.description;
+      document.getElementById("og-title").content = data.meta.title;
+      document.getElementById("og-description").content = data.meta.og;
+      document.getElementById("og-image").content = `https://i.ytimg.com/vi/${data.guide.id}/hqdefault.jpg`;
+      document.getElementById("og-locale").content = data.meta.locale;
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.getElementById("vera-link").href = `../vera/index.html?lang=${safeLang}`;
+      document.getElementById("next-link").href = `../report-builder/index.html?lang=${safeLang}`;
       document.querySelectorAll("[data-i18n]").forEach((node) => {
-        const key = node.getAttribute("data-i18n");
-        if (data[key]) node.textContent = data[key];
+        const value = data[node.dataset.i18n];
+        if (value) node.textContent = value;
       });
       document.getElementById("prompt-example").textContent = data.prompt;
+      const guideLink = document.getElementById("guide-link");
+      const guideThumb = document.getElementById("guide-thumb");
+      guideLink.href = `https://youtu.be/${data.guide.id}`;
+      guideLink.setAttribute("aria-label", data.guide.title);
+      guideThumb.src = `https://i.ytimg.com/vi/${data.guide.id}/maxresdefault.jpg`;
+      guideThumb.alt = data.guide.title;
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.setAttribute("aria-pressed", button.dataset.lang === safeLang ? "true" : "false");
       });
