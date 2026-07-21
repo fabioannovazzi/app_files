@@ -18,8 +18,7 @@ Installazione
 Moduli inclusi
 
 - Riconciliazione partite
-- Istruttoria cliente
-- Onboarding cliente, incarico, privacy e AML
+- Nuovo cliente: fascicolo, incarico, privacy, AML e monitoraggio
 - Campionamento del giornale
 - Controllo scritture
 - Riconciliazione banca-contabilità
@@ -35,12 +34,8 @@ Primo utilizzo
 Chiedi direttamente a Vera il lavoro da svolgere e indica la cartella o i file
 di input. Per esempio:
 
-Vera, prepara la prima istruttoria di questa cartella cliente.
-
-Oppure:
-
-Vera, prepara il dossier di onboarding di questo nuovo cliente con i dati e i
-servizi che ti indico.
+Vera, avvia il percorso per questo nuovo cliente dalla cartella allegata e
+prepara fascicolo, incarico, privacy e AML con i dati e i servizi che ti indico.
 
 Oppure:
 

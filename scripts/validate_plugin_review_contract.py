@@ -207,17 +207,17 @@ REVIEW_HANDOFF_TOOLS = {
         "save_check_entries_decisions",
         "apply_check_entries_decisions",
     ],
-    "client-intake": [
-        "validate_client_intake_review",
-        "render_client_intake_review",
-        "save_client_intake_decisions",
-        "apply_client_intake_decisions",
+    "client-file-preparation": [
+        "validate_client_file_preparation_review",
+        "render_client_file_preparation_review",
+        "save_client_file_preparation_decisions",
+        "apply_client_file_preparation_decisions",
     ],
-    "client-onboarding": [
-        "validate_client_onboarding_review",
-        "render_client_onboarding_review",
-        "save_client_onboarding_decisions",
-        "apply_client_onboarding_decisions",
+    "new-client": [
+        "validate_new_client_review",
+        "render_new_client_review",
+        "save_new_client_decisions",
+        "apply_new_client_decisions",
     ],
     "journal-sampling": [
         "validate_journal_sampling_review",

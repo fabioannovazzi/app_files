@@ -174,7 +174,7 @@ not plotting.
 
 Recommended order:
 
-1. `client-intake`
+1. `new-client`
 2. `check-entries`
 3. `journal-bank-reconciliation`
 4. `audit-reconciliation`
@@ -184,10 +184,12 @@ Recommended order:
 8. `report-builder`
 9. `concordato-plan-review`
 
-`client-intake` is the best first plugin because the review objects are natural
-for a commercialista workflow: document inventory, detected document types,
-missing documents, extracted fiscal fields, uncertain files, duplicate warnings,
-draft memo, and draft client email.
+`new-client` is the best first plugin because it is one coherent workflow for a
+commercialista: prepare the client file, establish the professional relationship,
+and keep the dossier current. Its subordinate `client-file-preparation` engine
+handles document inventory, detected document types, missing documents, extracted
+fiscal fields, uncertain files, duplicate warnings, the draft memo, and the draft
+client email.
 
 ### Phase 2: Chart And Plotting Workflows
 
@@ -225,7 +227,7 @@ It should not own specialist workflows.
 
 Example routes:
 
-- prepare client intake;
+- prepare a new client file;
 - analyze a tax notice or agency communication;
 - check FatturaPA XML files;
 - extract fiscal fields from CU, F24, 730, or Redditi PF;
@@ -238,7 +240,7 @@ Example routes:
 
 | Plugin | First UI Surface | Primary Review Object |
 | --- | --- | --- |
-| `client-intake` | MCP review widget first; Markdown/static fallback | Documents, missing items, fiscal fields, draft email |
+| `new-client` | MCP review widget first; Markdown/static fallback | Client file, professional relationship, AML review, monitoring, and history; document preparation is handled by its `client-file-preparation` engine |
 | `check-entries` | Local review UI | Entry-to-evidence comparisons and exceptions |
 | `journal-bank-reconciliation` | Local review UI | Matches, unmatched rows, weak evidence, exceptions |
 | `audit-reconciliation` | Local review UI | Open items, evidence categories, review samples |

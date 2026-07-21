@@ -121,7 +121,8 @@ def test_repo_workbench_demo_audit_has_no_findings() -> None:
     assert {report.plugin for report in reports} == {
         "audit-reconciliation",
         "check-entries",
-        "client-intake",
+        "client-file-preparation",
+        "new-client",
         "concordato-plan-review",
         "deep-research-validator",
         "journal-bank-reconciliation",

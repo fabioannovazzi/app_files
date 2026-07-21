@@ -13,7 +13,7 @@
       "required_signals": ["istruttoria", "cartella cliente", "controlli contabili"]
     },
     {
-      "id": "vera-client-onboarding",
+      "id": "vera-new-client",
       "prompt": "Vera, prepara il dossier di onboarding del nuovo cliente con titolari effettivi, mandato, privacy, AML e piano dei riesami, lasciando le decisioni al commercialista.",
       "required_signals": ["Vera", "onboarding", "AML"]
     },

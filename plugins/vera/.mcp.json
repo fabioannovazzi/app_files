@@ -8,21 +8,21 @@
       "command": "node",
       "args": ["./scripts/run_component_mcp.cjs", "audit-reconciliation"]
     },
-    "clientIntakeWidgets": {
-      "title": "Client Intake",
-      "description": "Validate and render Client Intake review-session payloads.",
+    "newClientFilePreparation": {
+      "title": "New Client · File Preparation",
+      "description": "Validate, render, save, and apply document-preparation decisions for the first phase of New Client.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "client-intake"]
+      "args": ["./scripts/run_component_mcp.cjs", "client-file-preparation"]
     },
-    "clientOnboardingReview": {
-      "title": "Client Onboarding Review",
-      "description": "Validate, render, save, and apply a source-bound professional review of client onboarding, AML, and document applicability.",
+    "newClientProfessionalSetup": {
+      "title": "New Client · Professional Setup",
+      "description": "Validate, render, save, and apply source-bound professional decisions for the later phases of New Client.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "client-onboarding"]
+      "args": ["./scripts/run_component_mcp.cjs", "new-client"]
     },
     "journalSamplingWidgets": {
       "title": "Journal Sampling",

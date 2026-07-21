@@ -12,8 +12,8 @@ LOGGER = logging.getLogger(__name__)
 SAVE_TOOLS = {
     "check-entries": "save_check_entries_decisions",
     "deep-research-validator": "save_deep_research_decisions",
-    "client-intake": "save_client_intake_decisions",
-    "client-onboarding": "save_client_onboarding_decisions",
+    "client-file-preparation": "save_client_file_preparation_decisions",
+    "new-client": "save_new_client_decisions",
     "audit-reconciliation": "save_audit_reconciliation_decisions",
     "journal-sampling": "save_journal_sampling_decisions",
     "journal-bank-reconciliation": "save_journal_bank_decisions",
@@ -24,8 +24,8 @@ SAVE_TOOLS = {
 APPLY_TOOLS = {
     "check-entries": "apply_check_entries_decisions",
     "deep-research-validator": "apply_deep_research_decisions",
-    "client-intake": "apply_client_intake_decisions",
-    "client-onboarding": "apply_client_onboarding_decisions",
+    "client-file-preparation": "apply_client_file_preparation_decisions",
+    "new-client": "apply_new_client_decisions",
     "audit-reconciliation": "apply_audit_reconciliation_decisions",
     "journal-sampling": "apply_journal_sampling_decisions",
     "journal-bank-reconciliation": "apply_journal_bank_decisions",
@@ -281,11 +281,11 @@ TARGETS: list[dict[str, Any]] = [
         },
     },
     {
-        "plugin": "client-intake",
-        "asset": "client-intake-review-widget.html",
-        "title": "Client Intake Review",
-        "reviewTitle": "Document Intake Review",
-        "queueTitle": "Intake Queue",
+        "plugin": "client-file-preparation",
+        "asset": "client-file-preparation-review-widget.html",
+        "title": "New Client · File Preparation",
+        "reviewTitle": "File Preparation Review",
+        "queueTitle": "Documents to Review",
         "detailTitle": "Document Decision",
         "detailMode": "intake-board",
         "detailHelp": "Classify documents, confirm missing items, and capture the next client request.",
@@ -316,9 +316,9 @@ TARGETS: list[dict[str, Any]] = [
             },
         ],
         "search": "Search document, missing item, memo, email, blocker",
-        "panels": ["Client document", "Required evidence", "Intake decision"],
+        "panels": ["Client document", "Required evidence", "Preparation decision"],
         "demo": {
-            "review_type": "client_intake_review",
+            "review_type": "client_file_preparation_review",
             "items": [
                 {
                     "id": "doc-1",
@@ -375,14 +375,14 @@ TARGETS: list[dict[str, Any]] = [
         },
     },
     {
-        "plugin": "client-onboarding",
+        "plugin": "new-client",
         "schemaVersion": "1.1",
-        "asset": "client-onboarding-review-widget.html",
-        "title": "Client Onboarding Review",
-        "reviewTitle": "Professional Onboarding Review",
-        "queueTitle": "Onboarding Decisions",
+        "asset": "new-client-review-widget.html",
+        "title": "New Client Review",
+        "reviewTitle": "Professional Setup Review",
+        "queueTitle": "Setup Decisions",
         "detailTitle": "Evidence, Basis, Decision",
-        "detailMode": "onboarding-compliance-desk",
+        "detailMode": "professional-setup-desk",
         "detailHelp": "Review the minimized fact, cited basis, and downstream dossier impact before recording a professional decision.",
         "persistDecisionTextInWidgetState": False,
         "useDecisionRevision": True,
@@ -433,7 +433,7 @@ TARGETS: list[dict[str, Any]] = [
             "Evidence and output impact",
         ],
         "demo": {
-            "review_type": "client_onboarding_professional_review",
+            "review_type": "new_client_professional_review",
             "items": [
                 {
                     "id": "aml-client-geography",
@@ -2116,53 +2116,53 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "search": "Aussage, Zitat, Quelle, Schweregrad, Ausgabe suchen",
         },
     },
-    "client-intake": {
+    "client-file-preparation": {
         "it": {
-            "title": "Revisione Istruttoria Clienti",
-            "reviewTitle": "Revisione documenti cliente",
-            "queueTitle": "Coda documenti",
+            "title": "Nuovo cliente · Preparazione documenti",
+            "reviewTitle": "Revisione preparazione documenti",
+            "queueTitle": "Documenti da rivedere",
             "detailTitle": "Decisione documento",
             "detailHelp": "Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.",
             "search": "Cerca documento, mancante, memo, email, blocco",
         },
         "fr": {
-            "title": "Revue intake client",
-            "reviewTitle": "Revue des documents client",
-            "queueTitle": "File documents",
+            "title": "Nouveau client · Preparation des documents",
+            "reviewTitle": "Revue de la preparation des documents",
+            "queueTitle": "Documents a revoir",
             "detailTitle": "Decision document",
             "detailHelp": "Classez les documents, confirmez les manquants et saisissez la prochaine demande client.",
             "search": "Chercher document, manquant, memo, email, blocage",
         },
         "de": {
-            "title": "Mandantenaufnahme Review",
-            "reviewTitle": "Mandantendokumente pruefen",
-            "queueTitle": "Dokumentenliste",
+            "title": "Neuer Mandant · Unterlagen vorbereiten",
+            "reviewTitle": "Unterlagenvorbereitung pruefen",
+            "queueTitle": "Zu pruefende Dokumente",
             "detailTitle": "Dokumententscheidung",
             "detailHelp": "Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.",
             "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen",
         },
     },
-    "client-onboarding": {
+    "new-client": {
         "it": {
-            "title": "Revisione Onboarding Cliente",
-            "reviewTitle": "Revisione professionale onboarding",
-            "queueTitle": "Decisioni onboarding",
+            "title": "Revisione nuovo cliente",
+            "reviewTitle": "Revisione assetto professionale",
+            "queueTitle": "Decisioni sul rapporto",
             "detailTitle": "Evidenza, base e decisione",
             "detailHelp": "Rivedi il fatto minimizzato, la base citata e l'impatto sul dossier prima di registrare la decisione professionale.",
             "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco",
         },
         "fr": {
-            "title": "Revue onboarding client",
-            "reviewTitle": "Revue professionnelle de l'onboarding",
-            "queueTitle": "Decisions d'onboarding",
+            "title": "Revue nouveau client",
+            "reviewTitle": "Revue de la mise en place professionnelle",
+            "queueTitle": "Decisions sur la relation",
             "detailTitle": "Preuve, fondement et decision",
             "detailHelp": "Examinez le fait minimise, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision professionnelle.",
             "search": "Chercher fait, service, facteur AML, document, source, blocage",
         },
         "de": {
-            "title": "Mandanten-Onboarding Review",
-            "reviewTitle": "Professionelles Onboarding-Review",
-            "queueTitle": "Onboarding-Entscheidungen",
+            "title": "Review neuer Mandant",
+            "reviewTitle": "Professionelle Einrichtung pruefen",
+            "queueTitle": "Entscheidungen zum Mandat",
             "detailTitle": "Nachweis, Grundlage und Entscheidung",
             "detailHelp": "Minimierten Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der professionellen Entscheidung pruefen.",
             "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen",
@@ -4494,7 +4494,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "saved_decision_load_js": '          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };',
         "widget_state_load_js": "          current[itemId] = decision;",
     }
-    if target["plugin"] != "client-onboarding":
+    if target["plugin"] != "new-client":
         return legacy
 
     return {
@@ -4640,7 +4640,7 @@ def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
         ),
         "demo": target["demo"],
     }
-    if target["plugin"] == "client-onboarding":
+    if target["plugin"] == "new-client":
         config["persistDecisionTextInWidgetState"] = target.get(
             "persistDecisionTextInWidgetState", False
         )

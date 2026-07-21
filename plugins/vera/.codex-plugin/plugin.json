@@ -1,7 +1,7 @@
 {
   "name": "vera",
-  "version": "0.1.14",
-  "description": "Vera prepara istruttorie e carte di lavoro rivedibili, inclusi onboarding cliente, AML, casi INPS e pratiche Registro Imprese/DIRE.",
+  "version": "0.1.15",
+  "description": "Vera prepara istruttorie e carte di lavoro rivedibili, incluso il percorso New Client con documenti, incarico, privacy e AML.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -15,8 +15,8 @@
     "commercialisti",
     "accounting",
     "audit",
-    "client-intake",
-    "client-onboarding",
+    "new-client",
+    "client-file-preparation",
     "antiriciclaggio",
     "aml",
     "reconciliation",
@@ -38,7 +38,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Prepara fascicoli cliente e dossier di onboarding rivedibili per identità, incarico, privacy, AI e AML; controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
+    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Prepara il percorso New Client dai documenti in ingresso fino a identità, incarico, privacy, AI, AML e monitoraggio; controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -50,7 +50,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Chiedi a Vera di preparare la prima istruttoria e il dossier di onboarding del cliente con evidenze, mandato, privacy e AML rivedibili.",
+      "Chiedi a Vera di preparare il nuovo cliente, dai documenti in ingresso a incarico, privacy e AML rivedibili.",
       "Chiedi a Vera di usare OCR locale ed export ufficiali per istruire il caso previdenziale INPS con fonti e bozza rivedibile.",
       "Chiedi a Vera di usare Camera competente e fonti SARI ufficiali per una bozza Registro Imprese/DIRE, senza accedere o inviare."
     ],
