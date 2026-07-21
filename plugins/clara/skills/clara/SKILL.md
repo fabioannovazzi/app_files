@@ -1240,11 +1240,17 @@ Keep failures and suggestions as two separate paths.
 For an observed failure, use the run context to draft the smallest useful
 engineering request: what happened, what should have happened, exact steps to
 reproduce it, the relevant error or output shape, and the plugin version. Do
-not attach the run, source documents, or client material. Replace any necessary
-example with a synthetic equivalent. Show the user the exact short request that
-would be sent, then ask exactly:
+not attach the run, source documents, client or customer material, credentials,
+secrets, personal data, or identifying details. Replace any necessary example
+with a synthetic equivalent. Show the user the exact sanitized request that
+would be sent, then ask only for consent to transmit that technical problem.
+Localize the consent question to the conversation language. In Italian, ask:
 
-> Should I transmit this to the developer so we fix it?
+> Vuoi che trasmetta questo problema tecnico allo sviluppatore così possiamo risolverlo?
+
+In English, ask:
+
+> Should I transmit this technical problem to the developer so we can fix it?
 
 Transmit only after the user says yes. Save the approved request as JSON and
 run from the Clara root:
@@ -1255,6 +1261,21 @@ python scripts/change_requests.py submit-problem --request <approved-request.jso
 
 Report the returned `CR-N` receipt. A retry after a network failure must reuse
 the saved submission and return the same receipt; it is not a new request.
+
+If `start-interview` fails before returning a link, follow the observed-failure
+path above. In that turn, show the sanitized technical report, ask only its
+localized transmission-consent question, and wait for the user's explicit
+answer. Do not continue with a chat interview, offer a fallback, or ask any
+suggestion question in the same turn. Consent to transmit the technical problem
+does not authorize transmission of the user's improvement suggestion.
+
+Only in a later turn, after the failure-report choice has been handled, may you
+offer to continue the original suggestion in chat. If the user chooses chat,
+before asking the suggestion question warn in the conversation language not to
+share client or customer names or data, source documents, run or case details,
+credentials, secrets, or other identifying information. Then follow the normal
+text-suggestion path below: draft a separate sanitized suggestion, show its
+exact text, and obtain separate suggestion-transmission consent.
 
 For suggestions, do not require Codex to notice the opportunity first. After a
 substantive Clara use, Codex may choose a natural, non-disruptive moment to ask.
@@ -1277,9 +1298,15 @@ If the user says yes without giving the suggestion, ask only whether they want
 to say it here or use the short voice conversation.
 
 If the user gives a suggestion in text, draft the smallest useful request,
-without client or customer material, show the exact text, and ask:
+without client or customer material, show the exact text, and ask only for
+consent to transmit that suggestion, localized to the conversation language.
+In Italian, ask:
 
-> Should I transmit this to the developer so we fix it?
+> Vuoi che trasmetta questo suggerimento allo sviluppatore così possiamo migliorare Clara?
+
+In English, ask:
+
+> Should I transmit this suggestion to the developer so we can improve Clara?
 
 Transmit only after yes, using:
 

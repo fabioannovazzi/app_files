@@ -1258,6 +1258,42 @@ def test_builder_validation_matches_dependency_standard() -> None:
         assert builder.validate_plugin_source(plugin_root) == []
 
 
+@pytest.mark.parametrize(
+    "required_snippet",
+    (
+        "Should I transmit this technical problem to the developer so we can fix it?",
+        "Do not continue with a chat interview, offer a fallback, or ask any",
+        "does not authorize transmission of the user's improvement suggestion.",
+        "Only in a later turn, after the failure-report choice has been handled",
+        "credentials, secrets, or other identifying information.",
+        "obtain separate suggestion-transmission consent.",
+        "Should I transmit this suggestion to the developer so we can improve",
+    ),
+)
+def test_builder_rejects_transmitted_feedback_policy_missing_safeguard(
+    tmp_path: Path, required_snippet: str
+) -> None:
+    builder = load_builder()
+    plugin_root = tmp_path / "vera"
+    skill_path = plugin_root / "skills" / "vera" / "SKILL.md"
+    skill_path.parent.mkdir(parents=True)
+    source_skill = (
+        ROOT / "plugins" / "vera" / "skills" / "vera" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    assert required_snippet in source_skill
+    skill_path.write_text(
+        source_skill.replace(required_snippet, "", 1),
+        encoding="utf-8",
+    )
+
+    errors = builder.validate_plugin_source(plugin_root)
+
+    assert (
+        "vera: skill instructions must include plugin improvement feedback policy"
+        in errors
+    )
+
+
 def test_dependency_checkers_are_packaged_in_download_zips() -> None:
     builder = load_builder()
 
@@ -1407,12 +1443,48 @@ def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:
         combined_skill_text = "\n".join(
             path.read_text(encoding="utf-8") for path in skill_files
         )
+        normalized_skill_text = " ".join(combined_skill_text.split())
 
         assert "## Plugin Improvement Feedback" in combined_skill_text, plugin_name
         if plugin_name in {"clara", "vera"}:
             assert (
-                "Should I transmit this to the developer so we fix it?"
+                "Localize the consent question to the conversation language."
                 in combined_skill_text
+            ), plugin_name
+            assert (
+                "Vuoi che trasmetta questo problema tecnico allo sviluppatore "
+                "così possiamo risolverlo?" in combined_skill_text
+            ), plugin_name
+            assert (
+                "Should I transmit this technical problem to the developer so we "
+                "can fix it?" in combined_skill_text
+            ), plugin_name
+            assert (
+                "Do not continue with a chat interview, offer a fallback, or ask any "
+                "suggestion question in the same turn." in normalized_skill_text
+            ), plugin_name
+            assert (
+                "Consent to transmit the technical problem does not authorize "
+                "transmission of the user's improvement suggestion."
+                in normalized_skill_text
+            ), plugin_name
+            assert (
+                "client or customer names or data, source documents, run or case "
+                "details, credentials, secrets, or other identifying information"
+                in normalized_skill_text
+            ), plugin_name
+            assert (
+                "follow the normal text-suggestion path below: draft a separate "
+                "sanitized suggestion, show its exact text, and obtain separate "
+                "suggestion-transmission consent." in normalized_skill_text
+            ), plugin_name
+            assert (
+                "Vuoi che trasmetta questo suggerimento allo sviluppatore così "
+                f"possiamo migliorare {plugin_name.title()}?" in combined_skill_text
+            ), plugin_name
+            assert (
+                "Should I transmit this suggestion to the developer so we can improve "
+                f"{plugin_name.title()}?" in combined_skill_text
             ), plugin_name
             assert "scripts/change_requests.py submit-problem" in combined_skill_text
             assert (
