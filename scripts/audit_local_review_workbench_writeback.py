@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -83,6 +84,7 @@ class BrowserWritebackReport:
     output_dir: str
     item_id: str = ""
     target_artifact: str = ""
+    writeback_mode: str = "artifact_edit"
     url: str | None = None
     screenshot_path: str | None = None
     row_count: int = 0
@@ -117,6 +119,7 @@ class BrowserWritebackReport:
             "output_dir": self.output_dir,
             "item_id": self.item_id,
             "target_artifact": self.target_artifact,
+            "writeback_mode": self.writeback_mode,
             "url": self.url,
             "screenshot_path": self.screenshot_path,
             "row_count": self.row_count,
@@ -256,6 +259,9 @@ def _write_target_artifact(output_dir: Path, item: dict[str, Any]) -> str:
 def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str, str]:
     """Write a browser-audit run fixture from a plugin's generated adapter demo."""
 
+    if plugin == "client-onboarding":
+        return _write_client_onboarding_fixture(root, output_dir)
+
     output_dir.mkdir(parents=True, exist_ok=True)
     adapter = _read_adapter(root, plugin)
     item = json.loads(json.dumps(_editable_demo_item(adapter)))
@@ -365,7 +371,78 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
             "status": "written_pending_review",
         },
     )
-    return {"item_id": str(item["id"]), "target_artifact": target_artifact}
+    return {
+        "item_id": str(item["id"]),
+        "target_artifact": target_artifact,
+        "writeback_mode": "artifact_edit",
+    }
+
+
+def _write_client_onboarding_fixture(root: Path, output_dir: Path) -> dict[str, str]:
+    """Build a real blocked package for immutable-domain review write-back."""
+
+    plugin_root = root / "plugins" / "client-onboarding"
+    initialize = subprocess.run(
+        [
+            sys.executable,
+            str(plugin_root / "scripts" / "initialize_case.py"),
+            "--case-dir",
+            str(output_dir),
+            "--client-reference",
+            "CLIENT-AUDIT-001",
+            "--assessment-date",
+            "2026-07-20",
+        ],
+        cwd=plugin_root,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if initialize.returncode != 0:
+        raise RuntimeError(
+            "client-onboarding audit initialization failed: "
+            + (initialize.stderr or initialize.stdout).strip()
+        )
+    package = subprocess.run(
+        [
+            sys.executable,
+            str(plugin_root / "scripts" / "package_onboarding.py"),
+            "--input",
+            str(output_dir / "onboarding_intake.json"),
+            "--output-dir",
+            str(output_dir),
+        ],
+        cwd=plugin_root,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if package.returncode != 0:
+        raise RuntimeError(
+            "client-onboarding audit packaging failed: "
+            + (package.stderr or package.stdout).strip()
+        )
+    review = _read_json_if_present(output_dir / "review_payload.json")
+    items = review.get("items")
+    if not isinstance(items, list):
+        raise RuntimeError("client-onboarding audit package has no review items")
+    item = next(
+        (
+            candidate
+            for candidate in items
+            if isinstance(candidate, dict)
+            and candidate.get("item_type") == "aml_risk_factor"
+            and "edit" in candidate.get("allowed_actions", [])
+        ),
+        None,
+    )
+    if item is None:
+        raise RuntimeError("client-onboarding audit package has no editable AML item")
+    return {
+        "item_id": str(item["id"]),
+        "target_artifact": "aml_assessment_draft.json",
+        "writeback_mode": "review_proposal",
+    }
 
 
 def write_check_entries_fixture(output_dir: Path) -> None:
@@ -554,9 +631,12 @@ def _inspect_written_artifacts(
     ]
     report.ui_decision_source = str(ui_decisions.get("decision_source") or "")
     report.applied_decision_source = str(applied_decisions.get("decision_source") or "")
-    report.final_status = str(
-        final_artifacts.get("review_status") or final_artifacts.get("status") or ""
-    )
+    if report.writeback_mode == "review_proposal":
+        report.final_status = str(final_artifacts.get("status") or "")
+    else:
+        report.final_status = str(
+            final_artifacts.get("review_status") or final_artifacts.get("status") or ""
+        )
     report.csv_contains_edit = EDIT_VALUE in target_text
 
     if report.ui_decision_source != "local_review_server":
@@ -576,7 +656,15 @@ def _inspect_written_artifacts(
             )
         )
     report.csv_contains_edit = EDIT_VALUE in target_text
-    if not report.csv_contains_edit:
+    if report.writeback_mode == "review_proposal" and report.csv_contains_edit:
+        report.issues.append(
+            _issue(
+                "high",
+                "immutable_domain_artifact_modified",
+                f"The proposal-only review modified {report.target_artifact}.",
+            )
+        )
+    elif report.writeback_mode == "artifact_edit" and not report.csv_contains_edit:
         report.issues.append(
             _issue(
                 "high",
@@ -584,7 +672,12 @@ def _inspect_written_artifacts(
                 f"The target artifact {report.target_artifact or '<missing>'} does not contain the reviewer edit.",
             )
         )
-    if report.final_status not in {"final_ready", "partial_review_applied", "blocked"}:
+    if report.final_status not in {
+        "final_ready",
+        "partial_review_applied",
+        "proposals_ready",
+        "blocked",
+    }:
         report.issues.append(
             _issue(
                 "medium",
@@ -625,7 +718,11 @@ def _drive_browser(
             page.locator("[data-decision-field='edit_value']").fill(EDIT_VALUE)
             page.locator("#apply-decisions").click()
             page.wait_for_function(
-                "() => document.body.innerText.includes('Applied') && document.body.innerText.includes('decisions')",
+                """() => {
+                  const node = document.querySelector("#save-status");
+                  return node?.classList.contains("is-ok")
+                    || node?.classList.contains("is-error");
+                }""",
                 timeout=15_000,
             )
             metrics = page.evaluate("""() => ({
@@ -665,6 +762,7 @@ def audit_local_review_writeback(
         output_dir=run_dir.as_posix(),
         item_id=fixture["item_id"],
         target_artifact=fixture["target_artifact"],
+        writeback_mode=fixture.get("writeback_mode", "artifact_edit"),
     )
     workbench = serve_review_workbench.LocalReviewWorkbench(
         plugin_dir=root / "plugins" / plugin,
@@ -697,12 +795,22 @@ def audit_local_review_writeback(
         httpd.shutdown()
         thread.join(timeout=5)
         httpd.server_close()
-    if report.row_count != 1:
+    invalid_row_count = (
+        report.row_count < 1
+        if report.writeback_mode == "review_proposal"
+        else report.row_count != 1
+    )
+    if invalid_row_count:
+        expected_rows = (
+            "at least one visible review row"
+            if report.writeback_mode == "review_proposal"
+            else "exactly one visible review row"
+        )
         report.issues.append(
             _issue(
                 "high",
                 "review_row_not_visible",
-                f"Expected 1 visible review row, found {report.row_count}.",
+                f"Expected {expected_rows}, found {report.row_count}.",
             )
         )
     if report.decision_control_count < 4:

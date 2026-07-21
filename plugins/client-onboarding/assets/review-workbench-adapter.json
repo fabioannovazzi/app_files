@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "1.1",
+  "plugin": "client-onboarding",
+  "title": "Client Onboarding Review",
+  "reviewTitle": "Professional Onboarding Review",
+  "queueTitle": "Onboarding Decisions",
+  "detailTitle": "Evidence, Basis, Decision",
+  "detailMode": "onboarding-compliance-desk",
+  "detailHelp": "Review the minimized fact, cited basis, and downstream dossier impact before recording a professional decision.",
+  "detailGroups": [
+    {
+      "title": "Client and Engagement",
+      "variant": "document",
+      "fields": [
+        "client_reference",
+        "fact_code",
+        "service_id",
+        "relationship_kind",
+        "confirmation_status"
+      ],
+      "empty": "No client or engagement fields."
+    },
+    {
+      "title": "AML and Applicability",
+      "variant": "finding",
+      "fields": [
+        "factor_code",
+        "score",
+        "proposed_value",
+        "risk_band",
+        "verification_type",
+        "rationale"
+      ],
+      "empty": "No AML or applicability fields."
+    },
+    {
+      "title": "Evidence and Output Impact",
+      "variant": "checklist",
+      "fields": [
+        "evidence_status",
+        "source_ids",
+        "case_fact_ids",
+        "requested_document",
+        "target_artifact",
+        "edit_hint"
+      ],
+      "empty": "No evidence or output-impact fields."
+    }
+  ],
+  "panels": [
+    "Client and engagement",
+    "AML and applicability",
+    "Evidence and output impact"
+  ],
+  "localized": {
+    "it": {
+      "title": "Revisione Onboarding Cliente",
+      "reviewTitle": "Revisione professionale onboarding",
+      "queueTitle": "Decisioni onboarding",
+      "detailTitle": "Evidenza, base e decisione",
+      "detailHelp": "Rivedi il fatto minimizzato, la base citata e l'impatto sul dossier prima di registrare la decisione professionale.",
+      "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco"
+    },
+    "fr": {
+      "title": "Revue onboarding client",
+      "reviewTitle": "Revue professionnelle de l'onboarding",
+      "queueTitle": "Decisions d'onboarding",
+      "detailTitle": "Preuve, fondement et decision",
+      "detailHelp": "Examinez le fait minimise, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision professionnelle.",
+      "search": "Chercher fait, service, facteur AML, document, source, blocage"
+    },
+    "de": {
+      "title": "Mandanten-Onboarding Review",
+      "reviewTitle": "Professionelles Onboarding-Review",
+      "queueTitle": "Onboarding-Entscheidungen",
+      "detailTitle": "Nachweis, Grundlage und Entscheidung",
+      "detailHelp": "Minimierten Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der professionellen Entscheidung pruefen.",
+      "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen"
+    }
+  },
+  "saveTool": "save_client_onboarding_decisions",
+  "applyTool": "apply_client_onboarding_decisions",
+  "widgetType": "client_onboarding_review",
+  "demo": {
+    "review_type": "client_onboarding_professional_review",
+    "items": [
+      {
+        "id": "aml-client-geography",
+        "item_type": "aml_risk_factor",
+        "title": "AML factor: client geography",
+        "output_path": "aml_assessment_draft.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "mark_unclear",
+        "data": {
+          "client_reference": "CLIENT-001",
+          "factor_code": "client_geography",
+          "score": 2,
+          "risk_band": "little_significant",
+          "rationale": "Proposed from the recorded operating territories; professional confirmation is pending.",
+          "evidence_status": "needs_professional_confirmation",
+          "source_ids": [
+            "CNDCEC-AML-GUIDANCE-2026"
+          ],
+          "case_fact_ids": [
+            "FACT-TERRITORY-01"
+          ],
+          "target_artifact": "aml_assessment_draft.json",
+          "target_records_key": "client_factors",
+          "target_id_field": "factor_code",
+          "target_record_id": "client_geography",
+          "target_field": "score",
+          "edit_hint": "Editing records a proposed replacement score and requires AML recalculation before acceptance."
+        },
+        "evidence": [
+          {
+            "kind": "source_bound_factor_proposal",
+            "source_ids": [
+              "CNDCEC-AML-GUIDANCE-2026"
+            ],
+            "case_fact_ids": [
+              "FACT-TERRITORY-01"
+            ],
+            "evidence_status": "needs_professional_confirmation"
+          }
+        ]
+      },
+      {
+        "id": "document-article28",
+        "item_type": "document_applicability",
+        "title": "Article 28 appointment applicability",
+        "output_path": "applicability_plan_validated.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "client_reference": "CLIENT-001",
+          "proposed_value": "not_applicable",
+          "rationale": "The role analysis is recorded as a proposal and must be confirmed for the actual service.",
+          "source_ids": [
+            "CNDCEC-PRIVACY-GUIDANCE-2025"
+          ],
+          "case_fact_ids": [
+            "SERVICE-BOOKKEEPING-01"
+          ],
+          "evidence_status": "source_bound_proposal"
+        },
+        "evidence": [
+          {
+            "kind": "applicability_basis",
+            "source_ids": [
+              "CNDCEC-PRIVACY-GUIDANCE-2025"
+            ],
+            "case_fact_ids": [
+              "SERVICE-BOOKKEEPING-01"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "missing-identity-evidence",
+        "item_type": "missing_evidence",
+        "title": "Missing verified identity evidence for executor EXEC-01",
+        "output_path": "missing_evidence.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "client_reference": "CLIENT-001",
+          "fact_code": "executor_identity",
+          "confirmation_status": "unknown",
+          "requested_document": "Readable identity evidence for executor EXEC-01",
+          "evidence_status": "missing",
+          "case_fact_ids": [
+            "EXEC-01"
+          ],
+          "target_artifact": "missing_evidence.json"
+        },
+        "evidence": [
+          {
+            "kind": "mechanical_completeness_gate",
+            "case_fact_ids": [
+              "EXEC-01"
+            ],
+            "evidence_status": "missing"
+          }
+        ]
+      }
+    ]
+  },
+  "persistDecisionTextInWidgetState": false,
+  "useDecisionRevision": true
+}

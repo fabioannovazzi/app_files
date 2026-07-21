@@ -213,6 +213,12 @@ REVIEW_HANDOFF_TOOLS = {
         "save_client_intake_decisions",
         "apply_client_intake_decisions",
     ],
+    "client-onboarding": [
+        "validate_client_onboarding_review",
+        "render_client_onboarding_review",
+        "save_client_onboarding_decisions",
+        "apply_client_onboarding_decisions",
+    ],
     "journal-sampling": [
         "validate_journal_sampling_review",
         "render_journal_sampling_review",

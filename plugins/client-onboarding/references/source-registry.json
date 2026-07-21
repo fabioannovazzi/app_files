@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.1",
+  "registry_version": "2026-07-21",
+  "last_reviewed": "2026-07-21",
+  "policy": {
+    "professional_review_required": true,
+    "semantic_applicability": "model-assisted or professional, never inferred by the arithmetic engine",
+    "legal_text_generation": "record only studio-approved template references; do not reproduce or populate third-party drafts",
+    "versioning": "verify currency and applicability before each production use"
+  },
+  "sources": [
+    {
+      "source_id": "d_lgs_231_2007",
+      "title": "Decreto legislativo 21 novembre 2007, n. 231",
+      "issuer": "Repubblica Italiana",
+      "version": "consolidated-current-at-review",
+      "effective_date": "2007-12-29",
+      "source_type": "legislation",
+      "authority": "binding_law",
+      "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2007-11-21;231",
+      "use_constraint": "Verify the current consolidated text and case-specific applicability before use."
+    },
+    {
+      "source_id": "cndcec_regole_tecniche_2025",
+      "title": "Regole tecniche antiriciclaggio 2025",
+      "issuer": "Consiglio Nazionale dei Dottori Commercialisti e degli Esperti Contabili",
+      "version": "2025",
+      "effective_date": "2025-01-01",
+      "source_type": "professional_rules",
+      "authority": "official_professional_guidance",
+      "url": "https://commercialisti.it/wp-content/uploads/2025/01/Regole-Tecniche-antiriciclaggio-2025.pdf",
+      "use_constraint": "Use as a professional source; preserve the professional's assessment of applicability and facts."
+    },
+    {
+      "source_id": "cndcec_indicazioni_operative_2026",
+      "title": "Indicazioni operative antiriciclaggio",
+      "issuer": "Consiglio Nazionale dei Dottori Commercialisti e degli Esperti Contabili",
+      "version": "approved-2026-03-18; published-2026-03-26",
+      "source_type": "operational_guidance",
+      "authority": "official_operational_material",
+      "url": "https://commercialisti.it/wp-content/uploads/2026/03/CNDCEC_Indicazioni-operative-2.pdf",
+      "use_constraint": "Verify the current version and have a professional confirm exclusions, triggers, factor scores, and final treatment."
+    },
+    {
+      "source_id": "cndcec_modulistica_aml_2026",
+      "title": "Modulistica antiriciclaggio",
+      "issuer": "Consiglio Nazionale dei Dottori Commercialisti e degli Esperti Contabili",
+      "version": "approved-2026-03-18; published-2026-03-26",
+      "source_type": "operational_forms",
+      "authority": "official_operational_material",
+      "url": "https://commercialisti.it/wp-content/uploads/2026/04/CNDCEC_modulistica-AML-def.docx",
+      "use_constraint": "Treat the original forms as the controlled source; generated summaries are not equivalent substitutes."
+    },
+    {
+      "source_id": "gdpr_regulation",
+      "title": "Regulation (EU) 2016/679",
+      "issuer": "European Parliament and Council",
+      "version": "official-journal-text",
+      "effective_date": "2018-05-25",
+      "source_type": "legislation",
+      "authority": "binding_law",
+      "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "use_constraint": "Determine controller and processor roles from the actual engagement; do not infer Article 28 applicability."
+    },
+    {
+      "source_id": "cndcec_privacy_guide_2025",
+      "title": "Il ruolo del commercialista in materia di privacy e protezione dei dati — la valutazione della conformità al GDPR",
+      "issuer": "Consiglio Nazionale dei Dottori Commercialisti e degli Esperti Contabili",
+      "version": "Informativa 105/2025; published-2025-07-09",
+      "source_type": "professional_guidance",
+      "authority": "official_professional_guidance",
+      "url": "https://commercialisti.it/informative/105-documento-il-ruolo-del-commercialista-in-materia-di-privacy-e-protezione-dei-dati-reg-ue-2016-679-la-valutazione-della-conformita-al-gdpr/",
+      "use_constraint": "Use for role analysis and review prompts, not as a ready-made client privacy notice."
+    },
+    {
+      "source_id": "italian_law_132_2025_article_13",
+      "title": "Legge 23 settembre 2025, n. 132, articolo 13",
+      "issuer": "Repubblica Italiana",
+      "version": "original-enactment-at-review",
+      "effective_date": "2025-10-10",
+      "source_type": "legislation",
+      "authority": "binding_law",
+      "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2025-09-23;132",
+      "use_constraint": "Verify current text and applicability to the professional activity before drafting any AI transparency notice."
+    }
+  ]
+}

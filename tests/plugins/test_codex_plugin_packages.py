@@ -19,6 +19,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "concordato-plan-review",
     "deep-research-validator",
     "client-intake",
+    "client-onboarding",
     "journal-bank-reconciliation",
     "journal-sampling",
     "prompt-optimizer",
@@ -186,6 +187,12 @@ NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
         "render_client_intake_review",
         "save_client_intake_decisions",
         "apply_client_intake_decisions",
+    ),
+    "client-onboarding": (
+        "validate_client_onboarding_review",
+        "render_client_onboarding_review",
+        "save_client_onboarding_decisions",
+        "apply_client_onboarding_decisions",
     ),
     "concordato-plan-review": (
         "validate_concordato_plan_review",
@@ -2927,6 +2934,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         ),
         "client-intake": (
             "https://mparanza.com/static/shared/client-intake/index.html"
+        ),
+        "client-onboarding": (
+            "https://mparanza.com/static/shared/client-onboarding/index.html"
         ),
         "concordato-plan-review": (
             "https://mparanza.com/static/shared/concordato-plan-review/index.html"

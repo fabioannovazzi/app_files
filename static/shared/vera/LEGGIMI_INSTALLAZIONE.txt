@@ -19,6 +19,7 @@ Moduli inclusi
 
 - Riconciliazione partite
 - Istruttoria cliente
+- Onboarding cliente, incarico, privacy e AML
 - Campionamento del giornale
 - Controllo scritture
 - Riconciliazione banca-contabilità
@@ -35,6 +36,11 @@ Chiedi direttamente a Vera il lavoro da svolgere e indica la cartella o i file
 di input. Per esempio:
 
 Vera, prepara la prima istruttoria di questa cartella cliente.
+
+Oppure:
+
+Vera, prepara il dossier di onboarding di questo nuovo cliente con i dati e i
+servizi che ti indico.
 
 Oppure:
 

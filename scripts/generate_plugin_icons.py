@@ -42,6 +42,13 @@ SPECS = (
         "folder",
     ),
     IconSpec(
+        "client-onboarding",
+        "Client Onboarding",
+        "#36586F",
+        "#82B6C9",
+        "onboard",
+    ),
+    IconSpec(
         "journal-sampling",
         "Journal Sampling",
         "#0F766E",
@@ -237,6 +244,12 @@ def _body(spec: IconSpec) -> str:
   <circle cx="28" cy="35" r="5" fill="{color}"/>
   <path d="M18 47c2-7 18-7 20 0" fill="none" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
   <path d="M40 34h7M40 41h5" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>""",
+        "onboard": f"""
+  <path d="M16 15h29l7 8v28H16z" fill="{paper}"/>
+  <path d="M45 15v9h7" fill="#DCE5E8"/>
+  <circle cx="27" cy="29" r="5" fill="{color}"/>
+  <path d="M20 42c1-6 13-6 14 0" fill="none" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
+  <path d="m37 39 4 4 9-12" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
         "sample": f"""
   <rect x="15" y="13" width="30" height="38" rx="5" fill="{paper}"/>
   <path d="M21 23h18M21 31h15M21 39h10" stroke="{color}" stroke-width="3" stroke-linecap="round"/>

@@ -1,0 +1,38 @@
+{
+  "plugin": "client-onboarding",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "new-client-full-onboarding",
+      "prompt": "Vera, prepara l'onboarding del nuovo cliente con mandato, privacy, titolari effettivi, AML e piano dei riesami.",
+      "required_signals": ["onboarding", "mandato", "AML"]
+    },
+    {
+      "id": "aml-and-document-applicability",
+      "prompt": "Organizza le evidenze del nuovo incarico e proponi per revisione AV.1, AV.4, informativa AI e l'eventuale nomina art. 28.",
+      "required_signals": ["nuovo incarico", "AV.1", "art. 28"]
+    },
+    {
+      "id": "reviewed-intake-to-onboarding",
+      "prompt": "Usa il run Client Intake già revisionato per preparare il dossier di accettazione del cliente senza firmare o inviare nulla.",
+      "required_signals": ["Client Intake", "dossier", "cliente"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "folder-inventory-only",
+      "prompt": "Fai soltanto l'inventario e l'OCR di questa cartella fiscale.",
+      "reason": "Use client-intake for document-folder intake and OCR."
+    },
+    {
+      "id": "bank-reconciliation",
+      "prompt": "Riconcilia il giornale contabile con l'estratto conto bancario.",
+      "reason": "Use journal-bank-reconciliation."
+    },
+    {
+      "id": "generic-legal-opinion",
+      "prompt": "Scrivi un parere generale sul GDPR senza un caso di onboarding cliente.",
+      "reason": "Generic legal research is outside this workflow."
+    }
+  ]
+}
