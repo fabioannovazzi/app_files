@@ -15,6 +15,17 @@ def test_is_resend_configured(monkeypatch: pytest.MonkeyPatch) -> None:
     assert resend_client.is_resend_configured() is True
 
 
+def test_is_resend_configured_rejects_placeholder_sender(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("RESEND_API_KEY", "key")
+    monkeypatch.setenv(
+        "RESEND_FROM_EMAIL", "Your App <noreply@updates.mparanza.com>"
+    )
+
+    assert resend_client.is_resend_configured() is False
+
+
 def test_send_plain_text_email_requires_config(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("RESEND_API_KEY", raising=False)
     monkeypatch.delenv("RESEND_FROM_EMAIL", raising=False)

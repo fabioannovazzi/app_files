@@ -6,6 +6,7 @@ import html
 import logging
 import os
 import re
+from email.utils import parseaddr
 from typing import Iterable, Sequence
 
 import requests
@@ -21,6 +22,7 @@ LOGGER = logging.getLogger(__name__)
 _RESEND_ENDPOINT = "https://api.resend.com/emails"
 _ENV_API_KEY = "RESEND_API_KEY"
 _ENV_FROM_EMAIL = "RESEND_FROM_EMAIL"
+_PLACEHOLDER_SENDER_NAMES = frozenset({"your app"})
 _URL_PATTERN = re.compile(r"https?://[^\s<]+")
 _SALUTATIONS = {
     "hi there,",
@@ -39,6 +41,13 @@ def _clean(value: str | None) -> str:
     if not cleaned:
         return cleaned
     return cleaned.strip("\"'")
+
+
+def _is_placeholder_sender(value: str | None) -> bool:
+    """Return whether a configured sender still uses a template identity."""
+
+    display_name, _address = parseaddr(_clean(value))
+    return display_name.strip().casefold() in _PLACEHOLDER_SENDER_NAMES
 
 
 def _redact_email(value: str | None) -> str:
@@ -229,7 +238,12 @@ def _build_default_html_email(
 def is_resend_configured() -> bool:
     """Return ``True`` when both API key and sender are defined."""
 
-    return bool(_clean(os.getenv(_ENV_API_KEY)) and _clean(os.getenv(_ENV_FROM_EMAIL)))
+    sender = _clean(os.getenv(_ENV_FROM_EMAIL))
+    return bool(
+        _clean(os.getenv(_ENV_API_KEY))
+        and sender
+        and not _is_placeholder_sender(sender)
+    )
 
 
 def send_email(
@@ -257,9 +271,11 @@ def send_email(
 
     resolved_sender = _clean(sender) or _clean(os.getenv(_ENV_FROM_EMAIL))
     resolved_key = _clean(api_key) or _clean(os.getenv(_ENV_API_KEY))
-    if not (resolved_sender and resolved_key):
+    if not (resolved_sender and resolved_key) or _is_placeholder_sender(
+        resolved_sender
+    ):
         LOGGER.debug(
-            "Skipping Resend send: RESEND_API_KEY or RESEND_FROM_EMAIL not configured."
+            "Skipping Resend send: credentials are missing or sender identity is a placeholder."
         )
         return False
 
