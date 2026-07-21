@@ -43,7 +43,7 @@ def _write_plugin(root: Path, name: str, skill_text: str) -> None:
 def _write_good_plugin(root: Path) -> None:
     _write_plugin(
         root,
-        "client-intake",
+        "client-file-preparation",
         (
             "Use local deterministic scripts. Ask only for external, destructive, "
             "approval-sensitive, or material choices."
@@ -66,15 +66,15 @@ def _write_customer_manifest(
                 "schema_version": "1.0",
                 "cases": [
                     {
-                        "case_id": "case-client-intake-001",
-                        "plugin": "client-intake",
+                        "case_id": "case-client-file-preparation-001",
+                        "plugin": "client-file-preparation",
                         "scenario_name": "Italian customer folder with missing docs",
-                        "input_path_or_case_id": "anonymized/client-intake/001",
+                        "input_path_or_case_id": "anonymized/client-file-preparation/001",
                         "language": "it",
                         "reviewer": "QA",
                         "validated_at": "2026-06-07T10:00:00Z",
                         "commands": [
-                            "run client-intake fixture",
+                            "run client-file-preparation fixture",
                             "open local review surface",
                         ],
                         "artifact_paths": (
@@ -86,7 +86,9 @@ def _write_customer_manifest(
                                 "ui_decisions": "out/ui_decisions.json",
                                 "applied_decisions": "out/applied_decisions.json",
                                 "final_artifacts": "out/final_artifacts.json",
-                                "screenshot_paths": ["shots/client-intake.png"],
+                                "screenshot_paths": [
+                                    "shots/client-file-preparation.png"
+                                ],
                                 "native_output_readback": "out/readback.md",
                             }
                         ),
@@ -140,7 +142,7 @@ def _write_manifest_artifact_files(
 def _write_browser_writeback_report(
     path: Path,
     *,
-    plugins: tuple[str, ...] = ("client-intake",),
+    plugins: tuple[str, ...] = ("client-file-preparation",),
     screenshot_dir: Path | None = None,
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -186,7 +188,7 @@ def _write_validation_run(run_output_dir: Path) -> None:
     (run_output_dir / "run_intake.json").write_text(
         json.dumps(
             {
-                "workflow": "client-intake",
+                "workflow": "client-file-preparation",
                 "language": "it",
                 "inferred_task": "first_customer_folder_intake",
             }
@@ -196,8 +198,8 @@ def _write_validation_run(run_output_dir: Path) -> None:
     (run_output_dir / "review_payload.json").write_text(
         json.dumps(
             {
-                "plugin": "client-intake",
-                "workflow": "client-intake",
+                "plugin": "client-file-preparation",
+                "workflow": "client-file-preparation",
                 "items": [{"id": "item-1"}],
             }
         ),
@@ -253,13 +255,13 @@ def _customer_validation_case_cli_args(
         str(manifest),
         mode_flag,
         "--case-id",
-        "case-client-intake-001",
+        "case-client-file-preparation-001",
         "--plugin",
-        "client-intake",
+        "client-file-preparation",
         "--scenario-name",
-        "Italian client intake folder",
+        "Italian client file preparation folder",
         "--input-path-or-case-id",
-        "anonymized/client-intake/001",
+        "anonymized/client-file-preparation/001",
         "--language",
         "it",
         "--reviewer",
@@ -280,7 +282,7 @@ def _customer_validation_case_cli_args(
         "--validated-at",
         "2026-06-07T10:00:00Z",
         "--validation-command",
-        "run local client-intake fixture",
+        "run local client-file-preparation fixture",
         "--validation-command",
         "save and apply review decisions",
     ]
@@ -299,8 +301,8 @@ def test_repo_openai_pattern_adoption_readiness_is_ok() -> None:
 
     assert report.status == "ok"
     assert severe == []
-    assert report.demo_summary["adapter_count"] == 9
-    assert report.contract_summary["plugin_count"] == 9
+    assert report.demo_summary["adapter_count"] == 10
+    assert report.contract_summary["plugin_count"] == 10
     assert all(item["scenario_files"] for item in report.workbench_evidence)
     assert tiers["interaction_contracts"]["status"] == "covered"
     assert tiers["demo_ui_contracts"]["status"] == "covered"
@@ -337,7 +339,7 @@ def test_readiness_markdown_names_patterns_and_scenario_tests(capsys) -> None:
     assert "run_local_review_surface" in output
     assert "ui_decisions.json" in output
     assert "## Workbench Evidence" in output
-    assert "Workflow contract plugins audited: 9" in output
+    assert "Workflow contract plugins audited: 10" in output
 
 
 def test_readiness_json_includes_machine_readable_limits(capsys) -> None:
@@ -347,7 +349,7 @@ def test_readiness_json_includes_machine_readable_limits(capsys) -> None:
 
     assert exit_code == 0
     assert payload["status"] == "ok"
-    assert payload["summary"]["contract_coverage"]["plugin_count"] == 9
+    assert payload["summary"]["contract_coverage"]["plugin_count"] == 10
     assert {item["section"] for item in payload["playbook_section_coverage"]} >= {
         "Ask Only When The Answer Changes The Work",
         "Decision Capture Is The Interaction Contract",
@@ -403,14 +405,14 @@ def test_browser_writeback_report_covers_mechanism_tier(tmp_path: Path) -> None:
     report_path = tmp_path / "browser-writeback.json"
     _write_browser_writeback_report(
         report_path,
-        plugins=("client-intake",),
+        plugins=("client-file-preparation",),
         screenshot_dir=tmp_path / "screenshots",
     )
 
     report = audit.audit_adoption_readiness(
         tmp_path,
         browser_writeback_report_path=report_path,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_browser_writeback=True,
         verify_browser_writeback_screenshots=True,
     )
@@ -418,7 +420,7 @@ def test_browser_writeback_report_covers_mechanism_tier(tmp_path: Path) -> None:
 
     assert report.status == "ok"
     assert report.browser_writeback["status"] == "covered"
-    assert report.browser_writeback["covered_plugins"] == ["client-intake"]
+    assert report.browser_writeback["covered_plugins"] == ["client-file-preparation"]
     assert tiers["browser_writeback_mechanism"]["status"] == "covered"
     assert "run_browser_writeback_mechanism_audit" not in {
         item["id"] for item in report.next_actions
@@ -430,7 +432,7 @@ def test_require_browser_writeback_fails_when_report_is_missing(tmp_path: Path) 
 
     report = audit.audit_adoption_readiness(
         tmp_path,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_browser_writeback=True,
     )
     issue_codes = {issue.code for issue in report.issues}
@@ -446,18 +448,18 @@ def test_browser_writeback_report_requires_expected_plugin_coverage(
 ) -> None:
     _write_good_plugin(tmp_path)
     report_path = tmp_path / "browser-writeback.json"
-    _write_browser_writeback_report(report_path, plugins=("client-intake",))
+    _write_browser_writeback_report(report_path, plugins=("client-file-preparation",))
 
     report = audit.audit_adoption_readiness(
         tmp_path,
         browser_writeback_report_path=report_path,
-        expected_customer_plugins=("client-intake", "report-builder"),
+        expected_customer_plugins=("client-file-preparation", "report-builder"),
     )
     issue_codes = {issue.code for issue in report.issues}
 
     assert report.status == "partial"
     assert report.browser_writeback["status"] == "partial"
-    assert report.browser_writeback["covered_plugins"] == ["client-intake"]
+    assert report.browser_writeback["covered_plugins"] == ["client-file-preparation"]
     assert report.browser_writeback["missing_expected_plugins"] == ["report-builder"]
     assert "browser_writeback_expected_plugins_missing" in issue_codes
 
@@ -473,7 +475,7 @@ def test_write_customer_validation_template_uses_expected_plugins(
             "--expected-customer-plugin",
             "report-builder",
             "--expected-customer-plugin",
-            "client-intake",
+            "client-file-preparation",
             "--write-customer-validation-template",
             str(template_path),
         ]
@@ -485,7 +487,7 @@ def test_write_customer_validation_template_uses_expected_plugins(
     assert exit_code == 0
     assert "Wrote customer validation template for 2 plugin(s)" in output
     assert [case["plugin"] for case in payload["cases"]] == [
-        "client-intake",
+        "client-file-preparation",
         "report-builder",
     ]
     assert payload["cases"][0]["status"] == "partial"
@@ -517,11 +519,12 @@ def test_write_customer_validation_template_defaults_to_workbench_plugins(
     assert [case["plugin"] for case in payload["cases"]] == [
         "audit-reconciliation",
         "check-entries",
-        "client-intake",
+        "client-file-preparation",
         "concordato-plan-review",
         "deep-research-validator",
         "journal-bank-reconciliation",
         "journal-sampling",
+        "new-client",
         "prompt-optimizer",
         "report-builder",
     ]
@@ -537,11 +540,12 @@ def test_committed_customer_validation_example_covers_default_plugins() -> None:
     assert [case["plugin"] for case in payload["cases"]] == [
         "audit-reconciliation",
         "check-entries",
-        "client-intake",
+        "client-file-preparation",
         "concordato-plan-review",
         "deep-research-validator",
         "journal-bank-reconciliation",
         "journal-sampling",
+        "new-client",
         "prompt-optimizer",
         "report-builder",
     ]
@@ -575,11 +579,12 @@ def test_customer_validation_runbook_names_required_evidence_and_gate() -> None:
     for plugin in (
         "audit-reconciliation",
         "check-entries",
-        "client-intake",
+        "client-file-preparation",
         "concordato-plan-review",
         "deep-research-validator",
         "journal-bank-reconciliation",
         "journal-sampling",
+        "new-client",
         "prompt-optimizer",
         "report-builder",
     ):
@@ -618,7 +623,7 @@ def test_customer_validation_manifest_can_cover_real_customer_tier(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
     )
     tiers = {item["tier"]: item for item in report.validation_tiers}
@@ -626,7 +631,7 @@ def test_customer_validation_manifest_can_cover_real_customer_tier(
     assert report.status == "ok"
     assert report.customer_validation["status"] == "covered"
     assert report.customer_validation["case_count"] == 1
-    assert report.customer_validation["covered_plugins"] == ["client-intake"]
+    assert report.customer_validation["covered_plugins"] == ["client-file-preparation"]
     assert tiers["real_customer_folder_validation"]["status"] == "covered"
     assert report.next_actions == []
 
@@ -641,7 +646,7 @@ def test_customer_validation_manifest_requires_usable_ux_verdict(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
     )
     issue_codes = {issue.code for issue in report.issues}
@@ -665,7 +670,7 @@ def test_customer_validation_manifest_requires_complete_ux_checks(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
     )
     issue_codes = {issue.code for issue in report.issues}
@@ -686,7 +691,7 @@ def test_customer_validation_artifact_verification_flags_missing_files(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
         verify_customer_artifact_paths=True,
     )
@@ -711,7 +716,7 @@ def test_customer_validation_artifact_verification_accepts_existing_files(
         "ui_decisions": "out/ui_decisions.json",
         "applied_decisions": "out/applied_decisions.json",
         "final_artifacts": "out/final_artifacts.json",
-        "screenshot_paths": ["shots/client-intake.png"],
+        "screenshot_paths": ["shots/client-file-preparation.png"],
         "native_output_readback": "out/readback.md",
     }
     _write_customer_manifest(manifest, artifact_paths=artifact_paths)
@@ -720,7 +725,7 @@ def test_customer_validation_artifact_verification_accepts_existing_files(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
         verify_customer_artifact_paths=True,
     )
@@ -729,7 +734,7 @@ def test_customer_validation_artifact_verification_accepts_existing_files(
     assert report.customer_validation["status"] == "covered"
     assert report.customer_validation["artifact_path_verification"] is True
     assert report.customer_validation["verified_artifact_case_count"] == 1
-    assert report.customer_validation["covered_plugins"] == ["client-intake"]
+    assert report.customer_validation["covered_plugins"] == ["client-file-preparation"]
 
 
 def test_customer_validation_artifact_verification_rejects_pending_final_artifacts(
@@ -743,7 +748,7 @@ def test_customer_validation_artifact_verification_rejects_pending_final_artifac
         "ui_decisions": "out/ui_decisions.json",
         "applied_decisions": "out/applied_decisions.json",
         "final_artifacts": "out/final_artifacts.json",
-        "screenshot_paths": ["shots/client-intake.png"],
+        "screenshot_paths": ["shots/client-file-preparation.png"],
         "native_output_readback": "out/readback.md",
     }
     _write_customer_manifest(manifest, artifact_paths=artifact_paths)
@@ -756,7 +761,7 @@ def test_customer_validation_artifact_verification_rejects_pending_final_artifac
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
         verify_customer_artifact_paths=True,
     )
@@ -788,13 +793,13 @@ def test_record_customer_validation_case_from_run_output_passes_strict_gate(
             str(manifest),
             "--record-customer-validation-case",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--plugin",
-            "client-intake",
+            "client-file-preparation",
             "--scenario-name",
-            "Italian client intake folder",
+            "Italian client file preparation folder",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--language",
             "it",
             "--reviewer",
@@ -815,7 +820,7 @@ def test_record_customer_validation_case_from_run_output_passes_strict_gate(
             "--validated-at",
             "2026-06-07T10:00:00Z",
             "--validation-command",
-            "run local client-intake fixture",
+            "run local client-file-preparation fixture",
             "--validation-command",
             "save and apply review decisions",
         ]
@@ -827,13 +832,15 @@ def test_record_customer_validation_case_from_run_output_passes_strict_gate(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
         verify_customer_artifact_paths=True,
     )
 
     assert exit_code == 0
-    assert "Recorded customer validation case case-client-intake-001" in output
+    assert (
+        "Recorded customer validation case case-client-file-preparation-001" in output
+    )
     assert case["artifact_paths"]["run_intake"] == "runs/case-001/run_intake.json"
     assert case["artifact_paths"]["screenshot_paths"] == ["shots/case-001.png"]
     assert case["decision_summary"]["accepted"] == 1
@@ -934,9 +941,9 @@ def test_preflight_customer_validation_case_can_infer_run_metadata(
             "--preflight-customer-validation-case",
             "--infer-case-metadata-from-run",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--reviewer",
             "QA",
             "--run-output-dir",
@@ -959,9 +966,9 @@ def test_preflight_customer_validation_case_can_infer_run_metadata(
 
     assert exit_code == 0
     assert "Customer validation case preflight passed" in output
-    assert "case-client-intake-001 (client-intake)" in output
+    assert "case-client-file-preparation-001 (client-file-preparation)" in output
     assert "language=it" in output
-    assert "plugin=client-intake" in output
+    assert "plugin=client-file-preparation" in output
     assert "scenario_name=first_customer_folder_intake" in output
     assert not manifest.exists()
 
@@ -986,9 +993,9 @@ def test_record_customer_validation_case_can_infer_run_metadata(
             "--record-customer-validation-case",
             "--infer-case-metadata-from-run",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--reviewer",
             "QA",
             "--run-output-dir",
@@ -1012,8 +1019,10 @@ def test_record_customer_validation_case_can_infer_run_metadata(
     case = payload["cases"][0]
 
     assert exit_code == 0
-    assert "Recorded customer validation case case-client-intake-001" in output
-    assert case["plugin"] == "client-intake"
+    assert (
+        "Recorded customer validation case case-client-file-preparation-001" in output
+    )
+    assert case["plugin"] == "client-file-preparation"
     assert case["scenario_name"] == "first_customer_folder_intake"
     assert case["language"] == "it"
 
@@ -1038,9 +1047,9 @@ def test_inferred_customer_validation_case_still_requires_reviewer_evidence(
             "--preflight-customer-validation-case",
             "--infer-case-metadata-from-run",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--run-output-dir",
             str(run_output_dir),
             "--screenshot-path",
@@ -1083,13 +1092,13 @@ def test_record_customer_validation_case_refuses_pending_final_artifacts(
             str(manifest),
             "--record-customer-validation-case",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--plugin",
-            "client-intake",
+            "client-file-preparation",
             "--scenario-name",
-            "Italian client intake folder",
+            "Italian client file preparation folder",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--language",
             "it",
             "--reviewer",
@@ -1129,9 +1138,9 @@ def test_record_customer_validation_case_refuses_synthetic_browser_audit_run(
     (run_output_dir / "run_intake.json").write_text(
         json.dumps(
             {
-                "plugin": "client-intake",
-                "workflow": "client-intake",
-                "inferred_task": "Browser write-back audit for Client Intake review.",
+                "plugin": "client-file-preparation",
+                "workflow": "client-file-preparation",
+                "inferred_task": "Browser write-back audit for Client File Preparation review.",
                 "assumptions": [
                     "Synthetic local fixture generated from the workbench adapter demo; not customer validation."
                 ],
@@ -1148,13 +1157,13 @@ def test_record_customer_validation_case_refuses_synthetic_browser_audit_run(
             str(manifest),
             "--record-customer-validation-case",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--plugin",
-            "client-intake",
+            "client-file-preparation",
             "--scenario-name",
-            "Italian client intake folder",
+            "Italian client file preparation folder",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--language",
             "it",
             "--reviewer",
@@ -1205,13 +1214,13 @@ def test_record_customer_validation_case_refuses_mismatched_plugin_metadata(
             str(manifest),
             "--record-customer-validation-case",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--plugin",
-            "client-intake",
+            "client-file-preparation",
             "--scenario-name",
-            "Italian client intake folder",
+            "Italian client file preparation folder",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--language",
             "it",
             "--reviewer",
@@ -1234,7 +1243,7 @@ def test_record_customer_validation_case_refuses_mismatched_plugin_metadata(
 
     assert exit_code == 1
     assert "review_payload.plugin is 'report-builder'" in captured.err
-    assert "expected 'client-intake'" in captured.err
+    assert "expected 'client-file-preparation'" in captured.err
     assert not manifest.exists()
 
 
@@ -1257,13 +1266,13 @@ def test_record_customer_validation_case_refuses_incomplete_ux_checks(
             str(manifest),
             "--record-customer-validation-case",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--plugin",
-            "client-intake",
+            "client-file-preparation",
             "--scenario-name",
-            "Italian client intake folder",
+            "Italian client file preparation folder",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--language",
             "it",
             "--reviewer",
@@ -1311,13 +1320,13 @@ def test_record_customer_validation_case_refuses_missing_run_artifacts(
             str(manifest),
             "--record-customer-validation-case",
             "--case-id",
-            "case-client-intake-001",
+            "case-client-file-preparation-001",
             "--plugin",
-            "client-intake",
+            "client-file-preparation",
             "--scenario-name",
-            "Italian client intake folder",
+            "Italian client file preparation folder",
             "--input-path-or-case-id",
-            "anonymized/client-intake/001",
+            "anonymized/client-file-preparation/001",
             "--language",
             "it",
             "--reviewer",
@@ -1360,7 +1369,7 @@ def test_customer_validation_manifest_flags_incomplete_evidence(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
     )
     issue_codes = {issue.code for issue in report.issues}
 
@@ -1383,13 +1392,13 @@ def test_customer_validation_manifest_requires_expected_plugin_coverage(
     report = audit.audit_adoption_readiness(
         tmp_path,
         customer_manifest_path=manifest,
-        expected_customer_plugins=("client-intake", "report-builder"),
+        expected_customer_plugins=("client-file-preparation", "report-builder"),
     )
     issue_codes = {issue.code for issue in report.issues}
 
     assert report.status == "partial"
     assert report.customer_validation["status"] == "partial"
-    assert report.customer_validation["covered_plugins"] == ["client-intake"]
+    assert report.customer_validation["covered_plugins"] == ["client-file-preparation"]
     assert report.customer_validation["missing_expected_plugins"] == ["report-builder"]
     assert "customer_validation_expected_plugins_missing" in issue_codes
 

@@ -1,6 +1,6 @@
 {
   "name": "deep-research-validator",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "description": "Validate Deep Research reports against cited sources with Codex-guided review and deterministic evidence checks.",
   "author": {
     "name": "Mparanza",

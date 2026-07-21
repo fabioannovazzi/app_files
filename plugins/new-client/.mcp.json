@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "newClientProfessionalSetup": {
+      "title": "New Client · Professional Setup",
+      "description": "Validate, render, save, and apply privacy-minimized professional decisions for the later phases of New Client.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": ["24x24"]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}

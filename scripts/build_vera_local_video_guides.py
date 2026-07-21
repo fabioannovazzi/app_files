@@ -47,14 +47,14 @@ LEAD_SECONDS = 0.8
 TAIL_SECONDS = 0.8
 TARGET_LOUDNESS_LUFS = -16
 EXPECTED_LOCALIZATIONS = {
-    ("client-onboarding", "core", "it"),
-    ("client-onboarding", "core", "en"),
-    ("client-onboarding", "core", "fr"),
-    ("client-onboarding", "core", "de"),
-    ("client-onboarding", "italy", "it"),
-    ("client-onboarding", "italy", "en"),
-    ("client-onboarding", "italy", "fr"),
-    ("client-onboarding", "italy", "de"),
+    ("new-client", "core", "it"),
+    ("new-client", "core", "en"),
+    ("new-client", "core", "fr"),
+    ("new-client", "core", "de"),
+    ("new-client", "italy", "it"),
+    ("new-client", "italy", "en"),
+    ("new-client", "italy", "fr"),
+    ("new-client", "italy", "de"),
     ("journal-sampling", "core", "it"),
     ("journal-sampling", "core", "en"),
     ("journal-sampling", "core", "fr"),
@@ -788,8 +788,10 @@ def _build_one_guide(
     }
 
 
-def build_vera_local_video_guides() -> Path:
-    """Render all missing Vera guide localizations and write their manifest."""
+def build_vera_local_video_guides(
+    modules: set[str] | None = None,
+) -> Path:
+    """Render selected Vera guide modules and write the complete manifest."""
 
     say = _required_tool("say", "/usr/bin/say")
     ffmpeg = _required_tool("ffmpeg", "/opt/homebrew/bin/ffmpeg")
@@ -817,8 +819,19 @@ def build_vera_local_video_guides() -> Path:
     if localizations != EXPECTED_LOCALIZATIONS:
         raise ValueError(f"Unexpected Vera localization set: {sorted(localizations)!r}")
 
+    available_modules = {concept["module"] for concept in spec["concepts"]}
+    if modules:
+        unknown_modules = modules - available_modules
+        if unknown_modules:
+            raise ValueError(f"Unknown Vera guide modules: {sorted(unknown_modules)!r}")
+    selected_concepts = [
+        concept
+        for concept in spec["concepts"]
+        if not modules or concept["module"] in modules
+    ]
+
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
-    entries: list[dict[str, Any]] = []
+    rendered_entries: list[dict[str, Any]] = []
     with sync_playwright() as playwright:
         browser: Browser = playwright.chromium.launch(headless=True)
         page = browser.new_page(
@@ -835,9 +848,9 @@ def build_vera_local_video_guides() -> Path:
             ),
         )
         try:
-            for concept in spec["concepts"]:
+            for concept in selected_concepts:
                 for language, localization in concept["localizations"].items():
-                    entries.append(
+                    rendered_entries.append(
                         _build_one_guide(
                             page=page,
                             frame_template=frame_template,
@@ -851,6 +864,38 @@ def build_vera_local_video_guides() -> Path:
                     )
         finally:
             browser.close()
+
+    entries_by_identity: dict[tuple[str, str, str], dict[str, Any]] = {}
+    if modules and MANIFEST_PATH.is_file():
+        existing_manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        entries_by_identity.update(
+            {
+                (entry["module"], entry["edition"], entry["language"]): entry
+                for entry in existing_manifest["assets"]
+            }
+        )
+    entries_by_identity.update(
+        {
+            (entry["module"], entry["edition"], entry["language"]): entry
+            for entry in rendered_entries
+        }
+    )
+    ordered_identities = [
+        (concept["module"], concept["edition"], language)
+        for concept in spec["concepts"]
+        for language in concept["localizations"]
+    ]
+    missing_identities = [
+        identity
+        for identity in ordered_identities
+        if identity not in entries_by_identity
+    ]
+    if missing_identities:
+        raise ValueError(
+            "Filtered render cannot produce a complete manifest; missing "
+            f"{missing_identities!r}"
+        )
+    entries = [entries_by_identity[identity] for identity in ordered_identities]
 
     manifest = {
         "schemaVersion": "2.0.0",
@@ -880,6 +925,12 @@ def _parse_args() -> argparse.Namespace:
         action="store_true",
         help="Show subprocess-level diagnostic detail.",
     )
+    parser.add_argument(
+        "--module",
+        action="append",
+        dest="modules",
+        help="Render only this module and preserve other validated manifest entries.",
+    )
     return parser.parse_args()
 
 
@@ -891,7 +942,7 @@ def main() -> int:
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(levelname)s %(message)s",
     )
-    build_vera_local_video_guides()
+    build_vera_local_video_guides(set(args.modules) if args.modules else None)
     return 0
 
 

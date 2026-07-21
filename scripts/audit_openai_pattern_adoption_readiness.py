@@ -1734,7 +1734,7 @@ def audit_adoption_readiness(
     demo_reports = demo.audit_adapters(root)
     test_roots = (
         root / "tests" / "plugins",
-        root / "plugins" / "client-intake" / "tests",
+        root / "plugins" / "client-file-preparation" / "tests",
     )
     contract_reports = contract.audit_contract_coverage(
         root,

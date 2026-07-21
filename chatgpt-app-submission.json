@@ -4,7 +4,7 @@
   "app_info": {
     "display_name": "Vera",
     "subtitle": "AI companion for accountants",
-    "description": "Vera is the AI companion for commercialisti and accounting professionals. It helps prepare and review client files, reconciliations, journal samples, supporting evidence, reports, concordato plans, and professional research workpapers. Vera keeps sources, checks, and reviewer decisions visible while professional judgment and responsibility remain with the commercialista.",
+    "description": "Vera is the AI companion for commercialisti and accounting professionals. It helps establish and maintain new-client relationships, prepare and review client files, reconcile accounts, sample journals, organize supporting evidence, build reports, review concordato plans, and prepare professional research workpapers. Vera keeps sources, checks, and reviewer decisions visible while professional judgment and responsibility remain with the commercialista.",
     "category": "PRODUCTIVITY"
   },
   "tools": {
@@ -56,7 +56,55 @@
         "destructive_justification": "Can overwrite local decision, artifact-status, or edited workpaper files when applying reviewer actions."
       }
     },
-    "validate_client_intake_review": {
+    "validate_new_client_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validates the supplied New Client review payload in memory without changing files or records.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_new_client_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders the New Client review interface from supplied payload data without persisting changes.",
+        "open_world_justification": "Does not write to public internet state or third-party systems.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "save_new_client_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Persists professional decisions for the New Client workflow to files in the user's local workspace.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite the local decision file when saving an updated decision set."
+      }
+    },
+    "apply_new_client_decisions": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Applies professional decisions by writing local decision outputs and updating local New Client artifact status files.",
+        "open_world_justification": "Changes only local workspace files and does not publish or transmit data to third-party systems.",
+        "destructive_justification": "Can overwrite local decision, artifact-status, or reviewed New Client files when applying reviewer actions."
+      }
+    },
+    "validate_client_file_preparation_review": {
       "annotations": {
         "readOnlyHint": true,
         "openWorldHint": false,
@@ -68,7 +116,7 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
-    "render_client_intake_review": {
+    "render_client_file_preparation_review": {
       "annotations": {
         "readOnlyHint": true,
         "openWorldHint": false,
@@ -80,7 +128,7 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
-    "save_client_intake_decisions": {
+    "save_client_file_preparation_decisions": {
       "annotations": {
         "readOnlyHint": false,
         "openWorldHint": false,
@@ -92,7 +140,7 @@
         "destructive_justification": "Can overwrite the local ui_decisions.json file when saving an updated decision set."
       }
     },
-    "apply_client_intake_decisions": {
+    "apply_client_file_preparation_decisions": {
       "annotations": {
         "readOnlyHint": false,
         "openWorldHint": false,
@@ -443,11 +491,11 @@
   },
   "test_cases": [
     {
-      "description": "Render a prepared client-intake review payload.",
-      "user_prompt": "Review this prepared client-intake payload and show the document inventory, missing items, extracted fields, memo, and draft client email for my approval.",
+      "description": "Render a prepared New Client review.",
+      "user_prompt": "Review this New Client file and show the relationship setup, AML assessment, documents, missing information, monitoring plan, and review history for my approval.",
       "file_attachment_urls": null,
-      "tools_triggered": "render_client_intake_review",
-      "expected_output": "Displays a structured review surface containing the supplied intake items and available reviewer actions without inventing missing evidence.",
+      "tools_triggered": "render_new_client_review",
+      "expected_output": "Displays one structured New Client review surface containing the supplied file, professional confirmations, document-preparation state, and available reviewer actions without inventing missing evidence.",
       "expected_output_url": null
     },
     {

@@ -1,0 +1,3 @@
+Vera | From source documents to a complete client file
+
+This Core edition shows how to build a new client’s file from source evidence. The model connects five elements: incoming documents and where they came from; client identity and the people involved; requested services and engagement facts; open requests with their next actions; and dates and history maintained over time. The elements remain distinct but connected, so every fact can be traced to the document or decision behind it. Each country maps its own documents, checks and rules onto this shared structure. The result is a readable client file that shows what is known, what remains open and how the professional relationship develops.

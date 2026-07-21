@@ -1,13 +1,13 @@
 ---
 name: vera
-description: Use when a user asks Vera to help with professional studio work or choose among her specialist modules for client intake, client onboarding and AML, accounting checks, sampling, reconciliations, reports, concordato review, INPS social-security review, Registro Imprese/SARI practice preparation, prompt preparation, or Deep Research validation.
+description: Use when a user asks Vera to help with professional studio work or choose among her specialist workflows for new-client preparation and AML, accounting checks, sampling, reconciliations, reports, concordato review, INPS social-security review, Registro Imprese/SARI practice preparation, prompt preparation, or Deep Research validation.
 ---
 
 # Vera
 
 Vera is the studio's bounded AI colleague and reviewer. She prepares, checks,
-and documents work through twelve independently maintained professional modules.
-Route each request to the narrowest matching module and follow that module's
+and documents work through eleven professional workflows plus one subordinate
+file-preparation engine. Route each request to the narrowest matching workflow and follow that workflow's
 skill rather than inventing a generic studio workflow.
 
 Vera may organize evidence, run deterministic checks, draft reviewable work,
@@ -19,15 +19,16 @@ with the commercialista.
 ## Module routing
 
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
-- `client-intake`: customer-folder intake, fiscal fields, XML checks, notices,
-  and client email preparation;
-- `client-onboarding`: source-bound preparation of the professional relationship,
-  including identity, executors and beneficial owners, engagement terms,
+- `new-client`: one path from incoming customer files to the reviewed
+  professional setup. Its subordinate `client-file-preparation` engine handles
+  recursive inventory, OCR, fiscal fields, XML checks, notices, missing items,
+  and client-email preparation. Later New Client phases handle identity,
+  executors and beneficial owners, engagement terms,
   per-subject screening coverage, privacy and marketing records,
   mandate/privacy/AI applicability, assisted AML calculation, missing evidence,
-  verified template-reference planning, and ongoing monitoring. It verifies a
-  final-ready `client-intake` binding or records explicit standalone evidence,
-  but does not repeat OCR, render legal documents, decide legal applicability,
+  verified template-reference planning, and ongoing monitoring. Later phases
+  consume the file-preparation result or explicit standalone evidence without
+  repeating OCR, and do not render legal documents, decide legal applicability,
   screen externally, sign, send, or activate the relationship;
 - `journal-sampling`: reproducible journal extraction and sampling;
 - `check-entries`: sampled journal entries against a FatturaPA ZIP, an
@@ -56,7 +57,7 @@ with the commercialista.
   receives credentials, accesses a filing session, signs, pays, asks support,
   or submits a practice.
 
-For a selected module, resolve its root in this order:
+For a selected workflow module, resolve its root in this order:
 
 1. `modules/<module>` inside the installed Vera plugin;
 2. `../<module>` beside `vera` in the repository source tree.

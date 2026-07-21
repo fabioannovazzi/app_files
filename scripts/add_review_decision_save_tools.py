@@ -52,12 +52,12 @@ TARGETS = [
         "render_deep_research_review",
     ),
     Target(
-        "client-intake",
-        "save_client_intake_decisions",
-        "Client Intake",
-        "client_intake",
-        "validate_client_intake_review",
-        "render_client_intake_review",
+        "client-file-preparation",
+        "save_client_file_preparation_decisions",
+        "New Client · File Preparation",
+        "client_file_preparation",
+        "validate_client_file_preparation_review",
+        "render_client_file_preparation_review",
     ),
     Target(
         "audit-reconciliation",

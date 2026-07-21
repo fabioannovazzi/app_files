@@ -26,9 +26,9 @@ Main groups:
 - Shared non-plotting review workbench generator:
   `scripts/generate_non_plotting_review_widgets.py`.
 - Generated non-plotting widget assets for Audit Reconciliation, Check Entries,
-  Client Intake, Concordato Plan Review, Deep Research Validator,
-  Journal-Bank Reconciliation, Journal Sampling, Prompt Optimizer, and Report
-  Builder.
+  New Client's client-file-preparation engine, Concordato Plan Review, Deep
+  Research Validator, Journal-Bank Reconciliation, Journal Sampling, Prompt
+  Optimizer, and Report Builder.
 - Regression coverage:
   `tests/plugins/test_non_plotting_review_workbench.py`.
 - Repo-level OpenAI-pattern interaction catalog and scorecard:
@@ -145,7 +145,8 @@ machine-readable readiness JSON.
 
 Visual QA was also run against generated review workbench demos using local
 headless Chrome. Check Entries was reviewed first at desktop and narrow mobile
-widths. Deep Research Validator, Report Builder, Client Intake, Audit
+widths. Deep Research Validator, Report Builder, New Client's
+client-file-preparation engine, Audit
 Reconciliation, Journal Sampling, Journal-Bank Reconciliation, Prompt
 Optimizer, and Concordato Plan Review were then reviewed with generated demo
 payloads. The desktop views open into workflow-specific queues and detail

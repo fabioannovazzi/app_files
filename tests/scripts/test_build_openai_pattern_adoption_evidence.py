@@ -37,7 +37,7 @@ def _write_browser_writeback_report(
                 },
                 "reports": [
                     {
-                        "plugin": "client-intake",
+                        "plugin": "client-file-preparation",
                         "status": "ok",
                         "row_count": 1,
                         "decision_control_count": 4,
@@ -66,7 +66,7 @@ def _write_customer_validation_manifest(path: Path) -> None:
     artifact_dir.mkdir(parents=True, exist_ok=True)
     screenshot_dir.mkdir(parents=True, exist_ok=True)
     (artifact_dir / "run_intake.json").write_text(
-        json.dumps({"workflow": "client-intake"}),
+        json.dumps({"workflow": "client-file-preparation"}),
         encoding="utf-8",
     )
     (artifact_dir / "review_payload.json").write_text(
@@ -86,17 +86,19 @@ def _write_customer_validation_manifest(path: Path) -> None:
         encoding="utf-8",
     )
     (artifact_dir / "native_readback.md").write_text("readback", encoding="utf-8")
-    (screenshot_dir / "client-intake.png").write_text("screenshot", encoding="utf-8")
+    (screenshot_dir / "client-file-preparation.png").write_text(
+        "screenshot", encoding="utf-8"
+    )
     path.write_text(
         json.dumps(
             {
                 "schema_version": "1.0",
                 "cases": [
                     {
-                        "case_id": "case-client-intake-001",
-                        "plugin": "client-intake",
+                        "case_id": "case-client-file-preparation-001",
+                        "plugin": "client-file-preparation",
                         "scenario_name": "Representative customer case",
-                        "input_path_or_case_id": "anonymized/client-intake/001",
+                        "input_path_or_case_id": "anonymized/client-file-preparation/001",
                         "language": "it",
                         "reviewer": "Reviewer Name",
                         "validated_at": "2026-06-08T10:00:00Z",
@@ -107,7 +109,9 @@ def _write_customer_validation_manifest(path: Path) -> None:
                             "ui_decisions": "out/ui_decisions.json",
                             "applied_decisions": "out/applied_decisions.json",
                             "final_artifacts": "out/final_artifacts.json",
-                            "screenshot_paths": ["screenshots/client-intake.png"],
+                            "screenshot_paths": [
+                                "screenshots/client-file-preparation.png"
+                            ],
                             "native_output_readback": "out/native_readback.md",
                         },
                         "decision_summary": {"accepted": 1},
@@ -181,11 +185,12 @@ def test_build_evidence_bundle_writes_core_artifacts(tmp_path: Path) -> None:
     assert [case["plugin"] for case in template_payload["cases"]] == [
         "audit-reconciliation",
         "check-entries",
-        "client-intake",
+        "client-file-preparation",
         "concordato-plan-review",
         "deep-research-validator",
         "journal-bank-reconciliation",
         "journal-sampling",
+        "new-client",
         "prompt-optimizer",
         "report-builder",
     ]
@@ -253,7 +258,7 @@ def test_build_evidence_bundle_writes_core_artifacts(tmp_path: Path) -> None:
 def test_build_evidence_bundle_uses_existing_browser_report(tmp_path: Path) -> None:
     bundle = load_bundle_module()
     browser_report = tmp_path / "browser.json"
-    screenshot = tmp_path / "shots" / "client-intake.png"
+    screenshot = tmp_path / "shots" / "client-file-preparation.png"
     screenshot.parent.mkdir(parents=True, exist_ok=True)
     screenshot.write_bytes(b"\x89PNG\r\n\x1a\nfixture")
     _write_browser_writeback_report(browser_report, screenshot_path=screenshot)
@@ -263,7 +268,7 @@ def test_build_evidence_bundle_uses_existing_browser_report(tmp_path: Path) -> N
         root=ROOT,
         output_dir=output_dir,
         browser_writeback_report_path=browser_report,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_browser_writeback=True,
     )
     readiness_payload = json.loads(
@@ -275,7 +280,7 @@ def test_build_evidence_bundle_uses_existing_browser_report(tmp_path: Path) -> N
 
     assert tiers["browser_writeback_mechanism"] == "covered"
     assert readiness_payload["browser_writeback"]["covered_plugins"] == [
-        "client-intake"
+        "client-file-preparation"
     ]
     assert "browser_writeback_gallery" in manifest["artifacts"]
     dashboard_html = Path(manifest["artifacts"]["adoption_review_dashboard"])
@@ -286,19 +291,19 @@ def test_build_evidence_bundle_uses_existing_browser_report(tmp_path: Path) -> N
         )
     )
     copied_screenshot = (
-        output_dir / "browser_writeback_gallery_assets" / "client-intake.png"
+        output_dir / "browser_writeback_gallery_assets" / "client-file-preparation.png"
     )
 
     assert gallery_html.exists()
     assert dashboard_html.exists()
     assert copied_screenshot.exists()
-    assert "client-intake" in gallery_html.read_text(encoding="utf-8")
+    assert "client-file-preparation" in gallery_html.read_text(encoding="utf-8")
     assert "browser_writeback_mechanism</span>" in dashboard_html.read_text(
         encoding="utf-8"
     )
-    assert "client-intake" in dashboard_html.read_text(encoding="utf-8")
+    assert "client-file-preparation" in dashboard_html.read_text(encoding="utf-8")
     assert gallery_payload["reports"][0]["screenshot_asset"] == (
-        "browser_writeback_gallery_assets/client-intake.png"
+        "browser_writeback_gallery_assets/client-file-preparation.png"
     )
 
 
@@ -313,7 +318,7 @@ def test_build_evidence_bundle_accepts_real_customer_manifest(
         root=ROOT,
         output_dir=tmp_path / "evidence",
         customer_manifest_path=manifest_path,
-        expected_customer_plugins=("client-intake",),
+        expected_customer_plugins=("client-file-preparation",),
         require_customer_validation=True,
         verify_customer_artifact_paths=True,
     )
@@ -342,12 +347,12 @@ def test_build_evidence_bundle_accepts_real_customer_manifest(
     dashboard_text = Path(manifest["artifacts"]["adoption_review_dashboard"]).read_text(
         encoding="utf-8"
     )
-    assert "case-client-intake-001" in checklist_text
+    assert "case-client-file-preparation-001" in checklist_text
     assert "covered" in checklist_text
     assert "complete_candidate" in dashboard_text
     assert tiers["real_customer_folder_validation"] == "covered"
     assert readiness_payload["customer_validation"]["covered_plugins"] == [
-        "client-intake"
+        "client-file-preparation"
     ]
     assert plan_payload["cases"][0]["status"] == "covered"
     requirements = {
@@ -422,7 +427,7 @@ def test_main_require_complete_objective_passes_with_complete_fixture(
             "--customer-validation-manifest",
             str(customer_manifest),
             "--expected-customer-plugin",
-            "client-intake",
+            "client-file-preparation",
             "--require-browser-writeback",
             "--require-customer-validation",
             "--verify-customer-validation-artifacts",

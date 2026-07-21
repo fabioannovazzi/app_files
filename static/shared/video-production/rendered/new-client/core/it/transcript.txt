@@ -1,0 +1,3 @@
+Vera | Dai documenti al fascicolo cliente
+
+L’edizione Core mostra come costruire il fascicolo di un nuovo cliente partendo dalle fonti. Il modello collega cinque elementi: i documenti ricevuti e la loro provenienza; l’identità del cliente e le persone coinvolte; i servizi richiesti e i fatti dell’incarico; le richieste aperte con le azioni successive; le date e lo storico mantenuti nel tempo. Gli elementi restano distinti ma connessi, così ogni informazione può essere ricondotta al documento o alla decisione da cui nasce. Ogni Paese collega a questa struttura i propri documenti, controlli e regole. Il risultato è un fascicolo leggibile: mostra che cosa è noto, che cosa resta aperto e come il rapporto professionale evolve.

@@ -35,7 +35,8 @@ def test_repo_review_payload_contract_coverage_has_no_gaps() -> None:
     assert set(by_plugin) == {
         "audit-reconciliation",
         "check-entries",
-        "client-intake",
+        "client-file-preparation",
+        "new-client",
         "concordato-plan-review",
         "deep-research-validator",
         "journal-bank-reconciliation",
