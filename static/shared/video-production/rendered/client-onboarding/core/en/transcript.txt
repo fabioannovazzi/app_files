@@ -1,0 +1,3 @@
+Vera | The client onboarding information model
+
+This Core edition explains the common structure for client onboarding. The model connects five elements: source evidence and where it came from; client identity and the people involved; requested services and engagement facts; open requests with their next actions; and dates and history maintained over time. The elements remain distinct but connected, so every fact can be traced to the document or decision behind it. Country implementations make the model operational by mapping their own documents, checks and rules onto these stable fields. The conceptual result is a readable structure for understanding what is known, what remains open and how the client file develops.

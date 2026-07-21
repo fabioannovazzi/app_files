@@ -1,0 +1,3 @@
+Vera | Check Entries · Italy · FatturaPA
+
+Checking an entry means understanding whether the right document supports it. Vera starts from the sampled journal row and looks first across FatturaPA XML and authorized exports. It compares amount, date, document number and counterparty while keeping each source visible. Strong matches move into the supported set. Ambiguous cases remain in the review queue with the reason and the specific document to inspect. The result is a workpaper that links every checked entry to its evidence and keeps exceptions separate. From a sampled row to support the reviewer can follow.

@@ -1,0 +1,3 @@
+Vera | Il modello informativo dell’onboarding
+
+L’edizione Core descrive la struttura comune dell’onboarding cliente. Il modello collega cinque elementi: le evidenze di partenza e la loro fonte; l’identità del cliente e le persone coinvolte; i servizi richiesti e i fatti dell’incarico; le richieste aperte con le azioni successive; le date e lo storico mantenuti nel tempo. Questi elementi restano distinti ma connessi, così ogni informazione può essere ricondotta al documento o alla decisione da cui nasce. Le implementazioni di ciascun Paese rendono il modello operativo, associando ai campi stabili i propri documenti, controlli e regole. Il risultato concettuale è una struttura leggibile per capire che cosa è noto, che cosa è aperto e come il fascicolo evolve.

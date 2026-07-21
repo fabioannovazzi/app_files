@@ -35,6 +35,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/client-intake/index.html"),
     Path("static/shared/client-intake/uk.html"),
     Path("static/shared/client-intake/zurich.html"),
+    Path("static/shared/client-onboarding/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/journal-bank-reconciliation/index.html"),
@@ -239,6 +240,7 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "vera" / "index.html",
     ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html",
     ROOT / "static" / "shared" / "client-intake" / "index.html",
+    ROOT / "static" / "shared" / "client-onboarding" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
@@ -258,6 +260,7 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "client-intake" / "geneva.html",
     ROOT / "static" / "shared" / "client-intake" / "uk.html",
     ROOT / "static" / "shared" / "client-intake" / "zurich.html",
+    ROOT / "static" / "shared" / "client-onboarding" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
@@ -1651,7 +1654,7 @@ def test_static_plugin_pages_do_not_show_feedback_mailto_footer() -> None:
             assert snippet not in page, page_path.as_posix()
 
 
-def test_static_plugin_pages_install_vera_from_marketplace() -> None:
+def test_static_plugin_pages_use_the_unified_vera_install_action() -> None:
     stale_download_snippets = (
         'href="downloads/check-entries-plugin.zip',
         'href="downloads/concordato-plan-review-plugin.zip',
@@ -1686,9 +1689,7 @@ def test_static_plugin_pages_install_vera_from_marketplace() -> None:
         assert "Plugin Pack" not in page, page_path.as_posix()
         assert "Download ZIP" not in page, page_path.as_posix()
         assert "Scarica ZIP" not in page, page_path.as_posix()
-        assert 'href="#download"' in page or 'href="#scarica"' in page
-        assert 'href="#download" data-i18n="hero.primary"' not in page
-        assert 'href="#scarica" data-i18n="hero.primary"' not in page
+        assert re.search(r'href="#(?:install|scarica|download)"', page)
         for snippet in stale_download_snippets:
             assert snippet not in page, page_path.as_posix()
 
@@ -1710,6 +1711,9 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
     shell = (ROOT / "static" / "shared" / "plugin-page-shell.css").read_text(
         encoding="utf-8"
     )
+    journey_shell = (ROOT / "static" / "shared" / "vera-journey.css").read_text(
+        encoding="utf-8"
+    )
 
     assert "--plugin-hero-title-size: 2.875rem;" in shell
     assert "--plugin-section-title-size: 2.125rem;" in shell
@@ -1718,14 +1722,21 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
     assert "font-size: var(--plugin-section-title-size)" in shell
     assert "font-size: var(--plugin-lead-size)" in shell
     assert "font-size: clamp(1.08rem" not in shell
+    assert "--vj-white: #ffffff;" in journey_shell
+    assert "background: var(--vj-white);" in journey_shell
 
     for page_path in ACCOUNTING_STATIC_PLUGIN_PAGES:
         page = page_path.read_text(encoding="utf-8")
+
+        if page_path.parent.name in {"client-intake", "client-onboarding"}:
+            assert 'href="../vera-journey.css?v=20260720-video"' in page
+            continue
 
         assert (
             "--paper: #ffffff;" in page
             or "--bg: #ffffff;" in page
             or "--white: #FFFFFF;" in page
+            or "--white: #ffffff;" in page
         ), page_path.as_posix()
         assert "font-size: clamp(3rem" not in page, page_path.as_posix()
         assert "font-size: clamp(42px, 7vw" not in page, page_path.as_posix()
@@ -1807,6 +1818,19 @@ def test_vera_downstream_pages_show_mparanza_logo(relative_path: Path) -> None:
         'href="../plugin-page-shell.css?v=20260720-logo"' in page
     ), relative_path.as_posix()
     assert header_match is not None, relative_path.as_posix()
+    if relative_path.name in {"geneva.html", "uk.html", "zurich.html"}:
+        renderer = (
+            ROOT / "static" / "shared" / "client-intake" / "jurisdiction-pages.js"
+        ).read_text(encoding="utf-8")
+        assert '<header class="topbar"></header>' in page
+        assert 'src="jurisdiction-pages.js?v=' in page
+        assert 'class="brand"' in renderer
+        assert (
+            '<img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" '
+            'alt="Mparanza">' in renderer
+        )
+        return
+
     header = header_match.group(0)
     assert 'class="brand"' in header
     assert (
@@ -2039,36 +2063,34 @@ def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
     assert "Supporti post cut-off" in page
     assert "Usa il default factoring" in page
     assert "pagamento in estratto conto bancario" in page
-    assert '<a href="#scarica" data-i18n="nav.download">Download</a>' in page
+    assert '<a href="#scarica" data-journey="nav.open">Apri Vera</a>' in page
 
 
-def test_istruttoria_page_describes_beta_workflow_and_prompt_bank() -> None:
+def test_istruttoria_page_describes_the_connected_client_journey() -> None:
     page = (ROOT / "static" / "shared" / "client-intake" / "index.html").read_text(
         encoding="utf-8"
     )
 
     for snippet in (
         '<html lang="it">',
-        "Istruttoria clienti",
-        "Prima lettura di una cartella cliente",
-        "Trasforma una cartella cliente disordinata in un primo fascicolo di lavoro",
-        "Istruttoria completa",
-        "730 / Redditi PF",
-        "Fatture XML",
-        "Dati fiscali",
-        "Email cliente",
-        "Avviso fiscale",
-        "organizza i file ricevuti",
-        "bozza email cliente",
-        "memo studio",
-        "anno fiscale, giurisdizione, cartella di destinazione",
-        "Pagine locali",
-        "Gen&egrave;ve",
-        "Z&uuml;rich",
+        "Istruttoria cliente",
+        "Dalla cartella ricevuta a un lavoro da cui partire.",
+        "Cosa fornisci",
+        "Cosa prepara Vera",
+        "Cosa ricevi",
+        "L’istruttoria apre il percorso. L’onboarding lo porta avanti.",
+        "Le mancanze diventano richieste precise.",
+        "Memo studio",
+        "Richiesta cliente",
+        "Mercato del fascicolo",
+        "Svizzera · Ginevra",
+        "Svizzera · Zurigo",
         "United Kingdom",
-        'href="geneva.html"',
-        'href="zurich.html"',
-        'href="uk.html"',
+        'id="prompt-example"',
+        'href="../client-onboarding/index.html?lang=it"',
+        'href="geneva.html?lang=it"',
+        'href="zurich.html?lang=it"',
+        'href="uk.html?lang=it"',
     ):
         assert snippet in page
     for stale_snippet in (
@@ -2097,65 +2119,40 @@ def test_vera_public_page_browser_title_uses_vera_brand(
     assert "| Mparanza" not in page
 
 
-def test_vera_public_page_routes_general_video_by_language() -> None:
-    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
+    intake_root = ROOT / "static" / "shared" / "client-intake"
+    jurisdiction_source = (intake_root / "jurisdiction-pages.js").read_text(
         encoding="utf-8"
     )
-
-    for language, video_id in {
-        "it": "2q4o2djeSmg",
-        "en": "Lqt3odBszD0",
-        "fr": "sjYBTUUguR4",
-        "de": "XV2KOGKZuYM",
-    }.items():
-        assert f'{language}: {{ id: "{video_id}"' in page
-    assert 'id="general-video-thumbnail"' in page
-
-
-def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
     pages = {
-        "geneva.html": (
-            '<html lang="fr">',
-            "Client Intake - Gen&egrave;ve",
-            "Premi&egrave;re revue d'un dossier fiscal genevois",
-            "Ce que le cabinet obtient",
-            "m&eacute;mo cabinet",
-            "Installer Vera",
-        ),
-        "zurich.html": (
-            "Mandanten-Erstpr&uuml;fung f&uuml;r Z&uuml;rcher Treuh&auml;nder",
-            "Erste Durchsicht eines Mandantendossiers",
-            "Was die Kanzlei erh&auml;lt",
-            "Interne Notiz",
-            "Vera installieren",
-        ),
-        "uk.html": (
-            "Self Assessment client intake",
-            "First review of a Self Assessment folder",
-            "What the intake produces",
-            "Accountant memo",
-            "Install Vera",
-        ),
+        "geneva.html": ("geneva", "fr"),
+        "zurich.html": ("zurich", "de"),
+        "uk.html": ("uk", "en"),
     }
 
-    for filename, snippets in pages.items():
+    for filename, (jurisdiction, default_language) in pages.items():
         page = (ROOT / "static" / "shared" / "client-intake" / filename).read_text(
             encoding="utf-8"
         )
-        for snippet in snippets:
-            assert snippet in page
-        for stale_snippet in (
-            "Mparanza turns a scattered client folder",
-            "Mparanza transforme un dossier client dispers&eacute;",
-            "Mparanza macht aus einem ungeordneten Mandantendossier",
-            "The plugin handles the first operational pass",
-            "Le plugin sert au premier passage",
-            "Der Plugin-Run beantwortet",
-            "Codex reads the evidence files",
-            "Codex lit les preuves",
-            "Codex liest die erzeugten Nachweise",
-        ):
-            assert stale_snippet not in page
+        assert f'data-jurisdiction="{jurisdiction}"' in page
+        assert f'data-presentation-language="{default_language}"' in page
+        assert 'src="jurisdiction-pages.js?v=' in page
+        assert f'slug: "{filename}"' in jurisdiction_source
+        assert f'defaultLanguage: "{default_language}"' in jurisdiction_source
+        for language in ("it", "en", "fr", "de"):
+            assert f'hreflang="{language}"' in page
+
+    assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de"]' in (
+        jurisdiction_source
+    )
+    assert "const page = jurisdictions[document.body.dataset.jurisdiction]" in (
+        jurisdiction_source
+    )
+    assert "document.body.dataset.presentationLanguage = language" in (
+        jurisdiction_source
+    )
+    assert 'url.searchParams.set("lang", language)' in jurisdiction_source
+    assert "dataset.jurisdiction =" not in jurisdiction_source
 
 
 def test_journal_sampling_page_matches_plugin_site_pattern() -> None:
@@ -2220,21 +2217,14 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         "Ottimizza prompt",
         "Optimiser le prompt",
         "Prompt optimieren",
-        "Prompt ready",
-        "Prompt pronti",
-        "Use it when",
-        "Quando usarlo",
-        "Scope before sources",
-        "Perimetro prima delle fonti",
-        "Facts preserved",
-        "Fatti preservati",
-        "Framework confirmed",
-        "Quadro confermato",
-        "Sources prioritized",
-        "Fonti prioritarie",
-        "Checks included",
-        "Controlli inclusi",
-        "How the brief is prepared",
+        "Un brief che Deep Research può seguire e tu puoi controllare.",
+        "Fornisci",
+        "Vera prepara",
+        "Ricevi",
+        "Come viene preparato",
+        "Da un quesito disordinato a una ricerca controllabile.",
+        "Un solo prompt per iniziare.",
+        "Un passaggio dentro un percorso più lungo.",
         "question_inventory.json",
         "prompt_recipe.json",
         "optimized_prompt.md",
@@ -2243,58 +2233,85 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         "source_domains.txt",
         "source_domains_comma.txt",
         "README_HUMAN.md",
+        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
 
 
-@pytest.mark.parametrize(
-    ("language", "localized_page"),
-    (
-        ("en", "uk.html"),
-        ("fr", "geneva.html"),
-        ("de", "zurich.html"),
-    ),
-)
-def test_client_intake_query_routes_to_localized_page(
-    language: str, localized_page: str
-) -> None:
+def test_client_intake_keeps_language_and_market_selection_separate() -> None:
     page = (ROOT / "static" / "shared" / "client-intake" / "index.html").read_text(
         encoding="utf-8"
     )
+    market_links = {
+        "italy": "index.html",
+        "geneva": "geneva.html",
+        "zurich": "zurich.html",
+        "uk": "uk.html",
+    }
 
-    assert f'{language}: "{localized_page}"' in page
-    assert "window.location.replace(localizedPage)" in page
+    for language in ("it", "en", "fr", "de"):
+        assert f'data-lang="{language}"' in page
+    assert "return `${path}?lang=${lang}`;" in page
+    for market, market_page in market_links.items():
+        assert f'id="market-{market}-link" href="{market_page}?lang=it"' in page
+        assert (
+            f'document.getElementById("market-{market}-link").href = '
+            f'localizedHref("{market_page}", lang);'
+        ) in page
+    assert 'setLanguage(params.get("lang") || "it", false)' in page
+    assert "window.location.replace" not in page
+    assert "clientIntakePages" not in page
 
 
-def test_vera_page_lists_all_eleven_modules() -> None:
+def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
+    core_start = page.index('id="core"')
+    core_end = page.index("</section>", core_start)
+    italy_start = page.index('id="italia"')
+    italy_end = page.index("</section>", italy_start)
+    core = page[core_start:core_end]
+    italy = page[italy_start:italy_end]
 
     for module_link in (
-        "../client-intake/index.html",
+        "../client-intake/index.html#work",
         "../journal-sampling/index.html",
-        "../check-entries/index.html",
+        "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
         "../report-builder/index.html",
-        "../concordato-plan-review/index.html",
-        "../previdenza-inps/index.html",
-        "../registro-imprese-sari/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
     ):
-        assert page.count(f'href="{module_link}"') == 1
-    assert page.count(" data-module-link") == 11
-    assert page.count('class="module-row"') == 11
-    assert 'id="previdenza-inps"' in page
-    assert 'id="registro-imprese-sari"' in page
-    assert "La collega AI che prepara, controlla e documenta" in page
-    assert (
-        "ZIP FatturaPA, export autorizzati e, solo per le eccezioni, PDF mirati" in page
-    )
-    assert "Install Vera from her official OpenAI listing." in page
+        assert f'href="{module_link}"' in core
+    for module_link in (
+        "../client-intake/index.html#market-selector",
+        "../client-onboarding/index.html#italy-pack",
+        "../check-entries/index.html#italy-adapter",
+        "../report-builder/index.html#italy-preset",
+        "../concordato-plan-review/index.html",
+        "../previdenza-inps/index.html",
+        "../registro-imprese-sari/index.html",
+    ):
+        assert f'href="{module_link}"' in italy
+    assert core.count(" data-module-link") == 8
+    assert core.count('class="module-row"') == 8
+    assert italy.count(" data-module-link") == 7
+    assert italy.count('class="module-row"') == 7
+    assert core.count('<article class="workstream">') == 3
+    assert 'id="modello"' in page
+    assert 'id="core"' in page
+    assert 'id="italia"' in page
+    assert 'id="video"' in page
+    assert 'id="installa"' in page
+    assert "Core multilingue + pacchetto Italia" in page
+    assert "Cambia la lingua del lavoro, non la giurisdizione applicata" in page
+    assert "FatturaPA" not in core
+    assert "FatturaPA" in italy
+    assert 'src="../video-library.js?v=2026072002"' in page
+    assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
     assert (
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
         in page
@@ -2303,6 +2320,7 @@ def test_vera_page_lists_all_eleven_modules() -> None:
     for stale_snippet in (
         "/downloads/vera",
         "data-download-link",
+        "data-free-download-link",
         "manual ZIP",
         "ZIP manuale",
         "ZIP manuel",
@@ -2323,15 +2341,23 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.bank.title",
         "module.reconciliation.title",
         "module.report.title",
+        "module.prompt.title",
+        "module.research.title",
+        "module.clientItaly.title",
+        "module.onboardingItaly.title",
+        "module.entriesItaly.title",
+        "module.reportItaly.title",
         "module.concordato.title",
         "module.previdenza.title",
         "module.registro.title",
-        "module.prompt.title",
-        "module.research.title",
     )
     for title_key in title_keys:
         assert page.count(f'data-i18n="{title_key}"') == 1
         assert page.count(f'"{title_key}":') == 4
+
+    visible_copy_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
+    for copy_key in visible_copy_keys:
+        assert page.count(f'"{copy_key}":') == 4, copy_key
 
     for untranslated_italian_copy in (
         "matching rivedibile",
@@ -2370,8 +2396,12 @@ def test_deep_research_validator_page_matches_plugin_site_pattern() -> None:
         "Sceglie le affermazioni",
         "Check sources",
         "Controlla le fonti",
-        "Prompt ready",
-        "Prompt pronti",
+        "Sapere quali conclusioni reggono, prima di usarle.",
+        "Fornisci",
+        "Vera prepara",
+        "Ricevi",
+        "Un solo prompt per iniziare.",
+        "La validazione chiude il circuito della ricerca.",
         "document_inventory.json",
         "source_inventory.json",
         "claims_review.json",
@@ -2379,14 +2409,12 @@ def test_deep_research_validator_page_matches_plugin_site_pattern() -> None:
         "validated_document.md",
         "validation_package.md",
         ACCOUNTING_BUNDLE_LINK,
-        "Installa Vera dal marketplace",
-        "Install Vera from the marketplace",
         "/?lang=${lang}",
     ):
         assert snippet in page
 
 
-def test_previdenza_inps_page_explains_evidence_and_access_boundaries() -> None:
+def test_previdenza_inps_page_explains_the_reviewable_case_journey() -> None:
     page = (ROOT / "static" / "shared" / "previdenza-inps" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -2396,20 +2424,23 @@ def test_previdenza_inps_page_explains_evidence_and_access_boundaries() -> None:
         "INPS Social Security Review",
         "Revue de prévoyance INPS",
         "INPS-Sozialversicherung prüfen",
-        "OCR locale",
-        "official INPS exports",
-        "does not log in to INPS autonomously",
-        "No credentials or submissions",
+        "Porta un caso INPS disperso a un fascicolo pronto da rivedere.",
+        "Fornisci",
+        "Vera prepara",
+        "Ricevi",
+        "Cronologia del caso",
+        "Matrice delle evidenze",
+        "Dal fascicolo approvato alla relazione Word.",
         "case_records_validated.json",
-        "claims_review_normalized.json",
+        "evidence_matrix.csv",
         "studio_memo.docx",
         ACCOUNTING_BUNDLE_LINK,
-        "Installa Vera dal marketplace",
+        'href="../report-builder/index.html?lang=it"',
     ):
         assert snippet in page
 
 
-def test_registro_imprese_sari_page_explains_read_only_draft_boundary() -> None:
+def test_registro_imprese_sari_page_explains_the_practice_plan_journey() -> None:
     page = (
         ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html"
     ).read_text(encoding="utf-8")
@@ -2419,15 +2450,18 @@ def test_registro_imprese_sari_page_explains_read_only_draft_boundary() -> None:
         "Business Register and SARI",
         "Registre des entreprises et SARI",
         "Unternehmensregister und SARI",
-        "case-specific network approval",
-        "written authorization from the rights holder",
-        "never receives credentials",
-        "ready_to_file always remains false",
+        "Porta una richiesta camerale a un piano di pratica chiaro e citato.",
+        "Fornisci",
+        "Vera prepara",
+        "Ricevi",
+        "Piano della pratica",
+        "Checklist DIRE",
+        "Registro delle fonti",
         "practice_plan_validated.json",
         "dire_practice_plan.json",
         "review_handoff.md",
         ACCOUNTING_BUNDLE_LINK,
-        "Installa Vera dal marketplace",
+        'href="../prompt-optimizer/index.html?lang=it"',
     ):
         assert snippet in page
 
@@ -2450,10 +2484,11 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
 
     for snippet in (
         "Check Entries",
-        "Match invoices without asking for hundreds of printed copies.",
-        "Abbina le fatture senza chiedere a Maria di stamparne duecento.",
-        "Rapprocher les factures sans demander des centaines d'impressions.",
-        "Rechnungen zuordnen, ohne Hunderte Ausdrucke anzufordern.",
+        "Collega ogni scrittura campionata al supporto disponibile.",
+        "Connect every sampled entry to its available support.",
+        "Reliez chaque écriture échantillonnée à son justificatif disponible.",
+        "Verbinden Sie jede Stichprobenbuchung mit dem verfügbaren Beleg.",
+        "Cosa dai / cosa ottieni",
         "Entry checks tied to documents",
         "Controlli con supporto collegato",
         "Start broad, finish with targeted requests",
@@ -2465,6 +2500,7 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
         "pdf_inventory.json",
         "check_results.csv",
         "check_audit.json",
+        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2493,11 +2529,12 @@ def test_journal_bank_reconciliation_page_matches_plugin_site_pattern() -> None:
     ).read_text(encoding="utf-8")
 
     for snippet in (
-        "Journal-bank reconciliation",
-        "Match bank rows to accounting rows without burying exceptions.",
-        "Abbina banca e contabilità senza nascondere le eccezioni",
-        "Rapprocher banque et comptabilité sans masquer les exceptions",
-        "Bank- und Buchhaltungszeilen abgleichen, ohne Ausnahmen zu verstecken",
+        "Riconciliazione banca-contabilità",
+        "Porta banca e contabilità in una riconciliazione con eccezioni visibili.",
+        "Bring bank and accounting into one reconciliation with visible exceptions.",
+        "Réunissez banque et comptabilité dans un rapprochement aux exceptions visibles.",
+        "Führen Sie Bank und Buchhaltung in einer Abstimmung mit sichtbaren Ausnahmen zusammen.",
+        "Cosa dai / cosa ottieni",
         "Prompt pronti",
         "Ready prompts",
         "Complete reconciliation",
@@ -2513,6 +2550,7 @@ def test_journal_bank_reconciliation_page_matches_plugin_site_pattern() -> None:
         "unmatched_bank.csv",
         "unmatched_journal.csv",
         "reconciliation_audit.json",
+        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2565,6 +2603,7 @@ def test_report_builder_page_matches_plugin_site_pattern() -> None:
         "report_draft.md",
         "report.docx",
         "report_audit.json",
+        ACCOUNTING_BUNDLE_LINK,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2575,7 +2614,7 @@ def test_report_builder_page_matches_plugin_site_pattern() -> None:
     (
         (
             "vera/index.html",
-            'document.title = strings["hero.eyebrow"]',
+            'document.title = strings["meta.title"]',
         ),
         (
             "report-builder/index.html",
@@ -2826,8 +2865,7 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
         "run_audit.json",
         "codex_run_review.md",
         ACCOUNTING_BUNDLE_LINK,
-        "Installa Vera dal marketplace",
-        "Install Vera from the marketplace",
+        'data-journey="cta.open"',
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -3007,37 +3045,30 @@ def test_vera_public_page_uses_deck_blue_palette_without_black() -> None:
 
 
 @pytest.mark.parametrize(
-    ("companion", "install_attribute", "video_id", "expected_video_count"),
+    ("companion", "install_attribute"),
     (
-        ("clara", "data-clara-install-link", "presentation-video-link", 1),
-        ("vera", "data-vera-install-link", "general-video-link", 1),
+        ("clara", "data-clara-install-link"),
+        ("vera", "data-vera-install-link"),
     ),
 )
-def test_companion_overview_video_follows_install_action_in_hero(
-    companion: str,
-    install_attribute: str,
-    video_id: str,
-    expected_video_count: int,
+def test_companion_overview_video_follows_the_intended_product_story(
+    companion: str, install_attribute: str
 ) -> None:
     page = (ROOT / "static" / "shared" / companion / "index.html").read_text(
         encoding="utf-8"
     )
+    if companion == "vera":
+        assert page.index('id="core"') < page.index('id="italia"')
+        assert page.index('id="italia"') < page.index('id="video"')
+        assert page.index('id="video"') < page.index('id="installa"')
+        assert page.count('class="overview-video"') == 1
+        return
+
     hero_start = page.index('<section class="hero">')
     hero_end = page.index("</section>", hero_start)
     hero = page[hero_start:hero_end]
-
-    assert hero.index(install_attribute) < hero.index(f'id="{video_id}"')
-    assert page.count('class="video-story"') == expected_video_count
-
-
-def test_vera_page_leaves_check_entries_explanation_to_detail_page() -> None:
-    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
-        encoding="utf-8"
-    )
-
-    assert '<section class="invoice-flow"' not in page
-    assert 'id="invoice-video-link"' not in page
-    assert 'href="../check-entries/index.html"' in page
+    assert hero.index(install_attribute) < hero.index('class="video-story"')
+    assert page.count('class="video-story"') == 1
 
 
 def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
@@ -3235,18 +3266,16 @@ def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
         assert positions == sorted(positions)
 
 
-def test_vera_module_links_preserve_language() -> None:
+def test_vera_module_links_preserve_language_without_changing_market() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert 'href="../client-intake/index.html" data-module-link' in page
+    assert 'href="../client-intake/index.html#work" data-module-link' in page
     assert 'url.searchParams.set("lang", lang)' in page
     assert 'link.setAttribute("href", withLanguage' in page
-    assert 'en: "../client-intake/uk.html"' in page
-    assert 'fr: "../client-intake/geneva.html"' in page
-    assert 'de: "../client-intake/zurich.html"' in page
-    assert "withLanguage(clientIntakePages[lang], lang)" in page
+    assert "clientIntakePages" not in page
+    assert "window.location.replace" not in page
 
 
 @pytest.mark.parametrize(
@@ -3276,51 +3305,28 @@ def test_companion_install_flow_routes_login_to_same_listing(
     assert page.count(login_url) == 2
     assert listing_url not in page
     assert page.count(install_marker) == 2
-    assert 'data-i18n="install.open"' in page
-    assert 'data-i18n="install.signed_out"' in page
+    if page_name == "vera":
+        assert 'data-i18n="hero.install"' in page
+        assert 'data-i18n="install.button"' in page
+        assert 'data-i18n="install.signed_out"' not in page
+    else:
+        assert 'data-i18n="install.open"' in page
+        assert 'data-i18n="install.signed_out"' in page
 
 
 @pytest.mark.parametrize(
-    ("page_name", "localized_guidance"),
+    "localized_guidance",
     (
-        (
-            "clara",
-            "Not signed in? ChatGPT asks you to sign in, then opens Clara's listing.",
-        ),
-        (
-            "clara",
-            "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Clara.",
-        ),
-        (
-            "clara",
-            "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Clara.",
-        ),
-        (
-            "clara",
-            "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Claras Eintrag.",
-        ),
-        (
-            "vera",
-            "Not signed in? ChatGPT asks you to sign in, then opens Vera's listing.",
-        ),
-        (
-            "vera",
-            "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Vera.",
-        ),
-        (
-            "vera",
-            "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Vera.",
-        ),
-        (
-            "vera",
-            "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Veras Eintrag.",
-        ),
+        "Not signed in? ChatGPT asks you to sign in, then opens Clara's listing.",
+        "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Clara.",
+        "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Clara.",
+        "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Claras Eintrag.",
     ),
 )
-def test_companion_install_flow_localizes_logged_out_guidance(
-    page_name: str, localized_guidance: str
+def test_clara_install_flow_localizes_logged_out_guidance(
+    localized_guidance: str,
 ) -> None:
-    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
 

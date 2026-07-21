@@ -1,0 +1,1327 @@
+{
+  "schemaVersion": "2.0.0",
+  "generatedAt": "2026-07-21T06:55:21+00:00",
+  "publicationStatus": "local_rendered",
+  "remotePublish": false,
+  "generator": "scripts/build_vera_local_video_guides.py",
+  "frameTemplate": "../guide-frame.html",
+  "specification": "../vera-missing-guides.json",
+  "assetCount": 19,
+  "assets": [
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "it",
+      "languageLabel": "Italiano",
+      "title": "Vera | Il modello informativo dell’onboarding",
+      "status": "local_rendered",
+      "targetDurationSeconds": 60.0,
+      "speechDurationSeconds": 58.496,
+      "voice": {
+        "name": "Alice",
+        "rate": 100,
+        "interScenePauseMs": 1578,
+        "effectiveInterScenePauseSeconds": 1.969
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#core-model"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        10.643,
+        10.28,
+        10.28,
+        9.843,
+        9.843,
+        9.111
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/core/it/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2400868,
+          "sha256": "e8178144d0333a0e40a1b372234ee6294447e1ae3c0bb959f97fab4c8bcbc021"
+        },
+        "poster": {
+          "path": "client-onboarding/core/it/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 84458,
+          "sha256": "d94e1c0a7c983d27518fae2145d24508507462516d64cead52fe15eaa7a93892"
+        },
+        "captions": {
+          "path": "client-onboarding/core/it/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 940,
+          "sha256": "a0cbe8c8c479508d3326dcb70e1e174acb50d8b160a89b0f09071b62f7a7f0d5"
+        },
+        "transcript": {
+          "path": "client-onboarding/core/it/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 784,
+          "sha256": "a0ad0117fb34d62147c85ea480301d47c8feb1de3beeec12c044974273703c5f"
+        }
+      },
+      "media": {
+        "durationSeconds": 60.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "en",
+      "languageLabel": "English",
+      "title": "Vera | The client onboarding information model",
+      "status": "local_rendered",
+      "targetDurationSeconds": 60.0,
+      "speechDurationSeconds": 58.532,
+      "voice": {
+        "name": "Samantha",
+        "rate": 100,
+        "interScenePauseMs": 1962,
+        "effectiveInterScenePauseSeconds": 2.538
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#core-model"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        10.81,
+        10.449,
+        10.01,
+        10.01,
+        10.449,
+        8.272
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/core/en/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2401366,
+          "sha256": "ee25a315ef9115b0501fe6fb0d55bc1a8e64111a15987e630c11981955ce0a15"
+        },
+        "poster": {
+          "path": "client-onboarding/core/en/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 85285,
+          "sha256": "d8af60a7662b0b6ae923eb2d6aa10c2a35c98c887c1c29c86620bb300016a813"
+        },
+        "captions": {
+          "path": "client-onboarding/core/en/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 883,
+          "sha256": "92365fba3cb5a249da70317e5704d1801c05c7baf7c8600c23d9286d87026c3c"
+        },
+        "transcript": {
+          "path": "client-onboarding/core/en/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 726,
+          "sha256": "959273df7ad60950451afce6bb0e68c87cffe0c69d515bc01d544d4eb4747c1e"
+        }
+      },
+      "media": {
+        "durationSeconds": 60.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "fr",
+      "languageLabel": "Français",
+      "title": "Vera | Le modèle d’information de l’onboarding client",
+      "status": "local_rendered",
+      "targetDurationSeconds": 60.0,
+      "speechDurationSeconds": 58.496,
+      "voice": {
+        "name": "Thomas",
+        "rate": 100,
+        "interScenePauseMs": 1477,
+        "effectiveInterScenePauseSeconds": 1.948
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#core-model"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        10.858,
+        10.058,
+        10.058,
+        10.058,
+        10.058,
+        8.91
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/core/fr/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2475603,
+          "sha256": "56c6615267c4bbebeab5f0efc6938e4ee1c239bbd5a902cefeb24143fe57f0c0"
+        },
+        "poster": {
+          "path": "client-onboarding/core/fr/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 89315,
+          "sha256": "363a8450f213237695621667a409cca3a8472c69698dee4dac7da4fe8e05caac"
+        },
+        "captions": {
+          "path": "client-onboarding/core/fr/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 992,
+          "sha256": "bac8766c6aaf360890ffcfef348639ec52e79ec3c2cbbb068c50985e82334597"
+        },
+        "transcript": {
+          "path": "client-onboarding/core/fr/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 847,
+          "sha256": "90af9079042098de0b98f33e271199dd3b4ec6a8397a4343b883a6e323a3bad2"
+        }
+      },
+      "media": {
+        "durationSeconds": 60.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "de",
+      "languageLabel": "Deutsch",
+      "title": "Vera | Informationsmodell fürs Mandanten-Onboarding",
+      "status": "local_rendered",
+      "targetDurationSeconds": 60.0,
+      "speechDurationSeconds": 58.102,
+      "voice": {
+        "name": "Anna",
+        "rate": 100,
+        "interScenePauseMs": 60,
+        "effectiveInterScenePauseSeconds": 0.0
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#core-model"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        10.433,
+        9.633,
+        9.633,
+        10.235,
+        9.633,
+        10.433
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/core/de/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2532255,
+          "sha256": "98759a583d807b6bd7879a6611413487c4ef687dcd9bb3fceb8f8627e33d4e0e"
+        },
+        "poster": {
+          "path": "client-onboarding/core/de/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 93088,
+          "sha256": "b3760d2b0a423e6bb1c7f2d0738737584b767460b1b2af4af756c72378a5e9e0"
+        },
+        "captions": {
+          "path": "client-onboarding/core/de/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 977,
+          "sha256": "d2f6d2d657353f4593dabb35855e1f652d28f86a9dcabbbbdab12bc7853b6832"
+        },
+        "transcript": {
+          "path": "client-onboarding/core/de/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 826,
+          "sha256": "972803b03b681fc1a11c94308868c15be058f93458ed646f0c339352ac62aee5"
+        }
+      },
+      "media": {
+        "durationSeconds": 60.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "it",
+      "languageLabel": "Italiano",
+      "title": "Vera | Onboarding cliente · Italia",
+      "status": "local_rendered",
+      "targetDurationSeconds": 70.0,
+      "speechDurationSeconds": 68.539,
+      "voice": {
+        "name": "Alice",
+        "rate": 100,
+        "interScenePauseMs": 2822,
+        "effectiveInterScenePauseSeconds": 3.344
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#italy-pack"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        11.598,
+        15.767,
+        10.798,
+        12.289,
+        12.289,
+        7.26
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/italy/it/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2683849,
+          "sha256": "819a2ba63148ad87431cc86603cb9b5f1693f535b3db33752a8b3880d9520ead"
+        },
+        "poster": {
+          "path": "client-onboarding/italy/it/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 77686,
+          "sha256": "9e0d31ea107232bc6b486b80bab9b7c173de72583d607468b57f88f189bd58fc"
+        },
+        "captions": {
+          "path": "client-onboarding/italy/it/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 938,
+          "sha256": "563cc42a5320f80c229d6e60c1a96d17a2876d60c469f4fd6c419ef60299e6a3"
+        },
+        "transcript": {
+          "path": "client-onboarding/italy/it/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 770,
+          "sha256": "13069623074f6c543a8aeb306036fbe8bc6aa2b6f9840ac0b335f9b0e6a6aeef"
+        }
+      },
+      "media": {
+        "durationSeconds": 70.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "en",
+      "languageLabel": "English",
+      "title": "Vera | Client onboarding · Italy",
+      "status": "local_rendered",
+      "targetDurationSeconds": 70.0,
+      "speechDurationSeconds": 68.446,
+      "voice": {
+        "name": "Samantha",
+        "rate": 100,
+        "interScenePauseMs": 3294,
+        "effectiveInterScenePauseSeconds": 3.908
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#italy-pack"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        11.688,
+        16.007,
+        11.819,
+        12.284,
+        10.888,
+        7.315
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/italy/en/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2655898,
+          "sha256": "f083b1bdaf2fe312483ac2fff0933186ae30df3c767bd977169a671e55e1e1f1"
+        },
+        "poster": {
+          "path": "client-onboarding/italy/en/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 75947,
+          "sha256": "999fa51ea2a01d006b54240efd9091d0b1ef04ac5f24114f26c24e35d13e321a"
+        },
+        "captions": {
+          "path": "client-onboarding/italy/en/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 880,
+          "sha256": "eb7fb04b9eb1d3d8457191c3d81bb3be2e5b6c851e5deba1f1a2b67aca18d298"
+        },
+        "transcript": {
+          "path": "client-onboarding/italy/en/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 710,
+          "sha256": "4ed5d1f51aa42ac850924b49e61df7e54045fd5393e245b6e127da9ea24860ee"
+        }
+      },
+      "media": {
+        "durationSeconds": 70.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "fr",
+      "languageLabel": "Français",
+      "title": "Vera | Onboarding client · Italie",
+      "status": "local_rendered",
+      "targetDurationSeconds": 70.0,
+      "speechDurationSeconds": 68.517,
+      "voice": {
+        "name": "Thomas",
+        "rate": 100,
+        "interScenePauseMs": 2494,
+        "effectiveInterScenePauseSeconds": 2.951
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#italy-pack"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        13.246,
+        15.294,
+        13.395,
+        11.496,
+        9.597,
+        6.971
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/italy/fr/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2671564,
+          "sha256": "87d21d34d13631acbf4efe74b205763c7c558429fd072cd384fd38f867a5b4e3"
+        },
+        "poster": {
+          "path": "client-onboarding/italy/fr/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 76783,
+          "sha256": "ec848c3197e1bed75775a35aed31fd28dba3c325ee5b0773f92e664a703e5d25"
+        },
+        "captions": {
+          "path": "client-onboarding/italy/fr/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 996,
+          "sha256": "70c51edc18928296a859259ec1e3dae66b5fbac244c860754d7a85856ac79548"
+        },
+        "transcript": {
+          "path": "client-onboarding/italy/fr/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 827,
+          "sha256": "3f6c8fe18e9ab785540647ab5310e875f1a2fe7f870679f123bf9efd28b85373"
+        }
+      },
+      "media": {
+        "durationSeconds": 70.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "de",
+      "languageLabel": "Deutsch",
+      "title": "Vera | Mandanten-Onboarding · Italien",
+      "status": "local_rendered",
+      "targetDurationSeconds": 70.0,
+      "speechDurationSeconds": 68.463,
+      "voice": {
+        "name": "Anna",
+        "rate": 100,
+        "interScenePauseMs": 1604,
+        "effectiveInterScenePauseSeconds": 1.885
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#italy-pack"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        12.413,
+        6.141,
+        14.045,
+        14.653,
+        14.653,
+        8.096
+      ],
+      "files": {
+        "video": {
+          "path": "client-onboarding/italy/de/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2859350,
+          "sha256": "5aad7213bf7cb9283876364dee14237f520c9dfaa90a82eeb50c02ec03348424"
+        },
+        "poster": {
+          "path": "client-onboarding/italy/de/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 86125,
+          "sha256": "d7e5856dc32a4f6dd5e301b2af0a83f14787690a7ceea75a848543406182bc3a"
+        },
+        "captions": {
+          "path": "client-onboarding/italy/de/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 960,
+          "sha256": "126d1fb6b93a1298b926ad83be94e03643af76ebfa153a6cc6fcc50f86d85570"
+        },
+        "transcript": {
+          "path": "client-onboarding/italy/de/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 795,
+          "sha256": "a972213c92944af4647b39fcc1f0c3cd59517652c4d91ee2441c13e8e9a44454"
+        }
+      },
+      "media": {
+        "durationSeconds": 70.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-journal-to-reproducible-sample",
+      "module": "journal-sampling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "it",
+      "languageLabel": "Italiano",
+      "title": "Vera | Dal giornale al campione riproducibile",
+      "status": "local_rendered",
+      "targetDurationSeconds": 55.0,
+      "speechDurationSeconds": 53.446,
+      "voice": {
+        "name": "Alice",
+        "rate": 100,
+        "interScenePauseMs": 1723,
+        "effectiveInterScenePauseSeconds": 2.027
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/journal-sampling/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        8.941,
+        10.022,
+        10.492,
+        8.141,
+        11.903,
+        5.503
+      ],
+      "files": {
+        "video": {
+          "path": "journal-sampling/core/it/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2273510,
+          "sha256": "90dd272c6266e8c8f90b00655c8d3de08c644428bfc19f63420708a56ebef412"
+        },
+        "poster": {
+          "path": "journal-sampling/core/it/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 90623,
+          "sha256": "1e03c438828f760c737f1cf448d77b9647238006ddec7aeea8a2d2c03e656ebe"
+        },
+        "captions": {
+          "path": "journal-sampling/core/it/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 821,
+          "sha256": "0951505a2b345341ab750fcbc28ddd2012cf873eec3480067fbc7b70cfecd3e1"
+        },
+        "transcript": {
+          "path": "journal-sampling/core/it/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 663,
+          "sha256": "b299db3932cfb79627ae5b1497377f92bbc2ce5b4005043b3ac6215f9c7e9089"
+        }
+      },
+      "media": {
+        "durationSeconds": 55.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-journal-to-reproducible-sample",
+      "module": "journal-sampling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "en",
+      "languageLabel": "English",
+      "title": "Vera | From journal to reproducible sample",
+      "status": "local_rendered",
+      "targetDurationSeconds": 55.0,
+      "speechDurationSeconds": 53.48,
+      "voice": {
+        "name": "Samantha",
+        "rate": 100,
+        "interScenePauseMs": 1737,
+        "effectiveInterScenePauseSeconds": 2.048
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/journal-sampling/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        8.539,
+        10.585,
+        11.534,
+        6.791,
+        11.534,
+        6.017
+      ],
+      "files": {
+        "video": {
+          "path": "journal-sampling/core/en/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2203519,
+          "sha256": "cbd633069c1f14000d35e344c6e61b95e27755c307bc7fbaa33a204961bb1fae"
+        },
+        "poster": {
+          "path": "journal-sampling/core/en/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 85925,
+          "sha256": "65e5c8b98be9534406465833aea0a3437d45df2537f239a29c5ec2f0f444bfd9"
+        },
+        "captions": {
+          "path": "journal-sampling/core/en/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 811,
+          "sha256": "748cfd27e7015301743c15460d8d6bdd5b3bc5838718c1e92e516e0af10c8dfc"
+        },
+        "transcript": {
+          "path": "journal-sampling/core/en/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 650,
+          "sha256": "7cd01c2f5c438301cb3b0e7325e50f7c4c35b647f523177916ef10122f017d4d"
+        }
+      },
+      "media": {
+        "durationSeconds": 55.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-journal-to-reproducible-sample",
+      "module": "journal-sampling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "fr",
+      "languageLabel": "Français",
+      "title": "Vera | Du journal à un échantillon reproductible",
+      "status": "local_rendered",
+      "targetDurationSeconds": 55.0,
+      "speechDurationSeconds": 53.203,
+      "voice": {
+        "name": "Thomas",
+        "rate": 100,
+        "interScenePauseMs": 996,
+        "effectiveInterScenePauseSeconds": 1.161
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/journal-sampling/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        7.973,
+        10.68,
+        10.68,
+        8.175,
+        11.682,
+        5.81
+      ],
+      "files": {
+        "video": {
+          "path": "journal-sampling/core/fr/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2287086,
+          "sha256": "73f2c1af66389b838cf3292e0132899964808ab32f53dbd5e901fc395837e726"
+        },
+        "poster": {
+          "path": "journal-sampling/core/fr/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 90729,
+          "sha256": "fcca60ef87e417d7effad0b54073572abe9d29174dfd75d196a9ee2f5019b045"
+        },
+        "captions": {
+          "path": "journal-sampling/core/fr/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 887,
+          "sha256": "800d3b3581f6cc64b6447618351c96f762feba1b4a90376c5ebda0fab2c7188d"
+        },
+        "transcript": {
+          "path": "journal-sampling/core/fr/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 734,
+          "sha256": "b8f97075dfc2cf7354333350d594d8927a95ffc2c4644f0466bac5162c8bd47b"
+        }
+      },
+      "media": {
+        "durationSeconds": 55.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-journal-to-reproducible-sample",
+      "module": "journal-sampling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "de",
+      "languageLabel": "Deutsch",
+      "title": "Vera | Vom Journal zur reproduzierbaren Stichprobe",
+      "status": "local_rendered",
+      "targetDurationSeconds": 55.0,
+      "speechDurationSeconds": 53.335,
+      "voice": {
+        "name": "Anna",
+        "rate": 100,
+        "interScenePauseMs": 560,
+        "effectiveInterScenePauseSeconds": 0.641
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/journal-sampling/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        8.612,
+        10.8,
+        10.202,
+        7.214,
+        11.397,
+        6.776
+      ],
+      "files": {
+        "video": {
+          "path": "journal-sampling/core/de/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2315222,
+          "sha256": "4d21bb43e969287270a691e9560d153a3d64bed9da5ebe94fe1f5d77bc17cb09"
+        },
+        "poster": {
+          "path": "journal-sampling/core/de/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 94011,
+          "sha256": "8bb507abb2217486dd7fa23b6f2ec354d7d881cf9a9f2491d6f72175cfed5f61"
+        },
+        "captions": {
+          "path": "journal-sampling/core/de/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 870,
+          "sha256": "4ddcabdf4a328fd296564f03d1df1bfa22959745f8ab09cb549efed500640ae8"
+        },
+        "transcript": {
+          "path": "journal-sampling/core/de/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 717,
+          "sha256": "d7d0449dba3d907cde8d601c055144710d7ebf9c104ff2b04ff7553e8c59a6d9"
+        }
+      },
+      "media": {
+        "durationSeconds": 55.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "it",
+      "languageLabel": "Italiano",
+      "title": "Vera | Dalla scrittura campionata al supporto verificato",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.303,
+      "voice": {
+        "name": "Alice",
+        "rate": 100,
+        "interScenePauseMs": 470,
+        "effectiveInterScenePauseSeconds": 0.527
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        6.361,
+        7.849,
+        9.68,
+        8.307,
+        11.511,
+        6.292
+      ],
+      "files": {
+        "video": {
+          "path": "check-entries/core/it/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1972597,
+          "sha256": "9ce66c64e89b98d34d5b7e45dc8e553ec665f3e832417496aa34abe093c4b68b"
+        },
+        "poster": {
+          "path": "check-entries/core/it/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 86846,
+          "sha256": "1528deaf2cf4cc64e961c4dca2305a5f1b92635c8c3ea9c91943443d69bfa085"
+        },
+        "captions": {
+          "path": "check-entries/core/it/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 873,
+          "sha256": "76047d3fd41b09214b492f97759d24cbf342f4a9b72ed253fb470e82b33ee9e8"
+        },
+        "transcript": {
+          "path": "check-entries/core/it/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 726,
+          "sha256": "86cb763eee02c615e7c19e794b4afd75ce97154a799d1a9369b2fedef2cec9c7"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "en",
+      "languageLabel": "English",
+      "title": "Vera | From sampled entry to verified support",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.186,
+      "voice": {
+        "name": "Samantha",
+        "rate": 100,
+        "interScenePauseMs": 1054,
+        "effectiveInterScenePauseSeconds": 1.226
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        6.869,
+        9.152,
+        7.39,
+        11.353,
+        10.032,
+        5.203
+      ],
+      "files": {
+        "video": {
+          "path": "check-entries/core/en/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1855168,
+          "sha256": "5cb116cb8491ad6e0f25f8e6263ee8cd15ea875548c9262ea6b7ec13202e2674"
+        },
+        "poster": {
+          "path": "check-entries/core/en/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 78557,
+          "sha256": "039cbe0f09616b52a2034b1eb19f345febaa6f15893c7e998737a1cf29a919a2"
+        },
+        "captions": {
+          "path": "check-entries/core/en/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 840,
+          "sha256": "c8507681f3b2346cba8ea64aaf64b71f33737d665dd1c4a32338fa34d93f8882"
+        },
+        "transcript": {
+          "path": "check-entries/core/en/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 682,
+          "sha256": "473b4a0e4c5b8a17d10332b999d37c5e6b848d802ce4bd452b4b2a2fff16f12e"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "fr",
+      "languageLabel": "Français",
+      "title": "Vera | De l’écriture sélectionnée au justificatif vérifié",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.385,
+      "voice": {
+        "name": "Thomas",
+        "rate": 110,
+        "interScenePauseMs": 672,
+        "effectiveInterScenePauseSeconds": 0.708
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        6.189,
+        9.68,
+        8.9,
+        10.07,
+        10.07,
+        5.091
+      ],
+      "files": {
+        "video": {
+          "path": "check-entries/core/fr/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1964730,
+          "sha256": "8203e72cdd692c232ee996cad9d87875e778ef7101d03da9fff8f56f207de203"
+        },
+        "poster": {
+          "path": "check-entries/core/fr/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 86456,
+          "sha256": "17147eeca45ad6396392e19d11c16736826b22416a974d8ea84f2a6e4dc5d78e"
+        },
+        "captions": {
+          "path": "check-entries/core/fr/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 961,
+          "sha256": "4802dd61b311c6c45baa43d65bfd3c0ad58e1fc117cccf8f6d7deb4b89890556"
+        },
+        "transcript": {
+          "path": "check-entries/core/fr/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 822,
+          "sha256": "af41f6588c446a4de32bdd7b961f0d4be4ce0f0134a2bb470a2c42414ade8203"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "de",
+      "languageLabel": "Deutsch",
+      "title": "Vera | Von der Stichprobenbuchung zum geprüften Beleg",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.378,
+      "voice": {
+        "name": "Anna",
+        "rate": 110,
+        "interScenePauseMs": 626,
+        "effectiveInterScenePauseSeconds": 0.657
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        8.198,
+        9.991,
+        7.398,
+        9.991,
+        10.51,
+        3.911
+      ],
+      "files": {
+        "video": {
+          "path": "check-entries/core/de/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1964384,
+          "sha256": "5fe1d658c48a4cb37636d618a1c506a6212093f588508d142cecc5eb4b7f551a"
+        },
+        "poster": {
+          "path": "check-entries/core/de/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 87849,
+          "sha256": "3d5f9deee8aba0a987b9f2286ff8521c5835dc6794e37b4f40218ec3f9fbe666"
+        },
+        "captions": {
+          "path": "check-entries/core/de/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 868,
+          "sha256": "3ef95daf2d0ebca13a3d97acfba8d12fb31a20f77e0b8c354d7aee60c8a7cb44"
+        },
+        "transcript": {
+          "path": "check-entries/core/de/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 719,
+          "sha256": "bc9004b785bf908b4435f41b408470cd01dbbb3c3c0bb5cc786017e313f5635d"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "italy-fatturapa",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "en",
+      "languageLabel": "English",
+      "title": "Vera | Check Entries · Italy · FatturaPA",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.476,
+      "voice": {
+        "name": "Samantha",
+        "rate": 100,
+        "interScenePauseMs": 1737,
+        "effectiveInterScenePauseSeconds": 2.046
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#italy-adapter"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        7.511,
+        8.832,
+        7.559,
+        11.801,
+        9.256,
+        5.041
+      ],
+      "files": {
+        "video": {
+          "path": "check-entries/italy-fatturapa/en/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1789372,
+          "sha256": "b321785285dba606529c0fd56a457a5795484f039088bdc6bcc5ef7092fd2436"
+        },
+        "poster": {
+          "path": "check-entries/italy-fatturapa/en/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 74604,
+          "sha256": "f47675c114c35f00e1030ed966baa7fccc1debbe0168cd9195c3a473cf378f85"
+        },
+        "captions": {
+          "path": "check-entries/italy-fatturapa/en/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 779,
+          "sha256": "837f1d31c9269769c9a60b90830b60b18685e9b930ebcd2c56e319b98b107bb6"
+        },
+        "transcript": {
+          "path": "check-entries/italy-fatturapa/en/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 618,
+          "sha256": "d8fd21b676b5e64b2065cf57a5bd463cf3a84fad3d8493489dfe8fe03c43cd51"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "italy-fatturapa",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "fr",
+      "languageLabel": "Français",
+      "title": "Vera | Écritures · Italie · FatturaPA",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.245,
+      "voice": {
+        "name": "Thomas",
+        "rate": 100,
+        "interScenePauseMs": 859,
+        "effectiveInterScenePauseSeconds": 0.994
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#italy-adapter"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        6.903,
+        9.51,
+        7.381,
+        11.639,
+        9.084,
+        5.484
+      ],
+      "files": {
+        "video": {
+          "path": "check-entries/italy-fatturapa/fr/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1805990,
+          "sha256": "959a9d30278fc1a681eb416b8cb35ee32448964efffd50682c788ee9a91fc34f"
+        },
+        "poster": {
+          "path": "check-entries/italy-fatturapa/fr/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 74223,
+          "sha256": "2d7d925089361d0e7599fdc54d7d836acda6e1e8327838d806a611b43f70ce5a"
+        },
+        "captions": {
+          "path": "check-entries/italy-fatturapa/fr/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 869,
+          "sha256": "a975feaa3f3f6fee6d8ed0e164787a133d69da72650fc0197813928daf7d4fe8"
+        },
+        "transcript": {
+          "path": "check-entries/italy-fatturapa/fr/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 706,
+          "sha256": "c3ac2c59564aa6c2c2b8da8752a6be9f665872ae4238ccbbd724843d85a65821"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "italy-fatturapa",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "de",
+      "languageLabel": "Deutsch",
+      "title": "Vera | Buchungen · Italien · FatturaPA",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.273,
+      "voice": {
+        "name": "Anna",
+        "rate": 100,
+        "interScenePauseMs": 669,
+        "effectiveInterScenePauseSeconds": 0.766
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#italy-adapter"
+      ],
+      "cueCount": 6,
+      "sceneDurationsSeconds": [
+        8.809,
+        8.566,
+        7.452,
+        10.794,
+        10.237,
+        4.143
+      ],
+      "files": {
+        "video": {
+          "path": "check-entries/italy-fatturapa/de/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1792147,
+          "sha256": "babcfcee84afdde894fdb485fef3ad61fe626f06861f62e9675f80c341e5e922"
+        },
+        "poster": {
+          "path": "check-entries/italy-fatturapa/de/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 75369,
+          "sha256": "b9270ad42db80a9f0bc4a34d50d05ca2b61ffd82c52df303411323dbec1fad7b"
+        },
+        "captions": {
+          "path": "check-entries/italy-fatturapa/de/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 796,
+          "sha256": "13ff2b6b7a9088928a7e4840819b881ee1b3b474919f6fac8a5564e6909019e2"
+        },
+        "transcript": {
+          "path": "check-entries/italy-fatturapa/de/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 633,
+          "sha256": "595f7ea2b0e79455df85f307e1c9e4dde9f87d91f1b790e784f9d07603dafce8"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    }
+  ]
+}

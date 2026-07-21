@@ -1,0 +1,3 @@
+Vera | Vom Journal zur reproduzierbaren Stichprobe
+
+Eine nützliche Stichprobe beginnt mit einer klaren Frage und einem lesbaren Journal. Vera importiert die Datei, erkennt Datum, Konten, Texte, Soll und Haben und macht Zeitraum und Grundgesamtheit sichtbar. Danach wird das gewählte Verfahren angewendet: Betragsabdeckung, ungewöhnliche Buchungen, Intervalle, gezielte Auswahl oder eine passende Kombination. Jede ausgewählte Zeile behält den Bezug zur Grundgesamtheit und den Auswahlgrund. Die Kanzlei erhält Stichprobe, normalisierte Population und eine kurze Methodenübersicht, sodass der Schritt wiederholt und geprüft werden kann. Vom vollständigen Journal zu den Buchungen für die gezielte Kontrolle.

@@ -1,0 +1,3 @@
+Vera | From sampled entry to verified support
+
+Checking an entry means understanding whether the available evidence supports it. Vera starts from the sampled journal row and searches the documents provided and any authorized archives or exports. It compares amount, date, document number, description and counterparty while keeping every source visible. Strong matches move into the supported set. Ambiguous cases remain in the review queue with the reason and the specific document to inspect. The result is a workpaper that links every checked entry to its evidence, separates exceptions and preserves the verification path. From a sampled row to support the reviewer can follow.
