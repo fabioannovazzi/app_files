@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "workstream": "deep-research-validator",
+  "display_name": "Deep Research Validator",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Deep Research report, cited sources and validation configuration"
+    ],
+    "local_processing": [
+      "Parse report claims and citations",
+      "Check URLs and deterministic citation structure",
+      "Build claim-by-claim review records"
+    ],
+    "codex_context": [
+      {
+        "id": "claim-validation",
+        "purpose": "Judge whether each cited source supports the report claim",
+        "content": "Report claims, surrounding language, citations, relevant source passages and validation diagnostics",
+        "minimum_necessary": "Use claim-level passages and cited-source excerpts; load broader report or source context only when meaning depends on it",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Claims and cited passages may reproduce case-specific facts from the research request",
+      "mitigation": "Validate at claim level and use only the surrounding text and source passages needed to judge support"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Il report viene scomposto e controllato localmente. Codex esamina le singole affermazioni, il contesto necessario e i passaggi delle fonti citate per valutarne il supporto.",
+    "message_en": "The report is parsed and checked locally. Codex reviews individual claims, necessary context and cited-source passages to assess support.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "Some claims require wider report or source context to avoid a misleading validation",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "4d20b19945b8ff191c07a068cc5977dab98924bee9d4e83ce4041615dbab0030"
+  }
+}

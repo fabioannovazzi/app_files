@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "workstream": "journal-sampling",
+  "display_name": "Journal Sampling",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Complete journal exports and sampling parameters"
+    ],
+    "local_processing": [
+      "Parse and normalize the journal",
+      "Calculate population statistics",
+      "Select a reproducible sample",
+      "Build sampling diagnostics"
+    ],
+    "codex_context": [
+      {
+        "id": "sampling-design",
+        "purpose": "Resolve column mappings, scope and sampling assumptions",
+        "content": "Headers, population summary, representative rows and user-approved parameters",
+        "minimum_necessary": "Use headers, aggregates and representative rows instead of the full journal",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      },
+      {
+        "id": "sample-review",
+        "purpose": "Explain the selected sample and notable strata",
+        "content": "Sampled rows, aggregate diagnostics and selection provenance",
+        "minimum_necessary": "Expose the selected sample and summaries, not non-selected journal rows",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Sampled journal descriptions can identify employees, suppliers or customers",
+      "mitigation": "Keep the full journal local and expose only the reproducible sample and required diagnostic context"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Il libro giornale completo viene elaborato localmente. Codex esamina le mappature, le statistiche aggregate e le sole righe selezionate nel campione.",
+    "message_en": "The complete journal is processed locally. Codex reviews mappings, aggregate statistics and only the rows selected in the sample.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "User-requested investigation can require additional targeted rows",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "15e7348954131f55ebe5afb81c6fcf13acff26b06b00b4ec8354d023426a61d8"
+  }
+}

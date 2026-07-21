@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "workstream": "previdenza-inps",
+  "display_name": "Previdenza INPS",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "schemas"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "INPS documents, official exports, optional approved read-only portal captures, emails and local scans"
+    ],
+    "local_processing": [
+      "Owner-only inventory",
+      "Local OCR and extraction",
+      "Validate fact provenance",
+      "Run approved arithmetic",
+      "Package evidence matrices and review drafts"
+    ],
+    "codex_context": [
+      {
+        "id": "case-fact-structuring",
+        "purpose": "Structure case facts and identify conflicts or missing evidence",
+        "content": "Extracted evidence, page-level quotes, validated fact records, timelines and unresolved decisions",
+        "minimum_necessary": "Use validated fact records and targeted evidence quotes; keep complete documents and capture images local unless visual interpretation is necessary",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      },
+      {
+        "id": "claim-and-case-review",
+        "purpose": "Relate supported official-source claims to validated case facts",
+        "content": "Case facts, relevant evidence anchors, official-source passages, calculation basis and review drafts",
+        "minimum_necessary": "Include only facts and passages required for the specific claim or calculation under review",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "INPS case review can require highly specific personal, contribution, payment and health-adjacent facts",
+      "mitigation": "Use owner-only local artifacts, page-level targeted evidence, pseudonymous actor IDs and explicit professional review; never include credentials or session material"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Documenti, immagini, OCR e calcoli del caso INPS restano nella cartella locale riservata. Codex esamina i fatti strutturati e i passaggi di evidenza necessari alla valutazione professionale; credenziali e dati di sessione non vengono mai acquisiti.",
+    "message_en": "INPS documents, images, OCR and calculations remain in the restricted local case folder. Codex reviews structured facts and evidence passages needed for professional assessment; credentials and session data are never acquired.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "The professional issue determines which sensitive case facts are necessary",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "13d31aea32b5036e896cc4ae90260f53d388c1cd184f1bf7c3910544d31bab35"
+  }
+}

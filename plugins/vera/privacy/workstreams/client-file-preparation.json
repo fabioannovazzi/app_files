@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "workstream": "client-file-preparation",
+  "display_name": "New Client · File Preparation",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Incoming client folders, fiscal documents, invoices, notices, scans and email files"
+    ],
+    "local_processing": [
+      "Recursive inventory",
+      "Local OCR and text extraction",
+      "Formal and XML checks",
+      "Structured fiscal-field extraction",
+      "Missing-document analysis"
+    ],
+    "codex_context": [
+      {
+        "id": "evidence-synthesis",
+        "purpose": "Prepare the studio intake synthesis and document requests",
+        "content": "Generated inventory, structured fields, formal-check results, extraction diagnostics and selected document passages",
+        "minimum_necessary": "Use generated evidence and selected passages; consult an original document only when its meaning or context cannot be established from the extraction",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      },
+      {
+        "id": "client-email-draft",
+        "purpose": "Draft a reviewable request for missing or unclear evidence",
+        "content": "Missing-item list, case context needed for clarity and selected supporting facts",
+        "minimum_necessary": "Use only facts required to explain the request and do not reproduce unrelated client data",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Structured fields and selected passages can contain direct identifiers and fiscal information",
+      "mitigation": "Keep the complete folder local and limit Codex to extracted results and passages necessary for intake synthesis"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "La cartella cliente viene inventariata, letta e controllata localmente. Codex riceve i risultati strutturati e, quando serve interpretarli, i soli passaggi pertinenti dei documenti.",
+    "message_en": "The client folder is inventoried, read and checked locally. Codex receives structured results and, when interpretation is needed, only the relevant document passages.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "Document diversity can require additional passages during professional review",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "2359c33fc53c418f0dafc9edd287bce6e1992ed289d2131472942b1508fe0f48"
+  }
+}
