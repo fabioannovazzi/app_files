@@ -42,7 +42,8 @@ def test_homepage_reserves_blue_for_vera_and_clara() -> None:
         ".landing-home .landing-logo-link:focus-visible,\n"
         ".landing-home .landing-lang__link:focus-visible,\n"
         ".landing-home .landing-open-source__links a:focus-visible,\n"
-        ".landing-home .landing-security__link:focus-visible {\n"
+        ".landing-home .landing-security__link:focus-visible,\n"
+        ".landing-home .landing-compliance__link:focus-visible {\n"
         "  outline: 2px solid var(--landing-ink);" in css
     )
 
