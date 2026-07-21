@@ -33,7 +33,9 @@ def test_homepage_content_states_the_llm_context_boundary_honestly() -> None:
 
     assert "what reaches the model" in content["lead"]
     assert "may enter the LLM context" in content["principles"][2]["blurb"]
-    assert "No additional data-processing intermediary" in content["closing"]
+    assert content["closing"] == (
+        "Less data in the LLM context. A simpler compliance perimeter."
+    )
 
 
 def test_homepage_template_places_compliance_after_security_before_plugins() -> None:
