@@ -454,6 +454,32 @@ def test_vera_hub_localizes_every_visible_copy_key_in_all_four_languages() -> No
         assert page.count(f'"{key}":') == 4, key
 
 
+@pytest.mark.parametrize(
+    "labels",
+    (
+        ("Area di lavoro 1 di 3", "Area di lavoro 2 di 3", "Area di lavoro 3 di 3"),
+        ("Work area 1 of 3", "Work area 2 of 3", "Work area 3 of 3"),
+        (
+            "Domaine de travail 1 sur 3",
+            "Domaine de travail 2 sur 3",
+            "Domaine de travail 3 sur 3",
+        ),
+        (
+            "Arbeitsbereich 1 von 3",
+            "Arbeitsbereich 2 von 3",
+            "Arbeitsbereich 3 von 3",
+        ),
+    ),
+)
+def test_vera_hub_explains_work_area_numbers_in_every_language(
+    labels: tuple[str, str, str],
+) -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    for label in labels:
+        assert f'"{label}"' in page
+
+
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
