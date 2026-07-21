@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "workstream": "check-entries",
+  "display_name": "Check Entries",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Selected journal entries, FatturaPA ZIP or authorized connector export, and targeted supporting PDFs"
+    ],
+    "local_processing": [
+      "Parse entries and invoices",
+      "Match amounts, dates and counterparties",
+      "Identify unresolved checks",
+      "Build evidence locators"
+    ],
+    "codex_context": [
+      {
+        "id": "mapping-and-resolution",
+        "purpose": "Resolve entry mappings and interpret unresolved evidence",
+        "content": "Selected entries, deterministic match results, invoice fields and targeted document excerpts",
+        "minimum_necessary": "Use only selected entries and evidence for unresolved checks; keep bulk invoice and journal populations local",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Selected entries, invoice fields and supporting excerpts may contain names, tax identifiers or transaction narratives",
+      "mitigation": "Limit context to selected entries and targeted evidence after local matching"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Registri e archivi fatture vengono confrontati localmente. Codex esamina soltanto le scritture selezionate, gli esiti dei controlli e le evidenze mirate necessarie a risolvere le eccezioni.",
+    "message_en": "Journals and invoice archives are compared locally. Codex reviews only selected entries, check results and the targeted evidence needed to resolve exceptions.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "An unresolved check can require a larger supporting passage",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "bc3e9afe25fca4b80dccf9ecf1bae3b48f3751177b7fbfbbd28c6f7483471014"
+  }
+}

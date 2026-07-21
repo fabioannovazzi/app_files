@@ -16,6 +16,28 @@ professional opinion, file on a client's behalf, or make decisions reserved to
 the commercialista. Judgement, approval, and professional responsibility remain
 with the commercialista.
 
+## Privacy Surface Governance
+
+Every registered Vera workstream has a design-time record in
+`../../privacy/workstreams/` describing what stays local and what Codex may
+read. Each specialist wrapper shows the applicable Italian or English notice in
+the Run Intake before its first workflow-controlled evidence read. Do not turn
+that notice into a generic consent question unless its manifest explicitly
+marks an optional disclosure as requiring confirmation.
+
+When adding or materially changing a workstream, use
+`../privacy-surface-review/SKILL.md` to review the actual Codex-context boundary,
+update its manifest, and refresh the source fingerprint. Before packaging Vera,
+run:
+
+```bash
+python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
+```
+
+The validator enforces coverage, structure, wrapper integration, and freshness.
+It does not decide whether data is personal, anonymous, legally necessary, or
+GDPR-compliant; those are contextual judgments and professional/legal matters.
+
 ## Module routing
 
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;

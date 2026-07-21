@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/vera-privacy-surface-v1.json",
+  "title": "Vera workstream privacy surface",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "workstream", "display_name", "role", "governed_paths", "data_flow", "residual_risks", "commercialista_notice", "review"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "workstream": {"type": "string", "minLength": 1},
+    "display_name": {"type": "string", "minLength": 1},
+    "role": {"enum": ["workflow", "internal_engine"]},
+    "governed_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "data_flow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["local_sources", "local_processing", "codex_context"],
+      "properties": {
+        "local_sources": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "local_processing": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "codex_context": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "purpose", "content", "minimum_necessary", "semantic_reasoning_required", "full_source_expected"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "purpose": {"type": "string", "minLength": 1},
+              "content": {"type": "string", "minLength": 1},
+              "minimum_necessary": {"type": "string", "minLength": 1},
+              "semantic_reasoning_required": {"type": "boolean"},
+              "full_source_expected": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "residual_risks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["risk", "mitigation"],
+        "properties": {
+          "risk": {"type": "string", "minLength": 1},
+          "mitigation": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "commercialista_notice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "timing", "message_it", "message_en", "requires_confirmation"],
+      "properties": {
+        "level": {"enum": ["none", "informational", "confirmation"]},
+        "timing": {"enum": ["not_shown", "workstream_start", "before_optional_disclosure"]},
+        "message_it": {"type": "string"},
+        "message_en": {"type": "string"},
+        "requires_confirmation": {"type": "boolean"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewed_at", "reviewed_by", "basis", "limitations", "source_fingerprint"],
+      "properties": {
+        "reviewed_at": {"type": "string", "format": "date"},
+        "reviewed_by": {"const": "privacy-surface-review"},
+        "basis": {"const": "model_review_of_workflow_source"},
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "source_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

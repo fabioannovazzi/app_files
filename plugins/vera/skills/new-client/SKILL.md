@@ -5,6 +5,14 @@ description: "Use whenever a studio starts work on a new client: prepare incomin
 
 # New Client
 
+## Privacy Boundary
+
+Before reading customer source or module-generated evidence, read
+`../../privacy/workstreams/new-client.json` and, when phase one is used,
+`../../privacy/workstreams/client-file-preparation.json`. Show the applicable
+notice in the conversation language in the Run Intake. Continue without a
+redundant consent question unless a manifest explicitly requires confirmation.
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 This is Vera's sole new-client workflow. Do not route users to separate
