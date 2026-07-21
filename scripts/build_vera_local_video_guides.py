@@ -46,6 +46,9 @@ FRAME_RATE = 30
 LEAD_SECONDS = 0.8
 TAIL_SECONDS = 0.8
 TARGET_LOUDNESS_LUFS = -16
+CAPTION_MAX_CHARACTERS = 84
+CAPTION_MIN_SECONDS = 1.0
+CAPTION_MAX_CHARACTERS_PER_SECOND = 20.0
 EXPECTED_LOCALIZATIONS = {
     ("new-client", "core", "it"),
     ("new-client", "core", "en"),
@@ -241,7 +244,7 @@ def _scene_durations(
     )
     if spoken_seconds <= 0:
         raise ValueError("Inter-scene pauses leave no time for narration")
-    weights = [max(1, len(caption.split())) for caption in captions]
+    weights = [max(1, len(caption)) for caption in captions]
     weight_total = sum(weights)
     durations = [spoken_seconds * weight / weight_total for weight in weights]
     for index in range(pause_count):
@@ -263,35 +266,208 @@ def _vtt_timestamp(seconds: float) -> str:
     return f"{hours:02d}:{minutes:02d}:{whole_seconds:02d}.{milliseconds:03d}"
 
 
+def _split_caption_cues(
+    text: str,
+    max_characters: int = CAPTION_MAX_CHARACTERS,
+) -> list[str]:
+    """Split narration at natural boundaries into mobile-readable cues."""
+
+    if max_characters < 1:
+        raise ValueError("Caption length must be positive")
+
+    clauses = [
+        clause.strip()
+        for clause in re.split(r"(?<=[.!?;:,])\s+", text.strip())
+        if clause.strip()
+    ]
+    cues: list[str] = []
+    current = ""
+
+    def append_words(words: Sequence[str]) -> None:
+        nonlocal current
+        for word in words:
+            if len(word) > max_characters:
+                if current:
+                    cues.append(current)
+                    current = ""
+                cues.extend(
+                    word[index : index + max_characters]
+                    for index in range(0, len(word), max_characters)
+                )
+                continue
+            candidate = f"{current} {word}".strip()
+            if current and len(candidate) > max_characters:
+                cues.append(current)
+                current = word
+            else:
+                current = candidate
+
+    for clause in clauses:
+        candidate = f"{current} {clause}".strip()
+        if len(candidate) <= max_characters:
+            current = candidate
+            continue
+        if current:
+            cues.append(current)
+            current = ""
+        if len(clause) <= max_characters:
+            current = clause
+        else:
+            append_words(clause.split())
+
+    if current:
+        cues.append(current)
+    if not cues or any(len(cue) > max_characters for cue in cues):
+        raise ValueError("Narration could not be split into readable caption cues")
+    return cues
+
+
+def _balanced_caption_pair(
+    first: str,
+    second: str,
+    min_characters: int,
+) -> tuple[str, str]:
+    """Redistribute two adjacent cues without exceeding the cue limit."""
+
+    words = f"{first} {second}".split()
+    candidates: list[tuple[int, str, str]] = []
+    for split_index in range(1, len(words)):
+        left = " ".join(words[:split_index])
+        right = " ".join(words[split_index:])
+        if (
+            min_characters <= len(left) <= CAPTION_MAX_CHARACTERS
+            and min_characters <= len(right) <= CAPTION_MAX_CHARACTERS
+        ):
+            candidates.append((abs(len(left) - len(right)), left, right))
+    if not candidates:
+        raise ValueError("Short caption cue could not be rebalanced safely")
+    _, left, right = min(candidates, key=lambda candidate: candidate[0])
+    return left, right
+
+
+def _rebalance_short_caption_cues(
+    cues: Sequence[str],
+    min_characters: int,
+) -> list[str]:
+    """Merge or rebalance short cues so each receives readable screen time."""
+
+    balanced = list(cues)
+    while len(balanced) > 1:
+        short_index = next(
+            (index for index, cue in enumerate(balanced) if len(cue) < min_characters),
+            None,
+        )
+        if short_index is None:
+            break
+
+        merge_options: list[tuple[int, int, int, str]] = []
+        if short_index > 0:
+            merged = f"{balanced[short_index - 1]} {balanced[short_index]}"
+            if len(merged) <= CAPTION_MAX_CHARACTERS:
+                merge_options.append(
+                    (len(merged), short_index - 1, short_index + 1, merged)
+                )
+        if short_index + 1 < len(balanced):
+            merged = f"{balanced[short_index]} {balanced[short_index + 1]}"
+            if len(merged) <= CAPTION_MAX_CHARACTERS:
+                merge_options.append(
+                    (len(merged), short_index, short_index + 2, merged)
+                )
+        if merge_options:
+            _, start, end, merged = min(merge_options, key=lambda option: option[0])
+            balanced[start:end] = [merged]
+            continue
+
+        pair_start = short_index - 1 if short_index > 0 else short_index
+        left, right = _balanced_caption_pair(
+            balanced[pair_start],
+            balanced[pair_start + 1],
+            min_characters,
+        )
+        balanced[pair_start : pair_start + 2] = [left, right]
+
+    if any(len(cue) > CAPTION_MAX_CHARACTERS for cue in balanced):
+        raise ValueError("Rebalanced caption exceeds the character limit")
+    return balanced
+
+
 def _write_captions(
     output_path: Path,
-    captions: Sequence[str],
+    scene_narration_parts: Sequence[str],
     scene_durations: Sequence[float],
-) -> None:
-    """Write one readable cue per visual scene."""
+    effective_pause_seconds: float,
+) -> int:
+    """Write proportionally timed cues within the existing scene intervals."""
 
-    cue_start = LEAD_SECONDS
+    if len(scene_narration_parts) != len(scene_durations):
+        raise ValueError("Caption scenes and visual scene durations must align")
+
+    cue_index = 1
+    scene_start = 0.0
     lines = ["WEBVTT", ""]
-    for index, (caption, scene_duration) in enumerate(
-        zip(captions, scene_durations, strict=True),
-        start=1,
+    for scene_index, (narration_part, scene_duration) in enumerate(
+        zip(scene_narration_parts, scene_durations, strict=True)
     ):
-        spoken_scene_duration = scene_duration
-        if index == 1:
-            spoken_scene_duration -= LEAD_SECONDS
-        if index == len(captions):
-            spoken_scene_duration -= TAIL_SECONDS
-        cue_end = cue_start + spoken_scene_duration
-        lines.extend(
-            [
-                str(index),
-                f"{_vtt_timestamp(cue_start)} --> {_vtt_timestamp(cue_end)}",
-                caption,
-                "",
-            ]
+        scene_end = scene_start + scene_duration
+        spoken_start = scene_start + (LEAD_SECONDS if scene_index == 0 else 0.0)
+        spoken_end = scene_end - (
+            TAIL_SECONDS
+            if scene_index == len(scene_narration_parts) - 1
+            else effective_pause_seconds
         )
-        cue_start = cue_end
+        if spoken_end <= spoken_start:
+            raise ValueError("Caption scene has no positive spoken interval")
+
+        spoken_duration = spoken_end - spoken_start
+        cues = _split_caption_cues(narration_part)
+        scene_character_rate = sum(len(cue) for cue in cues) / spoken_duration
+        if scene_character_rate > CAPTION_MAX_CHARACTERS_PER_SECOND:
+            raise ValueError(
+                "Caption scene exceeds the reading-speed limit: "
+                f"{scene_character_rate:.2f} characters per second"
+            )
+        min_characters = max(
+            1,
+            math.ceil(scene_character_rate * CAPTION_MIN_SECONDS),
+        )
+        cues = _rebalance_short_caption_cues(cues, min_characters)
+        weights = [max(1, len(cue)) for cue in cues]
+        total_weight = sum(weights)
+        elapsed_weight = 0
+        for local_index, (cue, weight) in enumerate(zip(cues, weights, strict=True)):
+            cue_start = spoken_start + (
+                (spoken_end - spoken_start) * elapsed_weight / total_weight
+            )
+            elapsed_weight += weight
+            cue_end = (
+                spoken_end
+                if local_index == len(cues) - 1
+                else spoken_start
+                + (spoken_end - spoken_start) * elapsed_weight / total_weight
+            )
+            cue_duration = cue_end - cue_start
+            cue_character_rate = len(cue) / cue_duration
+            if cue_duration < CAPTION_MIN_SECONDS:
+                raise ValueError(
+                    f"Caption cue is too brief: {cue_duration:.3f} seconds"
+                )
+            if cue_character_rate > CAPTION_MAX_CHARACTERS_PER_SECOND:
+                raise ValueError(
+                    "Caption cue exceeds the reading-speed limit: "
+                    f"{cue_character_rate:.2f} characters per second"
+                )
+            lines.extend(
+                [
+                    str(cue_index),
+                    f"{_vtt_timestamp(cue_start)} --> {_vtt_timestamp(cue_end)}",
+                    cue,
+                    "",
+                ]
+            )
+            cue_index += 1
+        scene_start = scene_end
     output_path.write_text("\n".join(lines), encoding="utf-8")
+    return cue_index - 1
 
 
 def _render_speech(
@@ -683,7 +859,7 @@ def _build_one_guide(
     poster_path = output_dir / "poster.jpg"
     captions_path = output_dir / "captions.vtt"
     transcript_path = output_dir / "transcript.txt"
-    captions = _partition_sentences(
+    scene_narration_parts = _partition_sentences(
         localization["narration"],
         len(concept["scenes"]),
     )
@@ -712,12 +888,12 @@ def _build_one_guide(
             say=say,
             ffprobe=ffprobe,
             voice=voice,
-            narration_parts=captions,
+            narration_parts=scene_narration_parts,
             target_seconds=target_seconds,
             output_path=narration_path,
         )
         scene_durations = _scene_durations(
-            captions,
+            scene_narration_parts,
             target_seconds,
             effective_pause_seconds,
         )
@@ -744,7 +920,12 @@ def _build_one_guide(
             output_path=video_path,
         )
 
-    _write_captions(captions_path, captions, scene_durations)
+    cue_count = _write_captions(
+        captions_path,
+        scene_narration_parts,
+        scene_durations,
+        effective_pause_seconds,
+    )
     transcript_path.write_text(
         f"{localization['title']}\n\n{localization['narration']}\n",
         encoding="utf-8",
@@ -781,26 +962,93 @@ def _build_one_guide(
             "effectiveInterScenePauseSeconds": round(effective_pause_seconds, 3),
         },
         "pageTargets": concept["pageTargets"],
-        "cueCount": len(captions),
+        "cueCount": cue_count,
         "sceneDurationsSeconds": [round(value, 3) for value in scene_durations],
         "files": files,
         "media": media,
     }
 
 
+def _build_captions_only_entry(
+    *,
+    concept: dict[str, Any],
+    language: str,
+    localization: dict[str, Any],
+    existing_entry: dict[str, Any],
+) -> dict[str, Any]:
+    """Rebuild captions while preserving the validated rendered media."""
+
+    identity = (concept["module"], concept["edition"], language)
+    existing_identity = (
+        existing_entry["module"],
+        existing_entry["edition"],
+        existing_entry["language"],
+    )
+    if existing_identity != identity:
+        raise ValueError(
+            f"Caption-only manifest identity mismatch: {existing_identity!r}"
+        )
+    if existing_entry["title"] != localization["title"]:
+        raise ValueError(
+            "Caption-only rendering cannot apply a changed title; "
+            f"render {identity!r} in full"
+        )
+
+    output_dir = OUTPUT_ROOT / concept["module"] / concept["edition"] / language
+    captions_path = output_dir / "captions.vtt"
+    transcript_path = output_dir / "transcript.txt"
+    expected_transcript = f"{localization['title']}\n\n{localization['narration']}\n"
+    if (
+        not transcript_path.is_file()
+        or transcript_path.read_text(encoding="utf-8") != expected_transcript
+    ):
+        raise ValueError(
+            "Caption-only rendering requires a matching existing transcript; "
+            f"render {identity!r} in full"
+        )
+
+    scene_narration_parts = _partition_sentences(
+        localization["narration"],
+        len(concept["scenes"]),
+    )
+    scene_durations = [
+        float(value) for value in existing_entry["sceneDurationsSeconds"]
+    ]
+    effective_pause_seconds = float(
+        existing_entry["voice"]["effectiveInterScenePauseSeconds"]
+    )
+    cue_count = _write_captions(
+        captions_path,
+        scene_narration_parts,
+        scene_durations,
+        effective_pause_seconds,
+    )
+
+    entry = dict(existing_entry)
+    files = dict(existing_entry["files"])
+    files["captions"] = _artifact_record(captions_path, "text/vtt")
+    entry.update(
+        {
+            "conceptId": concept["conceptId"],
+            "scope": concept["scope"],
+            "jurisdiction": concept["jurisdiction"],
+            "pageTargets": concept["pageTargets"],
+            "cueCount": cue_count,
+            "files": files,
+        }
+    )
+    return entry
+
+
 def build_vera_local_video_guides(
     modules: set[str] | None = None,
+    editions: set[str] | None = None,
+    *,
+    captions_only: bool = False,
 ) -> Path:
     """Render selected Vera guide modules and write the complete manifest."""
 
-    say = _required_tool("say", "/usr/bin/say")
-    ffmpeg = _required_tool("ffmpeg", "/opt/homebrew/bin/ffmpeg")
-    ffprobe = _required_tool("ffprobe", "/opt/homebrew/bin/ffprobe")
     spec = json.loads(SPEC_PATH.read_text(encoding="utf-8"))
-    frame_template = FRAME_TEMPLATE_PATH.read_text(encoding="utf-8")
-    if "/*__FRAME_DATA__*/" not in frame_template:
-        raise ValueError("Frame template is missing its data marker")
-
     for concept in spec["concepts"]:
         scope = concept["scope"]
         jurisdiction = concept["jurisdiction"]
@@ -824,56 +1072,96 @@ def build_vera_local_video_guides(
         unknown_modules = modules - available_modules
         if unknown_modules:
             raise ValueError(f"Unknown Vera guide modules: {sorted(unknown_modules)!r}")
+    available_editions = {concept["edition"] for concept in spec["concepts"]}
+    if editions:
+        unknown_editions = editions - available_editions
+        if unknown_editions:
+            raise ValueError(
+                f"Unknown Vera guide editions: {sorted(unknown_editions)!r}"
+            )
     selected_concepts = [
         concept
         for concept in spec["concepts"]
-        if not modules or concept["module"] in modules
+        if (not modules or concept["module"] in modules)
+        and (not editions or concept["edition"] in editions)
     ]
+    if not selected_concepts:
+        raise ValueError("The selected module and edition filters match no guides")
 
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
+    existing_manifest = (
+        json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        if MANIFEST_PATH.is_file()
+        else None
+    )
+    existing_entries = {
+        (entry["module"], entry["edition"], entry["language"]): entry
+        for entry in (existing_manifest or {}).get("assets", [])
+    }
     rendered_entries: list[dict[str, Any]] = []
-    with sync_playwright() as playwright:
-        browser: Browser = playwright.chromium.launch(headless=True)
-        page = browser.new_page(
-            viewport={"width": FRAME_WIDTH, "height": FRAME_HEIGHT},
-            device_scale_factor=1,
-        )
-        page.on("pageerror", lambda error: LOGGER.error("Frame error: %s", error))
-        page.on(
-            "console",
-            lambda message: (
-                LOGGER.error("Frame console: %s", message.text)
-                if message.type == "error"
-                else None
-            ),
-        )
-        try:
-            for concept in selected_concepts:
-                for language, localization in concept["localizations"].items():
-                    rendered_entries.append(
-                        _build_one_guide(
-                            page=page,
-                            frame_template=frame_template,
-                            concept=concept,
-                            language=language,
-                            localization=localization,
-                            say=say,
-                            ffmpeg=ffmpeg,
-                            ffprobe=ffprobe,
-                        )
+    if captions_only:
+        if existing_manifest is None:
+            raise ValueError("Caption-only rendering requires an existing manifest")
+        for concept in selected_concepts:
+            for language, localization in concept["localizations"].items():
+                identity = (concept["module"], concept["edition"], language)
+                if identity not in existing_entries:
+                    raise ValueError(
+                        "Caption-only rendering is missing the existing entry "
+                        f"{identity!r}"
                     )
-        finally:
-            browser.close()
+                rendered_entries.append(
+                    _build_captions_only_entry(
+                        concept=concept,
+                        language=language,
+                        localization=localization,
+                        existing_entry=existing_entries[identity],
+                    )
+                )
+    else:
+        say = _required_tool("say", "/usr/bin/say")
+        ffmpeg = _required_tool("ffmpeg", "/opt/homebrew/bin/ffmpeg")
+        ffprobe = _required_tool("ffprobe", "/opt/homebrew/bin/ffprobe")
+        frame_template = FRAME_TEMPLATE_PATH.read_text(encoding="utf-8")
+        if "/*__FRAME_DATA__*/" not in frame_template:
+            raise ValueError("Frame template is missing its data marker")
+
+        with sync_playwright() as playwright:
+            browser: Browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(
+                viewport={"width": FRAME_WIDTH, "height": FRAME_HEIGHT},
+                device_scale_factor=1,
+            )
+            page.on("pageerror", lambda error: LOGGER.error("Frame error: %s", error))
+            page.on(
+                "console",
+                lambda message: (
+                    LOGGER.error("Frame console: %s", message.text)
+                    if message.type == "error"
+                    else None
+                ),
+            )
+            try:
+                for concept in selected_concepts:
+                    for language, localization in concept["localizations"].items():
+                        rendered_entries.append(
+                            _build_one_guide(
+                                page=page,
+                                frame_template=frame_template,
+                                concept=concept,
+                                language=language,
+                                localization=localization,
+                                say=say,
+                                ffmpeg=ffmpeg,
+                                ffprobe=ffprobe,
+                            )
+                        )
+            finally:
+                browser.close()
 
     entries_by_identity: dict[tuple[str, str, str], dict[str, Any]] = {}
-    if modules and MANIFEST_PATH.is_file():
-        existing_manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-        entries_by_identity.update(
-            {
-                (entry["module"], entry["edition"], entry["language"]): entry
-                for entry in existing_manifest["assets"]
-            }
-        )
+    if modules or editions or captions_only:
+        entries_by_identity.update(existing_entries)
     entries_by_identity.update(
         {
             (entry["module"], entry["edition"], entry["language"]): entry
@@ -931,6 +1219,17 @@ def _parse_args() -> argparse.Namespace:
         dest="modules",
         help="Render only this module and preserve other validated manifest entries.",
     )
+    parser.add_argument(
+        "--edition",
+        action="append",
+        dest="editions",
+        help="Render only this edition and preserve other validated manifest entries.",
+    )
+    parser.add_argument(
+        "--captions-only",
+        action="store_true",
+        help="Rebuild captions from matching rendered media without changing it.",
+    )
     return parser.parse_args()
 
 
@@ -942,7 +1241,11 @@ def main() -> int:
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(levelname)s %(message)s",
     )
-    build_vera_local_video_guides(set(args.modules) if args.modules else None)
+    build_vera_local_video_guides(
+        set(args.modules) if args.modules else None,
+        set(args.editions) if args.editions else None,
+        captions_only=args.captions_only,
+    )
     return 0
 
 
