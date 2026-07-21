@@ -11,9 +11,9 @@ from modules.pdp.api import _get_landing_page_content
     ("lang", "title"),
     [
         ("en", "Compliant by design."),
-        ("it", "Conformità per progettazione."),
+        ("it", "Conformi per scelta."),
         ("fr", "Conformes par conception."),
-        ("de", "Compliance by Design."),
+        ("de", "Für Compliance konzipiert."),
     ],
 )
 def test_homepage_content_includes_localized_compliance_section(
