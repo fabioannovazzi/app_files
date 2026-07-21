@@ -151,6 +151,34 @@
     </section>
   {% endif %}
 
+  {% if compliance %}
+    <section id="{{ compliance.id }}"
+             class="landing-compliance"
+             aria-labelledby="landing-compliance-title">
+      <h2 id="landing-compliance-title">{{ compliance.title }}</h2>
+      <div class="landing-compliance__body">
+        <p class="landing-compliance__lead">{{ compliance.lead }}</p>
+        <p class="landing-compliance__description">{{ compliance.description }}</p>
+        {% if compliance.principles %}
+          <ol class="landing-compliance__principles">
+            {% for item in compliance.principles %}
+              <li>
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.blurb }}</p>
+              </li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+        <p class="landing-compliance__closing">{{ compliance.closing }}</p>
+        <a class="landing-compliance__link"
+           href="{{ compliance.cta_href }}?lang={{ lang }}">
+          <span>{{ compliance.cta_label }}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  {% endif %}
+
   {% if bridge %}
     <section id="{{ bridge.id }}"
              class="landing-bridge"
