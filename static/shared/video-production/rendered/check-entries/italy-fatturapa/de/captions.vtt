@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.800 --> 00:00:08.809
+Eine Buchung zu prüfen heißt zu verstehen, ob der richtige Beleg sie stützt.
+
+2
+00:00:08.809 --> 00:00:17.374
+Vera beginnt bei der ausgewählten Journalzeile und sucht zuerst in FatturaPA-XML und autorisierten Exporten.
+
+3
+00:00:17.374 --> 00:00:24.826
+Betrag, Datum, Belegnummer und Gegenpartei werden verglichen, während jede Quelle sichtbar bleibt.
+
+4
+00:00:24.826 --> 00:00:35.620
+Starke Treffer gehen in die belegte Gruppe. Mehrdeutige Fälle bleiben mit Grund und genauem Prüfbeleg in der Review-Liste.
+
+5
+00:00:35.620 --> 00:00:45.857
+Das Ergebnis ist ein Arbeitspapier, das jede geprüfte Buchung mit ihrem Nachweis verbindet und Ausnahmen getrennt hält.
+
+6
+00:00:45.857 --> 00:00:49.200
+Von der Stichprobenzeile zum nachvollziehbaren Beleg.

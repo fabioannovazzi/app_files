@@ -1,238 +1,197 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Valida Deep Research | Vera</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta id="meta-description" name="description" content="Vera rivede un output Deep Research per affermazioni materiali, controlla fonti e ragionamento e consegna un documento corretto con una traccia verificabile.">
+  <link rel="canonical" href="https://mparanza.com/static/shared/deep-research-validator/index.html">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=it">
+  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=en">
+  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=de">
+  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/deep-research-validator/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta id="og-title" property="og:title" content="Conclusioni sostenute dalle fonti | Vera">
+  <meta id="og-description" property="og:description" content="Dall'output Deep Research a una revisione per affermazioni, con supporto delle fonti, correzioni e incertezza residua separati.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/deep-research-validator/index.html">
+  <meta id="og-image" property="og:image" content="https://i.ytimg.com/vi/vA2JO3cG7Cw/hqdefault.jpg">
+  <meta id="og-locale" property="og:locale" content="it_IT">
+  <title>Conclusioni sostenute dalle fonti | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../vera-scope.css?v=20260721">
+  <script src="../vera-scope.js?v=20260721" defer></script>
   <style>
     :root {
-      --ink: #223026;
-      --muted: #5e6a61;
-      --line: #d9e0d8;
-      --panel: #ffffff;
-      --accent: #4f6b78;
-      --accent-ink: #263942;
       --bg: #ffffff;
+      --ink: #002060;
+      --text: #183765;
+      --muted: #52698d;
+      --line: #b7dded;
+      --line-strong: #7ec9e7;
+      --blue: #0070c0;
+      --cyan: #00b0f0;
+      --wash: #f3fbff;
+      --paper: #ffffff;
+      --content: 1120px;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     }
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
-      color: var(--ink);
+      color: var(--text);
+      font-family: "Instrument Sans", "Aptos", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-kerning: normal;
       line-height: 1.55;
     }
+    button, input, optgroup, select, textarea { font-family: inherit; }
     a { color: inherit; }
-    .page {
-      width: min(100% - 48px, 1180px);
-      margin: 0 auto;
+    :focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 40;
+      padding: 10px 14px;
+      background: var(--ink);
+      color: #f8fbff;
+      transform: translateY(-150%);
+      transition: transform 180ms var(--ease-out);
     }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 28px 0 18px;
-      border-bottom: 1px solid var(--line);
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      color: var(--accent-ink);
-    }
-    .brand img {
-      height: 34px;
-      width: auto;
-      display: block;
-    }
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-    nav a { text-decoration: none; }
-    nav a:hover { color: var(--ink); }
-    .lang {
-      display: inline-flex;
-      gap: 10px;
-      margin-left: 8px;
-      font-weight: 600;
-    }
-    .lang button {
-      border: 0;
-      background: transparent;
-      padding: 2px 0;
-      color: var(--muted);
-      cursor: pointer;
-      font: inherit;
-    }
-    .lang button[aria-pressed="true"] { color: var(--ink); }
+    .skip-link:focus { transform: translateY(0); }
+    .page { width: min(100% - 40px, var(--content)); margin: 0 auto; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 78px; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+    .brand img { display: block; width: auto; height: 34px; }
+    .primary-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 18px; color: var(--muted); font-size: 0.92rem; }
+    .primary-nav a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+    .primary-nav a:hover { color: var(--blue); }
+    .lang { display: inline-flex; gap: 4px; margin-left: 4px; }
+    .lang button { min-width: 44px; min-height: 44px; padding: 0; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-weight: 600; }
+    .lang button[aria-pressed="true"] { background: var(--wash); color: var(--blue); }
+    .breadcrumb { display: flex; align-items: center; gap: 9px; width: min(100% - 40px, var(--content)); margin: 0 auto; padding: 22px 0 0; color: var(--muted); font-size: 0.88rem; }
+    .breadcrumb a { min-height: 44px; display: inline-flex; align-items: center; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    .breadcrumb span[aria-hidden="true"] { color: var(--line-strong); }
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: clamp(32px, 5vw, 72px);
+      grid-template-columns: minmax(0, 1.16fr) minmax(300px, 0.84fr);
+      gap: clamp(44px, 8vw, 112px);
       align-items: end;
-      padding: clamp(56px, 8vw, 110px) 0 48px;
+      padding: clamp(58px, 9vw, 116px) 0 clamp(56px, 8vw, 92px);
     }
-    .eyebrow {
-      margin: 0 0 16px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    h1 {
-      margin: 0;
-      max-width: 780px;
-      font-size: clamp(42px, 5vw, 58px);
-      font-weight: 600;
-      line-height: 1.08;
-      letter-spacing: 0;
-      color: var(--ink);
-    }
-    .lead {
-      margin: 28px 0 0;
-      max-width: 720px;
-      color: #405047;
-      font-size: clamp(1.08rem, 2vw, 1.42rem);
-      line-height: 1.42;
-    }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 30px;
-    }
-    .button {
-      display: inline-flex;
+    .eyebrow, .section-kicker, .panel-kicker { margin: 0 0 16px; color: var(--blue); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 17ch; color: var(--ink); font-size: clamp(2.75rem, 6vw, 5.6rem); font-weight: 600; letter-spacing: -0.05em; line-height: 0.98; text-wrap: balance; }
+    .lead { margin: 26px 0 0; max-width: 62ch; color: var(--text); font-size: 1.18rem; line-height: 1.55; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px 22px; margin-top: 30px; }
+    .text-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--blue); font-weight: 700; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+    .route-card { border-top: 2px solid var(--ink); }
+    .route-card .panel-kicker { padding-top: 18px; }
+    .route-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .route-row span { color: var(--blue); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+    .route-row strong { color: var(--ink); font-size: 0.98rem; font-weight: 600; }
+    section { padding: clamp(58px, 8vw, 92px) 0; border-top: 1px solid var(--line); }
+    .section-head { display: grid; grid-template-columns: minmax(220px, 0.4fr) minmax(0, 0.6fr); gap: clamp(32px, 7vw, 92px); margin-bottom: 42px; }
+    .section-head h2 { margin: 0; color: var(--ink); font-size: clamp(2rem, 4vw, 4.1rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+    .section-head p { margin: 0; max-width: 64ch; color: var(--muted); font-size: 1.04rem; }
+    .workflow-list { border-top: 1px solid var(--line-strong); }
+    .workflow-step { display: grid; grid-template-columns: 58px minmax(180px, 0.36fr) minmax(0, 0.64fr); gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+    .workflow-step__number { color: var(--cyan); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .workflow-step h3 { margin: 0; color: var(--ink); font-size: 1.1rem; }
+    .workflow-step p { margin: 0; color: var(--muted); }
+    .proof-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.52fr) minmax(320px, 0.48fr);
+      gap: clamp(34px, 7vw, 88px);
       align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 11px 18px;
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      background: var(--accent);
-      color: white;
-      text-decoration: none;
-      font-weight: 700;
-    }
-    .button.secondary {
-      background: transparent;
-      color: var(--accent-ink);
-      border-color: var(--line);
-    }
-    .summary {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-      padding: 20px;
-    }
-    .summary h2 {
-      margin: 0 0 14px;
-      font-size: 1rem;
-    }
-    .summary ul {
-      margin: 0;
-      padding-left: 20px;
-      color: var(--muted);
-    }
-    section {
-      padding: 42px 0;
-      border-top: 1px solid var(--line);
-    }
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(180px, 0.34fr) minmax(0, 0.66fr);
-      gap: 28px;
-      margin-bottom: 24px;
-    }
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(28px, 3.4vw, 42px);
-      letter-spacing: 0;
-    }
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 760px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .item {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
-    }
-    .item h3 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-    }
-    .item p, .item li {
-      color: var(--muted);
-      font-size: 0.96rem;
-    }
-    .item p { margin: 0; }
-    .output-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px 18px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .output-list li {
+      padding: clamp(28px, 5vw, 52px) 0;
+      border-top: 2px solid var(--ink);
       border-bottom: 1px solid var(--line);
-      padding: 10px 0;
-      color: var(--muted);
     }
-    pre {
-      margin: 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      background: #1f2a24;
-      color: #edf3ee;
-      border-radius: 8px;
-      padding: 18px;
-      font-size: 0.9rem;
-      line-height: 1.48;
+    .proof-copy h2 { margin: 0; max-width: 14ch; color: var(--ink); font-size: clamp(2rem, 4vw, 4rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+    .proof-copy p { margin: 22px 0 0; max-width: 56ch; color: var(--muted); }
+    .artifact-line { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .artifact-line span { color: var(--blue); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+    .artifact-line code { color: var(--ink); font: inherit; font-weight: 600; }
+    .video-guide { display: block; text-decoration: none; }
+    .video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--wash); border: 1px solid var(--line); }
+    .video-frame img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 260ms var(--ease-out); }
+    .video-guide:hover img { transform: scale(1.015); }
+    .play-mark { position: absolute; inset: 50% auto auto 50%; display: grid; width: 54px; height: 54px; place-items: center; border-radius: 50%; background: var(--ink); color: #f8fbff; font-size: 1.05rem; transform: translate(-50%, -50%); }
+    .video-meta { display: flex; justify-content: space-between; gap: 18px; padding-top: 13px; color: var(--muted); font-size: 0.86rem; }
+    .video-meta strong { color: var(--ink); font-weight: 600; }
+    .journey-chain { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+    .journey-stage { min-height: 196px; padding: 24px 20px 24px 0; }
+    .journey-stage + .journey-stage { padding-left: 20px; border-left: 1px solid var(--line); }
+    .journey-stage.is-current { box-shadow: inset 0 4px 0 var(--blue); }
+    .journey-stage__number { display: block; margin-bottom: 26px; color: var(--cyan); font-size: 0.8rem; font-weight: 700; }
+    .journey-stage h3 { margin: 0 0 9px; color: var(--ink); font-size: 1.02rem; }
+    .journey-stage p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .journey-stage a { display: inline-flex; align-items: center; min-height: 44px; color: var(--blue); font-weight: 700; text-underline-offset: 4px; }
+    .starter { margin: 0; padding: clamp(24px, 4vw, 36px); overflow-wrap: anywhere; white-space: pre-wrap; background: var(--ink); color: #f7fbff; font: inherit; line-height: 1.6; }
+    .technical { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .technical summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 74px; color: var(--ink); cursor: pointer; font-size: 1.08rem; font-weight: 700; list-style: none; }
+    .technical summary::-webkit-details-marker { display: none; }
+    .technical summary::after { content: "+"; color: var(--blue); font-size: 1.5rem; font-weight: 500; }
+    .technical[open] summary::after { content: "−"; }
+    .technical-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(34px, 7vw, 86px); padding: 8px 0 40px; }
+    .technical-grid h3 { margin: 0 0 14px; color: var(--ink); font-size: 1.02rem; }
+    .technical-grid p, .technical-grid li { color: var(--muted); }
+    .output-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; margin: 0; padding: 0; list-style: none; }
+    .output-list li { padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--text); font-variant-numeric: tabular-nums; }
+    .install-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; padding-top: 34px; border-top: 2px solid var(--ink); }
+    .install-panel h2 { margin: 0 0 10px; color: var(--ink); font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 600; letter-spacing: -0.04em; }
+    .install-panel p { margin: 0; max-width: 60ch; color: var(--muted); }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 21px; border: 1px solid var(--ink); background: var(--ink); color: #f8fbff; text-decoration: none; font-weight: 700; transition: transform 180ms var(--ease-out), background 180ms linear; }
+    .button:hover { background: var(--blue); transform: translateY(-2px); }
+    footer { width: min(100% - 40px, var(--content)); margin: 0 auto; padding: 30px 0 max(30px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); color: var(--muted); font-size: 0.88rem; }
+    @media (max-width: 920px) {
+      .journey-chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .journey-stage:nth-child(3) { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
+      .journey-stage:nth-child(4) { border-top: 1px solid var(--line); }
     }
     @media (max-width: 820px) {
-      .page { width: min(100% - 32px, 1180px); }
-      header, nav { align-items: flex-start; }
-      header, .hero, .section-head { grid-template-columns: 1fr; }
-      header { flex-direction: column; }
-      nav { flex-wrap: wrap; }
-      .hero { padding-top: 44px; }
-      .grid, .output-list { grid-template-columns: 1fr; }
+      header { align-items: flex-start; flex-direction: column; padding: 18px 0; }
+      .primary-nav { align-items: flex-start; }
+      .hero, .section-head, .proof-panel, .technical-grid, .install-panel { grid-template-columns: 1fr; }
+      .hero { padding-top: 48px; }
+      .workflow-step { grid-template-columns: 44px minmax(0, 1fr); }
+      .workflow-step p { grid-column: 2; }
+      .proof-copy h2 { max-width: 18ch; }
+    }
+    @media (max-width: 580px) {
+      .page { width: min(100% - 24px, var(--content)); }
+      .breadcrumb, footer { width: calc(100% - 24px); }
+      .journey-chain, .output-list { grid-template-columns: 1fr; }
+      .journey-stage { min-height: 0; padding: 22px 0; }
+      .journey-stage + .journey-stage, .journey-stage:nth-child(3), .journey-stage:nth-child(4) { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
+      .journey-stage__number { margin-bottom: 12px; }
+      .route-row { grid-template-columns: 82px minmax(0, 1fr); }
+      .video-meta { display: block; }
+      .video-meta span { display: block; margin-top: 4px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
   </style>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
 </head>
-<body>
+<body data-vera-module="deep-research-validator" data-vera-scope="core">
+  <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
   <div class="page">
     <header>
-      <a class="brand" id="home-link" href="/?lang=it">
-        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
-      </a>
-      <nav>
-        <a href="#workflow" data-i18n="nav.workflow">Come funziona</a>
-        <a href="#outputs" data-i18n="nav.outputs">File prodotti</a>
-        <a href="#prompts" data-i18n="nav.prompts">Prompt</a>
-        <a href="#download" data-i18n="nav.download">Installazione</a>
-        <span class="lang" aria-label="Language">
+      <a class="brand" id="home-link" href="/?lang=it"><img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza"></a>
+      <nav class="primary-nav" id="primary-nav" aria-label="Navigazione principale">
+        <a href="#workflow" data-i18n="nav.workflow">Revisione</a>
+        <a href="#result" data-i18n="nav.result">Risultato</a>
+        <a href="#starter" data-i18n="nav.starter">Prompt iniziale</a>
+        <a href="#details" data-i18n="nav.details">Dettagli</a>
+        <a href="#download" data-i18n="nav.download">Apri Vera</a>
+        <span class="lang" id="language-switcher" aria-label="Lingua">
           <button type="button" data-lang="en">En</button>
           <button type="button" data-lang="it">It</button>
           <button type="button" data-lang="fr">Fr</button>
@@ -241,204 +200,422 @@
       </nav>
     </header>
 
-    <main>
+    <nav class="breadcrumb" id="breadcrumb" aria-label="Percorso">
+      <a id="vera-link" href="../vera/index.html?lang=it">Vera</a>
+      <span aria-hidden="true">/</span>
+      <span data-i18n="module.name">Valida Deep Research</span>
+    </nav>
+
+    <main id="main-content">
       <section class="hero" aria-labelledby="hero-title">
         <div>
-          <p class="eyebrow" data-i18n="hero.eyebrow">Validazione ricerca</p>
-          <h1 id="hero-title" data-i18n="hero.title">Valida Deep Research</h1>
-          <p class="lead" data-i18n="hero.lead">Rivede una risposta Deep Research prima che venga usata: seleziona le affermazioni essenziali, controlla il supporto citato e separa correzioni, limiti e punti da rivedere.</p>
+          <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Validazione della ricerca</p>
+          <h1 id="hero-title" data-i18n="hero.title">Sapere quali conclusioni reggono, prima di usarle.</h1>
+          <p class="lead" data-i18n="hero.lead">Porta l'output di Deep Research. Vera seleziona le affermazioni materiali, distingue accesso alle fonti, supporto e ragionamento, quindi prepara correzioni e incertezza residua per la tua review.</p>
+          <div class="hero-actions">
+            <a class="text-link" href="#starter" data-i18n="hero.action">Prova il prompt iniziale ↓</a>
+            <a class="text-link" id="hero-prompt-link" href="../prompt-optimizer/index.html?lang=it" data-i18n="hero.previous">Prima della ricerca: prepara il brief ←</a>
+          </div>
         </div>
-        <aside class="summary">
-          <h2 data-i18n="summary.title">Quando usarlo</h2>
-          <ul>
-            <li data-i18n="summary.item0">Hai un output Deep Research con fonti e citazioni</li>
-            <li data-i18n="summary.item1">Devi capire quali affermazioni reggono davvero</li>
-            <li data-i18n="summary.item2">Vuoi un pacchetto di revisione, non una nuova risposta</li>
-            <li data-i18n="summary.item3">Il professionista decide cosa accettare</li>
-          </ul>
+        <aside class="route-card" aria-labelledby="route-title">
+          <p class="panel-kicker" id="route-title" data-i18n="summary.title">Quando usarlo</p>
+          <div class="route-row"><span data-i18n="route.provide.label">Fornisci</span><strong data-i18n="route.provide">Output Deep Research, citazioni e fonti locali disponibili</strong></div>
+          <div class="route-row"><span data-i18n="route.prepare.label">Vera prepara</span><strong data-i18n="route.prepare">Revisione per affermazioni, fonti e ragionamento</strong></div>
+          <div class="route-row"><span data-i18n="route.receive.label">Ricevi</span><strong data-i18n="route.receive">Verdetti, documento corretto e traccia della review</strong></div>
         </aside>
       </section>
 
       <section id="workflow">
         <div class="section-head">
           <h2 data-i18n="workflow.title">Revisione per affermazioni</h2>
-          <p data-i18n="workflow.copy">La pagina non prova a ricontrollare tutto. Organizza poche affermazioni materiali, le confronta con fonti recuperabili e conserva la traccia del giudizio.</p>
+          <p data-i18n="workflow.copy">Definisci ciò che conta nel documento. Vera verifica affermazioni, fonti e ragionamento, registra le correzioni e rende il controllo ripetibile e leggibile.</p>
         </div>
-        <div class="grid">
-          <article class="item">
-            <h3 data-i18n="workflow.item1.title">Sceglie le affermazioni</h3>
-            <p data-i18n="workflow.item1.copy">Porta in primo piano le affermazioni che cambiano davvero il giudizio professionale.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="workflow.item2.title">Controlla le fonti</h3>
-            <p data-i18n="workflow.item2.copy">Verifica se le fonti citate supportano l'affermazione, la indeboliscono o non bastano.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="workflow.item3.title">Consegna la revisione</h3>
-            <p data-i18n="workflow.item3.copy">Prepara revisione delle affermazioni, traccia di revisione e documento corretto con limiti e punti da verificare.</p>
-          </article>
+        <div class="workflow-list">
+          <article class="workflow-step"><span class="workflow-step__number">01</span><h3 data-i18n="workflow.item1.title">Porta l'output</h3><p data-i18n="workflow.item1.copy">Allega il documento Deep Research con citazioni, URL ed eventuali fonti locali che il revisore può usare.</p></article>
+          <article class="workflow-step"><span class="workflow-step__number">02</span><h3 data-i18n="workflow.item2.title">Sceglie le affermazioni</h3><p data-i18n="workflow.item2.copy">Vera propone le affermazioni che cambiano conclusioni, numeri, date, idoneità o rischio; tu confermi il perimetro della review.</p></article>
+          <article class="workflow-step"><span class="workflow-step__number">03</span><h3 data-i18n="workflow.item3.title">Controlla le fonti</h3><p data-i18n="workflow.item3.copy">Separa fonte disponibile da fonte pertinente e valuta il supporto come sostenuto, parziale, assente, contraddetto o incerto.</p></article>
+          <article class="workflow-step"><span class="workflow-step__number">04</span><h3 data-i18n="workflow.item4.title">Rivedi le correzioni</h3><p data-i18n="workflow.item4.copy">Leggi il ragionamento, le proposte di correzione e i limiti. Accetta, modifica o lascia aperto ogni punto materiale.</p></article>
+          <article class="workflow-step"><span class="workflow-step__number">05</span><h3 data-i18n="workflow.item5.title">Ricevi il pacchetto</h3><p data-i18n="workflow.item5.copy">Ottieni verdetti per affermazione, audit, documento corretto e una sintesi di ciò che resta da decidere.</p></article>
         </div>
       </section>
 
-      <section id="outputs">
-        <div class="section-head">
-          <h2 data-i18n="outputs.title">File prodotti</h2>
-          <p data-i18n="outputs.copy">Apri claims_review.json per il verdetto affermazione per affermazione. validation_package.md riassume che cosa è stato controllato e cosa resta incerto.</p>
+      <section id="result">
+        <div class="proof-panel">
+          <div class="proof-copy">
+            <p class="section-kicker" data-i18n="proof.kicker">Risultato reale · Guida video</p>
+            <h2 data-i18n="proof.title">Molte citazioni non significano molto supporto.</h2>
+            <p data-i18n="proof.copy">La guida mostra una revisione concreta: ogni affermazione materiale riceve un verdetto, il ragionamento resta distinto dall'esistenza della fonte e le correzioni sono visibili.</p>
+            <div class="artifact-line"><span data-i18n="proof.artifactLabel">Apri per primo</span><code>claims_review.json</code></div>
+          </div>
+          <a class="video-guide" id="guide-link" href="https://youtu.be/vA2JO3cG7Cw" target="_blank" rel="noopener noreferrer" aria-label="Guarda la guida di Valida Deep Research su YouTube">
+            <div class="video-frame">
+              <img id="guide-thumbnail" src="https://i.ytimg.com/vi/vA2JO3cG7Cw/hqdefault.jpg" width="480" height="360" loading="lazy" alt="Anteprima della guida Molte citazioni non significano molto supporto">
+              <span class="play-mark" aria-hidden="true">▶</span>
+            </div>
+            <div class="video-meta"><strong data-i18n="proof.videoAction">Guarda la guida</strong><span data-i18n="proof.videoMeta">Italiano · Si apre su YouTube</span></div>
+          </a>
         </div>
-        <ul class="output-list">
-          <li>document_inventory.json</li>
-          <li>source_inventory.json</li>
-          <li>claims_review.json</li>
-          <li>validation_audit.json</li>
-          <li>validated_document.md</li>
-          <li>validated_document.docx</li>
-          <li>validation_package.md</li>
-        </ul>
       </section>
 
-      <section id="prompts">
+      <section id="next">
         <div class="section-head">
-          <h2 data-i18n="prompts.title">Prompt pronti</h2>
-          <p data-i18n="prompts.copy">Usa questo prompt quando hai già l'output Deep Research e vuoi una revisione mirata prima di affidarti alla risposta.</p>
+          <h2 data-i18n="next.title">La validazione chiude il circuito della ricerca.</h2>
+          <p data-i18n="next.copy">Se il controllo scopre un problema di impostazione, torna al brief. Se il documento regge, porta l'esito riveduto nel Report Builder.</p>
         </div>
-        <pre><code id="prompt-example">Usa Valida Deep Research su questo output. Lingua: it. Seleziona le affermazioni materiali, controlla le fonti citate, indica cosa è supportato, debole o non verificato, e prepara una revisione con correzioni, limiti e punti da decidere manualmente.</code></pre>
+        <div class="journey-chain" aria-label="Prompt Optimizer, Deep Research, Deep Research Validator, Report Builder">
+          <article class="journey-stage"><span class="journey-stage__number">01</span><h3 data-i18n="next.step1.title">Prompt Optimizer</h3><p data-i18n="next.step1.copy">Prepara il brief e i siti.</p><a id="prompt-link" href="../prompt-optimizer/index.html?lang=it" data-i18n="next.backLink">Riapri il brief ←</a></article>
+          <article class="journey-stage"><span class="journey-stage__number">02</span><h3>Deep Research</h3><p data-i18n="next.step2.copy">Esegue la ricerca con il brief ottimizzato.</p></article>
+          <article class="journey-stage is-current"><span class="journey-stage__number">03</span><h3 data-i18n="next.step3.title">Deep Research Validator</h3><p data-i18n="next.step3.copy">Controlla affermazioni, fonti e ragionamento.</p></article>
+          <article class="journey-stage"><span class="journey-stage__number">04</span><h3 data-i18n="next.step4.title">Report Builder</h3><p data-i18n="next.step4.copy">Trasforma l'esito riveduto in un deliverable.</p><a id="report-link" href="../report-builder/index.html?lang=it" data-i18n="next.forwardLink">Continua al report →</a></article>
+        </div>
+      </section>
+
+      <section id="starter">
+        <div class="section-head">
+          <h2 data-i18n="starter.title">Un solo prompt per iniziare.</h2>
+          <p data-i18n="starter.copy">Allega l'output Deep Research e usa queste istruzioni. Vera chiederà altro solo quando una fonte o una scelta di review cambia il risultato.</p>
+        </div>
+        <pre class="starter"><code id="prompt-example">Usa Valida Deep Research su questo output. Lingua: it. Ispeziona documento e fonti, seleziona le affermazioni materiali, valuta separatamente supporto e ragionamento, segnala limiti o correzioni e prepara il pacchetto di validazione per la mia review.</code></pre>
+      </section>
+
+      <section id="details">
+        <div class="section-head">
+          <h2 data-i18n="details.title">La parte tecnica documenta la revisione.</h2>
+          <p data-i18n="details.copy">Aprila per verificare il pacchetto, i verdetti applicati e le decisioni registrate.</p>
+        </div>
+        <details class="technical">
+          <summary data-i18n="details.summary">File, verdetti e perimetro</summary>
+          <div class="technical-grid">
+            <div>
+              <h3 data-i18n="details.outputs.title">File prodotti</h3>
+              <ul class="output-list">
+                <li>document_inventory.json</li>
+                <li>source_inventory.json</li>
+                <li>claims_review.json</li>
+                <li>validation_audit.json</li>
+                <li>validated_document.md</li>
+                <li>validated_document.docx</li>
+                <li>validation_package.md</li>
+              </ul>
+            </div>
+            <div>
+              <h3 data-i18n="details.scope.title">Verdetti e decisioni di review</h3>
+              <p data-i18n="details.scope.copy">Supported, partially_supported, not_supported, contradicted e uncertain separano il supporto delle fonti; il pacchetto registra poi le decisioni applicate nella review.</p>
+            </div>
+          </div>
+        </details>
       </section>
 
       <section id="download">
-        <div class="section-head">
-          <h2 data-i18n="download.title">Installa Vera dal marketplace</h2>
-          <p data-i18n="download.copy">Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.</p>
+        <div class="install-panel">
+          <div>
+            <h2 data-i18n="download.title">Vera include questo workflow.</h2>
+            <p data-i18n="download.copy">Apri Vera, allega l'output Deep Research e usa il prompt iniziale. La revisione delle affermazioni e il documento corretto fanno parte dello stesso percorso.</p>
+          </div>
+          <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="download.button">Apri Vera</a>
         </div>
-        <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="download.button">Installa Vera</a>
       </section>
     </main>
+
+    <footer data-i18n="footer">Vera · Dalla ricerca alla revisione tracciabile.</footer>
   </div>
 
   <script>
+    const guides = {
+      it: { id: "vA2JO3cG7Cw", locale: "it_IT" },
+      en: { id: "GRAPmp9D7ds", locale: "en_US" },
+      fr: { id: "v0CI1-lm-Qg", locale: "fr_FR" },
+      de: { id: "hL488KRscW0", locale: "de_DE" }
+    };
+
     const translations = {
       it: {
-        title: "Valida Deep Research | Vera",
-        "nav.workflow": "Come funziona",
-        "nav.outputs": "File prodotti",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installazione",
-        "hero.eyebrow": "Validazione ricerca",
-        "hero.title": "Valida Deep Research",
-        "hero.lead": "Rivede una risposta Deep Research prima che venga usata: seleziona le affermazioni essenziali, controlla il supporto citato e separa correzioni, limiti e punti da rivedere.",
+        title: "Conclusioni sostenute dalle fonti | Vera",
+        metaDescription: "Vera rivede un output Deep Research per affermazioni materiali, controlla fonti e ragionamento e consegna un documento corretto con una traccia verificabile.",
+        ogTitle: "Conclusioni sostenute dalle fonti | Vera",
+        ogDescription: "Dall'output Deep Research a una revisione per affermazioni, con supporto delle fonti, correzioni e incertezza residua separati.",
+        skip: "Vai al contenuto",
+        "nav.aria": "Navigazione principale",
+        "language.aria": "Lingua",
+        "breadcrumb.aria": "Percorso",
+        "nav.workflow": "Revisione",
+        "nav.result": "Risultato",
+        "nav.starter": "Prompt iniziale",
+        "nav.details": "Dettagli",
+        "nav.download": "Apri Vera",
+        "module.name": "Valida Deep Research",
+        "hero.eyebrow": "Vera · Validazione della ricerca",
+        "hero.title": "Sapere quali conclusioni reggono, prima di usarle.",
+        "hero.lead": "Porta l'output di Deep Research. Vera seleziona le affermazioni materiali, distingue accesso alle fonti, supporto e ragionamento, quindi prepara correzioni e incertezza residua per la tua review.",
+        "hero.action": "Prova il prompt iniziale ↓",
+        "hero.previous": "Prima della ricerca: prepara il brief ←",
         "summary.title": "Quando usarlo",
-        "summary.item0": "Hai un output Deep Research con fonti e citazioni",
-        "summary.item1": "Devi capire quali affermazioni reggono davvero",
-        "summary.item2": "Vuoi un pacchetto di revisione, non una nuova risposta",
-        "summary.item3": "Il professionista decide cosa accettare",
+        "route.provide.label": "Fornisci",
+        "route.provide": "Output Deep Research, citazioni e fonti locali disponibili",
+        "route.prepare.label": "Vera prepara",
+        "route.prepare": "Revisione per affermazioni, fonti e ragionamento",
+        "route.receive.label": "Ricevi",
+        "route.receive": "Verdetti, documento corretto e traccia della review",
         "workflow.title": "Revisione per affermazioni",
-        "workflow.copy": "La pagina non prova a ricontrollare tutto. Organizza poche affermazioni materiali, le confronta con fonti recuperabili e conserva la traccia del giudizio.",
-        "workflow.item1.title": "Sceglie le affermazioni",
-        "workflow.item1.copy": "Porta in primo piano le affermazioni che cambiano davvero il giudizio professionale.",
-        "workflow.item2.title": "Controlla le fonti",
-        "workflow.item2.copy": "Verifica se le fonti citate supportano l'affermazione, la indeboliscono o non bastano.",
-        "workflow.item3.title": "Consegna la revisione",
-        "workflow.item3.copy": "Prepara revisione delle affermazioni, traccia di revisione e documento corretto con limiti e punti da verificare.",
-        "outputs.title": "File prodotti",
-        "outputs.copy": "Apri claims_review.json per il verdetto affermazione per affermazione. validation_package.md riassume che cosa è stato controllato e cosa resta incerto.",
-        "prompts.title": "Prompt pronti",
-        "prompts.copy": "Usa questo prompt quando hai già l'output Deep Research e vuoi una revisione mirata prima di affidarti alla risposta.",
-        "download.title": "Installa Vera dal marketplace",
-        "download.copy": "Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.",
-        "download.button": "Installa Vera",
-        prompt: "Usa Valida Deep Research su questo output. Lingua: it. Seleziona le affermazioni materiali, controlla le fonti citate, indica cosa è supportato, debole o non verificato, e prepara una revisione con correzioni, limiti e punti da decidere manualmente."
+        "workflow.copy": "Definisci ciò che conta nel documento. Vera verifica affermazioni, fonti e ragionamento, registra le correzioni e rende il controllo ripetibile e leggibile.",
+        "workflow.item1.title": "Porta l'output",
+        "workflow.item1.copy": "Allega il documento Deep Research con citazioni, URL ed eventuali fonti locali che il revisore può usare.",
+        "workflow.item2.title": "Sceglie le affermazioni",
+        "workflow.item2.copy": "Vera propone le affermazioni che cambiano conclusioni, numeri, date, idoneità o rischio; tu confermi il perimetro della review.",
+        "workflow.item3.title": "Controlla le fonti",
+        "workflow.item3.copy": "Separa fonte disponibile da fonte pertinente e valuta il supporto come sostenuto, parziale, assente, contraddetto o incerto.",
+        "workflow.item4.title": "Rivedi le correzioni",
+        "workflow.item4.copy": "Leggi il ragionamento, le proposte di correzione e i limiti. Accetta, modifica o lascia aperto ogni punto materiale.",
+        "workflow.item5.title": "Ricevi il pacchetto",
+        "workflow.item5.copy": "Ottieni verdetti per affermazione, audit, documento corretto e una sintesi di ciò che resta da decidere.",
+        "proof.kicker": "Risultato reale · Guida video",
+        "proof.title": "Molte citazioni non significano molto supporto.",
+        "proof.copy": "La guida mostra una revisione concreta: ogni affermazione materiale riceve un verdetto, il ragionamento resta distinto dall'esistenza della fonte e le correzioni sono visibili.",
+        "proof.artifactLabel": "Apri per primo",
+        "proof.videoAction": "Guarda la guida",
+        "proof.videoMeta": "Italiano · Si apre su YouTube",
+        "proof.videoAlt": "Anteprima della guida Molte citazioni non significano molto supporto",
+        "proof.videoAria": "Guarda la guida di Valida Deep Research su YouTube",
+        "next.title": "La validazione chiude il circuito della ricerca.",
+        "next.copy": "Se il controllo scopre un problema di impostazione, torna al brief. Se il documento regge, porta l'esito riveduto nel Report Builder.",
+        "next.step1.title": "Prompt Optimizer",
+        "next.step1.copy": "Prepara il brief e i siti.",
+        "next.backLink": "Riapri il brief ←",
+        "next.step2.copy": "Esegue la ricerca con il brief ottimizzato.",
+        "next.step3.title": "Deep Research Validator",
+        "next.step3.copy": "Controlla affermazioni, fonti e ragionamento.",
+        "next.step4.title": "Report Builder",
+        "next.step4.copy": "Trasforma l'esito riveduto in un deliverable.",
+        "next.forwardLink": "Continua al report →",
+        "starter.title": "Un solo prompt per iniziare.",
+        "starter.copy": "Allega l'output Deep Research e usa queste istruzioni. Vera chiederà altro solo quando una fonte o una scelta di review cambia il risultato.",
+        "details.title": "La parte tecnica documenta la revisione.",
+        "details.copy": "Aprila per verificare il pacchetto, i verdetti applicati e le decisioni registrate.",
+        "details.summary": "File, verdetti e perimetro",
+        "details.outputs.title": "File prodotti",
+        "details.scope.title": "Verdetti e decisioni di review",
+        "details.scope.copy": "Supported, partially_supported, not_supported, contradicted e uncertain separano il supporto delle fonti; il pacchetto registra poi le decisioni applicate nella review.",
+        "download.title": "Vera include questo workflow.",
+        "download.copy": "Apri Vera, allega l'output Deep Research e usa il prompt iniziale. La revisione delle affermazioni e il documento corretto fanno parte dello stesso percorso.",
+        "download.button": "Apri Vera",
+        footer: "Vera · Dalla ricerca alla revisione tracciabile.",
+        prompt: "Usa Valida Deep Research su questo output. Lingua: it. Ispeziona documento e fonti, seleziona le affermazioni materiali, valuta separatamente supporto e ragionamento, segnala limiti o correzioni e prepara il pacchetto di validazione per la mia review."
       },
       en: {
-        title: "Validate Deep Research | Vera",
-        "nav.workflow": "Review method",
-        "nav.outputs": "Files produced",
-        "nav.prompts": "Prompt ready",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Research validation",
-        "hero.title": "Validate Deep Research",
-        "hero.lead": "Reviews a Deep Research answer before you rely on it: selects core claims, checks cited support and separates corrections, limits and points for review.",
+        title: "Conclusions supported by sources | Vera",
+        metaDescription: "Vera reviews a Deep Research output by material claim, checks sources and reasoning, and delivers a corrected document with a reviewable trail.",
+        ogTitle: "Conclusions supported by sources | Vera",
+        ogDescription: "From a Deep Research output to claim-level review, with source support, corrections and residual uncertainty kept separate.",
+        skip: "Skip to content",
+        "nav.aria": "Primary navigation",
+        "language.aria": "Language",
+        "breadcrumb.aria": "Breadcrumb",
+        "nav.workflow": "Review",
+        "nav.result": "Result",
+        "nav.starter": "Starter prompt",
+        "nav.details": "Details",
+        "nav.download": "Open Vera",
+        "module.name": "Validate Deep Research",
+        "hero.eyebrow": "Vera · Research validation",
+        "hero.title": "Know which conclusions hold before you rely on them.",
+        "hero.lead": "Bring the Deep Research output. Vera selects material claims, separates source access, support and reasoning, then prepares corrections and residual uncertainty for your review.",
+        "hero.action": "Try the starter prompt ↓",
+        "hero.previous": "Before research: prepare the brief ←",
         "summary.title": "Use it when",
-        "summary.item0": "You have a Deep Research output with sources and citations",
-        "summary.item1": "You need to know which claims actually hold",
-        "summary.item2": "You want a review package, not a new answer",
-        "summary.item3": "The professional reviewer decides what to accept",
+        "route.provide.label": "Provide",
+        "route.provide": "Deep Research output, citations and available local sources",
+        "route.prepare.label": "Vera prepares",
+        "route.prepare": "Review of claims, sources and reasoning",
+        "route.receive.label": "Receive",
+        "route.receive": "Verdicts, corrected document and review trail",
         "workflow.title": "Review by material claim",
-        "workflow.copy": "The page does not try to re-check everything. It organizes a small set of material claims, compares them with retrievable sources and keeps a review trail.",
-        "workflow.item1.title": "Select claims",
-        "workflow.item1.copy": "Brings forward the statements that would change the professional conclusion.",
-        "workflow.item2.title": "Check sources",
-        "workflow.item2.copy": "Reviews whether cited sources support the claim, weaken it or are not enough.",
-        "workflow.item3.title": "Deliver review",
-        "workflow.item3.copy": "Prepares the claim review, corrected document, limits and points to verify.",
-        "outputs.title": "Files produced",
-        "outputs.copy": "Open claims_review.json for the claim-by-claim verdict. validation_package.md summarizes what was checked and what remains uncertain.",
-        "prompts.title": "Prompt ready",
-        "prompts.copy": "Use this when you already have the Deep Research output and want a focused review before relying on it.",
-        "download.title": "Install Vera from the marketplace",
-        "download.copy": "Open Vera's official ChatGPT listing and select Install. All modules are included.",
-        "download.button": "Install Vera",
-        prompt: "Use Validate Deep Research on this output. Language: en. Select the material claims, check the cited sources, state what is supported, weak or unverified, and prepare a review with corrections, limits and points for manual decision."
+        "workflow.copy": "Define what matters in the document. Vera checks claims, sources and reasoning, records corrections and makes the review repeatable and legible.",
+        "workflow.item1.title": "Bring the output",
+        "workflow.item1.copy": "Attach the Deep Research document with citations, URLs and any local sources the reviewer can use.",
+        "workflow.item2.title": "Select claims",
+        "workflow.item2.copy": "Vera proposes claims that change conclusions, numbers, dates, eligibility or risk; you confirm the review scope.",
+        "workflow.item3.title": "Check sources",
+        "workflow.item3.copy": "It separates source availability from relevance and grades support as supported, partial, absent, contradicted or uncertain.",
+        "workflow.item4.title": "Review corrections",
+        "workflow.item4.copy": "Read the reasoning, proposed fixes and limits. Accept, edit or leave each material point open.",
+        "workflow.item5.title": "Receive the package",
+        "workflow.item5.copy": "Get claim-level verdicts, an audit, a corrected document and a summary of what remains to decide.",
+        "proof.kicker": "Real result · Video guide",
+        "proof.title": "Many citations do not mean strong source support.",
+        "proof.copy": "The guide shows a concrete review: each material claim receives a verdict, reasoning stays separate from source existence and corrections remain visible.",
+        "proof.artifactLabel": "Open first",
+        "proof.videoAction": "Watch the guide",
+        "proof.videoMeta": "English · Opens on YouTube",
+        "proof.videoAlt": "Preview of the Many citations do not mean strong source support guide",
+        "proof.videoAria": "Watch the Validate Deep Research guide on YouTube",
+        "next.title": "Validation closes the research loop.",
+        "next.copy": "If review uncovers a framing problem, return to the brief. If the document holds, take the reviewed result into Report Builder.",
+        "next.step1.title": "Prompt Optimizer",
+        "next.step1.copy": "Prepares the brief and sites.",
+        "next.backLink": "Reopen the brief ←",
+        "next.step2.copy": "Runs research with the optimized brief.",
+        "next.step3.title": "Deep Research Validator",
+        "next.step3.copy": "Checks claims, sources and reasoning.",
+        "next.step4.title": "Report Builder",
+        "next.step4.copy": "Turns the reviewed result into a deliverable.",
+        "next.forwardLink": "Continue to the report →",
+        "starter.title": "One prompt to get started.",
+        "starter.copy": "Attach the Deep Research output and use these instructions. Vera will ask for more only when a source or review choice changes the result.",
+        "details.title": "Technical detail documents the review.",
+        "details.copy": "Open it to inspect the package, applied verdicts and recorded review decisions.",
+        "details.summary": "Files, verdicts and scope",
+        "details.outputs.title": "Files produced",
+        "details.scope.title": "Verdicts and review decisions",
+        "details.scope.copy": "Supported, partially_supported, not_supported, contradicted and uncertain separate source support; the package then records the decisions applied during review.",
+        "download.title": "Vera includes this workflow.",
+        "download.copy": "Open Vera, attach the Deep Research output and use the starter prompt. Claim review and the corrected document belong to the same journey.",
+        "download.button": "Open Vera",
+        footer: "Vera · From research to a traceable review.",
+        prompt: "Use Validate Deep Research on this output. Language: en. Inspect the document and sources, select material claims, evaluate source support and reasoning separately, flag limits or corrections, and prepare the validation package for my review."
       },
       fr: {
-        title: "Valider Deep Research | Vera",
-        "nav.workflow": "Méthode",
-        "nav.outputs": "Fichiers produits",
-        "nav.prompts": "Prompt prêt",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Validation recherche",
-        "hero.title": "Valider Deep Research",
-        "hero.lead": "Relit une réponse Deep Research avant de s'y appuyer : sélectionne les affirmations essentielles, contrôle les sources citées et sépare corrections, limites et points à revoir.",
+        title: "Des conclusions soutenues par les sources | Vera",
+        metaDescription: "Vera relit une sortie Deep Research par affirmation matérielle, contrôle sources et raisonnement et livre un document corrigé avec une trace vérifiable.",
+        ogTitle: "Des conclusions soutenues par les sources | Vera",
+        ogDescription: "De la sortie Deep Research à une revue par affirmation, en séparant support des sources, corrections et incertitude résiduelle.",
+        skip: "Aller au contenu",
+        "nav.aria": "Navigation principale",
+        "language.aria": "Langue",
+        "breadcrumb.aria": "Fil d'Ariane",
+        "nav.workflow": "Revue",
+        "nav.result": "Résultat",
+        "nav.starter": "Prompt de départ",
+        "nav.details": "Détails",
+        "nav.download": "Ouvrir Vera",
+        "module.name": "Valider Deep Research",
+        "hero.eyebrow": "Vera · Validation de la recherche",
+        "hero.title": "Savoir quelles conclusions tiennent avant de s'y fier.",
+        "hero.lead": "Apportez la sortie Deep Research. Vera sélectionne les affirmations matérielles, sépare l'accès aux sources, le support et le raisonnement, puis prépare corrections et incertitude résiduelle pour votre revue.",
+        "hero.action": "Essayer le prompt de départ ↓",
+        "hero.previous": "Avant la recherche : préparer le brief ←",
         "summary.title": "Quand l'utiliser",
-        "summary.item0": "Vous avez une sortie Deep Research avec sources et citations",
-        "summary.item1": "Vous devez savoir quelles affirmations tiennent vraiment",
-        "summary.item2": "Vous voulez un paquet de revue, pas une nouvelle réponse",
-        "summary.item3": "Le professionnel décide ce qu'il accepte",
+        "route.provide.label": "Fournissez",
+        "route.provide": "Sortie Deep Research, citations et sources locales disponibles",
+        "route.prepare.label": "Vera prépare",
+        "route.prepare": "Revue des affirmations, sources et raisonnement",
+        "route.receive.label": "Recevez",
+        "route.receive": "Verdicts, document corrigé et trace de revue",
         "workflow.title": "Revue par affirmation",
-        "workflow.copy": "La page ne tente pas de tout revérifier. Elle organise quelques affirmations matérielles, les compare aux sources récupérables et conserve une trace de revue.",
-        "workflow.item1.title": "Choisir les affirmations",
-        "workflow.item1.copy": "Fait ressortir les affirmations qui changent réellement la conclusion professionnelle.",
-        "workflow.item2.title": "Contrôler les sources",
-        "workflow.item2.copy": "Vérifie si les sources citées soutiennent l'affirmation, l'affaiblissent ou ne suffisent pas.",
-        "workflow.item3.title": "Livrer la revue",
-        "workflow.item3.copy": "Prépare la revue des affirmations, le document corrigé, les limites et les points à vérifier.",
-        "outputs.title": "Fichiers produits",
-        "outputs.copy": "Ouvrez claims_review.json pour le verdict affirmation par affirmation. validation_package.md résume ce qui a été contrôlé et ce qui reste incertain.",
-        "prompts.title": "Prompt de départ",
-        "prompts.copy": "Utilisez ce prompt quand vous avez déjà la sortie Deep Research et voulez une revue ciblée avant de vous appuyer dessus.",
-        "download.title": "Installer Vera depuis la marketplace",
-        "download.copy": "Ouvrez la fiche officielle de Vera sur ChatGPT et sélectionnez Installer. Tous les modules sont inclus.",
-        "download.button": "Installer Vera",
-        prompt: "Utilise Valider Deep Research sur cette sortie. Langue : fr. Sélectionne les affirmations matérielles, contrôle les sources citées, indique ce qui est soutenu, faible ou non vérifié, puis prépare une revue avec corrections, limites et points à décider manuellement."
+        "workflow.copy": "Définissez ce qui compte dans le document. Vera contrôle affirmations, sources et raisonnement, consigne les corrections et rend la revue répétable et lisible.",
+        "workflow.item1.title": "Apportez la sortie",
+        "workflow.item1.copy": "Joignez le document Deep Research avec citations, URL et éventuelles sources locales accessibles au réviseur.",
+        "workflow.item2.title": "Choisir les affirmations",
+        "workflow.item2.copy": "Vera propose les affirmations qui changent conclusions, chiffres, dates, éligibilité ou risque ; vous confirmez le périmètre de la revue.",
+        "workflow.item3.title": "Contrôler les sources",
+        "workflow.item3.copy": "Elle sépare disponibilité et pertinence des sources et qualifie le support : soutenu, partiel, absent, contredit ou incertain.",
+        "workflow.item4.title": "Relisez les corrections",
+        "workflow.item4.copy": "Lisez le raisonnement, les corrections proposées et les limites. Acceptez, modifiez ou laissez chaque point matériel ouvert.",
+        "workflow.item5.title": "Recevez le paquet",
+        "workflow.item5.copy": "Obtenez les verdicts par affirmation, l'audit, le document corrigé et la synthèse de ce qui reste à décider.",
+        "proof.kicker": "Résultat réel · Guide vidéo",
+        "proof.title": "Beaucoup de citations ne garantissent pas le support.",
+        "proof.copy": "Le guide montre une revue concrète : chaque affirmation matérielle reçoit un verdict, le raisonnement reste séparé de l'existence de la source et les corrections restent visibles.",
+        "proof.artifactLabel": "À ouvrir d'abord",
+        "proof.videoAction": "Voir le guide",
+        "proof.videoMeta": "Français · S'ouvre sur YouTube",
+        "proof.videoAlt": "Aperçu du guide Beaucoup de citations ne garantissent pas le support",
+        "proof.videoAria": "Voir le guide Valider Deep Research sur YouTube",
+        "next.title": "La validation ferme la boucle de recherche.",
+        "next.copy": "Si la revue révèle un problème de cadrage, revenez au brief. Si le document tient, transmettez le résultat revu à Report Builder.",
+        "next.step1.title": "Prompt Optimizer",
+        "next.step1.copy": "Prépare le brief et les sites.",
+        "next.backLink": "Rouvrir le brief ←",
+        "next.step2.copy": "Exécute la recherche avec le brief optimisé.",
+        "next.step3.title": "Deep Research Validator",
+        "next.step3.copy": "Contrôle affirmations, sources et raisonnement.",
+        "next.step4.title": "Report Builder",
+        "next.step4.copy": "Transforme le résultat revu en livrable.",
+        "next.forwardLink": "Continuer vers le rapport →",
+        "starter.title": "Un seul prompt pour commencer.",
+        "starter.copy": "Joignez la sortie Deep Research et utilisez ces instructions. Vera concentre ses questions sur les sources et les choix de revue qui changent le résultat.",
+        "details.title": "La partie technique documente la revue.",
+        "details.copy": "Ouvrez-la pour examiner le paquet, les verdicts appliqués et les décisions de revue enregistrées.",
+        "details.summary": "Fichiers, verdicts et périmètre",
+        "details.outputs.title": "Fichiers produits",
+        "details.scope.title": "Verdicts et décisions de revue",
+        "details.scope.copy": "Supported, partially_supported, not_supported, contradicted et uncertain distinguent le support des sources; le paquet consigne ensuite les décisions appliquées pendant la revue.",
+        "download.title": "Vera inclut ce workflow.",
+        "download.copy": "Ouvrez Vera, joignez la sortie Deep Research et utilisez le prompt de départ. La revue des affirmations et le document corrigé appartiennent au même parcours.",
+        "download.button": "Ouvrir Vera",
+        footer: "Vera · De la recherche à une revue traçable.",
+        prompt: "Utilise Valider Deep Research sur cette sortie. Langue : fr. Inspecte le document et les sources, choisis les affirmations matérielles, évalue séparément le support des sources et le raisonnement, signale limites ou corrections et prépare le paquet de validation pour ma revue."
       },
       de: {
-        title: "Deep Research validieren | Vera",
-        "nav.workflow": "Methode",
-        "nav.outputs": "Dateien",
-        "nav.prompts": "Promptvorlage",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Research-Prüfung",
-        "hero.title": "Deep Research validieren",
-        "hero.lead": "Prüft eine Deep-Research-Antwort, bevor Sie sich darauf stützen: wählt Kernaussagen, kontrolliert zitierte Belege und trennt Korrekturen, Grenzen und Prüfpunkte.",
+        title: "Schlussfolgerungen mit Quellenstützung | Vera",
+        metaDescription: "Vera prüft einen Deep-Research-Output nach wesentlichen Aussagen, kontrolliert Quellen und Begründung und liefert ein korrigiertes Dokument mit prüfbarer Spur.",
+        ogTitle: "Schlussfolgerungen mit Quellenstützung | Vera",
+        ogDescription: "Vom Deep-Research-Output zur Aussagenprüfung mit getrennter Quellenstützung, Korrektur und Restunsicherheit.",
+        skip: "Zum Inhalt springen",
+        "nav.aria": "Hauptnavigation",
+        "language.aria": "Sprache",
+        "breadcrumb.aria": "Brotkrümelnavigation",
+        "nav.workflow": "Prüfung",
+        "nav.result": "Ergebnis",
+        "nav.starter": "Start-Prompt",
+        "nav.details": "Details",
+        "nav.download": "Vera öffnen",
+        "module.name": "Deep Research validieren",
+        "hero.eyebrow": "Vera · Recherchevalidierung",
+        "hero.title": "Wissen, welche Schlussfolgerungen tragen, bevor Sie sie nutzen.",
+        "hero.lead": "Bringen Sie den Deep-Research-Output ein. Vera wählt wesentliche Aussagen, trennt Quellenzugang, Unterstützung und Begründung und bereitet Korrekturen sowie Restunsicherheit für Ihre Prüfung vor.",
+        "hero.action": "Start-Prompt verwenden ↓",
+        "hero.previous": "Vor der Recherche: Briefing vorbereiten ←",
         "summary.title": "Wann es hilft",
-        "summary.item0": "Sie haben einen Deep-Research-Output mit Quellen und Zitaten",
-        "summary.item1": "Sie müssen wissen, welche Aussagen wirklich halten",
-        "summary.item2": "Sie wollen ein Prüfungspaket, keine neue Antwort",
-        "summary.item3": "Der professionelle Prüfer entscheidet, was gilt",
+        "route.provide.label": "Sie liefern",
+        "route.provide": "Deep-Research-Output, Zitate und verfügbare lokale Quellen",
+        "route.prepare.label": "Vera bereitet vor",
+        "route.prepare": "Prüfung von Aussagen, Quellen und Begründung",
+        "route.receive.label": "Sie erhalten",
+        "route.receive": "Urteile, korrigiertes Dokument und Prüfungsspur",
         "workflow.title": "Prüfung nach Aussagen",
-        "workflow.copy": "Die Seite versucht nicht, alles erneut zu prüfen. Sie organisiert wenige wesentliche Aussagen, vergleicht sie mit abrufbaren Quellen und dokumentiert die Prüfung.",
-        "workflow.item1.title": "Aussagen wählen",
-        "workflow.item1.copy": "Hebt die Aussagen hervor, die die professionelle Schlussfolgerung wirklich ändern.",
-        "workflow.item2.title": "Quellen prüfen",
-        "workflow.item2.copy": "Prüft, ob zitierte Quellen die Aussage stützen, schwächen oder nicht ausreichen.",
-        "workflow.item3.title": "Ergebnis vorbereiten",
-        "workflow.item3.copy": "Erstellt die Aussagenprüfung, das korrigierte Dokument, Einschränkungen und Prüfpunkte.",
-        "outputs.title": "Dateien",
-        "outputs.copy": "Öffnen Sie claims_review.json für das Urteil Aussage für Aussage. validation_package.md fasst zusammen, was geprüft wurde und was unsicher bleibt.",
-        "prompts.title": "Promptvorlage",
-        "prompts.copy": "Nutzen Sie das, wenn der Deep-Research-Output vorliegt und vor der Nutzung gezielt geprüft werden soll.",
-        "download.title": "Vera über den Marketplace installieren",
-        "download.copy": "Öffnen Sie Veras offiziellen ChatGPT-Eintrag und wählen Sie Installieren. Alle Module sind enthalten.",
-        "download.button": "Vera installieren",
-        prompt: "Verwende Deep Research validieren für diesen Output. Sprache: de. Wähle die wesentlichen Aussagen, prüfe die zitierten Quellen, benenne was gestützt, schwach oder ungeprüft ist, und erstelle eine Prüfung mit Korrekturen, Grenzen und Punkten für die manuelle Entscheidung."
+        "workflow.copy": "Legen Sie fest, was im Dokument zählt. Vera prüft Aussagen, Quellen und Begründung, protokolliert Korrekturen und macht die Prüfung wiederholbar und lesbar.",
+        "workflow.item1.title": "Output einbringen",
+        "workflow.item1.copy": "Fügen Sie das Deep-Research-Dokument mit Zitaten, URLs und verfügbaren lokalen Quellen für die Prüfung bei.",
+        "workflow.item2.title": "Aussagen wählen",
+        "workflow.item2.copy": "Vera schlägt Aussagen vor, die Schlussfolgerungen, Zahlen, Daten, Eignung oder Risiko verändern; Sie bestätigen den Prüfumfang.",
+        "workflow.item3.title": "Quellen prüfen",
+        "workflow.item3.copy": "Sie trennt Quellenverfügbarkeit von Relevanz und bewertet die Stützung als gestützt, teilweise, fehlend, widersprochen oder unsicher.",
+        "workflow.item4.title": "Korrekturen prüfen",
+        "workflow.item4.copy": "Lesen Sie Begründung, Korrekturvorschläge und Grenzen. Akzeptieren, ändern oder öffnen Sie jeden wesentlichen Punkt.",
+        "workflow.item5.title": "Paket erhalten",
+        "workflow.item5.copy": "Sie erhalten Urteile je Aussage, Audit, korrigiertes Dokument und eine Zusammenfassung der offenen Entscheidungen.",
+        "proof.kicker": "Echtes Ergebnis · Video-Anleitung",
+        "proof.title": "Viele Zitate bedeuten keine starke Quellenstützung.",
+        "proof.copy": "Die Anleitung zeigt eine konkrete Prüfung: Jede wesentliche Aussage erhält ein Urteil, Begründung bleibt von der Existenz der Quelle getrennt und Korrekturen bleiben sichtbar.",
+        "proof.artifactLabel": "Zuerst öffnen",
+        "proof.videoAction": "Anleitung ansehen",
+        "proof.videoMeta": "Deutsch · Öffnet auf YouTube",
+        "proof.videoAlt": "Vorschau der Anleitung Viele Zitate bedeuten keine starke Quellenstützung",
+        "proof.videoAria": "Anleitung zu Deep Research validieren auf YouTube ansehen",
+        "next.title": "Die Validierung schließt den Recherchekreislauf.",
+        "next.copy": "Wenn die Prüfung ein Problem im Ansatz zeigt, kehren Sie zum Briefing zurück. Wenn das Dokument trägt, geben Sie das geprüfte Ergebnis an Report Builder weiter.",
+        "next.step1.title": "Prompt Optimizer",
+        "next.step1.copy": "Bereitet Briefing und Websites vor.",
+        "next.backLink": "Briefing erneut öffnen ←",
+        "next.step2.copy": "Führt die Recherche mit dem optimierten Briefing aus.",
+        "next.step3.title": "Deep Research Validator",
+        "next.step3.copy": "Prüft Aussagen, Quellen und Begründung.",
+        "next.step4.title": "Report Builder",
+        "next.step4.copy": "Macht aus dem geprüften Ergebnis einen Deliverable.",
+        "next.forwardLink": "Weiter zum Bericht →",
+        "starter.title": "Ein Prompt für den Einstieg.",
+        "starter.copy": "Fügen Sie den Deep-Research-Output bei und verwenden Sie diese Anweisungen. Vera fragt nur nach, wenn eine Quelle oder Prüfentscheidung das Ergebnis verändert.",
+        "details.title": "Technische Details dokumentieren die Prüfung.",
+        "details.copy": "Öffnen Sie sie, um Paket, angewendete Einstufungen und erfasste Review-Entscheidungen zu prüfen.",
+        "details.summary": "Dateien, Urteile und Scope",
+        "details.outputs.title": "Dateien",
+        "details.scope.title": "Einstufungen und Review-Entscheidungen",
+        "details.scope.copy": "Supported, partially_supported, not_supported, contradicted und uncertain trennen die Quellenstützung; das Paket hält anschließend die im Review angewendeten Entscheidungen fest.",
+        "download.title": "Vera enthält diesen Workflow.",
+        "download.copy": "Öffnen Sie Vera, fügen Sie den Deep-Research-Output bei und nutzen Sie den Start-Prompt. Aussagenprüfung und korrigiertes Dokument gehören zum selben Ablauf.",
+        "download.button": "Vera öffnen",
+        footer: "Vera · Von der Recherche zur nachvollziehbaren Prüfung.",
+        prompt: "Verwende Deep Research validieren für diesen Output. Sprache: de. Prüfe Dokument und Quellen, wähle wesentliche Aussagen, bewerte Quellenstützung und Begründung getrennt, markiere Grenzen oder Korrekturen und erstelle das Validierungspaket für meine Prüfung."
       }
     };
 
@@ -448,16 +625,36 @@
       return translations[fromQuery] ? fromQuery : "it";
     }
 
-    function applyLanguage(lang) {
-      const data = translations[lang] || translations.it;
+    function applyLanguage(requestedLang) {
+      const lang = translations[requestedLang] ? requestedLang : "it";
+      const data = translations[lang];
+      const guide = guides[lang];
       document.documentElement.lang = lang;
-      document.title = data.title || translations.it.title;
+      document.title = data.title;
+      document.getElementById("meta-description").setAttribute("content", data.metaDescription);
+      document.getElementById("og-title").setAttribute("content", data.ogTitle);
+      document.getElementById("og-description").setAttribute("content", data.ogDescription);
+      document.getElementById("og-image").setAttribute("content", `https://i.ytimg.com/vi/${guide.id}/hqdefault.jpg`);
+      document.getElementById("og-locale").setAttribute("content", guide.locale);
       document.getElementById("home-link").href = `/?lang=${lang}`;
+      document.getElementById("vera-link").href = `../vera/index.html?lang=${lang}`;
+      document.getElementById("prompt-link").href = `../prompt-optimizer/index.html?lang=${lang}`;
+      document.getElementById("hero-prompt-link").href = `../prompt-optimizer/index.html?lang=${lang}`;
+      document.getElementById("report-link").href = `../report-builder/index.html?lang=${lang}`;
+      document.getElementById("primary-nav").setAttribute("aria-label", data["nav.aria"]);
+      document.getElementById("language-switcher").setAttribute("aria-label", data["language.aria"]);
+      document.getElementById("breadcrumb").setAttribute("aria-label", data["breadcrumb.aria"]);
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const key = node.getAttribute("data-i18n");
         if (data[key]) node.textContent = data[key];
       });
       document.getElementById("prompt-example").textContent = data.prompt;
+      const guideLink = document.getElementById("guide-link");
+      const guideThumbnail = document.getElementById("guide-thumbnail");
+      guideLink.href = `https://youtu.be/${guide.id}`;
+      guideLink.setAttribute("aria-label", data["proof.videoAria"]);
+      guideThumbnail.src = `https://i.ytimg.com/vi/${guide.id}/hqdefault.jpg`;
+      guideThumbnail.alt = data["proof.videoAlt"];
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.setAttribute("aria-pressed", button.dataset.lang === lang ? "true" : "false");
       });

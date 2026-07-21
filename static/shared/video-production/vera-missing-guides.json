@@ -1,0 +1,283 @@
+{
+  "schemaVersion": "2.0.0",
+  "createdAt": "2026-07-20",
+  "publicationStatus": "local_rendered",
+  "remotePublish": false,
+  "renderedAt": "2026-07-21",
+  "renderedManifest": "rendered/manifest.json",
+  "identityModel": "module + edition + language",
+  "voiceDirection": "Natural, calm and specific. Speak as one professional showing another a useful working method. Keep the pace measured and the ending practical.",
+  "concepts": [
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "targetDurationSeconds": 60,
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#core-model"
+      ],
+      "scenes": [
+        "The common onboarding model",
+        "Source evidence",
+        "Identity and participants",
+        "Service and engagement facts",
+        "Open requests and maintained history",
+        "Country implementation mapping"
+      ],
+      "localizations": {
+        "it": {
+          "title": "Vera | Il modello informativo dell’onboarding",
+          "narration": "L’edizione Core descrive la struttura comune dell’onboarding cliente. Il modello collega cinque elementi: le evidenze di partenza e la loro fonte; l’identità del cliente e le persone coinvolte; i servizi richiesti e i fatti dell’incarico; le richieste aperte con le azioni successive; le date e lo storico mantenuti nel tempo. Questi elementi restano distinti ma connessi, così ogni informazione può essere ricondotta al documento o alla decisione da cui nasce. Le implementazioni di ciascun Paese rendono il modello operativo, associando ai campi stabili i propri documenti, controlli e regole. Il risultato concettuale è una struttura leggibile per capire che cosa è noto, che cosa è aperto e come il fascicolo evolve.",
+          "onScreen": [
+            "Modello comune di onboarding",
+            "Evidenze · fonte",
+            "Identità · persone coinvolte",
+            "Servizi · fatti dell’incarico",
+            "Richieste · azioni · storico",
+            "Documenti e regole per Paese"
+          ]
+        },
+        "en": {
+          "title": "Vera | The client onboarding information model",
+          "narration": "This Core edition explains the common structure for client onboarding. The model connects five elements: source evidence and where it came from; client identity and the people involved; requested services and engagement facts; open requests with their next actions; and dates and history maintained over time. The elements remain distinct but connected, so every fact can be traced to the document or decision behind it. Country implementations make the model operational by mapping their own documents, checks and rules onto these stable fields. The conceptual result is a readable structure for understanding what is known, what remains open and how the client file develops.",
+          "onScreen": [
+            "Common onboarding model",
+            "Source evidence",
+            "Identity · participants",
+            "Services · engagement facts",
+            "Requests · actions · history",
+            "Documents and rules by country"
+          ]
+        },
+        "fr": {
+          "title": "Vera | Le modèle d’information de l’onboarding client",
+          "narration": "Cette édition Core explique la structure commune de l’onboarding client. Le modèle relie cinq éléments : les preuves sources et leur provenance ; l’identité du client et les personnes impliquées ; les services demandés et les faits de la mission ; les demandes ouvertes avec les actions suivantes ; enfin les dates et l’historique conservés dans le temps. Les éléments restent distincts mais connectés, afin de rattacher chaque information au document ou à la décision dont elle provient. Les implémentations de chaque pays rendent le modèle opérationnel en associant leurs documents, contrôles et règles à ces champs stables. Le résultat conceptuel est une structure lisible pour comprendre ce qui est connu, ce qui reste ouvert et comment le dossier évolue.",
+          "onScreen": [
+            "Modèle commun d’onboarding",
+            "Preuves · provenance",
+            "Identité · personnes impliquées",
+            "Services · faits de la mission",
+            "Demandes · actions · historique",
+            "Documents et règles par pays"
+          ]
+        },
+        "de": {
+          "title": "Vera | Informationsmodell fürs Mandanten-Onboarding",
+          "narration": "Diese Core-Ausgabe erklärt die gemeinsame Struktur des Mandanten-Onboardings. Das Modell verbindet fünf Elemente: Quellnachweise und ihre Herkunft; die Identität des Mandanten und beteiligte Personen; gewünschte Leistungen und Auftragsfakten; offene Anfragen mit den nächsten Aktionen; sowie dauerhaft gepflegte Termine und Historie. Die Elemente bleiben getrennt und zugleich verbunden, sodass jede Angabe auf das zugrunde liegende Dokument oder die Entscheidung zurückgeführt werden kann. Länderimplementierungen machen das Modell operativ, indem sie ihre Dokumente, Prüfungen und Regeln diesen stabilen Feldern zuordnen. Das konzeptionelle Ergebnis ist eine lesbare Struktur dafür, was bekannt ist, was offen bleibt und wie sich die Mandantenakte entwickelt.",
+          "onScreen": [
+            "Gemeinsames Onboarding-Modell",
+            "Nachweise · Herkunft",
+            "Identität · beteiligte Personen",
+            "Leistungen · Auftragsfakten",
+            "Anfragen · Aktionen · Historie",
+            "Dokumente und Regeln je Land"
+          ]
+        }
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "client-onboarding",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "targetDurationSeconds": 70,
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/client-onboarding/index.html#italy-pack"
+      ],
+      "scenes": [
+        "The new-client journey in Italy",
+        "Incoming client folder",
+        "Inventory and open points",
+        "Identity, people and engagement",
+        "Privacy, AML and monitoring",
+        "The operational client file"
+      ],
+      "localizations": {
+        "it": {
+          "title": "Vera | Onboarding cliente · Italia",
+          "narration": "Un nuovo cliente porta documenti, dati, persone e scelte che spesso restano in file separati. Vera li accompagna lungo un percorso unico. Parte dalla cartella ricevuta, costruisce l’inventario, raccoglie i dati leggibili e trasforma i punti aperti in richieste precise. Poi riprende quelle stesse evidenze per strutturare anagrafica, esecutori, titolari effettivi, prestazioni e condizioni dell’incarico. Mandato, privacy, informativa AI e valutazione antiriciclaggio nascono dalla stessa base. Attività, scadenze e riesami completano il fascicolo. Alla fine lo studio vede che cosa è pronto, che cosa va completato e quale passaggio viene dopo. Dalla prima cartella a un fascicolo operativo che continua a seguire il cliente.",
+          "onScreen": [
+            "Onboarding cliente · Italia",
+            "Documenti e dati ricevuti",
+            "Inventario · dati · richieste",
+            "Anagrafica · soggetti · incarico",
+            "Privacy · AML · monitoraggio",
+            "Fascicolo operativo"
+          ]
+        },
+        "en": {
+          "title": "Vera | Client onboarding · Italy",
+          "narration": "A new client brings documents, data, people and decisions that often remain in separate files. Vera carries them through one connected journey. It starts with the incoming folder, builds the inventory, gathers readable data and turns open points into precise requests. It then uses that same evidence to structure identity data, executors, beneficial owners, services and engagement terms. Engagement, privacy, AI information and the AML assessment share one basis. Actions, dates and reviews complete the file. The firm can see what is ready, what needs completing and which step comes next. From the first folder to an operational file that continues to follow the client.",
+          "onScreen": [
+            "Client onboarding · Italy",
+            "Incoming documents and data",
+            "Inventory · data · requests",
+            "Identity · people · engagement",
+            "Privacy · AML · monitoring",
+            "Operational client file"
+          ]
+        },
+        "fr": {
+          "title": "Vera | Onboarding client · Italie",
+          "narration": "Un nouveau client apporte des documents, des données, des personnes et des décisions qui restent souvent dans des fichiers séparés. Vera les accompagne dans un seul parcours. Elle part du dossier reçu, construit l’inventaire, rassemble les données lisibles et transforme les points ouverts en demandes précises. Elle reprend ensuite ces mêmes preuves pour structurer l’identité, les exécutants, les bénéficiaires effectifs, les prestations et les conditions de la mission. Mission, privacy, information IA et évaluation AML partagent la même base. Actions, échéances et réexamens complètent le dossier. Le cabinet voit ce qui est prêt, ce qu’il faut compléter et l’étape suivante. Du premier dossier à un dossier opérationnel qui continue à suivre le client.",
+          "onScreen": [
+            "Onboarding client · Italie",
+            "Documents et données reçus",
+            "Inventaire · données · demandes",
+            "Identité · personnes · mission",
+            "Privacy · AML · suivi",
+            "Dossier client opérationnel"
+          ]
+        },
+        "de": {
+          "title": "Vera | Mandanten-Onboarding · Italien",
+          "narration": "Ein neuer Mandant bringt Dokumente, Daten, Personen und Entscheidungen mit, die oft in getrennten Dateien bleiben. Vera führt sie in einem Ablauf zusammen. Am Anfang steht der eingegangene Ordner: Vera erstellt das Inventar, erfasst lesbare Daten und macht aus offenen Punkten präzise Anfragen. Dieselben Nachweise fließen anschließend in Stammdaten, Ausführende, wirtschaftlich Berechtigte, Leistungen und Auftragsbedingungen. Auftrag, Datenschutz, KI-Information und AML-Bewertung nutzen eine gemeinsame Grundlage. Aufgaben, Termine und Überprüfungen vervollständigen die Akte. Die Kanzlei sieht, was bereit ist, was ergänzt werden muss und welcher Schritt folgt. Vom ersten Ordner zu einer operativen Akte, die den Mandanten weiter begleitet.",
+          "onScreen": [
+            "Mandanten-Onboarding · Italien",
+            "Eingegangene Dokumente und Daten",
+            "Inventar · Daten · Anfragen",
+            "Stammdaten · Personen · Auftrag",
+            "Datenschutz · AML · Monitoring",
+            "Operative Mandantenakte"
+          ]
+        }
+      }
+    },
+    {
+      "conceptId": "from-journal-to-reproducible-sample",
+      "module": "journal-sampling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "targetDurationSeconds": 55,
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/journal-sampling/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "scenes": [
+        "The full journal",
+        "Fields and period aligned",
+        "Sampling purpose",
+        "Reproducible selection",
+        "Sample with reasons",
+        "Ready for entry checks"
+      ],
+      "localizations": {
+        "it": {
+          "title": "Vera | Dal giornale al campione riproducibile",
+          "narration": "Un campione utile parte da una domanda chiara e da un giornale leggibile. Vera importa il file, riconosce date, conti, descrizioni, dare e avere e rende espliciti periodo e popolazione. Poi applica il criterio scelto: copertura degli importi, voci insolite, intervalli, selezione mirata o combinazioni adatte al controllo. Ogni riga scelta conserva il riferimento alla popolazione e la ragione della selezione. Lo studio riceve il campione, la popolazione normalizzata e una sintesi del metodo, così il passaggio può essere ripetuto e rivisto. Dal giornale completo alle scritture su cui concentrare il controllo.",
+          "onScreen": ["Il giornale completo", "Campi e periodo", "Scopo del campione", "Selezione riproducibile", "Righe e motivazioni", "Pronto per il controllo scritture"]
+        },
+        "en": {
+          "title": "Vera | From journal to reproducible sample",
+          "narration": "A useful sample starts with a clear question and a readable journal. Vera imports the file, identifies dates, accounts, descriptions, debits and credits, and makes the period and population explicit. It then applies the selected approach: value coverage, unusual entries, intervals, targeted selection or a combination suited to the check. Every selected row retains its population reference and selection reason. The firm receives the sample, normalized population and a concise method summary, so the step can be repeated and reviewed. From the full journal to the entries that deserve focused checking.",
+          "onScreen": ["The full journal", "Fields and period", "Sampling purpose", "Reproducible selection", "Rows and reasons", "Ready for entry checks"]
+        },
+        "fr": {
+          "title": "Vera | Du journal à un échantillon reproductible",
+          "narration": "Un échantillon utile commence par une question claire et un journal lisible. Vera importe le fichier, identifie dates, comptes, libellés, débits et crédits, puis rend explicites la période et la population. Elle applique ensuite l’approche choisie : couverture des montants, écritures inhabituelles, intervalles, sélection ciblée ou combinaison adaptée au contrôle. Chaque ligne retenue conserve sa référence dans la population et le motif de sélection. Le cabinet reçoit l’échantillon, la population normalisée et une synthèse de la méthode, afin de pouvoir répéter et revoir le passage. Du journal complet aux écritures qui méritent un contrôle ciblé.",
+          "onScreen": ["Le journal complet", "Champs et période", "Objectif de l’échantillon", "Sélection reproductible", "Lignes et motifs", "Prêt pour le contrôle"]
+        },
+        "de": {
+          "title": "Vera | Vom Journal zur reproduzierbaren Stichprobe",
+          "narration": "Eine nützliche Stichprobe beginnt mit einer klaren Frage und einem lesbaren Journal. Vera importiert die Datei, erkennt Datum, Konten, Texte, Soll und Haben und macht Zeitraum und Grundgesamtheit sichtbar. Danach wird das gewählte Verfahren angewendet: Betragsabdeckung, ungewöhnliche Buchungen, Intervalle, gezielte Auswahl oder eine passende Kombination. Jede ausgewählte Zeile behält den Bezug zur Grundgesamtheit und den Auswahlgrund. Die Kanzlei erhält Stichprobe, normalisierte Population und eine kurze Methodenübersicht, sodass der Schritt wiederholt und geprüft werden kann. Vom vollständigen Journal zu den Buchungen für die gezielte Kontrolle.",
+          "onScreen": ["Das vollständige Journal", "Felder und Zeitraum", "Zweck der Stichprobe", "Reproduzierbare Auswahl", "Zeilen und Gründe", "Bereit für Buchungsprüfungen"]
+        }
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "targetDurationSeconds": 50,
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "scenes": [
+        "The sampled entry",
+        "Available source documents",
+        "Fields compared",
+        "Match strength",
+        "Exceptions to review",
+        "Traceable workpaper"
+      ],
+      "localizations": {
+        "it": {
+          "title": "Vera | Dalla scrittura campionata al supporto verificato",
+          "narration": "Controllare una scrittura significa capire se le evidenze disponibili la supportano. Vera parte dalla riga campionata e cerca nei documenti forniti e negli archivi o esportazioni autorizzati. Confronta importo, data, numero del documento, descrizione e controparte, mantenendo visibile ogni fonte. Le corrispondenze forti entrano nel gruppo supportato. I casi ambigui restano nella coda di revisione con il motivo e il documento preciso da esaminare. Il risultato è una carta di lavoro che collega ogni scrittura controllata alle sue evidenze, separa le eccezioni e conserva il percorso di verifica. Da una riga campionata a un supporto che il revisore può seguire.",
+          "onScreen": ["La scrittura campionata", "Documenti e archivi disponibili", "Importo · data · numero · controparte", "Forza della corrispondenza", "Coda di revisione", "Carta di lavoro tracciabile"]
+        },
+        "en": {
+          "title": "Vera | From sampled entry to verified support",
+          "narration": "Checking an entry means understanding whether the available evidence supports it. Vera starts from the sampled journal row and searches the documents provided and any authorized archives or exports. It compares amount, date, document number, description and counterparty while keeping every source visible. Strong matches move into the supported set. Ambiguous cases remain in the review queue with the reason and the specific document to inspect. The result is a workpaper that links every checked entry to its evidence, separates exceptions and preserves the verification path. From a sampled row to support the reviewer can follow.",
+          "onScreen": ["The sampled entry", "Available documents and archives", "Amount · date · number · party", "Match strength", "Review queue", "Traceable workpaper"]
+        },
+        "fr": {
+          "title": "Vera | De l’écriture sélectionnée au justificatif vérifié",
+          "narration": "Contrôler une écriture consiste à comprendre si les preuves disponibles la justifient. Vera part de la ligne sélectionnée dans le journal et recherche dans les documents fournis ainsi que dans les archives ou exports autorisés. Elle compare le montant, la date, le numéro du document, le libellé et la contrepartie tout en gardant chaque source visible. Les correspondances solides rejoignent l’ensemble étayé. Les cas ambigus restent dans la file de revue avec le motif et le document précis à examiner. Le résultat est un dossier de travail qui relie chaque écriture contrôlée à ses preuves, sépare les exceptions et conserve le parcours de vérification. D’une ligne sélectionnée à un justificatif que le réviseur peut suivre.",
+          "onScreen": ["L’écriture sélectionnée", "Documents et archives disponibles", "Montant · date · numéro · tiers", "Force du rapprochement", "File de revue", "Dossier de travail traçable"]
+        },
+        "de": {
+          "title": "Vera | Von der Stichprobenbuchung zum geprüften Beleg",
+          "narration": "Eine Buchung zu prüfen bedeutet zu verstehen, ob die verfügbaren Nachweise sie stützen. Vera beginnt bei der ausgewählten Journalzeile und sucht in den bereitgestellten Dokumenten sowie in autorisierten Archiven oder Exporten. Betrag, Datum, Belegnummer, Beschreibung und Gegenpartei werden verglichen, während jede Quelle sichtbar bleibt. Starke Treffer gehen in die belegte Gruppe. Mehrdeutige Fälle bleiben mit Grund und genauem Prüfbeleg in der Review-Liste. Das Ergebnis ist ein Arbeitspapier, das jede geprüfte Buchung mit ihren Nachweisen verbindet, Ausnahmen trennt und den Prüfpfad erhält. Von der Stichprobenzeile zum nachvollziehbaren Beleg.",
+          "onScreen": ["Die Stichprobenbuchung", "Verfügbare Dokumente und Archive", "Betrag · Datum · Nummer · Partei", "Trefferstärke", "Review-Liste", "Nachvollziehbares Arbeitspapier"]
+        }
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "italy-fatturapa",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "targetDurationSeconds": 50,
+      "existingLocalization": {
+        "sourceKind": "youtube",
+        "language": "it",
+        "edition": "italy-fatturapa",
+        "scope": "country",
+        "jurisdiction": "IT",
+        "youtubeId": "I1dp3FYVy2w",
+        "title": "Vera | Scritture · Italia · FatturaPA"
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#italy-adapter"
+      ],
+      "scenes": [
+        "The sampled entry",
+        "FatturaPA source documents",
+        "Fields compared",
+        "Match strength",
+        "Exceptions to review",
+        "Verified support queue"
+      ],
+      "localizations": {
+        "en": {
+          "title": "Vera | Check Entries · Italy · FatturaPA",
+          "narration": "Checking an entry means understanding whether the right document supports it. Vera starts from the sampled journal row and looks first across FatturaPA XML and authorized exports. It compares amount, date, document number and counterparty while keeping each source visible. Strong matches move into the supported set. Ambiguous cases remain in the review queue with the reason and the specific document to inspect. The result is a workpaper that links every checked entry to its evidence and keeps exceptions separate. From a sampled row to support the reviewer can follow.",
+          "onScreen": ["Italy · FatturaPA", "Candidate evidence", "Amount · date · number · party", "Match strength", "Review queue", "Verified support"]
+        },
+        "fr": {
+          "title": "Vera | Écritures · Italie · FatturaPA",
+          "narration": "Contrôler une écriture consiste à comprendre si le bon document la justifie. Vera part de la ligne sélectionnée dans le journal et cherche d’abord dans les XML FatturaPA et les exports autorisés. Elle compare montant, date, numéro de document et contrepartie tout en gardant chaque source visible. Les correspondances solides rejoignent les écritures étayées. Les cas ambigus restent dans la file de revue avec le motif et le document précis à examiner. Le résultat est un dossier de travail qui relie chaque écriture contrôlée à sa preuve et sépare les exceptions. D’une ligne sélectionnée à un justificatif que le réviseur peut suivre.",
+          "onScreen": ["Italie · FatturaPA", "Justificatifs possibles", "Montant · date · numéro · tiers", "Force du rapprochement", "File de revue", "Justificatif vérifié"]
+        },
+        "de": {
+          "title": "Vera | Buchungen · Italien · FatturaPA",
+          "narration": "Eine Buchung zu prüfen heißt zu verstehen, ob der richtige Beleg sie stützt. Vera beginnt bei der ausgewählten Journalzeile und sucht zuerst in FatturaPA-XML und autorisierten Exporten. Betrag, Datum, Belegnummer und Gegenpartei werden verglichen, während jede Quelle sichtbar bleibt. Starke Treffer gehen in die belegte Gruppe. Mehrdeutige Fälle bleiben mit Grund und genauem Prüfbeleg in der Review-Liste. Das Ergebnis ist ein Arbeitspapier, das jede geprüfte Buchung mit ihrem Nachweis verbindet und Ausnahmen getrennt hält. Von der Stichprobenzeile zum nachvollziehbaren Beleg.",
+          "onScreen": ["Italien · FatturaPA", "Mögliche Belege", "Betrag · Datum · Nummer · Partei", "Trefferstärke", "Review-Liste", "Geprüfter Beleg"]
+        }
+      }
+    }
+  ]
+}

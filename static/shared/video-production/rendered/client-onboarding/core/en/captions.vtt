@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00:00.800 --> 00:00:10.810
+This Core edition explains the common structure for client onboarding. The model connects five elements: source evidence
+
+2
+00:00:10.810 --> 00:00:21.259
+and where it came from; client identity and the people involved; requested services and engagement facts; open requests
+
+3
+00:00:21.259 --> 00:00:31.269
+with their next actions; and dates and history maintained over time. The elements remain distinct but connected,
+
+4
+00:00:31.269 --> 00:00:41.279
+so every fact can be traced to the document or decision behind it. Country implementations make the
+
+5
+00:00:41.279 --> 00:00:51.728
+model operational by mapping their own documents, checks and rules onto these stable fields. The conceptual result is
+
+6
+00:00:51.728 --> 00:00:59.200
+a readable structure for understanding what is known, what remains open and how the client file develops.
