@@ -1,25 +1,42 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Journal Sampling | Vera</title>
+  <meta name="description" id="meta-description" content="Vera trasforma un giornale contabile eterogeneo in una popolazione normalizzata e in un campione ripetibile, pronto per il controllo delle scritture.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta property="og:title" id="og-title" content="Campionamento del giornale | Vera">
+  <meta property="og:description" id="og-description" content="Dal giornale contabile a un campione ripetibile e pronto per il controllo.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/journal-sampling/index.html">
+  <meta property="og:image" content="https://mparanza.com/static/shared/video-production/rendered/journal-sampling/core/it/poster.jpg">
+  <meta id="og-locale" property="og:locale" content="it_IT">
+  <link rel="canonical" href="https://mparanza.com/static/shared/journal-sampling/index.html">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=it">
+  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=en">
+  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=de">
+  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/journal-sampling/index.html">
+  <title>Campionamento del giornale | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../vera-scope.css?v=20260721">
+  <script src="../vera-scope.js?v=20260721" defer></script>
   <style>
     :root {
-      --ink: #1f2933;
-      --text: #334155;
-      --muted: #667085;
-      --faint: #eef2f4;
+      --ink: #002060;
+      --text: #183765;
+      --muted: #52698d;
+      --faint: #e7f3fa;
       --paper: #ffffff;
       --surface: #ffffff;
-      --soft: #ffffff;
-      --accent: #2f6f68;
-      --accent-soft: #e7f0ee;
-      --line: #d9e2e1;
-      --shadow: 0 16px 42px rgba(31, 41, 51, 0.06);
+      --soft: #f3fbff;
+      --accent: #0070c0;
+      --accent-soft: #e8f6fd;
+      --line: #b7dded;
+      --line-strong: #7ec9e7;
+      --shadow: none;
       --content: 1120px;
     }
 
@@ -423,8 +440,49 @@
     }
   </style>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
+  <style>
+    .journey-breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 26px 0 0; color: var(--muted); font-size: 14px; }
+    .journey-breadcrumb a { color: var(--accent); text-decoration: none; }
+    .journey-breadcrumb strong { color: var(--ink); font-weight: 600; }
+    .journey-hero-action { margin-top: 24px; }
+    .journey-flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 28px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .journey-flow article { padding: 22px 24px 24px 0; border-right: 1px solid var(--line); }
+    .journey-flow article + article { padding-left: 24px; }
+    .journey-flow article:last-child { border-right: 0; }
+    .journey-flow span, .journey-step span { display: block; color: var(--accent); font-size: 12px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+    .journey-flow h3, .journey-step h3 { margin: 10px 0 7px; }
+    .journey-flow p, .journey-step p { margin: 0; }
+    .journey-steps { margin-top: 28px; border-top: 2px solid var(--ink); }
+    .journey-step { display: grid; grid-template-columns: 70px minmax(180px, .7fr) minmax(0, 1.3fr); gap: 22px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+    .journey-step h3 { margin: 0; }
+    .journey-proof { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 72px); align-items: center; border-top: 2px solid var(--ink); padding-top: 30px; }
+    .journey-video-local { min-width: 0; margin: 0; }
+    .journey-video-local video { width: 100%; display: block; aspect-ratio: 16 / 9; border: 1px solid var(--line-strong); background: var(--ink); object-fit: cover; }
+    .journey-video-local figcaption { padding-top: 14px; }
+    .journey-video-local strong { display: block; color: var(--ink); font-size: 1.18rem; line-height: 1.25; }
+    .journey-video-local span { display: block; margin-top: 6px; color: var(--muted); font-size: .85rem; }
+    .journey-video-local a { min-height: 44px; display: inline-flex; align-items: center; color: var(--accent); font-size: .85rem; font-weight: 650; text-underline-offset: 4px; }
+    .journey-related { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 28px; align-items: end; padding: 30px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .journey-related a { color: var(--ink); font-size: clamp(1.3rem, 2.6vw, 2rem); font-weight: 620; line-height: 1.16; text-decoration: none; }
+    .journey-related a:hover { color: var(--accent); }
+    details.journey-spec { margin: 64px 0; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+    details.journey-spec > summary { padding: 20px 0; color: var(--ink); cursor: pointer; font-weight: 620; }
+    details.journey-spec > .journey-spec__body { padding-bottom: 24px; }
+    .journey-cta { display: flex; justify-content: space-between; gap: 28px; align-items: center; padding: clamp(28px, 5vw, 52px); background: var(--soft); border: 1px solid var(--line); }
+    .journey-cta h2 { margin: 0 0 8px; }
+    .journey-cta p { margin: 0; }
+    @media (max-width: 760px) {
+      .journey-flow, .journey-proof, .journey-related { grid-template-columns: 1fr; }
+      .journey-flow article { border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 0; }
+      .journey-flow article + article { padding-left: 0; }
+      .journey-flow article:last-child { border-bottom: 0; }
+      .journey-step { grid-template-columns: 48px 1fr; }
+      .journey-step p { grid-column: 2; }
+      .journey-cta { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
 </head>
-<body>
+<body data-vera-module="journal-sampling" data-vera-scope="core">
   <header class="topbar">
     <div class="nav-shell">
       <a class="brand" id="home-link" href="/?lang=en" aria-label="Mparanza home">
@@ -432,12 +490,12 @@
       </a>
       <div class="nav-right">
         <nav class="nav-links" aria-label="Page sections">
-          <a href="#cosa-fa" data-i18n="nav.what">What it does</a>
-          <a href="#input" data-i18n="nav.inputs">Inputs</a>
-          <a href="#output" data-i18n="nav.outputs">Outputs</a>
-          <a href="#uso" data-i18n="nav.use">Use</a>
-          <a href="#prompt" data-i18n="nav.prompts">Prompts</a>
-          <a href="#scarica" data-i18n="nav.download">Installation</a>
+          <a href="#journey" data-journey="nav.overview">In breve</a>
+          <a href="#journey-workflow" data-journey="nav.workflow">Percorso</a>
+          <a href="#proof" data-journey="nav.proof">Risultato</a>
+          <a href="#related" data-journey="nav.next">Passo successivo</a>
+          <a href="#prompt" data-journey="nav.prompt">Prompt</a>
+          <a href="#scarica" data-journey="nav.open">Apri Vera</a>
         </nav>
         <div class="lang-switch" aria-label="Language">
           <button type="button" data-lang="it">It</button>
@@ -450,24 +508,57 @@
   </header>
 
   <main>
+    <nav class="journey-breadcrumb" aria-label="Breadcrumb" data-journey-aria="breadcrumbAria">
+      <a href="../vera/index.html?lang=it" data-vera-link data-journey="breadcrumb.vera">Vera</a>
+      <span aria-hidden="true">/</span>
+      <span data-journey="breadcrumb.area">Controlli contabili</span>
+      <span aria-hidden="true">/</span>
+      <strong data-journey="breadcrumb.module">Campionamento del giornale</strong>
+    </nav>
     <div class="hero" id="hero">
       <div>
-        <p class="eyebrow" data-i18n="hero.eyebrow">Audit sampling</p>
-        <h1 data-i18n="hero.title">Create a reproducible sample from a messy journal export.</h1>
-        <p class="subtitle" data-i18n="hero.subtitle">Turn variable accounting journals into audit samples a reviewer can replay.</p>
-        <p class="hero-copy" data-i18n="hero.copy">Give it a readable journal and sampling method. Get back a normalized population, selected sample, seed, filters and reading checks.</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Campionamento contabile</p>
+        <h1 data-i18n="hero.title">Crea un campione riproducibile da un giornale eterogeneo.</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">Trasforma giornali contabili variabili in campioni che il revisore può ripercorrere.</p>
+        <p class="hero-copy" data-i18n="hero.copy">Fornisci un giornale leggibile e un metodo di campionamento. Ottieni popolazione normalizzata, campione, seed, filtri e controlli di lettura.</p>
+        <div class="journey-hero-action"><a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-journey="cta.open">Apri Vera</a></div>
       </div>
 
       <aside class="hero-card" aria-label="Problem solved">
-          <div class="label" data-i18n="hero.cardLabel">Give it / get back</div>
+          <div class="label" data-i18n="hero.cardLabel">Cosa dai / cosa ottieni</div>
         <ul class="hero-list" id="hero-list">
-          <li>Give it Excel, CSV or text-PDF journal files.</li>
-          <li>Confirm the few accounting fields that remain ambiguous.</li>
-          <li>Get back the normalized population, sample files and audit parameters.</li>
+          <li>Fornisci file giornale Excel, CSV o PDF testuali.</li>
+          <li>Conferma i campi contabili rimasti ambigui.</li>
+          <li>Ottieni popolazione normalizzata, file campione e parametri di revisione.</li>
         </ul>
       </aside>
     </div>
 
+    <section class="section-block" id="journey">
+      <div class="section-head">
+        <div><p class="eyebrow" data-journey="overview.eyebrow">Il lavoro in breve</p><h2 data-journey="overview.title">Dal giornale ricevuto a un campione che si può ripercorrere.</h2></div>
+        <p data-journey="overview.copy">Vera mette ordine nella popolazione, conserva le scelte di campionamento e prepara il passaggio al controllo delle scritture.</p>
+      </div>
+      <div class="journey-flow">
+        <article><span>01</span><h3 data-journey="flow.provide.title">Fornisci</h3><p data-journey="flow.provide.copy">Il giornale in Excel, CSV o PDF leggibile e il criterio di campionamento.</p></article>
+        <article><span>02</span><h3 data-journey="flow.prepare.title">Vera prepara</h3><p data-journey="flow.prepare.copy">Una popolazione coerente, i filtri applicati e una selezione ripetibile.</p></article>
+        <article><span>03</span><h3 data-journey="flow.receive.title">Ricevi</h3><p data-journey="flow.receive.copy">Il campione in Excel e CSV, con parametri e traccia pronti per la verifica.</p></article>
+      </div>
+    </section>
+
+    <section class="section-block" id="journey-workflow">
+      <div class="section-head"><div><p class="eyebrow" data-journey="workflow.eyebrow">Percorso</p><h2 data-journey="workflow.title">Quattro passaggi, dalla popolazione alla selezione.</h2></div><p data-journey="workflow.copy">Le scelte che cambiano il campione restano visibili nel lavoro.</p></div>
+      <div class="journey-steps">
+        <article class="journey-step"><span>01</span><h3 data-journey="workflow.one.title">Legge il giornale</h3><p data-journey="workflow.one.copy">Individua struttura, intestazioni e campi contabili utili.</p></article>
+        <article class="journey-step"><span>02</span><h3 data-journey="workflow.two.title">Rende coerente la popolazione</h3><p data-journey="workflow.two.copy">Uniforma colonne e valori mantenendo visibili le righe che chiedono attenzione.</p></article>
+        <article class="journey-step"><span>03</span><h3 data-journey="workflow.three.title">Applica il metodo</h3><p data-journey="workflow.three.copy">Usa metodo, filtri, seed e dimensione concordati per selezionare il campione.</p></article>
+        <article class="journey-step"><span>04</span><h3 data-journey="workflow.four.title">Prepara il controllo</h3><p data-journey="workflow.four.copy">Consegna le righe selezionate e il contesto necessario al controllo dei supporti.</p></article>
+      </div>
+    </section>
+
+    <details class="journey-spec">
+      <summary data-journey="spec.summary">Specifiche tecniche, input e file prodotti</summary>
+      <div class="journey-spec__body">
     <section class="section-block" id="cosa-fa">
       <div class="section-head">
         <div>
@@ -533,43 +624,50 @@
       </div>
       <div class="usage-grid" id="usage-grid"></div>
     </section>
+      </div>
+    </details>
+
+    <section class="section-block" id="proof">
+      <div class="journey-proof">
+        <div><p class="eyebrow" data-journey="proof.eyebrow">Guida operativa</p><h2 data-journey="proof.title">Dal giornale al campione riproducibile.</h2><p data-journey="proof.copy">La guida segue popolazione, metodo, selezione e motivazioni nello stesso filo di lavoro.</p></div>
+        <figure class="journey-video-local">
+          <video id="proof-video" controls playsinline preload="metadata" poster="/static/shared/video-production/rendered/journal-sampling/core/it/poster.jpg" aria-labelledby="proof-video-title">
+            <source id="proof-video-source" src="/static/shared/video-production/rendered/journal-sampling/core/it/guide.mp4" type="video/mp4">
+            <track id="proof-video-track" kind="captions" src="/static/shared/video-production/rendered/journal-sampling/core/it/captions.vtt" srclang="it" label="Italiano" default>
+            <a id="proof-video-fallback" href="/static/shared/video-production/rendered/journal-sampling/core/it/guide.mp4">MP4</a>
+          </video>
+          <figcaption>
+            <strong id="proof-video-title" data-journey="proof.videoTitle">Dal giornale al campione riproducibile</strong>
+            <span data-journey="proof.videoMeta">Core · Italiano · 0:55</span>
+            <a id="proof-video-transcript" href="/static/shared/video-production/rendered/journal-sampling/core/it/transcript.txt" data-journey="proof.transcript">Leggi la trascrizione</a>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-block" id="related">
+      <div class="journey-related">
+        <div><p class="eyebrow" data-journey="related.eyebrow">Passo successivo</p><p data-journey="related.copy">Dopo aver scelto le righe, collega ogni scrittura ai documenti che la supportano.</p></div>
+        <a href="../check-entries/index.html?lang=it" data-related-link data-journey="related.link">Continua con Controllo scritture →</a>
+      </div>
+    </section>
 
     <section class="section-block" id="prompt">
       <div class="section-head">
         <div>
-          <p class="eyebrow" data-i18n="prompts.eyebrow">Prompts</p>
-          <h2 data-i18n="prompts.title">Ready prompts</h2>
+          <p class="eyebrow" data-journey="prompt.eyebrow">Per iniziare</p>
+          <h2 data-journey="prompt.title">Un prompt, poi il lavoro.</h2>
         </div>
-        <p data-i18n="prompts.copy">Start from one of these prompts and replace the folder path, language, method and sample size. Codex will ask before resolving essential ambiguities.</p>
+        <p data-journey="prompt.copy">Indica cartella, metodo e dimensione. Vera organizza il resto del percorso.</p>
       </div>
+      <pre><code id="prompt-example">Usa Journal Sampling sulla cartella /percorso/input. Metodo: random. Dimensione: 25. Prepara popolazione normalizzata, campione e parametri del lavoro.</code></pre>
       <ul class="output-list" id="prompt-list"></ul>
     </section>
 
     <section class="section-block" id="scarica">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow" data-i18n="download.eyebrow">Installation</p>
-          <h2 data-i18n="download.title">Install Vera from the marketplace</h2>
-        </div>
-        <p data-i18n="download.copy">Open Vera's official ChatGPT listing and select Install. All modules are included.</p>
-      </div>
-
-      <div class="download-panel">
-        <div>
-          <h3 data-i18n="download.installTitle">Marketplace</h3>
-          <p data-i18n="download.codexText">Vera is installed directly from her official ChatGPT listing.</p>
-          <div class="action-row">
-            <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="download.button">Install Vera</a>
-          </div>
-        </div>
-        <div>
-          <h3 data-i18n="download.firstUseTitle">First use</h3>
-          <p data-i18n="download.firstUseCopy">In a Codex chat, provide the journal folder, language, sampling method and target size.</p>
-          <pre style="margin-top: 10px;"><code id="prompt-example">Use Journal Sampling on /path/input.
-Language: en. Document language: auto.
-Inspect the files, ask only for essential field ambiguities, then generate sample, reading checks and review trail.
-Method: random. Size: 25.</code></pre>
-        </div>
+      <div class="journey-cta">
+        <div><h2 data-journey="cta.title">Porta il giornale in Vera.</h2><p data-journey="cta.copy">Apri Vera, indica la cartella di lavoro e avvia il campionamento.</p></div>
+        <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-journey="cta.open">Apri Vera</a>
       </div>
     </section>
   </main>
@@ -650,10 +748,7 @@ Method: random. Size: 25.</code></pre>
         },
         download: {
           eyebrow: "Installazione",
-          title: "Installa Vera dal marketplace",
-          copy: "Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.",
-          installTitle: "Marketplace",
-          codexText: "Vera si installa direttamente dalla sua pagina ufficiale su ChatGPT.",
+          title: "Apri Vera", copy: "Apri Vera e avvia il lavoro sul giornale.", installTitle: "Vera", codexText: "Tutti i moduli sono disponibili nello stesso spazio.",
           button: "Installa Vera",
           firstUseTitle: "Primo uso",
           firstUseCopy: "In una chat Codex, indica cartella giornale, lingua, metodo e dimensione campione.",
@@ -734,10 +829,7 @@ Method: random. Size: 25.</code></pre>
         },
         download: {
           eyebrow: "Installation",
-          title: "Install Vera from the marketplace",
-          copy: "Open Vera's official ChatGPT listing and select Install. All modules are included.",
-          installTitle: "Marketplace",
-          codexText: "Vera is installed directly from her official ChatGPT listing.",
+          title: "Open Vera", copy: "Open Vera and start working on the journal.", installTitle: "Vera", codexText: "All modules are available in the same workspace.",
           button: "Install Vera",
           firstUseTitle: "First use",
           firstUseCopy: "In a Codex chat, provide the journal folder, language, sampling method and target size.",
@@ -818,10 +910,7 @@ Method: random. Size: 25.</code></pre>
         },
         download: {
           eyebrow: "Installation",
-          title: "Installer Vera depuis la marketplace",
-          copy: "Ouvrez la fiche officielle de Vera sur ChatGPT et sélectionnez Installer. Tous les modules sont inclus.",
-          installTitle: "Marketplace",
-          codexText: "Vera s'installe directement depuis sa fiche officielle sur ChatGPT.",
+          title: "Ouvrir Vera", copy: "Ouvrez Vera et commencez le travail sur le journal.", installTitle: "Vera", codexText: "Tous les modules sont réunis dans le même espace.",
           button: "Installer Vera",
           firstUseTitle: "Premier usage",
           firstUseCopy: "Dans une conversation Codex, indiquez le dossier journal, la langue, la méthode et la taille cible.",
@@ -902,10 +991,7 @@ Method: random. Size: 25.</code></pre>
         },
         download: {
           eyebrow: "Installation",
-          title: "Vera über den Marketplace installieren",
-          copy: "Öffnen Sie Veras offiziellen ChatGPT-Eintrag und wählen Sie Installieren. Alle Module sind enthalten.",
-          installTitle: "Marketplace",
-          codexText: "Vera wird direkt über ihren offiziellen ChatGPT-Eintrag installiert.",
+          title: "Vera öffnen", copy: "Öffnen Sie Vera und beginnen Sie mit dem Journal.", installTitle: "Vera", codexText: "Alle Module stehen im selben Arbeitsbereich bereit.",
           button: "Vera installieren",
           firstUseTitle: "Erste Nutzung",
           firstUseCopy: "In einem Codex-Chat Journalordner, Sprache, Stichprobenmethode und Zielgröße angeben.",
@@ -996,8 +1082,7 @@ Method: random. Size: 25.</code></pre>
       if (requested && translations[requested]) {
         return requested;
       }
-      const browserLang = (navigator.language || "en").slice(0, 2);
-      return translations[browserLang] ? browserLang : "en";
+      return "it";
     }
 
     document.querySelectorAll("[data-lang]").forEach((button) => {
@@ -1011,6 +1096,117 @@ Method: random. Size: 25.</code></pre>
     });
 
     applyLanguage(initialLanguage());
+  </script>
+  <script>
+    const journeyCopy = {
+      it: {
+        metaTitle: "Campionamento del giornale | Vera",
+        metaDescription: "Vera trasforma un giornale contabile eterogeneo in una popolazione normalizzata e in un campione ripetibile, pronto per il controllo delle scritture.",
+        breadcrumbAria: "Percorso pagina",
+        text: {
+          "nav.overview": "In breve", "nav.workflow": "Percorso", "nav.proof": "Risultato", "nav.next": "Passo successivo", "nav.prompt": "Prompt", "nav.open": "Apri Vera",
+          "breadcrumb.vera": "Vera", "breadcrumb.area": "Controlli contabili", "breadcrumb.module": "Campionamento del giornale",
+          "overview.eyebrow": "Il lavoro in breve", "overview.title": "Dal giornale ricevuto a un campione che si può ripercorrere.", "overview.copy": "Vera mette ordine nella popolazione, conserva le scelte di campionamento e prepara il passaggio al controllo delle scritture.",
+          "flow.provide.title": "Fornisci", "flow.provide.copy": "Il giornale in Excel, CSV o PDF leggibile e il criterio di campionamento.", "flow.prepare.title": "Vera prepara", "flow.prepare.copy": "Una popolazione coerente, i filtri applicati e una selezione ripetibile.", "flow.receive.title": "Ricevi", "flow.receive.copy": "Il campione in Excel e CSV, con parametri e traccia pronti per la verifica.",
+          "workflow.eyebrow": "Percorso", "workflow.title": "Quattro passaggi, dalla popolazione alla selezione.", "workflow.copy": "Le scelte che cambiano il campione restano visibili nel lavoro.",
+          "workflow.one.title": "Legge il giornale", "workflow.one.copy": "Individua struttura, intestazioni e campi contabili utili.", "workflow.two.title": "Rende coerente la popolazione", "workflow.two.copy": "Uniforma colonne e valori mantenendo visibili le righe che chiedono attenzione.", "workflow.three.title": "Applica il metodo", "workflow.three.copy": "Usa metodo, filtri, seed e dimensione concordati per selezionare il campione.", "workflow.four.title": "Prepara il controllo", "workflow.four.copy": "Consegna le righe selezionate e il contesto necessario al controllo dei supporti.",
+          "spec.summary": "Specifiche tecniche, input e file prodotti",
+          "proof.eyebrow": "Guida operativa", "proof.title": "Dal giornale al campione riproducibile.", "proof.copy": "La guida segue popolazione, metodo, selezione e motivazioni nello stesso filo di lavoro.", "proof.videoTitle": "Dal giornale al campione riproducibile", "proof.videoMeta": "Core · Italiano · 0:55", "proof.transcript": "Leggi la trascrizione",
+          "related.eyebrow": "Passo successivo", "related.copy": "Dopo aver scelto le righe, collega ogni scrittura ai documenti che la supportano.", "related.link": "Continua con Controllo scritture →",
+          "prompt.eyebrow": "Per iniziare", "prompt.title": "Un prompt, poi il lavoro.", "prompt.copy": "Indica cartella, metodo e dimensione. Vera organizza il resto del percorso.",
+          "cta.title": "Porta il giornale in Vera.", "cta.copy": "Apri Vera, indica la cartella di lavoro e avvia il campionamento.", "cta.open": "Apri Vera"
+        }
+      },
+      en: {
+        metaTitle: "Journal sampling | Vera",
+        metaDescription: "Vera turns a varied accounting journal into a normalized population and a reproducible sample ready for entry testing.",
+        breadcrumbAria: "Page path",
+        text: {
+          "nav.overview": "Overview", "nav.workflow": "Workflow", "nav.proof": "Result", "nav.next": "Next step", "nav.prompt": "Prompt", "nav.open": "Open Vera",
+          "breadcrumb.vera": "Vera", "breadcrumb.area": "Accounting controls", "breadcrumb.module": "Journal sampling",
+          "overview.eyebrow": "The work at a glance", "overview.title": "From the journal received to a sample anyone can retrace.", "overview.copy": "Vera brings order to the population, preserves the sampling choices and prepares the handoff to entry testing.",
+          "flow.provide.title": "Provide", "flow.provide.copy": "The journal in Excel, CSV or readable PDF, plus the sampling approach.", "flow.prepare.title": "Vera prepares", "flow.prepare.copy": "A consistent population, the applied filters and a reproducible selection.", "flow.receive.title": "Receive", "flow.receive.copy": "The sample in Excel and CSV, with parameters and a trail ready for review.",
+          "workflow.eyebrow": "Workflow", "workflow.title": "Four steps from population to selection.", "workflow.copy": "Every choice that changes the sample stays visible in the work.",
+          "workflow.one.title": "Read the journal", "workflow.one.copy": "Identify its structure, headers and useful accounting fields.", "workflow.two.title": "Make the population consistent", "workflow.two.copy": "Align columns and values while keeping attention rows visible.", "workflow.three.title": "Apply the method", "workflow.three.copy": "Use the agreed method, filters, seed and size to select the sample.", "workflow.four.title": "Prepare the test", "workflow.four.copy": "Deliver the selected rows and the context needed to check their support.",
+          "spec.summary": "Technical specification, inputs and produced files",
+          "proof.eyebrow": "Working guide", "proof.title": "From journal to reproducible sample.", "proof.copy": "The guide follows population, method, selection and reasons through one line of work.", "proof.videoTitle": "From journal to reproducible sample", "proof.videoMeta": "Core · English · 0:55", "proof.transcript": "Read the transcript",
+          "related.eyebrow": "Next step", "related.copy": "Once the rows are selected, connect each entry to the documents that support it.", "related.link": "Continue with Check Entries →",
+          "prompt.eyebrow": "Get started", "prompt.title": "One prompt, then the work.", "prompt.copy": "Give the folder, method and size. Vera organizes the rest of the path.",
+          "cta.title": "Bring the journal to Vera.", "cta.copy": "Open Vera, point to the work folder and start the sample.", "cta.open": "Open Vera"
+        }
+      },
+      fr: {
+        metaTitle: "Échantillonnage du journal | Vera",
+        metaDescription: "Vera transforme un journal comptable hétérogène en population normalisée et en échantillon reproductible, prêt pour le contrôle des écritures.",
+        breadcrumbAria: "Parcours de la page",
+        text: {
+          "nav.overview": "En bref", "nav.workflow": "Parcours", "nav.proof": "Résultat", "nav.next": "Étape suivante", "nav.prompt": "Prompt", "nav.open": "Ouvrir Vera",
+          "breadcrumb.vera": "Vera", "breadcrumb.area": "Contrôles comptables", "breadcrumb.module": "Échantillonnage du journal",
+          "overview.eyebrow": "Le travail en bref", "overview.title": "Du journal reçu à un échantillon que l'on peut retracer.", "overview.copy": "Vera ordonne la population, conserve les choix d'échantillonnage et prépare le passage au contrôle des écritures.",
+          "flow.provide.title": "Vous fournissez", "flow.provide.copy": "Le journal en Excel, CSV ou PDF lisible et la méthode d'échantillonnage.", "flow.prepare.title": "Vera prépare", "flow.prepare.copy": "Une population cohérente, les filtres appliqués et une sélection reproductible.", "flow.receive.title": "Vous recevez", "flow.receive.copy": "L'échantillon en Excel et CSV, avec paramètres et piste prêts pour la revue.",
+          "workflow.eyebrow": "Parcours", "workflow.title": "Quatre étapes, de la population à la sélection.", "workflow.copy": "Chaque choix qui modifie l'échantillon reste visible dans le travail.",
+          "workflow.one.title": "Lire le journal", "workflow.one.copy": "Identifier sa structure, ses en-têtes et les champs comptables utiles.", "workflow.two.title": "Rendre la population cohérente", "workflow.two.copy": "Aligner colonnes et valeurs tout en gardant visibles les lignes à examiner.", "workflow.three.title": "Appliquer la méthode", "workflow.three.copy": "Utiliser méthode, filtres, graine et taille convenus pour sélectionner l'échantillon.", "workflow.four.title": "Préparer le contrôle", "workflow.four.copy": "Livrer les lignes retenues et le contexte nécessaire au contrôle des justificatifs.",
+          "spec.summary": "Spécifications techniques, entrées et fichiers produits",
+          "proof.eyebrow": "Guide de travail", "proof.title": "Du journal à un échantillon reproductible.", "proof.copy": "Le guide suit la population, la méthode, la sélection et ses motifs dans un même fil de travail.", "proof.videoTitle": "Du journal à un échantillon reproductible", "proof.videoMeta": "Core · Français · 0:55", "proof.transcript": "Lire la transcription",
+          "related.eyebrow": "Étape suivante", "related.copy": "Après la sélection, reliez chaque écriture aux documents qui la justifient.", "related.link": "Continuer avec Contrôle des écritures →",
+          "prompt.eyebrow": "Pour commencer", "prompt.title": "Un prompt, puis le travail.", "prompt.copy": "Indiquez dossier, méthode et taille. Vera organise la suite du parcours.",
+          "cta.title": "Confiez le journal à Vera.", "cta.copy": "Ouvrez Vera, indiquez le dossier de travail et lancez l'échantillonnage.", "cta.open": "Ouvrir Vera"
+        }
+      },
+      de: {
+        metaTitle: "Journalstichprobe | Vera",
+        metaDescription: "Vera überführt ein uneinheitliches Buchungsjournal in eine normalisierte Grundgesamtheit und eine reproduzierbare Stichprobe für die Buchungsprüfung.",
+        breadcrumbAria: "Seitenpfad",
+        text: {
+          "nav.overview": "Überblick", "nav.workflow": "Ablauf", "nav.proof": "Ergebnis", "nav.next": "Nächster Schritt", "nav.prompt": "Prompt", "nav.open": "Vera öffnen",
+          "breadcrumb.vera": "Vera", "breadcrumb.area": "Buchhaltungskontrollen", "breadcrumb.module": "Journalstichprobe",
+          "overview.eyebrow": "Die Arbeit im Überblick", "overview.title": "Vom erhaltenen Journal zur nachvollziehbaren Stichprobe.", "overview.copy": "Vera ordnet die Grundgesamtheit, bewahrt die Stichprobenentscheidungen und bereitet die Buchungsprüfung vor.",
+          "flow.provide.title": "Sie liefern", "flow.provide.copy": "Das Journal als Excel, CSV oder lesbare PDF sowie das Stichprobenverfahren.", "flow.prepare.title": "Vera bereitet vor", "flow.prepare.copy": "Eine konsistente Grundgesamtheit, die Filter und eine reproduzierbare Auswahl.", "flow.receive.title": "Sie erhalten", "flow.receive.copy": "Die Stichprobe in Excel und CSV samt Parametern und prüfbarer Spur.",
+          "workflow.eyebrow": "Ablauf", "workflow.title": "Vier Schritte von der Grundgesamtheit zur Auswahl.", "workflow.copy": "Jede Entscheidung, die die Stichprobe verändert, bleibt sichtbar.",
+          "workflow.one.title": "Journal lesen", "workflow.one.copy": "Struktur, Überschriften und relevante Buchungsfelder erkennen.", "workflow.two.title": "Grundgesamtheit vereinheitlichen", "workflow.two.copy": "Spalten und Werte angleichen und auffällige Zeilen sichtbar halten.", "workflow.three.title": "Verfahren anwenden", "workflow.three.copy": "Mit vereinbartem Verfahren, Filtern, Seed und Umfang die Stichprobe ziehen.", "workflow.four.title": "Prüfung vorbereiten", "workflow.four.copy": "Ausgewählte Zeilen und den nötigen Kontext für die Belegprüfung bereitstellen.",
+          "spec.summary": "Technische Spezifikation, Eingaben und erzeugte Dateien",
+          "proof.eyebrow": "Arbeitsanleitung", "proof.title": "Vom Journal zur reproduzierbaren Stichprobe.", "proof.copy": "Die Anleitung verbindet Grundgesamtheit, Verfahren, Auswahl und Gründe in einem Arbeitsfluss.", "proof.videoTitle": "Vom Journal zur reproduzierbaren Stichprobe", "proof.videoMeta": "Core · Deutsch · 0:55", "proof.transcript": "Transkript lesen",
+          "related.eyebrow": "Nächster Schritt", "related.copy": "Nach der Auswahl wird jede Buchung mit ihren Belegen verbunden.", "related.link": "Weiter mit Buchungen prüfen →",
+          "prompt.eyebrow": "Start", "prompt.title": "Ein Prompt, dann die Arbeit.", "prompt.copy": "Ordner, Verfahren und Umfang angeben. Vera organisiert den weiteren Ablauf.",
+          "cta.title": "Journal in Vera öffnen.", "cta.copy": "Vera öffnen, Arbeitsordner angeben und die Stichprobe starten.", "cta.open": "Vera öffnen"
+        }
+      }
+    };
+
+    function applyJourneyCopy(requestedLanguage) {
+      const language = journeyCopy[requestedLanguage] ? requestedLanguage : "it";
+      const data = journeyCopy[language];
+      document.title = data.metaTitle;
+      document.getElementById("meta-description").setAttribute("content", data.metaDescription);
+      document.getElementById("og-title").setAttribute("content", data.metaTitle);
+      document.getElementById("og-description").setAttribute("content", data.metaDescription);
+      document.getElementById("og-locale").setAttribute("content", { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE" }[language]);
+      document.querySelectorAll("[data-journey]").forEach((node) => {
+        const value = data.text[node.dataset.journey];
+        if (value) node.textContent = value;
+      });
+      document.querySelectorAll("[data-journey-aria]").forEach((node) => node.setAttribute("aria-label", data[node.dataset.journeyAria]));
+      const veraLink = document.querySelector("[data-vera-link]");
+      const relatedLink = document.querySelector("[data-related-link]");
+      if (veraLink) veraLink.href = `../vera/index.html?lang=${language}`;
+      if (relatedLink) relatedLink.href = `../check-entries/index.html?lang=${language}`;
+      const proofBase = `/static/shared/video-production/rendered/journal-sampling/core/${language}`;
+      const proofVideo = document.getElementById("proof-video");
+      proofVideo.pause();
+      proofVideo.poster = `${proofBase}/poster.jpg`;
+      document.getElementById("proof-video-source").src = `${proofBase}/guide.mp4`;
+      const proofTrack = document.getElementById("proof-video-track");
+      proofTrack.src = `${proofBase}/captions.vtt`;
+      proofTrack.srclang = language;
+      proofTrack.label = { it: "Italiano", en: "English", fr: "Français", de: "Deutsch" }[language];
+      document.getElementById("proof-video-fallback").href = `${proofBase}/guide.mp4`;
+      document.getElementById("proof-video-transcript").href = `${proofBase}/transcript.txt`;
+      document.querySelector('meta[property="og:image"]').content = `https://mparanza.com${proofBase}/poster.jpg`;
+      proofVideo.load();
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => applyJourneyCopy(button.dataset.lang)));
+    applyJourneyCopy(document.documentElement.lang.slice(0, 2));
   </script>
 </body>
 </html>

@@ -1,507 +1,506 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Registro Imprese e SARI | Vera</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta id="meta-description" name="description" content="Nel perimetro camerale italiano, Vera trasforma fatti, Camera competente e fonti SARI/CCIAA in un piano Registro Imprese/DIRE con passaggi, campi, allegati e citazioni.">
+  <link rel="canonical" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=it">
+  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=en">
+  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=de">
+  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta id="og-title" property="og:title" content="Registro Imprese e SARI — Italia | Vera">
+  <meta id="og-description" property="og:description" content="Workflow Italia: da una richiesta camerale a un piano di pratica chiaro, citato e pronto da rivedere.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/registro-imprese-sari/index.html">
+  <meta id="og-image" property="og:image" content="https://i.ytimg.com/vi/-UGe1FoLu8U/hqdefault.jpg">
+  <meta id="og-locale" property="og:locale" content="it_IT">
+  <title>Registro Imprese e SARI — Italia | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../vera-scope.css?v=20260721">
+  <script src="../vera-scope.js?v=20260721" defer></script>
   <style>
     :root {
-      --ink: #223026;
-      --muted: #5e6a61;
-      --line: #d9e0d8;
-      --panel: #ffffff;
-      --accent: #145f5a;
-      --accent-ink: #174640;
-      --bg: #ffffff;
+      --navy: #002060;
+      --blue: #0070c0;
+      --cyan: #00b0f0;
+      --ink: #142b4a;
+      --text: #344b69;
+      --muted: #64748b;
+      --line: #d8e4ef;
+      --pale: #f3faff;
+      --white: #ffffff;
+      --content: 1120px;
     }
-    * { box-sizing: border-box; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--ink);
+      color: var(--text);
+      background: var(--white);
+      font-family: "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
       line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; }
-    .page {
-      width: min(100% - 48px, 1180px);
-      margin: 0 auto;
+    button { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
     }
-    header {
+    .nav-shell {
+      width: min(var(--content), calc(100% - 48px));
+      min-height: 72px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-      padding: 28px 0 18px;
-      border-bottom: 1px solid var(--line);
+      gap: 28px;
     }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      color: var(--accent-ink);
-    }
-    .brand img {
-      height: 34px;
-      width: auto;
-      display: block;
-    }
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-    nav a { text-decoration: none; }
-    nav a:hover { color: var(--ink); }
-    .lang {
-      display: inline-flex;
-      gap: 10px;
-      margin-left: 8px;
-      font-weight: 600;
-    }
-    .lang button {
+    .brand img { display: block; width: 142px; height: auto; }
+    .nav-right, .nav-links, .lang-switch { display: flex; align-items: center; }
+    .nav-right { gap: 22px; }
+    .nav-links { gap: 20px; color: var(--muted); font-size: 13px; }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--blue); }
+    .lang-switch { gap: 3px; }
+    .lang-switch button {
+      min-width: 34px;
+      min-height: 34px;
       border: 0;
+      border-radius: 999px;
       background: transparent;
-      padding: 2px 0;
       color: var(--muted);
       cursor: pointer;
-      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
     }
-    .lang button[aria-pressed="true"] { color: var(--ink); }
+    .lang-switch button[aria-pressed="true"] { background: var(--pale); color: var(--blue); }
+
+    main { width: min(var(--content), calc(100% - 48px)); margin: 0 auto; }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .breadcrumb a { color: var(--blue); text-decoration: none; }
+    .breadcrumb a:hover, .breadcrumb a:focus-visible { text-decoration: underline; }
+
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: clamp(32px, 5vw, 72px);
+      grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+      gap: clamp(44px, 8vw, 112px);
       align-items: end;
-      padding: clamp(56px, 8vw, 110px) 0 48px;
+      padding: clamp(58px, 9vw, 112px) 0 clamp(58px, 7vw, 84px);
     }
     .eyebrow {
-      margin: 0 0 16px;
-      color: var(--muted);
-      font-size: 0.78rem;
+      margin: 0 0 15px;
+      color: var(--blue);
+      font-size: 12px;
       font-weight: 700;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
-    h1 {
-      margin: 0;
-      max-width: 780px;
-      font-size: clamp(42px, 5vw, 58px);
-      font-weight: 600;
-      line-height: 1.08;
-      color: var(--ink);
-    }
-    .lead {
-      margin: 28px 0 0;
-      max-width: 720px;
-      color: #405047;
-      font-size: clamp(1.08rem, 2vw, 1.42rem);
-      line-height: 1.42;
-    }
-    .summary {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-      padding: 20px;
-    }
-    .summary h2 {
-      margin: 0 0 14px;
-      font-size: 1rem;
-    }
-    .summary ul {
-      margin: 0;
-      padding-left: 20px;
-      color: var(--muted);
-    }
-    section {
-      padding: 42px 0;
-      border-top: 1px solid var(--line);
-    }
+    h1, h2, h3 { margin: 0; color: var(--navy); line-height: 1.12; }
+    h1 { max-width: 820px; font-size: clamp(42px, 5.5vw, 68px); font-weight: 600; letter-spacing: -0.035em; }
+    h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 600; letter-spacing: -0.025em; }
+    h3 { font-size: 18px; font-weight: 600; }
+    p { margin: 0; }
+    .lead { max-width: 760px; margin-top: 24px; color: var(--text); font-size: clamp(18px, 2vw, 23px); line-height: 1.45; }
+    .hero-outcome { border-top: 3px solid var(--cyan); padding-top: 20px; }
+    .hero-outcome strong { display: block; color: var(--navy); font-size: 19px; line-height: 1.35; }
+    .hero-outcome p { margin-top: 10px; color: var(--muted); }
+
+    .section { padding: clamp(54px, 7vw, 84px) 0; border-top: 1px solid var(--line); }
     .section-head {
       display: grid;
-      grid-template-columns: minmax(180px, 0.34fr) minmax(0, 0.66fr);
-      gap: 28px;
-      margin-bottom: 24px;
+      grid-template-columns: minmax(220px, 0.38fr) minmax(0, 0.62fr);
+      gap: clamp(28px, 6vw, 80px);
+      align-items: start;
+      margin-bottom: 34px;
     }
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(28px, 3.4vw, 42px);
-    }
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 760px;
-    }
-    .grid {
+    .section-head > p { max-width: 700px; color: var(--muted); font-size: 17px; }
+
+    .journey {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .item {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
-    }
-    .item h3 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-    }
-    .item p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.96rem;
-    }
-    .output-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px 18px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .output-list li {
+      border-top: 1px solid var(--navy);
       border-bottom: 1px solid var(--line);
-      padding: 10px 0;
-      color: var(--muted);
     }
-    pre {
-      margin: 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      background: #1f2a24;
-      color: #edf3ee;
-      border-radius: 8px;
-      padding: 18px;
-      font-size: 0.9rem;
-      line-height: 1.48;
+    .journey article { min-height: 190px; padding: 24px 28px 28px 0; }
+    .journey article + article { border-left: 1px solid var(--line); padding-left: 28px; }
+    .journey-number { display: block; margin-bottom: 28px; color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+    .journey h3 { margin-bottom: 10px; font-size: 22px; }
+    .journey p { color: var(--muted); }
+
+    .workflow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; counter-reset: workflow; }
+    .workflow-step { border-top: 2px solid var(--line); padding-top: 18px; counter-increment: workflow; }
+    .workflow-step::before { content: "0" counter(workflow); display: block; margin-bottom: 24px; color: var(--blue); font-size: 13px; font-weight: 700; }
+    .workflow-step h3 { margin-bottom: 9px; }
+    .workflow-step p { color: var(--muted); font-size: 15px; }
+
+    .proof-grid { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1.18fr); gap: clamp(36px, 7vw, 88px); align-items: center; }
+    .proof-list { margin: 30px 0 0; padding: 0; list-style: none; }
+    .proof-list li { padding: 15px 0; border-top: 1px solid var(--line); }
+    .proof-list strong { display: block; margin-bottom: 3px; color: var(--navy); }
+    .proof-list span { color: var(--muted); }
+    .video-guide { display: block; border: 1px solid var(--line); color: inherit; text-decoration: none; }
+    .video-guide:hover, .video-guide:focus-visible { border-color: var(--blue); }
+    .video-thumb { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--pale); }
+    .video-thumb img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .play {
+      position: absolute;
+      left: 22px;
+      bottom: 20px;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 17px;
+      line-height: 1;
     }
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 11px 18px;
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      background: var(--accent);
-      color: white;
-      text-decoration: none;
-      font-weight: 700;
+    .video-copy { display: block; padding: 22px 24px 24px; }
+    .video-copy small { display: block; margin-bottom: 8px; color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+    .video-copy strong { display: block; color: var(--navy); font-size: 20px; line-height: 1.3; }
+    .video-copy span { display: block; margin-top: 9px; color: var(--muted); font-size: 14px; }
+
+    .next-workflow { display: grid; grid-template-columns: minmax(0, 0.76fr) minmax(280px, 0.24fr); gap: 34px; align-items: end; padding: 34px; background: var(--pale); }
+    .next-workflow h2 { margin-top: 8px; font-size: clamp(26px, 3vw, 36px); }
+    .next-workflow p { max-width: 720px; margin-top: 12px; color: var(--text); }
+    .text-link { justify-self: end; color: var(--blue); font-weight: 700; text-decoration: none; }
+    .text-link:hover, .text-link:focus-visible { text-decoration: underline; }
+
+    .prompt-box { border: 1px solid var(--line); }
+    pre { margin: 0; padding: 24px; overflow-x: auto; white-space: pre-wrap; color: #eaf5ff; background: var(--navy); font: 500 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .technical-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 42px; }
+    .technical-item { display: grid; grid-template-columns: minmax(150px, 0.45fr) minmax(0, 0.55fr); gap: 18px; padding: 16px 0; border-top: 1px solid var(--line); }
+    .technical-item code { color: var(--navy); font-size: 13px; overflow-wrap: anywhere; }
+    .technical-item span { color: var(--muted); font-size: 14px; }
+
+    .install { margin-bottom: 72px; padding: clamp(34px, 5vw, 54px); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center; background: var(--navy); color: #d8ecff; }
+    .install h2 { color: var(--white) !important; }
+    .install p { max-width: 690px; margin-top: 10px; }
+    .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 11px 19px; border: 1px solid var(--cyan); background: var(--cyan); color: var(--navy); text-decoration: none; font-size: 14px; font-weight: 700; }
+    .button:hover, .button:focus-visible { background: var(--white); border-color: var(--white); }
+
+    @media (max-width: 900px) {
+      .nav-shell, main { width: min(100% - 32px, var(--content)); }
+      .nav-links { display: none; }
+      .hero, .section-head, .proof-grid, .next-workflow { grid-template-columns: 1fr; }
+      .hero { gap: 38px; }
+      .journey { grid-template-columns: 1fr; }
+      .journey article { min-height: 0; padding: 24px 0; }
+      .journey article + article { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+      .journey-number { margin-bottom: 12px; }
+      .workflow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .text-link { justify-self: start; }
     }
-    @media (max-width: 820px) {
-      .page { width: min(100% - 32px, 1180px); }
-      header, nav { align-items: flex-start; }
-      header, .hero, .section-head { grid-template-columns: 1fr; }
-      header { flex-direction: column; }
-      nav { flex-wrap: wrap; }
-      .hero { padding-top: 44px; }
-      .grid, .output-list { grid-template-columns: 1fr; }
+    @media (max-width: 600px) {
+      .brand img { width: 126px; }
+      .nav-shell { min-height: 64px; }
+      .lang-switch button { min-width: 30px; padding: 0; }
+      .breadcrumb { padding-top: 22px; }
+      .hero { padding-top: 42px; }
+      .workflow-grid, .technical-grid { grid-template-columns: 1fr; }
+      .technical-item { grid-template-columns: 1fr; gap: 5px; }
+      .proof-grid { gap: 30px; }
+      .install { grid-template-columns: 1fr; margin-bottom: 32px; }
+      .button { width: fit-content; }
     }
   </style>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
 </head>
-<body>
-  <div class="page">
-    <header>
-      <a class="brand" id="home-link" href="/?lang=it">
+<body data-vera-module="registro-imprese-sari" data-vera-scope="italy">
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza">
         <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
-      <nav>
-        <a href="#workflow" data-i18n="nav.workflow">Come funziona</a>
-        <a href="#boundaries" data-i18n="nav.boundaries">Perimetro</a>
-        <a href="#outputs" data-i18n="nav.outputs">File prodotti</a>
-        <a href="#prompts" data-i18n="nav.prompts">Prompt</a>
-        <a href="#download" data-i18n="nav.download">Installazione</a>
-        <span class="lang" aria-label="Language">
-          <button type="button" data-lang="en">En</button>
-          <button type="button" data-lang="it">It</button>
-          <button type="button" data-lang="fr">Fr</button>
-          <button type="button" data-lang="de">De</button>
-        </span>
-      </nav>
-    </header>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Page">
+          <a href="#workflow" data-i18n="nav.workflow">Percorso</a>
+          <a href="#result" data-i18n="nav.result">Risultato</a>
+          <a href="#prompt" data-i18n="nav.prompt">Prompt</a>
+          <a href="#install" data-i18n="nav.install">Apri Vera</a>
+        </nav>
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="false">En</button>
+          <button type="button" data-lang="it" aria-pressed="true">It</button>
+          <button type="button" data-lang="fr" aria-pressed="false">Fr</button>
+          <button type="button" data-lang="de" aria-pressed="false">De</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-    <main>
-      <section class="hero" aria-labelledby="hero-title">
+  <main>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a id="vera-link" href="../vera/index.html?lang=it">Vera</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page" data-i18n="breadcrumb.current">Pacchetto Italia · Registro Imprese e SARI</span>
+    </nav>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Pacchetto Italia · Registro Imprese e SARI · Vera</p>
+        <h1 id="hero-title" data-i18n="hero.title">Porta una richiesta camerale a un piano di pratica chiaro e citato.</h1>
+        <p class="lead" data-i18n="hero.lead">Nel perimetro camerale italiano, Vera collega fatti, Camera competente e fonti SARI/CCIAA in un percorso Registro Imprese/DIRE con passaggi, campi, allegati e decisioni ordinati per il professionista.</p>
+      </div>
+      <aside class="hero-outcome">
+        <p class="eyebrow" data-i18n="hero.outcomeLabel">Risultato</p>
+        <strong data-i18n="hero.outcomeTitle">Un piano di pratica leggibile e verificabile.</strong>
+        <p data-i18n="hero.outcomeCopy">Camera, operazione, posizioni RI/REA, passaggi DIRE, allegati, fonti e domande di revisione in un’unica cartella di lavoro.</p>
+      </aside>
+    </section>
+
+    <section class="section" aria-labelledby="journey-title">
+      <div class="section-head">
+        <h2 id="journey-title" data-i18n="journey.title">Dalla richiesta al piano di pratica</h2>
+        <p data-i18n="journey.copy">Un passaggio lineare mantiene insieme i fatti del caso, la Camera competente, le fonti applicabili e il lavoro consegnato allo studio.</p>
+      </div>
+      <div class="journey">
+        <article>
+          <span class="journey-number">01</span>
+          <h3 data-i18n="journey.provide.title">Fornisci</h3>
+          <p data-i18n="journey.provide.copy">Soggetto, attività, operazione, data, Camera o territorio e documenti già disponibili.</p>
+        </article>
+        <article>
+          <span class="journey-number">02</span>
+          <h3 data-i18n="journey.prepare.title">Vera prepara</h3>
+          <p data-i18n="journey.prepare.copy">Mappa delle posizioni RI/REA, registro delle fonti, piano della pratica, passaggi DIRE e lista degli allegati.</p>
+        </article>
+        <article>
+          <span class="journey-number">03</span>
+          <h3 data-i18n="journey.receive.title">Ricevi</h3>
+          <p data-i18n="journey.receive.copy">Una bozza rivedibile con proposte, citazioni, informazioni da completare e decisioni già ordinate.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="workflow" aria-labelledby="workflow-title">
+      <div class="section-head">
+        <h2 id="workflow-title" data-i18n="workflow.title">Quattro passaggi guidati dal professionista</h2>
+        <p data-i18n="workflow.copy">Il percorso parte dall’operazione concreta e usa conferme brevi per allineare Camera, posizioni, fonti e struttura della pratica.</p>
+      </div>
+      <div class="workflow-grid">
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step1.title">Inquadra l’operazione</h3>
+          <p data-i18n="workflow.step1.copy">Descrivi soggetto, attività, apertura o variazione, data e risultato atteso.</p>
+        </article>
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step2.title">Conferma Camera e posizioni</h3>
+          <p data-i18n="workflow.step2.copy">Rivedi Camera competente e distinzione tra Registro Imprese, REA e altri enti coinvolti.</p>
+        </article>
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step3.title">Rivedi fonti e proposte</h3>
+          <p data-i18n="workflow.step3.copy">Controlla territorio, data, schede SARI, passaggi DIRE, campi e allegati proposti.</p>
+        </article>
+        <article class="workflow-step">
+          <h3 data-i18n="workflow.step4.title">Completa il pacchetto</h3>
+          <p data-i18n="workflow.step4.copy">Registra le decisioni, assegna le integrazioni e consegna il piano alla fase operativa dello studio.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="result" aria-labelledby="result-title">
+      <div class="proof-grid">
         <div>
-          <p class="eyebrow" data-i18n="hero.eyebrow">Pratiche CCIAA</p>
-          <h1 id="hero-title" data-i18n="hero.title">Registro Imprese e SARI</h1>
-          <p class="lead" data-i18n="hero.lead">Raccoglie fatti, Camera competente e fonti ufficiali SARI/CCIAA per preparare una bozza Registro Imprese/DIRE con passaggi, campi, allegati, dubbi e citazioni, senza accedere ai portali o inviare.</p>
-        </div>
-        <aside class="summary">
-          <h2 data-i18n="summary.title">Quando usarlo</h2>
-          <ul>
-            <li data-i18n="summary.item1">Devi capire come impostare in DIRE l'apertura o la variazione di una posizione</li>
-            <li data-i18n="summary.item2">RI, REA e gli eventuali adempimenti verso gli altri enti vanno tenuti distinti</li>
-            <li data-i18n="summary.item3">Serve verificare se una scheda SARI è applicabile alla Camera, al territorio e alla data del caso</li>
+          <p class="eyebrow" data-i18n="result.eyebrow">Il risultato, prima di iniziare</p>
+          <h2 id="result-title" data-i18n="result.title">Vedi come una richiesta diventa un piano di pratica verificabile.</h2>
+          <p class="lead" data-i18n="result.copy">La guida mostra come una sola richiesta possa coinvolgere più posizioni e come il risultato le mantenga ordinate per la revisione.</p>
+          <ul class="proof-list">
+            <li><strong data-i18n="result.item1.title">Piano della pratica</strong><span data-i18n="result.item1.copy">Camera, operazione e posizioni RI/REA in apertura.</span></li>
+            <li><strong data-i18n="result.item2.title">Checklist DIRE</strong><span data-i18n="result.item2.copy">Passaggi, campi, allegati e informazioni da completare.</span></li>
+            <li><strong data-i18n="result.item3.title">Registro delle fonti</strong><span data-i18n="result.item3.copy">Schede SARI e riferimenti CCIAA con territorio e data.</span></li>
           </ul>
-        </aside>
-      </section>
+        </div>
+        <a class="video-guide" id="guide-link" href="https://youtu.be/-UGe1FoLu8U" target="_blank" rel="noopener noreferrer">
+          <span class="video-thumb">
+            <img id="guide-thumb" src="https://i.ytimg.com/vi/-UGe1FoLu8U/maxresdefault.jpg" alt="" loading="lazy">
+            <span class="play" aria-hidden="true">▶</span>
+          </span>
+          <span class="video-copy">
+            <small data-i18n="guide.label">Guida al risultato</small>
+            <strong data-i18n="guide.title">Vera | Una richiesta, più posizioni da tenere distinte</strong>
+            <span data-i18n="guide.meta">Narrazione in italiano · Si apre su YouTube</span>
+          </span>
+        </a>
+      </div>
+    </section>
 
-      <section id="workflow">
-        <div class="section-head">
-          <h2 data-i18n="workflow.title">Dai fatti alla bozza di pratica</h2>
-          <p data-i18n="workflow.copy">Conferma Camera, soggetto, attività, operazione e data; seleziona fonti ufficiali correnti; propone passaggi DIRE, campi, allegati e domande aperte; convalida provenienza e completezza per la revisione professionale.</p>
+    <section class="section" aria-labelledby="next-title">
+      <div class="next-workflow">
+        <div>
+          <p class="eyebrow" data-i18n="next.eyebrow">Flusso collegato</p>
+          <h2 id="next-title" data-i18n="next.title">Da un dubbio normativo a un quesito di ricerca controllabile.</h2>
+          <p data-i18n="next.copy">Quando il piano evidenzia una questione da approfondire, Prompt Optimizer organizza fatti, giurisdizione, data e fonti prioritarie in un brief di ricerca.</p>
         </div>
-        <div class="grid">
-          <article class="item">
-            <h3 data-i18n="workflow.item1.title">Chiarisce il perimetro</h3>
-            <p data-i18n="workflow.item1.copy">Separa Registro Imprese, REA e le eventuali posizioni verso Agenzia Entrate, INPS, INAIL, SUAP o IVASS/RUI.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="workflow.item2.title">Collega le fonti</h3>
-            <p data-i18n="workflow.item2.copy">Registra le fonti SARI, CCIAA, Registro Imprese e DIRE pertinenti con territorio, data e provenienza.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="workflow.item3.title">Prepara la bozza</h3>
-            <p data-i18n="workflow.item3.copy">Organizza proposte, passaggi, campi, allegati, rischi e informazioni mancanti senza trasformarli in istruzioni di deposito.</p>
-          </article>
-        </div>
-      </section>
+        <a class="text-link" id="next-link" href="../prompt-optimizer/index.html?lang=it" data-i18n="next.link">Scopri Prompt Optimizer →</a>
+      </div>
+    </section>
 
-      <section id="boundaries">
-        <div class="section-head">
-          <h2 data-i18n="boundaries.title">Consultazione, non automazione del portale</h2>
-          <p data-i18n="boundaries.copy">La consultazione ordinaria di SARI avviene in sola lettura: la Camera è scelta esplicitamente, la ricerca usa termini generici senza identificativi del cliente e una persona seleziona la scheda. Il connettore JSON non documentato resta bloccato senza sia un'approvazione di rete per il caso sia un'autorizzazione scritta del titolare dei diritti.</p>
-        </div>
-        <div class="grid">
-          <article class="item">
-            <h3 data-i18n="boundaries.item1.title">Nessun accesso o invio</h3>
-            <p data-i18n="boundaries.item1.copy">Vera non riceve credenziali, non accede ai portali, non compila, firma, paga, contatta l'assistenza o invia pratiche.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="boundaries.item2.title">Proposte da confermare</h3>
-            <p data-i18n="boundaries.item2.copy">Forma giuridica, ATECO, effetti RI/REA e posizioni presso gli altri enti richiedono conferma professionale.</p>
-          </article>
-          <article class="item">
-            <h3 data-i18n="boundaries.item3.title">Mai pronto per il deposito</h3>
-            <p data-i18n="boundaries.item3.copy">Il risultato resta una bozza per revisione; ready_to_file rimane sempre false.</p>
-          </article>
-        </div>
-      </section>
+    <section class="section" id="prompt" aria-labelledby="prompt-title">
+      <div class="section-head">
+        <h2 id="prompt-title" data-i18n="prompt.title">Un prompt per iniziare</h2>
+        <p data-i18n="prompt.copy">Descrivi l’operazione e indica la Camera o il territorio. Vera organizza il primo passaggio e ti chiede le conferme che cambiano la pratica.</p>
+      </div>
+      <div class="prompt-box"><pre><code id="prompt-example">Usa Registro Imprese e SARI per preparare [apertura/variazione] di [soggetto e attività] presso [Camera o territorio], con data [data]. Organizza posizioni RI/REA e altri enti, fonti SARI/CCIAA, passaggi DIRE, campi, allegati, informazioni da completare e domande per la revisione professionale.</code></pre></div>
+    </section>
 
-      <section id="outputs">
-        <div class="section-head">
-          <h2 data-i18n="outputs.title">File prodotti</h2>
-          <p data-i18n="outputs.copy">La consegna mantiene separati fatti confermati, fonti, proposte, blocchi, decisioni di revisione e stato finale.</p>
-        </div>
-        <ul class="output-list">
-          <li>case_intake_draft.json</li>
-          <li>local_evidence_inventory.json</li>
-          <li>official_sources.json</li>
-          <li>practice_plan_validated.json</li>
-          <li>dire_practice_plan.json</li>
-          <li>studio_checklist.md</li>
-          <li>document_checklist.md</li>
-          <li>sari_question_draft.md</li>
-          <li>review_handoff.md</li>
-          <li>final_artifacts.json</li>
-        </ul>
-      </section>
+    <section class="section" aria-labelledby="technical-title">
+      <div class="section-head">
+        <h2 id="technical-title" data-i18n="technical.title">Dettaglio tecnico</h2>
+        <p data-i18n="technical.copy">La cartella conserva fatti, fonti, piano operativo e decisioni in artefatti distinti e facili da consultare.</p>
+      </div>
+      <div class="technical-grid">
+        <div class="technical-item"><code>case_intake_draft.json</code><span data-i18n="technical.item1">Soggetto, attività, operazione e data.</span></div>
+        <div class="technical-item"><code>local_evidence_inventory.json</code><span data-i18n="technical.item7">Fonti locali e documenti disponibili.</span></div>
+        <div class="technical-item"><code>official_sources.json</code><span data-i18n="technical.item2">Fonti con Camera, territorio e riferimento.</span></div>
+        <div class="technical-item"><code>practice_plan_validated.json</code><span data-i18n="technical.item3">Posizioni e proposte strutturate.</span></div>
+        <div class="technical-item"><code>dire_practice_plan.json</code><span data-i18n="technical.item4">Passaggi, campi e allegati DIRE.</span></div>
+        <div class="technical-item"><code>studio_checklist.md</code><span data-i18n="technical.item5">Attività e decisioni per lo studio.</span></div>
+        <div class="technical-item"><code>document_checklist.md</code><span data-i18n="technical.item9">Allegati e documenti da completare.</span></div>
+        <div class="technical-item"><code>sari_question_draft.md</code><span data-i18n="technical.item8">Quesito SARI strutturato per la ricerca.</span></div>
+        <div class="technical-item"><code>review_handoff.md</code><span data-i18n="technical.item6">Sintesi leggibile per il revisore.</span></div>
+        <div class="technical-item"><code>final_artifacts.json</code><span data-i18n="technical.item10">Indice degli artefatti finali.</span></div>
+      </div>
+    </section>
 
-      <section id="prompts">
-        <div class="section-head">
-          <h2 data-i18n="prompts.title">Prompt pronto</h2>
-          <p data-i18n="prompts.copy">Usalo per preparare l'apertura o la variazione di una posizione mantenendo separati enti, fonti e scelte professionali.</p>
-        </div>
-        <pre><code id="prompt-example">Aiutami a capire come impostare in DIRE l'apertura di questa posizione usando la Camera competente e fonti SARI ufficiali. Mantieni separate le posizioni Registro Imprese/REA, Agenzia Entrate, INPS, INAIL, SUAP e IVASS/RUI; segnala ciò che richiede conferma professionale. Non accedere a portali, non usare credenziali e non inviare nulla.</code></pre>
-      </section>
-
-      <section id="download">
-        <div class="section-head">
-          <h2 data-i18n="download.title">Installa Vera dal marketplace</h2>
-          <p data-i18n="download.copy">Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.</p>
-        </div>
-        <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="download.button">Installa Vera</a>
-      </section>
-    </main>
-  </div>
+    <section class="install" id="install" aria-labelledby="install-title">
+      <div>
+        <h2 id="install-title" data-i18n="install.title">Vera include questo flusso.</h2>
+        <p data-i18n="install.copy">Apri Vera e descrivi la pratica camerale da preparare.</p>
+      </div>
+      <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="install.button">Apri Vera</a>
+    </section>
+  </main>
 
   <script>
     const translations = {
       it: {
-        title: "Registro Imprese e SARI | Vera",
-        "nav.workflow": "Come funziona",
-        "nav.boundaries": "Perimetro",
-        "nav.outputs": "File prodotti",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installazione",
-        "hero.eyebrow": "Pratiche CCIAA",
-        "hero.title": "Registro Imprese e SARI",
-        "hero.lead": "Raccoglie fatti, Camera competente e fonti ufficiali SARI/CCIAA per preparare una bozza Registro Imprese/DIRE con passaggi, campi, allegati, dubbi e citazioni, senza accedere ai portali o inviare.",
-        "summary.title": "Quando usarlo",
-        "summary.item1": "Devi capire come impostare in DIRE l'apertura o la variazione di una posizione",
-        "summary.item2": "RI, REA e gli eventuali adempimenti verso gli altri enti vanno tenuti distinti",
-        "summary.item3": "Serve verificare se una scheda SARI è applicabile alla Camera, al territorio e alla data del caso",
-        "workflow.title": "Dai fatti alla bozza di pratica",
-        "workflow.copy": "Conferma Camera, soggetto, attività, operazione e data; seleziona fonti ufficiali correnti; propone passaggi DIRE, campi, allegati e domande aperte; convalida provenienza e completezza per la revisione professionale.",
-        "workflow.item1.title": "Chiarisce il perimetro",
-        "workflow.item1.copy": "Separa Registro Imprese, REA e le eventuali posizioni verso Agenzia Entrate, INPS, INAIL, SUAP o IVASS/RUI.",
-        "workflow.item2.title": "Collega le fonti",
-        "workflow.item2.copy": "Registra le fonti SARI, CCIAA, Registro Imprese e DIRE pertinenti con territorio, data e provenienza.",
-        "workflow.item3.title": "Prepara la bozza",
-        "workflow.item3.copy": "Organizza proposte, passaggi, campi, allegati, rischi e informazioni mancanti senza trasformarli in istruzioni di deposito.",
-        "boundaries.title": "Consultazione, non automazione del portale",
-        "boundaries.copy": "La consultazione ordinaria di SARI avviene in sola lettura: la Camera è scelta esplicitamente, la ricerca usa termini generici senza identificativi del cliente e una persona seleziona la scheda. Il connettore JSON non documentato resta bloccato senza sia un'approvazione di rete per il caso sia un'autorizzazione scritta del titolare dei diritti.",
-        "boundaries.item1.title": "Nessun accesso o invio",
-        "boundaries.item1.copy": "Vera non riceve credenziali, non accede ai portali, non compila, firma, paga, contatta l'assistenza o invia pratiche.",
-        "boundaries.item2.title": "Proposte da confermare",
-        "boundaries.item2.copy": "Forma giuridica, ATECO, effetti RI/REA e posizioni presso gli altri enti richiedono conferma professionale.",
-        "boundaries.item3.title": "Mai pronto per il deposito",
-        "boundaries.item3.copy": "Il risultato resta una bozza per revisione; ready_to_file rimane sempre false.",
-        "outputs.title": "File prodotti",
-        "outputs.copy": "La consegna mantiene separati fatti confermati, fonti, proposte, blocchi, decisioni di revisione e stato finale.",
-        "prompts.title": "Prompt pronto",
-        "prompts.copy": "Usalo per preparare l'apertura o la variazione di una posizione mantenendo separati enti, fonti e scelte professionali.",
-        "download.title": "Installa Vera dal marketplace",
-        "download.copy": "Apri la pagina ufficiale di Vera su ChatGPT e seleziona Installa. Tutti i moduli sono inclusi.",
-        "download.button": "Installa Vera",
-        prompt: "Aiutami a capire come impostare in DIRE l'apertura di questa posizione usando la Camera competente e fonti SARI ufficiali. Mantieni separate le posizioni Registro Imprese/REA, Agenzia Entrate, INPS, INAIL, SUAP e IVASS/RUI; segnala ciò che richiede conferma professionale. Non accedere a portali, non usare credenziali e non inviare nulla."
+        meta: { title: "Registro Imprese e SARI — Italia | Vera", description: "Nel perimetro camerale italiano, Vera trasforma fatti, Camera competente e fonti SARI/CCIAA in un piano Registro Imprese/DIRE con passaggi, campi, allegati e citazioni.", og: "Workflow Italia: da una richiesta camerale a un piano di pratica chiaro, citato e pronto da rivedere.", locale: "it_IT" },
+        guide: { id: "-UGe1FoLu8U", title: "Vera | Una richiesta, più posizioni da tenere distinte" },
+        "nav.workflow": "Percorso", "nav.result": "Risultato", "nav.prompt": "Prompt", "nav.install": "Apri Vera",
+        "breadcrumb.current": "Pacchetto Italia · Registro Imprese e SARI",
+        "hero.eyebrow": "Pacchetto Italia · Registro Imprese e SARI · Vera", "hero.title": "Porta una richiesta camerale a un piano di pratica chiaro e citato.", "hero.lead": "Nel perimetro camerale italiano, Vera collega fatti, Camera competente e fonti SARI/CCIAA in un percorso Registro Imprese/DIRE con passaggi, campi, allegati e decisioni ordinati per il professionista.",
+        "hero.outcomeLabel": "Risultato", "hero.outcomeTitle": "Un piano di pratica leggibile e verificabile.", "hero.outcomeCopy": "Camera, operazione, posizioni RI/REA, passaggi DIRE, allegati, fonti e domande di revisione in un’unica cartella di lavoro.",
+        "journey.title": "Dalla richiesta al piano di pratica", "journey.copy": "Un passaggio lineare mantiene insieme i fatti del caso, la Camera competente, le fonti applicabili e il lavoro consegnato allo studio.",
+        "journey.provide.title": "Fornisci", "journey.provide.copy": "Soggetto, attività, operazione, data, Camera o territorio e documenti già disponibili.", "journey.prepare.title": "Vera prepara", "journey.prepare.copy": "Mappa delle posizioni RI/REA, registro delle fonti, piano della pratica, passaggi DIRE e lista degli allegati.", "journey.receive.title": "Ricevi", "journey.receive.copy": "Una bozza rivedibile con proposte, citazioni, informazioni da completare e decisioni già ordinate.",
+        "workflow.title": "Quattro passaggi guidati dal professionista", "workflow.copy": "Il percorso parte dall’operazione concreta e usa conferme brevi per allineare Camera, posizioni, fonti e struttura della pratica.",
+        "workflow.step1.title": "Inquadra l’operazione", "workflow.step1.copy": "Descrivi soggetto, attività, apertura o variazione, data e risultato atteso.", "workflow.step2.title": "Conferma Camera e posizioni", "workflow.step2.copy": "Rivedi Camera competente e distinzione tra Registro Imprese, REA e altri enti coinvolti.", "workflow.step3.title": "Rivedi fonti e proposte", "workflow.step3.copy": "Controlla territorio, data, schede SARI, passaggi DIRE, campi e allegati proposti.", "workflow.step4.title": "Completa il pacchetto", "workflow.step4.copy": "Registra le decisioni, assegna le integrazioni e consegna il piano alla fase operativa dello studio.",
+        "result.eyebrow": "Il risultato, prima di iniziare", "result.title": "Vedi come una richiesta diventa un piano di pratica verificabile.", "result.copy": "La guida mostra come una sola richiesta possa coinvolgere più posizioni e come il risultato le mantenga ordinate per la revisione.",
+        "result.item1.title": "Piano della pratica", "result.item1.copy": "Camera, operazione e posizioni RI/REA in apertura.", "result.item2.title": "Checklist DIRE", "result.item2.copy": "Passaggi, campi, allegati e informazioni da completare.", "result.item3.title": "Registro delle fonti", "result.item3.copy": "Schede SARI e riferimenti CCIAA con territorio e data.",
+        "guide.label": "Guida al risultato", "guide.title": "Vera | Una richiesta, più posizioni da tenere distinte", "guide.meta": "Narrazione in italiano · Si apre su YouTube",
+        "next.eyebrow": "Flusso collegato", "next.title": "Da un dubbio normativo a un quesito di ricerca controllabile.", "next.copy": "Quando il piano evidenzia una questione da approfondire, Prompt Optimizer organizza fatti, giurisdizione, data e fonti prioritarie in un brief di ricerca.", "next.link": "Scopri Prompt Optimizer →",
+        "prompt.title": "Un prompt per iniziare", "prompt.copy": "Descrivi l’operazione e indica la Camera o il territorio. Vera organizza il primo passaggio e ti chiede le conferme che cambiano la pratica.", prompt: "Usa Registro Imprese e SARI per preparare [apertura/variazione] di [soggetto e attività] presso [Camera o territorio], con data [data]. Organizza posizioni RI/REA e altri enti, fonti SARI/CCIAA, passaggi DIRE, campi, allegati, informazioni da completare e domande per la revisione professionale.",
+        "technical.title": "Dettaglio tecnico", "technical.copy": "La cartella conserva fatti, fonti, piano operativo e decisioni in artefatti distinti e facili da consultare.", "technical.item1": "Soggetto, attività, operazione e data.", "technical.item2": "Fonti con Camera, territorio e riferimento.", "technical.item3": "Posizioni e proposte strutturate.", "technical.item4": "Passaggi, campi e allegati DIRE.", "technical.item5": "Attività e decisioni per lo studio.", "technical.item6": "Sintesi leggibile per il revisore.", "technical.item7": "Fonti locali e documenti disponibili.", "technical.item8": "Quesito SARI strutturato per la ricerca.", "technical.item9": "Allegati e documenti da completare.", "technical.item10": "Indice degli artefatti finali.",
+        "install.title": "Vera include questo flusso.", "install.copy": "Apri Vera e descrivi la pratica camerale da preparare.", "install.button": "Apri Vera"
       },
       en: {
-        title: "Business Register and SARI | Vera",
-        "nav.workflow": "How it works",
-        "nav.boundaries": "Boundaries",
-        "nav.outputs": "Files produced",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Chamber of Commerce filings",
-        "hero.title": "Business Register and SARI",
-        "hero.lead": "Collects the facts, competent Chamber and official SARI/CCIAA sources to prepare a Business Register/DIRE practice draft with steps, fields, attachments, open questions and citations—without accessing a portal or filing.",
-        "summary.title": "Use it when",
-        "summary.item1": "You need to understand how to set up the opening or change of a position in DIRE",
-        "summary.item2": "RI, REA and any obligations toward other authorities must stay distinct",
-        "summary.item3": "You need to confirm whether a SARI card applies to the case's Chamber, territory and date",
-        "workflow.title": "From case facts to a practice draft",
-        "workflow.copy": "Confirms the Chamber, subject, activity, operation and date; selects current official sources; proposes DIRE steps, fields, attachments and open questions; validates provenance and completeness for professional review.",
-        "workflow.item1.title": "Clarify the scope",
-        "workflow.item1.copy": "Keeps the Business Register, REA and any Revenue Agency, INPS, INAIL, SUAP or IVASS/RUI positions separate.",
-        "workflow.item2.title": "Connect the sources",
-        "workflow.item2.copy": "Registers relevant SARI, CCIAA, Business Register and DIRE sources with their territory, date and provenance.",
-        "workflow.item3.title": "Prepare the draft",
-        "workflow.item3.copy": "Organizes proposals, steps, fields, attachments, risks and missing information without turning them into filing instructions.",
-        "boundaries.title": "Consultation, not portal automation",
-        "boundaries.copy": "Ordinary SARI consultation is read-only: the Chamber is selected explicitly, the search uses generic terms with no client identifiers, and a person selects the card. The undocumented JSON connector remains blocked without both a case-specific network approval and written authorization from the rights holder.",
-        "boundaries.item1.title": "No access or filing",
-        "boundaries.item1.copy": "Vera never receives credentials, accesses portals, fills, signs, pays, contacts support or files a practice.",
-        "boundaries.item2.title": "Proposals need confirmation",
-        "boundaries.item2.copy": "Legal form, ATECO, RI/REA effects and positions with other authorities require professional confirmation.",
-        "boundaries.item3.title": "Never ready to file",
-        "boundaries.item3.copy": "The result remains a professional-review draft; ready_to_file always remains false.",
-        "outputs.title": "Files produced",
-        "outputs.copy": "The package keeps confirmed facts, sources, proposals, blockers, review decisions and final status separate.",
-        "prompts.title": "Prompt ready",
-        "prompts.copy": "Use it to prepare the opening or change of a position while keeping authorities, sources and professional choices separate.",
-        "download.title": "Install Vera from the marketplace",
-        "download.copy": "Open Vera's official ChatGPT listing and select Install. All modules are included.",
-        "download.button": "Install Vera",
-        prompt: "Help me understand how to set up the opening of this position in DIRE using the competent Chamber and official SARI sources. Keep Business Register/REA, Revenue Agency, INPS, INAIL, SUAP and IVASS/RUI positions separate, and flag everything requiring professional confirmation. Do not access portals, use credentials or submit anything."
+        meta: { title: "Business Register and SARI — Italy | Vera", description: "For Italian Business Register filings, Vera turns case facts, the competent Chamber and SARI/CCIAA sources into a DIRE plan with steps, fields, attachments and citations.", og: "Italy workflow: from a Chamber request to a clear, cited practice plan ready for review.", locale: "en_US" },
+        guide: { id: "wbeoePNN4YA", title: "Vera | One request, several positions to keep distinct" },
+        "nav.workflow": "Journey", "nav.result": "Result", "nav.prompt": "Prompt", "nav.install": "Open Vera",
+        "breadcrumb.current": "Italy pack · Business Register and SARI",
+        "hero.eyebrow": "Italy pack · Business Register and SARI · Vera", "hero.title": "Turn a Chamber request into a clear, cited practice plan.", "hero.lead": "For Italian Business Register filings, Vera connects case facts, the competent Chamber and SARI/CCIAA sources in a DIRE journey with steps, fields, attachments and decisions organized for the professional.",
+        "hero.outcomeLabel": "Outcome", "hero.outcomeTitle": "A readable, verifiable practice plan.", "hero.outcomeCopy": "Chamber, operation, RI/REA positions, DIRE steps, attachments, sources and review questions in one work folder.",
+        "journey.title": "From request to practice plan", "journey.copy": "A direct journey keeps the case facts, competent Chamber, applicable sources and delivered work together.",
+        "journey.provide.title": "Provide", "journey.provide.copy": "Subject, activity, operation, date, Chamber or territory and the documents already available.", "journey.prepare.title": "Vera prepares", "journey.prepare.copy": "RI/REA scope, source register, practice plan, DIRE steps and attachment list.", "journey.receive.title": "Receive", "journey.receive.copy": "A reviewable draft with proposals, citations, information to complete and decisions already organized.",
+        "workflow.title": "Four practitioner-led steps", "workflow.copy": "The journey starts from the concrete operation and uses short confirmations to align the Chamber, positions, sources and practice structure.",
+        "workflow.step1.title": "Frame the operation", "workflow.step1.copy": "Describe the subject, activity, opening or change, date and expected result.", "workflow.step2.title": "Confirm Chamber and positions", "workflow.step2.copy": "Review the competent Chamber and the distinction between Business Register, REA and other authorities involved.", "workflow.step3.title": "Review sources and proposals", "workflow.step3.copy": "Check territory, date, SARI cards, DIRE steps, fields and proposed attachments.", "workflow.step4.title": "Complete the package", "workflow.step4.copy": "Record decisions, assign additions and hand the plan to the firm’s operational stage.",
+        "result.eyebrow": "See the outcome first", "result.title": "See a request become a verifiable practice plan.", "result.copy": "The guide shows how one request can involve several positions and how the result keeps them organized for review.",
+        "result.item1.title": "Practice plan", "result.item1.copy": "Chamber, operation and RI/REA scope up front.", "result.item2.title": "DIRE checklist", "result.item2.copy": "Steps, fields, attachments and information to complete.", "result.item3.title": "Source register", "result.item3.copy": "SARI cards and CCIAA references with territory and date.",
+        "guide.label": "Outcome guide", "guide.title": "Vera | One request, several positions to keep distinct", "guide.meta": "English narration · Opens on YouTube",
+        "next.eyebrow": "Connected workflow", "next.title": "From a regulatory question to a controlled research brief.", "next.copy": "When the plan surfaces a question to investigate, Prompt Optimizer organizes the facts, jurisdiction, date and priority sources into a research brief.", "next.link": "Explore Prompt Optimizer →",
+        "prompt.title": "One prompt to begin", "prompt.copy": "Describe the operation and state the Chamber or territory. Vera organizes the first pass and asks for the confirmations that change the practice.", prompt: "Use Business Register and SARI to prepare the [opening/change] of [subject and activity] with [Chamber or territory], dated [date]. Organize RI/REA and other-authority positions, SARI/CCIAA sources, DIRE steps, fields, attachments, information to complete and questions for professional review.",
+        "technical.title": "Technical detail", "technical.copy": "The folder keeps facts, sources, operational plan and decisions in distinct, easy-to-review artifacts.", "technical.item1": "Subject, activity, operation and date.", "technical.item2": "Sources with Chamber, territory and reference.", "technical.item3": "Scope and structured proposals.", "technical.item4": "DIRE steps, fields and attachments.", "technical.item5": "Firm activities and decisions.", "technical.item6": "Readable reviewer handoff.", "technical.item7": "Available local sources and documents.", "technical.item8": "SARI question structured for research.", "technical.item9": "Attachments and documents to complete.", "technical.item10": "Index of final artifacts.",
+        "install.title": "Vera includes this workflow.", "install.copy": "Open Vera and describe the Chamber practice to prepare.", "install.button": "Open Vera"
       },
       fr: {
-        title: "Registre des entreprises et SARI | Vera",
-        "nav.workflow": "Fonctionnement",
-        "nav.boundaries": "Périmètre",
-        "nav.outputs": "Fichiers produits",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Formalités Chambre de commerce",
-        "hero.title": "Registre des entreprises et SARI",
-        "hero.lead": "Rassemble les faits, la Chambre compétente et les sources officielles SARI/CCIAA pour préparer un projet de formalité Registre/DIRE avec étapes, champs, pièces, questions ouvertes et citations, sans accès au portail ni dépôt.",
-        "summary.title": "Quand l'utiliser",
-        "summary.item1": "Vous devez comprendre comment paramétrer dans DIRE l'ouverture ou la modification d'une position",
-        "summary.item2": "RI, REA et les éventuelles obligations envers les autres administrations doivent rester distinctes",
-        "summary.item3": "Il faut confirmer qu'une fiche SARI s'applique à la Chambre, au territoire et à la date du dossier",
-        "workflow.title": "Des faits au projet de formalité",
-        "workflow.copy": "Confirme la Chambre, le sujet, l'activité, l'opération et la date ; sélectionne des sources officielles à jour ; propose étapes DIRE, champs, pièces et questions ouvertes ; valide provenance et complétude pour la revue professionnelle.",
-        "workflow.item1.title": "Clarifier le périmètre",
-        "workflow.item1.copy": "Sépare Registre, REA et les éventuelles positions auprès de l'administration fiscale, de l'INPS, de l'INAIL, du SUAP ou de l'IVASS/RUI.",
-        "workflow.item2.title": "Relier les sources",
-        "workflow.item2.copy": "Enregistre les sources SARI, CCIAA, Registre et DIRE pertinentes avec leur territoire, date et provenance.",
-        "workflow.item3.title": "Préparer le projet",
-        "workflow.item3.copy": "Organise propositions, étapes, champs, pièces, risques et informations manquantes sans les transformer en instructions de dépôt.",
-        "boundaries.title": "Consultation, pas automatisation du portail",
-        "boundaries.copy": "La consultation ordinaire de SARI s'effectue en lecture seule : la Chambre est choisie explicitement, la recherche emploie des termes génériques sans identifiant client et une personne sélectionne la fiche. Le connecteur JSON non documenté reste bloqué sans une autorisation réseau propre au dossier et une autorisation écrite du titulaire des droits.",
-        "boundaries.item1.title": "Aucun accès ni dépôt",
-        "boundaries.item1.copy": "Vera ne reçoit jamais d'identifiants, n'accède à aucun portail, ne remplit, signe ou paie rien, ne contacte pas l'assistance et ne dépose aucune formalité.",
-        "boundaries.item2.title": "Propositions à confirmer",
-        "boundaries.item2.copy": "Forme juridique, ATECO, effets RI/REA et positions auprès des autres administrations exigent une confirmation professionnelle.",
-        "boundaries.item3.title": "Jamais prêt au dépôt",
-        "boundaries.item3.copy": "Le résultat reste un projet pour revue professionnelle ; ready_to_file reste toujours false.",
-        "outputs.title": "Fichiers produits",
-        "outputs.copy": "Le paquet sépare faits confirmés, sources, propositions, blocages, décisions de revue et état final.",
-        "prompts.title": "Prompt prêt",
-        "prompts.copy": "Utilisez-le pour préparer l'ouverture ou la modification d'une position en séparant administrations, sources et choix professionnels.",
-        "download.title": "Installer Vera depuis la marketplace",
-        "download.copy": "Ouvrez la fiche officielle de Vera sur ChatGPT et sélectionnez Installer. Tous les modules sont inclus.",
-        "download.button": "Installer Vera",
-        prompt: "Aide-moi à comprendre comment paramétrer dans DIRE l'ouverture de cette position en utilisant la Chambre compétente et des sources SARI officielles. Garde distinctes les positions Registre/REA, administration fiscale, INPS, INAIL, SUAP et IVASS/RUI, et signale tout ce qui exige une confirmation professionnelle. N'accède à aucun portail, n'utilise aucun identifiant et n'envoie rien."
+        meta: { title: "Registre des entreprises et SARI — Italie | Vera", description: "Pour les formalités du Registre italien des entreprises, Vera transforme faits, Chambre compétente et sources SARI/CCIAA en plan DIRE avec étapes, champs, pièces et citations.", og: "Workflow Italie : d’une demande à la Chambre à un plan de formalité clair, cité et prêt à réviser.", locale: "fr_FR" },
+        guide: { id: "v4vpOk_-J1M", title: "Vera | Une demande, plusieurs positions à distinguer" },
+        "nav.workflow": "Parcours", "nav.result": "Résultat", "nav.prompt": "Prompt", "nav.install": "Ouvrir Vera",
+        "breadcrumb.current": "Pack Italie · Registre des entreprises et SARI",
+        "hero.eyebrow": "Pack Italie · Registre des entreprises et SARI · Vera", "hero.title": "Transformez une demande à la Chambre en plan de formalité clair et cité.", "hero.lead": "Pour les formalités du Registre italien des entreprises, Vera relie les faits, la Chambre compétente et les sources SARI/CCIAA dans un parcours DIRE dont les étapes, champs, pièces et décisions sont organisés pour le professionnel.",
+        "hero.outcomeLabel": "Résultat", "hero.outcomeTitle": "Un plan de formalité lisible et vérifiable.", "hero.outcomeCopy": "Chambre, opération, positions RI/REA, étapes DIRE, pièces, sources et questions de revue dans un même dossier de travail.",
+        "journey.title": "De la demande au plan de formalité", "journey.copy": "Un parcours direct rassemble les faits, la Chambre compétente, les sources applicables et le travail livré au cabinet.",
+        "journey.provide.title": "Fournissez", "journey.provide.copy": "Sujet, activité, opération, date, Chambre ou territoire et documents déjà disponibles.", "journey.prepare.title": "Vera prépare", "journey.prepare.copy": "Périmètre RI/REA, registre des sources, plan de formalité, étapes DIRE et liste des pièces.", "journey.receive.title": "Recevez", "journey.receive.copy": "Un projet révisable avec propositions, citations, informations à compléter et décisions déjà organisées.",
+        "workflow.title": "Quatre étapes guidées par le professionnel", "workflow.copy": "Le parcours part de l’opération concrète et utilise de courtes confirmations pour aligner Chambre, positions, sources et structure de la formalité.",
+        "workflow.step1.title": "Cadrez l’opération", "workflow.step1.copy": "Décrivez le sujet, l’activité, l’ouverture ou la modification, la date et le résultat attendu.", "workflow.step2.title": "Confirmez Chambre et positions", "workflow.step2.copy": "Révisez la Chambre compétente et la distinction entre Registre, REA et autres administrations concernées.", "workflow.step3.title": "Révisez sources et propositions", "workflow.step3.copy": "Contrôlez territoire, date, fiches SARI, étapes DIRE, champs et pièces proposées.", "workflow.step4.title": "Complétez le paquet", "workflow.step4.copy": "Consignez les décisions, attribuez les compléments et remettez le plan à l’étape opérationnelle du cabinet.",
+        "result.eyebrow": "Le résultat avant de commencer", "result.title": "Voyez une demande devenir un plan de formalité vérifiable.", "result.copy": "Le guide montre comment une demande peut concerner plusieurs positions et comment le résultat les organise pour la revue.",
+        "result.item1.title": "Plan de formalité", "result.item1.copy": "Chambre, opération et périmètre RI/REA dès l’ouverture.", "result.item2.title": "Checklist DIRE", "result.item2.copy": "Étapes, champs, pièces et informations à compléter.", "result.item3.title": "Registre des sources", "result.item3.copy": "Fiches SARI et références CCIAA avec territoire et date.",
+        "guide.label": "Guide du résultat", "guide.title": "Vera | Une demande, plusieurs positions à distinguer", "guide.meta": "Narration en français · S’ouvre sur YouTube",
+        "next.eyebrow": "Flux associé", "next.title": "D’une question réglementaire à un brief de recherche contrôlable.", "next.copy": "Lorsque le plan fait apparaître une question à approfondir, Prompt Optimizer organise faits, juridiction, date et sources prioritaires dans un brief de recherche.", "next.link": "Découvrir Prompt Optimizer →",
+        "prompt.title": "Un prompt pour commencer", "prompt.copy": "Décrivez l’opération et indiquez la Chambre ou le territoire. Vera organise le premier passage et demande les confirmations qui modifient la formalité.", prompt: "Utilise Registre des entreprises et SARI pour préparer [ouverture/modification] de [sujet et activité] auprès de [Chambre ou territoire], à la date du [date]. Organise positions RI/REA et autres administrations, sources SARI/CCIAA, étapes DIRE, champs, pièces, informations à compléter et questions pour la revue professionnelle.",
+        "technical.title": "Détail technique", "technical.copy": "Le dossier conserve faits, sources, plan opérationnel et décisions dans des artefacts distincts et faciles à consulter.", "technical.item1": "Sujet, activité, opération et date.", "technical.item2": "Sources avec Chambre, territoire et référence.", "technical.item3": "Périmètre et propositions structurées.", "technical.item4": "Étapes, champs et pièces DIRE.", "technical.item5": "Activités et décisions du cabinet.", "technical.item6": "Synthèse lisible pour le réviseur.", "technical.item7": "Sources locales et documents disponibles.", "technical.item8": "Question SARI structurée pour la recherche.", "technical.item9": "Pièces et documents à compléter.", "technical.item10": "Index des livrables finaux.",
+        "install.title": "Vera inclut ce flux.", "install.copy": "Ouvrez Vera et décrivez la formalité à préparer.", "install.button": "Ouvrir Vera"
       },
       de: {
-        title: "Unternehmensregister und SARI | Vera",
-        "nav.workflow": "Ablauf",
-        "nav.boundaries": "Grenzen",
-        "nav.outputs": "Dateien",
-        "nav.prompts": "Prompt",
-        "nav.download": "Installation",
-        "hero.eyebrow": "Handelskammerverfahren",
-        "hero.title": "Unternehmensregister und SARI",
-        "hero.lead": "Sammelt Fakten, zuständige Kammer und offizielle SARI-/CCIAA-Quellen, um einen Register-/DIRE-Entwurf mit Schritten, Feldern, Anlagen, offenen Fragen und Zitaten vorzubereiten – ohne Portalzugriff oder Einreichung.",
-        "summary.title": "Wann es hilft",
-        "summary.item1": "Sie müssen verstehen, wie die Eröffnung oder Änderung einer Position in DIRE einzurichten ist",
-        "summary.item2": "RI, REA und mögliche Pflichten gegenüber anderen Stellen müssen getrennt bleiben",
-        "summary.item3": "Die Anwendbarkeit einer SARI-Karte auf Kammer, Gebiet und Datum des Falls ist zu prüfen",
-        "workflow.title": "Von Fallfakten zum Verfahrensentwurf",
-        "workflow.copy": "Bestätigt Kammer, Rechtsträger, Tätigkeit, Vorgang und Datum; wählt aktuelle offizielle Quellen; schlägt DIRE-Schritte, Felder, Anlagen und offene Fragen vor; prüft Herkunft und Vollständigkeit für die fachliche Prüfung.",
-        "workflow.item1.title": "Umfang klären",
-        "workflow.item1.copy": "Trennt Unternehmensregister, REA und mögliche Positionen bei Steuerverwaltung, INPS, INAIL, SUAP oder IVASS/RUI.",
-        "workflow.item2.title": "Quellen verbinden",
-        "workflow.item2.copy": "Registriert einschlägige SARI-, CCIAA-, Register- und DIRE-Quellen mit Gebiet, Datum und Herkunft.",
-        "workflow.item3.title": "Entwurf vorbereiten",
-        "workflow.item3.copy": "Ordnet Vorschläge, Schritte, Felder, Anlagen, Risiken und fehlende Angaben, ohne daraus Einreichungsanweisungen zu machen.",
-        "boundaries.title": "Konsultation, keine Portalautomatisierung",
-        "boundaries.copy": "Die normale SARI-Nutzung erfolgt schreibgeschützt: Die Kammer wird ausdrücklich ausgewählt, die Suche verwendet allgemeine Begriffe ohne Mandantenkennungen und ein Mensch wählt die Karte aus. Der nicht dokumentierte JSON-Konnektor bleibt ohne fallbezogene Netzwerkfreigabe und schriftliche Genehmigung des Rechteinhabers gesperrt.",
-        "boundaries.item1.title": "Kein Zugriff oder Einreichen",
-        "boundaries.item1.copy": "Vera erhält keine Zugangsdaten, greift auf keine Portale zu, füllt nichts aus, unterschreibt oder bezahlt nicht, kontaktiert keinen Support und reicht nichts ein.",
-        "boundaries.item2.title": "Vorschläge bestätigen",
-        "boundaries.item2.copy": "Rechtsform, ATECO, RI-/REA-Wirkungen und Positionen bei anderen Stellen bedürfen fachlicher Bestätigung.",
-        "boundaries.item3.title": "Nie einreichungsfertig",
-        "boundaries.item3.copy": "Das Ergebnis bleibt ein Entwurf zur fachlichen Prüfung; ready_to_file bleibt stets false.",
-        "outputs.title": "Dateien",
-        "outputs.copy": "Das Paket trennt bestätigte Fakten, Quellen, Vorschläge, Blocker, Prüfentscheidungen und Endstatus.",
-        "prompts.title": "Promptvorlage",
-        "prompts.copy": "Nutzen Sie sie zur Vorbereitung einer Eröffnung oder Änderung und halten Sie Stellen, Quellen und fachliche Entscheidungen getrennt.",
-        "download.title": "Vera über den Marketplace installieren",
-        "download.copy": "Öffnen Sie Veras offiziellen ChatGPT-Eintrag und wählen Sie Installieren. Alle Module sind enthalten.",
-        "download.button": "Vera installieren",
-        prompt: "Hilf mir zu verstehen, wie die Eröffnung dieser Position in DIRE mit der zuständigen Kammer und offiziellen SARI-Quellen einzurichten ist. Halte Unternehmensregister/REA, Steuerverwaltung, INPS, INAIL, SUAP und IVASS/RUI getrennt und kennzeichne alles, was fachlich bestätigt werden muss. Greife auf kein Portal zu, verwende keine Zugangsdaten und übermittle nichts."
+        meta: { title: "Unternehmensregister und SARI — Italien | Vera", description: "Für Verfahren im italienischen Unternehmensregister überführt Vera Fallfakten, zuständige Kammer und SARI-/CCIAA-Quellen in einen DIRE-Plan mit Schritten, Feldern, Anlagen und Zitaten.", og: "Italien-Workflow: von einer Kammeranfrage zu einem klaren, zitierten und prüfbaren Verfahrensplan.", locale: "de_DE" },
+        guide: { id: "Yj-smt4uEzc", title: "Vera | Ein Antrag, mehrere getrennte Positionen" },
+        "nav.workflow": "Ablauf", "nav.result": "Ergebnis", "nav.prompt": "Prompt", "nav.install": "Vera öffnen",
+        "breadcrumb.current": "Italien-Paket · Unternehmensregister und SARI",
+        "hero.eyebrow": "Italien-Paket · Unternehmensregister und SARI · Vera", "hero.title": "Machen Sie aus einer Kammeranfrage einen klaren, zitierten Verfahrensplan.", "hero.lead": "Für Verfahren im italienischen Unternehmensregister verbindet Vera Fallfakten, zuständige Kammer und SARI-/CCIAA-Quellen in einem DIRE-Ablauf und ordnet Schritte, Felder, Anlagen und Entscheidungen für die fachliche Prüfung.",
+        "hero.outcomeLabel": "Ergebnis", "hero.outcomeTitle": "Ein lesbarer, nachvollziehbarer Verfahrensplan.", "hero.outcomeCopy": "Kammer, Vorgang, RI-/REA-Positionen, DIRE-Schritte, Anlagen, Quellen und Prüffragen in einem Arbeitsordner.",
+        "journey.title": "Von der Anfrage zum Verfahrensplan", "journey.copy": "Ein direkter Ablauf hält Fallfakten, zuständige Kammer, anwendbare Quellen und Arbeitsergebnis zusammen.",
+        "journey.provide.title": "Bereitstellen", "journey.provide.copy": "Rechtsträger, Tätigkeit, Vorgang, Datum, Kammer oder Gebiet und bereits verfügbare Dokumente.", "journey.prepare.title": "Vera bereitet vor", "journey.prepare.copy": "RI-/REA-Umfang, Quellenregister, Verfahrensplan, DIRE-Schritte und Anlagenliste.", "journey.receive.title": "Erhalten", "journey.receive.copy": "Einen prüfbaren Entwurf mit Vorschlägen, Zitaten, zu ergänzenden Angaben und geordneten Entscheidungen.",
+        "workflow.title": "Vier fachlich geführte Schritte", "workflow.copy": "Der Ablauf beginnt mit dem konkreten Vorgang und nutzt kurze Bestätigungen, um Kammer, Positionen, Quellen und Verfahrensstruktur abzustimmen.",
+        "workflow.step1.title": "Vorgang einordnen", "workflow.step1.copy": "Rechtsträger, Tätigkeit, Eröffnung oder Änderung, Datum und erwartetes Ergebnis beschreiben.", "workflow.step2.title": "Kammer und Positionen bestätigen", "workflow.step2.copy": "Zuständige Kammer und Abgrenzung zwischen Unternehmensregister, REA und weiteren beteiligten Stellen prüfen.", "workflow.step3.title": "Quellen und Vorschläge prüfen", "workflow.step3.copy": "Gebiet, Datum, SARI-Karten, DIRE-Schritte, Felder und vorgeschlagene Anlagen prüfen.", "workflow.step4.title": "Paket vervollständigen", "workflow.step4.copy": "Entscheidungen festhalten, Ergänzungen zuweisen und den Plan an die operative Kanzleiphase übergeben.",
+        "result.eyebrow": "Das Ergebnis vorab", "result.title": "Sehen Sie, wie eine Anfrage zum prüfbaren Verfahrensplan wird.", "result.copy": "Die Anleitung zeigt, wie eine Anfrage mehrere Positionen betreffen kann und wie das Ergebnis sie für die Prüfung ordnet.",
+        "result.item1.title": "Verfahrensplan", "result.item1.copy": "Kammer, Vorgang und RI-/REA-Umfang auf einen Blick.", "result.item2.title": "DIRE-Checkliste", "result.item2.copy": "Schritte, Felder, Anlagen und zu ergänzende Angaben.", "result.item3.title": "Quellenregister", "result.item3.copy": "SARI-Karten und CCIAA-Verweise mit Gebiet und Datum.",
+        "guide.label": "Ergebnis-Anleitung", "guide.title": "Vera | Ein Antrag, mehrere getrennte Positionen", "guide.meta": "Deutsche Erzählung · Öffnet auf YouTube",
+        "next.eyebrow": "Verbundener Ablauf", "next.title": "Von der Rechtsfrage zum kontrollierbaren Recherche-Briefing.", "next.copy": "Wenn der Plan eine zu vertiefende Frage zeigt, ordnet Prompt Optimizer Fakten, Rechtsraum, Datum und vorrangige Quellen in einem Recherche-Briefing.", "next.link": "Prompt Optimizer entdecken →",
+        "prompt.title": "Ein Prompt zum Start", "prompt.copy": "Beschreiben Sie den Vorgang und nennen Sie Kammer oder Gebiet. Vera ordnet den ersten Durchlauf und fragt nach den Bestätigungen, die das Verfahren verändern.", prompt: "Verwende Unternehmensregister und SARI, um [Eröffnung/Änderung] von [Rechtsträger und Tätigkeit] bei [Kammer oder Gebiet] zum [Datum] vorzubereiten. Ordne RI-/REA- und weitere Behördenpositionen, SARI-/CCIAA-Quellen, DIRE-Schritte, Felder, Anlagen, zu ergänzende Angaben und Fragen zur fachlichen Prüfung.",
+        "technical.title": "Technische Details", "technical.copy": "Der Ordner hält Fakten, Quellen, operativen Plan und Entscheidungen in getrennten, leicht prüfbaren Artefakten fest.", "technical.item1": "Rechtsträger, Tätigkeit, Vorgang und Datum.", "technical.item2": "Quellen mit Kammer, Gebiet und Verweis.", "technical.item3": "Umfang und strukturierte Vorschläge.", "technical.item4": "DIRE-Schritte, Felder und Anlagen.", "technical.item5": "Kanzleiaufgaben und Entscheidungen.", "technical.item6": "Lesbare Übergabe für die Prüfung.", "technical.item7": "Verfügbare lokale Quellen und Unterlagen.", "technical.item8": "SARI-Frage für die Recherche strukturiert.", "technical.item9": "Zu ergänzende Anlagen und Unterlagen.", "technical.item10": "Verzeichnis der finalen Artefakte.",
+        "install.title": "Vera enthält diesen Ablauf.", "install.copy": "Öffnen Sie Vera und beschreiben Sie das vorzubereitende Kammerverfahren.", "install.button": "Vera öffnen"
       }
     };
 
     function getLang() {
-      const params = new URLSearchParams(window.location.search);
-      const fromQuery = params.get("lang");
-      return translations[fromQuery] ? fromQuery : "it";
+      const requested = new URLSearchParams(window.location.search).get("lang");
+      return translations[requested] ? requested : "it";
     }
 
     function applyLanguage(lang) {
       const safeLang = translations[lang] ? lang : "it";
       const data = translations[safeLang];
       document.documentElement.lang = safeLang;
-      document.title = data.title || translations.it.title;
+      document.title = data.meta.title;
+      document.getElementById("meta-description").content = data.meta.description;
+      document.getElementById("og-title").content = data.meta.title;
+      document.getElementById("og-description").content = data.meta.og;
+      document.getElementById("og-image").content = `https://i.ytimg.com/vi/${data.guide.id}/hqdefault.jpg`;
+      document.getElementById("og-locale").content = data.meta.locale;
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.getElementById("vera-link").href = `../vera/index.html?lang=${safeLang}`;
+      document.getElementById("next-link").href = `../prompt-optimizer/index.html?lang=${safeLang}`;
       document.querySelectorAll("[data-i18n]").forEach((node) => {
-        const key = node.getAttribute("data-i18n");
-        if (data[key]) node.textContent = data[key];
+        const value = data[node.dataset.i18n];
+        if (value) node.textContent = value;
       });
       document.getElementById("prompt-example").textContent = data.prompt;
+      const guideLink = document.getElementById("guide-link");
+      const guideThumb = document.getElementById("guide-thumb");
+      guideLink.href = `https://youtu.be/${data.guide.id}`;
+      guideLink.setAttribute("aria-label", data.guide.title);
+      guideThumb.src = `https://i.ytimg.com/vi/${data.guide.id}/maxresdefault.jpg`;
+      guideThumb.alt = data.guide.title;
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.setAttribute("aria-pressed", button.dataset.lang === safeLang ? "true" : "false");
       });

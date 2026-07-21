@@ -1,170 +1,31 @@
 <!doctype html>
-<html lang="de-CH">
+<html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mandanten-Erstpr&uuml;fung Z&uuml;rich | Vera</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Zürcher Mandantenunterlagen mit Vera inventarisieren, offene Punkte ordnen und eine Kanzleinotiz sowie Mandantenanfrage vorbereiten.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Mandanten-Erstprüfung · Zürich | Vera">
+  <meta property="og:description" content="Vom eingegangenen Steuerdossier zur lesbaren Arbeitsgrundlage für die Treuhandpraxis.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/client-intake/zurich.html?lang=de">
+  <meta property="og:image" content="https://i.ytimg.com/vi/Mjfz1e98oIw/maxresdefault.jpg">
+  <link rel="canonical" href="https://mparanza.com/static/shared/client-intake/zurich.html">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/client-intake/zurich.html?lang=it">
+  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/client-intake/zurich.html?lang=en">
+  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/client-intake/zurich.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/client-intake/zurich.html?lang=de">
+  <title>Mandanten-Erstprüfung · Zürich | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="jurisdictions.css">
+  <link rel="stylesheet" href="jurisdictions.css?v=20260721-language-jurisdiction">
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
+  <script src="jurisdiction-pages.js?v=20260721-language-jurisdiction" defer></script>
 </head>
-<body>
-  <header class="topbar">
-    <div class="nav-shell">
-      <a class="brand" href="/?lang=de" aria-label="Mparanza Startseite">
-        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
-      </a>
-      <nav class="nav-links" aria-label="Abschnitte">
-        <a href="#workflow">Ablauf</a>
-        <a href="#belege">Belege</a>
-        <a href="#output">Ergebnisse</a>
-        <a href="#download">Installation</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero" id="hero">
-      <div>
-        <p class="eyebrow">Z&uuml;rich</p>
-        <h1>Mandanten-Erstpr&uuml;fung f&uuml;r Z&uuml;rcher Treuh&auml;nder</h1>
-        <p class="subtitle">Erste Durchsicht eines Mandantendossiers: erhaltene Belege, offene Punkte, formale Hinweise, interne Notiz und E-Mail-Entwurf.</p>
-        <p class="hero-copy">Nutzen Sie es, wenn Belege als gemischte PDFs, Bilder, Exporte und Nachweise eintreffen. Die Erstpr&uuml;fung ordnet das Dossier, extrahiert lesbaren Text und bereitet eine Arbeitsunterlage f&uuml;r die weitere Bearbeitung vor.</p>
-      </div>
-
-      <aside class="scope-panel" aria-label="Zusammenfassung der Erstpr&uuml;fung">
-        <div>
-          <h2>Was die Kanzlei erh&auml;lt</h2>
-          <ul class="scope-list">
-            <li><span>Eingabe</span><strong>Mandantenordner mit PDF, Bildern, Exporten und Belegen</strong></li>
-            <li><span>Verarbeitung</span><strong>Inventar, optionales OCR, Klassifikation, Extraktion und Pr&uuml;fhinweise</strong></li>
-            <li><span>Ausgabe</span><strong>Interne Notiz, Mandantenfragen, Lesestatus und CSV-Dateien</strong></li>
-            <li><span>Sprache</span><strong>Deutsch f&uuml;r die Z&uuml;rcher Treuhandpraxis</strong></li>
-          </ul>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section-block" id="workflow">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Ablauf</p>
-          <h2>Vom Mandantenordner zur Arbeitsunterlage</h2>
-        </div>
-        <p>Die erste operative Durchsicht beantwortet die Fragen vor der Bearbeitung: Welche Belege sind da, was fehlt, was ist unklar und welche R&uuml;ckfragen gehen an den Mandanten?</p>
-      </div>
-
-      <div class="grid three">
-        <article class="card">
-          <h3>1. Erfassen</h3>
-          <p>Alle Dateien werden mit Pfad, wahrscheinlichem Jahr, Dokumenttyp, Lesbarkeit und m&ouml;glichen Duplikaten inventarisiert.</p>
-        </article>
-        <article class="card">
-          <h3>2. Auslesen</h3>
-          <p>Text aus PDF-Dateien wird lokal extrahiert; OCR kann bei Scans und Bildern helfen, wenn es in der Umgebung verf&uuml;gbar ist.</p>
-        </article>
-        <article class="card">
-          <h3>3. Vorbereiten</h3>
-          <p>Die Zusammenfassung verbindet gelesene Nachweise, Lesestatus und offene Punkte mit einer knappen Arbeitsnotiz und konkreten Mandantenfragen.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-block" id="belege">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Belege</p>
-          <h2>Unterlagen, die der Intake ordnet</h2>
-        </div>
-        <p>Die Z&uuml;rcher Erstpr&uuml;fung behandelt die Dokumentfamilien, die in der Treuhandpraxis wiederkehren: Einkommen, Verm&ouml;gen, Versicherungen, Vorsorge, Liegenschaften und unklare F&auml;lle.</p>
-      </div>
-
-      <div class="grid three">
-        <article class="card">
-          <h3>Einkommen und Verm&ouml;gen</h3>
-          <ul>
-            <li>Lohnausweis und Rentenbescheinigungen.</li>
-            <li>Bank-, Postkonto-, Wertschriften- und Guthabenbelege.</li>
-            <li>Nachweise zu Verm&ouml;gen in der Schweiz oder im Ausland.</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3>Abz&uuml;ge und Nachweise</h3>
-          <ul>
-            <li>Versicherungspr&auml;mien, S&auml;ule 2 und S&auml;ule 3a.</li>
-            <li>Krankheitskosten, Weiterbildung, Kinderbetreuung und Spenden.</li>
-            <li>Berufsauslagen, Hypothekarzinsen und Liegenschaftsunterhalt.</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3>Kl&auml;rungspunkte</h3>
-          <ul>
-            <li>Quellensteuer und nachtr&auml;gliche ordentliche Veranlagung.</li>
-            <li>Ausl&auml;ndische Eink&uuml;nfte oder Verm&ouml;genswerte.</li>
-            <li>Unlesbare, unvollst&auml;ndige oder jahresfremde Dateien.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-block" id="output">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Ergebnisse</p>
-          <h2>Arbeitsunterlagen f&uuml;r die Kanzlei</h2>
-        </div>
-        <p>Die Ausgaben zeigen Nachweise, offene Punkte, Lesestatus und Fundstellen in einer strukturierten Arbeitsunterlage.</p>
-      </div>
-
-      <div class="table-scroll">
-        <table class="matrix">
-          <thead>
-            <tr>
-              <th>Output</th>
-              <th>Nutzung</th>
-              <th>Detail</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Inventar</td>
-              <td>Dossier schnell &uuml;berblicken und Dokumentfamilien erkennen.</td>
-              <td>Vorsichtige Kategorien, Jahre und Lesestatus.</td>
-            </tr>
-            <tr>
-              <td>Fehlende Punkte</td>
-              <td>Mandantenfragen aus konkreten L&uuml;cken ableiten.</td>
-              <td>Konkrete R&uuml;ckfragen aus den gelesenen Belegen.</td>
-            </tr>
-            <tr>
-              <td>Interne Notiz</td>
-              <td>Stand, Nachweise, Auff&auml;lligkeiten und Grenzen zusammenfassen.</td>
-              <td>Zusammenfassung mit Dokumentbezug und Fundstellen.</td>
-            </tr>
-            <tr>
-              <td>E-Mail-Entwurf</td>
-              <td>Fehlende Unterlagen professionell beim Mandanten anfordern.</td>
-              <td>Entwurf f&uuml;r die weitere Bearbeitung.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="section-block" id="download">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Installation</p>
-          <h2>Vera über den Marketplace installieren</h2>
-        </div>
-        <p>&Ouml;ffnen Sie Veras offiziellen ChatGPT-Eintrag und w&auml;hlen Sie Installieren. Alle Module sind enthalten.</p>
-      </div>
-      <div class="action-row">
-        <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer">Vera installieren</a>
-      </div>
-    </section>
-  </main>
+<body data-jurisdiction="zurich" data-presentation-language="de">
+  <header class="topbar"></header>
+  <main id="page-content"></main>
 </body>
 </html>

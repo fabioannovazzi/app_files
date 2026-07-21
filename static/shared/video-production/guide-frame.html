@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vera guide frame</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #ffffff;
+      --ink: #002060;
+      --text: #183765;
+      --muted: #607495;
+      --blue: #0070c0;
+      --cyan: #00b0f0;
+      --wash: #f3fbff;
+      --line: #b7dded;
+      --line-strong: #7ec9e7;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 1280px;
+      height: 720px;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--text);
+      font-family: "Instrument Sans", "Avenir Next", "Helvetica Neue", sans-serif;
+      font-kerning: normal;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 7px;
+      background: var(--blue);
+    }
+
+    .frame {
+      height: 100%;
+      display: grid;
+      grid-template-rows: 76px 1fr 74px;
+      padding: 0 64px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .brand span {
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .language {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(470px, 1.08fr);
+      gap: 68px;
+      align-items: center;
+      min-height: 0;
+    }
+
+    .copy {
+      padding-bottom: 12px;
+    }
+
+    .module {
+      margin: 0 0 23px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 560px;
+      margin: 0;
+      color: var(--ink);
+      font-size: 52px;
+      font-weight: 600;
+      letter-spacing: -0.045em;
+      line-height: 1.02;
+      text-wrap: balance;
+    }
+
+    h1.long-title { font-size: 45px; }
+
+    .scene-label {
+      max-width: 520px;
+      margin: 30px 0 0;
+      padding-top: 22px;
+      border-top: 2px solid var(--ink);
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.28;
+    }
+
+    .visual {
+      position: relative;
+      min-height: 462px;
+      padding: 27px 29px;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      background: var(--wash);
+    }
+
+    .visual::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 auto;
+      width: 108px;
+      height: 108px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+      background: var(--paper);
+      transform: translate(48px, 48px) rotate(45deg);
+    }
+
+    .visual-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .visual-head strong {
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .workflow-list {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 0;
+      margin-top: 13px;
+    }
+
+    .workflow-row {
+      min-height: 58px;
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .workflow-row.is-current {
+      border-left: 3px solid var(--blue);
+      background: var(--paper);
+    }
+
+    .workflow-row.is-complete .step-dot {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: var(--paper);
+    }
+
+    .step-dot {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .workflow-row b {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.18;
+    }
+
+    .workflow-row em {
+      color: var(--muted);
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .journal-meta,
+    .match-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .journal-meta div,
+    .match-meta div {
+      padding: 11px 12px;
+      background: var(--paper);
+    }
+
+    .journal-meta span,
+    .match-meta span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .journal-meta strong,
+    .match-meta strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 14px;
+      border-collapse: collapse;
+      background: var(--paper);
+      color: var(--text);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    th,
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    td:last-child,
+    th:last-child { text-align: right; }
+
+    tr.is-selected {
+      box-shadow: inset 3px 0 var(--blue);
+      background: #eaf8ff;
+    }
+
+    .selection-note {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line-strong);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .selection-note strong { color: var(--blue); }
+
+    .entry-source {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) 38px minmax(0, 1.18fr);
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .entry-card,
+    .source-card {
+      min-height: 214px;
+      padding: 18px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper);
+    }
+
+    .entry-card > span,
+    .source-card > span {
+      color: var(--blue);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .entry-card strong,
+    .source-card strong {
+      display: block;
+      margin: 8px 0 14px;
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.16;
+    }
+
+    .field {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .field b { color: var(--text); font-weight: 600; }
+
+    .field.is-match b::after {
+      content: " ✓";
+      color: var(--blue);
+    }
+
+    .connector {
+      color: var(--cyan);
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .queue {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .queue div {
+      padding: 12px 14px;
+      border-top: 2px solid var(--line-strong);
+      background: var(--paper);
+    }
+
+    .queue span {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .queue strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--ink);
+      font-size: 17px;
+    }
+
+    footer {
+      display: grid;
+      grid-template-columns: 115px 1fr 86px;
+      gap: 22px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 7px;
+    }
+
+    .progress span {
+      height: 4px;
+      background: var(--line);
+    }
+
+    .progress span.is-complete { background: var(--blue); }
+    .progress span.is-current { background: var(--cyan); }
+
+    .scene-count {
+      color: var(--ink);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <header>
+      <div class="brand">Mparanza <span>Vera</span></div>
+      <div class="language" id="language"></div>
+    </header>
+    <main>
+      <section class="copy">
+        <p class="module" id="module"></p>
+        <h1 id="title"></h1>
+        <p class="scene-label" id="scene-label"></p>
+      </section>
+      <section class="visual" id="visual" aria-hidden="true"></section>
+    </main>
+    <footer>
+      <span id="footer-label">Working guide</span>
+      <div class="progress" id="progress" aria-hidden="true"></div>
+      <span class="scene-count" id="scene-count"></span>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+    const frameData = /*__FRAME_DATA__*/;
+
+    const labels = {
+      it: {
+        language: "Italiano", guide: "Guida operativa", current: "In corso", ready: "Pronto",
+        period: "Periodo", population: "Popolazione", method: "Metodo", rows: "righe",
+        date: "Data", account: "Conto", text: "Descrizione", amount: "Importo",
+        selected: "Selezione", reason: "Motivo", entry: "Scrittura", support: "Supporto",
+        document: "Documento", party: "Controparte", matched: "supportate", review: "da rivedere"
+      },
+      en: {
+        language: "English", guide: "Working guide", current: "Current", ready: "Ready",
+        period: "Period", population: "Population", method: "Method", rows: "rows",
+        date: "Date", account: "Account", text: "Description", amount: "Amount",
+        selected: "Selection", reason: "Reason", entry: "Entry", support: "Support",
+        document: "Document", party: "Counterparty", matched: "supported", review: "to review"
+      },
+      fr: {
+        language: "Français", guide: "Guide de travail", current: "En cours", ready: "Prêt",
+        period: "Période", population: "Population", method: "Méthode", rows: "lignes",
+        date: "Date", account: "Compte", text: "Libellé", amount: "Montant",
+        selected: "Sélection", reason: "Motif", entry: "Écriture", support: "Justificatif",
+        document: "Document", party: "Tiers", matched: "étayées", review: "à revoir"
+      },
+      de: {
+        language: "Deutsch", guide: "Arbeitsanleitung", current: "Aktuell", ready: "Bereit",
+        period: "Zeitraum", population: "Grundgesamtheit", method: "Verfahren", rows: "Zeilen",
+        date: "Datum", account: "Konto", text: "Text", amount: "Betrag",
+        selected: "Auswahl", reason: "Grund", entry: "Buchung", support: "Beleg",
+        document: "Dokument", party: "Gegenpartei", matched: "belegt", review: "zu prüfen"
+      }
+    };
+
+    const moduleNames = {
+      it: {"client-onboarding": "Onboarding cliente", "journal-sampling": "Campionamento del giornale", "check-entries": "Controllo scritture"},
+      en: {"client-onboarding": "Client Onboarding", "journal-sampling": "Journal Sampling", "check-entries": "Check Entries"},
+      fr: {"client-onboarding": "Onboarding client", "journal-sampling": "Échantillonnage du journal", "check-entries": "Contrôle des écritures"},
+      de: {"client-onboarding": "Mandanten-Onboarding", "journal-sampling": "Journal-Stichprobe", "check-entries": "Buchungen prüfen"}
+    };
+
+    const journalExamples = {
+      it: {descriptions: ["Servizi cloud", "Consulenza", "Storno rateo", "Trasferta", "Chiusura manuale"], method: "Copertura + anomalie"},
+      en: {descriptions: ["Cloud services", "Consulting", "Accrual reversal", "Travel", "Manual close"], method: "Coverage + unusual"},
+      fr: {descriptions: ["Services cloud", "Conseil", "Extourne", "Déplacement", "Clôture manuelle"], method: "Couverture + atypiques"},
+      de: {descriptions: ["Cloud-Dienste", "Beratung", "Abgrenzungsstorno", "Reise", "Manueller Abschluss"], method: "Abdeckung + Auffällige"}
+    };
+
+    function workflowVisual(data, copy) {
+      const rows = data.onScreen.map((label, index) => {
+        const state = index < data.sceneIndex ? "is-complete" : index === data.sceneIndex ? "is-current" : "";
+        const mark = index < data.sceneIndex ? "✓" : String(index + 1).padStart(2, "0");
+        const status = index < data.sceneIndex ? copy.ready : index === data.sceneIndex ? copy.current : "";
+        return `<div class="workflow-row ${state}"><span class="step-dot">${mark}</span><b>${label}</b><em>${status}</em></div>`;
+      }).join("");
+      return `<div class="visual-head"><span>${moduleNames[data.lang][data.module]}</span><strong>${copy.guide}</strong></div><div class="workflow-list">${rows}</div>`;
+    }
+
+    function journalVisual(data, copy) {
+      const highlight = data.sceneIndex >= 3;
+      const examples = journalExamples[data.lang];
+      const rows = [
+        ["04.03", "610100", examples.descriptions[0], "4.800"],
+        ["11.03", "660240", examples.descriptions[1], "18.750"],
+        ["18.03", "310020", examples.descriptions[2], "42.500"],
+        ["24.03", "610600", examples.descriptions[3], "1.260"],
+        ["31.03", "780100", examples.descriptions[4], "67.900"]
+      ].map((row, index) => `<tr class="${highlight && (index === 2 || index === 4) ? "is-selected" : ""}">${row.map((value) => `<td>${value}</td>`).join("")}</tr>`).join("");
+      const method = data.sceneIndex < 2 ? "—" : data.sceneIndex < 4 ? examples.method : "Seed 260720";
+      const reason = data.sceneIndex < 3 ? data.onScreen[data.sceneIndex] : `${data.onScreen[3]} · ${data.onScreen[4]}`;
+      return `<div class="visual-head"><span>${moduleNames[data.lang][data.module]}</span><strong>${data.onScreen[data.sceneIndex]}</strong></div>
+        <div class="journal-meta"><div><span>${copy.period}</span><strong>01.01–31.03</strong></div><div><span>${copy.population}</span><strong>12.482 ${copy.rows}</strong></div><div><span>${copy.method}</span><strong>${method}</strong></div></div>
+        <table><thead><tr><th>${copy.date}</th><th>${copy.account}</th><th>${copy.text}</th><th>${copy.amount}</th></tr></thead><tbody>${rows}</tbody></table>
+        <div class="selection-note"><span>${copy.reason}</span><strong>${reason}</strong></div>`;
+    }
+
+    function checkVisual(data, copy) {
+      const matchClass = data.sceneIndex >= 2 ? "is-match" : "";
+      const strongMatch = data.sceneIndex >= 3;
+      const supported = data.sceneIndex >= 3 ? 18 : 0;
+      const review = data.sceneIndex >= 4 ? 2 : 20;
+      return `<div class="visual-head"><span>${moduleNames[data.lang][data.module]}</span><strong>${data.onScreen[data.sceneIndex]}</strong></div>
+        <div class="entry-source"><div class="entry-card"><span>${copy.entry}</span><strong>JE-2026-0318</strong><div class="field"><span>${copy.amount}</span><b>€ 42.500</b></div><div class="field"><span>${copy.date}</span><b>18.03.2026</b></div><div class="field"><span>${copy.party}</span><b>Alfa S.r.l.</b></div></div>
+        <div class="connector">→</div>
+        <div class="source-card"><span>${copy.support}</span><strong>FatturaPA · TD01</strong><div class="field ${matchClass}"><span>${copy.amount}</span><b>€ 42.500</b></div><div class="field ${matchClass}"><span>${copy.date}</span><b>18.03.2026</b></div><div class="field ${strongMatch ? "is-match" : ""}"><span>${copy.document}</span><b>FT 184/26</b></div></div></div>
+        <div class="queue"><div><span>${copy.matched}</span><strong>${supported}</strong></div><div><span>${copy.review}</span><strong>${review}</strong></div></div>`;
+    }
+
+    function render() {
+      const data = frameData;
+      const copy = labels[data.lang] || labels.en;
+      document.documentElement.lang = data.lang;
+      document.getElementById("language").textContent = copy.language;
+      document.getElementById("module").textContent = moduleNames[data.lang][data.module];
+      const title = document.getElementById("title");
+      title.textContent = data.title.replace(/^Vera\s*\|\s*/u, "");
+      title.classList.toggle("long-title", title.textContent.length > 54);
+      document.getElementById("scene-label").textContent = data.onScreen[data.sceneIndex];
+      document.getElementById("footer-label").textContent = copy.guide;
+      document.getElementById("scene-count").textContent = `${String(data.sceneIndex + 1).padStart(2, "0")} / ${String(data.onScreen.length).padStart(2, "0")}`;
+      document.getElementById("progress").innerHTML = data.onScreen.map((_, index) => `<span class="${index < data.sceneIndex ? "is-complete" : index === data.sceneIndex ? "is-current" : ""}"></span>`).join("");
+      const visual = data.module === "journal-sampling" ? journalVisual(data, copy) : data.module === "check-entries" ? checkVisual(data, copy) : workflowVisual(data, copy);
+      document.getElementById("visual").innerHTML = visual;
+      document.body.dataset.ready = "true";
+    }
+
+    render();
+    })();
+  </script>
+</body>
+</html>
