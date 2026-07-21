@@ -2966,6 +2966,7 @@ body.landing-body.landing-home {
 .landing-home .landing-product__link,
 .landing-home .landing-open-source__links a,
 .landing-home .landing-security__link,
+.landing-home .landing-compliance__link,
 .landing-home .landing-bridge__links a {
   outline: none;
 }
@@ -2973,7 +2974,8 @@ body.landing-body.landing-home {
 .landing-home .landing-logo-link:focus-visible,
 .landing-home .landing-lang__link:focus-visible,
 .landing-home .landing-open-source__links a:focus-visible,
-.landing-home .landing-security__link:focus-visible {
+.landing-home .landing-security__link:focus-visible,
+.landing-home .landing-compliance__link:focus-visible {
   outline: 2px solid var(--landing-ink);
   outline-offset: 4px;
 }
@@ -3146,6 +3148,7 @@ body.landing-body.landing-home {
 .landing-home .landing-open-source h2,
 .landing-home .landing-free h2,
 .landing-home .landing-security h2,
+.landing-home .landing-compliance h2,
 .landing-home .landing-bridge h2 {
   margin: 0;
   max-width: 8ch;
@@ -3223,6 +3226,110 @@ body.landing-body.landing-home {
   gap: 10px;
   min-height: 44px;
   margin-top: clamp(34px, 4vw, 50px);
+  border-bottom: 1px solid var(--landing-ink);
+  color: var(--landing-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.landing-home .landing-compliance {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(40px, 7vw, 104px);
+  align-items: start;
+  padding: clamp(76px, 10vw, 132px) 0;
+  border-bottom: 1px solid var(--landing-rule);
+  scroll-margin-top: 24px;
+}
+
+.landing-home .landing-compliance__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.landing-home .landing-compliance__lead,
+.landing-home .landing-compliance__description,
+.landing-home .landing-compliance__closing {
+  margin: 0;
+  max-width: 51ch;
+  color: var(--landing-muted);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.62;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+.landing-home .landing-compliance__lead {
+  color: var(--landing-ink);
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+  line-height: 1.36;
+  letter-spacing: -0.035em;
+}
+
+.landing-home .landing-compliance__description {
+  margin-top: clamp(24px, 3vw, 38px);
+}
+
+.landing-home .landing-compliance__principles {
+  width: 100%;
+  margin: clamp(42px, 5vw, 64px) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--landing-rule);
+  list-style: none;
+  counter-reset: compliance-principle;
+}
+
+.landing-home .landing-compliance__principles li {
+  display: grid;
+  grid-template-columns: 2rem minmax(150px, 0.8fr) minmax(0, 1.2fr);
+  gap: 18px;
+  padding: 22px 0 24px;
+  border-bottom: 1px solid var(--landing-rule);
+  counter-increment: compliance-principle;
+}
+
+.landing-home .landing-compliance__principles li::before {
+  content: "0" counter(compliance-principle);
+  color: var(--landing-product-blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+}
+
+.landing-home .landing-compliance__principles h3,
+.landing-home .landing-compliance__principles p {
+  margin: 0;
+}
+
+.landing-home .landing-compliance__principles h3 {
+  color: var(--landing-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+}
+
+.landing-home .landing-compliance__principles p {
+  color: var(--landing-muted);
+  font-size: 0.875rem;
+  line-height: 1.58;
+}
+
+.landing-home .landing-compliance__closing {
+  margin-top: clamp(34px, 4vw, 50px);
+  color: var(--landing-ink);
+  font-weight: 600;
+}
+
+.landing-home .landing-compliance__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 26px;
   border-bottom: 1px solid var(--landing-ink);
   color: var(--landing-ink);
   font-size: 0.9375rem;
@@ -3496,6 +3603,7 @@ body.landing-body.landing-home {
   .landing-home .landing-open-source,
   .landing-home .landing-free,
   .landing-home .landing-security,
+  .landing-home .landing-compliance,
   .landing-home .landing-bridge {
     grid-template-columns: minmax(0, 1fr);
     gap: 40px;
@@ -3514,9 +3622,14 @@ body.landing-body.landing-home {
     padding: 84px 0;
   }
 
+  .landing-home .landing-compliance {
+    padding: 84px 0;
+  }
+
   .landing-home .landing-open-source h2,
   .landing-home .landing-free h2,
   .landing-home .landing-security h2,
+  .landing-home .landing-compliance h2,
   .landing-home .landing-bridge h2 {
     max-width: 9ch;
     font-size: clamp(2.6rem, 4.8vw, 4.8rem);
@@ -3562,6 +3675,15 @@ body.landing-body.landing-home {
 
   .landing-home .landing-product__lead {
     max-width: 30ch;
+  }
+
+  .landing-home .landing-compliance__principles li {
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .landing-home .landing-compliance__principles p {
+    grid-column: 2;
   }
 
   .landing-home .landing-bridge {
