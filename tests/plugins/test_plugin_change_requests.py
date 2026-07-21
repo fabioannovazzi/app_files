@@ -4,11 +4,18 @@ import importlib.util
 import json
 import multiprocessing
 import os
+import ssl
 import sys
+import urllib.error
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import pytest
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.x509.oid import NameOID
 
 ROOT = Path(__file__).resolve().parents[2]
 CLARA_CLIENT = ROOT / "plugins" / "clara" / "scripts" / "change_requests.py"
@@ -108,6 +115,175 @@ def write_plugin(root: Path, name: str, version: str = "1.2.3") -> Path:
 
 def read_state(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def certificate_verification_error(verify_code: int) -> ssl.SSLCertVerificationError:
+    error = ssl.SSLCertVerificationError(1, "certificate verify failed")
+    error.verify_code = verify_code
+    error.verify_message = "Basic Constraints of CA cert not marked critical"
+    return error
+
+
+def _write_noncritical_ca_tls_material(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """Write a valid leaf and its deliberately malformed test CA."""
+
+    valid_from = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    valid_until = datetime(2100, 1, 1, tzinfo=timezone.utc)
+    ca_key = ec.derive_private_key(1, ec.SECP256R1())
+    ca_name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "Test CA")])
+    ca_certificate = (
+        x509.CertificateBuilder()
+        .subject_name(ca_name)
+        .issuer_name(ca_name)
+        .public_key(ca_key.public_key())
+        .serial_number(1)
+        .not_valid_before(valid_from)
+        .not_valid_after(valid_until)
+        .add_extension(
+            x509.BasicConstraints(ca=True, path_length=1),
+            critical=False,
+        )
+        .add_extension(
+            x509.KeyUsage(
+                digital_signature=True,
+                content_commitment=False,
+                key_encipherment=False,
+                data_encipherment=False,
+                key_agreement=False,
+                key_cert_sign=True,
+                crl_sign=True,
+                encipher_only=None,
+                decipher_only=None,
+            ),
+            critical=True,
+        )
+        .add_extension(
+            x509.SubjectKeyIdentifier.from_public_key(ca_key.public_key()),
+            critical=False,
+        )
+        .sign(ca_key, hashes.SHA256())
+    )
+    leaf_key = ec.derive_private_key(2, ec.SECP256R1())
+    leaf_name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "mparanza.com")])
+    leaf_certificate = (
+        x509.CertificateBuilder()
+        .subject_name(leaf_name)
+        .issuer_name(ca_name)
+        .public_key(leaf_key.public_key())
+        .serial_number(2)
+        .not_valid_before(valid_from)
+        .not_valid_after(valid_until)
+        .add_extension(
+            x509.BasicConstraints(ca=False, path_length=None),
+            critical=True,
+        )
+        .add_extension(
+            x509.SubjectAlternativeName([x509.DNSName("mparanza.com")]),
+            critical=False,
+        )
+        .add_extension(
+            x509.AuthorityKeyIdentifier.from_issuer_public_key(ca_key.public_key()),
+            critical=False,
+        )
+        .sign(ca_key, hashes.SHA256())
+    )
+    ca_path = tmp_path / "noncritical-ca.pem"
+    certificate_path = tmp_path / "mparanza.pem"
+    key_path = tmp_path / "mparanza-key.pem"
+    ca_path.write_bytes(ca_certificate.public_bytes(serialization.Encoding.PEM))
+    certificate_path.write_bytes(
+        leaf_certificate.public_bytes(serialization.Encoding.PEM)
+    )
+    key_path.write_bytes(
+        leaf_key.private_bytes(
+            serialization.Encoding.PEM,
+            serialization.PrivateFormat.PKCS8,
+            serialization.NoEncryption(),
+        )
+    )
+    return ca_path, certificate_path, key_path
+
+
+def _complete_memory_bio_handshake(
+    client_context: ssl.SSLContext, server_context: ssl.SSLContext
+) -> None:
+    """Complete one client/server TLS handshake without opening a socket."""
+
+    client_in = ssl.MemoryBIO()
+    client_out = ssl.MemoryBIO()
+    server_in = ssl.MemoryBIO()
+    server_out = ssl.MemoryBIO()
+    client = client_context.wrap_bio(
+        client_in,
+        client_out,
+        server_side=False,
+        server_hostname="mparanza.com",
+    )
+    server = server_context.wrap_bio(server_in, server_out, server_side=True)
+    client_done = False
+    server_done = False
+    for _attempt in range(20):
+        if not client_done:
+            try:
+                client.do_handshake()
+                client_done = True
+            except ssl.SSLWantReadError:
+                pass
+        client_bytes = client_out.read()
+        if client_bytes:
+            server_in.write(client_bytes)
+        if not server_done:
+            try:
+                server.do_handshake()
+                server_done = True
+            except ssl.SSLWantReadError:
+                pass
+        server_bytes = server_out.read()
+        if server_bytes:
+            client_in.write(server_bytes)
+        if client_done and server_done:
+            return
+    raise AssertionError("In-memory TLS handshake did not complete.")
+
+
+class _MemoryBioUrlopen:
+    """Exercise urlopen calls against one in-memory malformed-CA TLS peer."""
+
+    def __init__(
+        self,
+        ca_path: Path,
+        certificate_path: Path,
+        key_path: Path,
+        create_default_context: Any,
+    ) -> None:
+        self.ca_path = ca_path
+        self.create_default_context = create_default_context
+        self.server_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        self.server_context.load_cert_chain(certificate_path, key_path)
+        self.verify_flags: list[ssl.VerifyFlags] = []
+        self.verify_codes: list[int] = []
+
+    def __call__(self, _request: Any, **kwargs: Any) -> FakeResponse:
+        context = kwargs.get("context")
+        if context is None:
+            context = self.create_default_context(cafile=self.ca_path)
+            context.verify_flags |= ssl.VERIFY_X509_STRICT
+        assert isinstance(context, ssl.SSLContext)
+        self.verify_flags.append(context.verify_flags)
+        try:
+            _complete_memory_bio_handshake(context, self.server_context)
+        except ssl.SSLCertVerificationError as exc:
+            self.verify_codes.append(exc.verify_code)
+            raise urllib.error.URLError(exc) from exc
+        return FakeResponse(
+            {
+                "schema_version": 1,
+                "change_request_id": "CR-89",
+                "status": "open",
+                "status_token": "interview-token",
+                "interview_url": "https://mparanza.com/interviews/session-89",
+            }
+        )
 
 
 def test_clara_and_vera_change_request_clients_stay_identical() -> None:
@@ -550,6 +726,107 @@ def test_parallel_prompt_reservations_admit_exactly_one_ask(
     )
 
 
+def test_prompt_reservation_deduplicates_plugin_data_alias_of_stable_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    if "fork" not in multiprocessing.get_all_start_methods():
+        pytest.skip("This regression test requires fork-capable process locking.")
+    context = multiprocessing.get_context("fork")
+    stable_root = tmp_path / "stable"
+    stable_state_dir = stable_root / "clara"
+    stable_state_dir.mkdir(parents=True)
+    plugin_data = tmp_path / "plugin-data"
+    plugin_data.mkdir()
+    (plugin_data / "change-requests").symlink_to(
+        stable_state_dir, target_is_directory=True
+    )
+    plugin_root = write_plugin(tmp_path, "clara")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    ready_event = context.Event()
+    start_event = context.Event()
+    result_queue = context.Queue()
+    process = context.Process(
+        target=_concurrent_prompt_reservation_worker,
+        args=(
+            str(plugin_root),
+            str(stable_root),
+            str(plugin_data),
+            5_000.0,
+            ready_event,
+            start_event,
+            result_queue,
+        ),
+    )
+
+    process.start()
+    assert ready_event.wait(5)
+    start_event.set()
+    process.join(5)
+    if process.is_alive():
+        process.terminate()
+        process.join(5)
+
+    assert process.exitcode == 0
+    assert result_queue.get(timeout=5) is True
+
+
+def test_prompt_reservation_stops_when_a_shared_lock_is_contended(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    temporary_root = tmp_path / "temporary"
+    temporary_root.mkdir()
+    plugin_root = write_plugin(tmp_path, "clara")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    monkeypatch.setattr(client.tempfile, "gettempdir", lambda: str(temporary_root))
+    attempts = 0
+    released: list[int] = []
+
+    class FakeLockFile:
+        closed = False
+
+        def close(self) -> None:
+            self.closed = True
+
+        def fileno(self) -> int:
+            return 42
+
+        def seek(self, _offset: int) -> None:
+            return None
+
+    class FakeLockModule:
+        LOCK_UN = 8
+        LK_UNLCK = 0
+
+        def flock(self, descriptor: int, operation: int) -> None:
+            assert operation == self.LOCK_UN
+            released.append(descriptor)
+
+        def locking(self, descriptor: int, operation: int, amount: int) -> None:
+            assert operation == self.LK_UNLCK
+            assert amount == 1
+            released.append(descriptor)
+
+    first_lock_file = FakeLockFile()
+
+    def contend_on_second_lock(_state_dir: Path) -> tuple[Any, Any]:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            return first_lock_file, FakeLockModule()
+        raise client._StateLockContentionError("synthetic contention")
+
+    monkeypatch.setattr(client, "_open_state_lock", contend_on_second_lock)
+
+    with pytest.raises(client.ChangeRequestError, match="state is busy"):
+        client.reserve_suggestion_prompt(plugin_root, now=5_000.0)
+
+    assert attempts == 2
+    assert released == [42]
+    assert first_lock_file.closed is True
+
+
 def test_parallel_processes_preserve_both_receipts(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -664,6 +941,544 @@ def test_start_interview_persists_receipt_before_opening_browser(
     assert read_state(stable_root / "vera" / "state.json") == read_state(
         plugin_data / "change-requests" / "state.json"
     )
+
+
+def test_start_interview_falls_back_when_primary_state_is_unwritable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    blocked_root = tmp_path / "blocked-state-root"
+    blocked_root.write_text("not a directory", encoding="utf-8")
+    temporary_root = tmp_path / "temporary"
+    temporary_root.mkdir()
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    opened: list[str] = []
+    observed_state_paths: list[Path] = []
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(blocked_root))
+    monkeypatch.setattr(client.tempfile, "gettempdir", lambda: str(temporary_root))
+
+    def opener(_request: Any, **_kwargs: object) -> FakeResponse:
+        state_paths = list(
+            temporary_root.glob("mparanza-change-requests-*/vera/state.json")
+        )
+        assert len(state_paths) == 1
+        observed_state_paths.extend(state_paths)
+        pending = read_state(state_paths[0])["requests"][0]
+        assert pending["status"] == "pending"
+        assert "pending_payload" in pending
+        return FakeResponse(
+            {
+                "schema_version": 1,
+                "change_request_id": "CR-90",
+                "status": "open",
+                "status_token": "interview-token",
+                "interview_url": "http://localhost:8080/change-requests/interviews/session-90",
+            }
+        )
+
+    receipt = client.start_interview(
+        plugin_root,
+        "General Vera improvement suggestion",
+        base_url="http://localhost:8080",
+        opener=opener,
+        browser_opener=opened.append,
+        now=300.0,
+    )
+
+    assert receipt["change_request_id"] == "CR-90"
+    assert opened == ["http://localhost:8080/change-requests/interviews/session-90"]
+    assert len(observed_state_paths) == 1
+    state_path = observed_state_paths[0]
+    stored = read_state(state_path)["requests"][0]
+    assert stored["change_request_id"] == "CR-90"
+    assert "pending_payload" not in stored
+    assert state_path.parent.parent.stat().st_mode & 0o777 == 0o700
+    assert state_path.parent.stat().st_mode & 0o777 == 0o700
+    assert state_path.stat().st_mode & 0o777 == 0o600
+    assert state_path.with_name(".state.lock").stat().st_mode & 0o777 == 0o600
+
+
+def test_submit_problem_falls_back_when_primary_state_is_unwritable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    blocked_root = tmp_path / "blocked-state-root"
+    blocked_root.write_text("not a directory", encoding="utf-8")
+    temporary_root = tmp_path / "temporary"
+    temporary_root.mkdir()
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    request_path = tmp_path / "problem.json"
+    request_path.write_text(
+        json.dumps({"actual": "Synthetic read-only state failure"}),
+        encoding="utf-8",
+    )
+    posted: list[dict[str, Any]] = []
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(blocked_root))
+    monkeypatch.setattr(client.tempfile, "gettempdir", lambda: str(temporary_root))
+
+    def opener(request: Any, **_kwargs: object) -> FakeResponse:
+        posted.append(json.loads(request.data.decode("utf-8")))
+        return FakeResponse(
+            {
+                "change_request_id": "CR-91",
+                "status_token": "problem-token",
+                "status": "open",
+                "fixed": False,
+                "fixed_version": None,
+                "install_url": None,
+            }
+        )
+
+    receipt = client.submit_problem(
+        plugin_root,
+        request_path,
+        base_url="http://localhost:8080",
+        opener=opener,
+        now=400.0,
+    )
+
+    assert receipt["change_request_id"] == "CR-91"
+    assert len(posted) == 1
+    assert posted[0]["submission_id"] == receipt["submission_id"]
+    state_paths = list(
+        temporary_root.glob("mparanza-change-requests-*/vera/state.json")
+    )
+    assert len(state_paths) == 1
+    stored = read_state(state_paths[0])["requests"][0]
+    assert stored["change_request_id"] == "CR-91"
+    assert "pending_payload" not in stored
+
+
+def test_start_interview_preserves_fallback_receipt_when_stable_recovers(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable-root"
+    stable_root.write_text("temporarily read only", encoding="utf-8")
+    temporary_root = tmp_path / "temporary"
+    temporary_root.mkdir()
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    posted: list[dict[str, Any]] = []
+    opened: list[str] = []
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    monkeypatch.setattr(client.tempfile, "gettempdir", lambda: str(temporary_root))
+
+    def opener(request: Any, **_kwargs: object) -> FakeResponse:
+        posted.append(json.loads(request.data.decode("utf-8")))
+        stable_root.unlink()
+        stable_root.mkdir()
+        return FakeResponse(
+            {
+                "schema_version": 1,
+                "change_request_id": "CR-92",
+                "status": "open",
+                "status_token": "interview-token",
+                "interview_url": "http://localhost:8080/change-requests/interviews/session-92",
+            }
+        )
+
+    first_receipt = client.start_interview(
+        plugin_root,
+        "General Vera improvement suggestion",
+        base_url="http://localhost:8080",
+        opener=opener,
+        browser_opener=opened.append,
+        now=500.0,
+    )
+
+    def must_not_post(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("A recovered receipt must prevent a duplicate POST")
+
+    second_receipt = client.start_interview(
+        plugin_root,
+        "General Vera improvement suggestion",
+        base_url="http://localhost:8080",
+        opener=must_not_post,
+        browser_opener=opened.append,
+        now=501.0,
+    )
+
+    temporary_paths = list(
+        temporary_root.glob("mparanza-change-requests-*/vera/state.json")
+    )
+    assert len(posted) == 1
+    assert first_receipt == second_receipt
+    assert first_receipt["change_request_id"] == "CR-92"
+    assert len(temporary_paths) == 1
+    assert read_state(stable_root / "vera" / "state.json") == read_state(
+        temporary_paths[0]
+    )
+    assert opened == [
+        "http://localhost:8080/change-requests/interviews/session-92",
+        "http://localhost:8080/change-requests/interviews/session-92",
+    ]
+
+
+def test_completed_receipt_dominates_equal_timestamp_pending_replica(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_data = tmp_path / "plugin-data"
+    blocked_temporary_root = tmp_path / "blocked-temporary"
+    blocked_temporary_root.write_text("not a directory", encoding="utf-8")
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    posted: list[dict[str, Any]] = []
+    opened: list[str] = []
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    monkeypatch.setattr(
+        client.tempfile, "gettempdir", lambda: str(blocked_temporary_root)
+    )
+
+    def opener(request: Any, **_kwargs: object) -> FakeResponse:
+        posted.append(json.loads(request.data.decode("utf-8")))
+        return FakeResponse(
+            {
+                "schema_version": 1,
+                "change_request_id": "CR-94",
+                "status": "open",
+                "status_token": "interview-token",
+                "interview_url": "http://localhost:8080/change-requests/interviews/session-94",
+            }
+        )
+
+    client.start_interview(
+        plugin_root,
+        "General Vera improvement suggestion",
+        plugin_data=plugin_data,
+        base_url="http://localhost:8080",
+        opener=opener,
+        browser_opener=opened.append,
+        now=700.0,
+    )
+    completed_state = read_state(stable_root / "vera" / "state.json")
+    pending_entry = dict(completed_state["requests"][0])
+    for field in (
+        "change_request_id",
+        "status_token",
+        "interview_url",
+        "fixed",
+        "fixed_version",
+        "install_url",
+    ):
+        pending_entry.pop(field, None)
+    pending_entry["status"] = "pending"
+    pending_entry["pending_payload"] = posted[0]
+    (plugin_data / "change-requests" / "state.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "plugin": "vera",
+                "requests": [pending_entry],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def must_not_post(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("A completed receipt must prevent a duplicate POST")
+
+    receipt = client.start_interview(
+        plugin_root,
+        "General Vera improvement suggestion",
+        plugin_data=plugin_data,
+        base_url="http://localhost:8080",
+        opener=must_not_post,
+        browser_opener=opened.append,
+        now=701.0,
+    )
+
+    repaired_stable = read_state(stable_root / "vera" / "state.json")["requests"][0]
+    repaired_plugin = read_state(plugin_data / "change-requests" / "state.json")[
+        "requests"
+    ][0]
+    assert len(posted) == 1
+    assert receipt["change_request_id"] == "CR-94"
+    assert receipt["status"] == "open"
+    assert repaired_stable == repaired_plugin
+    assert "pending_payload" not in repaired_stable
+    assert opened == [
+        "http://localhost:8080/change-requests/interviews/session-94",
+        "http://localhost:8080/change-requests/interviews/session-94",
+    ]
+
+
+def test_submit_problem_uses_plugin_data_when_home_and_temp_are_unwritable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    blocked_stable_root = tmp_path / "blocked-stable"
+    blocked_stable_root.write_text("not a directory", encoding="utf-8")
+    blocked_temporary_root = tmp_path / "blocked-temporary"
+    blocked_temporary_root.write_text("not a directory", encoding="utf-8")
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    plugin_data = tmp_path / "plugin-data"
+    request_path = tmp_path / "problem.json"
+    request_path.write_text(
+        json.dumps({"actual": "Synthetic read-only state failure"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(blocked_stable_root))
+    monkeypatch.setattr(
+        client.tempfile, "gettempdir", lambda: str(blocked_temporary_root)
+    )
+
+    receipt = client.submit_problem(
+        plugin_root,
+        request_path,
+        plugin_data=plugin_data,
+        base_url="http://localhost:8080",
+        opener=lambda *_args, **_kwargs: FakeResponse(
+            {
+                "change_request_id": "CR-93",
+                "status_token": "problem-token",
+                "status": "open",
+                "fixed": False,
+                "fixed_version": None,
+                "install_url": None,
+            }
+        ),
+        now=600.0,
+    )
+
+    state_path = plugin_data / "change-requests" / "state.json"
+    assert receipt["change_request_id"] == "CR-93"
+    assert read_state(state_path)["requests"][0]["change_request_id"] == "CR-93"
+    assert state_path.with_name(".state.lock").stat().st_mode & 0o777 == 0o600
+
+
+def test_fallback_rejects_symlink_without_touching_target(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    blocked_stable_root = tmp_path / "blocked-stable"
+    blocked_stable_root.write_text("not a directory", encoding="utf-8")
+    temporary_root = tmp_path / "temporary"
+    temporary_root.mkdir()
+    victim = tmp_path / "victim"
+    victim.mkdir(mode=0o755)
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    request_path = tmp_path / "problem.json"
+    request_path.write_text(
+        json.dumps({"actual": "Synthetic read-only state failure"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(blocked_stable_root))
+    monkeypatch.setattr(client.tempfile, "gettempdir", lambda: str(temporary_root))
+    fallback_state_dir = client._temporary_state_dir("vera")
+    fallback_state_dir.parent.mkdir(mode=0o700)
+    fallback_state_dir.symlink_to(victim, target_is_directory=True)
+
+    with pytest.raises(
+        client.ChangeRequestError,
+        match="Could not access a writable change-request state directory",
+    ):
+        client.submit_problem(
+            plugin_root,
+            request_path,
+            base_url="http://localhost:8080",
+            opener=lambda *_args, **_kwargs: FakeResponse({}),
+        )
+
+    assert victim.stat().st_mode & 0o777 == 0o755
+    assert list(victim.iterdir()) == []
+
+
+def test_start_interview_retries_default_https_once_for_noncritical_ca(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(tmp_path / "state"))
+    default_context = ssl.create_default_context()
+    calls: list[dict[str, Any]] = []
+    opened: list[str] = []
+
+    def urlopen(_request: Any, **kwargs: Any) -> FakeResponse:
+        calls.append(kwargs)
+        if len(calls) == 1:
+            raise urllib.error.URLError(certificate_verification_error(89))
+        return FakeResponse(
+            {
+                "schema_version": 1,
+                "change_request_id": "CR-89",
+                "status": "open",
+                "status_token": "interview-token",
+                "interview_url": "https://mparanza.com/case-notes/interview/session-89",
+            }
+        )
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", urlopen)
+
+    receipt = client.start_interview(
+        plugin_root,
+        "General Vera improvement suggestion",
+        browser_opener=opened.append,
+        now=300.0,
+    )
+
+    compatibility_context = calls[1]["context"]
+    assert receipt["change_request_id"] == "CR-89"
+    assert opened == ["https://mparanza.com/case-notes/interview/session-89"]
+    assert calls[0] == {"timeout": client.DEFAULT_TIMEOUT_SECONDS}
+    assert calls[1]["timeout"] == client.DEFAULT_TIMEOUT_SECONDS
+    assert isinstance(compatibility_context, ssl.SSLContext)
+    assert compatibility_context.verify_flags == (
+        default_context.verify_flags & ~ssl.VERIFY_X509_STRICT
+    )
+    assert compatibility_context.verify_mode == ssl.CERT_REQUIRED
+    assert compatibility_context.check_hostname is True
+
+
+@pytest.mark.skipif(
+    ssl.OPENSSL_VERSION_INFO < (3, 0, 0),
+    reason="OpenSSL 3 is required for verification error code 89.",
+)
+def test_start_interview_retries_real_strict_noncritical_ca_handshake(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(tmp_path / "state"))
+    ca_path, certificate_path, key_path = _write_noncritical_ca_tls_material(tmp_path)
+    create_default_context = ssl.create_default_context
+    opener = _MemoryBioUrlopen(
+        ca_path,
+        certificate_path,
+        key_path,
+        create_default_context,
+    )
+    opened: list[str] = []
+
+    def create_trusted_strict_context(*_args: Any, **_kwargs: Any) -> ssl.SSLContext:
+        context = create_default_context(cafile=ca_path)
+        context.verify_flags |= ssl.VERIFY_X509_STRICT
+        return context
+
+    monkeypatch.setattr(
+        client.ssl, "create_default_context", create_trusted_strict_context
+    )
+    monkeypatch.setattr(client.urllib.request, "urlopen", opener)
+
+    receipt = client.start_interview(
+        plugin_root,
+        "General Vera improvement suggestion",
+        browser_opener=opened.append,
+        now=300.0,
+    )
+
+    assert receipt["change_request_id"] == "CR-89"
+    assert opened == ["https://mparanza.com/interviews/session-89"]
+    assert opener.verify_codes == [89]
+    assert len(opener.verify_flags) == 2
+    assert opener.verify_flags[0] & ssl.VERIFY_X509_STRICT
+    assert opener.verify_flags[1] == (opener.verify_flags[0] & ~ssl.VERIFY_X509_STRICT)
+
+
+def test_start_interview_retries_noncritical_ca_at_most_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(tmp_path / "state"))
+    calls = 0
+
+    def unavailable(_request: Any, **_kwargs: Any) -> None:
+        nonlocal calls
+        calls += 1
+        raise urllib.error.URLError(certificate_verification_error(89))
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", unavailable)
+
+    with pytest.raises(client.ChangeRequestError, match="Could not reach"):
+        client.start_interview(
+            plugin_root,
+            "General Vera improvement suggestion",
+            browser_opener=lambda _url: None,
+        )
+
+    assert calls == 2
+
+
+def test_start_interview_does_not_retry_other_certificate_errors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(tmp_path / "state"))
+    calls = 0
+
+    def unavailable(_request: Any, **_kwargs: Any) -> None:
+        nonlocal calls
+        calls += 1
+        raise urllib.error.URLError(certificate_verification_error(62))
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", unavailable)
+
+    with pytest.raises(client.ChangeRequestError, match="Could not reach"):
+        client.start_interview(
+            plugin_root,
+            "General Vera improvement suggestion",
+            browser_opener=lambda _url: None,
+        )
+
+    assert calls == 1
+
+
+def test_start_interview_does_not_relax_tls_for_non_mparanza_host(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(tmp_path / "state"))
+    calls = 0
+
+    def unavailable(_request: Any, **_kwargs: Any) -> None:
+        nonlocal calls
+        calls += 1
+        raise urllib.error.URLError(certificate_verification_error(89))
+
+    monkeypatch.setattr(client.urllib.request, "urlopen", unavailable)
+
+    with pytest.raises(client.ChangeRequestError, match="Could not reach"):
+        client.start_interview(
+            plugin_root,
+            "General Vera improvement suggestion",
+            base_url="https://localhost:8443",
+            browser_opener=lambda _url: None,
+        )
+
+    assert calls == 1
+
+
+def test_start_interview_does_not_retry_an_injected_opener(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(tmp_path / "state"))
+    calls = 0
+
+    def unavailable(_request: Any, **_kwargs: Any) -> None:
+        nonlocal calls
+        calls += 1
+        raise urllib.error.URLError(certificate_verification_error(89))
+
+    with pytest.raises(client.ChangeRequestError, match="Could not reach"):
+        client.start_interview(
+            plugin_root,
+            "General Vera improvement suggestion",
+            opener=unavailable,
+            browser_opener=lambda _url: None,
+        )
+
+    assert calls == 1
 
 
 def test_check_fixed_requests_emits_exact_message_once(
