@@ -3100,7 +3100,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "compliance": {
             "id": "compliance",
-            "title": "Conformità per progettazione.",
+            "title": "Conformi per scelta.",
             "lead": "La privacy dipende da ciò che arriva al modello, non da ciò che rimane sul tuo computer.",
             "description": "Vera e Clara possono usare script locali per estrarre, calcolare, riconciliare, filtrare e aggregare le informazioni prima che Codex debba ragionarci. Spesso l'LLM può lavorare su un risultato mirato invece di ricevere i file sorgente completi.",
             "principles": [
@@ -3488,7 +3488,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "compliance": {
             "id": "compliance",
-            "title": "Compliance by Design.",
+            "title": "Für Compliance konzipiert.",
             "lead": "Datenschutz hängt davon ab, was das Modell erreicht – nicht davon, was auf Ihrem Computer verbleibt.",
             "description": "Vera und Clara können Informationen lokal extrahieren, berechnen, abgleichen, filtern und aggregieren, bevor Codex sie interpretieren muss. Das LLM kann häufig mit einem gezielten Ergebnis arbeiten, anstatt die vollständigen Quelldateien zu erhalten.",
             "principles": [
