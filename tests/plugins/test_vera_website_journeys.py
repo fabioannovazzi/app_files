@@ -13,6 +13,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SHARED_ROOT = ROOT / "static" / "shared"
+VERA_PLUGIN_ROOT = ROOT / "plugins" / "vera"
+VERA_PRIVACY_MANIFEST_ROOT = VERA_PLUGIN_ROOT / "privacy" / "workstreams"
 VERA_INSTALL_URL = (
     "https://chatgpt.com/auth/login?next="
     "%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
@@ -452,6 +454,95 @@ def test_vera_hub_localizes_every_visible_copy_key_in_all_four_languages() -> No
     assert visible_keys
     for key in visible_keys:
         assert page.count(f'"{key}":') == 4, key
+
+
+def test_vera_hub_privacy_rows_match_registered_workstreams_and_fingerprints() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    section_start = page.index('<section class="section-block" id="data-boundary">')
+    section_end = page.index('<section class="section-block" id="video">')
+    section = page[section_start:section_end]
+    row_matches = re.findall(
+        r'<tr\b(?=[^>]*\bdata-privacy-workstream="([^"]+)")'
+        r'(?=[^>]*\bdata-privacy-fingerprint="([^"]+)")[^>]*>(.*?)</tr>',
+        section,
+        flags=re.DOTALL,
+    )
+    manifest_paths = tuple(sorted(VERA_PRIVACY_MANIFEST_ROOT.glob("*.json")))
+    manifest_ids = {path.stem for path in manifest_paths}
+    components = json.loads(
+        (VERA_PLUGIN_ROOT / "components.json").read_text(encoding="utf-8")
+    )
+
+    assert len(row_matches) == 12
+    assert {workstream for workstream, _, _ in row_matches} == manifest_ids
+    assert manifest_ids == set(components["plugins"])
+
+    for workstream, website_fingerprint, row_body in row_matches:
+        manifest = json.loads(
+            (VERA_PRIVACY_MANIFEST_ROOT / f"{workstream}.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        assert manifest["workstream"] == workstream
+        assert website_fingerprint == manifest["review"]["source_fingerprint"]
+        assert f'id="privacy-workstream-{workstream}"' in section
+        assert '<th scope="row">' in row_body
+
+
+def test_vera_hub_privacy_rows_have_complete_four_language_copy() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    manifest_ids = {path.stem for path in VERA_PRIVACY_MANIFEST_ROOT.glob("*.json")}
+
+    for workstream in manifest_ids:
+        for field in ("name", "local", "codex", "example"):
+            key = f"privacy.row.{workstream}.{field}"
+            assert f'data-i18n="{key}"' in page
+            assert page.count(f'"{key}":') == 4
+
+
+def test_vera_hub_privacy_section_keeps_the_hard_boundaries_explicit() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    assert page.index('id="italia"') < page.index('id="data-boundary"')
+    assert page.index('id="data-boundary"') < page.index('id="video"')
+    for disclosure in (
+        "Il testo digitato è già nel contesto di Codex",
+        "Text already typed is in Codex context",
+        "Le texte saisi est déjà dans le contexte Codex",
+        "Bereits eingegebener Text befindet sich im Codex-Kontext",
+        "pseudonimizzazione, non di anonimato garantito",
+        "pseudonymisation, not guaranteed anonymity",
+        "pseudonymisation, pas d’anonymat garanti",
+        "Pseudonymisierung, keine garantierte Anonymität",
+    ):
+        assert disclosure in page
+
+
+def test_vera_hub_privacy_copy_discloses_registered_exception_inputs() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    for disclosure in (
+        "riepiloghi dell’intero giornale, righe rappresentative",
+        "whole-journal summaries, representative rows",
+        "synthèses du journal complet, lignes représentatives",
+        "Zusammenfassungen des gesamten Journals, repräsentative Zeilen",
+        "Inventario dei file, intestazioni, righe rappresentative, istruzioni dell’utente",
+        "File inventory, headers, representative rows, user instructions",
+        "Inventaire des fichiers, en-têtes, lignes représentatives, instructions de l’utilisateur",
+        "Dateiinventar, Spaltenüberschriften, repräsentative Zeilen, Nutzeranweisungen",
+        "Se serve interpretare un elemento visivo, può entrare il documento o l’immagine pertinente.",
+        "When visual interpretation is necessary, the relevant document or image may enter context.",
+        "Si une interprétation visuelle est nécessaire, le document ou l’image pertinente peut entrer dans le contexte.",
+        "Ist eine visuelle Auslegung erforderlich, kann das relevante Dokument oder Bild in den Kontext gelangen.",
+    ):
+        assert disclosure in page
+
+
+def test_vera_hub_privacy_row_deep_links_clear_the_sticky_header() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    assert ".privacy-table tbody tr { scroll-margin-top: 96px; }" in page
+    assert ".privacy-table tbody tr { scroll-margin-top: 150px; }" in page
 
 
 @pytest.mark.parametrize(
