@@ -3114,7 +3114,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
                 {
                     "title": "Mantieni chiaro il confine",
-                    "blurb": "Alcune attività richiedono di interpretare il testo originale o informazioni specifiche del caso. In questi casi, i contenuti necessari vengono inclusi nel contesto dell'LLM.",
+                    "blurb": "Alcune attività richiedono di interpretare il significato dei dati. In questi casi, i contenuti necessari vengono inclusi nel contesto dell'LLM.",
                 },
             ],
             "closing": "Meno dati nel contesto dell'LLM. Un perimetro di conformità più semplice.",
