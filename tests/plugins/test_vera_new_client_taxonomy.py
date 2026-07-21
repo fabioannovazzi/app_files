@@ -16,15 +16,11 @@ LEGACY_COMPETING_PATHS = (
     Path("static/shared/client-onboarding"),
 )
 
-FILE_PREPARATION_SKILLS = (
-    (
-        Path("plugins/client-file-preparation/skills/client-file-preparation/SKILL.md"),
-        "client-file-preparation",
-    ),
-    (
-        Path("plugins/client-file-preparation/skills/prepare-client-file/SKILL.md"),
-        "prepare-client-file",
-    ),
+FILE_PREPARATION_SKILL = Path(
+    "plugins/client-file-preparation/skills/client-file-preparation/SKILL.md"
+)
+RETIRED_FILE_PREPARATION_SKILL = Path(
+    "plugins/client-file-preparation/skills/prepare-client-file/SKILL.md"
 )
 
 FILE_PREPARATION_GUIDES = (
@@ -55,14 +51,11 @@ def test_vera_uses_one_new_client_workflow_with_a_subordinate_file_engine() -> N
     assert "client-file-preparation" in components
 
 
-@pytest.mark.parametrize(("relative_path", "expected_name"), FILE_PREPARATION_SKILLS)
-def test_file_preparation_skills_use_distinct_internal_names(
-    relative_path: Path,
-    expected_name: str,
-) -> None:
-    content = (ROOT / relative_path).read_text(encoding="utf-8")
+def test_file_preparation_exposes_one_canonical_internal_skill() -> None:
+    content = (ROOT / FILE_PREPARATION_SKILL).read_text(encoding="utf-8")
 
-    assert f"\nname: {expected_name}\n" in content
+    assert "\nname: client-file-preparation\n" in content
+    assert not (ROOT / RETIRED_FILE_PREPARATION_SKILL).exists()
 
 
 @pytest.mark.parametrize("relative_path", FILE_PREPARATION_GUIDES)

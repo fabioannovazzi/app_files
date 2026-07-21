@@ -1745,7 +1745,10 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
         page = page_path.read_text(encoding="utf-8")
 
         if page_path.parent.name == "new-client":
-            assert 'href="../vera-journey.css?v=20260721-new-client-layout"' in page
+            assert re.search(
+                r'href="\.\./vera-journey\.css\?v=20260721-new-client-[^"]+"',
+                page,
+            )
             continue
 
         assert (
@@ -2090,7 +2093,7 @@ def test_new_client_page_describes_one_connected_client_journey() -> None:
     for snippet in (
         '<html lang="it">',
         "Nuovo cliente",
-        "Dalla prima cartella a un fascicolo che continua nel tempo.",
+        "Un solo percorso per il nuovo cliente, dalla prima cartella ai riesami.",
         "Cosa fornisci",
         "Cosa prepara Vera",
         "Cosa ricevi",
@@ -2098,14 +2101,14 @@ def test_new_client_page_describes_one_connected_client_journey() -> None:
         "Le mancanze diventano richieste precise.",
         "Memo studio",
         "Richiesta cliente",
-        "Mercato del fascicolo",
+        "Scegli la giurisdizione",
         "Svizzera · Ginevra",
         "Svizzera · Zurigo",
         "United Kingdom",
         'id="prompt-example"',
         'id="file-preparation"',
         'id="relationship"',
-        'id="italy-pack"',
+        'id="italy"',
         'href="geneva.html?lang=it"',
         'href="zurich.html?lang=it"',
         'href="uk.html?lang=it"',
@@ -2170,7 +2173,7 @@ def test_new_client_jurisdiction_pages_define_local_scope() -> None:
         jurisdiction_source
     )
     assert 'url.searchParams.set("lang", language)' in jurisdiction_source
-    assert 'href="index.html?lang=${language}#relationship"' in jurisdiction_source
+    assert 'href="index.html?lang=${language}#core-model"' in jurisdiction_source
     assert "Report Builder" not in jurisdiction_source
     assert "dataset.jurisdiction =" not in jurisdiction_source
 
@@ -2265,8 +2268,8 @@ def test_new_client_keeps_language_and_market_selection_separate() -> None:
     )
     market_links = {
         "italy": (
-            "index.html?lang=it#italy-pack",
-            'localizedHref("index.html", lang, "#italy-pack")',
+            "index.html?lang=it#italy",
+            'localizedHref("index.html", lang, "#italy")',
         ),
         "geneva": ("geneva.html?lang=it", 'localizedHref("geneva.html", lang)'),
         "zurich": ("zurich.html?lang=it", 'localizedHref("zurich.html", lang)'),

@@ -825,9 +825,9 @@
       </a>
 
       <div class="video-library" data-curated-videos>
-        <a class="video-guide" href="https://youtu.be/z32cIdqyXCk" target="_blank" rel="noopener noreferrer" data-video-index="0">
-          <span class="video-guide__thumb" aria-hidden="true"><img src="https://i.ytimg.com/vi/z32cIdqyXCk/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
-          <span class="video-guide__body"><span class="video-kicker">Clienti</span><strong>Dalla cartella cliente a un fascicolo da cui partire</strong><span class="video-description">Dalla cartella ricevuta a un primo fascicolo di lavoro ordinato.</span><span class="video-meta">Si apre su YouTube</span></span>
+        <a class="video-guide" href="../video-production/rendered/new-client/core/it/guide.mp4" target="_blank" rel="noopener noreferrer" data-video-index="0">
+          <span class="video-guide__thumb" aria-hidden="true"><img src="../video-production/rendered/new-client/core/it/poster.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
+          <span class="video-guide__body"><span class="video-kicker">Nuovo cliente · Modello comune</span><strong>Dai documenti al fascicolo cliente</strong><span class="video-description">Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.</span><span class="video-meta">Apri la guida</span></span>
         </a>
         <a class="video-guide" href="https://youtu.be/x2u-AAAuxfc" target="_blank" rel="noopener noreferrer" data-video-index="1">
           <span class="video-guide__thumb" aria-hidden="true"><img src="https://i.ytimg.com/vi/x2u-AAAuxfc/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
@@ -970,6 +970,7 @@
         "videos.overview.kicker": "Panoramica",
         "videos.overview.title": "Dal lavoro dello studio al prossimo passo preparato",
         "videos.open": "Si apre su YouTube",
+        "videos.openGuide": "Apri la guida",
         "videos.all.index": "Catalogo video completo",
         "videos.all.title": "Tutte le guide, nella lingua che usi.",
         "videos.all.copy": "Core, edizioni paese e percorsi specialistici riuniti in un unico indice. La lingua cambia insieme alla pagina.",
@@ -1064,6 +1065,7 @@
         "videos.overview.kicker": "Overview",
         "videos.overview.title": "From the firm’s work to the next prepared step",
         "videos.open": "Opens on YouTube",
+        "videos.openGuide": "Open guide",
         "videos.all.index": "Complete video catalog",
         "videos.all.title": "Every guide, in the language you use.",
         "videos.all.copy": "Core workflows, country editions and specialist paths brought together in one index. Its language changes with the page.",
@@ -1158,6 +1160,7 @@
         "videos.overview.kicker": "Vue d’ensemble",
         "videos.overview.title": "Du travail du cabinet à la prochaine étape préparée",
         "videos.open": "S’ouvre sur YouTube",
+        "videos.openGuide": "Ouvrir le guide",
         "videos.all.index": "Catalogue vidéo complet",
         "videos.all.title": "Tous les guides, dans votre langue.",
         "videos.all.copy": "Socle, éditions pays et parcours spécialisés réunis dans un même index. Sa langue suit celle de la page.",
@@ -1252,6 +1255,7 @@
         "videos.overview.kicker": "Überblick",
         "videos.overview.title": "Von der Kanzleiarbeit zum vorbereiteten nächsten Schritt",
         "videos.open": "Öffnet YouTube",
+        "videos.openGuide": "Anleitung öffnen",
         "videos.all.index": "Vollständiger Videokatalog",
         "videos.all.title": "Alle Anleitungen in Ihrer Sprache.",
         "videos.all.copy": "Kern-Workflows, Ländereditionen und Fachwege in einem gemeinsamen Verzeichnis. Die Sprache folgt der Seite.",
@@ -1302,13 +1306,15 @@
 
       document.querySelectorAll("[data-video-index]").forEach((link) => {
         const item = curated[Number(link.dataset.videoIndex)];
-        link.href = `https://youtu.be/${item.id}`;
+        link.href = item.src || `https://youtu.be/${item.id}`;
         link.setAttribute("aria-label", item.shortTitle);
-        link.querySelector("img").src = thumbnailUrl(item.id);
+        link.querySelector("img").src = item.poster || thumbnailUrl(item.id);
         link.querySelector(".video-kicker").textContent = item.moduleLabel;
         link.querySelector("strong").textContent = item.shortTitle;
         link.querySelector(".video-description").textContent = item.description;
-        link.querySelector(".video-meta").textContent = strings["videos.open"];
+        link.querySelector(".video-meta").textContent = item.sourceKind === "local"
+          ? strings["videos.openGuide"]
+          : strings["videos.open"];
       });
       window.MparanzaVideos.mount({
         product: "vera",
