@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-21T11:29:50+00:00",
+  "generatedAt": "2026-07-21T14:13:41+00:00",
   "publicationStatus": "local_rendered",
   "remotePublish": false,
   "generator": "scripts/build_vera_local_video_guides.py",
@@ -19,32 +19,54 @@
       "title": "Vera | Dai documenti al fascicolo cliente",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
-      "speechDurationSeconds": 58.496,
+      "speechDurationSeconds": 58.4,
       "voice": {
         "name": "Alice",
         "rate": 100,
-        "interScenePauseMs": 1812,
-        "effectiveInterScenePauseSeconds": 2.296
+        "interScenePauseMs": 2646,
+        "effectiveInterScenePauseSeconds": 2.646
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#core-model"
       ],
-      "cueCount": 12,
-      "sceneDurationsSeconds": [
-        10.916,
-        10.116,
-        10.116,
-        10.116,
-        10.116,
-        8.62
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        7.935,
+        4.719,
+        4.219,
+        4.138,
+        10.99,
+        13.172
       ],
+      "sceneDurationsSeconds": [
+        10.057,
+        7.364,
+        6.865,
+        6.784,
+        13.635,
+        15.295
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          10.057,
+          17.422,
+          24.286,
+          31.07,
+          44.705
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/core/it/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2333934,
-          "sha256": "417e5465a60570812717137f0901c0b461bb849f284c294a2d0b523392dea266"
+          "bytes": 2087792,
+          "sha256": "59f240f1748d0d94ec2f8b5bff5ab83c6821389946b78585d3a1d12708cebecc"
         },
         "poster": {
           "path": "new-client/core/it/poster.jpg",
@@ -55,14 +77,14 @@
         "captions": {
           "path": "new-client/core/it/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 1106,
-          "sha256": "8b9fa79c3caa35f6c0518d4903cf4d6759a20f4b036c6e8683ec79d4659f664c"
+          "bytes": 1072,
+          "sha256": "48098df3ac1f2410b080fd486719afa102694ea6012a5c6881bd464bc07dcbb8"
         },
         "transcript": {
           "path": "new-client/core/it/transcript.txt",
           "mimeType": "text/plain",
           "bytes": 743,
-          "sha256": "c67194def945f6d1069e9ed6d8ee2275836879ea95e8fcaac7e775d29b6e0eee"
+          "sha256": "26a598fd373c0218326e0a346f296c38c56b358db8c8ca15f613037de76e50d3"
         }
       },
       "media": {
@@ -88,32 +110,54 @@
       "title": "Vera | From source documents to a working client file",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
-      "speechDurationSeconds": 58.543,
+      "speechDurationSeconds": 58.4,
       "voice": {
         "name": "Samantha",
         "rate": 100,
-        "interScenePauseMs": 2373,
-        "effectiveInterScenePauseSeconds": 3.028
+        "interScenePauseMs": 3206,
+        "effectiveInterScenePauseSeconds": 3.206
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#core-model"
       ],
-      "cueCount": 12,
-      "sceneDurationsSeconds": [
-        10.968,
-        10.168,
-        10.588,
-        10.168,
-        10.168,
-        7.94
+      "cueCount": 10,
+      "sceneSpeechDurationsSeconds": [
+        6.635,
+        4.475,
+        3.86,
+        4.313,
+        10.032,
+        13.055
       ],
+      "sceneDurationsSeconds": [
+        9.038,
+        7.681,
+        7.066,
+        7.519,
+        13.238,
+        15.458
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          9.038,
+          16.719,
+          23.785,
+          31.304,
+          44.542
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/core/en/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2396383,
-          "sha256": "773c3abf64e9fe8277afb2aa9b6ee635dda5e2da8a68e433ab9ec21cff0db309"
+          "bytes": 2093141,
+          "sha256": "1eb2c19d5a73e398e39c11421e4020bb625c41e7ae65ca5d89a513f8dfc652fb"
         },
         "poster": {
           "path": "new-client/core/en/poster.jpg",
@@ -124,14 +168,14 @@
         "captions": {
           "path": "new-client/core/en/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 1053,
-          "sha256": "292175598b78eb078da93bc8e1d1346db5c87e73d02bf81071e4f6a2fe726e56"
+          "bytes": 986,
+          "sha256": "993c06dfb9df979e4e3c8192a276bc02be2577956c9832c1be456e27009ee207"
         },
         "transcript": {
           "path": "new-client/core/en/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 702,
-          "sha256": "2c3885a5e513981cfe780d5500de71c35eec264d1a5b09374dee7bb1d97e49c1"
+          "bytes": 703,
+          "sha256": "d7daff219750bfbd801311ea665e5476ac44c755309349097e6ac1ea9ce6ccf3"
         }
       },
       "media": {
@@ -157,32 +201,54 @@
       "title": "Vera | Des documents sources au dossier client de travail",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
-      "speechDurationSeconds": 58.356,
+      "speechDurationSeconds": 58.4,
       "voice": {
         "name": "Thomas",
         "rate": 100,
-        "interScenePauseMs": 1630,
-        "effectiveInterScenePauseSeconds": 2.245
+        "interScenePauseMs": 2450,
+        "effectiveInterScenePauseSeconds": 2.45
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#core-model"
       ],
       "cueCount": 12,
-      "sceneDurationsSeconds": [
-        11.041,
-        9.841,
-        10.241,
-        10.241,
-        9.841,
-        8.795
+      "sceneSpeechDurationsSeconds": [
+        8.108,
+        4.545,
+        4.023,
+        4.278,
+        11.778,
+        13.415
       ],
+      "sceneDurationsSeconds": [
+        10.133,
+        6.996,
+        6.473,
+        6.729,
+        14.229,
+        15.44
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          10.133,
+          17.129,
+          23.603,
+          30.331,
+          44.56
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/core/fr/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2514203,
-          "sha256": "76688c2489f26ef9d0b75787e9c278dcaa833587fa299e1dacd07edb3aede6d4"
+          "bytes": 2283073,
+          "sha256": "a48f6cd9730b60066ff7fa966bf2c2778068084020a592604c53182f88bb0dc8"
         },
         "poster": {
           "path": "new-client/core/fr/poster.jpg",
@@ -193,14 +259,14 @@
         "captions": {
           "path": "new-client/core/fr/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 1167,
-          "sha256": "79f7b365c150e7378c4b501e119282e6f7d445e9a30dc4f73c3790014e887423"
+          "bytes": 1152,
+          "sha256": "fd7929042fbe2d26c7d7d4ce57cb499e3e8ba18f89355491c78fdc6a332055d4"
         },
         "transcript": {
           "path": "new-client/core/fr/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 820,
-          "sha256": "a0d824b65d875d12dadce5bcc89068ab949ca8757996f2796bf4dea287fc2813"
+          "bytes": 805,
+          "sha256": "2b80dbc66fb8b8cf1839806abc65b1e0be7a6e38317c647c85a5787ab95a2435"
         }
       },
       "media": {
@@ -226,32 +292,54 @@
       "title": "Vera | Von Quelldokumenten zur arbeitsfähigen Mandantenakte",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
-      "speechDurationSeconds": 58.334,
+      "speechDurationSeconds": 58.4,
       "voice": {
         "name": "Anna",
         "rate": 100,
-        "interScenePauseMs": 291,
-        "effectiveInterScenePauseSeconds": 0.355
+        "interScenePauseMs": 963,
+        "effectiveInterScenePauseSeconds": 0.963
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#core-model"
       ],
-      "cueCount": 15,
-      "sceneDurationsSeconds": [
-        10.4,
-        10.178,
-        9.6,
-        9.6,
-        10.178,
-        10.045
+      "cueCount": 14,
+      "sceneSpeechDurationsSeconds": [
+        9.154,
+        4.882,
+        5.381,
+        4.336,
+        13.942,
+        15.889
       ],
+      "sceneDurationsSeconds": [
+        10.436,
+        5.845,
+        6.344,
+        5.299,
+        14.905,
+        17.17
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          10.436,
+          16.281,
+          22.625,
+          27.925,
+          42.83
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/core/de/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2618558,
-          "sha256": "9bc56df0a515a7a6ce24339f42634a5f02dfd107f35e3acd0462dc0c04ce238e"
+          "bytes": 2540547,
+          "sha256": "d6b768f30dd9e96923644b8abebc18a50e49d88a7378549697d3642e56726f54"
         },
         "poster": {
           "path": "new-client/core/de/poster.jpg",
@@ -262,14 +350,14 @@
         "captions": {
           "path": "new-client/core/de/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 1252,
-          "sha256": "974586aacdf954913f6a69d6104367ee88908e18188623849cf37e56ef31534a"
+          "bytes": 1211,
+          "sha256": "42fd7c58923cc8870d330564e41c2a7daa99affbdc28b3c4d6a982b468fd0e08"
         },
         "transcript": {
           "path": "new-client/core/de/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 806,
-          "sha256": "626722279f2ab9e3919fe0f8e027dd5b9fd130694db625f494af839f95844159"
+          "bytes": 799,
+          "sha256": "858159b13adec6ffb3271ab2d562d076a99ec33266d3a0b45edaeb30a48de523"
         }
       },
       "media": {
@@ -295,32 +383,54 @@
       "title": "Vera | Incarico, privacy e AML per il nuovo cliente",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.492,
+      "speechDurationSeconds": 68.4,
       "voice": {
         "name": "Alice",
         "rate": 100,
-        "interScenePauseMs": 2269,
-        "effectiveInterScenePauseSeconds": 2.68
+        "interScenePauseMs": 2906,
+        "effectiveInterScenePauseSeconds": 2.906
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#italy"
       ],
       "cueCount": 15,
-      "sceneDurationsSeconds": [
-        13.03,
-        11.812,
-        12.021,
-        10.348,
-        15.716,
-        7.074
+      "sceneSpeechDurationsSeconds": [
+        9.92,
+        9.009,
+        9.615,
+        7.389,
+        12.498,
+        5.44
       ],
+      "sceneDurationsSeconds": [
+        12.173,
+        11.915,
+        12.521,
+        10.295,
+        15.404,
+        7.693
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          12.173,
+          24.088,
+          36.608,
+          46.903,
+          62.307
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/italy/it/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2813844,
-          "sha256": "2e4b50487f89305d5a30a8869a12aa0730b18147ba86b5b1f885be6c878f8553"
+          "bytes": 2533902,
+          "sha256": "897e4754f5065cabd77ef7017613096463ffedd689dbe92b92833af7adc39858"
         },
         "poster": {
           "path": "new-client/italy/it/poster.jpg",
@@ -332,7 +442,7 @@
           "path": "new-client/italy/it/captions.vtt",
           "mimeType": "text/vtt",
           "bytes": 1310,
-          "sha256": "27ca25593ff2118d276f715747ec4276794ad380dbde323b242089fdfd7e2862"
+          "sha256": "0cf7a09884c04afd81bf36709a094631069f281444d7c0c140c2d2392399f9b0"
         },
         "transcript": {
           "path": "new-client/italy/it/transcript.txt",
@@ -364,32 +474,54 @@
       "title": "Vera | Engagement, privacy and AML for a new client",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.504,
+      "speechDurationSeconds": 68.4,
       "voice": {
         "name": "Samantha",
         "rate": 100,
-        "interScenePauseMs": 2973,
-        "effectiveInterScenePauseSeconds": 3.478
+        "interScenePauseMs": 3696,
+        "effectiveInterScenePauseSeconds": 3.696
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#italy"
       ],
       "cueCount": 13,
-      "sceneDurationsSeconds": [
-        14.48,
-        12.325,
-        12.039,
-        10.47,
-        14.393,
-        6.293
+      "sceneSpeechDurationsSeconds": [
+        9.827,
+        8.69,
+        9.154,
+        6.879,
+        10.29,
+        5.081
       ],
+      "sceneDurationsSeconds": [
+        12.475,
+        12.386,
+        12.85,
+        10.574,
+        13.986,
+        7.728
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          12.475,
+          24.861,
+          37.711,
+          48.285,
+          62.272
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/italy/en/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2804989,
-          "sha256": "50c64a9730e1c3563e6562437953cba1239b7779977115638d06824d636bcd2d"
+          "bytes": 2448068,
+          "sha256": "a4abb198c653b6e7fc164036b1dcb6cab093fa4bb2f18ad294050863a243d898"
         },
         "poster": {
           "path": "new-client/italy/en/poster.jpg",
@@ -401,7 +533,7 @@
           "path": "new-client/italy/en/captions.vtt",
           "mimeType": "text/vtt",
           "bytes": 1161,
-          "sha256": "b6e62e9a211bd5fac09dee3b553ff17c802ea940b8796466007445c6db1b08f1"
+          "sha256": "fc8b1e95cb54b44672b8ab6552378207542f5782d7c615e3476e84a13e127984"
         },
         "transcript": {
           "path": "new-client/italy/en/transcript.txt",
@@ -433,32 +565,54 @@
       "title": "Vera | Mission, confidentialité et LCB-FT pour un nouveau client",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.47,
+      "speechDurationSeconds": 68.4,
       "voice": {
         "name": "Thomas",
         "rate": 100,
-        "interScenePauseMs": 1483,
-        "effectiveInterScenePauseSeconds": 1.809
+        "interScenePauseMs": 1920,
+        "effectiveInterScenePauseSeconds": 1.92
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#italy"
       ],
       "cueCount": 16,
-      "sceneDurationsSeconds": [
-        11.598,
-        14.092,
-        12.788,
-        10.18,
-        14.503,
-        6.839
+      "sceneSpeechDurationsSeconds": [
+        7.959,
+        12.396,
+        11.268,
+        9.201,
+        12.579,
+        5.395
       ],
+      "sceneDurationsSeconds": [
+        9.719,
+        14.316,
+        13.188,
+        11.121,
+        14.5,
+        7.155
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          9.719,
+          24.035,
+          37.224,
+          48.345,
+          62.845
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/italy/fr/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2900581,
-          "sha256": "e6fac7754b9de41c40da749d59bfd8af10559e547e7590717649cdb1f4193a36"
+          "bytes": 2721324,
+          "sha256": "89b5cc6037f3c6e2272fb67390691de01ce9ef38c2f313338881802b6c0a6457"
         },
         "poster": {
           "path": "new-client/italy/fr/poster.jpg",
@@ -470,7 +624,7 @@
           "path": "new-client/italy/fr/captions.vtt",
           "mimeType": "text/vtt",
           "bytes": 1445,
-          "sha256": "2bf6a487d8e535f1ac87aabeec43363c29e080808c2f9a787e9d6a4690622804"
+          "sha256": "a86eb90f3ec8190b025256c1c3c35a451de072eebe6fec90ae868ab5429e7830"
         },
         "transcript": {
           "path": "new-client/italy/fr/transcript.txt",
@@ -502,32 +656,54 @@
       "title": "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.254,
+      "speechDurationSeconds": 68.4,
       "voice": {
         "name": "Anna",
         "rate": 100,
-        "interScenePauseMs": 709,
-        "effectiveInterScenePauseSeconds": 0.813
+        "interScenePauseMs": 1076,
+        "effectiveInterScenePauseSeconds": 1.076
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#italy"
       ],
       "cueCount": 15,
-      "sceneDurationsSeconds": [
-        10.679,
-        15.048,
-        11.31,
-        10.038,
-        14.65,
-        8.275
+      "sceneSpeechDurationsSeconds": [
+        8.404,
+        13.814,
+        10.06,
+        9.398,
+        13.965,
+        7.38
       ],
+      "sceneDurationsSeconds": [
+        9.742,
+        14.889,
+        11.135,
+        10.474,
+        15.041,
+        8.718
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          9.742,
+          24.631,
+          35.767,
+          46.241,
+          61.282
+        ]
+      },
       "files": {
         "video": {
           "path": "new-client/italy/de/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 3071325,
-          "sha256": "2b07fd474e2c6572c58e1e699e9790d657e1ad4e93202683758d98f947d698c0"
+          "bytes": 2978473,
+          "sha256": "c115d10da12f177fc379f01e854ec03edeb097ccceb439106fcfc4fbc1f4d479"
         },
         "poster": {
           "path": "new-client/italy/de/poster.jpg",
@@ -539,7 +715,7 @@
           "path": "new-client/italy/de/captions.vtt",
           "mimeType": "text/vtt",
           "bytes": 1333,
-          "sha256": "3f5e952b3881a88fa937ea2d83089163d9d502dd15e71481029fbcee77b3cdef"
+          "sha256": "40829a9f4c655db35e731a1666c0c7f0dafefdea671f5c996746196ebc55300a"
         },
         "transcript": {
           "path": "new-client/italy/de/transcript.txt",
@@ -571,33 +747,55 @@
       "title": "Vera | Dal giornale al campione riproducibile",
       "status": "local_rendered",
       "targetDurationSeconds": 55.0,
-      "speechDurationSeconds": 53.446,
+      "speechDurationSeconds": 53.4,
       "voice": {
         "name": "Alice",
         "rate": 100,
-        "interScenePauseMs": 1723,
-        "effectiveInterScenePauseSeconds": 2.027
+        "interScenePauseMs": 2259,
+        "effectiveInterScenePauseSeconds": 2.259
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/journal-sampling/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        8.941,
-        10.022,
-        10.492,
-        8.141,
-        11.903,
-        5.503
+      "cueCount": 10,
+      "sceneSpeechDurationsSeconds": [
+        4.348,
+        8.737,
+        10.207,
+        5.533,
+        8.77,
+        4.511
       ],
+      "sceneDurationsSeconds": [
+        6.277,
+        10.996,
+        12.466,
+        7.792,
+        11.029,
+        6.44
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.277,
+          17.273,
+          29.739,
+          37.53,
+          48.56
+        ]
+      },
       "files": {
         "video": {
           "path": "journal-sampling/core/it/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2273510,
-          "sha256": "90dd272c6266e8c8f90b00655c8d3de08c644428bfc19f63420708a56ebef412"
+          "bytes": 2058179,
+          "sha256": "06a89d76830a42ded9f2344d2cb8c8231ba705a416c94c25764c4318c42bb96a"
         },
         "poster": {
           "path": "journal-sampling/core/it/poster.jpg",
@@ -608,8 +806,8 @@
         "captions": {
           "path": "journal-sampling/core/it/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 821,
-          "sha256": "0951505a2b345341ab750fcbc28ddd2012cf873eec3480067fbc7b70cfecd3e1"
+          "bytes": 954,
+          "sha256": "32248e7f9d1b2ccdf49139bc58355233973a844240af039b1ea85225fc307565"
         },
         "transcript": {
           "path": "journal-sampling/core/it/transcript.txt",
@@ -641,33 +839,55 @@
       "title": "Vera | From journal to reproducible sample",
       "status": "local_rendered",
       "targetDurationSeconds": 55.0,
-      "speechDurationSeconds": 53.48,
+      "speechDurationSeconds": 53.4,
       "voice": {
         "name": "Samantha",
         "rate": 100,
-        "interScenePauseMs": 1737,
-        "effectiveInterScenePauseSeconds": 2.048
+        "interScenePauseMs": 2274,
+        "effectiveInterScenePauseSeconds": 2.274
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/journal-sampling/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        8.539,
-        10.585,
-        11.534,
-        6.791,
-        11.534,
-        6.017
+      "cueCount": 9,
+      "sceneSpeechDurationsSeconds": [
+        4.266,
+        10.461,
+        10.234,
+        4.764,
+        8.527,
+        3.78
       ],
+      "sceneDurationsSeconds": [
+        6.203,
+        12.734,
+        12.508,
+        7.038,
+        10.801,
+        5.717
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.203,
+          18.937,
+          31.445,
+          38.482,
+          49.283
+        ]
+      },
       "files": {
         "video": {
           "path": "journal-sampling/core/en/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2203519,
-          "sha256": "cbd633069c1f14000d35e344c6e61b95e27755c307bc7fbaa33a204961bb1fae"
+          "bytes": 1987952,
+          "sha256": "56416a7425c0cb9565fed3e1c920ab35a5e86d0eb225304453a7b18072256d9f"
         },
         "poster": {
           "path": "journal-sampling/core/en/poster.jpg",
@@ -678,8 +898,8 @@
         "captions": {
           "path": "journal-sampling/core/en/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 811,
-          "sha256": "748cfd27e7015301743c15460d8d6bdd5b3bc5838718c1e92e516e0af10c8dfc"
+          "bytes": 910,
+          "sha256": "d1eb12bab59f266419976769d1636d49945519d3bf5a36db31bb16148d5d6a3e"
         },
         "transcript": {
           "path": "journal-sampling/core/en/transcript.txt",
@@ -711,33 +931,55 @@
       "title": "Vera | Du journal à un échantillon reproductible",
       "status": "local_rendered",
       "targetDurationSeconds": 55.0,
-      "speechDurationSeconds": 53.203,
+      "speechDurationSeconds": 53.4,
       "voice": {
         "name": "Thomas",
         "rate": 100,
-        "interScenePauseMs": 996,
-        "effectiveInterScenePauseSeconds": 1.161
+        "interScenePauseMs": 1433,
+        "effectiveInterScenePauseSeconds": 1.433
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/journal-sampling/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        7.973,
-        10.68,
-        10.68,
-        8.175,
-        11.682,
-        5.81
+      "cueCount": 12,
+      "sceneSpeechDurationsSeconds": [
+        4.848,
+        10.318,
+        11.43,
+        5.775,
+        9.642,
+        4.223
       ],
+      "sceneDurationsSeconds": [
+        6.364,
+        11.751,
+        12.863,
+        7.208,
+        11.075,
+        5.739
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.364,
+          18.115,
+          30.978,
+          38.186,
+          49.261
+        ]
+      },
       "files": {
         "video": {
           "path": "journal-sampling/core/fr/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2287086,
-          "sha256": "73f2c1af66389b838cf3292e0132899964808ab32f53dbd5e901fc395837e726"
+          "bytes": 2157573,
+          "sha256": "586830164876a60703706b59554da755378baf6eabfaabbfccf7b568c5a2c8c0"
         },
         "poster": {
           "path": "journal-sampling/core/fr/poster.jpg",
@@ -748,8 +990,8 @@
         "captions": {
           "path": "journal-sampling/core/fr/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 887,
-          "sha256": "800d3b3581f6cc64b6447618351c96f762feba1b4a90376c5ebda0fab2c7188d"
+          "bytes": 1088,
+          "sha256": "a8fb93f5a42cf843a9de312bb8fb885cecba9fdfcb84e291df3b9dba093f5946"
         },
         "transcript": {
           "path": "journal-sampling/core/fr/transcript.txt",
@@ -781,33 +1023,55 @@
       "title": "Vera | Vom Journal zur reproduzierbaren Stichprobe",
       "status": "local_rendered",
       "targetDurationSeconds": 55.0,
-      "speechDurationSeconds": 53.335,
+      "speechDurationSeconds": 53.4,
       "voice": {
         "name": "Anna",
         "rate": 100,
-        "interScenePauseMs": 560,
-        "effectiveInterScenePauseSeconds": 0.641
+        "interScenePauseMs": 886,
+        "effectiveInterScenePauseSeconds": 0.886
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/journal-sampling/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        8.612,
-        10.8,
-        10.202,
-        7.214,
-        11.397,
-        6.776
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        6.071,
+        9.414,
+        12.033,
+        6.032,
+        10.64,
+        4.78
       ],
+      "sceneDurationsSeconds": [
+        7.313,
+        10.3,
+        12.919,
+        6.918,
+        11.526,
+        6.023
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          7.313,
+          17.613,
+          30.533,
+          37.451,
+          48.977
+        ]
+      },
       "files": {
         "video": {
           "path": "journal-sampling/core/de/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2315222,
-          "sha256": "4d21bb43e969287270a691e9560d153a3d64bed9da5ebe94fe1f5d77bc17cb09"
+          "bytes": 2237001,
+          "sha256": "297773c4871161988f265d683163b1e2fe805adc6353ced139772f841ca8edca"
         },
         "poster": {
           "path": "journal-sampling/core/de/poster.jpg",
@@ -818,8 +1082,8 @@
         "captions": {
           "path": "journal-sampling/core/de/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 870,
-          "sha256": "4ddcabdf4a328fd296564f03d1df1bfa22959745f8ab09cb549efed500640ae8"
+          "bytes": 1037,
+          "sha256": "8efea61a35b4273953fc81c41d4e044232142be308c4b50d0f376a3655380f58"
         },
         "transcript": {
           "path": "journal-sampling/core/de/transcript.txt",
@@ -851,32 +1115,54 @@
       "title": "Vera | Dalla scrittura campionata al supporto verificato",
       "status": "local_rendered",
       "targetDurationSeconds": 50.0,
-      "speechDurationSeconds": 48.303,
+      "speechDurationSeconds": 48.4,
       "voice": {
         "name": "Alice",
-        "rate": 100,
-        "interScenePauseMs": 470,
-        "effectiveInterScenePauseSeconds": 0.527
+        "rate": 110,
+        "interScenePauseMs": 1525,
+        "effectiveInterScenePauseSeconds": 1.525
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        6.361,
-        7.849,
-        9.68,
-        8.307,
-        11.511,
-        6.292
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        5.129,
+        6.161,
+        11.48,
+        5.475,
+        8.877,
+        3.653
       ],
+      "sceneDurationsSeconds": [
+        6.692,
+        7.686,
+        13.005,
+        7.0,
+        10.402,
+        5.216
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.692,
+          14.377,
+          27.382,
+          34.383,
+          44.784
+        ]
+      },
       "files": {
         "video": {
           "path": "check-entries/core/it/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 1972597,
-          "sha256": "9ce66c64e89b98d34d5b7e45dc8e553ec665f3e832417496aa34abe093c4b68b"
+          "bytes": 1837790,
+          "sha256": "926ceff7987b2983d817a36037d3fce394969d90d50ba35a4054345d5a6d2e83"
         },
         "poster": {
           "path": "check-entries/core/it/poster.jpg",
@@ -887,8 +1173,8 @@
         "captions": {
           "path": "check-entries/core/it/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 873,
-          "sha256": "76047d3fd41b09214b492f97759d24cbf342f4a9b72ed253fb470e82b33ee9e8"
+          "bytes": 1040,
+          "sha256": "44bb9881f6b83c3409cfe670b909812c07fd5823999bc437032093dca18a07c3"
         },
         "transcript": {
           "path": "check-entries/core/it/transcript.txt",
@@ -920,32 +1206,54 @@
       "title": "Vera | From sampled entry to verified support",
       "status": "local_rendered",
       "targetDurationSeconds": 50.0,
-      "speechDurationSeconds": 48.186,
+      "speechDurationSeconds": 48.4,
       "voice": {
         "name": "Samantha",
         "rate": 100,
-        "interScenePauseMs": 1054,
-        "effectiveInterScenePauseSeconds": 1.226
+        "interScenePauseMs": 1512,
+        "effectiveInterScenePauseSeconds": 1.512
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        6.869,
-        9.152,
-        7.39,
-        11.353,
-        10.032,
-        5.203
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        4.683,
+        7.338,
+        7.529,
+        9.112,
+        8.724,
+        3.455
       ],
+      "sceneDurationsSeconds": [
+        6.239,
+        8.849,
+        9.041,
+        10.623,
+        10.236,
+        5.011
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.239,
+          15.089,
+          24.129,
+          34.753,
+          44.989
+        ]
+      },
       "files": {
         "video": {
           "path": "check-entries/core/en/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 1855168,
-          "sha256": "5cb116cb8491ad6e0f25f8e6263ee8cd15ea875548c9262ea6b7ec13202e2674"
+          "bytes": 1718465,
+          "sha256": "8a36b397a04ed70c30726ccdd5ad1689f75c51ddee40183973dfea5394114bbc"
         },
         "poster": {
           "path": "check-entries/core/en/poster.jpg",
@@ -956,8 +1264,8 @@
         "captions": {
           "path": "check-entries/core/en/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 840,
-          "sha256": "c8507681f3b2346cba8ea64aaf64b71f33737d665dd1c4a32338fa34d93f8882"
+          "bytes": 1007,
+          "sha256": "1f78afbd4da7c9dda37f05787ea5b1ab4337e29e67c9ba09115e8c153f736e69"
         },
         "transcript": {
           "path": "check-entries/core/en/transcript.txt",
@@ -989,32 +1297,54 @@
       "title": "Vera | De l’écriture sélectionnée au justificatif vérifié",
       "status": "local_rendered",
       "targetDurationSeconds": 50.0,
-      "speechDurationSeconds": 48.385,
+      "speechDurationSeconds": 48.4,
       "voice": {
         "name": "Thomas",
-        "rate": 110,
-        "interScenePauseMs": 672,
-        "effectiveInterScenePauseSeconds": 0.708
+        "rate": 117,
+        "interScenePauseMs": 921,
+        "effectiveInterScenePauseSeconds": 0.921
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        6.189,
-        9.68,
-        8.9,
-        10.07,
-        10.07,
-        5.091
+      "cueCount": 12,
+      "sceneSpeechDurationsSeconds": [
+        5.196,
+        7.533,
+        8.239,
+        8.854,
+        9.319,
+        4.654
       ],
+      "sceneDurationsSeconds": [
+        6.457,
+        8.454,
+        9.16,
+        9.775,
+        10.24,
+        5.915
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.457,
+          14.911,
+          24.07,
+          33.846,
+          44.085
+        ]
+      },
       "files": {
         "video": {
           "path": "check-entries/core/fr/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 1964730,
-          "sha256": "8203e72cdd692c232ee996cad9d87875e778ef7101d03da9fff8f56f207de203"
+          "bytes": 1879220,
+          "sha256": "5f15e065f5630a9defb829ab8794bb32655118765a23cbc73a893ff656c29f4a"
         },
         "poster": {
           "path": "check-entries/core/fr/poster.jpg",
@@ -1025,8 +1355,8 @@
         "captions": {
           "path": "check-entries/core/fr/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 961,
-          "sha256": "4802dd61b311c6c45baa43d65bfd3c0ad58e1fc117cccf8f6d7deb4b89890556"
+          "bytes": 1162,
+          "sha256": "00730044afe8a9818896605f84479e21045c6c568327d45e98c64e6d6ab94e98"
         },
         "transcript": {
           "path": "check-entries/core/fr/transcript.txt",
@@ -1058,32 +1388,54 @@
       "title": "Vera | Von der Stichprobenbuchung zum geprüften Beleg",
       "status": "local_rendered",
       "targetDurationSeconds": 50.0,
-      "speechDurationSeconds": 48.378,
+      "speechDurationSeconds": 48.4,
       "voice": {
         "name": "Anna",
-        "rate": 110,
-        "interScenePauseMs": 626,
-        "effectiveInterScenePauseSeconds": 0.657
+        "rate": 118,
+        "interScenePauseMs": 875,
+        "effectiveInterScenePauseSeconds": 0.875
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        8.198,
-        9.991,
-        7.398,
-        9.991,
-        10.51,
-        3.911
+      "cueCount": 12,
+      "sceneSpeechDurationsSeconds": [
+        5.804,
+        9.148,
+        8.029,
+        7.802,
+        9.481,
+        3.761
       ],
+      "sceneDurationsSeconds": [
+        7.042,
+        10.023,
+        8.904,
+        8.677,
+        10.356,
+        4.998
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          7.042,
+          17.065,
+          25.969,
+          34.646,
+          45.002
+        ]
+      },
       "files": {
         "video": {
           "path": "check-entries/core/de/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 1964384,
-          "sha256": "5fe1d658c48a4cb37636d618a1c506a6212093f588508d142cecc5eb4b7f551a"
+          "bytes": 1889973,
+          "sha256": "652e32847c18e7c524c2f37978c712c39a658ecd7acd2c29174bd2b4bc913fdb"
         },
         "poster": {
           "path": "check-entries/core/de/poster.jpg",
@@ -1094,8 +1446,8 @@
         "captions": {
           "path": "check-entries/core/de/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 868,
-          "sha256": "3ef95daf2d0ebca13a3d97acfba8d12fb31a20f77e0b8c354d7aee60c8a7cb44"
+          "bytes": 1069,
+          "sha256": "154dd5802b13359c6a5a0283245ff72cb3360a11c3de27f60bb7a1630cdd6052"
         },
         "transcript": {
           "path": "check-entries/core/de/transcript.txt",
@@ -1127,32 +1479,54 @@
       "title": "Vera | Check Entries · Italy · FatturaPA",
       "status": "local_rendered",
       "targetDurationSeconds": 50.0,
-      "speechDurationSeconds": 48.476,
+      "speechDurationSeconds": 48.4,
       "voice": {
         "name": "Samantha",
         "rate": 100,
-        "interScenePauseMs": 1737,
-        "effectiveInterScenePauseSeconds": 2.046
+        "interScenePauseMs": 2273,
+        "effectiveInterScenePauseSeconds": 2.273
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#italy-adapter"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        7.511,
-        8.832,
-        7.559,
-        11.801,
-        9.256,
-        5.041
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        4.474,
+        7.326,
+        6.426,
+        9.112,
+        6.24,
+        3.455
       ],
+      "sceneDurationsSeconds": [
+        6.411,
+        9.599,
+        8.699,
+        11.385,
+        8.513,
+        5.392
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.411,
+          16.01,
+          24.71,
+          36.095,
+          44.608
+        ]
+      },
       "files": {
         "video": {
           "path": "check-entries/italy-fatturapa/en/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 1789372,
-          "sha256": "b321785285dba606529c0fd56a457a5795484f039088bdc6bcc5ef7092fd2436"
+          "bytes": 1572757,
+          "sha256": "b8a754758f9f4b02c7acd98f7ed73ca1221c68202e2801074b992493282ae549"
         },
         "poster": {
           "path": "check-entries/italy-fatturapa/en/poster.jpg",
@@ -1163,8 +1537,8 @@
         "captions": {
           "path": "check-entries/italy-fatturapa/en/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 779,
-          "sha256": "837f1d31c9269769c9a60b90830b60b18685e9b930ebcd2c56e319b98b107bb6"
+          "bytes": 946,
+          "sha256": "fbaa6ad3ba022a2cc24ebe1f914a812facd8001f88bacec456dea2e51a1543ec"
         },
         "transcript": {
           "path": "check-entries/italy-fatturapa/en/transcript.txt",
@@ -1196,32 +1570,54 @@
       "title": "Vera | Écritures · Italie · FatturaPA",
       "status": "local_rendered",
       "targetDurationSeconds": 50.0,
-      "speechDurationSeconds": 48.245,
+      "speechDurationSeconds": 48.4,
       "voice": {
         "name": "Thomas",
         "rate": 100,
-        "interScenePauseMs": 859,
-        "effectiveInterScenePauseSeconds": 0.994
+        "interScenePauseMs": 1257,
+        "effectiveInterScenePauseSeconds": 1.257
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#italy-adapter"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        6.903,
-        9.51,
-        7.381,
-        11.639,
-        9.084,
-        5.484
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        5.044,
+        7.856,
+        7.181,
+        9.979,
+        6.983,
+        5.07
       ],
+      "sceneDurationsSeconds": [
+        6.473,
+        9.114,
+        8.438,
+        11.236,
+        8.241,
+        6.499
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.473,
+          15.586,
+          24.024,
+          35.261,
+          43.501
+        ]
+      },
       "files": {
         "video": {
           "path": "check-entries/italy-fatturapa/fr/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 1805990,
-          "sha256": "959a9d30278fc1a681eb416b8cb35ee32448964efffd50682c788ee9a91fc34f"
+          "bytes": 1696097,
+          "sha256": "db7900bc5e677a72e5321b19f9f37a717571d87235c538d382ffe19d9f7b171b"
         },
         "poster": {
           "path": "check-entries/italy-fatturapa/fr/poster.jpg",
@@ -1232,8 +1628,8 @@
         "captions": {
           "path": "check-entries/italy-fatturapa/fr/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 869,
-          "sha256": "a975feaa3f3f6fee6d8ed0e164787a133d69da72650fc0197813928daf7d4fe8"
+          "bytes": 1036,
+          "sha256": "d7b675c827b8c40ffa3a38da5d01c2dc8e054bb656fda9190e210f07cf7e4e13"
         },
         "transcript": {
           "path": "check-entries/italy-fatturapa/fr/transcript.txt",
@@ -1265,32 +1661,54 @@
       "title": "Vera | Buchungen · Italien · FatturaPA",
       "status": "local_rendered",
       "targetDurationSeconds": 50.0,
-      "speechDurationSeconds": 48.273,
+      "speechDurationSeconds": 48.4,
       "voice": {
         "name": "Anna",
         "rate": 100,
-        "interScenePauseMs": 669,
-        "effectiveInterScenePauseSeconds": 0.766
+        "interScenePauseMs": 1023,
+        "effectiveInterScenePauseSeconds": 1.023
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#italy-adapter"
       ],
-      "cueCount": 6,
-      "sceneDurationsSeconds": [
-        8.809,
-        8.566,
-        7.452,
-        10.794,
-        10.237,
-        4.143
+      "cueCount": 10,
+      "sceneSpeechDurationsSeconds": [
+        5.432,
+        8.717,
+        7.644,
+        8.509,
+        8.876,
+        4.106
       ],
+      "sceneDurationsSeconds": [
+        6.744,
+        9.74,
+        8.668,
+        9.532,
+        9.899,
+        5.418
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.744,
+          16.484,
+          25.151,
+          34.683,
+          44.582
+        ]
+      },
       "files": {
         "video": {
           "path": "check-entries/italy-fatturapa/de/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 1792147,
-          "sha256": "babcfcee84afdde894fdb485fef3ad61fe626f06861f62e9675f80c341e5e922"
+          "bytes": 1704703,
+          "sha256": "012a865b925f363c75f878b49487bd338000a23939c8ed652bed92137c97428c"
         },
         "poster": {
           "path": "check-entries/italy-fatturapa/de/poster.jpg",
@@ -1301,8 +1719,8 @@
         "captions": {
           "path": "check-entries/italy-fatturapa/de/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 796,
-          "sha256": "13ff2b6b7a9088928a7e4840819b881ee1b3b474919f6fac8a5564e6909019e2"
+          "bytes": 929,
+          "sha256": "ddd9188cfa184b062797ec8b7782c32871db0f225273faa22bc0545cfaf2e533"
         },
         "transcript": {
           "path": "check-entries/italy-fatturapa/de/transcript.txt",

@@ -1,25 +1,45 @@
 WEBVTT
 
 1
-00:00:00.800 --> 00:00:07.511
+00:00:00.800 --> 00:00:05.274
 Checking an entry means understanding whether the right document supports it.
 
 2
-00:00:07.511 --> 00:00:16.343
-Vera starts from the sampled journal row and looks first across FatturaPA XML and authorized exports.
+00:00:07.548 --> 00:00:13.482
+Vera starts from the sampled journal row and looks first across FatturaPA XML and
 
 3
-00:00:16.343 --> 00:00:23.902
-It compares amount, date, document number and counterparty while keeping each source visible.
+00:00:13.482 --> 00:00:14.874
+authorized exports.
 
 4
-00:00:23.902 --> 00:00:35.703
-Strong matches move into the supported set. Ambiguous cases remain in the review queue with the reason and the specific document to inspect.
+00:00:17.147 --> 00:00:18.893
+It compares amount, date,
 
 5
-00:00:35.703 --> 00:00:44.959
-The result is a workpaper that links every checked entry to its evidence and keeps exceptions separate.
+00:00:18.893 --> 00:00:23.573
+document number and counterparty while keeping each source visible.
 
 6
-00:00:44.959 --> 00:00:49.200
+00:00:25.846 --> 00:00:28.686
+Strong matches move into the supported set.
+
+7
+00:00:28.686 --> 00:00:31.789
+Ambiguous cases remain in the review queue with
+
+8
+00:00:31.789 --> 00:00:34.958
+the reason and the specific document to inspect.
+
+9
+00:00:37.232 --> 00:00:42.248
+The result is a workpaper that links every checked entry to its evidence and keeps
+
+10
+00:00:42.248 --> 00:00:43.471
+exceptions separate.
+
+11
+00:00:45.745 --> 00:00:49.200
 From a sampled row to support the reviewer can follow.

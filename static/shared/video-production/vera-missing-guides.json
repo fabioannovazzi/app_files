@@ -30,7 +30,7 @@
       "localizations": {
         "it": {
           "title": "Vera | Dai documenti al fascicolo cliente",
-          "narration": "L’edizione Core mostra come costruire il fascicolo di un nuovo cliente partendo dalle fonti. Il modello collega cinque elementi: i documenti ricevuti e la loro provenienza; l’identità del cliente e le persone coinvolte; i servizi richiesti e i fatti dell’incarico; le richieste aperte con le azioni successive; le date e lo storico mantenuti nel tempo. Gli elementi restano distinti ma connessi, così ogni informazione può essere ricondotta al documento o alla decisione da cui nasce. Ogni Paese collega a questa struttura i propri documenti, controlli e regole. Il risultato è un fascicolo leggibile: mostra che cosa è noto, che cosa resta aperto e come il rapporto professionale evolve.",
+          "narration": "L’edizione Core mostra come costruire il fascicolo di un nuovo cliente partendo dai documenti e dalle altre fonti disponibili. Il primo passaggio registra i documenti ricevuti e la loro provenienza. Il secondo collega l’identità del cliente alle persone coinvolte. Il terzo organizza i servizi richiesti e i fatti dell’incarico. Richieste aperte, azioni, date e storico restano distinti ma connessi, così ogni informazione può essere ricondotta alla fonte o alla decisione da cui nasce. Ogni Paese collega i propri documenti, controlli e regole a questa struttura, producendo un fascicolo leggibile che mostra ciò che è noto, ciò che resta aperto e come il rapporto professionale evolve.",
           "onScreen": [
             "Dai documenti al fascicolo",
             "Evidenze · fonte",
@@ -42,7 +42,7 @@
         },
         "en": {
           "title": "Vera | From source documents to a working client file",
-          "narration": "This Core edition shows how to build a new client’s file from source evidence. The model connects five elements: incoming documents and where they came from; client identity and the people involved; requested services and engagement facts; open requests with their next actions; and dates and history maintained over time. The elements remain distinct but connected, so every fact can be traced to the document or decision behind it. Each country maps its own documents, checks and rules onto this shared structure. The result is a readable client file that shows what is known, what remains open and how the professional relationship develops.",
+          "narration": "This Core edition shows how to build a new client’s file from documents and other available source evidence. The first step records the incoming documents and where they came from. The second connects client identity with the people involved. The third organizes requested services and engagement facts. Open requests, actions, dates and history remain distinct but connected, so every fact can be traced to its source or the decision behind it. Each country maps its own documents, checks and rules onto this structure, producing a readable client file that shows what is known, what remains open and how the professional relationship develops.",
           "onScreen": [
             "From documents to client file",
             "Source evidence",
@@ -54,7 +54,7 @@
         },
         "fr": {
           "title": "Vera | Des documents sources au dossier client de travail",
-          "narration": "Cette édition Core montre comment construire le dossier d’un nouveau client à partir des preuves sources. Le modèle relie cinq éléments : les documents reçus et leur provenance ; l’identité du client et les personnes impliquées ; les services demandés et les faits de la mission ; les demandes ouvertes avec les actions suivantes ; enfin les dates et l’historique conservés dans le temps. Les éléments restent distincts mais connectés, afin de rattacher chaque information au document ou à la décision dont elle provient. Chaque pays associe ses documents, contrôles et règles à cette structure commune. Le résultat est un dossier lisible qui montre ce qui est connu, ce qui reste ouvert et comment la relation professionnelle évolue.",
+          "narration": "Cette édition Core montre comment construire le dossier d’un nouveau client à partir des documents et des autres preuves disponibles. La première étape enregistre les documents reçus et leur provenance. La deuxième relie l’identité du client aux personnes impliquées. La troisième organise les services demandés et les faits de la mission. Les demandes ouvertes, les actions, les dates et l’historique restent distincts mais connectés, afin de rattacher chaque information à sa source ou à la décision dont elle provient. Chaque pays associe ses documents, contrôles et règles à cette structure, produisant un dossier lisible qui montre ce qui est connu, ce qui reste ouvert et comment la relation professionnelle évolue.",
           "onScreen": [
             "Des documents au dossier client",
             "Preuves · provenance",
@@ -66,7 +66,7 @@
         },
         "de": {
           "title": "Vera | Von Quelldokumenten zur arbeitsfähigen Mandantenakte",
-          "narration": "Diese Core-Ausgabe zeigt, wie aus Quelldokumenten die Akte eines neuen Mandanten entsteht. Das Modell verbindet fünf Elemente: eingegangene Dokumente und ihre Herkunft; die Identität des Mandanten und beteiligte Personen; gewünschte Leistungen und Auftragsfakten; offene Anfragen mit den nächsten Aktionen; sowie dauerhaft gepflegte Termine und Historie. Die Elemente bleiben getrennt und zugleich verbunden, sodass jede Angabe auf das zugrunde liegende Dokument oder die Entscheidung zurückgeführt werden kann. Jedes Land ordnet seine Dokumente, Prüfungen und Regeln dieser gemeinsamen Struktur zu. Das Ergebnis ist eine lesbare Mandantenakte, die zeigt, was bekannt ist, was offen bleibt und wie sich die Auftragsbeziehung entwickelt.",
+          "narration": "Diese Core-Ausgabe zeigt, wie aus Dokumenten und anderen verfügbaren Nachweisen die Akte eines neuen Mandanten entsteht. Der erste Schritt erfasst die eingegangenen Dokumente und ihre Herkunft. Der zweite verbindet die Identität des Mandanten mit den beteiligten Personen. Der dritte ordnet gewünschte Leistungen und Auftragsfakten. Offene Anfragen, Aktionen, Termine und Historie bleiben getrennt und zugleich verbunden, sodass jede Angabe auf ihre Quelle oder die zugrunde liegende Entscheidung zurückgeführt werden kann. Jedes Land ordnet seine Dokumente, Prüfungen und Regeln dieser Struktur zu und erzeugt eine lesbare Mandantenakte, die zeigt, was bekannt ist, was offen bleibt und wie sich die Auftragsbeziehung entwickelt.",
           "onScreen": [
             "Von Dokumenten zur Mandantenakte",
             "Nachweise · Herkunft",

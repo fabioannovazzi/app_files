@@ -1,61 +1,57 @@
 WEBVTT
 
 1
-00:00:00.800 --> 00:00:02.827
+00:00:00.800 --> 00:00:02.739
 Diese Core-Ausgabe zeigt,
 
 2
-00:00:02.827 --> 00:00:08.018
-wie aus Quelldokumenten die Akte eines neuen Mandanten entsteht.
+00:00:02.739 --> 00:00:05.998
+wie aus Dokumenten und anderen verfügbaren
 
 3
-00:00:08.018 --> 00:00:10.045
-Das Modell verbindet fünf
+00:00:05.998 --> 00:00:09.954
+Nachweisen die Akte eines neuen Mandanten entsteht.
 
 4
-00:00:10.400 --> 00:00:13.879
-Elemente: eingegangene Dokumente und ihre Herkunft;
+00:00:10.917 --> 00:00:15.799
+Der erste Schritt erfasst die eingegangenen Dokumente und ihre Herkunft.
 
 5
-00:00:13.879 --> 00:00:17.426
-die Identität des Mandanten und beteiligte Personen;
+00:00:16.763 --> 00:00:22.144
+Der zweite verbindet die Identität des Mandanten mit den beteiligten Personen.
 
 6
-00:00:17.426 --> 00:00:20.223
-gewünschte Leistungen und Auftragsfakten;
+00:00:23.107 --> 00:00:27.443
+Der dritte ordnet gewünschte Leistungen und Auftragsfakten.
 
 7
-00:00:20.578 --> 00:00:23.841
-offene Anfragen mit den nächsten Aktionen;
+00:00:28.406 --> 00:00:30.345
+Offene Anfragen, Aktionen,
 
 8
-00:00:23.841 --> 00:00:29.823
-sowie dauerhaft gepflegte Termine und Historie. Die Elemente bleiben getrennt
+00:00:30.345 --> 00:00:34.893
+Termine und Historie bleiben getrennt und zugleich verbunden,
 
 9
-00:00:30.178 --> 00:00:31.980
-und zugleich verbunden,
+00:00:34.893 --> 00:00:40.410
+sodass jede Angabe auf ihre Quelle oder die zugrunde liegende Entscheidung
 
 10
-00:00:31.980 --> 00:00:37.856
-sodass jede Angabe auf das zugrunde liegende Dokument oder die Entscheidung
+00:00:40.410 --> 00:00:42.348
+zurückgeführt werden kann.
 
 11
-00:00:37.856 --> 00:00:39.423
-zurückgeführt werden
+00:00:43.311 --> 00:00:45.973
+Jedes Land ordnet seine Dokumente,
 
 12
-00:00:39.778 --> 00:00:43.225
-kann. Jedes Land ordnet seine Dokumente,
+00:00:45.973 --> 00:00:52.156
+Prüfungen und Regeln dieser Struktur zu und erzeugt eine lesbare Mandantenakte,
 
 13
-00:00:43.225 --> 00:00:49.601
-Prüfungen und Regeln dieser gemeinsamen Struktur zu. Das Ergebnis ist eine
+00:00:52.156 --> 00:00:54.269
+die zeigt, was bekannt ist,
 
 14
-00:00:49.956 --> 00:00:54.047
-lesbare Mandantenakte, die zeigt, was bekannt ist,
-
-15
-00:00:54.047 --> 00:00:59.201
+00:00:54.269 --> 00:00:59.200
 was offen bleibt und wie sich die Auftragsbeziehung entwickelt.

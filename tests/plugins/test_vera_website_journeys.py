@@ -858,6 +858,17 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
             assert localization["title"]
             assert localization["narration"]
             assert len(localization["onScreen"]) == 6
+            narration_sentences = [
+                sentence.strip()
+                for sentence in re.split(
+                    r"(?<=[.!?])\s+", localization["narration"].strip()
+                )
+                if sentence.strip()
+            ]
+            assert len(narration_sentences) >= len(concept["scenes"])
+            assert all(
+                re.search(r"[.!?]$", sentence) for sentence in narration_sentences
+            )
             if concept["scope"] == "core":
                 core_script = " ".join(
                     (
@@ -951,16 +962,30 @@ def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
         else:
             assert asset["scope"] == "country"
             assert asset["jurisdiction"] == "IT"
-        if asset["module"] == "new-client":
-            assert asset["cueCount"] > 6
-        else:
-            assert asset["cueCount"] == 6
+        assert asset["cueCount"] >= 6
         assert asset["media"]["videoCodec"] == "h264"
         assert asset["media"]["audioCodec"] == "aac"
         assert asset["media"]["width"] == 1280
         assert asset["media"]["height"] == 720
         assert asset["media"]["frameRate"] == "30/1"
         assert asset["media"]["durationSeconds"] == asset["targetDurationSeconds"]
+        assert len(asset["sceneSpeechDurationsSeconds"]) == 6
+        assert all(duration > 0 for duration in asset["sceneSpeechDurationsSeconds"])
+        transition_safety = asset["transitionSafety"]
+        assert transition_safety["sentenceBoundaryOnly"] is True
+        assert transition_safety["visualCutPlacement"] == "inter-scene-silence-midpoint"
+        assert transition_safety["minimumInterSceneSilenceSeconds"] >= 0.8
+        assert transition_safety["validatedSilenceMarginSeconds"] >= 0.2
+        assert transition_safety["maximumValidatedVolumeDb"] <= -45.0
+        assert len(transition_safety["transitionSeconds"]) == 5
+        cumulative_scene_seconds = 0.0
+        expected_transitions = []
+        for scene_duration in asset["sceneDurationsSeconds"][:-1]:
+            cumulative_scene_seconds += scene_duration
+            expected_transitions.append(cumulative_scene_seconds)
+        assert transition_safety["transitionSeconds"] == pytest.approx(
+            expected_transitions, abs=0.01
+        )
         assert set(asset["files"]) == {
             "video",
             "poster",
@@ -989,17 +1014,16 @@ def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
         assert poster_path.read_bytes()[:2] == b"\xff\xd8"
         assert captions_path.read_text(encoding="utf-8").startswith("WEBVTT\n")
         assert " --> " in captions_path.read_text(encoding="utf-8")
-        if asset["module"] == "new-client":
-            cues = _read_vtt_cues(captions_path)
-            assert len(cues) == asset["cueCount"]
-            previous_end = 0.0
-            for start, end, text in cues:
-                duration = end - start
-                assert start >= previous_end
-                assert duration >= 1.0
-                assert len(text) <= 84
-                assert len(text) / duration <= 20.0
-                previous_end = end
+        cues = _read_vtt_cues(captions_path)
+        assert len(cues) == asset["cueCount"]
+        previous_end = 0.0
+        for start, end, text in cues:
+            duration = end - start
+            assert start >= previous_end
+            assert duration >= 1.0
+            assert len(text) <= 84
+            assert len(text) / duration <= 20.0
+            previous_end = end
         transcript = transcript_path.read_text(encoding="utf-8")
         assert asset["title"] in transcript
         if asset["scope"] == "core":

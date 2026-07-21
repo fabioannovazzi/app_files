@@ -1,25 +1,45 @@
 WEBVTT
 
 1
-00:00:00.800 --> 00:00:06.869
+00:00:00.800 --> 00:00:05.483
 Checking an entry means understanding whether the available evidence supports it.
 
 2
-00:00:06.869 --> 00:00:16.021
-Vera starts from the sampled journal row and searches the documents provided and any authorized archives or exports.
+00:00:06.995 --> 00:00:12.355
+Vera starts from the sampled journal row and searches the documents provided and any
 
 3
-00:00:16.021 --> 00:00:23.411
-It compares amount, date, document number, description and counterparty while keeping every source visible.
+00:00:12.355 --> 00:00:14.333
+authorized archives or exports.
 
 4
-00:00:23.411 --> 00:00:34.765
-Strong matches move into the supported set. Ambiguous cases remain in the review queue with the reason and the specific document to inspect.
+00:00:15.844 --> 00:00:18.828
+It compares amount, date, document number,
 
 5
-00:00:34.765 --> 00:00:44.797
-The result is a workpaper that links every checked entry to its evidence, separates exceptions and preserves the verification path.
+00:00:18.828 --> 00:00:23.373
+description and counterparty while keeping every source visible.
 
 6
-00:00:44.797 --> 00:00:49.200
+00:00:24.885 --> 00:00:27.724
+Strong matches move into the supported set.
+
+7
+00:00:27.724 --> 00:00:30.828
+Ambiguous cases remain in the review queue with
+
+8
+00:00:30.828 --> 00:00:33.997
+the reason and the specific document to inspect.
+
+9
+00:00:35.509 --> 00:00:40.408
+The result is a workpaper that links every checked entry to its evidence,
+
+10
+00:00:40.408 --> 00:00:44.233
+separates exceptions and preserves the verification path.
+
+11
+00:00:45.745 --> 00:00:49.200
 From a sampled row to support the reviewer can follow.
