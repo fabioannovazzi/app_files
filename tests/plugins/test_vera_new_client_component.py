@@ -1827,7 +1827,7 @@ def test_new_client_public_page_explains_one_operational_journey() -> None:
         "Privacy",
         "Informativa AI",
         "Fascicolo AML",
-        "Il fascicolo mostra dove siamo e che cosa viene dopo.",
+        "Il fascicolo mostra lo stato del lavoro e ciò che va rivisto.",
         'id="prompt-example"',
     ):
         assert snippet.casefold() in page.casefold()
