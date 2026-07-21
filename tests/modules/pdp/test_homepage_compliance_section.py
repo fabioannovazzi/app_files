@@ -42,9 +42,8 @@ def test_italian_homepage_explains_the_llm_boundary_without_jargon() -> None:
     blurb = _get_landing_page_content("it")["compliance"]["principles"][2]["blurb"]
 
     assert blurb == (
-        "Alcune attività richiedono di interpretare il testo originale o informazioni "
-        "specifiche del caso. In questi casi, i contenuti necessari vengono inclusi "
-        "nel contesto dell'LLM."
+        "Alcune attività richiedono di interpretare il significato dei dati. In questi "
+        "casi, i contenuti necessari vengono inclusi nel contesto dell'LLM."
     )
     assert "attività semantiche" not in blurb
 
