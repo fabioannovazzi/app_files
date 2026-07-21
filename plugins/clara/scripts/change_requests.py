@@ -10,6 +10,8 @@ import json
 import logging
 import os
 import re
+import ssl
+import stat
 import sys
 import tempfile
 import time
@@ -48,11 +50,16 @@ ALLOWED_REMOTE_HOSTS = frozenset({"mparanza.com", "www.mparanza.com"})
 LOCAL_TEST_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
 LANGUAGES = ("it", "en", "fr", "de")
 _CHANGE_REQUEST_ID = re.compile(r"^CR-[1-9]\d*$")
+_CA_BCONS_NOT_CRITICAL_VERIFY_CODE = 89
 LOGGER = logging.getLogger(__name__)
 
 
 class ChangeRequestError(RuntimeError):
     """Raised when a change-request operation cannot be completed safely."""
+
+
+class _StateLockContentionError(OSError):
+    """Raised when a valid state lock is already held by another process."""
 
 
 def _normalize_base_url(base_url: str) -> str:
@@ -140,48 +147,172 @@ def _stable_state_dir(plugin_name: str) -> Path:
         if override
         else Path.home() / ".codex" / "mparanza" / "change-requests"
     )
-    return base / plugin_name
+    return (base / plugin_name).resolve()
 
 
-def _state_paths(plugin_name: str, plugin_data: Path | None) -> list[Path]:
-    paths = [_stable_state_dir(plugin_name) / STATE_FILE_NAME]
+def _temporary_state_dir(plugin_name: str) -> Path:
+    """Return a deterministic private fallback for read-only home directories."""
+
+    get_uid = getattr(os, "getuid", None)
+    user_identity = (
+        str(get_uid())
+        if callable(get_uid)
+        else hashlib.sha256(str(Path.home()).encode("utf-8")).hexdigest()[:16]
+    )
+    stable_identity = str(_stable_state_dir(plugin_name).absolute())
+    state_key = hashlib.sha256(
+        f"{user_identity}:{stable_identity}".encode("utf-8")
+    ).hexdigest()[:20]
+    return (
+        Path(tempfile.gettempdir())
+        / f"mparanza-change-requests-{state_key}"
+        / plugin_name
+    )
+
+
+def _state_directories(plugin_name: str, plugin_data: Path | None) -> list[Path]:
+    directories = [_stable_state_dir(plugin_name)]
     if plugin_data is not None:
-        explicit = (
-            plugin_data.expanduser().resolve() / "change-requests" / STATE_FILE_NAME
-        )
-        if explicit not in paths:
-            paths.append(explicit)
-    return paths
+        explicit = (plugin_data.expanduser() / "change-requests").resolve()
+        if explicit not in directories:
+            directories.append(explicit)
+    temporary = _temporary_state_dir(plugin_name)
+    if temporary not in directories:
+        directories.append(temporary)
+    return directories
+
+
+def _prepare_private_temporary_directory(state_dir: Path) -> None:
+    """Create or validate a private, user-owned temporary state directory."""
+
+    get_uid = getattr(os, "getuid", None)
+    expected_uid = get_uid() if callable(get_uid) else None
+    for directory in (state_dir.parent, state_dir):
+        try:
+            directory.mkdir(mode=0o700)
+        except FileExistsError:
+            pass
+        details = directory.lstat()
+        if not stat.S_ISDIR(details.st_mode):
+            raise OSError(f"Unsafe temporary state path: {directory}")
+        if expected_uid is not None and details.st_uid != expected_uid:
+            raise PermissionError(
+                f"Temporary state path has the wrong owner: {directory}"
+            )
+        directory.chmod(0o700)
+        if stat.S_IMODE(directory.lstat().st_mode) != 0o700:
+            raise PermissionError(f"Temporary state path is not private: {directory}")
+
+
+def _open_state_lock(state_dir: Path) -> tuple[Any, Any]:
+    """Open and acquire one state lock without following a lock-file symlink."""
+
+    lock_path = state_dir / ".state.lock"
+    flags = os.O_RDWR | os.O_CREAT
+    flags |= getattr(os, "O_BINARY", 0)
+    flags |= getattr(os, "O_CLOEXEC", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(lock_path, flags, 0o600)
+    try:
+        details = os.fstat(descriptor)
+        if not stat.S_ISREG(details.st_mode):
+            raise OSError(f"Unsafe state lock path: {lock_path}")
+        get_uid = getattr(os, "getuid", None)
+        if callable(get_uid) and details.st_uid != get_uid():
+            raise PermissionError(f"State lock has the wrong owner: {lock_path}")
+        fchmod = getattr(os, "fchmod", None)
+        if callable(fchmod):
+            fchmod(descriptor, 0o600)
+        else:
+            lock_path.chmod(0o600)
+        lock_file = os.fdopen(descriptor, "r+b")
+        descriptor = -1
+        try:
+            if sys.platform == "win32":
+                lock_module = importlib.import_module("msvcrt")
+                lock_file.seek(0)
+                if not lock_file.read(1):
+                    lock_file.write(b"\0")
+                    lock_file.flush()
+                lock_file.seek(0)
+                lock_module.locking(lock_file.fileno(), lock_module.LK_LOCK, 1)
+            else:
+                lock_module = importlib.import_module("fcntl")
+                lock_module.flock(lock_file.fileno(), lock_module.LOCK_EX)
+        except OSError as exc:
+            lock_file.close()
+            raise _StateLockContentionError(
+                f"Change-request state lock is busy: {lock_path}"
+            ) from exc
+        return lock_file, lock_module
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+
+
+def _state_paths(state_directories: list[Path]) -> list[Path]:
+    return [directory / STATE_FILE_NAME for directory in state_directories]
+
+
+def _release_state_lock(lock: tuple[Any, Any]) -> None:
+    lock_file, lock_module = lock
+    try:
+        if sys.platform == "win32":
+            lock_file.seek(0)
+            lock_module.locking(lock_file.fileno(), lock_module.LK_UNLCK, 1)
+        else:
+            lock_module.flock(lock_file.fileno(), lock_module.LOCK_UN)
+    finally:
+        lock_file.close()
 
 
 @contextmanager
-def _locked_state(plugin_name: str) -> Iterator[None]:
-    """Serialize receipt mutations across parallel local Codex processes."""
+def _locked_state(plugin_name: str, plugin_data: Path | None) -> Iterator[list[Path]]:
+    """Serialize mutations while preserving every readable state replica."""
 
-    lock_path = _stable_state_dir(plugin_name) / ".state.lock"
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-    with lock_path.open("a+b") as lock_file:
-        lock_path.chmod(0o600)
-        if sys.platform == "win32":
-            msvcrt = importlib.import_module("msvcrt")
-            lock_file.seek(0)
-            if not lock_file.read(1):
-                lock_file.write(b"\0")
-                lock_file.flush()
-            lock_file.seek(0)
-            msvcrt.locking(lock_file.fileno(), msvcrt.LK_LOCK, 1)
-            try:
-                yield
-            finally:
-                lock_file.seek(0)
-                msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
-            return
-        fcntl = importlib.import_module("fcntl")
-        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+    temporary_state_dir = _temporary_state_dir(plugin_name)
+    state_directories: list[Path] = []
+    lock_candidates: list[Path] = []
+    errors: list[OSError] = []
+    for state_dir in _state_directories(plugin_name, plugin_data):
+        is_temporary = state_dir == temporary_state_dir
+        if not is_temporary:
+            state_directories.append(state_dir)
         try:
-            yield
-        finally:
-            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+            if is_temporary:
+                _prepare_private_temporary_directory(state_dir)
+            else:
+                state_dir.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            errors.append(exc)
+            continue
+        lock_candidates.append(state_dir)
+
+    locks: list[tuple[Any, Any]] = []
+    for state_dir in sorted(lock_candidates, key=str):
+        try:
+            lock = _open_state_lock(state_dir)
+        except _StateLockContentionError as exc:
+            for acquired_lock in reversed(locks):
+                _release_state_lock(acquired_lock)
+            raise ChangeRequestError(
+                "Change-request state is busy; retry the operation."
+            ) from exc
+        except OSError as exc:
+            errors.append(exc)
+            continue
+        locks.append(lock)
+        if state_dir == temporary_state_dir:
+            state_directories.append(state_dir)
+    if not locks:
+        raise ChangeRequestError(
+            "Could not access a writable change-request state directory."
+        ) from (errors[0] if errors else None)
+    try:
+        yield state_directories
+    finally:
+        for lock in reversed(locks):
+            _release_state_lock(lock)
 
 
 def _empty_state(plugin_name: str) -> dict[str, Any]:
@@ -211,12 +342,31 @@ def _read_state(path: Path, plugin_name: str) -> dict[str, Any] | None:
     return payload
 
 
+def _entry_has_receipt(entry: Mapping[str, Any]) -> bool:
+    request_id = entry.get("change_request_id")
+    token = entry.get("status_token")
+    return (
+        isinstance(request_id, str)
+        and _CHANGE_REQUEST_ID.fullmatch(request_id) is not None
+        and isinstance(token, str)
+        and bool(token)
+        and entry.get("status") in {"open", "fixed"}
+    )
+
+
 def _merge_entry(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
+    left_has_receipt = _entry_has_receipt(left)
+    right_has_receipt = _entry_has_receipt(right)
     left_updated = float(left.get("updated_at", 0) or 0)
     right_updated = float(right.get("updated_at", 0) or 0)
-    older, newer = (left, right) if left_updated <= right_updated else (right, left)
+    if left_has_receipt != right_has_receipt:
+        older, newer = (right, left) if left_has_receipt else (left, right)
+    else:
+        older, newer = (left, right) if left_updated <= right_updated else (right, left)
     merged = dict(older)
     merged.update(newer)
+    if left_has_receipt or right_has_receipt:
+        merged.pop("pending_payload", None)
     notified = [
         value
         for value in (left.get("fixed_notified_at"), right.get("fixed_notified_at"))
@@ -227,10 +377,13 @@ def _merge_entry(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
     return merged
 
 
-def _load_state(plugin_name: str, plugin_data: Path | None) -> dict[str, Any]:
+def _load_state(
+    plugin_name: str,
+    state_directories: list[Path],
+) -> dict[str, Any]:
     entries: dict[str, dict[str, Any]] = {}
     prompt_reservations: list[float] = []
-    for path in _state_paths(plugin_name, plugin_data):
+    for path in _state_paths(state_directories):
         state = _read_state(path, plugin_name)
         if state is None:
             continue
@@ -294,11 +447,12 @@ def _write_one_state(path: Path, state: dict[str, Any]) -> None:
 
 
 def _write_state(
-    state: dict[str, Any], plugin_name: str, plugin_data: Path | None
+    state: dict[str, Any],
+    state_directories: list[Path],
 ) -> None:
     errors: list[OSError] = []
     written = 0
-    for path in _state_paths(plugin_name, plugin_data):
+    for path in _state_paths(state_directories):
         try:
             _write_one_state(path, state)
         except OSError as exc:
@@ -362,12 +516,50 @@ def _response_json(response: Any) -> dict[str, Any]:
     return payload
 
 
+def _is_noncritical_ca_verification_error(exc: BaseException) -> bool:
+    """Return whether a URL failure wraps OpenSSL verification error 89."""
+
+    reason = exc.reason if isinstance(exc, urllib.error.URLError) else exc
+    return (
+        isinstance(reason, ssl.SSLCertVerificationError)
+        and getattr(reason, "verify_code", None) == _CA_BCONS_NOT_CRITICAL_VERIFY_CODE
+    )
+
+
+def _is_mparanza_https_request(request: urllib.request.Request) -> bool:
+    """Return whether a request targets the fixed remote feedback hosts."""
+
+    parts = urllib.parse.urlsplit(request.full_url)
+    host = (parts.hostname or "").lower()
+    return (
+        parts.scheme == "https"
+        and host in ALLOWED_REMOTE_HOSTS
+        and parts.port in {None, 443}
+    )
+
+
+def _urlopen_with_noncritical_ca_compatibility(
+    request: urllib.request.Request, *, timeout_seconds: float
+) -> Any:
+    """Open Mparanza HTTPS with pre-Python-3.13 X.509 strictness."""
+
+    if not _is_mparanza_https_request(request):
+        raise ValueError("CA compatibility is available only for Mparanza HTTPS.")
+    context = ssl.create_default_context()
+    context.verify_flags &= ~ssl.VERIFY_X509_STRICT
+    return urllib.request.urlopen(  # nosec B310
+        request,
+        timeout=timeout_seconds,
+        context=context,
+    )
+
+
 def _post_json(
     base_url: str,
     path: str,
     payload: Mapping[str, Any],
     *,
-    opener: Callable[..., Any],
+    opener: Callable[..., Any] | None,
     timeout_seconds: float,
 ) -> dict[str, Any]:
     data = _canonical_bytes(payload)
@@ -382,8 +574,21 @@ def _post_json(
         },
     )
     try:
-        with opener(request, timeout=timeout_seconds) as response:
-            return _response_json(response)
+        active_opener = urllib.request.urlopen if opener is None else opener
+        try:
+            with active_opener(request, timeout=timeout_seconds) as response:
+                return _response_json(response)
+        except (OSError, TimeoutError, urllib.error.URLError) as exc:
+            if (
+                opener is None
+                and _is_mparanza_https_request(request)
+                and _is_noncritical_ca_verification_error(exc)
+            ):
+                with _urlopen_with_noncritical_ca_compatibility(
+                    request, timeout_seconds=timeout_seconds
+                ) as response:
+                    return _response_json(response)
+            raise
     except urllib.error.HTTPError as exc:
         try:
             detail = _response_json(exc).get("detail")
@@ -491,8 +696,8 @@ def _reserve_entry(
     request_without_id: Mapping[str, Any],
     now: float,
 ) -> dict[str, Any]:
-    with _locked_state(plugin_name):
-        state = _load_state(plugin_name, plugin_data)
+    with _locked_state(plugin_name, plugin_data) as state_directories:
+        state = _load_state(plugin_name, state_directories)
         entry, _created = _find_or_create_entry(
             state,
             kind=kind,
@@ -501,7 +706,7 @@ def _reserve_entry(
             request_without_id=request_without_id,
             now=now,
         )
-        _write_state(state, plugin_name, plugin_data)
+        _write_state(state, state_directories)
         return dict(entry)
 
 
@@ -544,10 +749,11 @@ def _persist_receipt(
     plugin_data: Path | None,
     submission_id: str,
     receipt: Mapping[str, Any],
+    reserved_entry: Mapping[str, Any] | None,
     now: float,
 ) -> dict[str, Any]:
-    with _locked_state(plugin_name):
-        state = _load_state(plugin_name, plugin_data)
+    with _locked_state(plugin_name, plugin_data) as state_directories:
+        state = _load_state(plugin_name, state_directories)
         entry = next(
             (
                 candidate
@@ -557,12 +763,18 @@ def _persist_receipt(
             None,
         )
         if entry is None:
-            raise ChangeRequestError("The reserved change request is missing.")
+            if (
+                reserved_entry is None
+                or reserved_entry.get("submission_id") != submission_id
+            ):
+                raise ChangeRequestError("The reserved change request is missing.")
+            entry = dict(reserved_entry)
+            state["requests"].append(entry)
         existing = _stored_receipt(entry)
         if existing is not None:
             return existing
         stored = _save_receipt(entry, receipt, now=now)
-        _write_state(state, plugin_name, plugin_data)
+        _write_state(state, state_directories)
         return stored
 
 
@@ -576,8 +788,8 @@ def reserve_suggestion_prompt(
 
     plugin_name, _plugin_version = _read_plugin_identity(plugin_root)
     checked_at = time.time() if now is None else now
-    with _locked_state(plugin_name):
-        state = _load_state(plugin_name, plugin_data)
+    with _locked_state(plugin_name, plugin_data) as state_directories:
+        state = _load_state(plugin_name, state_directories)
         reserved_at = state.get(PROMPT_RESERVED_AT_FIELD)
         ask = (
             reserved_at is None
@@ -588,7 +800,7 @@ def reserve_suggestion_prompt(
             state[PROMPT_RESERVED_AT_FIELD] = checked_at
         # These paths are replicas: one durable write preserves the cooldown, and
         # the next successful load/write cycle repairs a temporarily failed replica.
-        _write_state(state, plugin_name, plugin_data)
+        _write_state(state, state_directories)
     next_eligible_at = float(reserved_at) + PROMPT_COOLDOWN_SECONDS
     return {
         "ask": ask,
@@ -605,7 +817,7 @@ def _submit_text_request(
     kind: str,
     plugin_data: Path | None = None,
     base_url: str = DEFAULT_BASE_URL,
-    opener: Callable[..., Any] = urllib.request.urlopen,
+    opener: Callable[..., Any] | None = None,
     now: float | None = None,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
@@ -647,6 +859,7 @@ def _submit_text_request(
         plugin_data=plugin_data,
         submission_id=str(entry["submission_id"]),
         receipt=_validate_receipt(response),
+        reserved_entry=entry,
         now=checked_at,
     )
 
@@ -657,7 +870,7 @@ def submit_problem(
     *,
     plugin_data: Path | None = None,
     base_url: str = DEFAULT_BASE_URL,
-    opener: Callable[..., Any] = urllib.request.urlopen,
+    opener: Callable[..., Any] | None = None,
     now: float | None = None,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
@@ -681,7 +894,7 @@ def submit_suggestion(
     *,
     plugin_data: Path | None = None,
     base_url: str = DEFAULT_BASE_URL,
-    opener: Callable[..., Any] = urllib.request.urlopen,
+    opener: Callable[..., Any] | None = None,
     now: float | None = None,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
@@ -706,7 +919,7 @@ def start_interview(
     language: str = "it",
     plugin_data: Path | None = None,
     base_url: str = DEFAULT_BASE_URL,
-    opener: Callable[..., Any] = urllib.request.urlopen,
+    opener: Callable[..., Any] | None = None,
     browser_opener: Callable[[str], Any] = webbrowser.open,
     now: float | None = None,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
@@ -752,6 +965,7 @@ def start_interview(
             plugin_data=plugin_data,
             submission_id=str(entry["submission_id"]),
             receipt=_validate_interview_receipt(response),
+            reserved_entry=entry,
             now=checked_at,
         )
     interview_url = receipt.get("interview_url")
@@ -811,7 +1025,7 @@ def check_fixed_requests(
     plugin_root: Path,
     plugin_data: Path | None,
     *,
-    opener: Callable[..., Any] = urllib.request.urlopen,
+    opener: Callable[..., Any] | None = None,
     now: float | None = None,
     base_url: str = DEFAULT_BASE_URL,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
@@ -820,8 +1034,8 @@ def check_fixed_requests(
 
     try:
         plugin_name, _plugin_version = _read_plugin_identity(plugin_root)
-        with _locked_state(plugin_name):
-            state = _load_state(plugin_name, plugin_data)
+        with _locked_state(plugin_name, plugin_data) as state_directories:
+            state = _load_state(plugin_name, state_directories)
             pending = [
                 dict(entry)
                 for entry in state["requests"]
@@ -830,7 +1044,7 @@ def check_fixed_requests(
                 and entry.get("fixed_notified_at") is None
             ]
             if not pending:
-                _write_state(state, plugin_name, plugin_data)
+                _write_state(state, state_directories)
         if not pending:
             return None
         checked_at = time.time() if now is None else now
@@ -856,8 +1070,8 @@ def check_fixed_requests(
                 if row.get("found"):
                     updates_by_id[row["change_request_id"]] = row
         newly_fixed: list[dict[str, Any]] = []
-        with _locked_state(plugin_name):
-            state = _load_state(plugin_name, plugin_data)
+        with _locked_state(plugin_name, plugin_data) as state_directories:
+            state = _load_state(plugin_name, state_directories)
             for entry in state["requests"]:
                 request_id = entry.get("change_request_id")
                 row = updates_by_id.get(str(request_id))
@@ -870,7 +1084,7 @@ def check_fixed_requests(
                 if entry.get("status") == "fixed":
                     entry["fixed_notified_at"] = checked_at
                     newly_fixed.append(dict(entry))
-            _write_state(state, plugin_name, plugin_data)
+            _write_state(state, state_directories)
     except (ChangeRequestError, OSError, TypeError, ValueError):
         return None
     if not newly_fixed:

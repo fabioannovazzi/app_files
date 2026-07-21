@@ -63,7 +63,13 @@ REQUIRED_FEEDBACK_HEADING = "## Plugin Improvement Feedback"
 LOCAL_FEEDBACK_SNIPPET = "Keep the improvement note local to chat or run artifacts."
 TRANSMITTED_FEEDBACK_PLUGINS = frozenset({"clara", "vera"})
 TRANSMITTED_FEEDBACK_SNIPPETS = (
-    "Should I transmit this to the developer so we fix it?",
+    "Should I transmit this technical problem to the developer so we can fix it?",
+    "Do not continue with a chat interview, offer a fallback, or ask any",
+    "does not authorize transmission of the user's improvement suggestion.",
+    "Only in a later turn, after the failure-report choice has been handled",
+    "credentials, secrets, or other identifying information.",
+    "obtain separate suggestion-transmission consent.",
+    "Should I transmit this suggestion to the developer so we can improve",
     "scripts/change_requests.py submit-problem",
     "scripts/change_requests.py reserve-suggestion-prompt",
     "scripts/change_requests.py submit-suggestion",
