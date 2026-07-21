@@ -2901,6 +2901,37 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "cta_label": "See how your data is handled",
             "cta_href": "/data-handling",
         },
+        "compliance": {
+            "id": "compliance",
+            "title": "Compliant by design.",
+            "lead": (
+                "Privacy depends on what reaches the model—not on what remains "
+                "on your computer."
+            ),
+            "description": (
+                "Vera and Clara can use local scripts to extract, calculate, "
+                "reconcile, filter, and aggregate information before Codex needs "
+                "to reason about it. The LLM can often work from a focused result "
+                "instead of receiving the complete source files."
+            ),
+            "principles": [
+                {
+                    "title": "Work locally",
+                    "blurb": "Complete datasets and mechanical processing can remain on your computer.",
+                },
+                {
+                    "title": "Give Codex the useful result",
+                    "blurb": "The plugin defines which outputs Codex needs for the professional task.",
+                },
+                {
+                    "title": "Keep the boundary honest",
+                    "blurb": "Some semantic tasks require original language or case-specific facts. That material may enter the LLM context; the plugin does not claim otherwise.",
+                },
+            ],
+            "closing": "Less data in the LLM context. No additional Mparanza intermediary. A simpler compliance perimeter.",
+            "cta_label": "See how your data is handled",
+            "cta_href": "/data-handling",
+        },
         "bridge": {
             "id": "plugins",
             "title": "Codex by design.",
@@ -3064,6 +3095,29 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "Codex che già usi. I tuoi prompt, file e risultati non passano "
                 "attraverso Mparanza."
             ),
+            "cta_label": "Scopri come vengono gestiti i tuoi dati",
+            "cta_href": "/data-handling",
+        },
+        "compliance": {
+            "id": "compliance",
+            "title": "Conformità per progettazione.",
+            "lead": "La privacy dipende da ciò che arriva al modello, non da ciò che rimane sul tuo computer.",
+            "description": "Vera e Clara possono usare script locali per estrarre, calcolare, riconciliare, filtrare e aggregare le informazioni prima che Codex debba ragionarci. Spesso l'LLM può lavorare su un risultato mirato invece di ricevere i file sorgente completi.",
+            "principles": [
+                {
+                    "title": "Lavora in locale",
+                    "blurb": "I dataset completi e le elaborazioni meccaniche possono rimanere sul tuo computer.",
+                },
+                {
+                    "title": "Dai a Codex il risultato utile",
+                    "blurb": "Il plugin definisce quali risultati servono a Codex per svolgere il lavoro professionale.",
+                },
+                {
+                    "title": "Mantieni chiaro il confine",
+                    "blurb": "Alcune attività semantiche richiedono il testo originale o fatti specifici del caso. Queste informazioni possono entrare nel contesto dell'LLM; il plugin non sostiene il contrario.",
+                },
+            ],
+            "closing": "Meno dati nel contesto dell'LLM. Nessun intermediario Mparanza aggiuntivo. Un perimetro di conformità più semplice.",
             "cta_label": "Scopri come vengono gestiti i tuoi dati",
             "cta_href": "/data-handling",
         },
@@ -3238,6 +3292,29 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "cta_label": "Voir comment vos données sont traitées",
             "cta_href": "/data-handling",
         },
+        "compliance": {
+            "id": "compliance",
+            "title": "Conformes par conception.",
+            "lead": "La confidentialité dépend de ce qui parvient au modèle, pas de ce qui reste sur votre ordinateur.",
+            "description": "Vera et Clara peuvent utiliser des scripts locaux pour extraire, calculer, rapprocher, filtrer et agréger les informations avant que Codex doive les interpréter. Le LLM peut souvent travailler à partir d'un résultat ciblé plutôt que de recevoir les fichiers sources complets.",
+            "principles": [
+                {
+                    "title": "Travailler localement",
+                    "blurb": "Les jeux de données complets et les traitements mécaniques peuvent rester sur votre ordinateur.",
+                },
+                {
+                    "title": "Donner à Codex le résultat utile",
+                    "blurb": "Le plugin définit les résultats dont Codex a besoin pour la tâche professionnelle.",
+                },
+                {
+                    "title": "Présenter honnêtement la frontière",
+                    "blurb": "Certaines tâches sémantiques exigent le texte original ou des faits propres au dossier. Ces éléments peuvent entrer dans le contexte du LLM ; le plugin ne prétend pas le contraire.",
+                },
+            ],
+            "closing": "Moins de données dans le contexte du LLM. Aucun intermédiaire Mparanza supplémentaire. Un périmètre de conformité plus simple.",
+            "cta_label": "Voir comment vos données sont traitées",
+            "cta_href": "/data-handling",
+        },
         "bridge": {
             "id": "plugins",
             "title": "Codex par conception.",
@@ -3409,6 +3486,29 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
             "cta_href": "/data-handling",
         },
+        "compliance": {
+            "id": "compliance",
+            "title": "Compliance by Design.",
+            "lead": "Datenschutz hängt davon ab, was das Modell erreicht – nicht davon, was auf Ihrem Computer verbleibt.",
+            "description": "Vera und Clara können Informationen lokal extrahieren, berechnen, abgleichen, filtern und aggregieren, bevor Codex sie interpretieren muss. Das LLM kann häufig mit einem gezielten Ergebnis arbeiten, anstatt die vollständigen Quelldateien zu erhalten.",
+            "principles": [
+                {
+                    "title": "Lokal arbeiten",
+                    "blurb": "Vollständige Datensätze und mechanische Verarbeitung können auf Ihrem Computer verbleiben.",
+                },
+                {
+                    "title": "Codex das nützliche Ergebnis geben",
+                    "blurb": "Das Plugin legt fest, welche Ergebnisse Codex für die professionelle Aufgabe benötigt.",
+                },
+                {
+                    "title": "Die Grenze ehrlich benennen",
+                    "blurb": "Manche semantischen Aufgaben benötigen den Originaltext oder fallspezifische Fakten. Diese Inhalte können in den LLM-Kontext gelangen; das Plugin behauptet nichts anderes.",
+                },
+            ],
+            "closing": "Weniger Daten im LLM-Kontext. Kein zusätzlicher Mparanza-Vermittler. Ein einfacherer Compliance-Rahmen.",
+            "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
+            "cta_href": "/data-handling",
+        },
         "bridge": {
             "id": "plugins",
             "title": "Für Codex konzipiert.",
@@ -3519,6 +3619,7 @@ def landing_page(request: Request) -> Any:
             open_source=landing_page_content["open_source"],
             free=landing_page_content["free"],
             security=landing_page_content["security"],
+            compliance=landing_page_content["compliance"],
             bridge=landing_page_content["bridge"],
             copy=get_page_copy("landing", lang),
             lang=lang,
@@ -8668,5 +8769,6 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
         "open_source": content.get("open_source", {}),
         "free": content.get("free", {}),
         "security": content.get("security", {}),
+        "compliance": content.get("compliance", {}),
         "bridge": content.get("bridge", {}),
     }
