@@ -457,7 +457,7 @@
       }
     },
     {
-      module: "client-intake", edition: "core", scope: "core",
+      module: "new-client", edition: "core", scope: "core",
       jurisdiction: null, kind: "guide",
       localizations: { en: "hLhP6x00ghQ", it: "z32cIdqyXCk", fr: "d9S4SA63sVw", de: "Mjfz1e98oIw" }
     },
@@ -537,8 +537,7 @@
   });
 
   const veraWorkstream = {
-    "client-intake": "client",
-    "client-onboarding": "client",
+    "new-client": "client",
     "journal-sampling": "controls",
     "check-entries": "controls",
     "journal-bank-reconciliation": "controls",
@@ -556,8 +555,7 @@
 
   const veraModuleCopy = {
     en: {
-      "client-intake": ["Client Intake", "Turn an incoming client folder into an organized first work file."],
-      "client-onboarding": ["Client Onboarding", "Carry source evidence into identity, roles, engagement facts and next actions."],
+      "new-client": ["New Client", "Move from source documents to a complete client file and maintained professional relationship."],
       "journal-sampling": ["Journal Sampling", "Move from the full journal to a reproducible review sample."],
       "check-entries": ["Check Entries", "Connect sampled entries to the evidence that supports them."],
       "journal-bank-reconciliation": ["Bank reconciliation", "Bring bank and ledger movements into a reviewable reconciliation."],
@@ -573,8 +571,7 @@
       "deep-research-validator": ["Research Validator", "Test material claims against the sources cited for them."]
     },
     it: {
-      "client-intake": ["Istruttoria cliente", "Dalla cartella ricevuta a un primo fascicolo di lavoro ordinato."],
-      "client-onboarding": ["Onboarding cliente", "Porta le evidenze in identità, ruoli, dati dell’incarico e prossime azioni."],
+      "new-client": ["Nuovo cliente", "Dai documenti al fascicolo completo e a un rapporto professionale mantenuto nel tempo."],
       "journal-sampling": ["Campionamento del giornale", "Dal giornale completo a un campione di revisione riproducibile."],
       "check-entries": ["Controllo scritture", "Collega le scritture campionate alle evidenze che le supportano."],
       "journal-bank-reconciliation": ["Riconciliazione banca", "Porta movimenti bancari e contabili in una riconciliazione rivedibile."],
@@ -590,8 +587,7 @@
       "deep-research-validator": ["Valida Deep Research", "Verifica le affermazioni rilevanti rispetto alle fonti citate."]
     },
     fr: {
-      "client-intake": ["Instruction client", "Du dossier reçu à un premier dossier de travail organisé."],
-      "client-onboarding": ["Onboarding client", "Prolonge les preuves vers identité, rôles, données de mission et actions suivantes."],
+      "new-client": ["Nouveau client", "Des documents au dossier complet et à une relation professionnelle suivie dans le temps."],
       "journal-sampling": ["Échantillonnage du journal", "Du journal complet à un échantillon de revue reproductible."],
       "check-entries": ["Contrôle des écritures", "Relie les écritures sélectionnées aux justificatifs correspondants."],
       "journal-bank-reconciliation": ["Rapprochement bancaire", "Réunit mouvements bancaires et comptables dans un rapprochement révisable."],
@@ -607,8 +603,7 @@
       "deep-research-validator": ["Valider la recherche", "Vérifie les affirmations importantes face aux sources citées."]
     },
     de: {
-      "client-intake": ["Mandanten-Erstprüfung", "Vom eingegangenen Ordner zur geordneten ersten Arbeitsakte."],
-      "client-onboarding": ["Mandanten-Onboarding", "Führt Nachweise in Identität, Rollen, Auftragsdaten und nächste Aktionen weiter."],
+      "new-client": ["Neuer Mandant", "Von den Quelldokumenten zur vollständigen Akte und dauerhaft gepflegten Auftragsbeziehung."],
       "journal-sampling": ["Journal-Stichprobe", "Vom vollständigen Journal zur reproduzierbaren Prüfstichprobe."],
       "check-entries": ["Buchungen prüfen", "Verbindet ausgewählte Buchungen mit ihren Nachweisen."],
       "journal-bank-reconciliation": ["Bankabstimmung", "Bringt Bank- und Buchungsbewegungen in eine prüfbare Abstimmung."],
@@ -626,8 +621,7 @@
   };
 
   const veraPageTargets = {
-    "client-intake": ["/static/shared/client-intake/index.html"],
-    "client-onboarding": ["/static/shared/client-onboarding/index.html"],
+    "new-client": ["/static/shared/new-client/index.html"],
     "journal-sampling": ["/static/shared/journal-sampling/index.html"],
     "check-entries": ["/static/shared/check-entries/index.html"],
     "journal-bank-reconciliation": ["/static/shared/journal-bank-reconciliation/index.html"],
@@ -636,16 +630,16 @@
     "concordato-plan-review": ["/static/shared/concordato-plan-review/index.html"],
     "previdenza-inps": ["/static/shared/previdenza-inps/index.html"],
     "registro-imprese-sari": ["/static/shared/registro-imprese-sari/index.html"],
-    "dati-fiscali-strutturati": ["/static/shared/client-intake/index.html"],
-    "avviso-intake": ["/static/shared/client-intake/index.html"],
-    "email-cliente": ["/static/shared/client-intake/index.html"],
+    "dati-fiscali-strutturati": ["/static/shared/new-client/index.html#file-preparation"],
+    "avviso-intake": ["/static/shared/new-client/index.html#file-preparation"],
+    "email-cliente": ["/static/shared/new-client/index.html#file-preparation"],
     "prompt-optimizer": ["/static/shared/prompt-optimizer/index.html"],
     "deep-research-validator": ["/static/shared/deep-research-validator/index.html"]
   };
 
   const localGuideDefinitions = Object.freeze([
     {
-      module: "client-onboarding",
+      module: "new-client",
       conceptId: "from-client-folder-to-operational-file",
       edition: "core",
       scope: "core",
@@ -653,13 +647,13 @@
       duration: "1:00",
       pageTargets: [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#core-model"
+        "/static/shared/new-client/index.html#core-model"
       ],
       titles: {
-        it: "Vera | Il modello informativo dell’onboarding",
-        en: "Vera | The client onboarding information model",
-        fr: "Vera | Le modèle d’information de l’onboarding client",
-        de: "Vera | Informationsmodell fürs Mandanten-Onboarding"
+        it: "Vera | Dai documenti al fascicolo cliente",
+        en: "Vera | From source documents to a complete client file",
+        fr: "Vera | Des documents sources au dossier client complet",
+        de: "Vera | Von Quelldokumenten zur vollständigen Mandantenakte"
       },
       descriptions: {
         it: "Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.",
@@ -669,7 +663,7 @@
       }
     },
     {
-      module: "client-onboarding",
+      module: "new-client",
       conceptId: "from-client-folder-to-operational-file",
       edition: "italy",
       scope: "country",
@@ -677,13 +671,13 @@
       duration: "1:10",
       pageTargets: [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#italy-pack"
+        "/static/shared/new-client/index.html#italy-pack"
       ],
       titles: {
-        it: "Vera | Onboarding cliente · Italia",
-        en: "Vera | Client onboarding · Italy",
-        fr: "Vera | Onboarding client · Italie",
-        de: "Vera | Mandanten-Onboarding · Italien"
+        it: "Vera | Incarico, privacy e AML per il nuovo cliente",
+        en: "Vera | Engagement, privacy and AML for a new client",
+        fr: "Vera | Mission, confidentialité et LCB-FT pour un nouveau client",
+        de: "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten"
       },
       descriptions: {
         it: "Applica il percorso italiano per incarico, privacy, informativa AI, AML e monitoraggio.",
@@ -771,7 +765,7 @@
   };
 
   const curatedVeraModules = [
-    "client-intake",
+    "new-client",
     "journal-bank-reconciliation",
     "report-builder",
     "prompt-optimizer"

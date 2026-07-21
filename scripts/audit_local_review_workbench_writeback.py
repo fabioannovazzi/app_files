@@ -259,8 +259,8 @@ def _write_target_artifact(output_dir: Path, item: dict[str, Any]) -> str:
 def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str, str]:
     """Write a browser-audit run fixture from a plugin's generated adapter demo."""
 
-    if plugin == "client-onboarding":
-        return _write_client_onboarding_fixture(root, output_dir)
+    if plugin == "new-client":
+        return _write_new_client_fixture(root, output_dir)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     adapter = _read_adapter(root, plugin)
@@ -378,10 +378,10 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
     }
 
 
-def _write_client_onboarding_fixture(root: Path, output_dir: Path) -> dict[str, str]:
+def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
     """Build a real blocked package for immutable-domain review write-back."""
 
-    plugin_root = root / "plugins" / "client-onboarding"
+    plugin_root = root / "plugins" / "new-client"
     initialize = subprocess.run(
         [
             sys.executable,
@@ -400,15 +400,15 @@ def _write_client_onboarding_fixture(root: Path, output_dir: Path) -> dict[str, 
     )
     if initialize.returncode != 0:
         raise RuntimeError(
-            "client-onboarding audit initialization failed: "
+            "new-client audit initialization failed: "
             + (initialize.stderr or initialize.stdout).strip()
         )
     package = subprocess.run(
         [
             sys.executable,
-            str(plugin_root / "scripts" / "package_onboarding.py"),
+            str(plugin_root / "scripts" / "package_new_client.py"),
             "--input",
-            str(output_dir / "onboarding_intake.json"),
+            str(output_dir / "new_client_input.json"),
             "--output-dir",
             str(output_dir),
         ],
@@ -419,13 +419,13 @@ def _write_client_onboarding_fixture(root: Path, output_dir: Path) -> dict[str, 
     )
     if package.returncode != 0:
         raise RuntimeError(
-            "client-onboarding audit packaging failed: "
+            "new-client audit packaging failed: "
             + (package.stderr or package.stdout).strip()
         )
     review = _read_json_if_present(output_dir / "review_payload.json")
     items = review.get("items")
     if not isinstance(items, list):
-        raise RuntimeError("client-onboarding audit package has no review items")
+        raise RuntimeError("new-client audit package has no review items")
     item = next(
         (
             candidate
@@ -437,7 +437,7 @@ def _write_client_onboarding_fixture(root: Path, output_dir: Path) -> dict[str, 
         None,
     )
     if item is None:
-        raise RuntimeError("client-onboarding audit package has no editable AML item")
+        raise RuntimeError("new-client audit package has no editable AML item")
     return {
         "item_id": str(item["id"]),
         "target_artifact": "aml_assessment_draft.json",

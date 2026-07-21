@@ -2622,7 +2622,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "nav_features": "Jump to a quick overview of every workflow that ships with Mparanza.",
         "nav_about": "Learn how the team behind Mparanza supports finance organisations.",
         "nav_why_us": "See why audit and revenue teams rely on Mparanza for AI-enabled reviews.",
-        "client_intake": "Download the Codex plugin for client-folder intake: document inventory, missing items, formal anomalies, studio memo and client email draft.",
+        "new_client": "Open Vera's New Client workflow to prepare the client file, engagement, privacy, AML and monitoring in one source-linked journey.",
         "riconciliazione_plugin": "Download the Codex plugin for open-item reconciliation: open items, ledgers, journals, bank statements, support documents and reviewable Excel/Word outputs.",
         "journal_sampling_plugin": "Download the Codex plugin for journal sampling: variable journal extraction, column mapping, reproducible samples, diagnostics and audit trail.",
         "check_entries_plugin": "Download the Codex plugin for entry support testing: selected entries, supporting PDFs, deterministic checks, exceptions and audit trail.",
@@ -2633,7 +2633,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "research_family": "Research workflows: optimize a Deep Research prompt before the run, then validate the answer against cited sources after the run.",
         "reporting_plugin": "Reporting workflow for selecting useful charts, tables and checks before drafting commentary tied to those outputs.",
         "clara_plugin": "Organizes case materials, notes, and reviewed judgements into shareable client outputs.",
-        "vera": "Vera works with accounting-firm files to complete client intake, checks, reconciliations, INPS case review, reports and tax or regulatory research.",
+        "vera": "Vera works with accounting-firm files to prepare new-client work, checks, reconciliations, INPS case review, reports and tax or regulatory research.",
         "codex_accountants_group": "Guided procedures for documents, controls, reports, and tax or regulatory research.",
         "codex_consultants_group": "Guided procedures for turning materials, analysis, and expert judgement into client-ready outputs.",
         "mix_contribution_analysis_plugin": "Pro plugin for mix and contribution analysis: Mekko, BarMekko, stacked, Pareto, multitier, small multiples, Word report and output package.",
@@ -2653,7 +2653,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "presentations": "Guarda le presentazioni",
         "slides_editor": "Crea e modifica le slide direttamente dal browser.",
         "sales_by_dataset": "Esplora le vendite arricchite per attributo.",
-        "client_intake": "Scarica il plugin Codex per l'istruttoria clienti: inventario documenti, mancanze, anomalie, memo ed email.",
+        "new_client": "Apri il percorso Nuovo cliente di Vera per preparare fascicolo, incarico, privacy, AML e monitoraggio in un unico flusso collegato alle fonti.",
         "riconciliazione_plugin": "Scarica il plugin Codex per la riconciliazione partite: partite, mastrini, giornale, banche, supporti esterni e output Excel/Word rivedibili.",
         "journal_sampling_plugin": "Scarica il plugin Codex per il campionamento del giornale: estrazione da formati variabili, mapping colonne, campioni riproducibili, diagnostiche e audit trail.",
         "check_entries_plugin": "Scarica il plugin Codex per il controllo scritture contabili: scritture selezionate, PDF di supporto, controlli deterministici, eccezioni e audit trail.",
@@ -2690,7 +2690,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "nav_features": "Accédez rapidement au panorama des fonctionnalités et des workflows proposés.",
         "nav_about": "Découvrez qui compose l’équipe Mparanza et son accompagnement des finances.",
         "nav_why_us": "Comprenez pourquoi les équipes d’audit et commerciales font confiance à Mparanza.",
-        "client_intake": "Téléchargez le plugin Codex pour l'intake de dossiers client : inventaire, pièces manquantes, anomalies formelles, mémo cabinet et brouillon email client.",
+        "new_client": "Ouvrez le parcours Nouveau client de Vera pour préparer dossier, mission, confidentialité, LCB-FT et suivi dans un même flux relié aux sources.",
         "riconciliazione_plugin": "Téléchargez le plugin Codex pour le rapprochement des postes ouverts : postes, grands livres, journaux, relevés bancaires, justificatifs externes et sorties Excel/Word révisables.",
         "journal_sampling_plugin": "Téléchargez le plugin Codex pour l'échantillonnage du journal : extraction de formats variables, mapping des colonnes, échantillons reproductibles, diagnostics et audit trail.",
         "check_entries_plugin": "Téléchargez le plugin Codex pour le contrôle des écritures : écritures sélectionnées, PDF justificatifs, contrôles déterministes, exceptions et audit trail.",
@@ -2724,7 +2724,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "nav_features": "Springen Sie zur Übersicht aller verfügbaren Workflows und Funktionen.",
         "nav_about": "Erfahren Sie mehr über das Mparanza-Team und seine Unterstützung für Finanzabteilungen.",
         "nav_why_us": "Lesen Sie, warum Audit- und Vertriebsteams auf Mparanza setzen.",
-        "client_intake": "Laden Sie das Codex-Plugin für Mandanten-Erstprüfung herunter: Dokumenteninventar, fehlende Unterlagen, formale Auffälligkeiten, Kanzlei-Memo und E-Mail-Entwurf.",
+        "new_client": "Öffnen Sie Veras Ablauf Neuer Mandant, um Akte, Auftrag, Datenschutz, AML und Monitoring in einem quellengebundenen Prozess vorzubereiten.",
         "riconciliazione_plugin": "Laden Sie das Codex-Plugin für Offene-Posten-Abstimmung herunter: offene Posten, Hauptbücher, Journale, Kontoauszüge, externe Nachweise und prüfbare Excel/Word-Arbeitspapiere.",
         "journal_sampling_plugin": "Laden Sie das Codex-Plugin für Journal-Stichproben herunter: variable Journalextraktion, Spalten-Mapping, reproduzierbare Stichproben, Diagnostik und Audit-Trail.",
         "check_entries_plugin": "Laden Sie das Codex-Plugin für Buchungsprüfung herunter: ausgewählte Buchungen, Beleg-PDFs, deterministische Prüfungen, Ausnahmen und Audit-Trail.",
@@ -2764,12 +2764,12 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                             "reconciliations and reporting."
                         ),
                         "description": (
-                            "Vera works directly on the firm's files. It handles client "
-                            "intake and journal sampling, checks entries, reconciles records, "
+                            "Vera works directly on the firm's files. It handles new-client "
+                            "work and journal sampling, checks entries, reconciles records, "
                             "and prepares reports or tax and regulatory research."
                         ),
                         "proof": [
-                            "From client intake to regulatory research",
+                            "From new-client work to regulatory research",
                             "Reviewable checks and reconciliations",
                             "Workpapers ready for professional review",
                         ],

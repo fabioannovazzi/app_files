@@ -10,17 +10,17 @@
   "concepts": [
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "core",
       "scope": "core",
       "jurisdiction": null,
       "targetDurationSeconds": 60,
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#core-model"
+        "/static/shared/new-client/index.html#core-model"
       ],
       "scenes": [
-        "The common onboarding model",
+        "From source documents to the client file",
         "Source evidence",
         "Identity and participants",
         "Service and engagement facts",
@@ -29,10 +29,10 @@
       ],
       "localizations": {
         "it": {
-          "title": "Vera | Il modello informativo dell’onboarding",
-          "narration": "L’edizione Core descrive la struttura comune dell’onboarding cliente. Il modello collega cinque elementi: le evidenze di partenza e la loro fonte; l’identità del cliente e le persone coinvolte; i servizi richiesti e i fatti dell’incarico; le richieste aperte con le azioni successive; le date e lo storico mantenuti nel tempo. Questi elementi restano distinti ma connessi, così ogni informazione può essere ricondotta al documento o alla decisione da cui nasce. Le implementazioni di ciascun Paese rendono il modello operativo, associando ai campi stabili i propri documenti, controlli e regole. Il risultato concettuale è una struttura leggibile per capire che cosa è noto, che cosa è aperto e come il fascicolo evolve.",
+          "title": "Vera | Dai documenti al fascicolo cliente",
+          "narration": "L’edizione Core mostra come costruire il fascicolo di un nuovo cliente partendo dalle fonti. Il modello collega cinque elementi: i documenti ricevuti e la loro provenienza; l’identità del cliente e le persone coinvolte; i servizi richiesti e i fatti dell’incarico; le richieste aperte con le azioni successive; le date e lo storico mantenuti nel tempo. Gli elementi restano distinti ma connessi, così ogni informazione può essere ricondotta al documento o alla decisione da cui nasce. Ogni Paese collega a questa struttura i propri documenti, controlli e regole. Il risultato è un fascicolo leggibile: mostra che cosa è noto, che cosa resta aperto e come il rapporto professionale evolve.",
           "onScreen": [
-            "Modello comune di onboarding",
+            "Dai documenti al fascicolo",
             "Evidenze · fonte",
             "Identità · persone coinvolte",
             "Servizi · fatti dell’incarico",
@@ -41,10 +41,10 @@
           ]
         },
         "en": {
-          "title": "Vera | The client onboarding information model",
-          "narration": "This Core edition explains the common structure for client onboarding. The model connects five elements: source evidence and where it came from; client identity and the people involved; requested services and engagement facts; open requests with their next actions; and dates and history maintained over time. The elements remain distinct but connected, so every fact can be traced to the document or decision behind it. Country implementations make the model operational by mapping their own documents, checks and rules onto these stable fields. The conceptual result is a readable structure for understanding what is known, what remains open and how the client file develops.",
+          "title": "Vera | From source documents to a complete client file",
+          "narration": "This Core edition shows how to build a new client’s file from source evidence. The model connects five elements: incoming documents and where they came from; client identity and the people involved; requested services and engagement facts; open requests with their next actions; and dates and history maintained over time. The elements remain distinct but connected, so every fact can be traced to the document or decision behind it. Each country maps its own documents, checks and rules onto this shared structure. The result is a readable client file that shows what is known, what remains open and how the professional relationship develops.",
           "onScreen": [
-            "Common onboarding model",
+            "From documents to client file",
             "Source evidence",
             "Identity · participants",
             "Services · engagement facts",
@@ -53,10 +53,10 @@
           ]
         },
         "fr": {
-          "title": "Vera | Le modèle d’information de l’onboarding client",
-          "narration": "Cette édition Core explique la structure commune de l’onboarding client. Le modèle relie cinq éléments : les preuves sources et leur provenance ; l’identité du client et les personnes impliquées ; les services demandés et les faits de la mission ; les demandes ouvertes avec les actions suivantes ; enfin les dates et l’historique conservés dans le temps. Les éléments restent distincts mais connectés, afin de rattacher chaque information au document ou à la décision dont elle provient. Les implémentations de chaque pays rendent le modèle opérationnel en associant leurs documents, contrôles et règles à ces champs stables. Le résultat conceptuel est une structure lisible pour comprendre ce qui est connu, ce qui reste ouvert et comment le dossier évolue.",
+          "title": "Vera | Des documents sources au dossier client complet",
+          "narration": "Cette édition Core montre comment construire le dossier d’un nouveau client à partir des preuves sources. Le modèle relie cinq éléments : les documents reçus et leur provenance ; l’identité du client et les personnes impliquées ; les services demandés et les faits de la mission ; les demandes ouvertes avec les actions suivantes ; enfin les dates et l’historique conservés dans le temps. Les éléments restent distincts mais connectés, afin de rattacher chaque information au document ou à la décision dont elle provient. Chaque pays associe ses documents, contrôles et règles à cette structure commune. Le résultat est un dossier lisible qui montre ce qui est connu, ce qui reste ouvert et comment la relation professionnelle évolue.",
           "onScreen": [
-            "Modèle commun d’onboarding",
+            "Des documents au dossier client",
             "Preuves · provenance",
             "Identité · personnes impliquées",
             "Services · faits de la mission",
@@ -65,10 +65,10 @@
           ]
         },
         "de": {
-          "title": "Vera | Informationsmodell fürs Mandanten-Onboarding",
-          "narration": "Diese Core-Ausgabe erklärt die gemeinsame Struktur des Mandanten-Onboardings. Das Modell verbindet fünf Elemente: Quellnachweise und ihre Herkunft; die Identität des Mandanten und beteiligte Personen; gewünschte Leistungen und Auftragsfakten; offene Anfragen mit den nächsten Aktionen; sowie dauerhaft gepflegte Termine und Historie. Die Elemente bleiben getrennt und zugleich verbunden, sodass jede Angabe auf das zugrunde liegende Dokument oder die Entscheidung zurückgeführt werden kann. Länderimplementierungen machen das Modell operativ, indem sie ihre Dokumente, Prüfungen und Regeln diesen stabilen Feldern zuordnen. Das konzeptionelle Ergebnis ist eine lesbare Struktur dafür, was bekannt ist, was offen bleibt und wie sich die Mandantenakte entwickelt.",
+          "title": "Vera | Von Quelldokumenten zur vollständigen Mandantenakte",
+          "narration": "Diese Core-Ausgabe zeigt, wie aus Quelldokumenten die Akte eines neuen Mandanten entsteht. Das Modell verbindet fünf Elemente: eingegangene Dokumente und ihre Herkunft; die Identität des Mandanten und beteiligte Personen; gewünschte Leistungen und Auftragsfakten; offene Anfragen mit den nächsten Aktionen; sowie dauerhaft gepflegte Termine und Historie. Die Elemente bleiben getrennt und zugleich verbunden, sodass jede Angabe auf das zugrunde liegende Dokument oder die Entscheidung zurückgeführt werden kann. Jedes Land ordnet seine Dokumente, Prüfungen und Regeln dieser gemeinsamen Struktur zu. Das Ergebnis ist eine lesbare Mandantenakte, die zeigt, was bekannt ist, was offen bleibt und wie sich die Auftragsbeziehung entwickelt.",
           "onScreen": [
-            "Gemeinsames Onboarding-Modell",
+            "Von Dokumenten zur Mandantenakte",
             "Nachweise · Herkunft",
             "Identität · beteiligte Personen",
             "Leistungen · Auftragsfakten",
@@ -80,14 +80,14 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "italy",
       "scope": "country",
       "jurisdiction": "IT",
       "targetDurationSeconds": 70,
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#italy-pack"
+        "/static/shared/new-client/index.html#italy-pack"
       ],
       "scenes": [
         "The new-client journey in Italy",
@@ -99,50 +99,50 @@
       ],
       "localizations": {
         "it": {
-          "title": "Vera | Onboarding cliente · Italia",
-          "narration": "Un nuovo cliente porta documenti, dati, persone e scelte che spesso restano in file separati. Vera li accompagna lungo un percorso unico. Parte dalla cartella ricevuta, costruisce l’inventario, raccoglie i dati leggibili e trasforma i punti aperti in richieste precise. Poi riprende quelle stesse evidenze per strutturare anagrafica, esecutori, titolari effettivi, prestazioni e condizioni dell’incarico. Mandato, privacy, informativa AI e valutazione antiriciclaggio nascono dalla stessa base. Attività, scadenze e riesami completano il fascicolo. Alla fine lo studio vede che cosa è pronto, che cosa va completato e quale passaggio viene dopo. Dalla prima cartella a un fascicolo operativo che continua a seguire il cliente.",
+          "title": "Vera | Incarico, privacy e AML per il nuovo cliente",
+          "narration": "Un nuovo cliente porta documenti, dati, persone e scelte che spesso restano in file separati. Vera li accompagna lungo un percorso unico. Parte dalla cartella ricevuta, costruisce l’inventario, raccoglie i dati leggibili e trasforma i punti aperti in richieste precise. Poi riprende quelle stesse evidenze per strutturare anagrafica, esecutori, titolari effettivi, prestazioni e condizioni dell’incarico. I piani per mandato, privacy e informativa AI, insieme alla valutazione antiriciclaggio, usano la stessa base. Attività, scadenze e riesami completano il fascicolo. Alla fine lo studio vede che cosa è pronto, che cosa va completato e quale passaggio viene dopo. Dalla prima cartella a un fascicolo operativo che continua a seguire il cliente.",
           "onScreen": [
-            "Onboarding cliente · Italia",
+            "Nuovo cliente · Italia",
             "Documenti e dati ricevuti",
             "Inventario · dati · richieste",
             "Anagrafica · soggetti · incarico",
-            "Privacy · AML · monitoraggio",
+            "Piani documentali · AML · monitoraggio",
             "Fascicolo operativo"
           ]
         },
         "en": {
-          "title": "Vera | Client onboarding · Italy",
-          "narration": "A new client brings documents, data, people and decisions that often remain in separate files. Vera carries them through one connected journey. It starts with the incoming folder, builds the inventory, gathers readable data and turns open points into precise requests. It then uses that same evidence to structure identity data, executors, beneficial owners, services and engagement terms. Engagement, privacy, AI information and the AML assessment share one basis. Actions, dates and reviews complete the file. The firm can see what is ready, what needs completing and which step comes next. From the first folder to an operational file that continues to follow the client.",
+          "title": "Vera | Engagement, privacy and AML for a new client",
+          "narration": "A new client brings documents, data, people and decisions that often remain in separate files. Vera carries them through one connected journey. It starts with the incoming folder, builds the inventory, gathers readable data and turns open points into precise requests. It then uses that same evidence to structure identity data, executors, beneficial owners, services and engagement terms. The plans for engagement, privacy and AI information share that basis with the AML assessment. Actions, dates and reviews complete the file. The firm can see what is ready, what needs completing and which step comes next. From the first folder to an operational file that continues to follow the client.",
           "onScreen": [
-            "Client onboarding · Italy",
+            "New client · Italy",
             "Incoming documents and data",
             "Inventory · data · requests",
             "Identity · people · engagement",
-            "Privacy · AML · monitoring",
+            "Document plans · AML · monitoring",
             "Operational client file"
           ]
         },
         "fr": {
-          "title": "Vera | Onboarding client · Italie",
-          "narration": "Un nouveau client apporte des documents, des données, des personnes et des décisions qui restent souvent dans des fichiers séparés. Vera les accompagne dans un seul parcours. Elle part du dossier reçu, construit l’inventaire, rassemble les données lisibles et transforme les points ouverts en demandes précises. Elle reprend ensuite ces mêmes preuves pour structurer l’identité, les exécutants, les bénéficiaires effectifs, les prestations et les conditions de la mission. Mission, privacy, information IA et évaluation AML partagent la même base. Actions, échéances et réexamens complètent le dossier. Le cabinet voit ce qui est prêt, ce qu’il faut compléter et l’étape suivante. Du premier dossier à un dossier opérationnel qui continue à suivre le client.",
+          "title": "Vera | Mission, confidentialité et LCB-FT pour un nouveau client",
+          "narration": "Un nouveau client apporte des documents, des données, des personnes et des décisions qui restent souvent dans des fichiers séparés. Vera les accompagne dans un seul parcours. Elle part du dossier reçu, construit l’inventaire, rassemble les données lisibles et transforme les points ouverts en demandes précises. Elle reprend ensuite ces mêmes preuves pour structurer l’identité, les exécutants, les bénéficiaires effectifs, les prestations et les conditions de la mission. Les plans pour la mission, la confidentialité et l’information IA partagent cette base avec l’évaluation LCB-FT. Actions, échéances et réexamens complètent le dossier. Le cabinet voit ce qui est prêt, ce qu’il faut compléter et l’étape suivante. Du premier dossier à un dossier opérationnel qui continue à suivre le client.",
           "onScreen": [
-            "Onboarding client · Italie",
+            "Nouveau client · Italie",
             "Documents et données reçus",
             "Inventaire · données · demandes",
             "Identité · personnes · mission",
-            "Privacy · AML · suivi",
+            "Plans documentaires · LCB-FT · suivi",
             "Dossier client opérationnel"
           ]
         },
         "de": {
-          "title": "Vera | Mandanten-Onboarding · Italien",
-          "narration": "Ein neuer Mandant bringt Dokumente, Daten, Personen und Entscheidungen mit, die oft in getrennten Dateien bleiben. Vera führt sie in einem Ablauf zusammen. Am Anfang steht der eingegangene Ordner: Vera erstellt das Inventar, erfasst lesbare Daten und macht aus offenen Punkten präzise Anfragen. Dieselben Nachweise fließen anschließend in Stammdaten, Ausführende, wirtschaftlich Berechtigte, Leistungen und Auftragsbedingungen. Auftrag, Datenschutz, KI-Information und AML-Bewertung nutzen eine gemeinsame Grundlage. Aufgaben, Termine und Überprüfungen vervollständigen die Akte. Die Kanzlei sieht, was bereit ist, was ergänzt werden muss und welcher Schritt folgt. Vom ersten Ordner zu einer operativen Akte, die den Mandanten weiter begleitet.",
+          "title": "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten",
+          "narration": "Ein neuer Mandant bringt Dokumente, Daten, Personen und Entscheidungen mit, die oft in getrennten Dateien bleiben. Vera führt sie in einem Ablauf zusammen. Am Anfang steht der eingegangene Ordner: Vera erstellt das Inventar, erfasst lesbare Daten und macht aus offenen Punkten präzise Anfragen. Dieselben Nachweise fließen anschließend in Stammdaten, Ausführende, wirtschaftlich Berechtigte, Leistungen und Auftragsbedingungen. Die Pläne für Auftrag, Datenschutz und KI-Information nutzen dieselbe Grundlage wie die AML-Bewertung. Aufgaben, Termine und Überprüfungen vervollständigen die Akte. Die Kanzlei sieht, was bereit ist, was ergänzt werden muss und welcher Schritt folgt. Vom ersten Ordner zu einer operativen Akte, die den Mandanten weiter begleitet.",
           "onScreen": [
-            "Mandanten-Onboarding · Italien",
+            "Neuer Mandant · Italien",
             "Eingegangene Dokumente und Daten",
             "Inventar · Daten · Anfragen",
             "Stammdaten · Personen · Auftrag",
-            "Datenschutz · AML · Monitoring",
+            "Dokumentpläne · AML · Monitoring",
             "Operative Mandantenakte"
           ]
         }

@@ -41,7 +41,7 @@
   ],
   "should_not_trigger": [
     {
-      "id": "generic_client_intake",
+      "id": "generic_new_client",
       "prompt": "Fai l'inventario generale di questa cartella cliente e prepara l'email per i documenti mancanti."
     },
     {

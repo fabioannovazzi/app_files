@@ -65,13 +65,13 @@ TARGETS = [
         "save_deep_research_decisions",
     ),
     Target(
-        "client-intake",
-        "apply_client_intake_decisions",
-        "Client Intake",
-        "client_intake",
-        "validate_client_intake_review",
-        "render_client_intake_review",
-        "save_client_intake_decisions",
+        "client-file-preparation",
+        "apply_client_file_preparation_decisions",
+        "New Client · File Preparation",
+        "client_file_preparation",
+        "validate_client_file_preparation_review",
+        "render_client_file_preparation_review",
+        "save_client_file_preparation_decisions",
     ),
     Target(
         "audit-reconciliation",
@@ -903,7 +903,7 @@ function statusFromEffects(effects, itemCount) {
 
 const REVIEW_HANDOFF_PLUGINS = new Set([
   "check-entries",
-  "client-intake",
+  "client-file-preparation",
   "journal-sampling",
   "journal-bank-reconciliation",
   "deep-research-validator",

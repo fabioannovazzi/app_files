@@ -1,0 +1,51 @@
+{
+  "name": "new-client",
+  "version": "0.1.1",
+  "description": "Prepara l'intero percorso del nuovo cliente: documenti in ingresso, identità, incarico, privacy, AI, antiriciclaggio e monitoraggio.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/new-client/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "commercialisti",
+    "new-client",
+    "client-file-preparation",
+    "antiriciclaggio",
+    "aml",
+    "mandato-professionale",
+    "privacy",
+    "titolare-effettivo",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "New Client",
+    "shortDescription": "Un percorso rivedibile dai documenti in ingresso fino a incarico, privacy, AML e monitoraggio.",
+    "longDescription": "Componente Vera per preparare in un unico percorso il lavoro sul nuovo cliente. La prima fase organizza e controlla i documenti in ingresso; le fasi successive strutturano identità, codice fiscale e partita IVA, esecutori e titolari effettivi, copertura PEP, sanzioni e Paesi, termini dell'incarico, decisioni privacy, informativa AI, valutazione AML verificabile, riferimenti ai template e monitoraggio. Proposte, fonti, evidenze e blocchi restano visibili fino alla revisione del professionista.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Usa New Client su questa cartella cliente oppure su evidenze già preparate, insieme ai servizi che indico.",
+      "Mantieni le decisioni su mandato, privacy, AI e AML come proposte rivedibili e mostra fonti, evidenze e blocchi.",
+      "Calcola solo gli elementi meccanici verificabili e prepara il pacchetto per la revisione del commercialista, senza firmare, inviare o attivare il rapporto."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

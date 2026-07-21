@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN = ROOT / "plugins" / "audit-reconciliation"
-ISTRUTTORIA_PLUGIN = ROOT / "plugins" / "client-intake"
+FILE_PREPARATION_PLUGIN = ROOT / "plugins" / "client-file-preparation"
 
 
 def test_plugin_manifest_and_marketplace_entry_are_valid():
@@ -51,7 +51,7 @@ def test_plugin_contains_no_customer_specific_artifacts_or_terms():
     assert not (PLUGIN / "examples").exists()
 
 
-def test_istruttoria_plugin_contains_no_customer_specific_artifacts_or_terms():
+def test_file_preparation_engine_contains_no_customer_specific_artifacts_or_terms():
     forbidden = (
         "/users/",
         "\\users\\",
@@ -62,13 +62,13 @@ def test_istruttoria_plugin_contains_no_customer_specific_artifacts_or_terms():
         "@outlook.com",
     )
     text_parts: list[str] = []
-    for path in ISTRUTTORIA_PLUGIN.rglob("*"):
+    for path in FILE_PREPARATION_PLUGIN.rglob("*"):
         if path.is_file() and path.suffix.lower() in {".py", ".md", ".json", ".txt"}:
             text_parts.append(path.read_text(encoding="utf-8", errors="ignore").lower())
     all_text = "\n".join(text_parts)
 
     assert not any(term in all_text for term in forbidden)
-    assert not (ISTRUTTORIA_PLUGIN / "examples").exists()
+    assert not (FILE_PREPARATION_PLUGIN / "examples").exists()
 
 
 def test_plugin_beta_onboarding_and_prompt_bank_are_documented():
@@ -83,7 +83,7 @@ def test_plugin_beta_onboarding_and_prompt_bank_are_documented():
 
     for snippet in (
         "Primo run beta",
-        "First Run Onboarding",
+        "First Run",
         "Prompt di avvio per beta user",
         "Starter Prompt Bank",
         "Riconciliazione completa",
@@ -105,19 +105,19 @@ def test_plugin_beta_onboarding_and_prompt_bank_are_documented():
         assert snippet.lower() in combined
 
 
-def test_istruttoria_beta_onboarding_and_prompt_bank_are_documented():
-    readme = (ISTRUTTORIA_PLUGIN / "README.md").read_text(encoding="utf-8")
-    skill = (ISTRUTTORIA_PLUGIN / "skills" / "client-intake" / "SKILL.md").read_text(
-        encoding="utf-8"
-    )
+def test_file_preparation_engine_run_guidance_and_prompt_bank_are_documented():
+    readme = (FILE_PREPARATION_PLUGIN / "README.md").read_text(encoding="utf-8")
+    skill = (
+        FILE_PREPARATION_PLUGIN / "skills" / "client-file-preparation" / "SKILL.md"
+    ).read_text(encoding="utf-8")
     workflow_reference = (
-        ISTRUTTORIA_PLUGIN / "references" / "workflow-reference.md"
+        FILE_PREPARATION_PLUGIN / "references" / "workflow-reference.md"
     ).read_text(encoding="utf-8")
     combined = f"{readme}\n{skill}\n{workflow_reference}".lower()
 
     for snippet in (
         "Primo run beta",
-        "First Run Onboarding",
+        "First Run",
         "Prompt di avvio per beta user",
         "Starter Prompt Bank",
         "Istruttoria completa fascicolo cliente",

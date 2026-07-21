@@ -411,6 +411,10 @@ p {
   border-bottom: 1px solid var(--vj-line);
 }
 
+body[data-vera-module="new-client"] .journey-step {
+  grid-template-columns: minmax(210px, 0.42fr) minmax(0, 0.58fr);
+}
+
 .journey-step__number {
   color: var(--vj-cyan);
   font-weight: 700;
@@ -767,6 +771,14 @@ footer {
 
   .journey-step p {
     grid-column: 2;
+  }
+
+  body[data-vera-module="new-client"] .journey-step {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-vera-module="new-client"] .journey-step p {
+    grid-column: 1;
   }
 
   .document-line,

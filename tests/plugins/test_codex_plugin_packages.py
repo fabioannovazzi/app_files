@@ -18,8 +18,8 @@ COMMERCIALISTA_MODULE_NAMES = {
     "check-entries",
     "concordato-plan-review",
     "deep-research-validator",
-    "client-intake",
-    "client-onboarding",
+    "client-file-preparation",
+    "new-client",
     "journal-bank-reconciliation",
     "journal-sampling",
     "prompt-optimizer",
@@ -32,15 +32,14 @@ PRIVATE_STANDALONE_PLUGIN_NAMES = {"attribute-reporting"}
 UNIFIED_PLUGIN_NAMES = {"vera"}
 VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/check-entries/index.html"),
-    Path("static/shared/client-intake/geneva.html"),
-    Path("static/shared/client-intake/index.html"),
-    Path("static/shared/client-intake/uk.html"),
-    Path("static/shared/client-intake/zurich.html"),
-    Path("static/shared/client-onboarding/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/journal-bank-reconciliation/index.html"),
     Path("static/shared/journal-sampling/index.html"),
+    Path("static/shared/new-client/geneva.html"),
+    Path("static/shared/new-client/index.html"),
+    Path("static/shared/new-client/uk.html"),
+    Path("static/shared/new-client/zurich.html"),
     Path("static/shared/previdenza-inps/index.html"),
     Path("static/shared/prompt-optimizer/index.html"),
     Path("static/shared/registro-imprese-sari/index.html"),
@@ -182,17 +181,17 @@ NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
         "save_check_entries_decisions",
         "apply_check_entries_decisions",
     ),
-    "client-intake": (
-        "validate_client_intake_review",
-        "render_client_intake_review",
-        "save_client_intake_decisions",
-        "apply_client_intake_decisions",
+    "client-file-preparation": (
+        "validate_client_file_preparation_review",
+        "render_client_file_preparation_review",
+        "save_client_file_preparation_decisions",
+        "apply_client_file_preparation_decisions",
     ),
-    "client-onboarding": (
-        "validate_client_onboarding_review",
-        "render_client_onboarding_review",
-        "save_client_onboarding_decisions",
-        "apply_client_onboarding_decisions",
+    "new-client": (
+        "validate_new_client_review",
+        "render_new_client_review",
+        "save_new_client_decisions",
+        "apply_new_client_decisions",
     ),
     "concordato-plan-review": (
         "validate_concordato_plan_review",
@@ -246,8 +245,7 @@ NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
 ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "vera" / "index.html",
     ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html",
-    ROOT / "static" / "shared" / "client-intake" / "index.html",
-    ROOT / "static" / "shared" / "client-onboarding" / "index.html",
+    ROOT / "static" / "shared" / "new-client" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
@@ -263,15 +261,14 @@ STATIC_PLUGIN_PAGES = ACCOUNTING_STATIC_PLUGIN_PAGES + STANDALONE_STATIC_PLUGIN_
 PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "clara" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
-    ROOT / "static" / "shared" / "client-intake" / "index.html",
-    ROOT / "static" / "shared" / "client-intake" / "geneva.html",
-    ROOT / "static" / "shared" / "client-intake" / "uk.html",
-    ROOT / "static" / "shared" / "client-intake" / "zurich.html",
-    ROOT / "static" / "shared" / "client-onboarding" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
+    ROOT / "static" / "shared" / "new-client" / "index.html",
+    ROOT / "static" / "shared" / "new-client" / "geneva.html",
+    ROOT / "static" / "shared" / "new-client" / "uk.html",
+    ROOT / "static" / "shared" / "new-client" / "zurich.html",
     ROOT / "static" / "shared" / "previdenza-inps" / "index.html",
     ROOT / "static" / "shared" / "prompt-optimizer" / "index.html",
     ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html",
@@ -528,7 +525,18 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES
-    assert COMMERCIALISTA_MODULE_NAMES <= skill_names
+    assert COMMERCIALISTA_MODULE_NAMES - {"client-file-preparation"} <= skill_names
+    assert "client-file-preparation" not in skill_names
+    assert components["workflow_roles"] == {
+        "new-client": {
+            "kind": "workflow",
+            "internal_engines": ["client-file-preparation"],
+        },
+        "client-file-preparation": {
+            "kind": "internal_engine",
+            "parent_workflow": "new-client",
+        },
+    }
 
 
 def test_component_package_selection_rebuilds_unified_bundles() -> None:
@@ -1668,7 +1676,8 @@ def test_static_plugin_pages_use_the_unified_vera_install_action() -> None:
         'href="downloads/clara-plugin.zip',
         'href="downloads/deep-research-validator-plugin.zip',
         'href="downloads/distribution-analysis-plugin.zip',
-        'href="downloads/client-intake-plugin.zip',
+        'href="downloads/client-file-preparation-plugin.zip',
+        'href="downloads/new-client-plugin.zip',
         'href="downloads/journal-bank-reconciliation-plugin.zip',
         'href="downloads/journal-sampling-plugin.zip',
         'href="downloads/mix-contribution-analysis-plugin.zip',
@@ -1735,8 +1744,8 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
     for page_path in ACCOUNTING_STATIC_PLUGIN_PAGES:
         page = page_path.read_text(encoding="utf-8")
 
-        if page_path.parent.name in {"client-intake", "client-onboarding"}:
-            assert 'href="../vera-journey.css?v=20260720-video"' in page
+        if page_path.parent.name == "new-client":
+            assert 'href="../vera-journey.css?v=20260721-new-client-layout"' in page
             continue
 
         assert (
@@ -1827,7 +1836,7 @@ def test_vera_downstream_pages_show_mparanza_logo(relative_path: Path) -> None:
     assert header_match is not None, relative_path.as_posix()
     if relative_path.name in {"geneva.html", "uk.html", "zurich.html"}:
         renderer = (
-            ROOT / "static" / "shared" / "client-intake" / "jurisdiction-pages.js"
+            ROOT / "static" / "shared" / "new-client" / "jurisdiction-pages.js"
         ).read_text(encoding="utf-8")
         assert '<header class="topbar"></header>' in page
         assert 'src="jurisdiction-pages.js?v=' in page
@@ -2073,19 +2082,19 @@ def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
     assert '<a href="#scarica" data-journey="nav.open">Apri Vera</a>' in page
 
 
-def test_istruttoria_page_describes_the_connected_client_journey() -> None:
-    page = (ROOT / "static" / "shared" / "client-intake" / "index.html").read_text(
+def test_new_client_page_describes_one_connected_client_journey() -> None:
+    page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
         encoding="utf-8"
     )
 
     for snippet in (
         '<html lang="it">',
-        "Istruttoria cliente",
-        "Dalla cartella ricevuta a un lavoro da cui partire.",
+        "Nuovo cliente",
+        "Dalla prima cartella a un fascicolo che continua nel tempo.",
         "Cosa fornisci",
         "Cosa prepara Vera",
         "Cosa ricevi",
-        "L’istruttoria apre il percorso. L’onboarding lo porta avanti.",
+        "Un solo percorso",
         "Le mancanze diventano richieste precise.",
         "Memo studio",
         "Richiesta cliente",
@@ -2094,7 +2103,9 @@ def test_istruttoria_page_describes_the_connected_client_journey() -> None:
         "Svizzera · Zurigo",
         "United Kingdom",
         'id="prompt-example"',
-        'href="../client-onboarding/index.html?lang=it"',
+        'id="file-preparation"',
+        'id="relationship"',
+        'id="italy-pack"',
         'href="geneva.html?lang=it"',
         'href="zurich.html?lang=it"',
         'href="uk.html?lang=it"',
@@ -2112,6 +2123,8 @@ def test_istruttoria_page_describes_the_connected_client_journey() -> None:
         "Tax fields",
         "Tax notice",
         "Operational first pass",
+        "Istruttoria cliente",
+        "Onboarding cliente",
     ):
         assert stale_snippet not in page
 
@@ -2126,9 +2139,9 @@ def test_vera_public_page_browser_title_uses_vera_brand(
     assert "| Mparanza" not in page
 
 
-def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
-    intake_root = ROOT / "static" / "shared" / "client-intake"
-    jurisdiction_source = (intake_root / "jurisdiction-pages.js").read_text(
+def test_new_client_jurisdiction_pages_define_local_scope() -> None:
+    new_client_root = ROOT / "static" / "shared" / "new-client"
+    jurisdiction_source = (new_client_root / "jurisdiction-pages.js").read_text(
         encoding="utf-8"
     )
     pages = {
@@ -2138,9 +2151,7 @@ def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
     }
 
     for filename, (jurisdiction, default_language) in pages.items():
-        page = (ROOT / "static" / "shared" / "client-intake" / filename).read_text(
-            encoding="utf-8"
-        )
+        page = (new_client_root / filename).read_text(encoding="utf-8")
         assert f'data-jurisdiction="{jurisdiction}"' in page
         assert f'data-presentation-language="{default_language}"' in page
         assert 'src="jurisdiction-pages.js?v=' in page
@@ -2159,6 +2170,8 @@ def test_istruttoria_jurisdiction_pages_define_local_scope() -> None:
         jurisdiction_source
     )
     assert 'url.searchParams.set("lang", language)' in jurisdiction_source
+    assert 'href="index.html?lang=${language}#relationship"' in jurisdiction_source
+    assert "Report Builder" not in jurisdiction_source
     assert "dataset.jurisdiction =" not in jurisdiction_source
 
 
@@ -2197,13 +2210,13 @@ def test_homepage_routes_accountant_plugins_through_vera() -> None:
     assert source.count('"href": "/static/shared/vera/index.html"') == 4
     assert source.count('"label": "Vera"') == 4
     assert source.count('"tooltip_key": "vera"') == 4
-    for old_homepage_link in (
+    for direct_workflow_link in (
         '"href": "/static/shared/audit-reconciliation/index.html"',
         '"href": "/static/shared/report-builder/index.html"',
-        '"href": "/static/shared/client-intake/index.html"',
-        '"href": "/static/shared/client-intake/uk.html"',
-        '"href": "/static/shared/client-intake/geneva.html"',
-        '"href": "/static/shared/client-intake/zurich.html"',
+        '"href": "/static/shared/new-client/index.html"',
+        '"href": "/static/shared/new-client/uk.html"',
+        '"href": "/static/shared/new-client/geneva.html"',
+        '"href": "/static/shared/new-client/zurich.html"',
         '"href": "/static/shared/research/index.html"',
         '"href": "/static/shared/journal-sampling/index.html"',
         '"href": "/static/shared/check-entries/index.html"',
@@ -2211,7 +2224,7 @@ def test_homepage_routes_accountant_plugins_through_vera() -> None:
         '"href": "/static/shared/riconciliazione-partite/index.html"',
         '"href": "/static/shared/concordato-plan-review/index.html"',
     ):
-        assert old_homepage_link not in source
+        assert direct_workflow_link not in source
 
 
 def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
@@ -2246,29 +2259,31 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
-def test_client_intake_keeps_language_and_market_selection_separate() -> None:
-    page = (ROOT / "static" / "shared" / "client-intake" / "index.html").read_text(
+def test_new_client_keeps_language_and_market_selection_separate() -> None:
+    page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
         encoding="utf-8"
     )
     market_links = {
-        "italy": "index.html",
-        "geneva": "geneva.html",
-        "zurich": "zurich.html",
-        "uk": "uk.html",
+        "italy": (
+            "index.html?lang=it#italy-pack",
+            'localizedHref("index.html", lang, "#italy-pack")',
+        ),
+        "geneva": ("geneva.html?lang=it", 'localizedHref("geneva.html", lang)'),
+        "zurich": ("zurich.html?lang=it", 'localizedHref("zurich.html", lang)'),
+        "uk": ("uk.html?lang=it", 'localizedHref("uk.html", lang)'),
     }
 
     for language in ("it", "en", "fr", "de"):
         assert f'data-lang="{language}"' in page
-    assert "return `${path}?lang=${lang}`;" in page
-    for market, market_page in market_links.items():
-        assert f'id="market-{market}-link" href="{market_page}?lang=it"' in page
+    assert "return `${path}?lang=${lang}${fragment}`;" in page
+    for market, (initial_href, localized_call) in market_links.items():
+        assert f'id="market-{market}-link" href="{initial_href}"' in page
         assert (
             f'document.getElementById("market-{market}-link").href = '
-            f'localizedHref("{market_page}", lang);'
+            f"{localized_call};"
         ) in page
     assert 'setLanguage(params.get("lang") || "it", false)' in page
     assert "window.location.replace" not in page
-    assert "clientIntakePages" not in page
 
 
 def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
@@ -2283,7 +2298,7 @@ def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
     italy = page[italy_start:italy_end]
 
     for module_link in (
-        "../client-intake/index.html#work",
+        "../new-client/index.html#journey",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
@@ -2294,8 +2309,6 @@ def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
     ):
         assert f'href="{module_link}"' in core
     for module_link in (
-        "../client-intake/index.html#market-selector",
-        "../client-onboarding/index.html#italy-pack",
         "../check-entries/index.html#italy-adapter",
         "../report-builder/index.html#italy-preset",
         "../concordato-plan-review/index.html",
@@ -2305,8 +2318,8 @@ def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
         assert f'href="{module_link}"' in italy
     assert core.count(" data-module-link") == 8
     assert core.count('class="module-row"') == 8
-    assert italy.count(" data-module-link") == 7
-    assert italy.count('class="module-row"') == 7
+    assert italy.count(" data-module-link") == 5
+    assert italy.count('class="module-row"') == 5
     assert core.count('<article class="workstream">') == 3
     assert 'id="modello"' in page
     assert 'id="core"' in page
@@ -2342,7 +2355,7 @@ def test_vera_page_localizes_every_module_title() -> None:
     )
 
     title_keys = (
-        "module.client.title",
+        "module.newClient.title",
         "module.sampling.title",
         "module.entries.title",
         "module.bank.title",
@@ -2350,8 +2363,6 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.report.title",
         "module.prompt.title",
         "module.research.title",
-        "module.clientItaly.title",
-        "module.onboardingItaly.title",
         "module.entriesItaly.title",
         "module.reportItaly.title",
         "module.concordato.title",
@@ -2932,12 +2943,10 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "check-entries": (
             "https://mparanza.com/static/shared/check-entries/index.html"
         ),
-        "client-intake": (
-            "https://mparanza.com/static/shared/client-intake/index.html"
+        "client-file-preparation": (
+            "https://mparanza.com/static/shared/new-client/index.html#file-preparation"
         ),
-        "client-onboarding": (
-            "https://mparanza.com/static/shared/client-onboarding/index.html"
-        ),
+        "new-client": ("https://mparanza.com/static/shared/new-client/index.html"),
         "concordato-plan-review": (
             "https://mparanza.com/static/shared/concordato-plan-review/index.html"
         ),
@@ -3281,10 +3290,9 @@ def test_vera_module_links_preserve_language_without_changing_market() -> None:
         encoding="utf-8"
     )
 
-    assert 'href="../client-intake/index.html#work" data-module-link' in page
+    assert 'href="../new-client/index.html#journey" data-module-link' in page
     assert 'url.searchParams.set("lang", lang)' in page
     assert 'link.setAttribute("href", withLanguage' in page
-    assert "clientIntakePages" not in page
     assert "window.location.replace" not in page
 
 
@@ -3353,6 +3361,7 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
         'class="landing-open-source"',
         'class="landing-free"',
         'class="landing-security"',
+        'class="landing-compliance"',
         'class="landing-bridge"',
         'class="landing-products"',
     )
@@ -3374,6 +3383,7 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
         ".landing-home .landing-open-source h2,\n"
         ".landing-home .landing-free h2,\n"
         ".landing-home .landing-security h2,\n"
+        ".landing-home .landing-compliance h2,\n"
         ".landing-home .landing-bridge h2 {"
     )
     design_heading_css = css.split(design_heading_selector, maxsplit=1)[1].split(

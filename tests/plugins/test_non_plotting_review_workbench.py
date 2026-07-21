@@ -25,14 +25,14 @@ WORKBENCH_WIDGETS = [
         "Deep Research Review",
     ),
     (
-        "client-intake",
-        "assets/client-intake-review-widget.html",
-        "Client Intake Review",
+        "client-file-preparation",
+        "assets/client-file-preparation-review-widget.html",
+        "New Client · File Preparation",
     ),
     (
-        "client-onboarding",
-        "assets/client-onboarding-review-widget.html",
-        "Client Onboarding Review",
+        "new-client",
+        "assets/new-client-review-widget.html",
+        "New Client Review",
     ),
     (
         "audit-reconciliation",
@@ -80,9 +80,9 @@ REVIEW_SAVE_TOOLS = [
         "supported_claim",
     ),
     (
-        "client-intake",
-        "save_client_intake_decisions",
-        "apply_client_intake_decisions",
+        "client-file-preparation",
+        "save_client_file_preparation_decisions",
+        "apply_client_file_preparation_decisions",
         "document_inventory",
     ),
     (
@@ -126,8 +126,8 @@ REVIEW_SAVE_TOOLS = [
 REVIEW_RENDER_TOOLS = {
     "check-entries": "render_check_entries_review",
     "deep-research-validator": "render_deep_research_review",
-    "client-intake": "render_client_intake_review",
-    "client-onboarding": "render_client_onboarding_review",
+    "client-file-preparation": "render_client_file_preparation_review",
+    "new-client": "render_new_client_review",
     "audit-reconciliation": "render_audit_reconciliation_review",
     "journal-sampling": "render_journal_sampling_review",
     "journal-bank-reconciliation": "render_journal_bank_review",
@@ -139,8 +139,8 @@ REVIEW_RENDER_TOOLS = {
 REVIEW_ITEM_LIMITS = {
     "check-entries": 2500,
     "deep-research-validator": 2500,
-    "client-intake": 2500,
-    "client-onboarding": 2500,
+    "client-file-preparation": 2500,
+    "new-client": 2500,
     "audit-reconciliation": 2500,
     "journal-sampling": 2500,
     "journal-bank-reconciliation": 2500,

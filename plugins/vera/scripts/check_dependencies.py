@@ -15,8 +15,8 @@ LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 COMPONENTS = (
     "audit-reconciliation",
-    "client-intake",
-    "client-onboarding",
+    "client-file-preparation",
+    "new-client",
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",

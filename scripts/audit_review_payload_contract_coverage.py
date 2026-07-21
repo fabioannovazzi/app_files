@@ -28,7 +28,7 @@ __all__ = [
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TEST_ROOTS = (
     ROOT / "tests" / "plugins",
-    ROOT / "plugins" / "client-intake" / "tests",
+    ROOT / "plugins" / "client-file-preparation" / "tests",
 )
 SEVERITY_RANK = {
     "info": 1,
@@ -149,7 +149,7 @@ WORKFLOW_GENERATION_SIGNALS = (
     "core.run_",
     "core.build_",
     "core.normalize_",
-    "build_intake_outputs(",
+    "build_file_preparation_outputs(",
     "write_review_session_artifacts(",
     "write_validation_package(",
     "write_validation(",
@@ -324,7 +324,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     test_roots = (
         args.root / "tests" / "plugins",
-        args.root / "plugins" / "client-intake" / "tests",
+        args.root / "plugins" / "client-file-preparation" / "tests",
     )
     reports = audit_contract_coverage(args.root, test_roots=test_roots)
     if args.format == "json":
