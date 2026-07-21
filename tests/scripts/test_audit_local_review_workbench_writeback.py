@@ -64,6 +64,32 @@ def test_generic_plugin_fixture_uses_adapter_edit_target(tmp_path: Path) -> None
     assert "proposed_fix" in target_payload["claims"][0]
 
 
+def test_client_onboarding_fixture_uses_real_proposal_only_contract(
+    tmp_path: Path,
+) -> None:
+    audit = load_audit_module()
+    output_dir = tmp_path / "client-onboarding-run"
+
+    fixture = audit.write_plugin_fixture(ROOT, "client-onboarding", output_dir)
+
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    assert review_payload["schema_version"] == "1.1"
+    assert review_payload["contract_version"] == "1.1"
+    assert review_payload["item_count"] > 1
+    assert final_artifacts["export_gate"]["relationship_ready"] is False
+    assert fixture["writeback_mode"] == "review_proposal"
+    assert fixture["target_artifact"] == "aml_assessment_draft.json"
+    assert any(
+        item["id"] == fixture["item_id"] and item["item_type"] == "aml_risk_factor"
+        for item in review_payload["items"]
+    )
+
+
 def test_browser_writeback_report_marks_high_issues_as_failure() -> None:
     audit = load_audit_module()
     report = audit.BrowserWritebackReport(

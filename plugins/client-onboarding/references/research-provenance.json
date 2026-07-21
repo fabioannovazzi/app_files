@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Non-runtime provenance for the material that prompted the product idea. These entries are never loaded into a client review, treated as authority, or redistributed.",
+  "entries": [
+    {
+      "reference_id": "francesco_mandate_inspiration",
+      "title": "Mandato professionale — downloadable draft materials",
+      "publisher": "mandatoprofessionale.it",
+      "url": "https://www.mandatoprofessionale.it/",
+      "role": "research_inspiration_only",
+      "runtime_source": false,
+      "reuse_rights": "unknown",
+      "constraint": "Do not copy, populate, bundle, or present this material as an official source or a studio-approved template."
+    },
+    {
+      "reference_id": "francesco_pricing_inspiration",
+      "title": "Onorari consigliati per l'anno 2026",
+      "publisher": "Associazione Nazionale Commercialisti Brescia",
+      "url": "https://www.abcbs.it/onorari-consigliati-per-lanno-2026.html",
+      "role": "research_inspiration_only",
+      "runtime_source": false,
+      "constraint": "No tariff, price recommendation, coefficient, or default fee from this page is part of Client Onboarding."
+    }
+  ]
+}

@@ -16,6 +16,14 @@
       "command": "node",
       "args": ["./scripts/run_component_mcp.cjs", "client-intake"]
     },
+    "clientOnboardingReview": {
+      "title": "Client Onboarding Review",
+      "description": "Validate, render, save, and apply a source-bound professional review of client onboarding, AML, and document applicability.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "client-onboarding"]
+    },
     "journalSamplingWidgets": {
       "title": "Journal Sampling",
       "description": "Validate and render Journal Sampling review-session payloads.",

@@ -4,8 +4,11 @@ import json
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import pytest
+
+from scripts import generate_non_plotting_review_widgets as widget_generator
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -25,6 +28,11 @@ WORKBENCH_WIDGETS = [
         "client-intake",
         "assets/client-intake-review-widget.html",
         "Client Intake Review",
+    ),
+    (
+        "client-onboarding",
+        "assets/client-onboarding-review-widget.html",
+        "Client Onboarding Review",
     ),
     (
         "audit-reconciliation",
@@ -119,6 +127,7 @@ REVIEW_RENDER_TOOLS = {
     "check-entries": "render_check_entries_review",
     "deep-research-validator": "render_deep_research_review",
     "client-intake": "render_client_intake_review",
+    "client-onboarding": "render_client_onboarding_review",
     "audit-reconciliation": "render_audit_reconciliation_review",
     "journal-sampling": "render_journal_sampling_review",
     "journal-bank-reconciliation": "render_journal_bank_review",
@@ -131,6 +140,7 @@ REVIEW_ITEM_LIMITS = {
     "check-entries": 2500,
     "deep-research-validator": 2500,
     "client-intake": 2500,
+    "client-onboarding": 2500,
     "audit-reconciliation": 2500,
     "journal-sampling": 2500,
     "journal-bank-reconciliation": 2500,
@@ -138,6 +148,30 @@ REVIEW_ITEM_LIMITS = {
     "prompt-optimizer": 2500,
     "concordato-plan-review": 2500,
 }
+
+
+@pytest.mark.parametrize(
+    "target",
+    widget_generator.TARGETS,
+    ids=lambda target: target["plugin"],
+)
+def test_non_plotting_review_assets_match_generator(
+    target: dict[str, Any],
+) -> None:
+    plugin = str(target["plugin"])
+    asset = str(target["asset"])
+    asset_dir = ROOT / "plugins" / plugin / "assets"
+
+    assert (asset_dir / asset).read_text(encoding="utf-8") == (
+        widget_generator.render_target(target)
+    )
+    assert (asset_dir / "review-workbench-adapter.json").read_text(
+        encoding="utf-8"
+    ) == json.dumps(
+        widget_generator.adapter_config(target),
+        ensure_ascii=True,
+        indent=2,
+    ) + "\n"
 
 
 def _assert_widget_resource_meta(meta: dict[str, object], uri: str) -> None:

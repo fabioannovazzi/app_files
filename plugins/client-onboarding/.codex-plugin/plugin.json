@@ -1,0 +1,50 @@
+{
+  "name": "client-onboarding",
+  "version": "0.1.0",
+  "description": "Prepara un dossier rivedibile per l'avvio del rapporto professionale: identità, incarico, privacy, AI, antiriciclaggio e monitoraggio.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/client-onboarding/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "commercialisti",
+    "client-onboarding",
+    "antiriciclaggio",
+    "aml",
+    "mandato-professionale",
+    "privacy",
+    "titolare-effettivo",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Client Onboarding",
+    "shortDescription": "Dossier cliente rivedibile per incarico, privacy, AML e monitoraggio.",
+    "longDescription": "Componente Vera per preparare un dossier interno e rivedibile prima dell'avvio del rapporto con un nuovo cliente. Verifica un run Client Intake final-ready o registra evidenze autonome, mantiene separati codice fiscale e partita IVA, struttura esecutori e titolari effettivi, controlla la copertura PEP, sanzioni e Paesi per ogni soggetto, riconcilia i termini inseriti dallo studio, struttura le decisioni privacy, assiste la valutazione AML con calcolo verificabile e prepara applicabilità, riferimenti ai template e monitoraggio. Proposte, fonti, evidenze e blocchi restano visibili fino alla revisione del professionista.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Usa Client Onboarding su questo run Client Intake final-ready oppure registra esplicitamente evidenze autonome, insieme ai servizi che indico.",
+      "Mantieni le decisioni su mandato, privacy, AI e AML come proposte rivedibili e mostra fonti, evidenze e blocchi.",
+      "Calcola solo gli elementi meccanici verificabili e prepara il pacchetto per la revisione del commercialista, senza firmare, inviare o attivare il rapporto."
+    ],
+    "brandColor": "#36586F",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

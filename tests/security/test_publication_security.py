@@ -51,8 +51,7 @@ def test_clara_and_vera_plugin_zips_are_absent() -> None:
 
 def test_public_pages_have_no_clara_or_vera_download_links() -> None:
     html = "\n".join(
-        path.read_text(encoding="utf-8")
-        for path in (ROOT / "static").rglob("*.html")
+        path.read_text(encoding="utf-8") for path in (ROOT / "static").rglob("*.html")
     ).lower()
 
     assert "/downloads/vera" not in html
@@ -61,7 +60,7 @@ def test_public_pages_have_no_clara_or_vera_download_links() -> None:
     assert "vera-plugin.zip" not in html
 
 
-def test_only_main_pages_have_marketplace_install_buttons() -> None:
+def test_only_product_and_onboarding_gateway_pages_have_install_buttons() -> None:
     install_button_pages = {
         path.relative_to(ROOT).as_posix()
         for path in (ROOT / "static" / "shared").rglob("*.html")
@@ -71,6 +70,8 @@ def test_only_main_pages_have_marketplace_install_buttons() -> None:
 
     assert install_button_pages == {
         "static/shared/clara/index.html",
+        "static/shared/client-intake/index.html",
+        "static/shared/client-onboarding/index.html",
         "static/shared/vera/index.html",
     }
 
