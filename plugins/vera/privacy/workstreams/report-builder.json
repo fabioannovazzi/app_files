@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "workstream": "report-builder",
+  "display_name": "Report Builder",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Financial spreadsheets, CSV files and report configuration"
+    ],
+    "local_processing": [
+      "Parse and normalize tables",
+      "Calculate totals and comparisons",
+      "Prepare chart data and report diagnostics",
+      "Render report artifacts"
+    ],
+    "codex_context": [
+      {
+        "id": "report-design",
+        "purpose": "Resolve reporting structure and explain results",
+        "content": "Schema, aggregate tables, calculated metrics, chart-ready summaries, diagnostics and user instructions",
+        "minimum_necessary": "Use calculated and aggregated reporting tables; inspect raw rows only for a targeted data-quality issue",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Small aggregates or targeted diagnostics can still reveal case-specific business information",
+      "mitigation": "Prefer aggregated reporting tables and limit raw-row inspection to explicit data-quality exceptions"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "I file finanziari vengono trasformati e calcolati localmente. Codex lavora normalmente su tabelle aggregate, metriche e diagnostica; consulta righe di dettaglio solo per anomalie mirate.",
+    "message_en": "Financial files are transformed and calculated locally. Codex normally works from aggregate tables, metrics and diagnostics, consulting detailed rows only for targeted anomalies.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "The user's requested report granularity determines whether detailed rows are necessary",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "1a4d620ee239b44248bf0bbe998402f81d6190ff09868f11c05347d737726dde"
+  }
+}

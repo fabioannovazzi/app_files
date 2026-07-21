@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "workstream": "registro-imprese-sari",
+  "display_name": "Registro Imprese e SARI",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "schemas"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Pseudonymous case intake, local evidence, DIRE or SARI screenshots and official public guidance"
+    ],
+    "local_processing": [
+      "Initialize private case records",
+      "Inventory and locally OCR evidence",
+      "Validate source provenance",
+      "Package a reviewable practice plan"
+    ],
+    "codex_context": [
+      {
+        "id": "practice-framing",
+        "purpose": "Frame the case and identify unresolved professional classifications",
+        "content": "Pseudonymous case facts, validated evidence anchors, dates, competent chamber and unresolved decisions",
+        "minimum_necessary": "Use an opaque client reference and neutral case facts; exclude names, tax codes, contact data and addresses from public research and review payloads",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      },
+      {
+        "id": "official-source-application",
+        "purpose": "Relate selected official guidance to the proposed practice",
+        "content": "Generic official-source passages, territorial metadata and necessary pseudonymous case facts",
+        "minimum_necessary": "Keep public searches generic and include only case facts needed to assess source applicability",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Even pseudonymous activity, chamber and effective-date facts can identify a case when combined",
+      "mitigation": "Keep identifiers local, use opaque case references, generic public searches and minimum case facts in Codex review"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Le evidenze del caso restano nella cartella locale e vengono rappresentate con un riferimento pseudonimo. Codex esamina solo i fatti necessari e le fonti ufficiali pertinenti; ricerche SARI e payload non devono contenere identificativi del cliente.",
+    "message_en": "Case evidence remains in the local folder and is represented by a pseudonymous reference. Codex reviews only necessary facts and relevant official sources; SARI searches and review payloads must not contain client identifiers.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "Pseudonymized case facts may remain indirectly identifying in a narrow professional context",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "27f5f19cd378e9575b0e6db3d7c7434a0c22160bfdc87b0a4bf1ac3fd943d2f0"
+  }
+}

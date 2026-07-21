@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "workstream": "journal-bank-reconciliation",
+  "display_name": "Journal-Bank Reconciliation",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Bank statements, journals and ledgers"
+    ],
+    "local_processing": [
+      "Parse and normalize bank and accounting rows",
+      "Generate deterministic matches",
+      "Calculate controls",
+      "Build exception and review payloads"
+    ],
+    "codex_context": [
+      {
+        "id": "reconciliation-review",
+        "purpose": "Resolve mappings and review unmatched or ambiguous transactions",
+        "content": "Headers, aggregate controls, matched summaries, exception rows and selected transaction evidence",
+        "minimum_necessary": "Use aggregates and exception rows rather than complete bank and journal populations",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Exception rows can include account holders, counterparties and payment descriptions",
+      "mitigation": "Keep complete statements and ledgers local; expose only mappings, controls and exceptions"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "Estratti conto e registri completi vengono elaborati localmente. Codex esamina controlli aggregati, abbinamenti ed eccezioni con le sole righe necessarie alla revisione.",
+    "message_en": "Complete statements and journals are processed locally. Codex reviews aggregate controls, matches and exceptions with only the rows needed for review.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "Ambiguous descriptions can require targeted supporting evidence",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "213bdf843c9b55b6849130a0233952184b4f4d6d01c8237b1683159bf4968611"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "workstream": "audit-reconciliation",
+  "display_name": "Audit Reconciliation",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "data_flow": {
+    "local_sources": [
+      "Open-item lists, ledgers, journals, bank statements, payment orders, factoring and compensation evidence"
+    ],
+    "local_processing": [
+      "Inventory and extract files",
+      "Normalize accounting records",
+      "Classify and reconcile rows",
+      "Build review packets and workpapers"
+    ],
+    "codex_context": [
+      {
+        "id": "intake-and-mapping",
+        "purpose": "Resolve source roles and material accounting assumptions",
+        "content": "File inventory, column headers, representative rows, user instructions and unresolved mappings",
+        "minimum_necessary": "Use inventory, headers and representative rows rather than complete populations when resolving mappings",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      },
+      {
+        "id": "exception-review",
+        "purpose": "Review reconciliation exceptions and evidence quality",
+        "content": "Deterministic reconciliation results, exception rows, evidence locators and selected supporting excerpts",
+        "minimum_necessary": "Expose exception rows and targeted evidence, not complete source files",
+        "semantic_reasoning_required": true,
+        "full_source_expected": false
+      }
+    ]
+  },
+  "residual_risks": [
+    {
+      "risk": "Selected accounting rows and supporting excerpts may contain counterparties or case-specific facts",
+      "mitigation": "Keep complete populations local and send Codex only mappings, exceptions and targeted evidence needed for review"
+    }
+  ],
+  "commercialista_notice": {
+    "level": "informational",
+    "timing": "workstream_start",
+    "message_it": "I file contabili completi e la riconciliazione restano locali. Codex esamina mappature, eccezioni e le sole evidenze mirate necessarie alla revisione.",
+    "message_en": "Complete accounting files and reconciliation processing remain local. Codex reviews mappings, exceptions and only the targeted evidence needed for review.",
+    "requires_confirmation": false
+  },
+  "review": {
+    "reviewed_at": "2026-07-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "model_review_of_workflow_source",
+    "limitations": [
+      "Actual context depends on the user's instructions and the evidence needed to resolve exceptions",
+      "This is a design-time data-flow review, not a GDPR legal determination"
+    ],
+    "source_fingerprint": "398469632136ba6b07849b40630ea2b4c8df2a446665a7cbcaad9b6b41b80158"
+  }
+}
