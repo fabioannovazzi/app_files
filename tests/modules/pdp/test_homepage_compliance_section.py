@@ -25,6 +25,7 @@ def test_homepage_content_includes_localized_compliance_section(
     assert content["title"] == title
     assert len(content["principles"]) == 3
     assert content["cta_href"] == "/data-handling"
+    assert "Mparanza" not in content["closing"]
 
 
 def test_homepage_content_states_the_llm_context_boundary_honestly() -> None:
@@ -32,7 +33,7 @@ def test_homepage_content_states_the_llm_context_boundary_honestly() -> None:
 
     assert "what reaches the model" in content["lead"]
     assert "may enter the LLM context" in content["principles"][2]["blurb"]
-    assert "No additional Mparanza intermediary" in content["closing"]
+    assert "No additional data-processing intermediary" in content["closing"]
 
 
 def test_homepage_template_places_compliance_after_security_before_plugins() -> None:
