@@ -1,0 +1,56 @@
+{
+  "name": "client-file-preparation",
+  "version": "0.1.26",
+  "description": "Motore interno della fase New Client che prepara i documenti in ingresso: inventario, controlli formali, dati fiscali strutturati, memo e bozza email.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/new-client/index.html#file-preparation",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "commercialisti",
+    "geneva-tax",
+    "zurich-tax",
+    "uk-tax",
+    "fascicolo-cliente",
+    "fatturapa",
+    "730",
+    "redditi-pf",
+    "cu",
+    "f24",
+    "avvisi",
+    "client-file-preparation",
+    "new-client",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "New Client · File Preparation",
+    "shortDescription": "Prima fase interna di New Client: prepara i documenti in ingresso per la revisione dello studio.",
+    "longDescription": "Motore interno della fase di preparazione documentale di New Client per fascicoli Italia, Ginevra, Zurigo e Regno Unito. Controlla le dipendenze locali, usa OCR quando disponibile e applica script verificabili a inventario, estrazione PDF/OCR, FatturaPA XML, campi fiscali strutturati, duplicati e avvisi. Vera legge poi le evidenze e prepara scheda operativa, mancanze, domande al cliente, anomalie formali, dati strutturati e limiti come prima parte dell'unico percorso New Client.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Use New Client to prepare the customer folder I provide.",
+      "Infer jurisdiction, target year, output folder, and OCR/scans when possible; ask only for material ambiguities and run the dependency check.",
+      "Prepare the inventory, formal checks, structured fiscal data, studio memo, client email draft, and internal points."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

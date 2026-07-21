@@ -60,7 +60,7 @@ def test_public_pages_have_no_clara_or_vera_download_links() -> None:
     assert "vera-plugin.zip" not in html
 
 
-def test_only_product_and_onboarding_gateway_pages_have_install_buttons() -> None:
+def test_only_product_and_new_client_gateway_pages_have_install_buttons() -> None:
     install_button_pages = {
         path.relative_to(ROOT).as_posix()
         for path in (ROOT / "static" / "shared").rglob("*.html")
@@ -70,10 +70,17 @@ def test_only_product_and_onboarding_gateway_pages_have_install_buttons() -> Non
 
     assert install_button_pages == {
         "static/shared/clara/index.html",
-        "static/shared/client-intake/index.html",
-        "static/shared/client-onboarding/index.html",
+        "static/shared/new-client/index.html",
         "static/shared/vera/index.html",
     }
+
+
+def test_retired_duplicate_client_pages_are_absent() -> None:
+    shared_root = ROOT / "static" / "shared"
+
+    assert (shared_root / "new-client" / "index.html").is_file()
+    assert not (shared_root / "client-intake").exists()
+    assert not (shared_root / "client-onboarding").exists()
 
 
 def test_retired_clara_and_vera_download_urls_return_not_found() -> None:

@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "newClientFilePreparation": {
+      "title": "New Client · File Preparation",
+      "description": "Validate, render, save, and apply document-preparation decisions for the first phase of New Client.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": ["24x24"]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}

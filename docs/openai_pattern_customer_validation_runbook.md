@@ -11,7 +11,8 @@ review-workbench plugin:
 
 - `audit-reconciliation`
 - `check-entries`
-- `client-intake`
+- `new-client`
+- `client-file-preparation` (New Client's document-preparation phase)
 - `concordato-plan-review`
 - `deep-research-validator`
 - `journal-bank-reconciliation`

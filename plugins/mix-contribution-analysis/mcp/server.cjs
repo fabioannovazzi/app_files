@@ -1164,7 +1164,7 @@ function statusFromEffects(effects, itemCount) {
 
 const REVIEW_HANDOFF_PLUGINS = new Set([
   "check-entries",
-  "client-intake",
+  "client-file-preparation",
   "journal-sampling",
   "journal-bank-reconciliation",
   "deep-research-validator",

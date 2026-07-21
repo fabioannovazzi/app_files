@@ -64,13 +64,13 @@ def test_generic_plugin_fixture_uses_adapter_edit_target(tmp_path: Path) -> None
     assert "proposed_fix" in target_payload["claims"][0]
 
 
-def test_client_onboarding_fixture_uses_real_proposal_only_contract(
+def test_new_client_fixture_uses_real_proposal_only_contract(
     tmp_path: Path,
 ) -> None:
     audit = load_audit_module()
-    output_dir = tmp_path / "client-onboarding-run"
+    output_dir = tmp_path / "new-client-run"
 
-    fixture = audit.write_plugin_fixture(ROOT, "client-onboarding", output_dir)
+    fixture = audit.write_plugin_fixture(ROOT, "new-client", output_dir)
 
     review_payload = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")

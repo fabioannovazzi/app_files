@@ -382,7 +382,7 @@ def validate_plugin_contract_coverage(plugin_dir: Path) -> list[str]:
     root = _audit_root_for_plugin_dir(plugin_dir)
     test_roots = (
         root / "tests" / "plugins",
-        root / "plugins" / "client-intake" / "tests",
+        root / "plugins" / "client-file-preparation" / "tests",
     )
     reports = _load_contract_coverage_audit_module().audit_contract_coverage(
         root,

@@ -7,8 +7,8 @@ const { spawn } = require("node:child_process");
 
 const COMPONENTS = new Set([
   "audit-reconciliation",
-  "client-intake",
-  "client-onboarding",
+  "client-file-preparation",
+  "new-client",
   "journal-sampling",
   "check-entries",
   "journal-bank-reconciliation",

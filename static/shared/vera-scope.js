@@ -2,8 +2,7 @@
   "use strict";
 
   const MODULE_SCOPE = Object.freeze({
-    "client-intake": "mixed",
-    "client-onboarding": "italy",
+    "new-client": "mixed",
     "journal-sampling": "core",
     "check-entries": "mixed",
     "journal-bank-reconciliation": "core",
@@ -34,7 +33,7 @@
         body: "Questo percorso applica un perimetro italiano. Puoi leggerlo in tutte e quattro le lingue: la lingua cambia, il paese resta Italia."
       },
       modules: {
-        "client-intake": "Inventario, lettura e richieste formano il core. Dati fiscali e famiglie documentali seguono il paese selezionato.",
+        "new-client": "Il fascicolo e il rapporto professionale formano un solo percorso. Documenti, controlli e regole seguono il paese selezionato.",
         "report-builder": "Il motore di reporting è riutilizzabile. Il profilo FPV, FCDE e PNRR per enti locali appartiene al pacchetto Italia.",
         "check-entries": "Il collegamento tra scrittura, supporto ed eccezione forma il core. FatturaPA è l’adattatore italiano."
       },
@@ -58,7 +57,7 @@
         body: "This workflow applies an Italian scope. Read it in any of the four languages: the language changes, the country remains Italy."
       },
       modules: {
-        "client-intake": "Inventory, reading and requests make up the core. Fiscal fields and document families follow the selected country.",
+        "new-client": "The client file and professional relationship form one workflow. Documents, checks and rules follow the selected country.",
         "report-builder": "The reporting engine is reusable. The FPV, FCDE and PNRR local-government profile belongs to the Italy pack.",
         "check-entries": "Connecting an entry, its support and its exceptions makes up the core. FatturaPA is the Italian adapter."
       },
@@ -82,7 +81,7 @@
         body: "Ce workflow applique un périmètre italien. Consultez-le dans les quatre langues : la langue change, le pays reste l’Italie."
       },
       modules: {
-        "client-intake": "Inventaire, lecture et demandes constituent le socle. Les données fiscales et familles documentaires suivent le pays sélectionné.",
+        "new-client": "Le dossier client et la relation professionnelle forment un seul parcours. Documents, contrôles et règles suivent le pays sélectionné.",
         "report-builder": "Le moteur de reporting est réutilisable. Le profil FPV, FCDE et PNRR pour les collectivités relève du pack Italie.",
         "check-entries": "Le lien entre écriture, justificatif et exception constitue le socle. FatturaPA est l’adaptateur italien."
       },
@@ -106,7 +105,7 @@
         body: "Dieser Workflow hat einen italienischen Geltungsbereich. Lesen Sie ihn in allen vier Sprachen: Die Sprache wechselt, das Land bleibt Italien."
       },
       modules: {
-        "client-intake": "Inventar, Auslesen und Anfragen bilden den Kern. Steuerfelder und Dokumentfamilien richten sich nach dem gewählten Land.",
+        "new-client": "Mandantenakte und Auftragsbeziehung bilden einen Ablauf. Dokumente, Prüfungen und Regeln richten sich nach dem gewählten Land.",
         "report-builder": "Die Reporting-Engine ist wiederverwendbar. Das Kommunalprofil für FPV, FCDE und PNRR gehört zum Italien-Paket.",
         "check-entries": "Die Verbindung von Buchung, Beleg und Ausnahme bildet den Kern. FatturaPA ist der italienische Adapter."
       },

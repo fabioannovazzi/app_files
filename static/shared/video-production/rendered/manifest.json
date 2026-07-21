@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-21T06:55:21+00:00",
+  "generatedAt": "2026-07-21T10:12:22+00:00",
   "publicationStatus": "local_rendered",
   "remotePublish": false,
   "generator": "scripts/build_vera_local_video_guides.py",
@@ -10,59 +10,59 @@
   "assets": [
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "core",
       "scope": "core",
       "jurisdiction": null,
       "language": "it",
       "languageLabel": "Italiano",
-      "title": "Vera | Il modello informativo dell’onboarding",
+      "title": "Vera | Dai documenti al fascicolo cliente",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
       "speechDurationSeconds": 58.496,
       "voice": {
         "name": "Alice",
         "rate": 100,
-        "interScenePauseMs": 1578,
-        "effectiveInterScenePauseSeconds": 1.969
+        "interScenePauseMs": 1812,
+        "effectiveInterScenePauseSeconds": 2.296
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#core-model"
+        "/static/shared/new-client/index.html#core-model"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        10.643,
-        10.28,
-        10.28,
-        9.843,
-        9.843,
-        9.111
+        10.916,
+        10.116,
+        10.116,
+        10.116,
+        10.116,
+        8.62
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/core/it/guide.mp4",
+          "path": "new-client/core/it/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2400868,
-          "sha256": "e8178144d0333a0e40a1b372234ee6294447e1ae3c0bb959f97fab4c8bcbc021"
+          "bytes": 2333934,
+          "sha256": "417e5465a60570812717137f0901c0b461bb849f284c294a2d0b523392dea266"
         },
         "poster": {
-          "path": "client-onboarding/core/it/poster.jpg",
+          "path": "new-client/core/it/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 84458,
-          "sha256": "d94e1c0a7c983d27518fae2145d24508507462516d64cead52fe15eaa7a93892"
+          "bytes": 80217,
+          "sha256": "9acd7367d7a72d3d3317dc843e280fda31ccdba850c493a9568f306f9c153e5f"
         },
         "captions": {
-          "path": "client-onboarding/core/it/captions.vtt",
+          "path": "new-client/core/it/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 940,
-          "sha256": "a0cbe8c8c479508d3326dcb70e1e174acb50d8b160a89b0f09071b62f7a7f0d5"
+          "bytes": 905,
+          "sha256": "873b1e0edcb583c7dc50234e1c8a55cf567a599a5a722d41d10452b7a5846517"
         },
         "transcript": {
-          "path": "client-onboarding/core/it/transcript.txt",
+          "path": "new-client/core/it/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 784,
-          "sha256": "a0ad0117fb34d62147c85ea480301d47c8feb1de3beeec12c044974273703c5f"
+          "bytes": 743,
+          "sha256": "c67194def945f6d1069e9ed6d8ee2275836879ea95e8fcaac7e775d29b6e0eee"
         }
       },
       "media": {
@@ -79,59 +79,59 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "core",
       "scope": "core",
       "jurisdiction": null,
       "language": "en",
       "languageLabel": "English",
-      "title": "Vera | The client onboarding information model",
+      "title": "Vera | From source documents to a complete client file",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
-      "speechDurationSeconds": 58.532,
+      "speechDurationSeconds": 58.543,
       "voice": {
         "name": "Samantha",
         "rate": 100,
-        "interScenePauseMs": 1962,
-        "effectiveInterScenePauseSeconds": 2.538
+        "interScenePauseMs": 2373,
+        "effectiveInterScenePauseSeconds": 3.028
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#core-model"
+        "/static/shared/new-client/index.html#core-model"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        10.81,
-        10.449,
-        10.01,
-        10.01,
-        10.449,
-        8.272
+        10.968,
+        10.168,
+        10.588,
+        10.168,
+        10.168,
+        7.94
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/core/en/guide.mp4",
+          "path": "new-client/core/en/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2401366,
-          "sha256": "ee25a315ef9115b0501fe6fb0d55bc1a8e64111a15987e630c11981955ce0a15"
+          "bytes": 2409824,
+          "sha256": "99d2772549c25fb67b50b9960a9f1a13fe5ab8d21431db7463eec358e2d7c947"
         },
         "poster": {
-          "path": "client-onboarding/core/en/poster.jpg",
+          "path": "new-client/core/en/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 85285,
-          "sha256": "d8af60a7662b0b6ae923eb2d6aa10c2a35c98c887c1c29c86620bb300016a813"
+          "bytes": 85413,
+          "sha256": "6ab81fb62fe8f37458de7ebe7193ee08d1a10e6814d090d79bae971a01b6cbcd"
         },
         "captions": {
-          "path": "client-onboarding/core/en/captions.vtt",
+          "path": "new-client/core/en/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 883,
-          "sha256": "92365fba3cb5a249da70317e5704d1801c05c7baf7c8600c23d9286d87026c3c"
+          "bytes": 852,
+          "sha256": "8db86932535973c1818a2ed156685d5a71c5bd089cf659999c6aa9b83c48af1a"
         },
         "transcript": {
-          "path": "client-onboarding/core/en/transcript.txt",
+          "path": "new-client/core/en/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 726,
-          "sha256": "959273df7ad60950451afce6bb0e68c87cffe0c69d515bc01d544d4eb4747c1e"
+          "bytes": 703,
+          "sha256": "9bf7c8a166f2f9d5d7ded3759b2613649ad46d71e608ff30f22f6464450d955e"
         }
       },
       "media": {
@@ -148,59 +148,59 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "core",
       "scope": "core",
       "jurisdiction": null,
       "language": "fr",
       "languageLabel": "Français",
-      "title": "Vera | Le modèle d’information de l’onboarding client",
+      "title": "Vera | Des documents sources au dossier client complet",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
-      "speechDurationSeconds": 58.496,
+      "speechDurationSeconds": 58.356,
       "voice": {
         "name": "Thomas",
         "rate": 100,
-        "interScenePauseMs": 1477,
-        "effectiveInterScenePauseSeconds": 1.948
+        "interScenePauseMs": 1630,
+        "effectiveInterScenePauseSeconds": 2.245
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#core-model"
+        "/static/shared/new-client/index.html#core-model"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        10.858,
-        10.058,
-        10.058,
-        10.058,
-        10.058,
-        8.91
+        11.041,
+        9.841,
+        10.241,
+        10.241,
+        9.841,
+        8.795
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/core/fr/guide.mp4",
+          "path": "new-client/core/fr/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2475603,
-          "sha256": "56c6615267c4bbebeab5f0efc6938e4ee1c239bbd5a902cefeb24143fe57f0c0"
+          "bytes": 2505112,
+          "sha256": "82e956c21cc860a3a392b240400767b631782e46c8120dc3da43ef99b3f7bf4c"
         },
         "poster": {
-          "path": "client-onboarding/core/fr/poster.jpg",
+          "path": "new-client/core/fr/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 89315,
-          "sha256": "363a8450f213237695621667a409cca3a8472c69698dee4dac7da4fe8e05caac"
+          "bytes": 90704,
+          "sha256": "830a4a5423826bd0fd260bb0ba33d4dc58f40f27e13af4340a6b03f90b8efb9d"
         },
         "captions": {
-          "path": "client-onboarding/core/fr/captions.vtt",
+          "path": "new-client/core/fr/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 992,
-          "sha256": "bac8766c6aaf360890ffcfef348639ec52e79ec3c2cbbb068c50985e82334597"
+          "bytes": 966,
+          "sha256": "b591e729c75d7dded55678b13175b1a5dae8177977b926ec8f0632e852a581c1"
         },
         "transcript": {
-          "path": "client-onboarding/core/fr/transcript.txt",
+          "path": "new-client/core/fr/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 847,
-          "sha256": "90af9079042098de0b98f33e271199dd3b4ec6a8397a4343b883a6e323a3bad2"
+          "bytes": 817,
+          "sha256": "9d5f763cae48efd62c81cb2e5c8e7464168c69daf54b8c58fad6a46443ec3c9f"
         }
       },
       "media": {
@@ -217,59 +217,59 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "core",
       "scope": "core",
       "jurisdiction": null,
       "language": "de",
       "languageLabel": "Deutsch",
-      "title": "Vera | Informationsmodell fürs Mandanten-Onboarding",
+      "title": "Vera | Von Quelldokumenten zur vollständigen Mandantenakte",
       "status": "local_rendered",
       "targetDurationSeconds": 60.0,
-      "speechDurationSeconds": 58.102,
+      "speechDurationSeconds": 58.334,
       "voice": {
         "name": "Anna",
         "rate": 100,
-        "interScenePauseMs": 60,
-        "effectiveInterScenePauseSeconds": 0.0
+        "interScenePauseMs": 291,
+        "effectiveInterScenePauseSeconds": 0.355
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#core-model"
+        "/static/shared/new-client/index.html#core-model"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        10.433,
-        9.633,
-        9.633,
-        10.235,
-        9.633,
-        10.433
+        10.4,
+        10.178,
+        9.6,
+        9.6,
+        10.178,
+        10.045
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/core/de/guide.mp4",
+          "path": "new-client/core/de/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2532255,
-          "sha256": "98759a583d807b6bd7879a6611413487c4ef687dcd9bb3fceb8f8627e33d4e0e"
+          "bytes": 2602152,
+          "sha256": "041bf2309011424e3e6dccefd2cff400c4c740f1be33964dda2d24b7d75c8ed7"
         },
         "poster": {
-          "path": "client-onboarding/core/de/poster.jpg",
+          "path": "new-client/core/de/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 93088,
-          "sha256": "b3760d2b0a423e6bb1c7f2d0738737584b767460b1b2af4af756c72378a5e9e0"
+          "bytes": 98694,
+          "sha256": "f3b86ec466f5bf7e74b63ca6693a857296ad9f919e583b5eed288592a8423980"
         },
         "captions": {
-          "path": "client-onboarding/core/de/captions.vtt",
+          "path": "new-client/core/de/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 977,
-          "sha256": "d2f6d2d657353f4593dabb35855e1f652d28f86a9dcabbbbdab12bc7853b6832"
+          "bytes": 949,
+          "sha256": "d2d8717f55893bf743ef8fa3a2732fbfeb6ee5f4493fa41554230c9f05ac5065"
         },
         "transcript": {
-          "path": "client-onboarding/core/de/transcript.txt",
+          "path": "new-client/core/de/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 826,
-          "sha256": "972803b03b681fc1a11c94308868c15be058f93458ed646f0c339352ac62aee5"
+          "bytes": 805,
+          "sha256": "f2631cd0943f64496cd307a51c45e083282c0027157c39c5d79092cc8753e667"
         }
       },
       "media": {
@@ -286,59 +286,59 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "italy",
       "scope": "country",
       "jurisdiction": "IT",
       "language": "it",
       "languageLabel": "Italiano",
-      "title": "Vera | Onboarding cliente · Italia",
+      "title": "Vera | Incarico, privacy e AML per il nuovo cliente",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.539,
+      "speechDurationSeconds": 68.516,
       "voice": {
         "name": "Alice",
         "rate": 100,
-        "interScenePauseMs": 2822,
-        "effectiveInterScenePauseSeconds": 3.344
+        "interScenePauseMs": 2577,
+        "effectiveInterScenePauseSeconds": 3.053
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#italy-pack"
+        "/static/shared/new-client/index.html#italy-pack"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        11.598,
-        15.767,
-        10.798,
-        12.289,
-        12.289,
-        7.26
+        11.165,
+        15.24,
+        10.365,
+        10.853,
+        15.24,
+        7.137
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/italy/it/guide.mp4",
+          "path": "new-client/italy/it/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2683849,
-          "sha256": "819a2ba63148ad87431cc86603cb9b5f1693f535b3db33752a8b3880d9520ead"
+          "bytes": 2784100,
+          "sha256": "ef59901c290401f0ea7d41ebfa31fd87b79f0cfc70de45f644d95351948ec8be"
         },
         "poster": {
-          "path": "client-onboarding/italy/it/poster.jpg",
+          "path": "new-client/italy/it/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 77686,
-          "sha256": "9e0d31ea107232bc6b486b80bab9b7c173de72583d607468b57f88f189bd58fc"
+          "bytes": 81809,
+          "sha256": "cd167dd85f16d70d6a035acf6433ceceb140b892c57d4fa97be90ac11f633b49"
         },
         "captions": {
-          "path": "client-onboarding/italy/it/captions.vtt",
+          "path": "new-client/italy/it/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 938,
-          "sha256": "563cc42a5320f80c229d6e60c1a96d17a2876d60c469f4fd6c419ef60299e6a3"
+          "bytes": 959,
+          "sha256": "f9e54ed3ab6d78c95382cadf637f5e6249847b7661815351125dc43f1eb0dccf"
         },
         "transcript": {
-          "path": "client-onboarding/italy/it/transcript.txt",
+          "path": "new-client/italy/it/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 770,
-          "sha256": "13069623074f6c543a8aeb306036fbe8bc6aa2b6f9840ac0b335f9b0e6a6aeef"
+          "bytes": 807,
+          "sha256": "9ed88f4a09971fecb698c655641223fcae18b2adcdf1913b89c45ada96171f7f"
         }
       },
       "media": {
@@ -355,59 +355,59 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "italy",
       "scope": "country",
       "jurisdiction": "IT",
       "language": "en",
       "languageLabel": "English",
-      "title": "Vera | Client onboarding · Italy",
+      "title": "Vera | Engagement, privacy and AML for a new client",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.446,
+      "speechDurationSeconds": 68.469,
       "voice": {
         "name": "Samantha",
         "rate": 100,
-        "interScenePauseMs": 3294,
-        "effectiveInterScenePauseSeconds": 3.908
+        "interScenePauseMs": 3219,
+        "effectiveInterScenePauseSeconds": 3.817
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#italy-pack"
+        "/static/shared/new-client/index.html#italy-pack"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        11.688,
-        16.007,
-        11.819,
-        12.284,
-        10.888,
-        7.315
+        11.404,
+        15.58,
+        11.508,
+        10.604,
+        13.77,
+        7.134
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/italy/en/guide.mp4",
+          "path": "new-client/italy/en/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2655898,
-          "sha256": "f083b1bdaf2fe312483ac2fff0933186ae30df3c767bd977169a671e55e1e1f1"
+          "bytes": 2801660,
+          "sha256": "17a229efc66edbc3b4be47e824b41863176d1a62a54bd218d1f41b1cff59bb41"
         },
         "poster": {
-          "path": "client-onboarding/italy/en/poster.jpg",
+          "path": "new-client/italy/en/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 75947,
-          "sha256": "999fa51ea2a01d006b54240efd9091d0b1ef04ac5f24114f26c24e35d13e321a"
+          "bytes": 82452,
+          "sha256": "cb5ebf742ac3687b99e42c9cf8a257546688b314c168acd9cb1b1b649a86658b"
         },
         "captions": {
-          "path": "client-onboarding/italy/en/captions.vtt",
+          "path": "new-client/italy/en/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 880,
-          "sha256": "eb7fb04b9eb1d3d8457191c3d81bb3be2e5b6c851e5deba1f1a2b67aca18d298"
+          "bytes": 899,
+          "sha256": "514d4146b7a0a79cb8346f759baba3f95a6471b3cf809c219871b43bb13636bc"
         },
         "transcript": {
-          "path": "client-onboarding/italy/en/transcript.txt",
+          "path": "new-client/italy/en/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 710,
-          "sha256": "4ed5d1f51aa42ac850924b49e61df7e54045fd5393e245b6e127da9ea24860ee"
+          "bytes": 747,
+          "sha256": "34ca556de10129752c606fb62e59692c96cdd191e267c16124e0b49e7526e563"
         }
       },
       "media": {
@@ -424,59 +424,59 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "italy",
       "scope": "country",
       "jurisdiction": "IT",
       "language": "fr",
       "languageLabel": "Français",
-      "title": "Vera | Onboarding client · Italie",
+      "title": "Vera | Mission, confidentialité et LCB-FT pour un nouveau client",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.517,
+      "speechDurationSeconds": 68.505,
       "voice": {
         "name": "Thomas",
         "rate": 100,
-        "interScenePauseMs": 2494,
-        "effectiveInterScenePauseSeconds": 2.951
+        "interScenePauseMs": 2201,
+        "effectiveInterScenePauseSeconds": 2.659
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#italy-pack"
+        "/static/shared/new-client/index.html#italy-pack"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        13.246,
-        15.294,
-        13.395,
-        11.496,
-        9.597,
-        6.971
+        12.799,
+        14.801,
+        12.933,
+        10.131,
+        12.466,
+        6.871
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/italy/fr/guide.mp4",
+          "path": "new-client/italy/fr/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2671564,
-          "sha256": "87d21d34d13631acbf4efe74b205763c7c558429fd072cd384fd38f867a5b4e3"
+          "bytes": 2887389,
+          "sha256": "372e75213c67a0fbacc0db2e1795298f9cb0c62932471498f8b8c9454773ceed"
         },
         "poster": {
-          "path": "client-onboarding/italy/fr/poster.jpg",
+          "path": "new-client/italy/fr/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 76783,
-          "sha256": "ec848c3197e1bed75775a35aed31fd28dba3c325ee5b0773f92e664a703e5d25"
+          "bytes": 86720,
+          "sha256": "c242851d8a0d2e417561c0b19a0a4ff1774980c5bfdddb2ba33d3da198198cc8"
         },
         "captions": {
-          "path": "client-onboarding/italy/fr/captions.vtt",
+          "path": "new-client/italy/fr/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 996,
-          "sha256": "70c51edc18928296a859259ec1e3dae66b5fbac244c860754d7a85856ac79548"
+          "bytes": 1038,
+          "sha256": "c84486e8ff850d76188b6f3f860b082c4b965a8076d39edec817d0cbd8686502"
         },
         "transcript": {
-          "path": "client-onboarding/italy/fr/transcript.txt",
+          "path": "new-client/italy/fr/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 827,
-          "sha256": "3f6c8fe18e9ab785540647ab5310e875f1a2fe7f870679f123bf9efd28b85373"
+          "bytes": 900,
+          "sha256": "626fe4aeb50a42e2172ffc07429fed884a18d7bad2ef97f04671fc18508b075e"
         }
       },
       "media": {
@@ -493,59 +493,59 @@
     },
     {
       "conceptId": "from-client-folder-to-operational-file",
-      "module": "client-onboarding",
+      "module": "new-client",
       "edition": "italy",
       "scope": "country",
       "jurisdiction": "IT",
       "language": "de",
       "languageLabel": "Deutsch",
-      "title": "Vera | Mandanten-Onboarding · Italien",
+      "title": "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten",
       "status": "local_rendered",
       "targetDurationSeconds": 70.0,
-      "speechDurationSeconds": 68.463,
+      "speechDurationSeconds": 68.451,
       "voice": {
         "name": "Anna",
         "rate": 100,
-        "interScenePauseMs": 1604,
-        "effectiveInterScenePauseSeconds": 1.885
+        "interScenePauseMs": 1537,
+        "effectiveInterScenePauseSeconds": 1.807
       },
       "pageTargets": [
         "/static/shared/vera/index.html",
-        "/static/shared/client-onboarding/index.html#italy-pack"
+        "/static/shared/new-client/index.html#italy-pack"
       ],
       "cueCount": 6,
       "sceneDurationsSeconds": [
-        12.413,
-        6.141,
-        14.045,
-        14.653,
-        14.653,
-        8.096
+        12.011,
+        5.921,
+        13.562,
+        16.501,
+        14.15,
+        7.854
       ],
       "files": {
         "video": {
-          "path": "client-onboarding/italy/de/guide.mp4",
+          "path": "new-client/italy/de/guide.mp4",
           "mimeType": "video/mp4",
-          "bytes": 2859350,
-          "sha256": "5aad7213bf7cb9283876364dee14237f520c9dfaa90a82eeb50c02ec03348424"
+          "bytes": 2991104,
+          "sha256": "e2c94e84a989efb4e618665d2fa08aae8a67aeadb182d2ee612bb92edd7cbecd"
         },
         "poster": {
-          "path": "client-onboarding/italy/de/poster.jpg",
+          "path": "new-client/italy/de/poster.jpg",
           "mimeType": "image/jpeg",
-          "bytes": 86125,
-          "sha256": "d7e5856dc32a4f6dd5e301b2af0a83f14787690a7ceea75a848543406182bc3a"
+          "bytes": 93032,
+          "sha256": "cf689e346a07c4f82246adb2822435f16b9893a407fbddc2481dd9f060785c9e"
         },
         "captions": {
-          "path": "client-onboarding/italy/de/captions.vtt",
+          "path": "new-client/italy/de/captions.vtt",
           "mimeType": "text/vtt",
-          "bytes": 960,
-          "sha256": "126d1fb6b93a1298b926ad83be94e03643af76ebfa153a6cc6fcc50f86d85570"
+          "bytes": 976,
+          "sha256": "1a8f905752da480ea1439090ef7d0a0cc4e6d82d97f3067da83b423091df439f"
         },
         "transcript": {
-          "path": "client-onboarding/italy/de/transcript.txt",
+          "path": "new-client/italy/de/transcript.txt",
           "mimeType": "text/plain",
-          "bytes": 795,
-          "sha256": "a972213c92944af4647b39fcc1f0c3cd59517652c4d91ee2441c13e8e9a44454"
+          "bytes": 835,
+          "sha256": "74c5dc38dd78f8793eb8b1fbc22cbf15e6ab01d9c092168a5bbc6384ae9a3a2e"
         }
       },
       "media": {

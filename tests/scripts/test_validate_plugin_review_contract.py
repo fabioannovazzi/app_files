@@ -135,6 +135,10 @@ def _base_contract(tmp_path: Path) -> Path:
             ],
             "item_count": 1,
             "columns": [{"field": "title", "label": "Entry"}],
+            "source_artifacts": {
+                "run_intake": "run_intake.json",
+                "check_results": "check_results.csv",
+            },
             "evidence": [],
             "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
             "status": "ready_for_review",

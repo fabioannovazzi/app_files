@@ -526,7 +526,7 @@ def test_static_png_gallery_includes_first_class_table_examples() -> None:
     assert " / index" not in index_html
     assert "__index.png" not in index_html
     assert "audit-reconciliation" not in index_html
-    assert "client-intake" not in index_html
+    assert "new-client" not in index_html
     assert "openai-data-analytics-capability-review" not in index_html
 
     for item in manifest["items"]:

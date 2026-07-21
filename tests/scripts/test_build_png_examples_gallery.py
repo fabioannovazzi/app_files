@@ -986,7 +986,7 @@ def test_build_index_suppresses_redundant_single_plugin_family_heading(
 def test_default_skipped_artifact_excludes_generic_html_snapshot(
     tmp_path: Path,
 ) -> None:
-    source_path = tmp_path / "client-intake" / "index.html"
+    source_path = tmp_path / "new-client" / "index.html"
     source_path.parent.mkdir()
     source_path.write_text(
         "<html><main>Plugin documentation</main></html>", encoding="utf-8"

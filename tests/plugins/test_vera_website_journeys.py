@@ -18,8 +18,7 @@ VERA_INSTALL_URL = (
     "%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
 )
 VERA_SITE_MODULES = {
-    "client-intake",
-    "client-onboarding",
+    "new-client",
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
@@ -36,8 +35,7 @@ VERA_MODULE_PAGES = {
 }
 VERA_CORE_PAGES = (SHARED_ROOT / "vera" / "index.html", *VERA_MODULE_PAGES.values())
 VERA_SCOPE_BY_MODULE = {
-    "client-intake": "mixed",
-    "client-onboarding": "italy",
+    "new-client": "mixed",
     "journal-sampling": "core",
     "check-entries": "mixed",
     "journal-bank-reconciliation": "core",
@@ -51,7 +49,7 @@ VERA_SCOPE_BY_MODULE = {
 }
 VERA_RENDERED_VIDEO_IDENTITIES = {
     *(
-        ("client-onboarding", edition, language)
+        ("new-client", edition, language)
         for edition in ("core", "italy")
         for language in ("it", "en", "fr", "de")
     ),
@@ -80,13 +78,11 @@ VERA_CORE_VIDEO_FORBIDDEN_PHRASES = (
 )
 VERA_PUBLIC_PAGES = (
     *VERA_CORE_PAGES,
-    SHARED_ROOT / "client-intake" / "geneva.html",
-    SHARED_ROOT / "client-intake" / "zurich.html",
-    SHARED_ROOT / "client-intake" / "uk.html",
+    SHARED_ROOT / "new-client" / "geneva.html",
+    SHARED_ROOT / "new-client" / "zurich.html",
+    SHARED_ROOT / "new-client" / "uk.html",
 )
 VERA_CONNECTED_JOURNEYS = (
-    ("client-intake", "../client-onboarding/index.html?lang=it"),
-    ("client-onboarding", "../client-intake/index.html?lang=it"),
     ("journal-sampling", "../check-entries/index.html?lang=it"),
     ("check-entries", "../journal-sampling/index.html?lang=it"),
     (
@@ -240,7 +236,7 @@ def test_vera_public_pages_omit_discarded_defensive_and_marketplace_copy(
         ("journal-sampling", 'setOutputList("prompt-list", data.prompts.items)', 3),
         (
             "riconciliazione-partite",
-            'data.prompts.rows, ([title, copy])',
+            "data.prompts.rows, ([title, copy])",
             5,
         ),
     ),
@@ -332,9 +328,9 @@ def test_vera_hub_separates_core_workflows_from_the_italy_pack() -> None:
     italy = _section_markup(page, "italia")
 
     assert core.count('class="module-row"') == 8
-    assert italy.count('class="module-row"') == 7
+    assert italy.count('class="module-row"') == 5
     for expected_href in (
-        "../client-intake/index.html#work",
+        "../new-client/index.html#journey",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
@@ -345,8 +341,6 @@ def test_vera_hub_separates_core_workflows_from_the_italy_pack() -> None:
     ):
         assert f'href="{expected_href}"' in core
     for expected_href in (
-        "../client-intake/index.html#market-selector",
-        "../client-onboarding/index.html#italy-pack",
         "../check-entries/index.html#italy-adapter",
         "../report-builder/index.html#italy-preset",
         "../concordato-plan-review/index.html",
@@ -361,6 +355,60 @@ def test_vera_hub_separates_core_workflows_from_the_italy_pack() -> None:
     assert 'href="#italia"' in page
     assert page.index('id="core"') < page.index('id="italia"')
     assert page.index('id="italia"') < page.index('id="video"')
+
+
+def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> None:
+    hub = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    new_client = (SHARED_ROOT / "new-client" / "index.html").read_text(encoding="utf-8")
+    public_identity_sources = "\n".join(
+        (
+            hub,
+            new_client,
+            (SHARED_ROOT / "vera-scope.js").read_text(encoding="utf-8"),
+            (SHARED_ROOT / "video-library.js").read_text(encoding="utf-8"),
+            (SHARED_ROOT / "video-production" / "vera-missing-guides.json").read_text(
+                encoding="utf-8"
+            ),
+            (SHARED_ROOT / "video-production" / "rendered" / "manifest.json").read_text(
+                encoding="utf-8"
+            ),
+            *(
+                path.read_text(encoding="utf-8")
+                for path in (
+                    SHARED_ROOT / "video-production" / "rendered" / "new-client"
+                ).rglob("*.txt")
+            ),
+            *(
+                path.read_text(encoding="utf-8")
+                for path in (
+                    SHARED_ROOT / "video-production" / "rendered" / "new-client"
+                ).rglob("*.vtt")
+            ),
+        )
+    ).casefold()
+
+    assert hub.count('id="new-client"') == 1
+    assert hub.count('href="../new-client/index.html#journey"') == 1
+    assert not (SHARED_ROOT / "client-intake").exists()
+    assert not (SHARED_ROOT / "client-onboarding").exists()
+    for retired_identity in (
+        "client-intake",
+        "client-onboarding",
+        "client intake",
+        "client onboarding",
+    ):
+        assert retired_identity not in public_identity_sources
+
+    assert "journey-step__number" not in new_client
+    assert "01 ·" not in new_client
+    assert "02 ·" not in new_client
+    assert "03 ·" not in new_client
+
+    journey_css = (SHARED_ROOT / "vera-journey.css").read_text(encoding="utf-8")
+    assert 'body[data-vera-module="new-client"] .journey-step' in journey_css
+    assert "grid-template-columns: minmax(210px, 0.42fr) minmax(0, 0.58fr);" in (
+        journey_css
+    )
 
 
 def test_vera_hub_localizes_every_visible_copy_key_in_all_four_languages() -> None:
@@ -381,7 +429,7 @@ def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
         page,
     )
 
-    assert len(module_hrefs) == 15
+    assert len(module_hrefs) == 13
     for href in module_hrefs:
         target = urlsplit(href)
         target_path = (hub_path.parent / target.path).resolve()
@@ -415,7 +463,6 @@ def test_vera_module_pages_publish_the_shared_scope_taxonomy(
 @pytest.mark.parametrize(
     "module",
     (
-        "client-onboarding",
         "concordato-plan-review",
         "previdenza-inps",
         "registro-imprese-sari",
@@ -434,8 +481,8 @@ def test_italy_scoped_pages_label_the_country_in_every_language(module: str) -> 
         assert country_label in page
 
 
-def test_client_intake_jurisdiction_and_presentation_language_are_independent() -> None:
-    jurisdiction_root = SHARED_ROOT / "client-intake"
+def test_new_client_jurisdiction_and_presentation_language_are_independent() -> None:
+    jurisdiction_root = SHARED_ROOT / "new-client"
     jurisdiction_script = (jurisdiction_root / "jurisdiction-pages.js").read_text(
         encoding="utf-8"
     )
@@ -466,6 +513,9 @@ def test_client_intake_jurisdiction_and_presentation_language_are_independent() 
         jurisdiction_script
     )
     assert "const copy = page.copy[language]" in jurisdiction_script
+    assert 'href="index.html?lang=${language}#relationship"' in jurisdiction_script
+    assert "Report Builder" not in jurisdiction_script
+    assert not re.search(r'title: "[123]\. ', jurisdiction_script)
     assert "dataset.jurisdiction =" not in jurisdiction_script
     assert "window.location.replace" not in jurisdiction_script
 
@@ -476,7 +526,7 @@ def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
     assert 'src="../video-library.js?v=2026072002"' in page
     assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
     assert (
-        'const curatedVideoModules = ["client-intake", '
+        'const curatedVideoModules = ["new-client", '
         '"journal-bank-reconciliation", "report-builder", "prompt-optimizer"]'
     ) in page
     assert page.count("data-video-index=") == 4
@@ -621,8 +671,8 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
     assert spec["remotePublish"] is False
     assert spec["renderedManifest"] == "rendered/manifest.json"
     assert {(concept["module"], concept["edition"]) for concept in concepts} == {
-        ("client-onboarding", "core"),
-        ("client-onboarding", "italy"),
+        ("new-client", "core"),
+        ("new-client", "italy"),
         ("journal-sampling", "core"),
         ("check-entries", "core"),
         ("check-entries", "italy-fatturapa"),
@@ -736,22 +786,22 @@ def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
 
 
 def test_vera_rendered_guides_are_adopted_by_their_module_pages() -> None:
-    onboarding = VERA_MODULE_PAGES["client-onboarding"].read_text(encoding="utf-8")
+    new_client = VERA_MODULE_PAGES["new-client"].read_text(encoding="utf-8")
     sampling = VERA_MODULE_PAGES["journal-sampling"].read_text(encoding="utf-8")
     entries = VERA_MODULE_PAGES["check-entries"].read_text(encoding="utf-8")
 
-    assert onboarding.count("<video") == 2
-    assert 'id="core-video"' in onboarding
-    assert 'id="proof-video"' in onboarding
-    assert "/rendered/client-onboarding/core/it/guide.mp4" in onboarding
-    assert "/rendered/client-onboarding/italy/it/guide.mp4" in onboarding
+    assert new_client.count("<video") == 2
+    assert 'id="core-video"' in new_client
+    assert 'id="proof-video"' in new_client
+    assert "/rendered/new-client/core/it/guide.mp4" in new_client
+    assert "/rendered/new-client/italy/it/guide.mp4" in new_client
     assert (
-        "`/static/shared/video-production/rendered/client-onboarding/core/${lang}`"
-        in onboarding
+        "`/static/shared/video-production/rendered/new-client/core/${lang}`"
+        in new_client
     )
     assert (
-        "`/static/shared/video-production/rendered/client-onboarding/italy/${lang}`"
-        in onboarding
+        "`/static/shared/video-production/rendered/new-client/italy/${lang}`"
+        in new_client
     )
 
     assert sampling.count("<video") == 1
@@ -787,6 +837,6 @@ def test_vera_rendered_guides_are_adopted_by_their_module_pages() -> None:
         in entries
     )
 
-    for page in (onboarding, sampling, entries):
+    for page in (new_client, sampling, entries):
         assert re.search(r"<video[^>]+controls[^>]+playsinline[^>]+preload=", page)
         assert 'kind="captions"' in page

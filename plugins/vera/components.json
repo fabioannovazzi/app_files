@@ -2,8 +2,8 @@
   "schema_version": 1,
   "plugins": [
     "audit-reconciliation",
-    "client-intake",
-    "client-onboarding",
+    "client-file-preparation",
+    "new-client",
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
@@ -13,5 +13,15 @@
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari"
-  ]
+  ],
+  "workflow_roles": {
+    "new-client": {
+      "kind": "workflow",
+      "internal_engines": ["client-file-preparation"]
+    },
+    "client-file-preparation": {
+      "kind": "internal_engine",
+      "parent_workflow": "new-client"
+    }
+  }
 }
