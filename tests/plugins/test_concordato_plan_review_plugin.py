@@ -569,7 +569,6 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
         "dependency_check": {"status": "not_run"},
         "data_posture": {
             "local_files_read": [tmp_path.as_posix()],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

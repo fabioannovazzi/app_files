@@ -37,16 +37,6 @@ def _write_case_records(path: Path, *, date_value: str = "2021-01-01") -> Path:
         "case_id": "CASE-001",
         "language": "it",
         "professional_question": "Quale trattamento previdenziale risulta supportato?",
-        "processing_authorization": {
-            "studio_processing_authorized": True,
-            "model_processing_approved": True,
-            "processor_scope": "current_approved_codex_runtime",
-            "approved_by_id": "REV-001",
-            "approved_by_role": "professional_reviewer",
-            "recorded_at": "2026-07-16T09:00:00+02:00",
-            "basis": "Explicit authorization for the synthetic test case.",
-            "personal_data_minimized": True,
-        },
         "material_decisions": {
             "professional_question_confirmed": True,
             "framework_confirmed": True,
@@ -220,6 +210,13 @@ def _node_or_skip() -> str:
 def _mcp_tool_call(
     node: str, tool_name: str, arguments: dict[str, object]
 ) -> dict[str, object]:
+    response = _mcp_raw_response(node, tool_name, arguments)
+    return response["result"]["structuredContent"]
+
+
+def _mcp_raw_response(
+    node: str, tool_name: str, arguments: dict[str, object]
+) -> dict[str, object]:
     request = {
         "jsonrpc": "2.0",
         "id": 1,
@@ -234,8 +231,7 @@ def _mcp_tool_call(
         text=True,
     )
     assert completed.returncode == 0, completed.stderr
-    response = json.loads(completed.stdout.strip())
-    return response["result"]["structuredContent"]
+    return json.loads(completed.stdout.strip())
 
 
 def _review_payload(
@@ -281,7 +277,6 @@ def _review_payload(
                 "status": "needs_review",
             }
         ],
-        "privacy_notice": "Review payload omits document quotes and subject labels; inspect local artifacts for full evidence.",
     }
 
 
@@ -601,7 +596,7 @@ def test_validate_case_records_rejects_modified_evidence_fragment(
     }
 
 
-def test_validate_case_records_enforces_value_and_decision_audit(
+def test_validate_case_records_enforces_value_and_professional_decision_audit(
     tmp_path: Path,
 ) -> None:
     _, output_dir = _inventory_case(tmp_path)
@@ -610,7 +605,6 @@ def test_validate_case_records_enforces_value_and_decision_audit(
     records["facts"][0].pop("value")
     records["decision_log"] = records["decision_log"][:-1]
     records["decision_log"][0]["decided_by_role"] = "model"
-    records["processing_authorization"]["model_processing_approved"] = False
     records_path.write_text(json.dumps(records), encoding="utf-8")
     validator = _load_script("validate_case_records")
 
@@ -623,7 +617,6 @@ def test_validate_case_records_enforces_value_and_decision_audit(
         "missing_fact_value",
         "incomplete_decision_log",
         "missing_decision_authority",
-        "unconfirmed_processing_authorization",
     }
 
 
@@ -834,9 +827,9 @@ def test_package_case_writes_reviewable_markdown_docx_and_handoff(
     fact_item = next(
         item for item in review_payload["items"] if item["item_type"] == "fact"
     )
-    assert fact_item["data"]["summary"] == "Validated fact record"
-    assert fact_item["evidence"] == []
-    assert '"quote":' not in json.dumps(review_payload)
+    assert fact_item["data"]["statement"] == "Il rapporto decorre dal 1 gennaio 2021."
+    assert fact_item["data"]["review_label"] == "Decorrenza del rapporto"
+    assert fact_item["evidence"][0]["quote"] == "decorre dal 1 gennaio 2021"
     handoff_item = next(
         item
         for item in review_payload["items"]
@@ -1042,7 +1035,7 @@ def test_package_case_blocks_changed_acquisition_posture_after_validation(
     }
 
 
-def test_package_case_blocks_and_omits_sensitive_review_metadata(
+def test_package_case_preserves_professional_data_but_blocks_session_urls(
     tmp_path: Path,
 ) -> None:
     _, output_dir = _inventory_case(tmp_path)
@@ -1057,9 +1050,9 @@ def test_package_case_blocks_and_omits_sensitive_review_metadata(
         == "passed"
     )
     claims = json.loads(claims_path.read_text(encoding="utf-8"))
-    secret_email = "test.user@example.it"
+    professional_data = "Fabio Annovazzi — TSTUSR80A01H501U — test.user@example.it"
     secret_url = "https://www.inps.it/area?token=PRIVATE-TOKEN"
-    claims["claims"][0]["review_label"] = f"Posizione di {secret_email}"
+    claims["claims"][0]["review_label"] = professional_data
     claims["claims"][0]["sources"][0]["reference"] = secret_url
     claims_path.write_text(json.dumps(claims), encoding="utf-8")
 
@@ -1069,8 +1062,7 @@ def test_package_case_blocks_and_omits_sensitive_review_metadata(
 
     assert result["final_artifacts"]["status"] == "validation_fail"
     assert {issue["code"] for issue in result["audit"]["issues"]} >= {
-        "unsafe_review_label",
-        "unsafe_source_reference",
+        "unsafe_source_reference"
     }
     generated = "\n".join(
         (output_dir / name).read_text(encoding="utf-8")
@@ -1082,7 +1074,7 @@ def test_package_case_blocks_and_omits_sensitive_review_metadata(
             "validation_audit.json",
         )
     )
-    assert secret_email not in generated
+    assert professional_data in generated
     assert secret_url not in generated
 
 
@@ -1480,19 +1472,14 @@ def test_previdenza_inps_mcp_render_discloses_only_safe_connector_approval(
     )
 
 
-def test_previdenza_inps_mcp_render_omits_arbitrary_untrusted_item_fields() -> None:
+def test_previdenza_inps_mcp_render_preserves_professional_case_fields() -> None:
     node = _node_or_skip()
     review = _review_payload("previdenza-inps-untrusted-fields")
     item = review["items"][0]
     assert isinstance(item, dict)
-    item["title"] = "test.user@example.it"
-    item["data"]["arbitrary_private_field"] = "TSTUSR80A01H501U"
-    item["evidence"] = [
-        {
-            "kind": "source_reference",
-            "value": "https://www.inps.it/area?token=PRIVATE-TOKEN",
-        }
-    ]
+    item["title"] = "Fabio Annovazzi — test.user@example.it"
+    item["data"]["case_fact"] = "TSTUSR80A01H501U"
+    item["evidence"] = [{"kind": "quote", "quote": "Fabio requested review."}]
 
     result = _mcp_tool_call(
         node,
@@ -1500,11 +1487,35 @@ def test_previdenza_inps_mcp_render_omits_arbitrary_untrusted_item_fields() -> N
         {"review_payload": review},
     )
 
-    serialized = json.dumps(result)
-    assert "test.user@example.it" not in serialized
-    assert "TSTUSR80A01H501U" not in serialized
-    assert "PRIVATE-TOKEN" not in serialized
-    assert result["review_payload"]["items"][0]["evidence"] == []
+    serialized = json.dumps(result, ensure_ascii=False)
+    assert "Fabio Annovazzi — test.user@example.it" in serialized
+    assert "TSTUSR80A01H501U" in serialized
+    assert result["review_payload"]["items"][0]["evidence"] == [
+        {"kind": "quote", "quote": "Fabio requested review."}
+    ]
+
+
+def test_previdenza_inps_mcp_render_rejects_tokenized_session_urls() -> None:
+    node = _node_or_skip()
+    review = _review_payload("previdenza-inps-session-url")
+    review["items"][0]["evidence"] = [
+        {
+            "kind": "source_reference",
+            "value": "https://www.inps.it/area?token=PRIVATE-TOKEN",
+        }
+    ]
+
+    response = _mcp_raw_response(
+        node,
+        "render_previdenza_inps_review",
+        {"review_payload": review},
+    )
+
+    assert response["result"]["isError"] is True
+    assert (
+        "private, credentialed, or tokenized URLs"
+        in response["result"]["structuredContent"]["error"]
+    )
 
 
 def test_previdenza_inps_mcp_persistence_rejects_reduced_stored_review(

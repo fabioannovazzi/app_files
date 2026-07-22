@@ -384,7 +384,7 @@ TARGETS: list[dict[str, Any]] = [
         "queueTitle": "Setup Decisions",
         "detailTitle": "Evidence, Basis, Decision",
         "detailMode": "professional-setup-desk",
-        "detailHelp": "Review the minimized fact, cited basis, and downstream dossier impact before recording a professional decision.",
+        "detailHelp": "Review the professional fact, cited basis, and downstream dossier impact before recording a decision.",
         "persistDecisionTextInWidgetState": False,
         "useDecisionRevision": True,
         "requiresReviewerAlias": True,
@@ -416,9 +416,22 @@ TARGETS: list[dict[str, Any]] = [
                 "fields": [
                     "client_reference",
                     "fact_code",
+                    "value",
+                    "document_type",
+                    "document_number",
+                    "representative_reference",
+                    "owner_reference",
+                    "role",
+                    "authority_basis",
+                    "control_basis",
                     "service_id",
+                    "description",
+                    "purpose",
+                    "legal_basis_code",
                     "relationship_kind",
                     "confirmation_status",
+                    "verification_date",
+                    "identity_verification_status",
                 ],
                 "empty": "No client or engagement fields.",
             },
@@ -432,6 +445,7 @@ TARGETS: list[dict[str, Any]] = [
                     "risk_band",
                     "verification_type",
                     "rationale",
+                    "basis",
                 ],
                 "empty": "No AML or applicability fields.",
             },
@@ -440,6 +454,13 @@ TARGETS: list[dict[str, Any]] = [
                 "variant": "checklist",
                 "fields": [
                     "evidence_status",
+                    "screening_id",
+                    "subject_reference",
+                    "source_reference",
+                    "screening_type",
+                    "checked_at",
+                    "outcome",
+                    "resolution_status",
                     "source_ids",
                     "case_fact_ids",
                     "requested_document",
@@ -1341,15 +1362,13 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "artifactRequiredCells": "Required cells",
             "artifactBytes": "bytes",
             "artifactMore": "+{count} more",
-            "dataPosture": "Data posture",
-            "localFiles": "Local files",
-            "modelExcerpts": "Model excerpts",
-            "excerptRows": "rows",
-            "excerptChars": "chars",
-            "connectors": "Connectors",
-            "uploads": "Uploads",
-            "remoteSql": "Remote SQL",
-            "hostedNotebook": "Hosted notebook",
+            "dataPosture": "Helper execution routes",
+            "dataPostureScope": "Optional routes used by helper execution. This does not describe or count the context sent by Codex to the model.",
+            "localFiles": "Files read by helpers",
+            "connectors": "Optional connectors",
+            "uploads": "Optional upload routes",
+            "remoteSql": "Helper remote SQL",
+            "hostedNotebook": "Helper hosted notebook",
             "executionProvenance": "Execution provenance",
             "executionPending": "Execution trace appears after run_intake.json records the local run.",
             "traceStepSingular": "step",
@@ -1366,20 +1385,20 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "safeguardsReady": "Ready",
             "safeguardsCheck": "Check",
             "safeguardsWarning": "Review",
-            "safeguardLocalExecution": "Local execution",
-            "safeguardExternalApproval": "External approval",
+            "safeguardLocalExecution": "Helper-script execution",
+            "safeguardExternalApproval": "Optional routes beyond Codex",
             "safeguardBoundedPayload": "Bounded payload",
             "safeguardDecisionPersistence": "Decision persistence",
             "safeguardFinalArtifacts": "Final artifacts",
             "externalApprovalRecorded": "Approval recorded",
             "externalApprovalMissing": "External approval missing",
-            "externalApprovalNotNeeded": "Not needed",
+            "externalApprovalNotNeeded": "No optional route used",
             "payloadItemsCount": "{count} items",
             "finalArtifactsDeclared": "{count} outputs",
             "finalArtifactsMissing": "No outputs declared",
             "executionTraceMissing": "Trace missing",
-            "localExecutionDeclared": "Local workspace",
-            "remoteExecutionDeclared": "Remote path",
+            "localExecutionDeclared": "Helper ran in local workspace",
+            "remoteExecutionDeclared": "Helper used an external path",
             "persistenceAvailable": "Save/apply available",
             "persistenceFallback": "Copy JSON only",
             "notDeclared": "Not declared",
@@ -1537,15 +1556,13 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "artifactRequiredCells": "Celle richieste",
             "artifactBytes": "byte",
             "artifactMore": "+{count} altri",
-            "dataPosture": "Postura dati",
-            "localFiles": "File locali",
-            "modelExcerpts": "Estratti modello",
-            "excerptRows": "righe",
-            "excerptChars": "car.",
-            "connectors": "Connettori",
-            "uploads": "Upload",
-            "remoteSql": "SQL remoto",
-            "hostedNotebook": "Notebook hosted",
+            "dataPosture": "Percorsi dati dei processi di supporto",
+            "dataPostureScope": "Percorsi opzionali usati dai processi di supporto. Non descrive né conta il contesto inviato da Codex al modello.",
+            "localFiles": "File letti dai processi di supporto",
+            "connectors": "Connettori opzionali",
+            "uploads": "Percorsi di upload opzionali",
+            "remoteSql": "SQL remoto dei processi di supporto",
+            "hostedNotebook": "Notebook hosted dei processi di supporto",
             "executionProvenance": "Provenienza esecuzione",
             "executionPending": "La traccia di esecuzione appare dopo che run_intake.json registra il run locale.",
             "traceStepSingular": "passo",
@@ -1562,20 +1579,20 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "safeguardsReady": "Pronto",
             "safeguardsCheck": "Da verificare",
             "safeguardsWarning": "Attenzione",
-            "safeguardLocalExecution": "Esecuzione locale",
-            "safeguardExternalApproval": "Approvazione esterna",
+            "safeguardLocalExecution": "Esecuzione degli script helper",
+            "safeguardExternalApproval": "Percorsi opzionali oltre Codex",
             "safeguardBoundedPayload": "Payload limitato",
             "safeguardDecisionPersistence": "Persistenza decisioni",
             "safeguardFinalArtifacts": "Artefatti finali",
             "externalApprovalRecorded": "Approvazione registrata",
             "externalApprovalMissing": "Approvazione esterna mancante",
-            "externalApprovalNotNeeded": "Non necessaria",
+            "externalApprovalNotNeeded": "Nessun percorso opzionale usato",
             "payloadItemsCount": "{count} elementi",
             "finalArtifactsDeclared": "{count} output",
             "finalArtifactsMissing": "Nessun output dichiarato",
             "executionTraceMissing": "Traccia mancante",
-            "localExecutionDeclared": "Workspace locale",
-            "remoteExecutionDeclared": "Percorso remoto",
+            "localExecutionDeclared": "Script eseguito nel workspace locale",
+            "remoteExecutionDeclared": "Script eseguito su un percorso esterno",
             "persistenceAvailable": "Salva/applica disponibile",
             "persistenceFallback": "Solo copia JSON",
             "notDeclared": "Non dichiarato",
@@ -1733,15 +1750,13 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "artifactRequiredCells": "Cellules requises",
             "artifactBytes": "octets",
             "artifactMore": "+{count} autres",
-            "dataPosture": "Posture donnees",
-            "localFiles": "Fichiers locaux",
-            "modelExcerpts": "Extraits modele",
-            "excerptRows": "lignes",
-            "excerptChars": "car.",
-            "connectors": "Connecteurs",
-            "uploads": "Uploads",
-            "remoteSql": "SQL distant",
-            "hostedNotebook": "Notebook heberge",
+            "dataPosture": "Flux de données des processus auxiliaires",
+            "dataPostureScope": "Flux optionnels utilisés par les processus auxiliaires. Ceci ne décrit ni ne compte le contexte envoyé par Codex au modèle.",
+            "localFiles": "Fichiers lus par les processus auxiliaires",
+            "connectors": "Connecteurs optionnels",
+            "uploads": "Flux de téléversement optionnels",
+            "remoteSql": "SQL distant des processus auxiliaires",
+            "hostedNotebook": "Notebook hébergé des processus auxiliaires",
             "executionProvenance": "Provenance execution",
             "executionPending": "La trace d'execution apparait apres l'enregistrement du run local dans run_intake.json.",
             "traceStepSingular": "etape",
@@ -1758,20 +1773,20 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "safeguardsReady": "Pret",
             "safeguardsCheck": "A verifier",
             "safeguardsWarning": "Attention",
-            "safeguardLocalExecution": "Execution locale",
-            "safeguardExternalApproval": "Approbation externe",
+            "safeguardLocalExecution": "Execution des scripts auxiliaires",
+            "safeguardExternalApproval": "Parcours optionnels hors de Codex",
             "safeguardBoundedPayload": "Payload borne",
             "safeguardDecisionPersistence": "Persistance decisions",
             "safeguardFinalArtifacts": "Artefacts finaux",
             "externalApprovalRecorded": "Approbation enregistree",
             "externalApprovalMissing": "Approbation externe manquante",
-            "externalApprovalNotNeeded": "Non requise",
+            "externalApprovalNotNeeded": "Aucun parcours optionnel utilise",
             "payloadItemsCount": "{count} elements",
             "finalArtifactsDeclared": "{count} sorties",
             "finalArtifactsMissing": "Aucune sortie declaree",
             "executionTraceMissing": "Trace manquante",
-            "localExecutionDeclared": "Workspace local",
-            "remoteExecutionDeclared": "Chemin distant",
+            "localExecutionDeclared": "Script execute dans le workspace local",
+            "remoteExecutionDeclared": "Script execute via un parcours externe",
             "persistenceAvailable": "Enregistrement/application disponible",
             "persistenceFallback": "Copie JSON seule",
             "notDeclared": "Non declare",
@@ -1929,15 +1944,13 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "artifactRequiredCells": "Erforderliche Zellen",
             "artifactBytes": "Bytes",
             "artifactMore": "+{count} weitere",
-            "dataPosture": "Datenhaltung",
-            "localFiles": "Lokale Dateien",
-            "modelExcerpts": "Modellauszuege",
-            "excerptRows": "Zeilen",
-            "excerptChars": "Zeichen",
-            "connectors": "Konnektoren",
-            "uploads": "Uploads",
-            "remoteSql": "Remote SQL",
-            "hostedNotebook": "Gehostetes Notebook",
+            "dataPosture": "Datenwege der Hilfsprozesse",
+            "dataPostureScope": "Optionale Wege der Hilfsprozesse. Dies beschreibt oder zählt nicht den von Codex an das Modell gesendeten Kontext.",
+            "localFiles": "Von Hilfsprozessen gelesene Dateien",
+            "connectors": "Optionale Konnektoren",
+            "uploads": "Optionale Upload-Wege",
+            "remoteSql": "Remote-SQL der Hilfsprozesse",
+            "hostedNotebook": "Gehostetes Notebook der Hilfsprozesse",
             "executionProvenance": "Ausfuehrungsnachweis",
             "executionPending": "Die Ausfuehrungsspur erscheint, nachdem run_intake.json den lokalen Run erfasst.",
             "traceStepSingular": "Schritt",
@@ -1954,20 +1967,20 @@ UI_I18N: dict[str, dict[str, Any]] = {
             "safeguardsReady": "Bereit",
             "safeguardsCheck": "Pruefen",
             "safeguardsWarning": "Achtung",
-            "safeguardLocalExecution": "Lokale Ausfuehrung",
-            "safeguardExternalApproval": "Externe Freigabe",
+            "safeguardLocalExecution": "Ausfuehrung der Hilfsskripte",
+            "safeguardExternalApproval": "Optionale Wege ausserhalb von Codex",
             "safeguardBoundedPayload": "Begrenzter Payload",
             "safeguardDecisionPersistence": "Entscheidungspersistenz",
             "safeguardFinalArtifacts": "Finale Artefakte",
             "externalApprovalRecorded": "Freigabe erfasst",
             "externalApprovalMissing": "Externe Freigabe fehlt",
-            "externalApprovalNotNeeded": "Nicht erforderlich",
+            "externalApprovalNotNeeded": "Kein optionaler Weg verwendet",
             "payloadItemsCount": "{count} Elemente",
             "finalArtifactsDeclared": "{count} Ausgaben",
             "finalArtifactsMissing": "Keine Ausgaben deklariert",
             "executionTraceMissing": "Spur fehlt",
-            "localExecutionDeclared": "Lokaler Workspace",
-            "remoteExecutionDeclared": "Remote-Pfad",
+            "localExecutionDeclared": "Hilfsskript im lokalen Workspace",
+            "remoteExecutionDeclared": "Hilfsskript ueber externen Pfad",
             "persistenceAvailable": "Speichern/Anwenden verfuegbar",
             "persistenceFallback": "Nur JSON kopieren",
             "notDeclared": "Nicht deklariert",
@@ -2147,9 +2160,9 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Decisione documento",
             "detailHelp": "Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.",
             "search": "Cerca documento, mancante, memo, email, blocco",
-            "reviewerAlias": "Alias revisore",
-            "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare la revisione; non inserire nome, email o identificativi fiscali.",
-            "reviewerAliasInvalid": "L'alias revisore deve iniziare con una lettera e contenere da 3 a 64 lettere ASCII, numeri, punti, trattini bassi, due punti o trattini.",
+            "reviewerAlias": "Revisore",
+            "reviewerAliasHelp": "Usa un riferimento stabile del professionista o del suo account. È ammesso il nome reale del professionista. Non inserire credenziali, materiale di sessione o percorsi locali grezzi.",
+            "reviewerAliasInvalid": "Il riferimento del revisore può avere al massimo 160 caratteri e non deve contenere credenziali, materiale di sessione o percorsi locali grezzi.",
         },
         "fr": {
             "title": "Nouveau client · Preparation des documents",
@@ -2158,9 +2171,9 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Decision document",
             "detailHelp": "Classez les documents, confirmez les manquants et saisissez la prochaine demande client.",
             "search": "Chercher document, manquant, memo, email, blocage",
-            "reviewerAlias": "Alias du reviseur",
-            "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour terminer la revue; ne saisissez ni nom, ni email, ni identifiant fiscal.",
-            "reviewerAliasInvalid": "L'alias du reviseur doit commencer par une lettre et contenir de 3 a 64 lettres ASCII, chiffres, points, tirets bas, deux-points ou tirets.",
+            "reviewerAlias": "Réviseur",
+            "reviewerAliasHelp": "Utilisez une référence stable du professionnel ou de son compte. Le nom réel du professionnel est admis. Ne saisissez ni identifiants de connexion, ni données de session, ni chemins locaux bruts.",
+            "reviewerAliasInvalid": "La référence du réviseur est limitée à 160 caractères et ne doit contenir ni identifiants de connexion, ni données de session, ni chemins locaux bruts.",
         },
         "de": {
             "title": "Neuer Mandant · Unterlagen vorbereiten",
@@ -2169,9 +2182,9 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Dokumententscheidung",
             "detailHelp": "Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.",
             "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen",
-            "reviewerAlias": "Prueferalias",
-            "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den Abschluss der Pruefung erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
-            "reviewerAliasInvalid": "Das Prueferalias muss mit einem Buchstaben beginnen und 3 bis 64 ASCII-Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten.",
+            "reviewerAlias": "Prüfer",
+            "reviewerAliasHelp": "Verwenden Sie eine stabile Referenz des Berufsträgers oder seines Kontos. Der echte Name des Berufsträgers ist zulässig. Keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade eingeben.",
+            "reviewerAliasInvalid": "Die Prüferreferenz darf höchstens 160 Zeichen lang sein und keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade enthalten.",
         },
     },
     "new-client": {
@@ -2180,11 +2193,11 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "reviewTitle": "Revisione assetto professionale",
             "queueTitle": "Decisioni sul rapporto",
             "detailTitle": "Evidenza, base e decisione",
-            "detailHelp": "Rivedi il fatto minimizzato, la base citata e l'impatto sul dossier prima di registrare la decisione professionale.",
+            "detailHelp": "Rivedi il fatto professionale, la base citata e l'impatto sul dossier prima di registrare la decisione.",
             "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco",
-            "reviewerAlias": "Alias revisore",
-            "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare l'export professionale; non inserire nome, email o identificativi fiscali.",
-            "reviewerAliasInvalid": "L'alias revisore puo contenere solo lettere, numeri, punti, trattini bassi, due punti o trattini.",
+            "reviewerAlias": "Revisore",
+            "reviewerAliasHelp": "Usa un riferimento stabile del professionista o del suo account. È ammesso il nome reale del professionista. Non inserire credenziali, materiale di sessione o percorsi locali grezzi.",
+            "reviewerAliasInvalid": "Il riferimento del revisore può avere al massimo 160 caratteri e non deve contenere credenziali, materiale di sessione o percorsi locali grezzi.",
             "bulkProfessionalSkipped": "Applicate {applied} raccomandazioni sicure. {skipped} decisioni professionali richiedono ancora una revisione individuale.",
         },
         "fr": {
@@ -2192,11 +2205,11 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "reviewTitle": "Revue de la mise en place professionnelle",
             "queueTitle": "Decisions sur la relation",
             "detailTitle": "Preuve, fondement et decision",
-            "detailHelp": "Examinez le fait minimise, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision professionnelle.",
+            "detailHelp": "Examinez le fait professionnel, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision.",
             "search": "Chercher fait, service, facteur AML, document, source, blocage",
-            "reviewerAlias": "Alias du reviseur",
-            "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour finaliser l'export professionnel; ne saisissez ni nom, ni email, ni identifiant fiscal.",
-            "reviewerAliasInvalid": "L'alias du reviseur ne peut contenir que des lettres, chiffres, points, tirets bas, deux-points ou tirets.",
+            "reviewerAlias": "Réviseur",
+            "reviewerAliasHelp": "Utilisez une référence stable du professionnel ou de son compte. Le nom réel du professionnel est admis. Ne saisissez ni identifiants de connexion, ni données de session, ni chemins locaux bruts.",
+            "reviewerAliasInvalid": "La référence du réviseur est limitée à 160 caractères et ne doit contenir ni identifiants de connexion, ni données de session, ni chemins locaux bruts.",
             "bulkProfessionalSkipped": "{applied} recommandations sures appliquees. {skipped} decisions professionnelles exigent encore une revue individuelle.",
         },
         "de": {
@@ -2204,11 +2217,11 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "reviewTitle": "Professionelle Einrichtung pruefen",
             "queueTitle": "Entscheidungen zum Mandat",
             "detailTitle": "Nachweis, Grundlage und Entscheidung",
-            "detailHelp": "Minimierten Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der professionellen Entscheidung pruefen.",
+            "detailHelp": "Beruflichen Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der Entscheidung pruefen.",
             "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen",
-            "reviewerAlias": "Prueferalias",
-            "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den professionellen Export erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
-            "reviewerAliasInvalid": "Das Prueferalias darf nur Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten.",
+            "reviewerAlias": "Prüfer",
+            "reviewerAliasHelp": "Verwenden Sie eine stabile Referenz des Berufsträgers oder seines Kontos. Der echte Name des Berufsträgers ist zulässig. Keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade eingeben.",
+            "reviewerAliasInvalid": "Die Prüferreferenz darf höchstens 160 Zeichen lang sein und keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade enthalten.",
             "bulkProfessionalSkipped": "{applied} sichere Empfehlungen angewendet. {skipped} professionelle Entscheidungen muessen einzeln geprueft werden.",
         },
     },
@@ -2591,10 +2604,19 @@ TEMPLATE = """<!doctype html>
       margin-bottom: 1rem;
     }}
     .data-posture__title {{
+      display: grid;
+      gap: 0.28rem;
       color: var(--ink);
       font-size: 0.82rem;
       font-weight: 650;
       line-height: 1.25;
+    }}
+    .data-posture__title small {{
+      max-width: 32ch;
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 450;
+      line-height: 1.35;
     }}
     .data-posture__grid {{
       display: grid;
@@ -3469,7 +3491,6 @@ TEMPLATE = """<!doctype html>
         language: \"en\",
         data_posture: {{
           local_files_read: [\"input.xlsx\", \"evidence/\"],
-          model_excerpts_sent: [],
           external_connectors_used: [],
           upload_paths_used: [],
           remote_sql_execution_used: false,
@@ -3764,27 +3785,6 @@ TEMPLATE = """<!doctype html>
       if (value === null || value === undefined || value === \"\") return fallback;
       return String(value);
     }}
-    function modelExcerptEntry(value) {{
-      if (!value || typeof value !== \"object\" || Array.isArray(value)) return compactListValue(value);
-      const id = value.excerpt_id || value.id || value.title || value.source || \"excerpt\";
-      const parts = [];
-      if (value.purpose) parts.push(String(value.purpose));
-      if (value.redaction_status) parts.push(String(value.redaction_status).replace(/_/g, \" \"));
-      const counts = [];
-      if (value.row_count != null && value.row_count !== \"\") counts.push(`${{formatValue(value.row_count)}} ${{uiText(\"excerptRows\", \"rows\")}}`);
-      if (value.character_count != null && value.character_count !== \"\") counts.push(`${{formatValue(value.character_count)}} ${{uiText(\"excerptChars\", \"chars\")}}`);
-      if (counts.length) parts.push(counts.join(\", \"));
-      return `${{id}}${{parts.length ? \": \" + parts.join(\", \") : \"\"}}`;
-    }}
-    function modelExcerptValue(value, fallback) {{
-      if (!Array.isArray(value)) return postureValue(value, fallback);
-      const entries = value.map(modelExcerptEntry).filter(Boolean);
-      if (!entries.length) return fallback;
-      const visible = entries.slice(0, 2).join(\"; \");
-      const overflow = entries.length - 2;
-      if (overflow <= 0) return visible;
-      return `${{visible}}; ${{uiText(\"artifactMore\", \"+{{count}} more\").replace(\"{{count}}\", overflow)}}`;
-    }}
     function remoteSqlValue(posture, fallback) {{
       if (typeof posture.remote_sql_execution_used === \"boolean\") return postureValue(posture.remote_sql_execution_used, fallback);
       if (posture.remote_sql_execution_used) return postureValue(posture.remote_sql_execution_used, fallback);
@@ -3813,15 +3813,15 @@ TEMPLATE = """<!doctype html>
       const none = uiText(\"noneValue\", \"None\");
       const missing = uiText(\"notDeclared\", \"Not declared\");
       const cells = [
-        postureItem(uiText(\"localFiles\", \"Local files\"), postureValue(posture.local_files_read, missing)),
-        postureItem(uiText(\"modelExcerpts\", \"Model excerpts\"), modelExcerptValue(posture.model_excerpts_sent, none)),
-        postureItem(uiText(\"connectors\", \"Connectors\"), postureValue(posture.external_connectors_used, none)),
-        postureItem(uiText(\"uploads\", \"Uploads\"), postureValue(posture.upload_paths_used, none)),
-        postureItem(uiText(\"remoteSql\", \"Remote SQL\"), remoteSqlValue(posture, missing)),
-        postureItem(uiText(\"hostedNotebook\", \"Hosted notebook\"), hostedNotebookValue(posture, missing)),
+        postureItem(uiText(\"localFiles\", \"Files read by helpers\"), postureValue(posture.local_files_read, missing)),
+        postureItem(uiText(\"connectors\", \"Optional connectors\"), postureValue(posture.external_connectors_used, none)),
+        postureItem(uiText(\"uploads\", \"Optional upload routes\"), postureValue(posture.upload_paths_used, none)),
+        postureItem(uiText(\"remoteSql\", \"Helper remote SQL\"), remoteSqlValue(posture, missing)),
+        postureItem(uiText(\"hostedNotebook\", \"Helper hosted notebook\"), hostedNotebookValue(posture, missing)),
       ];
       node.style.display = \"\";
-      node.innerHTML = `<div class=\"data-posture__title\">${{esc(uiText(\"dataPosture\", \"Data posture\"))}}</div><div class=\"data-posture__grid\">${{cells.join(\"\")}}</div>`;
+      const scope = uiText(\"dataPostureScope\", \"Optional routes used by helper execution. This does not describe or count the context sent by Codex to the model.\");
+      node.innerHTML = `<div class=\"data-posture__title\">${{esc(uiText(\"dataPosture\", \"Helper execution routes\"))}}<small>${{esc(scope)}}</small></div><div class=\"data-posture__grid\">${{cells.join(\"\")}}</div>`;
     }}
     function traceEntries() {{
       const trace = state.payload.run_intake?.execution_trace;
@@ -3915,17 +3915,17 @@ TEMPLATE = """<!doctype html>
       const outputCount = artifactRecords().length;
       return [
         {{
-          label: uiText(\"safeguardLocalExecution\", \"Local execution\"),
+          label: uiText(\"safeguardLocalExecution\", \"Helper-script execution\"),
           value: trace.length
-            ? (hasRemoteTrace ? uiText(\"remoteExecutionDeclared\", \"Remote path\") : uiText(\"localExecutionDeclared\", \"Local workspace\"))
+            ? (hasRemoteTrace ? uiText(\"remoteExecutionDeclared\", \"Helper used an external path\") : uiText(\"localExecutionDeclared\", \"Helper ran in local workspace\"))
             : uiText(\"executionTraceMissing\", \"Trace missing\"),
           kind: trace.length ? (hasRemoteTrace ? \"check\" : \"ok\") : \"warning\",
         }},
         {{
-          label: uiText(\"safeguardExternalApproval\", \"External approval\"),
+          label: uiText(\"safeguardExternalApproval\", \"Optional routes beyond Codex\"),
           value: externalUsed
             ? (approved ? uiText(\"externalApprovalRecorded\", \"Approval recorded\") : uiText(\"externalApprovalMissing\", \"External approval missing\"))
-            : uiText(\"externalApprovalNotNeeded\", \"Not needed\"),
+            : uiText(\"externalApprovalNotNeeded\", \"No optional route used\"),
           kind: externalUsed ? (approved ? \"ok\" : \"danger\") : \"ok\",
         }},
         {{
@@ -4587,9 +4587,9 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     }
 """,
             "reviewer_alias_html": """        <label class=\"reviewer-alias-field\" for=\"reviewer-alias\">
-          <span class=\"field-label\" id=\"reviewer-alias-label\">Reviewer alias</span>
-          <input id=\"reviewer-alias\" type=\"text\" maxlength=\"64\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"reviewer-fg\">
-          <small class=\"reviewer-alias-help\" id=\"reviewer-alias-help\">Use a stable pseudonymous studio alias to complete review. Do not enter a name or email.</small>
+          <span class=\"field-label\" id=\"reviewer-alias-label\">Reviewer</span>
+          <input id=\"reviewer-alias\" type=\"text\" maxlength=\"160\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"Maria Rossi\">
+          <small class=\"reviewer-alias-help\" id=\"reviewer-alias-help\">Use a stable professional or account reference. A real professional name is allowed. Do not enter credentials, session material, or raw local paths.</small>
         </label>
 """,
             "state_extra": 'reviewerAlias: "", ',
@@ -4603,26 +4603,34 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
             "render_chrome_extra_js": """      const reviewerAliasInput = document.getElementById("reviewer-alias");
       if (reviewerAliasInput && reviewerAliasInput.value !== state.reviewerAlias) reviewerAliasInput.value = state.reviewerAlias;
       const reviewerAliasLabel = document.getElementById("reviewer-alias-label");
-      if (reviewerAliasLabel) reviewerAliasLabel.textContent = workflowText("reviewerAlias", "Reviewer alias");
+      if (reviewerAliasLabel) reviewerAliasLabel.textContent = workflowText("reviewerAlias", "Reviewer");
       const reviewerAliasHelp = document.getElementById("reviewer-alias-help");
-      if (reviewerAliasHelp) reviewerAliasHelp.textContent = workflowText("reviewerAliasHelp", "Use a stable pseudonymous studio alias to complete review.");
+      if (reviewerAliasHelp) reviewerAliasHelp.textContent = workflowText("reviewerAliasHelp", "Use a stable professional or account reference. A real professional name is allowed. Do not enter credentials, session material, or raw local paths.");
 """,
             "event_listener_extra_js": """    document.getElementById("reviewer-alias")?.addEventListener("input", (event) => {
       state.reviewerAlias = String(event.target.value || "").trim();
       persistWidgetState();
     });
 """,
-            "decision_input_js": r"""    const SAFE_REVIEWER_ALIAS_RE = /^[A-Za-z][A-Za-z0-9._:-]{2,63}$/;
+            "decision_input_js": r"""    const MAX_REVIEWER_REFERENCE_LENGTH = 160;
+    const REVIEWER_REFERENCE_SECRET_RE = /(?:password|passwd|api[_ -]?key|access[_ -]?token|refresh[_ -]?token|session[_ -]?(?:token|cookie)|authorization)\s*[:=]/i;
+    const REVIEWER_REFERENCE_CREDENTIAL_VALUE_RE = /^(?:sk-[A-Za-z0-9_-]{16,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.)/;
     function reviewerAliasValue() { return String(state.reviewerAlias || "").trim(); }
-    function validateReviewerAlias(decisions) {
+    function validateReviewerReference(decisions) {
       if (!decisions.length) return;
-      const alias = reviewerAliasValue();
-      if (alias && !SAFE_REVIEWER_ALIAS_RE.test(alias)) throw new Error(workflowText("reviewerAliasInvalid", "Reviewer alias must use 3-64 supported characters and start with a letter."));
+      const reference = reviewerAliasValue();
+      const isUnsafe = reference.length > MAX_REVIEWER_REFERENCE_LENGTH
+        || /[\u0000-\u001f\u007f]/.test(reference)
+        || reference.includes("/")
+        || reference.includes("\\")
+        || REVIEWER_REFERENCE_SECRET_RE.test(reference)
+        || REVIEWER_REFERENCE_CREDENTIAL_VALUE_RE.test(reference);
+      if (reference && isUnsafe) throw new Error(workflowText("reviewerAliasInvalid", "Reviewer reference must be at most 160 characters and must not contain credentials, session material, or raw local paths."));
     }
 """
             + legacy["decision_input_js"],
             "validate_decision_inputs_js": """    function validateDecisionInputs(decisions) {
-      validateReviewerAlias(decisions);
+      validateReviewerReference(decisions);
       for (const decision of decisions) {
         if (decision.action === "edit" && !decision.edit_value) throw new Error(uiText("editRequired", "Edit value required for {item}.").replace("{item}", itemById(decision.item_id)?.title || decision.item_id));
       }
@@ -4700,9 +4708,9 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     }
 """,
         "reviewer_alias_html": """        <label class=\"reviewer-alias-field\" for=\"reviewer-alias\">
-          <span class=\"field-label\" id=\"reviewer-alias-label\">Reviewer alias</span>
-          <input id=\"reviewer-alias\" type=\"text\" maxlength=\"160\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"reviewer-fg\">
-          <small class=\"reviewer-alias-help\" id=\"reviewer-alias-help\">Use a stable pseudonymous studio alias to complete professional export. Do not enter a name or email.</small>
+          <span class=\"field-label\" id=\"reviewer-alias-label\">Reviewer</span>
+          <input id=\"reviewer-alias\" type=\"text\" maxlength=\"160\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"Maria Rossi\">
+          <small class=\"reviewer-alias-help\" id=\"reviewer-alias-help\">Use a stable professional or account reference. A real professional name is allowed. Do not enter credentials, session material, or raw local paths.</small>
         </label>
 """,
         "state_extra": 'reviewerAlias: "", ',
@@ -4716,9 +4724,9 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "render_chrome_extra_js": """      const reviewerAliasInput = document.getElementById("reviewer-alias");
       if (reviewerAliasInput && reviewerAliasInput.value !== state.reviewerAlias) reviewerAliasInput.value = state.reviewerAlias;
       const reviewerAliasLabel = document.getElementById("reviewer-alias-label");
-      if (reviewerAliasLabel) reviewerAliasLabel.textContent = workflowText("reviewerAlias", "Reviewer alias");
+      if (reviewerAliasLabel) reviewerAliasLabel.textContent = workflowText("reviewerAlias", "Reviewer");
       const reviewerAliasHelp = document.getElementById("reviewer-alias-help");
-      if (reviewerAliasHelp) reviewerAliasHelp.textContent = workflowText("reviewerAliasHelp", "Use a stable pseudonymous studio alias to complete professional export.");
+      if (reviewerAliasHelp) reviewerAliasHelp.textContent = workflowText("reviewerAliasHelp", "Use a stable professional or account reference. A real professional name is allowed. Do not enter credentials, session material, or raw local paths.");
 """,
         "event_listener_extra_js": """    document.getElementById("reviewer-alias")?.addEventListener("input", (event) => {
       state.reviewerAlias = String(event.target.value || "").trim();
@@ -4727,12 +4735,20 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
 """,
         "artifact_count_js": """      const writtenArtifactCount = artifactRecords().length;
       const artifactCount = summary.artifact_count ?? (writtenArtifactCount || items().filter((item) => String(item.item_type || "").includes("artifact")).length);""",
-        "decision_input_js": r"""    const SAFE_REVIEWER_ALIAS_RE = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/;
+        "decision_input_js": r"""    const MAX_REVIEWER_REFERENCE_LENGTH = 160;
+    const REVIEWER_REFERENCE_SECRET_RE = /(?:password|passwd|api[_ -]?key|access[_ -]?token|refresh[_ -]?token|session[_ -]?(?:token|cookie)|authorization)\s*[:=]/i;
+    const REVIEWER_REFERENCE_CREDENTIAL_VALUE_RE = /^(?:sk-[A-Za-z0-9_-]{16,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.)/;
     function reviewerAliasValue() { return String(state.reviewerAlias || "").trim(); }
-    function validateReviewerAlias(decisions) {
+    function validateReviewerReference(decisions) {
       if (!decisions.length) return;
-      const alias = reviewerAliasValue();
-      if (alias && !SAFE_REVIEWER_ALIAS_RE.test(alias)) throw new Error(workflowText("reviewerAliasInvalid", "Reviewer alias contains unsupported characters."));
+      const reference = reviewerAliasValue();
+      const isUnsafe = reference.length > MAX_REVIEWER_REFERENCE_LENGTH
+        || /[\u0000-\u001f\u007f]/.test(reference)
+        || reference.includes("/")
+        || reference.includes("\\")
+        || REVIEWER_REFERENCE_SECRET_RE.test(reference)
+        || REVIEWER_REFERENCE_CREDENTIAL_VALUE_RE.test(reference);
+      if (reference && isUnsafe) throw new Error(workflowText("reviewerAliasInvalid", "Reviewer reference must be at most 160 characters and must not contain credentials, session material, or raw local paths."));
     }
     function ensureDecision(item, action = null) {
       if (!item) return null;
@@ -4769,7 +4785,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       });
     }""",
         "validate_decision_inputs_js": """    function validateDecisionInputs(decisions) {
-      validateReviewerAlias(decisions);
+      validateReviewerReference(decisions);
       for (const decision of decisions) {
         if (decision.action === "edit" && !decision.edit_value && decision.reuse_saved_details !== true) throw new Error(uiText("editRequired", "Edit value required for {item}.").replace("{item}", itemById(decision.item_id)?.title || decision.item_id));
       }

@@ -535,7 +535,6 @@ def write_run_intake(
         },
         "data_posture": {
             "local_files_read": [normalized_csv.as_posix()],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

@@ -49,6 +49,7 @@ SCHEMA_VERSION = "1.0"
 PLUGIN_NAME = "client-file-preparation"
 WORKFLOW_NAME = "client-file-preparation"
 MAX_PREVIEW_CHARS = 2000
+ITEM_PREVIEW_CHARS = 600
 PACKAGE_HASH_BASIS = "sorted_outputs_path_size_sha256_canonical_json_v1"
 INVENTORY_REQUIRED_COLUMNS = [
     "relative_path",
@@ -476,17 +477,16 @@ def _document_item(
     evidence: DocumentEvidence | None,
     fiscal_field_count: int,
     *,
-    include_preview: bool,
     language: str,
 ) -> dict[str, Any]:
     evidence_refs: list[dict[str, Any]] = []
-    if include_preview and evidence and evidence.text_path:
+    if evidence and evidence.text_path:
         text_path = output_dir / "extracted" / evidence.text_path
         evidence_refs.append(
             {
                 "kind": "extracted_text",
                 "path": _as_output_ref(text_path, output_dir),
-                "preview": _read_preview(text_path, limit=600),
+                "preview": _read_preview(text_path, limit=ITEM_PREVIEW_CHARS),
             }
         )
     if evidence:
@@ -636,7 +636,6 @@ def _missing_document_items(
 def _fiscal_field_items(
     fields: Sequence[FiscalField],
     *,
-    include_preview: bool,
     language: str,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
@@ -653,8 +652,13 @@ def _fiscal_field_items(
                 ],
             }
         ]
-        if include_preview and evidence_text:
-            evidence.append({"kind": "snippet", "text": evidence_text})
+        if evidence_text:
+            evidence.append(
+                {
+                    "kind": "snippet",
+                    "text": str(evidence_text).strip()[:ITEM_PREVIEW_CHARS],
+                }
+            )
         items.append(
             _base_item(
                 f"fiscal-field-{index}",
@@ -681,8 +685,6 @@ def _draft_item(
     title: str,
     output_dir: Path,
     relative_path: str,
-    *,
-    include_preview: bool,
 ) -> dict[str, Any]:
     path = output_dir / relative_path
     return _base_item(
@@ -695,8 +697,8 @@ def _draft_item(
         data={
             "path": relative_path,
             "exists": path.exists(),
-        }
-        | ({"preview": _read_preview(path)} if include_preview else {}),
+            "preview": _read_preview(path),
+        },
     )
 
 
@@ -1108,29 +1110,29 @@ def write_run_intake(
     run_id = _run_id()
     data_posture_notes = {
         "it": [
-            "Gli script esaminano localmente i file della cartella cliente e producono artefatti limitati per la review nell’interfaccia.",
+            "Gli script esaminano localmente i file della cartella cliente e producono per l’interfaccia artefatti di review con anteprime limitate nelle dimensioni.",
             "Per impostazione predefinita non vengono usati connettori esterni, percorsi di upload, SQL remoto o notebook ospitati.",
         ],
         "en": [
-            "Scripts inspect local customer-folder files and write bounded review artifacts for UI review.",
+            "Scripts inspect local customer-folder files and write review artifacts with size-limited previews for UI review.",
             "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
         ],
         "fr": [
-            "Les scripts examinent localement les fichiers du dossier client et produisent des artefacts limités pour la revue dans l’interface.",
+            "Les scripts examinent localement les fichiers du dossier client et produisent pour l’interface des artefacts de revue avec des aperçus de taille limitée.",
             "Par défaut, aucun connecteur externe, chemin de téléversement, SQL distant ou notebook hébergé n’est utilisé.",
         ],
         "de": [
-            "Die Skripte prüfen die Dateien des Mandantenordners lokal und erzeugen begrenzte Artefakte für die Prüfung in der Oberfläche.",
+            "Die Skripte prüfen die Dateien des Mandantenordners lokal und erzeugen für die Oberfläche Prüfartefakte mit größenbegrenzten Vorschauen.",
             "Standardmäßig werden keine externen Konnektoren, Upload-Pfade, Remote-SQL-Abfragen oder gehosteten Notebooks verwendet.",
         ],
     }[language]
     if enable_ocr or require_ocr:
         data_posture_notes.append(
             {
-                "it": "Quando è abilitato o necessario, l’OCR legge i documenti locali prima della produzione degli artefatti limitati di review.",
-                "en": "OCR, when enabled or required, reads local document files before bounded review artifacts are written.",
-                "fr": "Lorsqu’il est activé ou requis, l’OCR lit les documents locaux avant la production des artefacts de revue limités.",
-                "de": "Wenn OCR aktiviert oder erforderlich ist, liest es lokale Dokumente, bevor begrenzte Prüfartefakte erzeugt werden.",
+                "it": "Quando è abilitato o necessario, l’OCR legge i documenti locali prima della produzione degli artefatti di review con anteprime limitate nelle dimensioni.",
+                "en": "OCR, when enabled or required, reads local document files before review artifacts with size-limited previews are written.",
+                "fr": "Lorsqu’il est activé ou requis, l’OCR lit les documents locaux avant la production des artefacts de revue avec des aperçus de taille limitée.",
+                "de": "Wenn OCR aktiviert oder erforderlich ist, liest es lokale Dokumente, bevor Prüfartefakte mit größenbegrenzten Vorschauen erzeugt werden.",
             }[language]
         )
     payload = {
@@ -1193,7 +1195,6 @@ def write_run_intake(
         },
         "data_posture": {
             "local_files_read": [root.as_posix()],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
@@ -1226,7 +1227,6 @@ def write_review_session_artifacts(
     xml_records: Sequence[InvoiceXmlRecord],
     jurisdiction: str,
     language: str,
-    include_previews: bool = False,
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact index."""
 
@@ -1240,7 +1240,6 @@ def write_review_session_artifacts(
             output_dir,
             evidence_lookup.get(record.relative_path),
             field_counts.get(record.relative_path, 0),
-            include_preview=include_previews,
             language=language,
         )
         for index, record in enumerate(records, start=1)
@@ -1257,7 +1256,6 @@ def write_review_session_artifacts(
     items.extend(
         _fiscal_field_items(
             structured_fields,
-            include_preview=include_previews,
             language=language,
         )
     )
@@ -1275,7 +1273,6 @@ def write_review_session_artifacts(
             }[language],
             output_dir,
             "07_scheda_codex_per_studio.md",
-            include_preview=include_previews,
         )
     )
     items.append(
@@ -1290,7 +1287,6 @@ def write_review_session_artifacts(
             }[language],
             output_dir,
             "06_memo_istruttoria.md",
-            include_preview=include_previews,
         )
     )
     items.append(
@@ -1305,7 +1301,6 @@ def write_review_session_artifacts(
             }[language],
             output_dir,
             "04_bozza_email_cliente.md",
-            include_preview=include_previews,
         )
     )
 
@@ -1322,9 +1317,10 @@ def write_review_session_artifacts(
             "kind": "local_customer_folder",
             "local_reference": "run_intake.json",
         },
-        "preview_policy": {
-            "mode": "explicit_opt_in",
-            "previews_included": include_previews,
+        "preview_limits": {
+            "document_text_characters": ITEM_PREVIEW_CHARS,
+            "fiscal_evidence_characters": ITEM_PREVIEW_CHARS,
+            "draft_text_characters": MAX_PREVIEW_CHARS,
         },
         "review_type": "client_file_preparation_folder_review",
         "items": items,
@@ -1338,10 +1334,10 @@ def write_review_session_artifacts(
                 "de": "Vorgeschlagene Punkte vor der Anwendung von Entscheidungen anhand der lokalen Dateien prüfen.",
             }[language],
             {
-                "it": "I percorsi assoluti e le anteprime testuali restano locali salvo inclusione esplicita.",
-                "en": "Absolute paths and text previews remain local unless explicitly included.",
-                "fr": "Les chemins absolus et les aperçus textuels restent locaux sauf inclusion explicite.",
-                "de": "Absolute Pfade und Textvorschauen bleiben lokal, sofern sie nicht ausdrücklich einbezogen werden.",
+                "it": "La review include, quando disponibili, anteprime testuali limitate e professionalmente utili. I limiti servono a mantenere gestibile l’interfaccia; non anonimizzano i contenuti.",
+                "en": "The review includes size-limited, professionally useful text previews when available. The limits keep the interface manageable; they do not anonymize the content.",
+                "fr": "La revue inclut, lorsqu’ils sont disponibles, des aperçus textuels de taille limitée et utiles au travail professionnel. Ces limites rendent l’interface gérable; elles n’anonymisent pas le contenu.",
+                "de": "Die Prüfung enthält, soweit verfügbar, größenbegrenzte und fachlich nützliche Textvorschauen. Die Grenzen halten die Oberfläche handhabbar; sie anonymisieren die Inhalte nicht.",
             }[language],
         ],
         "source_artifacts": {},

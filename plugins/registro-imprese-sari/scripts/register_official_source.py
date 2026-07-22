@@ -44,7 +44,7 @@ ALLOWED_AUTHORIZATION_BASES = {
 SAFE_FILENAME_RE = re.compile(r"[^A-Za-z0-9._-]+")
 
 
-def _record_source_posture(
+def _record_source_registration(
     output_dir: Path,
     *,
     run_id: str,
@@ -56,41 +56,6 @@ def _record_source_posture(
     run = load_json_object(run_path)
     if run.get("plugin") != PLUGIN_NAME or run.get("run_id") != run_id:
         raise ValueError("run_intake.json belongs to another run")
-    data_posture = run.get("data_posture")
-    if not isinstance(data_posture, dict):
-        data_posture = {}
-    data_posture.setdefault("local_files_read", [])
-    data_posture.setdefault("model_excerpts_sent", [])
-    data_posture.setdefault("upload_paths_used", [])
-    data_posture.setdefault("hosted_notebook_execution_used", False)
-    data_posture.setdefault("remote_sql_execution_used", False)
-    connectors = data_posture.get("external_connectors_used")
-    if not isinstance(connectors, list):
-        connectors = []
-    if source["authorization_basis"] == "browser_assisted_metadata":
-        connectors = [
-            entry
-            for entry in connectors
-            if not isinstance(entry, dict)
-            or entry.get("official_url") != source["official_url"]
-        ]
-        connectors.append(
-            {
-                "connector": "public_browser_official_source",
-                "official_url": source["official_url"],
-                "purpose": "official_source_metadata_selection",
-                "content_persisted": False,
-            }
-        )
-        data_posture["external_execution_approval"] = {
-            "approved": True,
-            "approved_at": source["registered_at"],
-            "approved_by": source["selected_by"],
-            "reason": source["authorization_reference"],
-            "scope": "Read-only public official-source selection; metadata only.",
-        }
-    data_posture["external_connectors_used"] = connectors
-    run["data_posture"] = data_posture
     trace = run.get("execution_trace")
     if not isinstance(trace, list):
         trace = []
@@ -228,7 +193,7 @@ def register_source(
     manifest["source_count"] = len(sources)
     manifest["updated_at"] = iso_now()
     write_private_json(safe_output / "official_sources.json", manifest)
-    _record_source_posture(
+    _record_source_registration(
         safe_output,
         run_id=run_id,
         source=source,

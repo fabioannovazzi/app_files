@@ -122,7 +122,6 @@ ALLOWED_STATUSES = {
 
 RECOMMENDED_DATA_POSTURE_FIELDS = {
     "local_files_read",
-    "model_excerpts_sent",
     "external_connectors_used",
     "upload_paths_used",
 }
@@ -133,29 +132,6 @@ RECOMMENDED_EXECUTION_POSTURE_FIELDS = {
 EXTERNAL_DATA_POSTURE_FIELDS = {
     "external_connectors_used",
     "upload_paths_used",
-}
-MODEL_EXCERPT_REQUIRED_FIELDS = {
-    "content_type",
-    "excerpt_id",
-    "purpose",
-    "redaction_status",
-    "source",
-}
-MODEL_EXCERPT_RAW_FIELDS = {
-    "content",
-    "excerpt",
-    "payload",
-    "raw_text",
-    "records",
-    "rows",
-    "sample",
-    "snippet",
-    "text",
-}
-MODEL_EXCERPT_REDACTION_STATUSES = {
-    "none_required",
-    "not_applicable",
-    "redacted",
 }
 EXTERNAL_EXECUTION_APPROVAL_REQUIRED_FIELDS = {
     "approved_at",
@@ -505,8 +481,8 @@ def _validate_data_posture(
     if data_posture is None:
         message = (
             "run_intake.json missing recommended data_posture; add local_files_read, "
-            "model_excerpts_sent, external_connectors_used, upload_paths_used, "
-            "remote_sql_execution_used, and hosted_notebook_execution_used"
+            "external_connectors_used, upload_paths_used, remote_sql_execution_used, "
+            "and hosted_notebook_execution_used"
         )
         if strict:
             errors.append(message)
@@ -535,12 +511,6 @@ def _validate_data_posture(
     for field_name in sorted(RECOMMENDED_DATA_POSTURE_FIELDS & set(data_posture)):
         if not isinstance(data_posture[field_name], list):
             errors.append(f"run_intake.json data_posture.{field_name} must be a list")
-    _validate_model_excerpts(
-        data_posture.get("model_excerpts_sent"),
-        strict=strict,
-        errors=errors,
-        warnings=warnings,
-    )
     external_entries = [
         entry
         for field_name in sorted(EXTERNAL_DATA_POSTURE_FIELDS)
@@ -580,50 +550,6 @@ def _validate_data_posture(
                     "run_intake.json data_posture external_execution_approval."
                     f"{field_name} must be a non-empty string"
                 )
-
-
-def _validate_model_excerpts(
-    value: Any,
-    *,
-    strict: bool,
-    errors: list[str],
-    warnings: list[str],
-) -> None:
-    if not isinstance(value, list):
-        return
-    for index, entry in enumerate(value):
-        prefix = f"run_intake.json data_posture.model_excerpts_sent[{index}]"
-        if not isinstance(entry, dict):
-            message = (
-                f"{prefix} must be an object with excerpt_id, source, purpose, "
-                "content_type, and redaction_status"
-            )
-            if strict:
-                errors.append(message)
-            else:
-                warnings.append(message)
-            continue
-        raw_fields = sorted(MODEL_EXCERPT_RAW_FIELDS & set(entry))
-        if raw_fields:
-            errors.append(
-                f"{prefix} must not include raw excerpt content fields: "
-                + ", ".join(raw_fields)
-            )
-        missing = sorted(MODEL_EXCERPT_REQUIRED_FIELDS - set(entry))
-        if missing:
-            message = f"{prefix} missing fields: " + ", ".join(missing)
-            if strict:
-                errors.append(message)
-            else:
-                warnings.append(message)
-        redaction_status = str(entry.get("redaction_status") or "")
-        if (
-            redaction_status
-            and redaction_status not in MODEL_EXCERPT_REDACTION_STATUSES
-        ):
-            errors.append(
-                f"{prefix} has unsupported redaction_status: {redaction_status}"
-            )
 
 
 def _is_non_empty_string(value: Any) -> bool:

@@ -546,7 +546,7 @@
       const approval = isObject(posture.external_execution_approval) && posture.external_execution_approval.approved === true;
       const locations = [...new Set(trace.map((entry) => entry?.execution_location).filter(Boolean))];
       const location = locations.length ? locations.join(", ") : "non dichiarata";
-      const externalLabel = external ? (approval ? "uso esterno approvato" : "uso esterno da verificare") : "nessun uso esterno";
+      const externalLabel = external ? (approval ? "percorso oltre Codex approvato" : "percorso oltre Codex da verificare") : "nessun percorso esterno oltre Codex";
       const persistence = state.payload.decision_policy?.can_persist ? "run_intake.output_dir" : "fallback JSON";
       const traceRows = trace.slice(0, 6).map((entry) => {
         const details = [
@@ -557,14 +557,15 @@
         return `<div><strong>${esc(entry.step_id || entry.kind || "Passaggio")}</strong> · ${esc(entry.status || "")}${entry.execution_location ? ` · ${esc(entry.execution_location)}` : ""}${details ? `<span>${esc(details)}</span>` : ""}</div>`;
       }).join("");
       return `<details class="safeguards">
-        <summary><strong>Controlli di esecuzione</strong> · ${esc(location)} · ${esc(externalLabel)} · ${items().length}/${2500} elementi</summary>
+        <summary><strong>Script e percorsi oltre Codex</strong> · ${esc(location)} · ${esc(externalLabel)} · ${items().length}/${2500} elementi</summary>
         <div class="safeguard-grid">
-          <div class="safeguard"><span>Esecuzione</span><strong>${esc(location)}</strong></div>
-          <div class="safeguard"><span>Accesso esterno</span><strong>${esc(externalLabel)}</strong></div>
+          <div class="safeguard"><span>Esecuzione helper</span><strong>${esc(location)}</strong></div>
+          <div class="safeguard"><span>Oltre Codex</span><strong>${esc(externalLabel)}</strong></div>
           <div class="safeguard"><span>Payload</span><strong>${items().length} di 2500</strong></div>
           <div class="safeguard"><span>Persistenza</span><strong>${esc(persistence)}</strong></div>
         </div>
-        ${traceRows ? `<div class="trace">${traceRows}</div>` : `<div class="trace">Nessuna traccia di esecuzione dichiarata nel payload.</div>`}
+        <div class="trace">Il contesto del modello Codex non è conteggiato in questa sezione.</div>
+        ${traceRows ? `<div class="trace">${traceRows}</div>` : `<div class="trace">Nessuna esecuzione helper dichiarata nel payload.</div>`}
       </details>`;
     }
 

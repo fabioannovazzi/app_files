@@ -15,10 +15,10 @@ Research cut-off: **2026-07-16**. Recheck these sources before relying on the ch
 
 No verified general-purpose API currently authorizes Vera to fetch a client's contribution position for a commercialista. The supported first bridge is therefore:
 
-1. an authorized human authenticates with their own SPID, CIE, or CNS and confirms the applicable profile/delegation;
-2. official downloads remain the preferred evidence;
+1. official downloads supplied as local files remain the preferred evidence; the registrar records the declared origin and file hashes without asking the professional to re-attest how the earlier portal access was authorized;
+2. when a human performs the portal action, they authenticate with their own SPID, CIE, or CNS and remain responsible for the applicable profile/delegation;
 3. only after separate verification of the particular service's terms or another applicable permission, Vera may take a local read-only snapshot of one already-open INPS tab; user or studio approval alone is insufficient;
-4. the bridge records hashes and provenance but never handles credentials, activates a delegation, navigates, submits, or exports browser state;
+4. neither bridge handles credentials, activates a delegation, navigates, submits, or exports browser state;
 5. all substantive conclusions remain draft material for professional review.
 
 ## Still unknown until a real run

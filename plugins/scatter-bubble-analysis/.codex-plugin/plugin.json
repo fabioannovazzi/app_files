@@ -1,6 +1,6 @@
 {
   "name": "scatter-bubble-analysis",
-  "version": "0.1.43",
+  "version": "0.1.44",
   "description": "Legacy-backed scatter and bubble chart workflow with reusable prepared-data caching and audit outputs.",
   "author": {
     "name": "Mparanza",

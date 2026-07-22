@@ -19,7 +19,7 @@ const REVIEW_TYPES = new Set(["professional_case_review"]);
 const SAFE_CONNECTORS = new Set(["inps_browser_read_only"]);
 const ACQUISITION_CHANNELS = new Set([
   "inps_conditional_browser_capture",
-  "inps_official_user_export",
+  "inps_registered_local_export",
 ]);
 const ACQUISITION_CONNECTORS = new Set(["inps_browser_read_only"]);
 const ACQUISITION_OCR_FIELDS = [
@@ -37,14 +37,6 @@ const ACQUISITION_OCR_FIELDS = [
 ];
 const LOWERCASE_SHA256 = /^[0-9a-f]{64}$/;
 const SAFE_ITEM_STATUSES = new Set(["needs_review"]);
-const SAFE_REVIEW_DATA_ENUMS = {
-  review_status: new Set(["confirmed", "disputed", "pending"]),
-  claim_type: new Set(["calculation_basis", "case_application", "rule"]),
-  verdict: new Set(["contradicted", "not_supported", "partially_supported", "supported", "uncertain"]),
-  professional_review_status: new Set(["pending"]),
-  temporal_role: new Set(["later_interpretive_authority", "period_rule", "research_cutoff_authority"]),
-  status: new Set(["blocked", "calculated", "passed", "pending", "validation_fail"]),
-};
 const SAFE_UI_STATUSES = new Set(["partial_review", "pending", "reviewed"]);
 const SAFE_DECISION_STATUSES = new Set([
   "accepted",
@@ -69,18 +61,13 @@ const SAFE_FINAL_STATUSES = new Set([
   READY_STATUS,
   "validation_fail",
 ]);
-const SAFE_REVIEW_DATA = {
-  fact: new Set(["fact_id", "review_status", "evidence_count"]),
-  finding: new Set(["claim_id", "claim_type", "verdict", "source_count", "professional_review_status"]),
-  calculation: new Set(["recipe_id", "status"]),
-  missing_evidence: new Set(["request_id"]),
-  authority: new Set(["source_id", "temporal_role"]),
-  audit_check: new Set(["status"]),
-  artifact: new Set(["path"]),
-};
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/;
-const ITALIAN_TAX_CODE = /(?:^|[^A-Za-z0-9])[A-Za-z]{6}[0-9]{2}[A-EHLMPRSTa-ehlmprst][0-9]{2}[A-Za-z][0-9]{3}[A-Za-z](?=$|[^A-Za-z0-9])/;
-const EMAIL_ADDRESS = /(?:^|[^\w.+-])[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?![\w.-])/;
+const FORBIDDEN_SECRET_KEYS = new Set([
+  "access_token", "auth_token", "authorization_header", "cookie", "cookies",
+  "credential", "credentials", "one_time_code", "otp", "otp_code", "password",
+  "private_session_url", "refresh_token", "session_cookie", "session_token",
+  "session_url", "token",
+]);
 const SAFE_TRACE_COMMANDS = new Set([
   "python scripts/capture_portal_snapshot.py",
   "python scripts/package_case.py",
@@ -113,7 +100,7 @@ const SAFE_TRACE_LOCATIONS = new Set([
 ]);
 const SAFE_TRACE_INPUT_NAMES = new Set([
   "approved_open_browser_tab",
-  "user_downloaded_official_portal_exports",
+  "locally_supplied_official_portal_exports",
   "validated_case_records",
   "claims_review",
   "calculation_results",
@@ -207,18 +194,15 @@ function safeIsoDateTime(value) {
 
 function safeIdentifier(value, field) {
   const text = requireText(value, field);
-  if (!SAFE_ID.test(text) || ITALIAN_TAX_CODE.test(text) || EMAIL_ADDRESS.test(text) || text.includes("://")) {
-    throw new Error(`${field} must be an opaque identifier without personal data`);
+  if (!SAFE_ID.test(text) || text.includes("://")) {
+    throw new Error(`${field} must be a structurally safe identifier`);
   }
   return text;
 }
 
-function assertPrivacySafeText(value, field) {
+function assertSessionSafeText(value, field) {
   const text = optionalText(value, field);
   if (!text) return text;
-  if (ITALIAN_TAX_CODE.test(text) || EMAIL_ADDRESS.test(text)) {
-    throw new Error(`${field} must omit raw identity, tax codes, and email`);
-  }
   for (const match of text.matchAll(/https?:\/\/[^\s<>"']+/gi)) {
     let url;
     try {
@@ -243,6 +227,25 @@ function assertPrivacySafeText(value, field) {
     }
   }
   return text;
+}
+
+function safeProfessionalValue(value, field) {
+  if (Array.isArray(value)) {
+    return value.map((entry, index) => safeProfessionalValue(entry, `${field}[${index}]`));
+  }
+  if (isObject(value)) {
+    const output = {};
+    for (const [key, entry] of Object.entries(value)) {
+      if (FORBIDDEN_SECRET_KEYS.has(key.toLowerCase())) {
+        throw new Error(`${field}.${key} contains credential or session material`);
+      }
+      output[key] = safeProfessionalValue(entry, `${field}.${key}`);
+    }
+    return output;
+  }
+  if (typeof value === "string") return assertSessionSafeText(value, field);
+  if (value == null || typeof value === "number" || typeof value === "boolean") return value;
+  throw new Error(`${field} contains an unsupported value`);
 }
 
 function findGitRoot(start) {
@@ -383,7 +386,7 @@ function acquisitionProjection(runIntake) {
   const exportReceipt = acquisitionReceipt(
     posture,
     "portal_export_receipt",
-    "inps_official_user_export",
+    "inps_registered_local_export",
     channels,
   );
   if (captureReceipt !== null && canonicalJson(connectors) !== canonicalJson(["inps_browser_read_only"])) {
@@ -808,40 +811,7 @@ function optionalText(value, field) {
 
 function safeReviewData(item, itemType, root) {
   const input = isObject(item.data) ? item.data : {};
-  const allowed = SAFE_REVIEW_DATA[itemType] || new Set();
-  const data = {};
-  for (const name of allowed) {
-    if (input[name] == null) continue;
-    const field = `${root}.data.${name}`;
-    if (["fact_id", "claim_id", "recipe_id", "request_id", "source_id"].includes(name)) {
-      data[name] = safeIdentifier(input[name], field);
-    } else if (["evidence_count", "source_count"].includes(name)) {
-      if (!Number.isInteger(input[name]) || input[name] < 0 || input[name] > MAX_ITEMS) {
-        throw new Error(`${field} must be a bounded non-negative integer`);
-      }
-      data[name] = input[name];
-    } else if (name === "path") {
-      if (!SAFE_TRACE_OUTPUT_NAMES.has(input[name])) throw new Error(`${field} is not an approved artifact name`);
-      data[name] = input[name];
-    } else {
-      const allowedValues = SAFE_REVIEW_DATA_ENUMS[name];
-      if (!allowedValues || !allowedValues.has(input[name])) {
-        throw new Error(`${field} is not an approved review value`);
-      }
-      data[name] = input[name];
-    }
-  }
-  const summaries = {
-    fact: "Validated fact record",
-    finding: "Source-reviewed finding",
-    calculation: "Approved calculation record",
-    missing_evidence: "Missing evidence request",
-    authority: "Authority record",
-    audit_check: "Package validation audit",
-    artifact: "Package artifact",
-  };
-  data.summary = summaries[itemType];
-  return data;
+  return safeProfessionalValue(input, `${root}.data`);
 }
 
 function validateItem(item, index, seenIds) {
@@ -870,24 +840,15 @@ function validateItem(item, index, seenIds) {
   }
   const outputPath =
     typeof item.output_path === "string" && SAFE_TRACE_OUTPUT_NAMES.has(item.output_path) ? item.output_path : null;
-  const titles = {
-    fact: "Fact record",
-    finding: "Finding record",
-    calculation: "Calculation record",
-    missing_evidence: "Missing evidence request",
-    authority: "Authority record",
-    audit_check: "Package validation audit",
-    artifact: "Package artifact",
-  };
   return {
     id,
     item_type: itemType,
-    title: titles[itemType],
+    title: assertSessionSafeText(item.title, `${root}.title`),
     source_path: null,
     output_path: outputPath,
     allowed_actions: [...actions],
     recommended_action: item.recommended_action || null,
-    evidence: [],
+    evidence: safeProfessionalValue(Array.isArray(item.evidence) ? item.evidence : [], `${root}.evidence`),
     data: safeReviewData(item, itemType, root),
     status: "needs_review",
   };
@@ -970,8 +931,6 @@ function validateReview(input) {
     items: safeItems,
     item_count: safeItems.length,
     status: review.status,
-    privacy_notice:
-      "Review payload omits document quotes and subject labels; inspect local artifacts for full evidence.",
   };
   if (persistence && canonicalJson(safeReview) !== canonicalJson(review)) {
     throw new Error("stored review_payload.json contains fields that are not safe for MCP exposure");
@@ -1000,7 +959,7 @@ function stringArray(value, field) {
   if (value == null) return [];
   if (!Array.isArray(value)) throw new Error(`${field} must be an array when provided`);
   return value.map((entry, index) => {
-    const text = assertPrivacySafeText(entry, `${field}[${index}]`);
+    const text = assertSessionSafeText(entry, `${field}[${index}]`);
     if (!text) throw new Error(`${field}[${index}] must be a non-empty string`);
     return text;
   });
@@ -1052,8 +1011,8 @@ function buildDecisions(input) {
     const action = requireText(decision.action, `${root}.action`);
     if (!ALLOWED_ACTIONS.has(action)) throw new Error(`${root}.action is not supported`);
     if (!item.allowed_actions.includes(action)) throw new Error(`${root}.action is not allowed for this item`);
-    const reviewerNote = assertPrivacySafeText(decision.reviewer_note ?? decision.note, `${root}.reviewer_note`);
-    const editValue = assertPrivacySafeText(decision.edit_value ?? decision.user_text, `${root}.edit_value`);
+    const reviewerNote = assertSessionSafeText(decision.reviewer_note ?? decision.note, `${root}.reviewer_note`);
+    const editValue = assertSessionSafeText(decision.edit_value ?? decision.user_text, `${root}.edit_value`);
     if (action === "edit" && !editValue) throw new Error(`${root}.edit_value is required when action is edit`);
     let requestedDocuments = stringArray(decision.requested_documents, `${root}.requested_documents`);
     if (action === "request_more_documents" && requestedDocuments.length === 0) {
@@ -1093,7 +1052,7 @@ function buildDecisions(input) {
     item_count: itemCount,
     status,
   };
-  const reviewer = input.reviewer ? safeIdentifier(input.reviewer, "reviewer") : "";
+  const reviewer = input.reviewer ? assertSessionSafeText(input.reviewer, "reviewer") : "";
   if (reviewer) uiDecisions.reviewer = reviewer;
   return { payload, uiDecisions, outputDir: persistence?.outputDir || null };
 }

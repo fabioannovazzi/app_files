@@ -67,16 +67,6 @@ def build_template(
         "schema_version": SCHEMA_VERSION,
         "jurisdiction": jurisdiction,
         "language": language,
-        "processing_authority": {
-            "status": "pending",
-            "scope": "new_client_professional_setup",
-            "runtime": "local_codex_workspace",
-            "minimization": "structured_facts_and_selected_excerpts",
-            "external_transfer_authorized": False,
-            "authorized_by": None,
-            "authorized_by_role": None,
-            "authorized_at": None,
-        },
         "client_file_preparation_binding": {
             "mode": "standalone_evidence",
             "reason": (

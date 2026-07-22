@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "concordato-plan-review",
   "display_name": "Concordato Plan Review",
   "role": "workflow",
@@ -10,49 +10,42 @@
     "assets/review-workbench-adapter.json",
     "assets/concordato-plan-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Concordato plan, financial schedules and supporting accounting evidence"
-    ],
-    "local_processing": [
-      "Extract plan tables",
-      "Recalculate totals and roll-forwards",
-      "Tie schedules to source evidence",
-      "Build discrepancy diagnostics",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "plan-interpretation",
-        "purpose": "Interpret plan assertions and explain numerical discrepancies",
-        "content": "Extracted plan sections, calculated tables, discrepancies, evidence locators and relevant original passages",
-        "minimum_necessary": "Use extracted tables and discrepancy-linked passages; consult broader plan language only when interpretation depends on surrounding terms",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "plan-evidence-and-review",
+        "purpose": "Interpret the concordato plan and explain numerical checks and discrepancies",
+        "content": "User instructions; plan documents and extracted text; financial schedules; recalculations; discrepancies; evidence locators; proposed findings and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [],
+  "security_controls": [
     {
-      "risk": "Plan passages and schedules can contain debtor, creditor and transaction-specific information",
-      "mitigation": "Perform numerical tie-outs locally and expose only discrepancy-linked tables and passages"
+      "id": "local-mechanical-checks",
+      "control": "Extraction, recalculation, tie-outs, and package validation run locally; helper scripts make no model API calls."
+    },
+    {
+      "id": "private-output-root",
+      "control": "Run artifacts are written outside published repository paths."
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Tabelle e quadrature del piano vengono elaborate localmente. Codex esamina risultati, scostamenti e i passaggi del piano necessari a interpretarli, non l'intero fascicolo per impostazione predefinita.",
-    "message_en": "Plan tables and tie-outs are processed locally. Codex reviews results, discrepancies and the plan passages needed to interpret them, not the complete file by default.",
-    "requires_confirmation": false
-  },
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "Some plan conclusions depend on language distributed across multiple sections",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "6f484a767c1a0e5466044da293085e26fb21faa3795e4cdc3995e4aeb0c65042"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "ad7473828ef32dd81af698787b53f0fa4541f11aa10e740462cb694292c08d87"
   }
 }

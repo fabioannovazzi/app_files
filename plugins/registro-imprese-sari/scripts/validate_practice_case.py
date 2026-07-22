@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -46,28 +45,27 @@ PLAN_ARRAYS = (
     "risks",
     "missing_information",
 )
-BANNED_PRIVATE_KEYS = {
-    "client_name",
-    "full_name",
-    "nome_cliente",
-    "codice_fiscale",
-    "tax_code",
-    "partita_iva",
-    "vat_number",
-    "email",
-    "pec",
-    "phone",
-    "telefono",
-    "street_address",
-    "indirizzo",
+PROHIBITED_SECRET_KEYS = {
+    "access_token",
+    "api_key",
+    "cie",
+    "cns",
+    "cookie",
+    "cookies",
+    "credential",
+    "credentials",
+    "one_time_code",
+    "otp",
+    "passcode",
+    "password",
+    "refresh_token",
+    "session",
+    "session_cookie",
+    "session_id",
+    "signature",
+    "spid",
+    "token",
 }
-EMAIL_RE = re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.IGNORECASE)
-ITALIAN_TAX_CODE_RE = re.compile(
-    r"\b[A-Z]{6}[0-9]{2}[A-EHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]\b",
-    re.IGNORECASE,
-)
-ITALIAN_VAT_RE = re.compile(r"(?<!\d)\d{11}(?!\d)")
-PHONE_RE = re.compile(r"(?<!\w)(?:\+?39[ .-]?)?(?:0\d{1,3}|3\d{2})[ .-]?\d{5,8}(?!\w)")
 MODEL_ROLES = {"ai", "assistant", "codex", "llm", "model"}
 
 
@@ -128,7 +126,7 @@ def _validate_timestamp(
     return text
 
 
-def _walk_privacy(
+def _walk_prohibited_secrets(
     value: object,
     *,
     path: str,
@@ -137,46 +135,50 @@ def _walk_privacy(
     if isinstance(value, dict):
         for key, child in value.items():
             child_path = f"{path}.{key}" if path else str(key)
-            if str(key).lower() in BANNED_PRIVATE_KEYS:
+            normalized_key = (
+                str(key).strip().casefold().replace("-", "_").replace(" ", "_")
+            )
+            if normalized_key in PROHIBITED_SECRET_KEYS:
                 _issue(
                     issues,
-                    code="direct_identifier_field_forbidden",
+                    code="secret_or_session_material_forbidden",
                     path=child_path,
-                    message="case JSON must use a pseudonymous client_reference",
+                    message=(
+                        "case artifacts must not store credentials, authentication "
+                        "tokens, cookies, signatures, or session material"
+                    ),
                 )
-            _walk_privacy(child, path=child_path, issues=issues)
+            _walk_prohibited_secrets(child, path=child_path, issues=issues)
     elif isinstance(value, list):
         for index, child in enumerate(value):
-            _walk_privacy(child, path=f"{path}[{index}]", issues=issues)
-    elif isinstance(value, str):
-        if EMAIL_RE.search(value):
-            _issue(
-                issues,
-                code="email_in_minimized_case_json",
-                path=path,
-                message="remove direct email addresses from the minimized case JSON",
+            _walk_prohibited_secrets(
+                child,
+                path=f"{path}[{index}]",
+                issues=issues,
             )
-        if ITALIAN_TAX_CODE_RE.search(value):
-            _issue(
-                issues,
-                code="tax_code_in_minimized_case_json",
-                path=path,
-                message="remove Italian tax codes from the minimized case JSON",
-            )
-        if ITALIAN_VAT_RE.search(value):
-            _issue(
-                issues,
-                code="eleven_digit_identifier_in_minimized_case_json",
-                path=path,
-                message="remove eleven-digit identifiers from the minimized case JSON",
-            )
-        if PHONE_RE.search(value):
-            _issue(
-                issues,
-                code="phone_in_minimized_case_json",
-                path=path,
-                message="remove phone numbers from the minimized case JSON",
-            )
+
+
+def _optional_text(
+    value: object,
+    *,
+    path: str,
+    issues: list[dict[str, Any]],
+    max_length: int = 10_000,
+) -> str:
+    if value is None:
+        return ""
+    if not isinstance(value, str):
+        _issue(issues, code="invalid_text", path=path, message="value must be text")
+        return ""
+    text = value.strip()
+    if len(text) > max_length:
+        _issue(
+            issues,
+            code="text_too_long",
+            path=path,
+            message=f"value exceeds {max_length} characters",
+        )
+    return text
 
 
 def _validate_case_intake(
@@ -217,6 +219,32 @@ def _validate_case_intake(
             path="case_intake.client_reference",
             message=str(exc),
         )
+    client_identity = intake.get("client_identity")
+    has_client_identity = False
+    if client_identity is not None and not isinstance(client_identity, dict):
+        _issue(
+            issues,
+            code="invalid_client_identity",
+            path="case_intake.client_identity",
+            message="client_identity must be an object when provided",
+        )
+    elif isinstance(client_identity, dict):
+        for field in (
+            "name",
+            "tax_code",
+            "vat_number",
+            "email",
+            "pec",
+            "phone",
+            "address",
+        ):
+            identity_value = _optional_text(
+                client_identity.get(field),
+                path=f"case_intake.client_identity.{field}",
+                issues=issues,
+                max_length=2_000,
+            )
+            has_client_identity = has_client_identity or bool(identity_value)
     try:
         validate_iso_date(intake.get("reference_date"), field="reference_date")
     except ValueError as exc:
@@ -235,6 +263,8 @@ def _validate_case_intake(
         "CASE-EFFECTIVE-DATE",
         "CASE-PROFESSIONAL-QUESTION",
     }
+    if has_client_identity:
+        fact_ids.add("CASE-CLIENT")
     chamber = intake.get("competent_chamber")
     if not isinstance(chamber, dict):
         _issue(
@@ -418,46 +448,6 @@ def _validate_case_intake(
         path="case_intake.professional_question",
         issues=issues,
     )
-    authorization = intake.get("processing_authorization")
-    if not isinstance(authorization, dict):
-        _issue(
-            issues,
-            code="processing_authorization_missing",
-            path="case_intake.processing_authorization",
-            message="explicit case-material processing authorization is required",
-        )
-    else:
-        if authorization.get("approved") is not True:
-            _issue(
-                issues,
-                code="processing_not_approved",
-                path="case_intake.processing_authorization.approved",
-                message="processing authorization must be true",
-            )
-        _nonempty_text(
-            authorization.get("approval_id"),
-            path="case_intake.processing_authorization.approval_id",
-            issues=issues,
-            max_length=200,
-        )
-        role = _nonempty_text(
-            authorization.get("approved_by_role"),
-            path="case_intake.processing_authorization.approved_by_role",
-            issues=issues,
-            max_length=120,
-        )
-        if role.casefold() in MODEL_ROLES:
-            _issue(
-                issues,
-                code="model_cannot_authorize_processing",
-                path="case_intake.processing_authorization.approved_by_role",
-                message="authorization must come from a human with authority",
-            )
-        _validate_timestamp(
-            authorization.get("recorded_at"),
-            path="case_intake.processing_authorization.recorded_at",
-            issues=issues,
-        )
     return run_id, fact_ids
 
 
@@ -678,6 +668,14 @@ def _validate_plan(
     _nonempty_text(
         plan.get("case_summary"), path="practice_plan.case_summary", issues=issues
     )
+    review_context = plan.get("review_context")
+    if review_context is not None and not isinstance(review_context, dict):
+        _issue(
+            issues,
+            code="invalid_review_context",
+            path="practice_plan.review_context",
+            message="review_context must be an object when provided",
+        )
     all_source_ids = {"CASE-INTAKE", *source_ids}
     seen_item_ids: set[str] = set()
     review_counts = {status: 0 for status in ITEM_REVIEW_STATUSES}
@@ -801,33 +799,15 @@ def _validate_plan(
         issues=issues,
     )
     limitations = plan.get("limitations")
-    if not isinstance(limitations, list) or not all(
-        isinstance(item, str) and item.strip() for item in limitations
+    if not isinstance(limitations, list) or any(
+        not isinstance(item, str) or not item.strip() for item in limitations
     ):
         _issue(
             issues,
-            code="limitations_missing",
+            code="limitations_invalid",
             path="practice_plan.limitations",
-            message="non-empty limitations are required",
+            message="limitations must be a list of non-empty case-specific statements",
         )
-    else:
-        combined = " ".join(limitations).casefold()
-        if "revisione professionale" not in combined:
-            _issue(
-                issues,
-                code="professional_review_disclaimer_missing",
-                path="practice_plan.limitations",
-                message="limitations must state that this is a professional-review draft",
-            )
-        if not any(
-            term in combined for term in ("nessun accesso", "non accede", "non invia")
-        ):
-            _issue(
-                issues,
-                code="no_submission_disclaimer_missing",
-                path="practice_plan.limitations",
-                message="limitations must state that no portal access or submission occurs",
-            )
     professional_review = plan.get("professional_review")
     if not isinstance(professional_review, dict):
         _issue(
@@ -956,8 +936,8 @@ def validate_practice_case(
     intake = load_json_object(case_intake_path)
     plan = load_json_object(practice_plan_path)
     manifest = load_json_object(official_sources_path)
-    _walk_privacy(intake, path="case_intake", issues=issues)
-    _walk_privacy(plan, path="practice_plan", issues=issues)
+    _walk_prohibited_secrets(intake, path="case_intake", issues=issues)
+    _walk_prohibited_secrets(plan, path="practice_plan", issues=issues)
     run_id, fact_ids = _validate_case_intake(intake, issues=issues)
     source_ids = _validate_source_manifest(
         manifest, run_id=run_id, output_dir=output_dir, issues=issues

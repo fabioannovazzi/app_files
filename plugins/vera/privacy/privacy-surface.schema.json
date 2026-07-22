@@ -1,79 +1,152 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/vera-privacy-surface-v1.json",
-  "title": "Vera workstream privacy surface",
+  "$id": "https://mparanza.com/schemas/vera-external-boundary-v2.json",
+  "title": "Vera workstream external-boundary review",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "workstream", "display_name", "role", "governed_paths", "data_flow", "residual_risks", "commercialista_notice", "review"],
+  "required": [
+    "schema_version",
+    "workstream",
+    "display_name",
+    "role",
+    "governed_paths",
+    "codex_context",
+    "codex_account_boundary",
+    "boundaries_beyond_codex",
+    "security_controls",
+    "review"
+  ],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
     "workstream": {"type": "string", "minLength": 1},
     "display_name": {"type": "string", "minLength": 1},
     "role": {"enum": ["workflow", "internal_engine"]},
-    "governed_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-    "data_flow": {
+    "governed_paths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "codex_context": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["local_sources", "local_processing", "codex_context"],
+      "required": ["policy", "classes"],
       "properties": {
-        "local_sources": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-        "local_processing": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-        "codex_context": {
+        "policy": {"const": "real_case_data_may_enter_codex_context"},
+        "classes": {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "purpose", "content", "minimum_necessary", "semantic_reasoning_required", "full_source_expected"],
+            "required": ["id", "purpose", "content"],
             "properties": {
               "id": {"type": "string", "minLength": 1},
               "purpose": {"type": "string", "minLength": 1},
-              "content": {"type": "string", "minLength": 1},
-              "minimum_necessary": {"type": "string", "minLength": 1},
-              "semantic_reasoning_required": {"type": "boolean"},
-              "full_source_expected": {"type": "boolean"}
+              "content": {"type": "string", "minLength": 1}
             }
           }
         }
       }
     },
-    "residual_risks": {
+    "codex_account_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_by",
+        "vera_runtime_enforcement",
+        "review_timing",
+        "review_items",
+        "per_case_record_required"
+      ],
+      "properties": {
+        "selected_by": {"const": "firm_or_user"},
+        "vera_runtime_enforcement": {"const": "none"},
+        "review_timing": {
+          "const": "before_professional_use_and_when_account_or_terms_change"
+        },
+        "review_items": {
+          "const": [
+            "account_or_workspace_plan",
+            "model_training_data_controls",
+            "retention_and_deletion_controls"
+          ]
+        },
+        "per_case_record_required": {"const": false}
+      }
+    },
+    "boundaries_beyond_codex": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {"requires_confirmation": {"const": true}},
+              "required": ["requires_confirmation"]
+            },
+            "then": {"properties": {"optional": {"const": true}}}
+          }
+        ],
+        "required": [
+          "id",
+          "kind",
+          "destination",
+          "purpose",
+          "content",
+          "optional",
+          "requires_confirmation",
+          "controls"
+        ],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {
+            "enum": [
+              "public_research",
+              "hosted_service",
+              "external_connector",
+              "send_or_publish"
+            ]
+          },
+          "destination": {"type": "string", "minLength": 1},
+          "purpose": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "optional": {"type": "boolean"},
+          "requires_confirmation": {"type": "boolean"},
+          "controls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "security_controls": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["risk", "mitigation"],
+        "required": ["id", "control"],
         "properties": {
-          "risk": {"type": "string", "minLength": 1},
-          "mitigation": {"type": "string", "minLength": 1}
+          "id": {"type": "string", "minLength": 1},
+          "control": {"type": "string", "minLength": 1}
         }
-      }
-    },
-    "commercialista_notice": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["level", "timing", "message_it", "message_en", "requires_confirmation"],
-      "properties": {
-        "level": {"enum": ["none", "informational", "confirmation"]},
-        "timing": {"enum": ["not_shown", "workstream_start", "before_optional_disclosure"]},
-        "message_it": {"type": "string"},
-        "message_en": {"type": "string"},
-        "message_fr": {"type": "string"},
-        "message_de": {"type": "string"},
-        "requires_confirmation": {"type": "boolean"}
       }
     },
     "review": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["reviewed_at", "reviewed_by", "basis", "limitations", "source_fingerprint"],
+      "required": ["reviewed_at", "reviewed_by", "basis", "source_fingerprint"],
       "properties": {
         "reviewed_at": {"type": "string", "format": "date"},
         "reviewed_by": {"const": "privacy-surface-review"},
-        "basis": {"const": "model_review_of_workflow_source"},
-        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-        "source_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        "basis": {"const": "external_boundary_review_of_workflow_source"},
+        "source_fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
       }
     }
   }

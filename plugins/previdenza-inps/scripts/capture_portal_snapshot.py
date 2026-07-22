@@ -57,8 +57,6 @@ APPROVAL_FIELDS = frozenset(
         "portal_profile_authority_basis",
         "delegation_or_subject_authority_confirmed",
         "delegation_or_subject_authority_basis",
-        "client_data_processing_authorized_confirmed",
-        "processing_authority_basis",
         "portal_capture_permission_confirmed",
         "portal_permission_basis",
         "read_only_capture_confirmed",
@@ -75,7 +73,6 @@ GUARDRAILS = {
     "browser_closed": False,
     "case_content_uploaded": False,
     "own_or_authorized_credentials_confirmed": True,
-    "client_data_processing_authorized_confirmed": True,
     "portal_capture_permission_confirmed": True,
     "read_only_capture_confirmed": True,
     "no_credentials_or_session_secrets_visible_confirmed": True,
@@ -240,7 +237,6 @@ def validate_external_approval(value: Mapping[str, Any]) -> dict[str, Any]:
         "human_access_authority_confirmed",
         "portal_profile_authority_confirmed",
         "delegation_or_subject_authority_confirmed",
-        "client_data_processing_authorized_confirmed",
         "portal_capture_permission_confirmed",
         "read_only_capture_confirmed",
         "no_credentials_or_session_secrets_visible_confirmed",
@@ -287,11 +283,6 @@ def validate_external_approval(value: Mapping[str, Any]) -> dict[str, Any]:
         "delegation_or_subject_authority_basis": _required_text(
             value.get("delegation_or_subject_authority_basis"),
             field="external approval delegation_or_subject_authority_basis",
-        ),
-        "client_data_processing_authorized_confirmed": True,
-        "processing_authority_basis": _required_text(
-            value.get("processing_authority_basis"),
-            field="external approval processing_authority_basis",
         ),
         "portal_capture_permission_confirmed": True,
         "portal_permission_basis": _required_text(
@@ -667,12 +658,6 @@ def _capture_parser(subparsers: Any) -> None:
     )
     parser.add_argument("--delegation-or-subject-authority-basis", required=True)
     parser.add_argument(
-        "--confirm-client-data-processing-authority",
-        action="store_true",
-        required=True,
-    )
-    parser.add_argument("--processing-authority-basis", required=True)
-    parser.add_argument(
         "--confirm-portal-capture-permission",
         action="store_true",
         required=True,
@@ -710,10 +695,6 @@ def _approval_from_args(args: argparse.Namespace) -> dict[str, Any]:
         "delegation_or_subject_authority_basis": (
             args.delegation_or_subject_authority_basis
         ),
-        "client_data_processing_authorized_confirmed": (
-            args.confirm_client_data_processing_authority
-        ),
-        "processing_authority_basis": args.processing_authority_basis,
         "portal_capture_permission_confirmed": (args.confirm_portal_capture_permission),
         "portal_permission_basis": args.portal_permission_basis,
         "read_only_capture_confirmed": args.confirm_read_only_capture,

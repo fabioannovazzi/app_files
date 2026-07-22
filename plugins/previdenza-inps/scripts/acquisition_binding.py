@@ -1,4 +1,4 @@
-"""Build immutable, privacy-safe provenance bindings for an INPS case run."""
+"""Build immutable acquisition-provenance bindings for an INPS case run."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ class AcquisitionBindingError(ValueError):
 
 _KNOWN_CHANNELS = {
     "inps_conditional_browser_capture",
-    "inps_official_user_export",
+    "inps_registered_local_export",
 }
 _KNOWN_CONNECTORS = {"inps_browser_read_only"}
 _OCR_PROJECTION_FIELDS = (
@@ -147,7 +147,7 @@ def _acquisition_projection(run_intake: dict[str, Any]) -> dict[str, Any]:
     export_receipt = _receipt(
         posture,
         name="portal_export_receipt",
-        channel="inps_official_user_export",
+        channel="inps_registered_local_export",
     )
     if capture_receipt is not None and connectors != ["inps_browser_read_only"]:
         raise AcquisitionBindingError(

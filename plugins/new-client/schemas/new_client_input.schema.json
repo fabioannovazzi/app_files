@@ -8,7 +8,6 @@
     "schema_version",
     "jurisdiction",
     "language",
-    "processing_authority",
     "client_file_preparation_binding",
     "client_reference",
     "client_type",
@@ -40,9 +39,6 @@
     "jurisdiction": {
       "const": "IT",
       "description": "Only the Italy professional-setup country pack is currently available."
-    },
-    "processing_authority": {
-      "$ref": "#/$defs/processing_authority"
     },
     "client_file_preparation_binding": {
       "$ref": "#/$defs/client_file_preparation_binding"
@@ -139,32 +135,6 @@
     }
   },
   "$defs": {
-    "processing_authority": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "status",
-        "scope",
-        "runtime",
-        "minimization",
-        "external_transfer_authorized",
-        "authorized_by",
-        "authorized_by_role",
-        "authorized_at"
-      ],
-      "properties": {
-        "status": {"enum": ["pending", "authorized"]},
-        "scope": {"const": "new_client_professional_setup"},
-        "runtime": {"enum": ["local_codex_workspace", "managed_codex_runtime"]},
-        "minimization": {"const": "structured_facts_and_selected_excerpts"},
-        "external_transfer_authorized": {"type": "boolean"},
-        "authorized_by": {
-          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/reference"}]
-        },
-        "authorized_by_role": {"enum": [null, "professional"]},
-        "authorized_at": {"type": ["string", "null"], "format": "date-time"}
-      }
-    },
     "representative_posture": {
       "type": "object",
       "additionalProperties": false,

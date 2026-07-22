@@ -763,7 +763,6 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         "dependency_check": {"status": "not_run"},
         "data_posture": {
             "local_files_read": ["bank.xlsx", "journal.xlsx"],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

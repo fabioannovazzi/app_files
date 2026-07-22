@@ -149,17 +149,20 @@ The internal phase follows the OpenAI-style MCP UI pattern for review surfaces:
 Do not hand-build a separate HTML page for this review handoff. The reusable MCP
 widget is the primary UI surface.
 
-## Integrity And Privacy Contract
+## Integrity And Review Contract
 
 - validate that the customer folder exists and contains evidence before any
   default output directory is created;
 - keep every inventoried file in `extracted/documents.jsonl`, including unread
   or unsupported files;
 - keep absolute customer paths in the private local intake only; the review
-  payload uses relative paths and omits text previews unless the run explicitly
-  enables them; explicit preview mode includes bounded excerpts from every
-  readable inventoried document, fiscal-field evidence snippets, and generated
-  draft previews that can repeat the client name;
+  payload uses relative paths and includes bounded, professionally useful
+  excerpts from readable inventoried documents, fiscal-field evidence, and
+  generated drafts by default; these may contain real client data, and their
+  size limits support interface performance rather than anonymization or an
+  inventory of everything Codex may have read;
+- exclude credentials, session material, and raw absolute local paths from the
+  review payload;
 - require `size_bytes` and `sha256` for every `final_artifacts.json` output;
 - compute `integrity.package_hash` from the UTF-8-path-sorted canonical array of
   `{path, sha256, size_bytes}` records; `final_artifacts.json` itself is excluded;

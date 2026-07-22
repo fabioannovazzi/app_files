@@ -14,7 +14,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 SHARED_ROOT = ROOT / "static" / "shared"
 VERA_PLUGIN_ROOT = ROOT / "plugins" / "vera"
-VERA_PRIVACY_MANIFEST_ROOT = VERA_PLUGIN_ROOT / "privacy" / "workstreams"
 VERA_INSTALL_URL = (
     "https://chatgpt.com/auth/login?next="
     "%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
@@ -142,10 +141,8 @@ DISCARDED_PUBLIC_PHRASES = (
     "giudizio professionale",
     "il professionista decide",
     "professional judgment remains",
-    "vera does not",
     "vera doesn't",
     "vera never",
-    "vera non ",
     "ne remplace pas",
     "vera ne décide pas",
     "vera ne se connecte pas",
@@ -456,93 +453,113 @@ def test_vera_hub_localizes_every_visible_copy_key_in_all_four_languages() -> No
         assert page.count(f'"{key}":') == 4, key
 
 
-def test_vera_hub_privacy_rows_match_registered_workstreams_and_fingerprints() -> None:
-    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+def _vera_data_boundary_section(page: str) -> str:
     section_start = page.index('<section class="section-block" id="data-boundary">')
     section_end = page.index('<section class="section-block" id="video">')
-    section = page[section_start:section_end]
-    row_matches = re.findall(
-        r'<tr\b(?=[^>]*\bdata-privacy-workstream="([^"]+)")'
-        r'(?=[^>]*\bdata-privacy-fingerprint="([^"]+)")[^>]*>(.*?)</tr>',
-        section,
-        flags=re.DOTALL,
-    )
-    manifest_paths = tuple(sorted(VERA_PRIVACY_MANIFEST_ROOT.glob("*.json")))
-    manifest_ids = {path.stem for path in manifest_paths}
-    components = json.loads(
-        (VERA_PLUGIN_ROOT / "components.json").read_text(encoding="utf-8")
-    )
-
-    assert len(row_matches) == 12
-    assert {workstream for workstream, _, _ in row_matches} == manifest_ids
-    assert manifest_ids == set(components["plugins"])
-
-    for workstream, website_fingerprint, row_body in row_matches:
-        manifest = json.loads(
-            (VERA_PRIVACY_MANIFEST_ROOT / f"{workstream}.json").read_text(
-                encoding="utf-8"
-            )
-        )
-        assert manifest["workstream"] == workstream
-        assert website_fingerprint == manifest["review"]["source_fingerprint"]
-        assert f'id="privacy-workstream-{workstream}"' in section
-        assert '<th scope="row">' in row_body
+    return page[section_start:section_end]
 
 
-def test_vera_hub_privacy_rows_have_complete_four_language_copy() -> None:
+def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
-    manifest_ids = {path.stem for path in VERA_PRIVACY_MANIFEST_ROOT.glob("*.json")}
+    section = _vera_data_boundary_section(page)
 
-    for workstream in manifest_ids:
-        for field in ("name", "local", "codex", "example"):
-            key = f"privacy.row.{workstream}.{field}"
-            assert f'data-i18n="{key}"' in page
-            assert page.count(f'"{key}":') == 4
+    assert "<table" not in section
+    assert "data-privacy-workstream" not in page
+    assert "data-privacy-fingerprint" not in page
+    assert "privacy.row." not in page
+    assert "privacy.notice" not in page
+    assert "privacy.governance" not in page
+    assert section.count('class="data-position__fact"') == 4
+    assert section.count('class="data-route"') == 3
 
 
-def test_vera_hub_privacy_section_keeps_the_hard_boundaries_explicit() -> None:
+@pytest.mark.parametrize(
+    ("title", "automatic", "account", "secrets", "mparanza", "external"),
+    (
+        (
+            "Vera lavora sui dati reali del cliente.",
+            "Vera non anonimizza automaticamente.",
+            "Lo studio sceglie l’account Codex/OpenAI",
+            "Password, chiavi API, cookie, token e dati di sessione",
+            "Vera non invia il lavoro a Mparanza.",
+            "ricerca pubblica, un connector o un invio esplicito",
+        ),
+        (
+            "Vera works on real client data.",
+            "Vera does not anonymize automatically.",
+            "The firm chooses the Codex/OpenAI account",
+            "Passwords, API keys, cookies, tokens, and session data",
+            "Vera does not send the work to Mparanza.",
+            "public search, connector, or explicit send",
+        ),
+        (
+            "Vera travaille sur les données réelles du client.",
+            "Vera n’anonymise pas automatiquement.",
+            "Le cabinet choisit le compte Codex/OpenAI",
+            "Mots de passe, clés API, cookies, jetons et données de session",
+            "Vera n’envoie pas le travail à Mparanza.",
+            "recherche publique, un connecteur ou un envoi explicite",
+        ),
+        (
+            "Vera arbeitet mit echten Mandantendaten.",
+            "Vera anonymisiert nicht automatisch.",
+            "Die Kanzlei wählt das Codex-/OpenAI-Konto",
+            "Passwörter, API-Schlüssel, Cookies, Token und Sitzungsdaten",
+            "Vera sendet die Arbeit nicht an Mparanza.",
+            "öffentliche Suche, ein Connector oder ein ausdrücklicher Versand",
+        ),
+    ),
+)
+def test_vera_hub_localizes_the_real_data_boundary(
+    title: str,
+    automatic: str,
+    account: str,
+    secrets: str,
+    mparanza: str,
+    external: str,
+) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
-    assert page.index('id="italia"') < page.index('id="data-boundary"')
-    assert page.index('id="data-boundary"') < page.index('id="video"')
-    for disclosure in (
-        "Il testo digitato è già nel contesto di Codex",
-        "Text already typed is in Codex context",
-        "Le texte saisi est déjà dans le contexte Codex",
-        "Bereits eingegebener Text befindet sich im Codex-Kontext",
-        "pseudonimizzazione, non di anonimato garantito",
-        "pseudonymisation, not guaranteed anonymity",
-        "pseudonymisation, pas d’anonymat garanti",
-        "Pseudonymisierung, keine garantierte Anonymität",
+    assert title in page
+    assert automatic in page
+    assert account in page
+    assert secrets in page
+    assert mparanza in page
+    assert external in page
+
+
+@pytest.mark.parametrize(
+    "model_context_copy",
+    (
+        "il contenuto che Codex legge entra nel contesto del modello",
+        "the content Codex reads enters the model context",
+        "le contenu lu par Codex entre dans le contexte du modèle",
+        "die von Codex gelesenen Inhalte über das von der Kanzlei gewählte OpenAI-Konto in den Modellkontext gelangen",
+    ),
+)
+def test_vera_hub_names_the_content_codex_reads(model_context_copy: str) -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    assert model_context_copy in page
+    assert "relevant content enters" not in page
+    assert "contenuto pertinente entra" not in page
+    assert "contenu pertinent entre" not in page
+    assert "relevante Inhalte" not in page
+
+
+def test_vera_hub_names_the_three_actual_routes() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    section = _vera_data_boundary_section(page)
+
+    for key in (
+        "privacy.routes.local.title",
+        "privacy.routes.codex.title",
+        "privacy.routes.external.title",
     ):
-        assert disclosure in page
+        assert f'data-i18n="{key}"' in section
+        assert page.count(f'"{key}":') == 4
 
-
-def test_vera_hub_privacy_copy_discloses_registered_exception_inputs() -> None:
-    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
-
-    for disclosure in (
-        "riepiloghi dell’intero giornale, righe rappresentative",
-        "whole-journal summaries, representative rows",
-        "synthèses du journal complet, lignes représentatives",
-        "Zusammenfassungen des gesamten Journals, repräsentative Zeilen",
-        "Inventario dei file, intestazioni, righe rappresentative, istruzioni dell’utente",
-        "File inventory, headers, representative rows, user instructions",
-        "Inventaire des fichiers, en-têtes, lignes représentatives, instructions de l’utilisateur",
-        "Dateiinventar, Spaltenüberschriften, repräsentative Zeilen, Nutzeranweisungen",
-        "Se serve interpretare un elemento visivo, può entrare il documento o l’immagine pertinente.",
-        "When visual interpretation is necessary, the relevant document or image may enter context.",
-        "Si une interprétation visuelle est nécessaire, le document ou l’image pertinente peut entrer dans le contexte.",
-        "Ist eine visuelle Auslegung erforderlich, kann das relevante Dokument oder Bild in den Kontext gelangen.",
-    ):
-        assert disclosure in page
-
-
-def test_vera_hub_privacy_row_deep_links_clear_the_sticky_header() -> None:
-    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
-
-    assert ".privacy-table tbody tr { scroll-margin-top: 96px; }" in page
-    assert ".privacy-table tbody tr { scroll-margin-top: 150px; }" in page
+    assert "privacy.routes.hosted" not in page
 
 
 @pytest.mark.parametrize(

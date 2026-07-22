@@ -22,8 +22,12 @@ not a filing instruction or portal automation.
   other recipient cued by the facts.
 - Never infer legal form, ATECO, recipient, DIRE model/panel/field, deadline, or
   SARI-card applicability with deterministic keyword rules.
-- Use pseudonymous case JSON and generic public-search terms. Do not put client
-  identifiers into SARI, search URLs, widget payloads, or generated filenames.
+- Private case JSON and local professional-review artifacts may contain the
+  client and case facts that are useful for the work. Never place credentials,
+  cookies, tokens, signatures, or session material in them.
+- Before an actual public SARI search, reduce the outgoing query to generic
+  topical terms and run the direct-identifier guard. Do not put client
+  identifiers into public SARI/search URLs or generated filenames.
 - Every OCR-derived fact remains partial until a human visually confirms the
   source image.
 - No status may mean ready to file. `ready_to_file` must remain false.
@@ -42,9 +46,9 @@ practice plan.
 1. Start with a visible checklist for dependency checks, Run Intake, local
    evidence, official-source selection, material decisions, validation,
    packaging, and professional review.
-2. Show a Run Intake table with the pseudonymous case reference, private input
-   and output folders, competent Camera, reference/effective dates, local or
-   external processing posture, recorded authority, and assumptions.
+2. Show a Run Intake table with the stable case reference, private input
+   and output folders, competent Camera, reference/effective dates, Codex-context
+   and external-acquisition posture, and assumptions.
 3. Show a compact Decision Table for every unresolved chamber, legal form,
    activity/classification, recipient position, DIRE step, source
    applicability, date, OCR limitation, or evidence conflict.
@@ -58,7 +62,7 @@ Default output policy: create the ordinary private review package without
 unnecessary copies of source evidence. JSON, Markdown, audit, and review files
 are not choices to propose when the tooling can produce them. Ask only about
 material choices that change facts, legal scope, source applicability,
-processing authority, destination, or write scope. Generate alternatives from
+destination, or write scope. Generate alternatives from
 the case facts; do not offer uncued legal classifications.
 
 Ask only those unresolved choices in chat, and wait only when an answer would
@@ -106,15 +110,19 @@ Do not overwrite or resume draft files for a different `run_id`.
 Before research, show a short decision table and confirm facts that materially
 change the practice:
 
-- pseudonymous client reference;
+- stable client reference and any identity or contact facts useful to the
+  professional task;
 - competent chamber/tenant and territorial basis;
 - subject and legal form;
 - activity in neutral factual language;
 - operation requested and effective date;
 - current RI/REA and other known position states;
 - which recipient positions are being investigated, not assumed applicable;
-- the professional question;
-- authority to process the case materials.
+- the professional question.
+
+Real case material may enter the Codex model context when it is useful for this
+private professional review. Do not ask for a per-case processing declaration;
+Vera cannot use that declaration to establish compliance.
 
 Complete `case_intake_draft.json`. An unresolved chamber, form, activity, scope,
 or date is a blocker, not a reason to guess.
@@ -153,7 +161,7 @@ the competent Camera. Operate in read-only public pages only:
 2. search with a generic topical query, never a name, tax code, VAT number,
    phone, email, PEC, address, or case narrative;
 3. present candidates and let a human select the relevant content ID;
-4. capture only the minimum metadata needed for provenance;
+4. capture the metadata needed for provenance;
 5. do not export session cookies or use login/contact/assistance forms.
 
 Register a browser-selected source without fetching it from a script:
@@ -243,9 +251,10 @@ insurance subagents or legacy third/fourth producer groups, distinguish the
 source's territorial/date scope, the RUI section/mandate evidence, the RI/REA
 effect, and any INPS position. Leave disputed meaning as a named question.
 
-Always draft a concise, de-identified `sari_question_draft` and limitations that
-say this is a professional-review draft and that no portal access or submission
-occurred.
+Always draft a concise `sari_question_draft` for private professional review.
+Record only case, source, or OCR limitations that actually apply. Before any
+later manual transmission, the professional decides which facts the actual
+question needs.
 
 ## 6. Validate and package
 
@@ -278,7 +287,7 @@ does not authorize a portal action.
 
 ## 7. Professional review
 
-Call the local MCP tools in this order:
+Call the MCP review tools in this order:
 
 1. `validate_registro_imprese_sari_review`
 2. `render_registro_imprese_sari_review`

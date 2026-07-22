@@ -727,7 +727,6 @@ def write_run_intake(
         },
         "data_posture": {
             "local_files_read": local_files_read,
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

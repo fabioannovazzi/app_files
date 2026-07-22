@@ -42,7 +42,6 @@ __all__ = [
     "utc_now",
     "validate_contract",
     "validate_new_client_input",
-    "validate_processing_authority",
     "validate_review_payload_privacy",
     "validate_source_references",
     "verify_client_file_preparation_binding",
@@ -115,19 +114,26 @@ EXPECTED_ARTIFACTS = (
 
 _FORBIDDEN_OUTCOME_STATUSES = {"active", "compliant", "complete", "signed"}
 _REVIEW_FORBIDDEN_KEYS = {
-    "codice_fiscale",
-    "partita_iva",
-    "tax_id",
-    "tax_identifier",
-    "document_number",
-    "full_name",
-    "legal_name",
+    "access_token",
+    "auth_token",
+    "authorization_header",
+    "cookie",
+    "cookies",
+    "credential",
+    "credentials",
+    "one_time_code",
+    "otp",
+    "otp_code",
+    "password",
+    "private_session_url",
+    "refresh_token",
+    "session_cookie",
+    "session_token",
+    "session_url",
+    "token",
     "raw_path",
     "local_path",
     "evidence_path",
-    "client_reference",
-    "source_reference",
-    "subject_reference",
 }
 _REFERENCE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{2,79}$")
 
@@ -181,10 +187,10 @@ _REVIEW_COPY: dict[str, dict[str, str]] = {
         "de": "Umfang und Bedingungen des Auftrags",
     },
     "title.screening_subject": {
-        "it": "Copertura delle verifiche — {subject_alias}",
-        "en": "Screening coverage — {subject_alias}",
-        "fr": "Couverture des vérifications — {subject_alias}",
-        "de": "Abdeckung der Prüfungen — {subject_alias}",
+        "it": "Copertura delle verifiche — {subject_reference}",
+        "en": "Screening coverage — {subject_reference}",
+        "fr": "Couverture des vérifications — {subject_reference}",
+        "de": "Abdeckung der Prüfungen — {subject_reference}",
     },
     "title.aml_factor_section": {
         "it": "Sezione {section} dei fattori di rischio antiriciclaggio",
@@ -203,64 +209,6 @@ _REVIEW_COPY: dict[str, dict[str, str]] = {
         "en": "Missing evidence and unresolved information",
         "fr": "Justificatifs manquants et informations non résolues",
         "de": "Fehlende Nachweise und ungeklärte Angaben",
-    },
-    "privacy.notice": {
-        "it": (
-            "Dati di revisione pseudonimizzati: nomi, identificativi fiscali, "
-            "numeri dei documenti di identità e percorsi delle evidenze originali "
-            "restano negli artefatti locali con accesso riservato al proprietario."
-        ),
-        "en": (
-            "Pseudonymous review payload: names, tax identifiers, identity-document "
-            "numbers, and raw evidence paths remain in owner-only local artifacts."
-        ),
-        "fr": (
-            "Données de révision pseudonymisées : les noms, identifiants fiscaux, "
-            "numéros de pièces d’identité et chemins des justificatifs d’origine "
-            "restent dans des artefacts locaux accessibles uniquement à leur "
-            "propriétaire."
-        ),
-        "de": (
-            "Pseudonymisierte Prüfdaten: Namen, Steuerkennzeichen, Ausweisnummern "
-            "und Pfade zu den ursprünglichen Nachweisen verbleiben in lokalen "
-            "Artefakten, auf die nur der Eigentümer zugreifen kann."
-        ),
-    },
-    "privacy.excluded.names": {
-        "it": "nomi",
-        "en": "names",
-        "fr": "noms",
-        "de": "Namen",
-    },
-    "privacy.excluded.tax_identifiers": {
-        "it": "identificativi fiscali",
-        "en": "tax identifiers",
-        "fr": "identifiants fiscaux",
-        "de": "Steuerkennzeichen",
-    },
-    "privacy.excluded.identity_document_numbers": {
-        "it": "numeri dei documenti di identità",
-        "en": "identity-document numbers",
-        "fr": "numéros de pièces d’identité",
-        "de": "Ausweisnummern",
-    },
-    "privacy.excluded.raw_evidence_paths": {
-        "it": "percorsi delle evidenze originali",
-        "en": "raw evidence paths",
-        "fr": "chemins des justificatifs d’origine",
-        "de": "Pfade zu den ursprünglichen Nachweisen",
-    },
-    "privacy.excluded.subject_references": {
-        "it": "riferimenti del cliente e dei soggetti",
-        "en": "client and subject references",
-        "fr": "références du client et des sujets",
-        "de": "Mandanten- und Personenreferenzen",
-    },
-    "privacy.excluded.screening_sources": {
-        "it": "riferimenti alle fonti delle verifiche",
-        "en": "screening source references",
-        "fr": "références des sources de vérification",
-        "de": "Referenzen der Prüfquellen",
     },
 }
 
@@ -597,80 +545,6 @@ def _validate_professional_confirmation(
         )
 
 
-def validate_processing_authority(
-    value: Any, *, require_authorized: bool = False
-) -> dict[str, Any]:
-    """Validate the explicit authority record required before semantic processing."""
-
-    authority = _require_object(value, "processing_authority")
-    expected_fields = {
-        "status",
-        "scope",
-        "runtime",
-        "minimization",
-        "external_transfer_authorized",
-        "authorized_by",
-        "authorized_by_role",
-        "authorized_at",
-    }
-    if set(authority) != expected_fields:
-        raise ValidationError(
-            "processing_authority fields must be exactly: "
-            + ", ".join(sorted(expected_fields))
-        )
-    status = authority.get("status")
-    if status not in {"pending", "authorized"}:
-        raise ValidationError(
-            "processing_authority.status must be pending or authorized."
-        )
-    if authority.get("scope") != "new_client_professional_setup":
-        raise ValidationError(
-            "processing_authority.scope must be new_client_professional_setup."
-        )
-    if authority.get("runtime") not in {
-        "local_codex_workspace",
-        "managed_codex_runtime",
-    }:
-        raise ValidationError("processing_authority.runtime is not supported.")
-    if authority.get("minimization") != "structured_facts_and_selected_excerpts":
-        raise ValidationError(
-            "processing_authority.minimization must be "
-            "structured_facts_and_selected_excerpts."
-        )
-    if not isinstance(authority.get("external_transfer_authorized"), bool):
-        raise ValidationError(
-            "processing_authority.external_transfer_authorized must be boolean."
-        )
-    if status == "authorized":
-        _require_reference(
-            authority.get("authorized_by"), "processing_authority.authorized_by"
-        )
-        if authority.get("authorized_by_role") != "professional":
-            raise ValidationError(
-                "Authorized processing_authority must be "
-                "authorized_by_role=professional."
-            )
-        _parse_timestamp(
-            authority.get("authorized_at"), "processing_authority.authorized_at"
-        )
-    elif (
-        authority.get("authorized_by") is not None
-        or authority.get("authorized_by_role") is not None
-        or authority.get("authorized_at") is not None
-        or authority.get("external_transfer_authorized") is True
-    ):
-        raise ValidationError(
-            "Pending processing_authority cannot contain authorization metadata "
-            "or authorize an external transfer."
-        )
-    if require_authorized and status != "authorized":
-        raise ValidationError(
-            "Semantic/model processing is blocked until processing_authority.status "
-            "is authorized by the professional."
-        )
-    return dict(authority)
-
-
 def _validate_factor_group(
     factors: Any,
     *,
@@ -801,7 +675,6 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         "schema_version",
         "jurisdiction",
         "language",
-        "processing_authority",
         "client_file_preparation_binding",
         "client_reference",
         "client_type",
@@ -839,7 +712,6 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
             + ", ".join(SUPPORTED_JURISDICTIONS)
             + "."
         )
-    validate_processing_authority(data.get("processing_authority"))
     _require_reference(data.get("client_reference"), "client_reference")
     if data.get("client_type") not in {
         "individual",
@@ -3512,7 +3384,6 @@ def build_case_facts(
         "jurisdiction": intake["jurisdiction"],
         "country_pack": ITALY_COUNTRY_PACK,
         "language": intake["language"],
-        "processing_authority": intake["processing_authority"],
         "client_reference": intake["client_reference"],
         "client_type": intake["client_type"],
         "tax_facts": intake["tax_facts"],
@@ -4320,7 +4191,7 @@ def _localize_review_items(
             title = _localized_review_copy(
                 language,
                 "title.screening_subject",
-                subject_alias=data["subject_alias"],
+                subject_reference=data["subject_reference"],
             )
         elif item_type == "aml_factor_section":
             title = _localized_review_copy(
@@ -4356,40 +4227,9 @@ def build_review_payload(
     client_file_preparation_verification: Mapping[str, Any] | None = None,
     temporal_validity: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Build a bounded, pseudonymous review payload without raw client identifiers."""
+    """Build a bounded private review payload with professionally useful case data."""
 
     items: list[dict[str, Any]] = []
-    subject_aliases = {intake["client_reference"]: "review-subject-client"}
-    subject_aliases.update(
-        {
-            representative["representative_reference"]: (
-                f"review-subject-representative-{index:02d}"
-            )
-            for index, representative in enumerate(intake["representatives"], start=1)
-        }
-    )
-    subject_aliases.update(
-        {
-            owner["owner_reference"]: f"review-subject-owner-{index:02d}"
-            for index, owner in enumerate(intake["beneficial_owners"], start=1)
-        }
-    )
-    screening_aliases = {
-        screening["screening_id"]: f"review-screening-{index:02d}"
-        for index, screening in enumerate(intake["screening_results"], start=1)
-    }
-    party_fact_aliases = {
-        fact["fact_id"]: f"review-party-fact-{index:02d}"
-        for index, fact in enumerate(intake["party_facts"], start=1)
-    }
-    service_aliases = {
-        service["service_id"]: f"review-engagement-service-{index:02d}"
-        for index, service in enumerate(intake["engagement"]["services"], start=1)
-    }
-    evidence_aliases = {
-        evidence["evidence_id"]: f"review-evidence-{index:02d}"
-        for index, evidence in enumerate(intake["evidence_register"], start=1)
-    }
     fact_codes_by_id = {
         fact["fact_id"]: fact["fact_code"] for fact in intake["party_facts"]
     }
@@ -4402,9 +4242,9 @@ def build_review_payload(
                 title=f"Party tax fact — {fact_name}",
                 data={
                     "fact_code": fact_name,
+                    "value": fact.get("value"),
                     "confirmation_status": fact["verification_status"],
                     "evidence_count": len(fact.get("evidence_ids", [])),
-                    "raw_value_excluded": True,
                 },
             )
         )
@@ -4470,13 +4310,11 @@ def build_review_payload(
         expires_on = evidence.get("expires_on")
         items.append(
             _review_item(
-                item_id=f"evidence:{evidence_aliases[evidence['evidence_id']]}",
+                item_id=f"evidence:{evidence['evidence_id']}",
                 item_type="evidence_record",
-                title=(
-                    "Evidence record — " + evidence_aliases[evidence["evidence_id"]]
-                ),
+                title="Evidence record — " + evidence["evidence_id"],
                 data={
-                    "evidence_alias": evidence_aliases[evidence["evidence_id"]],
+                    "evidence_id": evidence["evidence_id"],
                     "evidence_type": evidence["evidence_type"],
                     "declared_status": evidence["status"],
                     "obtained_on": evidence.get("obtained_on"),
@@ -4508,7 +4346,7 @@ def build_review_payload(
                 ),
                 data={
                     "decision_alias": f"processing-{index:02d}",
-                    "purpose_recorded": bool(decision["purpose"]),
+                    "purpose": decision["purpose"],
                     "role": decision["role"],
                     "legal_basis_code": (
                         legal_basis.get("code")
@@ -4547,17 +4385,16 @@ def build_review_payload(
         )
     )
     for fact in intake["party_facts"]:
-        fact_alias = party_fact_aliases[fact["fact_id"]]
         items.append(
             _review_item(
-                item_id=f"party_fact:{fact_alias}",
+                item_id=f"party_fact:{fact['fact_id']}",
                 item_type="party_fact",
                 title=f"Party fact — {fact['fact_code']}",
                 data={
                     "fact_code": fact["fact_code"],
+                    "value": fact.get("value"),
                     "confirmation_status": fact["verification_status"],
                     "evidence_count": len(fact.get("evidence_ids", [])),
-                    "raw_value_excluded": True,
                 },
             )
         )
@@ -4570,8 +4407,8 @@ def build_review_payload(
             data={
                 "fact_code": "identity_document_verification",
                 "confirmation_status": party_identity["verification_status"],
-                "document_type_recorded": bool(party_identity.get("document_type")),
-                "document_number_excluded": True,
+                "document_type": party_identity.get("document_type"),
+                "document_number": party_identity.get("document_number"),
                 "verification_date": party_identity.get("verified_on"),
                 "expires_on": party_identity.get("expires_on"),
                 "freshness_status": (
@@ -4591,18 +4428,15 @@ def build_review_payload(
     for representative in intake["representatives"]:
         identity = representative["identity_document"]
         reference = representative["representative_reference"]
-        subject_alias = subject_aliases[reference]
         items.append(
             _review_item(
-                item_id=f"representative:{subject_alias}",
+                item_id=f"representative:{reference}",
                 item_type="representative_fact",
-                title=f"Representative or executor — {subject_alias}",
+                title=f"Representative or executor — {reference}",
                 data={
-                    "representative_reference": subject_alias,
+                    "representative_reference": reference,
                     "role": representative["role"],
-                    "authority_basis_recorded": bool(
-                        representative.get("authority_basis")
-                    ),
+                    "authority_basis": representative.get("authority_basis"),
                     "confirmation_status": identity["verification_status"],
                     "verification_date": identity.get("verified_on"),
                     "expires_on": identity.get("expires_on"),
@@ -4616,7 +4450,7 @@ def build_review_payload(
                         < as_of
                         else "current_or_not_dated"
                     ),
-                    "document_number_excluded": True,
+                    "document_number": identity.get("document_number"),
                     "evidence_count": len(
                         set(representative.get("evidence_ids", []))
                         | set(identity.get("evidence_ids", []))
@@ -4627,15 +4461,14 @@ def build_review_payload(
     for owner in intake["beneficial_owners"]:
         identity = owner["identity_document"]
         reference = owner["owner_reference"]
-        subject_alias = subject_aliases[reference]
         items.append(
             _review_item(
-                item_id=f"beneficial_owner:{subject_alias}",
+                item_id=f"beneficial_owner:{reference}",
                 item_type="beneficial_owner_fact",
-                title=f"Beneficial owner — {subject_alias}",
+                title=f"Beneficial owner — {reference}",
                 data={
-                    "owner_reference": subject_alias,
-                    "control_basis_recorded": bool(owner.get("control_basis")),
+                    "owner_reference": reference,
+                    "control_basis": owner.get("control_basis"),
                     "confirmation_status": owner["verification_status"],
                     "identity_verification_status": identity["verification_status"],
                     "verification_date": identity.get("verified_on"),
@@ -4650,7 +4483,7 @@ def build_review_payload(
                         < as_of
                         else "current_or_not_dated"
                     ),
-                    "document_number_excluded": True,
+                    "document_number": identity.get("document_number"),
                     "evidence_count": len(
                         set(owner.get("evidence_ids", []))
                         | set(identity.get("evidence_ids", []))
@@ -4659,17 +4492,15 @@ def build_review_payload(
             )
         )
     for service in intake["engagement"]["services"]:
-        service_alias = service_aliases[service["service_id"]]
         items.append(
             _review_item(
-                item_id=f"engagement_service:{service_alias}",
+                item_id=f"engagement_service:{service['service_id']}",
                 item_type="engagement_service",
-                title=f"Engagement service — {service_alias}",
+                title=f"Engagement service — {service['service_id']}",
                 data={
-                    "service_id": service_alias,
+                    "service_id": service["service_id"],
                     "confirmation_status": service["assessment_status"],
-                    "description_recorded": bool(service.get("description")),
-                    "raw_description_excluded": True,
+                    "description": service.get("description"),
                 },
             )
         )
@@ -4692,19 +4523,17 @@ def build_review_payload(
         )
     )
     for screening in intake["screening_results"]:
-        screening_alias = screening_aliases[screening["screening_id"]]
-        subject_alias = subject_aliases[screening["subject_reference"]]
         resolution = screening.get("professional_resolution")
         items.append(
             _review_item(
-                item_id=f"screening:{screening_alias}",
+                item_id=f"screening:{screening['screening_id']}",
                 item_type="screening_result",
                 title=f"Screening result — {screening['screening_type']}",
                 data={
-                    "screening_alias": screening_alias,
-                    "subject_alias": subject_alias,
+                    "screening_id": screening["screening_id"],
+                    "subject_reference": screening["subject_reference"],
                     "screening_type": screening["screening_type"],
-                    "source_recorded": bool(screening["source_reference"]),
+                    "source_reference": screening["source_reference"],
                     "checked_at": screening["checked_at"],
                     "outcome": screening["outcome"],
                     "confirmation_status": screening["review_status"],
@@ -4723,7 +4552,6 @@ def build_review_payload(
                         if isinstance(resolution, dict)
                         else 0
                     ),
-                    "raw_result_excluded": True,
                 },
             )
         )
@@ -4738,8 +4566,7 @@ def build_review_payload(
                         "factor_code": factor["factor_id"],
                         "score": factor["score"],
                         "confirmation_status": factor["assessment_status"],
-                        "rationale_recorded": bool(factor.get("basis")),
-                        "raw_rationale_excluded": True,
+                        "basis": factor.get("basis"),
                         "evidence_count": len(factor.get("evidence_ids", [])),
                     },
                 )
@@ -4764,10 +4591,9 @@ def build_review_payload(
                     "topic": record["topic"],
                     "applicability_status": record["applicability_status"],
                     "review_status": record["review_status"],
-                    "rationale_recorded": bool(record.get("basis")),
+                    "basis": record.get("basis"),
                     "supporting_case_fact_codes": supporting_fact_codes,
                     "supporting_case_fact_count": len(supporting_fact_codes),
-                    "raw_rationale_excluded": True,
                 },
             )
         )
@@ -4830,27 +4656,18 @@ def build_review_payload(
                     "trigger_id": trigger["trigger_id"],
                     "status": trigger["status"],
                     "review_status": trigger["review_status"],
-                    "rationale_recorded": bool(trigger.get("basis")),
-                    "raw_rationale_excluded": True,
+                    "basis": trigger.get("basis"),
                 },
             )
         )
-    reference_aliases = {
-        **subject_aliases,
-        **screening_aliases,
-        **party_fact_aliases,
-        **service_aliases,
-        **evidence_aliases,
-    }
     for index, item in enumerate(missing_evidence["items"], start=1):
-        safe_reference = reference_aliases.get(item["reference"], item["reference"])
         items.append(
             _review_item(
                 item_id=f"missing:item-{index:02d}",
                 item_type="missing_evidence",
                 title=f"Missing information — {item['item_type']}",
                 data={
-                    "reference": safe_reference,
+                    "reference": item["reference"],
                     "reason": item["reason"],
                 },
             )
@@ -4981,19 +4798,23 @@ def build_review_payload(
                     else "mark_unclear"
                 ),
                 data={
+                    "client_reference": intake["client_reference"],
                     "client_type": intake["client_type"],
                     "tax_fact_statuses": [
                         {
                             "tax_fact_type": name,
+                            "value": fact.get("value"),
                             "verification_status": fact["verification_status"],
                         }
                         for name, fact in intake["tax_facts"].items()
                     ],
-                    "party_fact_codes": [
-                        fact["fact_code"] for fact in intake["party_facts"]
-                    ],
-                    "party_fact_statuses": [
-                        fact["verification_status"] for fact in intake["party_facts"]
+                    "party_facts": [
+                        {
+                            "fact_code": fact["fact_code"],
+                            "value": fact.get("value"),
+                            "verification_status": fact["verification_status"],
+                        }
+                        for fact in intake["party_facts"]
                     ],
                     "identity_status": intake["party_identity_document"][
                         "verification_status"
@@ -5001,7 +4822,9 @@ def build_review_payload(
                     "identity_expires_on": intake["party_identity_document"].get(
                         "expires_on"
                     ),
-                    "raw_identifiers_excluded": True,
+                    "identity_document_number": intake["party_identity_document"].get(
+                        "document_number"
+                    ),
                 },
             ),
             _review_item(
@@ -5050,7 +4873,29 @@ def build_review_payload(
                         owner["identity_document"]["verification_status"]
                         for owner in intake["beneficial_owners"]
                     ],
-                    "raw_identifiers_excluded": True,
+                    "representatives": [
+                        {
+                            "representative_reference": representative[
+                                "representative_reference"
+                            ],
+                            "role": representative["role"],
+                            "authority_basis": representative.get("authority_basis"),
+                            "document_number": representative["identity_document"].get(
+                                "document_number"
+                            ),
+                        }
+                        for representative in intake["representatives"]
+                    ],
+                    "beneficial_owners": [
+                        {
+                            "owner_reference": owner["owner_reference"],
+                            "control_basis": owner.get("control_basis"),
+                            "document_number": owner["identity_document"].get(
+                                "document_number"
+                            ),
+                        }
+                        for owner in intake["beneficial_owners"]
+                    ],
                 },
             ),
             _review_item(
@@ -5070,9 +4915,9 @@ def build_review_payload(
                     "engagement_kind": intake["engagement"]["kind"],
                     "services": [
                         {
-                            "service_alias": service_aliases[service["service_id"]],
+                            "service_id": service["service_id"],
                             "assessment_status": service["assessment_status"],
-                            "description_recorded": bool(service["description"]),
+                            "description": service["description"],
                         }
                         for service in intake["engagement"]["services"]
                     ],
@@ -5095,7 +4940,10 @@ def build_review_payload(
         resolution = screening.get("professional_resolution")
         screenings_by_subject.setdefault(screening["subject_reference"], []).append(
             {
+                "screening_id": screening["screening_id"],
                 "screening_type": screening["screening_type"],
+                "subject_reference": screening["subject_reference"],
+                "source_reference": screening["source_reference"],
                 "outcome": screening["outcome"],
                 "review_status": screening["review_status"],
                 "checked_at": screening.get("checked_at"),
@@ -5111,12 +4959,11 @@ def build_review_payload(
             }
         )
     for subject_reference, results in screenings_by_subject.items():
-        subject_alias = subject_aliases[subject_reference]
         items.append(
             _review_item(
-                item_id=f"screening_subject:{subject_alias}",
+                item_id=f"screening_subject:{subject_reference}",
                 item_type="screening_subject",
-                title=f"Screening coverage — {subject_alias}",
+                title=f"Screening coverage — {subject_reference}",
                 recommended_action=(
                     "accept"
                     if all(
@@ -5130,7 +4977,7 @@ def build_review_payload(
                     else "mark_unclear"
                 ),
                 data={
-                    "subject_alias": subject_alias,
+                    "subject_reference": subject_reference,
                     "coverage_complete": {
                         result["screening_type"] for result in results
                     }
@@ -5138,7 +4985,6 @@ def build_review_payload(
                     "results": sorted(
                         results, key=lambda result: result["screening_type"]
                     ),
-                    "raw_results_excluded": True,
                 },
             )
         )
@@ -5163,12 +5009,11 @@ def build_review_payload(
                             "factor_code": factor["factor_id"],
                             "score": factor["score"],
                             "assessment_status": factor["assessment_status"],
-                            "rationale_recorded": bool(factor.get("basis")),
+                            "basis": factor.get("basis"),
                             "evidence_count": len(factor.get("evidence_ids", [])),
                         }
                         for factor in factors
                     ],
-                    "raw_rationales_excluded": True,
                 },
             )
         )
@@ -5192,11 +5037,10 @@ def build_review_payload(
                         "trigger_id": trigger["trigger_id"],
                         "status": trigger["status"],
                         "review_status": trigger["review_status"],
-                        "rationale_recorded": bool(trigger.get("basis")),
+                        "basis": trigger.get("basis"),
                     }
                     for trigger in intake["aml"]["mandatory_enhanced_triggers"]
                 ],
-                "raw_rationales_excluded": True,
             },
         )
     )
@@ -5256,20 +5100,9 @@ def build_review_payload(
             "skip",
         ],
         "privacy": {
-            "classification": "pseudonymous_review_payload",
-            "excluded": [
-                _localized_review_copy(review_language, key)
-                for key in (
-                    "privacy.excluded.names",
-                    "privacy.excluded.tax_identifiers",
-                    "privacy.excluded.identity_document_numbers",
-                    "privacy.excluded.raw_evidence_paths",
-                    "privacy.excluded.subject_references",
-                    "privacy.excluded.screening_sources",
-                )
-            ],
+            "classification": "private_professional_review",
+            "excluded": ["credentials", "session secrets", "raw evidence paths"],
         },
-        "privacy_notice": _localized_review_copy(review_language, "privacy.notice"),
         "summary": {
             "review_item_count": len(items),
             "missing_information_count": missing_evidence["count"],
@@ -5278,12 +5111,11 @@ def build_review_payload(
             "jurisdiction": intake["jurisdiction"],
             "country_pack": ITALY_COUNTRY_PACK,
             "language": intake["language"],
-            "processing_authority_status": intake["processing_authority"]["status"],
         },
         "source_artifacts": {
             "facts": {
                 "path": "case_facts_validated.json",
-                "type": "local_sensitive_facts",
+                "type": "private_professional_facts",
                 "sha256": canonical_json_hash(case_facts_value),
             },
             "sources": {
@@ -5345,45 +5177,13 @@ def _walk_json(value: Any) -> Iterable[tuple[str | None, Any]]:
 def validate_review_payload_privacy(
     payload: Mapping[str, Any], intake: Mapping[str, Any] | None = None
 ) -> None:
-    """Reject sensitive identifiers and evidence locations in the review payload."""
+    """Reject credentials, session material, and raw local evidence paths."""
 
     for key, value in _walk_json(payload):
         if key is not None and key.casefold() in _REVIEW_FORBIDDEN_KEYS:
             raise ValidationError(
-                f"review_payload.json contains forbidden sensitive field {key!r}."
-            )
-    if intake is None:
-        return
-    serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True)
-    sensitive_values: set[str] = set()
-    for fact in intake["tax_facts"].values():
-        value = fact.get("value")
-        if isinstance(value, str) and value:
-            sensitive_values.add(value)
-    for evidence in intake["evidence_register"]:
-        sensitive_values.add(evidence["evidence_id"])
-        local_path = evidence.get("local_path")
-        if isinstance(local_path, str) and local_path:
-            sensitive_values.add(local_path)
-    sensitive_values.add(intake["client_reference"])
-    sensitive_values.update(
-        representative["representative_reference"]
-        for representative in intake["representatives"]
-    )
-    sensitive_values.update(
-        owner["owner_reference"] for owner in intake["beneficial_owners"]
-    )
-    for screening in intake["screening_results"]:
-        sensitive_values.add(screening["screening_id"])
-        sensitive_values.add(screening["subject_reference"])
-        if isinstance(screening.get("source_reference"), str):
-            sensitive_values.add(screening["source_reference"])
-    for template in intake["template_references"]:
-        sensitive_values.add(template["local_path"])
-    for sensitive_value in sensitive_values:
-        if sensitive_value in serialized:
-            raise ValidationError(
-                "review_payload.json contains a sensitive identifier or evidence path."
+                "review_payload.json contains forbidden credential, session, "
+                f"or local-path field {key!r}."
             )
 
 

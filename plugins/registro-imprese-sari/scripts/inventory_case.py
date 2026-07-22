@@ -65,7 +65,6 @@ def _update_run_intake(
         for record in records
         if record.get("sha256")
     ]
-    data_posture.setdefault("model_excerpts_sent", [])
     data_posture.setdefault("external_connectors_used", [])
     data_posture.setdefault("upload_paths_used", [])
     data_posture.setdefault("hosted_notebook_execution_used", False)

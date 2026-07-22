@@ -80,9 +80,10 @@ La sola review in Markdown/chat non applica decisioni: in quel caso
 `ui_decisions.json` resta in attesa.
 
 Per arrivare allo stato finale la review deve essere completa e attribuita a un
-alias pseudonimo stabile del revisore. Il campo non deve contenere nome, email o
-altri identificativi diretti; una review saltata o incompleta non rende il
-fascicolo pronto.
+riferimento stabile del professionista o del suo account. Può essere il nome
+reale del professionista; non deve contenere credenziali, token di sessione o
+percorsi locali grezzi. Una review saltata o incompleta non rende il fascicolo
+pronto.
 
 ## Copertura documentale
 
@@ -144,12 +145,13 @@ python scripts/build_file_preparation_outputs.py \
 ```
 
 `--jurisdiction` accetta `italy`, `geneva`, `zurich`, `uk` o `mixed`;
-`--language` accetta `it`, `en`, `fr` o `de`. Le anteprime testuali non entrano
-nel payload di review salvo uso esplicito di `--include-review-previews`: tale
-opzione include estratti limitati di ogni documento leggibile nella cartella
-selezionata, evidenze dei campi fiscali e anteprime delle bozze generate, che
-possono ripetere il nome cliente; non riguarda soltanto passaggi scelti
-singolarmente.
+`--language` accetta `it`, `en`, `fr` o `de`. Il payload di review include per
+impostazione predefinita estratti limitati di ogni documento leggibile,
+evidenze dei campi fiscali e anteprime della scheda per lo studio, del memo e
+dell'e-mail al cliente. Possono contenere dati reali del cliente necessari alla
+review. I limiti servono a mantenere gestibile l'interfaccia, non sono una forma
+di anonimizzazione e non descrivono tutto ciò che Codex può aver letto. Restano
+esclusi credenziali, materiale di sessione e percorsi locali assoluti.
 
 Il motore non segue link simbolici presenti nella cartella cliente. Estrazione
 PDF/testo, OCR e lettura dei formati Office/archivio supportati applicano limiti

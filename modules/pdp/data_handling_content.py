@@ -14,14 +14,19 @@ _OPENAI_CODEX_DATA_URL = (
 _OPENAI_CHATGPT_ANALYSIS_URL = (
     "https://help.openai.com/en/articles/8437071-data-analysis-with-chatgpt"
 )
+_GDPR_URL = "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+_EDPB_AI_OPINION_URL = (
+    "https://www.edpb.europa.eu/documents/opinion-of-the-board-art-64/"
+    "opinion-282024-on-certain-data-protection-aspects-related-to_en"
+)
 _SOURCE_URL = "https://github.com/fabioannovazzi/app_files"
 
 
 _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     "en": {
         "meta_description": (
-            "How Mparanza keeps local Codex work out of Mparanza systems, runs "
-            "scripts on your machine, and approaches security, privacy, and GDPR."
+            "How local Codex work, model requests, Mparanza-hosted features, and "
+            "external services handle professional data."
         ),
         "skip_label": "Skip to main content",
         "home_label": "Return to Mparanza",
@@ -29,89 +34,94 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Security, privacy and data",
         "title": "How your data is handled.",
         "summary": (
-            "Mparanza is designed to stay out of the path of your work. The "
-            "important question is not whether you trust a promise, but which "
-            "systems actually receive your data."
+            "Real professional work may require Codex to read client data. Local "
+            "execution tells you where scripts run; it does not make model-readable "
+            "content anonymous."
         ),
         "boundary": {
             "title": "The local data boundary.",
             "intro": (
-                "Vera and Clara add specialist methods to the Codex environment "
-                "you already use. They do not add a Mparanza application server "
-                "between your workspace and OpenAI."
+                "In a local workflow, scripts run on your computer. When Codex "
+                "interprets content, the documents, passages, facts, or other content "
+                "it reads enter the model context through your Codex/OpenAI account. "
+                "They do not pass through Mparanza."
             ),
             "local_label": "Your computer",
-            "local_detail": "Codex workspace · local files · scripts and outputs",
+            "local_detail": "Local files · local scripts · local outputs",
             "account_label": "Your Codex / OpenAI account",
-            "account_detail": "Model requests · account terms · data controls",
-            "exclusion": "Mparanza does not receive the working content.",
+            "account_detail": "Content Codex reads · account terms · data controls",
+            "exclusion": "Local workflow: Mparanza is not a recipient.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "The scripts run on your machine.",
+                "title": "Local processing is useful. It is not anonymization.",
                 "paragraphs": [
                     (
                         "Vera and Clara's tools execute from the Codex workspace on "
-                        "your computer, using the local files, software, and "
-                        "permissions you control."
+                        "your computer. They can sort, calculate, reconcile, extract, "
+                        "and create outputs where the files already live."
                     ),
                     (
-                        "This lets you analyze, filter, and aggregate data locally, "
-                        "and limit what you send to the model to the information "
-                        "needed for the request."
-                    ),
-                    (
-                        "Unlike a conventional ChatGPT data-analysis workflow, where "
-                        "uploaded files are made available to a provider-managed "
-                        "Jupyter notebook, these scripts run where the files already live."
+                        "When Codex must interpret the work, it may read original "
+                        "documents, images, text, data, or extracted facts through your "
+                        "account. A file staying on your computer does not mean its "
+                        "contents stay out of the model context."
                     ),
                 ],
             },
             {
                 "id": "security",
-                "title": "One fewer system to trust.",
+                "title": "Codex may read real client data.",
                 "paragraphs": [
                     (
-                        "Model requests use your existing Codex/OpenAI account. "
-                        "Mparanza is not the intermediary and cannot inspect prompts, "
-                        "files, or outputs it does not receive."
+                        "Names, identity and ownership details, financial or tax facts, "
+                        "correspondence, and supporting evidence may be needed for the "
+                        "professional task. Vera and Clara do not automatically "
+                        "anonymize case material or routinely remove names and personal "
+                        "data."
                     ),
                     (
-                        "The terms, data controls, and workspace policies attached "
-                        "to your account continue to apply."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "GDPR follows the actual data flow.",
-                "paragraphs": [
-                    (
-                        "A local-first architecture can reduce the number of recipients "
-                        "and copies, but it does not by itself answer every GDPR "
-                        "question. Local workflows do not add Mparanza as another "
-                        "recipient of your working content."
-                    ),
-                    (
-                        "Where Mparanza processes personal data, our policy explains "
-                        "the scope, purpose, retention, and rights that apply."
+                        "Never put passwords, API keys, authentication cookies, access "
+                        "tokens, or session material in prompts or files Codex can read."
                     ),
                 ],
             },
             {
                 "id": "hosted-features",
-                "title": "Hosted features are explicit.",
+                "title": "Local, hosted, and external are different routes.",
                 "paragraphs": [
                     (
-                        "If you choose an optional Mparanza-hosted feature, the content "
-                        "needed to provide it reaches systems controlled by Mparanza. "
-                        "We identify that boundary and explain the applicable retention "
-                        "and deletion rules in our policy."
+                        "Local Vera and Clara workflows use your Codex/OpenAI account; "
+                        "Mparanza is not the intermediary and does not receive the work."
                     ),
                     (
-                        "Services you connect yourself remain governed by their own "
-                        "permissions and terms."
+                        "If you choose a Mparanza-hosted feature, the content needed to "
+                        "provide it reaches Mparanza systems under the stated retention "
+                        "and deletion rules."
+                    ),
+                    (
+                        "Public searches, portals, and external services receive the "
+                        "queries, uploads, or submissions you send them and apply their "
+                        "own permissions and terms."
+                    ),
+                ],
+            },
+            {
+                "id": "gdpr",
+                "title": "Compliance follows the actual data flow.",
+                "paragraphs": [
+                    (
+                        "Local processing can reduce copies and systems involved. It "
+                        "does not establish anonymity, a legal basis, or GDPR compliance. "
+                        "GDPR data minimisation is purpose-based; it does not mean "
+                        "automatically removing every identifier."
+                    ),
+                    (
+                        "The firm chooses the Codex/OpenAI account used for professional "
+                        "work and configures the data controls available for that plan. "
+                        "Mparanza-hosted features and other external services are separate "
+                        "routes, with their own recipients and terms."
                     ),
                 ],
             },
@@ -128,6 +138,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "external": False,
                 },
                 {
+                    "label": "Read the GDPR text (Article 5)",
+                    "href": _GDPR_URL,
+                    "external": True,
+                },
+                {
+                    "label": "Read the EDPB opinion on AI models and anonymity",
+                    "href": _EDPB_AI_OPINION_URL,
+                    "external": True,
+                },
+                {
                     "label": "Review OpenAI's Codex data controls",
                     "href": _OPENAI_CODEX_DATA_URL,
                     "external": True,
@@ -139,13 +159,12 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 },
             ],
         },
-        "closing": "Secure by design. Trust minimized, not merely promised.",
+        "closing": "Local processing changes the route, not the nature, of the data.",
     },
     "it": {
         "meta_description": (
-            "Come Mparanza mantiene il lavoro locale in Codex fuori dai propri "
-            "sistemi, esegue gli script sul tuo computer e affronta sicurezza, "
-            "privacy e GDPR."
+            "Come il lavoro locale in Codex, le richieste al modello, le funzioni "
+            "hosted di Mparanza e i servizi esterni trattano i dati professionali."
         ),
         "skip_label": "Vai al contenuto principale",
         "home_label": "Torna a Mparanza",
@@ -153,91 +172,94 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sicurezza, privacy e dati",
         "title": "Come vengono gestiti i tuoi dati.",
         "summary": (
-            "Mparanza nasce per restare fuori dal flusso del tuo lavoro. La "
-            "domanda importante non è se ti fidi di una promessa, ma quali "
-            "sistemi ricevono davvero i tuoi dati."
+            "Il lavoro professionale può richiedere a Codex di leggere dati dei "
+            "clienti. L'esecuzione locale indica dove girano gli script; non rende "
+            "anonimi i contenuti che Codex legge."
         ),
         "boundary": {
             "title": "Il confine dei dati locali.",
             "intro": (
-                "Vera e Clara aggiungono metodi specialistici all'ambiente Codex "
-                "che già usi. Non aggiungono un server applicativo Mparanza tra "
-                "il tuo spazio di lavoro e OpenAI."
+                "In un flusso locale, gli script girano sul tuo computer. Quando Codex "
+                "interpreta un contenuto, i documenti, i passaggi, i fatti o gli altri "
+                "contenuti che legge entrano nel contesto del modello tramite il tuo "
+                "account Codex/OpenAI. Non passano da Mparanza."
             ),
             "local_label": "Il tuo computer",
-            "local_detail": "Ambiente Codex · file locali · script e risultati",
+            "local_detail": "File locali · script locali · risultati locali",
             "account_label": "Il tuo account Codex / OpenAI",
-            "account_detail": "Richieste al modello · termini · controlli sui dati",
-            "exclusion": "Mparanza non riceve i contenuti di lavoro.",
+            "account_detail": "Contenuti letti da Codex · termini · controlli sui dati",
+            "exclusion": "Flusso locale: Mparanza non è destinataria dei dati.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "Gli script vengono eseguiti sul tuo computer.",
+                "title": "L'elaborazione locale è utile. Non è anonimizzazione.",
                 "paragraphs": [
                     (
-                        "Gli strumenti di Vera e Clara vengono eseguiti dall'ambiente "
-                        "Codex sul tuo computer, usando i file locali, il software e "
-                        "le autorizzazioni che controlli."
+                        "Gli strumenti di Vera e Clara girano dall'ambiente Codex sul "
+                        "tuo computer. Possono ordinare, calcolare, riconciliare, estrarre "
+                        "e creare risultati dove si trovano già i file."
                     ),
                     (
-                        "Questo consente di analizzare, filtrare e aggregare i dati "
-                        "localmente e di limitare ciò che viene inviato al modello alle "
-                        "sole informazioni necessarie per la richiesta."
-                    ),
-                    (
-                        "A differenza di un flusso convenzionale di analisi dati in "
-                        "ChatGPT, in cui i file caricati vengono messi a disposizione "
-                        "di un notebook Jupyter gestito dal fornitore, questi script "
-                        "vengono eseguiti dove si trovano già i file."
+                        "Quando Codex deve interpretare il lavoro, può leggere documenti, "
+                        "immagini, testi, dati originali o fatti estratti tramite il tuo "
+                        "account. Che un file resti sul computer non significa che il "
+                        "suo contenuto resti fuori dal contesto del modello."
                     ),
                 ],
             },
             {
                 "id": "security",
-                "title": "Un sistema in meno di cui fidarsi.",
+                "title": "Codex può leggere dati reali dei clienti.",
                 "paragraphs": [
                     (
-                        "Le richieste al modello usano il tuo account Codex/OpenAI. "
-                        "Mparanza non fa da intermediario e non può esaminare prompt, "
-                        "file o risultati che non riceve."
+                        "Nomi, dati su identità e titolarità, fatti finanziari o fiscali, "
+                        "corrispondenza e documenti di supporto possono servire al lavoro "
+                        "professionale. Vera e Clara non anonimizzano automaticamente il "
+                        "materiale del caso né rimuovono sistematicamente nomi e dati personali."
                     ),
                     (
-                        "I termini, i controlli sui dati e le regole dello spazio di "
-                        "lavoro associati al tuo account continuano ad applicarsi."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "Il GDPR segue il flusso reale dei dati.",
-                "paragraphs": [
-                    (
-                        "Un'architettura local-first può ridurre il numero di "
-                        "destinatari e di copie, ma da sola non risponde a ogni "
-                        "questione GDPR. I flussi locali non aggiungono Mparanza come "
-                        "ulteriore destinatario dei tuoi contenuti di lavoro."
-                    ),
-                    (
-                        "Quando Mparanza tratta dati personali, la nostra informativa "
-                        "spiega ambito, finalità, conservazione e diritti applicabili."
+                        "Non inserire mai password, chiavi API, cookie di autenticazione, "
+                        "token di accesso o dati di sessione nei prompt o nei file che "
+                        "Codex può leggere."
                     ),
                 ],
             },
             {
                 "id": "hosted-features",
-                "title": "Le funzionalità ospitate sono esplicite.",
+                "title": "Locale, hosted ed esterno sono percorsi diversi.",
                 "paragraphs": [
                     (
-                        "Se scegli una funzionalità opzionale ospitata da Mparanza, i "
-                        "contenuti necessari a fornirla arrivano su sistemi controllati "
-                        "da Mparanza. Indichiamo chiaramente questo confine e spieghiamo "
-                        "nella nostra informativa le regole applicabili di conservazione "
-                        "e cancellazione."
+                        "I flussi locali di Vera e Clara usano il tuo account Codex/OpenAI; "
+                        "Mparanza non fa da intermediario e non riceve il lavoro."
                     ),
                     (
-                        "I servizi che colleghi direttamente restano regolati dalle "
-                        "rispettive autorizzazioni e condizioni."
+                        "Se scegli una funzione hosted da Mparanza, i contenuti necessari "
+                        "a fornirla raggiungono i sistemi Mparanza secondo le regole "
+                        "dichiarate di conservazione e cancellazione."
+                    ),
+                    (
+                        "Ricerche pubbliche, portali e servizi esterni ricevono le query, "
+                        "i file o gli invii che trasmetti e applicano autorizzazioni e "
+                        "condizioni proprie."
+                    ),
+                ],
+            },
+            {
+                "id": "gdpr",
+                "title": "La conformità segue il flusso reale dei dati.",
+                "paragraphs": [
+                    (
+                        "L'elaborazione locale può ridurre copie e sistemi coinvolti. Non "
+                        "stabilisce anonimato, base giuridica o conformità al GDPR. La "
+                        "minimizzazione prevista dal GDPR dipende dallo scopo; non "
+                        "significa rimuovere automaticamente ogni identificativo."
+                    ),
+                    (
+                        "Lo studio sceglie l'account Codex/OpenAI usato per il lavoro "
+                        "professionale e configura i controlli disponibili per quel piano. "
+                        "Le funzioni ospitate da Mparanza e gli altri servizi esterni sono "
+                        "percorsi separati, con destinatari e condizioni propri."
                     ),
                 ],
             },
@@ -254,6 +276,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "external": False,
                 },
                 {
+                    "label": "Leggi il GDPR (articolo 5)",
+                    "href": _GDPR_URL,
+                    "external": True,
+                },
+                {
+                    "label": "Consulta il parere EDPB su modelli di IA e anonimato",
+                    "href": _EDPB_AI_OPINION_URL,
+                    "external": True,
+                },
+                {
                     "label": "Consulta i controlli dati Codex di OpenAI",
                     "href": _OPENAI_CODEX_DATA_URL,
                     "external": True,
@@ -265,13 +297,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 },
             ],
         },
-        "closing": "Sicuri fin dalla progettazione. Meno fiducia richiesta, non una promessa in più.",
+        "closing": "L'elaborazione locale cambia il percorso, non la natura dei dati.",
     },
     "fr": {
         "meta_description": (
-            "Comment Mparanza maintient le travail Codex local hors de ses systèmes, "
-            "exécute les scripts sur votre ordinateur et aborde la sécurité, la "
-            "confidentialité et le RGPD."
+            "Comment le travail Codex local, les requêtes au modèle, les fonctions "
+            "hébergées par Mparanza et les services externes traitent les données "
+            "professionnelles."
         ),
         "skip_label": "Aller au contenu principal",
         "home_label": "Retourner à Mparanza",
@@ -279,94 +311,98 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sécurité, confidentialité et données",
         "title": "Comment vos données sont traitées.",
         "summary": (
-            "L'architecture de Mparanza est conçue pour ne pas s'interposer dans "
-            "votre travail. La question importante n'est pas de savoir si vous "
-            "faites confiance à une promesse, mais quels systèmes reçoivent "
-            "réellement vos données."
+            "Le travail professionnel peut nécessiter que Codex lise des données clients. "
+            "L'exécution locale indique où les scripts s'exécutent ; elle ne rend pas "
+            "anonymes les contenus lus par Codex."
         ),
         "boundary": {
             "title": "Le périmètre des données locales.",
             "intro": (
-                "Vera et Clara ajoutent des méthodes spécialisées à l'environnement "
-                "Codex que vous utilisez déjà. Elles n'ajoutent aucun serveur "
-                "applicatif Mparanza entre votre espace de travail et OpenAI."
+                "Dans un flux local, les scripts s'exécutent sur votre ordinateur. "
+                "Lorsque Codex interprète un contenu, les documents, passages, faits "
+                "ou autres contenus qu'il lit entrent dans le contexte du modèle via "
+                "votre compte Codex/OpenAI. Ils ne transitent pas par Mparanza."
             ),
             "local_label": "Votre ordinateur",
-            "local_detail": "Espace Codex · fichiers locaux · scripts et livrables",
+            "local_detail": "Fichiers locaux · scripts locaux · livrables locaux",
             "account_label": "Votre compte Codex / OpenAI",
-            "account_detail": "Requêtes au modèle · conditions · contrôles des données",
-            "exclusion": "Mparanza ne reçoit pas les contenus de travail.",
+            "account_detail": "Contenus lus par Codex · conditions · contrôles des données",
+            "exclusion": "Flux local : Mparanza n'est pas destinataire des données.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "Les scripts s'exécutent sur votre ordinateur.",
+                "title": "Le traitement local est utile. Ce n'est pas une anonymisation.",
                 "paragraphs": [
                     (
                         "Les outils de Vera et Clara s'exécutent depuis l'espace Codex "
-                        "sur votre ordinateur, en utilisant les fichiers locaux, les "
-                        "logiciels et les autorisations que vous contrôlez."
+                        "sur votre ordinateur. Ils peuvent trier, calculer, rapprocher, "
+                        "extraire et produire des livrables là où se trouvent les fichiers."
                     ),
                     (
-                        "Vous pouvez ainsi analyser, filtrer et agréger les données "
-                        "localement, et limiter ce qui est envoyé au modèle aux seules "
-                        "informations nécessaires à la requête."
-                    ),
-                    (
-                        "Contrairement à un flux classique d'analyse de données dans "
-                        "ChatGPT, où les fichiers téléversés sont mis à disposition "
-                        "d'un notebook Jupyter géré par le fournisseur, ces scripts "
-                        "s'exécutent là où les fichiers se trouvent déjà."
+                        "Lorsque Codex doit interpréter le travail, il peut lire des "
+                        "documents, images, textes, données d'origine ou faits extraits "
+                        "via votre compte. Le fait qu'un fichier reste sur l'ordinateur "
+                        "ne signifie pas que son contenu reste hors du contexte du modèle."
                     ),
                 ],
             },
             {
                 "id": "security",
-                "title": "Un système de moins auquel faire confiance.",
+                "title": "Codex peut lire de vraies données clients.",
                 "paragraphs": [
                     (
-                        "Les requêtes au modèle utilisent votre compte Codex/OpenAI. "
-                        "Mparanza ne sert pas d'intermédiaire et ne peut pas examiner "
-                        "les prompts, fichiers ou livrables qu'elle ne reçoit pas."
+                        "Noms, données d'identité et de détention, faits financiers ou "
+                        "fiscaux, correspondance et justificatifs peuvent être nécessaires "
+                        "au travail professionnel. Vera et Clara n'anonymisent pas "
+                        "automatiquement les dossiers et ne suppriment pas "
+                        "systématiquement les noms ou les données personnelles."
                     ),
                     (
-                        "Les conditions, contrôles des données et règles de l'espace "
-                        "de travail liés à votre compte continuent de s'appliquer."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "Le RGPD suit le flux réel des données.",
-                "paragraphs": [
-                    (
-                        "Une architecture privilégiant le traitement local peut réduire "
-                        "le nombre de destinataires et de copies, mais elle ne répond "
-                        "pas à elle seule à toutes les questions liées au RGPD. Les flux "
-                        "locaux n'ajoutent pas Mparanza comme destinataire supplémentaire "
-                        "de vos contenus de travail."
-                    ),
-                    (
-                        "Lorsque Mparanza traite des données à caractère personnel, "
-                        "notre politique précise le périmètre, les finalités, la durée "
-                        "de conservation et les droits applicables."
+                        "Ne placez jamais de mots de passe, clés API, cookies "
+                        "d'authentification, jetons d'accès ou données de session dans "
+                        "des prompts ou fichiers que Codex peut lire."
                     ),
                 ],
             },
             {
                 "id": "hosted-features",
-                "title": "Les fonctionnalités hébergées sont clairement signalées.",
+                "title": "Local, hébergé et externe sont des parcours distincts.",
                 "paragraphs": [
                     (
-                        "Si vous choisissez une fonctionnalité optionnelle hébergée par "
-                        "Mparanza, les contenus nécessaires sont transmis à des systèmes "
-                        "contrôlés par Mparanza. Nous signalons clairement ce changement "
-                        "de périmètre et expliquons dans notre politique les règles de "
-                        "conservation et de suppression applicables."
+                        "Les flux locaux de Vera et Clara utilisent votre compte "
+                        "Codex/OpenAI ; Mparanza n'est pas l'intermédiaire et ne reçoit "
+                        "pas le travail."
                     ),
                     (
-                        "Les services que vous connectez vous-même restent régis par "
-                        "leurs propres autorisations et conditions."
+                        "Si vous choisissez une fonction hébergée par Mparanza, les "
+                        "contenus nécessaires atteignent les systèmes Mparanza selon les "
+                        "règles de conservation et de suppression indiquées."
+                    ),
+                    (
+                        "Les recherches publiques, portails et services externes reçoivent "
+                        "les requêtes, fichiers ou soumissions que vous leur transmettez et "
+                        "appliquent leurs propres autorisations et conditions."
+                    ),
+                ],
+            },
+            {
+                "id": "gdpr",
+                "title": "La conformité suit le flux réel des données.",
+                "paragraphs": [
+                    (
+                        "Le traitement local peut réduire les copies et les systèmes "
+                        "impliqués. Il n'établit ni anonymat, ni base juridique, ni "
+                        "conformité au RGPD. La minimisation prévue par le RGPD dépend "
+                        "de la finalité ; elle ne consiste pas à supprimer automatiquement "
+                        "tout identifiant."
+                    ),
+                    (
+                        "Le cabinet choisit le compte Codex/OpenAI utilisé pour le travail "
+                        "professionnel et configure les contrôles disponibles pour cette "
+                        "offre. Les fonctions hébergées par Mparanza et les autres services "
+                        "externes sont des parcours distincts, avec leurs propres "
+                        "destinataires et conditions."
                     ),
                 ],
             },
@@ -383,6 +419,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "external": False,
                 },
                 {
+                    "label": "Lire le RGPD (article 5)",
+                    "href": _GDPR_URL,
+                    "external": True,
+                },
+                {
+                    "label": "Lire l'avis de l'EDPB sur les modèles d'IA et l'anonymat",
+                    "href": _EDPB_AI_OPINION_URL,
+                    "external": True,
+                },
+                {
                     "label": "Consulter les contrôles de données Codex d'OpenAI",
                     "href": _OPENAI_CODEX_DATA_URL,
                     "external": True,
@@ -394,13 +440,12 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 },
             ],
         },
-        "closing": "Sécurisés dès la conception. Moins de confiance à accorder, pas une promesse de plus.",
+        "closing": "Le traitement local change le parcours, pas la nature des données.",
     },
     "de": {
         "meta_description": (
-            "Wie Mparanza lokale Codex-Arbeit aus Mparanza-Systemen heraushält, "
-            "Skripte auf Ihrem Computer ausführt und Sicherheit, Datenschutz und "
-            "DSGVO behandelt."
+            "Wie lokale Codex-Arbeit, Modellanfragen, von Mparanza gehostete "
+            "Funktionen und externe Dienste professionelle Daten verarbeiten."
         ),
         "skip_label": "Zum Hauptinhalt springen",
         "home_label": "Zurück zu Mparanza",
@@ -408,92 +453,98 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sicherheit, Datenschutz und Daten",
         "title": "So werden Ihre Daten verarbeitet.",
         "summary": (
-            "Mparanza ist darauf ausgelegt, nicht Teil des Datenwegs Ihrer Arbeit "
-            "zu sein. Entscheidend ist nicht, ob Sie einem Versprechen vertrauen, "
-            "sondern welche Systeme Ihre Daten tatsächlich erhalten."
+            "Professionelle Arbeit kann erfordern, dass Codex Mandantendaten liest. "
+            "Lokale Ausführung beschreibt, wo Skripte laufen; sie macht Inhalte, die "
+            "Codex liest, nicht anonym."
         ),
         "boundary": {
             "title": "Die lokale Datengrenze.",
             "intro": (
-                "Vera und Clara ergänzen Ihre bestehende Codex-Umgebung um "
-                "fachliche Methoden. Sie schalten keinen Mparanza-Anwendungsserver "
-                "zwischen Ihren Arbeitsbereich und OpenAI."
+                "In einem lokalen Ablauf laufen Skripte auf Ihrem Computer. Wenn Codex "
+                "Inhalte auswertet, gelangen die Dokumente, Passagen, Fakten oder "
+                "anderen Inhalte, die Codex liest, über Ihr Codex-/OpenAI-Konto in den "
+                "Modellkontext. Sie laufen nicht über Mparanza."
             ),
             "local_label": "Ihr Computer",
-            "local_detail": "Codex-Arbeitsbereich · lokale Dateien · Skripte und Ergebnisse",
+            "local_detail": "Lokale Dateien · lokale Skripte · lokale Ergebnisse",
             "account_label": "Ihr Codex-/OpenAI-Konto",
-            "account_detail": "Modellanfragen · Bedingungen · Datenkontrollen",
-            "exclusion": "Mparanza erhält die Arbeitsinhalte nicht.",
+            "account_detail": "Von Codex gelesene Inhalte · Bedingungen · Datenkontrollen",
+            "exclusion": "Lokaler Ablauf: Mparanza ist kein Datenempfänger.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "Die Skripte laufen auf Ihrem Computer.",
+                "title": "Lokale Verarbeitung ist nützlich. Sie ist keine Anonymisierung.",
                 "paragraphs": [
                     (
-                        "Die Werkzeuge von Vera und Clara werden aus dem Codex-"
-                        "Arbeitsbereich auf Ihrem Computer ausgeführt und verwenden "
-                        "die lokalen Dateien, Programme und Berechtigungen, die Sie "
-                        "kontrollieren."
+                        "Die Werkzeuge von Vera und Clara laufen aus dem Codex-"
+                        "Arbeitsbereich auf Ihrem Computer. Sie können Dateien dort "
+                        "sortieren, berechnen, abstimmen, extrahieren und Ergebnisse "
+                        "erstellen, wo die Dateien bereits liegen."
                     ),
                     (
-                        "So können Sie Daten lokal analysieren, filtern und aggregieren "
-                        "und nur die für die jeweilige Anfrage erforderlichen "
-                        "Informationen an das Modell senden."
-                    ),
-                    (
-                        "Anders als bei einem herkömmlichen Datenanalyse-Ablauf in "
-                        "ChatGPT, bei dem hochgeladene Dateien in einem vom Anbieter "
-                        "verwalteten Jupyter-Notebook bereitgestellt werden, laufen "
-                        "diese Skripte dort, wo sich die Dateien bereits befinden."
+                        "Muss Codex die Arbeit auswerten, kann es Originaldokumente, "
+                        "Bilder, Texte, Daten oder extrahierte Fakten über Ihr Konto "
+                        "lesen. Dass eine Datei auf dem Computer bleibt, bedeutet nicht, "
+                        "dass ihr Inhalt außerhalb des Modellkontexts bleibt."
                     ),
                 ],
             },
             {
                 "id": "security",
-                "title": "Ein System weniger, dem Sie vertrauen müssen.",
+                "title": "Codex kann echte Mandantendaten lesen.",
                 "paragraphs": [
                     (
-                        "Modellanfragen verwenden Ihr Codex-/OpenAI-Konto. Mparanza "
-                        "ist nicht zwischengeschaltet und kann Prompts, Dateien oder "
-                        "Ergebnisse, die Mparanza nicht erhält, nicht einsehen."
+                        "Namen, Identitäts- und Beteiligungsdaten, finanzielle oder "
+                        "steuerliche Fakten, Korrespondenz und Nachweise können für die "
+                        "professionelle Aufgabe erforderlich sein. Vera und Clara "
+                        "anonymisieren Fallmaterial nicht automatisch und entfernen "
+                        "Namen oder personenbezogene Daten nicht pauschal."
                     ),
                     (
-                        "Die Bedingungen, Datenkontrollen und Arbeitsbereichsregeln "
-                        "Ihres Kontos gelten weiterhin."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "Die DSGVO folgt dem tatsächlichen Datenfluss.",
-                "paragraphs": [
-                    (
-                        "Eine Local-first-Architektur kann die Zahl der Empfänger und "
-                        "Kopien verringern, beantwortet für sich allein jedoch nicht "
-                        "jede DSGVO-Frage. Lokale Arbeitsabläufe machen Mparanza nicht "
-                        "zu einem weiteren Empfänger Ihrer Arbeitsinhalte."
-                    ),
-                    (
-                        "Wenn Mparanza personenbezogene Daten verarbeitet, erläutert "
-                        "unsere Richtlinie Umfang, Zweck, Aufbewahrung und geltende Rechte."
+                        "Geben Sie niemals Passwörter, API-Schlüssel, Authentifizierungs-"
+                        "Cookies, Zugriffstoken oder Sitzungsdaten in Prompts oder Dateien "
+                        "ein, die Codex lesen kann."
                     ),
                 ],
             },
             {
                 "id": "hosted-features",
-                "title": "Gehostete Funktionen werden klar ausgewiesen.",
+                "title": "Lokale, gehostete und externe Wege sind getrennt.",
                 "paragraphs": [
                     (
-                        "Wenn Sie eine optionale, von Mparanza gehostete Funktion "
-                        "wählen, gelangen die dafür erforderlichen Inhalte auf von "
-                        "Mparanza kontrollierte Systeme. Wir weisen klar auf diese "
-                        "Datengrenze hin und erläutern die geltenden Aufbewahrungs- "
-                        "und Löschregeln in unserer Richtlinie."
+                        "Lokale Vera- und Clara-Abläufe verwenden Ihr Codex-/OpenAI-"
+                        "Konto; Mparanza ist nicht zwischengeschaltet und erhält die "
+                        "Arbeit nicht."
                     ),
                     (
-                        "Dienste, die Sie selbst verbinden, unterliegen weiterhin "
-                        "ihren eigenen Berechtigungen und Bedingungen."
+                        "Wählen Sie eine von Mparanza gehostete Funktion, erreichen die "
+                        "dafür erforderlichen Inhalte Mparanza-Systeme nach den genannten "
+                        "Aufbewahrungs- und Löschregeln."
+                    ),
+                    (
+                        "Öffentliche Recherchen, Portale und externe Dienste erhalten "
+                        "die Suchanfragen, Dateien oder Eingaben, die Sie senden, und "
+                        "wenden ihre eigenen Berechtigungen und Bedingungen an."
+                    ),
+                ],
+            },
+            {
+                "id": "gdpr",
+                "title": "Compliance folgt dem tatsächlichen Datenfluss.",
+                "paragraphs": [
+                    (
+                        "Lokale Verarbeitung kann Kopien und beteiligte Systeme "
+                        "verringern. Sie begründet weder Anonymität noch Rechtsgrundlage "
+                        "oder DSGVO-Konformität. Datenminimierung nach der DSGVO richtet "
+                        "sich nach dem Zweck; sie bedeutet nicht, jede Kennung automatisch "
+                        "zu entfernen."
+                    ),
+                    (
+                        "Die Kanzlei wählt das Codex-/OpenAI-Konto für die berufliche Arbeit "
+                        "und konfiguriert die für den Tarif verfügbaren Datenkontrollen. Von "
+                        "Mparanza gehostete Funktionen und andere externe Dienste sind "
+                        "getrennte Wege mit eigenen Empfängern und Bedingungen."
                     ),
                 ],
             },
@@ -510,6 +561,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "external": False,
                 },
                 {
+                    "label": "DSGVO lesen (Artikel 5)",
+                    "href": _GDPR_URL,
+                    "external": True,
+                },
+                {
+                    "label": "EDSA-Stellungnahme zu KI-Modellen und Anonymität lesen",
+                    "href": _EDPB_AI_OPINION_URL,
+                    "external": True,
+                },
+                {
                     "label": "OpenAI-Datenkontrollen für Codex prüfen",
                     "href": _OPENAI_CODEX_DATA_URL,
                     "external": True,
@@ -521,7 +582,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 },
             ],
         },
-        "closing": "Sicher konzipiert. Weniger notwendiges Vertrauen statt eines weiteren Versprechens.",
+        "closing": "Lokale Verarbeitung ändert den Weg, nicht die Art der Daten.",
     },
 }
 

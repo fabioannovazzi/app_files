@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "journal-bank-reconciliation",
   "display_name": "Journal-Bank Reconciliation",
   "role": "workflow",
@@ -10,49 +10,42 @@
     "assets/review-workbench-adapter.json",
     "assets/journal-bank-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Bank statements, journals and ledgers"
-    ],
-    "local_processing": [
-      "Parse and normalize bank and accounting rows",
-      "Generate deterministic matches",
-      "Calculate controls",
-      "Build exception and review payloads",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "reconciliation-review",
-        "purpose": "Resolve mappings and review unmatched or ambiguous transactions",
-        "content": "Headers, aggregate controls, matched summaries, exception rows and selected transaction evidence",
-        "minimum_necessary": "Use aggregates and exception rows rather than complete bank and journal populations",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "bank-and-ledger-review",
+        "purpose": "Resolve mappings and review matched, unmatched, or ambiguous transactions",
+        "content": "User instructions; bank statements; journals or ledgers; normalized rows; controls; matches; exceptions; supporting evidence and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [],
+  "security_controls": [
     {
-      "risk": "Exception rows can include account holders, counterparties and payment descriptions",
-      "mitigation": "Keep complete statements and ledgers local; expose only mappings, controls and exceptions"
+      "id": "local-reconciliation",
+      "control": "Parsing, normalization, deterministic matching, controls, and review-package generation run locally."
+    },
+    {
+      "id": "private-output-root",
+      "control": "Run artifacts are written outside published repository paths."
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Estratti conto e registri completi vengono elaborati localmente. Codex esamina controlli aggregati, abbinamenti ed eccezioni con le sole righe necessarie alla revisione.",
-    "message_en": "Complete statements and journals are processed locally. Codex reviews aggregate controls, matches and exceptions with only the rows needed for review.",
-    "requires_confirmation": false
-  },
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "Ambiguous descriptions can require targeted supporting evidence",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "4943ce13290cc37552cbcabd983378badb35c2b0aff241823d15455318642c94"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "ca6dddad91f823f12e69f7bc39dfc9ee9ee2bddf4f0700b8ad9c7fda6d7eae14"
   }
 }

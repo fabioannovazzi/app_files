@@ -491,7 +491,7 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
         if item["item_type"] == "draft_client_email"
     ]
     assert draft_email_items
-    assert "preview" not in draft_email_items[0]["data"]
+    assert draft_email_items[0]["data"]["preview"]
     studio_brief = next(
         item for item in review_payload["items"] if item["id"] == "draft-studio-brief"
     )
@@ -507,14 +507,14 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
     ]
     assert all("evidence" not in item["data"] for item in fiscal_items)
     assert all(
-        evidence.get("kind") != "snippet"
+        any(evidence.get("kind") == "snippet" for evidence in item["evidence"])
         for item in fiscal_items
-        for evidence in item["evidence"]
     )
     assert review_payload["source_paths"] == []
-    assert review_payload["preview_policy"] == {
-        "mode": "explicit_opt_in",
-        "previews_included": False,
+    assert review_payload["preview_limits"] == {
+        "document_text_characters": 600,
+        "fiscal_evidence_characters": 600,
+        "draft_text_characters": 2000,
     }
 
     ui_decisions = json.loads(
@@ -1231,7 +1231,7 @@ def test_mixed_generic_xml_is_not_misclassified_as_fatturapa(
     assert "structure FatturaPA non identifiée" in anomaly_text
 
 
-def test_run_scope_records_supported_jurisdiction_language_and_opt_in_previews(
+def test_run_scope_records_supported_jurisdiction_language_and_default_previews(
     tmp_path: Path,
 ) -> None:
     customer = tmp_path / "geneva-client"
@@ -1243,7 +1243,6 @@ def test_run_scope_records_supported_jurisdiction_language_and_opt_in_previews(
         target_year=2025,
         jurisdiction="geneva",
         language="fr",
-        include_review_previews=True,
     )
 
     run_intake = json.loads(
@@ -1257,7 +1256,11 @@ def test_run_scope_records_supported_jurisdiction_language_and_opt_in_previews(
     assert run_intake["assumptions"]["ocr_language"] == "fr"
     assert review_payload["jurisdiction"] == "geneva"
     assert review_payload["language"] == "fr"
-    assert review_payload["preview_policy"]["previews_included"] is True
+    assert review_payload["preview_limits"] == {
+        "document_text_characters": 600,
+        "fiscal_evidence_characters": 600,
+        "draft_text_characters": 2000,
+    }
     inventory_item = next(
         item
         for item in review_payload["items"]
@@ -1725,7 +1728,7 @@ def test_client_file_preparation_mcp_server_validates_and_renders_review_payload
         == []
     )
     sanitized_intake = render_result["structuredContent"]["run_intake"]
-    assert "client_name" not in sanitized_intake["assumptions"]
+    assert sanitized_intake["assumptions"]["client_name"] == "Private Client"
     assert sanitized_intake["execution_trace"][0]["inputs"] == ["<local-path>"]
     assert sanitized_intake["execution_trace"][0]["command"] == [
         "python",
@@ -1736,8 +1739,8 @@ def test_client_file_preparation_mcp_server_validates_and_renders_review_payload
         "nonempty_text",
         "required_text",
     ]
-    assert "required_text" not in rendered_artifacts["outputs"][0]
-    assert private_required_text not in json.dumps(render_result)
+    assert rendered_artifacts["outputs"][0]["required_text"] == [private_required_text]
+    assert private_required_text in json.dumps(render_result)
     assert (
         render_result["_meta"]["openai/outputTemplate"]
         == "ui://widget/client-file-preparation-review.html"
@@ -1820,6 +1823,10 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
         assert "output_dir" not in rendered["run_intake"]
         assert result.output_dir.as_posix() not in json.dumps(render_response)
         assert customer.as_posix() not in json.dumps(render_response)
+        assert all(
+            text in json.dumps(render_response, ensure_ascii=False)
+            for text in private_required_text
+        )
 
         initial_ui_bytes = (result.output_dir / "ui_decisions.json").read_bytes()
         rejected_response = call_tool(
@@ -1879,8 +1886,8 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
         assert applied["applied_decisions_path"] == "applied_decisions.json"
         assert applied["final_artifacts_path"] == "final_artifacts.json"
         assert applied["run_intake_path"] == "run_intake.json"
-        assert all(
-            "required_text" not in output
+        assert any(
+            output.get("required_text")
             for output in applied["final_artifacts"]["outputs"]
         )
         browser_results = json.dumps(
@@ -1889,7 +1896,7 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
         )
         assert result.output_dir.as_posix() not in browser_results
         assert customer.as_posix() not in browser_results
-        assert "Hosted Path Private Client" not in browser_results
+        assert "Hosted Path Private Client" in browser_results
         persisted_final_artifacts = json.loads(
             (result.output_dir / "final_artifacts.json").read_text(encoding="utf-8")
         )
@@ -2365,7 +2372,7 @@ def test_mcp_save_binds_caller_review_to_sealed_run_payload(tmp_path: Path) -> N
     assert _run_tree_bytes(result.output_dir) == before
 
 
-def test_mcp_final_ready_requires_stable_pseudonymous_reviewer(
+def test_mcp_final_ready_requires_stable_reviewer_attribution(
     tmp_path: Path,
 ) -> None:
     customer = tmp_path / "reviewer-client"
@@ -2387,7 +2394,7 @@ def test_mcp_final_ready_requires_stable_pseudonymous_reviewer(
     )
 
     assert missing_reviewer["ok"] is False
-    assert "stable pseudonymous alias" in missing_reviewer["error"]
+    assert "stable professional or account reference" in missing_reviewer["error"]
     assert _run_tree_bytes(result.output_dir) == before
 
     saved = _call_review_decision_tool(
@@ -2396,7 +2403,7 @@ def test_mcp_final_ready_requires_stable_pseudonymous_reviewer(
         review_payload=review_payload,
         final_artifacts=final_artifacts,
         decisions=decisions[:1],
-        reviewer="reviewer-stable-01",
+        reviewer="Fabio Annovazzi",
     )
     assert saved["ok"] is True
     current_final = json.loads(
@@ -2408,7 +2415,7 @@ def test_mcp_final_ready_requires_stable_pseudonymous_reviewer(
         review_payload=review_payload,
         final_artifacts=current_final,
         decisions=decisions,
-        reviewer="reviewer-other-02",
+        reviewer="Maria Rossi",
     )
     assert changed_reviewer["ok"] is False
     assert "must remain stable" in changed_reviewer["error"]

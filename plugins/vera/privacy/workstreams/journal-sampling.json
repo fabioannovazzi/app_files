@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "journal-sampling",
   "display_name": "Journal Sampling",
   "role": "workflow",
@@ -10,57 +10,42 @@
     "assets/review-workbench-adapter.json",
     "assets/journal-sampling-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Complete journal exports and sampling parameters"
-    ],
-    "local_processing": [
-      "Parse and normalize the journal",
-      "Calculate population statistics",
-      "Select a reproducible sample",
-      "Build sampling diagnostics",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "sampling-design",
-        "purpose": "Resolve column mappings, scope and sampling assumptions",
-        "content": "Headers, population summary, representative rows and user-approved parameters",
-        "minimum_necessary": "Use headers, aggregates and representative rows instead of the full journal",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
-      },
-      {
-        "id": "sample-review",
-        "purpose": "Explain the selected sample and notable strata",
-        "content": "Sampled rows, aggregate diagnostics and selection provenance",
-        "minimum_necessary": "Expose the selected sample and summaries, not non-selected journal rows",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "journal-and-sample-review",
+        "purpose": "Resolve journal mappings and explain the sampling design and selected sample",
+        "content": "User instructions; journal data or normalized rows; mappings; population statistics; sampling parameters; selected rows; diagnostics and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [],
+  "security_controls": [
     {
-      "risk": "Sampled journal descriptions can identify employees, suppliers or customers",
-      "mitigation": "Keep the full journal local and expose only the reproducible sample and required diagnostic context"
+      "id": "local-sampling",
+      "control": "Parsing, normalization, population calculations, seeded sample selection, and package generation run locally."
+    },
+    {
+      "id": "no-external-data-path",
+      "control": "The workflow does not use an external connector, upload path, remote SQL system, or hosted notebook by default."
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Il libro giornale completo viene elaborato localmente. Codex esamina le mappature, le statistiche aggregate e le sole righe selezionate nel campione.",
-    "message_en": "The complete journal is processed locally. Codex reviews mappings, aggregate statistics and only the rows selected in the sample.",
-    "requires_confirmation": false
-  },
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "User-requested investigation can require additional targeted rows",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "ab9d8df6a8666e169755c56f7c2ef64908f0533c3758b6dd7448d8088e6fe74b"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "2a35214f086be500c0a8f39e0a14bc79889d698b5c9597f0a30eceb06d797080"
   }
 }

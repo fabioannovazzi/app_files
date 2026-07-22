@@ -48,8 +48,13 @@ they do not replace professional judgment.
 
 ## Case facts
 
-Use only pseudonymous case JSON. The standard case-fact IDs are:
+Private case JSON may contain names, fiscal identifiers, contact details,
+addresses, case summaries, proposed values, and document passages when they are
+useful to prepare or review the practice. Keep credentials, cookies, tokens,
+signatures, and session material out of every artifact. The standard case-fact
+IDs are:
 
+- `CASE-CLIENT`
 - `CASE-CHAMBER`
 - `CASE-SUBJECT`
 - `CASE-ACTIVITY`
@@ -57,9 +62,10 @@ Use only pseudonymous case JSON. The standard case-fact IDs are:
 - `CASE-EFFECTIVE-DATE`
 - `CASE-PROFESSIONAL-QUESTION`
 
-Do not put a name, tax code, VAT number, address, phone, PEC, or email into the
-case JSON or SARI query. If a source document contains such data, keep it in the
-private local evidence folder; the review widget must not reproduce it.
+The stable `client_reference` binds artifacts; it is not an anonymization
+claim. The plan author selects the case facts needed for professional review.
+Only an actual public SARI/search query must remain generic and exclude direct
+client identifiers.
 
 ## OCR posture
 

@@ -328,7 +328,7 @@ def test_chart_review_session_contract_declares_local_data_posture(
     data_posture = run_intake["data_posture"]
     assert report.ok, report.as_dict()
     assert data_posture["local_files_read"]
-    assert data_posture["model_excerpts_sent"] == []
+    assert "model_excerpts_sent" not in data_posture
     assert data_posture["external_connectors_used"] == []
     assert data_posture["upload_paths_used"] == []
     assert data_posture["calculation_mode"] == "local_deterministic_scripts"

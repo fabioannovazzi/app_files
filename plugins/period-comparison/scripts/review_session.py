@@ -141,7 +141,6 @@ def _data_posture(input_path: Path, recipe_path: Path | None) -> dict[str, Any]:
         local_files.append(recipe_path.as_posix())
     return {
         "local_files_read": local_files,
-        "model_excerpts_sent": [],
         "external_connectors_used": [],
         "upload_paths_used": [],
         "remote_sql_execution_used": False,

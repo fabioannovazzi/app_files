@@ -23,6 +23,30 @@ NODE_FALLBACK = (
     / "bin"
     / "node"
 )
+PRIVATE_CLIENT_IDENTITY = {
+    "name": "Mario Rossi",
+    "tax_code": "RSSMRA80A01H501U",
+    "vat_number": "12345678901",
+    "email": "mario.rossi@example.com",
+    "pec": "mario.rossi@pec.example.it",
+    "phone": "+39 333 1234567",
+    "address": "Via Roma 1, Milano",
+}
+PRIVATE_ACTIVITY_DESCRIPTION = (
+    "Intermediazione assicurativa svolta da Mario Rossi come subagente."
+)
+PRIVATE_CASE_SUMMARY = (
+    "Mario Rossi, codice fiscale RSSMRA80A01H501U e partita IVA 12345678901, "
+    "chiede l'apertura della posizione per l'attività descritta nel fascicolo."
+)
+PRIVATE_PROPOSED_VALUE = (
+    "Iscrizione come impresa individuale con avvio il 1 agosto 2026."
+)
+PRIVATE_DOCUMENT_QUOTE = "Il sottoscritto Mario Rossi dichiara l'avvio dell'attività."
+PRIVATE_SARI_QUESTION = (
+    "Per Mario Rossi (RSSMRA80A01H501U), quali passaggi DIRE servono per "
+    "l'apertura descritta nel fascicolo?"
+)
 
 
 class _FakeHeaders:
@@ -163,6 +187,7 @@ def _prepare_case(
     intake = _read_json(paths["intake"])
     intake.update(
         {
+            "client_identity": PRIVATE_CLIENT_IDENTITY.copy(),
             "competent_chamber": {
                 "tenant": "ptpo",
                 "name": "Camera di commercio sintetica",
@@ -174,7 +199,7 @@ def _prepare_case(
                 "confirmation_status": "confirmed",
             },
             "activity": {
-                "description": "ATTIVITA-SENSIBILE-TEST",
+                "description": PRIVATE_ACTIVITY_DESCRIPTION,
                 "classification_status": "confirmed",
                 "ateco_proposal": None,
             },
@@ -185,12 +210,6 @@ def _prepare_case(
                 "confirmation_status": "confirmed",
             },
             "professional_question": "Quali passaggi devono essere predisposti in DIRE?",
-            "processing_authorization": {
-                "approved": True,
-                "approval_id": "PROCESS-APPROVAL-001",
-                "approved_by_role": "professional_reviewer",
-                "recorded_at": "2026-07-16T09:00:00+02:00",
-            },
         }
     )
     _write_json(paths["intake"], intake)
@@ -221,7 +240,12 @@ def _prepare_case(
     }
     plan.update(
         {
-            "case_summary": "Caso sintetico source-backed per la verifica del flusso.",
+            "case_summary": PRIVATE_CASE_SUMMARY,
+            "review_context": {
+                "client_name": PRIVATE_CLIENT_IDENTITY["name"],
+                "client_email": PRIVATE_CLIENT_IDENTITY["email"],
+                "activity_description": PRIVATE_ACTIVITY_DESCRIPTION,
+            },
             "position_matrix": [
                 {
                     "id": "POSITION-001",
@@ -230,7 +254,19 @@ def _prepare_case(
                     "system": "DIRE",
                     "sequence": 1,
                     "source_ids": ["SRC-SARI-001", "CASE-INTAKE"],
-                    "case_fact_ids": ["CASE-OPERATION", "CASE-ACTIVITY"],
+                    "case_fact_ids": [
+                        "CASE-CLIENT",
+                        "CASE-OPERATION",
+                        "CASE-ACTIVITY",
+                    ],
+                    "proposed_value": PRIVATE_PROPOSED_VALUE,
+                    "document_quotes": [
+                        {
+                            "text": PRIVATE_DOCUMENT_QUOTE,
+                            "source_id": "CASE-INTAKE",
+                            "location": "Dichiarazione del cliente, pagina 1",
+                        }
+                    ],
                     **confirmed_item,
                 }
             ],
@@ -246,7 +282,7 @@ def _prepare_case(
                     **confirmed_item,
                 }
             ],
-            "sari_question_draft": "QUESITO-SENSIBILE-TEST",
+            "sari_question_draft": PRIVATE_SARI_QUESTION,
             "professional_review": {
                 "status": "reviewed",
                 "reviewer_id": "REVIEWER-001",
@@ -273,6 +309,9 @@ def test_plugin_metadata_icon_and_trigger_fixtures_are_complete() -> None:
     manifest = _read_json(PLUGIN_ROOT / ".codex-plugin" / "plugin.json")
     fixtures = _read_json(PLUGIN_ROOT / "evals" / "trigger_fixtures.json")
     icon = (PLUGIN_ROOT / "assets" / "icon.svg").read_text(encoding="utf-8")
+    widget = (
+        PLUGIN_ROOT / "assets" / "registro-imprese-sari-review-widget.html"
+    ).read_text(encoding="utf-8")
 
     assert manifest["name"] == "registro-imprese-sari"
     assert manifest["skills"] == "./skills/"
@@ -280,6 +319,8 @@ def test_plugin_metadata_icon_and_trigger_fixtures_are_complete() -> None:
     assert fixtures["should_trigger"]
     assert fixtures["should_not_trigger"]
     assert 'data-theme="mparanza-plugin-icon-v1"' in icon
+    assert "privacy_notice" not in widget
+    assert "Metadati minimizzati" not in widget
 
 
 @pytest.mark.parametrize(
@@ -454,6 +495,7 @@ def test_authorized_search_uses_exactly_two_requests_and_records_budget(
     tmp_path: Path,
 ) -> None:
     connector = _load_script("sari_connector")
+    initializer = _load_script("initialize_case")
     tenant_url = "https://supportospecialisticori.infocamere.it/sariWeb/ptpo"
     search_url = "https://supportospecialisticori.infocamere.it/sariWeb/faq/get/"
     tenant_html = b'<input id="titoloAssistenza" value="Camera di commercio sintetica">'
@@ -469,6 +511,12 @@ def test_authorized_search_uses_exactly_two_requests_and_records_budget(
     client = connector.SariClient()
     client.opener = opener
     output_dir = tmp_path / "authorized-search"
+    initializer.initialize_case(
+        output_dir,
+        run_id="SARI-AUTHORIZED-001",
+        reference_date="2026-07-16",
+        client_reference="CLIENT-AUTHORIZED-001",
+    )
 
     result = connector.run_search(
         output_dir=output_dir,
@@ -482,9 +530,59 @@ def test_authorized_search_uses_exactly_two_requests_and_records_budget(
     )
 
     receipt = _read_json(output_dir / "sari_network_receipt.json")
+    run_intake = _read_json(output_dir / "run_intake.json")
+    connector_entries = run_intake["data_posture"]["external_connectors_used"]
+    connector_entry = connector_entries[0]
+    connector_step = run_intake["execution_trace"][-1]
     assert result["returned_candidate_count"] == 0
     assert opener.call_count == connector.MAX_REQUESTS_PER_OPERATION == 2
     assert receipt["request_limit"] == 2
+    assert len(connector_entries) == 1
+    assert connector_entry["connector"] == "authorized_sari_json_read_only"
+    assert connector_entry["origin"] == connector.SARI_ORIGIN
+    assert connector_entry["tenant"] == "ptpo"
+    assert connector_entry["operation"] == "search"
+    assert connector_entry["credentials_used"] is False
+    assert connector_entry["status"] == "completed"
+    assert connector_entry["completed_at"]
+    assert run_intake["data_posture"]["external_execution_approval"]["approved"] is True
+    assert connector_step["kind"] == "external_official_source_read"
+    assert connector_step["status"] == "passed"
+
+
+def test_connector_failure_does_not_record_use_or_completion(tmp_path: Path) -> None:
+    connector = _load_script("sari_connector")
+    initializer = _load_script("initialize_case")
+    output_dir = tmp_path / "failed-search"
+    initializer.initialize_case(
+        output_dir,
+        run_id="SARI-FAILED-001",
+        reference_date="2026-07-16",
+        client_reference="CLIENT-FAILED-001",
+    )
+
+    class FailingClient:
+        def initialize_tenant(self, *_args: object, **_kwargs: object) -> None:
+            raise connector.SariConnectorError("synthetic network failure")
+
+    with pytest.raises(connector.SariConnectorError, match="synthetic network failure"):
+        connector.run_search(
+            output_dir=output_dir,
+            run_id="SARI-FAILED-001",
+            tenant="ptpo",
+            expected_chamber="Camera di commercio sintetica",
+            query="apertura posizione subagente assicurativo",
+            network_approval_id="NETWORK-APPROVAL-001",
+            written_use_authorization_id="RIGHTS-HOLDER-AUTHORIZATION-001",
+            client=FailingClient(),
+        )
+
+    run_intake = _read_json(output_dir / "run_intake.json")
+    assert run_intake["data_posture"]["external_connectors_used"] == []
+    assert "external_execution_approval" not in run_intake["data_posture"]
+    assert not (output_dir / "sari_network_receipt.json").exists()
+    assert len(run_intake["execution_trace"]) == 1
+    assert run_intake["execution_trace"][0]["kind"] == "deterministic_initialization"
 
 
 def test_sari_client_blocks_third_request_before_network() -> None:
@@ -531,7 +629,14 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
     tmp_path: Path,
 ) -> None:
     registration = _load_script("register_official_source")
+    initializer = _load_script("initialize_case")
     output_dir = tmp_path / "source-run"
+    initializer.initialize_case(
+        output_dir,
+        run_id="SOURCE-TEST-001",
+        reference_date="2026-07-16",
+        client_reference="CLIENT-SOURCE-001",
+    )
     source = registration.register_source(
         output_dir=output_dir,
         run_id="SOURCE-TEST-001",
@@ -550,6 +655,9 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
 
     assert source["artifact_path"] is None
     assert source["artifact_sha256"] is None
+    assert source["selected_by"] == "professional_reviewer"
+    assert source["authorization_basis"] == "browser_assisted_metadata"
+    assert source["authorization_reference"] == "BROWSER-SELECTION-001"
     assert not (output_dir / "sources").exists()
     with pytest.raises(ValueError, match="cannot persist content"):
         registration.register_source(
@@ -567,7 +675,11 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
             snapshot=snapshot,
         )
     manifest = _read_json(output_dir / "official_sources.json")
+    run_intake = _read_json(output_dir / "run_intake.json")
     assert manifest["source_count"] == 1
+    assert run_intake["data_posture"]["external_connectors_used"] == []
+    assert "external_execution_approval" not in run_intake["data_posture"]
+    assert run_intake["execution_trace"][-1]["kind"] == "local_source_registration"
 
 
 def test_synthetic_case_validates_and_packages_only_for_professional_review(
@@ -577,8 +689,16 @@ def test_synthetic_case_validates_and_packages_only_for_professional_review(
 
     assert audit["status"] == "passed"
     final_artifacts = _read_json(output_dir / "final_artifacts.json")
+    validated_intake = _read_json(output_dir / "case_intake_validated.json")
+    local_plan = _read_json(output_dir / "dire_practice_plan.json")
     review_payload = _read_json(output_dir / "review_payload.json")
     review_text = json.dumps(review_payload, ensure_ascii=False)
+    checklist_text = (output_dir / "studio_checklist.md").read_text(encoding="utf-8")
+    sari_question_text = (output_dir / "sari_question_draft.md").read_text(
+        encoding="utf-8"
+    )
+    handoff_text = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    draft_disclaimer = "BOZZA PER REVISIONE PROFESSIONALE — NON PRONTA PER IL DEPOSITO"
     assert final_artifacts["status"] == "ready_for_professional_review"
     assert final_artifacts["professional_review_required"] is True
     assert final_artifacts["ready_to_file"] is False
@@ -603,14 +723,68 @@ def test_synthetic_case_validates_and_packages_only_for_professional_review(
     assert contract.returncode == 0, contract.stdout + contract.stderr
     assert review_payload["filing_status"] == "not_filed"
     assert review_payload["filing_authorized"] is False
-    assert "ATTIVITA-SENSIBILE-TEST" not in review_text
-    assert "QUESITO-SENSIBILE-TEST" not in review_text
-    assert "ATTIVITA-SENSIBILE-TEST" in (output_dir / "studio_checklist.md").read_text(
-        encoding="utf-8"
+    assert "privacy_notice" not in review_payload
+    assert local_plan["limitations"] == []
+    assert checklist_text.count(draft_disclaimer) == 1
+    assert draft_disclaimer not in sari_question_text
+    assert draft_disclaimer not in handoff_text
+    assert validated_intake["client_identity"] == PRIVATE_CLIENT_IDENTITY
+    assert local_plan["case_summary"] == PRIVATE_CASE_SUMMARY
+    assert local_plan["position_matrix"][0]["proposed_value"] == PRIVATE_PROPOSED_VALUE
+    assert local_plan["position_matrix"][0]["document_quotes"][0]["text"] == (
+        PRIVATE_DOCUMENT_QUOTE
+    )
+    assert PRIVATE_CLIENT_IDENTITY["name"] in checklist_text
+    assert PRIVATE_CLIENT_IDENTITY["tax_code"] in checklist_text
+    assert PRIVATE_CLIENT_IDENTITY["vat_number"] in checklist_text
+    assert PRIVATE_CLIENT_IDENTITY["email"] in checklist_text
+    assert PRIVATE_CLIENT_IDENTITY["pec"] in checklist_text
+    assert PRIVATE_CLIENT_IDENTITY["phone"] in checklist_text
+    assert PRIVATE_CLIENT_IDENTITY["address"] in checklist_text
+    assert PRIVATE_ACTIVITY_DESCRIPTION in checklist_text
+    assert PRIVATE_CASE_SUMMARY in checklist_text
+    assert PRIVATE_SARI_QUESTION in sari_question_text
+    assert review_payload["case_context"]["client_identity"] == PRIVATE_CLIENT_IDENTITY
+    assert review_payload["case_context"]["case_summary"] == PRIVATE_CASE_SUMMARY
+    assert review_payload["case_context"]["sari_question_draft"] == (
+        PRIVATE_SARI_QUESTION
+    )
+    assert PRIVATE_ACTIVITY_DESCRIPTION in review_text
+    assert PRIVATE_CASE_SUMMARY in review_text
+    assert PRIVATE_PROPOSED_VALUE in review_text
+    assert PRIVATE_DOCUMENT_QUOTE in review_text
+    assert PRIVATE_SARI_QUESTION in review_text
+
+
+@pytest.mark.parametrize("secret_field", ["credentials", "cookie", "token", "session"])
+def test_private_case_validation_rejects_secret_or_session_material(
+    tmp_path: Path,
+    secret_field: str,
+) -> None:
+    output_dir, initial_audit = _prepare_case(tmp_path, package_case=False)
+    validate_case = _load_script("validate_practice_case")
+    plan_path = output_dir / "practice_plan_draft.json"
+    plan = _read_json(plan_path)
+    plan["review_context"][secret_field] = "forbidden-test-value"
+    _write_json(plan_path, plan)
+
+    audit = validate_case.validate_practice_case(
+        output_dir / "case_intake_draft.json",
+        plan_path,
+        output_dir / "official_sources.json",
+        output_dir,
+    )
+
+    assert initial_audit["status"] == "passed"
+    assert audit["status"] == "schema_error"
+    assert audit["error_count"] == 1
+    assert audit["issues"][0]["code"] == "secret_or_session_material_forbidden"
+    assert audit["issues"][0]["path"] == (
+        f"practice_plan.review_context.{secret_field}"
     )
 
 
-def test_mcp_render_minimizes_run_intake_and_decisions_reject_identifiers(
+def test_mcp_review_preserves_case_identifiers_but_omits_local_paths(
     tmp_path: Path,
 ) -> None:
     output_dir, _audit = _prepare_case(
@@ -618,23 +792,35 @@ def test_mcp_render_minimizes_run_intake_and_decisions_reject_identifiers(
         output_name="client-test.user@example.com",
     )
     run_intake = _read_json(output_dir / "run_intake.json")
-    run_intake["client_name"] = "SHOULD-NOT-REACH-WIDGET"
-    run_intake["professional_question"] = "SHOULD-NOT-REACH-WIDGET"
+    run_intake["client_name"] = PRIVATE_CLIENT_IDENTITY["name"]
+    run_intake["professional_question"] = PRIVATE_SARI_QUESTION
     review = _read_json(output_dir / "review_payload.json")
+    final_artifacts = _read_json(output_dir / "final_artifacts.json")
 
     rendered = _tool_call(
         "render_registro_imprese_sari_review",
-        {"run_intake": run_intake, "review_payload": review},
+        {
+            "run_intake": run_intake,
+            "review_payload": review,
+            "final_artifacts": final_artifacts,
+        },
     )
 
     assert rendered["isError"] is False
-    public_run = rendered["structuredContent"]["run_intake"]
-    assert "client_name" not in public_run
-    assert "professional_question" not in public_run
-    assert "output_dir" not in public_run
-    assert public_run["run_id"] == review["run_id"]
+    review_run = rendered["structuredContent"]["run_intake"]
+    assert review_run["client_name"] == PRIVATE_CLIENT_IDENTITY["name"]
+    assert review_run["professional_question"] == PRIVATE_SARI_QUESTION
+    assert "output_dir" not in review_run
+    assert review_run["run_id"] == review["run_id"]
+    assert PRIVATE_CASE_SUMMARY in json.dumps(
+        rendered["structuredContent"]["review_payload"], ensure_ascii=False
+    )
+    rendered_final = rendered["structuredContent"]["final_artifacts"]
+    assert rendered_final["outputs"] == final_artifacts["outputs"]
+    assert rendered_final["caveats"] == final_artifacts["caveats"]
+    assert rendered_final["next_actions"] == final_artifacts["next_actions"]
 
-    rejected = _tool_call(
+    saved = _tool_call(
         "save_registro_imprese_sari_decisions",
         {
             "review_payload": review,
@@ -648,10 +834,13 @@ def test_mcp_render_minimizes_run_intake_and_decisions_reject_identifiers(
         },
     )
 
-    assert rejected["isError"] is True
-    assert "direct identifier" in rejected["structuredContent"]["error"]
+    assert saved["isError"] is False
+    assert (
+        saved["structuredContent"]["ui_decisions"]["decisions"][0]["reviewer_note"]
+        == "Scrivere a test.user@example.com"
+    )
 
-    rejected_reviewer = _tool_call(
+    saved_reviewer = _tool_call(
         "save_registro_imprese_sari_decisions",
         {
             "review_payload": review,
@@ -659,10 +848,12 @@ def test_mcp_render_minimizes_run_intake_and_decisions_reject_identifiers(
             "reviewer": "test.user@example.com",
         },
     )
-    assert rejected_reviewer["isError"] is True
-    assert "direct identifier" in rejected_reviewer["structuredContent"]["error"]
+    assert saved_reviewer["isError"] is False
+    assert saved_reviewer["structuredContent"]["ui_decisions"]["reviewer"] == (
+        "test.user@example.com"
+    )
 
-    rejected_source = _tool_call(
+    saved_source = _tool_call(
         "save_registro_imprese_sari_decisions",
         {
             "review_payload": review,
@@ -670,8 +861,10 @@ def test_mcp_render_minimizes_run_intake_and_decisions_reject_identifiers(
             "decision_source": "test.user@example.com",
         },
     )
-    assert rejected_source["isError"] is True
-    assert "direct identifier" in rejected_source["structuredContent"]["error"]
+    assert saved_source["isError"] is False
+    assert saved_source["structuredContent"]["ui_decisions"]["decision_source"] == (
+        "test.user@example.com"
+    )
 
 
 def test_packaging_rejects_source_tampering_after_validation(tmp_path: Path) -> None:
@@ -709,7 +902,7 @@ def test_packaged_case_passes_shared_strict_review_contract(tmp_path: Path) -> N
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-def test_mcp_exposes_exact_four_tools_and_rejects_untrusted_review_fields() -> None:
+def test_mcp_exposes_exact_four_tools_and_accepts_professional_case_fields() -> None:
     listed = _mcp_request(
         {"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
     )
@@ -751,19 +944,62 @@ def test_mcp_exposes_exact_four_tools_and_rejects_untrusted_review_fields() -> N
                 "title": "Controllo meccanico",
                 "allowed_actions": ["accept", "mark_unclear", "skip"],
                 "recommended_action": "accept",
-                "data": {"case_summary": "campo non fidato"},
+                "data": {
+                    "case_summary": PRIVATE_CASE_SUMMARY,
+                    "client_name": PRIVATE_CLIENT_IDENTITY["name"],
+                    "codice_fiscale": PRIVATE_CLIENT_IDENTITY["tax_code"],
+                    "document_quote": PRIVATE_DOCUMENT_QUOTE,
+                    "proposed_value": PRIVATE_PROPOSED_VALUE,
+                    "sari_question_draft": PRIVATE_SARI_QUESTION,
+                },
             }
         ],
-        "privacy_notice": "Payload minimizzato.",
         "filing_status": "not_filed",
         "filing_authorized": False,
     }
+    accepted = _tool_call(
+        "validate_registro_imprese_sari_review", {"review_payload": review}
+    )
+
+    assert accepted["isError"] is False
+    serialized = json.dumps(accepted["structuredContent"], ensure_ascii=False)
+    assert PRIVATE_CASE_SUMMARY in serialized
+    assert PRIVATE_CLIENT_IDENTITY["tax_code"] in serialized
+    assert PRIVATE_DOCUMENT_QUOTE in serialized
+    assert PRIVATE_PROPOSED_VALUE in serialized
+    assert PRIVATE_SARI_QUESTION in serialized
+
+
+@pytest.mark.parametrize("secret_field", ["credentials", "cookie", "token", "session"])
+def test_mcp_review_rejects_secret_or_session_material(secret_field: str) -> None:
+    review = {
+        "schema_version": "1.0",
+        "plugin": "registro-imprese-sari",
+        "workflow": "registro-imprese-sari",
+        "run_id": "MCP-SECRET-001",
+        "review_type": "registro_imprese_practice_review",
+        "status": "draft_for_professional_review",
+        "item_count": 1,
+        "items": [
+            {
+                "id": "audit-001",
+                "item_type": "audit_check",
+                "title": "Controllo meccanico",
+                "allowed_actions": ["accept", "mark_unclear", "skip"],
+                "recommended_action": "accept",
+                "data": {secret_field: "forbidden-test-value"},
+            }
+        ],
+        "filing_status": "not_filed",
+        "filing_authorized": False,
+    }
+
     rejected = _tool_call(
         "validate_registro_imprese_sari_review", {"review_payload": review}
     )
 
     assert rejected["isError"] is True
-    assert "case_summary is forbidden" in rejected["structuredContent"]["error"]
+    assert "credential or session material" in rejected["structuredContent"]["error"]
 
 
 def test_mcp_persists_and_applies_review_decisions_without_portal_actions(

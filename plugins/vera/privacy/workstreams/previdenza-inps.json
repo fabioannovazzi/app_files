@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "previdenza-inps",
   "display_name": "Previdenza INPS",
   "role": "workflow",
@@ -9,57 +9,87 @@
     "mcp",
     "schemas"
   ],
-  "data_flow": {
-    "local_sources": [
-      "INPS documents, official exports, optional approved read-only portal captures, emails and local scans"
-    ],
-    "local_processing": [
-      "Owner-only inventory",
-      "Local OCR and extraction",
-      "Validate fact provenance",
-      "Run approved arithmetic",
-      "Package evidence matrices and review drafts"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "case-fact-structuring",
-        "purpose": "Structure case facts and identify conflicts or missing evidence",
-        "content": "Extracted evidence, page-level quotes, validated fact records, timelines and unresolved decisions",
-        "minimum_necessary": "Use validated fact records and targeted evidence quotes; keep complete documents and capture images local unless visual interpretation is necessary",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
-      },
-      {
-        "id": "claim-and-case-review",
-        "purpose": "Relate supported official-source claims to validated case facts",
-        "content": "Case facts, relevant evidence anchors, official-source passages, calculation basis and review drafts",
-        "minimum_necessary": "Include only facts and passages required for the specific claim or calculation under review",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "inps-case-evidence",
+        "purpose": "Structure facts, resolve evidence conflicts, and apply supported sources to the case",
+        "content": "INPS records and exports or captured page evidence; contracts, F24s, emails and scans; extracted text; page quotes; facts; timelines; official sources; calculation basis; draft findings and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [
     {
-      "risk": "INPS case review can require highly specific personal, contribution, payment and health-adjacent facts",
-      "mitigation": "Use owner-only local artifacts, page-level targeted evidence, pseudonymous actor IDs and explicit professional review; never include credentials or session material"
+      "id": "official-source-research",
+      "kind": "public_research",
+      "destination": "Current official public legal and INPS sources",
+      "purpose": "Research the confirmed framework and verify material claims",
+      "content": "Contribution issue, period, legal-research query and selected public source URLs; public queries exclude personal identifiers",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Use current official sources and record source reference, temporal role, retrieval time, and version note.",
+        "Keep external research queries free of personal identifiers and session secrets."
+      ]
+    },
+    {
+      "id": "inps-browser-capture",
+      "kind": "external_connector",
+      "destination": "One already-open, human-authenticated INPS tab through a loopback browser endpoint",
+      "purpose": "Capture a read-only current-view snapshot when an official export is not used",
+      "content": "Visible page text and screenshot received into the private local run folder; source URL and title are stored only as hashes",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Require separately verified portal-capture permission, access/profile/delegation authority, exact origin, scope, and approval record; user approval alone is insufficient.",
+        "Restrict attachment to loopback and an exact HTTPS inps.it origin.",
+        "Do not navigate, click, submit, download, read cookies or storage, save HTML, close the browser, or capture credentials and one-time codes."
+      ]
+    },
+    {
+      "id": "ocr-model-download",
+      "kind": "hosted_service",
+      "destination": "Configured PaddleOCR model-weight host",
+      "purpose": "Download missing OCR model weights before local recognition",
+      "content": "Model-weight request and approval reference; no case documents or extracted case content",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Disabled by default and enabled only with both the download flag and a stable approval ID.",
+        "Only model weights cross the boundary; document recognition remains local."
+      ]
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Documenti, immagini, OCR e calcoli del caso INPS restano nella cartella locale riservata. Codex esamina i fatti strutturati e i passaggi di evidenza necessari alla valutazione professionale; credenziali e dati di sessione non vengono mai acquisiti.",
-    "message_en": "INPS documents, images, OCR and calculations remain in the restricted local case folder. Codex reviews structured facts and evidence passages needed for professional assessment; credentials and session data are never acquired.",
-    "requires_confirmation": false
-  },
+  "security_controls": [
+    {
+      "id": "private-case-folder",
+      "control": "Evidence and generated artifacts remain in an access-restricted directory outside the repository."
+    },
+    {
+      "id": "no-authentication-material",
+      "control": "The workflow never requests or stores SPID/CIE/CNS credentials, cookies, tokens, browser state, or one-time codes."
+    },
+    {
+      "id": "hash-bound-acquisition",
+      "control": "Portal exports and conditional captures are hash-bound and revalidated before review decisions are saved or applied."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "The professional issue determines which sensitive case facts are necessary",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "13d31aea32b5036e896cc4ae90260f53d388c1cd184f1bf7c3910544d31bab35"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "035bc67df8b78a7687d61bc2d12a4dbd97421e9311c431a89c0755188367e845"
   }
 }

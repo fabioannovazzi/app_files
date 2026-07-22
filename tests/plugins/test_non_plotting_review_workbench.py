@@ -194,7 +194,7 @@ def test_non_plotting_review_assets_match_generator(
     ) + "\n"
 
 
-def test_client_file_preparation_widget_forwards_pseudonymous_reviewer() -> None:
+def test_client_file_preparation_widget_forwards_stable_reviewer_attribution() -> None:
     plugin_root = ROOT / "plugins" / "client-file-preparation"
     widget_path = plugin_root / "assets" / "client-file-preparation-review-widget.html"
     widget = widget_path.read_text(encoding="utf-8")
@@ -264,10 +264,10 @@ context.globalThis = context;
 vm.createContext(context);
 new vm.Script(`${match[1]}
 ensureDecision(state.payload.review_payload.items[0], "accept");
-state.reviewerAlias = "reviewer with spaces";
+state.reviewerAlias = "session_token=do-not-store";
 let invalidAliasError = "";
 try { validateDecisionInputs(collectDecisionInputs()); } catch (error) { invalidAliasError = error.message; }
-state.reviewerAlias = "reviewer-fg";
+state.reviewerAlias = "Fabio Annovazzi";
 validateDecisionInputs(collectDecisionInputs());
 persistWidgetState();
 const persistentSave = saveToolArgs();
@@ -302,19 +302,21 @@ process.stdout.write(JSON.stringify(context.__result));
     assert adapter["requiresReviewerAlias"] is True
     assert "useDecisionRevision" not in adapter
     assert 'id="reviewer-alias"' in widget
-    assert 'maxlength="64"' in widget
+    assert 'maxlength="160"' in widget
+    assert "A real professional name is allowed" in widget
+    assert "pseudonymous" not in widget
     assert "expected_decision_revision" not in widget
     assert "reuse_saved_details" not in widget
     assert result == {
-        "saveReviewer": "reviewer-fg",
-        "applyReviewer": "reviewer-fg",
-        "fallbackReviewer": "reviewer-fg",
-        "storedReviewer": "reviewer-fg",
+        "saveReviewer": "Fabio Annovazzi",
+        "applyReviewer": "Fabio Annovazzi",
+        "fallbackReviewer": "Fabio Annovazzi",
+        "storedReviewer": "Fabio Annovazzi",
         "savePersistenceToken": "a" * 43,
         "applyPersistenceToken": "a" * 43,
         "persistentHasFinalArtifacts": False,
         "nonpersistentHasFinalArtifacts": True,
-        "invalidAliasError": "Reviewer alias must use 3-64 supported characters and start with a letter.",
+        "invalidAliasError": "Reviewer reference must be at most 160 characters and must not contain credentials, session material, or raw local paths.",
     }
 
 
@@ -415,9 +417,14 @@ def test_non_plotting_review_workbench_exposes_review_ui(
     assert "Appliquer decisions" in html
     assert "Entscheidungen anwenden" in html
     assert "Final outputs" in html
-    assert "Data posture" in html
-    assert "Remote SQL" in html
-    assert "Hosted notebook" in html
+    assert "Helper execution routes" in html
+    assert "Optional upload routes" in html
+    assert (
+        "This does not describe or count the context sent by Codex to the model."
+        in html
+    )
+    assert "Helper remote SQL" in html
+    assert "Helper hosted notebook" in html
     assert "Execution provenance" in html
     assert "execution-provenance" in html
     assert "execution_trace" in html
@@ -441,16 +448,20 @@ def test_non_plotting_review_workbench_exposes_review_ui(
         assert "Supporto fonte" in html
         assert "Appui de la source" in html
         assert "Quellennachweis" in html
-    assert "modelExcerptValue" in html
-    assert "redaction_status" in html
-    assert "excerptRows" in html
-    assert "Postura dati" in html
+    assert "modelExcerptValue" not in html
+    assert "redaction_status" not in html
+    assert "model_excerpts_sent" not in html
+    assert "Percorsi dati dei processi di supporto" in html
+    assert (
+        r"Non descrive n\u00e9 conta il contesto inviato da Codex al modello." in html
+    )
     assert "Provenienza esecuzione" in html
     assert "Garanzie revisione" in html
     assert "SQL distant" in html
     assert "Provenance execution" in html
     assert "Garde-fous revue" in html
-    assert "Datenhaltung" in html
+    assert r"Flux de donn\u00e9es des processus auxiliaires" in html
+    assert "Datenwege der Hilfsprozesse" in html
     assert "Ausfuehrungsnachweis" in html
     assert "Review-Schutzmassnahmen" in html
     assert "data-posture" in html
