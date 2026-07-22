@@ -25,7 +25,7 @@ from case_core import (
 )
 from docx import Document
 from docx.shared import Pt
-from privacy_guard import privacy_issue, safe_identifier, safe_source_reference
+from privacy_guard import safe_identifier, safe_source_reference, session_url_issue
 
 __all__ = ["package_case", "main"]
 
@@ -94,10 +94,10 @@ def _list_of_strings(value: Any) -> list[str]:
     return [str(item).strip() for item in value if str(item).strip()]
 
 
-def _privacy_safe_text(value: Any) -> Any:
-    """Omit mechanically detectable identifiers from generated JSON artifacts."""
+def _session_safe_text(value: Any) -> Any:
+    """Omit private or tokenized session URLs from generated artifacts."""
 
-    return "[omitted_for_privacy]" if privacy_issue(value) else value
+    return "[session_url_omitted]" if session_url_issue(value) else value
 
 
 def _as_date(value: Any) -> bool:
@@ -453,7 +453,7 @@ def _audit_sources(
                 {
                     "code": "invalid_or_duplicate_source_id",
                     "field": f"{field}.source_id",
-                    "message": "source_id must be opaque, identifier-free, and unique within the claim.",
+                    "message": "source_id must use the stable machine-ID format and be unique within the claim.",
                 }
             )
         else:
@@ -472,7 +472,7 @@ def _audit_sources(
                 {
                     "code": "unsafe_source_reference",
                     "field": f"{field}.reference",
-                    "message": "Source reference must omit identifiers and private, credentialed, or tokenized URLs.",
+                    "message": "Source reference must omit private, credentialed, or tokenized session URLs.",
                 }
             )
         else:
@@ -502,12 +502,12 @@ def _audit_sources(
                         "message": f"Each source needs a non-empty {name}.",
                     }
                 )
-            elif privacy_issue(source.get(name)):
+            elif session_url_issue(source.get(name)):
                 issues.append(
                     {
                         "code": "unsafe_source_note",
                         "field": f"{field}.{name}",
-                        "message": "Source notes must omit raw identifiers and private or tokenized URLs.",
+                        "message": "Source notes must omit private or tokenized session URLs.",
                     }
                 )
         snapshot_hash = source.get("snapshot_sha256")
@@ -531,19 +531,19 @@ def _audit_sources(
                 "reference": (
                     reference
                     if reference and safe_source_reference(reference)
-                    else "[omitted_for_privacy]"
+                    else "[session_url_omitted]"
                 ),
                 "temporal_role": source.get("temporal_role"),
                 "retrieved_at": source.get("retrieved_at"),
                 "version_note": (
                     source.get("version_note")
-                    if not privacy_issue(source.get("version_note"))
-                    else "[omitted_for_privacy]"
+                    if not session_url_issue(source.get("version_note"))
+                    else "[session_url_omitted]"
                 ),
                 "support_note": (
                     source.get("support_note")
-                    if not privacy_issue(source.get("support_note"))
-                    else "[omitted_for_privacy]"
+                    if not session_url_issue(source.get("support_note"))
+                    else "[session_url_omitted]"
                 ),
                 "snapshot_sha256": snapshot_hash,
             }
@@ -584,7 +584,7 @@ def _audit_claims(
                 {
                     "code": "unsafe_claim_id",
                     "field": f"{field}.claim_id",
-                    "message": "claim_id must be an opaque identifier without personal data.",
+                    "message": "claim_id must use the stable machine-ID format.",
                 }
             )
             claim_id = f"CL-OMITTED-{index:03d}"
@@ -607,12 +607,12 @@ def _audit_claims(
                     "message": "Material claim text is required.",
                 }
             )
-        elif privacy_issue(claim.get("claim_text")):
+        elif session_url_issue(claim.get("claim_text")):
             issues.append(
                 {
                     "code": "unsafe_claim_text",
                     "field": f"{field}.claim_text",
-                    "message": "Claim text must omit raw identifiers and private or tokenized URLs.",
+                    "message": "Claim text must omit private or tokenized session URLs.",
                 }
             )
         if not _nonempty(claim.get("review_label")):
@@ -620,15 +620,15 @@ def _audit_claims(
                 {
                     "code": "missing_safe_review_label",
                     "field": f"{field}.review_label",
-                    "message": "A concise identifier-free review label is required.",
+                    "message": "A concise review label is required.",
                 }
             )
-        elif privacy_issue(claim.get("review_label")):
+        elif session_url_issue(claim.get("review_label")):
             issues.append(
                 {
                     "code": "unsafe_review_label",
                     "field": f"{field}.review_label",
-                    "message": "Review labels must omit raw identity, tax codes, email, and private URLs.",
+                    "message": "Review labels must omit private or tokenized session URLs.",
                 }
             )
         if claim_type not in CLAIM_TYPES:
@@ -667,12 +667,12 @@ def _audit_claims(
                     "message": "Reasoning must be reviewed separately from source existence.",
                 }
             )
-        elif privacy_issue(claim.get("reasoning_review")):
+        elif session_url_issue(claim.get("reasoning_review")):
             issues.append(
                 {
                     "code": "unsafe_reasoning_review",
                     "field": f"{field}.reasoning_review",
-                    "message": "Reasoning text must omit raw identifiers and private or tokenized URLs.",
+                    "message": "Reasoning text must omit private or tokenized session URLs.",
                 }
             )
         dependencies = _list_of_strings(
@@ -683,7 +683,7 @@ def _audit_claims(
                 {
                     "code": "unsafe_fact_dependency",
                     "field": f"{field}.evidence_dependencies",
-                    "message": "Fact dependencies must use opaque identifier-free IDs.",
+                    "message": "Fact dependencies must use stable machine IDs.",
                 }
             )
         if claim_type in {"case_application", "calculation_basis"} and not dependencies:
@@ -731,12 +731,12 @@ def _audit_claims(
                     "message": "Temporal scope needs an explicit basis or unresolved-state note.",
                 }
             )
-        elif privacy_issue(period_scope.get("note")):
+        elif session_url_issue(period_scope.get("note")):
             issues.append(
                 {
                     "code": "unsafe_temporal_scope_note",
                     "field": f"{field}.period_scope.note",
-                    "message": "Temporal scope notes must omit raw identifiers and private URLs.",
+                    "message": "Temporal scope notes must omit private or tokenized session URLs.",
                 }
             )
         for name, boundary in (("start", scope_start), ("end", scope_end)):
@@ -788,14 +788,14 @@ def _audit_claims(
             )
         normalized_claim = {
             "claim_id": claim_id,
-            "claim_text": _privacy_safe_text(claim.get("claim_text")),
-            "review_label": _privacy_safe_text(claim.get("review_label")),
+            "claim_text": _session_safe_text(claim.get("claim_text")),
+            "review_label": _session_safe_text(claim.get("review_label")),
             "claim_type": claim_type,
             "verdict": verdict,
             "sources": sources,
             "source_refs": source_refs,
-            "source_support": _privacy_safe_text(claim.get("source_support")),
-            "reasoning_review": _privacy_safe_text(claim.get("reasoning_review")),
+            "source_support": _session_safe_text(claim.get("source_support")),
+            "reasoning_review": _session_safe_text(claim.get("reasoning_review")),
             "evidence_dependencies": [
                 dependency for dependency in dependencies if safe_identifier(dependency)
             ],
@@ -803,7 +803,7 @@ def _audit_claims(
                 "status": scope_status,
                 "start": scope_start,
                 "end": scope_end,
-                "note": _privacy_safe_text(
+                "note": _session_safe_text(
                     period_scope.get("note") if isinstance(period_scope, dict) else None
                 ),
             },
@@ -814,7 +814,7 @@ def _audit_claims(
         }
         for name in ("later_authority_note", "proposed_fix", "uncertainty"):
             if name in claim:
-                normalized_claim[name] = _privacy_safe_text(claim.get(name))
+                normalized_claim[name] = _session_safe_text(claim.get(name))
         normalized.append(normalized_claim)
     return normalized, issues
 
@@ -823,10 +823,10 @@ def _fact_rows(case_records: dict[str, Any]) -> list[dict[str, Any]]:
     return [fact for fact in case_records.get("facts", []) if isinstance(fact, dict)]
 
 
-def _audit_fact_review_privacy(
+def _audit_fact_review_security(
     case_records: dict[str, Any],
 ) -> list[dict[str, str]]:
-    """Protect review-visible identifiers without interpreting case meaning."""
+    """Enforce stable IDs and exclude private or tokenized session URLs."""
 
     issues: list[dict[str, str]] = []
     for index, fact in enumerate(_fact_rows(case_records)):
@@ -836,15 +836,15 @@ def _audit_fact_review_privacy(
                 {
                     "code": "unsafe_fact_id",
                     "field": f"{field}.fact_id",
-                    "message": "Fact IDs must be opaque and identifier-free.",
+                    "message": "Fact IDs must use the stable machine-ID format.",
                 }
             )
-        if privacy_issue(fact.get("review_label")):
+        if session_url_issue(fact.get("review_label")):
             issues.append(
                 {
                     "code": "unsafe_fact_review_label",
                     "field": f"{field}.review_label",
-                    "message": "Fact review labels must omit raw identity, tax codes, email, and private URLs.",
+                    "message": "Fact review labels must omit private or tokenized session URLs.",
                 }
             )
     return issues
@@ -888,8 +888,9 @@ def _missing_evidence(
             if _nonempty(value):
                 text = str(value).strip()
                 items.append(
-                    "Request details omitted for privacy; consult the local case record."
-                    if privacy_issue(text)
+                    "Request details omitted because they contain a private or tokenized "
+                    "session URL; consult the local case record."
+                    if session_url_issue(text)
                     else text
                 )
     return list(dict.fromkeys(items))
@@ -901,7 +902,7 @@ def _blocked_note_lines(
     lines = [
         "# FASCICOLO BLOCCATO — NON È UN PARERE",
         "",
-        f"**Quesito:** {_privacy_safe_text(case_records.get('professional_question', ''))}",
+        f"**Quesito:** {_session_safe_text(case_records.get('professional_question', ''))}",
         "",
         "Il pacchetto conclusivo non è stato creato perché uno o più gate di validazione non sono soddisfatti.",
         "",
@@ -1034,34 +1035,16 @@ def _item(
     evidence: list[dict[str, Any]] | None = None,
     output_path: str | None = None,
 ) -> dict[str, Any]:
-    titles = {
-        "fact": "Fact record",
-        "finding": "Finding record",
-        "calculation": "Calculation record",
-        "missing_evidence": "Missing evidence request",
-        "authority": "Authority record",
-        "audit_check": "Package validation audit",
-        "artifact": "Package artifact",
-    }
-    summaries = {
-        "fact": "Validated fact record",
-        "finding": "Source-reviewed finding",
-        "calculation": "Approved calculation record",
-        "missing_evidence": "Missing evidence request",
-        "authority": "Authority record",
-        "audit_check": "Package validation audit",
-        "artifact": "Package artifact",
-    }
     return {
         "id": item_id,
         "item_type": item_type,
-        "title": titles[item_type],
+        "title": title,
         "source_path": None,
         "output_path": output_path,
         "allowed_actions": ALLOWED_ACTIONS,
         "recommended_action": recommended_action,
-        "evidence": [],
-        "data": {**data, "summary": summaries[item_type]},
+        "evidence": list(evidence or []),
+        "data": data,
         "status": "needs_review",
     }
 
@@ -1092,10 +1075,14 @@ def _review_items(
                 ),
                 data={
                     "fact_id": fact_id,
-                    "summary": "Validated fact record",
+                    "statement": fact.get("statement"),
+                    "review_label": fact.get("review_label"),
+                    "value": fact.get("value"),
+                    "value_type": fact.get("value_type"),
                     "review_status": status,
                     "evidence_count": len(fact.get("evidence", [])),
                 },
+                evidence=list(fact.get("evidence", [])),
             )
         )
     for claim_index, claim in enumerate(claims, start=1):
@@ -1117,9 +1104,13 @@ def _review_items(
                 recommended_action=action,
                 data={
                     "claim_id": claim["claim_id"],
-                    "summary": "Source-reviewed finding",
+                    "claim_text": claim.get("claim_text"),
+                    "review_label": claim.get("review_label"),
                     "claim_type": claim.get("claim_type"),
                     "verdict": verdict,
+                    "source_support": claim.get("source_support"),
+                    "reasoning_review": claim.get("reasoning_review"),
+                    "proposed_fix": claim.get("proposed_fix"),
                     "source_count": len(claim.get("source_refs", [])),
                     "professional_review_status": claim.get(
                         "professional_review_status"
@@ -1129,6 +1120,10 @@ def _review_items(
                     {"kind": "fact_dependency", "fact_id": fact_id}
                     for fact_id in claim.get("evidence_dependencies", [])
                     if safe_identifier(fact_id)
+                ]
+                + [
+                    {"kind": "source_reference", "source_ref": source_ref}
+                    for source_ref in claim.get("source_refs", [])
                 ],
             )
         )
@@ -1153,7 +1148,10 @@ def _review_items(
                 data={
                     "recipe_id": recipe_id,
                     "status": calculation.get("status"),
-                    "summary": "Approved calculation record",
+                    "description": calculation.get("description"),
+                    "result": calculation.get("result"),
+                    "unit": calculation.get("unit"),
+                    "inputs": calculation.get("inputs"),
                 },
             )
         )
@@ -1164,7 +1162,7 @@ def _review_items(
                 item_type="missing_evidence",
                 title=f"Missing evidence request {index}",
                 recommended_action="request_more_documents",
-                data={"request_id": f"REQ-{index:03d}"},
+                data={"request_id": f"REQ-{index:03d}", "request_text": request},
             )
         )
     items.append(
@@ -1309,7 +1307,7 @@ def package_case(
         if fact.get("fact_id")
     }
     issues = _audit_case_validation(case_records_path, case_records)
-    issues.extend(_audit_fact_review_privacy(case_records))
+    issues.extend(_audit_fact_review_security(case_records))
     claims, claim_issues = _audit_claims(claims_payload, fact_ids)
     issues.extend(claim_issues)
     calculations = _calculation_rows(calculations_payload)
@@ -1365,7 +1363,7 @@ def package_case(
         "language": claims_payload.get("language"),
         "claims": claims,
         "claim_count": len(claims),
-        "privacy_posture": "allowlisted_fields_identifier_guarded",
+        "review_boundary": "private_professional_review",
     }
     write_json(output_dir / "claims_review_normalized.json", normalized_claims)
 
@@ -1414,7 +1412,6 @@ def package_case(
         "items": items,
         "item_count": len(items),
         "status": review_status,
-        "privacy_notice": "Review payload omits document quotes and subject labels; inspect local artifacts for full evidence.",
     }
     write_json(output_dir / "review_payload.json", review_payload)
     review_payload_sha256 = _file_sha256(output_dir / "review_payload.json")

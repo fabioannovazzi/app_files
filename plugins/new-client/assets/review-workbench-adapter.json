@@ -6,7 +6,7 @@
   "queueTitle": "Setup Decisions",
   "detailTitle": "Evidence, Basis, Decision",
   "detailMode": "professional-setup-desk",
-  "detailHelp": "Review the minimized fact, cited basis, and downstream dossier impact before recording a professional decision.",
+  "detailHelp": "Review the professional fact, cited basis, and downstream dossier impact before recording a decision.",
   "detailGroups": [
     {
       "title": "Client and Engagement",
@@ -14,9 +14,22 @@
       "fields": [
         "client_reference",
         "fact_code",
+        "value",
+        "document_type",
+        "document_number",
+        "representative_reference",
+        "owner_reference",
+        "role",
+        "authority_basis",
+        "control_basis",
         "service_id",
+        "description",
+        "purpose",
+        "legal_basis_code",
         "relationship_kind",
-        "confirmation_status"
+        "confirmation_status",
+        "verification_date",
+        "identity_verification_status"
       ],
       "empty": "No client or engagement fields."
     },
@@ -29,7 +42,8 @@
         "proposed_value",
         "risk_band",
         "verification_type",
-        "rationale"
+        "rationale",
+        "basis"
       ],
       "empty": "No AML or applicability fields."
     },
@@ -38,6 +52,13 @@
       "variant": "checklist",
       "fields": [
         "evidence_status",
+        "screening_id",
+        "subject_reference",
+        "source_reference",
+        "screening_type",
+        "checked_at",
+        "outcome",
+        "resolution_status",
         "source_ids",
         "case_fact_ids",
         "requested_document",
@@ -58,11 +79,11 @@
       "reviewTitle": "Revisione assetto professionale",
       "queueTitle": "Decisioni sul rapporto",
       "detailTitle": "Evidenza, base e decisione",
-      "detailHelp": "Rivedi il fatto minimizzato, la base citata e l'impatto sul dossier prima di registrare la decisione professionale.",
+      "detailHelp": "Rivedi il fatto professionale, la base citata e l'impatto sul dossier prima di registrare la decisione.",
       "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco",
-      "reviewerAlias": "Alias revisore",
-      "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare l'export professionale; non inserire nome, email o identificativi fiscali.",
-      "reviewerAliasInvalid": "L'alias revisore puo contenere solo lettere, numeri, punti, trattini bassi, due punti o trattini.",
+      "reviewerAlias": "Revisore",
+      "reviewerAliasHelp": "Usa un riferimento stabile del professionista o del suo account. \u00c8 ammesso il nome reale del professionista. Non inserire credenziali, materiale di sessione o percorsi locali grezzi.",
+      "reviewerAliasInvalid": "Il riferimento del revisore pu\u00f2 avere al massimo 160 caratteri e non deve contenere credenziali, materiale di sessione o percorsi locali grezzi.",
       "bulkProfessionalSkipped": "Applicate {applied} raccomandazioni sicure. {skipped} decisioni professionali richiedono ancora una revisione individuale."
     },
     "fr": {
@@ -70,11 +91,11 @@
       "reviewTitle": "Revue de la mise en place professionnelle",
       "queueTitle": "Decisions sur la relation",
       "detailTitle": "Preuve, fondement et decision",
-      "detailHelp": "Examinez le fait minimise, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision professionnelle.",
+      "detailHelp": "Examinez le fait professionnel, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision.",
       "search": "Chercher fait, service, facteur AML, document, source, blocage",
-      "reviewerAlias": "Alias du reviseur",
-      "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour finaliser l'export professionnel; ne saisissez ni nom, ni email, ni identifiant fiscal.",
-      "reviewerAliasInvalid": "L'alias du reviseur ne peut contenir que des lettres, chiffres, points, tirets bas, deux-points ou tirets.",
+      "reviewerAlias": "R\u00e9viseur",
+      "reviewerAliasHelp": "Utilisez une r\u00e9f\u00e9rence stable du professionnel ou de son compte. Le nom r\u00e9el du professionnel est admis. Ne saisissez ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts.",
+      "reviewerAliasInvalid": "La r\u00e9f\u00e9rence du r\u00e9viseur est limit\u00e9e \u00e0 160 caract\u00e8res et ne doit contenir ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts.",
       "bulkProfessionalSkipped": "{applied} recommandations sures appliquees. {skipped} decisions professionnelles exigent encore une revue individuelle."
     },
     "de": {
@@ -82,11 +103,11 @@
       "reviewTitle": "Professionelle Einrichtung pruefen",
       "queueTitle": "Entscheidungen zum Mandat",
       "detailTitle": "Nachweis, Grundlage und Entscheidung",
-      "detailHelp": "Minimierten Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der professionellen Entscheidung pruefen.",
+      "detailHelp": "Beruflichen Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der Entscheidung pruefen.",
       "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen",
-      "reviewerAlias": "Prueferalias",
-      "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den professionellen Export erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
-      "reviewerAliasInvalid": "Das Prueferalias darf nur Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten.",
+      "reviewerAlias": "Pr\u00fcfer",
+      "reviewerAliasHelp": "Verwenden Sie eine stabile Referenz des Berufstr\u00e4gers oder seines Kontos. Der echte Name des Berufstr\u00e4gers ist zul\u00e4ssig. Keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade eingeben.",
+      "reviewerAliasInvalid": "Die Pr\u00fcferreferenz darf h\u00f6chstens 160 Zeichen lang sein und keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade enthalten.",
       "bulkProfessionalSkipped": "{applied} sichere Empfehlungen angewendet. {skipped} professionelle Entscheidungen muessen einzeln geprueft werden."
     }
   },

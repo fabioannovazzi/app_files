@@ -108,9 +108,9 @@ Mparanza rule:
 - External SQL, hosted notebooks, connector reads, uploads, or remote
   execution paths require an explicit user choice and must be recorded in
   `run_intake.json` and `final_artifacts.json`.
-- If bounded excerpts are sent to a model, `run_intake.json` records excerpt
-  metadata such as `excerpt_id`, source, purpose, content type, redaction
-  status, and row/character counts; it does not repeat raw excerpt text.
+- Helper scripts do not claim to enumerate everything Codex has read. The
+  workstream privacy manifest describes the Codex-context boundary; execution
+  records describe only actions the helper actually performed.
 - Strict review-contract validation rejects external connectors, uploads,
   remote SQL, or hosted execution unless `run_intake.json` records an explicit
   approval object with `approved=true`, `approved_by`, `approved_at`, `scope`,
@@ -131,10 +131,9 @@ Mparanza rule:
 - Payloads include source paths, row counts, truncation markers, evidence
   metadata, and the deterministic command or script that produced them.
 - Use deterministic samples or previews for large outputs.
-- Never put secrets, credentials, direct payment/contact identifiers, or raw
-  unnecessary personal data into widget payloads.
-- Never put raw model excerpt content into `model_excerpts_sent`; use compact
-  metadata so the reviewer can see what was exposed without exposing it again.
+- Never put secrets, credentials, authentication/session material, or raw local
+  paths into widget payloads. Professionally useful names, identifiers, case
+  facts, and source passages may be included in a private Codex review.
 
 ### Validate Before Render Or Final Handoff
 
@@ -332,9 +331,9 @@ Shared UI should:
 
 - validate payloads before rendering;
 - show workflow-specific evidence views;
-- show the run's data posture in the review surface, including local files,
-  model excerpts, connectors/uploads, and whether remote SQL or hosted
-  execution was used;
+- show the helper-route posture in the review surface: local files used by the
+  helper, connectors/uploads, and whether remote SQL or hosted execution was
+  used; do not present it as a log of everything Codex read;
 - show execution provenance in the review surface, including local/remote
   location, command, status, inputs, and outputs for replayable steps;
 - capture decisions with editable fields;
@@ -343,8 +342,9 @@ Shared UI should:
   target, and what document request was prefilled from item data/evidence;
 - show saved/applied/recovered/unsaved decision state in the action band so a
   reopened review does not hide already persisted decisions;
-- show a compact safeguards panel that summarizes local execution, external
-  approval, payload bounds, decision persistence, and final artifact readiness;
+- show a compact safeguards panel that summarizes helper-script execution,
+  optional routes beyond Codex, payload bounds, decision persistence, and final
+  artifact readiness;
 - show fallback/failure recovery guidance when static HTML can only copy JSON
   or when save/apply does not persist;
 - persist decisions through the MCP/local-server bridge;
@@ -495,7 +495,7 @@ Each migrated plugin should have tests for:
 | Decision persistence | Adopted for MCP review plugins | Keep save/apply decision tools covered for non-plotting and chart review plugins; require persistence to `ui_decisions.json`, application to `applied_decisions.json`, and final status updates in `final_artifacts.json`. |
 | First-class partial/blocked states | Adopted for non-plotting MCP save/apply | Report Builder missing-section rows and Concordato unmatched-plan/extraction-error rows now publish requested-document hints and follow-up context, and request-more-documents decisions carry them into blocker records. Extend partial/blocked checks into workflow-specific evidence and final-artifact QA where needed. |
 | Edit/revision handoff | Partial | MCP apply tools for non-plotting and chart review plugins write safe text revisions under `revisions/`, directly update existing text final artifacts inside `run_intake.output_dir`, back up originals under `revisions/originals/`, update explicit CSV/JSON/JSONL row targets, and list all updates in `final_artifacts.json`. Audit Reconciliation review-row edits now update the exact `codex_review_packet.json` row through the primary local browser server by `review_id`, so reviewer notes become part of the durable review packet rather than a disconnected revision. Deep Research claim edits now write reviewer corrections to `claims_review.json.claims[].proposed_fix` through the shared JSON records-key path, then deterministically refresh `validation_audit.json` and `validation_package.md` from the updated review JSON so the final Markdown package includes the correction and strict `required_text` readback proves it; when `validated_document.docx` is declared or present, the apply path regenerates the Word output from the refreshed validation package, records `native_regenerated_paths`, and strict DOCX visible-text readback proves the correction is in the native artifact. Concordato Plan Review memo edits now create or update `codex_run_review.md`, append the reviewed memo to `concordato_review_summary.docx` when the Word summary is part of the artifact gallery, record `native_regenerated_paths`, and publish strict DOCX visible-text checks for the memo. Prompt Optimizer edits to `optimized_prompt.md` now rerun deterministic prompt validation and refresh `prompt_audit.json`, `prompt_package.md`, `source_domains.txt`, and `source_domains_comma.txt`, with strict readback proving both the edited prompt and refreshed package metadata. When a structured edit makes a declared workbook stale, Check Entries and Journal-Bank now regenerate the dependent XLSX, record `native_regenerated_paths`, and publish strict workbook sheet/header/cell checks for the edited cell. Add deterministic native regeneration where other workflows need DOCX/XLSX/PDF refresh after review edits. |
-| Local data posture | Adopted for review-session plugins | Keep `data_posture` required in strict review-session tests for non-plotting and chart plugins, including local files read, model excerpts sent, external connectors used, upload paths used, and local deterministic calculation mode. Strict validation rejects external connectors, uploads, remote SQL, or hosted notebooks unless `external_execution_approval` records `approved=true`, `approved_by`, `approved_at`, `scope`, and `reason`. |
+| Helper-route posture | Adopted for review-session plugins | Keep `data_posture` required in strict review-session tests for non-plotting and chart plugins to record helper-script inputs and optional routes beyond Codex: local files read, external connectors used, upload paths used, remote SQL, and hosted notebooks. Helper scripts do not know or claim to enumerate the total Codex model context. Strict validation rejects external connectors, uploads, remote SQL, or hosted notebooks unless the user has actually chosen that route and `external_execution_approval` records the choice. |
 | Execution trace | Adopted for review sessions and review application | `scripts/validate_plugin_review_contract.py --strict-execution-trace` can require `run_intake.execution_trace[]` with replayable deterministic steps and reject written final outputs that are not listed in trace outputs. Current non-plotting review-session plugins and chart/review-session plugins append local deterministic execution traces after writing `final_artifacts.json`, and generated-run fixture tests enable strict execution-trace validation. MCP apply tools for non-plotting and chart review plugins now append a `deterministic_review_apply` trace step when reviewer decisions are applied, and the Audit Reconciliation local browser server does the same for browser-based Apply. Strict validation requires a review-apply trace when `final_artifacts.json.review_application` exists and verifies that applied manifests, changed artifacts, regenerated outputs, backups, and `final_artifacts.json` are listed in review-apply outputs. Remote execution locations in the trace require explicit `data_posture.external_execution_approval`. |
 | No `type continue` theater | Adopted for current plugin skills | Added to `plugin-ui-strategy` and plugin guide checklist; plugin skills now use execution checkpoints and ask for approval only for external, destructive, approval-sensitive, or materially unresolved steps. `tests/plugins/test_codex_plugin_packages.py::test_plugin_skills_do_not_require_continue_theater` now blocks literal continue-command prompts and requires the approval boundary in plugin skill text. |
 | Final artifact gallery | Partial | `scripts/validate_plugin_review_contract.py` now requires each final output to include `path`, `kind`, and `status`, and requires `caveats` and `next_actions` to be lists. MCP apply paths for non-plotting and chart review plugins preserve caveats/next actions, add blocker lists from follow-up decisions, and record `review_status`. The shared non-plotting workbench shows compact artifact QA chips plus an expandable verification detail panel for exact required text fragments, columns, sheets, headers, workbook cells, and QA checks. Extend richer native handoff surfaces where needed. |

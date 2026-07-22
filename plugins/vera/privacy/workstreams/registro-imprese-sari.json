@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "registro-imprese-sari",
   "display_name": "Registro Imprese e SARI",
   "role": "workflow",
@@ -9,56 +9,88 @@
     "mcp",
     "schemas"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Pseudonymous case intake, local evidence, DIRE or SARI screenshots and official public guidance"
-    ],
-    "local_processing": [
-      "Initialize private case records",
-      "Inventory and locally OCR evidence",
-      "Validate source provenance",
-      "Package a reviewable practice plan"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "practice-framing",
-        "purpose": "Frame the case and identify unresolved professional classifications",
-        "content": "Pseudonymous case facts, validated evidence anchors, dates, competent chamber and unresolved decisions",
-        "minimum_necessary": "Use an opaque client reference and neutral case facts; exclude names, tax codes, contact data and addresses from public research and review payloads",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
-      },
-      {
-        "id": "official-source-application",
-        "purpose": "Relate selected official guidance to the proposed practice",
-        "content": "Generic official-source passages, territorial metadata and necessary pseudonymous case facts",
-        "minimum_necessary": "Keep public searches generic and include only case facts needed to assess source applicability",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "practice-case-and-sources",
+        "purpose": "Frame the case, apply current official guidance, and draft the professional-review practice plan",
+        "content": "Case facts and local evidence; DIRE or SARI screenshots and OCR; dates and chamber; official-source passages and provenance; proposed classifications, recipient positions, filing steps, questions and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [
     {
-      "risk": "Even pseudonymous activity, chamber and effective-date facts can identify a case when combined",
-      "mitigation": "Keep identifiers local, use opaque case references, generic public searches and minimum case facts in Codex review"
+      "id": "official-public-research",
+      "kind": "public_research",
+      "destination": "Public SARI, Registro Imprese, DIRE, chamber, INPS, INAIL, SUAP, and IVASS sources relevant to the case",
+      "purpose": "Select current official guidance and record its provenance",
+      "content": "Competent chamber and generic topical query, selected public content ID, public page metadata and official-source URLs; no client identifiers or case narrative",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Use generic topical searches without names, tax codes, VAT numbers, contact details, addresses, or case narrative.",
+        "Keep the public browser flow read-only and do not export cookies or use login, contact, assistance, upload, or submission routes.",
+        "A human selects the relevant SARI content before it is registered."
+      ]
+    },
+    {
+      "id": "authorized-sari-json",
+      "kind": "external_connector",
+      "destination": "Exact public SARI host and selected chamber tenant",
+      "purpose": "Search public metadata and fetch one human-selected SARI card through the conditional connector",
+      "content": "Generic topical query or selected card ID, tenant and expected chamber; public metadata and card response",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Require separate written rights-holder permission and a case-specific network approval; user or studio approval alone is insufficient.",
+        "Allow only the exact HTTPS SARI host and path, reject redirects, cap results and bytes, and fetch at most one selected card.",
+        "Keep anonymous cookies in memory and never call login, support, upload, or submission routes."
+      ]
+    },
+    {
+      "id": "ocr-model-download",
+      "kind": "hosted_service",
+      "destination": "Configured PaddleOCR model-weight host",
+      "purpose": "Download missing OCR model weights before local recognition",
+      "content": "Model-weight request and approval reference; no case screenshots or extracted case content",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Disabled by default and enabled only with both the download flag and a stable approval ID.",
+        "Only model weights cross the boundary; screenshot recognition remains local."
+      ]
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Le evidenze del caso restano nella cartella locale e vengono rappresentate con un riferimento pseudonimo. Codex esamina solo i fatti necessari e le fonti ufficiali pertinenti; ricerche SARI e payload non devono contenere identificativi del cliente.",
-    "message_en": "Case evidence remains in the local folder and is represented by a pseudonymous reference. Codex reviews only necessary facts and relevant official sources; SARI searches and review payloads must not contain client identifiers.",
-    "requires_confirmation": false
-  },
+  "security_controls": [
+    {
+      "id": "private-case-folder",
+      "control": "Evidence and generated artifacts remain in an owner-only directory outside the repository."
+    },
+    {
+      "id": "no-authentication-or-filing",
+      "control": "The workflow never receives authentication material, operates a filing session, signs, pays, contacts support, or submits a practice."
+    },
+    {
+      "id": "draft-status",
+      "control": "Generated packages remain professional-review drafts and keep ready_to_file false."
+    }
+  ],
   "review": {
-    "reviewed_at": "2026-07-21",
+    "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "Pseudonymized case facts may remain indirectly identifying in a narrow professional context",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "27f5f19cd378e9575b0e6db3d7c7434a0c22160bfdc87b0a4bf1ac3fd943d2f0"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "666ab38e2dbdf2835be6a0c55a3644993a61b4e3bbe6b04368389a2f30fb20ca"
   }
 }

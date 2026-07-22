@@ -50,19 +50,35 @@ def _capture_template_response(
 
 
 @pytest.mark.parametrize(
-    ("lang", "page_title", "security_title"),
+    ("lang", "page_title", "closing"),
     (
-        ("en", "How your data is handled.", "Secure by design."),
-        ("it", "Come vengono gestiti i tuoi dati.", "Sicuri fin dalla progettazione."),
-        ("fr", "Comment vos données sont traitées.", "Sécurisés dès la conception."),
-        ("de", "So werden Ihre Daten verarbeitet.", "Sicher konzipiert."),
+        (
+            "en",
+            "How your data is handled.",
+            "Local processing changes the route, not the nature, of the data.",
+        ),
+        (
+            "it",
+            "Come vengono gestiti i tuoi dati.",
+            "L'elaborazione locale cambia il percorso, non la natura dei dati.",
+        ),
+        (
+            "fr",
+            "Comment vos données sont traitées.",
+            "Le traitement local change le parcours, pas la nature des données.",
+        ),
+        (
+            "de",
+            "So werden Ihre Daten verarbeitet.",
+            "Lokale Verarbeitung ändert den Weg, nicht die Art der Daten.",
+        ),
     ),
 )
 def test_data_handling_page_is_public_and_localized(
     monkeypatch: pytest.MonkeyPatch,
     lang: str,
     page_title: str,
-    security_title: str,
+    closing: str,
 ) -> None:
     captured = _capture_template_response(monkeypatch)
     client = TestClient(app)
@@ -80,7 +96,7 @@ def test_data_handling_page_is_public_and_localized(
     page = context["page"]
     assert isinstance(page, dict)
     assert page["title"] == page_title
-    assert str(page["closing"]).startswith(security_title)
+    assert page["closing"] == closing
 
 
 @pytest.mark.parametrize(
@@ -188,7 +204,7 @@ def test_homepage_uses_the_approved_english_security_copy() -> None:
     assert security["title"] == "Secure by design."
     assert (
         security["lead"]
-        == "You do not have to trust us with your work. We do not receive it."
+        == "In local Vera and Clara workflows, Mparanza does not receive your work."
     )
     assert (
         security["description"]
@@ -216,45 +232,100 @@ def test_data_handling_page_explains_local_execution_and_account_boundary() -> N
     page = get_data_handling_content("en")
     sections = {section["id"]: section for section in page["sections"]}
 
-    assert sections["local-execution"]["title"] == "The scripts run on your machine."
-    assert (
-        "provider-managed Jupyter notebook"
-        in sections["local-execution"]["paragraphs"][2]
+    assert sections["local-execution"]["title"] == (
+        "Local processing is useful. It is not anonymization."
     )
-    assert (
-        "Mparanza is not the intermediary and cannot inspect prompts"
-        in sections["security"]["paragraphs"][0]
+    assert "does not mean its contents stay out" in (
+        sections["local-execution"]["paragraphs"][1]
     )
-    assert sections["gdpr"]["title"] == "GDPR follows the actual data flow."
+    assert sections["security"]["title"] == "Codex may read real client data."
+    assert "do not automatically anonymize case material" in (
+        sections["security"]["paragraphs"][0]
+    )
+    assert "documents, passages, facts, or other content" in page["boundary"]["intro"]
+    assert "enter the model context" in page["boundary"]["intro"]
+    assert "session material" in sections["security"]["paragraphs"][1]
+    assert sections["hosted-features"]["title"] == (
+        "Local, hosted, and external are different routes."
+    )
+    assert "Public searches, portals, and external services" in (
+        sections["hosted-features"]["paragraphs"][2]
+    )
+    assert sections["gdpr"]["title"] == "Compliance follows the actual data flow."
+    assert "The firm chooses the Codex/OpenAI account" in (
+        sections["gdpr"]["paragraphs"][1]
+    )
+    assert "separate routes" in sections["gdpr"]["paragraphs"][1]
 
 
 @pytest.mark.parametrize(
-    ("lang", "expected_copy"),
+    ("lang", "not_anonymization", "purpose_based"),
     (
         (
             "en",
-            "analyze, filter, and aggregate data locally, and limit what you send",
+            "It is not anonymization",
+            "GDPR data minimisation is purpose-based",
         ),
         (
             "it",
-            "analizzare, filtrare e aggregare i dati localmente e di limitare ciò che",
+            "Non è anonimizzazione",
+            "minimizzazione prevista dal GDPR dipende dallo scopo",
         ),
         (
             "fr",
-            "analyser, filtrer et agréger les données localement, et limiter ce qui",
+            "Ce n'est pas une anonymisation",
+            "minimisation prévue par le RGPD dépend de la finalité",
         ),
         (
             "de",
-            "Daten lokal analysieren, filtern und aggregieren und nur die",
+            "Sie ist keine Anonymisierung",
+            "Datenminimierung nach der DSGVO richtet sich nach dem Zweck",
         ),
     ),
 )
-def test_data_handling_page_localizes_data_minimization_copy(
-    lang: str, expected_copy: str
+def test_data_handling_page_localizes_the_local_processing_limit(
+    lang: str, not_anonymization: str, purpose_based: str
 ) -> None:
     page = get_data_handling_content(lang)
+    sections = {section["id"]: section for section in page["sections"]}
 
-    assert expected_copy in page["sections"][0]["paragraphs"][1]
+    assert not_anonymization in sections["local-execution"]["title"]
+    assert purpose_based in sections["gdpr"]["paragraphs"][0]
+
+
+@pytest.mark.parametrize(
+    ("lang", "model_input", "automatic_limit"),
+    (
+        (
+            "en",
+            "documents, passages, facts, or other content it reads",
+            "do not automatically anonymize case material",
+        ),
+        (
+            "it",
+            "i documenti, i passaggi, i fatti o gli altri contenuti che legge",
+            "non anonimizzano automaticamente il materiale del caso",
+        ),
+        (
+            "fr",
+            "les documents, passages, faits ou autres contenus qu'il lit",
+            "n'anonymisent pas automatiquement les dossiers",
+        ),
+        (
+            "de",
+            "Dokumente, Passagen, Fakten oder anderen Inhalte, die Codex liest",
+            "anonymisieren Fallmaterial nicht automatisch",
+        ),
+    ),
+)
+def test_data_handling_page_names_what_codex_reads_without_claiming_detection(
+    lang: str, model_input: str, automatic_limit: str
+) -> None:
+    page = get_data_handling_content(lang)
+    sections = {section["id"]: section for section in page["sections"]}
+
+    assert model_input in page["boundary"]["intro"]
+    assert automatic_limit in sections["security"]["paragraphs"][0]
 
 
 def test_data_handling_template_has_one_heading_and_a_main_target() -> None:
@@ -277,6 +348,11 @@ def test_data_handling_reference_links_distinguish_internal_navigation() -> None
         "href": "/zero-retention",
         "external": False,
     }
+    external_hrefs = {
+        link["href"] for link in page["resources"]["links"] if link["external"]
+    }
+    assert "https://eur-lex.europa.eu/eli/reg/2016/679/oj" in external_hrefs
+    assert any("opinion-282024" in href for href in external_hrefs)
     assert '{{ "↗" if item.external else "→" }}' in template
     assert 'target="_blank"' not in template
 

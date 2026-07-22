@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "audit-reconciliation",
   "display_name": "Audit Reconciliation",
   "role": "workflow",
@@ -10,57 +10,42 @@
     "assets/review-workbench-adapter.json",
     "assets/audit-reconciliation-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Open-item lists, ledgers, journals, bank statements, payment orders, factoring and compensation evidence"
-    ],
-    "local_processing": [
-      "Inventory and extract files",
-      "Normalize accounting records",
-      "Classify and reconcile rows",
-      "Build review packets and workpapers",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "intake-and-mapping",
-        "purpose": "Resolve source roles and material accounting assumptions",
-        "content": "File inventory, column headers, representative rows, user instructions and unresolved mappings",
-        "minimum_necessary": "Use inventory, headers and representative rows rather than complete populations when resolving mappings",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
-      },
-      {
-        "id": "exception-review",
-        "purpose": "Review reconciliation exceptions and evidence quality",
-        "content": "Deterministic reconciliation results, exception rows, evidence locators and selected supporting excerpts",
-        "minimum_necessary": "Expose exception rows and targeted evidence, not complete source files",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "accounting-evidence-and-review",
+        "purpose": "Map sources, review reconciliations, and explain exceptions",
+        "content": "User instructions; accounting files or extracted records; mappings; reconciliation results; exception evidence; workpapers and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [],
+  "security_controls": [
     {
-      "risk": "Selected accounting rows and supporting excerpts may contain counterparties or case-specific facts",
-      "mitigation": "Keep complete populations local and send Codex only mappings, exceptions and targeted evidence needed for review"
+      "id": "private-output-root",
+      "control": "Run artifacts are written to the user-selected private output directory rather than a published repository path."
+    },
+    {
+      "id": "local-review-service",
+      "control": "The review server binds to loopback and constrains review writes to the selected run folder."
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "I file contabili completi e la riconciliazione restano locali. Codex esamina mappature, eccezioni e le sole evidenze mirate necessarie alla revisione.",
-    "message_en": "Complete accounting files and reconciliation processing remain local. Codex reviews mappings, exceptions and only the targeted evidence needed for review.",
-    "requires_confirmation": false
-  },
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "Actual context depends on the user's instructions and the evidence needed to resolve exceptions",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "8df86a3fc2a1506fa9db2faa7d4b3fcc92a3b00ba02d0e88540480342991cee7"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "f14249aa4d0e6fd0e2d59c25963b34015049ecc29a25b30a0e3f0975bc22aeeb"
   }
 }

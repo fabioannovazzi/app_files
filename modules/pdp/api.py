@@ -2891,7 +2891,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Secure by design.",
             "lead": (
-                "You do not have to trust us with your work. We do not receive it."
+                "In local Vera and Clara workflows, Mparanza does not receive your work."
             ),
             "description": (
                 "In local workflows, Vera and Clara run inside your existing Codex "
@@ -2904,31 +2904,29 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Compliant by design.",
-            "lead": (
-                "Privacy depends on what reaches the model—not on what remains "
-                "on your computer."
-            ),
+            "lead": ("Professional work may require Codex to read real client data."),
             "description": (
-                "Vera and Clara can use local scripts to extract, calculate, "
-                "reconcile, filter, and aggregate information before Codex needs "
-                "to reason about it. The LLM can often work from a focused result "
-                "instead of receiving the complete source files."
+                "A file can stay on your computer while Codex reads its contents, "
+                "selected passages, or extracted facts through your Codex/OpenAI "
+                "account. Local scripts can reduce unnecessary copies and transfers, "
+                "but they do not make data anonymous. Vera and Clara do not "
+                "automatically remove names or personal data."
             ),
             "principles": [
                 {
-                    "title": "Work locally",
-                    "blurb": "Complete datasets and mechanical processing can remain on your computer.",
+                    "title": "Codex may read client data",
+                    "blurb": "When the work needs identities, documents, or case facts, that material may enter the model context.",
                 },
                 {
-                    "title": "Give Codex the useful result",
-                    "blurb": "The plugin defines which outputs Codex needs for the professional task.",
+                    "title": "Keep secrets out",
+                    "blurb": "Never put passwords, API keys, authentication cookies, or session material in prompts or model-readable files.",
                 },
                 {
-                    "title": "Keep the boundary honest",
-                    "blurb": "Some semantic tasks require original language or case-specific facts. That material may enter the LLM context; the plugin does not claim otherwise.",
+                    "title": "Choose the account and route",
+                    "blurb": "The firm chooses the Codex/OpenAI account used for professional work and configures the data controls available for that plan. Local workflows, Mparanza-hosted features, and other external services have different recipients.",
                 },
             ],
-            "closing": "Less data in the LLM context. A simpler compliance perimeter.",
+            "closing": "Local processing reduces copies. It is not anonymization or a compliance determination.",
             "cta_label": "See how your data is handled",
             "cta_href": "/data-handling",
         },
@@ -3089,7 +3087,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "security": {
             "id": "security",
             "title": "Sicuri per scelta.",
-            "lead": "Non devi affidarci il tuo lavoro. Non lo riceviamo.",
+            "lead": "Nei flussi locali di Vera e Clara, Mparanza non riceve il tuo lavoro.",
             "description": (
                 "Nei flussi di lavoro locali, Vera e Clara operano nell'ambiente "
                 "Codex che già usi. I tuoi prompt, file e risultati non passano "
@@ -3101,23 +3099,23 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Conformi per scelta.",
-            "lead": "La privacy dipende da ciò che arriva al modello, non da ciò che rimane sul tuo computer.",
-            "description": "Vera e Clara possono usare script locali per estrarre, calcolare, riconciliare, filtrare e aggregare le informazioni prima che Codex debba ragionarci. Spesso l'LLM può lavorare su un risultato mirato invece di ricevere i file sorgente completi.",
+            "lead": "Il lavoro professionale può richiedere a Codex di leggere dati reali dei clienti.",
+            "description": "Un file può restare sul tuo computer mentre Codex ne legge il contenuto, alcuni passaggi o i fatti estratti tramite il tuo account Codex/OpenAI. Gli script locali possono ridurre copie e trasferimenti inutili, ma non rendono anonimi i dati. Vera e Clara non rimuovono automaticamente nomi o dati personali.",
             "principles": [
                 {
-                    "title": "Lavora in locale",
-                    "blurb": "I dataset completi e le elaborazioni meccaniche possono rimanere sul tuo computer.",
+                    "title": "Codex può leggere dati dei clienti",
+                    "blurb": "Quando il lavoro richiede identità, documenti o fatti specifici, questi contenuti possono entrare nel contesto del modello.",
                 },
                 {
-                    "title": "Dai a Codex il risultato utile",
-                    "blurb": "Il plugin definisce quali risultati servono a Codex per svolgere il lavoro professionale.",
+                    "title": "Proteggi i segreti",
+                    "blurb": "Non inserire password, chiavi API, cookie di autenticazione o dati di sessione nei prompt o nei file leggibili dal modello.",
                 },
                 {
-                    "title": "Mantieni chiaro il confine",
-                    "blurb": "Alcune attività richiedono di interpretare il significato dei dati. In questi casi, i contenuti necessari vengono inclusi nel contesto dell'LLM.",
+                    "title": "Scegli account e percorso",
+                    "blurb": "Lo studio sceglie l'account Codex/OpenAI usato per il lavoro professionale e configura i controlli disponibili per quel piano. I flussi locali, le funzioni ospitate da Mparanza e gli altri servizi esterni hanno destinatari diversi.",
                 },
             ],
-            "closing": "Meno dati nel contesto dell'LLM. Un perimetro di conformità più semplice.",
+            "closing": "L'elaborazione locale riduce le copie. Non è anonimizzazione né una valutazione di conformità.",
             "cta_label": "Scopri come vengono gestiti i tuoi dati",
             "cta_href": "/data-handling",
         },
@@ -3282,7 +3280,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Sécurisés par conception.",
             "lead": (
-                "Vous n'avez pas à nous confier votre travail. Nous ne le recevons pas."
+                "Dans les flux locaux de Vera et Clara, Mparanza ne reçoit pas votre travail."
             ),
             "description": (
                 "Dans les flux de travail locaux, Vera et Clara fonctionnent dans "
@@ -3295,23 +3293,23 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Conformes par conception.",
-            "lead": "La confidentialité dépend de ce qui parvient au modèle, pas de ce qui reste sur votre ordinateur.",
-            "description": "Vera et Clara peuvent utiliser des scripts locaux pour extraire, calculer, rapprocher, filtrer et agréger les informations avant que Codex doive les interpréter. Le LLM peut souvent travailler à partir d'un résultat ciblé plutôt que de recevoir les fichiers sources complets.",
+            "lead": "Le travail professionnel peut nécessiter que Codex lise de vraies données clients.",
+            "description": "Un fichier peut rester sur votre ordinateur tandis que Codex en lit le contenu, certains passages ou des faits extraits via votre compte Codex/OpenAI. Les scripts locaux peuvent réduire les copies et transferts inutiles, mais ils ne rendent pas les données anonymes. Vera et Clara ne suppriment pas automatiquement les noms ou les données personnelles.",
             "principles": [
                 {
-                    "title": "Travailler localement",
-                    "blurb": "Les jeux de données complets et les traitements mécaniques peuvent rester sur votre ordinateur.",
+                    "title": "Codex peut lire des données clients",
+                    "blurb": "Lorsque le travail exige des identités, des documents ou des faits propres au dossier, ces contenus peuvent entrer dans le contexte du modèle.",
                 },
                 {
-                    "title": "Donner à Codex le résultat utile",
-                    "blurb": "Le plugin définit les résultats dont Codex a besoin pour la tâche professionnelle.",
+                    "title": "Gardez les secrets hors contexte",
+                    "blurb": "Ne placez jamais de mots de passe, clés API, cookies d'authentification ou données de session dans les prompts ou fichiers lisibles par le modèle.",
                 },
                 {
-                    "title": "Présenter honnêtement la frontière",
-                    "blurb": "Certaines tâches sémantiques exigent le texte original ou des faits propres au dossier. Ces éléments peuvent entrer dans le contexte du LLM ; le plugin ne prétend pas le contraire.",
+                    "title": "Choisissez le compte et le parcours",
+                    "blurb": "Le cabinet choisit le compte Codex/OpenAI utilisé pour le travail professionnel et configure les contrôles disponibles pour cette offre. Les flux locaux, les fonctions hébergées par Mparanza et les autres services externes ont des destinataires différents.",
                 },
             ],
-            "closing": "Moins de données dans le contexte du LLM. Un périmètre de conformité plus simple.",
+            "closing": "Le traitement local réduit les copies. Ce n'est ni une anonymisation ni une détermination de conformité.",
             "cta_label": "Voir comment vos données sont traitées",
             "cta_href": "/data-handling",
         },
@@ -3476,7 +3474,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Sicher konzipiert.",
             "lead": (
-                "Sie müssen uns Ihre Arbeit nicht anvertrauen. Wir erhalten sie nicht."
+                "Bei lokalen Vera- und Clara-Abläufen erhält Mparanza Ihre Arbeit nicht."
             ),
             "description": (
                 "Bei lokalen Arbeitsabläufen laufen Vera und Clara in Ihrer bestehenden "
@@ -3489,23 +3487,23 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Für Compliance konzipiert.",
-            "lead": "Datenschutz hängt davon ab, was das Modell erreicht – nicht davon, was auf Ihrem Computer verbleibt.",
-            "description": "Vera und Clara können Informationen lokal extrahieren, berechnen, abgleichen, filtern und aggregieren, bevor Codex sie interpretieren muss. Das LLM kann häufig mit einem gezielten Ergebnis arbeiten, anstatt die vollständigen Quelldateien zu erhalten.",
+            "lead": "Professionelle Arbeit kann erfordern, dass Codex echte Mandantendaten liest.",
+            "description": "Eine Datei kann auf Ihrem Computer bleiben, während Codex ihren Inhalt, ausgewählte Passagen oder extrahierte Fakten über Ihr Codex-/OpenAI-Konto liest. Lokale Skripte können unnötige Kopien und Übertragungen verringern, machen Daten aber nicht anonym. Vera und Clara entfernen Namen oder personenbezogene Daten nicht automatisch.",
             "principles": [
                 {
-                    "title": "Lokal arbeiten",
-                    "blurb": "Vollständige Datensätze und mechanische Verarbeitung können auf Ihrem Computer verbleiben.",
+                    "title": "Codex kann Mandantendaten lesen",
+                    "blurb": "Benötigt die Arbeit Identitäten, Dokumente oder fallbezogene Fakten, können diese Inhalte in den Modellkontext gelangen.",
                 },
                 {
-                    "title": "Codex das nützliche Ergebnis geben",
-                    "blurb": "Das Plugin legt fest, welche Ergebnisse Codex für die professionelle Aufgabe benötigt.",
+                    "title": "Geheimnisse gehören nicht in den Kontext",
+                    "blurb": "Geben Sie niemals Passwörter, API-Schlüssel, Authentifizierungs-Cookies oder Sitzungsdaten in Prompts oder modelllesbare Dateien ein.",
                 },
                 {
-                    "title": "Die Grenze ehrlich benennen",
-                    "blurb": "Manche semantischen Aufgaben benötigen den Originaltext oder fallspezifische Fakten. Diese Inhalte können in den LLM-Kontext gelangen; das Plugin behauptet nichts anderes.",
+                    "title": "Konto und Datenweg auswählen",
+                    "blurb": "Die Kanzlei wählt das Codex-/OpenAI-Konto für die berufliche Arbeit und konfiguriert die für den Tarif verfügbaren Datenkontrollen. Lokale Abläufe, von Mparanza gehostete Funktionen und andere externe Dienste haben unterschiedliche Empfänger.",
                 },
             ],
-            "closing": "Weniger Daten im LLM-Kontext. Ein einfacherer Compliance-Rahmen.",
+            "closing": "Lokale Verarbeitung verringert Kopien. Sie ist weder Anonymisierung noch eine Compliance-Bewertung.",
             "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
             "cta_href": "/data-handling",
         },

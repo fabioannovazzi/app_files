@@ -5,13 +5,6 @@ description: Use when a user wants Codex to turn a legal, tax, or compliance que
 
 # Optimize Prompt
 
-## Privacy Boundary
-
-At workstream start, read `../../privacy/workstreams/prompt-optimizer.json` and
-show its notice in the conversation language. The notice must state that text
-already entered in Codex is already in model context. Do not claim that Vera can
-remove or anonymize it retroactively.
-
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 Resolve `../../modules/prompt-optimizer` from this skill directory when it

@@ -295,7 +295,6 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
             "dependency_check": {"status": "ok"},
             "data_posture": {
                 "local_files_read": input_paths,
-                "model_excerpts_sent": [],
                 "external_connectors_used": [],
                 "upload_paths_used": [],
                 "remote_sql_execution_used": False,
@@ -467,7 +466,6 @@ def write_check_entries_fixture(output_dir: Path) -> None:
             "dependency_check": {"status": "ok"},
             "data_posture": {
                 "local_files_read": ["entries.xlsx", "support_1001.pdf"],
-                "model_excerpts_sent": [],
                 "external_connectors_used": [],
                 "upload_paths_used": [],
                 "remote_sql_execution_used": False,

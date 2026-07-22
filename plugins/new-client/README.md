@@ -66,18 +66,10 @@ privata. Il workflow produce almeno `run_intake.json`, `review_payload.json`,
 `ui_decisions.json`, `review_handoff.md` e `final_artifacts.json`, insieme agli
 artefatti di dominio.
 
-Prima del packaging, `processing_authority` deve registrare runtime, scope,
-minimizzazione e l'alias pseudonimo del professionista che autorizza il
-trattamento semantico. Uno starter con autorizzazione ancora `pending` resta
-utilizzabile per la sola preparazione deterministica ma non può essere
-processato o confezionato.
-
-Nel `run_intake.json`, `processing_authority_declaration` conserva ciò che lo
-studio ha autorizzato (runtime e trasferimento inclusi), mentre
-`observed_processing` registra separatamente ciò che lo script di packaging ha
-effettivamente eseguito. L'autorizzazione a un runtime gestito o a un
-trasferimento esterno non viene quindi presentata come prova che quel
-trasferimento sia avvenuto.
+Il workflow usa i dati reali necessari al lavoro professionale e non aggiunge
+una dichiarazione per singolo caso che pretenda di autorizzare il normale uso
+di Codex o di certificare la minimizzazione. Credenziali, cookie, token, URL di
+sessione e percorsi locali grezzi restano esclusi dal payload di review.
 
 ## Revisione
 
@@ -96,8 +88,10 @@ an expired package must be regenerated.
 Le decisioni vengono registrate in `ui_decisions.json` e applicate in
 `applied_decisions.json`; gli artefatti di origine restano immutati. Per
 sbloccare l'export professionale, `apply` registra nel campo `reviewer` un
-riferimento pseudonimo e stabile del professionista dello studio. Nome, email e
-altri identificativi diretti restano fuori dal payload di review.
+riferimento stabile del professionista dello studio, che può essere il nome o
+il riferimento dell'account professionale. Il payload di review può includere
+i dati reali del cliente utili alla decisione; credenziali, dati di sessione e
+percorsi locali grezzi restano esclusi.
 
 Se i tool MCP del client non sono disponibili, il pacchetto Vera include lo
 stesso workbench con write-back locale. Dal root del modulo:

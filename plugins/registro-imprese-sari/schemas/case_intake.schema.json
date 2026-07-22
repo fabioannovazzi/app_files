@@ -14,8 +14,7 @@
     "subject",
     "activity",
     "requested_operation",
-    "professional_question",
-    "processing_authorization"
+    "professional_question"
   ],
   "properties": {
     "schema_version": {"const": "1.0"},
@@ -23,6 +22,19 @@
     "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
     "reference_date": {"type": "string", "format": "date"},
     "client_reference": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
+    "client_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "tax_code": {"type": ["string", "null"]},
+        "vat_number": {"type": ["string", "null"]},
+        "email": {"type": ["string", "null"]},
+        "pec": {"type": ["string", "null"]},
+        "phone": {"type": ["string", "null"]},
+        "address": {"type": ["string", "null"]}
+      }
+    },
     "competent_chamber": {
       "type": "object",
       "additionalProperties": false,
@@ -69,17 +81,6 @@
       }
     },
     "current_positions": {"type": "array", "items": {"type": "object"}},
-    "professional_question": {"type": "string"},
-    "processing_authorization": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["approved", "approval_id", "approved_by_role", "recorded_at"],
-      "properties": {
-        "approved": {"const": true},
-        "approval_id": {"type": "string"},
-        "approved_by_role": {"type": "string"},
-        "recorded_at": {"type": "string", "format": "date-time"}
-      }
-    }
+    "professional_question": {"type": "string"}
   }
 }

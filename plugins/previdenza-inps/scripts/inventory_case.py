@@ -36,13 +36,13 @@ PORTAL_CAPTURE_RESERVED_NAMES = frozenset(
 )
 PORTAL_EXPORT_RECEIPT_MARKERS = frozenset(
     {
+        "schema_version",
         "manifest_type",
+        "registration_id",
+        "created_at",
         "source_origin",
-        "authority",
-        "processing_approval",
         "safety",
         "artifacts",
-        "registration_id",
     }
 )
 PORTAL_PRIVATE_RECEIPT_NAMES = frozenset(
@@ -84,8 +84,8 @@ def _named_paths(input_dir: Path, names: frozenset[str]) -> set[Path]:
 def _looks_like_portal_export_receipt(path: Path) -> bool:
     """Detect private export receipts by their fixed structural markers.
 
-    This deterministic gate is justified by auditability: connector approval
-    metadata must never silently become ordinary case evidence merely because a
+    This deterministic gate is justified by auditability: registration and
+    provenance metadata must never silently become ordinary case evidence because a
     manifest type was altered. It does not interpret document meaning.
     """
 
@@ -179,27 +179,16 @@ def _initial_run_intake(
             "ambiguous_terms_resolved": False,
         },
         "decision_log": [],
-        "processing_authorization": {
-            "studio_processing_authorized": False,
-            "model_processing_approved": False,
-            "processor_scope": None,
-            "approved_by_id": None,
-            "approved_by_role": None,
-            "recorded_at": None,
-            "basis": None,
-            "personal_data_minimized": False,
-        },
         "data_posture": {
             "local_only": not args.allow_ocr_model_download and not connector_used,
             "network_calls_by_scripts": connector_used,
             "network_access_allowed_for_model_weights": (args.allow_ocr_model_download),
             "local_files_read": [args.input_dir.expanduser().resolve().as_posix()],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
-            "semantic_model_processing": "not_authorized_by_inventory_step",
+            "semantic_model_processing": "outside_inventory_script",
             "ocr": {
                 "enabled": not args.no_ocr,
                 "engine": "paddleocr",
@@ -225,29 +214,13 @@ def _initial_run_intake(
     payload["execution_trace"] = []
 
     if portal_export is not None:
-        processing = portal_export["processing_approval"]
-        authority = portal_export["authority"]
-        payload["processing_authorization"].update(
-            {
-                "studio_processing_authorized": True,
-                "approved_by_id": processing["approved_by_id"],
-                "approved_by_role": processing["approved_by_role"],
-                "recorded_at": processing["recorded_at"],
-                "basis": processing["approval_basis"],
-            }
-        )
-        posture["acquisition_channels_used"].append("inps_official_user_export")
+        posture["acquisition_channels_used"].append("inps_registered_local_export")
         posture["portal_export_receipt"] = {
             "registration_id": portal_export["registration_id"],
             "registered_at": portal_export["created_at"],
             "source_origin": portal_export["source_origin"],
             "manifest_sha256": portal_export["manifest_sha256"],
             "artifact_count": len(portal_export["artifacts"]),
-            "human_authority_confirmed": authority["human_authority_confirmed"],
-            "profile_authority_confirmed": authority["profile_authority_confirmed"],
-            "delegation_authority_confirmed": authority[
-                "delegation_authority_confirmed"
-            ],
             **portal_export["safety"],
         }
         payload["execution_trace"].append(
@@ -257,7 +230,7 @@ def _initial_run_intake(
                 "status": "passed",
                 "execution_location": "local_codex_workspace",
                 "command": "python scripts/register_portal_export.py",
-                "inputs": ["user_downloaded_official_portal_exports"],
+                "inputs": ["locally_supplied_official_portal_exports"],
                 "outputs": [
                     "portal_export_manifest",
                     "registered_portal_exports",
@@ -269,15 +242,6 @@ def _initial_run_intake(
         return payload
 
     approval = portal_capture["approval"]
-    payload["processing_authorization"].update(
-        {
-            "studio_processing_authorized": True,
-            "approved_by_id": approval["approved_by"],
-            "approved_by_role": approval["approved_by_role"],
-            "recorded_at": approval["approved_at"],
-            "basis": approval["processing_authority_basis"],
-        }
-    )
     posture["acquisition_channels_used"].append("inps_conditional_browser_capture")
     posture["external_connectors_used"] = ["inps_browser_read_only"]
     posture["external_execution_approval"] = {
@@ -318,9 +282,6 @@ def _initial_run_intake(
         "delegation_or_subject_authority_basis_sha256": hashlib.sha256(
             approval["delegation_or_subject_authority_basis"].encode("utf-8")
         ).hexdigest(),
-        "client_data_processing_authorized_confirmed": approval[
-            "client_data_processing_authorized_confirmed"
-        ],
         "portal_capture_permission_confirmed": True,
         "portal_permission_basis_sha256": hashlib.sha256(
             approval["portal_permission_basis"].encode("utf-8")

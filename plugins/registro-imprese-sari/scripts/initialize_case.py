@@ -51,6 +51,15 @@ def initialize_case(
             "run_id": run_id,
             "reference_date": reference_date,
             "client_reference": client_reference,
+            "client_identity": {
+                "name": "",
+                "tax_code": "",
+                "vat_number": "",
+                "email": "",
+                "pec": "",
+                "phone": "",
+                "address": "",
+            },
             "competent_chamber": {
                 "tenant": "",
                 "name": "",
@@ -74,12 +83,6 @@ def initialize_case(
             },
             "current_positions": [],
             "professional_question": "",
-            "processing_authorization": {
-                "approved": False,
-                "approval_id": "",
-                "approved_by_role": "",
-                "recorded_at": "",
-            },
         },
     )
     write_private_json(
@@ -89,6 +92,7 @@ def initialize_case(
             "plugin": PLUGIN_NAME,
             "run_id": run_id,
             "case_summary": "",
+            "review_context": {},
             "classification_proposals": [],
             "position_matrix": [],
             "dire_steps": [],
@@ -97,10 +101,7 @@ def initialize_case(
             "risks": [],
             "missing_information": [],
             "sari_question_draft": "",
-            "limitations": [
-                "Bozza per revisione professionale; non costituisce istruzione di deposito.",
-                "Nessun accesso, firma o invio a DIRE, Registro Imprese, INPS, INAIL, SUAP o IVASS.",
-            ],
+            "limitations": [],
             "professional_review": {
                 "status": "pending",
                 "reviewer_id": None,
@@ -140,13 +141,13 @@ def initialize_case(
             "status": "pending",
             "data_posture": {
                 "local_files_read": [],
-                "model_excerpts_sent": [],
                 "external_connectors_used": [],
                 "upload_paths_used": [],
                 "hosted_notebook_execution_used": False,
                 "remote_sql_execution_used": False,
                 "private_local_output": True,
-                "direct_identifiers_excluded_from_case_json": True,
+                "private_case_details_available_for_professional_review": True,
+                "public_sari_queries_require_generic_terms": True,
                 "network_calls_by_default": False,
                 "credentials_or_session_export": False,
                 "portal_submission": False,

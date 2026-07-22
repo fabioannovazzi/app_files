@@ -56,9 +56,9 @@
       "detailTitle": "Decisione documento",
       "detailHelp": "Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.",
       "search": "Cerca documento, mancante, memo, email, blocco",
-      "reviewerAlias": "Alias revisore",
-      "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare la revisione; non inserire nome, email o identificativi fiscali.",
-      "reviewerAliasInvalid": "L'alias revisore deve iniziare con una lettera e contenere da 3 a 64 lettere ASCII, numeri, punti, trattini bassi, due punti o trattini."
+      "reviewerAlias": "Revisore",
+      "reviewerAliasHelp": "Usa un riferimento stabile del professionista o del suo account. \u00c8 ammesso il nome reale del professionista. Non inserire credenziali, materiale di sessione o percorsi locali grezzi.",
+      "reviewerAliasInvalid": "Il riferimento del revisore pu\u00f2 avere al massimo 160 caratteri e non deve contenere credenziali, materiale di sessione o percorsi locali grezzi."
     },
     "fr": {
       "title": "Nouveau client \u00b7 Preparation des documents",
@@ -67,9 +67,9 @@
       "detailTitle": "Decision document",
       "detailHelp": "Classez les documents, confirmez les manquants et saisissez la prochaine demande client.",
       "search": "Chercher document, manquant, memo, email, blocage",
-      "reviewerAlias": "Alias du reviseur",
-      "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour terminer la revue; ne saisissez ni nom, ni email, ni identifiant fiscal.",
-      "reviewerAliasInvalid": "L'alias du reviseur doit commencer par une lettre et contenir de 3 a 64 lettres ASCII, chiffres, points, tirets bas, deux-points ou tirets."
+      "reviewerAlias": "R\u00e9viseur",
+      "reviewerAliasHelp": "Utilisez une r\u00e9f\u00e9rence stable du professionnel ou de son compte. Le nom r\u00e9el du professionnel est admis. Ne saisissez ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts.",
+      "reviewerAliasInvalid": "La r\u00e9f\u00e9rence du r\u00e9viseur est limit\u00e9e \u00e0 160 caract\u00e8res et ne doit contenir ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts."
     },
     "de": {
       "title": "Neuer Mandant \u00b7 Unterlagen vorbereiten",
@@ -78,9 +78,9 @@
       "detailTitle": "Dokumententscheidung",
       "detailHelp": "Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.",
       "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen",
-      "reviewerAlias": "Prueferalias",
-      "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den Abschluss der Pruefung erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
-      "reviewerAliasInvalid": "Das Prueferalias muss mit einem Buchstaben beginnen und 3 bis 64 ASCII-Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten."
+      "reviewerAlias": "Pr\u00fcfer",
+      "reviewerAliasHelp": "Verwenden Sie eine stabile Referenz des Berufstr\u00e4gers oder seines Kontos. Der echte Name des Berufstr\u00e4gers ist zul\u00e4ssig. Keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade eingeben.",
+      "reviewerAliasInvalid": "Die Pr\u00fcferreferenz darf h\u00f6chstens 160 Zeichen lang sein und keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade enthalten."
     }
   },
   "saveTool": "save_client_file_preparation_decisions",

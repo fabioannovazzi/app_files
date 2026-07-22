@@ -335,18 +335,6 @@
     .country-pack-note strong { color: var(--navy); }
     .country-pack-note p { max-width: 720px; color: var(--blue); }
 
-    .privacy-boundary-note {
-      margin-bottom: clamp(40px, 6vw, 64px);
-      padding-block: 20px;
-      display: grid;
-      grid-template-columns: minmax(180px, 0.34fr) minmax(0, 1fr);
-      gap: 24px;
-      border-block: 1px solid var(--cyan);
-    }
-
-    .privacy-boundary-note strong { color: var(--navy); }
-    .privacy-boundary-note p { max-width: 780px; color: var(--blue); }
-
     #data-boundary .section-head {
       grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
     }
@@ -355,128 +343,61 @@
       font-size: clamp(2.25rem, 4.4vw, 4.25rem);
     }
 
-    .privacy-table-wrap { overflow: visible; }
-
-    .privacy-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      border-top: 2px solid var(--navy);
-    }
-
-    .privacy-table col:nth-child(1) { width: 18%; }
-    .privacy-table col:nth-child(2) { width: 27%; }
-    .privacy-table col:nth-child(3) { width: 27%; }
-    .privacy-table col:nth-child(4) { width: 28%; }
-
-    .privacy-table th,
-    .privacy-table td {
-      padding: 22px 18px 24px 0;
-      border-bottom: 1px solid var(--cyan);
-      vertical-align: top;
-    }
-
-    .privacy-table thead th {
-      color: var(--blue);
-      font-size: 0.72rem;
-      font-weight: 650;
-      letter-spacing: 0.08em;
-      text-align: left;
-      text-transform: uppercase;
-    }
-
-    .privacy-table tbody th {
-      color: var(--navy);
-      font-size: 1rem;
-      line-height: 1.3;
-      text-align: left;
-    }
-
-    .privacy-table tbody tr { scroll-margin-top: 96px; }
-
-    .privacy-table td {
-      color: var(--blue);
-      font-size: 0.9rem;
-      line-height: 1.48;
-    }
-
-    .privacy-cell-label { display: none; }
-
-    .privacy-qualifier {
+    .data-position__statement {
       max-width: 900px;
-      margin-top: 24px;
-      color: var(--blue);
-      font-size: 0.9rem;
+      margin-bottom: clamp(44px, 7vw, 72px);
+      color: var(--navy);
+      font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+      line-height: 1.38;
+      letter-spacing: -0.02em;
     }
 
-    .privacy-cases,
-    .privacy-operations,
-    .privacy-meaning {
-      margin-top: clamp(64px, 9vw, 104px);
-    }
-
-    .privacy-subhead {
-      margin-bottom: clamp(32px, 5vw, 52px);
-      display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(320px, 1.28fr);
-      gap: clamp(28px, 7vw, 88px);
-      align-items: end;
-    }
-
-    .privacy-subhead__title { display: grid; gap: 12px; }
-    .privacy-subhead__title h3 { font-size: clamp(1.8rem, 3.6vw, 3.2rem); }
-    .privacy-subhead > p { max-width: 640px; color: var(--blue); }
-
-    .privacy-case-list { border-top: 2px solid var(--navy); }
-
-    .privacy-case {
-      padding-block: 28px;
-      display: grid;
-      grid-template-columns: minmax(210px, 0.34fr) minmax(0, 1fr);
-      gap: 28px;
-      border-bottom: 1px solid var(--cyan);
-    }
-
-    .privacy-case h3 { font-size: 1.15rem; }
-    .privacy-case p { max-width: 760px; color: var(--blue); }
-
-    .privacy-operations {
+    .data-position__facts {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0 48px;
       border-top: 2px solid var(--navy);
     }
 
-    .privacy-operation { padding-block: 30px; border-bottom: 1px solid var(--cyan); }
-    .privacy-operation h3 { margin-bottom: 14px; font-size: 1.2rem; }
-    .privacy-operation p { color: var(--blue); }
+    .data-position__fact {
+      padding: 30px 34px 32px 0;
+      border-bottom: 1px solid var(--cyan);
+    }
 
-    .privacy-meaning {
+    .data-position__fact:nth-child(even) {
+      padding-inline: 34px 0;
+      border-left: 1px solid var(--cyan);
+    }
+
+    .data-position__fact h3 { margin-bottom: 14px; font-size: 1.2rem; }
+    .data-position__fact p { max-width: 560px; color: var(--blue); }
+
+    .data-routes { margin-top: clamp(64px, 9vw, 96px); }
+    .data-routes > h3 { margin-bottom: 24px; font-size: clamp(1.6rem, 3vw, 2.5rem); }
+    .data-routes__grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0 48px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       border-block: 2px solid var(--navy);
     }
 
-    .privacy-meaning section { padding-block: 30px; }
-    .privacy-meaning h3 { margin-bottom: 16px; font-size: 1.2rem; }
-    .privacy-meaning ul { margin: 0; padding-left: 20px; color: var(--blue); }
-    .privacy-meaning li + li { margin-top: 8px; }
+    .data-route { padding: 28px 28px 30px 0; }
+    .data-route + .data-route { padding-left: 28px; border-left: 1px solid var(--cyan); }
+    .data-route h4 { margin-bottom: 12px; font-size: 1rem; }
+    .data-route p { color: var(--blue); font-size: 0.94rem; }
 
-    .privacy-conclusion {
+    .data-position__closing {
       max-width: 900px;
       margin-top: clamp(44px, 7vw, 72px);
       padding-left: clamp(22px, 4vw, 40px);
       border-left: 2px solid var(--cyan);
     }
 
-    .privacy-conclusion p {
+    .data-position__closing p {
       font-size: clamp(1.2rem, 2.3vw, 1.65rem);
       line-height: 1.35;
       letter-spacing: -0.02em;
     }
 
-    .privacy-conclusion .text-link { margin-top: 20px; font-size: 0.94rem; }
+    .data-position__closing .text-link { margin-top: 20px; font-size: 0.94rem; }
 
     .overview-video {
       display: grid;
@@ -671,42 +592,9 @@
       .workstream-head { grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr); }
       .country-pack-head { grid-template-columns: 1fr; gap: 20px; }
       #data-boundary .section-head { grid-template-columns: 1fr; gap: 20px; }
-      .privacy-table,
-      .privacy-table tbody,
-      .privacy-table tr,
-      .privacy-table th,
-      .privacy-table td {
-        display: block;
-        width: 100%;
-      }
-      .privacy-table thead {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-      }
-      .privacy-table tbody tr {
-        padding-block: 28px;
-        border-bottom: 1px solid var(--cyan);
-      }
-      .privacy-table th, .privacy-table td { padding: 0; border: 0; }
-      .privacy-table tbody th { margin-bottom: 18px; font-size: 1.2rem; }
-      .privacy-table td {
-        display: grid;
-        grid-template-columns: minmax(150px, 0.32fr) minmax(0, 1fr);
-        gap: 18px;
-        padding-block: 9px;
-      }
-      .privacy-cell-label {
-        display: block;
-        color: var(--blue);
-        font-size: 0.68rem;
-        font-weight: 650;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
+      .data-routes__grid { grid-template-columns: 1fr; }
+      .data-route { padding: 24px 0; }
+      .data-route + .data-route { padding-left: 0; border-top: 1px solid var(--cyan); border-left: 0; }
     }
 
     @media (max-width: 720px) {
@@ -738,10 +626,8 @@
       .workstream-head { grid-template-columns: 1fr; gap: 10px; }
       .workstream-head p { grid-column: 1; }
       .country-pack-note { grid-template-columns: 1fr; gap: 8px; }
-      .privacy-boundary-note, .privacy-subhead { grid-template-columns: 1fr; gap: 12px; }
-      .privacy-case { grid-template-columns: 1fr; gap: 10px; }
-      .privacy-operations, .privacy-meaning { grid-template-columns: 1fr; }
-      .privacy-table tbody tr { scroll-margin-top: 150px; }
+      .data-position__facts { grid-template-columns: 1fr; }
+      .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
       .module-row p { grid-column: 1; }
       .module-row__arrow { grid-column: 2; grid-row: 1 / span 2; }
@@ -765,7 +651,6 @@
       h1 { font-size: 4rem; }
       .journey-step { padding-block: 24px; }
       .module-row { padding-block: 22px; }
-      .privacy-table td { grid-template-columns: 1fr; gap: 5px; }
       .footer-language-buttons { flex-wrap: wrap; }
     }
 
@@ -991,172 +876,59 @@
     <section class="section-block" id="data-boundary">
       <div class="section-head">
         <div class="section-head__title">
-          <span class="section-index" data-i18n="privacy.index">Confine dei dati · dodici processi</span>
-          <h2 id="privacy-title" data-i18n="privacy.title">Che cosa può leggere Codex, processo per processo.</h2>
+          <span class="section-index" data-i18n="privacy.index">Dati · confini reali</span>
+          <h2 data-i18n="privacy.title">Vera lavora sui dati reali del cliente.</h2>
         </div>
-        <p id="privacy-copy" data-i18n="privacy.copy">Vera separa l’elaborazione locale da ciò che serve al ragionamento di Codex. File completi e interi insiemi di dati restano normalmente nell’area di lavoro; Codex può leggere il livello utile alla revisione: riepiloghi, eccezioni, campioni, fatti strutturati o passaggi mirati.</p>
+        <p data-i18n="privacy.copy">Un file può restare sul tuo computer mentre il contenuto che Codex legge entra nel contesto del modello tramite l’account OpenAI scelto dallo studio. Vera non invia il lavoro a Mparanza.</p>
       </div>
 
-      <div class="privacy-boundary-note">
-        <strong data-i18n="privacy.boundary.title">Il confine si valuta alla fine del processo</strong>
-        <p data-i18n="privacy.boundary.copy">Per ogni workflow si osserva prima il lavoro effettivo, poi si registra ciò che resta locale e ciò che entra nel contesto dell’LLM. I dati non vengono rimossi a prescindere: viene ridotto ciò che non serve al lavoro professionale.</p>
-      </div>
+      <p class="data-position__statement" data-i18n="privacy.statement">Vera non anonimizza automaticamente. Gli strumenti locali sono utili per estrarre, calcolare e organizzare; non trasformano da soli dati personali in dati anonimi.</p>
 
-      <div class="privacy-table-wrap">
-        <table class="privacy-table" aria-labelledby="privacy-title" aria-describedby="privacy-copy privacy-qualifier">
-          <colgroup><col><col><col><col></colgroup>
-          <thead>
-            <tr>
-              <th scope="col" data-i18n="privacy.table.process">Processo Vera</th>
-              <th scope="col" data-i18n="privacy.table.local">Che cosa resta normalmente locale</th>
-              <th scope="col" data-i18n="privacy.table.codex">Che cosa può leggere Codex</th>
-              <th scope="col" data-i18n="privacy.table.example">Esempio pratico</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="privacy-workstream-client-file-preparation" data-privacy-workstream="client-file-preparation" data-privacy-fingerprint="2359c33fc53c418f0dafc9edd287bce6e1992ed289d2131472942b1508fe0f48">
-              <th scope="row"><span data-i18n="privacy.row.client-file-preparation.name">Nuovo cliente · preparazione del fascicolo</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.client-file-preparation.local">La cartella ricevuta completa, scansioni, fatture, email, OCR e controlli formali.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.client-file-preparation.codex">L’inventario prodotto, i campi strutturati, gli esiti dei controlli e solo i passaggi pertinenti.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.client-file-preparation.example">Vera legge localmente 80 documenti. Codex vede che l’incarico non è firmato e il passaggio necessario a spiegare il problema.</span></td>
-            </tr>
-            <tr id="privacy-workstream-new-client" data-privacy-workstream="new-client" data-privacy-fingerprint="80b8a5d4b2f25d902abfe1621a1abcc06861e2e350a25720cf3ec5be38f8d629">
-              <th scope="row"><span data-i18n="privacy.row.new-client.name">Nuovo cliente · impostazione professionale</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.new-client.local">Il fascicolo completo, la preparazione tecnica e i controlli di copertura e provenienza.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.new-client.codex">I fatti necessari su identità, titolarità, incarico, privacy e AML, con decisioni irrisolte ed evidenze mirate.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.new-client.example">Per verificare il titolare effettivo, Codex può dover conoscere identità e percentuale di partecipazione.</span></td>
-            </tr>
-            <tr id="privacy-workstream-journal-sampling" data-privacy-workstream="journal-sampling" data-privacy-fingerprint="15e7348954131f55ebe5afb81c6fcf13acff26b06b00b4ec8354d023426a61d8">
-              <th scope="row"><span data-i18n="privacy.row.journal-sampling.name">Campionamento del giornale</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.journal-sampling.local">Il giornale completo, la lettura strutturata, la normalizzazione, le statistiche e la selezione riproducibile.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.journal-sampling.codex">Intestazioni, mappature, riepiloghi dell’intero giornale, righe rappresentative, parametri approvati e righe campionate.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.journal-sampling.example">Su 50.000 righe, Codex vede le 40 righe campionate, non il giornale completo.</span></td>
-            </tr>
-            <tr id="privacy-workstream-check-entries" data-privacy-workstream="check-entries" data-privacy-fingerprint="bc3e9afe25fca4b80dccf9ecf1bae3b48f3751177b7fbfbbd28c6f7483471014">
-              <th scope="row"><span data-i18n="privacy.row.check-entries.name">Controllo scritture</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.check-entries.local">L’archivio FatturaPA, il giornale, i PDF di supporto e i confronti estesi.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.check-entries.codex">Le scritture selezionate, gli esiti degli abbinamenti, i campi rilevanti delle fatture e passaggi mirati.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.check-entries.example">Codex vede la scrittura di acquisto selezionata e la fattura collegata, non l’intero archivio.</span></td>
-            </tr>
-            <tr id="privacy-workstream-journal-bank-reconciliation" data-privacy-workstream="journal-bank-reconciliation" data-privacy-fingerprint="213bdf843c9b55b6849130a0233952184b4f4d6d01c8237b1683159bf4968611">
-              <th scope="row"><span data-i18n="privacy.row.journal-bank-reconciliation.name">Riconciliazione banca-contabilità</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.journal-bank-reconciliation.local">Estratti conto, giornali e mastri completi; normalizzazione, abbinamenti e controlli.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.journal-bank-reconciliation.codex">Intestazioni, controlli aggregati, sintesi degli abbinamenti, eccezioni ed evidenze mirate.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.journal-bank-reconciliation.example">Su 3.000 movimenti, 2.985 vengono abbinati localmente; Codex esamina le 15 eccezioni.</span></td>
-            </tr>
-            <tr id="privacy-workstream-audit-reconciliation" data-privacy-workstream="audit-reconciliation" data-privacy-fingerprint="398469632136ba6b07849b40630ea2b4c8df2a446665a7cbcaad9b6b41b80158">
-              <th scope="row"><span data-i18n="privacy.row.audit-reconciliation.name">Riconciliazione partite aperte</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.audit-reconciliation.local">Partite aperte, mastri, giornali, estratti conto ed evidenze complete; normalizzazione e riconciliazione.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.audit-reconciliation.codex">Inventario dei file, intestazioni, righe rappresentative, istruzioni dell’utente, mappature irrisolte, risultati, eccezioni e passaggi mirati.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.audit-reconciliation.example">Vera abbina localmente 900 crediti. Codex esamina le 12 fatture non risolte.</span></td>
-            </tr>
-            <tr id="privacy-workstream-report-builder" data-privacy-workstream="report-builder" data-privacy-fingerprint="1a4d620ee239b44248bf0bbe998402f81d6190ff09868f11c05347d737726dde">
-              <th scope="row"><span data-i18n="privacy.row.report-builder.name">Generazione di report</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.report-builder.local">Fogli finanziari e CSV; normalizzazione, calcoli, dati per i grafici e creazione del report.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.report-builder.codex">Struttura dei dati, tabelle aggregate, metriche, sintesi per i grafici e risultati dei controlli; righe di dettaglio solo per anomalie mirate.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.report-builder.example">Codex vede i ricavi mensili per business unit. Una riga individuale entra solo se serve a spiegare un’anomalia.</span></td>
-            </tr>
-            <tr id="privacy-workstream-prompt-optimizer" data-privacy-workstream="prompt-optimizer" data-privacy-fingerprint="49a1214830a6a890df162e74fd1ad92f0f295a9a0ede086be9c5bcf37e1e61a1">
-              <th scope="row"><span data-i18n="privacy.row.prompt-optimizer.name">Ottimizzazione del prompt</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.prompt-optimizer.local">I materiali non incollati nella conversazione. Il testo già inviato non può essere protetto a posteriori.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.prompt-optimizer.codex">La domanda e i fatti già digitati o allegati; nel prompt riscritto, solo i fatti che vincolano davvero la ricerca.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.prompt-optimizer.example">Se il messaggio contiene il nome di un cliente, quel nome è già nel contesto. Vera può ometterlo dal prompt migliorato, ma non cancellare il messaggio iniziale.</span></td>
-            </tr>
-            <tr id="privacy-workstream-deep-research-validator" data-privacy-workstream="deep-research-validator" data-privacy-fingerprint="4d20b19945b8ff191c07a068cc5977dab98924bee9d4e83ce4041615dbab0030">
-              <th scope="row"><span data-i18n="privacy.row.deep-research-validator.name">Validazione di Deep Research</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.deep-research-validator.local">Il report completo, le fonti citate, l’individuazione delle affermazioni e i controlli meccanici delle citazioni.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.deep-research-validator.codex">Una singola affermazione, il contesto necessario, la citazione, il passaggio della fonte e la diagnostica.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.deep-research-validator.example">Codex verifica un’affermazione alla volta contro il passaggio citato, invece di ricevere l’intero report in un solo blocco.</span></td>
-            </tr>
-            <tr id="privacy-workstream-concordato-plan-review" data-privacy-workstream="concordato-plan-review" data-privacy-fingerprint="8f7f5cbe0ce0f4efc7ba2f5a5f8093881e420d054b5f71be61840827986ea53a">
-              <th scope="row"><span data-i18n="privacy.row.concordato-plan-review.name">Revisione Piano Concordato</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.concordato-plan-review.local">Piano, prospetti finanziari ed evidenze contabili; estrazione, ricalcoli e quadrature.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.concordato-plan-review.codex">Sezioni estratte, tabelle calcolate, scostamenti e i passaggi necessari a interpretarli.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.concordato-plan-review.example">I calcoli locali trovano 1,15 milioni di euro in un prospetto e 1,20 milioni nel testo. Codex vede lo scostamento e i paragrafi pertinenti.</span></td>
-            </tr>
-            <tr id="privacy-workstream-previdenza-inps" data-privacy-workstream="previdenza-inps" data-privacy-fingerprint="13d31aea32b5036e896cc4ae90260f53d388c1cd184f1bf7c3910544d31bab35">
-              <th scope="row"><span data-i18n="privacy.row.previdenza-inps.name">Previdenza INPS</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.previdenza-inps.local">Documenti, immagini, OCR, acquisizioni autorizzate e calcoli nella cartella locale riservata.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.previdenza-inps.codex">Fatti validati, cronologie, passaggi mirati, fonti ufficiali e basi di calcolo. Se serve interpretare un elemento visivo, può entrare il documento o l’immagine pertinente. Credenziali e dati di sessione restano esclusi.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.previdenza-inps.example">Vera legge localmente un estratto contributivo di 30 pagine. Codex vede il periodo mancante e le righe che lo documentano.</span></td>
-            </tr>
-            <tr id="privacy-workstream-registro-imprese-sari" data-privacy-workstream="registro-imprese-sari" data-privacy-fingerprint="27f5f19cd378e9575b0e6db3d7c7434a0c22160bfdc87b0a4bf1ac3fd943d2f0">
-              <th scope="row"><span data-i18n="privacy.row.registro-imprese-sari.name">Registro Imprese e SARI</span></th>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.local">Che cosa resta normalmente locale</span><span data-i18n="privacy.row.registro-imprese-sari.local">Gli identificativi del cliente, le evidenze originali, le immagini e la preparazione locale del fascicolo.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.codex">Che cosa può leggere Codex</span><span data-i18n="privacy.row.registro-imprese-sari.codex">Un riferimento pseudonimo, i fatti necessari, le decisioni irrisolte e le fonti ufficiali pertinenti.</span></td>
-              <td><span class="privacy-cell-label" aria-hidden="true" data-i18n="privacy.table.example">Esempio pratico</span><span data-i18n="privacy.row.registro-imprese-sari.example">Codex vede «Caso RI-024, attività X, Camera di Milano, data Y», non il nome o il codice fiscale del cliente.</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p class="privacy-qualifier" id="privacy-qualifier" data-i18n="privacy.qualifier">Il perimetro reale dipende dalla richiesta e dal contesto necessario a un’analisi fedele. «Locale» descrive il funzionamento abituale del workflow, non un’impossibilità tecnica di consultare in modo mirato un documento sorgente.</p>
-
-      <div class="privacy-cases">
-        <div class="privacy-subhead">
-          <div class="privacy-subhead__title">
-            <span class="section-index" data-i18n="privacy.cases.index">Tre confini da capire bene</span>
-            <h3 data-i18n="privacy.cases.title">Dove serve una spiegazione in più.</h3>
-          </div>
-          <p data-i18n="privacy.cases.copy">Ridurre il contesto non significa sempre anonimizzare. Questi tre casi mostrano perché il confine dipende dal momento e dallo scopo del lavoro.</p>
-        </div>
-        <div class="privacy-case-list">
-          <article class="privacy-case">
-            <h3 data-i18n="privacy.case.prompt.title">Prompt Optimizer</h3>
-            <p data-i18n="privacy.case.prompt.copy">Il testo digitato è già nel contesto di Codex prima che Vera possa ottimizzarlo. Se la richiesta contiene il nome di un cliente, Vera può evitare di ripeterlo nel prompt migliorato quando non serve, ma non può eliminare il messaggio originale.</p>
-          </article>
-          <article class="privacy-case">
-            <h3 data-i18n="privacy.case.newClient.title">Nuovo cliente</h3>
-            <p data-i18n="privacy.case.newClient.copy">Alcuni dati personali servono davvero alla revisione professionale: per esempio identità, titolarità e poteri di firma nella verifica AML. La riduzione avviene a livello documentale: il fascicolo completo resta locale e Codex riceve i fatti e i passaggi necessari.</p>
-          </article>
-          <article class="privacy-case">
-            <h3 data-i18n="privacy.case.registro.title">Registro Imprese e SARI</h3>
-            <p data-i18n="privacy.case.registro.copy">La ricerca pubblica usa un riferimento opaco e fatti neutrali senza gli identificativi del cliente. Una combinazione insolita di attività, luogo e data può comunque rendere il caso riconoscibile: si tratta di pseudonimizzazione, non di anonimato garantito.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="privacy-operations">
-        <article class="privacy-operation">
-          <h3 data-i18n="privacy.notice.title">L’avviso al commercialista</h3>
-          <p data-i18n="privacy.notice.copy">All’avvio del processo, prima che il workflow esponga a Codex la prima evidenza controllata, Vera mostra un breve avviso nella lingua della conversazione: che cosa resta locale e che cosa può leggere Codex. Gli avvisi attuali informano; una conferma è riservata a un’eventuale divulgazione davvero facoltativa.</p>
+      <div class="data-position__facts">
+        <article class="data-position__fact">
+          <h3 data-i18n="privacy.clientData.title">Dati del cliente</h3>
+          <p data-i18n="privacy.clientData.copy">Se identità, titolarità, fatti fiscali, contabili o previdenziali servono alla revisione, possono entrare nel contesto di Codex.</p>
         </article>
-        <article class="privacy-operation">
-          <h3 data-i18n="privacy.governance.title">Una revisione che si ripete</h3>
-          <p data-i18n="privacy.governance.copy">Ogni processo ha una scheda registrata. Se cambiano le istruzioni del workflow, gli script, gli schemi o gli strumenti coperti, cambia la sua impronta tecnica e la revisione risulta obsoleta finché il flusso dei dati non viene riesaminato. I controlli automatici verificano copertura e aggiornamento; non decidono necessità, anonimato o conformità al GDPR.</p>
+        <article class="data-position__fact">
+          <h3 data-i18n="privacy.local.title">Elaborazione locale</h3>
+          <p data-i18n="privacy.local.copy">Può ridurre copie e trasferimenti inutili. Non è anonimizzazione. La minimizzazione dipende dallo scopo del lavoro; non significa eliminare ogni identificativo.</p>
+        </article>
+        <article class="data-position__fact">
+          <h3 data-i18n="privacy.account.title">Scelta dell’account</h3>
+          <p data-i18n="privacy.account.copy">Lo studio sceglie l’account Codex/OpenAI usato per il lavoro professionale e configura i controlli disponibili per quel piano. Il trattamento da parte di OpenAI dipende dal piano, dalle impostazioni dell’ambiente di lavoro e dai termini applicabili.</p>
+        </article>
+        <article class="data-position__fact">
+          <h3 data-i18n="privacy.secrets.title">Credenziali e sessioni</h3>
+          <p data-i18n="privacy.secrets.copy">Password, chiavi API, cookie, token e dati di sessione non devono entrare nei prompt o nei file leggibili da Codex.</p>
         </article>
       </div>
 
-      <div class="privacy-meaning">
-        <section>
-          <h3 data-i18n="privacy.means.title">Questo significa</h3>
-          <ul>
-            <li data-i18n="privacy.means.1">I dati massivi possono spesso restare locali.</li>
-            <li data-i18n="privacy.means.2">Codex lavora normalmente su riepiloghi, eccezioni, campioni, fatti strutturati o passaggi pertinenti.</li>
-            <li data-i18n="privacy.means.3">Il contesto residuo viene documentato processo per processo.</li>
-            <li data-i18n="privacy.means.4">Processi nuovi o modificati devono ripetere la revisione.</li>
-          </ul>
-        </section>
-        <section>
-          <h3 data-i18n="privacy.doesNotMean.title">Questo non significa</h3>
-          <ul>
-            <li data-i18n="privacy.doesNotMean.1">Che tutto ciò che Codex legge sia anonimo.</li>
-            <li data-i18n="privacy.doesNotMean.2">Che aggregazione o pseudonimizzazione producano automaticamente dati anonimi.</li>
-            <li data-i18n="privacy.doesNotMean.3">Che nomi e identificativi vengano rilevati o rimossi automaticamente.</li>
-            <li data-i18n="privacy.doesNotMean.4">Che la scheda costituisca una DPIA o una prova di conformità al GDPR.</li>
-          </ul>
-        </section>
+      <div class="data-routes">
+        <h3 data-i18n="privacy.routes.title">I tre confini effettivi.</h3>
+        <div class="data-routes__grid">
+          <article class="data-route">
+            <h4 data-i18n="privacy.routes.local.title">File e script locali</h4>
+            <p data-i18n="privacy.routes.local.copy">I file restano sul computer. Il loro contenuto supera il confine locale solo quando Codex lo porta nel contesto del modello o un’azione esplicita lo invia a un altro servizio.</p>
+          </article>
+          <article class="data-route">
+            <h4 data-i18n="privacy.routes.codex.title">Contesto del modello Codex</h4>
+            <p data-i18n="privacy.routes.codex.copy">Quando Vera chiede a Codex di interpretare il lavoro, i contenuti letti entrano nel contesto tramite l’account OpenAI scelto dallo studio.</p>
+          </article>
+          <article class="data-route">
+            <h4 data-i18n="privacy.routes.external.title">Ricerca, connector o invio</h4>
+            <p data-i18n="privacy.routes.external.copy">Una ricerca pubblica, un connector o un invio esplicito trasmette query o contenuti al servizio scelto, che applica controlli e termini propri.</p>
+          </article>
+        </div>
       </div>
 
-      <div class="privacy-conclusion">
-        <p data-i18n="privacy.claim">Vera riduce e documenta ciò che raggiunge il modello secondo le esigenze di ogni processo professionale. Quando servono informazioni specifiche del caso, lo dichiara senza presentarle come anonime.</p>
+      <div class="data-position__closing">
+        <p data-i18n="privacy.closing">Vera rende il lavoro più strutturato. Anonimato e conformità non sono certificati; le scelte su account, dati e servizi restano allo studio.</p>
         <a class="text-link" href="/data-handling?lang=it" data-data-handling-link>
-          <span data-i18n="privacy.dataLink">Leggi le regole generali sulla gestione dei dati</span>
+          <span data-i18n="privacy.dataLink">Leggi come vengono gestiti i dati</span>
           <span aria-hidden="true">→</span>
         </a>
       </div>
     </section>
-
     <section class="section-block" id="video">
       <div class="section-head">
         <div class="section-head__title">
@@ -1323,89 +1095,27 @@
         "module.prompt": "Trasforma un quesito legale, fiscale o di conformità in una ricerca con perimetro, fonti e verifiche definite.",
         "module.research.title": "Valida Deep Research",
         "module.research": "Controlla le affermazioni rispetto alle fonti citate e prepara il materiale consolidato.",
-        "privacy.index": "Confine dei dati · dodici processi",
-        "privacy.title": "Che cosa può leggere Codex, processo per processo.",
-        "privacy.copy": "Vera separa l’elaborazione locale da ciò che serve al ragionamento di Codex. File completi e interi insiemi di dati restano normalmente nell’area di lavoro; Codex può leggere il livello utile alla revisione: riepiloghi, eccezioni, campioni, fatti strutturati o passaggi mirati.",
-        "privacy.boundary.title": "Il confine si valuta alla fine del processo",
-        "privacy.boundary.copy": "Per ogni workflow si osserva prima il lavoro effettivo, poi si registra ciò che resta locale e ciò che entra nel contesto dell’LLM. I dati non vengono rimossi a prescindere: viene ridotto ciò che non serve al lavoro professionale.",
-        "privacy.table.process": "Processo Vera",
-        "privacy.table.local": "Che cosa resta normalmente locale",
-        "privacy.table.codex": "Che cosa può leggere Codex",
-        "privacy.table.example": "Esempio pratico",
-        "privacy.row.client-file-preparation.name": "Nuovo cliente · preparazione del fascicolo",
-        "privacy.row.client-file-preparation.local": "La cartella ricevuta completa, scansioni, fatture, email, OCR e controlli formali.",
-        "privacy.row.client-file-preparation.codex": "L’inventario prodotto, i campi strutturati, gli esiti dei controlli e solo i passaggi pertinenti.",
-        "privacy.row.client-file-preparation.example": "Vera legge localmente 80 documenti. Codex vede che l’incarico non è firmato e il passaggio necessario a spiegare il problema.",
-        "privacy.row.new-client.name": "Nuovo cliente · impostazione professionale",
-        "privacy.row.new-client.local": "Il fascicolo completo, la preparazione tecnica e i controlli di copertura e provenienza.",
-        "privacy.row.new-client.codex": "I fatti necessari su identità, titolarità, incarico, privacy e AML, con decisioni irrisolte ed evidenze mirate.",
-        "privacy.row.new-client.example": "Per verificare il titolare effettivo, Codex può dover conoscere identità e percentuale di partecipazione.",
-        "privacy.row.journal-sampling.name": "Campionamento del giornale",
-        "privacy.row.journal-sampling.local": "Il giornale completo, la lettura strutturata, la normalizzazione, le statistiche e la selezione riproducibile.",
-        "privacy.row.journal-sampling.codex": "Intestazioni, mappature, riepiloghi dell’intero giornale, righe rappresentative, parametri approvati e righe campionate.",
-        "privacy.row.journal-sampling.example": "Su 50.000 righe, Codex vede le 40 righe campionate, non il giornale completo.",
-        "privacy.row.check-entries.name": "Controllo scritture",
-        "privacy.row.check-entries.local": "L’archivio FatturaPA, il giornale, i PDF di supporto e i confronti estesi.",
-        "privacy.row.check-entries.codex": "Le scritture selezionate, gli esiti degli abbinamenti, i campi rilevanti delle fatture e passaggi mirati.",
-        "privacy.row.check-entries.example": "Codex vede la scrittura di acquisto selezionata e la fattura collegata, non l’intero archivio.",
-        "privacy.row.journal-bank-reconciliation.name": "Riconciliazione banca-contabilità",
-        "privacy.row.journal-bank-reconciliation.local": "Estratti conto, giornali e mastri completi; normalizzazione, abbinamenti e controlli.",
-        "privacy.row.journal-bank-reconciliation.codex": "Intestazioni, controlli aggregati, sintesi degli abbinamenti, eccezioni ed evidenze mirate.",
-        "privacy.row.journal-bank-reconciliation.example": "Su 3.000 movimenti, 2.985 vengono abbinati localmente; Codex esamina le 15 eccezioni.",
-        "privacy.row.audit-reconciliation.name": "Riconciliazione partite aperte",
-        "privacy.row.audit-reconciliation.local": "Partite aperte, mastri, giornali, estratti conto ed evidenze complete; normalizzazione e riconciliazione.",
-        "privacy.row.audit-reconciliation.codex": "Inventario dei file, intestazioni, righe rappresentative, istruzioni dell’utente, mappature irrisolte, risultati, eccezioni e passaggi mirati.",
-        "privacy.row.audit-reconciliation.example": "Vera abbina localmente 900 crediti. Codex esamina le 12 fatture non risolte.",
-        "privacy.row.report-builder.name": "Generazione di report",
-        "privacy.row.report-builder.local": "Fogli finanziari e CSV; normalizzazione, calcoli, dati per i grafici e creazione del report.",
-        "privacy.row.report-builder.codex": "Struttura dei dati, tabelle aggregate, metriche, sintesi per i grafici e risultati dei controlli; righe di dettaglio solo per anomalie mirate.",
-        "privacy.row.report-builder.example": "Codex vede i ricavi mensili per business unit. Una riga individuale entra solo se serve a spiegare un’anomalia.",
-        "privacy.row.prompt-optimizer.name": "Ottimizzazione del prompt",
-        "privacy.row.prompt-optimizer.local": "I materiali non incollati nella conversazione. Il testo già inviato non può essere protetto a posteriori.",
-        "privacy.row.prompt-optimizer.codex": "La domanda e i fatti già digitati o allegati; nel prompt riscritto, solo i fatti che vincolano davvero la ricerca.",
-        "privacy.row.prompt-optimizer.example": "Se il messaggio contiene il nome di un cliente, quel nome è già nel contesto. Vera può ometterlo dal prompt migliorato, ma non cancellare il messaggio iniziale.",
-        "privacy.row.deep-research-validator.name": "Validazione di Deep Research",
-        "privacy.row.deep-research-validator.local": "Il report completo, le fonti citate, l’individuazione delle affermazioni e i controlli meccanici delle citazioni.",
-        "privacy.row.deep-research-validator.codex": "Una singola affermazione, il contesto necessario, la citazione, il passaggio della fonte e la diagnostica.",
-        "privacy.row.deep-research-validator.example": "Codex verifica un’affermazione alla volta contro il passaggio citato, invece di ricevere l’intero report in un solo blocco.",
-        "privacy.row.concordato-plan-review.name": "Revisione Piano Concordato",
-        "privacy.row.concordato-plan-review.local": "Piano, prospetti finanziari ed evidenze contabili; estrazione, ricalcoli e quadrature.",
-        "privacy.row.concordato-plan-review.codex": "Sezioni estratte, tabelle calcolate, scostamenti e i passaggi necessari a interpretarli.",
-        "privacy.row.concordato-plan-review.example": "I calcoli locali trovano 1,15 milioni di euro in un prospetto e 1,20 milioni nel testo. Codex vede lo scostamento e i paragrafi pertinenti.",
-        "privacy.row.previdenza-inps.name": "Previdenza INPS",
-        "privacy.row.previdenza-inps.local": "Documenti, immagini, OCR, acquisizioni autorizzate e calcoli nella cartella locale riservata.",
-        "privacy.row.previdenza-inps.codex": "Fatti validati, cronologie, passaggi mirati, fonti ufficiali e basi di calcolo. Se serve interpretare un elemento visivo, può entrare il documento o l’immagine pertinente. Credenziali e dati di sessione restano esclusi.",
-        "privacy.row.previdenza-inps.example": "Vera legge localmente un estratto contributivo di 30 pagine. Codex vede il periodo mancante e le righe che lo documentano.",
-        "privacy.row.registro-imprese-sari.name": "Registro Imprese e SARI",
-        "privacy.row.registro-imprese-sari.local": "Gli identificativi del cliente, le evidenze originali, le immagini e la preparazione locale del fascicolo.",
-        "privacy.row.registro-imprese-sari.codex": "Un riferimento pseudonimo, i fatti necessari, le decisioni irrisolte e le fonti ufficiali pertinenti.",
-        "privacy.row.registro-imprese-sari.example": "Codex vede «Caso RI-024, attività X, Camera di Milano, data Y», non il nome o il codice fiscale del cliente.",
-        "privacy.qualifier": "Il perimetro reale dipende dalla richiesta e dal contesto necessario a un’analisi fedele. «Locale» descrive il funzionamento abituale del workflow, non un’impossibilità tecnica di consultare in modo mirato un documento sorgente.",
-        "privacy.cases.index": "Tre confini da capire bene",
-        "privacy.cases.title": "Dove serve una spiegazione in più.",
-        "privacy.cases.copy": "Ridurre il contesto non significa sempre anonimizzare. Questi tre casi mostrano perché il confine dipende dal momento e dallo scopo del lavoro.",
-        "privacy.case.prompt.title": "Prompt Optimizer",
-        "privacy.case.prompt.copy": "Il testo digitato è già nel contesto di Codex prima che Vera possa ottimizzarlo. Se la richiesta contiene il nome di un cliente, Vera può evitare di ripeterlo nel prompt migliorato quando non serve, ma non può eliminare il messaggio originale.",
-        "privacy.case.newClient.title": "Nuovo cliente",
-        "privacy.case.newClient.copy": "Alcuni dati personali servono davvero alla revisione professionale: per esempio identità, titolarità e poteri di firma nella verifica AML. La riduzione avviene a livello documentale: il fascicolo completo resta locale e Codex riceve i fatti e i passaggi necessari.",
-        "privacy.case.registro.title": "Registro Imprese e SARI",
-        "privacy.case.registro.copy": "La ricerca pubblica usa un riferimento opaco e fatti neutrali senza gli identificativi del cliente. Una combinazione insolita di attività, luogo e data può comunque rendere il caso riconoscibile: si tratta di pseudonimizzazione, non di anonimato garantito.",
-        "privacy.notice.title": "L’avviso al commercialista",
-        "privacy.notice.copy": "All’avvio del processo, prima che il workflow esponga a Codex la prima evidenza controllata, Vera mostra un breve avviso nella lingua della conversazione: che cosa resta locale e che cosa può leggere Codex. Gli avvisi attuali informano; una conferma è riservata a un’eventuale divulgazione davvero facoltativa.",
-        "privacy.governance.title": "Una revisione che si ripete",
-        "privacy.governance.copy": "Ogni processo ha una scheda registrata. Se cambiano le istruzioni del workflow, gli script, gli schemi o gli strumenti coperti, cambia la sua impronta tecnica e la revisione risulta obsoleta finché il flusso dei dati non viene riesaminato. I controlli automatici verificano copertura e aggiornamento; non decidono necessità, anonimato o conformità al GDPR.",
-        "privacy.means.title": "Questo significa",
-        "privacy.means.1": "I dati massivi possono spesso restare locali.",
-        "privacy.means.2": "Codex lavora normalmente su riepiloghi, eccezioni, campioni, fatti strutturati o passaggi pertinenti.",
-        "privacy.means.3": "Il contesto residuo viene documentato processo per processo.",
-        "privacy.means.4": "Processi nuovi o modificati devono ripetere la revisione.",
-        "privacy.doesNotMean.title": "Questo non significa",
-        "privacy.doesNotMean.1": "Che tutto ciò che Codex legge sia anonimo.",
-        "privacy.doesNotMean.2": "Che aggregazione o pseudonimizzazione producano automaticamente dati anonimi.",
-        "privacy.doesNotMean.3": "Che nomi e identificativi vengano rilevati o rimossi automaticamente.",
-        "privacy.doesNotMean.4": "Che la scheda costituisca una DPIA o una prova di conformità al GDPR.",
-        "privacy.claim": "Vera riduce e documenta ciò che raggiunge il modello secondo le esigenze di ogni processo professionale. Quando servono informazioni specifiche del caso, lo dichiara senza presentarle come anonime.",
-        "privacy.dataLink": "Leggi le regole generali sulla gestione dei dati",
+        "privacy.index": "Dati · confini reali",
+        "privacy.title": "Vera lavora sui dati reali del cliente.",
+        "privacy.copy": "Un file può restare sul tuo computer mentre il contenuto che Codex legge entra nel contesto del modello tramite l’account OpenAI scelto dallo studio. Vera non invia il lavoro a Mparanza.",
+        "privacy.statement": "Vera non anonimizza automaticamente. Gli strumenti locali sono utili per estrarre, calcolare e organizzare; non trasformano da soli dati personali in dati anonimi.",
+        "privacy.clientData.title": "Dati del cliente",
+        "privacy.clientData.copy": "Se identità, titolarità, fatti fiscali, contabili o previdenziali servono alla revisione, possono entrare nel contesto di Codex.",
+        "privacy.local.title": "Elaborazione locale",
+        "privacy.local.copy": "Può ridurre copie e trasferimenti inutili. Non è anonimizzazione. La minimizzazione prevista dal GDPR dipende dallo scopo; non significa eliminare ogni identificativo.",
+        "privacy.account.title": "Scelta dell’account",
+        "privacy.account.copy": "Lo studio sceglie l’account Codex/OpenAI usato per il lavoro professionale e configura i controlli disponibili per quel piano. Il trattamento da parte di OpenAI dipende dal piano, dalle impostazioni dell’ambiente di lavoro e dai termini applicabili.",
+        "privacy.secrets.title": "Credenziali e sessioni",
+        "privacy.secrets.copy": "Password, chiavi API, cookie, token e dati di sessione non devono entrare nei prompt o nei file leggibili da Codex.",
+        "privacy.routes.title": "I tre confini effettivi.",
+        "privacy.routes.local.title": "File e script locali",
+        "privacy.routes.local.copy": "I file restano sul computer. Il loro contenuto supera il confine locale solo quando Codex lo porta nel contesto del modello o un’azione esplicita lo invia a un altro servizio.",
+        "privacy.routes.codex.title": "Contesto del modello Codex",
+        "privacy.routes.codex.copy": "Quando Vera chiede a Codex di interpretare il lavoro, i contenuti letti entrano nel contesto tramite l’account OpenAI scelto dallo studio.",
+        "privacy.routes.external.title": "Ricerca, connector o invio",
+        "privacy.routes.external.copy": "Una ricerca pubblica, un connector o un invio esplicito trasmette query o contenuti al servizio scelto, che applica controlli e termini propri.",
+        "privacy.closing": "Vera rende il lavoro più strutturato. Anonimato e conformità non sono certificati; le scelte su account, dati e servizi restano allo studio.",
+        "privacy.dataLink": "Leggi come vengono gestiti i dati",
         "videos.index": "Cinque storie dal Core",
         "videos.title": "Vera al lavoro.",
         "videos.copy": "Una panoramica e quattro esempi del metodo comune. Le edizioni Italia restano accanto ai workflow che estendono.",
@@ -1505,89 +1215,27 @@
         "module.prompt": "Turns a legal, tax or compliance question into research with a defined scope, sources and checks.",
         "module.research.title": "Validate Deep Research",
         "module.research": "Checks claims against cited sources and prepares the consolidated material.",
-        "privacy.index": "Data boundary · twelve processes",
-        "privacy.title": "What Codex may read, process by process.",
-        "privacy.copy": "Vera separates local processing from what Codex needs for reasoning. Complete files and full datasets normally remain in the workspace; Codex may read the layer useful for review: summaries, exceptions, samples, structured facts or targeted passages.",
-        "privacy.boundary.title": "The boundary is assessed at the end of the process",
-        "privacy.boundary.copy": "For each workflow, the real work is examined first; then what stays local and what enters the LLM context is recorded. Data is not removed as an end in itself: only what the professional task does not need is reduced.",
-        "privacy.table.process": "Vera process",
-        "privacy.table.local": "What normally remains local",
-        "privacy.table.codex": "What Codex may read",
-        "privacy.table.example": "Practical example",
-        "privacy.row.client-file-preparation.name": "New Client · file preparation",
-        "privacy.row.client-file-preparation.local": "The complete incoming folder, scans, invoices, emails, OCR and formal checks.",
-        "privacy.row.client-file-preparation.codex": "The generated inventory, structured fields, check results and only the relevant passages.",
-        "privacy.row.client-file-preparation.example": "Vera reads 80 documents locally. Codex sees that the engagement is unsigned and the passage needed to explain the issue.",
-        "privacy.row.new-client.name": "New Client · professional setup",
-        "privacy.row.new-client.local": "The complete file, technical preparation, and coverage and provenance checks.",
-        "privacy.row.new-client.codex": "Necessary identity, ownership, engagement, privacy and AML facts, with unresolved decisions and targeted evidence.",
-        "privacy.row.new-client.example": "For beneficial-owner review, Codex may need the owner’s identity and ownership percentage.",
-        "privacy.row.journal-sampling.name": "Journal Sampling",
-        "privacy.row.journal-sampling.local": "The complete journal, structured extraction, normalization, journal-wide statistics and reproducible sample selection.",
-        "privacy.row.journal-sampling.codex": "Headers, mappings, whole-journal summaries, representative rows, approved parameters and sampled rows.",
-        "privacy.row.journal-sampling.example": "From 50,000 rows, Codex sees the 40 sampled rows, not the complete journal.",
-        "privacy.row.check-entries.name": "Check Entries",
-        "privacy.row.check-entries.local": "The FatturaPA archive, journal, supporting PDFs and bulk comparisons.",
-        "privacy.row.check-entries.codex": "Selected entries, match results, relevant invoice fields and targeted passages.",
-        "privacy.row.check-entries.example": "Codex sees the selected purchase entry and its related invoice, not the complete archive.",
-        "privacy.row.journal-bank-reconciliation.name": "Journal-Bank Reconciliation",
-        "privacy.row.journal-bank-reconciliation.local": "Complete bank statements, journals and ledgers; normalization, matching and controls.",
-        "privacy.row.journal-bank-reconciliation.codex": "Headers, aggregate controls, match summaries, exceptions and targeted evidence.",
-        "privacy.row.journal-bank-reconciliation.example": "Of 3,000 transactions, 2,985 are matched locally; Codex examines the 15 exceptions.",
-        "privacy.row.audit-reconciliation.name": "Open-item Reconciliation",
-        "privacy.row.audit-reconciliation.local": "Open items, ledgers, journals, statements and complete evidence populations; normalization and reconciliation.",
-        "privacy.row.audit-reconciliation.codex": "File inventory, headers, representative rows, user instructions, unresolved mappings, results, exceptions and targeted passages.",
-        "privacy.row.audit-reconciliation.example": "Vera matches 900 receivables locally. Codex examines the 12 unresolved invoices.",
-        "privacy.row.report-builder.name": "Report Builder",
-        "privacy.row.report-builder.local": "Financial spreadsheets and CSV files; normalization, calculations, chart data and report production.",
-        "privacy.row.report-builder.codex": "Data structure, aggregate tables, metrics, chart-ready summaries and check results; detailed rows only for targeted anomalies.",
-        "privacy.row.report-builder.example": "Codex sees monthly revenue by business unit. An individual row enters context only when needed to explain an anomaly.",
-        "privacy.row.prompt-optimizer.name": "Prompt Optimizer",
-        "privacy.row.prompt-optimizer.local": "Material not pasted into the conversation. Text already sent cannot be protected retroactively.",
-        "privacy.row.prompt-optimizer.codex": "The question and facts already typed or attached; in the rewritten prompt, only facts that materially constrain the research.",
-        "privacy.row.prompt-optimizer.example": "If the message contains a client’s name, that name is already in context. Vera can omit it from the improved prompt but cannot erase the initial message.",
-        "privacy.row.deep-research-validator.name": "Deep Research Validator",
-        "privacy.row.deep-research-validator.local": "The complete report, cited sources, claim identification and mechanical citation checks.",
-        "privacy.row.deep-research-validator.codex": "One claim, its necessary context, the citation, the relevant source passage and validation diagnostics.",
-        "privacy.row.deep-research-validator.example": "Codex checks one claim at a time against the cited passage instead of receiving the whole report in one block.",
-        "privacy.row.concordato-plan-review.name": "Concordato Plan Review",
-        "privacy.row.concordato-plan-review.local": "The plan, financial schedules and accounting evidence; extraction, recalculation and tie-outs.",
-        "privacy.row.concordato-plan-review.codex": "Extracted sections, calculated tables, discrepancies and the passages needed to interpret them.",
-        "privacy.row.concordato-plan-review.example": "Local calculations find €1.15 million in a schedule and €1.20 million in the narrative. Codex sees the discrepancy and the relevant paragraphs.",
-        "privacy.row.previdenza-inps.name": "INPS Social Security",
-        "privacy.row.previdenza-inps.local": "Documents, images, OCR, approved captures and calculations in the restricted local case folder.",
-        "privacy.row.previdenza-inps.codex": "Validated facts, timelines, targeted passages, official sources and calculation bases. When visual interpretation is necessary, the relevant document or image may enter context. Credentials and session data remain excluded.",
-        "privacy.row.previdenza-inps.example": "Vera reads a 30-page contribution statement locally. Codex sees the missing period and the lines that support it.",
-        "privacy.row.registro-imprese-sari.name": "Business Register and SARI",
-        "privacy.row.registro-imprese-sari.local": "Client identifiers, original evidence, images and local case preparation.",
-        "privacy.row.registro-imprese-sari.codex": "A pseudonymous reference, necessary facts, unresolved decisions and relevant official sources.",
-        "privacy.row.registro-imprese-sari.example": "Codex sees “Case RI-024, activity X, Milan Chamber, date Y,” not the client’s name or tax code.",
-        "privacy.qualifier": "The actual boundary depends on the request and the context needed for a faithful analysis. “Local” describes the workflow’s normal operation, not a technical impossibility of consulting a source document in a targeted way.",
-        "privacy.cases.index": "Three boundaries worth understanding",
-        "privacy.cases.title": "Where a little more explanation matters.",
-        "privacy.cases.copy": "Reducing context does not always mean anonymising it. These three cases show why the boundary depends on the timing and purpose of the work.",
-        "privacy.case.prompt.title": "Prompt Optimizer",
-        "privacy.case.prompt.copy": "Text already typed is in Codex context before Vera can optimize it. If the request contains a client’s name, Vera can avoid repeating it in the improved prompt when unnecessary, but cannot remove the original message.",
-        "privacy.case.newClient.title": "New Client",
-        "privacy.case.newClient.copy": "Some personal information is genuinely needed for professional review—for example identity, ownership and signing authority in an AML review. Reduction happens at document level: the complete file stays local and Codex receives the necessary facts and passages.",
-        "privacy.case.registro.title": "Business Register and SARI",
-        "privacy.case.registro.copy": "Public research uses an opaque reference and neutral facts without client identifiers. An unusual combination of activity, location and date may still make the case recognisable: this is pseudonymisation, not guaranteed anonymity.",
-        "privacy.notice.title": "The notice shown to the accountant",
-        "privacy.notice.copy": "At the start of the process, before the workflow exposes the first controlled item of evidence to Codex, Vera shows a short notice in the conversation language: what stays local and what Codex may read. Current notices inform; confirmation is reserved for a genuinely optional future disclosure.",
-        "privacy.governance.title": "A review that repeats",
-        "privacy.governance.copy": "Every process has a registered card. If covered workflow instructions, scripts, schemas or tools change, its technical fingerprint changes and the review becomes stale until the data flow is reviewed again. Automated checks verify coverage and freshness; they do not decide necessity, anonymity or GDPR compliance.",
-        "privacy.means.title": "This means",
-        "privacy.means.1": "Bulk data can often remain local.",
-        "privacy.means.2": "Codex normally works from summaries, exceptions, samples, structured facts or relevant passages.",
-        "privacy.means.3": "The remaining context surface is documented process by process.",
-        "privacy.means.4": "New and modified processes must repeat the review.",
-        "privacy.doesNotMean.title": "This does not mean",
-        "privacy.doesNotMean.1": "That everything Codex reads is anonymous.",
-        "privacy.doesNotMean.2": "That aggregation or pseudonymisation automatically creates anonymous data.",
-        "privacy.doesNotMean.3": "That names and identifiers are automatically detected or removed.",
-        "privacy.doesNotMean.4": "That the registered card constitutes a DPIA or proof of GDPR compliance.",
-        "privacy.claim": "Vera reduces and documents what reaches the model according to the needs of each professional process. When case-specific information is required, Vera says so instead of presenting it as anonymous.",
-        "privacy.dataLink": "Read the general data-handling rules",
+        "privacy.index": "Data · real boundaries",
+        "privacy.title": "Vera works on real client data.",
+        "privacy.copy": "A file can stay on your computer while the content Codex reads enters the model context through the OpenAI account chosen by the firm. Vera does not send the work to Mparanza.",
+        "privacy.statement": "Vera does not anonymize automatically. Local tools are useful for extracting, calculating, and organizing; they do not turn personal data into anonymous data by themselves.",
+        "privacy.clientData.title": "Client data",
+        "privacy.clientData.copy": "If identity, ownership, tax, accounting, or social-security facts are needed for review, they may enter the Codex context.",
+        "privacy.local.title": "Local processing",
+        "privacy.local.copy": "It can reduce unnecessary copies and transfers. It is not anonymization. GDPR data minimisation is purpose-based; it does not mean deleting every identifier.",
+        "privacy.account.title": "Account choice",
+        "privacy.account.copy": "The firm chooses the Codex/OpenAI account used for professional work and configures the data controls available for that plan. How OpenAI handles the data depends on the plan, workspace settings, and applicable terms.",
+        "privacy.secrets.title": "Credentials and sessions",
+        "privacy.secrets.copy": "Passwords, API keys, cookies, tokens, and session data must not enter prompts or files Codex can read.",
+        "privacy.routes.title": "The three actual boundaries.",
+        "privacy.routes.local.title": "Local files and scripts",
+        "privacy.routes.local.copy": "Files stay on the computer. Their contents leave the local boundary only when Codex reads them into the model context or an explicit action sends them to another service.",
+        "privacy.routes.codex.title": "Codex model context",
+        "privacy.routes.codex.copy": "When Vera asks Codex to interpret the work, the content it reads enters the model context through the OpenAI account chosen by the firm.",
+        "privacy.routes.external.title": "Search, connector, or send",
+        "privacy.routes.external.copy": "A public search, connector, or explicit send transmits queries or content to the selected service, which applies its own controls and terms.",
+        "privacy.closing": "Vera makes the work more structured. It provides no certification of anonymity or compliance; account, data, and service choices remain with the firm.",
+        "privacy.dataLink": "Read how data is handled",
         "videos.index": "Five stories from the Core",
         "videos.title": "Vera at work.",
         "videos.copy": "One overview and four examples of the common method. Italy editions stay beside the workflows they extend.",
@@ -1687,89 +1335,27 @@
         "module.prompt": "Transforme une question juridique, fiscale ou de conformité en recherche avec périmètre, sources et contrôles définis.",
         "module.research.title": "Valider Deep Research",
         "module.research": "Contrôle les affirmations par rapport aux sources citées et prépare le matériel consolidé.",
-        "privacy.index": "Périmètre des données · douze processus",
-        "privacy.title": "Ce que Codex peut lire, processus par processus.",
-        "privacy.copy": "Vera sépare le traitement local de ce dont Codex a besoin pour raisonner. Les fichiers et jeux de données complets restent normalement dans l’espace de travail ; Codex peut lire le niveau utile à la revue : synthèses, exceptions, échantillons, faits structurés ou passages ciblés.",
-        "privacy.boundary.title": "La limite s’évalue à la fin du processus",
-        "privacy.boundary.copy": "Pour chaque workflow, le travail réel est d’abord examiné ; ce qui reste local et ce qui entre dans le contexte du LLM sont ensuite enregistrés. Les données ne sont pas retirées par principe : seul ce qui est inutile au travail professionnel est réduit.",
-        "privacy.table.process": "Processus Vera",
-        "privacy.table.local": "Ce qui reste normalement local",
-        "privacy.table.codex": "Ce que Codex peut lire",
-        "privacy.table.example": "Exemple concret",
-        "privacy.row.client-file-preparation.name": "Nouveau client · préparation du dossier",
-        "privacy.row.client-file-preparation.local": "Dossier reçu complet, scans, factures, e-mails, OCR et contrôles formels.",
-        "privacy.row.client-file-preparation.codex": "Inventaire produit, champs structurés, résultats des contrôles et seuls les passages pertinents.",
-        "privacy.row.client-file-preparation.example": "Vera lit 80 documents localement. Codex voit que la lettre de mission n’est pas signée et le passage nécessaire pour expliquer le problème.",
-        "privacy.row.new-client.name": "Nouveau client · mise en place professionnelle",
-        "privacy.row.new-client.local": "Dossier complet, préparation technique et contrôles de couverture et de provenance.",
-        "privacy.row.new-client.codex": "Faits nécessaires sur l’identité, la structure de détention, la mission, la protection des données et la LCB-FT, avec décisions non résolues et preuves ciblées.",
-        "privacy.row.new-client.example": "Pour examiner le bénéficiaire effectif, Codex peut avoir besoin de son identité et de son pourcentage de détention.",
-        "privacy.row.journal-sampling.name": "Échantillonnage du journal",
-        "privacy.row.journal-sampling.local": "Journal complet, extraction structurée, normalisation, statistiques du journal et sélection reproductible de l’échantillon.",
-        "privacy.row.journal-sampling.codex": "En-têtes, correspondances, synthèses du journal complet, lignes représentatives, paramètres approuvés et lignes échantillonnées.",
-        "privacy.row.journal-sampling.example": "Sur 50 000 lignes, Codex voit les 40 lignes échantillonnées, pas le journal complet.",
-        "privacy.row.check-entries.name": "Contrôle des écritures",
-        "privacy.row.check-entries.local": "Archive FatturaPA, journal, PDF justificatifs et comparaisons en masse.",
-        "privacy.row.check-entries.codex": "Écritures sélectionnées, résultats des rapprochements, champs de facture pertinents et passages ciblés.",
-        "privacy.row.check-entries.example": "Codex voit l’écriture d’achat sélectionnée et la facture correspondante, pas l’archive complète.",
-        "privacy.row.journal-bank-reconciliation.name": "Rapprochement banque-comptabilité",
-        "privacy.row.journal-bank-reconciliation.local": "Relevés bancaires, journaux et grands livres complets ; normalisation, rapprochements et contrôles.",
-        "privacy.row.journal-bank-reconciliation.codex": "En-têtes, contrôles agrégés, synthèses des rapprochements, exceptions et preuves ciblées.",
-        "privacy.row.journal-bank-reconciliation.example": "Sur 3 000 mouvements, 2 985 sont rapprochés localement ; Codex examine les 15 exceptions.",
-        "privacy.row.audit-reconciliation.name": "Rapprochement des postes ouverts",
-        "privacy.row.audit-reconciliation.local": "Postes ouverts, grands livres, journaux, relevés et ensembles complets de preuves ; normalisation et rapprochement.",
-        "privacy.row.audit-reconciliation.codex": "Inventaire des fichiers, en-têtes, lignes représentatives, instructions de l’utilisateur, correspondances non résolues, résultats, exceptions et passages ciblés.",
-        "privacy.row.audit-reconciliation.example": "Vera rapproche 900 créances localement. Codex examine les 12 factures non résolues.",
-        "privacy.row.report-builder.name": "Génération de rapports",
-        "privacy.row.report-builder.local": "Tableurs financiers et CSV ; normalisation, calculs, données de graphiques et production du rapport.",
-        "privacy.row.report-builder.codex": "Structure des données, tableaux agrégés, indicateurs, synthèses pour les graphiques et résultats des contrôles ; lignes détaillées uniquement pour des anomalies ciblées.",
-        "privacy.row.report-builder.example": "Codex voit le chiffre d’affaires mensuel par activité. Une ligne individuelle n’entre dans le contexte que si elle explique une anomalie.",
-        "privacy.row.prompt-optimizer.name": "Optimisation du prompt",
-        "privacy.row.prompt-optimizer.local": "Les éléments non collés dans la conversation. Un texte déjà envoyé ne peut pas être protégé rétroactivement.",
-        "privacy.row.prompt-optimizer.codex": "La question et les faits déjà saisis ou joints ; dans le prompt réécrit, seulement les faits qui délimitent réellement la recherche.",
-        "privacy.row.prompt-optimizer.example": "Si le message contient le nom d’un client, ce nom est déjà dans le contexte. Vera peut l’omettre du prompt amélioré, mais pas effacer le message initial.",
-        "privacy.row.deep-research-validator.name": "Validation de Deep Research",
-        "privacy.row.deep-research-validator.local": "Rapport complet, sources citées, repérage des affirmations et contrôles mécaniques des citations.",
-        "privacy.row.deep-research-validator.codex": "Une affirmation, son contexte nécessaire, la citation, le passage pertinent de la source et les diagnostics de validation.",
-        "privacy.row.deep-research-validator.example": "Codex vérifie une affirmation à la fois par rapport au passage cité au lieu de recevoir tout le rapport en un seul bloc.",
-        "privacy.row.concordato-plan-review.name": "Revue du plan de concordat",
-        "privacy.row.concordato-plan-review.local": "Plan, tableaux financiers et preuves comptables ; extraction, nouveaux calculs et contrôles de concordance.",
-        "privacy.row.concordato-plan-review.codex": "Sections extraites, tableaux calculés, écarts et passages nécessaires à leur interprétation.",
-        "privacy.row.concordato-plan-review.example": "Les calculs locaux trouvent 1,15 M€ dans un tableau et 1,20 M€ dans le texte. Codex voit l’écart et les paragraphes pertinents.",
-        "privacy.row.previdenza-inps.name": "Prévoyance INPS",
-        "privacy.row.previdenza-inps.local": "Documents, images, OCR, captures autorisées et calculs dans le dossier local réservé.",
-        "privacy.row.previdenza-inps.codex": "Faits validés, chronologies, passages ciblés, sources officielles et bases de calcul. Si une interprétation visuelle est nécessaire, le document ou l’image pertinente peut entrer dans le contexte. Identifiants de connexion et données de session restent exclus.",
-        "privacy.row.previdenza-inps.example": "Vera lit localement un relevé contributif de 30 pages. Codex voit la période manquante et les lignes qui l’établissent.",
-        "privacy.row.registro-imprese-sari.name": "Registre des entreprises et SARI",
-        "privacy.row.registro-imprese-sari.local": "Identifiants du client, preuves originales, images et préparation locale du dossier.",
-        "privacy.row.registro-imprese-sari.codex": "Une référence pseudonyme, les faits nécessaires, les décisions non résolues et les sources officielles pertinentes.",
-        "privacy.row.registro-imprese-sari.example": "Codex voit « Dossier RI-024, activité X, chambre de Milan, date Y », pas le nom du client ni son code fiscal.",
-        "privacy.qualifier": "Le périmètre réel dépend de la demande et du contexte nécessaire à une analyse fidèle. « Local » décrit le fonctionnement habituel du workflow, pas l’impossibilité technique de consulter un document source de façon ciblée.",
-        "privacy.cases.index": "Trois limites à bien comprendre",
-        "privacy.cases.title": "Quand une explication supplémentaire est utile.",
-        "privacy.cases.copy": "Réduire le contexte ne signifie pas toujours l’anonymiser. Ces trois cas montrent pourquoi la limite dépend du moment et de l’objectif du travail.",
-        "privacy.case.prompt.title": "Prompt Optimizer",
-        "privacy.case.prompt.copy": "Le texte saisi est déjà dans le contexte Codex avant que Vera puisse l’optimiser. Si la demande contient le nom d’un client, Vera peut éviter de le répéter dans le prompt amélioré lorsqu’il est inutile, mais pas retirer le message original.",
-        "privacy.case.newClient.title": "Nouveau client",
-        "privacy.case.newClient.copy": "Certaines données personnelles sont réellement nécessaires à la revue professionnelle, par exemple l’identité, la structure de détention et les pouvoirs de signature pour la LCB-FT. La réduction se fait au niveau documentaire : le dossier complet reste local et Codex reçoit les faits et passages nécessaires.",
-        "privacy.case.registro.title": "Registre des entreprises et SARI",
-        "privacy.case.registro.copy": "La recherche publique utilise une référence opaque et des faits neutres sans identifiants du client. Une combinaison inhabituelle d’activité, de lieu et de date peut toutefois rendre le dossier reconnaissable : il s’agit de pseudonymisation, pas d’anonymat garanti.",
-        "privacy.notice.title": "L’information donnée à l’expert-comptable",
-        "privacy.notice.copy": "Au démarrage du processus, avant que le workflow n’expose à Codex le premier élément de preuve contrôlé, Vera affiche une brève information dans la langue de la conversation : ce qui reste local et ce que Codex peut lire. Les informations actuelles n’exigent pas de confirmation ; celle-ci est réservée à une éventuelle divulgation réellement facultative.",
-        "privacy.governance.title": "Une revue qui se répète",
-        "privacy.governance.copy": "Chaque processus dispose d’une fiche enregistrée. Si les instructions du workflow, scripts, schémas ou outils couverts changent, son empreinte technique change et la revue devient obsolète jusqu’au nouvel examen du flux de données. Les contrôles automatiques vérifient la couverture et l’actualité ; ils ne déterminent ni nécessité, ni anonymat, ni conformité au RGPD.",
-        "privacy.means.title": "Cela signifie",
-        "privacy.means.1": "Les ensembles de données volumineux peuvent souvent rester locaux.",
-        "privacy.means.2": "Codex travaille normalement à partir de synthèses, exceptions, échantillons, faits structurés ou passages pertinents.",
-        "privacy.means.3": "Le contexte résiduel est documenté processus par processus.",
-        "privacy.means.4": "Tout processus nouveau ou modifié doit repasser par la revue.",
-        "privacy.doesNotMean.title": "Cela ne signifie pas",
-        "privacy.doesNotMean.1": "Que tout ce que Codex lit est anonyme.",
-        "privacy.doesNotMean.2": "Que l’agrégation ou la pseudonymisation produisent automatiquement des données anonymes.",
-        "privacy.doesNotMean.3": "Que les noms et identifiants sont automatiquement détectés ou supprimés.",
-        "privacy.doesNotMean.4": "Que la fiche constitue une AIPD ou une preuve de conformité au RGPD.",
-        "privacy.claim": "Vera réduit et documente ce qui atteint le modèle selon les besoins de chaque processus professionnel. Lorsque des informations propres au dossier sont nécessaires, elle le dit au lieu de les présenter comme anonymes.",
-        "privacy.dataLink": "Lire les règles générales de gestion des données",
+        "privacy.index": "Données · périmètres réels",
+        "privacy.title": "Vera travaille sur les données réelles du client.",
+        "privacy.copy": "Un fichier peut rester sur votre ordinateur tandis que le contenu lu par Codex entre dans le contexte du modèle via le compte OpenAI choisi par le cabinet. Vera n’envoie pas le travail à Mparanza.",
+        "privacy.statement": "Vera n’anonymise pas automatiquement. Les outils locaux servent à extraire, calculer et organiser ; ils ne transforment pas à eux seuls des données personnelles en données anonymes.",
+        "privacy.clientData.title": "Données clients",
+        "privacy.clientData.copy": "Si l’identité, la détention ou des faits fiscaux, comptables ou sociaux sont nécessaires à la revue, ils peuvent entrer dans le contexte Codex.",
+        "privacy.local.title": "Traitement local",
+        "privacy.local.copy": "Il peut réduire les copies et transferts inutiles. Ce n’est pas une anonymisation. La minimisation prévue par le RGPD dépend de la finalité ; elle ne consiste pas à supprimer tout identifiant.",
+        "privacy.account.title": "Choix du compte",
+        "privacy.account.copy": "Le cabinet choisit le compte Codex/OpenAI utilisé pour le travail professionnel et configure les contrôles disponibles pour cette offre. Le traitement par OpenAI dépend de l’offre, des paramètres de l’espace de travail et des conditions applicables.",
+        "privacy.secrets.title": "Identifiants et sessions",
+        "privacy.secrets.copy": "Mots de passe, clés API, cookies, jetons et données de session ne doivent pas entrer dans les prompts ou fichiers lisibles par Codex.",
+        "privacy.routes.title": "Les trois périmètres réels.",
+        "privacy.routes.local.title": "Fichiers et scripts locaux",
+        "privacy.routes.local.copy": "Les fichiers restent sur l’ordinateur. Leur contenu ne franchit le périmètre local que lorsque Codex l’intègre au contexte du modèle ou qu’une action explicite l’envoie à un autre service.",
+        "privacy.routes.codex.title": "Contexte du modèle Codex",
+        "privacy.routes.codex.copy": "Lorsque Vera demande à Codex d’interpréter le travail, le contenu lu entre dans le contexte du modèle via le compte OpenAI choisi par le cabinet.",
+        "privacy.routes.external.title": "Recherche, connecteur ou envoi",
+        "privacy.routes.external.copy": "Une recherche publique, un connecteur ou un envoi explicite transmet des requêtes ou contenus au service choisi, qui applique ses propres contrôles et conditions.",
+        "privacy.closing": "Vera structure le travail. Elle ne certifie ni anonymat ni conformité ; les choix concernant les comptes, les données et les services restent au cabinet.",
+        "privacy.dataLink": "Lire comment les données sont traitées",
         "videos.index": "Cinq histoires du socle",
         "videos.title": "Vera à l’œuvre.",
         "videos.copy": "Une vue d’ensemble et quatre exemples de la méthode commune. Les éditions Italie restent auprès des workflows qu’elles prolongent.",
@@ -1869,89 +1455,27 @@
         "module.prompt": "Überführt eine rechtliche, steuerliche oder Compliance-Frage in eine Recherche mit festgelegtem Umfang, Quellen und Prüfungen.",
         "module.research.title": "Deep Research prüfen",
         "module.research": "Prüft Aussagen gegen zitierte Quellen und erstellt das konsolidierte Material.",
-        "privacy.index": "Datengrenze · zwölf Prozesse",
-        "privacy.title": "Was Codex lesen kann – Prozess für Prozess.",
-        "privacy.copy": "Vera trennt lokale Verarbeitung von den Inhalten, die Codex für die fachliche Einordnung benötigt. Vollständige Dateien und große Datenbestände bleiben normalerweise im Arbeitsbereich; Codex kann die für die Prüfung nützliche Ebene lesen: Zusammenfassungen, Ausnahmen, Stichproben, strukturierte Tatsachen oder gezielte Passagen.",
-        "privacy.boundary.title": "Die Grenze wird am Ende des Prozesses beurteilt",
-        "privacy.boundary.copy": "Für jeden Workflow wird zuerst die tatsächliche Arbeit betrachtet; anschließend wird festgehalten, was lokal bleibt und was in den LLM-Kontext gelangt. Daten werden nicht um ihrer selbst willen entfernt: Reduziert wird nur, was die fachliche Aufgabe nicht benötigt.",
-        "privacy.table.process": "Vera-Prozess",
-        "privacy.table.local": "Was normalerweise lokal bleibt",
-        "privacy.table.codex": "Was Codex lesen kann",
-        "privacy.table.example": "Praxisbeispiel",
-        "privacy.row.client-file-preparation.name": "Neuer Mandant · Aktenvorbereitung",
-        "privacy.row.client-file-preparation.local": "Vollständiger Eingangsordner, Scans, Rechnungen, E-Mails, OCR und formale Prüfungen.",
-        "privacy.row.client-file-preparation.codex": "Erstelltes Inventar, strukturierte Felder, Prüfergebnisse und nur die relevanten Passagen.",
-        "privacy.row.client-file-preparation.example": "Vera liest 80 Dokumente lokal. Codex sieht, dass der Auftrag nicht unterzeichnet ist, sowie die zur Erklärung erforderliche Passage.",
-        "privacy.row.new-client.name": "Neuer Mandant · fachliche Einrichtung",
-        "privacy.row.new-client.local": "Vollständige Akte, technische Vorbereitung sowie Prüfungen von Abdeckung und Herkunft.",
-        "privacy.row.new-client.codex": "Erforderliche Angaben zu Identität, Beteiligungsverhältnissen, Auftrag, Datenschutz und Geldwäscheprävention, mit offenen Entscheidungen und gezielten Nachweisen.",
-        "privacy.row.new-client.example": "Zur Prüfung des wirtschaftlich Berechtigten kann Codex dessen Identität und Beteiligungsquote benötigen.",
-        "privacy.row.journal-sampling.name": "Journalstichprobe",
-        "privacy.row.journal-sampling.local": "Vollständiges Journal, strukturierte Erfassung, Normalisierung, Gesamtstatistiken und reproduzierbare Stichprobenauswahl.",
-        "privacy.row.journal-sampling.codex": "Spaltenüberschriften, Zuordnungen, Zusammenfassungen des gesamten Journals, repräsentative Zeilen, freigegebene Parameter und Stichprobenzeilen.",
-        "privacy.row.journal-sampling.example": "Von 50.000 Zeilen sieht Codex die 40 Stichprobenzeilen, nicht das gesamte Journal.",
-        "privacy.row.check-entries.name": "Buchungen prüfen",
-        "privacy.row.check-entries.local": "FatturaPA-Archiv, Journal, unterstützende PDF-Dateien und Massenvergleiche.",
-        "privacy.row.check-entries.codex": "Ausgewählte Buchungen, Abgleichergebnisse, relevante Rechnungsfelder und gezielte Passagen.",
-        "privacy.row.check-entries.example": "Codex sieht die ausgewählte Einkaufsbuchung und die zugehörige Rechnung, nicht das gesamte Archiv.",
-        "privacy.row.journal-bank-reconciliation.name": "Bank und Buchhaltung abstimmen",
-        "privacy.row.journal-bank-reconciliation.local": "Vollständige Kontoauszüge, Journale und Hauptbücher; Normalisierung, Zuordnung und Kontrollen.",
-        "privacy.row.journal-bank-reconciliation.codex": "Spaltenüberschriften, aggregierte Kontrollen, Zuordnungsübersichten, Ausnahmen und gezielte Nachweise.",
-        "privacy.row.journal-bank-reconciliation.example": "Von 3.000 Transaktionen werden 2.985 lokal zugeordnet; Codex prüft die 15 Ausnahmen.",
-        "privacy.row.audit-reconciliation.name": "Offene-Posten-Abstimmung",
-        "privacy.row.audit-reconciliation.local": "Offene Posten, Hauptbücher, Journale, Auszüge und vollständige Nachweisbestände; Normalisierung und Abstimmung.",
-        "privacy.row.audit-reconciliation.codex": "Dateiinventar, Spaltenüberschriften, repräsentative Zeilen, Nutzeranweisungen, ungeklärte Zuordnungen, Ergebnisse, Ausnahmen und gezielte Passagen.",
-        "privacy.row.audit-reconciliation.example": "Vera gleicht 900 Forderungen lokal ab. Codex prüft die 12 ungeklärten Rechnungen.",
-        "privacy.row.report-builder.name": "Bericht erstellen",
-        "privacy.row.report-builder.local": "Finanzielle Tabellen und CSV-Dateien; Normalisierung, Berechnungen, Diagrammdaten und Berichtserstellung.",
-        "privacy.row.report-builder.codex": "Datenstruktur, aggregierte Tabellen, Kennzahlen, Diagrammzusammenfassungen und Prüfergebnisse; Detailzeilen nur für gezielte Auffälligkeiten.",
-        "privacy.row.report-builder.example": "Codex sieht den monatlichen Umsatz nach Geschäftsbereich. Eine Einzelzeile gelangt nur in den Kontext, wenn sie eine Auffälligkeit erklärt.",
-        "privacy.row.prompt-optimizer.name": "Prompt optimieren",
-        "privacy.row.prompt-optimizer.local": "Material, das nicht in die Unterhaltung eingefügt wurde. Bereits gesendeter Text lässt sich nicht rückwirkend schützen.",
-        "privacy.row.prompt-optimizer.codex": "Die bereits eingegebene oder angehängte Frage und ihre Tatsachen; im überarbeiteten Prompt nur die für die Recherche wirklich maßgeblichen Tatsachen.",
-        "privacy.row.prompt-optimizer.example": "Enthält die Nachricht den Namen eines Mandanten, befindet sich dieser bereits im Kontext. Vera kann ihn im verbesserten Prompt weglassen, aber die ursprüngliche Nachricht nicht löschen.",
-        "privacy.row.deep-research-validator.name": "Deep Research prüfen",
-        "privacy.row.deep-research-validator.local": "Vollständiger Bericht, zitierte Quellen, Erfassung der Aussagen und mechanische Zitationsprüfungen.",
-        "privacy.row.deep-research-validator.codex": "Eine Aussage, ihr erforderlicher Kontext, das Zitat, die relevante Quellenpassage und die Validierungsdiagnostik.",
-        "privacy.row.deep-research-validator.example": "Codex prüft jeweils eine Aussage anhand der zitierten Passage, statt den gesamten Bericht in einem Block zu erhalten.",
-        "privacy.row.concordato-plan-review.name": "Concordato-Plan prüfen",
-        "privacy.row.concordato-plan-review.local": "Plan, Finanzaufstellungen und Buchhaltungsnachweise; Extraktion, Neuberechnung und Abstimmung.",
-        "privacy.row.concordato-plan-review.codex": "Extrahierte Abschnitte, berechnete Tabellen, Abweichungen und die zu ihrer Einordnung erforderlichen Passagen.",
-        "privacy.row.concordato-plan-review.example": "Lokale Berechnungen ergeben 1,15 Mio. € in einer Aufstellung und 1,20 Mio. € im Text. Codex sieht die Abweichung und die relevanten Absätze.",
-        "privacy.row.previdenza-inps.name": "INPS-Sozialversicherung",
-        "privacy.row.previdenza-inps.local": "Dokumente, Bilder, OCR, freigegebene Aufnahmen und Berechnungen im geschützten lokalen Fallordner.",
-        "privacy.row.previdenza-inps.codex": "Validierte Tatsachen, Zeitabläufe, gezielte Passagen, amtliche Quellen und Berechnungsgrundlagen. Ist eine visuelle Auslegung erforderlich, kann das relevante Dokument oder Bild in den Kontext gelangen. Zugangsdaten und Sitzungsdaten bleiben ausgeschlossen.",
-        "privacy.row.previdenza-inps.example": "Vera liest lokal einen 30-seitigen Beitragsauszug. Codex sieht den fehlenden Zeitraum und die Zeilen, die ihn belegen.",
-        "privacy.row.registro-imprese-sari.name": "Unternehmensregister und SARI",
-        "privacy.row.registro-imprese-sari.local": "Mandantenkennungen, Originalnachweise, Bilder und lokale Fallvorbereitung.",
-        "privacy.row.registro-imprese-sari.codex": "Eine pseudonyme Fallreferenz, erforderliche Tatsachen, offene Entscheidungen und relevante amtliche Quellen.",
-        "privacy.row.registro-imprese-sari.example": "Codex sieht „Fall RI-024, Tätigkeit X, Handelskammer Mailand, Datum Y“, nicht den Namen oder die Steuernummer des Mandanten.",
-        "privacy.qualifier": "Der tatsächliche Umfang hängt von der Anfrage und dem für eine verlässliche Beurteilung erforderlichen Kontext ab. „Lokal“ beschreibt den üblichen Workflow, nicht die technische Unmöglichkeit, ein Quelldokument gezielt einzusehen.",
-        "privacy.cases.index": "Drei Grenzen, die wichtig sind",
-        "privacy.cases.title": "Wo eine zusätzliche Erklärung hilft.",
-        "privacy.cases.copy": "Weniger Kontext bedeutet nicht immer Anonymisierung. Diese drei Fälle zeigen, warum die Grenze vom Zeitpunkt und Zweck der Arbeit abhängt.",
-        "privacy.case.prompt.title": "Prompt Optimizer",
-        "privacy.case.prompt.copy": "Bereits eingegebener Text befindet sich im Codex-Kontext, bevor Vera ihn optimieren kann. Enthält die Anfrage einen Mandantennamen, kann Vera ihn im verbesserten Prompt weglassen, wenn er unnötig ist, die ursprüngliche Nachricht aber nicht entfernen.",
-        "privacy.case.newClient.title": "Neuer Mandant",
-        "privacy.case.newClient.copy": "Bestimmte personenbezogene Angaben sind für die fachliche Prüfung tatsächlich erforderlich, etwa Identität, Beteiligungsverhältnisse und Zeichnungsberechtigung bei der Geldwäscheprüfung. Die Reduktion erfolgt auf Dokumentebene: Die vollständige Akte bleibt lokal; Codex erhält die erforderlichen Tatsachen und Passagen.",
-        "privacy.case.registro.title": "Unternehmensregister und SARI",
-        "privacy.case.registro.copy": "Die Recherche in öffentlichen Quellen verwendet eine undurchsichtige Referenz und neutrale Tatsachen ohne Mandantenkennungen. Eine ungewöhnliche Kombination aus Tätigkeit, Ort und Datum kann den Fall dennoch erkennbar machen: Das ist Pseudonymisierung, keine garantierte Anonymität.",
-        "privacy.notice.title": "Der Hinweis für die Kanzlei",
-        "privacy.notice.copy": "Zu Beginn des Prozesses, bevor der Workflow Codex den ersten kontrollierten Nachweis zugänglich macht, zeigt Vera einen kurzen Hinweis in der Sprache der Unterhaltung: was lokal bleibt und was Codex lesen kann. Die heutigen Hinweise informieren; eine Bestätigung bleibt einer tatsächlich optionalen künftigen Offenlegung vorbehalten.",
-        "privacy.governance.title": "Eine Prüfung, die sich wiederholt",
-        "privacy.governance.copy": "Für jeden Prozess ist eine Karte registriert. Ändern sich die Workflow-Anweisungen, Skripte, Schemas oder abgedeckten Werkzeuge, ändert sich der technische Fingerabdruck und die Prüfung gilt bis zur erneuten Prüfung des Datenflusses als veraltet. Automatische Kontrollen prüfen Abdeckung und Aktualität; sie entscheiden nicht über Erforderlichkeit, Anonymität oder DSGVO-Konformität.",
-        "privacy.means.title": "Das bedeutet",
-        "privacy.means.1": "Große Datenbestände können häufig lokal bleiben.",
-        "privacy.means.2": "Codex arbeitet normalerweise mit Zusammenfassungen, Ausnahmen, Stichproben, strukturierten Tatsachen oder relevanten Passagen.",
-        "privacy.means.3": "Der verbleibende Kontext wird Prozess für Prozess dokumentiert.",
-        "privacy.means.4": "Neue und geänderte Prozesse müssen die Prüfung erneut durchlaufen.",
-        "privacy.doesNotMean.title": "Das bedeutet nicht",
-        "privacy.doesNotMean.1": "Dass alles, was Codex liest, anonym ist.",
-        "privacy.doesNotMean.2": "Dass Aggregation oder Pseudonymisierung automatisch anonyme Daten erzeugt.",
-        "privacy.doesNotMean.3": "Dass Namen und Kennungen automatisch erkannt oder entfernt werden.",
-        "privacy.doesNotMean.4": "Dass die registrierte Karte eine DSFA oder einen Nachweis der DSGVO-Konformität darstellt.",
-        "privacy.claim": "Vera reduziert und dokumentiert entsprechend den Anforderungen jedes fachlichen Prozesses, welche Inhalte das Modell erreichen. Sind fallbezogene Informationen erforderlich, weist Vera darauf hin, statt sie als anonym darzustellen.",
-        "privacy.dataLink": "Allgemeine Regeln zur Datenverarbeitung lesen",
+        "privacy.index": "Daten · tatsächliche Grenzen",
+        "privacy.title": "Vera arbeitet mit echten Mandantendaten.",
+        "privacy.copy": "Eine Datei kann auf Ihrem Computer bleiben, während die von Codex gelesenen Inhalte über das von der Kanzlei gewählte OpenAI-Konto in den Modellkontext gelangen. Vera sendet die Arbeit nicht an Mparanza.",
+        "privacy.statement": "Vera anonymisiert nicht automatisch. Lokale Werkzeuge helfen beim Extrahieren, Berechnen und Strukturieren; sie machen personenbezogene Daten nicht von selbst anonym.",
+        "privacy.clientData.title": "Mandantendaten",
+        "privacy.clientData.copy": "Sind Identität, Beteiligung oder steuerliche, buchhalterische oder sozialversicherungsrechtliche Fakten für die Prüfung erforderlich, können sie in den Codex-Kontext gelangen.",
+        "privacy.local.title": "Lokale Verarbeitung",
+        "privacy.local.copy": "Sie kann unnötige Kopien und Übertragungen verringern. Sie ist keine Anonymisierung. Datenminimierung nach der DSGVO richtet sich nach dem Zweck; sie bedeutet nicht, jede Kennung zu entfernen.",
+        "privacy.account.title": "Kontowahl",
+        "privacy.account.copy": "Die Kanzlei wählt das Codex-/OpenAI-Konto für die berufliche Arbeit und konfiguriert die für den Tarif verfügbaren Datenkontrollen. Wie OpenAI die Daten verarbeitet, hängt vom Tarif, den Workspace-Einstellungen und den geltenden Bedingungen ab.",
+        "privacy.secrets.title": "Zugangsdaten und Sitzungen",
+        "privacy.secrets.copy": "Passwörter, API-Schlüssel, Cookies, Token und Sitzungsdaten dürfen nicht in Prompts oder von Codex lesbare Dateien gelangen.",
+        "privacy.routes.title": "Die drei tatsächlichen Grenzen.",
+        "privacy.routes.local.title": "Lokale Dateien und Skripte",
+        "privacy.routes.local.copy": "Die Dateien bleiben auf dem Computer. Ihre Inhalte verlassen die lokale Grenze nur, wenn Codex sie in den Modellkontext übernimmt oder eine ausdrückliche Aktion sie an einen anderen Dienst sendet.",
+        "privacy.routes.codex.title": "Codex-Modellkontext",
+        "privacy.routes.codex.copy": "Wenn Vera Codex mit der Auswertung beauftragt, gelangen die gelesenen Inhalte über das von der Kanzlei gewählte OpenAI-Konto in den Modellkontext.",
+        "privacy.routes.external.title": "Suche, Connector oder Versand",
+        "privacy.routes.external.copy": "Eine öffentliche Suche, ein Connector oder ein ausdrücklicher Versand übermittelt Anfragen oder Inhalte an den gewählten Dienst, für den eigene Kontrollen und Bedingungen gelten.",
+        "privacy.closing": "Vera strukturiert die Arbeit. Sie zertifiziert weder Anonymität noch Compliance; Entscheidungen zu Konten, Daten und Diensten bleiben bei der Kanzlei.",
+        "privacy.dataLink": "Lesen, wie Daten verarbeitet werden",
         "videos.index": "Fünf Geschichten aus dem Kern",
         "videos.title": "Vera bei der Arbeit.",
         "videos.copy": "Ein Überblick und vier Beispiele der gemeinsamen Methode. Italien-Editionen bleiben bei den Workflows, die sie erweitern.",

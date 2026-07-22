@@ -1,8 +1,8 @@
-"""Register user-downloaded INPS portal exports as immutable local evidence.
+"""Register locally supplied INPS portal exports as immutable local evidence.
 
 This module intentionally performs no browser automation, authentication, network
-request, or portal submission. It accepts only regular files already downloaded
-by an authorized human and records a reviewable, privacy-minimized manifest.
+request, or portal submission. It accepts regular files supplied from local
+storage and records a bounded, reviewable manifest.
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ SCRIPT_PATH = Path(__file__).resolve()
 COMPONENT_ROOT = SCRIPT_PATH.parents[1]
 MANIFEST_NAME = "manifest.json"
 MANIFEST_TYPE = "inps_official_portal_export_registration"
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "2.0"
 MAX_FILE_SIZE_BYTES = 512 * 1024 * 1024
 MAX_MANIFEST_SIZE_BYTES = 1024 * 1024
 READ_CHUNK_BYTES = 1024 * 1024
@@ -82,56 +82,23 @@ FORBIDDEN_BROWSER_NAMES = {
     "web data",
 }
 OFFICIAL_HOST_ROOTS = ("inps.it",)
-PSEUDONYMOUS_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$")
 REGISTRATION_ID_RE = re.compile(r"^INPS-EXPORT-[0-9a-f]{32}$")
 HEX_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 STORED_NAME_RE = re.compile(
     r"^inps-export-(?P<index>[0-9]{3})-(?P<digest>[0-9a-f]{12})"
     r"(?P<suffix>\.[a-z0-9]+)$"
 )
-AUTHORITY_ROLES = {
-    "authorized_delegate",
-    "profile_holder",
-    "professional_reviewer",
-}
-PROCESSING_ROLES = {
-    "authorized_user",
-    "data_controller",
-    "professional_reviewer",
-}
 TOP_LEVEL_KEYS = {
     "schema_version",
     "manifest_type",
     "registration_id",
     "created_at",
     "source_origin",
-    "authority",
-    "processing_approval",
     "safety",
     "artifacts",
 }
-AUTHORITY_KEYS = {
-    "human_actor_id",
-    "human_actor_role",
-    "recorded_at",
-    "authority_scope",
-    "human_authority_basis",
-    "profile_authority_basis",
-    "delegation_authority_basis",
-    "human_authority_confirmed",
-    "profile_authority_confirmed",
-    "delegation_authority_confirmed",
-}
-PROCESSING_KEYS = {
-    "approved_by_id",
-    "approved_by_role",
-    "recorded_at",
-    "processor_scope",
-    "approval_basis",
-    "client_data_processing_approved",
-}
 SAFETY_KEYS = {
-    "source_files_user_downloaded",
+    "source_files_supplied_locally",
     "network_access_performed",
     "portal_automation_performed",
     "credentials_collected",
@@ -148,7 +115,7 @@ ARTIFACT_KEYS = {
     "sha256",
 }
 SAFE_SAFETY_VALUES = {
-    "source_files_user_downloaded": True,
+    "source_files_supplied_locally": True,
     "network_access_performed": False,
     "portal_automation_performed": False,
     "credentials_collected": False,
@@ -303,28 +270,6 @@ def _normalize_timestamp(value: str, *, field: str) -> str:
     if parsed.tzinfo is None or parsed.utcoffset() is None:
         raise PortalExportError(f"{field} must include a timezone")
     return parsed.replace(microsecond=0).isoformat()
-
-
-def _pseudonymous_id(value: str, *, field: str) -> str:
-    if not isinstance(value, str) or PSEUDONYMOUS_ID_RE.fullmatch(value) is None:
-        raise PortalExportError(
-            f"{field} must be a 3-64 character pseudonymous stable identifier"
-        )
-    return value
-
-
-def _required_text(value: str, *, field: str, max_length: int = 1000) -> str:
-    if not isinstance(value, str):
-        raise PortalExportError(f"{field} is required")
-    normalized = " ".join(value.split())
-    if len(normalized) < 8 or len(normalized) > max_length:
-        raise PortalExportError(f"{field} must contain 8-{max_length} characters")
-    return normalized
-
-
-def _require_confirmation(value: bool, *, field: str) -> None:
-    if value is not True:
-        raise PortalExportError(f"{field} must be explicitly confirmed")
 
 
 def _open_regular_source(path: Path) -> tuple[int, os.stat_result]:
@@ -554,78 +499,14 @@ def register_portal_exports(
     output_dir: Path,
     *,
     source_origin: str,
-    authority_actor_id: str,
-    authority_actor_role: str,
-    authority_recorded_at: str,
-    authority_scope: str,
-    human_authority_basis: str,
-    profile_authority_basis: str,
-    delegation_authority_basis: str,
-    processing_approved_by_id: str,
-    processing_approved_by_role: str,
-    processing_recorded_at: str,
-    processor_scope: str,
-    processing_approval_basis: str,
-    confirm_human_authority: bool,
-    confirm_profile_authority: bool,
-    confirm_delegation_authority: bool,
-    approve_client_data_processing: bool,
-    confirm_user_downloaded_files: bool,
 ) -> Path:
-    """Copy authorized official exports into a new private evidence directory."""
+    """Copy locally supplied exports into a new private evidence directory."""
 
     if not source_files:
-        raise PortalExportError("at least one user-downloaded source file is required")
+        raise PortalExportError("at least one locally supplied source file is required")
     if len(source_files) > 999:
         raise PortalExportError("a registration may contain at most 999 source files")
-    _require_confirmation(
-        confirm_human_authority, field="human portal-access authority"
-    )
-    _require_confirmation(confirm_profile_authority, field="profile-access authority")
-    _require_confirmation(confirm_delegation_authority, field="delegation authority")
-    _require_confirmation(
-        approve_client_data_processing, field="client-data processing approval"
-    )
-    _require_confirmation(
-        confirm_user_downloaded_files, field="user-downloaded file provenance"
-    )
     canonical_origin = _normalize_origin(source_origin)
-    actor_id = _pseudonymous_id(authority_actor_id, field="authority_actor_id")
-    if not isinstance(authority_actor_role, str) or (
-        authority_actor_role not in AUTHORITY_ROLES
-    ):
-        raise PortalExportError("authority_actor_role is not allowed")
-    authority_time = _normalize_timestamp(
-        authority_recorded_at, field="authority_recorded_at"
-    )
-    normalized_authority_scope = _required_text(
-        authority_scope, field="authority_scope"
-    )
-    normalized_human_basis = _required_text(
-        human_authority_basis, field="human_authority_basis"
-    )
-    normalized_profile_basis = _required_text(
-        profile_authority_basis, field="profile_authority_basis"
-    )
-    normalized_delegation_basis = _required_text(
-        delegation_authority_basis, field="delegation_authority_basis"
-    )
-    processor_id = _pseudonymous_id(
-        processing_approved_by_id, field="processing_approved_by_id"
-    )
-    if not isinstance(processing_approved_by_role, str) or (
-        processing_approved_by_role not in PROCESSING_ROLES
-    ):
-        raise PortalExportError("processing_approved_by_role is not allowed")
-    processing_time = _normalize_timestamp(
-        processing_recorded_at, field="processing_recorded_at"
-    )
-    normalized_processor_scope = _required_text(
-        processor_scope, field="processor_scope"
-    )
-    normalized_processing_basis = _required_text(
-        processing_approval_basis, field="processing_approval_basis"
-    )
 
     plans = [
         _inspect_source(Path(source), source_index=index)
@@ -665,26 +546,6 @@ def register_portal_exports(
             "registration_id": f"INPS-EXPORT-{uuid4().hex}",
             "created_at": _utc_now(),
             "source_origin": canonical_origin,
-            "authority": {
-                "human_actor_id": actor_id,
-                "human_actor_role": authority_actor_role,
-                "recorded_at": authority_time,
-                "authority_scope": normalized_authority_scope,
-                "human_authority_basis": normalized_human_basis,
-                "profile_authority_basis": normalized_profile_basis,
-                "delegation_authority_basis": normalized_delegation_basis,
-                "human_authority_confirmed": True,
-                "profile_authority_confirmed": True,
-                "delegation_authority_confirmed": True,
-            },
-            "processing_approval": {
-                "approved_by_id": processor_id,
-                "approved_by_role": processing_approved_by_role,
-                "recorded_at": processing_time,
-                "processor_scope": normalized_processor_scope,
-                "approval_basis": normalized_processing_basis,
-                "client_data_processing_approved": True,
-            },
             "safety": dict(SAFE_SAFETY_VALUES),
             "artifacts": artifacts,
         }
@@ -729,55 +590,6 @@ def _load_strict_manifest(path: Path) -> dict[str, Any]:
     except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise PortalExportError("manifest is not valid UTF-8 JSON") from exc
     return _strict_object(payload, keys=TOP_LEVEL_KEYS, field="manifest")
-
-
-def _validate_authority(value: object) -> None:
-    authority = _strict_object(value, keys=AUTHORITY_KEYS, field="authority")
-    _pseudonymous_id(authority["human_actor_id"], field="authority.human_actor_id")
-    if not isinstance(authority["human_actor_role"], str) or (
-        authority["human_actor_role"] not in AUTHORITY_ROLES
-    ):
-        raise PortalExportError("authority.human_actor_role is not allowed")
-    _normalize_timestamp(authority["recorded_at"], field="authority.recorded_at")
-    for field in (
-        "authority_scope",
-        "human_authority_basis",
-        "profile_authority_basis",
-        "delegation_authority_basis",
-    ):
-        _required_text(authority[field], field=f"authority.{field}")
-    for field in (
-        "human_authority_confirmed",
-        "profile_authority_confirmed",
-        "delegation_authority_confirmed",
-    ):
-        _require_confirmation(authority[field], field=f"authority.{field}")
-
-
-def _validate_processing(value: object) -> None:
-    processing = _strict_object(
-        value, keys=PROCESSING_KEYS, field="processing_approval"
-    )
-    _pseudonymous_id(
-        processing["approved_by_id"], field="processing_approval.approved_by_id"
-    )
-    if not isinstance(processing["approved_by_role"], str) or (
-        processing["approved_by_role"] not in PROCESSING_ROLES
-    ):
-        raise PortalExportError("processing_approval.approved_by_role is not allowed")
-    _normalize_timestamp(
-        processing["recorded_at"], field="processing_approval.recorded_at"
-    )
-    _required_text(
-        processing["processor_scope"], field="processing_approval.processor_scope"
-    )
-    _required_text(
-        processing["approval_basis"], field="processing_approval.approval_basis"
-    )
-    _require_confirmation(
-        processing["client_data_processing_approved"],
-        field="processing_approval.client_data_processing_approved",
-    )
 
 
 def _validate_safety(value: object) -> None:
@@ -881,8 +693,6 @@ def verify_portal_export(output_dir: Path) -> dict[str, Any]:
     _normalize_timestamp(manifest["created_at"], field="created_at")
     if _normalize_origin(manifest["source_origin"]) != manifest["source_origin"]:
         raise PortalExportError("source_origin is not canonical")
-    _validate_authority(manifest["authority"])
-    _validate_processing(manifest["processing_approval"])
     _validate_safety(manifest["safety"])
     artifacts = manifest["artifacts"]
     if not isinstance(artifacts, list) or not artifacts:
@@ -907,34 +717,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     register = subparsers.add_parser(
-        "register", help="Register files already downloaded by an authorized human."
+        "register", help="Register INPS exports already present in local storage."
     )
     register.add_argument("source_files", nargs="+", type=Path)
     register.add_argument("--output-dir", required=True, type=Path)
     register.add_argument("--source-origin", required=True)
-    register.add_argument("--authority-actor-id", required=True)
-    register.add_argument(
-        "--authority-actor-role", required=True, choices=sorted(AUTHORITY_ROLES)
-    )
-    register.add_argument("--authority-recorded-at", required=True)
-    register.add_argument("--authority-scope", required=True)
-    register.add_argument("--human-authority-basis", required=True)
-    register.add_argument("--profile-authority-basis", required=True)
-    register.add_argument("--delegation-authority-basis", required=True)
-    register.add_argument("--processing-approved-by-id", required=True)
-    register.add_argument(
-        "--processing-approved-by-role",
-        required=True,
-        choices=sorted(PROCESSING_ROLES),
-    )
-    register.add_argument("--processing-recorded-at", required=True)
-    register.add_argument("--processor-scope", required=True)
-    register.add_argument("--processing-approval-basis", required=True)
-    register.add_argument("--confirm-human-authority", action="store_true")
-    register.add_argument("--confirm-profile-authority", action="store_true")
-    register.add_argument("--confirm-delegation-authority", action="store_true")
-    register.add_argument("--approve-client-data-processing", action="store_true")
-    register.add_argument("--confirm-user-downloaded-files", action="store_true")
 
     verify = subparsers.add_parser("verify", help="Verify a registered export.")
     verify.add_argument("output_dir", type=Path)
@@ -958,23 +745,6 @@ def main(argv: list[str] | None = None) -> int:
             args.source_files,
             args.output_dir,
             source_origin=args.source_origin,
-            authority_actor_id=args.authority_actor_id,
-            authority_actor_role=args.authority_actor_role,
-            authority_recorded_at=args.authority_recorded_at,
-            authority_scope=args.authority_scope,
-            human_authority_basis=args.human_authority_basis,
-            profile_authority_basis=args.profile_authority_basis,
-            delegation_authority_basis=args.delegation_authority_basis,
-            processing_approved_by_id=args.processing_approved_by_id,
-            processing_approved_by_role=args.processing_approved_by_role,
-            processing_recorded_at=args.processing_recorded_at,
-            processor_scope=args.processor_scope,
-            processing_approval_basis=args.processing_approval_basis,
-            confirm_human_authority=args.confirm_human_authority,
-            confirm_profile_authority=args.confirm_profile_authority,
-            confirm_delegation_authority=args.confirm_delegation_authority,
-            approve_client_data_processing=args.approve_client_data_processing,
-            confirm_user_downloaded_files=args.confirm_user_downloaded_files,
         )
     except (OSError, PortalExportError) as exc:
         LOGGER.error("%s", exc)

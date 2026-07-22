@@ -22,7 +22,7 @@ The scripts must not contain contribution rates, regime mappings, thresholds, ce
 ## Codex-Native Run UX
 
 1. Start with a visible checklist covering intake, dependency check, inventory, material decisions, facts, research, claim validation, calculations, packaging, and professional review.
-2. Show a Run Intake table with input folder, output folder, working language, period, cut-off date, local/external model-processing posture, processing authority, and assumptions.
+2. Show a Run Intake table with input folder, output folder, working language, period, cut-off date, Codex-context boundary, external acquisition posture, and assumptions.
 3. Show a compact Decision Table for unresolved framework, period, ambiguous terms, evidence conflicts, OCR limits, or calculation recipes.
 4. Before long or write-heavy work, show an execution checkpoint with command intent, inputs, output folder, and expected artifacts. Ask for approval only for external, destructive, approval-sensitive, or materially unresolved actions.
 5. End with an Artifact Card listing each output, status, unresolved issues, and next professional action.
@@ -35,7 +35,7 @@ When useful, create `codex_run_review.md` beside the package. Never edit plugin 
 
 ## Required intake
 
-Before sending or exposing any third-party INPS, F24, contract, or email content to a model/provider, record whether the studio is authorized to process it, whether the current processor/runtime is approved, the approved processor scope, the approving actor ID/role, and the minimization basis. Before portal capture, separately record three gates: the human actor's access/profile/delegation authority and own-credential use; the studio's client-data processing authority; and the particular service's permission for software-assisted capture, with a specific terms/contract/mandate basis. Also record the exact approved origin, scope, purpose, approval time, and confirmation that the visible page contains no credentials or one-time codes. Local deterministic inventory may run first; semantic review stops as `blocked_decision` until the relevant authorization is explicit.
+Real case material may enter the Codex model context when it is useful for the professional analysis. Do not demand a per-case declaration that model processing was approved or that personal data was minimized; Vera cannot verify either assertion. Before portal capture, separately verify the human actor's access/profile/delegation authority and own-credential use, plus the particular service's permission for software-assisted capture. Also record the exact approved origin, scope, purpose, approval time, and confirmation that the visible page contains no credentials or one-time codes.
 
 Ask at most five material questions when the answers are not already in the evidence:
 
@@ -53,29 +53,12 @@ Confirm the Italian/INPS framework separately from output language. Surface any 
 
 Prefer an official PDF or other portal download made by the subject or appropriately profiled intermediary/delegate. No verified general-purpose API currently lets a commercialista retrieve a client's individual contribution position. Never route a private case through the public Open Data API or a PDND e-service merely because the words “INPS” or “Estratto Conto” match; verify the exact service contract and actor eligibility first.
 
-Register files already downloaded by the authorized human before inventory. Keep both the source and registered directory outside the Git workspace. First inspect the complete option contract with `python scripts/register_portal_export.py register --help`; then provide every authority, processing, and provenance field explicitly. The command shape is:
+Register files already present in local storage before inventory. Keep both the source and registered directory outside the Git workspace. The registrar copies and hash-binds the files; it does not operate the portal or ask the professional to re-document access, profile, delegation, or model-processing authority for a local file. The command shape is:
 
 ```bash
 python scripts/register_portal_export.py register /path/to/downloaded/export.pdf \
   --output-dir /private/path/inps-export-registration \
-  --source-origin https://www.inps.it \
-  --authority-actor-id ACTOR-PSEUDONYM \
-  --authority-actor-role authorized_delegate \
-  --authority-recorded-at YYYY-MM-DDThh:mm:ss+01:00 \
-  --authority-scope "Exact bounded access and export scope" \
-  --human-authority-basis "Recorded basis for the human access" \
-  --profile-authority-basis "Recorded basis for the selected portal profile" \
-  --delegation-authority-basis "Recorded basis for the active client delegation" \
-  --processing-approved-by-id REVIEWER-PSEUDONYM \
-  --processing-approved-by-role professional_reviewer \
-  --processing-recorded-at YYYY-MM-DDThh:mm:ss+01:00 \
-  --processor-scope "Exact bounded local processing scope" \
-  --processing-approval-basis "Recorded client-data processing basis" \
-  --confirm-human-authority \
-  --confirm-profile-authority \
-  --confirm-delegation-authority \
-  --approve-client-data-processing \
-  --confirm-user-downloaded-files
+  --source-origin https://www.inps.it
 python scripts/register_portal_export.py verify \
   /private/path/inps-export-registration
 python scripts/inventory_case.py /private/path/inps-export-registration \
@@ -85,7 +68,7 @@ python scripts/inventory_case.py /private/path/inps-export-registration \
   --reference-date YYYY-MM-DD
 ```
 
-Do not substitute names, email addresses, tax identifiers, or raw file paths for the pseudonymous actor IDs. Registration performs no network request or portal action and rejects browser profiles, cookies, storage exports, HTML, HAR, symlinks, unsafe formats, or altered artifacts.
+`--source-origin` records the declared official origin and enforces an exact INPS HTTPS host shape; the local registrar cannot prove where a file was downloaded. Registration performs no network request or portal action and rejects browser profiles, cookies, storage exports, HTML, HAR, symlinks, unsafe formats, or altered artifacts.
 
 For an alternative current-view snapshot, first verify and record permission for software-assisted capture under the particular service terms or another applicable basis. One inventory run accepts one portal-derived acquisition mode; do not mix a capture receipt and an export-registration receipt. If capture permission is unresolved, do not attach to the browser; use an official export/import path. When permission is confirmed, the human must open a dedicated browser session, authenticate personally with their own SPID/CIE/CNS, confirm the relevant profile/delegation, navigate to the exact read-only view, and remove any credential or one-time-code display. Vera may then attach only to a loopback browser endpoint and capture that already-open tab. The capture implementation is forbidden from navigating, clicking, filling, submitting, downloading, reading cookies/storage, saving HTML, exporting browser state, or closing the user's browser. Do not ask the user to disclose credentials, cookies, tokens, or authentication codes.
 
@@ -114,7 +97,7 @@ Read `file_inventory.json`, `extraction_report.json`, and `extracted_evidence.md
 
 ### 2. Structure and validate facts
 
-Codex writes `case_records_draft.json` using `schemas/case_records.schema.json`. Every material fact needs a document locator and quote. Preserve pending, disputed, and conflicting facts. Record a stable pseudonymous ID for who made each material decision, their role, when it was recorded, and the document or instruction forming its basis; the model itself is never the approving authority.
+Codex writes `case_records_draft.json` using `schemas/case_records.schema.json`. Every material fact needs a document locator and quote. Preserve pending, disputed, and conflicting facts. Record a stable actor reference for who made each material decision, their role, when it was recorded, and the document or instruction forming its basis; the model itself is never the approving authority.
 
 Keep these evidentiary propositions separate: an F24 was prepared, an amount was debited, INPS allocated a payment, and an extract credits a contribution period. For a negative or absence claim, document the completeness and scope of the records reviewed; one silent page is not proof of absence.
 
@@ -201,13 +184,13 @@ If MCP rendering is unavailable, review the local artifacts in Markdown. Keep de
 - Scans, protected files, or missing pages: `partial_evidence`.
 - OCR-derived text without a recorded human page check: `partial_evidence` and never a confirmed calculation input.
 - Browser-visible text without a recorded human comparison to the captured page image: `partial_evidence` and never a confirmed calculation input.
-- Unverified portal-service permission for software-assisted capture, missing access or processing authority, non-loopback browser endpoint, origin mismatch, multiple matching tabs, or changed/tampered capture artifacts: stop the capture; use an official export/import path and do not fall back to broader browser access.
+- Unverified portal-service permission for software-assisted capture, missing access/profile/delegation authority, non-loopback browser endpoint, origin mismatch, multiple matching tabs, or changed/tampered capture artifacts: stop the capture; use an official export/import path and do not fall back to broader browser access.
 - Invalid record or missing provenance: `schema_error`.
 - Missing or changed inventory intake, acquisition posture, portal receipt, or stored review binding: stop and regenerate validation from the verified acquisition; never recreate a local-only posture.
 - Missing approved arithmetic input: `calculation_not_run`.
 - Unsupported material claim or malformed package: `validation_fail`.
 
-Never replace missing required evidence with model inference. Never write credentials, SPID/CIE data, cookies, tokens, or unnecessary raw identifiers into artifacts or review payloads. Use a dedicated access-restricted output directory, minimize duplicates, keep external research queries free of personal identifiers, and record the approved model/provider processing scope before semantic review. State that retention, encryption, and deletion remain the studio's responsibility unless an approved storage policy says otherwise.
+Never replace missing required evidence with model inference. Never write credentials, SPID/CIE secrets, cookies, tokens, private or tokenized session URLs, or raw local paths into artifacts or review payloads. Use a dedicated access-restricted output directory, avoid duplicate evidence copies, and keep external research queries free of personal identifiers. The firm or user chooses the Codex account and its data controls outside the per-case workflow.
 
 ## Plugin Improvement Feedback
 

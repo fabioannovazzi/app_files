@@ -139,16 +139,6 @@ def test_new_client_pipeline_promotes_a_sealed_reviewed_phase_one_run(
         "evidence_ids": ["phase1-reviewed-decisions"],
     }
 
-    intake["processing_authority"] = {
-        "status": "authorized",
-        "scope": "new_client_professional_setup",
-        "runtime": "local_codex_workspace",
-        "minimization": "structured_facts_and_selected_excerpts",
-        "external_transfer_authorized": False,
-        "authorized_by": "reviewer-e2e",
-        "authorized_by_role": "professional",
-        "authorized_at": "2026-07-21T12:00:00Z",
-    }
     intake_path.write_text(
         json.dumps(intake, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",

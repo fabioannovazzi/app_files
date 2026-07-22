@@ -81,7 +81,7 @@ signature.
 1. Start with a visible checklist for evidence binding, dependencies, facts,
    material decisions, AML inputs, applicability, document plan, monitoring,
    packaging, and professional review.
-2. Show a Run Intake table with the pseudonymous case alias, verified Client
+2. Show a Run Intake table with the case reference, verified Client
    File Preparation binding or explicit standalone-evidence mode, output directory,
    jurisdiction, reference date, language, local/model-processing posture, and
    assumptions.
@@ -98,8 +98,8 @@ signature.
 Default output policy: create the ordinary owner-only review package whenever
 the inputs and dependencies permit. JSON, Markdown, audit, review, and handoff
 files are not choices to propose. Ask only about material choices that change
-facts, professional scope, source applicability, processing authority,
-destination, or write scope.
+facts, professional scope, source applicability, client-relationship privacy
+role or processing basis, destination, or write scope.
 
 Ask only those unresolved choices in chat when the answer materially changes
 the case or authorized action. Generate the Decision Table from the actual inputs.
@@ -111,20 +111,18 @@ When useful, create `codex_run_review.md` beside the package to record the
 checklist, Run Intake table, Decision Table, commands, limitations, and Artifact
 Card. Never edit plugin source or generated ZIPs during a customer case run.
 
-## Required privacy and authority intake
+## Private review and external boundaries
 
-Before sending third-party content to any model/provider, record whether the
-studio is authorized to process it, the approved processor/runtime and scope,
-the approving pseudonymous actor and role, and the minimization basis. Local
-deterministic validation may run first. Semantic processing remains
-`blocked_decision` until the relevant authorization is explicit.
+Ordinary Codex analysis and the owner-only MCP review may include names, codice
+fiscale, partita IVA, addresses, emails, identity-document numbers, descriptions,
+source excerpts, and rationales when they are professionally useful. Do not add a
+separate per-run model-approval or minimization form merely to permit that work,
+and do not describe data removed after Codex read it as anonymized.
 
-Keep full names, codice fiscale, partita IVA, addresses, emails, identity
-document numbers, raw paths, and source excerpts in the owner-only local case
-artifacts. The MCP review payload uses only pseudonymous references, masked
-values, stable fact IDs, compact evidence status, and source IDs. Do not place
-credentials, authentication codes, cookies, or screening-provider tokens in
-any artifact.
+Keep credentials, authentication codes, cookies, private or tokenized session
+URLs, and screening-provider tokens out of every artifact and review surface.
+Keep raw local paths behind the owner-only persistence boundary. Authorization
+for a real external action remains a separate gate at the point of that action.
 
 ## Workflow
 
@@ -291,10 +289,10 @@ the system UTC date and fails without writing when that date is later than the
 earliest bound deadline. Refresh the affected material and generate a new run;
 an earlier professional acceptance does not extend the deadline.
 
-Pass a stable pseudonymous studio reviewer reference in the `reviewer` field
-when applying the completed review. Do not put a name, email address, tax code,
-or other direct identifier in that field. A complete set of acceptances without
-this professional reviewer reference must remain blocked from export.
+Pass a stable studio reviewer reference in the `reviewer` field when applying
+the completed review. It may be the reviewer's real name or professional account
+reference. A complete set of acceptances without this reviewer reference must
+remain blocked from export.
 
 `accept` confirms only the displayed proposal. It cannot erase upstream,
 domain, template, privacy, screening, or artifact blockers. `reject`, `mark_unclear`,
@@ -340,8 +338,9 @@ domain, review, and artifact blockers and always keeps
 ## Failure states
 
 - Missing or unreadable evidence: `blocked_input` or `partial_evidence`.
-- Unresolved jurisdiction, processing authority, service meaning, privacy role,
-  AML input, trigger, source, or template applicability: `blocked_decision`.
+- Unresolved jurisdiction, client-relationship privacy role or processing basis,
+  service meaning, AML input, trigger, source, or template applicability:
+  `blocked_decision`.
 - Invalid schema, identifier, range, path, permission, or hash binding:
   `schema_error` or a hard validation failure.
 - Stale source, template, upstream run, or changed material dependency: a hard

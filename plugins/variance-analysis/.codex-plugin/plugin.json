@@ -1,6 +1,6 @@
 {
   "name": "variance-analysis",
-  "version": "0.1.86",
+  "version": "0.1.87",
   "description": "Sales variance analysis workflow with reviewable charts, exploded drilldowns, root-cause outputs, and driver interpretation.",
   "author": {
     "name": "Mparanza",

@@ -508,7 +508,6 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
         "dependency_check": {"status": "not_run"},
         "data_posture": {
             "local_files_read": ["entries.xlsx", "support_1001.pdf"],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
