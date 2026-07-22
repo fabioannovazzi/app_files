@@ -163,7 +163,12 @@ def test_pnl_statement_table_run_writes_deterministic_artifacts(
     _write_statement_fixture(source_file)
     _write_recipe(recipe_path)
 
-    result = core.run_statement_analysis(source_file, output_dir, recipe_path)
+    result = core.run_statement_analysis(
+        source_file,
+        output_dir,
+        recipe_path,
+        language="es",
+    )
 
     assert result.html_path.exists()
     assert result.csv_path.exists()
@@ -179,8 +184,12 @@ def test_pnl_statement_table_run_writes_deterministic_artifacts(
     context = json.loads(result.context_path.read_text(encoding="utf-8"))
     manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
     html = result.html_path.read_text(encoding="utf-8")
+    used_recipe = json.loads(
+        (output_dir / "used_recipe.json").read_text(encoding="utf-8")
+    )
 
     assert context["capability_id"] == "statement.pnl_table"
+    assert used_recipe["language"] == "es"
     assert context["table_key"] == "pnl_statement_table"
     assert context["statement_label"] == "Profit and loss statement"
     table_artifact = manifest["artifacts"][0]

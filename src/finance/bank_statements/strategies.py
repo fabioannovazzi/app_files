@@ -9,7 +9,7 @@ from typing import List
 
 import pdfplumber
 
-from .lexicon import Lexicon
+from .lexicon import Lexicon, canonical_header
 from .model import BankTransaction
 from .normalize import (
     combine_debit_credit,
@@ -42,7 +42,7 @@ def strategy_layout(
     header_idx = _find_header_row(table, lex)
     if header_idx is None:
         return []
-    header = [c.lower() if c else "" for c in table[header_idx]]
+    header = [canonical_header(c or "", lex.headers) for c in table[header_idx]]
     data_rows = table[header_idx + 1 :]
     transactions: List[BankTransaction] = []
     for row in data_rows:
@@ -124,6 +124,7 @@ def strategy_ocr(
     """OCR-based fallback via PaddleOCR; returns empty list when unavailable."""
     try:
         from PIL import Image
+
         from modules.slides.ocr import extract_text_from_image_bytes
     except Exception as e:  # pragma: no cover - optional dependency
         logging.exception(e)

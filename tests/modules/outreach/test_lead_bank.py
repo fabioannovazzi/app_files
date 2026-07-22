@@ -84,6 +84,36 @@ def test_discover_leads_from_html_keeps_firm_domain_contact_email() -> None:
     ]
 
 
+def test_discover_leads_from_html_keeps_spanish_domain_contact_email() -> None:
+    html = """
+    <html>
+      <title>Asesoría Ejemplo</title>
+      <body>
+        <a href="mailto:info@asesoria-ejemplo.es">info@asesoria-ejemplo.es</a>
+      </body>
+    </html>
+    """
+
+    result = discover_leads_from_html(
+        html,
+        source_url="https://asesoria-ejemplo.es/contacto",
+        country="Spain",
+        city="Madrid",
+        source_note="public-directory",
+    )
+
+    assert result == [
+        OutreachLead(
+            name="Asesoría Ejemplo",
+            email="info@asesoria-ejemplo.es",
+            city="Madrid",
+            country="Spain",
+            source_url="https://asesoria-ejemplo.es/contacto",
+            source_note="public-directory",
+        )
+    ]
+
+
 def test_build_lead_bank_from_sources_appends_only_new_hashes(
     tmp_path: Path,
     monkeypatch,

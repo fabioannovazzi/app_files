@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-import base64
 import importlib.util
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
-import zlib
+import types
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -41,6 +43,86 @@ def test_clara_skill_identity_uses_namespace_without_redundant_prefix(
     assert f'display_name: "{display_name}"' in agent_metadata
     assert f"Use ${skill_name}" in agent_metadata
     assert not (PLUGIN_ROOT / "skills" / old_skill_name).exists()
+
+
+def test_clara_public_page_exposes_complete_spanish_locale_contract() -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    english_block = page.split("      en: {", 1)[1].split("      it: {", 1)[0]
+    spanish_block = page.split("      es: {", 1)[1].split("    };", 1)[0]
+    key_pattern = re.compile(r'^\s*(?:"([^"]+)"|(title)):', re.MULTILINE)
+    english_keys = {
+        quoted or bare for quoted, bare in key_pattern.findall(english_block)
+    }
+    spanish_keys = {
+        quoted or bare for quoted, bare in key_pattern.findall(spanish_block)
+    }
+
+    assert english_keys == spanish_keys
+    assert 'data-lang="es"' in page
+    assert 'hreflang="es"' in page
+    assert 'hreflang="x-default"' in page
+    assert 'const supportedLanguages = new Set(["en", "it", "fr", "de", "es"]);' in page
+    assert 'es: "es_ES"' in page
+    assert "Clara prepara el trabajo. El criterio sigue siendo tuyo." in page
+    assert "Consulta cómo se tratan los datos" in page
+
+
+def test_clara_public_page_uses_truthful_english_video_fallback_for_spanish() -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'es: { id: "3zvFm3fGdQ8", duration: "0:37", catalogLanguage: "es" }' in page
+    assert "Narración en inglés · Se abre en YouTube" in page
+    assert "Mientras se preparan las versiones en español" in page
+    assert "activePresentationVideo.catalogLanguage || safeLang" in page
+    assert "lang: videoCatalogLanguage" in page
+
+
+def test_clara_spanish_catalog_localizes_labels_and_discloses_english_audio() -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is required to execute the browser video catalog")
+    script = r"""
+const fs = require("node:fs");
+global.window = {};
+eval(fs.readFileSync(process.argv[1], "utf8"));
+const catalog = window.MparanzaVideos.getCatalog("clara", "es");
+process.stdout.write(JSON.stringify(catalog));
+"""
+
+    result = subprocess.run(
+        [node, "-e", script, str(ROOT / "static" / "shared" / "video-library.js")],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    catalog = json.loads(result.stdout)
+
+    assert catalog["language"] == "es"
+    assert catalog["featured"]["audioLanguage"] == "en"
+    assert catalog["featured"]["shortTitle"] == "Resumen de Clara"
+    assert len(catalog["videos"]) == 11
+    assert {video["audioLanguage"] for video in catalog["videos"]} == {"en"}
+    assert {video["language"] for video in catalog["videos"]} == {"es"}
+    assert catalog["videos"][0]["shortTitle"] == (
+        "Una entrevista que sigue el hilo que realmente importa"
+    )
+    assert [video["id"] for video in catalog["videos"]] == [
+        "s3vtavYiUco",
+        "T_cklFKk3WA",
+        "Ol9yz9NWOlw",
+        "i-EtiyVeBQ8",
+        "OdEdNAVu0hY",
+        "u_UmkF7pDZ8",
+        "zMQjPiyiDnA",
+        "0vM_PmJccwY",
+        "6HCRTPbOanc",
+        "LPjR9Off3sc",
+        "KVGdOyK-Vmc",
+    ]
 
 
 def load_core() -> Any:
@@ -444,7 +526,11 @@ def fixed_now() -> datetime:
     return datetime(2026, 1, 2, 10, 30, tzinfo=timezone.utc)
 
 
-def init_case(tmp_path: Path) -> tuple[Any, Path]:
+def init_case(
+    tmp_path: Path,
+    *,
+    output_language: str = "it",
+) -> tuple[Any, Path]:
     core = load_core()
     case_dir = tmp_path / "case"
     core.initialize_case(
@@ -453,7 +539,7 @@ def init_case(tmp_path: Path) -> tuple[Any, Path]:
         project="Succession advisory",
         objective="Prepare a decision pack",
         audience="Owner",
-        output_language="it",
+        output_language=output_language,
         now=fixed_now(),
     )
     return core, case_dir
@@ -678,7 +764,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.94"
+    assert manifest["version"] == "0.1.100"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -849,6 +935,14 @@ def test_initialize_case_creates_schema_files(tmp_path: Path) -> None:
     assert "Pending judgement entries: 0" in brief
     assert "Active case issues: 0" in brief
     assert "## Clara Mandate" in brief
+
+
+def test_initialize_case_accepts_spanish_output_language(tmp_path: Path) -> None:
+    _core, case_dir = init_case(tmp_path, output_language="es")
+
+    manifest = json.loads((case_dir / "case_manifest.json").read_text())
+
+    assert manifest["output_language"] == "es"
 
 
 def test_validate_workspace_cli_accepts_clean_case(tmp_path: Path) -> None:
@@ -1969,6 +2063,23 @@ def test_clara_kickoff_preparation_and_partner_brief(tmp_path: Path) -> None:
     assert "Prepare a partner questions list." in case_brief
 
 
+def test_clara_partner_brief_localizes_default_content_in_spanish(
+    tmp_path: Path,
+) -> None:
+    core, case_dir = init_case(tmp_path, output_language="es")
+    core.prepare_clara_kickoff(case_dir, now=fixed_now())
+
+    result = core.render_clara_partner_brief(case_dir)
+
+    html = result.html_path.read_text(encoding="utf-8")
+    assert '<html lang="es">' in html
+    assert "Briefing del socio" in html
+    assert "Próximos pasos" in html
+    assert "Transferencia de la propiedad y derechos económicos" in html
+    assert "Registrar la orientación del socio" in html
+    assert "Partner Brief" not in html
+
+
 def test_partner_brief_surfaces_candidates_before_voice_kickoff(
     tmp_path: Path,
 ) -> None:
@@ -2126,6 +2237,58 @@ def test_unapproved_judgement_is_excluded_from_decision_pack(tmp_path: Path) -> 
     assert str(source.resolve()) in workpaper
     assert result.docx_path.exists()
     assert result.workpaper_docx_path.exists()
+
+
+def test_decision_pack_uses_spanish_headings_and_storyline(tmp_path: Path) -> None:
+    core, case_dir = init_case(tmp_path, output_language="es")
+    material = core.ingest_note_text(
+        case_dir,
+        title="Nota del socio",
+        text="La autoridad operativa todavía depende del fundador.",
+        now=fixed_now(),
+    )
+    core.add_judgement_entries(
+        case_dir,
+        [
+            {
+                "kind": "fact",
+                "text": "La autoridad operativa sigue concentrada en el fundador.",
+                "status": "approved",
+                "source_material_ids": [material["id"]],
+            },
+            {
+                "kind": "advisor_judgement",
+                "text": "La transición necesita derechos de decisión explícitos.",
+                "status": "approved",
+                "source_material_ids": [material["id"]],
+            },
+            {
+                "kind": "decision_implication",
+                "text": "Definir una matriz de autoridad antes del relevo.",
+                "status": "approved",
+                "source_material_ids": [material["id"]],
+            },
+        ],
+        now=fixed_now(),
+    )
+    core.add_open_question(
+        case_dir,
+        question="¿Quién tendrá la última palabra sobre inversiones?",
+        why_it_matters="Determina los derechos de decisión reales.",
+        now=fixed_now(),
+    )
+
+    result = core.build_decision_pack(case_dir)
+
+    markdown = result.markdown_path.read_text(encoding="utf-8")
+    workpaper = result.workpaper_markdown_path.read_text(encoding="utf-8")
+    assert "Paquete de decisión" in markdown
+    assert "## Línea argumental ejecutiva" in markdown
+    assert "Punto de partida." in markdown
+    assert "Lectura del caso." in markdown
+    assert "Ruta recomendada." in markdown
+    assert "Preguntas abiertas que resolver" in markdown
+    assert "Documento de trabajo del paquete de decisión" in workpaper
 
 
 def test_pending_only_decision_pack_has_no_executive_storyline(
@@ -2478,6 +2641,30 @@ def test_inclusion_review_renders_status_checklist_without_mutating_entries(
     ]
 
 
+def test_inclusion_review_uses_spanish_review_instructions(tmp_path: Path) -> None:
+    core, case_dir = init_case(tmp_path, output_language="es")
+    core.add_judgement_entries(
+        case_dir,
+        [
+            {
+                "kind": "advisor_judgement",
+                "text": "La transición requiere un mandato explícito.",
+            }
+        ],
+        now=fixed_now(),
+    )
+
+    result = core.build_inclusion_review(case_dir, now=fixed_now())
+
+    review = result.review_path.read_text(encoding="utf-8")
+    assert "# Revisión de inclusión - ClientCo" in review
+    assert "Elementos pendientes que requieren decisión del socio: 1" in review
+    assert "## Cómo responder" in review
+    assert "incluye el elemento 1" in review
+    assert "excluye el elemento 1" in review
+    assert "muestra más sobre el elemento 1" in review
+
+
 def test_inclusion_review_renders_semantic_approval_bundles(
     tmp_path: Path,
 ) -> None:
@@ -2662,7 +2849,7 @@ def test_invalid_judgement_status_raises(tmp_path: Path) -> None:
         )
 
 
-def test_hosted_voice_launcher_carries_case_context(tmp_path: Path) -> None:
+def test_hosted_voice_launcher_keeps_case_context_out_of_url(tmp_path: Path) -> None:
     core, case_dir = init_case(tmp_path)
     launcher = load_hosted_voice_launcher()
     core.add_judgement_entries(
@@ -2679,16 +2866,13 @@ def test_hosted_voice_launcher_carries_case_context(tmp_path: Path) -> None:
 
     context = launcher.build_case_context(case_dir)
     launch_url = launcher.build_launch_url(
-        "https://mparanza.com/case-notes/voice/launch",
-        case_context=context,
+        "https://mparanza.com/case-notes/voice/launch"
     )
-    encoded = parse_qs(urlsplit(launch_url).query)["case_context_z"][0]
-    decoded_context = zlib.decompress(base64.urlsafe_b64decode(encoded)).decode("utf-8")
 
-    assert "ClientCo" in decoded_context
-    assert "Morgan ExampleCo is worried" in decoded_context
-    assert "case_context_z=" in launch_url
-    assert "mode=" not in launch_url
+    assert "ClientCo" in context
+    assert "Morgan ExampleCo is worried" in context
+    assert urlsplit(launch_url).query == ""
+    assert "ClientCo" not in launch_url
 
 
 def test_hosted_voice_launcher_builds_transcription_launch_url(
@@ -2697,16 +2881,12 @@ def test_hosted_voice_launcher_builds_transcription_launch_url(
     _, case_dir = init_case(tmp_path)
     launcher = load_hosted_voice_launcher()
 
-    launch_url, _context_limit = launcher.build_limited_launch_url(
-        case_dir,
-        base_url="https://mparanza.com/case-notes/voice/launch",
+    launch_url = launcher.build_launch_url(
+        "https://mparanza.com/case-notes/voice/launch"
     )
     query = parse_qs(urlsplit(launch_url).query)
-    decoded_context = zlib.decompress(
-        base64.urlsafe_b64decode(query["case_context_z"][0])
-    ).decode("utf-8")
 
-    assert "ClientCo" in decoded_context
+    assert not query
     assert "mode" not in query
     assert not (case_dir / "clara_kickoff_preparation.md").exists()
 
@@ -2718,9 +2898,8 @@ def test_hosted_voice_launcher_rejects_unsupported_voice_purpose(
     launcher = load_hosted_voice_launcher()
 
     with pytest.raises(launcher.CaseWorkspaceError, match="Unsupported voice purpose"):
-        launcher.build_limited_launch_url(
+        launcher.build_case_context(
             case_dir,
-            base_url="https://mparanza.com/case-notes/voice/launch",
             purpose="unsupported_capture",
         )
 
@@ -2739,34 +2918,136 @@ def test_hosted_voice_launcher_rejects_kickoff_context(
         )
 
 
-def test_hosted_voice_launcher_keeps_context_within_url_budget(tmp_path: Path) -> None:
-    core, case_dir = init_case(tmp_path)
+def test_hosted_voice_launcher_rejects_unpinned_destination(tmp_path: Path) -> None:
+    _, case_dir = init_case(tmp_path)
     launcher = load_hosted_voice_launcher()
-    core.add_judgement_entries(
-        case_dir,
-        [
-            {
-                "kind": "codex_inference",
-                "text": (
-                    "Scenario "
-                    f"{index}: validate decision rights, operating controls, "
-                    f"risk register item {index}, and implementation trigger {index}."
-                ),
-            }
-            for index in range(1, 35)
-        ],
-        now=fixed_now(),
+
+    with pytest.raises(launcher.CaseWorkspaceError, match="https://mparanza.com"):
+        launcher.build_launch_url("https://attacker.example/case-notes/voice/launch")
+    assert case_dir.exists()
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://mparanza.com/case-notes/voice/launch",
+        "https://api.mparanza.com/case-notes/voice/launch",
+        "https://mparanza.com:444/case-notes/voice/launch",
+        "https://attacker.example/case-notes/voice/launch",
+    ],
+)
+def test_hosted_voice_launcher_pins_remote_origin(url: str) -> None:
+    launcher = load_hosted_voice_launcher()
+
+    with pytest.raises(launcher.CaseWorkspaceError):
+        launcher.validate_hosted_url(url)
+
+
+def test_hosted_voice_launcher_allows_localhost_only_with_test_flag() -> None:
+    launcher = load_hosted_voice_launcher()
+    local_url = "http://127.0.0.1:8000/case-notes/voice/launch"
+
+    with pytest.raises(launcher.CaseWorkspaceError):
+        launcher.validate_hosted_url(local_url)
+
+    assert (
+        launcher.validate_hosted_url(
+            local_url,
+            allow_localhost_for_tests=True,
+        )
+        == local_url
     )
 
-    launch_url, context_limit = launcher.build_limited_launch_url(
-        case_dir,
-        max_context_chars=2500,
-        max_url_chars=1000,
+
+def test_hosted_voice_secret_file_is_forced_to_owner_only_permissions(
+    tmp_path: Path,
+) -> None:
+    launcher = load_hosted_voice_launcher()
+    secret_path = tmp_path / "session-cookie.txt"
+    secret_path.write_text("auth_session=test-cookie\n", encoding="utf-8")
+    secret_path.chmod(0o644)
+
+    value = launcher.read_private_text_file(
+        secret_path,
+        label="session cookie",
     )
 
-    assert len(launch_url) <= 1000
-    assert context_limit <= 2500
-    assert "case_context_z=" in launch_url
+    assert value == "auth_session=test-cookie"
+    assert secret_path.stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize(
+    "script_name",
+    [
+        "launch_hosted_voice.py",
+        "start_deck_feedback.py",
+        "upload_hosted_audio.py",
+    ],
+)
+def test_hosted_voice_cli_does_not_accept_authentication_secrets_in_argv(
+    script_name: str,
+) -> None:
+    source = (SCRIPTS_DIR / script_name).read_text(encoding="utf-8")
+
+    assert 'parser.add_argument("--magic-link",' not in source
+    assert 'parser.add_argument("--cookie-header",' not in source
+    assert '"--launch-token",' not in source
+    assert '"--launch-token-file",' not in source
+
+
+def test_hosted_audio_upload_requires_an_authenticated_session(
+    tmp_path: Path,
+) -> None:
+    _, case_dir = init_case(tmp_path)
+    uploader = load_hosted_audio_uploader()
+    audio_path = tmp_path / "meeting.m4a"
+    audio_path.write_bytes(b"audio bytes")
+
+    with pytest.raises(
+        uploader.CaseWorkspaceError,
+        match="provide --magic-link-file, --request-magic-link, or --cookie-header-file",
+    ):
+        uploader.upload_hosted_audio(
+            case_dir=case_dir,
+            audio_path=audio_path,
+            import_bundle=False,
+        )
+
+
+def test_hosted_voice_launcher_sends_context_by_authenticated_body(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    _, case_dir = init_case(tmp_path, output_language="es")
+    launcher = load_hosted_voice_launcher()
+    captured: dict[str, Any] = {}
+
+    fake_client = types.ModuleType("upload_hosted_audio")
+    fake_client._new_opener = lambda: object()
+    fake_client.authenticate_with_magic_link = lambda *_args, **_kwargs: ""
+
+    def fake_bind_session_cookie(_opener, **kwargs):
+        captured["cookie"] = kwargs
+
+    def fake_request_context_launch_token(_opener, **kwargs):
+        captured["context_request"] = kwargs
+        return "opaque-token"
+
+    fake_client.bind_session_cookie = fake_bind_session_cookie
+    fake_client.request_context_launch_token = fake_request_context_launch_token
+    monkeypatch.setitem(sys.modules, "upload_hosted_audio", fake_client)
+
+    launch_url, context_attached = launcher.prepare_launch_url(
+        case_dir,
+        cookie_header="auth_session=test-cookie",
+    )
+
+    assert context_attached is True
+    assert launch_url == "https://mparanza.com/case-notes/voice?session=opaque-token"
+    assert captured["cookie"]["base_url"] == "https://mparanza.com"
+    assert "ClientCo" in captured["context_request"]["case_context"]
+    assert captured["context_request"]["language"] == "es"
+    assert "ClientCo" not in launch_url
 
 
 def test_hosted_voice_launcher_builds_clean_chrome_args(tmp_path: Path) -> None:
@@ -2774,9 +3055,10 @@ def test_hosted_voice_launcher_builds_clean_chrome_args(tmp_path: Path) -> None:
     profile_dir = tmp_path / "chrome-profile"
 
     args = launcher.build_chrome_launch_args(
-        "http://127.0.0.1:8000/case-notes/voice/launch?case_context_z=abc",
+        "http://127.0.0.1:8000/case-notes/voice?session=opaque-token",
         profile_dir=profile_dir,
         remote_debugging_port=9224,
+        allow_localhost_for_tests=True,
     )
 
     assert f"--user-data-dir={profile_dir}" in args
@@ -2784,7 +3066,7 @@ def test_hosted_voice_launcher_builds_clean_chrome_args(tmp_path: Path) -> None:
     assert "--remote-debugging-port=9224" in args
     assert "--use-fake-ui-for-media-stream" in args
     assert "--unsafely-treat-insecure-origin-as-secure=http://127.0.0.1:8000" in args
-    assert args[-1].endswith("case_context_z=abc")
+    assert args[-1].endswith("session=opaque-token")
 
 
 def test_hosted_voice_launcher_can_leave_chrome_microphone_prompt_manual(
@@ -2801,8 +3083,11 @@ def test_hosted_voice_launcher_can_leave_chrome_microphone_prompt_manual(
     assert "--use-fake-ui-for-media-stream" not in args
 
 
-def test_start_deck_feedback_imports_new_bundle_and_records_html_target(
+@pytest.mark.parametrize("case_context_attached", [False, True])
+def test_start_deck_feedback_records_actual_context_posture(
     tmp_path: Path,
+    monkeypatch,
+    case_context_attached: bool,
 ) -> None:
     _, case_dir = init_case(tmp_path)
     starter = load_deck_feedback_starter()
@@ -2812,6 +3097,19 @@ def test_start_deck_feedback_imports_new_bundle_and_records_html_target(
     target_deck.write_text("<html><body>Deck</body></html>", encoding="utf-8")
     bundle_path = downloads_dir / "case-notes-voice-20260102.zip"
     wrote_bundle = False
+
+    def fake_prepare_launch_url(_case_dir: Path, **kwargs):
+        assert bool(kwargs["cookie_header"]) is case_context_attached
+        return (
+            (
+                "https://mparanza.com/case-notes/voice?session=opaque-token"
+                if case_context_attached
+                else "https://mparanza.com/case-notes/voice/launch"
+            ),
+            case_context_attached,
+        )
+
+    monkeypatch.setattr(starter, "prepare_launch_url", fake_prepare_launch_url)
 
     def complete_capture(_seconds: float) -> None:
         nonlocal wrote_bundle
@@ -2831,6 +3129,7 @@ def test_start_deck_feedback_imports_new_bundle_and_records_html_target(
         case_dir,
         target_deck_path=target_deck,
         downloads_dir=downloads_dir,
+        cookie_header=("auth_session=test" if case_context_attached else ""),
         open_browser=False,
         poll_seconds=0.01,
         timeout_seconds=1,
@@ -2850,6 +3149,11 @@ def test_start_deck_feedback_imports_new_bundle_and_records_html_target(
     }
     assert handoff["screen_video_path"].endswith("deck-screen.webm")
     assert handoff["data_posture"]["hosted_capture_used"] is True
+    assert result.case_context_attached is case_context_attached
+    assert (
+        handoff["data_posture"]["hosted_case_context_attached"] is case_context_attached
+    )
+    assert bool(handoff["data_posture"]["local_files_read"]) is case_context_attached
 
 
 def test_dependency_checker_maps_core_and_ocr_package_imports() -> None:
@@ -3062,7 +3366,8 @@ def test_import_hosted_voice_bundle_adds_local_pending_judgement(
     assert "Who can veto governance exceptions?" in brief
     review_pack = result.discussion_review_pack_path.read_text(encoding="utf-8")
     clara_review = result.clara_review_path.read_text(encoding="utf-8")
-    assert "Local Codex Discussion Review Pack" in review_pack
+    assert "Codex Discussion Review Pack (local file)" in review_pack
+    assert "may enter model context" in review_pack
     assert "The server handled hosted audio processing only." in review_pack
     assert "Informal governance is a material risk." in review_pack
     assert f"Clara review: `{result.clara_review_path.relative_to(case_dir)}`" in (
@@ -3591,12 +3896,10 @@ def test_upload_hosted_audio_saves_and_imports_bundle(
         _opener,
         magic_link,
         *,
-        launch_url,
         timeout_seconds,
     ):
         captured["auth"] = {
             "magic_link": magic_link,
-            "launch_url": launch_url,
             "timeout_seconds": timeout_seconds,
         }
         return f"launch:{magic_link}"
@@ -3667,18 +3970,13 @@ def test_upload_hosted_audio_saves_and_imports_bundle(
     assert upload_kwargs["launch_token"].startswith("launch:")
     assert upload_kwargs["audio_path"] == audio_path
     assert upload_kwargs["source_metadata"]["title"] == "Morgan interview"
-    auth_query = parse_qs(urlsplit(captured["auth"]["launch_url"]).query)
-    decoded_context = zlib.decompress(
-        base64.urlsafe_b64decode(auth_query["case_context_z"][0])
-    ).decode("utf-8")
-    assert "mode" not in auth_query
-    assert "ClientCo" in decoded_context
+    assert "ClientCo" in upload_kwargs["case_context"]
     assert captured["poll"]["job_id"] == "job-123"
     assert captured["import_args"] == (case_dir, result.bundle_path)
     assert captured["import_kwargs"]["companion_audio_path"] == audio_path
 
 
-def test_upload_hosted_audio_refreshes_context_before_launch_url(
+def test_upload_hosted_audio_refreshes_context_before_body_payload(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -3701,19 +3999,15 @@ def test_upload_hosted_audio_refreshes_context_before_launch_url(
 
     monkeypatch.setattr(uploader, "refresh_case_brief", fake_refresh_case_brief)
 
-    debrief_url = uploader._build_context_launch_url(
+    uploader._refresh_case_context_sources(case_dir, "transcription")
+    debrief_context = uploader.build_case_context(
         case_dir,
-        base_url="https://mparanza.com",
+        purpose="transcription",
     )
-    debrief_query = parse_qs(urlsplit(debrief_url).query)
-    debrief_context = zlib.decompress(
-        base64.urlsafe_b64decode(debrief_query["case_context_z"][0])
-    ).decode("utf-8")
 
     assert calls == ["brief"]
     assert "FRESH brief for ClientCo" in debrief_context
     assert "STALE brief" not in debrief_context
-    assert "mode" not in debrief_query
 
 
 def test_upload_hosted_audio_can_reuse_session_cookie(
@@ -3772,12 +4066,7 @@ def test_upload_hosted_audio_can_reuse_session_cookie(
     assert bundle["user_transcript"] == "Transcript from cookie-authenticated upload."
     assert result.import_result is None
     assert captured["auth"]["cookie_header"] == "auth_session=test-cookie"
-    auth_query = parse_qs(urlsplit(captured["auth"]["launch_url"]).query)
-    decoded_context = zlib.decompress(
-        base64.urlsafe_b64decode(auth_query["case_context_z"][0])
-    ).decode("utf-8")
-    assert "mode" not in auth_query
-    assert "ClientCo" in decoded_context
+    assert "ClientCo" in captured["upload"]["case_context"]
     assert captured["upload"]["launch_token"] == "launch-from-cookie"
     assert captured["poll"]["job_id"] == "job-cookie"
 
@@ -3786,19 +4075,23 @@ def test_hosted_audio_cookie_header_strips_optional_cookie_prefix() -> None:
     uploader = load_hosted_audio_uploader()
     opener = uploader._new_opener()
 
-    uploader._set_cookie_header(opener, "Cookie: auth_session=test-cookie")
+    uploader.bind_session_cookie(
+        opener,
+        base_url="https://mparanza.com",
+        cookie_header="Cookie: auth_session=test-cookie",
+    )
+    mparanza_request = urllib.request.Request("https://mparanza.com/case-notes/voice")
+    uploader._cookie_jar(opener).add_cookie_header(mparanza_request)
 
-    assert opener.addheaders[-1] == ("Cookie", "auth_session=test-cookie")
+    assert mparanza_request.get_header("Cookie") == "auth_session=test-cookie"
 
-    uploader._set_cookie_header(opener, "auth_session=next-cookie")
+    attacker_request = urllib.request.Request("https://attacker.example/collect")
+    uploader._cookie_jar(opener).add_cookie_header(attacker_request)
 
-    assert opener.addheaders[-1] == ("Cookie", "auth_session=next-cookie")
-    assert [
-        header for header in opener.addheaders if header[0].lower() == "cookie"
-    ] == [("Cookie", "auth_session=next-cookie")]
+    assert attacker_request.get_header("Cookie") is None
 
 
-def test_hosted_audio_magic_link_can_relaunch_with_case_context() -> None:
+def test_hosted_audio_magic_link_stays_on_pinned_origin() -> None:
     uploader = load_hosted_audio_uploader()
     seen_urls: list[str] = []
 
@@ -3821,8 +4114,6 @@ def test_hosted_audio_magic_link_can_relaunch_with_case_context() -> None:
     class FakeOpener:
         def open(self, request, timeout):
             seen_urls.append(request.full_url)
-            if len(seen_urls) == 1:
-                return FakeResponse("https://mparanza.com/case-notes/voice")
             return FakeResponse(
                 "https://mparanza.com/case-notes/voice?session=context-token"
             )
@@ -3830,16 +4121,55 @@ def test_hosted_audio_magic_link_can_relaunch_with_case_context() -> None:
     token = uploader.authenticate_with_magic_link(
         FakeOpener(),
         "https://mparanza.com/auth/magic/consume?token=test",
-        launch_url=(
-            "https://mparanza.com/case-notes/voice/launch?" "case_context_z=abc"
-        ),
     )
 
     assert token == "context-token"
     assert seen_urls == [
         "https://mparanza.com/auth/magic/consume?token=test",
-        ("https://mparanza.com/case-notes/voice/launch?" "case_context_z=abc"),
     ]
+
+
+def test_hosted_voice_context_launch_uses_https_body(monkeypatch) -> None:
+    uploader = load_hosted_audio_uploader()
+    captured: dict[str, Any] = {}
+
+    def fake_read_json_response(_opener, request, *, timeout_seconds):
+        captured["url"] = request.full_url
+        captured["method"] = request.method
+        captured["payload"] = json.loads(request.data)
+        captured["timeout_seconds"] = timeout_seconds
+        return uploader.JsonResponse(
+            200,
+            {"status": "ready", "launch_token": "opaque-token"},
+        )
+
+    monkeypatch.setattr(uploader, "_read_json_response", fake_read_json_response)
+
+    token = uploader.request_context_launch_token(
+        object(),
+        base_url="https://mparanza.com",
+        case_context="Client: ExampleCo\nRisk: informal governance.",
+        language="es",
+    )
+
+    assert token == "opaque-token"
+    assert captured["url"] == "https://mparanza.com/case-notes/api/voice/launch"
+    assert captured["method"] == "POST"
+    assert captured["payload"] == {
+        "case_context": "Client: ExampleCo\nRisk: informal governance.",
+        "language": "es",
+    }
+    assert "ExampleCo" not in captured["url"]
+
+
+def test_hosted_audio_rejects_unpinned_magic_link() -> None:
+    uploader = load_hosted_audio_uploader()
+
+    with pytest.raises(uploader.CaseWorkspaceError, match="mparanza.com"):
+        uploader.authenticate_with_magic_link(
+            object(),
+            "https://attacker.example/auth/magic/consume?token=secret",
+        )
 
 
 def test_upload_hosted_audio_retries_large_recording_as_chunks_after_413(
@@ -3857,7 +4187,7 @@ def test_upload_hosted_audio_retries_large_recording_as_chunks_after_413(
     def fake_read_json_response(_opener, request, *, timeout_seconds):
         body = request.data.read() if request.data is not None else b""
         calls.append((request.full_url, body))
-        if request.full_url == "https://example.test/case-notes/api/voice/upload":
+        if request.full_url == "https://mparanza.com/case-notes/api/voice/upload":
             return uploader.JsonResponse(413, {"detail": "request body too large"})
         if request.full_url.endswith("/case-notes/api/voice/upload/chunks/start"):
             assert b'name="total_bytes"\r\n\r\n11' in body
@@ -3886,7 +4216,7 @@ def test_upload_hosted_audio_retries_large_recording_as_chunks_after_413(
 
     payload = uploader.upload_audio_file(
         object(),
-        base_url="https://example.test",
+        base_url="https://mparanza.com",
         launch_token="launch-token",
         audio_path=audio_path,
         source_metadata={"title": "Morgan interview"},
@@ -3895,12 +4225,12 @@ def test_upload_hosted_audio_retries_large_recording_as_chunks_after_413(
 
     assert payload["job_id"] == "job-chunk"
     assert [url for url, _body in calls] == [
-        "https://example.test/case-notes/api/voice/upload",
-        "https://example.test/case-notes/api/voice/upload/chunks/start",
-        "https://example.test/case-notes/api/voice/upload/chunks/upload-123",
-        "https://example.test/case-notes/api/voice/upload/chunks/upload-123",
-        "https://example.test/case-notes/api/voice/upload/chunks/upload-123",
-        "https://example.test/case-notes/api/voice/upload/chunks/upload-123/finish",
+        "https://mparanza.com/case-notes/api/voice/upload",
+        "https://mparanza.com/case-notes/api/voice/upload/chunks/start",
+        "https://mparanza.com/case-notes/api/voice/upload/chunks/upload-123",
+        "https://mparanza.com/case-notes/api/voice/upload/chunks/upload-123",
+        "https://mparanza.com/case-notes/api/voice/upload/chunks/upload-123",
+        "https://mparanza.com/case-notes/api/voice/upload/chunks/upload-123/finish",
     ]
     assert len(chunk_bodies) == 3
     assert b"abcde" in chunk_bodies[0]
@@ -3939,7 +4269,7 @@ def test_upload_hosted_audio_retries_large_recording_as_chunks_after_transport_e
 
     payload = uploader.upload_audio_file(
         object(),
-        base_url="https://example.test",
+        base_url="https://mparanza.com",
         launch_token="launch-token",
         audio_path=audio_path,
         source_metadata={"title": "Morgan interview"},
@@ -3970,7 +4300,7 @@ def test_upload_hosted_audio_poll_fails_fast_on_non_200(
     ):
         uploader.poll_upload_job(
             object(),
-            base_url="https://example.test",
+            base_url="https://mparanza.com",
             job_id="missing-job",
             run_dir=tmp_path,
             poll_seconds=60,
@@ -3980,7 +4310,7 @@ def test_upload_hosted_audio_poll_fails_fast_on_non_200(
     latest_payload = json.loads(
         (tmp_path / "latest_job_payload.json").read_text(encoding="utf-8")
     )
-    assert calls == ["https://example.test/case-notes/api/voice/upload/missing-job"]
+    assert calls == ["https://mparanza.com/case-notes/api/voice/upload/missing-job"]
     assert latest_payload == {"detail": "Not authenticated"}
 
 

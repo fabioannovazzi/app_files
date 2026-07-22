@@ -40,7 +40,7 @@ YEAR_RE = re.compile(r"\b20[0-4]\d\b")
 CH_AHV_RE = re.compile(r"\b756[.\s]?\d{4}[.\s]?\d{4}[.\s]?\d{2}\b")
 UK_NINO_RE = re.compile(r"\b[A-CEGHJ-PR-TW-Z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]\b")
 
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 
 SUMMARY_COPY = {
     "it": {
@@ -95,6 +95,20 @@ SUMMARY_COPY = {
             "extrahiert."
         ),
         "additional_fields": "... {count} weitere Felder in der CSV-Datei.",
+    },
+    "es": {
+        "title": "Datos fiscales estructurados",
+        "limitation": (
+            "Esta sección presenta campos extraídos de texto legible. Cada valor "
+            "debe verificarse en el documento original antes de su uso operativo."
+        ),
+        "field_count": "Campos extraídos",
+        "document_type_count": "Tipos de documento",
+        "empty": (
+            "No se extrajeron campos fiscales estructurados de los documentos "
+            "legibles."
+        ),
+        "additional_fields": "... {count} campos adicionales en el CSV.",
     },
 }
 
@@ -260,6 +274,57 @@ FIELD_LABELS = {
         "Amount due": "Fälliger Betrag",
         "Repayment due": "Fällige Erstattung",
     },
+    "es": {
+        "Codice fiscale individuato": "Código fiscal identificado",
+        "Partita IVA / codice numerico a 11 cifre": (
+            "Número de IVA / código numérico de 11 dígitos"
+        ),
+        "Anno individuato": "Año identificado",
+        "Codice tributo": "Código de pago tributario",
+        "Anno riferimento": "Año de referencia",
+        "Importo a debito versato": "Importe deudor pagado",
+        "Importo a credito compensato": "Importe acreedor compensado",
+        "Importo a debito": "Importe deudor",
+        "Rateazione / mese": "Fraccionamiento / mes",
+        "Importo a credito": "Importe acreedor",
+        "Redditi lavoro dipendente e assimilati": (
+            "Rendimientos del trabajo y asimilados"
+        ),
+        "Redditi pensione": "Rendimientos de pensiones",
+        "Ritenute IRPEF": "Retenciones IRPEF",
+        "Addizionale regionale": "Recargo regional",
+        "Addizionale comunale": "Recargo municipal",
+        "Trattamento integrativo": "Tratamiento complementario",
+        "Giorni lavoro dipendente": "Días de trabajo por cuenta ajena",
+        "Importo da trattenere": "Importe que se debe retener",
+        "Importo da rimborsare": "Importe que se debe reembolsar",
+        "Saldo e primo acconto": "Saldo y primer pago a cuenta",
+        "Secondo o unico acconto": "Segundo o único pago a cuenta",
+        "Reddito complessivo": "Renta total",
+        "Imposta lorda": "Impuesto bruto",
+        "Imposta netta": "Impuesto neto",
+        "Differenza": "Diferencia",
+        "Numero AVS/AHV individuato": "Número AVS/AHV identificado",
+        "Salaire brut / Bruttolohn": "Salario bruto",
+        "Salaire net / Nettolohn": "Salario neto",
+        "Revenu imposable / steuerbares Einkommen": "Renta imponible",
+        "Fortune imposable / steuerbares Vermögen": "Patrimonio imponible",
+        "Impôt anticipé / Verrechnungssteuer": "Impuesto anticipado",
+        "Impôt cantonal / Kantonssteuer": "Impuesto cantonal",
+        "Impôt communal / Gemeindesteuer": "Impuesto municipal",
+        "Impôt fédéral direct / direkte Bundessteuer": "Impuesto federal directo",
+        "National Insurance number": "Número de National Insurance",
+        "Unique Taxpayer Reference": "Referencia única del contribuyente",
+        "Total pay": "Retribución total",
+        "Tax deducted": "Impuesto retenido",
+        "National Insurance": "National Insurance",
+        "Student loan": "Préstamo estudiantil",
+        "Benefits": "Prestaciones",
+        "Bank interest": "Intereses bancarios",
+        "Dividends": "Dividendos",
+        "Amount due": "Importe debido",
+        "Repayment due": "Reembolso debido",
+    },
 }
 
 CONFIDENCE_LABELS = {
@@ -267,6 +332,7 @@ CONFIDENCE_LABELS = {
     "en": {"alta": "high", "media": "medium", "bassa": "low"},
     "fr": {"alta": "élevée", "media": "moyenne", "bassa": "faible"},
     "de": {"alta": "hoch", "media": "mittel", "bassa": "niedrig"},
+    "es": {"alta": "alta", "media": "media", "bassa": "baja"},
 }
 
 WARNING_LABELS = {
@@ -288,6 +354,11 @@ WARNING_LABELS = {
     "de": {
         "campo da verificare su layout originale": (
             "Feld anhand des Originallayouts prüfen"
+        )
+    },
+    "es": {
+        "campo da verificare su layout originale": (
+            "campo que debe verificarse en el diseño original"
         )
     },
 }
@@ -1134,6 +1205,7 @@ def _localize_field_label(label: str, language: str) -> str:
             "en": f"CU point {point}",
             "fr": f"Point CU {point}",
             "de": f"CU-Feld {point}",
+            "es": f"Punto CU {point}",
         }[language]
 
     model_amount = re.fullmatch(r"(?P<row>[A-Z]+\d+) importo (?P<position>\d+)", label)
@@ -1145,6 +1217,7 @@ def _localize_field_label(label: str, language: str) -> str:
             "en": f"{row} amount {position}",
             "fr": f"{row} montant {position}",
             "de": f"{row} Betrag {position}",
+            "es": f"{row} importe {position}",
         }[language]
     return label
 

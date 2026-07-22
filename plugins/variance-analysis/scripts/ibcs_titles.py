@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -53,7 +54,8 @@ class IBCSTitle:
 def _language(recipe: dict[str, Any]) -> str:
     """Return the recipe language code."""
 
-    return str(recipe.get("language") or "en").lower()
+    raw_language = str(recipe.get("language") or "en").lower().replace("_", "-")
+    return raw_language.split("-", maxsplit=1)[0]
 
 
 def _clean_text(value: Any) -> str:
@@ -71,7 +73,10 @@ def _format_entity_name(value: str) -> str:
 def _entity_name(recipe: dict[str, Any]) -> str:
     """Return the chart subject."""
 
-    return reporting_subject_label_from_recipe(recipe) or "Sales"
+    subject = reporting_subject_label_from_recipe(recipe)
+    if subject:
+        return subject
+    return "Ventas" if _language(recipe) == "es" else "Sales"
 
 
 def _currency_unit(recipe: dict[str, Any]) -> str:
@@ -89,16 +94,50 @@ def _comparison_text(recipe: dict[str, Any]) -> str:
 
     mappings = recipe.get("mappings") or {}
     options = recipe.get("options") or {}
-    baseline = _clean_text(mappings.get("baseline_period")) or "baseline"
-    comparison = _clean_text(mappings.get("comparison_period")) or "comparison"
+    language = _language(recipe)
+    baseline_default = "base" if language == "es" else "baseline"
+    comparison_default = "comparación" if language == "es" else "comparison"
+    baseline = _clean_text(mappings.get("baseline_period")) or baseline_default
+    comparison = _clean_text(mappings.get("comparison_period")) or comparison_default
     text = f"{comparison} vs {baseline}"
     if options.get("comparison_basis") != "period":
         return text
-    return reporting_period_line_from_recipe(
+    period_text = reporting_period_line_from_recipe(
         recipe,
         current_label=comparison,
         previous_label=baseline,
     )
+    if language != "es":
+        return period_text
+    return _spanish_period_text(period_text)
+
+
+def _spanish_period_text(text: str) -> str:
+    """Translate framework wording in a shared reporting-period label."""
+
+    localized = text.replace(", YTD through ", ", acumulado del año hasta ")
+    localized = localized.replace(", rolling through ", ", periodo móvil hasta ")
+    localized = localized.replace(", through ", ", hasta ")
+    localized = re.sub(
+        r", rolling (\d+) months$",
+        r", periodo móvil de \1 meses",
+        localized,
+    )
+    suffixes = {
+        ", rolling period": ", periodo móvil",
+        ", calendar period": ", periodo natural",
+        ", year to date": ", acumulado del año",
+        ", period to date": ", acumulado del periodo",
+        ", latest rolling year vs prior year": (
+            ", último año móvil frente al año anterior"
+        ),
+        ", custom": ", comparación personalizada",
+        ", not applicable": ", no aplicable",
+    }
+    for english_suffix, spanish_suffix in suffixes.items():
+        if localized.endswith(english_suffix):
+            return f"{localized[: -len(english_suffix)]}{spanish_suffix}"
+    return localized
 
 
 def _what_text(
@@ -141,6 +180,37 @@ def _what_text(
                 else "Drilldown root-cause vendite"
             ),
         }.get(chart_kind, "Varianza vendite")
+    elif language == "es":
+        base = {
+            "standard_variance": "Varianza de ventas",
+            "pvm_decomposition_ladder": ("Varianza de ventas: precio, unidades y mix"),
+            "standard_small_multiples": (
+                f"Varianza de ventas por {dimension_text}"
+                if dimension_text
+                else "Varianza de ventas por dimensión"
+            ),
+            "total_by_dimension": (
+                f"Varianza total de ventas por {dimension_text}"
+                if dimension_text
+                else "Varianza total de ventas por dimensión"
+            ),
+            "root_cause": "Varianza de ventas por causa raíz",
+            "root_cause_total": "Varianza total de ventas por causa raíz",
+            "variable_root_cause_total": (
+                "Varianza total de ventas por causa raíz y dimensión variable"
+            ),
+            "root_cause_component": (
+                "Varianza de componentes de ventas por causa raíz"
+            ),
+            "variable_root_cause": (
+                "Varianza de ventas por causa raíz y dimensión variable"
+            ),
+            "root_cause_drilldown": (
+                f"Desglose de causa raíz de ventas: {selection_text}"
+                if selection_text
+                else "Desglose de causa raíz de ventas"
+            ),
+        }.get(chart_kind, "Varianza de ventas")
     else:
         base = {
             "standard_variance": "Sales variance",

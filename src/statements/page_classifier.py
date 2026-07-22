@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 from typing import Dict, Tuple
 
@@ -42,6 +43,15 @@ SUMMARY_TOKENS = [
     "summary",
     "totals",
     "fees",
+    "resumen",
+    "interés",
+    "interes",
+    "comisión",
+    "comision",
+    "comisiones",
+    "gastos",
+    "impuesto",
+    "impuestos",
     "zusammenfassung",
     "zinsen",
     "gebühren",
@@ -52,12 +62,21 @@ HEADER_TOKENS = {
     "data",
     "datum",
     "fecha",
+    "fechaoperacion",
     "valuta",
     "valore",
     "wert",
     "description",
     "descrizione",
+    "descripcion",
+    "concepto",
+    "detalle",
     "beschreibung",
+    "importe",
+    "cargo",
+    "abono",
+    "saldo",
+    "referencia",
     "debit",
     "credito",
     "credit",
@@ -101,7 +120,18 @@ class PageClassifier:
                     candidate_rows += 1
         header_cues = False
         for line in cleaned_lines[:5]:
-            tokens = {re.sub(r"[^a-z]", "", t.lower()) for t in line.split()}
+            tokens = {
+                re.sub(
+                    r"[^a-z]",
+                    "",
+                    "".join(
+                        char
+                        for char in unicodedata.normalize("NFKD", token.lower())
+                        if not unicodedata.combining(char)
+                    ),
+                )
+                for token in line.split()
+            }
             if len(tokens & HEADER_TOKENS) >= 2:
                 header_cues = True
                 break
@@ -113,7 +143,9 @@ class PageClassifier:
         amount_density = len(amount_lines) / total_lines
         label = "other"
         confidence = 0.5
-        if (candidate_rows >= TX_MIN_ROWS and date_density >= TX_MIN_DATE_DENSITY) or header_cues:
+        if (
+            candidate_rows >= TX_MIN_ROWS and date_density >= TX_MIN_DATE_DENSITY
+        ) or header_cues:
             label = "transaction"
             confidence = 0.9
         elif (

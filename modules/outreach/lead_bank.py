@@ -378,6 +378,7 @@ def _usable_outreach_email(email_address: str) -> bool:
         "ch",
         "com",
         "de",
+        "es",
         "eu",
         "fr",
         "it",

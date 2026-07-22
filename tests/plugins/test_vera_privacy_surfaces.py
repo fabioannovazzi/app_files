@@ -20,6 +20,15 @@ VALIDATOR = (
     / "validate_privacy_surfaces.py"
 )
 CONTEXT_POLICY = "real_case_data_may_enter_codex_context"
+ORDINARY_PROCESSING = {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": (
+        "existing_chatgpt_or_codex_account_selected_by_firm_or_user"
+    ),
+    "separate_vera_recipient": False,
+    "automatic_anonymization": False,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+}
 
 
 def _validator_module():
@@ -34,6 +43,13 @@ def _manifests() -> list[dict[str, Any]]:
     return [
         json.loads(path.read_text(encoding="utf-8"))
         for path in sorted((VERA_ROOT / "privacy" / "workstreams").glob("*.json"))
+    ]
+
+
+def _service_manifests() -> list[dict[str, Any]]:
+    return [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted((VERA_ROOT / "privacy" / "services").glob("*.json"))
     ]
 
 
@@ -61,6 +77,66 @@ def test_vera_privacy_manifests_match_the_published_schema() -> None:
 
     assert errors
     assert all(not manifest_errors for manifest_errors in errors.values()), errors
+
+
+def test_vera_shared_service_manifests_match_the_published_schema() -> None:
+    schema = json.loads(
+        (VERA_ROOT / "privacy" / "service-boundary.schema.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    validator = jsonschema.Draft202012Validator(schema)
+    errors = {
+        str(manifest["service_id"]): [
+            error.message for error in validator.iter_errors(manifest)
+        ]
+        for manifest in _service_manifests()
+    }
+
+    assert errors
+    assert all(not manifest_errors for manifest_errors in errors.values()), errors
+
+
+def test_vera_shared_services_separate_update_from_feedback() -> None:
+    manifests = {manifest["service_id"]: manifest for manifest in _service_manifests()}
+
+    assert set(manifests) == {"plugin-update-check", "plugin-feedback"}
+    update_boundaries = manifests["plugin-update-check"]["boundaries_beyond_codex"]
+    assert [boundary["id"] for boundary in update_boundaries] == [
+        "automatic-version-check"
+    ]
+    assert update_boundaries[0]["activation"] == "automatic_session_start"
+    feedback_boundaries = manifests["plugin-feedback"]["boundaries_beyond_codex"]
+    assert [boundary["id"] for boundary in feedback_boundaries] == [
+        "automatic-feedback-status-poll",
+        "approved-text-feedback-submission",
+        "approved-improvement-interview",
+    ]
+    assert feedback_boundaries[0]["activation"] == ("automatic_after_prior_submission")
+    assert all(
+        boundary["activation"] == "explicit_user_choice"
+        and boundary["optional"] is True
+        and boundary["requires_confirmation"] is True
+        for boundary in feedback_boundaries[1:]
+    )
+
+
+def test_vera_security_controls_exclude_architecture_and_policy_labels() -> None:
+    ceremonial_ids = {
+        "draft-status",
+        "local-file-processing",
+        "local-mechanical-checks",
+        "local-reconciliation",
+        "local-report-build",
+        "local-sampling",
+        "no-external-data-path",
+        "no-model-api-in-scripts",
+        "no-retroactive-anonymisation-claim",
+    }
+
+    for manifest in _manifests():
+        control_ids = {row["id"] for row in manifest["security_controls"]}
+        assert not control_ids & ceremonial_ids
 
 
 def test_vera_privacy_contract_allows_real_case_data_without_minimum_classifier() -> (
@@ -101,6 +177,13 @@ def test_vera_account_boundary_is_explicit_and_not_a_per_case_form() -> None:
             "review_items": expected_items,
             "per_case_record_required": False,
         }
+
+
+def test_vera_ordinary_processing_has_no_extra_recipient_or_fake_anonymization() -> (
+    None
+):
+    for manifest in _manifests():
+        assert manifest["ordinary_processing"] == ORDINARY_PROCESSING
 
 
 def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:
@@ -179,6 +262,56 @@ def test_vera_privacy_validator_reports_unregistered_manifest_gap(
     errors = validator.validate_privacy_surfaces(vera_root)
 
     assert "check-entries: registered workstream has no privacy manifest" in errors
+
+
+def test_vera_privacy_validator_reports_shared_service_manifest_gap(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    vera_root = tmp_path / "plugins" / "vera"
+    shutil.copytree(VERA_ROOT, vera_root)
+    missing = vera_root / "privacy" / "services" / "plugin-feedback.json"
+    missing.unlink()
+
+    errors = validator.validate_privacy_surfaces(vera_root)
+
+    assert (
+        "plugin-feedback: registered shared service has no privacy manifest" in errors
+    )
+
+
+def test_vera_privacy_validator_detects_changed_shared_service_source(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    vera_root = tmp_path / "plugins" / "vera"
+    shutil.copytree(VERA_ROOT, vera_root)
+    components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    components["plugins"] = []
+    components["workflow_roles"] = {}
+    (vera_root / "components.json").write_text(
+        json.dumps(components, indent=2) + "\n", encoding="utf-8"
+    )
+    for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
+        manifest.unlink()
+
+    validator._refresh_service("all", vera_root)
+    updater = vera_root / "scripts" / "check_for_update.py"
+    updater.write_text(
+        updater.read_text(encoding="utf-8") + "\n# material boundary change\n",
+        encoding="utf-8",
+    )
+
+    errors = validator.validate_privacy_surfaces(vera_root)
+
+    assert (
+        "plugin-update-check: privacy review is stale; run the review skill, then --refresh-service"
+        in errors
+    )
+    assert (
+        "plugin-feedback: privacy review is stale; run the review skill, then --refresh-service"
+        in errors
+    )
 
 
 def test_vera_privacy_validator_detects_changed_governed_source(
@@ -278,6 +411,86 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     assert (
         "client-file-preparation: privacy review is stale; run the review skill, then --refresh"
         in validator.validate_privacy_surfaces(vera_root)
+    )
+
+
+def test_privacy_fingerprint_governs_shared_ocr_source(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    plugins_root = tmp_path / "repository" / "plugins"
+    vera_root = plugins_root / "vera"
+    component_root = plugins_root / "previdenza-inps"
+    shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
+    shutil.copytree(VERA_ROOT, vera_root)
+    shutil.copytree(ROOT / "plugins" / "previdenza-inps", component_root)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_ocr",
+        shared_ocr,
+    )
+    components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    components["plugins"] = ["previdenza-inps"]
+    components["workflow_roles"] = {}
+    components["shared_services"] = []
+    (vera_root / "components.json").write_text(
+        json.dumps(components, indent=2) + "\n", encoding="utf-8"
+    )
+    for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
+        if manifest.stem != "previdenza-inps":
+            manifest.unlink()
+    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
+        manifest.unlink()
+    validator._refresh("previdenza-inps", vera_root)
+
+    assert validator.validate_privacy_surfaces(vera_root) == []
+
+    adapter = shared_ocr / "__init__.py"
+    adapter.write_text(
+        adapter.read_text(encoding="utf-8") + "\n# material model-route change\n",
+        encoding="utf-8",
+    )
+
+    assert (
+        "previdenza-inps: privacy review is stale; run the review skill, then --refresh"
+        in validator.validate_privacy_surfaces(vera_root)
+    )
+
+
+def test_packaged_ocr_consumer_cannot_fall_back_to_repository_shared_source(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    plugins_root = tmp_path / "repository" / "plugins"
+    vera_root = plugins_root / "vera"
+    source_component = plugins_root / "previdenza-inps"
+    shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
+    shutil.copytree(VERA_ROOT, vera_root)
+    shutil.copytree(ROOT / "plugins" / "previdenza-inps", source_component)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_ocr",
+        shared_ocr,
+    )
+    components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    components["plugins"] = ["previdenza-inps"]
+    components["workflow_roles"] = {}
+    components["shared_services"] = []
+    (vera_root / "components.json").write_text(
+        json.dumps(components, indent=2) + "\n", encoding="utf-8"
+    )
+    for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
+        if manifest.stem != "previdenza-inps":
+            manifest.unlink()
+    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
+        manifest.unlink()
+    validator._refresh("previdenza-inps", vera_root)
+    shutil.copytree(source_component, vera_root / "modules" / "previdenza-inps")
+
+    errors = validator.validate_privacy_surfaces(vera_root)
+
+    assert any(
+        error.startswith("previdenza-inps: cannot fingerprint governed source:")
+        and "governed shared path" in error
+        for error in errors
     )
 
 

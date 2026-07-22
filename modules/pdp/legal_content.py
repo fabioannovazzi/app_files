@@ -14,7 +14,7 @@ __all__ = [
 
 CONTACT_EMAIL = "fabio@mparanza.com"
 SUPPORT_EMAIL = "fabio@mparanza.com"
-LEGAL_EFFECTIVE_DATE = "July 14, 2026"
+LEGAL_EFFECTIVE_DATE = "July 22, 2026"
 
 LEGAL_PAGES: dict[str, dict[str, Any]] = {
     "zero-retention": {
@@ -22,38 +22,35 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
         "eyebrow": "Mparanza LLC · Privacy notice",
         "effective_date": LEGAL_EFFECTIVE_DATE,
         "summary": (
-            "Mparanza's core products are local-first plugins. Mparanza does "
-            "not receive or retain Customer Content processed entirely in the "
-            "AI environment and workspace you choose. Our objective is zero "
-            "retention of Customer Content across Mparanza-controlled systems. "
-            "This policy also serves as our privacy notice and explains the "
-            "limited hosted, operational, legal, and external-service exceptions."
+            "Mparanza's products use two processing categories. Ordinary plugin "
+            "functions use your existing ChatGPT plan and Codex workspace. "
+            "Mparanza does "
+            "not receive or retain Customer Content merely because you use those "
+            "functions, and the plugin does not automatically anonymize that "
+            "content. Mparanza-hosted services receive the content needed to "
+            "provide them under the retention rules below."
         ),
         "sections": [
             {
                 "id": "commitment",
-                "title": "Our Zero-Retention Commitment",
+                "title": "What Zero Retention Means",
                 "paragraphs": [
                     (
-                        "Zero retention is Mparanza's design objective for "
-                        "Customer Content on systems that Mparanza controls. "
-                        "Customer Content means files, datasets, prompts, "
-                        "instructions, recordings, transcripts, reports, "
-                        "comments, and workflow outputs submitted for processing."
+                        "Zero retention is a design objective for Customer Content "
+                        "on systems that Mparanza controls, not a claim that every "
+                        "hosted service stores nothing. Customer Content means files, "
+                        "datasets, prompts, instructions, recordings, transcripts, "
+                        "reports, comments, and workflow outputs submitted for processing."
                     ),
                     (
-                        "We avoid receiving Customer Content when a workflow can "
-                        "run locally. When Mparanza does receive Customer Content, "
-                        "our objective is to keep it only for the shortest period "
-                        "needed for the feature you requested and then delete or "
-                        "de-identify Mparanza-controlled copies."
+                        "Ordinary plugin functions use your existing ChatGPT plan and "
+                        "Codex workspace without sending Customer Content to Mparanza. "
+                        "Mparanza-hosted services receive the content described for each "
+                        "service and follow the retention and deletion arrangements below."
                     ),
                     (
-                        "Zero retention does not mean that Mparanza keeps no "
-                        "information of any kind or that every optional hosted "
-                        "feature deletes data instantly. Authentication, delivery, "
-                        "security, legal, saved-feature, and external-service "
-                        "records are addressed below."
+                        "Authentication, delivery, security, legal, saved-service, "
+                        "and external-service records are also addressed below."
                     ),
                 ],
             },
@@ -71,7 +68,8 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "Mparanza-controlled systems are systems that Mparanza "
                         "operates or can directly administer. Your own device, "
-                        "chosen AI environment, connected services, email provider, "
+                        "existing ChatGPT plan and Codex workspace, connected "
+                        "services, email provider, "
                         "and other externally operated systems are not "
                         "Mparanza-controlled systems."
                     ),
@@ -85,36 +83,38 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "local-plugins",
-                "title": "Local Plugin Workflows",
+                "title": "Ordinary Plugin Functions",
                 "paragraphs": [
                     (
-                        "Mparanza's core plugins run in the AI environment and "
-                        "workspace you choose. Installing or using a plugin does "
-                        "not by itself upload workspace files to mparanza.com. "
-                        "Mparanza does not receive, access, or retain Customer "
-                        "Content that stays within that environment."
+                        "Ordinary plugin functions use your existing ChatGPT plan "
+                        "and Codex workspace. Files, scripts, and outputs "
+                        "may stay on your computer, while content Codex reads can "
+                        "enter the model context under that plan. Mparanza does not "
+                        "receive, access, or retain that Customer Content merely "
+                        "because you use the plugin, and the plugin does not "
+                        "automatically anonymize it."
                     ),
                     (
-                        "Your chosen environment, connectors, and other services "
-                        "may process information under their own arrangements. "
-                        "If a plugin clearly invokes a Mparanza-hosted feature, "
-                        "the hosted portion is covered by the next section."
+                        "Your ChatGPT plan, Codex workspace settings, connectors, and "
+                        "other services process information under their own "
+                        "arrangements. If a plugin clearly invokes a Mparanza-hosted "
+                        "service, that category is covered by the next section."
                     ),
                 ],
             },
             {
                 "id": "hosted-features",
-                "title": "Optional Hosted Features",
+                "title": "Mparanza-Hosted Services",
                 "paragraphs": [
                     (
-                        "When you explicitly use a Mparanza-hosted feature, the "
-                        "content needed for that feature reaches Mparanza-controlled "
+                        "When you explicitly use a Mparanza-hosted service, the "
+                        "content needed for that service reaches Mparanza-controlled "
                         "systems. Hosted processing may create uploads, temporary "
                         "files, session or job state, extracted content, generated "
                         "outputs, recordings, transcripts, or review artifacts."
                     ),
                     (
-                        "Some hosted features process a request without intentionally "
+                        "Some hosted services process a request without intentionally "
                         "preserving durable feature state. Others intentionally "
                         "save a deck, template, checking session, interview, report, "
                         "or output so it can be resumed, reviewed, shared, retried, "
@@ -125,8 +125,8 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "Closing a browser, completing a job, archiving a project, "
                         "or allowing a link to expire does not necessarily delete "
                         "the underlying hosted data. Mparanza's product development "
-                        "is focused on local plugins and reducing these hosted "
-                        "retention exceptions."
+                        "is focused on ordinary plugin functions and reducing these "
+                        "hosted retention exceptions."
                     ),
                 ],
             },
@@ -143,7 +143,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     ),
                     (
                         "Customer Content and feature state that you explicitly "
-                        "submit to or create with an optional hosted feature;"
+                        "submit to or create with a Mparanza-hosted service;"
                     ),
                     (
                         "limited download, transactional-message, and delivery "
@@ -165,7 +165,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "id": "how-we-use-information",
                 "title": "How We Use Information",
                 "paragraphs": [
-                    "We use retained information only as needed:",
+                    "We use retained information for:",
                 ],
                 "bullets": [
                     "to perform the workflow or provide the feature you requested;",
@@ -174,10 +174,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "and protect the Service;"
                     ),
                     ("to deliver requested downloads and transactional messages;"),
-                    (
-                        "to troubleshoot failures using the minimum information "
-                        "reasonably needed; and"
-                    ),
+                    ("to troubleshoot failures and provide support; and"),
                     (
                         "to comply with law, enforce terms, and protect rights, "
                         "safety, and security."
@@ -206,17 +203,26 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Retention Today",
                 "paragraphs": [
                     (
-                        "Our objective is to move every Mparanza-controlled "
-                        "Customer Content workflow toward zero retention. The "
-                        "following describes current retention behavior and "
-                        "therefore the present limits of that objective:"
+                        "Retention differs by service. The following describes the "
+                        "current behavior:"
                     ),
                 ],
                 "bullets": [
                     (
-                        "Local plugin content: Mparanza retention is zero because "
-                        "Mparanza does not receive content that remains in your "
-                        "chosen environment."
+                        "Ordinary plugin functions: Mparanza retention is zero for "
+                        "content Mparanza does not receive. Content that Codex reads "
+                        "is handled under the terms and data controls of your "
+                        "existing ChatGPT plan and Codex workspace; local storage "
+                        "is not anonymization."
+                    ),
+                    (
+                        "Plugin updates and feedback: startup checks request the public "
+                        "plugin-version manifest and may poll the status of a previously "
+                        "submitted request. Those checks contain no Customer Content, "
+                        "although the technical records described below may be logged. "
+                        "Feedback or suggestion content is transmitted only through the "
+                        "explicit submission workflow and remains a support record until "
+                        "administrative deletion."
                     ),
                     (
                         "Request-scoped hosted tools: the application does not "
@@ -237,13 +243,25 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "before a completed package can be returned. On terminal "
                         "package retrieval, transcript and package job state are "
                         "scrubbed before the server sends the response; if that "
-                        "scrub fails, retrieval is blocked. Startup and periodic "
-                        "cleanup remove abandoned call-capture state after "
-                        "interrupted processing."
+                        "scrub fails, retrieval is blocked. When an authenticated "
+                        "launch includes compact case context, it is held in "
+                        "owner-bound opaque-token metadata and used to guide "
+                        "transcription. Token access expires after eight hours; "
+                        "startup and periodic cleanup remove expired launch metadata "
+                        "and abandoned call-capture state after interrupted processing."
                     ),
                     (
-                        "Saved hosted features: slide projects, templates, and "
-                        "hosted interviews are retained until manual or "
+                        "Retail data bridge: Retailer Signals and Brand Fit evidence "
+                        "jobs expire after 30 days, mapping worksets after 7 days, and "
+                        "mapping submissions after 180 days. Product-image bytes and "
+                        "generated reports are not uploaded by the plugin. These periods "
+                        "cover bridge artifacts; central structured product records, "
+                        "taxonomy, and accepted mappings are durable service data and do "
+                        "not share that automatic schedule."
+                    ),
+                    (
+                        "Saved Mparanza-hosted content: slide projects, templates, "
+                        "and hosted interviews are retained until manual or "
                         "administrative deletion. Archiving a deck or expiration "
                         "of an interview link is not deletion."
                     ),
@@ -273,17 +291,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "External Services",
                 "paragraphs": [
                     (
-                        "A plugin operates inside the AI environment and workspace "
-                        "you choose. Mparanza does not control that environment or "
-                        "make promises about its handling of data; its terms apply "
-                        "separately."
+                        "Ordinary plugin functions use your existing ChatGPT plan "
+                        "and Codex workspace. Mparanza does not control that plan or "
+                        "workspace or make promises about its handling of data; its "
+                        "terms and data controls apply separately."
                     ),
                     (
-                        "When a Mparanza-hosted feature requires an external service, "
-                        "only the information reasonably needed to perform the "
-                        "requested operation may be transmitted to that service. "
-                        "External systems are not Mparanza-controlled systems, and "
-                        "their terms apply separately."
+                        "When a Mparanza-hosted service uses an external service, the "
+                        "content described for that hosted service may be transmitted "
+                        "to it. External systems are not Mparanza-controlled systems, "
+                        "and their terms apply separately."
                     ),
                 ],
             },
@@ -408,10 +425,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
         "effective_date": LEGAL_EFFECTIVE_DATE,
         "summary": (
             "These Terms govern access to and use of mparanza.com, Mparanza web "
-            "tools, downloadable plugins, and related services. Mparanza's core "
-            "plugins are local-first, while optional hosted features have the "
-            "data lifecycles described in the Zero Retention Policy. The Service "
-            "is currently provided for free and without service levels."
+            "tools, downloadable plugins, and related services. Ordinary plugin "
+            "functions use your existing ChatGPT plan and Codex workspace, while "
+            "Mparanza-hosted services have the data lifecycles described in the "
+            "Zero Retention Policy. The Service is currently provided for free and "
+            "without service levels."
         ),
         "sections": [
             {
@@ -480,14 +498,15 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "You retain ownership of files, data, prompts, text, "
                         "records, instructions, comments, and other content you "
                         "provide, which these Terms call User Content. Content "
-                        "processed solely by a downloaded plugin in your chosen "
-                        "environment is not submitted to Mparanza merely because "
-                        "the plugin reads or writes it. Mparanza receives no license "
-                        "to that local content unless you direct it to a "
-                        "Mparanza-hosted feature."
+                        "processed by an ordinary plugin function through your "
+                        "existing ChatGPT plan and Codex workspace is not submitted "
+                        "to Mparanza "
+                        "merely because the plugin reads or writes it. Mparanza "
+                        "receives no license to that content unless you direct it "
+                        "to a Mparanza-hosted service."
                     ),
                     (
-                        "For User Content submitted to a Mparanza-hosted feature, "
+                        "For User Content submitted to a Mparanza-hosted service, "
                         "you grant Mparanza and its service providers a limited, "
                         "worldwide, non-exclusive, royalty-free license to host, "
                         "copy, transmit, process, format, display to you, and "
@@ -536,7 +555,8 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "immediately remove information from active memory, technical "
                         "logs, delivered messages, infrastructure backups, records "
                         "required for law or security, or systems operated by others. "
-                        "Files created by local plugins remain under your control "
+                        "Files created by ordinary plugin functions remain under "
+                        "your control "
                         "and must be deleted from your environment by you."
                     ),
                     (
@@ -610,12 +630,15 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Third-Party Services",
                 "paragraphs": [
                     (
-                        "Some features rely on external services for functions such "
-                        "as hosting, authentication, communications, model processing, "
-                        "connectors, browser operations, and infrastructure. When "
-                        "you use such a feature, you direct and authorize Mparanza "
-                        "to transmit the content and related information reasonably "
-                        "necessary to perform it."
+                        "Ordinary plugin functions use your existing ChatGPT plan and "
+                        "any connectors or browser services you choose. Mparanza does "
+                        "not transmit that content merely because the plugin uses them."
+                    ),
+                    (
+                        "When a Mparanza-hosted service uses an external provider for "
+                        "hosting, authentication, communications, model processing, or "
+                        "infrastructure, you direct and authorize Mparanza to transmit "
+                        "the content described for that hosted service."
                     ),
                     (
                         "External systems are outside Mparanza's direct control. "
@@ -655,8 +678,9 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "The Zero Retention Policy at "
                         "https://mparanza.com/zero-retention describes how Mparanza "
                         "handles Customer Content and personal information, the "
-                        "difference between local and hosted processing, current "
-                        "retention behavior, and available privacy rights."
+                        "difference between ordinary plugin functions and "
+                        "Mparanza-hosted services, current retention behavior, and "
+                        "available privacy rights."
                     ),
                     (
                         "If these Terms and the Zero Retention Policy describe a "
@@ -753,8 +777,9 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "Termination does not itself guarantee immediate deletion. "
                         "Hosted content is handled according to the Retention and "
                         "Deletion section and the Zero Retention Policy. Content "
-                        "created or stored by local plugins remains in your chosen "
-                        "environment, and Mparanza cannot delete it remotely."
+                        "created or stored by ordinary plugin functions remains in "
+                        "your chosen workspace, and Mparanza cannot delete it "
+                        "remotely."
                     ),
                     (
                         "The User Content license ends when Mparanza no longer holds "
@@ -852,13 +877,14 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "local-first",
-                "title": "Local-First Support Boundary",
+                "title": "Ordinary Functions Support Boundary",
                 "paragraphs": [
                     (
-                        "Mparanza plugins run in the AI environment and workspace "
-                        "you choose. For local plugin workflows, Mparanza has no "
-                        "automatic access to your files, plugin runs, or outputs "
-                        "and cannot inspect them unless you choose to share details."
+                        "Ordinary plugin functions use your existing ChatGPT plan "
+                        "and Codex workspace. Mparanza has no automatic access to "
+                        "your files, plugin runs, or outputs and cannot inspect them "
+                        "unless you choose to share details or invoke a "
+                        "Mparanza-hosted service."
                     ),
                 ],
             },

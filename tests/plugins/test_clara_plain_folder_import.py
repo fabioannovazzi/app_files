@@ -120,6 +120,31 @@ def test_plain_folder_import_creates_bundle_transcript_and_registry(
     assert not (target_dir / "voice_sessions").exists()
 
 
+def test_plain_folder_import_writes_spanish_transcript_copy(tmp_path: Path) -> None:
+    importer = load_importer()
+    target_dir = tmp_path / "documents"
+    bundle_path = tmp_path / "Downloads" / "case-notes-audio-spanish.zip"
+    payload = voice_payload(
+        transcript="La participante describe el proceso actual y sus límites."
+    )
+    payload["language"] = "es-ES"
+    payload["source_metadata"] = {"title": "Caso de ejemplo", "participants": ""}
+    write_zip_bundle(bundle_path, payload)
+
+    result = importer.import_hosted_voice_bundle_to_folder(
+        target_dir,
+        bundle_path,
+        now=FIXED_NOW,
+    )
+
+    transcript = result.transcript_path.read_text(encoding="utf-8")
+    assert "Caso de ejemplo — Transcripción de la llamada" in transcript
+    assert "## Transcripción" in transcript
+    assert "Participantes indicados en los metadatos: no disponible" in transcript
+    assert "Archivo de origen" in transcript
+    assert "Call transcript" not in transcript
+
+
 def test_plain_folder_import_exact_rerun_is_idempotent(tmp_path: Path) -> None:
     importer = load_importer()
     source_dir = tmp_path / "Downloads"

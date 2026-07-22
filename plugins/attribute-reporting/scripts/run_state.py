@@ -109,7 +109,7 @@ def _write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
 
 @contextmanager
 def _locked_run(run: Path) -> Iterator[None]:
-    """Serialize ledger reads and writes across parallel local Codex agents."""
+    """Serialize local-ledger access across parallel Codex agents."""
 
     lock_path = run / ".run_state.lock"
     with lock_path.open("a+", encoding="utf-8") as handle:

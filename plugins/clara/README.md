@@ -55,11 +55,11 @@ URLs remain server-authoritative; product images and report artifacts remain
 local. Do not add its report to a case or convert it into a 16:9 deck unless the
 user explicitly asks for that follow-on work.
 
-Brand Fit uses the same local-first boundary. The server prepares structured
-evidence from its stored product snapshot; the completed Retailer Signals
-report, downloaded product images, semantic interpretation, independent review,
-and final HTML report remain local. Neither the user nor the server supplies a
-model-provider API key for that work.
+Brand Fit uses a hosted evidence boundary and local report artifacts. The server
+prepares structured evidence from its stored product snapshot; the completed
+Retailer Signals report, downloaded product images, and final HTML report remain
+local. Codex performs semantic interpretation and independent review through the
+user's existing ChatGPT plan; no separate model-provider API key is required.
 
 Reporting Engine's canonical implementation lives inside Clara at
 `modules/reporting-engine`; it has no standalone plugin identity. Editable
@@ -68,9 +68,17 @@ Attribute Reporting and chart-family implementations remain in their
 under `modules/`. Clara's skills own discovery and routing.
 
 The scripts are intentionally mechanical. They validate JSON shape, preserve
-source provenance, enforce the client-pack inclusion gate, and render outputs. Codex handles
-the semantic work: interpreting advisor judgement, challenging assumptions after
-import, asking follow-up questions, and drafting client-facing narrative.
+source provenance, enforce the client-pack inclusion gate, and render outputs.
+Codex handles the semantic work through the user's existing ChatGPT plan:
+interpreting advisor judgement, challenging assumptions after import, asking
+follow-up questions, and drafting client-facing narrative.
+
+## Privacy Surface Governance
+
+Every new or materially changed Clara workflow or hosted integration must use
+`skills/privacy-surface-review`, update the relevant records under `privacy/`,
+and pass its validator before packaging. This is a developer/release check, not
+a routine per-case notice or consent step.
 
 For Attribute Reporting, delegate its dependency check before component helper
 scripts:
@@ -284,8 +292,9 @@ inspect the intended paths and `--json` for a machine-readable result.
 This path only preserves source material. It does not create case JSON files,
 register judgement, infer speakers, or make the transcript advisory evidence.
 If `case_manifest.json` is present, use `import_hosted_voice_bundle.py` instead.
-Speaker attribution remains a separate local Codex/Clara text review that keeps
-the original transcript unchanged.
+Speaker attribution remains a separate text-only Codex/Clara review after local
+import. The transcript may enter model context through the user's existing
+ChatGPT plan; the original local transcript remains unchanged.
 
 ## Normalizing Legacy PowerPoint Decks
 
@@ -332,6 +341,7 @@ industry implications, material anchors, succession lenses, and red flags.
 python scripts/prepare_clara_kickoff.py <case-dir>
 python scripts/build_clara_kickoff_deck.py <case-dir>
 python scripts/launch_hosted_voice.py <case-dir>
+python scripts/launch_hosted_voice.py <case-dir> --cookie-header-file /tmp/mparanza.cookie
 python scripts/import_hosted_voice_bundle.py <case-dir> <downloaded-bundle.json>
 python scripts/build_clara_partner_brief.py <case-dir>
 ```
@@ -479,19 +489,23 @@ python scripts/approve_judgements.py <case-dir> --bundle <number-or-id> \
 ## Hosted Voice Debrief
 
 The hosted voice path lets the Clara plugin use the Mparanza server for
-Realtime voice without requiring a local OpenAI API key. The server issues a
-short-lived launch token with compact context from the local `case_brief.md`.
-That context is kept only in the launch-token metadata while the token is
-valid. The hosted page records live audio or uploads an existing recording; for
-browser tab audio it can also capture tab video as provenance. The server
+Realtime voice without requiring a local OpenAI API key. With an authenticated
+cookie or magic link, the launcher sends compact context from the local
+`case_brief.md` in an HTTPS request body. The server keeps that context in
+short-lived metadata and returns an opaque token; case context is never placed
+in the launch URL. The token is bound to the authenticated user and does not
+replace the Mparanza session. Without supplied authentication material, the
+launcher uses an explicit browser-authenticated fallback without reading or
+attaching the case brief. The hosted page records live audio or uploads an existing recording;
+for browser tab audio it can also capture tab video as provenance. The server
 transcribes audio and returns a downloadable bundle. Attribution, challenge,
-and semantic review happen after import, when local Codex reviews the full
-transcript in the case workspace.
+and semantic review happen after import, when Codex reviews the full transcript
+in the case workspace through the user's existing ChatGPT plan.
 
 ```bash
 python scripts/launch_hosted_voice.py <case-dir>
 python scripts/import_hosted_voice_bundle.py <case-dir> <downloaded-bundle.json>
-python scripts/upload_hosted_audio.py <case-dir> <audio-file> --magic-link "<url>"
+python scripts/upload_hosted_audio.py <case-dir> <audio-file> --magic-link-file /tmp/mparanza.magic-link
 python scripts/upload_hosted_audio.py <case-dir> <audio-file> --cookie-header-file /tmp/mparanza.cookie
 ```
 
@@ -502,22 +516,26 @@ case and target deck, then runs the single continuing helper:
 ```bash
 python scripts/start_deck_feedback.py <case-dir> \
   --deck <existing-deck.pptx-or-html> \
-  --browser chrome
+  --browser chrome \
+  --cookie-header-file /tmp/mparanza.cookie
 ```
 
-The helper opens the context-bearing hosted capture, watches for a new bundle,
-imports it automatically, and records the exact deck target in the imported
-voice session. Users do not need the server URL or a manual Downloads-folder
-handoff.
+The helper opens the hosted capture, watches for a new bundle, imports it
+automatically, and records the exact deck target in the imported voice session.
+When authentication material is supplied, it attaches case context through the
+same body-based launch; otherwise its handoff records that the context-free
+browser-authenticated fallback was used. Users do not need the server URL or a
+manual Downloads-folder handoff.
 
 Imported sessions are written under `voice_sessions/`, registered as transcript
 materials, and added to `judgement_log.json` as pending entries only. They are
 not used in the decision pack unless later marked ready for client-pack use.
 The import also writes `voice_sessions/<timestamp>/codex_discussion_review.md`,
-a local-only Codex review pack for the second-pass advisory read of the full
+a locally stored review pack for Codex's second-pass advisory read of the full
 discussion: weak assumptions, contradictions, missed questions, and candidate
-Clara entries. Before an imported transcript changes the advisory position or
-deck, Codex updates `advisory_evidence_map.md`.
+Clara entries. Its contents may enter model context through the user's ChatGPT
+plan. Before an imported transcript changes the advisory position or deck,
+Codex updates `advisory_evidence_map.md`.
 
 For screen-video sessions that may revise an existing deck, Clara prepares a
 local deck-revision intake before slide editing. The intake is evidence
@@ -707,9 +725,10 @@ resolves to `docs/specs/pptx_templates/bain-style-spec.md`. A project case can
 override this by passing `--deck-style`, `--style-spec`, or by adding a style
 field to `case_manifest.json`.
 
-Speaker attribution is local and text-only. The hosted server transcribes
-audio and may provide clean text, but it is not the authority for naming
-speakers in Clara case work. Import creates and registers
+Speaker attribution is text-only Codex work after local import. The hosted
+server transcribes audio and may provide clean text, but it is not the authority
+for naming speakers in Clara case work. The transcript Codex reads may enter the
+model context through the user's existing ChatGPT plan. Import creates and registers
 `voice_sessions/<timestamp>/attributed_transcript.md` only when attribution is
 actually trivial: a single known speaker. If more than one speaker is possible,
 import writes `speaker_attribution_task.md` plus
@@ -740,10 +759,10 @@ browser or Chrome extension cannot attach local files. The script can consume a
 Mparanza magic link or reuse an existing authenticated `Cookie` header, uploads
 the audio through the hosted API, saves the bundle under the case workspace,
 imports it into `voice_sessions/`, and copies the original audio file into the
-imported session folder. By default it attaches the same compact local case
-context used by `launch_hosted_voice.py` before requesting the upload token; use
-`--no-case-context` only for debugging a raw hosted token path. Use `--no-import`
-only when you need to inspect the hosted bundle before registering it locally.
+imported session folder. By default it sends compact local case context in the
+authenticated upload body; use `--no-case-context` when the hosted
+transcription should not receive that context. Use `--no-import` only when you
+need to inspect the hosted bundle before registering it locally.
 
 ## Support Package
 

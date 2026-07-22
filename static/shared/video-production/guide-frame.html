@@ -479,6 +479,13 @@
         date: "Datum", account: "Konto", text: "Text", amount: "Betrag",
         selected: "Auswahl", reason: "Grund", entry: "Buchung", support: "Beleg",
         document: "Dokument", party: "Gegenpartei", matched: "belegt", review: "zu prüfen"
+      },
+      es: {
+        language: "Español", guide: "Guía de trabajo", current: "En curso", ready: "Listo",
+        period: "Periodo", population: "Población", method: "Método", rows: "líneas",
+        date: "Fecha", account: "Cuenta", text: "Descripción", amount: "Importe",
+        selected: "Selección", reason: "Motivo", entry: "Asiento", support: "Justificante",
+        document: "Documento", party: "Contraparte", matched: "respaldados", review: "por revisar"
       }
     };
 
@@ -486,14 +493,16 @@
       it: {"new-client": "Nuovo cliente", "journal-sampling": "Campionamento del giornale", "check-entries": "Controllo scritture"},
       en: {"new-client": "New Client", "journal-sampling": "Journal Sampling", "check-entries": "Check Entries"},
       fr: {"new-client": "Nouveau client", "journal-sampling": "Échantillonnage du journal", "check-entries": "Contrôle des écritures"},
-      de: {"new-client": "Neuer Mandant", "journal-sampling": "Journal-Stichprobe", "check-entries": "Buchungen prüfen"}
+      de: {"new-client": "Neuer Mandant", "journal-sampling": "Journal-Stichprobe", "check-entries": "Buchungen prüfen"},
+      es: {"new-client": "Nuevo cliente", "journal-sampling": "Muestreo del diario", "check-entries": "Comprobación de asientos"}
     };
 
     const journalExamples = {
       it: {descriptions: ["Servizi cloud", "Consulenza", "Storno rateo", "Trasferta", "Chiusura manuale"], method: "Copertura + anomalie"},
       en: {descriptions: ["Cloud services", "Consulting", "Accrual reversal", "Travel", "Manual close"], method: "Coverage + unusual"},
       fr: {descriptions: ["Services cloud", "Conseil", "Extourne", "Déplacement", "Clôture manuelle"], method: "Couverture + atypiques"},
-      de: {descriptions: ["Cloud-Dienste", "Beratung", "Abgrenzungsstorno", "Reise", "Manueller Abschluss"], method: "Abdeckung + Auffällige"}
+      de: {descriptions: ["Cloud-Dienste", "Beratung", "Abgrenzungsstorno", "Reise", "Manueller Abschluss"], method: "Abdeckung + Auffällige"},
+      es: {descriptions: ["Servicios cloud", "Consultoría", "Reversión de periodificación", "Viaje", "Cierre manual"], method: "Cobertura + inusuales"}
     };
 
     function workflowVisual(data, copy) {

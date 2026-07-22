@@ -55,6 +55,11 @@ WORKPAPER_SHEET_HEADERS = {
     ],
 }
 WORKPAPER_SHEETS = list(WORKPAPER_SHEET_HEADERS)
+SPANISH_WORKPAPER_SHEET_NAMES = {
+    "Inventory": "Inventario",
+    "Amount candidates": "Importes candidatos",
+    "Candidate matches": "Coincidencias candidatas",
+}
 
 
 @dataclass(frozen=True)
@@ -741,12 +746,21 @@ def _output_records(
         "ui_decisions.json",
         "final_artifacts.json",
     }
+    is_spanish = audit.get("language") == "es"
     required_text_by_path = {
-        "review_packet.md": [
-            "# Concordato plan review packet",
-            "## Deterministic counts",
-            "## Codex review required",
-        ],
+        "review_packet.md": (
+            [
+                "# Paquete de revisión del plan de concordato",
+                "## Recuentos deterministas",
+                "## Revisión requerida por Codex",
+            ]
+            if is_spanish
+            else [
+                "# Concordato plan review packet",
+                "## Deterministic counts",
+                "## Codex review required",
+            ]
+        ),
         "concordato_review_summary.docx": [
             "Revisione piano concordato - sintesi tie-out",
             "Conclusione operativa",
@@ -765,17 +779,40 @@ def _output_records(
             "status": "written",
         }
         if relative == "concordato_tie_out_workpaper.xlsx":
-            output["required_sheets"] = WORKPAPER_SHEETS
-            output["required_sheet_headers"] = _workpaper_required_sheet_headers(
+            sheet_names = (
+                SPANISH_WORKPAPER_SHEET_NAMES
+                if is_spanish
+                else {name: name for name in WORKPAPER_SHEETS}
+            )
+            output["required_sheets"] = [sheet_names[name] for name in WORKPAPER_SHEETS]
+            required_headers = _workpaper_required_sheet_headers(
                 inventory=inventory,
                 candidates=candidates,
                 matches=matches,
             )
-            output["required_cells"] = _workpaper_required_cells(
+            output["required_sheet_headers"] = {
+                sheet_names[name]: headers for name, headers in required_headers.items()
+            }
+            required_cells = _workpaper_required_cells(
                 inventory=inventory,
                 candidates=candidates,
                 matches=matches,
             )
+            if is_spanish:
+                required_cells = {
+                    name: {
+                        cell: (
+                            "No se generaron filas"
+                            if value == "No rows generated"
+                            else value
+                        )
+                        for cell, value in cells.items()
+                    }
+                    for name, cells in required_cells.items()
+                }
+            output["required_cells"] = {
+                sheet_names[name]: cells for name, cells in required_cells.items()
+            }
             output["qa_checks"] = [
                 "office_zip",
                 "workbook_xml",

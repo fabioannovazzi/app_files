@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "service_id": "hosted-voice",
+  "display_name": "Mparanza Hosted Voice",
+  "provider_or_recipients": [
+    "Mparanza Hosted Voice",
+    "The realtime or transcription provider configured by Mparanza; Clara's main skill currently identifies an OpenAI Realtime session for live voice"
+  ],
+  "workflows": [
+    "clara",
+    "deck-correction",
+    "transcribe"
+  ],
+  "governed_paths": [
+    "skills/clara/SKILL.md",
+    "skills/deck-correction/SKILL.md",
+    "skills/transcribe/SKILL.md",
+    "scripts/launch_hosted_voice.py",
+    "scripts/start_deck_feedback.py",
+    "scripts/upload_hosted_audio.py",
+    "repository/modules/case_notes_voice/api.py",
+    "repository/modules/pdp/legal_content.py",
+    "repository/static/js/case-notes-voice.js",
+    "repository/templates/case_notes_voice.html"
+  ],
+  "trigger": "The user chooses live Voice Capture, hosted audio upload, or live deck-feedback capture. Importing an already downloaded bundle does not trigger this service.",
+  "automatic": false,
+  "data_sent": [
+    {
+      "id": "authentication-and-launch",
+      "when": "When requesting or consuming a magic link or reusing a Mparanza session, then opening a user-bound launch token",
+      "content": "Authorized email and redirect path, magic-link token or session cookie, short-lived launch token used alongside the authenticated session, and ordinary connection metadata"
+    },
+    {
+      "id": "compact-case-context",
+      "when": "When the default context-bearing launch or authenticated upload path is used",
+      "content": "A bounded excerpt of the local case brief, which can include client, project, participant, fact, judgement, question, and other professional context; when selected, it is used to guide transcription of names and professional terms"
+    },
+    {
+      "id": "live-capture",
+      "when": "During live consultant debrief or deck-feedback capture",
+      "content": "Microphone audio, selected language, launch token, and realtime transcription-session metadata. Screen video, active-slide timeline, and visual capture metadata remain in the browser and local downloaded bundle and are not uploaded to Mparanza."
+    },
+    {
+      "id": "uploaded-recording",
+      "when": "When an existing audio recording is uploaded",
+      "content": "Audio bytes, language, title, source type, interview date, participants, interviewer, notes, and upload/job metadata"
+    }
+  ],
+  "data_returned": [
+    {
+      "id": "launch-and-job-receipts",
+      "when": "After launch or upload creation",
+      "content": "Launch token or browser URL, upload job identifier, status, and service messages"
+    },
+    {
+      "id": "voice-bundle",
+      "when": "When capture or transcription completes",
+      "content": "The server returns transcript payload, timed events, source metadata, transcription metadata, and job status. The browser combines those results with locally recorded audio, screen video, and slide-timeline provenance when it builds the downloadable ZIP."
+    }
+  ],
+  "access": {
+    "arrangement": "Launch and upload require a Mparanza user session established directly or by consuming a magic link. The short-lived, user-bound launch token is an additional session control, not standalone authentication. The browser uses the token alongside the authenticated session to access the hosted capture surface; the plugin downloads or receives the completed bundle into the local workspace. The plugin source does not establish internal operator access.",
+    "controls": [
+      "Remote launch and upload routes are intended for HTTPS mparanza.com; authentication material is not written into transcript or advisory artifacts.",
+      "Plugin command-line entry points read magic links and session cookies from owner-only files or an interactive prompt rather than command arguments; they do not offer a launch-token-only upload path.",
+      "The launch, realtime, upload, and job routes require the authenticated Mparanza session; voice operations additionally require a returned user-bound launch token or job identifier.",
+      "Local import preserves the raw bundle and records fingerprints before advisory interpretation."
+    ]
+  },
+  "retention": {
+    "status": "documented",
+    "statement": "Live screen video remains in the browser and is not uploaded. Context-bearing launch metadata is bound to the authenticated user behind an opaque token; token access expires after eight hours, and expired metadata is removed by startup or periodic cleanup rather than at a guaranteed exact instant. Hosted audio, upload chunks, and transcription work files must be deleted before a completed package is available. On terminal package retrieval, transcript and job state are scrubbed before the response; a scrub failure blocks retrieval. Cleanup also removes stale chunks, terminal jobs, and abandoned processing state. Ordinary technical logs follow the separate service logging arrangements."
+  },
+  "security_controls": [
+    {
+      "id": "pinned-origin-and-authenticated-session",
+      "control": "Plugin clients reject remote destinations other than exact HTTPS mparanza.com, bind supplied cookies to that origin, and require a cookie- or magic-link-authenticated session rather than treating a launch token as standalone authentication."
+    },
+    {
+      "id": "bounded-context",
+      "control": "The launcher bounds the case-brief excerpt, sends it only in an authenticated HTTPS request body, uses an opaque launch token in the browser URL, and reports truncation."
+    },
+    {
+      "id": "local-screen-video",
+      "control": "Screen video is recorded and packaged by browser JavaScript and is never included in the Hosted Voice upload or realtime-session requests."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "hosted_service_boundary_review_of_source",
+    "source_fingerprint": "c4045512dfcd7651595bd56bc0cb18c78b2058834f544f8e8ccd853e4965e09b"
+  }
+}

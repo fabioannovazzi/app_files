@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import logging
 from pathlib import Path
 from typing import Callable, Iterable, Mapping, Tuple
@@ -12,7 +13,7 @@ from modules.check_entries.summary import summarize_results
 from modules.llm.function_calls import function_specs, mapping_examples
 from modules.llm.random_entries_queries import infer_column_mapping
 from modules.process_excel.logic import _as_dict
-from modules.process_pdf_journal.logic import parse_journal
+from modules.process_pdf_journal.logic import normalize_ocr_language, parse_journal
 from src.check_statements import (
     _detect_excel_header_polars as detect_excel_header_polars,
 )
@@ -21,6 +22,8 @@ from src.check_statements import _rebuild_df_with_header as rebuild_df_with_head
 
 def _load_dataframe(
     data: str | Path | bytes | pl.DataFrame | pl.LazyFrame,
+    *,
+    lang: str = "eng",
 ) -> pl.DataFrame:
     """Return a DataFrame from *data* which may be a path or in-memory object."""
     if isinstance(data, pl.LazyFrame):
@@ -38,7 +41,7 @@ def _load_dataframe(
             return pl.read_csv(path)
         if suffix == ".pdf":
             with open(path, "rb") as fh:
-                return parse_journal(fh.read())
+                return parse_journal(fh.read(), lang=normalize_ocr_language(lang))
         raise ValueError(f"Unsupported file type: {suffix}")
     if isinstance(data, bytes):
         header_row = detect_excel_header_polars(data)
@@ -92,7 +95,7 @@ def check_entries_pipeline(
         ``(result_df, summary_text, summary_metrics, error_message)``
     """
 
-    df = _load_dataframe(data)
+    df = _load_dataframe(data, lang=lang)
     mapping = mapping or _infer_mapping(llm_wrapper, df)
     pdf_map = build_pdf_map(pdf_files)
 

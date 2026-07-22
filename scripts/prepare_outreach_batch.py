@@ -40,17 +40,17 @@ def main() -> int:
     parser.add_argument(
         "--locale",
         default="",
-        help="Optional reporting key, for example italy, geneva, zurich, or usa.",
+        help="Optional reporting key, for example italy, spain, geneva, zurich, or usa.",
     )
     parser.add_argument(
         "--quota-key",
         default="",
-        help="Daily quota country/market key, for example italy, switzerland, or usa.",
+        help="Daily quota country/market key, for example italy, spain, switzerland, or usa.",
     )
     parser.add_argument(
         "--language",
         required=True,
-        help="Message language key, for example it, en, fr, or de.",
+        help="Message language key, for example it, en, fr, de, or es.",
     )
     parser.add_argument("--limit", type=int, default=10)
     parser.add_argument("--status", default="prepared")

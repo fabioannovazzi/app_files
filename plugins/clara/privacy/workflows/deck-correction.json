@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "workflow": "deck-correction",
+  "display_name": "Deck Correction",
+  "governed_paths": [
+    "skills/deck-correction/SKILL.md",
+    "scripts/start_deck_feedback.py",
+    "scripts/prepare_voice_deck_revision.py",
+    "scripts/build_deck_revision_workbench.py",
+    "scripts/build_deck_revision_interpretation_packets.py",
+    "scripts/finalize_deck_revision_plan.py",
+    "scripts/build_deck_revision_execution_plan.py",
+    "scripts/build_deck_revision_execution_packets.py",
+    "scripts/analyze_deck_revision_materials.py",
+    "scripts/approve_deck_revision_plan.py",
+    "scripts/apply_deck_revision_plan.py",
+    "scripts/verify_deck_revision_output.py",
+    "scripts/complete_deck_revision_output_review.py"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "deck-and-feedback-evidence",
+        "purpose": "Interpret requested changes against the correct deck and evidence",
+        "content": "Existing PPTX or HTML deck; slide text, images, notes and structure; spoken feedback, transcript, screen recording, review notes, partner comments, case evidence, style authority, and source materials"
+      },
+      {
+        "id": "revision-plan-and-output",
+        "purpose": "Plan, apply, and verify only the understood changes",
+        "content": "Interpretation packets, requested changes, uncertainty, targets, success criteria, approval state, patches, corrected deck, rendered slides, verification findings, and final audience-facing review"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [
+    "hosted-voice"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "optional-live-feedback-capture",
+      "kind": "hosted_service",
+      "hosted_service_id": "hosted-voice",
+      "destination": "Mparanza Hosted Voice and its configured realtime/transcription provider",
+      "purpose": "Capture spoken or screen-recorded deck feedback when no reviewed transcript already exists",
+      "content": "Compact case context and captured audio reach Hosted Voice. Screen video, active-slide timeline, deck identity, and visual capture metadata remain in the browser and local downloaded bundle; the service returns transcript and transcription metadata.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The hosted route is used only when the user requests live recording or hosted transcription.",
+        "An existing reviewed local transcript can be used without calling Hosted Voice.",
+        "The separate hosted-service record states the source-backed access and retention position."
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "98a787301225d4534a2e8e0725b4365f6a1d9b2651309efa7b315f36c5992442"
+  }
+}

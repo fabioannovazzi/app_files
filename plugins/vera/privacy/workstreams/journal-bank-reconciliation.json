@@ -31,12 +31,15 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [],
   "security_controls": [
-    {
-      "id": "local-reconciliation",
-      "control": "Parsing, normalization, deterministic matching, controls, and review-package generation run locally."
-    },
     {
       "id": "private-output-root",
       "control": "Run artifacts are written outside published repository paths."
@@ -46,6 +49,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ca6dddad91f823f12e69f7bc39dfc9ee9ee2bddf4f0700b8ad9c7fda6d7eae14"
+    "source_fingerprint": "a544c282a88aff046ae4794b57b82543d96cbf4809a16ef78859baf6e17c20c1"
   }
 }

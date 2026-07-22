@@ -51,13 +51,19 @@ VERA_RENDERED_VIDEO_IDENTITIES = {
     *(
         ("new-client", edition, language)
         for edition in ("core", "italy")
-        for language in ("it", "en", "fr", "de")
+        for language in ("it", "en", "fr", "de", "es")
     ),
-    *(("journal-sampling", "core", language) for language in ("it", "en", "fr", "de")),
-    *(("check-entries", "core", language) for language in ("it", "en", "fr", "de")),
+    *(
+        ("journal-sampling", "core", language)
+        for language in ("it", "en", "fr", "de", "es")
+    ),
+    *(
+        ("check-entries", "core", language)
+        for language in ("it", "en", "fr", "de", "es")
+    ),
     *(
         ("check-entries", "italy-fatturapa", language)
-        for language in ("en", "fr", "de")
+        for language in ("en", "fr", "de", "es")
     ),
 }
 VERA_CORE_VIDEO_FORBIDDEN_PHRASES = (
@@ -104,6 +110,160 @@ VERA_CONNECTED_JOURNEYS = (
     ("report-builder", "../concordato-plan-review/index.html?lang=it"),
     ("report-builder", "../deep-research-validator/index.html?lang=it"),
 )
+
+
+def _split_js_top_level(source: str) -> list[str]:
+    """Split JavaScript object entries without splitting nested values."""
+
+    chunks: list[str] = []
+    start = 0
+    depths = {"{": 0, "[": 0, "(": 0}
+    closing = {"}": "{", "]": "[", ")": "("}
+    quote = ""
+    escaped = False
+    line_comment = False
+    block_comment = False
+    index = 0
+    while index < len(source):
+        char = source[index]
+        following = source[index + 1] if index + 1 < len(source) else ""
+        if line_comment:
+            line_comment = char != "\n"
+        elif block_comment:
+            if char == "*" and following == "/":
+                block_comment = False
+                index += 1
+        elif quote:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = ""
+        elif char == "/" and following == "/":
+            line_comment = True
+            index += 1
+        elif char == "/" and following == "*":
+            block_comment = True
+            index += 1
+        elif char in {'"', "'", "`"}:
+            quote = char
+        elif char in depths:
+            depths[char] += 1
+        elif char in closing:
+            depths[closing[char]] -= 1
+        elif char == "," and not any(depths.values()):
+            chunks.append(source[start:index])
+            start = index + 1
+        index += 1
+    chunks.append(source[start:])
+    return chunks
+
+
+def _strip_leading_js_comments(source: str) -> str:
+    """Remove comments that appear before one JavaScript object property."""
+
+    value = source.lstrip()
+    while value.startswith(("//", "/*")):
+        if value.startswith("//"):
+            newline = value.find("\n")
+            return (
+                "" if newline < 0 else _strip_leading_js_comments(value[newline + 1 :])
+            )
+        comment_end = value.find("*/", 2)
+        return (
+            ""
+            if comment_end < 0
+            else _strip_leading_js_comments(value[comment_end + 2 :])
+        )
+    return value
+
+
+def _js_object_properties(literal: str) -> dict[str, str]:
+    """Return the direct properties of a JavaScript object literal."""
+
+    value = literal.strip()
+    if not (value.startswith("{") and value.endswith("}")):
+        return {}
+    properties: dict[str, str] = {}
+    property_pattern = re.compile(
+        r'^(?:"([^"]+)"|\'([^\']+)\'|([A-Za-z_$][\w$]*))\s*:\s*'
+    )
+    for raw_entry in _split_js_top_level(value[1:-1]):
+        entry = _strip_leading_js_comments(raw_entry)
+        match = property_pattern.match(entry)
+        if match is None:
+            continue
+        key = next(group for group in match.groups() if group is not None)
+        properties[key] = entry[match.end() :].strip()
+    return properties
+
+
+def _js_object_key_paths(literal: str, prefix: str = "") -> set[str]:
+    """Collect nested property paths from a JavaScript object literal."""
+
+    paths: set[str] = set()
+    for key, value in _js_object_properties(literal).items():
+        path = f"{prefix}.{key}" if prefix else key
+        paths.add(path)
+        if value.startswith("{"):
+            paths.update(_js_object_key_paths(value, path))
+    return paths
+
+
+def _find_js_object_end(source: str, start: int) -> int:
+    """Find the closing brace for one JavaScript object literal."""
+
+    depth = 0
+    quote = ""
+    escaped = False
+    line_comment = False
+    block_comment = False
+    index = start
+    while index < len(source):
+        char = source[index]
+        following = source[index + 1] if index + 1 < len(source) else ""
+        if line_comment:
+            line_comment = char != "\n"
+        elif block_comment:
+            if char == "*" and following == "/":
+                block_comment = False
+                index += 1
+        elif quote:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = ""
+        elif char == "/" and following == "/":
+            line_comment = True
+            index += 1
+        elif char == "/" and following == "*":
+            block_comment = True
+            index += 1
+        elif char in {'"', "'", "`"}:
+            quote = char
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return index
+        index += 1
+    raise AssertionError("Unclosed JavaScript object literal")
+
+
+def _js_named_object_literals(source: str) -> list[tuple[str, str]]:
+    """Extract const-assigned JavaScript object literals from one HTML page."""
+
+    literals: list[tuple[str, str]] = []
+    pattern = re.compile(r"\bconst\s+([A-Za-z_$][\w$]*)\s*=\s*\{")
+    for match in pattern.finditer(source):
+        start = source.index("{", match.start())
+        end = _find_js_object_end(source, start)
+        literals.append((match.group(1), source[start : end + 1]))
+    return literals
 
 
 def _vtt_seconds(timestamp: str) -> float:
@@ -180,12 +340,72 @@ def test_vera_core_pages_publish_consistent_multilingual_metadata(
             rf'<meta\b(?=[^>]*\bproperty="{property_name}")[^>]*\bcontent="[^"]+"',
             page,
         ), property_name
-    for language in ("it", "en", "fr", "de"):
+    for language in ("it", "en", "fr", "de", "es"):
         assert (
             f'<link rel="alternate" hreflang="{language}" '
             f'href="{canonical_url}?lang={language}">'
         ) in page
     assert f'<link rel="alternate" hreflang="x-default" href="{canonical_url}">' in page
+
+
+def test_static_pages_with_spanish_selector_have_complete_locale_objects() -> None:
+    expected_languages = {"it", "en", "fr", "de", "es"}
+    localized_pages = 0
+
+    for page_path in sorted(SHARED_ROOT.rglob("*.html")):
+        page = page_path.read_text(encoding="utf-8")
+        if 'data-lang="es"' not in page:
+            continue
+
+        localized_pages += 1
+        page_label = page_path.relative_to(ROOT).as_posix()
+        language_buttons = set(re.findall(r'data-lang="([a-z]{2})"', page))
+        assert language_buttons == expected_languages, page_label
+        assert 'hreflang="es"' in page, page_label
+
+        locale_object_count = 0
+        for object_name, literal in _js_named_object_literals(page):
+            properties = _js_object_properties(literal)
+            present_languages = language_buttons.intersection(properties)
+            if len(present_languages) < 3:
+                continue
+
+            locale_object_count += 1
+            assert language_buttons <= properties.keys(), (
+                f"{page_label}: {object_name} is missing "
+                f"{sorted(language_buttons.difference(properties))}"
+            )
+            localized_values = {
+                language: properties[language].lstrip() for language in language_buttons
+            }
+            object_value_flags = {
+                language: value.startswith("{")
+                for language, value in localized_values.items()
+            }
+            assert (
+                len(set(object_value_flags.values())) == 1
+            ), f"{page_label}: {object_name} mixes locale value structures"
+            if not all(object_value_flags.values()):
+                continue
+
+            signatures = {
+                language: _js_object_key_paths(value)
+                for language, value in localized_values.items()
+            }
+            reference_language = "it" if "it" in signatures else sorted(signatures)[0]
+            reference = signatures[reference_language]
+            for language, signature in signatures.items():
+                assert signature == reference, (
+                    f"{page_label}: {object_name}.{language} key mismatch; "
+                    f"missing={sorted(reference - signature)}, "
+                    f"extra={sorted(signature - reference)}"
+                )
+
+        assert (
+            locale_object_count > 0
+        ), f"{page_label}: Spanish selector has no locale-indexed copy object"
+
+    assert localized_pages > 0
 
 
 @pytest.mark.parametrize(
@@ -240,22 +460,30 @@ def test_vera_public_pages_omit_discarded_defensive_and_marketplace_copy(
 
 
 @pytest.mark.parametrize(
-    ("module", "render_call", "scenario_count"),
+    ("module", "render_call", "scenario_count", "localized_language_count"),
     (
         (
             "concordato-plan-review",
             'renderPairs("prompt-list", t.prompts.items)',
             3,
+            5,
         ),
         (
             "journal-bank-reconciliation",
             'renderOutputList("prompt-list", t.prompts.items)',
             3,
+            5,
         ),
-        ("journal-sampling", 'setOutputList("prompt-list", data.prompts.items)', 3),
+        (
+            "journal-sampling",
+            'setOutputList("prompt-list", data.prompts.items)',
+            3,
+            5,
+        ),
         (
             "riconciliazione-partite",
             "data.prompts.rows, ([title, copy])",
+            5,
             5,
         ),
     ),
@@ -264,6 +492,7 @@ def test_vera_scenario_prompt_libraries_are_visible_and_localized(
     module: str,
     render_call: str,
     scenario_count: int,
+    localized_language_count: int,
 ) -> None:
     page = VERA_MODULE_PAGES[module].read_text(encoding="utf-8")
     prompt_list = re.search(r'<ul\b(?=[^>]*\bid="prompt-list")[^>]*>', page)
@@ -276,7 +505,7 @@ def test_vera_scenario_prompt_libraries_are_visible_and_localized(
     assert prompt_list is not None
     assert "hidden" not in prompt_list.group(0)
     assert render_call in page
-    assert len(prompt_blocks) == 4
+    assert len(prompt_blocks) == localized_language_count
     for prompt_block in prompt_blocks:
         assert prompt_block.count("\n            [") == scenario_count
 
@@ -284,13 +513,14 @@ def test_vera_scenario_prompt_libraries_are_visible_and_localized(
 def test_report_builder_publishes_three_localized_scenario_prompts() -> None:
     page = VERA_MODULE_PAGES["report-builder"].read_text(encoding="utf-8")
     prompt_section = _section_markup(page, "prompts")
+    language_count = len(set(re.findall(r'data-lang="([a-z]{2})"', page)))
 
     assert prompt_section.count("<li>") == 3
     for item_number in range(1, 4):
         for field in ("title", "copy"):
             key = f"prompts.item{item_number}.{field}"
             assert f'data-i18n="{key}"' in prompt_section
-            assert page.count(f'"{key}":') == 4
+            assert page.count(f'"{key}":') == language_count
 
 
 @pytest.mark.parametrize(
@@ -330,7 +560,7 @@ def test_italy_workflows_publish_the_complete_artifact_inventory(
         assert f"<code>{artifact_name}</code>" in page
     for key in translation_keys:
         assert f'data-i18n="{key}"' in page
-        assert page.count(f'"{key}":') == 4
+        assert page.count(f'"{key}":') == 5
 
 
 def _section_markup(page: str, section_id: str) -> str:
@@ -444,13 +674,18 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     )
 
 
-def test_vera_hub_localizes_every_visible_copy_key_in_all_four_languages() -> None:
+def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
+    language_buttons = set(re.findall(r'data-lang="([a-z]{2})"', page))
+    copy_languages = set(re.findall(r"^      ([a-z]{2}): \{$", page, re.MULTILINE))
 
     assert visible_keys
+    assert language_buttons == copy_languages == {"it", "en", "fr", "de", "es"}
     for key in visible_keys:
-        assert page.count(f'"{key}":') == 4, key
+        assert page.count(f'"{key}":') == len(copy_languages), key
+    for language in copy_languages:
+        assert f'hreflang="{language}"' in page
 
 
 def _vera_data_boundary_section(page: str) -> str:
@@ -470,96 +705,138 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     assert "privacy.notice" not in page
     assert "privacy.governance" not in page
     assert section.count('class="data-position__fact"') == 4
-    assert section.count('class="data-route"') == 3
+    assert section.count('class="data-route"') == 2
 
 
 @pytest.mark.parametrize(
-    ("title", "automatic", "account", "secrets", "mparanza", "external"),
+    (
+        "title",
+        "automatic",
+        "local_python",
+        "chatgpt_plan",
+        "recipient_boundary",
+        "secrets",
+        "hosted_boundary",
+        "workflow_mapping",
+        "external_destination",
+    ),
     (
         (
             "Vera lavora sui dati reali del cliente.",
-            "Vera non anonimizza automaticamente.",
-            "Lo studio sceglie l’account Codex/OpenAI",
+            "Vera e Clara non anonimizzano automaticamente i dati.",
+            "Possono usare Python in locale per filtrare o aggregare le informazioni",
+            "piano ChatGPT già utilizzato dall’utente",
+            "non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello",
             "Password, chiavi API, cookie, token e dati di sessione",
-            "Vera non invia il lavoro a Mparanza.",
-            "ricerca pubblica, un connector o un invio esplicito",
+            "Servizi hosted da Mparanza",
+            "Ogni workflow viene mappato quando viene aggiunto o quando cambia",
+            "non sono una terza categoria Mparanza",
         ),
         (
             "Vera works on real client data.",
-            "Vera does not anonymize automatically.",
-            "The firm chooses the Codex/OpenAI account",
+            "Vera and Clara do not automatically anonymise data.",
+            "They may use local Python to filter or aggregate information",
+            "user’s existing ChatGPT plan",
+            "do not send client files, prompts, or model-context content to Mparanza",
             "Passwords, API keys, cookies, tokens, and session data",
-            "Vera does not send the work to Mparanza.",
-            "public search, connector, or explicit send",
+            "Mparanza-hosted services",
+            "Each workflow is mapped when it is added or changed",
+            "not a third Mparanza category",
         ),
         (
             "Vera travaille sur les données réelles du client.",
-            "Vera n’anonymise pas automatiquement.",
-            "Le cabinet choisit le compte Codex/OpenAI",
+            "Vera et Clara n’anonymisent pas automatiquement les données.",
+            "Elles peuvent utiliser Python localement pour filtrer ou agréger",
+            "l’offre ChatGPT existante de l’utilisateur",
+            "n’envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle",
             "Mots de passe, clés API, cookies, jetons et données de session",
-            "Vera n’envoie pas le travail à Mparanza.",
-            "recherche publique, un connecteur ou un envoi explicite",
+            "Services hébergés par Mparanza",
+            "Chaque workflow est cartographié lorsqu’il est ajouté ou modifié",
+            "ne constituent pas une troisième catégorie Mparanza",
         ),
         (
             "Vera arbeitet mit echten Mandantendaten.",
-            "Vera anonymisiert nicht automatisch.",
-            "Die Kanzlei wählt das Codex-/OpenAI-Konto",
+            "Vera und Clara anonymisieren Daten nicht automatisch.",
+            "Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren",
+            "bestehenden ChatGPT-Tarifs des Nutzers",
+            "senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza",
             "Passwörter, API-Schlüssel, Cookies, Token und Sitzungsdaten",
-            "Vera sendet die Arbeit nicht an Mparanza.",
-            "öffentliche Suche, ein Connector oder ein ausdrücklicher Versand",
+            "Mparanza-gehostete Dienste",
+            "Jeder Workflow wird beim Hinzufügen oder Ändern zugeordnet",
+            "keine dritte Mparanza-Kategorie",
+        ),
+        (
+            "Vera trabaja con datos reales del cliente.",
+            "Vera y Clara no anonimizan automáticamente los datos.",
+            "Pueden usar Python en local para filtrar o agregar información",
+            "plan de ChatGPT que ya utiliza el usuario",
+            "no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo",
+            "contraseñas, claves de API, cookies, tokens y datos de sesión",
+            "Servicios alojados por Mparanza",
+            "Cada flujo de trabajo se mapea cuando se añade o cambia",
+            "no forman una tercera categoría de Mparanza",
         ),
     ),
 )
 def test_vera_hub_localizes_the_real_data_boundary(
     title: str,
     automatic: str,
-    account: str,
+    local_python: str,
+    chatgpt_plan: str,
+    recipient_boundary: str,
     secrets: str,
-    mparanza: str,
-    external: str,
+    hosted_boundary: str,
+    workflow_mapping: str,
+    external_destination: str,
 ) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
     assert title in page
     assert automatic in page
-    assert account in page
+    assert local_python in page
+    assert chatgpt_plan in page
+    assert recipient_boundary in page
     assert secrets in page
-    assert mparanza in page
-    assert external in page
+    assert hosted_boundary in page
+    assert workflow_mapping in page
+    assert external_destination in page
 
 
 @pytest.mark.parametrize(
-    "model_context_copy",
+    "model_processing_copy",
     (
-        "il contenuto che Codex legge entra nel contesto del modello",
-        "the content Codex reads enters the model context",
-        "le contenu lu par Codex entre dans le contexte du modèle",
-        "die von Codex gelesenen Inhalte über das von der Kanzlei gewählte OpenAI-Konto in den Modellkontext gelangen",
+        "I dati forniti al modello vengono trattati attraverso il piano ChatGPT",
+        "Data supplied to the model is processed through the user’s existing ChatGPT plan",
+        "Les données fournies au modèle sont traitées dans le cadre de l’offre ChatGPT existante",
+        "Daten, die dem Modell bereitgestellt werden, werden im Rahmen des bestehenden ChatGPT-Tarifs",
+        "Los datos proporcionados al modelo se procesan mediante el plan de ChatGPT",
     ),
 )
-def test_vera_hub_names_the_content_codex_reads(model_context_copy: str) -> None:
+def test_vera_hub_names_the_model_processing_plan(
+    model_processing_copy: str,
+) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
-    assert model_context_copy in page
+    assert model_processing_copy in page
     assert "relevant content enters" not in page
     assert "contenuto pertinente entra" not in page
     assert "contenu pertinent entre" not in page
     assert "relevante Inhalte" not in page
 
 
-def test_vera_hub_names_the_three_actual_routes() -> None:
+def test_vera_hub_names_the_two_processing_categories() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     section = _vera_data_boundary_section(page)
 
     for key in (
         "privacy.routes.local.title",
-        "privacy.routes.codex.title",
-        "privacy.routes.external.title",
+        "privacy.routes.hosted.title",
     ):
         assert f'data-i18n="{key}"' in section
-        assert page.count(f'"{key}":') == 4
+        assert page.count(f'"{key}":') == 5
 
-    assert "privacy.routes.hosted" not in page
+    assert 'data-i18n="privacy.routes.codex.title"' not in section
+    assert "privacy.routes.external" not in page
 
 
 @pytest.mark.parametrize(
@@ -576,6 +853,11 @@ def test_vera_hub_names_the_three_actual_routes() -> None:
             "Arbeitsbereich 1 von 3",
             "Arbeitsbereich 2 von 3",
             "Arbeitsbereich 3 von 3",
+        ),
+        (
+            "Área de trabajo 1 de 3",
+            "Área de trabajo 2 de 3",
+            "Área de trabajo 3 de 3",
         ),
     ),
 )
@@ -665,14 +947,14 @@ def test_new_client_jurisdiction_and_presentation_language_are_independent() -> 
         assert f'data-jurisdiction="{jurisdiction}"' in page
         assert f'data-presentation-language="{default_language}"' in page
         assert 'src="jurisdiction-pages.js?v=' in page
-        for language in ("it", "en", "fr", "de"):
+        for language in ("it", "en", "fr", "de", "es"):
             assert f'hreflang="{language}"' in page
         assert 'hreflang="x-default"' in page
         assert f'slug: "{filename}"' in jurisdiction_script
         assert f'defaultLanguage: "{default_language}"' in jurisdiction_script
         assert "youtu" not in page.casefold()
 
-    assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de"]' in (
+    assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"]' in (
         jurisdiction_script
     )
     assert "const page = jurisdictions[document.body.dataset.jurisdiction]" in (
@@ -696,6 +978,7 @@ def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
 
     assert re.search(r'src="\.\./video-library\.js\?v=[^"]+"', page)
     assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
+    assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
     assert (
         'const curatedVideoModules = ["new-client", '
         '"journal-bank-reconciliation", "report-builder", "prompt-optimizer"]'
@@ -716,7 +999,7 @@ def test_vera_video_catalog_v3_separates_edition_language_and_jurisdiction() -> 
 const fs = require("node:fs");
 global.window = {};
 eval(fs.readFileSync(process.argv[1], "utf8"));
-const catalogs = ["it", "en", "fr", "de"].map((language) =>
+const catalogs = ["it", "en", "fr", "de", "es"].map((language) =>
   window.MparanzaVideos.getCatalog("vera", language)
 );
 process.stdout.write(JSON.stringify(catalogs));
@@ -759,7 +1042,13 @@ process.stdout.write(JSON.stringify(catalogs));
         for asset in manifest["assets"]
     }
 
-    assert [catalog["language"] for catalog in catalogs] == ["it", "en", "fr", "de"]
+    assert [catalog["language"] for catalog in catalogs] == [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es",
+    ]
     for catalog in catalogs:
         language = catalog["language"]
         published_modules = {video["module"] for video in catalog["videos"]}
@@ -824,6 +1113,8 @@ process.stdout.write(JSON.stringify(catalogs));
                 assert video["sourceKind"] == "youtube"
                 assert video["status"] == "published"
                 assert video["id"]
+                if language == "es":
+                    assert video["audioLanguage"] == "en"
 
         new_client_guides = [
             video for video in catalog["videos"] if video["module"] == "new-client"
@@ -861,7 +1152,7 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
         ("check-entries", "core"),
         ("check-entries", "italy-fatturapa"),
     }
-    assert sum(len(concept["localizations"]) for concept in concepts) == 19
+    assert sum(len(concept["localizations"]) for concept in concepts) == 24
     for concept in concepts:
         assert len(concept["scenes"]) == 6
         assert concept["pageTargets"]
@@ -932,6 +1223,13 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
             "fachlich geprüft",
             "mandanten-arbeitsakte",
         ),
+        "es": (
+            "borrador de evaluación de pbc",
+            "documentado",
+            "sigue abierto",
+            "requiere revisión profesional",
+            "expediente de cliente operativo",
+        ),
     }
     for language, required_phrases in required_italy_phrases.items():
         localization = italy["localizations"][language]
@@ -965,8 +1263,8 @@ def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
     assert manifest["schemaVersion"] == "2.0.0"
     assert manifest["publicationStatus"] == "local_rendered"
     assert manifest["remotePublish"] is False
-    assert manifest["assetCount"] == 19
-    assert len(assets) == 19
+    assert manifest["assetCount"] == 24
+    assert len(assets) == 24
     assert {
         (asset["module"], asset["edition"], asset["language"]) for asset in assets
     } == (VERA_RENDERED_VIDEO_IDENTITIES)

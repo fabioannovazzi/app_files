@@ -31,13 +31,20 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [
     {
       "id": "accounting-system-export",
       "kind": "external_connector",
       "destination": "User-selected accounting-system provider",
       "purpose": "Acquire an invoice ZIP or folder export when the user chooses connection instead of supplying local support",
-      "content": "Authorized read/export request for the selected client and period; the resulting export is then processed locally",
+      "content": "Authorized read/export request for the selected client and period; the resulting export is stored and mechanically prepared locally, and relevant entries or evidence may enter Codex context",
       "optional": true,
       "requires_confirmation": true,
       "controls": [
@@ -61,6 +68,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4f44de104fa7652ebde4235115d78689a0d272329d1d321dbc2b1e86a4ebdcd5"
+    "source_fingerprint": "d5f5eb1626260f468f837cffa60b3f3da416dff4c9ca0267ae49b7634affabdd"
   }
 }

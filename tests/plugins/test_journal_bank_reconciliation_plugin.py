@@ -353,6 +353,65 @@ def test_plugin_inspects_and_runs_deterministic_journal_bank_reconciliation(
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.xlsx"
+    journal_path = tmp_path / "journal.xlsx"
+    output_dir = tmp_path / "output"
+    _save_workbook(
+        bank_path,
+        [
+            ["Date", "Description", "Amount", "Reference"],
+            ["2026-01-15", "Pago factura ES100", 75.25, "ES100"],
+        ],
+    )
+    _save_workbook(
+        journal_path,
+        [
+            ["Date", "Description", "Debit", "Reference"],
+            ["2026-01-15", "Factura ES100", 75.25, "ES100"],
+        ],
+    )
+
+    core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        language="es-ES",
+        document_language="en",
+    )
+
+    review_notes = (output_dir / "review_notes.md").read_text(encoding="utf-8")
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    review_notes_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "review_notes.md"
+    )
+
+    assert review_notes.startswith(
+        "# Notas de revisión de la conciliación entre diario y banco\n"
+    )
+    assert "- Idioma: es" in review_notes
+    assert "## Recuento por etapa" in review_notes
+    assert "## Política de revisión" in review_notes
+    assert review_notes_output["required_text"] == [
+        "# Notas de revisión de la conciliación entre diario y banco",
+        "## Recuento por etapa",
+        "## Política de revisión",
+    ]
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
 def test_plugin_keeps_ambiguous_rows_unmatched(tmp_path: Path) -> None:
     core = load_core()
     bank_path = tmp_path / "bank.xlsx"
@@ -627,7 +686,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "The user should not interact directly with CLI scripts" in skill_text
     assert "must not make direct OpenAI API calls" in skill_text
     assert "scripts/check_dependencies.py" in skill_text
-    assert "it`, `en`, `fr`, and `de`" in skill_text
+    assert "it`, `en`, `fr`, `de`, and `es`" in skill_text
     assert "missing deterministic extraction script" in skill_text
     assert "Keep the improvement note local to chat or run artifacts." in skill_text
     assert "validate_journal_bank_review" in skill_text
@@ -637,7 +696,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "openai" not in script_text.lower()
 
 
-def test_static_page_exposes_four_language_switch() -> None:
+def test_static_page_exposes_five_language_switch() -> None:
     page = (
         ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html"
     ).read_text(encoding="utf-8")
@@ -647,10 +706,12 @@ def test_static_page_exposes_four_language_switch() -> None:
         'data-lang="en"',
         'data-lang="fr"',
         'data-lang="de"',
-        "Abbina banca e contabilità senza nascondere le eccezioni",
-        "Match bank rows to accounting rows without burying exceptions.",
-        "Rapprocher banque et comptabilité sans masquer les exceptions",
-        "Bank- und Buchhaltungszeilen abgleichen, ohne Ausnahmen zu verstecken",
+        'data-lang="es"',
+        "Porta banca e contabilità in una riconciliazione con eccezioni visibili.",
+        "Bring bank and accounting into one reconciliation with visible exceptions.",
+        "Réunissez banque et comptabilité dans un rapprochement aux exceptions visibles.",
+        "Reúna banco y contabilidad en una conciliación con excepciones visibles.",
+        "Führen Sie Bank und Buchhaltung in einer Abstimmung mit sichtbaren Ausnahmen zusammen.",
     ):
         assert snippet in page
 

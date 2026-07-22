@@ -106,6 +106,7 @@ from src.slides.ocr_service import (
     ensure_deck_ocr_payload,
 )
 from src.slides.pdf_import import build_image_only_slide_content
+from src.slides.pptx_post_render import apply_post_render_compare_loop
 from src.slides.pptx_template_manifest import (
     DECK_PPTX_TEMPLATE_FILENAME,
     DECK_PPTX_TEMPLATE_MANIFEST_FILENAME,
@@ -117,7 +118,6 @@ from src.slides.pptx_template_store import (
     save_uploaded_pptx_template,
     set_default_pptx_template,
 )
-from src.slides.pptx_post_render import apply_post_render_compare_loop
 from src.slides.semantic_pptx import (
     build_slides_pptx_spec,
     render_slides_pptx_from_template,
@@ -194,6 +194,7 @@ _OCR_LANG_BY_LOCALE = {
     "it": "ita",
     "fr": "fra",
     "de": "deu",
+    "es": "spa",
 }
 
 _NOTIFY_LANG_BY_OCR_LANG = {
@@ -201,6 +202,7 @@ _NOTIFY_LANG_BY_OCR_LANG = {
     "ita": "it",
     "fra": "fr",
     "deu": "de",
+    "spa": "es",
 }
 
 
@@ -4768,7 +4770,6 @@ def _render_deck_pdf_with_reportlab(
     page_size_pt: tuple[float, float] | None = None,
 ) -> io.BytesIO:
     from reportlab.lib.utils import ImageReader
-
     from reportlab.pdfgen import canvas
 
     buffer = io.BytesIO()

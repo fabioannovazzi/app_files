@@ -22,7 +22,7 @@ elencato dal run, oltre all'hash canonico dell'intero pacchetto, prima di creare
 lo starter della fase professionale.
 
 La fase professionale include oggi il solo country pack italiano (`IT`). I
-quattro codici lingua `it`, `en`, `fr` e `de` controllano review, memo e richieste
+cinque codici lingua `it`, `en`, `fr`, `de` ed `es` controllano review, memo e richieste
 generate; non dichiarano l'esistenza di country pack svizzeri o britannici.
 
 ## Risultati

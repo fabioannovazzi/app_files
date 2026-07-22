@@ -62,7 +62,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
         if item.get("expected_skill") == "clara:attribute-reporting"
     }
 
-    assert manifest["version"] == "0.1.94"
+    assert manifest["version"] == "0.1.100"
     assert "retail-attribute-reporting" in manifest["keywords"]
     assert "Retailer Signals" in manifest["interface"]["longDescription"]
     assert "Clara exposes six distinct conversation workflows" in router
@@ -176,7 +176,7 @@ def test_clara_public_page_describes_retail_pipeline_and_public_example() -> Non
         "capabilities.attributes.local",
         "capabilities.attributes.prompt",
     ):
-        assert page.count(f'"{key}"') == 5
+        assert page.count(f'"{key}"') == 6
         assert f'data-i18n="{key}"' in page
 
     retailer_example = (

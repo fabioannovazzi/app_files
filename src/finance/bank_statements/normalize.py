@@ -8,7 +8,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Iterable, Optional, Tuple
 
-from .lexicon import HEADERS
+from .lexicon import LANGUAGE_HEADER_MARKERS
 
 try:  # optional dependency
     from dateutil.parser import parse as dateutil_parse
@@ -28,13 +28,10 @@ LANG_FALLBACK = "en"
 
 def detect_language(text: str) -> str:
     """Detect language using keyword counts and optional langdetect."""
-    counts = {lang: 0 for lang in ["it", "en", "de", "fr", "es"]}
+    counts = {lang: 0 for lang in LANGUAGE_HEADER_MARKERS}
     lower = text.lower()
-    for _, words in HEADERS.items():
-        for w in words:
-            for lang in counts:
-                if w in lower:
-                    counts[lang] += 1
+    for lang, markers in LANGUAGE_HEADER_MARKERS.items():
+        counts[lang] = sum(1 for marker in markers if marker in lower)
     best = max(counts, key=counts.get)
     if counts[best] == 0 and detect is not None:
         try:

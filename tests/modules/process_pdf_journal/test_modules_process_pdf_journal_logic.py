@@ -1,6 +1,7 @@
 import sys
 from datetime import date
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -8,6 +9,7 @@ import pytest
 SRC = Path(__file__).resolve().parents[2] / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+
 
 def _ensure_minimal_journal_ingest_modules() -> None:
     """Provide minimal stubs if an external 'journal_ingest' shadows the repo.
@@ -19,7 +21,10 @@ def _ensure_minimal_journal_ingest_modules() -> None:
     try:
         # If the real package is available and has the expected symbols, keep it
         from journal_ingest.config import get_recipe as _gr  # type: ignore
-        from journal_ingest.core import ParserConfidenceError, ValidationError  # type: ignore
+        from journal_ingest.core import (  # type: ignore
+            ParserConfidenceError,
+            ValidationError,
+        )
         from journal_ingest.router import Router  # type: ignore
         from journal_ingest.strategies import (  # type: ignore
             JournalStrategyTableArea,
@@ -27,6 +32,7 @@ def _ensure_minimal_journal_ingest_modules() -> None:
             TablePDFParser,
             TextPDFParser,
         )
+
         return
     except Exception:
         pass
@@ -86,6 +92,7 @@ def _ensure_minimal_journal_ingest_modules() -> None:
     sys.modules["journal_ingest.router"] = router
     sys.modules["journal_ingest.strategies"] = strategies
 
+
 def _import_targets():
     # Import lazily to avoid module-level import issues during collection
     _ensure_minimal_journal_ingest_modules()
@@ -99,8 +106,8 @@ def _import_targets():
     [
         ("1,234.56", 1234.56),  # US style: comma thousands, dot decimal
         ("1.234,56", 1234.56),  # EU style: dot thousands, comma decimal
-        (".5", 0.5),            # leading decimal dot
-        (",5", 0.5),            # leading decimal comma
+        (".5", 0.5),  # leading decimal dot
+        (",5", 0.5),  # leading decimal comma
         ("1\u00a0234,56", 1234.56),  # NBSP thousands separator
     ],
 )
@@ -182,3 +189,32 @@ def test_parse_amount_blanks_and_invalid_return_none(text: str):
 
     # Assert
     assert result is None
+
+
+def test_spanish_ocr_language_reaches_pdf_text_extraction(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from modules.process_pdf_journal import logic
+
+    captured: dict[str, str] = {}
+
+    def fake_extract(pdf_bytes: bytes, *, lang: str) -> SimpleNamespace:
+        assert pdf_bytes == b"%PDF-spanish-journal"
+        captured["lang"] = lang
+        return SimpleNamespace(
+            text="Fecha Descripción Importe\n01/01/2026 Servicio 10,00",
+            method="ocr",
+        )
+
+    monkeypatch.setattr(logic, "_extract_pdf_text_with_ocr_once", fake_extract)
+
+    logic._build_df_from_text(b"%PDF-spanish-journal", use_ocr=True, lang="spa")
+
+    assert captured == {"lang": "spa"}
+
+
+@pytest.mark.parametrize("language", ("es", "es-ES", "es_ES", "spa", "español"))
+def test_normalize_ocr_language_maps_spanish_aliases(language: str) -> None:
+    from modules.process_pdf_journal.logic import normalize_ocr_language
+
+    assert normalize_ocr_language(language) == "spa"

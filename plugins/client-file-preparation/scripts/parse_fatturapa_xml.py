@@ -26,38 +26,44 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 MAX_XML_BYTES = 20 * 1024 * 1024
 FORBIDDEN_XML_DECLARATIONS = (b"<!doctype", b"<!entity")
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 
 ANOMALY_COPY = {
     "tipo documento mancante": {
         "en": "document type missing",
         "fr": "type de document manquant",
         "de": "Dokumenttyp fehlt",
+        "es": "falta el tipo de documento",
     },
     "data fattura mancante": {
         "en": "invoice date missing",
         "fr": "date de facture manquante",
         "de": "Rechnungsdatum fehlt",
+        "es": "falta la fecha de la factura",
     },
     "numero fattura mancante": {
         "en": "invoice number missing",
         "fr": "numéro de facture manquant",
         "de": "Rechnungsnummer fehlt",
+        "es": "falta el número de la factura",
     },
     "importo totale documento mancante": {
         "en": "document total missing",
         "fr": "total du document manquant",
         "de": "Dokumentgesamtbetrag fehlt",
+        "es": "falta el total del documento",
     },
     "partita IVA / codice fiscale cedente mancante": {
         "en": "supplier VAT/tax identifier missing",
         "fr": "identifiant TVA/fiscal du fournisseur manquant",
         "de": "USt-/Steuer-ID des Lieferanten fehlt",
+        "es": "falta el identificador fiscal o de IVA del proveedor",
     },
     "sezione DatiRiepilogo non individuata": {
         "en": "DatiRiepilogo section not found",
         "fr": "section DatiRiepilogo introuvable",
         "de": "Abschnitt DatiRiepilogo nicht gefunden",
+        "es": "no se encuentra la sección DatiRiepilogo",
     },
 }
 
@@ -76,6 +82,7 @@ def localize_formal_anomaly(value: str, language: str) -> str:
             "en": f"date outside target year {year}",
             "fr": f"date hors de l’année cible {year}",
             "de": f"Datum außerhalb des Zieljahres {year}",
+            "es": f"fecha fuera del año objetivo {year}",
         }[language]
     if value.startswith("XML non leggibile:"):
         detail = value.partition(":")[2].strip()
@@ -83,6 +90,7 @@ def localize_formal_anomaly(value: str, language: str) -> str:
             "en": "Unreadable XML",
             "fr": "XML illisible",
             "de": "XML nicht lesbar",
+            "es": "XML no legible",
         }[language]
         return f"{prefix}: {detail}"
     return value
@@ -558,6 +566,13 @@ def write_formal_anomalies_markdown(
             "duplicates": "Mögliche Duplikate",
             "by_file": "Anomalien nach Datei",
             "empty": "In den geprüften XML-Dateien wurden keine formalen Anomalien festgestellt.",
+        },
+        "es": {
+            "title": "Anomalías formales en XML de factura electrónica",
+            "intro": "Este control resume los campos XML, las fechas, los importes, los códigos de naturaleza del IVA, el IVA y las anomalías formales.",
+            "duplicates": "Posibles duplicados",
+            "by_file": "Anomalías por archivo",
+            "empty": "No se detectaron anomalías formales en los archivos XML revisados.",
         },
     }[language]
     lines = [f"# {copy['title']}", "", copy["intro"], ""]

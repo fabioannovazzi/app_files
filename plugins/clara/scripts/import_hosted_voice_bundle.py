@@ -540,10 +540,10 @@ def _clara_review_markdown(
     bundle: Mapping[str, Any],
     extraction: Mapping[str, Any],
 ) -> str:
-    """Build the local review workspace from the downloaded transcript.
+    """Build the locally stored review workspace from the downloaded transcript.
 
     The importer is deterministic: it formats the source transcript and creates
-    review sections, but local Codex/Clara must fill the semantic judgement.
+    review sections, but Codex/Clara must fill the semantic judgement.
     """
 
     _ = extraction
@@ -566,8 +566,8 @@ def _clara_review_markdown(
         "# Clara Audio Review",
         "",
         "Generated locally by the Clara plugin from the downloaded transcript bundle. "
-        "The hosted server supplied the transcript; local Codex/Clara should fill the "
-        "semantic review sections below.",
+        "The hosted server supplied the transcript; Codex/Clara should fill the semantic "
+        "review sections below through the user's existing ChatGPT plan.",
         "",
         "## Source",
         "",
@@ -650,7 +650,7 @@ def _discussion_review_pack_markdown(
     clara_review_path: Path,
     judgement_candidates_path: Path,
 ) -> str:
-    """Build a local Codex review pack for the imported voice discussion."""
+    """Build a locally stored Codex review pack for the imported voice discussion."""
 
     brief_text = _read_text_or_empty(case_dir / CASE_BRIEF_FILENAME)
     raw_transcript = _read_text_or_empty(raw_transcript_path)
@@ -706,9 +706,10 @@ def _discussion_review_pack_markdown(
     )
     return "\n".join(
         [
-            "# Local Codex Discussion Review Pack",
+            "# Codex Discussion Review Pack (local file)",
             "",
-            "Use this file with local Codex after the voice bundle has been imported.",
+            "Use this locally stored file with Codex after the voice bundle has been imported.",
+            "Its contents may enter model context through the user's existing ChatGPT plan.",
             "Do not send this pack back to the hosted voice server. The server handled hosted audio processing only.",
             "",
             "## Review Task",
@@ -1100,7 +1101,7 @@ def main() -> int:
             "Speaker attribution report: %s",
             result.speaker_attribution_report_path,
         )
-    LOGGER.info("Local Codex review pack: %s", result.discussion_review_pack_path)
+    LOGGER.info("Local review pack for Codex: %s", result.discussion_review_pack_path)
     LOGGER.info("Session folder: %s", result.session_dir)
     return 0
 

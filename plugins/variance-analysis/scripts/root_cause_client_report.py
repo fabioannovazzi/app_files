@@ -35,7 +35,8 @@ TOTAL_VALUES = {"", "all", "__total", "total", "none", "null"}
 
 
 def _language(recipe: dict[str, Any]) -> str:
-    return str(recipe.get("language") or "en").lower()
+    raw_language = str(recipe.get("language") or "en").lower().replace("_", "-")
+    return raw_language.split("-", maxsplit=1)[0]
 
 
 def _currency_note(recipe: dict[str, Any], labels: dict[str, str]) -> str:
@@ -66,6 +67,13 @@ def _comparison_metadata(recipe: dict[str, Any], language: str) -> dict[str, str
                 if mode in {"rolling_period", "year_to_date"}
                 else "periodo precedente"
             )
+        elif language == "es":
+            comparison_name = "periodo actual"
+            baseline_name = (
+                "periodo del año anterior"
+                if mode in {"rolling_period", "year_to_date"}
+                else "periodo anterior"
+            )
         else:
             comparison_name = "current period"
             baseline_name = (
@@ -75,16 +83,20 @@ def _comparison_metadata(recipe: dict[str, Any], language: str) -> dict[str, str
             )
     elif baseline_upper in {"PL", "PLAN"} and comparison_upper in {"AC", "ACTUAL"}:
         baseline_name = "Plan"
-        comparison_name = "Actual"
+        comparison_name = "Real" if language == "es" else "Actual"
     else:
         baseline_name = baseline
         comparison_name = comparison
+    separator = " frente a " if language == "es" else " vs "
     return {
         "baseline_label": baseline,
         "comparison_label": comparison,
         "baseline_name": baseline_name,
         "comparison_name": comparison_name,
-        "comparison": f"{comparison_name} vs {baseline_name} ({comparison} vs {baseline})",
+        "comparison": (
+            f"{comparison_name}{separator}{baseline_name} "
+            f"({comparison}{separator}{baseline})"
+        ),
     }
 
 
@@ -229,6 +241,173 @@ def _text(language: str) -> dict[str, str]:
             "drilldown_composition": "Il residuo è concentrato su pochi contributi.",
             "top_contributions": "Principali contributi: {items}",
         }
+    if language == "es":
+        return {
+            "title": "Análisis de las causas de la varianza de ventas",
+            "subtitle": "Real frente a Plan (AC frente a PL)",
+            "summary": "Resumen",
+            "source_data": "Datos de soporte principales",
+            "reading_notes": "Notas de lectura",
+            "bridge_summary": "Puente de resumen",
+            "product_line_drilldown": "Desglose por línea de producto",
+            "mixed_deep_dive": "Análisis detallado multidimensional",
+            "chart_1": "Fuente 1 - Impulsor principal",
+            "chart_2": "Fuente 2 - Detalle por línea de producto",
+            "chart_3": "Fuente 3 - Detalle por área y línea de producto",
+            "chart_small_multiples": "Puente estándar por {dimension}",
+            "chart_pvm_ladder": "Puente de Precio / Unidades / Mix",
+            "drilldown_findings": "Hallazgos de los desgloses seleccionados",
+            "source_units": (
+                "Los importes se muestran en las unidades de la fuente porque "
+                "el archivo no indica una moneda explícita."
+            ),
+            "currency_note": (
+                "Los importes se presentan en {currency}; utilice otra moneda "
+                "solo si la indica el usuario o el archivo fuente."
+            ),
+            "price_only": (
+                "El análisis determinista solo refleja el efecto precio: el "
+                "volumen y el mix son cero porque las unidades de "
+                "{baseline_name} y {comparison_name} coinciden en el nivel de "
+                "cálculo."
+            ),
+            "component_note": (
+                "El puente estándar está dominado por {dominant_type} "
+                "({dominant_amount}); componentes principales: {components}."
+            ),
+            "residual_note": (
+                "Las filas del puente de causa raíz son residuales: una fila "
+                "posterior no representa el total independiente de esa dimensión."
+            ),
+            "source_caption": "Resumen de los datos de soporte seleccionados.",
+            "drilldown_caption": (
+                "Detalle de las contribuciones de los desgloses seleccionados."
+            ),
+            "chart_footer": (
+                "Los impulsores seleccionados se muestran en secuencia; el "
+                "saldo residual se concilia en Otros."
+            ),
+            "chart_summary_title": "Puente de resumen: {label}",
+            "chart_summary_subtitle": (
+                "{comparison}, impulsor seleccionado del análisis de causa raíz"
+            ),
+            "chart_drilldown_title": "Desglose: {label}",
+            "chart_drilldown_subtitle": (
+                "{comparison}, detalle de la fila seleccionada"
+            ),
+            "chart_mixed_title": "Puente multidimensional de causa raíz",
+            "chart_mixed_subtitle": (
+                "{comparison}, secuencia con dimensiones distintas"
+            ),
+            "summary_intro": (
+                "La diferencia entre {comparison_name} y {baseline_name} es "
+                "{delta}. El puente de resumen concilia el movimiento con "
+                "{driver_count} impulsores seleccionados ({items}) y un residual "
+                "de {residual}."
+            ),
+            "drilldown_intro": (
+                "El desglose de la fila principal detalla la contribución: "
+                "{items}. Por tanto, la contribución se concentra principalmente "
+                "en {top_label}."
+            ),
+            "mixed_intro": (
+                "Un análisis más detallado confirma que el movimiento no se "
+                "distribuye de manera uniforme: destacan {items}. Esta vista "
+                "sigue siendo un análisis detallado porque deja {residual} como "
+                "saldo residual."
+            ),
+            "bridge_reading": (
+                "Concilia la diferencia con la secuencia de impulsores seleccionada."
+            ),
+            "drilldown_reading": "Descompone el impulsor principal.",
+            "mixed_reading": (
+                "Identifica dónde aporta información el detalle residual."
+            ),
+            "data_key": "Dato clave",
+            "reading": "Lectura",
+            "residual": "residual",
+            "source_col": "Fuente",
+            "analysis_area": "Área de análisis",
+            "useful_reading": "Lectura útil",
+            "chart_1_reading": (
+                "La secuencia seleccionada ({items}) concilia el movimiento "
+                "{comparison} con un residual final de {residual}."
+            ),
+            "chart_2_reading": (
+                "El impulsor principal es sobre todo {top_label}, seguido por "
+                "otras contribuciones por línea de producto."
+            ),
+            "chart_3_reading": (
+                "El segundo nivel de análisis muestra que el detalle residual "
+                "útil se concentra en {items}."
+            ),
+            "chart_small_multiples_reading": (
+                "El puente estándar por {dimension} muestra que la varianza se "
+                "concentra principalmente en {items}."
+            ),
+            "chart_pvm_ladder_reading": (
+                "La misma varianza se presenta en tres niveles: total combinado, "
+                "Precio separado de Unidades y Mix, y Precio / Unidades / Mix. "
+                "Componentes principales: {items}."
+            ),
+            "chart_1_caption": (
+                "El puente concilia el movimiento entre los dos periodos o "
+                "escenarios y aísla el impulsor principal."
+            ),
+            "chart_2_caption": (
+                "El detalle por línea de producto convierte el impulsor principal "
+                "en una lectura comercial inmediata."
+            ),
+            "chart_3_caption": (
+                "Esta vista debe leerse como una secuencia residual: las filas "
+                "posteriores son netas de las anteriores."
+            ),
+            "chart_small_multiples_caption": (
+                "Cada panel repite el puente compacto de Precio / Unidades y Mix / "
+                "Saldo; la dimensión separa los paneles."
+            ),
+            "chart_pvm_ladder_caption": (
+                "La escala y los totales son iguales en todos los paneles: solo "
+                "cambia el nivel de descomposición de la varianza."
+            ),
+            "pvm_ladder_source": "Lectura de Precio / Unidades / Mix",
+            "pvm_ladder_reading": (
+                "Compara tres descomposiciones del mismo movimiento."
+            ),
+            "small_multiples_source": "Múltiplos comparativos estándar",
+            "small_multiples_reading": (
+                "Muestra el mismo puente estándar para cada elemento de la "
+                "dimensión seleccionada."
+            ),
+            "drilldown_balance": (
+                "El saldo incluye compensaciones entre contribuciones positivas "
+                "y negativas."
+            ),
+            "drilldown_concentration": (
+                "La contribución no depende de un solo elemento."
+            ),
+            "drilldown_composition": (
+                "El residual se concentra en pocas contribuciones."
+            ),
+            "top_contributions": "Contribuciones principales: {items}",
+            "root_cause_bridge": "Puente de causa raíz",
+            "dimension": "dimensión",
+            "sales": "Ventas",
+            "total": "Total",
+            "variance_type_price": "Precio",
+            "variance_type_units": "Unidades",
+            "variance_type_volume": "Volumen",
+            "variance_type_mix": "Mix",
+            "variance_type_other": "Otros",
+            "variance_type_balance": "Saldo",
+            "variance_type_net_sales": "Ventas netas",
+            "variance_type_discount": "Descuento",
+            "variance_type_cogs": "Coste de ventas",
+            "variance_type_gross_margin": "Margen bruto",
+            "variance_type_units_and_mix": "Unidades y Mix",
+            "variance_type_price_and_units_and_mix": "Precio, Unidades y Mix",
+            "variance_type_price_and_volume_and_mix": "Precio, Volumen y Mix",
+        }
     return {
         "title": "Sales Variance Root-Cause Analysis",
         "subtitle": "Actual vs Plan",
@@ -358,6 +537,40 @@ def _text(language: str) -> dict[str, str]:
     }
 
 
+def _variance_type_label(value: Any, labels: dict[str, str]) -> str:
+    """Return a localized display label without changing the calculation key."""
+
+    raw_value = str(value or "").strip()
+    label_keys = {
+        "price": "variance_type_price",
+        "units": "variance_type_units",
+        "volume": "variance_type_volume",
+        "mix": "variance_type_mix",
+        "other": "variance_type_other",
+        "balance": "variance_type_balance",
+        "net sales": "variance_type_net_sales",
+        "discount": "variance_type_discount",
+        "cogs": "variance_type_cogs",
+        "gross margin": "variance_type_gross_margin",
+        "units & mix": "variance_type_units_and_mix",
+        "price & units & mix": "variance_type_price_and_units_and_mix",
+        "price & volume & mix": "variance_type_price_and_volume_and_mix",
+    }
+    label_key = label_keys.get(raw_value.casefold())
+    return labels.get(label_key, raw_value) if label_key else raw_value
+
+
+def _localized_selected_label(value: Any, labels: dict[str, str]) -> str:
+    """Localize the generated variance-type suffix in a selected-row label."""
+
+    raw_value = str(value or "").strip()
+    prefix, separator, variance_type = raw_value.rpartition(" - ")
+    if not separator:
+        return labels.get("total", raw_value) if raw_value == "Total" else raw_value
+    localized_type = _variance_type_label(variance_type, labels)
+    return f"{prefix}{separator}{localized_type}"
+
+
 def _is_total(value: Any) -> bool:
     if value is None:
         return True
@@ -419,16 +632,20 @@ def _read_csv(path: Path) -> pl.DataFrame:
     return _collect_csv_scan(path)
 
 
-def _row_label(row: dict[str, Any]) -> str:
-    labels: list[str] = []
+def _row_label(
+    row: dict[str, Any], display_labels: dict[str, str] | None = None
+) -> str:
+    row_labels: list[str] = []
     for key, value in row.items():
         if key in MEASURE_COLUMNS or _is_total(value):
             continue
-        labels.append(str(value))
+        row_labels.append(str(value))
     variance_type = row.get("variance_type")
     if variance_type and not _is_total(variance_type):
-        labels.append(str(variance_type))
-    return " / ".join(labels) if labels else "Total"
+        row_labels.append(_variance_type_label(variance_type, display_labels or {}))
+    if row_labels:
+        return " / ".join(row_labels)
+    return (display_labels or {}).get("total", "Total")
 
 
 def _chart_path(output_dir: Path, value: Any) -> Path | None:
@@ -510,7 +727,9 @@ def _selected_amounts(row: dict[str, Any]) -> list[float]:
 
 
 def _top_label_amounts(
-    rows: list[dict[str, Any]], limit: int = 3
+    rows: list[dict[str, Any]],
+    display_labels: dict[str, str] | None = None,
+    limit: int = 3,
 ) -> list[tuple[str, float]]:
     sorted_rows = sorted(
         rows,
@@ -518,7 +737,7 @@ def _top_label_amounts(
         reverse=True,
     )
     return [
-        (_row_label(row), float(row.get("variance_amount") or 0.0))
+        (_row_label(row, display_labels), float(row.get("variance_amount") or 0.0))
         for row in sorted_rows[:limit]
     ]
 
@@ -533,15 +752,21 @@ def _best_product_line_items(
     output_dir: Path,
     alternative: int,
     row_index: int,
+    display_labels: dict[str, str] | None = None,
 ) -> list[tuple[str, float]]:
     rows = _drilldown_rows(output_dir, alternative, row_index)
-    return _top_label_amounts(rows)
+    return _top_label_amounts(rows, display_labels)
 
 
-def _top_positive_and_negative(rows: list[dict[str, Any]]) -> list[tuple[str, float]]:
+def _top_positive_and_negative(
+    rows: list[dict[str, Any]], display_labels: dict[str, str] | None = None
+) -> list[tuple[str, float]]:
     positives = sorted(
         (
-            (_row_label(row), float(row.get("variance_amount") or 0.0))
+            (
+                _row_label(row, display_labels),
+                float(row.get("variance_amount") or 0.0),
+            )
             for row in rows
             if float(row.get("variance_amount") or 0.0) > 0
         ),
@@ -550,7 +775,10 @@ def _top_positive_and_negative(rows: list[dict[str, Any]]) -> list[tuple[str, fl
     )[:2]
     negatives = sorted(
         (
-            (_row_label(row), float(row.get("variance_amount") or 0.0))
+            (
+                _row_label(row, display_labels),
+                float(row.get("variance_amount") or 0.0),
+            )
             for row in rows
             if float(row.get("variance_amount") or 0.0) < 0
         ),
@@ -574,7 +802,7 @@ def _drilldown_finding_rows(
         drilldown_rows = _drilldown_rows(output_dir, alternative, index)
         if not drilldown_rows:
             continue
-        top_items = _top_positive_and_negative(drilldown_rows)
+        top_items = _top_positive_and_negative(drilldown_rows, labels)
         reading = (
             labels["drilldown_balance"]
             if any(amount < 0 for _, amount in top_items)
@@ -582,7 +810,7 @@ def _drilldown_finding_rows(
         )
         findings.append(
             [
-                _row_label(parent_row),
+                _row_label(parent_row, labels),
                 reading,
                 labels["top_contributions"].format(
                     items=_format_label_amounts(top_items, limit=3)
@@ -608,7 +836,7 @@ def _small_multiples_info(
         return None
     if context.get("status") != "written":
         return None
-    dimension = str(context.get("dimension") or "dimension")
+    dimension = str(context.get("dimension") or labels.get("dimension", "dimension"))
     panels = [
         panel
         for panel in context.get("panels", [])
@@ -620,7 +848,7 @@ def _small_multiples_info(
         variance_type = str(dominant.get("variance_type") or "").strip()
         label = str(panel.get("dimension_value") or "").strip()
         if variance_type:
-            label = f"{label} / {variance_type}"
+            label = f"{label} / {_variance_type_label(variance_type, labels)}"
         try:
             amount = float(dominant.get("variance_amount") or 0.0)
         except (TypeError, ValueError):
@@ -679,7 +907,12 @@ def _pvm_ladder_info(
         except (TypeError, ValueError):
             amount = 0.0
         if abs(amount) > 0:
-            ranked.append((str(component.get("variance_type") or ""), amount))
+            ranked.append(
+                (
+                    _variance_type_label(component.get("variance_type"), labels),
+                    amount,
+                )
+            )
     ranked.sort(key=lambda item: abs(item[1]), reverse=True)
     item_text = _format_label_amounts(ranked, limit=3) if ranked else ""
     return {
@@ -745,11 +978,11 @@ def _standard_component_note(
     if other_amount <= 0.000001:
         ordered_components = [item for item in ordered_components if item[0] != "Other"]
     component_text = ", ".join(
-        f"{variance_type} {_format_amount(amount)}"
+        f"{_variance_type_label(variance_type, labels)} {_format_amount(amount)}"
         for variance_type, amount in ordered_components[:4]
     )
     return labels["component_note"].format(
-        dominant_type=dominant_type,
+        dominant_type=_variance_type_label(dominant_type, labels),
         dominant_amount=_format_amount(dominant_amount),
         components=component_text,
     )
@@ -1027,8 +1260,15 @@ def _build_payload(
     pvm_ladder = _pvm_ladder_info(output_dir, labels)
     small_multiples = _small_multiples_info(output_dir, labels)
     summary_alt = int(summary_row.get("alternative_result") or 0)
-    summary_labels = _split_summary_values(summary_row.get("selected_labels"))
-    summary_label = summary_labels[0] if summary_labels else "Root-cause bridge"
+    summary_labels = [
+        _localized_selected_label(value, labels)
+        for value in _split_summary_values(summary_row.get("selected_labels"))
+    ]
+    summary_label = (
+        summary_labels[0]
+        if summary_labels
+        else labels.get("root_cause_bridge", "Root-cause bridge")
+    )
     summary_amounts = _selected_amounts(summary_row)
     summary_amount = summary_amounts[0] if summary_amounts else 0.0
     selected_items = list(zip(summary_labels, summary_amounts))
@@ -1038,7 +1278,7 @@ def _build_payload(
     )
     driver_count = max(len(summary_labels), len(summary_amounts), 1)
     total_delta = sum(summary_amounts) + _summary_float(summary_row, "other_residual")
-    product_items = _best_product_line_items(output_dir, summary_alt, 1)
+    product_items = _best_product_line_items(output_dir, summary_alt, 1, labels)
     top_product = product_items[0][0] if product_items else summary_label
     product_text = _format_label_amounts(product_items)
     mixed_row = _select_mixed(summary_rows)
@@ -1048,7 +1288,7 @@ def _build_payload(
     if mixed_row is not None:
         mixed_alt = int(mixed_row.get("alternative_result") or 0)
         mixed_bridge_rows = _bridge_rows(output_dir, mixed_alt)
-        mixed_items = [_row_label(row) for row in mixed_bridge_rows[:5]]
+        mixed_items = [_row_label(row, labels) for row in mixed_bridge_rows[:5]]
         mixed_residual = _summary_float(mixed_row, "other_residual")
         mixed_chart = _write_localized_chart(
             _chart_path(output_dir, mixed_row.get("chart_path")),
@@ -1087,7 +1327,7 @@ def _build_payload(
     has_drilldown = bool(product_items) or drilldown_chart is not None
     mixed_text = ", ".join(mixed_items) if mixed_items else summary_label
     subtitle = (
-        f"{Path(str(recipe.get('source_file') or '')).stem or 'Sales'} | "
+        f"{Path(str(recipe.get('source_file') or '')).stem or labels.get('sales', 'Sales')} | "
         f"{comparison['comparison']}"
     )
     summary_paragraphs = [

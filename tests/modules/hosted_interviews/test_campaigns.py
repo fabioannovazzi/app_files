@@ -15,6 +15,7 @@ from modules.hosted_interviews.campaigns import (
     build_outreach_interview_case_id,
     get_interview_campaign,
     list_interview_campaigns,
+    outreach_interviewee_role,
 )
 
 
@@ -55,6 +56,25 @@ def test_build_ai_adoption_campaign_payload_contains_only_adoption_brief() -> No
         not in payload["priority_topics"]
     )
     assert "plugin participant onboarding" not in payload["client_project"]
+
+
+def test_build_ai_adoption_campaign_payload_localizes_spanish_participant_copy() -> (
+    None
+):
+    payload = build_campaign_interview_payload(
+        AI_ADOPTION_RESEARCH_CAMPAIGN_ID,
+        case_id="spanish-adoption-participant",
+        language="es-ES",
+    )
+
+    assert payload["interview_title"] == (
+        "Adopción de la IA en los despachos profesionales"
+    )
+    assert payload["participant_intro"].startswith(
+        "Esta breve entrevista busca comprender cómo utilizan la IA"
+    )
+    assert "datos confidenciales de clientes" in payload["participant_intro"]
+    assert "how professional firms use AI" in payload["purpose"]
 
 
 def test_build_working_group_payload_contains_only_needs_brief() -> None:
@@ -146,3 +166,9 @@ def test_build_outreach_interview_case_id_separates_outreach_campaigns() -> None
     assert first_case_id == "legacy-adoption-2026-07-0123456789abcdef"
     assert second_case_id == "commercialisti-needs-2026-07-0123456789abcdef"
     assert first_case_id != second_case_id
+
+
+def test_outreach_interviewee_role_supports_spain() -> None:
+    result = outreach_interviewee_role("spain", "spain")
+
+    assert result == "Accountant or Spanish professional firm representative"

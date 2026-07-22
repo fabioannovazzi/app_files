@@ -24,10 +24,9 @@ from import_latest_hosted_voice_bundle import (
 from launch_hosted_voice import (
     DEFAULT_CHROME_PROFILE_DIR,
     DEFAULT_VOICE_LAUNCH_URL,
-    MAX_CASE_CONTEXT_CHARS,
-    MAX_LAUNCH_URL_CHARS,
-    build_limited_launch_url,
     open_launch_url,
+    prepare_launch_url,
+    read_private_text_file,
 )
 from prepare_voice_deck_revision import prepare_voice_deck_revision_intake
 
@@ -54,6 +53,7 @@ class DeckFeedbackCaptureResult:
     import_result: HostedVoiceImportResult
     handoff_path: Path
     deck_revision_intake_path: Path | None
+    case_context_attached: bool
 
 
 def _now_iso() -> str:
@@ -145,6 +145,7 @@ def _write_handoff(
     target_kind: str,
     selected_bundle_path: Path,
     import_result: HostedVoiceImportResult,
+    case_context_attached: bool,
 ) -> Path:
     handoff_path = import_result.session_dir / HANDOFF_FILENAME
     payload = {
@@ -171,9 +172,14 @@ def _write_handoff(
         ),
         "recorded_at": _now_iso(),
         "data_posture": {
-            "local_files_read": [_portable_path(case_dir, case_dir / "case_brief.md")],
+            "local_files_read": (
+                [_portable_path(case_dir, case_dir / "case_brief.md")]
+                if case_context_attached
+                else []
+            ),
             "local_files_referenced": [_portable_path(case_dir, target_deck_path)],
             "hosted_capture_used": True,
+            "hosted_case_context_attached": case_context_attached,
             "external_connectors_used": [],
             "local_bundle_imported": True,
         },
@@ -192,6 +198,8 @@ def start_deck_feedback(
     downloads_dir: Path | None = None,
     browser: str = "chrome",
     server_url: str = DEFAULT_VOICE_LAUNCH_URL,
+    cookie_header: str = "",
+    magic_link: str = "",
     chrome_profile_dir: Path = DEFAULT_CHROME_PROFILE_DIR,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
     poll_seconds: float = DEFAULT_POLL_SECONDS,
@@ -213,12 +221,19 @@ def start_deck_feedback(
         raise CaseWorkspaceError(f"downloads folder does not exist: {downloads_dir}")
 
     baseline = _bundle_snapshot(downloads_dir)
-    launch_url, _context_limit = build_limited_launch_url(
+    launch_url, case_context_attached = prepare_launch_url(
         case_dir,
-        base_url=server_url,
-        max_context_chars=MAX_CASE_CONTEXT_CHARS,
-        max_url_chars=MAX_LAUNCH_URL_CHARS,
+        server_url=server_url,
+        cookie_header=cookie_header,
+        magic_link=magic_link,
     )
+    if case_context_attached:
+        LOGGER.info("Authenticated case context attached to Hosted Voice capture.")
+    else:
+        LOGGER.warning(
+            "Opening the browser-authenticated fallback without case context; "
+            "case_brief.md was not read for this launch."
+        )
     if open_browser:
         open_launch_url(
             launch_url,
@@ -250,6 +265,7 @@ def start_deck_feedback(
         target_kind=target_kind,
         selected_bundle_path=selected.path,
         import_result=import_result,
+        case_context_attached=case_context_attached,
     )
 
     deck_revision_intake_path: Path | None = None
@@ -270,6 +286,7 @@ def start_deck_feedback(
         import_result=import_result,
         handoff_path=handoff_path,
         deck_revision_intake_path=deck_revision_intake_path,
+        case_context_attached=case_context_attached,
     )
 
 
@@ -282,6 +299,8 @@ def main() -> int:
     parser.add_argument("--downloads-dir", type=Path, default=Path("~/Downloads"))
     parser.add_argument("--browser", choices=("default", "chrome"), default="chrome")
     parser.add_argument("--server-url", default=DEFAULT_VOICE_LAUNCH_URL)
+    parser.add_argument("--magic-link-file", type=Path)
+    parser.add_argument("--cookie-header-file", type=Path)
     parser.add_argument(
         "--chrome-profile-dir", type=Path, default=DEFAULT_CHROME_PROFILE_DIR
     )
@@ -294,12 +313,27 @@ def main() -> int:
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
+    cookie_header = ""
+    if args.cookie_header_file:
+        cookie_header = read_private_text_file(
+            args.cookie_header_file,
+            label="session cookie",
+        )
+    magic_link = ""
+    if args.magic_link_file:
+        magic_link = read_private_text_file(
+            args.magic_link_file,
+            label="magic link",
+        )
+
     result = start_deck_feedback(
         args.case_dir,
         target_deck_path=args.deck,
         downloads_dir=args.downloads_dir,
         browser=args.browser,
         server_url=args.server_url,
+        cookie_header=cookie_header,
+        magic_link=magic_link,
         chrome_profile_dir=args.chrome_profile_dir,
         timeout_seconds=args.timeout_seconds,
         poll_seconds=args.poll_seconds,

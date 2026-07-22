@@ -13,6 +13,8 @@ HEADER_SYNONYMS: Dict[str, List[str]] = {
         "data registrazione",
         "buchungstag",
         "fecha contable",
+        "fecha operación",
+        "fecha de operación",
         "date comptable",
     ],
     "value_date": [
@@ -30,6 +32,10 @@ HEADER_SYNONYMS: Dict[str, List[str]] = {
         "beschreibung",
         "libellé",
         "concepto",
+        "descripción",
+        "descripcion",
+        "detalle",
+        "detalle de operación",
     ],
     "amount": [
         "amount",
@@ -57,6 +63,8 @@ HEADER_SYNONYMS: Dict[str, List[str]] = {
         "rif.",
         "référence",
         "referenz",
+        "referencia",
+        "número de referencia",
     ],
 }
 

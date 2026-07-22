@@ -51,8 +51,9 @@ def test_cashmere_example_page_is_portable_public_html() -> None:
         in page
     )
     assert "Correct with caveats" in page
-    assert "Attribute Reporting · public example" in page
-    assert "user reports remain local unless deliberately shared" in page
+    assert "Clara · Retailer Signals · public example" in page
+    assert "Published here as a curated example" in page
+    assert "user reports remain local unless deliberately shared" not in page
     assert '<meta name="robots" content="noindex,nofollow">' in page
     assert "retailer pages remain the original source" in page
     assert parser.sources == set(EXPECTED_PRODUCT_IMAGES)

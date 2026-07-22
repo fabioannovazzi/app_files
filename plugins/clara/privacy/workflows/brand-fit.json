@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "workflow": "brand-fit",
+  "display_name": "Brand Fit",
+  "governed_paths": [
+    "skills/brand-fit/SKILL.md",
+    "modules/attribute-reporting/skills/brand-fit/SKILL.md",
+    "modules/attribute-reporting/scripts"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "retailer-and-brand-evidence",
+        "purpose": "Compare retailer signals with current retailer presence and the brand-owned catalogue",
+        "content": "Completed Retailer Signals report and verdict; retailer, category and brand names; current database snapshot, retailer-presence rows, owned-catalogue rows, accepted mappings, product attributes, candidate products, image URLs and locally hydrated images"
+      },
+      {
+        "id": "brand-fit-judgement-and-report",
+        "purpose": "Interpret gaps and candidates and create and independently check the local report",
+        "content": "Scope metrics, deterministic claims, report model, selected products, rationales, caveats, semantic review, browser QA, correctness findings, and final HTML"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [
+    "retail-data"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "mparanza-brand-fit-data",
+      "kind": "hosted_service",
+      "hosted_service_id": "retail-data",
+      "destination": "Mparanza Attribute Reporting service",
+      "purpose": "Build and return a Brand Fit evidence package from the actor-owned retail evidence job and central database snapshot",
+      "content": "Source evidence-job identifier, retailer-report SHA-256 and exact verdict, brand name and brand-source retailer, optional category aliases, and authentication metadata; the local Retailer Signals HTML report is not uploaded",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The user explicitly selects Brand Fit and the authenticated job derives source identifiers and hashes from an intact local Retailer Signals run.",
+        "The separate hosted-service record states the source-backed access and retention position."
+      ]
+    },
+    {
+      "id": "public-product-image-retrieval",
+      "kind": "public_research",
+      "destination": "Public product-image hosts named by the evidence package",
+      "purpose": "Download retailer and owned-catalogue product images for local evidence and report review",
+      "content": "Package-supplied public image URLs and ordinary network request metadata; image bytes remain local",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The image hydrator validates public address, redirect, byte-size, and hash constraints.",
+        "Retailer and owned-catalogue image scopes remain separated."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "source-report-not-uploaded",
+      "control": "Only the source report hash, verdict, and actor-owned evidence-job identifier cross the hosted boundary; the report file itself remains local."
+    },
+    {
+      "id": "origin-bound-auth",
+      "control": "Authentication cookies are kept outside the run folder and attached only to the exact approved Mparanza origin."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "f0c062685a5ec7ab0572103debdc77938bff14583e518a1af714877c8af459cd"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "deep-research-validator",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Validate Deep Research reports against cited sources with Codex-guided review and deterministic evidence checks.",
   "author": {
     "name": "Mparanza",
@@ -23,7 +23,7 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Validate Deep Research",
-    "shortDescription": "Review Deep Research outputs against cited sources and package validated findings in Italian, English, French, or German.",
+    "shortDescription": "Review Deep Research outputs against cited sources and package validated findings in Italian, English, French, German, or Spanish.",
     "longDescription": "Codex workflow for validating Deep Research answers and reports. Codex identifies material claims, reviews source support, checks reasoning, and writes corrections. Deterministic scripts only inspect document structure, extract citations and URLs, fetch or parse sources, match quoted passages, validate review JSON, and automatically package the natural full output set: Markdown, DOCX when tooling is available, validation audit, claim review, and validation package. The scripts do not make direct model API calls.",
     "developerName": "Fabio",
     "category": "Productivity",

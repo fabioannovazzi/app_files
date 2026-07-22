@@ -35,6 +35,7 @@ DEFAULT_BASE_URL = "https://mparanza.com"
 DEFAULT_TIMEOUT_SECONDS = 60.0
 ALLOWED_REMOTE_HOSTS = frozenset({"mparanza.com", "www.mparanza.com"})
 LOCAL_TEST_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 LOGGER = logging.getLogger(__name__)
 
 
@@ -556,7 +557,9 @@ def main() -> int:
     campaign_parser.add_argument("interview_campaign_id")
     campaign_parser.add_argument("--case-id", required=True)
     campaign_parser.add_argument("--participant-name", required=True)
-    campaign_parser.add_argument("--language", default="it")
+    campaign_parser.add_argument(
+        "--language", choices=SUPPORTED_LANGUAGES, default="it"
+    )
     campaign_parser.add_argument("--interviewee-role", default="")
     campaign_parser.add_argument("--expires-in-hours", type=int, default=7 * 24)
     _add_output_argument(campaign_parser, required=True)

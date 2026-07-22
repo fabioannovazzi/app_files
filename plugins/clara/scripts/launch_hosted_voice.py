@@ -3,19 +3,19 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import logging
 import os
 import subprocess
 import sys
 import webbrowser
-import zlib
 from pathlib import Path
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import urlencode, urlsplit, urlunsplit
 
 from advisor_case_core import (
     CASE_BRIEF_FILENAME,
+    SUPPORTED_LANGUAGES,
     CaseWorkspaceError,
+    load_case_file,
     refresh_case_brief,
     validate_case_workspace,
 )
@@ -23,21 +23,39 @@ from advisor_case_core import (
 __all__ = [
     "DEFAULT_VOICE_LAUNCH_URL",
     "build_case_context",
-    "build_limited_launch_url",
     "build_launch_url",
+    "build_voice_session_url",
     "build_chrome_launch_args",
-    "encode_case_context",
     "main",
     "open_launch_url",
+    "prepare_launch_url",
+    "read_private_text_file",
+    "validate_hosted_url",
 ]
 
 LOGGER = logging.getLogger(__name__)
 
 DEFAULT_VOICE_LAUNCH_URL = "https://mparanza.com/case-notes/voice/launch"
 MAX_CASE_CONTEXT_CHARS = 2_500
-MIN_CASE_CONTEXT_CHARS = 1_200
-MAX_LAUNCH_URL_CHARS = 6_000
 DEFAULT_CHROME_PROFILE_DIR = Path("/private/tmp/mparanza-case-notes-chrome-voice")
+_HOSTED_HOST = "mparanza.com"
+_TEST_LOCAL_HOSTS = {"127.0.0.1", "::1", "localhost"}
+
+
+def read_private_text_file(path: Path, *, label: str) -> str:
+    """Read one local secret after forcing owner-only file permissions."""
+
+    source = path.expanduser()
+    if source.is_symlink() or not source.is_file():
+        raise CaseWorkspaceError(f"{label} file must be a regular local file.")
+    try:
+        source.chmod(0o600)
+        value = source.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        raise CaseWorkspaceError(f"Could not read {label} file: {source}") from exc
+    if not value:
+        raise CaseWorkspaceError(f"{label} file is empty.")
+    return value
 
 
 def build_case_context(
@@ -62,80 +80,140 @@ def build_case_context(
     return brief
 
 
-def encode_case_context(case_context: str) -> str:
-    """Compress and URL-safe encode case context for the hosted launch URL."""
+def validate_hosted_url(
+    value: str,
+    *,
+    required_path: str | None = None,
+    allow_query: bool = False,
+    allow_localhost_for_tests: bool = False,
+) -> str:
+    """Return a pinned Hosted Voice URL or reject the destination."""
 
-    compressed = zlib.compress(case_context.encode("utf-8"), level=9)
-    return base64.urlsafe_b64encode(compressed).decode("ascii")
+    clean = value.strip()
+    try:
+        parts = urlsplit(clean)
+        port = parts.port
+    except ValueError as exc:
+        raise CaseWorkspaceError(
+            "Hosted Voice destination is not a valid URL."
+        ) from exc
+    is_mparanza = (
+        parts.scheme == "https"
+        and (parts.hostname or "").lower() == _HOSTED_HOST
+        and port in {None, 443}
+    )
+    is_test_local = (
+        allow_localhost_for_tests
+        and parts.scheme in {"http", "https"}
+        and (parts.hostname or "").lower() in _TEST_LOCAL_HOSTS
+    )
+    if not (is_mparanza or is_test_local):
+        raise CaseWorkspaceError(
+            "Hosted Voice destination must be https://mparanza.com."
+        )
+    if parts.username or parts.password or parts.fragment:
+        raise CaseWorkspaceError(
+            "Hosted Voice URL contains unsupported credentials or fragment."
+        )
+    if required_path is not None and parts.path != required_path:
+        raise CaseWorkspaceError(f"Hosted Voice URL must use the {required_path} path.")
+    if parts.query and not allow_query:
+        raise CaseWorkspaceError("Hosted Voice URL must not contain a query string.")
+    return clean
 
 
 def build_launch_url(
     base_url: str = DEFAULT_VOICE_LAUNCH_URL,
-    *,
-    case_context: str = "",
 ) -> str:
-    """Return the hosted voice launch URL."""
+    """Return the context-free browser-authenticated launch URL."""
 
-    clean_base = base_url.strip()
-    if not case_context.strip():
-        return clean_base
-    parts = urlsplit(clean_base)
-    query_items = parse_qsl(parts.query, keep_blank_values=True)
-    if case_context.strip():
-        query_items.append(("case_context_z", encode_case_context(case_context)))
+    return validate_hosted_url(
+        base_url,
+        required_path="/case-notes/voice/launch",
+    )
+
+
+def build_voice_session_url(
+    base_url: str,
+    *,
+    launch_token: str,
+) -> str:
+    """Return a Hosted Voice page URL containing only an opaque launch token."""
+
+    clean_token = launch_token.strip()
+    if not clean_token or any(
+        char not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+        for char in clean_token
+    ):
+        raise CaseWorkspaceError("Hosted Voice returned an invalid launch token.")
+    parts = urlsplit(validate_hosted_url(base_url))
     return urlunsplit(
         (
             parts.scheme,
             parts.netloc,
-            parts.path,
-            urlencode(query_items),
-            parts.fragment,
+            "/case-notes/voice",
+            urlencode({"session": clean_token}),
+            "",
         )
     )
 
 
-def build_limited_launch_url(
+def prepare_launch_url(
     case_dir: Path,
     *,
-    base_url: str = DEFAULT_VOICE_LAUNCH_URL,
+    server_url: str = DEFAULT_VOICE_LAUNCH_URL,
     purpose: str = "transcription",
     max_context_chars: int = MAX_CASE_CONTEXT_CHARS,
-    max_url_chars: int = MAX_LAUNCH_URL_CHARS,
-) -> tuple[str, int]:
-    """Return a hosted launch URL that stays within the configured URL budget.
+    cookie_header: str = "",
+    magic_link: str = "",
+    language: str | None = None,
+) -> tuple[str, bool]:
+    """Prepare an authenticated context launch or an explicit context-free fallback."""
 
-    Query-string length is a gateway constraint, so deterministic truncation is
-    safer than opening a URL that may fail before authentication.
-    """
+    launch_base_url = build_launch_url(server_url)
+    if not (cookie_header.strip() or magic_link.strip()):
+        return launch_base_url, False
 
-    if max_context_chars < MIN_CASE_CONTEXT_CHARS:
-        raise CaseWorkspaceError(
-            f"max_context_chars must be at least {MIN_CASE_CONTEXT_CHARS}"
-        )
-    if max_url_chars <= len(base_url):
-        raise CaseWorkspaceError("max_url_chars is shorter than the launch base URL")
-    if purpose != "transcription":
-        raise CaseWorkspaceError(f"Unsupported voice purpose: {purpose}")
+    from upload_hosted_audio import (
+        _new_opener,
+        authenticate_with_magic_link,
+        bind_session_cookie,
+        request_context_launch_token,
+    )
 
-    context_limit = max_context_chars
-    while True:
-        case_context = build_case_context(
-            case_dir,
-            max_chars=context_limit,
-            purpose=purpose,
+    refresh_case_brief(case_dir)
+    context = build_case_context(
+        case_dir,
+        max_chars=max_context_chars,
+        purpose=purpose,
+    )
+    manifest = load_case_file(case_dir, "manifest")
+    resolved_language = (
+        str(language or manifest.get("output_language") or "it").strip().lower()
+    )
+    if resolved_language not in SUPPORTED_LANGUAGES:
+        raise CaseWorkspaceError(f"Unsupported voice language: {resolved_language}")
+    base_parts = urlsplit(launch_base_url)
+    hosted_base_url = urlunsplit((base_parts.scheme, base_parts.netloc, "", "", ""))
+    opener = _new_opener()
+    if magic_link.strip():
+        authenticate_with_magic_link(opener, magic_link)
+    if cookie_header.strip():
+        bind_session_cookie(
+            opener,
+            base_url=hosted_base_url,
+            cookie_header=cookie_header,
         )
-        launch_url = build_launch_url(
-            base_url,
-            case_context=case_context,
-        )
-        if len(launch_url) <= max_url_chars:
-            return launch_url, context_limit
-        if context_limit == MIN_CASE_CONTEXT_CHARS:
-            raise CaseWorkspaceError(
-                "Hosted voice launch URL is too long even after context truncation "
-                f"({len(launch_url)} > {max_url_chars} characters)."
-            )
-        context_limit = max(MIN_CASE_CONTEXT_CHARS, context_limit // 2)
+    token = request_context_launch_token(
+        opener,
+        base_url=hosted_base_url,
+        case_context=context,
+        language=resolved_language,
+    )
+    return (
+        build_voice_session_url(hosted_base_url, launch_token=token),
+        True,
+    )
 
 
 def build_chrome_launch_args(
@@ -144,9 +222,15 @@ def build_chrome_launch_args(
     profile_dir: Path = DEFAULT_CHROME_PROFILE_DIR,
     remote_debugging_port: int = 0,
     auto_accept_microphone: bool = True,
+    allow_localhost_for_tests: bool = False,
 ) -> list[str]:
     """Return Chrome arguments for a clean Clara voice session."""
 
+    validate_hosted_url(
+        launch_url,
+        allow_query=True,
+        allow_localhost_for_tests=allow_localhost_for_tests,
+    )
     args = [
         f"--user-data-dir={profile_dir}",
         "--no-first-run",
@@ -177,6 +261,7 @@ def open_launch_url(
 ) -> None:
     """Open *launch_url* in the requested browser."""
 
+    validate_hosted_url(launch_url, allow_query=True)
     if browser == "default":
         webbrowser.open(launch_url)
         return
@@ -214,7 +299,14 @@ def main() -> int:
         default="transcription",
         help="Open Clara Voice Capture for recording or uploaded-audio transcription.",
     )
+    parser.add_argument(
+        "--language",
+        choices=sorted(SUPPORTED_LANGUAGES),
+        help="Transcription language; defaults to the Clara case output language.",
+    )
     parser.add_argument("--no-open", action="store_true")
+    parser.add_argument("--magic-link-file", type=Path)
+    parser.add_argument("--cookie-header-file", type=Path)
     parser.add_argument("--browser", choices=("default", "chrome"), default="default")
     parser.add_argument(
         "--chrome-profile-dir",
@@ -237,13 +329,7 @@ def main() -> int:
         "--max-context-chars",
         type=int,
         default=MAX_CASE_CONTEXT_CHARS,
-        help="Maximum case context characters before compression.",
-    )
-    parser.add_argument(
-        "--max-url-chars",
-        type=int,
-        default=MAX_LAUNCH_URL_CHARS,
-        help="Maximum generated launch URL length.",
+        help="Maximum case context characters sent in the authenticated body.",
     )
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -252,22 +338,38 @@ def main() -> int:
     if errors:
         raise CaseWorkspaceError("; ".join(errors))
 
-    refresh_case_brief(args.case_dir)
-    launch_url, context_limit = build_limited_launch_url(
+    cookie_header = ""
+    if args.cookie_header_file:
+        cookie_header = read_private_text_file(
+            args.cookie_header_file,
+            label="session cookie",
+        )
+    magic_link = ""
+    if args.magic_link_file:
+        magic_link = read_private_text_file(
+            args.magic_link_file,
+            label="magic link",
+        )
+    launch_url, context_attached = prepare_launch_url(
         args.case_dir,
-        base_url=args.server_url,
+        server_url=args.server_url,
         purpose=args.purpose,
         max_context_chars=args.max_context_chars,
-        max_url_chars=args.max_url_chars,
+        cookie_header=cookie_header,
+        magic_link=magic_link,
+        language=args.language,
     )
-    if context_limit < args.max_context_chars:
-        LOGGER.warning(
-            "Hosted voice context truncated to %s characters to keep launch URL "
-            "within %s characters.",
-            context_limit,
-            args.max_url_chars,
+    if context_attached:
+        LOGGER.info(
+            "Hosted voice launch prepared with authenticated case context; "
+            "the opaque token is not printed."
         )
-    LOGGER.info("Hosted voice launch URL: %s", launch_url)
+    else:
+        LOGGER.warning(
+            "No hosted authentication material was supplied. Opening the "
+            "browser-authenticated fallback without attaching case context."
+        )
+    LOGGER.info("Hosted voice destination: https://mparanza.com/case-notes/voice")
     if not args.no_open:
         open_launch_url(
             launch_url,

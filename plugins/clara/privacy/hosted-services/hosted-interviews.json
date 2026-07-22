@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "service_id": "hosted-interviews",
+  "display_name": "Mparanza Hosted Interviews",
+  "provider_or_recipients": [
+    "Mparanza Hosted Interviews",
+    "OpenAI realtime, transcription, and review services configured by Mparanza"
+  ],
+  "workflows": [
+    "interview"
+  ],
+  "governed_paths": [
+    "skills/interview/SKILL.md",
+    "scripts/manage_hosted_interview.py",
+    "repository/modules/hosted_interviews/api.py",
+    "repository/modules/pdp/legal_content.py",
+    "repository/static/js/hosted-interview.js",
+    "repository/templates/hosted_interview.html"
+  ],
+  "trigger": "The user asks Clara to create or operate an external-participant hosted interview; creating the participant link is the route choice.",
+  "automatic": false,
+  "data_sent": [
+    {
+      "id": "authentication",
+      "when": "When the preparer authenticates or requests a magic link",
+      "content": "Authorized email address and redirect path for magic-link requests, or a Mparanza session cookie or consumed magic link"
+    },
+    {
+      "id": "campaign-interview-preparation",
+      "when": "When creating a participant link from a registered campaign",
+      "content": "Exact campaign identifier, non-sensitive case identifier, participant name, language, participant role, and requested expiry"
+    },
+    {
+      "id": "custom-interview-brief",
+      "when": "When creating a one-off interview",
+      "content": "Campaign and case identifiers; case, project, participant and interview labels; role and language; purpose, participant introduction, background context, hypotheses, topics, questions, red flags, boundaries, and expiry"
+    },
+    {
+      "id": "participant-conversation",
+      "when": "When the participant opens the bearer link and completes the interview",
+      "content": "Participant microphone audio and answers, conversation events, and service-generated transcript and review material"
+    }
+  ],
+  "data_returned": [
+    {
+      "id": "participant-link-and-receipt",
+      "when": "After interview preparation",
+      "content": "Bearer participant URL, expiry, campaign identifier, and preparation receipt"
+    },
+    {
+      "id": "public-status",
+      "when": "When checking a known participant link",
+      "content": "Minimal status plus case name and interview title exposed by the unauthenticated status route"
+    },
+    {
+      "id": "bundle-and-review",
+      "when": "After authenticated retrieval of a completed interview",
+      "content": "Prepared record, completion data, current-run events, transcript material, media metadata, and generated quality review; the documented JSON bundle contains no raw audio or video bytes"
+    }
+  ],
+  "access": {
+    "arrangement": "An authenticated preparer creates and retrieves interviews. The participant uses an expiring bearer link without login. A known bearer token can read minimal public status, including case name and interview title; bundle and review retrieval use the authenticated helper. Mparanza and OpenAI process audio, answers, and transcript to conduct, transcribe, and review the interview.",
+    "controls": [
+      "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+      "Cookie headers are attached only to the approved origin.",
+      "Briefs and receipts containing bearer material are written as local 0600 files.",
+      "Participant-visible and public-status fields are required to be non-sensitive by the workflow."
+    ]
+  },
+  "retention": {
+    "status": "documented",
+    "statement": "The hosted interview record remains stored until manual or administrative deletion. Participant-link expiry, revocation, or archiving is not deletion."
+  },
+  "security_controls": [
+    {
+      "id": "bearer-link-handling",
+      "control": "Bearer URLs and tokens are kept out of ordinary command arguments, shell history, source files, and normal logs."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "hosted_service_boundary_review_of_source",
+    "source_fingerprint": "8ff6cd87ed0a4ae57ee1c3f4f766c747ab65f817eecd043c8c7776d2034528de"
+  }
+}

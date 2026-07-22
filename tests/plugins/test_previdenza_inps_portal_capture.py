@@ -46,31 +46,6 @@ def _load_inventory_module() -> ModuleType:
 PORTAL = _load_module()
 
 
-def _approval(**overrides: Any) -> dict[str, Any]:
-    approval = {
-        "approved": True,
-        "approval_id": "APR-001",
-        "approved_at": "2026-07-16T10:00:00+02:00",
-        "approved_by": "reviewer-001",
-        "approved_by_role": "professional_reviewer",
-        "reason": "Authorized evidence capture for the synthetic case.",
-        "scope": "Read one already-authenticated INPS page.",
-        "own_or_authorized_credentials_confirmed": True,
-        "human_access_authority_confirmed": True,
-        "human_access_authority_basis": "Recorded human authority for this bounded portal view.",
-        "portal_profile_authority_confirmed": True,
-        "portal_profile_authority_basis": "Recorded authority for the selected professional profile.",
-        "delegation_or_subject_authority_confirmed": True,
-        "delegation_or_subject_authority_basis": "Recorded client delegation or subject self-access basis.",
-        "portal_capture_permission_confirmed": True,
-        "portal_permission_basis": "Synthetic service terms permit this test capture.",
-        "read_only_capture_confirmed": True,
-        "no_credentials_or_session_secrets_visible_confirmed": True,
-    }
-    approval.update(overrides)
-    return approval
-
-
 class _FakeLocator:
     def __init__(self, page: _FakePage) -> None:
         self._page = page
@@ -248,43 +223,6 @@ def test_normalize_approved_origin_accepts_only_inps_https_origins(
     assert PORTAL.normalize_approved_origin(approved_origin) == expected
 
 
-@pytest.mark.parametrize(
-    "change",
-    [
-        {"approval_id": ""},
-        {"approved": False},
-        {"own_or_authorized_credentials_confirmed": False},
-        {"human_access_authority_confirmed": False},
-        {"human_access_authority_basis": ""},
-        {"portal_profile_authority_confirmed": False},
-        {"portal_profile_authority_basis": ""},
-        {"delegation_or_subject_authority_confirmed": False},
-        {"delegation_or_subject_authority_basis": ""},
-        {"portal_capture_permission_confirmed": False},
-        {"portal_permission_basis": ""},
-        {"read_only_capture_confirmed": False},
-        {"no_credentials_or_session_secrets_visible_confirmed": False},
-        {"approved_at": "2026-07-16T10:00:00"},
-        {"approved_by_role": "administrator"},
-        {"unexpected": "field"},
-    ],
-)
-def test_external_approval_rejects_missing_or_invalid_authorization(
-    change: dict[str, Any],
-) -> None:
-    approval = _approval(**change)
-    with pytest.raises(PORTAL.PortalCaptureError):
-        PORTAL.validate_external_approval(approval)
-
-
-def test_external_approval_rejects_a_missing_required_field() -> None:
-    approval = _approval()
-    approval.pop("scope")
-
-    with pytest.raises(PORTAL.PortalCaptureError, match="missing: scope"):
-        PORTAL.validate_external_approval(approval)
-
-
 def test_capture_writes_private_hash_bound_artifacts_without_operating_browser(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
@@ -302,7 +240,6 @@ def test_capture_writes_private_hash_bound_artifacts_without_operating_browser(
         remote_url="http://127.0.0.1:9222/",
         approved_origin="https://servizi.inps.it",
         output_dir=output,
-        external_approval=_approval(),
         timeout_ms=1_234,
         playwright_factory=lambda: runtime,
         captured_at=datetime(2026, 7, 16, 8, 30, tzinfo=timezone.utc),
@@ -324,6 +261,9 @@ def test_capture_writes_private_hash_bound_artifacts_without_operating_browser(
         manifest["page_title_sha256"]
         == hashlib.sha256(secret_title.encode("utf-8")).hexdigest()
     )
+    assert manifest["route_selected"] is True
+    assert "approval" not in manifest
+    assert all(value is False for value in manifest["guardrails"].values())
     assert secret_url not in manifest_text
     assert secret_title not in manifest_text
     assert "top-secret" not in manifest_text
@@ -366,7 +306,6 @@ def test_capture_requires_exactly_one_already_open_matching_page(
             remote_url="http://localhost:9222",
             approved_origin="https://www.inps.it",
             output_dir=output,
-            external_approval=_approval(),
             playwright_factory=lambda: runtime,
         )
 
@@ -397,7 +336,6 @@ def test_capture_fails_closed_if_page_url_changes_during_read(
             remote_url="http://localhost:9222",
             approved_origin="https://www.inps.it",
             output_dir=output,
-            external_approval=_approval(),
             playwright_factory=lambda: runtime,
         )
 
@@ -423,7 +361,6 @@ def test_capture_sanitizes_browser_errors_and_logs(
             remote_url="http://localhost:9222",
             approved_origin="https://www.inps.it",
             output_dir=output,
-            external_approval=_approval(),
             playwright_factory=lambda: runtime,
         )
 
@@ -441,7 +378,6 @@ def test_verifier_rejects_tampered_artifact(tmp_path: Path) -> None:
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=output,
-        external_approval=_approval(),
         playwright_factory=lambda: runtime,
     )
     (output / PORTAL.VISIBLE_TEXT_NAME).write_text(
@@ -460,7 +396,6 @@ def test_verifier_rejects_manifest_that_persists_raw_url(tmp_path: Path) -> None
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=output,
-        external_approval=_approval(),
         playwright_factory=lambda: runtime,
     )
     manifest_path = output / PORTAL.MANIFEST_NAME
@@ -480,7 +415,6 @@ def test_verifier_rejects_capture_id_without_required_prefix(tmp_path: Path) -> 
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=output,
-        external_approval=_approval(),
         playwright_factory=lambda: runtime,
     )
     manifest_path = output / PORTAL.MANIFEST_NAME
@@ -505,7 +439,6 @@ def test_capture_rejects_output_inside_git_before_browser_connection() -> None:
             remote_url="http://localhost:9222",
             approved_origin="https://www.inps.it",
             output_dir=ROOT / "portal-capture-must-not-exist",
-            external_approval=_approval(),
             playwright_factory=_factory,
         )
 
@@ -544,7 +477,6 @@ def test_inventory_records_verified_portal_capture_and_excludes_private_receipt(
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=capture_dir,
-        external_approval=_approval(),
         playwright_factory=lambda: _FakePlaywright(
             [_FakePage(secret_url, body_text="Periodo contributivo 2020-2024")]
         ),
@@ -585,15 +517,27 @@ def test_inventory_records_verified_portal_capture_and_excludes_private_receipt(
     )
     posture = run_intake["data_posture"]
     assert posture["external_connectors_used"] == ["inps_browser_read_only"]
-    assert posture["external_execution_approval"]["approved"] is True
-    assert posture["portal_capture_receipt"]["case_content_uploaded"] is False
-    assert posture["portal_capture_receipt"]["portal_capture_permission_confirmed"]
-    assert posture["portal_capture_receipt"]["human_access_authority_confirmed"]
-    assert posture["portal_capture_receipt"]["portal_profile_authority_confirmed"]
-    assert posture["portal_capture_receipt"][
-        "delegation_or_subject_authority_confirmed"
+    assert posture["external_routes_used"] == [
+        {
+            "route": "inps_browser_read_only",
+            "destination_or_origin": "https://www.inps.it",
+            "payload_category": "visible_page_content_received_from_selected_tab",
+            "network_used": True,
+            "access_basis": None,
+        }
     ]
-    assert "access_authority_confirmed" not in posture["portal_capture_receipt"]
+    assert "external_execution_approval" not in posture
+    receipt = posture["portal_capture_receipt"]
+    assert receipt["route_selected"] is True
+    assert receipt["capture_method"] == "attached_chrome_visible_page_read_only"
+    assert receipt["case_content_uploaded"] is False
+    assert receipt["authentication_performed_by_connector"] is False
+    assert receipt["navigation_performed"] is False
+    assert receipt["page_actions_performed"] is False
+    assert receipt["cookies_read"] is False
+    assert receipt["storage_state_read"] is False
+    assert receipt["page_html_read"] is False
+    assert receipt["browser_closed"] is False
     assert secret_url not in json.dumps(run_intake)
 
 
@@ -605,7 +549,6 @@ def test_inventory_requires_explicit_manifest_argument_for_capture(
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=capture_dir,
-        external_approval=_approval(),
         playwright_factory=lambda: _FakePlaywright(
             [_FakePage("https://www.inps.it/area")]
         ),
@@ -630,7 +573,6 @@ def test_inventory_rejects_nested_capture_bundle_before_writing_output(
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=capture_dir,
-        external_approval=_approval(),
         playwright_factory=lambda: _FakePlaywright(
             [_FakePage("https://www.inps.it/area")]
         ),
@@ -675,7 +617,6 @@ def test_inventory_rejects_tampered_root_capture_instead_of_inventorying_it(
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=capture_dir,
-        external_approval=_approval(),
         playwright_factory=lambda: _FakePlaywright(
             [_FakePage("https://www.inps.it/area")]
         ),
@@ -730,7 +671,6 @@ def test_capture_screenshot_is_hashed_but_never_ocr_reprocessed(tmp_path: Path) 
         remote_url="http://localhost:9222",
         approved_origin="https://www.inps.it",
         output_dir=capture_dir,
-        external_approval=_approval(),
         playwright_factory=lambda: _FakePlaywright(
             [_FakePage("https://www.inps.it/area", body_text="Periodo 2020-2024")]
         ),

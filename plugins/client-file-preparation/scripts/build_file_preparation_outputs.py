@@ -103,12 +103,13 @@ LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = SCRIPT_DIR.parent
 TEMPLATE_DIR = PLUGIN_ROOT / "templates"
 SUPPORTED_JURISDICTIONS = ("italy", "geneva", "zurich", "uk", "mixed")
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 OCR_LANGUAGE_BY_LANGUAGE = {
     "it": "it",
     "en": "en",
     "fr": "fr",
     "de": "german",
+    "es": "es",
 }
 
 COPY = {
@@ -143,6 +144,14 @@ COPY = {
         "questions_title": "Interne Fragen der Kanzlei",
         "questions_intro": "Arbeitspunkte aus der Klassifizierung und den verfügbaren Auszügen.",
         "questions_empty": "Es wurden keine Fragen automatisch erstellt.",
+    },
+    "es": {
+        "missing_title": "Documentos pendientes o inciertos",
+        "missing_intro": "Lista operativa basada en la clasificación, el análisis y el texto extraído.",
+        "missing_empty": "Los controles automáticos no detectaron carencias evidentes.",
+        "questions_title": "Preguntas internas del despacho",
+        "questions_intro": "Puntos operativos derivados de la clasificación y de los extractos disponibles.",
+        "questions_empty": "No se generaron preguntas automáticamente.",
     },
 }
 
@@ -218,6 +227,29 @@ CATEGORY_LABELS = {
         CATEGORY_UK_HMRC_NOTICE: "britische HMRC-Mitteilungen",
         CATEGORY_UK_BANK_TAX: "britische Bank- und Kapitalertragsteuerbescheinigungen",
     },
+    "es": {
+        "730 / precompilata": "declaración italiana 730 / precompletada",
+        "fatture elettroniche XML": "facturas electrónicas XML",
+        "ricevute sanitarie": "justificantes médicos",
+        "mutuo": "hipoteca",
+        "affitto / locazione": "alquiler / arrendamiento",
+        "assicurazioni": "seguros",
+        "previdenza": "seguridad social",
+        "avvisi / comunicazioni": "avisos / comunicaciones",
+        "contratti": "contratos",
+        "documenti non classificati": "documentos sin clasificar",
+        CATEGORY_CH_GE_TAX: "documentos fiscales de Ginebra",
+        CATEGORY_CH_ZH_TAX: "documentos fiscales de Zúrich",
+        CATEGORY_CH_TAX_RETURN: "declaración fiscal suiza",
+        CATEGORY_CH_TAX_ASSESSMENT: "liquidación fiscal suiza",
+        CATEGORY_CH_SALARY_CERTIFICATE: "certificado salarial suizo",
+        CATEGORY_CH_BANK_TAX: "certificados fiscales bancarios y de retención suizos",
+        CATEGORY_UK_YEAR_END_PAYROLL: "documentos británicos P60 / P45 / P11D",
+        CATEGORY_UK_PAYSLIP: "nómina británica",
+        CATEGORY_UK_SELF_ASSESSMENT: "declaración británica Self Assessment",
+        CATEGORY_UK_HMRC_NOTICE: "comunicaciones británicas de HMRC",
+        CATEGORY_UK_BANK_TAX: "certificados fiscales bancarios y de inversión británicos",
+    },
 }
 
 
@@ -239,6 +271,7 @@ def _inventory_note_label(value: str, language: str) -> str:
             "en": "classification uncertain",
             "fr": "classification incertaine",
             "de": "Klassifizierung unklar",
+            "es": "clasificación incierta",
         }[language]
     if value.startswith("anno non coerente con target "):
         year = value.removeprefix("anno non coerente con target ")
@@ -246,24 +279,28 @@ def _inventory_note_label(value: str, language: str) -> str:
             "en": f"year differs from target {year}",
             "fr": f"année différente de la cible {year}",
             "de": f"Jahr weicht vom Zieljahr {year} ab",
+            "es": f"el año difiere del objetivo {year}",
         }[language]
     if value.startswith("immagine"):
         return {
             "en": "image: possible receipt or scanned document",
             "fr": "image : reçu possible ou document numérisé",
             "de": "Bild: möglicher Beleg oder gescanntes Dokument",
+            "es": "imagen: posible justificante o documento escaneado",
         }[language]
     if value.startswith("XML generico"):
         return {
             "en": "generic XML: FatturaPA structure not identified",
             "fr": "XML générique : structure FatturaPA non identifiée",
             "de": "Generisches XML: FatturaPA-Struktur nicht erkannt",
+            "es": "XML genérico: no se ha identificado la estructura FatturaPA",
         }[language]
     if value == "collegamento simbolico non seguito":
         return {
             "en": "symbolic link not followed",
             "fr": "lien symbolique non suivi",
             "de": "symbolischer Link wurde nicht verfolgt",
+            "es": "no se ha seguido el enlace simbólico",
         }[language]
     return value
 
@@ -276,12 +313,14 @@ def _duplicate_type_label(value: str, language: str) -> str:
                 "en": "identical hash",
                 "fr": "empreinte identique",
                 "de": "identischer Hash",
+                "es": "hash idéntico",
             },
             "nome-dimensione-simile": {
                 "it": "nome e dimensione simili",
                 "en": "similar name and size",
                 "fr": "nom et taille similaires",
                 "de": "ähnlicher Name und ähnliche Größe",
+                "es": "nombre y tamaño similares",
             },
         }
         .get(value, {})
@@ -428,6 +467,18 @@ def _write_environment_report(
             "missing": "Fehlend",
             "commands": "Empfohlene Befehle",
             "ready": "Die Umgebung ist für die angeforderten Funktionen bereit.",
+        },
+        "es": {
+            "title": "Comprobación del entorno",
+            "ocr": "OCR necesario",
+            "yes": "sí",
+            "no": "no",
+            "available_count": "Dependencias disponibles",
+            "missing_count": "Dependencias pendientes",
+            "available": "Disponibles",
+            "missing": "Pendientes",
+            "commands": "Comandos sugeridos",
+            "ready": "El entorno está preparado para las funciones solicitadas.",
         },
     }[language]
     lines = [
@@ -668,6 +719,23 @@ MISSING_ITEM_TRANSLATIONS = {
         "Sono presenti duplicati potenziali": "Mögliche Dateiduplikate sind vorhanden. Vor Abschluss des Inventars prüfen.",
         "Alcuni PDF o immagini": "Einige PDF-Dateien oder Bilder konnten nicht zuverlässig gelesen werden. Siehe `extracted/extraction_report.md`; OCR bei Bedarf aktivieren.",
     },
+    "es": {
+        "Non è stata individuata una CU.": "No se encontró ninguna Certificazione Unica (CU). Compruebe si el cliente debe aportarla o si no es pertinente para este encargo.",
+        "Presente una CU.": "Hay una Certificazione Unica (CU). Confirme que no existan otras CU, rentas extranjeras, alquileres, actividades por cuenta propia o participaciones.",
+        "Presente documentazione mutuo": "Hay documentación hipotecaria, pero no se identificó un certificado separado de intereses hipotecarios.",
+        "Ricevute sanitarie presenti": "Hay justificantes médicos: verifique el titular, la trazabilidad del pago y su inclusión en la declaración precompletada.",
+        "Sono presenti riferimenti a spese sanitarie": "Los documentos legibles mencionan gastos médicos. Compruebe si los justificantes o detalles de soporte figuran en el expediente.",
+        "F24 presenti": "Hay formularios F24, pero los controles automáticos no pueden determinar si el conjunto está completo.",
+        "Presente documentazione 730/precompilata": "Hay documentación 730/precompletada sin una CU identificada; verifique que la documentación de ingresos esté completa.",
+        "Presente documentazione Redditi PF": "Hay documentación Redditi PF sin una CU identificada; verifique el perímetro de rentas del cliente.",
+        "Il fascicolo è impostato su Italia": "La ejecución se limita a Italia, pero no se encontró un contexto fiscal italiano claramente legible. Revise el perímetro documental.",
+        "Verificare la completezza documentale": "Verifique que la documentación esté completa según la jurisdicción registrada para la ejecución.",
+        "Giurisdizione mista": "Jurisdicción mixta: separe los documentos y los controles de integridad por cada ámbito nacional o cantonal.",
+        "Fatture XML presenti": "Hay facturas XML; revise los resúmenes de anomalías formales.",
+        "Sono presenti documenti non classificati": "Hay documentos sin clasificar; decida si deben renombrarse, archivarse o excluirse del expediente.",
+        "Sono presenti duplicati potenziali": "Hay posibles archivos duplicados. Revíselos antes de considerar completo el inventario.",
+        "Alcuni PDF o immagini": "Algunos PDF o imágenes no pudieron leerse de forma fiable. Consulte `extracted/extraction_report.md` y active el OCR si es necesario.",
+    },
 }
 
 
@@ -680,6 +748,7 @@ def _localize_missing_item(item: str, language: str) -> str:
             "en": "Files outside the target year are present:",
             "fr": "Des fichiers hors de l’année cible sont présents :",
             "de": "Dateien außerhalb des Zieljahres sind vorhanden:",
+            "es": "Hay archivos fuera del año objetivo:",
         }[language]
         return f"{prefix} {paths}"
     if item.startswith("Alcuni XML non sono leggibili"):
@@ -688,6 +757,7 @@ def _localize_missing_item(item: str, language: str) -> str:
             "en": "Some XML files are unreadable or malformed:",
             "fr": "Certains fichiers XML sont illisibles ou mal formés :",
             "de": "Einige XML-Dateien sind unlesbar oder fehlerhaft:",
+            "es": "Algunos archivos XML son ilegibles o están mal formados:",
         }[language]
         return f"{prefix} {paths}"
     for prefix, translation in MISSING_ITEM_TRANSLATIONS[language].items():
@@ -697,6 +767,7 @@ def _localize_missing_item(item: str, language: str) -> str:
         "en": "Review this missing or uncertain item against the local evidence.",
         "fr": "Examiner cet élément manquant ou incertain à partir des preuves locales.",
         "de": "Diesen fehlenden oder unklaren Punkt anhand der lokalen Nachweise prüfen.",
+        "es": "Revise este elemento pendiente o incierto con la evidencia local.",
     }[language]
 
 
@@ -727,6 +798,10 @@ def _build_professional_questions(
             "Ist der Einkommensumfang des Mandanten anhand der erhaltenen Unterlagen vollständig?",
             "Sind Dokumente auszuschließen, weil sie nicht zum Zieljahr oder Mandat gehören?",
         ],
+        "es": [
+            "¿Está completo el perímetro de rentas del cliente según los documentos recibidos?",
+            "¿Debe excluirse algún documento porque no corresponde al año objetivo o al encargo?",
+        ],
     }[language].copy()
     if categories.get(CATEGORY_RICEVUTE_SANITARIE):
         questions.append(
@@ -735,6 +810,7 @@ def _build_professional_questions(
                 "en": "Do the medical expenses require checks of the holder, payment traceability, and consistency with the pre-filled return?",
                 "fr": "Les frais médicaux exigent-ils une vérification du titulaire, de la traçabilité du paiement et de la déclaration préremplie ?",
                 "de": "Müssen Gesundheitsausgaben hinsichtlich Inhaber, Zahlungsnachvollziehbarkeit und vorausgefüllter Erklärung geprüft werden?",
+                "es": "¿Deben verificarse el titular, la trazabilidad del pago y la coherencia con la declaración precompletada de los gastos médicos?",
             }[language]
         )
     if categories.get(CATEGORY_AVVISI):
@@ -744,6 +820,7 @@ def _build_professional_questions(
                 "en": "Does the notice require substantive assessment, a response, or further document retrieval?",
                 "fr": "L’avis exige-t-il une analyse de fond, une réponse ou la collecte d’autres documents ?",
                 "de": "Erfordert der Bescheid eine inhaltliche Prüfung, eine Antwort oder weitere Unterlagen?",
+                "es": "¿El aviso exige un análisis de fondo, una respuesta o la obtención de más documentos?",
             }[language]
         )
     if missing_items:
@@ -753,6 +830,7 @@ def _build_professional_questions(
                 "en": "Which missing items should be requested from the client, and which can the firm resolve internally?",
                 "fr": "Quels éléments manquants faut-il demander au client et lesquels le cabinet peut-il résoudre en interne ?",
                 "de": "Welche fehlenden Punkte sind beim Mandanten anzufordern und welche kann die Kanzlei intern klären?",
+                "es": "¿Qué elementos pendientes deben solicitarse al cliente y cuáles puede resolver internamente el despacho?",
             }[language]
         )
     return questions
@@ -842,6 +920,7 @@ def _write_memo(
         "en": f"Potential duplicates: {len(duplicate_candidates)} files to review.",
         "fr": f"Doublons potentiels : {len(duplicate_candidates)} fichiers à examiner.",
         "de": f"Mögliche Duplikate: {len(duplicate_candidates)} Dateien zu prüfen.",
+        "es": f"Posibles duplicados: {len(duplicate_candidates)} archivos que revisar.",
     }[language]
     anomalies = [duplicate_message] if duplicate_candidates else []
     anomalies.extend(
@@ -852,6 +931,7 @@ def _write_memo(
                 "en": f"`{record.relative_path}`: formal XML anomaly; see the detailed anomaly report.",
                 "fr": f"`{record.relative_path}` : anomalie XML formelle ; voir le rapport détaillé.",
                 "de": f"`{record.relative_path}`: formale XML-Auffälligkeit; siehe Detailbericht.",
+                "es": f"`{record.relative_path}`: anomalía XML formal; consulte el informe detallado.",
             }[language]
         )
         for record in xml_records
@@ -864,6 +944,7 @@ def _write_memo(
                 "en": "No obvious formal anomalies were found by the automated checks.",
                 "fr": "Aucune anomalie formelle manifeste dans les contrôles automatiques.",
                 "de": "Bei den automatischen Prüfungen wurden keine offensichtlichen formalen Auffälligkeiten gefunden.",
+                "es": "Los controles automáticos no detectaron anomalías formales evidentes.",
             }[language]
         )
 
@@ -876,6 +957,7 @@ def _write_memo(
                 "en": "not specified",
                 "fr": "non indiquée",
                 "de": "nicht angegeben",
+                "es": "no especificado",
             }[language]
         ),
         "file_count": str(len(records)),
@@ -885,6 +967,7 @@ def _write_memo(
             "en": "- No category identified.",
             "fr": "- Aucune catégorie identifiée.",
             "de": "- Keine Kategorie erkannt.",
+            "es": "- No se identificó ninguna categoría.",
         }[language],
         "missing_lines": "\n".join(f"- {item}" for item in missing_items)
         or f"- {_copy(language, 'missing_empty')}",
@@ -936,6 +1019,19 @@ def _write_memo(
                 "Fragen an den Mandanten",
                 "Hinweise",
                 "Dieser Vermerk ist eine Arbeitsgrundlage für die Vorbereitung der Mandantenakte.",
+            ),
+            "es": (
+                "Memoria de preparación del expediente del cliente",
+                "Cliente",
+                "Año",
+                "Documentos recibidos",
+                "Archivos revisados",
+                "Elementos pendientes o inciertos",
+                "Anomalías formales",
+                "Preguntas internas del despacho",
+                "Preguntas para el cliente",
+                "Notas",
+                "Esta memoria constituye una base de trabajo para preparar el expediente del cliente.",
             ),
         }[language]
         (
@@ -1051,6 +1147,18 @@ def _client_questions(
             "resend_xml": "unlesbare oder fehlerhafte XML-Rechnungen erneut senden;",
             "send_readable_copy": "eine besser lesbare Kopie gescannter oder nicht korrekt gelesener Dokumente senden;",
         },
+        "es": {
+            "send_cu": "enviar la Certificazione Unica (CU) o confirmar que no es pertinente para este encargo;",
+            "confirm_other_cu": "confirmar que no haya otras CU ni documentación de ingresos pendiente de aportar;",
+            "confirm_other_income": "confirmar las rentas extranjeras, alquileres, actividades por cuenta propia o participaciones que no figuren en el expediente;",
+            "send_mortgage_interest": "enviar el certificado de intereses hipotecarios;",
+            "confirm_medical": "confirmar si la documentación de gastos médicos aportada está completa;",
+            "confirm_f24": "enviar los formularios F24 pendientes o confirmar que los aportados están completos;",
+            "confirm_other_years": "confirmar si los archivos relativos a otros años son pertinentes para el encargo actual;",
+            "clarify_unclassified": "aclarar la naturaleza de los documentos sin clasificar identificados por el despacho;",
+            "resend_xml": "volver a enviar las facturas XML ilegibles o mal formadas;",
+            "send_readable_copy": "enviar una copia más legible de los documentos escaneados o que no se hayan leído correctamente;",
+        },
     }
     return [translations[language][key] for key in request_keys]
 
@@ -1067,6 +1175,7 @@ def _write_email(
             "en": "# Draft client email\n\nThe formal checks did not generate a client request. Decide internally whether a message is needed.\n",
             "fr": "# Projet d’e-mail au client\n\nLes contrôles formels n’ont généré aucune demande au client. Décider en interne si un message est nécessaire.\n",
             "de": "# Entwurf der Mandanten-E-Mail\n\nAus den formalen Prüfungen ergab sich keine Anfrage an den Mandanten. Intern entscheiden, ob eine Nachricht erforderlich ist.\n",
+            "es": "# Borrador de correo al cliente\n\nLos controles formales no generaron ninguna solicitud para el cliente. Decida internamente si es necesario enviar un mensaje.\n",
         }[language]
         output_path.write_text(empty, encoding="utf-8")
         return output_path
@@ -1097,6 +1206,13 @@ def _write_email(
                 "Wir haben die erhaltenen Unterlagen zunächst geprüft. Zur Vervollständigung der Akte bitten wir Sie:",
                 "Wir verwenden die erhaltenen Unterlagen zur Vervollständigung der Mandantenakte.",
                 "Freundliche Grüße",
+            ),
+            "es": (
+                "Asunto: Documentos y aclaraciones necesarios para completar el expediente",
+                "Hola",
+                "Hemos realizado una primera revisión de la documentación recibida. Para completar el expediente, le rogamos que:",
+                "Utilizaremos los documentos recibidos para completar el expediente del cliente del despacho.",
+                "Un cordial saludo",
             ),
         }[language]
         subject, greeting, intro, closing, signoff = framing
@@ -1176,6 +1292,16 @@ def _write_notice_outputs(
             "protocol": "Aktenzeichen",
             "verify": "zu prüfen",
             "documents": "Noch einzuholende Unterlagen: nach Prüfung der Akte festlegen.",
+        },
+        "es": {
+            "title": "Aviso / comunicación - ficha de primera lectura",
+            "intro": "Destaca los elementos prácticos para la revisión del despacho.",
+            "empty": "No se identificó ningún aviso ni comunicación en el expediente.",
+            "dates": "Fechas identificadas",
+            "amounts": "Importes identificados",
+            "protocol": "Referencia",
+            "verify": "pendiente de verificar",
+            "documents": "Documentos que obtener: definir después de revisar el expediente.",
         },
     }[language]
     memo_lines = [f"# {copy['title']}", "", copy["intro"], ""]
@@ -1265,6 +1391,13 @@ def _write_combined_anomalies(
             "inventory": "Hinweise aus dem Inventar",
             "duplicates": "Mögliche Duplikate",
             "xml": "E-Rechnungs-XML",
+        },
+        "es": {
+            "title": "Anomalías formales",
+            "empty": "Los controles automáticos no detectaron anomalías formales evidentes.",
+            "inventory": "Notas del inventario",
+            "duplicates": "Posibles duplicados",
+            "xml": "Factura electrónica XML",
         },
     }[language]
     lines = [f"# {copy['title']}", ""]
@@ -1412,6 +1545,33 @@ def _write_studio_synthesis(
                 "limit_intro": "Einige Dokumente benötigen OCR oder manuelle Prüfung, weil sie nicht zuverlässig gelesen wurden:",
                 "read_ok": "Alle versuchten Textdokumente lieferten verwertbaren Text.",
             },
+            "es": {
+                "title": "Ficha de preparación para el despacho",
+                "year_missing": "año no especificado",
+                "intro": "Esta ficha se basa en los archivos revisados localmente y en los datos extraídos. Sirve de apoyo para la revisión operativa del despacho.",
+                "summary": "Resumen del expediente",
+                "files": "Archivos revisados",
+                "categories": "Categorías identificadas",
+                "readable": "Documentos con texto extraído",
+                "unreadable": "Documentos que no se han leído de forma fiable",
+                "fields": "Campos fiscales estructurados extraídos",
+                "xml": "Facturas electrónicas XML revisadas",
+                "duplicates": "Posibles duplicados",
+                "found": "Elementos encontrados",
+                "none": "No se identificó ningún archivo.",
+                "missing": "Elementos pendientes o inciertos",
+                "anomalies": "Anomalías formales",
+                "no_anomaly": "Los controles automáticos no detectaron anomalías formales evidentes.",
+                "data": "Datos fiscales estructurados",
+                "field_word": "campos",
+                "detail": "El detalle figura en `08_dati_fiscali_strutturati.md`.",
+                "no_fields": "No se extrajeron campos fiscales estructurados de los documentos legibles.",
+                "client_questions": "Preguntas para el cliente",
+                "firm_questions": "Puntos para el despacho",
+                "limits": "Limitaciones de lectura",
+                "limit_intro": "Algunos documentos requieren OCR o revisión manual porque no se han leído de forma fiable:",
+                "read_ok": "Todos los documentos de texto procesados produjeron texto utilizable.",
+            },
         }[language]
         localized_lines = [
             f"# {labels['title']} — {client_name} — {target_year or labels['year_missing']}",
@@ -1453,6 +1613,7 @@ def _write_studio_synthesis(
                     "en": f"- `{record.relative_path}`: formal XML anomaly; see the detailed report.",
                     "fr": f"- `{record.relative_path}` : anomalie XML formelle ; voir le rapport détaillé.",
                     "de": f"- `{record.relative_path}`: formale XML-Auffälligkeit; siehe Detailbericht.",
+                    "es": f"- `{record.relative_path}`: anomalía XML formal; consulte el informe detallado.",
                 }[language]
                 for record in xml_records
                 if record.anomalies

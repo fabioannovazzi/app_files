@@ -38,6 +38,21 @@ from .pdf_text_fallback import (
 
 DEFAULT_STRATEGY_ORDER = ["tables", "text", "ocr"]
 
+_OCR_LANGUAGE_ALIASES = {
+    "de": "deu",
+    "deu": "deu",
+    "en": "eng",
+    "eng": "eng",
+    "es": "spa",
+    "espanol": "spa",
+    "español": "spa",
+    "fra": "fra",
+    "fr": "fra",
+    "it": "ita",
+    "ita": "ita",
+    "spa": "spa",
+}
+
 
 """Generic journal PDF parser.
 
@@ -64,6 +79,16 @@ The implementation deliberately avoids pandas and relies solely on
 # ---------------------------------------------------------------------------
 # helpers
 # ---------------------------------------------------------------------------
+
+
+def normalize_ocr_language(language: str | None) -> str:
+    """Return a Tesseract-compatible OCR language code."""
+
+    normalized = str(language or "eng").strip().lower().replace("_", "-")
+    base = normalized.split("-", maxsplit=1)[0]
+    return _OCR_LANGUAGE_ALIASES.get(
+        normalized, _OCR_LANGUAGE_ALIASES.get(base, normalized)
+    )
 
 
 def _ensure_bytes(data: Any) -> bytes:
@@ -452,9 +477,9 @@ def _build_df_from_tables(
 
 
 def _build_df_from_text(
-    pdf_bytes: bytes, use_ocr: bool
+    pdf_bytes: bytes, use_ocr: bool, *, lang: str = "eng"
 ) -> tuple[pl.DataFrame, List[str]]:
-    res = _extract_pdf_text_with_ocr_once(pdf_bytes, lang="eng")
+    res = _extract_pdf_text_with_ocr_once(pdf_bytes, lang=lang)
     if use_ocr:
         if not res.text.strip():
             return pl.DataFrame(), []
@@ -568,7 +593,7 @@ def _parse_journal_any_impl(
     data: Any,
     *,
     strategy_order: Sequence[str] | None = None,
-    locale_hint: str | None = None,  # noqa: ARG001 - reserved for future use
+    locale_hint: str | None = None,
     column_hints: dict[str, Sequence[str]] | None = None,
     min_rows: int = 5,
     return_mapping: bool = False,
@@ -670,9 +695,13 @@ def _parse_journal_any_impl(
             if strat == "tables":
                 df, tokens = _build_df_from_tables(pdf_bytes, header_row)
             elif strat == "text":
-                df, tokens = _build_df_from_text(pdf_bytes, use_ocr=False)
+                df, tokens = _build_df_from_text(
+                    pdf_bytes, use_ocr=False, lang=locale_hint or "eng"
+                )
             elif strat == "ocr":
-                df, tokens = _build_df_from_text(pdf_bytes, use_ocr=True)
+                df, tokens = _build_df_from_text(
+                    pdf_bytes, use_ocr=True, lang=locale_hint or "eng"
+                )
             else:
                 continue
         except Exception as e:
@@ -873,7 +902,10 @@ def parse_journal_any(
 
 
 def parse_journal(
-    pdf_binary: bytes, header_row: int | tuple[int, int] | None = None
+    pdf_binary: bytes,
+    header_row: int | tuple[int, int] | None = None,
+    *,
+    lang: str = "eng",
 ) -> pl.DataFrame:
     """Backward compatible wrapper for :func:`parse_journal_any`.
 
@@ -886,7 +918,12 @@ def parse_journal(
         tuple ``(r1, r2)`` to merge two header rows with ``r2`` taking precedence.
     """
 
-    result = parse_journal_any(pdf_binary, return_mapping=False, header_row=header_row)
+    result = parse_journal_any(
+        pdf_binary,
+        return_mapping=False,
+        header_row=header_row,
+        locale_hint=normalize_ocr_language(lang),
+    )
     assert isinstance(result, pl.DataFrame)
     return result
 

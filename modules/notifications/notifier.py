@@ -65,6 +65,11 @@ LANG_ALIASES = {
     "de": "de",
     "german": "de",
     "deutsch": "de",
+    "spa": "es",
+    "es": "es",
+    "spanish": "es",
+    "español": "es",
+    "espanol": "es",
 }
 
 RESULTS_CTA_LABELS = {
@@ -72,7 +77,9 @@ RESULTS_CTA_LABELS = {
     "it": "Apri i risultati",
     "fr": "Ouvrir les résultats",
     "de": "Ergebnisse öffnen",
+    "es": "Abrir resultados",
 }
+RESULTS_LINK_LABELS = {"es": "Resultados"}
 
 SUCCESS_TEMPLATES = {
     "entries": {
@@ -114,6 +121,16 @@ SUCCESS_TEMPLATES = {
                 "— Dies ist die einmalige Benachrichtigung, die Sie angefordert haben. —\n"
                 "Ihre E-Mail-Adresse wird gelöscht, sobald Sie die Sitzung schließen.\n\n"
                 "Vielen Dank, dass Sie unser Entry-Check-Tool nutzen!\n"
+            ),
+        },
+        "es": {
+            "subject": "Los resultados de la revisión de asientos están listos",
+            "body": (
+                "Hola,\n\n"
+                "✅ La revisión de asientos acaba de finalizar (duración total: {pretty}).\n\n"
+                "— Esta es la notificación única que solicitaste. —\n"
+                "Tu dirección de correo electrónico se eliminará cuando cierres la sesión.\n\n"
+                "¡Gracias por utilizar nuestra herramienta de revisión de asientos!\n"
             ),
         },
     },
@@ -158,6 +175,16 @@ SUCCESS_TEMPLATES = {
                 "Vielen Dank, dass Sie unser Abstimmungs-Tool nutzen!\n"
             ),
         },
+        "es": {
+            "subject": "Los resultados de la conciliación están listos",
+            "body": (
+                "Hola,\n\n"
+                "✅ La conciliación bancaria acaba de finalizar (duración total: {pretty}).\n\n"
+                "— Esta es la notificación única que solicitaste. —\n"
+                "Tu dirección de correo electrónico se eliminará cuando cierres la sesión.\n\n"
+                "¡Gracias por utilizar nuestra herramienta de conciliación bancaria!\n"
+            ),
+        },
     },
     "report": {
         "en": {
@@ -170,6 +197,16 @@ SUCCESS_TEMPLATES = {
                 "Thanks for using our Report Builder Tool!\n"
             ),
         },
+        "es": {
+            "subject": "Tu informe está listo",
+            "body": (
+                "Hola,\n\n"
+                "✅ El informe acaba de generarse (duración total: {pretty}).\n\n"
+                "— Esta es la notificación única que solicitaste. —\n"
+                "Tu dirección de correo electrónico se eliminará cuando cierres la sesión.\n\n"
+                "¡Gracias por utilizar nuestra herramienta de creación de informes!\n"
+            ),
+        },
     },
     "deck_ocr": {
         "en": {
@@ -178,6 +215,15 @@ SUCCESS_TEMPLATES = {
                 "Hi there,\n\n"
                 "✅  Your deck OCR build finished just now (total time: {pretty}).\n\n"
                 "You can reopen the slide editor to continue working.\n"
+            ),
+        },
+        "es": {
+            "subject": "Los resultados del OCR de tus diapositivas están listos",
+            "body": (
+                "Hola,\n\n"
+                "✅ El procesamiento OCR de la presentación acaba de finalizar "
+                "(duración total: {pretty}).\n\n"
+                "Puedes volver a abrir el editor de diapositivas para continuar.\n"
             ),
         },
     },
@@ -190,6 +236,14 @@ SUCCESS_TEMPLATES = {
                 "You can reopen the slide editor to continue working.\n"
             ),
         },
+        "es": {
+            "subject": "Tu presentación en PDF se ha procesado",
+            "body": (
+                "Hola,\n\n"
+                "✅ La presentación en PDF se ha procesado (duración total: {pretty}).\n\n"
+                "Puedes volver a abrir el editor de diapositivas para continuar.\n"
+            ),
+        },
     },
     "default": {
         "en": {
@@ -198,6 +252,14 @@ SUCCESS_TEMPLATES = {
                 "Hi there,\n\n"
                 "✅ The process finished just now (total time: {pretty}).\n\n"
                 "Thanks for using our tools!\n"
+            ),
+        },
+        "es": {
+            "subject": "Tus resultados están listos",
+            "body": (
+                "Hola,\n\n"
+                "✅ El proceso acaba de finalizar (duración total: {pretty}).\n\n"
+                "¡Gracias por utilizar nuestras herramientas!\n"
             ),
         },
     },
@@ -237,6 +299,14 @@ ERROR_TEMPLATES = {
                 "Teilresultate stehen zum Download bereit."
             ),
         },
+        "es": {
+            "subject": "Problema con la revisión de asientos",
+            "body": (
+                "Hola,\n\n"
+                "❌ La revisión de asientos se detuvo debido a un error. "
+                "Puedes descargar los resultados parciales."
+            ),
+        },
     },
     "statements": {
         "en": {
@@ -271,11 +341,23 @@ ERROR_TEMPLATES = {
                 "Teilresultate können heruntergeladen werden."
             ),
         },
+        "es": {
+            "subject": "Problema con la conciliación bancaria",
+            "body": (
+                "Hola,\n\n"
+                "❌ La conciliación bancaria se detuvo debido a un error. "
+                "Puedes descargar los resultados parciales."
+            ),
+        },
     },
     "default": {
         "en": {
             "subject": "Processing issue",
             "body": "Hi there,\n\n❌ The process stopped due to an error. Partial results may be available.",
+        },
+        "es": {
+            "subject": "Problema de procesamiento",
+            "body": "Hola,\n\n❌ El proceso se detuvo debido a un error. Puede haber resultados parciales disponibles.",
         },
     },
     "deck_ocr": {
@@ -287,6 +369,14 @@ ERROR_TEMPLATES = {
                 "Please retry from the slide editor."
             ),
         },
+        "es": {
+            "subject": "Problema con la solicitud de OCR de diapositivas",
+            "body": (
+                "Hola,\n\n"
+                "❌ El procesamiento OCR de la presentación se detuvo debido a un error. "
+                "Vuelve a intentarlo desde el editor de diapositivas."
+            ),
+        },
     },
     "deck_processing": {
         "en": {
@@ -295,6 +385,14 @@ ERROR_TEMPLATES = {
                 "Hi there,\n\n"
                 "❌ Your uploaded PDF deck processing stopped due to an error. "
                 "Please retry from the slide editor."
+            ),
+        },
+        "es": {
+            "subject": "Problema con la presentación en PDF",
+            "body": (
+                "Hola,\n\n"
+                "❌ El procesamiento de la presentación en PDF se detuvo debido a un error. "
+                "Vuelve a intentarlo desde el editor de diapositivas."
             ),
         },
     },
@@ -330,7 +428,8 @@ def _send_email(
     subject = template["subject"]
     body = template["body"].format(pretty=pretty)
     if link:
-        body += f"\nResults: {link}\n"
+        link_label = RESULTS_LINK_LABELS.get(lang, "Results")
+        body += f"\n{link_label}: {link}\n"
     notification_id = enqueue_email(
         recipients=recipients,
         subject=subject,
@@ -354,7 +453,8 @@ def _send_error_email(dest: str, step: str, lang: str, link: str | None = None) 
     subject = template["subject"]
     body = template["body"]
     if link:
-        body += f"\nResults: {link}\n"
+        link_label = RESULTS_LINK_LABELS.get(lang, "Results")
+        body += f"\n{link_label}: {link}\n"
     notification_id = enqueue_email(
         recipients=recipients,
         subject=subject,

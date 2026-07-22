@@ -31,12 +31,15 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [],
   "security_controls": [
-    {
-      "id": "local-file-processing",
-      "control": "Inventory, extraction, formal checks, XML parsing, and OCR run in the local workspace."
-    },
     {
       "id": "source-and-package-integrity",
       "control": "The workflow does not follow source symlinks, binds extraction to a bounded SHA-256 source ledger, rejects source type, size, or byte drift, and seals reviewed outputs by hash."
@@ -58,6 +61,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "baccca60434b4f1ddab31307b04ffc2df00d78ac98f1684c00c5ee53588f9bbc"
+    "source_fingerprint": "fb05948345970648a90ce8472fbdefca4e2f962bdba0837504817480cb2dff41"
   }
 }

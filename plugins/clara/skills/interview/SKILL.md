@@ -58,7 +58,7 @@ Do not turn either mode into a fixed questionnaire. A custom brief supplies the
 purpose, context, priority topics, prepared questions, red flags, and boundaries;
 the server-side interviewer decides how to cover them adaptively.
 
-Supported configured languages are `it`, `en`, `fr`, and `de`. The participant
+Supported configured languages are `it`, `en`, `fr`, `de`, and `es`. The participant
 page uses microphone audio. Do not promise screen capture or raw-media download.
 
 ## Authenticated Helper

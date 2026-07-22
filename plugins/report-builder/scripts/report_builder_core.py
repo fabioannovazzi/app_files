@@ -14,6 +14,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Sequence
 
+import openpyxl
 from docx import Document
 from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT, WD_TABLE_ALIGNMENT
@@ -21,7 +22,6 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
-import openpyxl
 
 try:
     from .review_session import write_review_session_artifacts, write_run_intake
@@ -42,7 +42,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
 
 LOGGER = logging.getLogger(__name__)
 
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 SUPPORTED_DOCUMENT_LANGUAGES = ("auto", *SUPPORTED_LANGUAGES)
 SUPPORTED_SUFFIXES = {".csv", ".pdf", ".xlsx", ".xlsm", ".zip"}
 TEXT_SUFFIXES = {".pdf"}
@@ -55,6 +55,7 @@ REPORT_TYPES: dict[str, dict[str, Any]] = {
             "it": "Report gestionale",
             "fr": "Rapport de gestion",
             "de": "Managementbericht",
+            "es": "Informe de gestión",
         },
         "sections": [
             "overview",
@@ -74,6 +75,7 @@ REPORT_TYPES: dict[str, dict[str, Any]] = {
             "it": "Relazione ente locale",
             "fr": "Revue collectivite locale",
             "de": "Kommunaler Pruefbericht",
+            "es": "Informe de entidad local",
         },
         "sections": [
             "overview",
@@ -95,6 +97,7 @@ REPORT_TYPES: dict[str, dict[str, Any]] = {
             "it": "Bilancio annuale",
             "fr": "Etats financiers annuels",
             "de": "Jahresabschluss",
+            "es": "Estados financieros anuales",
         },
         "sections": [
             "overview",
@@ -117,119 +120,147 @@ SECTION_TITLES: dict[str, dict[str, str]] = {
         "it": "Sintesi",
         "fr": "Synthese",
         "de": "Ueberblick",
+        "es": "Resumen",
     },
     "income_statement": {
         "en": "Income statement",
         "it": "Conto economico",
         "fr": "Compte de resultat",
         "de": "Gewinn- und Verlustrechnung",
+        "es": "Cuenta de resultados",
     },
     "balance_sheet": {
         "en": "Balance sheet",
         "it": "Stato patrimoniale",
         "fr": "Bilan",
         "de": "Bilanz",
+        "es": "Balance",
     },
     "cash_flow": {
         "en": "Cash flow",
         "it": "Rendiconto finanziario",
         "fr": "Flux de tresorerie",
         "de": "Cashflow",
+        "es": "Flujo de caja",
     },
     "budget": {
         "en": "Budget",
         "it": "Budget",
         "fr": "Budget",
         "de": "Budget",
+        "es": "Presupuesto",
     },
     "debt": {
         "en": "Debt",
         "it": "Debito",
         "fr": "Dette",
         "de": "Schulden",
+        "es": "Deuda",
     },
     "investments": {
         "en": "Investments",
         "it": "Investimenti",
         "fr": "Investissements",
         "de": "Investitionen",
+        "es": "Inversiones",
     },
     "taxes": {
         "en": "Taxes",
         "it": "Tributi",
         "fr": "Fiscalite",
         "de": "Steuern",
+        "es": "Impuestos",
     },
     "notes": {
         "en": "Notes",
         "it": "Note",
         "fr": "Notes",
         "de": "Anmerkungen",
+        "es": "Notas",
     },
     "fpv": {
         "en": "FPV",
         "it": "FPV",
         "fr": "FPV",
         "de": "FPV",
+        "es": "FPV",
     },
     "fcde": {
         "en": "FCDE",
         "it": "FCDE",
         "fr": "FCDE",
         "de": "FCDE",
+        "es": "FCDE",
     },
     "cash": {
         "en": "Cash",
         "it": "Cassa",
         "fr": "Tresorerie",
         "de": "Liquiditaet",
+        "es": "Tesorería",
     },
     "spending": {
         "en": "Spending",
         "it": "Spesa",
         "fr": "Depenses",
         "de": "Ausgaben",
+        "es": "Gasto",
     },
     "participations": {
         "en": "Participations",
         "it": "Partecipazioni",
         "fr": "Participations",
         "de": "Beteiligungen",
+        "es": "Participaciones",
     },
     "pnrr": {
         "en": "PNRR",
         "it": "PNRR",
         "fr": "PNRR",
         "de": "PNRR",
+        "es": "PNRR",
     },
     "equity": {
         "en": "Equity",
         "it": "Patrimonio netto",
         "fr": "Capitaux propres",
         "de": "Eigenkapital",
+        "es": "Patrimonio neto",
     },
     "ratios": {
         "en": "Ratios",
         "it": "Indicatori",
         "fr": "Ratios",
         "de": "Kennzahlen",
+        "es": "Ratios",
     },
     "segment": {
         "en": "Segment information",
         "it": "Informativa per settore",
         "fr": "Information sectorielle",
         "de": "Segmentinformationen",
+        "es": "Información por segmentos",
     },
     "capex": {
         "en": "Capital expenditure",
         "it": "Investimenti tecnici",
         "fr": "Depenses d'investissement",
         "de": "Investitionsausgaben",
+        "es": "Inversiones de capital",
     },
 }
 
 SECTION_ALIASES: dict[str, tuple[str, ...]] = {
-    "overview": ("overview", "sintesi", "summary", "resume", "ueberblick"),
+    "overview": (
+        "overview",
+        "sintesi",
+        "summary",
+        "resume",
+        "ueberblick",
+        "resumen",
+        "síntesis",
+        "sintesis",
+    ),
     "income_statement": (
         "income",
         "profit",
@@ -239,6 +270,9 @@ SECTION_ALIASES: dict[str, tuple[str, ...]] = {
         "costi",
         "resultat",
         "guv",
+        "cuenta de resultados",
+        "pérdidas y ganancias",
+        "perdidas y ganancias",
     ),
     "balance_sheet": (
         "balance",
@@ -247,6 +281,9 @@ SECTION_ALIASES: dict[str, tuple[str, ...]] = {
         "passivo",
         "bilan",
         "bilanz",
+        "balance",
+        "situación financiera",
+        "situacion financiera",
     ),
     "cash_flow": (
         "cash flow",
@@ -254,33 +291,92 @@ SECTION_ALIASES: dict[str, tuple[str, ...]] = {
         "flussi",
         "tresorerie",
         "kapitalfluss",
+        "flujo de caja",
+        "flujos de efectivo",
     ),
-    "budget": ("budget", "forecast", "prevision", "preventivo", "planung"),
-    "debt": ("debt", "debito", "mutui", "loans", "dette", "schulden"),
+    "budget": (
+        "budget",
+        "forecast",
+        "prevision",
+        "preventivo",
+        "planung",
+        "presupuesto",
+        "previsión",
+    ),
+    "debt": (
+        "debt",
+        "debito",
+        "mutui",
+        "loans",
+        "dette",
+        "schulden",
+        "deuda",
+        "préstamos",
+        "prestamos",
+    ),
     "investments": (
         "investment",
         "investimenti",
         "capex",
         "immobilizzazioni",
         "investissements",
+        "inversiones",
     ),
-    "taxes": ("tax", "taxes", "imposte", "tributi", "fiscal", "steuern"),
-    "notes": ("note", "notes", "comment", "commenti", "annexe", "anhang"),
+    "taxes": (
+        "tax",
+        "taxes",
+        "imposte",
+        "tributi",
+        "fiscal",
+        "steuern",
+        "impuestos",
+        "tributos",
+    ),
+    "notes": (
+        "note",
+        "notes",
+        "comment",
+        "commenti",
+        "annexe",
+        "anhang",
+        "notas",
+        "anexo",
+    ),
     "fpv": ("fpv", "fondo pluriennale"),
     "fcde": ("fcde", "crediti dubbia", "doubtful", "creances douteuses"),
-    "cash": ("cash", "cassa", "tesoreria", "banque", "liquiditaet"),
-    "spending": ("spesa", "spending", "depenses", "ausgaben"),
+    "cash": (
+        "cash",
+        "cassa",
+        "tesoreria",
+        "banque",
+        "liquiditaet",
+        "tesorería",
+        "efectivo",
+    ),
+    "spending": ("spesa", "spending", "depenses", "ausgaben", "gasto"),
     "participations": (
         "partecipazioni",
         "participations",
         "beteiligungen",
         "subsidiaries",
+        "participaciones",
     ),
     "pnrr": ("pnrr", "rrf", "recovery"),
-    "equity": ("equity", "patrimonio netto", "capitaux propres", "eigenkapital"),
-    "ratios": ("ratio", "indicatori", "indici", "kennzahlen"),
-    "segment": ("segment", "settore", "sector", "secteur"),
-    "capex": ("capex", "capital expenditure", "investimenti tecnici"),
+    "equity": (
+        "equity",
+        "patrimonio netto",
+        "capitaux propres",
+        "eigenkapital",
+        "patrimonio neto",
+    ),
+    "ratios": ("ratio", "indicatori", "indici", "kennzahlen", "ratios"),
+    "segment": ("segment", "settore", "sector", "secteur", "segmento"),
+    "capex": (
+        "capex",
+        "capital expenditure",
+        "investimenti tecnici",
+        "inversiones de capital",
+    ),
 }
 
 DOCX_COPY: dict[str, dict[str, str]] = {
@@ -289,108 +385,161 @@ DOCX_COPY: dict[str, dict[str, str]] = {
         "it": "Ente",
         "fr": "Entite",
         "de": "Einheit",
+        "es": "Entidad",
     },
     "period": {
         "en": "Period",
         "it": "Periodo",
         "fr": "Periode",
         "de": "Zeitraum",
+        "es": "Periodo",
+    },
+    "entity_pending": {
+        "en": "Entity pending",
+        "it": "Ente da definire",
+        "fr": "Entite a definir",
+        "de": "Einheit noch offen",
+        "es": "Entidad pendiente",
+    },
+    "period_pending": {
+        "en": "Period pending",
+        "it": "Periodo da definire",
+        "fr": "Periode a definir",
+        "de": "Zeitraum noch offen",
+        "es": "Periodo pendiente",
     },
     "executive_summary": {
         "en": "Executive summary",
         "it": "Sintesi",
         "fr": "Synthese",
         "de": "Zusammenfassung",
+        "es": "Resumen ejecutivo",
+    },
+    "executive_summary_pending": {
+        "en": "Codex executive summary pending.",
+        "it": "Sintesi Codex in attesa.",
+        "fr": "Synthese Codex en attente.",
+        "de": "Codex-Zusammenfassung noch offen.",
+        "es": "Resumen ejecutivo de Codex pendiente.",
     },
     "context": {
         "en": "Context",
         "it": "Contesto",
         "fr": "Contexte",
         "de": "Kontext",
+        "es": "Contexto",
     },
     "source": {
         "en": "Source",
         "it": "Fonte",
         "fr": "Source",
         "de": "Quelle",
+        "es": "Fuente",
     },
     "rows": {
         "en": "Rows",
         "it": "Righe",
         "fr": "Lignes",
         "de": "Zeilen",
+        "es": "Filas",
     },
     "columns": {
         "en": "Columns",
         "it": "Colonne",
         "fr": "Colonnes",
         "de": "Spalten",
+        "es": "Columnas",
     },
     "numeric_totals": {
         "en": "Deterministic numeric totals",
         "it": "Totali numerici deterministici",
         "fr": "Totaux numeriques deterministes",
         "de": "Deterministische numerische Summen",
+        "es": "Totales numéricos deterministas",
+    },
+    "count": {
+        "en": "count",
+        "it": "conteggio",
+        "fr": "nombre",
+        "de": "Anzahl",
+        "es": "recuento",
+    },
+    "sum": {
+        "en": "sum",
+        "it": "somma",
+        "fr": "somme",
+        "de": "Summe",
+        "es": "suma",
     },
     "table_preview": {
         "en": "Table preview",
         "it": "Anteprima tabella",
         "fr": "Apercu du tableau",
         "de": "Tabellenvorschau",
+        "es": "Vista previa de la tabla",
     },
     "unassigned": {
         "en": "No table assigned yet. Codex review pending for this section.",
         "it": "Nessuna tabella assegnata. Revisione Codex in attesa per questa sezione.",
         "fr": "Aucun tableau assigne. Revue Codex en attente pour cette section.",
         "de": "Noch keine Tabelle zugeordnet. Codex-Pruefung fuer diesen Abschnitt offen.",
+        "es": "Todavía no hay una tabla asignada. La revisión de Codex está pendiente para esta sección.",
     },
     "codex_pending": {
         "en": "Codex review pending for this section.",
         "it": "Revisione Codex in attesa per questa sezione.",
         "fr": "Revue Codex en attente pour cette section.",
         "de": "Codex-Pruefung fuer diesen Abschnitt offen.",
+        "es": "La revisión de Codex está pendiente para esta sección.",
     },
     "audit_appendix": {
         "en": "Audit appendix",
         "it": "Appendice audit",
         "fr": "Annexe d'audit",
         "de": "Audit-Anhang",
+        "es": "Anexo de auditoría",
     },
     "report_status": {
         "en": "Report status",
         "it": "Stato report",
         "fr": "Statut du rapport",
         "de": "Berichtsstatus",
+        "es": "Estado del informe",
     },
     "assigned_sections": {
         "en": "Assigned sections",
         "it": "Sezioni assegnate",
         "fr": "Sections assignees",
         "de": "Zugeordnete Abschnitte",
+        "es": "Secciones asignadas",
     },
     "missing_sections": {
         "en": "Missing sections",
         "it": "Sezioni mancanti",
         "fr": "Sections manquantes",
         "de": "Fehlende Abschnitte",
+        "es": "Secciones pendientes",
     },
     "model_api_calls": {
         "en": "Model API calls from scripts",
         "it": "Chiamate API modello dagli script",
         "fr": "Appels API modele par les scripts",
         "de": "Modell-API-Aufrufe aus Skripten",
+        "es": "Llamadas a la API del modelo desde los scripts",
     },
     "draft": {
         "en": "Draft generated by deterministic scripts and Codex-guided narrative.",
         "it": "Bozza generata da script deterministici e narrativa guidata da Codex.",
         "fr": "Brouillon genere par scripts deterministes et narration guidee par Codex.",
         "de": "Entwurf durch deterministische Skripte und Codex-gefuehrte Narrative erstellt.",
+        "es": "Borrador generado por scripts deterministas y narrativa guiada por Codex.",
     },
     "notes": {
         "en": "Notes",
         "it": "Note",
         "fr": "Notes",
         "de": "Anmerkungen",
+        "es": "Notas",
     },
 }
 
@@ -1079,19 +1228,19 @@ def render_markdown(recipe: dict[str, Any], analysis: dict[str, Any]) -> str:
     language = normalize_language(recipe.get("language"), default="en")
     report_type = normalize_report_type(recipe.get("report_type"))
     title = report_type_label(report_type, language)
-    entity = clean_text(recipe.get("entity")) or "Entity pending"
-    period = clean_text(recipe.get("period")) or "Period pending"
+    entity = clean_text(recipe.get("entity")) or docx_label("entity_pending", language)
+    period = clean_text(recipe.get("period")) or docx_label("period_pending", language)
     executive_summary = clean_text(recipe.get("executive_summary"))
     if not executive_summary:
-        executive_summary = "Codex executive summary pending."
+        executive_summary = docx_label("executive_summary_pending", language)
 
     lines = [
         f"# {title}",
         "",
-        f"**Entity:** {entity}",
-        f"**Period:** {period}",
+        f"**{docx_label('entity', language)}:** {entity}",
+        f"**{docx_label('period', language)}:** {period}",
         "",
-        "## Executive summary",
+        f"## {docx_label('executive_summary', language)}",
         "",
         executive_summary,
         "",
@@ -1099,7 +1248,7 @@ def render_markdown(recipe: dict[str, Any], analysis: dict[str, Any]) -> str:
 
     context_items = recipe.get("context_items", {})
     if isinstance(context_items, dict) and context_items:
-        lines.extend(["## Context", ""])
+        lines.extend([f"## {docx_label('context', language)}", ""])
         for key, value in context_items.items():
             lines.append(f"- **{clean_text(key)}:** {clean_text(value)}")
         lines.append("")
@@ -1107,28 +1256,27 @@ def render_markdown(recipe: dict[str, Any], analysis: dict[str, Any]) -> str:
     for section in analysis["sections"]:
         lines.extend([f"## {section['title']}", ""])
         if section["status"] != "assigned":
-            lines.extend(
-                ["No table assigned yet. Codex review pending for this section.", ""]
-            )
+            lines.extend([docx_label("unassigned", language), ""])
             continue
-        comment = (
-            section.get("codex_comment") or "Codex review pending for this section."
-        )
+        comment = section.get("codex_comment") or docx_label("codex_pending", language)
         lines.extend(
             [
                 comment,
                 "",
-                f"Source: {section.get('source_file', '')}"
+                f"{docx_label('source', language)}: {section.get('source_file', '')}"
                 + (f" / {section['sheet_name']}" if section.get("sheet_name") else ""),
-                f"Rows: {section['row_count']} | Columns: {section['column_count']}",
+                f"{docx_label('rows', language)}: {section['row_count']} | "
+                f"{docx_label('columns', language)}: {section['column_count']}",
             ]
         )
         numeric_columns = section.get("numeric_columns") or []
         if numeric_columns:
-            lines.extend(["", "Deterministic numeric totals:"])
+            lines.extend(["", f"{docx_label('numeric_totals', language)}:"])
             for column in numeric_columns[:8]:
                 lines.append(
-                    f"- {column['column']}: count {column['numeric_count']}, sum {column['sum']}"
+                    f"- {column['column']}: {docx_label('count', language)} "
+                    f"{column['numeric_count']}, {docx_label('sum', language)} "
+                    f"{column['sum']}"
                 )
         preview_table = markdown_table(section.get("preview_rows") or [])
         if preview_table and recipe.get("render", {}).get(

@@ -435,11 +435,13 @@ def test_non_plotting_review_workbench_exposes_review_ui(
     assert "Review safeguards" in html
     assert "review-safeguards" in html
     assert "safeguardLocalExecution" in html
-    assert "safeguardExternalApproval" in html
+    assert "safeguardExternalRoute" in html
     assert "safeguardBoundedPayload" in html
     assert "safeguardDecisionPersistence" in html
     assert "safeguardFinalArtifacts" in html
-    assert "externalApprovalMissing" in html
+    assert "externalRouteUsed" in html
+    assert "external_routes_used" in html
+    assert "externalApprovalMissing" not in html
     assert "executionTraceMissing" in html
     assert "renderReviewSafeguards" in html
     assert "externalExecutionUsed" in html

@@ -69,6 +69,19 @@ class InterviewCampaignDefinition:
     priority_topics: tuple[str, ...]
     boundaries: tuple[str, ...]
     participant_intro: str = ""
+    localized_interview_titles: tuple[tuple[str, str], ...] = ()
+    localized_participant_intros: tuple[tuple[str, str], ...] = ()
+
+    def participant_copy(self, language: str) -> tuple[str, str]:
+        """Return public-facing campaign copy for the requested language."""
+
+        language_key = str(language).strip().lower().split("-", 1)[0]
+        titles = dict(self.localized_interview_titles)
+        intros = dict(self.localized_participant_intros)
+        return (
+            titles.get(language_key, self.interview_title),
+            intros.get(language_key, self.participant_intro),
+        )
 
     def prepared_payload(
         self,
@@ -81,18 +94,20 @@ class InterviewCampaignDefinition:
     ) -> dict[str, Any]:
         """Return an independent prepared-interview payload for this campaign."""
 
+        interview_title, participant_intro = self.participant_copy(language)
+
         return {
             "interview_campaign_id": self.interview_campaign_id,
             "case_id": case_id,
             "case_name": self.case_name,
             "participant_name": participant_name,
             "client_project": self.client_project,
-            "interview_title": self.interview_title,
+            "interview_title": interview_title,
             "interviewee_role": interviewee_role or self.default_interviewee_role,
             "interview_mode": self.interview_mode,
             "language": language,
             "purpose": self.purpose,
-            "participant_intro": self.participant_intro,
+            "participant_intro": participant_intro,
             "background_context": self.background_context,
             "hypotheses_to_test": [],
             "priority_topics": list(self.priority_topics),
@@ -150,6 +165,18 @@ _CAMPAIGNS = (
                 "sales, or purchasing."
             ),
             "Keep the interview as professional research.",
+        ),
+        localized_interview_titles=(
+            ("es", "Adopción de la IA en los despachos profesionales"),
+        ),
+        localized_participant_intros=(
+            (
+                "es",
+                "Esta breve entrevista busca comprender cómo utilizan la IA los "
+                "despachos profesionales en su trabajo diario: para qué tareas "
+                "resulta útil, qué límites y riesgos observan y qué dificulta "
+                "su adopción. No compartas datos confidenciales de clientes.",
+            ),
         ),
     ),
     InterviewCampaignDefinition(
@@ -316,6 +343,8 @@ def outreach_interviewee_role(locale: str, quota_key: str) -> str:
         return "Fiduciaire or Swiss Romande professional firm representative"
     if locale == "swiss-german":
         return "Treuhand or Swiss German professional firm representative"
+    if locale == "spain":
+        return "Accountant or Spanish professional firm representative"
     if locale == "uk":
         return "Accountant or UK professional firm representative"
     return "Professional firm representative"

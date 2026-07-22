@@ -48,7 +48,8 @@ def test_clara_brand_fit_wrapper_is_visible_and_delegates_to_attribute_component
     assert "check_dependencies.py --module attribute-reporting" in wrapper
     assert "stored database snapshot" in wrapper
     assert "live shelf" in wrapper
-    assert "no model-provider API key" in wrapper
+    assert "user's existing ChatGPT plan" in wrapper
+    assert "no separate API" in wrapper
     assert 'display_name: "Brand Fit"' in metadata
     assert "Use $brand-fit" in metadata
 
@@ -67,7 +68,7 @@ def test_clara_routes_brand_fit_separately_from_retailer_signals_and_charts() ->
         if item.get("expected_skill") == "clara:brand-fit"
     }
 
-    assert manifest["version"] == "0.1.94"
+    assert manifest["version"] == "0.1.100"
     assert manifest["name"] == "clara"
     assert manifest["interface"]["displayName"] == "Clara"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
@@ -107,7 +108,7 @@ def test_clara_public_page_marks_brand_fit_available_with_honest_boundary() -> N
         "retail.brand_fit.copy.link",
         "retail.brand_fit.copy.after",
     ):
-        assert page.count(f'"{key}"') == 5
+        assert page.count(f'"{key}"') == 6
         assert f'data-i18n="{key}"' in page
     assert (
         'href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html"'

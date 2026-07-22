@@ -35,7 +35,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
 LOGGER = logging.getLogger(__name__)
 
 SUPPORTED_SUFFIXES = {".csv", ".xls", ".xlsx", ".xlsm", ".pdf"}
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 CANONICAL_COLUMNS = [
     "entry_date",
     "movement_number",
@@ -1280,10 +1280,10 @@ def temp_output_dir(prefix: str) -> Path:
 def add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--language",
-        help="Working/output language locale: it, en, fr, or de. Defaults to recipe or en.",
+        help="Working/output language locale: it, en, fr, de, or es. Defaults to recipe or en.",
     )
     parser.add_argument(
         "--document-language",
-        help="Source-document language locale: it, en, fr, de, or auto. Defaults to recipe or auto.",
+        help="Source-document language locale: it, en, fr, de, es, or auto. Defaults to recipe or auto.",
     )
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging.")

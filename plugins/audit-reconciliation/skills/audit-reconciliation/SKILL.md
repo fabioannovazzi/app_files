@@ -241,7 +241,9 @@ plugin run better. Base suggestions on the actual session, such as missing
 inputs, brittle extraction, unclear assumptions, output gaps, installation
 friction, or repeated manual steps.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.
 
 ## Packaging
 
