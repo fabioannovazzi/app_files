@@ -16,6 +16,7 @@ from typing import Any, Callable
 
 import numpy as np
 from PIL import Image, ImageFilter, ImageOps, UnidentifiedImageError
+
 from src.slides.layout_semantics import (
     BULLET_BLOCK_TYPES,
     LAYOUT_SEMANTIC_TYPES,
@@ -100,10 +101,12 @@ _PADDLE_LANG_MAP = {
     "ita": "it",
     "fra": "fr",
     "deu": "de",
+    "spa": "es",
     "en": "en",
     "it": "it",
     "fr": "fr",
     "de": "de",
+    "es": "es",
 }
 
 _LAYOUT_TYPE_ALIASES = {

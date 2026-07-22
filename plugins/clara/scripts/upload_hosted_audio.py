@@ -16,11 +16,14 @@ import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from http.cookies import SimpleCookie
 from pathlib import Path
 from typing import Any, Mapping
 
 from advisor_case_core import (
+    SUPPORTED_LANGUAGES,
     CaseWorkspaceError,
+    load_case_file,
     refresh_case_brief,
     validate_case_workspace,
 )
@@ -30,10 +33,9 @@ from import_hosted_voice_bundle import (
 )
 from launch_hosted_voice import (
     MAX_CASE_CONTEXT_CHARS,
-    MAX_LAUNCH_URL_CHARS,
-    MIN_CASE_CONTEXT_CHARS,
     build_case_context,
-    build_launch_url,
+    read_private_text_file,
+    validate_hosted_url,
 )
 
 __all__ = [
@@ -41,8 +43,10 @@ __all__ = [
     "HostedAudioUploadResult",
     "authenticate_with_magic_link",
     "authenticate_with_session_cookie",
+    "bind_session_cookie",
     "build_source_metadata",
     "poll_upload_job",
+    "request_context_launch_token",
     "request_magic_link",
     "upload_audio_file",
     "upload_hosted_audio",
@@ -85,16 +89,31 @@ def _now_compact() -> str:
 
 
 def _normalize_base_url(base_url: str) -> str:
-    return base_url.rstrip("/")
+    clean = validate_hosted_url(base_url)
+    parts = urllib.parse.urlsplit(clean)
+    if parts.path not in {"", "/"}:
+        raise CaseWorkspaceError("Hosted Voice base URL must not contain a path.")
+    return urllib.parse.urlunsplit((parts.scheme, parts.netloc, "", "", ""))
 
 
 def _json_bytes(payload: Mapping[str, Any]) -> bytes:
     return json.dumps(payload, ensure_ascii=False).encode("utf-8")
 
 
+class _PinnedRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Refuse redirects away from the pinned Hosted Voice origin."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        validate_hosted_url(newurl, allow_query=True)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def _new_opener() -> urllib.request.OpenerDirector:
     cookie_jar = http.cookiejar.CookieJar()
-    return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie_jar))
+    return urllib.request.build_opener(
+        urllib.request.HTTPCookieProcessor(cookie_jar),
+        _PinnedRedirectHandler(),
+    )
 
 
 def _read_json_response(
@@ -127,8 +146,22 @@ def _extract_magic_link(value: str) -> str:
     clean = value.strip()
     if not clean:
         raise CaseWorkspaceError("missing mparanza magic link")
-    match = re.search(r"https://[^)\s]+/auth/magic/consume\?token=[^)\s]+", clean)
-    return match.group(0) if match else clean
+    match = re.search(
+        r"https://mparanza\.com/auth/magic/consume\?token=[^)\s]+",
+        clean,
+    )
+    magic_link = match.group(0) if match else clean
+    validate_hosted_url(
+        magic_link,
+        required_path="/auth/magic/consume",
+        allow_query=True,
+    )
+    token = urllib.parse.parse_qs(urllib.parse.urlsplit(magic_link).query).get(
+        "token", [""]
+    )[0]
+    if not token:
+        raise CaseWorkspaceError("invalid mparanza magic link")
+    return magic_link
 
 
 def _launch_token_from_url(final_url: str) -> str:
@@ -138,55 +171,10 @@ def _launch_token_from_url(final_url: str) -> str:
     )[0]
 
 
-def _voice_launch_base_url(base_url: str) -> str:
-    return f"{_normalize_base_url(base_url)}/case-notes/voice/launch"
-
-
 def _refresh_case_context_sources(case_dir: Path, purpose: str) -> None:
-    """Refresh derived local context files before issuing hosted launch tokens."""
+    """Refresh derived local context files before the authenticated upload."""
 
     refresh_case_brief(case_dir)
-
-
-def _build_context_launch_url(
-    case_dir: Path,
-    *,
-    base_url: str,
-    max_context_chars: int = MAX_CASE_CONTEXT_CHARS,
-    max_launch_url_chars: int = MAX_LAUNCH_URL_CHARS,
-) -> str:
-    """Return a context-bearing hosted voice launch URL within URL limits."""
-
-    launch_base_url = _voice_launch_base_url(base_url)
-    if max_context_chars < MIN_CASE_CONTEXT_CHARS:
-        raise CaseWorkspaceError(
-            f"max_context_chars must be at least {MIN_CASE_CONTEXT_CHARS}"
-        )
-    if max_launch_url_chars <= len(launch_base_url):
-        raise CaseWorkspaceError(
-            "max_launch_url_chars is shorter than the launch base URL"
-        )
-    context_limit = max_context_chars
-    purpose = "transcription"
-    _refresh_case_context_sources(case_dir, purpose)
-    while True:
-        case_context = build_case_context(
-            case_dir,
-            max_chars=context_limit,
-            purpose=purpose,
-        )
-        launch_url = build_launch_url(
-            launch_base_url,
-            case_context=case_context,
-        )
-        if len(launch_url) <= max_launch_url_chars:
-            return launch_url
-        if context_limit == MIN_CASE_CONTEXT_CHARS:
-            raise CaseWorkspaceError(
-                "Hosted voice launch URL is too long even after context truncation "
-                f"({len(launch_url)} > {max_launch_url_chars} characters)."
-            )
-        context_limit = max(MIN_CASE_CONTEXT_CHARS, context_limit // 2)
 
 
 def _request_launch_token(
@@ -196,6 +184,10 @@ def _request_launch_token(
     action: str,
     timeout_seconds: float,
 ) -> str:
+    validate_hosted_url(
+        launch_url,
+        required_path="/case-notes/voice/launch",
+    )
     request = urllib.request.Request(launch_url, method="GET")
     try:
         with opener.open(request, timeout=timeout_seconds) as response:
@@ -203,23 +195,91 @@ def _request_launch_token(
             response.read()
     except (OSError, urllib.error.URLError) as exc:
         raise CaseWorkspaceError(f"{action} failed: {exc}") from exc
+    validate_hosted_url(
+        final_url,
+        required_path="/case-notes/voice",
+        allow_query=True,
+    )
     launch_token = _launch_token_from_url(final_url)
     if not launch_token:
         raise CaseWorkspaceError(f"{action} did not return a Clara launch token")
     return launch_token
 
 
-def _set_cookie_header(
+def _cookie_jar(opener: urllib.request.OpenerDirector) -> http.cookiejar.CookieJar:
+    for handler in opener.handlers:
+        if isinstance(handler, urllib.request.HTTPCookieProcessor):
+            return handler.cookiejar
+    raise CaseWorkspaceError("hosted audio client has no origin-bound cookie jar")
+
+
+def bind_session_cookie(
     opener: urllib.request.OpenerDirector,
+    *,
+    base_url: str,
     cookie_header: str,
 ) -> None:
+    """Bind supplied cookies to the validated Hosted Voice origin."""
+
+    normalized_base_url = _normalize_base_url(base_url)
+    parts = urllib.parse.urlsplit(normalized_base_url)
     clean = re.sub(r"^\s*cookie\s*:\s*", "", cookie_header, flags=re.IGNORECASE).strip()
     if not clean:
         raise CaseWorkspaceError("missing mparanza cookie header")
-    opener.addheaders = [
-        (name, value) for name, value in opener.addheaders if name.lower() != "cookie"
-    ]
-    opener.addheaders.append(("Cookie", clean))
+    parsed = SimpleCookie()
+    parsed.load(clean)
+    if not parsed:
+        raise CaseWorkspaceError("invalid mparanza cookie header")
+    jar = _cookie_jar(opener)
+    jar.clear()
+    for name, morsel in parsed.items():
+        jar.set_cookie(
+            http.cookiejar.Cookie(
+                version=0,
+                name=name,
+                value=morsel.value,
+                port=None,
+                port_specified=False,
+                domain=parts.hostname or "",
+                domain_specified=True,
+                domain_initial_dot=False,
+                path="/",
+                path_specified=True,
+                secure=True,
+                expires=None,
+                discard=True,
+                comment=None,
+                comment_url=None,
+                rest={"HttpOnly": None},
+                rfc2109=False,
+            )
+        )
+
+
+def request_context_launch_token(
+    opener: urllib.request.OpenerDirector,
+    *,
+    base_url: str,
+    case_context: str,
+    language: str = DEFAULT_LANGUAGE,
+    timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS,
+) -> str:
+    """Send case context in an authenticated HTTPS body and return an opaque token."""
+
+    request = urllib.request.Request(
+        f"{_normalize_base_url(base_url)}/case-notes/api/voice/launch",
+        data=_json_bytes({"case_context": case_context, "language": language}),
+        method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    response = _read_json_response(opener, request, timeout_seconds=timeout_seconds)
+    if response.status_code != 200:
+        detail = response.payload.get("detail") or response.payload
+        raise CaseWorkspaceError(f"hosted voice context launch failed: {detail}")
+    launch_token = str(response.payload.get("launch_token", "")).strip()
+    if not launch_token or not re.fullmatch(r"[A-Za-z0-9_-]+", launch_token):
+        raise CaseWorkspaceError("hosted voice context launch returned no valid token")
+    return launch_token
 
 
 def request_magic_link(
@@ -248,7 +308,6 @@ def authenticate_with_magic_link(
     opener: urllib.request.OpenerDirector,
     magic_link: str,
     *,
-    launch_url: str = "",
     timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS,
 ) -> str:
     """Consume a mparanza magic link and return a Clara launch token."""
@@ -260,13 +319,7 @@ def authenticate_with_magic_link(
             response.read()
     except (OSError, urllib.error.URLError) as exc:
         raise CaseWorkspaceError(f"magic link login failed: {exc}") from exc
-    if launch_url.strip():
-        return _request_launch_token(
-            opener,
-            launch_url,
-            action="context launch after magic link login",
-            timeout_seconds=timeout_seconds,
-        )
+    validate_hosted_url(final_url, allow_query=True)
     launch_token = _launch_token_from_url(final_url)
     if not launch_token:
         raise CaseWorkspaceError("magic link login did not return a Clara launch token")
@@ -278,18 +331,18 @@ def authenticate_with_session_cookie(
     *,
     base_url: str = DEFAULT_BASE_URL,
     cookie_header: str,
-    launch_url: str = "",
     timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS,
 ) -> str:
     """Use an existing mparanza session cookie to return a Clara launch token."""
 
-    _set_cookie_header(opener, cookie_header)
-    resolved_launch_url = launch_url.strip() or (
-        f"{_normalize_base_url(base_url)}/case-notes/voice/launch"
+    bind_session_cookie(
+        opener,
+        base_url=base_url,
+        cookie_header=cookie_header,
     )
     return _request_launch_token(
         opener,
-        resolved_launch_url,
+        f"{_normalize_base_url(base_url)}/case-notes/voice/launch",
         action="session cookie launch",
         timeout_seconds=timeout_seconds,
     )
@@ -637,6 +690,7 @@ def upload_audio_file(
     *,
     base_url: str = DEFAULT_BASE_URL,
     launch_token: str,
+    case_context: str = "",
     audio_path: Path,
     source_metadata: Mapping[str, str],
     language: str = DEFAULT_LANGUAGE,
@@ -653,6 +707,7 @@ def upload_audio_file(
     fields = {
         "launch_token": launch_token,
         "language": language,
+        "case_context": case_context,
         "source_metadata_json": json.dumps(dict(source_metadata), ensure_ascii=False),
     }
     try:
@@ -758,76 +813,63 @@ def upload_hosted_audio(
     audio_path: Path,
     magic_link: str = "",
     cookie_header: str = "",
-    launch_token: str = "",
     output_dir: Path | None = None,
     base_url: str = DEFAULT_BASE_URL,
     source_metadata: Mapping[str, str] | None = None,
-    language: str = DEFAULT_LANGUAGE,
+    language: str | None = None,
     include_case_context: bool = True,
     max_context_chars: int = MAX_CASE_CONTEXT_CHARS,
-    max_launch_url_chars: int = MAX_LAUNCH_URL_CHARS,
     import_bundle: bool = True,
     poll_seconds: int = DEFAULT_POLL_SECONDS,
     poll_interval_seconds: float = DEFAULT_POLL_INTERVAL_SECONDS,
     timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS,
 ) -> HostedAudioUploadResult:
-    """Upload existing audio through hosted Clara and optionally import the result."""
+    """Upload through an authenticated hosted session and optionally import."""
 
     errors = validate_case_workspace(case_dir)
     if errors:
         raise CaseWorkspaceError("; ".join(errors))
+    manifest = load_case_file(case_dir, "manifest")
+    resolved_language = (
+        str(language or manifest.get("output_language") or DEFAULT_LANGUAGE)
+        .strip()
+        .lower()
+    )
+    if resolved_language not in SUPPORTED_LANGUAGES:
+        raise CaseWorkspaceError(f"Unsupported voice language: {resolved_language}")
     source_path = audio_path.expanduser()
     if not source_path.is_file():
         raise CaseWorkspaceError(f"audio file does not exist: {source_path}")
 
     run_dir = output_dir or case_dir / "hosted_voice_uploads" / _now_compact()
     run_dir.mkdir(parents=True, exist_ok=True)
+    normalized_base_url = _normalize_base_url(base_url)
     opener = _new_opener()
-    can_request_context_launch = bool(
-        cookie_header or (magic_link and not launch_token)
-    )
-    context_launch_url = (
-        _build_context_launch_url(
+    case_context = ""
+    if include_case_context:
+        _refresh_case_context_sources(case_dir, "transcription")
+        case_context = build_case_context(
             case_dir,
-            base_url=base_url,
-            max_context_chars=max_context_chars,
-            max_launch_url_chars=max_launch_url_chars,
+            max_chars=max_context_chars,
+            purpose="transcription",
         )
-        if include_case_context and can_request_context_launch
-        else ""
-    )
-    if launch_token:
-        if cookie_header:
-            _set_cookie_header(opener, cookie_header)
-        resolved_launch_token = (
-            _request_launch_token(
-                opener,
-                context_launch_url,
-                action="context launch with session cookie",
-                timeout_seconds=timeout_seconds,
-            )
-            if cookie_header and context_launch_url
-            else launch_token
-        )
-    elif cookie_header:
+    if cookie_header:
         resolved_launch_token = authenticate_with_session_cookie(
             opener,
-            base_url=base_url,
+            base_url=normalized_base_url,
             cookie_header=cookie_header,
-            launch_url=context_launch_url,
             timeout_seconds=timeout_seconds,
         )
     elif magic_link:
         resolved_launch_token = authenticate_with_magic_link(
             opener,
             magic_link,
-            launch_url=context_launch_url,
             timeout_seconds=timeout_seconds,
         )
     else:
         raise CaseWorkspaceError(
-            "provide --magic-link, --magic-link-file, --request-magic-link, "
-            "--cookie-header, --cookie-header-file, or --launch-token"
+            "provide --magic-link-file, --request-magic-link, or "
+            "--cookie-header-file"
         )
     metadata = dict(source_metadata or {})
     if not metadata.get("title"):
@@ -835,11 +877,12 @@ def upload_hosted_audio(
 
     upload_payload = upload_audio_file(
         opener,
-        base_url=base_url,
+        base_url=normalized_base_url,
         launch_token=resolved_launch_token,
+        case_context=case_context,
         audio_path=source_path,
         source_metadata=metadata,
-        language=language,
+        language=resolved_language,
         timeout_seconds=timeout_seconds,
     )
     upload_response_path = run_dir / "upload_response.json"
@@ -853,7 +896,7 @@ def upload_hosted_audio(
 
     final_payload = poll_upload_job(
         opener,
-        base_url=base_url,
+        base_url=normalized_base_url,
         job_id=job_id,
         run_dir=run_dir,
         poll_seconds=poll_seconds,
@@ -895,10 +938,8 @@ def upload_hosted_audio(
 
 
 def _magic_link_from_args(args: argparse.Namespace) -> str:
-    if args.magic_link:
-        return args.magic_link
     if args.magic_link_file:
-        return args.magic_link_file.read_text(encoding="utf-8")
+        return read_private_text_file(args.magic_link_file, label="magic link")
     if args.request_magic_link:
         opener = _new_opener()
         request_magic_link(
@@ -917,10 +958,11 @@ def _magic_link_from_args(args: argparse.Namespace) -> str:
 
 
 def _cookie_header_from_args(args: argparse.Namespace) -> str:
-    if args.cookie_header:
-        return args.cookie_header
     if args.cookie_header_file:
-        return args.cookie_header_file.read_text(encoding="utf-8")
+        return read_private_text_file(
+            args.cookie_header_file,
+            label="session cookie",
+        )
     return ""
 
 
@@ -931,15 +973,8 @@ def main() -> int:
     parser.add_argument("case_dir", type=Path)
     parser.add_argument("audio", type=Path)
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
-    parser.add_argument("--magic-link", default="")
     parser.add_argument("--magic-link-file", type=Path)
-    parser.add_argument("--cookie-header", default="")
     parser.add_argument("--cookie-header-file", type=Path)
-    parser.add_argument(
-        "--launch-token",
-        default="",
-        help="Existing Clara launch token; usually combine with --cookie-header.",
-    )
     parser.add_argument(
         "--request-magic-link",
         metavar="EMAIL",
@@ -947,23 +982,21 @@ def main() -> int:
     )
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--no-import", action="store_true")
-    parser.add_argument("--language", default=DEFAULT_LANGUAGE)
+    parser.add_argument(
+        "--language",
+        choices=sorted(SUPPORTED_LANGUAGES),
+        help="Transcription language; defaults to the Clara case output language.",
+    )
     parser.add_argument(
         "--no-case-context",
         action="store_true",
-        help="Do not attach the local Clara case context to the hosted launch token.",
+        help="Do not send local Clara case context in the hosted upload body.",
     )
     parser.add_argument(
         "--max-context-chars",
         type=int,
         default=MAX_CASE_CONTEXT_CHARS,
-        help="Maximum local case-context characters to embed in the launch token.",
-    )
-    parser.add_argument(
-        "--max-launch-url-chars",
-        type=int,
-        default=MAX_LAUNCH_URL_CHARS,
-        help="Maximum hosted voice launch URL length before reducing context.",
+        help="Maximum local case-context characters sent in the upload body.",
     )
     parser.add_argument("--source-type", default="")
     parser.add_argument("--title", default="")
@@ -998,14 +1031,12 @@ def main() -> int:
         audio_path=args.audio,
         magic_link=_magic_link_from_args(args),
         cookie_header=_cookie_header_from_args(args),
-        launch_token=args.launch_token,
         output_dir=args.output_dir,
         base_url=args.base_url,
         source_metadata=source_metadata,
         language=args.language,
         include_case_context=not args.no_case_context,
         max_context_chars=args.max_context_chars,
-        max_launch_url_chars=args.max_launch_url_chars,
         import_bundle=not args.no_import,
         poll_seconds=args.poll_seconds,
         poll_interval_seconds=args.poll_interval_seconds,

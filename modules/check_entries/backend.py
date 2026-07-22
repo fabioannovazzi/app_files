@@ -4,21 +4,22 @@ import io
 import logging
 import pickle
 import uuid
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-from contextlib import contextmanager
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import polars as pl
 from cryptography.fernet import Fernet
 
 from modules.check_entries.constants import BeneficiaryCheckMode
-from modules.check_entries.utils import hide_line_numbers
-from modules.utilities.config import select_provider
-from modules.llm.llm_call_wrapper import LLMCallWrapper
 from modules.check_entries.pdf_matching import build_pdf_map
+from modules.check_entries.utils import hide_line_numbers
+from modules.llm.llm_call_wrapper import LLMCallWrapper
 from modules.process_excel.logic import _suggest_header_row, _unique_column_names
 from modules.process_pdf_journal.logic import parse_journal
+from modules.utilities.config import select_provider
+
 try:
     from modules.utilities.fastexcel import suppress_fastexcel_dtype_warnings
 except Exception:  # pragma: no cover - fallback when helper is unavailable
@@ -34,18 +35,18 @@ except Exception:  # pragma: no cover - fallback when helper is unavailable
             yield
         finally:
             logger.setLevel(previous_level)
-from src.check_entries_review import merge_review_feedback, pdf_bytes_for
+
+
 from src.check_entries.run import (
     CheckEntriesRunContext,
     CheckEntriesRunParams,
     run_check_entries,
 )
+from src.check_entries_review import merge_review_feedback, pdf_bytes_for
 from src.check_statements import (
     _detect_excel_header_polars as detect_excel_header_polars,
 )
 from src.check_statements import _rebuild_df_with_header as rebuild_df_with_header
-
-
 
 LOGGER = logging.getLogger(__name__)
 SESSION_STORAGE_DIR = Path("tmp") / "check_entries_sessions"
@@ -125,8 +126,10 @@ class CheckEntriesStore:
         self._storage_dir = storage_dir or SESSION_STORAGE_DIR
         self._storage_dir.mkdir(parents=True, exist_ok=True)
 
-    def create_session(self, filename: str, content: bytes) -> CheckEntriesSession:
-        df = _load_dataframe_from_bytes(filename, content)
+    def create_session(
+        self, filename: str, content: bytes, *, lang: str = "eng"
+    ) -> CheckEntriesSession:
+        df = _load_dataframe_from_bytes(filename, content, lang=lang)
         columns = list(df.columns)
         session_id = uuid.uuid4().hex
         session = CheckEntriesSession(
@@ -196,7 +199,9 @@ class CheckEntriesStore:
                 session.pdf_files = list(session.pdf_map.values())
                 return session
         except Exception as exc:  # noqa: BLE001 - best effort
-            LOGGER.warning("Failed to load check entries session %s: %s", session_id, exc)
+            LOGGER.warning(
+                "Failed to load check entries session %s: %s", session_id, exc
+            )
             try:
                 path.unlink()
             except OSError:
@@ -207,7 +212,9 @@ class CheckEntriesStore:
 store = CheckEntriesStore()
 
 
-def _load_dataframe_from_bytes(filename: str, content: bytes) -> pl.DataFrame:
+def _load_dataframe_from_bytes(
+    filename: str, content: bytes, *, lang: str = "eng"
+) -> pl.DataFrame:
     suffix = filename.lower().rsplit(".", 1)[-1]
     if suffix in {"xlsx", "xls"}:
         header_row = detect_excel_header_polars(content)
@@ -230,7 +237,7 @@ def _load_dataframe_from_bytes(filename: str, content: bytes) -> pl.DataFrame:
         df.columns = header
         return df
     if suffix == "pdf":
-        return parse_journal(content)
+        return parse_journal(content, lang=lang)
     header_row = detect_excel_header_polars(content)
     if header_row is None:
         raise ValueError("Could not detect header row automatically")
@@ -283,7 +290,9 @@ def _infer_mapping(llm_wrapper, df: pl.DataFrame) -> Dict[str, Optional[str]]:
     return _as_dict(inferred.get("fields", {}))
 
 
-def apply_mapping(session: CheckEntriesSession, mapping: Dict[str, Optional[str]]) -> None:
+def apply_mapping(
+    session: CheckEntriesSession, mapping: Dict[str, Optional[str]]
+) -> None:
     mapping = {k: (v or None) for k, v in mapping.items()}
     _validate_mapping(mapping)
     session.mapping = mapping
@@ -294,7 +303,9 @@ def _validate_mapping(mapping: Dict[str, Optional[str]]) -> None:
     if not mapping.get("movement_number"):
         raise ValueError("Mapping must include movement_number")
     has_amount = bool(mapping.get("amount"))
-    has_debit_credit = bool(mapping.get("debit_amount")) and bool(mapping.get("credit_amount"))
+    has_debit_credit = bool(mapping.get("debit_amount")) and bool(
+        mapping.get("credit_amount")
+    )
     if not (has_amount or has_debit_credit):
         raise ValueError("Map either amount or debit/credit columns")
 
@@ -307,7 +318,10 @@ def run_checks(
     if not mapping:
         raise ValueError("Map the journal columns before running checks")
     if not session.pdf_files:
-        LOGGER.warning("Running check_entries session %s without supporting PDFs.", session.session_id)
+        LOGGER.warning(
+            "Running check_entries session %s without supporting PDFs.",
+            session.session_id,
+        )
 
     llm_wrapper = _build_llm_wrapper()
     provider_config = select_provider("checkEntriesQuery")
@@ -330,9 +344,13 @@ def run_checks(
             lang=str(params.get("lang", "eng")),
             amount_tolerance=float(params.get("amount_tolerance", 0.0)),
             date_window=int(params.get("date_window", 0)),
-            timing_difference_window=_parse_optional_int(params.get("timing_difference_window")),
+            timing_difference_window=_parse_optional_int(
+                params.get("timing_difference_window")
+            ),
             beneficiary_similarity=float(params.get("beneficiary_similarity", 0.0)),
-            beneficiary_check_mode=_parse_beneficiary_mode(params.get("beneficiary_check_mode")),
+            beneficiary_check_mode=_parse_beneficiary_mode(
+                params.get("beneficiary_check_mode")
+            ),
         ),
     )
 
@@ -396,7 +414,9 @@ def review_mismatches(
     return session.output
 
 
-def get_pdf_bytes(session: CheckEntriesSession, movement: str) -> Tuple[bytes | None, str]:
+def get_pdf_bytes(
+    session: CheckEntriesSession, movement: str
+) -> Tuple[bytes | None, str]:
     pdf_map = build_pdf_map(session.pdf_files)
     return pdf_bytes_for(movement, pdf_map)
 
@@ -421,5 +441,7 @@ def _parse_beneficiary_mode(value: Any) -> BeneficiaryCheckMode:
         if value:
             return BeneficiaryCheckMode(str(value))
     except ValueError:
-        LOGGER.warning("Unknown beneficiary check mode '%s', defaulting to COMPARE", value)
+        LOGGER.warning(
+            "Unknown beneficiary check mode '%s', defaulting to COMPARE", value
+        )
     return BeneficiaryCheckMode.COMPARE

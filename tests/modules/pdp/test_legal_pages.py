@@ -62,6 +62,14 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert isinstance(page, dict)
     assert page["title"] == "Zero Retention Policy"
     assert "does not receive or retain Customer Content" in page["summary"]
+    assert "two processing categories" in page["summary"]
+    assert "existing ChatGPT plan and Codex workspace" in str(page)
+    assert "does not automatically anonymize" in str(page)
+    assert "Ordinary Plugin Functions" in str(page)
+    assert "Mparanza-Hosted Services" in str(page)
+    assert "startup checks request the public plugin-version manifest" in str(page)
+    assert "mapping worksets after 7 days" in str(page)
+    assert "Token access expires after eight hours" in str(page)
     assert "OpenAI" not in str(page)
     assert context["active_legal_page"] == "zero-retention"
 
@@ -95,6 +103,8 @@ def test_terms_page_is_public_when_auth_enabled(
     assert "https://mparanza.com/zero-retention" in terms_text
     assert "https://mparanza.com/privacy" not in terms_text
     assert "Mparanza receives no license" in terms_text
+    assert "Ordinary plugin functions" in terms_text
+    assert "Mparanza-hosted services" in terms_text
     assert "improve, and develop" not in terms_text
     assert "OpenAI" not in terms_text
 
@@ -117,4 +127,6 @@ def test_support_page_is_public_when_auth_enabled(
     assert page["title"] == "Customer Support"
     assert page["contact_email"] == "fabio@mparanza.com"
     assert "no automatic access" in str(page)
+    assert "existing ChatGPT plan and Codex workspace" in str(page)
+    assert "Mparanza-hosted service" in str(page)
     assert context["active_legal_page"] == "support"

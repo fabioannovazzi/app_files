@@ -223,6 +223,49 @@ _LOCALE_TEXT = {
         ],
         "handoff_boundary": "Die statische Akte ist ein Entwurf. Sie aktiviert keinen Mandanten, unterzeichnet kein Dokument und trifft keine fachliche Compliance-Entscheidung.",
     },
+    "es": {
+        "memo_title": "Memoria del despacho — nuevo cliente",
+        "run_id": "ID de ejecución",
+        "client_reference": "Referencia del cliente",
+        "engagement": "Encargo",
+        "package_status": "Estado del expediente",
+        "jurisdiction": "Jurisdicción profesional",
+        "country_pack": "Configuración nacional",
+        "aml_heading": "Cálculo de prevención del blanqueo",
+        "calculated_band": "Nivel calculado",
+        "table_1_status": "Estado de la tabla 1",
+        "baseline_treatment": "Medida de diligencia de referencia",
+        "formula": "Fórmula",
+        "evidence_heading": "Evidencias y decisiones",
+        "open_items": "Información pendiente",
+        "aml_status": "Estado del proceso de prevención del blanqueo",
+        "monitoring_status": "Estado del seguimiento",
+        "documents": "Documentos",
+        "review_boundary": "Alcance de la revisión",
+        "missing_title": "Borrador — solicitud de información pendiente del nuevo cliente",
+        "draft_notice": "Borrador del despacho. Revíselo y personalícelo antes de enviarlo.",
+        "provide": "Proporcione o aclare lo siguiente:",
+        "none_missing": "No se detectaron elementos mecánicamente pendientes. El profesional debe comprobar igualmente la integridad y la pertinencia.",
+        "secure_channel": "No envíe documentos de identidad por un canal no autorizado. Utilice el método de recogida segura indicado por el despacho.",
+        "handoff_title": "Entrega para revisión — nuevo cliente",
+        "review_sequence": "Secuencia de revisión",
+        "review_payload": "Datos de revisión",
+        "pending_decisions": "Decisiones pendientes",
+        "applied_decisions": "Decisiones aplicadas",
+        "applied_decisions_note": "creado por el servicio de revisión",
+        "final_manifest": "Manifiesto final de artefactos",
+        "review_tools": "Herramientas de revisión",
+        "table1_note": "La aplicabilidad de la tabla 1 es una decisión profesional expresa con una base registrada; una evaluación sin resolver bloquea el resultado.",
+        "arithmetic_note": "Es un apoyo aritmético. Las puntuaciones, exclusiones, indicadores y el tratamiento final requieren revisión profesional.",
+        "boundary_note": "No se ha generado ni declarado definitivo ningún mandato, aviso de privacidad o de IA, cláusula del artículo 28 ni formulario de prevención del blanqueo. El expediente solo registra la aplicabilidad y las referencias verificadas a plantillas para el plan documental profesional.",
+        "handoff_steps": [
+            "Validar `review_payload.json` con la herramienta de revisión del plugin.",
+            "Revisar la aplicabilidad, los datos e indicadores de prevención del blanqueo, las evidencias pendientes, los documentos y el calendario de seguimiento.",
+            "Guardar las decisiones explícitas en `ui_decisions.json`.",
+            "Aplicar las decisiones mediante el servicio de revisión persistente.",
+        ],
+        "handoff_boundary": "El expediente estático es un borrador. No activa al cliente, no firma documentos ni adopta una decisión profesional de cumplimiento.",
+    },
 }
 
 _DISPLAY_COPY: dict[str, dict[str | None, dict[str, str]]] = {
@@ -712,6 +755,122 @@ _DISPLAY_COPY: dict[str, dict[str | None, dict[str, str]]] = {
         },
     },
 }
+
+_SPANISH_DISPLAY_COPY: dict[str, dict[str | None, str]] = {
+    "engagement_kind": {
+        "ongoing": "continuo",
+        "one_off": "ocasional",
+    },
+    "package_status": {
+        "draft_for_professional_review": "borrador para revisión profesional",
+    },
+    "jurisdiction": {"IT": "Italia"},
+    "country_pack": {
+        ITALY_COUNTRY_PACK: "Italia — configuración profesional 2026",
+    },
+    "risk_band": {
+        "not_significant": "no significativo",
+        "low_significance": "poco significativo",
+        "medium_significance": "bastante significativo",
+        "high_significance": "muy significativo",
+    },
+    "table_1_status": {
+        "yes": "aplicable",
+        "no": "no aplicable",
+        "unknown": "por determinar",
+    },
+    "review_status": {
+        "confirmed": "confirmado por el profesional",
+        "proposed": "propuesto, pendiente de revisión",
+    },
+    "verification_mode": {
+        None: "por determinar",
+        "conduct_rule": "regla de conducta aplicable",
+        "simplified": "verificación simplificada",
+        "ordinary": "verificación ordinaria",
+        "enhanced": "verificación reforzada",
+    },
+    "aml_status": {
+        "blocked_unresolved_table_1": "bloqueado: evaluación de la tabla 1 sin resolver",
+        "blocked_unknown_mandatory_trigger": "bloqueado: indicador obligatorio sin resolver",
+        "blocked_unconfirmed_positive_trigger": "bloqueado: indicador positivo pendiente de confirmación",
+        "calculated_for_professional_review": "calculado para revisión profesional",
+    },
+    "monitoring_status": {
+        "not_scheduled_one_off": "no programado para un encargo ocasional",
+        "blocked_table_1_assessment": "bloqueado a la espera de la evaluación de la tabla 1",
+        "not_scheduled_conduct_rule": "periodicidad por definir conforme a la regla de conducta",
+        "draft_schedule_for_professional_review": "borrador de calendario para revisión profesional",
+        "blocked_enhanced_interval_selection": "bloqueado: se requiere una periodicidad reforzada",
+    },
+    "document_type": {
+        "mandate": "encargo profesional",
+        "privacy_notice": "aviso de privacidad",
+        "ai_transparency_notice": "aviso sobre el uso de IA",
+        "article_28_terms": "cláusulas del artículo 28",
+        "aml_assessment": "evaluación de prevención del blanqueo",
+    },
+    "document_status": {
+        "template_reference_required": "se requiere una referencia a una plantilla",
+        "template_reference_verification_required": "se requiere verificar la plantilla",
+        "approved_reusable_reference_available": "referencia reutilizable aprobada disponible",
+        "template_reference_not_ready": "la referencia a la plantilla no está preparada",
+        "not_planned_by_confirmed_applicability": "no previsto según la aplicabilidad confirmada",
+        "applicability_review_required": "se requiere revisar la aplicabilidad",
+    },
+    "missing_item_type": {
+        "evidence_record": "documento o evidencia",
+        "tax_fact": "dato fiscal",
+        "party_fact": "dato del perfil del cliente",
+        "identity_document": "documento de identidad del cliente",
+        "representative": "representante o ejecutor",
+        "beneficial_owner": "titular real",
+        "representative_posture": "representación y ejecutor",
+        "ownership_status": "situación de la titularidad real",
+        "screening_result": "verificación PEP, sanciones o países",
+        "privacy_processing": "decisión sobre privacidad",
+        "applicability": "aplicabilidad documental",
+        "aml_assessment": "evaluación de prevención del blanqueo",
+        "aml_trigger": "indicador de prevención del blanqueo",
+        "engagement_terms": "condiciones del encargo",
+        "client_file_preparation_binding": "expediente preparatorio del cliente",
+    },
+    "missing_reason": {
+        "supporting_evidence_not_verified": "las evidencias de respaldo no se han verificado",
+        "evidence_status_requested": "se ha solicitado, pero todavía no se ha recibido",
+        "evidence_status_missing": "no está disponible actualmente",
+        "evidence_status_stale": "debe actualizarse",
+        "evidence_expired": "su vigencia registrada ha caducado",
+        "verification_status_unknown": "el dato debe proporcionarse y verificarse",
+        "verification_status_reported": "el dato declarado debe verificarse",
+        "identity_verification_status_unknown": "debe completarse la verificación de identidad",
+        "identity_verification_status_reported": "debe confirmarse la verificación de identidad declarada",
+        "identity_verification_status_not_applicable": "debe confirmarse por qué no es aplicable el documento de identidad",
+        "identity_document_expired": "el documento de identidad ha caducado",
+        "representative_or_executor_posture_pending": "deben definirse los representantes y el ejecutor",
+        "beneficial_ownership_posture_pending": "debe definirse la situación de la titularidad real",
+        "professional_resolution_pending": "se requiere una resolución profesional documentada",
+        "professional_confirmation_pending": "se requiere confirmación profesional",
+        "professional_resolution_do_not_proceed": "la decisión profesional registrada indica que no se debe continuar",
+        "privacy_processing_decision_pending": "debe completarse la decisión sobre el tratamiento de datos",
+        "applicability_unclear": "debe aclararse la aplicabilidad",
+        "table_1_status_unknown": "debe resolverse la aplicabilidad de la tabla 1",
+        "mandatory_trigger_status_unknown": "debe resolverse el estado del indicador obligatorio",
+        "positive_trigger_requires_confirmation": "el indicador positivo requiere confirmación profesional",
+        "engagement_terms_incomplete": "deben completarse las condiciones del encargo",
+        "bound_client_file_preparation_run_not_final_ready": "el expediente preparatorio vinculado no está listo para su uso profesional",
+    },
+}
+
+if set(_SPANISH_DISPLAY_COPY) != set(_DISPLAY_COPY):
+    raise RuntimeError("Spanish display-copy categories must match the canonical set")
+for _category, _translations in _SPANISH_DISPLAY_COPY.items():
+    if set(_translations) != set(_DISPLAY_COPY[_category]):
+        raise RuntimeError(
+            f"Spanish display-copy values are incomplete for {_category!r}"
+        )
+    for _value, _translation in _translations.items():
+        _DISPLAY_COPY[_category][_value]["es"] = _translation
 
 
 def _display_value(category: str, value: str | None, language: str) -> str:

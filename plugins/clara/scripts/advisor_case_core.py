@@ -93,7 +93,7 @@ __all__ = [
 SCHEMA_VERSION = 1
 EXCHANGE_SCHEMA_VERSION = 1
 EXCHANGE_SOURCE = "case_notes_case_update"
-SUPPORTED_LANGUAGES = {"it", "en", "fr", "de"}
+SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
 CASE_STATUSES = {"active", "paused", "complete", "archived"}
 MATERIAL_TYPES = {
     "source",
@@ -2497,6 +2497,103 @@ def _html_copy(language: str) -> dict[str, str]:
             ),
             "what_clara_needs": "Decisioni per il prossimo passaggio.",
         }
+    if language == "es":
+        return {
+            "already_requested_next_steps": "Próximos pasos ya solicitados",
+            "approved_entries": "Elementos aprobados para el paquete del cliente",
+            "approved_metric": "elementos listos para el paquete del cliente",
+            "brief_eyebrow": "Briefing del socio",
+            "brief_lead": (
+                "Documento interno para separar contenido listo, hipótesis "
+                "candidatas y próximas comprobaciones."
+            ),
+            "candidate_count": "elementos candidatos",
+            "candidate_empty": "Aún no se ha registrado ningún juicio candidato.",
+            "candidate_judgement": "Juicio candidato",
+            "case_state": "Estado del caso",
+            "clarification_empty": "Aún no se han registrado aclaraciones esenciales.",
+            "client_decision": "Decisión del cliente",
+            "control_note": "Nota de control",
+            "control_note_body": (
+                "Material de trabajo local. El juicio profesional corresponde al "
+                "socio sénior."
+            ),
+            "deck_eyebrow": "Kickoff",
+            "deck_note": "Material de trabajo interno.",
+            "direction": "Dirección",
+            "direction_item_include": (
+                "Qué elementos candidatos incluir, excluir o corregir."
+            ),
+            "direction_item_output": "Qué entregable quiere el socio a continuación.",
+            "engagement_objective": "Objetivo del encargo",
+            "essential_clarifications": "Aclaraciones esenciales",
+            "evidence_gaps": "Lagunas de evidencia",
+            "executive_storyline": "Línea argumental ejecutiva",
+            "facts_empty": "Aún no se han registrado hechos.",
+            "facts_title": "Hechos conocidos",
+            "hypotheses_empty": "Aún no se han registrado hipótesis candidatas.",
+            "hypotheses_heading": "Hipótesis candidatas que confirmar o corregir.",
+            "hypotheses_eyebrow": "Hipótesis que comprobar",
+            "initial_readout": "Síntesis inicial",
+            "initial_readout_heading": "Hechos y orientación recogidos hasta ahora.",
+            "investigation": "Investigación",
+            "investigation_empty": "Aún no se han registrado puntos de investigación.",
+            "investigation_prompt": "Qué evidencia obtener primero.",
+            "investigation_title": "Comprobaciones necesarias",
+            "industry_context": "Contexto sectorial",
+            "industry_context_empty": "Aún no se ha registrado contexto sectorial.",
+            "judgement": "Juicio",
+            "judgement_item_client": "Qué puede utilizarse con el cliente.",
+            "judgement_item_right": "Qué ya es correcto.",
+            "judgement_item_sensitive": "Qué es políticamente sensible.",
+            "known_facts": "Hechos conocidos",
+            "lenses_empty": "No se han registrado perspectivas de preparación.",
+            "mandate": "Mandato",
+            "materials_metric": "materiales indexados",
+            "next_conversation": "Próxima conversación",
+            "next_conversation_heading": "Decisiones para el siguiente paso.",
+            "next_step_empty": "Aún no se han registrado próximos pasos.",
+            "next_steps": "Próximos pasos",
+            "open_questions_metric": "preguntas abiertas",
+            "partner_orientation": "Orientación del socio",
+            "partner_orientation_empty": "Aún no se ha registrado la orientación del socio.",
+            "partner_orientation_waiting": (
+                "Aún no se ha registrado la orientación del socio; empezar por "
+                "los elementos candidatos."
+            ),
+            "pending_metric": "elementos de juicio pendientes",
+            "pending_note": (
+                "Elementos aprobados para el paquete del cliente: {approved_count}. "
+                "El juicio pendiente es solo material de trabajo."
+            ),
+            "preparation_lenses": "Comprobaciones de preparación",
+            "preparation_lenses_heading": (
+                "Puntos que comprobar en la primera conversación con el socio."
+            ),
+            "priority_checks": "Comprobaciones prioritarias",
+            "questions_empty": "Aún no se han registrado preguntas abiertas.",
+            "questions_heading": (
+                "Preguntas que Clara debe resolver antes de que el contenido esté "
+                "listo para el cliente."
+            ),
+            "red_flags": "Señales de alerta",
+            "red_flags_empty": "No se han registrado señales de alerta.",
+            "research_empty": "No se ha registrado investigación externa.",
+            "research_notes": "Notas de investigación externa",
+            "ready_judgement": "Contenido listo para el paquete del cliente",
+            "ready_judgement_empty": "No se ha registrado contenido aprobado.",
+            "sensitive_empty": "No se han registrado puntos sensibles.",
+            "sensitive_points": "Puntos sensibles",
+            "sensitive_default_gate": (
+                "El juicio candidato no está listo para el cliente hasta que el "
+                "socio lo marque como tal."
+            ),
+            "sensitive_default_paths": (
+                "El entregable para el cliente no debe mostrar rutas de archivos "
+                "locales ni mecanismos internos de trabajo."
+            ),
+            "what_clara_needs": "Decisiones para el siguiente paso.",
+        }
     return {
         "already_requested_next_steps": "Already requested next steps",
         "approved_entries": "Approved client-pack entries",
@@ -2649,10 +2746,76 @@ ITALIAN_DEFAULT_TEXT = {
     ),
 }
 
+SPANISH_DEFAULT_TEXT = {
+    "Ownership transfer and economic rights": (
+        "Transferencia de la propiedad y derechos económicos"
+    ),
+    "Control, vetoes, and real decision rights": (
+        "Control, vetos y derechos de decisión reales"
+    ),
+    "Operating leadership and successor credibility": (
+        "Liderazgo operativo y credibilidad del sucesor"
+    ),
+    "Founder role after transition": "Papel del fundador tras la transición",
+    "Family alignment and politically acceptable narrative": (
+        "Alineación familiar y narrativa políticamente aceptable"
+    ),
+    "Governance mechanisms that make agreement operational": (
+        "Mecanismos de gobernanza que hacen operativo el acuerdo"
+    ),
+    "Tax, legal, and financial constraints": (
+        "Restricciones fiscales, jurídicas y financieras"
+    ),
+    "Industry-specific capabilities needed by the next leader": (
+        "Capacidades sectoriales que necesita el próximo líder"
+    ),
+    "A successor is named but authority is not actually transferred.": (
+        "Se nombra a un sucesor, pero la autoridad no se transfiere realmente."
+    ),
+    "Family agreement is stated but not translated into governance mechanisms.": (
+        "Se declara un acuerdo familiar, pero no se traduce en mecanismos de gobernanza."
+    ),
+    "A tax or legal structure solves wealth transfer but not leadership continuity.": (
+        "Una estructura fiscal o jurídica resuelve la transferencia patrimonial, "
+        "pero no la continuidad del liderazgo."
+    ),
+    "The founder's future role is emotionally or operationally ambiguous.": (
+        "El futuro papel del fundador es ambiguo en términos emocionales u operativos."
+    ),
+    "The case contains a private preference that is being disguised as analysis.": (
+        "El caso contiene una preferencia privada disfrazada de análisis."
+    ),
+    "Customer, supplier, or employee trust is personal to the founder and not institutionalized.": (
+        "La confianza de clientes, proveedores o empleados depende personalmente "
+        "del fundador y no está institucionalizada."
+    ),
+    "The next client decision is unclear, so a final recommendation would be premature.": (
+        "La próxima decisión del cliente no está clara, por lo que una "
+        "recomendación final sería prematura."
+    ),
+    "Separate family, ownership, and business governance roles.": (
+        "Separar las funciones de familia, propiedad y gobierno empresarial."
+    ),
+    "CEO succession in family companies requires both capability and family-system fit.": (
+        "La sucesión del consejero delegado en empresas familiares exige tanto "
+        "capacidad como encaje en el sistema familiar."
+    ),
+    "Family-business negotiation must protect both the economic decision and the family relationship.": (
+        "La negociación en la empresa familiar debe proteger tanto la decisión "
+        "económica como la relación familiar."
+    ),
+    "Family-business governance needs explicit structures, roles, and policies.": (
+        "La gobernanza de la empresa familiar necesita estructuras, funciones y "
+        "políticas explícitas."
+    ),
+}
+
 
 def _localized_default_text(value: str, language: str) -> str:
     if language == "it":
         return ITALIAN_DEFAULT_TEXT.get(value, value)
+    if language == "es":
+        return SPANISH_DEFAULT_TEXT.get(value, value)
     return value
 
 
@@ -2675,6 +2838,26 @@ def _localized_default_research_items(
             }
         )
     return localized
+
+
+def _default_partner_next_steps(language: str) -> list[str]:
+    if language == "it":
+        return [
+            "Aprire il kickoff deck e reagire alle ipotesi iniziali.",
+            "Decidere quali voci candidate includere, escludere, correggere o espandere.",
+            "Registrare orientamento del partner e priorita' del primo output.",
+        ]
+    if language == "es":
+        return [
+            "Abrir el deck de kickoff y reaccionar a las hipótesis iniciales.",
+            "Decidir qué elementos candidatos incluir, excluir, corregir o ampliar.",
+            "Registrar la orientación del socio y la prioridad del primer entregable.",
+        ]
+    return [
+        "Open the kickoff deck and react to the initial hypotheses.",
+        "Decide which candidate items to include, exclude, correct, or expand.",
+        "Record the partner's orientation and first output priority.",
+    ]
 
 
 def _html_list(items: Sequence[str], *, empty: str) -> str:
@@ -3018,23 +3201,9 @@ def render_clara_partner_brief(
         _clean_string_list(body.get("essential_clarifications", []))
         or open_question_items[:5]
     )
-    next_step_items = _clean_string_list(body.get("next_steps", [])) or [
-        (
-            "Aprire il kickoff deck e reagire alle ipotesi iniziali."
-            if language == "it"
-            else "Open the kickoff deck and react to the initial hypotheses."
-        ),
-        (
-            "Decidere quali voci candidate includere, escludere, correggere o espandere."
-            if language == "it"
-            else "Decide which candidate items to include, exclude, correct, or expand."
-        ),
-        (
-            "Registrare orientamento del partner e priorita' del primo output."
-            if language == "it"
-            else "Record the partner's orientation and first output priority."
-        ),
-    ]
+    next_step_items = _clean_string_list(
+        body.get("next_steps", [])
+    ) or _default_partner_next_steps(language)
     sensitive_items = _clean_string_list(body.get("sensitive_points", [])) or [
         copy["sensitive_default_gate"],
         copy["sensitive_default_paths"],
@@ -4561,6 +4730,79 @@ def _inclusion_review_copy(language: str) -> dict[str, str]:
             "status_counts": "Conteggi",
             "title": "Revisione inclusione",
         }
+    if language == "es":
+        return {
+            "already_approved": "Elementos ya listos para el paquete del cliente",
+            "already_approved_count": (
+                "Elementos ya marcados como listos para el paquete del cliente"
+            ),
+            "ask_evidence": "Pedir evidencia",
+            "bundle": "Paquete",
+            "bundle_action": (
+                "Respuesta: incluye el paquete {index}, excluye el paquete {index} "
+                "o muestra más sobre el paquete {index}. ID: `{bundle_id}`."
+            ),
+            "bundle_description": "Nota",
+            "bundle_items": "Elementos",
+            "bundles": "Paquetes pendientes",
+            "bundles_count": "Paquetes pendientes disponibles",
+            "control_heading": "Notas de control",
+            "control_pending": (
+                "Los elementos pendientes y rechazados no deben alimentar "
+                "`decision_pack.md` ni `decision_pack.docx`."
+            ),
+            "control_regenerated": (
+                "Este archivo deriva de los JSON canónicos del caso y puede "
+                "regenerarse de forma segura."
+            ),
+            "create_bundles": (
+                "Para revisiones largas, Clara/Codex puede crear "
+                "`inclusion_bundles.json` con paquetes temáticos y regenerar "
+                "esta lista."
+            ),
+            "correct_one": "Corregir un elemento",
+            "correct_one_example": "corrige el elemento 9: ...",
+            "excluded": "Elementos excluidos",
+            "excluded_count": "Elementos ya excluidos del paquete del cliente",
+            "exclude_one": "Excluir un elemento",
+            "exclude_one_example": "excluye el elemento 7",
+            "entry_action": (
+                "Respuesta: incluye el elemento {index}, excluye el elemento "
+                "{index}, corrige el elemento {index} o muestra más sobre el "
+                "elemento {index}."
+            ),
+            "generated": "Generado",
+            "how_to_respond": "Cómo responder",
+            "include_all": "Incluir todo",
+            "include_all_example": "incluye todos los elementos pendientes",
+            "include_bundle": "Incluir un paquete",
+            "include_bundle_example": "incluye el paquete 1",
+            "include_one": "Incluir un elemento",
+            "include_one_example": "incluye el elemento 4",
+            "intro": (
+                "Lista de trabajo para decidir qué elementos estructurados del "
+                "caso están listos para el paquete del cliente."
+            ),
+            "intro_gate": (
+                "Este documento no cambia el estado de los juicios. Indica qué "
+                "elementos incluir, excluir, corregir o ampliar; la decisión se "
+                "registra de forma mecánica tras la confirmación."
+            ),
+            "no_entries": "No hay elementos en este estado.",
+            "no_bundles": "No hay paquetes temáticos configurados.",
+            "pending": "Elementos pendientes",
+            "pending_count": "Elementos pendientes que requieren decisión del socio",
+            "item": "Elemento",
+            "project": "Proyecto",
+            "audience": "Destinatario",
+            "rationale": "Motivo",
+            "recorded_by": "Registrado por",
+            "review_note": "Nota de revisión",
+            "show_more_example": "muestra más sobre el elemento 3",
+            "sources": "Fuentes",
+            "status_counts": "Recuento por estado",
+            "title": "Revisión de inclusión",
+        }
     return {
         "already_approved": "Already Ready For Client Pack",
         "already_approved_count": "Already marked ready for client pack",
@@ -4898,6 +5140,39 @@ LANGUAGE_COPY = {
         "pending": "Ausgeschlossene pending Einschaetzungen",
         "rejected": "Ausgeschlossene abgelehnte Einschaetzungen",
     },
+    "es": {
+        "title": "Paquete de decisión",
+        "project": "Proyecto",
+        "objective": "Objetivo",
+        "audience": "Destinatario",
+        "status": "Estado del borrador",
+        "ready_note": (
+            "Este borrador utiliza únicamente juicios marcados como listos para "
+            "el paquete del cliente."
+        ),
+        "not_ready": (
+            "El paquete del cliente aún no está listo. Revisa los elementos "
+            "candidatos antes de compartir este entregable."
+        ),
+        "facts": "Hechos",
+        "storyline": "Línea argumental ejecutiva",
+        "advisor": "Lectura consultiva",
+        "inferences": "Implicaciones analíticas",
+        "decisions": "Implicaciones para la decisión",
+        "questions": "Preguntas abiertas que resolver",
+        "no_items": "Aún no hay elementos revisados.",
+        "why": "Por qué es importante",
+        "workpaper_note": (
+            "La procedencia detallada y el control de inclusión están en "
+            "decision_pack_workpaper.md."
+        ),
+        "workpaper_title": "Documento de trabajo del paquete de decisión",
+        "materials": "Materiales indexados",
+        "control": "Control de inclusión",
+        "used": "Elementos de juicio listos utilizados",
+        "pending": "Elementos de juicio pendientes excluidos",
+        "rejected": "Elementos de juicio rechazados excluidos",
+    },
 }
 
 
@@ -4971,6 +5246,20 @@ def _storyline_paragraphs(
             paragraphs.append(
                 "Prima di finalizzare la raccomandazione, resta da chiudere "
                 f"questo punto: {first_open_question}"
+            )
+        return paragraphs
+    if language == "es":
+        paragraphs = []
+        if fact_text:
+            paragraphs.append(f"Punto de partida. {fact_text}")
+        if advisor_text:
+            paragraphs.append(f"Lectura del caso. {advisor_text}")
+        if decision_text:
+            paragraphs.append(f"Ruta recomendada. {decision_text}")
+        if first_open_question:
+            paragraphs.append(
+                "Antes de cerrar la recomendación, queda por resolver este punto: "
+                f"{first_open_question}"
             )
         return paragraphs
 

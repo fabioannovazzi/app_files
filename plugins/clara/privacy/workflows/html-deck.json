@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "workflow": "html-deck",
+  "display_name": "HTML Deck",
+  "governed_paths": [
+    "skills/html-deck/SKILL.md",
+    "skills/html-deck/assets",
+    "skills/html-deck/references",
+    "skills/html-deck/scripts"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "source-and-case-material",
+        "purpose": "Build a source-faithful presentation",
+        "content": "Word, PDF, Markdown, spreadsheet, case-workspace, or mixed source material, including names, facts, figures, qualifications, evidence gaps, and advisor judgement"
+      },
+      {
+        "id": "deck-work",
+        "purpose": "Plan, compose, revise, and review the presentation",
+        "content": "Storyline, claims, evidence references, slide titles and text, speaker notes, layout choices, revision ledger, HTML/CSS, screenshots, and QA findings"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [],
+  "boundaries_beyond_codex": [],
+  "security_controls": [
+    {
+      "id": "self-contained-output",
+      "control": "The production HTML is dependency-free and rejects required remote scripts, web fonts, analytics, tracking, and network requests."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "30c1411f731d8661318a269488e972cfd3104708a74e39c73765bbbe61abd949"
+  }
+}

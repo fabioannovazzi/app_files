@@ -665,11 +665,19 @@ def _output_records(
                 "amount_abs",
             ]
         elif relative == "review_notes.md":
-            output["required_text"] = [
-                "# Journal-Bank Reconciliation Review Notes",
-                "## Stage Counts",
-                "## Review Policy",
-            ]
+            output["required_text"] = (
+                [
+                    "# Notas de revisión de la conciliación entre diario y banco",
+                    "## Recuento por etapa",
+                    "## Política de revisión",
+                ]
+                if audit.get("language") == "es"
+                else [
+                    "# Journal-Bank Reconciliation Review Notes",
+                    "## Stage Counts",
+                    "## Review Policy",
+                ]
+            )
             output["qa_checks"] = ["nonempty_text", "required_text"]
         outputs.append(output)
     return outputs
@@ -795,7 +803,7 @@ def write_review_session_artifacts(
         "items": items,
         "item_count": len(items),
         "columns": _review_columns(),
-        "evidence": {
+        "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "audit": "reconciliation_audit.json",
             "review_notes": "review_notes.md",

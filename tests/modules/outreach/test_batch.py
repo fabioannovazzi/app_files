@@ -42,18 +42,24 @@ def test_normalise_email_accepts_display_name_and_lowercases() -> None:
     assert normalise_email("Studio <Info@Example.COM>") == "info@example.com"
 
 
-def test_normalise_language_maps_aliases() -> None:
-    assert normalise_language("Italian") == "it"
+@pytest.mark.parametrize(
+    ("alias", "expected"),
+    (("Italian", "it"), ("Spanish", "es"), ("Español", "es"), ("spa", "es")),
+)
+def test_normalise_language_maps_aliases(alias: str, expected: str) -> None:
+    assert normalise_language(alias) == expected
 
 
 def test_normalise_locale_maps_aliases() -> None:
     assert normalise_locale("United States") == "usa"
     assert normalise_locale("United Kingdom") == "uk"
+    assert normalise_locale("España") == "spain"
 
 
 def test_normalise_quota_key_keeps_swiss_market_bucket() -> None:
     assert normalise_quota_key("swiss-german") == "swiss-german"
     assert normalise_quota_key("United Kingdom") == "uk"
+    assert normalise_quota_key("España") == "spain"
 
 
 def test_normalise_quota_key_maps_organization_bucket() -> None:
@@ -449,6 +455,21 @@ def test_parse_outreach_template_accepts_localized_subject(tmp_path: Path) -> No
     assert message.subject == "Ricerca sull'uso dell'AI negli studi professionali"
     assert message.body.startswith("Buongiorno,")
     assert message.variant_id == "template:template"
+
+
+def test_parse_outreach_template_accepts_spanish_subject(tmp_path: Path) -> None:
+    template_path = tmp_path / "template.txt"
+    template_path.write_text(
+        "Asunto: Investigación sobre el uso de la IA\n\n"
+        "Buenos días:\n\n"
+        "Participe aquí: {interview_url}\n",
+        encoding="utf-8",
+    )
+
+    message = parse_outreach_template(template_path)
+
+    assert message.subject == "Investigación sobre el uso de la IA"
+    assert message.body.startswith("Buenos días:")
 
 
 def test_prepare_template_outreach_batch_uses_approved_message(

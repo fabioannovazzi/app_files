@@ -120,7 +120,7 @@ def test_funnel_stage_table_run_writes_deterministic_artifacts(tmp_path: Path) -
     output_dir = tmp_path / "funnel"
     _write_lead_fixture(source_file)
 
-    result = core.run_funnel_analysis(source_file, output_dir)
+    result = core.run_funnel_analysis(source_file, output_dir, language="es")
 
     assert result.html_path.exists()
     assert result.csv_path.exists()
@@ -138,8 +138,12 @@ def test_funnel_stage_table_run_writes_deterministic_artifacts(tmp_path: Path) -
     context = json.loads(result.context_path.read_text(encoding="utf-8"))
     manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
     html = result.html_path.read_text(encoding="utf-8")
+    used_recipe = json.loads(
+        (output_dir / "used_recipe.json").read_text(encoding="utf-8")
+    )
 
     assert context["capability_id"] == "funnel.stage_table"
+    assert used_recipe["language"] == "es"
     assert context["table_key"] == "funnel_stage_table"
     assert context["metric_label"] == "Lead readiness funnel"
     assert context["chart_title_lines"] == [

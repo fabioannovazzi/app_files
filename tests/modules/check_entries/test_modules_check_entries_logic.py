@@ -1,11 +1,16 @@
 import pytest
 
+from modules.check_entries.constants import BeneficiaryCheckMode
 from modules.check_entries.logic import (
-    get_severity_label,
-    query_llm_return_json,
     _pre_llm_check,  # test behaviour that depends on line_has_keyword
 )
-from modules.check_entries.constants import BeneficiaryCheckMode
+from modules.check_entries.logic import (
+    LANGUAGE_ALIASES,
+    LANGUAGE_NAMES,
+    LOCALIZED_STRINGS,
+    get_severity_label,
+    query_llm_return_json,
+)
 
 
 def test_query_llm_return_json_forwards_all_args(monkeypatch):
@@ -59,6 +64,7 @@ def test_query_llm_return_json_forwards_all_args(monkeypatch):
     [
         ("en", "Critical"),
         ("ita", "Critico"),
+        ("spa", "Crítico"),
         ("xx", "Critical"),  # unknown language -> fallback to English labels
     ],
 )
@@ -76,6 +82,17 @@ def test_get_severity_label_unknown_mismatch_defaults_to_minor_label():
 
     # Assert
     assert label == "Gering"
+
+
+@pytest.mark.parametrize("language", ("es", "spa", "spanish", "español", "espanol"))
+def test_spanish_language_aliases_resolve_to_localized_runtime_copy(
+    language: str,
+) -> None:
+    canonical = LANGUAGE_ALIASES[language]
+
+    assert canonical == "spa"
+    assert LANGUAGE_NAMES[canonical] == "Spanish"
+    assert LOCALIZED_STRINGS[canonical]["manual_review"].startswith("El texto extraído")
 
 
 def test_amount_match_on_keyword_line_no_mismatch():

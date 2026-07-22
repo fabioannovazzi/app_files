@@ -1,16 +1,15 @@
 from __future__ import annotations
 
+import importlib.util
 import io
-from datetime import date
+import os
 import re
+import sys
+import types
+from datetime import date
+from pathlib import Path
 
 import polars as pl
-
-import os
-import sys
-import importlib.util
-from pathlib import Path
-import types
 
 # Load loaders module directly to avoid heavy package __init__ side-effects
 ROOT = Path(os.getcwd()).resolve()
@@ -22,7 +21,9 @@ cs_loaders = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cs_loaders)  # type: ignore[arg-type]
 
 parse_spreadsheet_prepare = cs_loaders.parse_spreadsheet_prepare
-parse_spreadsheet_prepare_with_keywords = cs_loaders.parse_spreadsheet_prepare_with_keywords
+parse_spreadsheet_prepare_with_keywords = (
+    cs_loaders.parse_spreadsheet_prepare_with_keywords
+)
 load_ledger_rows = cs_loaders.load_ledger_rows
 parse_pdf_prepare = cs_loaders.parse_pdf_prepare
 _parse_amount_local = cs_loaders._parse_amount_local  # type: ignore[attr-defined]
@@ -58,7 +59,9 @@ def test_parse_spreadsheet_prepare_with_keywords_overrides() -> None:
     }
 
     # Act
-    df, mapping = parse_spreadsheet_prepare_with_keywords(content, "dummy.csv", keywords)
+    df, mapping = parse_spreadsheet_prepare_with_keywords(
+        content, "dummy.csv", keywords
+    )
 
     # Assert
     assert df.height == 1
@@ -94,7 +97,9 @@ def test_parse_pdf_prepare_returns_empty_without_parsers() -> None:
     bogus_pdf = b"not a pdf"
 
     # Act
-    rows = parse_pdf_prepare(bogus_pdf, "sample.pdf", language="ita", deterministic_only=True)
+    rows = parse_pdf_prepare(
+        bogus_pdf, "sample.pdf", language="ita", deterministic_only=True
+    )
 
     # Assert
     assert isinstance(rows, list)
@@ -140,3 +145,31 @@ def test_load_ledger_rows_retains_pattern_matches_when_extra_desc_present() -> N
         sys.modules.pop("finance", None)
         sys.modules.pop("finance.ledger", None)
         sys.modules.pop("finance.ledger.ignore_patterns", None)
+
+
+def test_load_ledger_rows_forwards_spanish_ocr_language(
+    monkeypatch,
+) -> None:
+    captured: dict[str, str] = {}
+    parser_module = types.ModuleType("modules.process_pdf_journal.logic")
+
+    def normalize_ocr_language(language: str) -> str:
+        assert language == "es"
+        return "spa"
+
+    def parse_journal(content: bytes, *, lang: str) -> pl.DataFrame:
+        assert content == b"%PDF-spanish-ledger"
+        captured["lang"] = lang
+        return pl.DataFrame()
+
+    parser_module.normalize_ocr_language = normalize_ocr_language  # type: ignore[attr-defined]
+    parser_module.parse_journal = parse_journal  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "modules.process_pdf_journal.logic", parser_module)
+
+    rows = load_ledger_rows(
+        [("diario.pdf", b"%PDF-spanish-ledger")],
+        language="es",
+    )
+
+    assert captured == {"lang": "spa"}
+    assert rows == []

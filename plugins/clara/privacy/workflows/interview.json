@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "workflow": "interview",
+  "display_name": "Hosted Interview",
+  "governed_paths": [
+    "skills/interview/SKILL.md",
+    "scripts/manage_hosted_interview.py"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "interview-design",
+        "purpose": "Select or prepare an interview that addresses the engagement question",
+        "content": "Campaign definitions; case and project labels; participant name, role, language, introduction and identifier; purpose, background context, hypotheses, topics, questions, red flags, boundaries, and expiry"
+      },
+      {
+        "id": "interview-evidence",
+        "purpose": "Retrieve and interpret the completed interview",
+        "content": "Status, completion data, transcript events, participant answers, media metadata, generated review, uncertainties, contradictions, missed opportunities, and follow-up questions"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [
+    "hosted-interviews"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "hosted-interview",
+      "kind": "hosted_service",
+      "hosted_service_id": "hosted-interviews",
+      "destination": "Mparanza Hosted Interviews",
+      "purpose": "Create and operate an adaptive external-participant interview and retrieve its evidence",
+      "content": "The selected campaign or custom brief, participant and project fields, expiry, participant microphone conversation, transcript events, media metadata, and generated quality review",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The user selects the hosted-interview workflow before a participant link is created.",
+        "Authentication secrets and bearer URLs are kept out of ordinary command arguments and logs.",
+        "The separate hosted-service record states the source-backed access and retention position."
+      ]
+    },
+    {
+      "id": "send-participant-link",
+      "kind": "send_or_publish",
+      "destination": "A participant or mailing channel selected by the user",
+      "purpose": "Deliver the bearer interview link to its intended participant",
+      "content": "Participant URL and any invitation text",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Creating a link does not authorize Clara to send it.",
+        "The workflow sends or publishes the link only after the user explicitly asks for that action."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "private-local-files",
+      "control": "Input briefs and output receipts containing bearer material are restricted to local mode 0600."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "e416e8c380e64dbafc33c39bb667e42194d67abeb2fcbf67a5c7b8c89f774a9a"
+  }
+}

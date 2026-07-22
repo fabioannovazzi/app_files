@@ -21,7 +21,7 @@ The plugin keeps extraction and comparison deterministic:
 
 Run `python scripts/check_dependencies.py` from the plugin directory before using the helper scripts.
 
-Working locales: `it`, `en`, `fr`, `de`.
+Working locales: `it`, `en`, `fr`, `de`, `es`.
 
 ## Support acquisition ladder
 

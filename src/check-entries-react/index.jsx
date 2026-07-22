@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 const apiBase = `${window.location.origin.replace(/\/$/, "")}/check`;
 const currentLang = window.appLanguage || "en";
 const appCopy = window.appCopy || {};
-const OCR_LANG_MAP = { it: "ita", fr: "fra", de: "deu" };
+const OCR_LANG_MAP = { it: "ita", fr: "fra", de: "deu", es: "spa" };
 
 function readBootstrap() {
   const node = document.getElementById("checkEntriesBootstrap");

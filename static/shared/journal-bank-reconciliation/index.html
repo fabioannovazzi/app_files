@@ -10,13 +10,14 @@
   <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/journal-bank-reconciliation/index.html?lang=en">
   <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/journal-bank-reconciliation/index.html?lang=fr">
   <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/journal-bank-reconciliation/index.html?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/journal-bank-reconciliation/index.html?lang=es">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/journal-bank-reconciliation/index.html">
   <title>Riconciliazione banca-contabilità | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../vera-scope.css?v=20260721">
-  <script src="../vera-scope.js?v=20260721" defer></script>
+  <script src="../vera-scope.js?v=20260722" defer></script>
   <style>
     :root {
       --ink: #002060;
@@ -414,6 +415,7 @@
           <button type="button" data-lang="en">En</button>
           <button type="button" data-lang="fr">Fr</button>
           <button type="button" data-lang="de">De</button>
+          <button type="button" data-lang="es">Es</button>
         </div>
       </div>
     </div>
@@ -479,7 +481,7 @@
           <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
           <h2 data-i18n="inputs.title">What it reads</h2>
         </div>
-        <p data-i18n="inputs.copy">Reads local Excel, CSV and text-PDF inputs. OCR-only PDFs are flagged for review rather than treated as reconciled.</p>
+        <p data-i18n="inputs.copy">Reads Excel, CSV, and text-PDF files already available in the firm's Codex workspace. OCR-only PDFs are flagged for review rather than treated as reconciled.</p>
       </div>
       <div class="grid" id="input-cards"></div>
     </section>
@@ -545,7 +547,7 @@
         inputs: {
           eyebrow: "File letti",
           title: "Che cosa legge",
-          copy: "Legge Excel, CSV e PDF testuali locali. I PDF solo scansionati vengono segnalati per revisione, non trattati come riconciliati.",
+          copy: "Legge i file Excel, CSV e PDF testuali già disponibili nel workspace Codex dello studio. I PDF solo scansionati vengono segnalati per revisione, non trattati come riconciliati.",
           cards: [
             ["Banca", "Estratti conto in Excel, CSV o PDF testuale."],
             ["Giornale o mastrino", "Righe contabili con importo, data, descrizione e riferimenti."],
@@ -615,7 +617,7 @@
         inputs: {
           eyebrow: "Inputs",
           title: "What it reads",
-          copy: "Reads local Excel, CSV and text-PDF inputs. OCR-only PDFs are flagged for review rather than treated as reconciled.",
+          copy: "Reads Excel, CSV, and text-PDF files already available in the firm's Codex workspace. OCR-only PDFs are flagged for review rather than treated as reconciled.",
           cards: [
             ["Bank", "Statements in Excel, CSV or text PDF."],
             ["Journal or ledger", "Accounting rows with amount, date, description and references."],
@@ -685,7 +687,7 @@
         inputs: {
           eyebrow: "Entrées",
           title: "Ce qu'il lit",
-          copy: "Lit les fichiers locaux Excel, CSV et PDF texte. Les PDF uniquement OCR/scannés sont signalés pour revue plutôt que considérés comme rapprochés.",
+          copy: "Lit les fichiers Excel, CSV et PDF texte déjà disponibles dans l'espace de travail Codex du cabinet. Les PDF uniquement OCR/scannés sont signalés pour revue plutôt que considérés comme rapprochés.",
           cards: [
             ["Banque", "Relevés en Excel, CSV ou PDF texte."],
             ["Journal ou grand livre", "Lignes comptables avec montant, date, description et références."],
@@ -731,6 +733,76 @@
           firstUseCopy: "Dans une conversation Codex, indiquez chemin banque, chemin journal, langue et seuils.",
         }
       },
+      es: {
+        nav: { what: "Qué hace", inputs: "Entradas", outputs: "Salidas", prompts: "Prompts", download: "Instalación" },
+        hero: {
+          eyebrow: "Conciliación bancaria",
+          title: "Reúna banco y contabilidad en una conciliación con excepciones visibles.",
+          subtitle: "Concilia movimientos bancarios con líneas del diario o del mayor.",
+          copy: "Proporcione extractos bancarios y líneas del diario o del mayor. Reciba coincidencias aceptadas, candidatas, líneas sin conciliar y un libro que mantenga visibles los umbrales.",
+          primary: "Instalar Vera",
+          secondary: "Ver las salidas",
+          cardLabel: "Lo que proporciona / lo que recibe",
+          bullets: [
+            "Proporcione exportaciones bancarias y líneas del diario o del mayor.",
+            "Defina la tolerancia de importe, la ventana de fechas y las hipótesis de conciliación.",
+            "Reciba coincidencias, candidatas, líneas sin conciliar y un libro revisable."
+          ]
+        },
+        what: {
+          eyebrow: "Qué hace",
+          title: "De los archivos bancarios y contables a una conciliación revisable",
+          copy: "Úselo cuando la conciliación diario-banco sea distinta de la conciliación de partidas abiertas: los movimientos bancarios deben compararse directamente con líneas del diario o del mayor."
+        },
+        inputs: {
+          eyebrow: "Entradas",
+          title: "Qué lee",
+          copy: "Lee archivos Excel, CSV y PDF con texto ya disponibles en el espacio de trabajo Codex del despacho. Los PDF escaneados que solo admiten OCR se señalan para revisión y no se tratan como conciliados.",
+          cards: [
+            ["Banco", "Extractos en Excel, CSV o PDF con texto."],
+            ["Diario o mayor", "Líneas contables con importe, fecha, descripción y referencias."],
+            ["Muestra opcional", "Lista de movimientos para limitar el lado del diario o del mayor."],
+            ["Umbrales de conciliación", "Tolerancia de importe, ventana de fechas y reglas utilizadas para explicar las excepciones."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Salidas",
+          title: "Qué genera",
+          copy: "La carpeta de trabajo contiene la receta, las líneas bancarias y contables normalizadas, la tabla de coincidencias, las excepciones, el libro y el registro de revisión.",
+          items: [
+            ["inspection.json", "Comprobaciones iniciales de columnas y campos de conciliación."],
+            ["suggested_recipe.json", "Receta que Codex puede editar en la carpeta de trabajo."],
+            ["normalized_bank.csv", "Movimientos bancarios canónicos."],
+            ["normalized_journal.csv", "Líneas canónicas del diario o del mayor."],
+            ["reconciliation_matches.csv", "Coincidencias reproducibles con etapa y diferencias."],
+            ["unmatched_bank.csv / unmatched_journal.csv", "Excepciones que revisar."],
+            ["journal_bank_reconciliation.xlsx", "Libro revisable."],
+            ["reconciliation_audit.json", "Parámetros, recuentos y rutas de salida."]
+          ]
+        },
+        review: {
+          title: "Las coincidencias y las excepciones permanecen separadas",
+          copy1: "La inspección propone los campos bancarios y contables y solicita solo las decisiones pendientes antes de generar los archivos de conciliación.",
+          copy2: "El libro mantiene separados los datos normalizados, las coincidencias aceptadas y las líneas sin conciliar, para revisar las excepciones sin perder la trazabilidad de la fuente."
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts listos",
+          copy: "Sustituya las rutas, el idioma y los umbrales. Codex solo preguntará por las ambigüedades esenciales.",
+          items: [
+            ["Conciliación completa", "Usa Conciliación diario-banco con los extractos de /ruta/banco y el diario /ruta/diario.xlsx. Idioma: es. Idioma de los documentos: auto. Examina las columnas y los archivos, pregunta solo por las ambigüedades esenciales y genera la conciliación, las comprobaciones y el registro de revisión."],
+            ["Con una muestra de movimientos", "Usa Conciliación diario-banco en /ruta/banco y /ruta/diario.xlsx con la muestra /ruta/muestra.xlsx. Limita el lado contable a los movimientos muestreados e informa de unmatched_bank y unmatched_journal."],
+            ["Con umbrales explícitos", "Usa Conciliación diario-banco en /ruta/banco.csv y /ruta/mayor.xlsx. Aplica una tolerancia de importe de 0,01 y una ventana de fechas de 3 días. Mantén los umbrales explícitos y explica las excepciones."]
+          ]
+        },
+        download: {
+          eyebrow: "Instalación",
+          title: "Abrir Vera", copy: "Abra Vera e inicie la conciliación.", installTitle: "Vera", codexText: "Todos los módulos están disponibles en el mismo espacio de trabajo.",
+          button: "Instalar Vera",
+          firstUseTitle: "Primer uso",
+          firstUseCopy: "En un chat de Codex, indique la ruta bancaria, la ruta del diario, el idioma y los umbrales.",
+        }
+      },
       de: {
         nav: { what: "Was es tut", inputs: "Eingaben", outputs: "Ergebnisse", prompts: "Prompts", download: "Installation" },
         hero: {
@@ -755,7 +827,7 @@
         inputs: {
           eyebrow: "Eingaben",
           title: "Was gelesen wird",
-          copy: "Liest lokale Excel-, CSV- und Text-PDF-Dateien. Reine OCR-/Scan-PDFs werden zur Prüfung markiert, nicht als abgestimmt behandelt.",
+          copy: "Liest Excel-, CSV- und Text-PDF-Dateien, die bereits im Codex-Workspace der Kanzlei verfügbar sind. Reine OCR-/Scan-PDFs werden zur Prüfung markiert, nicht als abgestimmt behandelt.",
           cards: [
             ["Bank", "Kontoauszüge in Excel, CSV oder Text-PDF."],
             ["Journal oder Hauptbuch", "Buchungszeilen mit Betrag, Datum, Beschreibung und Referenzen."],
@@ -862,9 +934,10 @@
       it:{metaTitle:"Riconciliazione banca-contabilità | Vera",metaDescription:"Vera collega movimenti bancari e righe contabili in una riconciliazione rivedibile, con abbinamenti ed eccezioni separati.",breadcrumbAria:"Percorso pagina",videoId:"x2u-AAAuxfc",text:{"nav.overview":"In breve","nav.workflow":"Percorso","nav.proof":"Guarda","nav.next":"Riconciliazioni","nav.prompt":"Prompt","nav.open":"Apri Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Riconciliazioni","breadcrumb.module":"Banca e contabilità","overview.eyebrow":"Il lavoro in breve","overview.title":"Dall'estratto conto a una riconciliazione leggibile.","overview.copy":"Vera porta banca e contabilità nella stessa vista, distingue gli abbinamenti solidi dai candidati e lascia le eccezioni pronte da rivedere.","flow.provide.title":"Fornisci","flow.provide.copy":"Estratti conto e giornale o mastrino del periodo.","flow.prepare.title":"Vera prepara","flow.prepare.copy":"Righe normalizzate, abbinamenti e candidati con soglie visibili.","flow.receive.title":"Ricevi","flow.receive.copy":"Una carta di lavoro con abbinati, candidati e movimenti ancora aperti.","workflow.eyebrow":"Percorso","workflow.title":"Quattro passaggi per vedere dove la banca incontra la contabilità.","workflow.copy":"Il percorso conserva importi, date, riferimenti e criteri di confronto.","workflow.one.title":"Legge i due lati","workflow.one.copy":"Individua le colonne utili negli estratti e nelle registrazioni contabili.","workflow.two.title":"Uniforma le righe","workflow.two.copy":"Rende confrontabili date, importi, descrizioni e riferimenti.","workflow.three.title":"Propone gli abbinamenti","workflow.three.copy":"Separa corrispondenze chiare, candidati e righe senza controparte.","workflow.four.title":"Prepara la revisione","workflow.four.copy":"Porta le eccezioni in una vista filtrabile senza perdere la fonte.","spec.summary":"Specifiche tecniche, input e file prodotti","proof.eyebrow":"Vera al lavoro","proof.title":"Guarda movimenti e registrazioni diventare una sola vista.","proof.copy":"La guida mostra il passaggio dall'estratto conto agli abbinamenti e alle eccezioni rivedibili.","proof.kicker":"Guida breve · Narrazione italiana","proof.videoTitle":"Dall'estratto conto a una riconciliazione verificabile","related.eyebrow":"Riconciliazioni","related.copy":"Quando il punto di partenza sono partite, mastrini e supporti, usa il percorso dedicato alle partite aperte.","related.link":"Vai a Riconciliazione partite →","prompt.eyebrow":"Per iniziare","prompt.title":"Un prompt, poi la riconciliazione.","prompt.copy":"Indica file banca e contabilità. Vera prepara il confronto.","prompt.text":"Usa Journal-Bank Reconciliation su /percorso/banca.xlsx e /percorso/giornale.xlsx. Prepara abbinamenti, candidati ed eccezioni in una carta di lavoro rivedibile.","cta.title":"Porta banca e contabilità in Vera.","cta.copy":"Apri Vera e prepara la riconciliazione del periodo.","cta.open":"Apri Vera"}},
       en:{metaTitle:"Bank-to-ledger reconciliation | Vera",metaDescription:"Vera connects bank movements and accounting rows in a reviewable reconciliation with matches and exceptions kept separate.",breadcrumbAria:"Page path",videoId:"Qn9YTSX388I",text:{"nav.overview":"Overview","nav.workflow":"Workflow","nav.proof":"Watch","nav.next":"Reconciliations","nav.prompt":"Prompt","nav.open":"Open Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Reconciliations","breadcrumb.module":"Bank and accounting","overview.eyebrow":"The work at a glance","overview.title":"From bank statement to a reconciliation you can read.","overview.copy":"Vera brings bank and accounting into one view, separates strong matches from candidates and leaves exceptions ready for review.","flow.provide.title":"Provide","flow.provide.copy":"Bank statements and the journal or ledger for the period.","flow.prepare.title":"Vera prepares","flow.prepare.copy":"Normalized rows, matches and candidates with visible thresholds.","flow.receive.title":"Receive","flow.receive.copy":"A workpaper with matched, candidate and still-open movements.","workflow.eyebrow":"Workflow","workflow.title":"Four steps to see where bank and accounting meet.","workflow.copy":"The path preserves amounts, dates, references and comparison criteria.","workflow.one.title":"Read both sides","workflow.one.copy":"Identify useful columns in statements and accounting records.","workflow.two.title":"Align the rows","workflow.two.copy":"Make dates, amounts, descriptions and references comparable.","workflow.three.title":"Propose matches","workflow.three.copy":"Separate clear matches, candidates and rows without a counterpart.","workflow.four.title":"Prepare review","workflow.four.copy":"Bring exceptions into a filterable view without losing their source.","spec.summary":"Technical specification, inputs and produced files","proof.eyebrow":"Vera at work","proof.title":"Watch bank movements and entries become one view.","proof.copy":"The guide follows the statement through matches and reviewable exceptions.","proof.kicker":"Short guide · English narration","proof.videoTitle":"From bank statement to a reviewable reconciliation","related.eyebrow":"Reconciliations","related.copy":"When the starting point is open items, ledgers and support, use the open-item path.","related.link":"Go to Open-item reconciliation →","prompt.eyebrow":"Get started","prompt.title":"One prompt, then the reconciliation.","prompt.copy":"Point to the bank and accounting files. Vera prepares the comparison.","prompt.text":"Use Journal-Bank Reconciliation on /path/bank.xlsx and /path/journal.xlsx. Prepare matches, candidates and exceptions in a reviewable workpaper.","cta.title":"Bring bank and accounting to Vera.","cta.copy":"Open Vera and prepare the period reconciliation.","cta.open":"Open Vera"}},
       fr:{metaTitle:"Rapprochement banque-comptabilité | Vera",metaDescription:"Vera relie les mouvements bancaires aux lignes comptables dans un rapprochement révisable, avec correspondances et exceptions séparées.",breadcrumbAria:"Parcours de la page",videoId:"mQWMfsHGZtE",text:{"nav.overview":"En bref","nav.workflow":"Parcours","nav.proof":"Voir","nav.next":"Rapprochements","nav.prompt":"Prompt","nav.open":"Ouvrir Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Rapprochements","breadcrumb.module":"Banque et comptabilité","overview.eyebrow":"Le travail en bref","overview.title":"Du relevé bancaire à un rapprochement lisible.","overview.copy":"Vera réunit banque et comptabilité, distingue les correspondances solides des candidates et prépare les exceptions à revoir.","flow.provide.title":"Vous fournissez","flow.provide.copy":"Les relevés bancaires et le journal ou grand livre de la période.","flow.prepare.title":"Vera prépare","flow.prepare.copy":"Des lignes normalisées, des correspondances et des candidates avec seuils visibles.","flow.receive.title":"Vous recevez","flow.receive.copy":"Un dossier avec mouvements rapprochés, candidats et encore ouverts.","workflow.eyebrow":"Parcours","workflow.title":"Quatre étapes pour voir où banque et comptabilité se rejoignent.","workflow.copy":"Le parcours conserve montants, dates, références et critères de comparaison.","workflow.one.title":"Lire les deux côtés","workflow.one.copy":"Repérer les colonnes utiles dans les relevés et écritures.","workflow.two.title":"Aligner les lignes","workflow.two.copy":"Rendre dates, montants, libellés et références comparables.","workflow.three.title":"Proposer les rapprochements","workflow.three.copy":"Séparer correspondances claires, candidates et lignes sans contrepartie.","workflow.four.title":"Préparer la revue","workflow.four.copy":"Présenter les exceptions dans une vue filtrable sans perdre la source.","spec.summary":"Spécifications techniques, entrées et fichiers produits","proof.eyebrow":"Vera au travail","proof.title":"Voyez mouvements bancaires et écritures devenir une seule vue.","proof.copy":"Le guide suit le relevé jusqu'aux rapprochements et exceptions révisables.","proof.kicker":"Guide court · Narration française","proof.videoTitle":"Du relevé bancaire à un rapprochement vérifiable","related.eyebrow":"Rapprochements","related.copy":"Si le point de départ est constitué de postes ouverts, grands livres et justificatifs, utilisez le parcours dédié.","related.link":"Aller à Rapprochement des postes ouverts →","prompt.eyebrow":"Pour commencer","prompt.title":"Un prompt, puis le rapprochement.","prompt.copy":"Indiquez les fichiers banque et comptabilité. Vera prépare la comparaison.","prompt.text":"Utilise Journal-Bank Reconciliation sur /chemin/banque.xlsx et /chemin/journal.xlsx. Prépare correspondances, candidates et exceptions dans un dossier révisable.","cta.title":"Confiez banque et comptabilité à Vera.","cta.copy":"Ouvrez Vera et préparez le rapprochement de la période.","cta.open":"Ouvrir Vera"}},
+      es:{metaTitle:"Conciliación banco-contabilidad | Vera",metaDescription:"Vera vincula los movimientos bancarios y las líneas contables en una conciliación revisable, manteniendo separadas las coincidencias y las excepciones.",breadcrumbAria:"Ruta de la página",videoId:"Qn9YTSX388I",text:{"nav.overview":"Resumen","nav.workflow":"Recorrido","nav.proof":"Ver","nav.next":"Conciliaciones","nav.prompt":"Prompt","nav.open":"Abrir Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Conciliaciones","breadcrumb.module":"Banco y contabilidad","overview.eyebrow":"El trabajo de un vistazo","overview.title":"Del extracto bancario a una conciliación legible.","overview.copy":"Vera reúne banco y contabilidad en una sola vista, separa las coincidencias sólidas de las candidatas y deja las excepciones listas para revisar.","flow.provide.title":"Proporcione","flow.provide.copy":"Extractos bancarios y el diario o el mayor del periodo.","flow.prepare.title":"Vera prepara","flow.prepare.copy":"Líneas normalizadas, coincidencias y candidatas con umbrales visibles.","flow.receive.title":"Reciba","flow.receive.copy":"Un papel de trabajo con movimientos conciliados, candidatos y aún abiertos.","workflow.eyebrow":"Recorrido","workflow.title":"Cuatro pasos para ver dónde se encuentran banco y contabilidad.","workflow.copy":"El recorrido conserva importes, fechas, referencias y criterios de comparación.","workflow.one.title":"Leer ambos lados","workflow.one.copy":"Identificar las columnas útiles en los extractos y los registros contables.","workflow.two.title":"Alinear las líneas","workflow.two.copy":"Hacer comparables fechas, importes, descripciones y referencias.","workflow.three.title":"Proponer coincidencias","workflow.three.copy":"Separar coincidencias claras, candidatas y líneas sin contraparte.","workflow.four.title":"Preparar la revisión","workflow.four.copy":"Llevar las excepciones a una vista filtrable sin perder su fuente.","spec.summary":"Especificaciones técnicas, entradas y archivos generados","proof.eyebrow":"Vera en acción","proof.title":"Vea cómo los movimientos bancarios y los asientos se convierten en una sola vista.","proof.copy":"La guía sigue el extracto hasta las coincidencias y las excepciones revisables.","proof.kicker":"Guía breve · Narración en inglés","proof.videoTitle":"Del extracto bancario a una conciliación verificable","related.eyebrow":"Conciliaciones","related.copy":"Cuando el punto de partida son partidas abiertas, mayores y justificantes, utilice el recorrido específico.","related.link":"Ir a Conciliación de partidas abiertas →","prompt.eyebrow":"Para empezar","prompt.title":"Un prompt y después la conciliación.","prompt.copy":"Indique los archivos bancarios y contables. Vera prepara la comparación.","prompt.text":"Usa Conciliación diario-banco en /ruta/banco.xlsx y /ruta/diario.xlsx. Prepara coincidencias, candidatas y excepciones en un papel de trabajo revisable.","cta.title":"Lleve banco y contabilidad a Vera.","cta.copy":"Abra Vera y prepare la conciliación del periodo.","cta.open":"Abrir Vera"}},
       de:{metaTitle:"Bank und Buchhaltung abstimmen | Vera",metaDescription:"Vera verbindet Bankbewegungen und Buchungszeilen in einer prüfbaren Abstimmung mit getrennten Treffern und Ausnahmen.",breadcrumbAria:"Seitenpfad",videoId:"lV7LIqFotpI",text:{"nav.overview":"Überblick","nav.workflow":"Ablauf","nav.proof":"Ansehen","nav.next":"Abstimmungen","nav.prompt":"Prompt","nav.open":"Vera öffnen","breadcrumb.vera":"Vera","breadcrumb.area":"Abstimmungen","breadcrumb.module":"Bank und Buchhaltung","overview.eyebrow":"Die Arbeit im Überblick","overview.title":"Vom Kontoauszug zur lesbaren Abstimmung.","overview.copy":"Vera bringt Bank und Buchhaltung in eine Sicht, trennt sichere Treffer von Kandidaten und bereitet Ausnahmen zur Prüfung vor.","flow.provide.title":"Sie liefern","flow.provide.copy":"Kontoauszüge und Journal oder Hauptbuch des Zeitraums.","flow.prepare.title":"Vera bereitet vor","flow.prepare.copy":"Normalisierte Zeilen, Treffer und Kandidaten mit sichtbaren Schwellen.","flow.receive.title":"Sie erhalten","flow.receive.copy":"Ein Arbeitspapier mit Treffern, Kandidaten und offenen Bewegungen.","workflow.eyebrow":"Ablauf","workflow.title":"Vier Schritte, die Bank und Buchhaltung zusammenführen.","workflow.copy":"Beträge, Daten, Referenzen und Vergleichskriterien bleiben erhalten.","workflow.one.title":"Beide Seiten lesen","workflow.one.copy":"Nutzbare Spalten in Auszügen und Buchungen erkennen.","workflow.two.title":"Zeilen angleichen","workflow.two.copy":"Daten, Beträge, Beschreibungen und Referenzen vergleichbar machen.","workflow.three.title":"Treffer vorschlagen","workflow.three.copy":"Klare Treffer, Kandidaten und Zeilen ohne Gegenstück trennen.","workflow.four.title":"Prüfung vorbereiten","workflow.four.copy":"Ausnahmen filterbar darstellen, ohne ihre Quelle zu verlieren.","spec.summary":"Technische Spezifikation, Eingaben und erzeugte Dateien","proof.eyebrow":"Vera bei der Arbeit","proof.title":"Sehen Sie Bankbewegungen und Buchungen in einer Sicht.","proof.copy":"Die Anleitung zeigt den Weg vom Kontoauszug zu Treffern und prüfbaren Ausnahmen.","proof.kicker":"Kurzanleitung · Deutsche Sprecherstimme","proof.videoTitle":"Vom Kontoauszug zur nachvollziehbaren Abstimmung","related.eyebrow":"Abstimmungen","related.copy":"Wenn offene Posten, Hauptbücher und Nachweise den Ausgangspunkt bilden, nutzen Sie den dafür vorgesehenen Ablauf.","related.link":"Zur Offene-Posten-Abstimmung →","prompt.eyebrow":"Start","prompt.title":"Ein Prompt, dann die Abstimmung.","prompt.copy":"Bank- und Buchhaltungsdateien angeben. Vera bereitet den Vergleich vor.","prompt.text":"Verwende Journal-Bank Reconciliation für /pfad/bank.xlsx und /pfad/journal.xlsx. Erstelle Treffer, Kandidaten und Ausnahmen in einem prüfbaren Arbeitspapier.","cta.title":"Bank und Buchhaltung in Vera öffnen.","cta.copy":"Vera öffnen und die Abstimmung des Zeitraums vorbereiten.","cta.open":"Vera öffnen"}}
     };
-    function applyJourneyCopy(requested){const lang=journeyCopy[requested]?requested:"it";const data=journeyCopy[lang];document.title=data.metaTitle;document.getElementById("meta-description").content=data.metaDescription;document.getElementById("og-title").content=data.metaTitle;document.getElementById("og-description").content=data.metaDescription;document.getElementById("og-locale").content={it:"it_IT",en:"en_US",fr:"fr_FR",de:"de_DE"}[lang];document.querySelectorAll("[data-journey]").forEach(node=>{const value=data.text[node.dataset.journey];if(value)node.textContent=value});document.querySelectorAll("[data-journey-aria]").forEach(node=>node.setAttribute("aria-label",data[node.dataset.journeyAria]));const vera=document.querySelector("[data-vera-link]");const related=document.querySelector("[data-related-link]");const proof=document.querySelector("[data-proof-link]");const thumb=document.querySelector("[data-proof-thumb]");if(vera)vera.href=`../vera/index.html?lang=${lang}`;if(related)related.href=`../riconciliazione-partite/index.html?lang=${lang}`;if(proof)proof.href=`https://youtu.be/${data.videoId}`;if(thumb)thumb.src=`https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`}
+    function applyJourneyCopy(requested){const lang=journeyCopy[requested]?requested:"it";const data=journeyCopy[lang];document.title=data.metaTitle;document.getElementById("meta-description").content=data.metaDescription;document.getElementById("og-title").content=data.metaTitle;document.getElementById("og-description").content=data.metaDescription;document.getElementById("og-locale").content={it:"it_IT",en:"en_US",fr:"fr_FR",de:"de_DE",es:"es_ES"}[lang];document.querySelectorAll("[data-journey]").forEach(node=>{const value=data.text[node.dataset.journey];if(value)node.textContent=value});document.querySelectorAll("[data-journey-aria]").forEach(node=>node.setAttribute("aria-label",data[node.dataset.journeyAria]));const vera=document.querySelector("[data-vera-link]");const related=document.querySelector("[data-related-link]");const proof=document.querySelector("[data-proof-link]");const thumb=document.querySelector("[data-proof-thumb]");if(vera)vera.href=`../vera/index.html?lang=${lang}`;if(related)related.href=`../riconciliazione-partite/index.html?lang=${lang}`;if(proof)proof.href=`https://youtu.be/${data.videoId}`;if(thumb)thumb.src=`https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`}
     document.querySelectorAll("[data-lang]").forEach(button=>button.addEventListener("click",()=>applyJourneyCopy(button.dataset.lang)));applyJourneyCopy(document.documentElement.lang.slice(0,2));
   </script>
 </body>

@@ -1,0 +1,3 @@
+Vera | Asientos · Italia · FatturaPA
+
+Comprobar un asiento significa entender si el documento correcto lo respalda. Vera parte de la línea seleccionada del diario y busca primero en los XML FatturaPA y en las exportaciones autorizadas. Compara el importe, la fecha, el número de documento y la contraparte mientras mantiene visible cada fuente. Las coincidencias sólidas pasan al conjunto respaldado. Los casos ambiguos permanecen en la cola de revisión con el motivo y el documento concreto que debe examinarse. El resultado es un papel de trabajo que vincula cada asiento comprobado con su evidencia y mantiene separadas las excepciones. De una línea seleccionada a un justificante que el revisor puede seguir.

@@ -924,9 +924,11 @@ def test_new_client_input_rejects_unsupported_language() -> None:
         engagement_kind="ongoing",
         assessment_date="2026-01-31",
     )
-    payload["language"] = "es"
+    payload["language"] = "pt"
 
-    with pytest.raises(ValidationError, match="language must be one of it, en, fr, de"):
+    with pytest.raises(
+        ValidationError, match="language must be one of it, en, fr, de, es"
+    ):
         validate_new_client_input(payload)
 
 
@@ -1353,8 +1355,24 @@ def test_initialize_case_writes_owner_only_file_outside_repository(
                 "triggers": "Auslöser für verpflichtende verstärkte Maßnahmen",
             },
         ),
+        (
+            "es",
+            {
+                "privacy": "Decisión sobre el tratamiento de datos — finalidad 01",
+                "marketing": "Consentimiento de marketing separado",
+                "applicability": "Aplicabilidad — encargo profesional",
+                "table_1": "Aplicabilidad de la tabla 1 de prevención del blanqueo",
+                "monitoring": "Calendario de revisiones periódicas",
+                "profile": "Perfil del cliente y documentos de identidad",
+                "structure": "Representantes, ejecutor y titularidad real",
+                "engagement": "Alcance y condiciones del encargo",
+                "screening": "Cobertura de las verificaciones — CASE-ALPHA",
+                "aml_section": "Sección A de los factores de riesgo de blanqueo",
+                "triggers": "Indicadores que exigen medidas reforzadas",
+            },
+        ),
     ],
-    ids=("italian", "english", "french", "german"),
+    ids=("italian", "english", "french", "german", "spanish"),
 )
 def test_package_localizes_professional_review_copy(
     tmp_path: Path,
@@ -2922,6 +2940,7 @@ def test_promotion_inherits_and_protects_sealed_language(tmp_path: Path) -> None
         ("en", "Studio new-client memo"),
         ("fr", "Note du cabinet — nouveau client"),
         ("de", "Kanzleivermerk — neuer Mandant"),
+        ("es", "Memoria del despacho — nuevo cliente"),
     ],
 )
 def test_generated_studio_outputs_follow_selected_language(
@@ -2972,8 +2991,14 @@ def test_generated_studio_outputs_follow_selected_language(
             "liegt derzeit nicht vor",
             "# Übergabe zur Prüfung — neuer Mandant",
         ),
+        (
+            "es",
+            "Nivel calculado: poco significativo",
+            "no está disponible actualmente",
+            "# Entrega para revisión — nuevo cliente",
+        ),
     ],
-    ids=("italian", "english", "french", "german"),
+    ids=("italian", "english", "french", "german", "spanish"),
 )
 def test_human_facing_package_artifacts_are_fully_localized(
     tmp_path: Path,

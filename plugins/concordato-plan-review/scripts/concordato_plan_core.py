@@ -41,7 +41,7 @@ SUPPORTED_SUFFIXES = {".pdf", ".xlsx", ".xlsm", ".csv"}
 TEXT_SUFFIXES = {".csv", ".txt", ".md"}
 PDF_SUFFIXES = {".pdf"}
 WORKBOOK_SUFFIXES = {".xlsx", ".xlsm"}
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 STOPWORDS = {
     "al",
     "alla",
@@ -448,14 +448,17 @@ def _write_workbook(
     inventory: list[dict[str, Any]],
     candidates: list[dict[str, Any]],
     matches: list[dict[str, Any]],
+    language: str,
 ) -> None:
     workbook = openpyxl.Workbook()
     workbook.remove(workbook.active)
-    for sheet_name, rows in (
-        ("Inventory", inventory),
-        ("Amount candidates", candidates),
-        ("Candidate matches", matches),
-    ):
+    sheet_names = (
+        ("Inventario", "Importes candidatos", "Coincidencias candidatas")
+        if language == "es"
+        else ("Inventory", "Amount candidates", "Candidate matches")
+    )
+    empty_message = "No se generaron filas" if language == "es" else "No rows generated"
+    for sheet_name, rows in zip(sheet_names, (inventory, candidates, matches)):
         sheet = workbook.create_sheet(sheet_name)
         headers = list(rows[0]) if rows else ["message"]
         sheet.append(headers)
@@ -463,7 +466,7 @@ def _write_workbook(
             for row in rows:
                 sheet.append([row.get(header, "") for header in headers])
         else:
-            sheet.append(["No rows generated"])
+            sheet.append([empty_message])
         sheet.freeze_panes = "A2"
         for column_cells in sheet.columns:
             header = str(column_cells[0].value or "")
@@ -501,39 +504,74 @@ def _write_review_packet(
         for item in plan_amounts
         if (item.source_file, item.location, item.amount) not in supported_plan_keys
     )
-    lines = [
-        "# Concordato plan review packet",
-        "",
-        f"- Input folder: `{input_dir}`",
-        f"- Reference date: `{reference_date or 'not provided'}`",
-        f"- Language: `{language}`",
-        f"- Document language: `{document_language}`",
-        f"- Amount tolerance: `{tolerance:,.2f}`",
-        "",
-        "## Source roles suggested from file names",
-        "",
-    ]
+    if language == "es":
+        lines = [
+            "# Paquete de revisión del plan de concordato",
+            "",
+            f"- Carpeta de entrada: `{input_dir}`",
+            f"- Fecha de referencia: `{reference_date or 'no facilitada'}`",
+            f"- Idioma: `{language}`",
+            f"- Idioma de los documentos: `{document_language}`",
+            f"- Tolerancia de importes: `{tolerance:,.2f}`",
+            "",
+            "## Roles de origen sugeridos a partir de los nombres de archivo",
+            "",
+        ]
+    else:
+        lines = [
+            "# Concordato plan review packet",
+            "",
+            f"- Input folder: `{input_dir}`",
+            f"- Reference date: `{reference_date or 'not provided'}`",
+            f"- Language: `{language}`",
+            f"- Document language: `{document_language}`",
+            f"- Amount tolerance: `{tolerance:,.2f}`",
+            "",
+            "## Source roles suggested from file names",
+            "",
+        ]
     for role, count in sorted(role_counts.items()):
         lines.append(f"- `{role}`: {count}")
-    lines.extend(
-        [
-            "",
-            "## Deterministic counts",
-            "",
-            f"- Amount candidates extracted: {len(candidates)}",
-            f"- Plan amount candidates: {len(plan_amounts)}",
-            f"- Candidate amount matches: {len(matches)}",
-            f"- Plan amount candidates without an amount match: {unmatched_plan_count}",
-            "",
-            "## Codex review required",
-            "",
-            "- Treat exact amount matches as candidates only, not final support.",
-            "- Classify plan numbers as historical data, rectification, reclassification, prospective assumption, or unsupported/unclear.",
-            "- Review large unmatched plan amounts and plan amounts with many equal-value matches.",
-            "- Inspect tax/social-security debt balances separately against the dedicated detail schedule.",
-            "- Write auditor-oriented criticalities in `codex_run_review.md` after reviewing context.",
-        ]
-    )
+    if language == "es":
+        lines.extend(
+            [
+                "",
+                "## Recuentos deterministas",
+                "",
+                f"- Importes candidatos extraídos: {len(candidates)}",
+                f"- Importes candidatos del plan: {len(plan_amounts)}",
+                f"- Coincidencias candidatas por importe: {len(matches)}",
+                f"- Importes candidatos del plan sin coincidencia por importe: {unmatched_plan_count}",
+                "",
+                "## Revisión requerida por Codex",
+                "",
+                "- Trate las coincidencias exactas de importe solo como candidatas, no como justificantes definitivos.",
+                "- Clasifique las cifras del plan como datos históricos, rectificaciones, reclasificaciones, hipótesis prospectivas o partidas sin justificar o poco claras.",
+                "- Revise los importes elevados del plan sin coincidencia y los importes con múltiples coincidencias del mismo valor.",
+                "- Revise por separado los saldos de deudas tributarias y con la Seguridad Social frente al detalle específico correspondiente.",
+                "- Redacte las cuestiones críticas orientadas al auditor en `codex_run_review.md` después de revisar el contexto.",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                "",
+                "## Deterministic counts",
+                "",
+                f"- Amount candidates extracted: {len(candidates)}",
+                f"- Plan amount candidates: {len(plan_amounts)}",
+                f"- Candidate amount matches: {len(matches)}",
+                f"- Plan amount candidates without an amount match: {unmatched_plan_count}",
+                "",
+                "## Codex review required",
+                "",
+                "- Treat exact amount matches as candidates only, not final support.",
+                "- Classify plan numbers as historical data, rectification, reclassification, prospective assumption, or unsupported/unclear.",
+                "- Review large unmatched plan amounts and plan amounts with many equal-value matches.",
+                "- Inspect tax/social-security debt balances separately against the dedicated detail schedule.",
+                "- Write auditor-oriented criticalities in `codex_run_review.md` after reviewing context.",
+            ]
+        )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -864,6 +902,7 @@ def run_concordato_review(
         inventory=inventory,
         candidates=candidate_rows,
         matches=matches,
+        language=language,
     )
     _write_review_packet(
         output_dir / "review_packet.md",

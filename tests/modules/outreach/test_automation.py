@@ -63,6 +63,26 @@ def test_default_region_configs_use_german_for_swiss_german_track() -> None:
     )
 
 
+def test_default_region_configs_include_spanish_track() -> None:
+    configs = {
+        config.key: config
+        for config in default_region_configs(
+            data_dir=Path("data/outreach"),
+            config_dir=Path("config/outreach"),
+        )
+    }
+
+    config = configs["spain"]
+    assert config.language == "es"
+    assert config.locale == "spain"
+    assert config.quota_key == "spain"
+    assert config.template_path == Path(
+        "config/outreach/templates/spanish_ai_research_interview.txt"
+    )
+    assert config.candidates_path == Path("data/outreach/queues/spain.csv")
+    assert config.timezone_name == "Europe/Madrid"
+
+
 def test_prepare_region_batch_skips_non_business_day(tmp_path: Path) -> None:
     config = _region_config(tmp_path)
 

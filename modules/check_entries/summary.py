@@ -32,6 +32,9 @@ SUMMARY_TEMPLATE: dict[str, str] = {
     "deu": (
         "Die Prüfung hat {total} Buchungen mit PDF geprüft : {passed} korrekt, {mismatches} Abweichungen, {no_pdf} ohne PDF."
     ),
+    "spa": (
+        "El control revisó {total} asientos con PDF: {passed} sin discrepancias, {mismatches} con discrepancias y {no_pdf} sin PDF."
+    ),
 }
 
 CATEGORY_SECTION = {
@@ -39,6 +42,7 @@ CATEGORY_SECTION = {
     "ita": "Categorie di discordanze",
     "fra": "Catégories d'écart",
     "deu": "Abweichungskategorien",
+    "spa": "Categorías de discrepancia",
 }
 
 EXAMPLES_SECTION = {
@@ -46,6 +50,7 @@ EXAMPLES_SECTION = {
     "ita": "Esempi rappresentativi",
     "fra": "Exemples représentatifs",
     "deu": "Beispiele",
+    "spa": "Ejemplos representativos",
 }
 
 MOVEMENT_LABEL = {
@@ -53,6 +58,7 @@ MOVEMENT_LABEL = {
     "ita": "movimento",
     "fra": "mouvement",
     "deu": "Buchung",
+    "spa": "asiento",
 }
 
 SEVERITY_SUMMARY = {
@@ -60,6 +66,22 @@ SEVERITY_SUMMARY = {
     "ita": "Nel complesso sono state rilevate {counts}.",
     "fra": "Au total, {counts}.",
     "deu": "Insgesamt wurden {counts} festgestellt.",
+    "spa": "Discrepancias totales: {counts}.",
+}
+
+AMOUNT_DIFFERENCE = {
+    "spa": "diferencia {diff}",
+}
+
+DATE_DIFFERENCE = {
+    "spa": "{diff} días",
+}
+
+BENEFICIARY_SECTION = {
+    "spa": {
+        "singular": "{count} asiento tenía una discrepancia de beneficiario",
+        "plural": "{count} asientos tenían discrepancias de beneficiario",
+    },
 }
 
 # ---------------------------------------------------------------------------
@@ -89,6 +111,8 @@ def _extract_amount_diff(expl: str) -> float | None:
     m = re.search(r"expected\s+([\d.,]+)\D+found\s+([\d.,]+)", expl)
     if not m:
         m = re.search(r"previsto\s+([\d.,]+)\D+trovato\s+([\d.,]+)", expl)
+    if not m:
+        m = re.search(r"se esperaba\s+([\d.,]+)\D+se encontró\s+([\d.,]+)", expl)
     if m:
         a = float(m.group(1).replace(",", "."))
         b = float(m.group(2).replace(",", "."))
@@ -305,11 +329,13 @@ def summarize_results(
             if type_ == "amount_mismatch":
                 diff = _extract_amount_diff(expl)
                 if diff is not None:
-                    diff_info = f" (diff {diff})"
+                    diff_template = AMOUNT_DIFFERENCE.get(lang_code, "diff {diff}")
+                    diff_info = f" ({diff_template.format(diff=diff)})"
             elif type_ == "date_mismatch":
                 diff = _extract_date_diff(expl)
                 if diff is not None:
-                    diff_info = f" ({diff} giorni)"
+                    diff_template = DATE_DIFFERENCE.get(lang_code, "{diff} giorni")
+                    diff_info = f" ({diff_template.format(diff=diff)})"
             type_label = cat_names.get(type_, type_)
             examples_lines.append(
                 f"- {type_label}: {movement_word} {movement} – {sev_label} – {expl}{diff_info}"
@@ -365,8 +391,13 @@ def summarize_results(
     if categories_lines:
         summary_parts.append(categories_heading + "\n" + "\n".join(categories_lines))
     if beneficiary_count:
-        noun = "entry" if beneficiary_count == 1 else "entries"
-        section = f"{beneficiary_count} {noun} had beneficiary mismatches"
+        beneficiary_copy = BENEFICIARY_SECTION.get(lang_code)
+        if beneficiary_copy:
+            cardinality = "singular" if beneficiary_count == 1 else "plural"
+            section = beneficiary_copy[cardinality].format(count=beneficiary_count)
+        else:
+            noun = "entry" if beneficiary_count == 1 else "entries"
+            section = f"{beneficiary_count} {noun} had beneficiary mismatches"
         if beneficiary_lines:
             section += "\n" + "\n".join(beneficiary_lines)
         summary_parts.append(section)

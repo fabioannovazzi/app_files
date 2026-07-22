@@ -2,10 +2,9 @@ from __future__ import annotations
 
 """Helpers to extract and normalise counterparty names consistently."""
 
-from typing import Any, Iterable
-
 import re
 import unicodedata
+from typing import Any, Iterable
 
 from src.check_statements.models import Transaction
 
@@ -38,6 +37,10 @@ _GENERIC_LEDGER_LABELS = {
     "VARI",
     "DOCUMENTO",
     "VARIE",
+    "PAGOS",
+    "PAGO",
+    "PAGOS VARIOS",
+    "MOVIMIENTOS VARIOS",
 }
 
 _LEDGER_PAYROLL_KEYS = (
@@ -285,6 +288,68 @@ _LANG_NOISE = {
             "hellobank",
         },
     },
+    "es": {
+        "leading": {
+            "pago",
+            "pagos",
+            "transferencia",
+            "transferencias",
+            "traspaso",
+            "ingreso",
+            "adeudo",
+            "abono",
+            "domiciliacion",
+            "domiciliado",
+            "sepa",
+            "instantanea",
+            "instantaneo",
+            "comision",
+            "comisiones",
+            "concepto",
+            "referencia",
+            "ref",
+            "detalle",
+            "operacion",
+            "movimiento",
+            "retirada",
+            "reintegro",
+        },
+        "noise": {
+            "banco",
+            "banca",
+            "cuenta",
+            "numero",
+            "nro",
+            "referencia",
+            "ref",
+            "iban",
+            "swift",
+            "moneda",
+            "eur",
+            "concepto",
+            "descripcion",
+            "detalle",
+            "sepa",
+        },
+        "bank": {
+            "banco",
+            "banca",
+            "santander",
+            "bbva",
+            "caixabank",
+            "caixa",
+            "sabadell",
+            "bankinter",
+            "unicaja",
+            "iberacaja",
+            "kutxabank",
+            "abanca",
+            "openbank",
+            "ing",
+            "revolut",
+            "wise",
+        },
+    },
 }
 
 _DEFAULT_LANG = "it"
@@ -293,7 +358,7 @@ _DEFAULT_LANG = "it"
 def _normalise_lang(lang: str | None) -> str:
     if not isinstance(lang, str) or not lang.strip():
         return _DEFAULT_LANG
-    return lang.strip().lower()
+    return lang.strip().lower().replace("_", "-").split("-", 1)[0]
 
 
 def _token_sets_for_lang(lang: str | None) -> tuple[set[str], set[str], set[str]]:
@@ -356,8 +421,11 @@ def _normalize_party_local(name: str) -> str:
         "r",
         "l",
         "p",
+        "sl",
+        "sa",
+        "slu",
     }
-    legal_suffixes = {"srl", "spa", "snc", "sas"}
+    legal_suffixes = {"srl", "spa", "snc", "sas", "sl", "sa", "slu"}
     for tok in parts:
         if (
             repaired
@@ -375,6 +443,9 @@ def _normalize_party_local(name: str) -> str:
     s = re.sub(r"\bs\s*r\s*l\b", "srl", s)
     s = re.sub(r"\bs\s*p\s*a\b", "spa", s)
     s = re.sub(r"\bs\s*a\s*s\b", "sas", s)
+    s = re.sub(r"\bs\s*l\s*u\b", "slu", s)
+    s = re.sub(r"\bs\s*l\b", "sl", s)
+    s = re.sub(r"\bs\s*a\b", "sa", s)
     return s
 
 
@@ -382,14 +453,18 @@ def _clean_party_for_evidence(text: str | None, lang: str | None = None) -> str:
     """Canonical normalisation used for evidence tables and beneficiary matching."""
 
     base = _trim_party_markers((text or "").strip())
-    # Drop leading payment verbs (ADDEBITO, BONIFICO, PAGAMENTO …)
+    # Drop leading payment verbs (ADDEBITO, BONIFICO, TRANSFERENCIA …)
     base = re.sub(
-        r"(?i)^(?:addebito\s+sdd|addebito|accredito|bonifico(?:\s+(?:sepa|istantaneo))?|sdd|rid|pag\.?\s*deb\.?|pagamento|giroconto)\s*[:#-]*\s*",
+        r"(?i)^(?:addebito\s+sdd|addebito|accredito|bonifico(?:\s+(?:sepa|istantaneo))?|sdd|rid|pag\.?\s*deb\.?|pagamento|giroconto|transferencia(?:\s+(?:sepa|instant[aá]nea?))?|pago|adeudo(?:\s+(?:directo|domiciliado))?|abono|ingreso|domiciliaci[oó]n)\s*[:#-]*\s*",
         "",
         base,
     )
-    # Cut at obvious trailing tokens (commissioni, causale placeholder, currency)
-    base = re.split(r"(?i)\b(?:comm(?:issione)?|causale)\b", base, maxsplit=1)[0]
+    # Cut at obvious trailing tokens (commissioni/comisiones, causale/concepto).
+    base = re.split(
+        r"(?i)\b(?:comm(?:issione)?|causale|comisi[oó]n(?:es)?|concepto)\b",
+        base,
+        maxsplit=1,
+    )[0]
     base = _CURRENCY_PATTERN.sub(" ", base)
     base = re.sub(r"\d+(?:[.,]\d+)?", " ", base)
     norm = _normalize_party_local(base) if base else ""
@@ -427,7 +502,15 @@ def _clean_party_for_evidence(text: str | None, lang: str | None = None) -> str:
             trimmed_no_bank = list(trimmed)
             while len(trimmed_no_bank) > 1 and trimmed_no_bank[0] in bank_lang:
                 trimmed_no_bank.pop(0)
-            while len(trimmed_no_bank) > 1 and trimmed_no_bank[0] in {"spa", "srl", "snc", "sas"}:
+            while len(trimmed_no_bank) > 1 and trimmed_no_bank[0] in {
+                "spa",
+                "srl",
+                "snc",
+                "sas",
+                "sl",
+                "sa",
+                "slu",
+            }:
                 trimmed_no_bank.pop(0)
             if trimmed_no_bank:
                 trimmed = trimmed_no_bank

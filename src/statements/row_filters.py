@@ -6,11 +6,13 @@ from typing import List, Optional
 from .page_classifier import AMOUNT_RE, DATE_RE
 
 SUMMARY_ROW_PREFIXES = [
+    r"^total\b",
     r"^totale\b",
     r"^subtotal\b",
     r"^summary\b",
     r"^riepilogo\b",
     r"^récapitulatif\b",
+    r"^resumen\b",
     r"^zusammenfassung\b",
 ]
 

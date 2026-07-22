@@ -51,6 +51,14 @@
     "Match result"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n diario-banco",
+      "reviewTitle": "Revisi\u00f3n de conciliaci\u00f3n diario-banco",
+      "queueTitle": "Coincidencias",
+      "detailTitle": "Diario y banco",
+      "detailHelp": "Compare el asiento y el movimiento bancario con el mismo nivel de detalle.",
+      "search": "Buscar l\u00ednea bancaria, asiento, cuenta, coincidencia, excepci\u00f3n"
+    },
     "it": {
       "title": "Revisione giornale-banca",
       "reviewTitle": "Revisione match giornale-banca",

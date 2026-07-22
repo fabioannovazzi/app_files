@@ -2331,6 +2331,11 @@ CLARA_FORBIDDEN_COPY: dict[str, dict[str, str]] = {
         "message": "Clara ist nur für autorisierte Nutzer verfügbar.",
         "return_home_label": "Zur Startseite",
     },
+    "es": {
+        "title": "Acceso a Clara",
+        "message": "Clara solo está disponible para usuarios autorizados.",
+        "return_home_label": "Volver al inicio",
+    },
 }
 _DEFAULT_PRESENTATIONS_ROOT = Path("presentations")
 
@@ -2742,6 +2747,40 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "period_comparison_plugin": "Pro-Plugin für Periodenvergleichsanalyse: Vorjahresspalten, Linie, Periodenfenster, Waterfall, Small Multiples, Word-Bericht und Ausgabepaket.",
         "variance_analysis_plugin": "Pro-Plugin für Verkaufsabweichungen: Periodensplit, Preis-Volumen-Mix-Zerlegung, Nettoverkauf, Margen-Bridge, Waterfall bei Bedarf und Audit-Trail.",
     },
+    "es": {
+        "prompt": "Crea un prompt de Deep Research personalizado a partir de tu pregunta.",
+        "prompt_optimizer_plugin": "Descarga el plugin de Codex para optimizar prompts de Deep Research jurídicos, fiscales y de cumplimiento: hechos de referencia, enfoque de investigación, estrategia de fuentes, citas y validación determinista.",
+        "deep_research_validator_plugin": "Valida resultados de Deep Research: respaldo de afirmaciones, comprobación de fuentes, revisión del razonamiento, Markdown corregido, DOCX y pista de auditoría.",
+        "check_entries": "Comprueba los asientos contables comparándolos con los documentos justificativos.",
+        "product_attributes": "Explora datos de atributos de producto entre retailers y categorías, con filtros y registros detallados.",
+        "chat_report": "Haz preguntas sobre el resumen ejecutivo y el material de origen de un informe de ventas.",
+        "projects": "Explora las señales de retailers para ver qué combinaciones de atributos parecen ganadoras, emergentes o sobrerrepresentadas en el entorno del retailer.",
+        "brand_reports": "Usa los informes de afinidad de marca para ver qué señales del retailer ya cubre la marca y dónde puede seguir habiendo oportunidades de producto relevantes para el retailer.",
+        "product_hypotheses": "Explora hipótesis de producto derivadas de las señales de retailers y la afinidad de marca.",
+        "presentations": "Ver presentaciones",
+        "slides_editor": "Crea y edita diapositivas ejecutivas directamente en el navegador.",
+        "sales_by_dataset": "Explora métricas de ventas combinadas por atributo.",
+        "nav_features": "Ve a una vista rápida de todos los flujos de trabajo incluidos en Mparanza.",
+        "nav_about": "Conoce cómo el equipo de Mparanza ayuda a las organizaciones financieras.",
+        "nav_why_us": "Descubre por qué los equipos de auditoría e ingresos confían en Mparanza para revisiones asistidas por IA.",
+        "new_client": "Abre el flujo Nuevo cliente de Vera para preparar el expediente, el encargo, la privacidad, la prevención del blanqueo y el seguimiento en un recorrido vinculado a las fuentes.",
+        "riconciliazione_plugin": "Descarga el plugin de Codex para conciliar partidas abiertas: partidas, libros mayores, diarios, extractos bancarios, justificantes y resultados revisables en Excel y Word.",
+        "journal_sampling_plugin": "Descarga el plugin de Codex para muestreo del diario: extracción de diarios variables, asignación de columnas, muestras reproducibles, diagnósticos y pista de auditoría.",
+        "check_entries_plugin": "Descarga el plugin de Codex para comprobar justificantes de asientos: asientos seleccionados, PDF justificativos, comprobaciones deterministas, excepciones y pista de auditoría.",
+        "journal_bank_reconciliation_plugin": "Descarga el plugin de Codex para conciliar diario y banco: extractos bancarios, filas del diario o libro mayor, correspondencia determinista, excepciones y pista de auditoría.",
+        "report_builder_plugin": "Descarga el plugin de Codex para generar informes: entradas variables de Excel, CSV y PDF, asignación de secciones, narrativa de Codex, DOCX y pista de auditoría.",
+        "concordato_plan_review_plugin": "Descarga el plugin de Codex para revisar planes de concordato: concilia las cifras del plan con el balance, los libros mayores, los estados ajustados y el detalle fiscal y social, con resultados en Excel y Word y pista de auditoría.",
+        "audit_reconciliation_family": "Flujos de auditoría y conciliación: muestreo del diario, comprobación de justificantes, conciliación diario-banco, partidas abiertas y conciliación del plan.",
+        "research_family": "Flujos de investigación: optimiza un prompt de Deep Research antes de ejecutarlo y valida después la respuesta frente a las fuentes citadas.",
+        "reporting_plugin": "Flujo de informes para seleccionar gráficos, tablas y comprobaciones útiles antes de redactar comentarios vinculados a esos resultados.",
+        "clara_plugin": "Organiza materiales del caso, notas y valoraciones revisadas en entregables que pueden compartirse con el cliente.",
+        "vera": "Vera trabaja con los archivos del despacho para preparar nuevos clientes, comprobaciones, conciliaciones, revisiones de expedientes del INPS, informes e investigación fiscal o regulatoria.",
+        "codex_accountants_group": "Procedimientos guiados para documentos, controles, informes e investigación fiscal o regulatoria.",
+        "codex_consultants_group": "Procedimientos guiados para convertir materiales, análisis y criterio experto en entregables listos para el cliente.",
+        "mix_contribution_analysis_plugin": "Plugin Pro para análisis de mix y contribución: Mekko, BarMekko, apilados, Pareto, multinivel, múltiplos pequeños, informe de Word y paquete de resultados.",
+        "period_comparison_plugin": "Plugin Pro para análisis entre periodos: columnas interanuales, línea, por periodo, cascada, múltiplos pequeños, informe de Word y paquete de resultados.",
+        "variance_analysis_plugin": "Plugin Pro para desviaciones de ventas: división por periodos, descomposición precio-volumen-mix, ventas netas, puente de margen, cascada cuando sea útil y pista de auditoría.",
+    },
 }
 
 LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
@@ -2891,12 +2930,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Secure by design.",
             "lead": (
-                "In local Vera and Clara workflows, Mparanza does not receive your work."
+                "In ordinary Vera and Clara workflows, Mparanza does not receive your client work."
             ),
             "description": (
-                "In local workflows, Vera and Clara run inside your existing Codex "
-                "environment. Your prompts, files, and outputs do not pass through "
-                "Mparanza."
+                "Ordinary plugin workflows run inside your existing Codex environment. "
+                "Your client prompts, files, and outputs do not pass through Mparanza."
             ),
             "cta_label": "See how your data is handled",
             "cta_href": "/data-handling",
@@ -2906,27 +2944,26 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Compliant by design.",
             "lead": ("Professional work may require Codex to read real client data."),
             "description": (
-                "A file can stay on your computer while Codex reads its contents, "
-                "selected passages, or extracted facts through your Codex/OpenAI "
-                "account. Local scripts can reduce unnecessary copies and transfers, "
-                "but they do not make data anonymous. Vera and Clara do not "
-                "automatically remove names or personal data."
+                "Vera and Clara do not automatically anonymise data. They may use "
+                "local Python to filter or aggregate information when useful. Data "
+                "supplied to the model is processed through the user's existing "
+                "ChatGPT plan."
             ),
             "principles": [
                 {
-                    "title": "Codex may read client data",
-                    "blurb": "When the work needs identities, documents, or case facts, that material may enter the model context.",
+                    "title": "Use local Python when useful",
+                    "blurb": "Filtering and aggregation can happen on your computer when they improve the work. They are not automatic anonymisation.",
                 },
                 {
-                    "title": "Keep secrets out",
-                    "blurb": "Never put passwords, API keys, authentication cookies, or session material in prompts or model-readable files.",
+                    "title": "Real data may reach the model",
+                    "blurb": "Names, documents, original language, and case facts may enter the model context when the professional task needs them.",
                 },
                 {
-                    "title": "Choose the account and route",
-                    "blurb": "The firm chooses the Codex/OpenAI account used for professional work and configures the data controls available for that plan. Local workflows, Mparanza-hosted features, and other external services have different recipients.",
+                    "title": "Two processing categories",
+                    "blurb": "Ordinary plugin functions use the existing ChatGPT plan. Mparanza-hosted services form a separate processing boundary.",
                 },
             ],
-            "closing": "Local processing reduces copies. It is not anonymization or a compliance determination.",
+            "closing": "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
             "cta_label": "See how your data is handled",
             "cta_href": "/data-handling",
         },
@@ -3087,11 +3124,10 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "security": {
             "id": "security",
             "title": "Sicuri per scelta.",
-            "lead": "Nei flussi locali di Vera e Clara, Mparanza non riceve il tuo lavoro.",
+            "lead": "Nei flussi ordinari di Vera e Clara, Mparanza non riceve il lavoro dei tuoi clienti.",
             "description": (
-                "Nei flussi di lavoro locali, Vera e Clara operano nell'ambiente "
-                "Codex che già usi. I tuoi prompt, file e risultati non passano "
-                "attraverso Mparanza."
+                "I normali workflow dei plugin operano nell'ambiente Codex che già usi. "
+                "Prompt, file e risultati dei tuoi clienti non passano attraverso Mparanza."
             ),
             "cta_label": "Scopri come vengono gestiti i tuoi dati",
             "cta_href": "/data-handling",
@@ -3100,22 +3136,22 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "compliance",
             "title": "Conformi per scelta.",
             "lead": "Il lavoro professionale può richiedere a Codex di leggere dati reali dei clienti.",
-            "description": "Un file può restare sul tuo computer mentre Codex ne legge il contenuto, alcuni passaggi o i fatti estratti tramite il tuo account Codex/OpenAI. Gli script locali possono ridurre copie e trasferimenti inutili, ma non rendono anonimi i dati. Vera e Clara non rimuovono automaticamente nomi o dati personali.",
+            "description": "Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile. I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall'utente.",
             "principles": [
                 {
-                    "title": "Codex può leggere dati dei clienti",
-                    "blurb": "Quando il lavoro richiede identità, documenti o fatti specifici, questi contenuti possono entrare nel contesto del modello.",
+                    "title": "Usa Python in locale quando serve",
+                    "blurb": "Filtri e aggregazioni possono essere eseguiti sul tuo computer quando migliorano il lavoro. Non sono anonimizzazione automatica.",
                 },
                 {
-                    "title": "Proteggi i segreti",
-                    "blurb": "Non inserire password, chiavi API, cookie di autenticazione o dati di sessione nei prompt o nei file leggibili dal modello.",
+                    "title": "I dati reali possono arrivare al modello",
+                    "blurb": "Nomi, documenti, testo originale e fatti del caso possono entrare nel contesto del modello quando servono al lavoro professionale.",
                 },
                 {
-                    "title": "Scegli account e percorso",
-                    "blurb": "Lo studio sceglie l'account Codex/OpenAI usato per il lavoro professionale e configura i controlli disponibili per quel piano. I flussi locali, le funzioni ospitate da Mparanza e gli altri servizi esterni hanno destinatari diversi.",
+                    "title": "Due categorie di trattamento",
+                    "blurb": "Le normali funzioni dei plugin usano il piano ChatGPT esistente. I servizi hosted di Mparanza hanno un confine di trattamento separato.",
                 },
             ],
-            "closing": "L'elaborazione locale riduce le copie. Non è anonimizzazione né una valutazione di conformità.",
+            "closing": "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
             "cta_label": "Scopri come vengono gestiti i tuoi dati",
             "cta_href": "/data-handling",
         },
@@ -3280,12 +3316,12 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Sécurisés par conception.",
             "lead": (
-                "Dans les flux locaux de Vera et Clara, Mparanza ne reçoit pas votre travail."
+                "Dans les flux ordinaires de Vera et Clara, Mparanza ne reçoit pas le travail de vos clients."
             ),
             "description": (
-                "Dans les flux de travail locaux, Vera et Clara fonctionnent dans "
-                "l'environnement Codex que vous utilisez déjà. Vos prompts, fichiers "
-                "et livrables ne transitent pas par Mparanza."
+                "Les workflows ordinaires des plugins fonctionnent dans l'environnement "
+                "Codex que vous utilisez déjà. Les prompts, fichiers et livrables de vos "
+                "clients ne transitent pas par Mparanza."
             ),
             "cta_label": "Voir comment vos données sont traitées",
             "cta_href": "/data-handling",
@@ -3294,22 +3330,22 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "compliance",
             "title": "Conformes par conception.",
             "lead": "Le travail professionnel peut nécessiter que Codex lise de vraies données clients.",
-            "description": "Un fichier peut rester sur votre ordinateur tandis que Codex en lit le contenu, certains passages ou des faits extraits via votre compte Codex/OpenAI. Les scripts locaux peuvent réduire les copies et transferts inutiles, mais ils ne rendent pas les données anonymes. Vera et Clara ne suppriment pas automatiquement les noms ou les données personnelles.",
+            "description": "Vera et Clara n'anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile. Les données fournies au modèle sont traitées dans le cadre de l'offre ChatGPT existante de l'utilisateur.",
             "principles": [
                 {
-                    "title": "Codex peut lire des données clients",
-                    "blurb": "Lorsque le travail exige des identités, des documents ou des faits propres au dossier, ces contenus peuvent entrer dans le contexte du modèle.",
+                    "title": "Utiliser Python localement lorsque c'est utile",
+                    "blurb": "Le filtrage et l'agrégation peuvent s'exécuter sur votre ordinateur lorsqu'ils améliorent le travail. Il ne s'agit pas d'une anonymisation automatique.",
                 },
                 {
-                    "title": "Gardez les secrets hors contexte",
-                    "blurb": "Ne placez jamais de mots de passe, clés API, cookies d'authentification ou données de session dans les prompts ou fichiers lisibles par le modèle.",
+                    "title": "Les données réelles peuvent parvenir au modèle",
+                    "blurb": "Noms, documents, texte original et faits propres au dossier peuvent entrer dans le contexte du modèle lorsque le travail professionnel l'exige.",
                 },
                 {
-                    "title": "Choisissez le compte et le parcours",
-                    "blurb": "Le cabinet choisit le compte Codex/OpenAI utilisé pour le travail professionnel et configure les contrôles disponibles pour cette offre. Les flux locaux, les fonctions hébergées par Mparanza et les autres services externes ont des destinataires différents.",
+                    "title": "Deux catégories de traitement",
+                    "blurb": "Les fonctions ordinaires des plugins utilisent l'offre ChatGPT existante. Les services hébergés par Mparanza ont un périmètre de traitement distinct.",
                 },
             ],
-            "closing": "Le traitement local réduit les copies. Ce n'est ni une anonymisation ni une détermination de conformité.",
+            "closing": "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
             "cta_label": "Voir comment vos données sont traitées",
             "cta_href": "/data-handling",
         },
@@ -3474,12 +3510,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Sicher konzipiert.",
             "lead": (
-                "Bei lokalen Vera- und Clara-Abläufen erhält Mparanza Ihre Arbeit nicht."
+                "Bei normalen Vera- und Clara-Abläufen erhält Mparanza Ihre Mandantenarbeit nicht."
             ),
             "description": (
-                "Bei lokalen Arbeitsabläufen laufen Vera und Clara in Ihrer bestehenden "
-                "Codex-Umgebung. Ihre Prompts, Dateien und Ergebnisse laufen nicht über "
-                "Mparanza."
+                "Normale Plugin-Abläufe laufen in Ihrer bestehenden Codex-Umgebung. "
+                "Prompts, Dateien und Ergebnisse Ihrer Mandanten laufen nicht über Mparanza."
             ),
             "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
             "cta_href": "/data-handling",
@@ -3488,22 +3523,22 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "compliance",
             "title": "Für Compliance konzipiert.",
             "lead": "Professionelle Arbeit kann erfordern, dass Codex echte Mandantendaten liest.",
-            "description": "Eine Datei kann auf Ihrem Computer bleiben, während Codex ihren Inhalt, ausgewählte Passagen oder extrahierte Fakten über Ihr Codex-/OpenAI-Konto liest. Lokale Skripte können unnötige Kopien und Übertragungen verringern, machen Daten aber nicht anonym. Vera und Clara entfernen Namen oder personenbezogene Daten nicht automatisch.",
+            "description": "Vera und Clara anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist. Daten, die dem Modell bereitgestellt werden, werden im Rahmen des bestehenden ChatGPT-Tarifs des Nutzers verarbeitet.",
             "principles": [
                 {
-                    "title": "Codex kann Mandantendaten lesen",
-                    "blurb": "Benötigt die Arbeit Identitäten, Dokumente oder fallbezogene Fakten, können diese Inhalte in den Modellkontext gelangen.",
+                    "title": "Python lokal einsetzen, wenn es nützt",
+                    "blurb": "Filtern und Aggregieren kann auf Ihrem Computer erfolgen, wenn es die Arbeit verbessert. Das ist keine automatische Anonymisierung.",
                 },
                 {
-                    "title": "Geheimnisse gehören nicht in den Kontext",
-                    "blurb": "Geben Sie niemals Passwörter, API-Schlüssel, Authentifizierungs-Cookies oder Sitzungsdaten in Prompts oder modelllesbare Dateien ein.",
+                    "title": "Echte Daten können das Modell erreichen",
+                    "blurb": "Namen, Dokumente, Originalformulierungen und Fallfakten können in den Modellkontext gelangen, wenn die professionelle Aufgabe sie benötigt.",
                 },
                 {
-                    "title": "Konto und Datenweg auswählen",
-                    "blurb": "Die Kanzlei wählt das Codex-/OpenAI-Konto für die berufliche Arbeit und konfiguriert die für den Tarif verfügbaren Datenkontrollen. Lokale Abläufe, von Mparanza gehostete Funktionen und andere externe Dienste haben unterschiedliche Empfänger.",
+                    "title": "Zwei Verarbeitungskategorien",
+                    "blurb": "Normale Plugin-Funktionen nutzen den bestehenden ChatGPT-Tarif. Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze.",
                 },
             ],
-            "closing": "Lokale Verarbeitung verringert Kopien. Sie ist weder Anonymisierung noch eine Compliance-Bewertung.",
+            "closing": "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
             "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
             "cta_href": "/data-handling",
         },
@@ -3513,6 +3548,219 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "description": (
                 "Mparanza, das sind Vera und Clara: zwei Plugins, die dieselbe "
                 "Codex-Arbeitsumgebung auf zwei Berufsgruppen ausrichten."
+            ),
+        },
+    },
+    "es": {
+        "primary": {
+            "title": "",
+            "links": [],
+        },
+        "sections": [
+            {
+                "preserve_order": True,
+                "groups": [
+                    {
+                        "id": "vera",
+                        "title": "Codex para profesionales contables",
+                        "tooltip_key": "codex_accountants_group",
+                        "audience": "Para profesionales contables",
+                        "lead": (
+                            "Un plugin de Codex para expedientes de clientes, controles "
+                            "contables, conciliaciones e informes."
+                        ),
+                        "description": (
+                            "Vera trabaja directamente con los archivos del despacho. "
+                            "Gestiona la incorporación de nuevos clientes y el muestreo "
+                            "de diarios, comprueba asientos, concilia registros y prepara "
+                            "informes o investigaciones fiscales y regulatorias."
+                        ),
+                        "proof": [
+                            "De la incorporación de clientes a la investigación regulatoria",
+                            "Comprobaciones y conciliaciones revisables",
+                            "Papeles de trabajo listos para la revisión profesional",
+                        ],
+                        "cta_label": "Descubrir Vera",
+                        "icon": "/static/shared/vera/icon.svg",
+                        "links": [
+                            {
+                                "label": "Vera",
+                                "href": "/static/shared/vera/index.html",
+                                "active": True,
+                                "tooltip_key": "vera",
+                                "public": True,
+                            },
+                        ],
+                    },
+                    {
+                        "id": "clara",
+                        "title": "Codex para consultores",
+                        "tooltip_key": "codex_consultants_group",
+                        "audience": "Para consultores",
+                        "lead": (
+                            "Un plugin de Codex para presentaciones y trabajo continuo "
+                            "en proyectos."
+                        ),
+                        "description": (
+                            "Clara reúne documentos, notas, entrevistas y grabaciones en "
+                            "la carpeta del proyecto y usa ese contexto para crear o revisar "
+                            "presentaciones, informes breves y documentos para la toma de "
+                            "decisiones."
+                        ),
+                        "proof": [
+                            "Contexto del proyecto conservado",
+                            "Evidencias reunidas en un solo espacio de trabajo",
+                            "Informes, presentaciones y documentos de decisión",
+                        ],
+                        "cta_label": "Descubrir Clara",
+                        "icon": "/static/shared/clara/icon.svg",
+                        "links": [
+                            {
+                                "label": "Clara",
+                                "href": "/static/shared/clara/index.html",
+                                "active": True,
+                                "tooltip_key": "clara_plugin",
+                                "public": True,
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+        "menu_links": [],
+        "hero": {
+            "id": "hero",
+            "skip_label": "Ir al contenido principal",
+            "plugins_label": "Plugins de Codex",
+            "eyebrow": "Plugins de Codex para el trabajo profesional",
+            "headline": "La IA aporta la potencia. Codex aporta el control.",
+            "subheadline": (
+                "Mparanza crea plugins de Codex. Cada uno proporciona a Codex una "
+                "forma de trabajo especializada para tareas profesionales."
+            ),
+        },
+        "harness": {
+            "id": "codex",
+            "title": "El entorno de trabajo cambia lo que la IA puede hacer.",
+            "description": (
+                "La IA aporta las capacidades. Codex las sitúa en un entorno de trabajo "
+                "capaz de usar archivos, ejecutar herramientas, seguir instrucciones y "
+                "crear resultados. Ese entorno es lo que entendemos por control."
+            ),
+            "layers": [
+                {
+                    "title": "Potencia",
+                    "blurb": "El modelo razona, analiza y crea.",
+                },
+                {
+                    "title": "Control",
+                    "blurb": (
+                        "Codex conecta esas capacidades con los archivos, las herramientas "
+                        "y el contexto de la tarea."
+                    ),
+                },
+                {
+                    "title": "Uso profesional",
+                    "blurb": (
+                        "Un plugin de Codex define el método especializado y los resultados "
+                        "esperados."
+                    ),
+                },
+            ],
+        },
+        "open_source": {
+            "id": "open-source",
+            "title": "Abiertos por diseño.",
+            "description": (
+                "Vera y Clara son plugins open source para Codex. Puedes examinar "
+                "los métodos, los controles y el código antes de usarlos, y adaptarlos "
+                "a tu trabajo."
+            ),
+            "links_label": "Información sobre código abierto",
+            "links": [
+                {
+                    "label": "Examinar el código fuente en GitHub",
+                    "href": "https://github.com/fabioannovazzi/app_files",
+                },
+                {
+                    "label": "Leer la licencia GNU AGPLv3",
+                    "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
+                },
+            ],
+        },
+        "free": {
+            "id": "free",
+            "title": "Gratuitos por diseño.",
+            "description": (
+                "Vera y Clara se pueden instalar y usar gratuitamente. Agradecemos las "
+                "contribuciones a su desarrollo. Mparanza cobra por la consultoría, la "
+                "implementación y los servicios alojados."
+            ),
+        },
+        "security": {
+            "id": "security",
+            "title": "Seguros por diseño.",
+            "lead": (
+                "En los flujos ordinarios de Vera y Clara, Mparanza no recibe el trabajo de tus clientes."
+            ),
+            "description": (
+                "Los flujos ordinarios de los plugins funcionan dentro de tu entorno de "
+                "Codex actual. Los prompts, archivos y resultados de tus clientes no "
+                "pasan por Mparanza."
+            ),
+            "cta_label": "Ver cómo se tratan tus datos",
+            "cta_href": "/data-handling",
+        },
+        "compliance": {
+            "id": "compliance",
+            "title": "Cumplimiento por diseño.",
+            "lead": (
+                "El trabajo profesional puede requerir que Codex lea datos reales de "
+                "clientes."
+            ),
+            "description": (
+                "Vera y Clara no anonimizan los datos automáticamente. Pueden usar Python "
+                "en local para filtrar o agregar información cuando resulte útil. Los datos "
+                "facilitados al modelo se tratan mediante el plan de ChatGPT que ya usa el "
+                "usuario."
+            ),
+            "principles": [
+                {
+                    "title": "Usa Python en local cuando resulte útil",
+                    "blurb": (
+                        "El filtrado y la agregación pueden realizarse en tu ordenador "
+                        "cuando mejoran el trabajo. No son anonimización automática."
+                    ),
+                },
+                {
+                    "title": "Los datos reales pueden llegar al modelo",
+                    "blurb": (
+                        "Los nombres, documentos, el idioma original y los hechos del caso "
+                        "pueden entrar en el contexto del modelo cuando la tarea profesional "
+                        "los necesita."
+                    ),
+                },
+                {
+                    "title": "Dos categorías de tratamiento",
+                    "blurb": (
+                        "Las funciones ordinarias de los plugins usan el plan de ChatGPT "
+                        "existente. Los servicios alojados por Mparanza constituyen un "
+                        "límite de tratamiento separado."
+                    ),
+                },
+            ],
+            "closing": (
+                "Una política para Vera y Clara. Sin documentación para cada prompt."
+            ),
+            "cta_label": "Ver cómo se tratan tus datos",
+            "cta_href": "/data-handling",
+        },
+        "bridge": {
+            "id": "plugins",
+            "title": "Codex por diseño.",
+            "description": (
+                "Mparanza es Vera y Clara: dos plugins que aplican el mismo entorno de "
+                "Codex a dos profesiones distintas."
             ),
         },
     },

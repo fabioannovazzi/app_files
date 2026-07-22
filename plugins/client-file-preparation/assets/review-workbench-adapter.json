@@ -49,6 +49,17 @@
     "Preparation decision"
   ],
   "localized": {
+    "es": {
+      "title": "Nuevo cliente \u00b7 Preparaci\u00f3n de documentos",
+      "reviewTitle": "Revisi\u00f3n de la preparaci\u00f3n de documentos",
+      "queueTitle": "Documentos para revisar",
+      "detailTitle": "Decisi\u00f3n sobre el documento",
+      "detailHelp": "Clasifique los documentos, confirme los faltantes y registre la siguiente solicitud al cliente.",
+      "search": "Buscar documento, faltante, informe, correo, bloqueo",
+      "reviewerAlias": "Revisor",
+      "reviewerAliasHelp": "Use una referencia estable del profesional o de su cuenta. Se admite el nombre real del profesional. No introduzca credenciales, datos de sesi\u00f3n ni rutas locales sin depurar.",
+      "reviewerAliasInvalid": "La referencia del revisor puede tener un m\u00e1ximo de 160 caracteres y no debe contener credenciales, datos de sesi\u00f3n ni rutas locales sin depurar."
+    },
     "it": {
       "title": "Nuovo cliente \u00b7 Preparazione documenti",
       "reviewTitle": "Revisione preparazione documenti",

@@ -16,13 +16,14 @@
   <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=en">
   <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=fr">
   <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=es">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/journal-sampling/index.html">
   <title>Campionamento del giornale | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../vera-scope.css?v=20260721">
-  <script src="../vera-scope.js?v=20260721" defer></script>
+  <script src="../vera-scope.js?v=20260722" defer></script>
   <style>
     :root {
       --ink: #002060;
@@ -502,6 +503,7 @@
           <button type="button" data-lang="en">En</button>
           <button type="button" data-lang="fr">Fr</button>
           <button type="button" data-lang="de">De</button>
+          <button type="button" data-lang="es">Es</button>
         </div>
       </div>
     </div>
@@ -592,7 +594,7 @@
           <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
           <h2 data-i18n="inputs.title">What it reads</h2>
         </div>
-        <p data-i18n="inputs.copy">Works with local files already available to the firm. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.</p>
+        <p data-i18n="inputs.copy">Works with files already available in the firm's Codex workspace. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.</p>
       </div>
       <div class="grid four" id="input-cards"></div>
     </section>
@@ -698,7 +700,7 @@
         inputs: {
           eyebrow: "File letti",
           title: "Che cosa legge",
-          copy: "Lavora su file locali già disponibili allo studio. I PDF solo scansionati vengono segnalati per gestione manuale, non trattati come giornali leggibili.",
+          copy: "Lavora sui file già disponibili nel workspace Codex dello studio. I PDF solo scansionati vengono segnalati per gestione manuale, non trattati come giornali leggibili.",
           cards: [
             ["Excel e CSV", "Giornali esportati con intestazioni leggibili e righe contabili."],
             ["Excel da stampa PDF", "Fogli con intestazioni ripetute, colonne larghe e righe di dettaglio."],
@@ -779,7 +781,7 @@
         inputs: {
           eyebrow: "Inputs",
           title: "What it reads",
-          copy: "Works with local files already available to the firm. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.",
+          copy: "Works with files already available in the firm's Codex workspace. OCR-only scanned PDFs are flagged for manual handling rather than treated as readable input.",
           cards: [
             ["Excel and CSV", "Exported journals with readable headers and accounting rows."],
             ["Print-style Excel", "Sheets with repeated headers, wide columns and detail rows."],
@@ -860,7 +862,7 @@
         inputs: {
           eyebrow: "Entrées",
           title: "Ce qu'il lit",
-          copy: "Le contrôle travaille sur les fichiers locaux déjà disponibles au cabinet. Les PDF uniquement scannés/OCR sont signalés pour traitement manuel plutôt que considérés comme lisibles.",
+          copy: "Le contrôle travaille sur les fichiers déjà disponibles dans l'espace de travail Codex du cabinet. Les PDF uniquement scannés/OCR sont signalés pour traitement manuel plutôt que considérés comme lisibles.",
           cards: [
             ["Excel et CSV", "Journaux exportés avec en-têtes lisibles et lignes comptables."],
             ["Excel type impression", "Feuilles avec en-têtes répétés, colonnes larges et lignes de détail."],
@@ -917,6 +919,87 @@
           prompt: "Utilise Journal Sampling sur /chemin/input.\nLangue : fr. Langue des documents : auto.\nInspecte les fichiers, demande uniquement les ambiguïtés de champs essentielles, puis génère échantillon, contrôles de lecture et trace de revue.\nMéthode : random. Taille : 25."
         }
       },
+      es: {
+        nav: { what: "Qué hace", inputs: "Entradas", outputs: "Salidas", use: "Uso", prompts: "Prompts", download: "Instalación" },
+        hero: {
+          eyebrow: "Muestreo de auditoría",
+          title: "Cree una muestra reproducible a partir de un diario desordenado.",
+          subtitle: "Convierta diarios contables variables en muestras que un revisor pueda repetir.",
+          copy: "Proporcione un diario legible y un método de muestreo. Reciba una población normalizada, la muestra seleccionada, la semilla, los filtros y los controles de lectura.",
+          primary: "Instalar Vera",
+          secondary: "Cómo funciona",
+          cardLabel: "Lo que proporciona / lo que recibe",
+          bullets: [
+            "Proporcione archivos de diario en Excel, CSV o PDF con texto.",
+            "Confirme los pocos campos contables que sigan siendo ambiguos.",
+            "Reciba la población normalizada, los archivos de la muestra y los parámetros de auditoría."
+          ]
+        },
+        what: {
+          eyebrow: "Qué hace",
+          title: "De diarios heterogéneos a una muestra revisable",
+          copy: "Úselo cuando un diario sea legible pero no esté normalizado: Excel, CSV, Excel con formato de impresión exportado desde PDF o PDF con texto. Codex solo pregunta por las decisiones de campo que no pueden inferirse con seguridad."
+        },
+        inputs: {
+          eyebrow: "Entradas",
+          title: "Qué lee",
+          copy: "Trabaja con archivos ya disponibles en el espacio de trabajo Codex del despacho. Los PDF escaneados que solo admiten OCR se señalan para tratamiento manual y no se consideran una entrada legible.",
+          cards: [
+            ["Excel y CSV", "Diarios exportados con encabezados legibles y líneas contables."],
+            ["Excel con formato de impresión", "Hojas con encabezados repetidos, columnas anchas y líneas de detalle."],
+            ["PDF con texto", "PDF cuyo texto de las líneas del diario puede extraerse sin OCR."],
+            ["Parámetros de la muestra", "Método, semilla, filtros y tamaño de la muestra documentados en la trazabilidad de revisión."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Salidas",
+          title: "Qué genera",
+          copy: "El resultado es una carpeta de trabajo revisable: receta, población normalizada, archivos de muestra, controles de lectura y trazabilidad de revisión.",
+          items: [
+            ["inspection.json", "Resumen de la inspección y confianza de lectura."],
+            ["suggested_recipe.json", "Receta de campos propuesta que puede modificarse en la carpeta de trabajo."],
+            ["normalized_journal.csv", "Población normalizada con campos canónicos."],
+            ["normalization_diagnostics.json", "Campos faltantes, líneas descartadas y límites de lectura."],
+            ["journal_sample.csv / .xlsx", "Muestra seleccionada con un método reproducible."],
+            ["sampling_audit.json", "Método, semilla, filtros, población y tamaño de la muestra."]
+          ]
+        },
+        review: {
+          title: "Una selección de muestra que puede repetirse",
+          copy1: "La inspección propone las columnas contables y solicita únicamente las decisiones esenciales pendientes: fila de encabezado, columna de cuenta, convención debe/haber o hipótesis de muestreo.",
+          copy2: "La carpeta resultante mantiene visibles la extracción, la normalización, los filtros, la semilla y las exportaciones, de modo que un revisor pueda repetir o cuestionar la selección.",
+          copy3: "Las limitaciones de lectura permanecen visibles en lugar de quedar ocultas en la muestra final."
+        },
+        use: {
+          eyebrow: "Uso",
+          title: "Cree la muestra desde la carpeta de trabajo",
+          copy: "Abra la carpeta de trabajo, confirme las decisiones esenciales sobre los campos y genere el paquete de la muestra.",
+          steps: [
+            ["Preparar", "Coloque los archivos Excel, CSV o PDF con texto en una carpeta de trabajo."],
+            ["Examinar", "Revise inspection.json y suggested_recipe.json."],
+            ["Resolver", "Si es necesario, confirme la fila de encabezado o las columnas esenciales."],
+            ["Crear", "Genere normalized_journal.csv, los archivos de muestra y sampling_audit.json."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts listos",
+          copy: "Parta de uno de estos prompts y sustituya la ruta de la carpeta, el idioma, el método y el tamaño de la muestra. Codex preguntará antes de resolver ambigüedades esenciales.",
+          items: [
+            ["Muestreo completo del diario", "Usa Muestreo del diario en /ruta/entrada. Idioma: es. Idioma de los documentos: auto. Examina los archivos, pregunta solo por las ambigüedades esenciales y genera la muestra, los controles de lectura y la trazabilidad de revisión. Método: random. Tamaño: 25."],
+            ["Excel con formato de impresión", "Usa Muestreo del diario en /ruta/diario.xlsx. Trátalo como una exportación de PDF con formato de impresión, identifica encabezados y líneas de detalle y propón la receta de campos antes de normalizar."],
+            ["Muestra MUS", "Usa Muestreo del diario en /ruta/entrada con el método MUS. Confirma primero la base del importe y los filtros y genera después la muestra y sampling_audit.json."]
+          ]
+        },
+        download: {
+          eyebrow: "Instalación",
+          title: "Abrir Vera", copy: "Abra Vera y empiece a trabajar con el diario.", installTitle: "Vera", codexText: "Todos los módulos están disponibles en el mismo espacio de trabajo.",
+          button: "Instalar Vera",
+          firstUseTitle: "Primer uso",
+          firstUseCopy: "En un chat de Codex, indique la carpeta del diario, el idioma, el método de muestreo y el tamaño objetivo.",
+          prompt: "Usa Muestreo del diario en /ruta/entrada.\nIdioma: es. Idioma de los documentos: auto.\nExamina los archivos, pregunta solo por las ambigüedades esenciales de los campos y genera la muestra, los controles de lectura y la trazabilidad de revisión.\nMétodo: random. Tamaño: 25."
+        }
+      },
       de: {
         nav: { what: "Was es tut", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Installation" },
         hero: {
@@ -941,7 +1024,7 @@
         inputs: {
           eyebrow: "Eingaben",
           title: "Was es liest",
-          copy: "Arbeitet mit lokalen Dateien, die der Kanzlei bereits vorliegen. Reine Scan-/OCR-PDFs werden zur manuellen Bearbeitung markiert und nicht als lesbarer Input behandelt.",
+          copy: "Arbeitet mit Dateien, die bereits im Codex-Workspace der Kanzlei verfügbar sind. Reine Scan-/OCR-PDFs werden zur manuellen Bearbeitung markiert und nicht als lesbarer Input behandelt.",
           cards: [
             ["Excel und CSV", "Exportierte Journale mit lesbaren Kopfzeilen und Buchungszeilen."],
             ["Druck-Excel", "Blätter mit wiederholten Kopfzeilen, breiten Spalten und Detailzeilen."],
@@ -1153,6 +1236,24 @@
           "cta.title": "Confiez le journal à Vera.", "cta.copy": "Ouvrez Vera, indiquez le dossier de travail et lancez l'échantillonnage.", "cta.open": "Ouvrir Vera"
         }
       },
+      es: {
+        metaTitle: "Muestreo del diario | Vera",
+        metaDescription: "Vera convierte un diario contable heterogéneo en una población normalizada y una muestra reproducible, lista para comprobar los asientos.",
+        breadcrumbAria: "Ruta de la página",
+        text: {
+          "nav.overview": "Resumen", "nav.workflow": "Recorrido", "nav.proof": "Resultado", "nav.next": "Siguiente paso", "nav.prompt": "Prompt", "nav.open": "Abrir Vera",
+          "breadcrumb.vera": "Vera", "breadcrumb.area": "Controles contables", "breadcrumb.module": "Muestreo del diario",
+          "overview.eyebrow": "El trabajo de un vistazo", "overview.title": "Del diario recibido a una muestra que puede reconstruirse.", "overview.copy": "Vera ordena la población, conserva las decisiones de muestreo y prepara la entrega para comprobar los asientos.",
+          "flow.provide.title": "Proporcione", "flow.provide.copy": "El diario en Excel, CSV o PDF legible y el método de muestreo.", "flow.prepare.title": "Vera prepara", "flow.prepare.copy": "Una población coherente, los filtros aplicados y una selección reproducible.", "flow.receive.title": "Reciba", "flow.receive.copy": "La muestra en Excel y CSV, con los parámetros y la trazabilidad listos para revisar.",
+          "workflow.eyebrow": "Recorrido", "workflow.title": "Cuatro pasos de la población a la selección.", "workflow.copy": "Cada decisión que cambia la muestra permanece visible en el trabajo.",
+          "workflow.one.title": "Leer el diario", "workflow.one.copy": "Identificar su estructura, los encabezados y los campos contables útiles.", "workflow.two.title": "Hacer coherente la población", "workflow.two.copy": "Alinear columnas y valores manteniendo visibles las líneas que requieren atención.", "workflow.three.title": "Aplicar el método", "workflow.three.copy": "Usar el método, los filtros, la semilla y el tamaño acordados para seleccionar la muestra.", "workflow.four.title": "Preparar la comprobación", "workflow.four.copy": "Entregar las líneas seleccionadas y el contexto necesario para comprobar sus justificantes.",
+          "spec.summary": "Especificaciones técnicas, entradas y archivos generados",
+          "proof.eyebrow": "Guía de trabajo", "proof.title": "Del diario a una muestra reproducible.", "proof.copy": "La guía sigue la población, el método, la selección y sus motivos en un mismo hilo de trabajo.", "proof.videoTitle": "Del diario a una muestra reproducible", "proof.videoMeta": "Principal · Español · 0:55", "proof.transcript": "Leer la transcripción",
+          "related.eyebrow": "Siguiente paso", "related.copy": "Una vez seleccionadas las líneas, vincule cada asiento con los documentos que lo respaldan.", "related.link": "Continuar con Comprobar asientos →",
+          "prompt.eyebrow": "Para empezar", "prompt.title": "Un prompt y después el trabajo.", "prompt.copy": "Indique la carpeta, el método y el tamaño. Vera organiza el resto del recorrido.",
+          "cta.title": "Lleve el diario a Vera.", "cta.copy": "Abra Vera, indique la carpeta de trabajo e inicie el muestreo.", "cta.open": "Abrir Vera"
+        }
+      },
       de: {
         metaTitle: "Journalstichprobe | Vera",
         metaDescription: "Vera überführt ein uneinheitliches Buchungsjournal in eine normalisierte Grundgesamtheit und eine reproduzierbare Stichprobe für die Buchungsprüfung.",
@@ -1180,7 +1281,7 @@
       document.getElementById("meta-description").setAttribute("content", data.metaDescription);
       document.getElementById("og-title").setAttribute("content", data.metaTitle);
       document.getElementById("og-description").setAttribute("content", data.metaDescription);
-      document.getElementById("og-locale").setAttribute("content", { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE" }[language]);
+      document.getElementById("og-locale").setAttribute("content", { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES" }[language]);
       document.querySelectorAll("[data-journey]").forEach((node) => {
         const value = data.text[node.dataset.journey];
         if (value) node.textContent = value;
@@ -1198,7 +1299,7 @@
       const proofTrack = document.getElementById("proof-video-track");
       proofTrack.src = `${proofBase}/captions.vtt`;
       proofTrack.srclang = language;
-      proofTrack.label = { it: "Italiano", en: "English", fr: "Français", de: "Deutsch" }[language];
+      proofTrack.label = { it: "Italiano", en: "English", fr: "Français", de: "Deutsch", es: "Español" }[language];
       document.getElementById("proof-video-fallback").href = `${proofBase}/guide.mp4`;
       document.getElementById("proof-video-transcript").href = `${proofBase}/transcript.txt`;
       document.querySelector('meta[property="og:image"]').content = `https://mparanza.com${proofBase}/poster.jpg`;

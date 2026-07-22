@@ -1,0 +1,4 @@
+interface:
+  display_name: "Privacy Surface Review"
+  short_description: "Map Clara model and hosted boundaries"
+  default_prompt: "Use $privacy-surface-review to review this Clara workflow or hosted service boundary."

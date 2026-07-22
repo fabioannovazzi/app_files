@@ -31,6 +31,13 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [
     {
       "id": "source-domain-research",
@@ -48,14 +55,6 @@
   ],
   "security_controls": [
     {
-      "id": "no-retroactive-anonymisation-claim",
-      "control": "The workflow does not claim to remove or anonymize text that the user already placed in Codex context."
-    },
-    {
-      "id": "no-model-api-in-scripts",
-      "control": "Helper scripts inspect, validate, and package files locally and do not call model APIs."
-    },
-    {
       "id": "manual-deep-research-handoff",
       "control": "The workflow produces a prompt package; it does not automatically submit the prompt to Deep Research."
     }
@@ -64,6 +63,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "400f53f462b7514046b1dfa84f3a31c1aaad1c7bb430800159f1646018bf33b7"
+    "source_fingerprint": "2794d3e2ee7822d0ece9b43f92c8584e356ace5469fb4edb4ac6c1a134ca521c"
   }
 }

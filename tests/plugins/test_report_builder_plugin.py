@@ -56,6 +56,93 @@ def _call_mcp_server(
     return response["result"]
 
 
+def test_spanish_docx_output_record_uses_spanish_required_text(
+    tmp_path: Path,
+) -> None:
+    load_core()
+    review_session = sys.modules["mparanza_report_builder_review_session"]
+    (tmp_path / "report.docx").write_bytes(b"docx-placeholder")
+    (tmp_path / "report_draft.md").write_text(
+        "# Informe de gestión\n",
+        encoding="utf-8",
+    )
+    analysis = {
+        "language": "es",
+        "sections": [{"title": "Resultados del periodo", "status": "assigned"}],
+    }
+    audit = {"missing_section_count": 1}
+
+    outputs = review_session.build_output_records(tmp_path, audit, analysis)
+
+    report = next(output for output in outputs if output["path"] == "report.docx")
+    draft = next(output for output in outputs if output["path"] == "report_draft.md")
+    assert report["required_text"] == [
+        "Resumen ejecutivo",
+        "Anexo de auditoría",
+        "Estado del informe",
+        "Llamadas a la API del modelo desde los scripts",
+        "Secciones asignadas",
+        "Secciones pendientes",
+        "Resultados del periodo",
+    ]
+    assert draft["required_text"] == [
+        "## Resumen ejecutivo",
+        "## Resultados del periodo",
+        "Fuente:",
+        "Filas:",
+    ]
+
+
+def test_render_markdown_localizes_all_spanish_wrapper_copy() -> None:
+    core = load_core()
+    recipe = {
+        "language": "es",
+        "report_type": "management_report",
+        "context_items": {"Moneda": "EUR"},
+        "render": {"include_table_previews": False},
+    }
+    analysis = {
+        "sections": [
+            {
+                "title": "Resultados",
+                "status": "assigned",
+                "source_file": "informe.xlsx",
+                "sheet_name": "Resultados",
+                "row_count": 3,
+                "column_count": 2,
+                "numeric_columns": [
+                    {"column": "Importe", "numeric_count": 3, "sum": "250.00"}
+                ],
+                "preview_rows": [],
+            },
+            {
+                "title": "Tesorería",
+                "status": "unassigned",
+                "numeric_columns": [],
+                "preview_rows": [],
+            },
+        ]
+    }
+
+    markdown = core.render_markdown(recipe, analysis)
+
+    assert markdown.startswith("# Informe de gestión")
+    assert "**Entidad:** Entidad pendiente" in markdown
+    assert "**Periodo:** Periodo pendiente" in markdown
+    assert "## Resumen ejecutivo" in markdown
+    assert "Resumen ejecutivo de Codex pendiente." in markdown
+    assert "## Contexto" in markdown
+    assert "La revisión de Codex está pendiente para esta sección." in markdown
+    assert "Fuente: informe.xlsx / Resultados" in markdown
+    assert "Filas: 3 | Columnas: 2" in markdown
+    assert "Totales numéricos deterministas:" in markdown
+    assert "Importe: recuento 3, suma 250.00" in markdown
+    assert "Todavía no hay una tabla asignada." in markdown
+    assert "Executive summary" not in markdown
+    assert "Source:" not in markdown
+    assert "Rows:" not in markdown
+
+
 def _save_workbook(path: Path) -> None:
     workbook = openpyxl.Workbook()
     income = workbook.active
@@ -669,7 +756,7 @@ def test_skill_and_scripts_keep_codex_as_the_narrative_layer() -> None:
     assert "The user should not interact directly with CLI scripts" in skill_text
     assert "must not make direct OpenAI API calls" in skill_text
     assert "scripts/check_dependencies.py" in skill_text
-    assert "it`, `en`, `fr`, and `de`" in skill_text
+    assert "it`, `en`, `fr`, `de`, and `es`" in skill_text
     assert "missing deterministic extraction script" in skill_text
     assert "Keep the improvement note local to chat or run artifacts." in skill_text
     assert "validate_report_builder_review" in skill_text
@@ -681,7 +768,7 @@ def test_skill_and_scripts_keep_codex_as_the_narrative_layer() -> None:
     assert "get_openai_client" not in script_text
 
 
-def test_static_page_exposes_four_language_switch_and_prompts() -> None:
+def test_static_page_exposes_five_language_switch_and_prompts() -> None:
     page = (ROOT / "static" / "shared" / "report-builder" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -691,16 +778,18 @@ def test_static_page_exposes_four_language_switch_and_prompts() -> None:
         'data-lang="en"',
         'data-lang="fr"',
         'data-lang="de"',
+        'data-lang="es"',
         "Turn source tables into a reviewable Word report.",
         "Da tabelle sorgente a un report Word rivedibile.",
         "Transformer les tableaux source en rapport Word révisable.",
         "Quelltabellen in einen prüfbaren Word-Bericht verwandeln.",
+        "Convierta tablas fuente en un informe Word revisable.",
         "Prepara una bozza DOCX da Excel, CSV e PDF leggibili.",
         "Ready prompts",
         "Prompt pronti",
         "File prodotti rivedibili",
         "Usa Genera report sui file in /percorso/report.",
-        "Installa Vera dal marketplace",
+        '"download.button": "Installa Vera"',
     ):
         assert snippet in page
 

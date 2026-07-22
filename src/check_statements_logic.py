@@ -44,14 +44,14 @@ import io
 import itertools
 import json
 import logging
+import math
+import re
 import tempfile
 from collections import defaultdict
 from contextlib import contextmanager
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
-import re
-import math
-from datetime import date, datetime, timedelta
 from typing import (
     Any,
     Callable,
@@ -67,8 +67,8 @@ from typing import (
     Tuple,
 )
 
-import polars as pl
 import pdfplumber
+import polars as pl
 from pdfminer.pdfparser import PDFSyntaxError
 
 from src.check_statements.normalisation import (
@@ -90,7 +90,9 @@ logger = logging.getLogger(__name__)
 try:
     from modules.utilities.cache import get_cache_dir, get_cache_path
 except Exception:  # pragma: no cover - fallback for isolated tests
-    logger.warning("modules.utilities.cache import failed; using fallback cache helpers")
+    logger.warning(
+        "modules.utilities.cache import failed; using fallback cache helpers"
+    )
 
     def get_cache_dir(*parts: str) -> Path:  # type: ignore
         base = Path(".cache_fallback")
@@ -121,14 +123,23 @@ except ImportError:
     extract_pdf_text_with_ocr = None  # type: ignore
 
 try:
-    from modules.process_pdf_journal.logic import parse_journal
+    from modules.process_pdf_journal.logic import normalize_ocr_language, parse_journal
 except ImportError:
     parse_journal = None  # type: ignore
+
+    def normalize_ocr_language(language: str | None) -> str:
+        """Return a best-effort OCR code when the parser is unavailable."""
+
+        normalized = str(language or "ita").strip().lower()
+        return "spa" if normalized == "es" else normalized
+
 
 try:
     from modules.utilities.config import get_naming_params, get_run_params
 except Exception:  # pragma: no cover - fallback for unit tests
-    logger.warning("modules.utilities.config not available; using empty run/naming params")
+    logger.warning(
+        "modules.utilities.config not available; using empty run/naming params"
+    )
 
     def get_naming_params() -> dict:  # type: ignore
         return {}
@@ -157,11 +168,14 @@ except Exception:  # pragma: no cover
     def _prepare_df_for_excel(df):  # type: ignore
         return df
 
+
 # Final-pass cleaner for unmatched bank rows (module-level to allow monkeypatching)
 try:
     from .final_pass_filter import FilterReport, clean_bank_not_matched  # type: ignore
 except Exception:  # pragma: no cover - fallback for unit tests
-    logger.warning("final_pass_filter not available; proceeding without bank cleanup filter")
+    logger.warning(
+        "final_pass_filter not available; proceeding without bank cleanup filter"
+    )
 
     class FilterReport:  # type: ignore
         def __init__(self, *a, **k):
@@ -169,6 +183,7 @@ except Exception:  # pragma: no cover - fallback for unit tests
 
     def clean_bank_not_matched(df, *a, **k):  # type: ignore
         return df
+
 
 try:
     from statements.orchestrator import StatementExtractor
@@ -190,60 +205,69 @@ try:
 except ImportError:  # pragma: no cover - optional dependency
     GenericStatementParser = None  # type: ignore
 from finance.ledger.ignore_patterns import load_ignore_patterns
+from src.check_statements.classify import (
+    _lex_for,
+    classify_op,
+)
+from src.check_statements.classify import extract_iban as _extract_iban
+from src.check_statements.classify import is_tax_ledger_entry as _is_tax_ledger_entry
 
 # Import extracted filter helpers (API re-exports below maintain compatibility)
 from src.check_statements.filters import (
-    load_fee_patterns as _load_fee_patterns_impl,
-    _preaggregate_bank_transactions as _preaggregate_bank_transactions,
     _early_filter_bank_transactions as _early_filter_bank_transactions,
 )
-from src.check_statements.classify import (
-    classify_op,
-    extract_iban as _extract_iban,
-    is_tax_ledger_entry as _is_tax_ledger_entry,
-    _lex_for,
+from src.check_statements.filters import (
+    _preaggregate_bank_transactions as _preaggregate_bank_transactions,
+)
+from src.check_statements.filters import load_fee_patterns as _load_fee_patterns_impl
+from src.check_statements.loaders import (
+    _detect_excel_header_polars,
+    _infer_columns,
+    _rebuild_df_with_header,
+    _resolve_account_col,
+    _resolve_mapping,
+    _validate_required_columns,
+    guess_columns_from_data,
+)
+from src.check_statements.loaders import load_bank_rows as load_bank_rows_extracted
+from src.check_statements.loaders import load_ledger_rows as load_ledger_rows_extracted
+from src.check_statements.loaders import (
+    ocr_extract_pdf_text as ocr_extract_pdf_text_extracted,
+)
+from src.check_statements.loaders import (
+    parse_bank_text_prepare as parse_bank_text_prepare_extracted,
+)
+from src.check_statements.loaders import (
+    parse_pdf_prepare as parse_pdf_prepare_extracted,
+)
+from src.check_statements.loaders import (
+    parse_spreadsheet_prepare as parse_spreadsheet_prepare_extracted,
+)
+from src.check_statements.loaders import (
+    parse_spreadsheet_prepare_with_keywords as parse_spreadsheet_prepare_with_keywords_extracted,
 )
 from src.check_statements.matching import (
-    _txns_to_polars,
-    _pairs_from_candidates,
-    _build_bank_candidates,
     _assignment_pass,
+    _build_bank_candidates,
     _exact_pass,
-    _fuzzy_score,
-    _fuzzy_pass,
     _fuzzy_margin_pass,
-    _reference_substring_pass,
+    _fuzzy_pass,
+    _fuzzy_score,
     _group_match,
+    _pairs_from_candidates,
+    _reference_substring_pass,
+    _txns_to_polars,
 )
+from src.check_statements.models import Transaction
 from src.check_statements.reconcile_pipeline import (
     _group_match_local,
     _stage2_fixers_and_routing,
     staged_reconcile,
 )
-from src.check_statements.loaders import (
-    _detect_excel_header_polars,
-    _rebuild_df_with_header,
-    _infer_columns,
-    _resolve_account_col,
-    guess_columns_from_data,
-    parse_spreadsheet_prepare as parse_spreadsheet_prepare_extracted,
-    parse_spreadsheet_prepare_with_keywords as parse_spreadsheet_prepare_with_keywords_extracted,
-    ocr_extract_pdf_text as ocr_extract_pdf_text_extracted,
-    _resolve_mapping,
-    _validate_required_columns,
-    parse_pdf_prepare as parse_pdf_prepare_extracted,
-    load_ledger_rows as load_ledger_rows_extracted,
-    load_bank_rows as load_bank_rows_extracted,
-    parse_bank_text_prepare as parse_bank_text_prepare_extracted,
-)
-from src.check_statements.models import Transaction
-
 
 # ---------------------------------------------
 # Operation classification and metadata helpers
 # ---------------------------------------------
-
-
 
 
 def _write_temp_file(filename: str, content: bytes) -> Path:
@@ -355,7 +379,11 @@ def _enrich_transaction(tx: Transaction) -> Transaction:
     # Prefer explicit beneficiary field; then try description; finally include
     # supplemental text (extra_desc/details/account_desc) as a fallback to help
     # ledger entries where the vendor appears after an invoice token.
-    ben = tx.beneficiary or extract_beneficiary(tx.description) or extract_beneficiary(combined_text)
+    ben = (
+        tx.beneficiary
+        or extract_beneficiary(tx.description)
+        or extract_beneficiary(combined_text)
+    )
     tx.beneficiary = normalise_name(ben) if ben else None
     # Extract IBAN and classify operation type for downstream matching
     try:
@@ -383,8 +411,6 @@ def _enrich_transaction(tx: Transaction) -> Transaction:
     except Exception:  # nosec - defensive
         pass
     return tx
-
-
 
 
 # ------------------------
@@ -688,7 +714,9 @@ def _parse_ledger_pdf_text_fallback(
     """Heuristic parser for ledger-style PDFs when structured parser is unavailable."""
 
     if pdfplumber is None:
-        logger.debug("pdfplumber not available; ledger text fallback skipped for %s", filename)
+        logger.debug(
+            "pdfplumber not available; ledger text fallback skipped for %s", filename
+        )
         return []
 
     lines: List[str] = []
@@ -774,7 +802,9 @@ def _parse_ledger_pdf_text_fallback(
         counter_code: Optional[str] = None
         counter_name: Optional[str] = None
         if counter_desc_raw:
-            counter_code, counter_name = _extract_counterparty_code_and_name(counter_desc_raw)
+            counter_code, counter_name = _extract_counterparty_code_and_name(
+                counter_desc_raw
+            )
         counter_desc = counter_name or counter_desc_raw.strip("- ")
 
         signed_amount: float
@@ -800,7 +830,11 @@ def _parse_ledger_pdf_text_fallback(
             metadata["counter_account_desc"] = counter_desc
         if counter_code:
             metadata["counter_account_id"] = counter_code
-        if counter_desc and "cassa" in counter_desc.lower() and "contanti" in counter_desc.lower():
+        if (
+            counter_desc
+            and "cassa" in counter_desc.lower()
+            and "contanti" in counter_desc.lower()
+        ):
             metadata["counter_account_is_cash"] = True
         metadata["ledger_section"] = section
         metadata["ledger_balance"] = balance_val
@@ -809,7 +843,11 @@ def _parse_ledger_pdf_text_fallback(
         beneficiary_name = counter_desc
         if beneficiary_name:
             beneficiary_name = beneficiary_name.strip()
-            if beneficiary_name == "" or beneficiary_name.lower() in {"", "beneficiari diversi", "beneficiari diversi - commissioni"}:
+            if beneficiary_name == "" or beneficiary_name.lower() in {
+                "",
+                "beneficiari diversi",
+                "beneficiari diversi - commissioni",
+            }:
                 beneficiary_name = None
 
         transactions.append(
@@ -857,17 +895,13 @@ def _postprocess_rows(
     try:
         df = df.with_columns(_parse_dates_expr(date_col).alias("__booking_date"))
     except pl.exceptions.ComputeError:
-        parsed_dates = [
-            _parse_date_any(value)
-            for value in df.get_column(date_col)
-        ]
+        parsed_dates = [_parse_date_any(value) for value in df.get_column(date_col)]
         df = df.with_columns(pl.Series("__booking_date", parsed_dates))
 
     if "amount" in mapping and mapping["amount"] in available_columns:
         df = df.with_columns(_amount_expr(mapping["amount"]).alias("__amount"))
-    elif (
-        ("debit" in mapping and mapping["debit"] in available_columns)
-        or ("credit" in mapping and mapping["credit"] in available_columns)
+    elif ("debit" in mapping and mapping["debit"] in available_columns) or (
+        "credit" in mapping and mapping["credit"] in available_columns
     ):
         exprs: List[pl.Expr] = []
         if "debit" in mapping and mapping["debit"] in available_columns:
@@ -1041,7 +1075,9 @@ def _parse_spreadsheet(
     """Parse spreadsheet bank statement using extracted helpers + postprocess."""
     if pl is None:
         raise ImportError("polars is required to parse spreadsheets")
-    df, mapping = parse_spreadsheet_prepare_extracted(content, filename, max_header_scan_rows=50)
+    df, mapping = parse_spreadsheet_prepare_extracted(
+        content, filename, max_header_scan_rows=50
+    )
     if df is None or df.height == 0:
         logger.debug("No data found in %s", filename)
         return []
@@ -1104,7 +1140,9 @@ def _parse_pdf_with_ocr(
     except (OSError, RuntimeError) as exc:
         logger.warning("OCR extraction failed for %s: %s", filename, exc)
 
-    parsed_rows: List[Transaction] = _parse_bank_text(text, filename, month, year, language) if text else []
+    parsed_rows: List[Transaction] = (
+        _parse_bank_text(text, filename, month, year, language) if text else []
+    )
 
     if not parsed_rows:
         logger.debug("No transactions extracted from %s", filename)
@@ -1145,9 +1183,7 @@ def load_bank_files(
             logger.debug("Processing %s as spreadsheet", filename)
             before = len(transactions)
             transactions.extend(
-                _parse_spreadsheet(
-                    content, filename, month, year, language=language
-                )
+                _parse_spreadsheet(content, filename, month, year, language=language)
             )
             if len(transactions) == before:
                 with _temp_file(filename, content) as tmp:
@@ -1195,7 +1231,11 @@ def load_bank_files(
 
 
 def _parse_bank_text(
-    text: str, filename: str, month: Optional[int], year: Optional[int], language: Optional[str] = None
+    text: str,
+    filename: str,
+    month: Optional[int],
+    year: Optional[int],
+    language: Optional[str] = None,
 ) -> List[Transaction]:
     """Wrapper around loaders.parse_bank_text_prepare that returns Transactions."""
     rows = parse_bank_text_prepare_extracted(text, filename, month, year, language)
@@ -1219,12 +1259,18 @@ def _parse_bank_text(
 
 
 def _finalise_bank_row(
-    row: Dict[str, Any], filename: str, month: Optional[int], year: Optional[int], language: Optional[str] = None
+    row: Dict[str, Any],
+    filename: str,
+    month: Optional[int],
+    year: Optional[int],
+    language: Optional[str] = None,
 ) -> Optional[Transaction]:
     """Compatibility wrapper that delegates to loaders and builds Transaction."""
     try:
         # Lazily import to avoid circulars if any
-        from src.check_statements.loaders import _finalise_bank_row_prepare as _prep  # type: ignore
+        from src.check_statements.loaders import (
+            _finalise_bank_row_prepare as _prep,  # type: ignore
+        )
     except Exception:
         _prep = None  # type: ignore
     if _prep is None:
@@ -1417,7 +1463,10 @@ def load_ledger_files(
         }
 
     LEDGER_HEADERS_PATH = (
-        Path(__file__).resolve().parent.parent / "config" / "lexicon" / "ledger_headers.json"
+        Path(__file__).resolve().parent.parent
+        / "config"
+        / "lexicon"
+        / "ledger_headers.json"
     )
 
     def _load_ledger_headers(path: Path | None = None) -> Dict[str, List[str]]:
@@ -1559,7 +1608,11 @@ def load_ledger_files(
                         combined_details = " ".join(row_texts)
                     except Exception:
                         combined_details = ""
-                    metadata = {"source": filename, "details": combined_details, "language": language}
+                    metadata = {
+                        "source": filename,
+                        "details": combined_details,
+                        "language": language,
+                    }
                     # Optional: attach journal/registration id to support counterparty pairing
                     jid = (
                         str(row.get(resolved["journal_id"]))
@@ -1607,7 +1660,7 @@ def load_ledger_files(
             parsed_rows: List[Transaction] = []
             if parse_journal is not None:
                 try:
-                    df = parse_journal(content)
+                    df = parse_journal(content, lang=normalize_ocr_language(language))
                     if df.height > 0:
                         # parse_journal returns a Polars DataFrame with
                         # columns: movement_number, date, description,
@@ -1623,8 +1676,13 @@ def load_ledger_files(
                         resolved = _resolve_mapping(columns, mapping)
                         if account_desc_column and account_desc_column in columns:
                             resolved["account_desc"] = account_desc_column
-                        if counter_account_desc_column and counter_account_desc_column in columns:
-                            resolved["counter_account_desc"] = counter_account_desc_column
+                        if (
+                            counter_account_desc_column
+                            and counter_account_desc_column in columns
+                        ):
+                            resolved["counter_account_desc"] = (
+                                counter_account_desc_column
+                            )
                         if extra_desc_column and extra_desc_column in columns:
                             resolved["extra_desc"] = extra_desc_column
                         _validate_required_columns(resolved)
@@ -1706,15 +1764,20 @@ def load_ledger_files(
                                 try:
                                     extra_desc = (
                                         str(row.get(resolved["extra_desc"])).strip()
-                                        if "extra_desc" in resolved and row.get(resolved["extra_desc"]) is not None
+                                        if "extra_desc" in resolved
+                                        and row.get(resolved["extra_desc"]) is not None
                                         else None
                                     )
                                 except Exception:
                                     extra_desc = None
                                 try:
                                     counter_account_desc = (
-                                        str(row.get(resolved["counter_account_desc"])).strip()
-                                        if "counter_account_desc" in resolved and row.get(resolved["counter_account_desc"]) is not None
+                                        str(
+                                            row.get(resolved["counter_account_desc"])
+                                        ).strip()
+                                        if "counter_account_desc" in resolved
+                                        and row.get(resolved["counter_account_desc"])
+                                        is not None
                                         else None
                                     )
                                 except Exception:
@@ -1722,7 +1785,9 @@ def load_ledger_files(
                                 if extra_desc:
                                     metadata["extra_desc"] = extra_desc
                                 if counter_account_desc:
-                                    metadata["counter_account_desc"] = counter_account_desc
+                                    metadata["counter_account_desc"] = (
+                                        counter_account_desc
+                                    )
                                 parsed_rows.append(
                                     _enrich_transaction(
                                         Transaction(
@@ -2067,7 +2132,10 @@ def reconcile_transactions(
     ben_index: defaultdict[str, List[int]] = defaultdict(list)
     # Load learned alias rules (global V1) and apply when indexing beneficiaries
     try:
-        from src.check_statements.alias_memory import load_alias_rules, apply_alias_to_norm  # type: ignore
+        from src.check_statements.alias_memory import (  # type: ignore
+            apply_alias_to_norm,
+            load_alias_rules,
+        )
 
         _alias_map = load_alias_rules()
     except Exception:  # pragma: no cover - optional feature
@@ -2639,7 +2707,7 @@ def export_to_excel(
             "source": pl.Utf8,
         },
         strict=False,
-        ).with_columns(
+    ).with_columns(
         pl.col("source").cast(pl.Utf8),
         pl.lit("").alias("notes"),
     )
@@ -2655,16 +2723,14 @@ def export_to_excel(
         # Resolve via public facade so tests can monkeypatch `src.check_statements.clean_bank_not_matched`
         try:
             from src import check_statements as _facade  # type: ignore
+
             _cbnm = getattr(_facade, "clean_bank_not_matched", clean_bank_not_matched)
         except Exception:  # pragma: no cover
             _cbnm = clean_bank_not_matched
         cleaned_result = _cbnm(
             unmatched_bank_df_raw, return_dropped_rows=True, collect_stats=True
         )
-        if (
-            isinstance(cleaned_result, tuple)
-            and len(cleaned_result) >= 3
-        ):
+        if isinstance(cleaned_result, tuple) and len(cleaned_result) >= 3:
             try:
                 unmatched_bank_df, dropped_df, report = cleaned_result  # type: ignore[misc]
                 rules_counts = dict(getattr(report, "counts_by_rule", {}) or {})

@@ -7,12 +7,13 @@ items and evidence rows.
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 from typing import Any
 
 try:
     from .accountant_report import write_accountant_report_workbook
+    from .locale_support import language_pack, normalize_language
     from .reconciliation_helpers import (
         bank_allocation_candidates,
         build_codex_review_packet,
@@ -30,7 +31,6 @@ try:
         reversal_or_compensation_candidates,
         review_signal_rows,
     )
-    from .locale_support import language_pack
     from .review_session import write_review_session_artifacts, write_run_intake
     from .workpaper_outputs import (
         build_audit_workbook_sheets,
@@ -42,7 +42,10 @@ except ImportError:  # pragma: no cover - supports direct import from scripts/
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
+    import importlib.util
+
     from accountant_report import write_accountant_report_workbook  # type: ignore
+    from locale_support import language_pack, normalize_language  # type: ignore
     from reconciliation_helpers import (  # type: ignore
         bank_allocation_candidates,
         build_codex_review_packet,
@@ -60,8 +63,6 @@ except ImportError:  # pragma: no cover - supports direct import from scripts/
         reversal_or_compensation_candidates,
         review_signal_rows,
     )
-    from locale_support import language_pack  # type: ignore
-    import importlib.util
 
     _review_session_path = Path(__file__).resolve().parent / "review_session.py"
     _review_session_spec = importlib.util.spec_from_file_location(
@@ -80,6 +81,21 @@ except ImportError:  # pragma: no cover - supports direct import from scripts/
         write_excel_workpaper,
         write_word_report,
     )
+
+
+DEFAULT_REPORT_TITLES = {
+    "de": "Bericht zur Kontenabstimmung",
+    "en": "Accounting reconciliation report",
+    "es": "Informe de conciliación contable",
+    "fr": "Rapport de rapprochement comptable",
+    "it": "Relazione di riconciliazione contabile",
+}
+
+
+def default_report_title(language: str = "it") -> str:
+    """Return the localized default title for the reconciliation report."""
+
+    return DEFAULT_REPORT_TITLES[normalize_language(language)]
 
 
 def default_next_steps(
@@ -130,7 +146,7 @@ def build_reconciliation_artifacts(
     review_random_count: int = 20,
     require_completed_review: bool = False,
     metadata: dict[str, Any] | None = None,
-    title: str = "Relazione di riconciliazione contabile",
+    title: str | None = None,
     narrative: str = "",
     next_steps: list[str] | None = None,
     language: str = "it",
@@ -241,7 +257,7 @@ def build_reconciliation_artifacts(
     )
     word_path = write_word_report(
         out_dir / word_name,
-        title=title,
+        title=title or default_report_title(language),
         metadata=metadata or {},
         summary_rows=summary_from_reconciliation(reconciliation_rows),
         assumptions=assumptions,

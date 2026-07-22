@@ -127,7 +127,7 @@ Optional:
 
 - mapping hints for period, baseline period, comparison period, amount/sales, units, discount, COGS, and dimensions;
 - calculation grain hints when mix should be calculated bottom-up below the reporting dimensions;
-- working language: `it`, `en`, `fr`, or `de`;
+- working language: `it`, `en`, `fr`, `de`, or `es`;
 - root-cause variance analysis runs by default when dimensions support it.
 
 ## Known Scenario Codes
@@ -163,7 +163,7 @@ fallback in chart audit metadata.
 3. Run deterministic inspection:
 
 ```bash
-python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <it|en|fr|de>
+python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <it|en|fr|de|es>
 ```
 
 4. Read `inspection.json` and `suggested_recipe.json`. Summarize columns, periods, suggested mappings, warnings, comparison basis, period comparison style, and missing required choices.

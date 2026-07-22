@@ -531,6 +531,7 @@
     function hasExternalUse(posture) {
       const values = [
         posture.external_connectors_used,
+        posture.external_routes_used,
         posture.upload_paths_used,
         posture.remote_sql_execution_used,
         posture.hosted_notebook_execution_used,
@@ -543,10 +544,9 @@
       const posture = isObject(run.data_posture) ? run.data_posture : {};
       const trace = Array.isArray(run.execution_trace) ? run.execution_trace : [];
       const external = hasExternalUse(posture);
-      const approval = isObject(posture.external_execution_approval) && posture.external_execution_approval.approved === true;
       const locations = [...new Set(trace.map((entry) => entry?.execution_location).filter(Boolean))];
       const location = locations.length ? locations.join(", ") : "non dichiarata";
-      const externalLabel = external ? (approval ? "percorso oltre Codex approvato" : "percorso oltre Codex da verificare") : "nessun percorso esterno oltre Codex";
+      const externalLabel = external ? "percorso oltre Codex usato" : "nessun percorso esterno oltre Codex";
       const persistence = state.payload.decision_policy?.can_persist ? "run_intake.output_dir" : "fallback JSON";
       const traceRows = trace.slice(0, 6).map((entry) => {
         const details = [

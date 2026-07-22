@@ -26,6 +26,13 @@ Codex context when the professional task requires it. Ordinary Vera work does
 not show a privacy notice or ask for privacy consent merely because Codex reads
 that material.
 
+Shared Vera routes are registered once in `../../privacy/services/`.
+`plugin-update-check` records only the automatic public version check.
+`plugin-feedback` records the separately chosen text-feedback and hosted
+improvement-interview routes plus later automatic status polling for their
+stored receipts. Do not duplicate those shared routes in every workstream or
+turn them into per-case notices.
+
 Ask for confirmation only when a genuinely optional boundary beyond Codex has
 not already been chosen by the user. The user's explicit choice of a connector,
 hosted-service action, or send/publish action is enough; do not ask again.

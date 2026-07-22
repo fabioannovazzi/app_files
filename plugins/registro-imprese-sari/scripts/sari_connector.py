@@ -1,10 +1,11 @@
-"""Bounded read-only connector for an explicitly authorized public SARI lookup.
+"""Bounded read-only connector for a user-selected public SARI lookup.
 
 SARI's JSON routes are public frontend implementation details, not a documented
-API. This connector therefore fails closed unless the caller records both a
-case-specific network approval and a separate written-use authorization. The
-ordinary workflow uses the public browser and registers the user-selected
-official result with ``register_official_source.py`` instead.
+API. This connector therefore fails closed unless the caller records a separate
+written-use authorization. Invoking the connector is the network-route choice;
+it does not manufacture a second approval reference. The ordinary workflow uses
+the public browser and registers the user-selected official result with
+``register_official_source.py`` instead.
 """
 
 from __future__ import annotations
@@ -366,7 +367,6 @@ def _record_network_receipt(
     run_id: str,
     operation: str,
     tenant: str,
-    network_approval_id: str,
     written_use_authorization_id: str,
     query_sha256: str | None,
 ) -> None:
@@ -379,7 +379,8 @@ def _record_network_receipt(
             "operation": operation,
             "tenant": tenant,
             "recorded_at": iso_now(),
-            "network_approval_id": network_approval_id,
+            "route_selected": True,
+            "network_used": True,
             "written_use_authorization_id": written_use_authorization_id,
             "query_sha256": query_sha256,
             "credentials_used": False,
@@ -396,7 +397,6 @@ def _record_completed_connector_use(
     run_id: str,
     operation: str,
     tenant: str,
-    network_approval_id: str,
     written_use_authorization_id: str,
     outputs: list[str],
 ) -> None:
@@ -443,16 +443,25 @@ def _record_completed_connector_use(
     ]
     connectors.append(connector_entry)
     data_posture["external_connectors_used"] = connectors
-    data_posture["external_execution_approval"] = {
-        "approved": True,
-        "approved_at": completed_at,
-        "approved_by": network_approval_id,
-        "reason": written_use_authorization_id,
-        "scope": (
-            f"Exactly {MAX_REQUESTS_PER_OPERATION} bounded read-only SARI requests "
-            f"for {operation} on tenant {tenant}; redirects prohibited."
+    route_entry = {
+        "route": "authorized_sari_json_read_only",
+        "destination_or_origin": SARI_ORIGIN,
+        "payload_category": "generic_public_query_or_selected_card_identifier",
+        "network_used": True,
+        "access_basis": (
+            f"written_use_authorization_id:{written_use_authorization_id}"
         ),
     }
+    routes = data_posture.get("external_routes_used")
+    if not isinstance(routes, list):
+        routes = []
+    routes = [
+        entry
+        for entry in routes
+        if not isinstance(entry, dict) or entry.get("route") != route_entry["route"]
+    ]
+    routes.append(route_entry)
+    data_posture["external_routes_used"] = routes
     run["data_posture"] = data_posture
     trace = run.get("execution_trace")
     if not isinstance(trace, list):
@@ -485,7 +494,6 @@ def run_search(
     tenant: str,
     expected_chamber: str,
     query: str,
-    network_approval_id: str,
     written_use_authorization_id: str,
     limit: int = MAX_RESULTS,
     client: SariClient | None = None,
@@ -496,9 +504,6 @@ def run_search(
     clean_query = assert_generic_public_query(query)
     if not 1 <= limit <= MAX_RESULTS:
         raise SariConnectorError(f"limit must be between 1 and {MAX_RESULTS}")
-    network_approval_id = _authorization(
-        network_approval_id, field="network_approval_id"
-    )
     written_use_authorization_id = _authorization(
         written_use_authorization_id, field="written_use_authorization_id"
     )
@@ -558,7 +563,6 @@ def run_search(
         run_id=run_id,
         operation="search_metadata",
         tenant=active_client.tenant,
-        network_approval_id=network_approval_id,
         written_use_authorization_id=written_use_authorization_id,
         query_sha256=sha256_bytes(clean_query.encode("utf-8")),
     )
@@ -567,7 +571,6 @@ def run_search(
         run_id=run_id,
         operation="search",
         tenant=active_client.tenant,
-        network_approval_id=network_approval_id,
         written_use_authorization_id=written_use_authorization_id,
         outputs=[
             "sari_search_candidates.json",
@@ -585,7 +588,6 @@ def run_detail(
     tenant: str,
     expected_chamber: str,
     card_id: str,
-    network_approval_id: str,
     written_use_authorization_id: str,
     client: SariClient | None = None,
 ) -> dict[str, Any]:
@@ -595,9 +597,6 @@ def run_detail(
     card_id = str(card_id or "").strip()
     if not CARD_ID_RE.fullmatch(card_id):
         raise SariConnectorError("card id contains unsupported characters")
-    network_approval_id = _authorization(
-        network_approval_id, field="network_approval_id"
-    )
     written_use_authorization_id = _authorization(
         written_use_authorization_id, field="written_use_authorization_id"
     )
@@ -658,7 +657,6 @@ def run_detail(
         run_id=run_id,
         operation="selected_card_detail",
         tenant=active_client.tenant,
-        network_approval_id=network_approval_id,
         written_use_authorization_id=written_use_authorization_id,
         query_sha256=None,
     )
@@ -667,7 +665,6 @@ def run_detail(
         run_id=run_id,
         operation="detail",
         tenant=active_client.tenant,
-        network_approval_id=network_approval_id,
         written_use_authorization_id=written_use_authorization_id,
         outputs=[
             result_path.name,
@@ -687,7 +684,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--tenant", required=True)
     parser.add_argument("--expected-chamber", required=True)
-    parser.add_argument("--network-approval-id", required=True)
     parser.add_argument("--written-use-authorization-id", required=True)
     parser.add_argument("--query")
     parser.add_argument("--card-id")
@@ -698,7 +694,6 @@ def main(argv: list[str] | None = None) -> int:
         "run_id": args.run_id,
         "tenant": args.tenant,
         "expected_chamber": args.expected_chamber,
-        "network_approval_id": args.network_approval_id,
         "written_use_authorization_id": args.written_use_authorization_id,
     }
     try:

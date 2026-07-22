@@ -11,7 +11,7 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 Use this skill when a legal, tax, or compliance question must be turned into a structured Deep Research prompt. The plugin is a guided Codex workflow: Codex inspects the question, confirms only essential assumptions, writes the optimized prompt, runs deterministic validation, repairs gaps, and delivers a reviewable prompt package.
 
-The workflow is not Italian-only. Support the same four working locales used by the Mparanza plugins: `it`, `en`, `fr`, and `de`. Keep artifact file names and JSON keys in English for stability, but speak to the user in the chosen working language.
+The workflow is not Italian-only. Support the same five working locales used by the Mparanza plugins: `it`, `en`, `fr`, `de`, and `es`. Keep artifact file names and JSON keys in English for stability, but speak to the user in the chosen working language.
 
 Detailed wording guidance and validation expectations live in `../../references/workflow-reference.md` from this skill directory. Load that reference when the run needs extra detail beyond the workflow below.
 
@@ -218,7 +218,7 @@ Required:
 
 Optional:
 
-- working language: `it`, `en`, `fr`, or `de`;
+- working language: `it`, `en`, `fr`, `de`, or `es`;
 - legal jurisdiction hints, independent from output language;
 - research posture: `planning_ex_ante`, `assessment_ex_post`, `defense_audit_dispute`, or `compare_approaches`;
 - objective: `efficient`, `defensible_conservative`, or `balanced`;
@@ -240,7 +240,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 4. Run deterministic inspection:
 
 ```bash
-python scripts/inspect_question.py <question-file> --output-dir <output-dir> --language <auto|it|en|fr|de>
+python scripts/inspect_question.py <question-file> --output-dir <output-dir> --language <auto|it|en|fr|de|es>
 ```
 
 5. Read `question_inventory.json` and `prompt_recipe.json`. Summarize key fact anchors, explicit questions, jurisdiction hints, possible frameworks, `policy_source`, inferred posture/objective/scope, `angle_confirmation`, and `jurisdiction_confirmation`. Tell the user the output language, detected legal-framework cues, inferred research lens, proposed defaults, and unresolved assumptions. Do not describe a deterministic jurisdiction, legal topic, phasing choice, or source-domain list as resolved.
@@ -253,7 +253,7 @@ python scripts/inspect_question.py <question-file> --output-dir <output-dir> --l
 11. Run deterministic validation:
 
 ```bash
-python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de> --source-domains-file <output-dir>/draft_source_domains.txt
+python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de|es> --source-domains-file <output-dir>/draft_source_domains.txt
 ```
 
 12. Read `prompt_audit.json`. If any check fails, repair the prompt in Codex, overwrite `draft_prompt.md`, and rerun validation until the prompt passes or only explainable residual gaps remain.
@@ -348,7 +348,8 @@ Ask for or infer the working/output language:
 - `it`: Italian;
 - `en`: English;
 - `fr`: French;
-- `de`: German.
+- `de`: German;
+- `es`: Spanish.
 
 If the user writes in a supported language, default to that working language. If language is unclear, use `auto` for inspection and ask only if the final prompt language matters.
 
@@ -359,6 +360,7 @@ IT: Usa Optimize Prompt su questo quesito fiscale/legale. Lingua output: it. Inv
 EN: Use Optimize Prompt on this legal/tax question. Output language: en. Inventory possible jurisdiction/framework cues without choosing governing law; confirm the framework with the user before execution. Inspect the facts, propose posture/objective/scope, run a short lawyer-style intake if material facts are missing, write a complete Deep Research prompt with official sources, citations, notes, link checks, and fact-preservation constraints. Validate and repair the prompt before delivery.
 FR: Utilise Optimize Prompt sur cette question juridique/fiscale. Langue de sortie: fr. Inventorie les indices possibles de juridiction/cadre juridique sans choisir le droit applicable; confirme le cadre avec l'utilisateur avant l'exécution. Inspecte les faits, propose posture/objectif/portee, fais une brève intake de juriste si des faits matériels manquent, redige un prompt Deep Research complet avec sources officielles, citations, notes, controle des liens et contrainte de preservation des faits. Valide et repare le prompt avant livraison.
 DE: Verwende Optimize Prompt fuer diese Rechts-/Steuerfrage. Ausgabesprache: de. Inventarisiere moegliche Hinweise auf Rechtsordnung/Framework, ohne das anwendbare Recht auszuwaehlen; bestaetige das Framework vor der Ausfuehrung mit dem Nutzer. Pruefe die Fakten, schlage Posture/Ziel/Scope vor, fuehre bei fehlenden wesentlichen Fakten eine kurze anwaltsartige Intake durch und schreibe einen vollstaendigen Deep-Research-Prompt mit offiziellen Quellen, Zitaten, Notizen, Linkpruefung und Faktenerhalt. Validiere und repariere den Prompt vor der Lieferung.
+ES: Usa Optimize Prompt con esta cuestión jurídica/fiscal. Idioma de salida: es. Identifica los posibles indicios de jurisdicción o marco jurídico sin elegir el derecho aplicable; confirma el marco con el usuario antes de ejecutar. Examina los hechos, propón postura, objetivo y alcance, realiza una breve entrevista jurídica si faltan hechos materiales y redacta un prompt completo para Deep Research con fuentes oficiales, citas, notas, comprobación de enlaces y preservación de los hechos. Valida y corrige el prompt antes de entregarlo.
 ```
 
 ## Failure Modes
@@ -381,4 +383,6 @@ When there is something useful to report, write a short improvement note with:
 - relevant input/output file names when available;
 - suggested next engineering action.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

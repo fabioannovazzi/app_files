@@ -403,6 +403,12 @@ def scan_folder(
             "file_size": "Die Quelldatei überschreitet die Größenbegrenzung pro Datei",
             "total_size": "Die Quelldateien überschreiten die Gesamtgrößenbegrenzung",
         },
+        "es": {
+            "entries": "La carpeta del cliente supera el límite de elementos inspeccionables",
+            "files": "La carpeta del cliente supera el límite de archivos",
+            "file_size": "El archivo fuente supera el límite de tamaño por archivo",
+            "total_size": "Los archivos fuente superan el límite de tamaño total",
+        },
     }.get(language)
     if error_copy is None:
         raise ValueError(f"Unsupported language: {language}")
@@ -594,6 +600,16 @@ def write_index_markdown(
             "none": "Keine Dateien gefunden.",
             "detail": "Dateidetails",
         },
+        "es": {
+            "title": "Índice del expediente del cliente",
+            "folder": "Carpeta local",
+            "year": "Año objetivo",
+            "year_missing": "no especificado",
+            "files": "Archivos revisados",
+            "categories": "Categorías identificadas",
+            "none": "No se encontraron archivos.",
+            "detail": "Detalle de archivos",
+        },
     }[language]
     category_labels = {
         "en": {
@@ -619,6 +635,14 @@ def write_index_markdown(
             CATEGORY_AVVISI: "Bescheide / Mitteilungen",
             CATEGORY_CONTRATTI: "Verträge",
             CATEGORY_NON_CLASSIFICATI: "nicht klassifizierte Dokumente",
+        },
+        "es": {
+            CATEGORY_FATTURE_XML: "facturas electrónicas XML",
+            CATEGORY_RICEVUTE_SANITARIE: "justificantes médicos",
+            CATEGORY_MUTUO: "hipoteca",
+            CATEGORY_AVVISI: "avisos / comunicaciones",
+            CATEGORY_CONTRATTI: "contratos",
+            CATEGORY_NON_CLASSIFICATI: "documentos sin clasificar",
         },
     }.get(language, {})
     year_text = str(target_year) if target_year is not None else labels["year_missing"]
@@ -648,6 +672,7 @@ def write_index_markdown(
         "en": {"alta": "high", "media": "medium", "bassa": "low"},
         "fr": {"alta": "élevée", "media": "moyenne", "bassa": "faible"},
         "de": {"alta": "hoch", "media": "mittel", "bassa": "niedrig"},
+        "es": {"alta": "alta", "media": "media", "bassa": "baja"},
     }[language]
     for record in records:
         localized_notes: list[str] = []
@@ -659,6 +684,7 @@ def write_index_markdown(
                         "en": "classification uncertain",
                         "fr": "classification incertaine",
                         "de": "Klassifizierung unklar",
+                        "es": "clasificación incierta",
                     }[language]
                 )
             elif note_value.startswith("anno non coerente"):
@@ -668,6 +694,7 @@ def write_index_markdown(
                         "en": f"year differs from target {target_year}",
                         "fr": f"année différente de la cible {target_year}",
                         "de": f"Jahr weicht vom Zieljahr {target_year} ab",
+                        "es": f"el año difiere del objetivo {target_year}",
                     }[language]
                 )
             elif note_value.startswith("immagine"):
@@ -677,6 +704,7 @@ def write_index_markdown(
                         "en": "image: possible receipt or scanned document",
                         "fr": "image : reçu possible ou document numérisé",
                         "de": "Bild: möglicher Beleg oder gescanntes Dokument",
+                        "es": "imagen: posible justificante o documento escaneado",
                     }[language]
                 )
             else:

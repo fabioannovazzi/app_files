@@ -74,6 +74,18 @@
     "Evidence and output impact"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n de nuevo cliente",
+      "reviewTitle": "Revisi\u00f3n de la configuraci\u00f3n profesional",
+      "queueTitle": "Decisiones sobre la relaci\u00f3n",
+      "detailTitle": "Evidencia, fundamento y decisi\u00f3n",
+      "detailHelp": "Revise el hecho profesional, el fundamento citado y el impacto en el expediente antes de registrar la decisi\u00f3n.",
+      "search": "Buscar hecho, servicio, factor AML, documento, fuente, bloqueo",
+      "reviewerAlias": "Revisor",
+      "reviewerAliasHelp": "Use una referencia estable del profesional o de su cuenta. Se admite el nombre real del profesional. No introduzca credenciales, datos de sesi\u00f3n ni rutas locales sin depurar.",
+      "reviewerAliasInvalid": "La referencia del revisor puede tener un m\u00e1ximo de 160 caracteres y no debe contener credenciales, datos de sesi\u00f3n ni rutas locales sin depurar.",
+      "bulkProfessionalSkipped": "Se han aplicado {applied} recomendaciones seguras. {skipped} decisiones profesionales a\u00fan requieren una revisi\u00f3n individual."
+    },
     "it": {
       "title": "Revisione nuovo cliente",
       "reviewTitle": "Revisione assetto professionale",

@@ -63,13 +63,13 @@ Per un primo lavoro completo, Codex deve raccogliere e confermare questi element
 - cartella input con partite aperte, mastrini, banche, distinte, factoring/anticipi e compensazioni disponibili;
 - periodo e cut-off della riconciliazione;
 - file che contiene la popolazione da riconciliare;
-- lingua operativa e lingua dei documenti (`it`, `en`, `fr`, `de` o `auto` per documenti misti);
+- lingua operativa e lingua dei documenti (`it`, `en`, `fr`, `de`, `es` o `auto` per documenti misti);
 - assunzioni sulle evidenze: eventi post cut-off, valore probatorio delle distinte, eventuale trattamento factoring/anticipo più restrittivo del default e compensazione;
 - controllo dipendenze con `python scripts/check_dependencies.py`;
 - output attesi: Excel audit, scheda operativa per commercialista, Word, `source_pages.json`, `run_intake.json`, `review_payload.json`, `ui_decisions.json`, `final_artifacts.json`, `artifact_card.md`, `review_ui.html`, review Codex e, se utile, richieste mirate di evidenza;
 - passaggio di review: controllare eccezioni, righe ad alto valore, evidenze obbligatorie e righe non chiuse.
 
-Lingue supportate per etichette e testi di output: italiano (`it`), inglese (`en`), francese (`fr`) e tedesco (`de`).
+Lingue supportate per etichette e testi di output: italiano (`it`), inglese (`en`), francese (`fr`), tedesco (`de`) e spagnolo (`es`).
 
 ## Review browser locale e UI MCP
 

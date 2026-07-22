@@ -56,171 +56,205 @@ DIAGNOSTIC_PREFIX_COPY = {
         "en": "source path is not run-local or normalized",
         "fr": "le chemin source n’est pas local au run ou normalisé",
         "de": "Quellpfad ist nicht lauflokal oder normalisiert",
+        "es": "la ruta de origen no es local a la ejecución o no está normalizada",
     },
     "collegamento simbolico sorgente non consentito": {
         "en": "source symbolic link is not allowed",
         "fr": "le lien symbolique source n’est pas autorisé",
         "de": "symbolischer Quelllink ist nicht zulässig",
+        "es": "no se permite el enlace simbólico de origen",
     },
     "percorso sorgente esterno alla cartella cliente": {
         "en": "source path is outside the client folder",
         "fr": "le chemin source se trouve hors du dossier client",
         "de": "Quellpfad liegt außerhalb des Mandantenordners",
+        "es": "la ruta de origen está fuera de la carpeta del cliente",
     },
     "la sorgente non è un file regolare": {
         "en": "source is not a regular file",
         "fr": "la source n’est pas un fichier ordinaire",
         "de": "Quelle ist keine reguläre Datei",
+        "es": "el origen no es un archivo normal",
     },
     "lettura DOCX fallita": {
         "en": "DOCX reading failed",
         "fr": "échec de lecture du DOCX",
         "de": "DOCX konnte nicht gelesen werden",
+        "es": "no se ha podido leer el DOCX",
     },
     "lettura XLSX fallita": {
         "en": "XLSX reading failed",
         "fr": "échec de lecture du XLSX",
         "de": "XLSX konnte nicht gelesen werden",
+        "es": "no se ha podido leer el XLSX",
     },
     "lettura EML fallita": {
         "en": "EML reading failed",
         "fr": "échec de lecture de l’EML",
         "de": "EML konnte nicht gelesen werden",
+        "es": "no se ha podido leer el EML",
     },
     "lettura testo fallita": {
         "en": "text reading failed",
         "fr": "échec de lecture du texte",
         "de": "Text konnte nicht gelesen werden",
+        "es": "no se ha podido leer el texto",
     },
     "email troppo grande": {
         "en": "email exceeds the size limit",
         "fr": "l’e-mail dépasse la limite de taille",
         "de": "E-Mail überschreitet die Größenbegrenzung",
+        "es": "el correo supera el límite de tamaño",
     },
     "file di testo troppo grande": {
         "en": "text file exceeds the size limit",
         "fr": "le fichier texte dépasse la limite de taille",
         "de": "Textdatei überschreitet die Größenbegrenzung",
+        "es": "el archivo de texto supera el límite de tamaño",
     },
     "file di testo oltre il limite di": {
         "en": "text file exceeds the limit of",
         "fr": "le fichier texte dépasse la limite de",
         "de": "Textdatei überschreitet die Grenze von",
+        "es": "el archivo de texto supera el límite de",
     },
     "testo assente o troppo breve": {
         "en": "text is absent or too short",
         "fr": "le texte est absent ou trop court",
         "de": "Text fehlt oder ist zu kurz",
+        "es": "el texto está ausente o es demasiado breve",
     },
     "PDF troppo grande": {
         "en": "PDF exceeds the size limit",
         "fr": "le PDF dépasse la limite de taille",
         "de": "PDF überschreitet die Größenbegrenzung",
+        "es": "el PDF supera el límite de tamaño",
     },
     "allegati EML non estratti": {
         "en": "EML attachments not extracted",
         "fr": "pièces jointes EML non extraites",
         "de": "EML-Anhänge nicht extrahiert",
+        "es": "no se han extraído los adjuntos EML",
     },
     "pdfplumber non disponibile": {
         "en": "pdfplumber unavailable",
         "fr": "pdfplumber indisponible",
         "de": "pdfplumber nicht verfügbar",
+        "es": "pdfplumber no está disponible",
     },
     "pdfplumber fallito": {
         "en": "pdfplumber failed",
         "fr": "échec de pdfplumber",
         "de": "pdfplumber fehlgeschlagen",
+        "es": "pdfplumber ha fallado",
     },
     "PyMuPDF non disponibile": {
         "en": "PyMuPDF unavailable",
         "fr": "PyMuPDF indisponible",
         "de": "PyMuPDF nicht verfügbar",
+        "es": "PyMuPDF no está disponible",
     },
     "PyMuPDF fallito": {
         "en": "PyMuPDF failed",
         "fr": "échec de PyMuPDF",
         "de": "PyMuPDF fehlgeschlagen",
+        "es": "PyMuPDF ha fallado",
     },
     "rendering PyMuPDF non disponibile": {
         "en": "PyMuPDF rendering unavailable",
         "fr": "rendu PyMuPDF indisponible",
         "de": "PyMuPDF-Rendering nicht verfügbar",
+        "es": "el renderizado de PyMuPDF no está disponible",
     },
     "rendering PyMuPDF fallito": {
         "en": "PyMuPDF rendering failed",
         "fr": "échec du rendu PyMuPDF",
         "de": "PyMuPDF-Rendering fehlgeschlagen",
+        "es": "el renderizado de PyMuPDF ha fallado",
     },
     "PaddleOCR non disponibile": {
         "en": "PaddleOCR unavailable",
         "fr": "PaddleOCR indisponible",
         "de": "PaddleOCR nicht verfügbar",
+        "es": "PaddleOCR no está disponible",
     },
     "PaddleOCR init fallito": {
         "en": "PaddleOCR initialization failed",
         "fr": "échec de l’initialisation de PaddleOCR",
         "de": "PaddleOCR-Initialisierung fehlgeschlagen",
+        "es": "no se ha podido inicializar PaddleOCR",
     },
     "PaddleOCR fallito": {
         "en": "PaddleOCR failed",
         "fr": "échec de PaddleOCR",
         "de": "PaddleOCR fehlgeschlagen",
+        "es": "PaddleOCR ha fallado",
     },
     "Pillow non disponibile": {
         "en": "Pillow unavailable",
         "fr": "Pillow indisponible",
         "de": "Pillow nicht verfügbar",
+        "es": "Pillow no está disponible",
     },
     "OCR immagine fallito": {
         "en": "image OCR failed",
         "fr": "échec de l’OCR de l’image",
         "de": "Bild-OCR fehlgeschlagen",
+        "es": "el OCR de la imagen ha fallado",
     },
     "nessuna pagina rasterizzata": {
         "en": "no page was rasterized",
         "fr": "aucune page n’a été rastérisée",
         "de": "keine Seite wurde gerastert",
+        "es": "no se ha rasterizado ninguna página",
     },
     "OCR non ha prodotto testo utile": {
         "en": "OCR produced no usable text",
         "fr": "l’OCR n’a produit aucun texte exploitable",
         "de": "OCR hat keinen nutzbaren Text erzeugt",
+        "es": "el OCR no ha producido texto utilizable",
     },
     "estensione non supportata per estrazione locale": {
         "en": "extension unsupported for local extraction",
         "fr": "extension non prise en charge pour l’extraction locale",
         "de": "Erweiterung für lokale Extraktion nicht unterstützt",
+        "es": "extensión no compatible con la extracción local",
     },
     "membro OOXML troppo grande": {
         "en": "OOXML member exceeds the size limit",
         "fr": "le membre OOXML dépasse la limite de taille",
         "de": "OOXML-Bestandteil überschreitet die Größenbegrenzung",
+        "es": "el componente OOXML supera el límite de tamaño",
     },
     "membro OOXML cifrato non supportato": {
         "en": "encrypted OOXML member unsupported",
         "fr": "membre OOXML chiffré non pris en charge",
         "de": "verschlüsselter OOXML-Bestandteil nicht unterstützt",
+        "es": "el componente OOXML cifrado no es compatible",
     },
     "rapporto di compressione OOXML eccessivo": {
         "en": "OOXML compression ratio exceeds the limit",
         "fr": "le taux de compression OOXML dépasse la limite",
         "de": "OOXML-Kompressionsverhältnis überschreitet die Grenze",
+        "es": "la relación de compresión OOXML supera el límite",
     },
     "archivio OOXML con troppi membri": {
         "en": "OOXML archive contains too many members",
         "fr": "l’archive OOXML contient trop de membres",
         "de": "OOXML-Archiv enthält zu viele Bestandteile",
+        "es": "el archivo OOXML contiene demasiados componentes",
     },
     "archivio OOXML con nomi membro duplicati": {
         "en": "OOXML archive contains duplicate member names",
         "fr": "l’archive OOXML contient des noms de membres en double",
         "de": "OOXML-Archiv enthält doppelte Bestandteilnamen",
+        "es": "el archivo OOXML contiene nombres de componentes duplicados",
     },
     "archivio OOXML espanso troppo grande": {
         "en": "expanded OOXML archive exceeds the size limit",
         "fr": "l’archive OOXML décompressée dépasse la limite de taille",
         "de": "entpacktes OOXML-Archiv überschreitet die Größenbegrenzung",
+        "es": "el archivo OOXML descomprimido supera el límite de tamaño",
     },
 }
 
@@ -240,6 +274,7 @@ def _localized_diagnostic(value: str, language: str) -> str:
             "en": f"text extraction limited to the first {read_pages} of {total_pages} pages",
             "fr": f"extraction de texte limitée aux {read_pages} premières pages sur {total_pages}",
             "de": f"Textextraktion auf die ersten {read_pages} von {total_pages} Seiten begrenzt",
+            "es": f"extracción de texto limitada a las primeras {read_pages} de {total_pages} páginas",
         }[language]
     ocr_limit = re.fullmatch(
         r"OCR limitato alle prime (\d+) di (\d+) pagine",
@@ -251,6 +286,7 @@ def _localized_diagnostic(value: str, language: str) -> str:
             "en": f"OCR limited to the first {read_pages} of {total_pages} pages",
             "fr": f"OCR limité aux {read_pages} premières pages sur {total_pages}",
             "de": f"OCR auf die ersten {read_pages} von {total_pages} Seiten begrenzt",
+            "es": f"OCR limitado a las primeras {read_pages} de {total_pages} páginas",
         }[language]
     unsafe_xml = re.fullmatch(
         r"(?P<source>.+): dichiarazioni DTD/entity non consentite",
@@ -262,6 +298,7 @@ def _localized_diagnostic(value: str, language: str) -> str:
             "en": f"{source}: DTD/entity declarations are not allowed",
             "fr": f"{source} : les déclarations DTD/entity ne sont pas autorisées",
             "de": f"{source}: DTD-/Entity-Deklarationen sind nicht zulässig",
+            "es": f"{source}: no se permiten declaraciones DTD/entity",
         }[language]
     for prefix in sorted(DIAGNOSTIC_PREFIX_COPY, key=len, reverse=True):
         if value == prefix or value.startswith(
@@ -1149,12 +1186,23 @@ def write_extraction_report(
             "characters": "Zeichen",
             "confidence": "Konfidenz",
         },
+        "es": {
+            "title": "Extracción de texto de documentos",
+            "attempted": "Documentos procesados",
+            "readable": "Documentos legibles",
+            "unreadable": "Documentos no legibles",
+            "verify": "Pendiente de verificar / OCR necesario",
+            "extracted": "Texto extraído",
+            "characters": "caracteres",
+            "confidence": "confianza",
+        },
     }[language]
     confidence_copy = {
         "it": {"alta": "alta", "media": "media", "bassa": "bassa"},
         "en": {"alta": "high", "media": "medium", "bassa": "low"},
         "fr": {"alta": "élevée", "media": "moyenne", "bassa": "faible"},
         "de": {"alta": "hoch", "media": "mittel", "bassa": "niedrig"},
+        "es": {"alta": "alta", "media": "media", "bassa": "baja"},
     }[language]
     lines = [
         f"# {copy['title']}",
@@ -1194,7 +1242,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--lang", default="it", help="Lingua OCR Paddle.")
     parser.add_argument(
         "--language",
-        choices=("it", "en", "fr", "de"),
+        choices=("it", "en", "fr", "de", "es"),
         default="it",
         help="Lingua del report di estrazione.",
     )

@@ -49,6 +49,14 @@
     "Review note"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n de informe",
+      "reviewTitle": "Revisi\u00f3n de secciones del informe",
+      "queueTitle": "Secciones del informe",
+      "detailTitle": "Editor de secci\u00f3n",
+      "detailHelp": "Revise cada secci\u00f3n narrativa con su tabla fuente y registre las modificaciones.",
+      "search": "Buscar secci\u00f3n, tabla, fuente, bloqueo, salida"
+    },
     "it": {
       "title": "Revisione report",
       "reviewTitle": "Revisione sezioni report",

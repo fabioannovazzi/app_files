@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "workflow": "attribute-reporting",
+  "display_name": "Retailer Signals",
+  "governed_paths": [
+    "skills/attribute-reporting/SKILL.md",
+    "modules/attribute-reporting/skills/attribute-reporting/SKILL.md",
+    "modules/attribute-reporting/skills/attribute-reporting/references",
+    "modules/attribute-reporting/scripts"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "retailer-product-evidence",
+        "purpose": "Map product attributes and compare retailer cohorts",
+        "content": "Retailer and category; structured product, variant, brand, description, price, promotion, ranking, cohort and taxonomy records; public image URLs and locally hydrated product images; package provenance and mapping history"
+      },
+      {
+        "id": "mapping-and-report-judgement",
+        "purpose": "Resolve ambiguous taxonomy mappings and author and review a checked report",
+        "content": "Mapping tasks, decisions, evidence, local-image hashes, independent mapping reviews, computed tables, report model, claim ledger, caveats, selected examples, semantic review, browser QA, and correctness verdict"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [
+    "retail-data"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "mparanza-retail-data",
+      "kind": "hosted_service",
+      "hosted_service_id": "retail-data",
+      "destination": "Mparanza Attribute Reporting service",
+      "purpose": "Retrieve the central taxonomy and current structured retail snapshot, create mapping worksets, submit explicitly reviewed mappings, and download rebuilt evidence packages",
+      "content": "Retailer/category and pinned taxonomy identifiers; evidence and workset identifiers; mapping tasks, decisions, validated mappings, independent mapping review, correction reason when used, and authenticated transport metadata; local HTML reports and local image bytes are not uploaded",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The installed current-database route is selected explicitly; existing integrity-checked local packages can be processed without it.",
+        "Server writes occur only at the explicit mapping-submission checkpoint.",
+        "The separate hosted-service record states the source-backed access and retention position."
+      ]
+    },
+    {
+      "id": "public-product-image-retrieval",
+      "kind": "public_research",
+      "destination": "Public product-image hosts named by the evidence package",
+      "purpose": "Download product images for local mapping evidence and report review",
+      "content": "The package-supplied public image URL and ordinary network request metadata; downloaded image bytes remain local and are not sent back with the report",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The image hydrator permits supported public raster URLs only and validates address, redirect, byte-size, and hash constraints.",
+        "Missing images remain a visible partial evidence state rather than triggering an undisclosed alternative route."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "origin-bound-auth",
+      "control": "Authentication cookies are kept in a private local auth directory and attached only to the exact approved Mparanza origin."
+    },
+    {
+      "id": "checksummed-packages",
+      "control": "Downloads are size-limited, checksum-verified, safely extracted, and bound to local transport and package provenance."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "d8f8489ac69969583355863b99a2efb296bae328c9b2a80dcd978fb374f2bf23"
+  }
+}

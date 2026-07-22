@@ -16,14 +16,14 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 import polars as pl
+from ibcs_titles import build_ibcs_title
 from legacy_adapter import (
     cleanup_legacy_imports,
     legacy_date_period_context,
-    run_legacy_variable_dimension_component_bridge,
     run_legacy_variable_dimension_bridge,
+    run_legacy_variable_dimension_component_bridge,
     run_legacy_variance,
 )
-from ibcs_titles import build_ibcs_title
 from legacy_plotting import write_pvm_decomposition_ladder_png, write_waterfall_png
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -45,20 +45,24 @@ def _ensure_local_review_session_import() -> None:
 
 
 _ensure_local_review_session_import()
-from review_session import write_review_session_artifacts, write_run_intake
 from exploded_variance_bridge_chart import (
     DEFAULT_CHILD_TOP_N as EXPLODED_BRIDGE_DEFAULT_CHILD_TOP_N,
 )
 from exploded_variance_bridge_chart import (
     DEFAULT_MAX_DRILLDOWNS as EXPLODED_BRIDGE_DEFAULT_MAX_DRILLDOWNS,
 )
-from exploded_variance_bridge_chart import write_exploded_variance_bridge_artifacts
+from exploded_variance_bridge_chart import (
+    write_exploded_variance_bridge_artifacts,
+)
+from review_session import write_review_session_artifacts, write_run_intake
 from root_cause_bridge_chart import write_root_cause_bridge_png
 from root_cause_client_report import write_root_cause_client_report
 from total_by_dimension_bridge_chart import (
     DEFAULT_TOP_N as TOTAL_BY_DIMENSION_DEFAULT_TOP_N,
 )
-from total_by_dimension_bridge_chart import write_total_by_dimension_bridge_artifacts
+from total_by_dimension_bridge_chart import (
+    write_total_by_dimension_bridge_artifacts,
+)
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 VENDOR_ROOT = PLUGIN_ROOT / "vendor"
@@ -353,7 +357,7 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--language",
         default="en",
-        choices=["it", "en", "fr", "de"],
+        choices=["it", "en", "fr", "de", "es"],
         help="Working/output language for Codex-facing summaries.",
     )
     parser.add_argument(
@@ -365,9 +369,7 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
         "--artifact-mode",
         choices=sorted(ARTIFACT_MODES),
         default=ARTIFACT_MODE_DATA_AND_RENDER,
-        help=(
-            "Write chart data only or keep the legacy data-and-render behavior."
-        ),
+        help=("Write chart data only or keep the legacy data-and-render behavior."),
     )
 
 

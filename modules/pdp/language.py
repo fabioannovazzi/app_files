@@ -7,19 +7,23 @@ from urllib.request import urlopen
 
 from fastapi import Request
 
+from modules.pdp.language_es import SPANISH_PAGE_COPY
+
 LANGUAGE_LABELS: Dict[str, str] = {
     "en": "English",
     "it": "Italiano",
     "fr": "Français",
     "de": "Deutsch",
+    "es": "Español",
 }
 LANDING_LANGUAGE_LABELS: Dict[str, str] = {
     "en": "En",
     "it": "It",
     "fr": "Fr",
     "de": "De",
+    "es": "Es",
 }
-LANGUAGE_ORDER: List[str] = ["en", "it", "fr", "de"]
+LANGUAGE_ORDER: List[str] = ["en", "it", "fr", "de", "es"]
 SUPPORTED_LANGUAGES = set(LANGUAGE_LABELS.keys())
 
 PAGE_LABELS = {
@@ -28,72 +32,84 @@ PAGE_LABELS = {
         "it": "Verifica registrazioni contabili",
         "fr": "Contrôler les écritures",
         "de": "Buchungen prüfen",
+        "es": "Comprobar asientos",
     },
     "/presentations/page": {
         "en": "Presentations",
         "it": "Presentazioni",
         "fr": "Présentations",
         "de": "Präsentationen",
+        "es": "Presentaciones",
     },
     "/review/reports/page": {
         "en": "Retailer signals",
         "it": "Segnali dei retailer",
         "fr": "Signaux retailers",
         "de": "Retailer-Signale",
+        "es": "Señales de retailers",
     },
     "/review/brand-reports/page": {
         "en": "Brand fit",
         "it": "Fit del brand",
         "fr": "Fit de marque",
         "de": "Marken-Fit",
+        "es": "Afinidad de marca",
     },
     "/review/product-hypotheses/page": {
         "en": "Product hints",
         "it": "Spunti prodotto",
         "fr": "Pistes produit",
         "de": "Produkt-Hinweise",
+        "es": "Pistas de producto",
     },
     "/auth/page": {
         "en": "Sign in",
         "it": "Accedi",
         "fr": "Se connecter",
         "de": "Anmelden",
+        "es": "Iniciar sesión",
     },
     "/slides/page": {
         "en": "Slide editor",
         "it": "Editor diapositive",
         "fr": "Éditeur de diapositives",
         "de": "Folieneditor",
+        "es": "Editor de diapositivas",
     },
     "/review/page": {
         "en": "Catalog",
         "it": "Catalogo",
         "fr": "Catalogue",
         "de": "Katalog",
+        "es": "Catálogo",
     },
     "/review/react": {
         "en": "Catalog",
         "it": "Catalogo",
         "fr": "Catalogue",
         "de": "Katalog",
+        "es": "Catálogo",
     },
     "/review/coverage/page": {
         "en": "Attribute coverage",
         "it": "Copertura attributi",
         "fr": "Couverture des attributs",
         "de": "Attributabdeckung",
+        "es": "Cobertura de atributos",
     },
     "/review/explicit-rules/page": {
         "en": "Explicit attributes",
         "it": "Dichiarazioni PDP",
         "fr": "Déclarations PDP",
         "de": "PDP-Angaben",
+        "es": "Declaraciones de PDP",
     },
     "/review/issues/page": {
         "en": "Attribute issues",
         "it": "Problemi attributi",
         "fr": "Problèmes d’attributs",
         "de": "Attributprobleme",
+        "es": "Problemas de atributos",
     },
 }
 
@@ -2638,6 +2654,8 @@ def resolve_language(request: Request) -> str:
             return "fr"
         if country_code == "DE":
             return "de"
+        if country_code == "ES":
+            return "es"
     return "en"
 
 
@@ -2687,7 +2705,28 @@ def get_page_copy(page: str, lang: str) -> Dict[str, Any]:
     page_data = PAGE_COPY.get(page)
     if not page_data:
         return {}
-    return _resolve_copy(page_data, lang)
+    resolved = _resolve_copy(page_data, lang)
+    if lang == "es":
+        _apply_spanish_overrides(resolved, SPANISH_PAGE_COPY.get(page, {}))
+    return resolved
+
+
+def _apply_spanish_overrides(
+    resolved: Dict[str, Any], overrides: Dict[str, str]
+) -> None:
+    """Apply path-keyed Spanish values to a resolved page-copy tree."""
+
+    for path, value in overrides.items():
+        keys = path.split(".")
+        target = resolved
+        for key in keys[:-1]:
+            child = target[key]
+            if not isinstance(child, dict):
+                raise TypeError(
+                    f"Spanish copy path does not resolve to a mapping: {path}"
+                )
+            target = child
+        target[keys[-1]] = value
 
 
 def _resolve_copy(node: Any, lang: str) -> Any:

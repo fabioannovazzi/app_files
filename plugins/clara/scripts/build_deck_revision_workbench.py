@@ -472,7 +472,7 @@ def _render_review(
     lines = [
         "# Deck Revision Workbench",
         "",
-        "Status: ready for local Codex interpretation. No PPTX edits have been made.",
+        "Status: the local workbench is ready for Codex interpretation. No PPTX edits have been made.",
         "",
         "## Inputs",
         "",

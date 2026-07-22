@@ -83,7 +83,13 @@ def test_visual_report_marks_horizontal_overflow_as_failure() -> None:
 
 
 def test_parse_languages_accepts_supported_comma_list() -> None:
-    assert audit._parse_languages("en,it,fr,de") == ("en", "it", "fr", "de")
+    assert audit._parse_languages("en,it,fr,de,es") == (
+        "en",
+        "it",
+        "fr",
+        "de",
+        "es",
+    )
 
 
 def test_localized_payload_sets_run_language(tmp_path: Path) -> None:

@@ -1,0 +1,3 @@
+# Añada las fechas sin envíos para España en formato AAAA-MM-DD, una por línea.
+# Ejemplo:
+# 2026-01-01

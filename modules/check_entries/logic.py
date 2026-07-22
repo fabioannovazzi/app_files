@@ -134,6 +134,11 @@ LANGUAGE_ALIASES: dict[str, str] = {
     "de": "deu",
     "deu": "deu",
     "german": "deu",
+    "es": "spa",
+    "spa": "spa",
+    "spanish": "spa",
+    "español": "spa",
+    "espanol": "spa",
 }
 
 # Reverse mapping used to obtain a user-facing language name for the LLM.
@@ -142,6 +147,7 @@ LANGUAGE_NAMES: dict[str, str] = {
     "ita": "Italian",
     "fra": "French",
     "deu": "German",
+    "spa": "Spanish",
 }
 
 
@@ -205,6 +211,22 @@ LOCALIZED_STRINGS: dict[str, dict[str, str]] = {
             "Es konnte nicht genügend Text aus dem PDF extrahiert werden; LLM-Prüfung übersprungen."
         ),
         "manual_review": "Unzureichender Text extrahiert; manuelle Prüfung erforderlich.",
+    },
+    "spa": {
+        "amount_mismatch": "Diferencia de importe: se esperaba {expected}±{tolerance}, se encontró {found}",
+        "date_mismatch": "Diferencia de fecha: se esperaba {expected}±{window} días, se encontró {found}",
+        "timing_difference": "Diferencia temporal: se esperaba {expected}±{window} días, se encontró {found}",
+        "beneficiary_mismatch": (
+            "Beneficiario diferente: se esperaba {expected} (similitud ≥ {similarity}), se encontró {found}"
+        ),
+        "missing_transaction": "Transacción pendiente: se esperaba {expected}, no se encontró",
+        "duplicate_transaction": "Transacción duplicada: se esperaba {expected}, se encontró {found}",
+        "fraud": "Fraude: {reason}",
+        "no_pdf": "No se ha cargado ningún PDF",
+        "extraction_failed": (
+            "No se pudo extraer suficiente texto del PDF; se omitió la comprobación con LLM."
+        ),
+        "manual_review": "El texto extraído es insuficiente; se requiere revisión manual.",
     },
 }
 

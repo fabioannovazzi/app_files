@@ -4,7 +4,7 @@
 
 Guided Codex workflow for deterministic reconciliation between bank statements and journal or ledger exports.
 
-The plugin is multilingual (`it`, `en`, `fr`, `de`) and keeps helper scripts deterministic. Codex handles inspection, mapping decisions, review explanation, and improvement suggestions; scripts perform extraction, normalization, matching, and exports without direct model API calls.
+The plugin is multilingual (`it`, `en`, `fr`, `de`, `es`) and keeps helper scripts deterministic. Codex handles inspection, mapping decisions, review explanation, and improvement suggestions; scripts perform extraction, normalization, matching, and exports without direct model API calls.
 
 ## Internal Scripts
 

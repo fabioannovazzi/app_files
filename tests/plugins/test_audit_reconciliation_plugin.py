@@ -10,7 +10,7 @@ from typing import Any
 
 import pytest
 from docx import Document
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 
 from scripts.validate_plugin_review_contract import validate_contract
 
@@ -21,6 +21,7 @@ REVIEW_SESSION_PATH = SCRIPT_DIR / "review_session.py"
 REVIEW_SERVER_PATH = SCRIPT_DIR / "review_server.py"
 RAW_INPUT_RUNNER_PATH = SCRIPT_DIR / "raw_input_runner.py"
 CHECK_DEPENDENCIES_PATH = SCRIPT_DIR / "check_dependencies.py"
+MISSING_EVIDENCE_PATH = SCRIPT_DIR / "build_missing_evidence_requests.py"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 
 
@@ -74,6 +75,52 @@ def load_check_dependencies() -> Any:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def load_missing_evidence_requests() -> Any:
+    if str(SCRIPT_DIR) not in sys.path:
+        sys.path.insert(0, str(SCRIPT_DIR))
+    spec = importlib.util.spec_from_file_location(
+        "audit_reconciliation_missing_evidence", MISSING_EVIDENCE_PATH
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_missing_evidence_request_workbook_is_spanish(tmp_path: Path) -> None:
+    module = load_missing_evidence_requests()
+    pack = module.build_missing_evidence_request_pack(
+        [
+            {
+                "row_id": "row-1",
+                "reconciliation_status": "probable_payment",
+                "document": "FAC-001",
+                "amount": "1250.00",
+            }
+        ],
+        entity_name="Entidad Demo",
+        counterparty_name="Cliente Demo",
+        cutoff_date="2026-12-31",
+        language="es",
+    )
+    output_path = module.write_missing_evidence_workbook(
+        tmp_path / "solicitudes.xlsx", pack
+    )
+
+    workbook = load_workbook(output_path, read_only=True, data_only=True)
+    assert pack.language == "es"
+    assert pack.instructions[0]["principle"] == (
+        "No vuelva a solicitar documentos ya adquiridos"
+    )
+    assert "instrucciones" in workbook.sheetnames
+    assert "pagos_probables" in workbook.sheetnames
+    assert workbook["pagos_probables"]["A1"].value == "id_línea_papel_trabajo"
+    assert workbook["pagos_probables"]["J2"].value.startswith(
+        "Confirmación de la asignación"
+    )
 
 
 def _call_mcp_server(messages: list[dict[str, object]]) -> list[dict[str, object]]:
@@ -585,7 +632,7 @@ def _write_review_server_fixture(output_dir: Path) -> None:
         ],
         "item_count": 2,
         "columns": [],
-        "evidence": {},
+        "source_artifacts": {},
         "allowed_actions": [
             "accept",
             "reject",
@@ -724,7 +771,7 @@ def test_review_server_renders_local_browser_bridge(tmp_path: Path) -> None:
     assert "review-safeguards" in html
     assert "renderReviewSafeguards" in html
     assert "safeguardLocalExecution" in html
-    assert "safeguardExternalApproval" in html
+    assert "safeguardExternalRoute" in html
     assert "safeguardBoundedPayload" in html
     assert "safeguardDecisionPersistence" in html
     assert "safeguardFinalArtifacts" in html
@@ -887,7 +934,7 @@ def test_audit_reconciliation_mcp_server_validates_and_renders_review_payload() 
         ],
         "item_count": 2,
         "columns": [],
-        "evidence": {},
+        "source_artifacts": {},
         "allowed_actions": [
             "accept",
             "reject",

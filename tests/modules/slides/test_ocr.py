@@ -54,8 +54,14 @@ def test_configure_paddle_import_environment_preserves_explicit_cache(
     assert slides_ocr.os.environ["MPLCONFIGDIR"] == str(explicit_matplotlib_home)
 
 
+@pytest.mark.parametrize(
+    ("requested_lang", "engine_lang"),
+    [("eng", "en"), ("spa", "es")],
+)
 def test_extract_raw_ocr_from_image_bytes_uses_paddle_output_and_lang_mapping(
     monkeypatch: pytest.MonkeyPatch,
+    requested_lang: str,
+    engine_lang: str,
 ) -> None:
     captured: dict[str, object] = {}
 
@@ -85,9 +91,12 @@ def test_extract_raw_ocr_from_image_bytes_uses_paddle_output_and_lang_mapping(
     monkeypatch.setattr(slides_ocr, "_get_paddle_ocr", _fake_get_paddle_ocr)
     monkeypatch.setattr(slides_ocr, "_get_paddle_layout", _fail_if_layout_used)
 
-    raw_ocr = slides_ocr.extract_raw_ocr_from_image_bytes(_tiny_png_bytes(), lang="eng")
+    raw_ocr = slides_ocr.extract_raw_ocr_from_image_bytes(
+        _tiny_png_bytes(),
+        lang=requested_lang,
+    )
 
-    assert captured["lang"] == "en"
+    assert captured["lang"] == engine_lang
     assert captured["cls"] is True
     assert raw_ocr == [
         [

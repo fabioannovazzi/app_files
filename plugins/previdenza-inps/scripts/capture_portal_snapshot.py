@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture one approved, already-open INPS browser page without operating it."""
+"""Capture one selected, already-open INPS browser page without operating it."""
 
 from __future__ import annotations
 
@@ -24,13 +24,12 @@ __all__ = [
     "main",
     "normalize_approved_origin",
     "normalize_cdp_url",
-    "validate_external_approval",
     "verify_portal_snapshot",
 ]
 
 LOGGER = logging.getLogger(__name__)
 
-SCHEMA_VERSION = "previdenza_inps.portal_capture.v2"
+SCHEMA_VERSION = "previdenza_inps.portal_capture.v3"
 VISIBLE_TEXT_NAME = "portal_visible_text.txt"
 SCREENSHOT_NAME = "portal_full_page.png"
 MANIFEST_NAME = "portal_capture_manifest.json"
@@ -38,31 +37,8 @@ PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 CAPTURE_ID_RE = re.compile(r"^inps-capture-[0-9a-f]{32}$")
 LOOPBACK_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
-APPROVER_ROLES = frozenset({"authorized_user", "professional_reviewer"})
 ALLOWED_INPS_SUFFIXES = ("inps.it",)
 
-APPROVAL_FIELDS = frozenset(
-    {
-        "approved",
-        "approval_id",
-        "approved_at",
-        "approved_by",
-        "approved_by_role",
-        "reason",
-        "scope",
-        "own_or_authorized_credentials_confirmed",
-        "human_access_authority_confirmed",
-        "human_access_authority_basis",
-        "portal_profile_authority_confirmed",
-        "portal_profile_authority_basis",
-        "delegation_or_subject_authority_confirmed",
-        "delegation_or_subject_authority_basis",
-        "portal_capture_permission_confirmed",
-        "portal_permission_basis",
-        "read_only_capture_confirmed",
-        "no_credentials_or_session_secrets_visible_confirmed",
-    }
-)
 GUARDRAILS = {
     "authentication_performed_by_connector": False,
     "navigation_performed": False,
@@ -72,22 +48,18 @@ GUARDRAILS = {
     "page_html_read": False,
     "browser_closed": False,
     "case_content_uploaded": False,
-    "own_or_authorized_credentials_confirmed": True,
-    "portal_capture_permission_confirmed": True,
-    "read_only_capture_confirmed": True,
-    "no_credentials_or_session_secrets_visible_confirmed": True,
 }
 TOP_LEVEL_FIELDS = frozenset(
     {
         "schema_version",
         "capture_id",
         "captured_at",
+        "route_selected",
         "capture_method",
         "approved_origin",
         "source_url_sha256",
         "page_title_sha256",
         "body_character_count",
-        "approval",
         "guardrails",
         "artifacts",
     }
@@ -214,86 +186,6 @@ def _page_origin(value: str) -> str | None:
     return f"https://{host}"
 
 
-def validate_external_approval(value: Mapping[str, Any]) -> dict[str, Any]:
-    """Validate the explicit human authorization required for external capture."""
-
-    if not isinstance(value, Mapping):
-        raise PortalCaptureError("external approval must be an object.")
-    if set(value) != APPROVAL_FIELDS:
-        missing = sorted(APPROVAL_FIELDS - set(value))
-        unexpected = sorted(set(value) - APPROVAL_FIELDS)
-        detail = []
-        if missing:
-            detail.append("missing: " + ", ".join(missing))
-        if unexpected:
-            detail.append("unexpected: " + ", ".join(unexpected))
-        raise PortalCaptureError(
-            "external approval fields are invalid (" + "; ".join(detail) + ")."
-        )
-    if value.get("approved") is not True:
-        raise PortalCaptureError("external approval must set approved=true.")
-    for field in (
-        "own_or_authorized_credentials_confirmed",
-        "human_access_authority_confirmed",
-        "portal_profile_authority_confirmed",
-        "delegation_or_subject_authority_confirmed",
-        "portal_capture_permission_confirmed",
-        "read_only_capture_confirmed",
-        "no_credentials_or_session_secrets_visible_confirmed",
-    ):
-        if value.get(field) is not True:
-            raise PortalCaptureError(f"external approval must confirm {field}.")
-    role = _required_text(
-        value.get("approved_by_role"),
-        field="external approval approved_by_role",
-        maximum_characters=100,
-    )
-    if role not in APPROVER_ROLES:
-        raise PortalCaptureError("external approval has an unsupported approver role.")
-    return {
-        "approved": True,
-        "approval_id": _required_text(
-            value.get("approval_id"),
-            field="external approval approval_id",
-            maximum_characters=200,
-        ),
-        "approved_at": _timezone_datetime(
-            value.get("approved_at"), field="external approval approved_at"
-        ),
-        "approved_by": _required_text(
-            value.get("approved_by"),
-            field="external approval approved_by",
-            maximum_characters=200,
-        ),
-        "approved_by_role": role,
-        "reason": _required_text(value.get("reason"), field="external approval reason"),
-        "scope": _required_text(value.get("scope"), field="external approval scope"),
-        "own_or_authorized_credentials_confirmed": True,
-        "human_access_authority_confirmed": True,
-        "human_access_authority_basis": _required_text(
-            value.get("human_access_authority_basis"),
-            field="external approval human_access_authority_basis",
-        ),
-        "portal_profile_authority_confirmed": True,
-        "portal_profile_authority_basis": _required_text(
-            value.get("portal_profile_authority_basis"),
-            field="external approval portal_profile_authority_basis",
-        ),
-        "delegation_or_subject_authority_confirmed": True,
-        "delegation_or_subject_authority_basis": _required_text(
-            value.get("delegation_or_subject_authority_basis"),
-            field="external approval delegation_or_subject_authority_basis",
-        ),
-        "portal_capture_permission_confirmed": True,
-        "portal_permission_basis": _required_text(
-            value.get("portal_permission_basis"),
-            field="external approval portal_permission_basis",
-        ),
-        "read_only_capture_confirmed": True,
-        "no_credentials_or_session_secrets_visible_confirmed": True,
-    }
-
-
 def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
@@ -390,7 +282,6 @@ def capture_portal_snapshot(
     remote_url: str,
     approved_origin: str,
     output_dir: Path,
-    external_approval: Mapping[str, Any],
     timeout_ms: int = 20_000,
     playwright_factory: Callable[[], Any] | None = None,
     captured_at: datetime | None = None,
@@ -404,7 +295,6 @@ def capture_portal_snapshot(
 
     cdp_url = normalize_cdp_url(remote_url)
     origin = normalize_approved_origin(approved_origin)
-    approval = validate_external_approval(external_approval)
     if not isinstance(timeout_ms, int) or not 1 <= timeout_ms <= 120_000:
         raise PortalCaptureError("timeout_ms must be an integer from 1 to 120000.")
     if captured_at is not None and (
@@ -476,12 +366,12 @@ def capture_portal_snapshot(
         "schema_version": SCHEMA_VERSION,
         "capture_id": capture_id,
         "captured_at": captured_at_text,
+        "route_selected": True,
         "capture_method": "attached_chrome_visible_page_read_only",
         "approved_origin": origin,
         "source_url_sha256": _sha256_bytes(full_url.encode("utf-8")),
         "page_title_sha256": _sha256_bytes(title.encode("utf-8")),
         "body_character_count": len(text_bytes.decode("utf-8")),
-        "approval": approval,
         "guardrails": dict(GUARDRAILS),
         "artifacts": artifacts,
     }
@@ -553,6 +443,8 @@ def verify_portal_snapshot(output_dir: Path) -> dict[str, Any]:
     if not CAPTURE_ID_RE.fullmatch(str(manifest.get("capture_id", ""))):
         raise PortalCaptureError("portal capture ID is invalid.")
     _timezone_datetime(manifest.get("captured_at"), field="captured_at")
+    if manifest.get("route_selected") is not True:
+        raise PortalCaptureError("portal capture route selection is invalid.")
     if manifest.get("capture_method") != "attached_chrome_visible_page_read_only":
         raise PortalCaptureError("portal capture method is invalid.")
     normalize_approved_origin(str(manifest.get("approved_origin", "")))
@@ -564,7 +456,6 @@ def verify_portal_snapshot(output_dir: Path) -> dict[str, Any]:
         or manifest["body_character_count"] < 0
     ):
         raise PortalCaptureError("body_character_count must be a non-negative integer.")
-    validate_external_approval(manifest.get("approval", {}))
     if manifest.get("guardrails") != GUARDRAILS:
         raise PortalCaptureError("portal capture guardrails are incomplete.")
 
@@ -617,91 +508,12 @@ def verify_portal_snapshot(output_dir: Path) -> dict[str, Any]:
 
 def _capture_parser(subparsers: Any) -> None:
     parser = subparsers.add_parser(
-        "capture", help="Capture exactly one approved, already-open INPS tab."
+        "capture", help="Capture exactly one selected, already-open INPS tab."
     )
     parser.add_argument("--remote-url", default="http://127.0.0.1:9222")
     parser.add_argument("--approved-origin", required=True)
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--timeout-ms", type=int, default=20_000)
-    parser.add_argument("--approval-id", required=True)
-    parser.add_argument("--approved-at", required=True)
-    parser.add_argument("--approved-by", required=True)
-    parser.add_argument(
-        "--approved-by-role",
-        required=True,
-        choices=sorted(APPROVER_ROLES),
-    )
-    parser.add_argument("--approval-reason", required=True)
-    parser.add_argument("--approval-scope", required=True)
-    parser.add_argument("--approve-external-access", action="store_true", required=True)
-    parser.add_argument(
-        "--confirm-own-or-authorized-credentials",
-        action="store_true",
-        required=True,
-    )
-    parser.add_argument(
-        "--confirm-human-access-authority",
-        action="store_true",
-        required=True,
-    )
-    parser.add_argument("--human-access-authority-basis", required=True)
-    parser.add_argument(
-        "--confirm-portal-profile-authority",
-        action="store_true",
-        required=True,
-    )
-    parser.add_argument("--portal-profile-authority-basis", required=True)
-    parser.add_argument(
-        "--confirm-delegation-or-subject-authority",
-        action="store_true",
-        required=True,
-    )
-    parser.add_argument("--delegation-or-subject-authority-basis", required=True)
-    parser.add_argument(
-        "--confirm-portal-capture-permission",
-        action="store_true",
-        required=True,
-    )
-    parser.add_argument("--portal-permission-basis", required=True)
-    parser.add_argument(
-        "--confirm-read-only-capture", action="store_true", required=True
-    )
-    parser.add_argument(
-        "--confirm-no-credentials-or-session-secrets-visible",
-        action="store_true",
-        required=True,
-    )
-
-
-def _approval_from_args(args: argparse.Namespace) -> dict[str, Any]:
-    return {
-        "approved": args.approve_external_access,
-        "approval_id": args.approval_id,
-        "approved_at": args.approved_at,
-        "approved_by": args.approved_by,
-        "approved_by_role": args.approved_by_role,
-        "reason": args.approval_reason,
-        "scope": args.approval_scope,
-        "own_or_authorized_credentials_confirmed": (
-            args.confirm_own_or_authorized_credentials
-        ),
-        "human_access_authority_confirmed": args.confirm_human_access_authority,
-        "human_access_authority_basis": args.human_access_authority_basis,
-        "portal_profile_authority_confirmed": (args.confirm_portal_profile_authority),
-        "portal_profile_authority_basis": args.portal_profile_authority_basis,
-        "delegation_or_subject_authority_confirmed": (
-            args.confirm_delegation_or_subject_authority
-        ),
-        "delegation_or_subject_authority_basis": (
-            args.delegation_or_subject_authority_basis
-        ),
-        "portal_capture_permission_confirmed": (args.confirm_portal_capture_permission),
-        "portal_permission_basis": args.portal_permission_basis,
-        "read_only_capture_confirmed": args.confirm_read_only_capture,
-        "no_credentials_or_session_secrets_visible_confirmed": (
-            args.confirm_no_credentials_or_session_secrets_visible
-        ),
-    }
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -724,7 +536,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 remote_url=args.remote_url,
                 approved_origin=args.approved_origin,
                 output_dir=args.output_dir,
-                external_approval=_approval_from_args(args),
                 timeout_ms=args.timeout_ms,
             )
             result = {

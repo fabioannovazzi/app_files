@@ -96,6 +96,29 @@ def test_interview_opening_question_names_vera(tmp_path: Path, monkeypatch) -> N
     assert "Do not name clients or customers" in interview["participant_intro"]
 
 
+def test_interview_submission_accepts_spanish_and_localizes_intro(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path / "interviews"))
+    store = ChangeRequestStore(sqlite_path=tmp_path / "requests.sqlite3")
+    payload = _payload()
+    payload.update(
+        {
+            "submission_id": "74803396-2558-4503-bd32-650cedb3963e",
+            "language": "es",
+        }
+    )
+
+    response = _client(store).post("/api/change-requests/interviews", json=payload)
+
+    assert response.status_code == 201
+    token = response.json()["interview_url"].rsplit("/", 1)[-1]
+    interview = hosted_interview_api._load_record_for_token(token)
+    assert interview["language"] == "es"
+    assert interview["questions"] == ["¿Qué debería hacer mejor Clara?"]
+    assert "No menciones a clientes" in interview["participant_intro"]
+
+
 def test_completing_improvement_interview_attaches_transcript_to_request(
     tmp_path: Path, monkeypatch
 ) -> None:

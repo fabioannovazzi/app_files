@@ -39,6 +39,17 @@ LANGUAGE_MARKERS = {
     "en": ("what", "how", "tax", "vat", "company", "law", "compliance"),
     "fr": ("quoi", "comment", "tva", "impot", "societe", "droit", "fiscal"),
     "de": ("was", "wie", "mwst", "steuer", "gesellschaft", "recht"),
+    "es": (
+        "qué",
+        "que",
+        "cómo",
+        "como",
+        "iva",
+        "impuesto",
+        "sociedad",
+        "derecho",
+        "fiscal",
+    ),
 }
 
 JURISDICTION_CUES = {
@@ -505,7 +516,7 @@ def _effective_language(language: str, detected_language: str) -> str:
 
     if language != "auto":
         return language
-    if detected_language in {"it", "en", "fr", "de"}:
+    if detected_language in {"it", "en", "fr", "de", "es"}:
         return detected_language
     return "auto"
 
@@ -1260,7 +1271,7 @@ def main() -> int:
         help="Directory for question_inventory.json and prompt_recipe.json.",
     )
     parser.add_argument(
-        "--language", choices=["auto", "it", "en", "fr", "de"], default="auto"
+        "--language", choices=["auto", "it", "en", "fr", "de", "es"], default="auto"
     )
     args = parser.parse_args()
 

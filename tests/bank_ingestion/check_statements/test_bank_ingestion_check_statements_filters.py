@@ -22,6 +22,7 @@ except ModuleNotFoundError:  # pragma: no cover
         ("it", "Riepilogo movimenti"),
         ("de", "Gebühren Mitteilung"),  # includes accented keyword
         ("fr", "Frais de service"),
+        ("es", "Resumen de comisiones"),
     ],
 )
 def test_is_summary_or_notice_detects_keywords(lang: str, text: str) -> None:
@@ -34,7 +35,7 @@ def test_is_summary_or_notice_detects_keywords(lang: str, text: str) -> None:
 
 def test_is_summary_or_notice_unknown_language_returns_false() -> None:
     # Act
-    result = is_summary_or_notice("summary of charges", "es")
+    result = is_summary_or_notice("summary of charges", "nl")
 
     # Assert
     assert result is False
@@ -43,13 +44,15 @@ def test_is_summary_or_notice_unknown_language_returns_false() -> None:
 @pytest.mark.parametrize(
     "y_pos,page_height,expected",
     [
-        (69.999, 1000.0, True),   # inside header band (< 7%)
-        (70.0, 1000.0, False),     # exactly at band boundary -> not header/footer
-        (930.0, 1000.0, False),    # exactly at lower boundary of footer band
-        (930.001, 1000.0, True),   # inside footer band (> 93%)
+        (69.999, 1000.0, True),  # inside header band (< 7%)
+        (70.0, 1000.0, False),  # exactly at band boundary -> not header/footer
+        (930.0, 1000.0, False),  # exactly at lower boundary of footer band
+        (930.001, 1000.0, True),  # inside footer band (> 93%)
     ],
 )
-def test_is_header_footer_band_boundaries(y_pos: float, page_height: float, expected: bool) -> None:
+def test_is_header_footer_band_boundaries(
+    y_pos: float, page_height: float, expected: bool
+) -> None:
     # Act
     result = is_header_footer(y_pos, page_height)
 

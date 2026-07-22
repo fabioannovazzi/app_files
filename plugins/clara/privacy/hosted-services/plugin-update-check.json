@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "service_id": "plugin-update-check",
+  "display_name": "Mparanza Plugin Update Check",
+  "provider_or_recipients": [
+    "Mparanza public static-site infrastructure"
+  ],
+  "workflows": [
+    "clara"
+  ],
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "hooks/hooks.json",
+    "scripts/check_for_update.py",
+    "repository/modules/pdp/legal_content.py"
+  ],
+  "trigger": "The SessionStart hook runs on startup or resume. A local 24-hour cache normally suppresses repeated manifest downloads.",
+  "automatic": true,
+  "data_sent": [
+    {
+      "id": "version-manifest-request",
+      "when": "On SessionStart when no valid local manifest cache is available",
+      "content": "An HTTPS GET to the fixed public version-manifest URL with Accept: application/json and User-Agent: Mparanza-Plugin-Update-Check/1, plus ordinary connection metadata such as source IP and time; no client files, prompts, transcripts, or case content are included by the plugin"
+    }
+  ],
+  "data_returned": [
+    {
+      "id": "published-plugin-versions",
+      "when": "After a successful manifest request",
+      "content": "Public manifest schema, Clara published version, and validated ChatGPT plugin install URL"
+    }
+  ],
+  "access": {
+    "arrangement": "The version manifest is a public unauthenticated static resource. The plugin source does not establish infrastructure-log access.",
+    "controls": [
+      "The client uses a fixed HTTPS URL, fixed User-Agent, three-second network timeout, and fail-open behavior.",
+      "The response is accepted only when the expected schema, version string, and ChatGPT plugin URL shape are present.",
+      "The last check and notification state are cached locally when plugin data storage is available."
+    ]
+  },
+  "retention": {
+    "status": "partially_documented",
+    "statement": "The plugin caches the downloaded public manifest and check time locally. Current Mparanza web access logs use 14 daily rotations; other application logs, download records, caches, exports, and backups do not share one automatic deletion schedule."
+  },
+  "security_controls": [
+    {
+      "id": "no-professional-payload",
+      "control": "The update request is constructed without case, client, prompt, source-document, transcript, or output content."
+    },
+    {
+      "id": "rate-limited-and-fail-open",
+      "control": "The local cache limits the manifest request to approximately once per 24 hours and network failure never blocks plugin startup."
+    },
+    {
+      "id": "fixed-endpoint-and-validated-response",
+      "control": "The update client uses a fixed HTTPS manifest URL and accepts only the expected schema, version string, and ChatGPT install-URL shape."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "hosted_service_boundary_review_of_source",
+    "source_fingerprint": "b73ff0c15f990b73f81e8a8509738c055801e9166b1b814922d274d24f940992"
+  }
+}

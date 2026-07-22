@@ -48,6 +48,14 @@
     "Tie-out finding"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n del plan de concordato",
+      "reviewTitle": "Revisi\u00f3n de los respaldos del plan",
+      "queueTitle": "Cuadres",
+      "detailTitle": "Plan y respaldo",
+      "detailHelp": "Compare las cifras del plan con los respaldos contables y mantenga decisiones trazables.",
+      "search": "Buscar secci\u00f3n del plan, cuadre, evidencia, bloqueo, salida"
+    },
     "it": {
       "title": "Revisione piano concordato",
       "reviewTitle": "Revisione supporti del piano",

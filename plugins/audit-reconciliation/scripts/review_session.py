@@ -636,7 +636,7 @@ def _path_role_map(
 
 
 def _audit_workpaper_required_sheets(language: str) -> list[str]:
-    if str(language or "").lower().startswith("it"):
+    if _is_italian(language):
         return [
             "Indice",
             "Assunzioni",
@@ -644,6 +644,15 @@ def _audit_workpaper_required_sheets(language: str) -> list[str]:
             "Sintesi",
             "Controlli",
             "Revisione Codex",
+        ]
+    if _is_spanish(language):
+        return [
+            "Índice",
+            "Supuestos",
+            "Detalle de conciliación",
+            "Resumen",
+            "Controles",
+            "Revisión Codex",
         ]
     return [
         "Index",
@@ -656,10 +665,15 @@ def _audit_workpaper_required_sheets(language: str) -> list[str]:
 
 
 def _audit_workpaper_required_sheet_headers(language: str) -> dict[str, list[str]]:
-    if str(language or "").lower().startswith("it"):
+    if _is_italian(language):
         return {
             "Indice": ["Foglio", "Righe"],
             "Assunzioni": ["Campo", "Valore"],
+        }
+    if _is_spanish(language):
+        return {
+            "Índice": ["Hoja", "Líneas"],
+            "Supuestos": ["Campo", "Valor"],
         }
     return {
         "Index": ["Sheet", "Rows"],
@@ -675,9 +689,37 @@ ITALIAN_CELL_FIELD_LABELS = {
     "rule_applied": "Regola applicata",
 }
 
+SPANISH_CELL_FIELD_LABELS = {
+    "amount": "Importe",
+    "currency": "Moneda",
+    "cutoff_date": "Fecha de corte",
+    "document_no": "Documento",
+    "matched_evidence_type": "Tipo de evidencia conciliada",
+    "record_id": "ID de línea",
+    "reconciliation_status": "Estado de conciliación",
+    "rule_applied": "Regla aplicada",
+    "scope_year": "Año del alcance",
+}
+
+
+def _language_code(language: object | None) -> str:
+    text = str(language or "it").strip().lower().replace("_", "-")
+    code = text.split("-", 1)[0]
+    return {
+        "esp": "es",
+        "espanol": "es",
+        "español": "es",
+        "spa": "es",
+        "spanish": "es",
+    }.get(code, code)
+
 
 def _is_italian(language: str) -> bool:
-    return str(language or "").lower().startswith("it")
+    return _language_code(language) == "it"
+
+
+def _is_spanish(language: str) -> bool:
+    return _language_code(language) == "es"
 
 
 def _fallback_cell_label(value: object) -> str:
@@ -694,6 +736,8 @@ def _cell_field_label(field: object, language: str) -> str:
         return ""
     if _is_italian(language):
         return ITALIAN_CELL_FIELD_LABELS.get(value.lower(), _fallback_cell_label(value))
+    if _is_spanish(language):
+        return SPANISH_CELL_FIELD_LABELS.get(value.lower(), _fallback_cell_label(value))
     return value
 
 
@@ -760,7 +804,7 @@ def _first_reconciliation_detail_cell_checks(
 def _audit_workpaper_required_cells(
     language: str, result: dict[str, Any] | None = None
 ) -> dict[str, dict[str, str]]:
-    if str(language or "").lower().startswith("it"):
+    if _is_italian(language):
         cells = {
             "Indice": {
                 "A1": "Foglio",
@@ -776,6 +820,23 @@ def _audit_workpaper_required_cells(
         detail_checks = _first_reconciliation_detail_cell_checks(result, language)
         if detail_checks:
             cells["Dettaglio riconciliazione"] = detail_checks
+        return cells
+    if _is_spanish(language):
+        cells = {
+            "Índice": {
+                "A1": "Hoja",
+                "B1": "Líneas",
+                "A2": "Supuestos",
+                "A5": "Detalle de conciliación",
+            },
+            "Supuestos": {"A1": "Campo", "B1": "Valor"},
+        }
+        assumption_checks = _audit_assumption_cell_checks(result, language)
+        if assumption_checks:
+            cells["Supuestos"].update(assumption_checks)
+        detail_checks = _first_reconciliation_detail_cell_checks(result, language)
+        if detail_checks:
+            cells["Detalle de conciliación"] = detail_checks
         return cells
     cells = {
         "Index": {
@@ -833,7 +894,7 @@ def _accountant_workbook_required_cells(
 
 
 def _word_report_required_text(language: str) -> list[str]:
-    if str(language or "").lower().startswith("it"):
+    if _is_italian(language):
         return [
             "Sintesi esecutiva",
             "Perimetro e metodo",
@@ -842,6 +903,16 @@ def _word_report_required_text(language: str) -> list[str]:
             "Revisione manuale Codex",
             "Limiti della procedura",
             "Rinvio al file Excel",
+        ]
+    if _is_spanish(language):
+        return [
+            "Resumen ejecutivo",
+            "Alcance y método",
+            "Cómo interpretar los resultados",
+            "Controles automáticos",
+            "Revisión manual de Codex",
+            "Limitaciones del procedimiento",
+            "Referencia al archivo Excel",
         ]
     return [
         "Executive Summary",
@@ -1139,7 +1210,7 @@ def write_review_session_artifacts(
         "items": items,
         "item_count": len(items),
         "columns": _review_columns(),
-        "evidence": {
+        "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "audit_workbook": _as_output_ref(result.get("excel_path"), output_dir),
             "accountant_report": _as_output_ref(

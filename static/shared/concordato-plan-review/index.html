@@ -10,13 +10,14 @@
   <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/concordato-plan-review/index.html?lang=en">
   <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/concordato-plan-review/index.html?lang=fr">
   <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/concordato-plan-review/index.html?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/concordato-plan-review/index.html?lang=es">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
   <title>Revisione Piano Concordato — Italia | Vera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../vera-scope.css?v=20260721">
-  <script src="../vera-scope.js?v=20260721" defer></script>
+  <script src="../vera-scope.js?v=20260722" defer></script>
   <style>
     :root {
       --ink: #002060;
@@ -445,6 +446,7 @@
           <button type="button" data-lang="en">En</button>
           <button type="button" data-lang="fr">Fr</button>
           <button type="button" data-lang="de">De</button>
+          <button type="button" data-lang="es">Es</button>
         </div>
       </div>
     </div>
@@ -506,7 +508,7 @@
           <p class="eyebrow" data-i18n="inputs.eyebrow">Input</p>
           <h2 data-i18n="inputs.title">Che cosa legge</h2>
         </div>
-        <p data-i18n="inputs.copy">Lavora su file locali già disponibili allo studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.</p>
+        <p data-i18n="inputs.copy">Lavora sui file già disponibili nel workspace Codex dello studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.</p>
       </div>
       <div class="grid four" id="input-cards"></div>
     </section>
@@ -583,7 +585,7 @@
         inputs: {
           eyebrow: "File letti",
           title: "Che cosa legge",
-          copy: "Lavora su file locali già disponibili allo studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.",
+          copy: "Lavora sui file già disponibili nel workspace Codex dello studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.",
           cards: [
             ["Piano di concordato", "Parte descrittiva e numerica del piano, PDF o Excel."],
             ["Bilancio e mastrini", "Saldi e schede da usare come primo riscontro numerico."],
@@ -664,7 +666,7 @@
         inputs: {
           eyebrow: "Inputs",
           title: "What it reads",
-          copy: "Works with local files already available to the firm. Non-text PDFs and broken formulas are flagged for review rather than forced into a false match.",
+          copy: "Works with files already available in the firm's Codex workspace. Non-text PDFs and broken formulas are flagged for review rather than forced into a false match.",
           cards: [
             ["Concordato plan", "Descriptive and numerical plan sections, PDF or Excel."],
             ["Balance and ledgers", "Account balances and schedules used as the first tie-out source."],
@@ -745,7 +747,7 @@
         inputs: {
           eyebrow: "Entrées",
           title: "Ce qu'il lit",
-          copy: "Le contrôle travaille sur les fichiers locaux déjà disponibles au cabinet. Les PDF non textuels et les formules cassées sont signalés pour revue.",
+          copy: "Le contrôle travaille sur les fichiers déjà disponibles dans l'espace de travail Codex du cabinet. Les PDF non textuels et les formules cassées sont signalés pour revue.",
           cards: [
             ["Plan de concordat", "Parties descriptives et chiffrées du plan, PDF ou Excel."],
             ["Bilan et grands livres", "Soldes et fiches utilisés comme première source de rapprochement."],
@@ -802,6 +804,87 @@
           prompt: "Utilise Révision du plan de concordat sur /chemin/dossier.\nDate de référence : 2026-03-31. Langue du document : fr.\nCompare plan, bilan, grands livres, tableaux ajustés et détail fiscal/social.\nProduis tableau Excel, synthèse Word et revue des écarts."
         }
       },
+      es: {
+        nav: { what: "Qué hace", inputs: "Entradas", outputs: "Salidas", use: "Uso", prompts: "Prompts", download: "Instalación" },
+        hero: {
+          eyebrow: "Paquete Italia · Revisión del plan de concordato",
+          title: "Compruebe las cifras del plan antes de que el revisor adopte una posición.",
+          subtitle: "En el procedimiento italiano de concordato, vincule los valores del plan con el balance, los mayores, los cuadros ajustados y el detalle de las deudas fiscales y de seguridad social.",
+          copy: "Proporcione el plan, el balance, los mayores y los cuadros de respaldo. Reciba lo que cuadra, lo que solo es candidato y las cifras que aún requieren explicación.",
+          primary: "Instalar Vera",
+          secondary: "Cómo utilizarlo",
+          cardLabel: "Lo que proporciona / lo que recibe",
+          bullets: [
+            "Proporcione el plan, el balance, los mayores y los cuadros de respaldo.",
+            "Confirme fecha, alcance, tolerancia e idioma del documento.",
+            "Reciba un archivo Excel de revisión, un resumen Word y un informe de diferencias."
+          ]
+        },
+        what: {
+          eyebrow: "Qué hace",
+          title: "De archivos dispersos a un Excel revisable",
+          copy: "Úselo para comparar un plan de concordato con el respaldo contable mediante un puente documentado entre las cifras del plan y las evidencias."
+        },
+        inputs: {
+          eyebrow: "Entradas",
+          title: "Qué lee",
+          copy: "Trabaja con los archivos ya disponibles en el espacio de trabajo Codex del despacho. Los PDF sin texto y las fórmulas rotas se señalan para revisión en lugar de forzar una coincidencia falsa.",
+          cards: [
+            ["Plan de concordato", "Secciones descriptivas y numéricas del plan, en PDF o Excel."],
+            ["Balance y mayores", "Saldos contables y cuadros utilizados como primera fuente de cuadre."],
+            ["Cuadros ajustados", "Saldos ajustados, escenarios de continuidad o liquidación y hojas de respaldo."],
+            ["Detalle fiscal y social", "Cuadros fiscales, de seguridad social y otros que deben cuadrarse con el plan."]
+          ]
+        },
+        outputs: {
+          eyebrow: "Salidas",
+          title: "Qué genera",
+          copy: "La carpeta de trabajo separa el inventario de fuentes, los importes extraídos, las coincidencias candidatas, el archivo Excel de revisión y el resumen Word. El documento Word indica qué cuadra, qué no cuadra y qué falta por explicar.",
+          items: [
+            ["inventory.json", "Inventario de fuentes, funciones sugeridas y limitaciones de lectura."],
+            ["amount_candidates.csv", "Importes extraídos de PDF, Excel y CSV con su contexto de origen."],
+            ["exact_amount_matches.csv", "Coincidencias por importe entre el plan y las fuentes de respaldo, que deben validarse en contexto."],
+            ["concordato_tie_out_workpaper.xlsx", "Archivo Excel revisable con diferencias candidatas y hojas fuente."],
+            ["concordato_review_summary.docx", "Resumen Word con secciones de cuadra, no cuadra y requiere explicación."],
+            ["run_audit.json", "Parámetros, recuentos y límite entre los datos extraídos y el resumen final."],
+            ["codex_run_review.md", "Informe final sobre diferencias, cuestiones críticas y próximas aclaraciones."]
+          ]
+        },
+        review: {
+          title: "El puente muestra qué cuadra, qué es candidato y qué falta",
+          copy1: "El archivo Excel reúne importes, páginas, hojas, fórmulas y coincidencias por importe. El resumen explica si una línea del plan está respaldada, es solo candidata o sigue sin explicación.",
+          copy2: "El resultado presenta al revisor diferencias, omisiones, fuentes débiles y aclaraciones antes de adoptar una posición sobre el plan de concordato."
+        },
+        use: {
+          eyebrow: "Uso",
+          title: "Cómo configurar la revisión",
+          copy: "Abra la carpeta del cliente y confirme solo las decisiones materiales: alcance, fecha de referencia, tolerancia e idioma del documento final.",
+          steps: [
+            ["Preparación", "Comprobación del material", "Verifique dependencias, archivos legibles y fuentes disponibles."],
+            ["Decisiones", "Decisiones materiales", "Si el conjunto de archivos es ambiguo, confirme únicamente alcance, fecha, tolerancia o fuente del plan."],
+            ["Análisis", "Puente numérico", "Extraiga importes, hojas, páginas y coincidencias candidatas."],
+            ["Revisión", "Resumen para el revisor", "Prepare el informe de diferencias y cuestiones críticas para el revisor."]
+          ]
+        },
+        prompts: {
+          eyebrow: "Prompts",
+          title: "Prompts listos",
+          copy: "Empiece con estos prompts y sustituya la ruta de la carpeta. Codex preguntará antes de asumir decisiones materiales que los archivos no resuelvan.",
+          items: [
+            ["Revisión completa", "Usa Revisión del plan de concordato en /ruta/carpeta. Compara el plan, el balance, los mayores, los cuadros ajustados y el detalle fiscal y social. Genera Excel, Word e informe de diferencias."],
+            ["Solo cuadre numérico", "Comprueba si las cifras del plan cuadran con el balance y los mayores. Para las que no cuadren, busca respaldo en los cuadros ajustados y el detalle de deudas. Enumera ejemplos concretos."],
+            ["Posición del revisor", "Después del cuadre, destaca continuidad, efectos en el balance, datos sin respaldo, omisiones y solicitudes que enviar al cliente."]
+          ]
+        },
+        download: {
+          eyebrow: "Instalación",
+          title: "Abrir Vera", copy: "Abra Vera e inicie la revisión.", installTitle: "Vera", codexText: "Todos los módulos están disponibles en el mismo espacio de trabajo.",
+          button: "Instalar Vera",
+          firstUseTitle: "Primer uso",
+          firstUseCopy: "En un chat de Codex, indique la carpeta del expediente, la fecha de referencia, el idioma y la tolerancia de importes.",
+          prompt: "Usa Revisión del plan de concordato en /ruta/carpeta.\nFecha de referencia: 2026-03-31. Idioma del documento: es.\nCompara el plan, el balance, los mayores, los cuadros ajustados y el detalle fiscal y social.\nGenera un archivo Excel de revisión, un resumen Word y una revisión de diferencias."
+        }
+      },
       de: {
         nav: { what: "Leistung", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Installation" },
         hero: {
@@ -826,7 +909,7 @@
         inputs: {
           eyebrow: "Inputs",
           title: "Was gelesen wird",
-          copy: "Die Prüfung arbeitet mit lokalen Dateien der Kanzlei. Nicht-textuelle PDFs und fehlerhafte Formeln werden markiert, nicht künstlich normalisiert.",
+          copy: "Die Prüfung arbeitet mit Dateien, die bereits im Codex-Workspace der Kanzlei verfügbar sind. Nicht-textuelle PDFs und fehlerhafte Formeln werden markiert, nicht künstlich normalisiert.",
           cards: [
             ["Concordato-Plan", "Beschreibende und numerische Planabschnitte, PDF oder Excel."],
             ["Bilanz und Hauptbücher", "Salden und Karten als erste Tie-out-Quelle."],
@@ -966,9 +1049,10 @@
       it:{metaTitle:"Revisione Piano Concordato — Italia | Vera",metaDescription:"Nel perimetro italiano del concordato, Vera collega i numeri del piano a bilancio, mastrini e prospetti di supporto in una revisione leggibile.",breadcrumbAria:"Percorso pagina",videoId:"ndZQoJjwOpY",text:{"nav.overview":"In breve","nav.workflow":"Percorso","nav.proof":"Guarda","nav.next":"Workflow Italia","nav.prompt":"Prompt","nav.open":"Apri Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Pacchetto Italia","breadcrumb.module":"Piano di concordato","overview.eyebrow":"Il lavoro in breve","overview.title":"Dal piano a una revisione che mostra che cosa torna davvero.","overview.copy":"Vera collega ogni numero alle evidenze disponibili e separa i valori riconciliati, i candidati e le differenze ancora da spiegare.","flow.provide.title":"Fornisci","flow.provide.copy":"Piano, bilancio, mastrini e prospetti tributari o previdenziali.","flow.prepare.title":"Vera prepara","flow.prepare.copy":"Collegamenti tra importi, fonti e differenze con una traccia leggibile.","flow.receive.title":"Ricevi","flow.receive.copy":"Un tabulato Excel e una sintesi Word che partono dai punti aperti.","workflow.eyebrow":"Percorso","workflow.title":"Quattro passaggi per leggere il piano contro le sue basi.","workflow.copy":"Il lavoro conserva importo, pagina, foglio e collegamento per ogni voce rilevante.","workflow.one.title":"Inventaria il fascicolo","workflow.one.copy":"Ordina piano, bilancio, mastrini e dettagli di supporto.","workflow.two.title":"Estrae gli importi","workflow.two.copy":"Porta valori e localizzatori in una base confrontabile.","workflow.three.title":"Costruisce il ponte","workflow.three.copy":"Collega le voci del piano alle evidenze e separa i candidati.","workflow.four.title":"Prepara la revisione","workflow.four.copy":"Raccoglie differenze, omissioni e domande in una vista pronta da percorrere.","spec.summary":"Specifiche tecniche, input e file prodotti","proof.eyebrow":"Vera al lavoro","proof.title":"Guarda il ponte tra il piano e le evidenze.","proof.copy":"La guida mostra come i valori del piano diventano riconciliati, candidati o ancora da spiegare.","proof.kicker":"Guida breve · Narrazione italiana","proof.videoTitle":"Dal piano a una revisione che mostra che cosa batte davvero","related.eyebrow":"Altri workflow Italia","related.copy":"Vera usa lo stesso filo tra fascicolo, fonti e lavoro rivedibile anche negli altri workflow del pacchetto Italia.","related.inps":"Previdenza INPS →","related.registro":"Registro Imprese e SARI →","prompt.eyebrow":"Per iniziare","prompt.title":"Un prompt, poi la revisione.","prompt.copy":"Indica cartella e data di riferimento. Vera prepara il confronto.","prompt.text":"Usa Revisione Piano Concordato su /percorso/fascicolo. Data di riferimento: 31/03/2026. Collega piano, bilancio, mastrini e prospetti e prepara differenze e punti aperti.","cta.title":"Porta il fascicolo in Vera.","cta.copy":"Apri Vera e prepara il ponte tra il piano e le sue basi.","cta.open":"Apri Vera"}},
       en:{metaTitle:"Concordato Plan Review — Italy | Vera",metaDescription:"Within Italy’s Concordato procedure, Vera connects plan figures to balances, ledgers and supporting schedules in a readable review.",breadcrumbAria:"Page path",videoId:"LYNGc7XVmsI",text:{"nav.overview":"Overview","nav.workflow":"Workflow","nav.proof":"Watch","nav.next":"Italy workflows","nav.prompt":"Prompt","nav.open":"Open Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Italy pack","breadcrumb.module":"Concordato plan","overview.eyebrow":"The work at a glance","overview.title":"From the plan to a review that shows what actually ties.","overview.copy":"Vera connects each figure to available evidence and separates reconciled values, candidates and differences still to explain.","flow.provide.title":"Provide","flow.provide.copy":"Plan, balances, ledgers and tax or social-security schedules.","flow.prepare.title":"Vera prepares","flow.prepare.copy":"Connections between figures, sources and differences with a readable trail.","flow.receive.title":"Receive","flow.receive.copy":"An Excel workpaper and Word summary that begin with open points.","workflow.eyebrow":"Workflow","workflow.title":"Four steps to read the plan against its foundations.","workflow.copy":"The work preserves amount, page, sheet and connection for each relevant item.","workflow.one.title":"Inventory the file","workflow.one.copy":"Organize plan, balances, ledgers and supporting detail.","workflow.two.title":"Extract figures","workflow.two.copy":"Bring values and locators into a comparable base.","workflow.three.title":"Build the bridge","workflow.three.copy":"Connect plan items to evidence and keep candidates separate.","workflow.four.title":"Prepare review","workflow.four.copy":"Gather differences, omissions and questions in a navigable view.","spec.summary":"Technical specification, inputs and produced files","proof.eyebrow":"Vera at work","proof.title":"Watch the bridge between the plan and its evidence.","proof.copy":"The guide shows how plan values become reconciled, candidate or still unexplained.","proof.kicker":"Short guide · English narration","proof.videoTitle":"From the plan to a review that shows what actually ties","related.eyebrow":"Other Italy workflows","related.copy":"Vera uses the same thread between case file, sources and reviewable work across other workflows in the Italy pack.","related.inps":"INPS Social Security Review →","related.registro":"Business Register and SARI →","prompt.eyebrow":"Get started","prompt.title":"One prompt, then the review.","prompt.copy":"Give the folder and reference date. Vera prepares the comparison.","prompt.text":"Use Concordato Plan Review on /path/case. Reference date: 31/03/2026. Connect the plan, balances, ledgers and schedules and prepare differences and open points.","cta.title":"Bring the case file to Vera.","cta.copy":"Open Vera and prepare the bridge between the plan and its foundations.","cta.open":"Open Vera"}},
       fr:{metaTitle:"Revue du plan de concordat — Italie | Vera",metaDescription:"Dans le cadre italien du concordat, Vera relie les chiffres du plan au bilan, aux grands livres et aux tableaux justificatifs dans une revue lisible.",breadcrumbAria:"Parcours de la page",videoId:"Fmoaxshafhg",text:{"nav.overview":"En bref","nav.workflow":"Parcours","nav.proof":"Voir","nav.next":"Workflows Italie","nav.prompt":"Prompt","nav.open":"Ouvrir Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Pack Italie","breadcrumb.module":"Plan de concordat","overview.eyebrow":"Le travail en bref","overview.title":"Du plan à une revue qui montre ce qui concorde vraiment.","overview.copy":"Vera relie chaque chiffre aux preuves disponibles et sépare valeurs rapprochées, candidates et écarts à expliquer.","flow.provide.title":"Vous fournissez","flow.provide.copy":"Plan, bilan, grands livres et tableaux fiscaux ou sociaux.","flow.prepare.title":"Vera prépare","flow.prepare.copy":"Les liens entre montants, sources et écarts avec une piste lisible.","flow.receive.title":"Vous recevez","flow.receive.copy":"Un tableau Excel et une synthèse Word qui commencent par les points ouverts.","workflow.eyebrow":"Parcours","workflow.title":"Quatre étapes pour lire le plan face à ses fondements.","workflow.copy":"Le travail conserve montant, page, feuille et lien pour chaque poste pertinent.","workflow.one.title":"Inventorier le dossier","workflow.one.copy":"Ordonner plan, bilan, grands livres et détails justificatifs.","workflow.two.title":"Extraire les montants","workflow.two.copy":"Placer valeurs et localisateurs dans une base comparable.","workflow.three.title":"Construire le pont","workflow.three.copy":"Relier les postes du plan aux preuves et isoler les candidats.","workflow.four.title":"Préparer la revue","workflow.four.copy":"Réunir écarts, omissions et questions dans une vue facile à parcourir.","spec.summary":"Spécifications techniques, entrées et fichiers produits","proof.eyebrow":"Vera au travail","proof.title":"Voyez le pont entre le plan et ses preuves.","proof.copy":"Le guide montre comment les valeurs deviennent rapprochées, candidates ou encore inexpliquées.","proof.kicker":"Guide court · Narration française","proof.videoTitle":"Du plan à une revue qui montre ce qui concorde vraiment","related.eyebrow":"Autres workflows Italie","related.copy":"Vera suit le même fil entre dossier, sources et travail révisable dans les autres workflows du pack Italie.","related.inps":"Revue de prévoyance INPS →","related.registro":"Registre des entreprises et SARI →","prompt.eyebrow":"Pour commencer","prompt.title":"Un prompt, puis la revue.","prompt.copy":"Indiquez dossier et date de référence. Vera prépare la comparaison.","prompt.text":"Utilise Revue du plan de concordat sur /chemin/dossier. Date de référence : 31/03/2026. Relie plan, bilan, grands livres et tableaux et prépare écarts et points ouverts.","cta.title":"Confiez le dossier à Vera.","cta.copy":"Ouvrez Vera et préparez le pont entre le plan et ses fondements.","cta.open":"Ouvrir Vera"}},
+      es:{metaTitle:"Revisión del plan de concordato — Italia | Vera",metaDescription:"En el procedimiento italiano de concordato, Vera vincula las cifras del plan con el balance, los mayores y los cuadros de respaldo en una revisión legible.",breadcrumbAria:"Ruta de la página",videoId:"LYNGc7XVmsI",text:{"nav.overview":"Resumen","nav.workflow":"Recorrido","nav.proof":"Ver","nav.next":"Flujos de Italia","nav.prompt":"Prompt","nav.open":"Abrir Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Paquete Italia","breadcrumb.module":"Plan de concordato","overview.eyebrow":"El trabajo de un vistazo","overview.title":"Del plan a una revisión que muestra qué cuadra realmente.","overview.copy":"Vera vincula cada cifra con las evidencias disponibles y separa los valores conciliados, los candidatos y las diferencias que aún deben explicarse.","flow.provide.title":"Proporcione","flow.provide.copy":"Plan, balance, mayores y cuadros fiscales o de seguridad social.","flow.prepare.title":"Vera prepara","flow.prepare.copy":"Conexiones entre importes, fuentes y diferencias con una trazabilidad legible.","flow.receive.title":"Reciba","flow.receive.copy":"Un archivo Excel y un resumen Word que parten de los puntos abiertos.","workflow.eyebrow":"Recorrido","workflow.title":"Cuatro pasos para leer el plan frente a sus fundamentos.","workflow.copy":"El trabajo conserva importe, página, hoja y conexión para cada partida relevante.","workflow.one.title":"Inventariar el expediente","workflow.one.copy":"Ordenar el plan, el balance, los mayores y el detalle de respaldo.","workflow.two.title":"Extraer los importes","workflow.two.copy":"Llevar valores y localizadores a una base comparable.","workflow.three.title":"Construir el puente","workflow.three.copy":"Vincular las partidas del plan con las evidencias y mantener separados los candidatos.","workflow.four.title":"Preparar la revisión","workflow.four.copy":"Reunir diferencias, omisiones y preguntas en una vista fácil de recorrer.","spec.summary":"Especificaciones técnicas, entradas y archivos generados","proof.eyebrow":"Vera en acción","proof.title":"Vea el puente entre el plan y sus evidencias.","proof.copy":"La guía muestra cómo los valores del plan pasan a estar conciliados, ser candidatos o seguir sin explicación.","proof.kicker":"Guía breve · Narración en inglés","proof.videoTitle":"Del plan a una revisión que muestra qué cuadra realmente","related.eyebrow":"Otros flujos de Italia","related.copy":"Vera utiliza el mismo hilo entre expediente, fuentes y trabajo revisable en los demás flujos del paquete Italia.","related.inps":"Seguridad Social INPS →","related.registro":"Registro Mercantil y SARI →","prompt.eyebrow":"Para empezar","prompt.title":"Un prompt y después la revisión.","prompt.copy":"Indique la carpeta y la fecha de referencia. Vera prepara la comparación.","prompt.text":"Usa Revisión del plan de concordato en /ruta/expediente. Fecha de referencia: 31/03/2026. Vincula el plan, el balance, los mayores y los cuadros y prepara las diferencias y los puntos abiertos.","cta.title":"Lleve el expediente a Vera.","cta.copy":"Abra Vera y prepare el puente entre el plan y sus fundamentos.","cta.open":"Abrir Vera"}},
       de:{metaTitle:"Concordato-Plan prüfen — Italien | Vera",metaDescription:"Im italienischen Concordato-Verfahren verbindet Vera Planzahlen mit Bilanz, Hauptbüchern und unterstützenden Aufstellungen in einer lesbaren Prüfung.",breadcrumbAria:"Seitenpfad",videoId:"l_PI6K8fyPw",text:{"nav.overview":"Überblick","nav.workflow":"Ablauf","nav.proof":"Ansehen","nav.next":"Italien-Workflows","nav.prompt":"Prompt","nav.open":"Vera öffnen","breadcrumb.vera":"Vera","breadcrumb.area":"Italien-Paket","breadcrumb.module":"Concordato-Plan","overview.eyebrow":"Die Arbeit im Überblick","overview.title":"Vom Plan zur Prüfung, die zeigt, was wirklich stimmt.","overview.copy":"Vera verbindet jede Zahl mit verfügbaren Nachweisen und trennt abgestimmte Werte, Kandidaten und ungeklärte Differenzen.","flow.provide.title":"Sie liefern","flow.provide.copy":"Plan, Bilanz, Hauptbücher sowie Steuer- oder Sozialaufstellungen.","flow.prepare.title":"Vera bereitet vor","flow.prepare.copy":"Verbindungen zwischen Beträgen, Quellen und Differenzen mit lesbarer Spur.","flow.receive.title":"Sie erhalten","flow.receive.copy":"Ein Excel-Arbeitspapier und eine Word-Zusammenfassung, die bei offenen Punkten beginnen.","workflow.eyebrow":"Ablauf","workflow.title":"Vier Schritte, um den Plan an seinen Grundlagen zu lesen.","workflow.copy":"Betrag, Seite, Blatt und Verbindung bleiben für jede relevante Position erhalten.","workflow.one.title":"Akte inventarisieren","workflow.one.copy":"Plan, Bilanz, Hauptbücher und Nachweise ordnen.","workflow.two.title":"Beträge extrahieren","workflow.two.copy":"Werte und Fundstellen vergleichbar zusammenführen.","workflow.three.title":"Brücke bauen","workflow.three.copy":"Planpositionen mit Nachweisen verbinden und Kandidaten trennen.","workflow.four.title":"Prüfung vorbereiten","workflow.four.copy":"Differenzen, Lücken und Fragen in einer navigierbaren Sicht bündeln.","spec.summary":"Technische Spezifikation, Eingaben und erzeugte Dateien","proof.eyebrow":"Vera bei der Arbeit","proof.title":"Sehen Sie die Brücke zwischen Plan und Nachweisen.","proof.copy":"Die Anleitung zeigt, wie Planwerte abgestimmt, Kandidaten oder noch ungeklärt werden.","proof.kicker":"Kurzanleitung · Deutsche Sprecherstimme","proof.videoTitle":"Vom Plan zur Prüfung, die zeigt, was wirklich stimmt","related.eyebrow":"Weitere Italien-Workflows","related.copy":"Vera nutzt denselben Faden zwischen Akte, Quellen und prüfbarer Arbeit auch in den weiteren Workflows des Italien-Pakets.","related.inps":"INPS-Sozialversicherung prüfen →","related.registro":"Unternehmensregister und SARI →","prompt.eyebrow":"Start","prompt.title":"Ein Prompt, dann die Prüfung.","prompt.copy":"Ordner und Stichtag angeben. Vera bereitet den Vergleich vor.","prompt.text":"Nutze Concordato-Plan prüfen für /pfad/akte. Stichtag: 31.03.2026. Verbinde Plan, Bilanz, Hauptbücher und Aufstellungen und bereite Differenzen und offene Punkte vor.","cta.title":"Akte in Vera öffnen.","cta.copy":"Vera öffnen und die Brücke zwischen Plan und Grundlagen vorbereiten.","cta.open":"Vera öffnen"}}
     };
-    function applyJourneyCopy(requested){const lang=journeyCopy[requested]?requested:"it";const data=journeyCopy[lang];document.title=data.metaTitle;document.getElementById("meta-description").content=data.metaDescription;document.getElementById("og-title").content=data.metaTitle;document.getElementById("og-description").content=data.metaDescription;document.getElementById("og-locale").content={it:"it_IT",en:"en_US",fr:"fr_FR",de:"de_DE"}[lang];document.querySelectorAll("[data-journey]").forEach(node=>{const value=data.text[node.dataset.journey];if(value)node.textContent=value});document.querySelectorAll("[data-journey-aria]").forEach(node=>node.setAttribute("aria-label",data[node.dataset.journeyAria]));const vera=document.querySelector("[data-vera-link]");const inps=document.querySelector('[data-related-link="inps"]');const registro=document.querySelector('[data-related-link="registro"]');const proof=document.querySelector("[data-proof-link]");const thumb=document.querySelector("[data-proof-thumb]");if(vera)vera.href=`../vera/index.html?lang=${lang}`;if(inps)inps.href=`../previdenza-inps/index.html?lang=${lang}`;if(registro)registro.href=`../registro-imprese-sari/index.html?lang=${lang}`;if(proof)proof.href=`https://youtu.be/${data.videoId}`;if(thumb)thumb.src=`https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`}
+    function applyJourneyCopy(requested){const lang=journeyCopy[requested]?requested:"it";const data=journeyCopy[lang];document.title=data.metaTitle;document.getElementById("meta-description").content=data.metaDescription;document.getElementById("og-title").content=data.metaTitle;document.getElementById("og-description").content=data.metaDescription;document.getElementById("og-locale").content={it:"it_IT",en:"en_US",fr:"fr_FR",de:"de_DE",es:"es_ES"}[lang];document.querySelectorAll("[data-journey]").forEach(node=>{const value=data.text[node.dataset.journey];if(value)node.textContent=value});document.querySelectorAll("[data-journey-aria]").forEach(node=>node.setAttribute("aria-label",data[node.dataset.journeyAria]));const vera=document.querySelector("[data-vera-link]");const inps=document.querySelector('[data-related-link="inps"]');const registro=document.querySelector('[data-related-link="registro"]');const proof=document.querySelector("[data-proof-link]");const thumb=document.querySelector("[data-proof-thumb]");if(vera)vera.href=`../vera/index.html?lang=${lang}`;if(inps)inps.href=`../previdenza-inps/index.html?lang=${lang}`;if(registro)registro.href=`../registro-imprese-sari/index.html?lang=${lang}`;if(proof)proof.href=`https://youtu.be/${data.videoId}`;if(thumb)thumb.src=`https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`}
     document.querySelectorAll("[data-lang]").forEach(button=>button.addEventListener("click",()=>applyJourneyCopy(button.dataset.lang)));applyJourneyCopy(document.documentElement.lang.slice(0,2));
   </script>
 </body>

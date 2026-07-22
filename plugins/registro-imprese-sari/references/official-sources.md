@@ -54,9 +54,9 @@ Default posture:
    user-provided local snapshot;
 6. use the result as evidence requiring professional applicability review.
 
-The direct `sari_connector.py` route is available only when the studio records
-both a case-specific network approval and a separate written-use authorization
-from the relevant rights holder. It performs one tenant initialization plus one
-search or one selected-card read, never a bulk crawl. It keeps cookies only in
-memory and never calls login, contact, support-question, upload, or submission
-routes.
+The direct `sari_connector.py` route is available only when the studio records a
+written-use authorization from the relevant rights holder. Invoking the command
+is the explicit network-route choice; no second approval identifier is created.
+It performs one tenant initialization plus one search or one selected-card read,
+never a bulk crawl. It keeps cookies only in memory and never calls login,
+contact, support-question, upload, or submission routes.

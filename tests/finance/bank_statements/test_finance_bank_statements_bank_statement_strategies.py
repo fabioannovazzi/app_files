@@ -8,6 +8,7 @@ import pytest
 from src.finance.bank_statements.bank_statement_strategies import (
     LayoutAwareTextStrategy,
     StatementParsingStrategy,
+    TabularExtractionStrategy,
 )
 
 
@@ -27,6 +28,15 @@ class _FakePage:
 class _FakeDoc:
     def __init__(self, pages):
         self.pages = pages
+
+
+class _FakeTablePage(_FakePage):
+    def __init__(self, table: list[list[str]], page_number: int = 1):
+        super().__init__(text="", page_number=page_number)
+        self._table = table
+
+    def extract_table(self) -> list[list[str]]:
+        return self._table
 
 
 def test_statement_parsing_strategy_docstrings_present() -> None:
@@ -57,7 +67,9 @@ def test_layoutaware_parse_debit_credit_line_produces_transaction() -> None:
     # Arrange: a single page with one row starting with a date and two numbers
     # Format: posted_date value_date debit credit description
     layout_text = "15/01/2023 16/01/2023 10,00 0,00 Grocery store"
-    page = _FakePage(text="Date Debit Credit Description", text_layout=layout_text, page_number=3)
+    page = _FakePage(
+        text="Date Debit Credit Description", text_layout=layout_text, page_number=3
+    )
     doc = _FakeDoc([page])
 
     # Act
@@ -72,3 +84,24 @@ def test_layoutaware_parse_debit_credit_line_produces_transaction() -> None:
     assert isinstance(tx.amount, Decimal) and tx.amount == Decimal("-10.00")
     assert tx.source_page == 3
     assert isinstance(tx.raw, dict) and "row" in tx.raw
+
+
+def test_tabular_strategy_extracts_spanish_headers() -> None:
+    table = [
+        ["Fecha", "Fecha valor", "Cargo", "Abono", "Concepto", "Moneda"],
+        ["15/01/2023", "16/01/2023", "10,00", "", "Compra", "EUR"],
+        ["17/01/2023", "18/01/2023", "", "25,50", "Reembolso", "EUR"],
+    ]
+    document = _FakeDoc([_FakeTablePage(table, page_number=2)])
+
+    result = TabularExtractionStrategy().parse(document)  # type: ignore[arg-type]
+
+    assert [transaction.description for transaction in result] == [
+        "Compra",
+        "Reembolso",
+    ]
+    assert [transaction.amount for transaction in result] == [
+        Decimal("-10.00"),
+        Decimal("25.50"),
+    ]
+    assert all(transaction.currency == "EUR" for transaction in result)

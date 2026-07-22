@@ -313,25 +313,7 @@ def test_ocr_optional_requirements_have_import_mappings() -> None:
     assert declared <= set(checker.PACKAGE_IMPORTS)
 
 
-def test_model_download_flag_requires_explicit_approval_id(tmp_path: Path) -> None:
-    inventory_case = _load_script("inventory_case")
-    input_dir = tmp_path / "input"
-    input_dir.mkdir()
-
-    with pytest.raises(SystemExit) as error:
-        inventory_case.main(
-            [
-                str(input_dir),
-                "--output-dir",
-                str(tmp_path / "output"),
-                "--allow-ocr-model-download",
-            ]
-        )
-
-    assert error.value.code == 2
-
-
-def test_model_download_approval_is_persisted_before_extraction(
+def test_model_download_route_choice_is_persisted_before_extraction(
     tmp_path: Path, monkeypatch: Any
 ) -> None:
     inventory_case = _load_script("inventory_case")
@@ -354,15 +336,14 @@ def test_model_download_approval_is_persisted_before_extraction(
             "--output-dir",
             str(output_dir),
             "--allow-ocr-model-download",
-            "--ocr-model-download-approval-id",
-            "REV-001",
         ]
     )
 
     assert exit_code == 1
     preflight = observed_preflight[0]
     assert preflight["status"] == "inventory_in_progress"
-    assert preflight["data_posture"]["ocr"]["model_download_approval_id"] == ("REV-001")
+    assert preflight["data_posture"]["ocr"]["model_download_allowed"] is True
+    assert "model_download_approval_id" not in preflight["data_posture"]["ocr"]
     final_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )

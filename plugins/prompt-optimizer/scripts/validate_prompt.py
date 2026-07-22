@@ -54,6 +54,7 @@ LANGUAGE_LOCK_TERMS = {
     "en": ("language", "english"),
     "fr": ("langue", "francais", "français"),
     "de": ("sprache", "deutsch"),
+    "es": ("idioma", "español", "espanol"),
     "auto": (
         "language",
         "english",
@@ -689,7 +690,7 @@ def main() -> int:
         ),
     )
     parser.add_argument(
-        "--language", choices=["auto", "it", "en", "fr", "de"], default="auto"
+        "--language", choices=["auto", "it", "en", "fr", "de", "es"], default="auto"
     )
     parser.add_argument(
         "--source-domains-file",

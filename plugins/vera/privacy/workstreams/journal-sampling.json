@@ -31,21 +31,19 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [],
-  "security_controls": [
-    {
-      "id": "local-sampling",
-      "control": "Parsing, normalization, population calculations, seeded sample selection, and package generation run locally."
-    },
-    {
-      "id": "no-external-data-path",
-      "control": "The workflow does not use an external connector, upload path, remote SQL system, or hosted notebook by default."
-    }
-  ],
+  "security_controls": [],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2a35214f086be500c0a8f39e0a14bc79889d698b5c9597f0a30eceb06d797080"
+    "source_fingerprint": "e582ed10ace46492bc0a731047e31b7f01fcc197810d22ed911d5e69b448547a"
   }
 }

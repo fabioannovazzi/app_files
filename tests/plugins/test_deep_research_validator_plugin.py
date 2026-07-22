@@ -295,8 +295,9 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "Valida Deep Research",
         "Valider Deep Research",
         "Deep Research validieren",
-        "Prompt ready",
-        "Prompt pronti",
+        "One prompt to get started.",
+        "Un solo prompt per iniziare.",
+        "Un solo prompt para empezar.",
         "document_inventory.json",
         "source_inventory.json",
         "claims_review.json",
@@ -304,7 +305,8 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "validated_document.md",
         "validation_package.md",
         VERA_MARKETPLACE_LINK,
-        "Installa Vera dal marketplace",
+        "Apri Vera",
+        "Abrir Vera",
         "/?lang=${lang}",
     ):
         assert snippet in page

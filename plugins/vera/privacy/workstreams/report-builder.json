@@ -31,12 +31,15 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [],
   "security_controls": [
-    {
-      "id": "local-report-build",
-      "control": "Input discovery, extraction, numeric diagnostics, rendering, and audit-output generation run locally; helper scripts make no model API calls."
-    },
     {
       "id": "private-output-root",
       "control": "Run artifacts are written outside the repository and published folders."
@@ -46,6 +49,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "887ea650430817227d142539314c5b9a22ee5748ce0efb7862cb918fb606a307"
+    "source_fingerprint": "f53c1c047608dece00fbdc5a4f4ea9c4ea86a23b74fbc1517b701399bf58e752"
   }
 }

@@ -15,8 +15,9 @@ transcripts, review files, and `codex_run_review.md` in the user's target case,
 ordinary folder, or adjacent project/output folder.
 
 Use this skill for transcription-first evidence capture. The hosted service is
-the authorized audio/transcription layer; the durable source, speaker review,
-and advisory interpretation live locally. This is separate from `interview`,
+the authorized audio/transcription layer. Durable source and output files remain
+local after import; Codex performs speaker review and advisory interpretation
+through the user's existing ChatGPT plan. This is separate from `interview`,
 which conducts an adaptive conversation with an external participant.
 
 ## Choose the Path
@@ -49,13 +50,21 @@ For an initialized Clara case:
 ```bash
 python scripts/launch_hosted_voice.py <case-dir>
 python scripts/launch_hosted_voice.py <case-dir> --browser chrome
+python scripts/launch_hosted_voice.py <case-dir> \
+  --cookie-header-file <private-cookie.txt>
 ```
 
-The launcher refreshes `case_brief.md`, attaches a compact transcription context
-to a short-lived launch token, and opens the authorized hosted page. Use Chrome
-when the embedded browser or stale permissions block the microphone. The browser
+With an authenticated cookie or magic link, the launcher refreshes
+`case_brief.md`, sends compact transcription context in an authenticated HTTPS
+request body, and opens the hosted page with an opaque short-lived token. The
+context is not placed in the URL. The user-bound token is an additional session
+control and does not replace Mparanza authentication. Without supplied
+authentication material, the launcher opens an explicit browser-authenticated
+fallback without reading or attaching `case_brief.md`. Use Chrome when the
+embedded browser or stale permissions block the microphone. The browser
 downloads a local bundle when the session ends. Directly opening the hosted
-voice URL without a plugin-created launch token is not a valid run.
+voice URL without a plugin-created launch token and authenticated session is not
+a valid run.
 
 Voice Capture is transcription-first. Sparse follow-ups may help the advisor
 finish a debrief, but the hosted model is not the final speaker-attribution or

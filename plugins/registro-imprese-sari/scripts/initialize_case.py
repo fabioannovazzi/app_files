@@ -142,6 +142,7 @@ def initialize_case(
             "data_posture": {
                 "local_files_read": [],
                 "external_connectors_used": [],
+                "external_routes_used": [],
                 "upload_paths_used": [],
                 "hosted_notebook_execution_used": False,
                 "remote_sql_execution_used": False,

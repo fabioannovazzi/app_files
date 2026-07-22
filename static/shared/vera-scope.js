@@ -19,8 +19,8 @@
     it: {
       core: {
         kind: "Workflow core",
-        title: "Metodo riutilizzabile, in quattro lingue.",
-        body: "Questo lavoro resta lo stesso in italiano, inglese, francese e tedesco. Il perimetro nazionale entra solo quando cambiano regole, enti, fonti o formati."
+        title: "Metodo riutilizzabile, in cinque lingue.",
+        body: "Questo lavoro resta lo stesso in italiano, inglese, francese, tedesco e spagnolo. Il perimetro nazionale entra solo quando cambiano regole, enti, fonti o formati."
       },
       mixed: {
         kind: "Core + pacchetto paese",
@@ -30,7 +30,7 @@
       italy: {
         kind: "Pacchetto paese · Italia",
         title: "Regole, enti e formati italiani.",
-        body: "Questo percorso applica un perimetro italiano. Puoi leggerlo in tutte e quattro le lingue: la lingua cambia, il paese resta Italia."
+        body: "Questo percorso applica un perimetro italiano. Puoi leggerlo in tutte e cinque le lingue: la lingua cambia, il paese resta Italia."
       },
       modules: {
         "new-client": "Il fascicolo e il rapporto professionale formano un solo percorso. Documenti, controlli e regole seguono il paese selezionato.",
@@ -43,8 +43,8 @@
     en: {
       core: {
         kind: "Core workflow",
-        title: "A reusable method, in four languages.",
-        body: "The work stays the same in Italian, English, French and German. National scope enters only when rules, institutions, sources or formats change."
+        title: "A reusable method, in five languages.",
+        body: "The work stays the same in Italian, English, French, German and Spanish. National scope enters only when rules, institutions, sources or formats change."
       },
       mixed: {
         kind: "Core + country pack",
@@ -54,7 +54,7 @@
       italy: {
         kind: "Country pack · Italy",
         title: "Italian rules, institutions and formats.",
-        body: "This workflow applies an Italian scope. Read it in any of the four languages: the language changes, the country remains Italy."
+        body: "This workflow applies an Italian scope. Read it in any of the five languages: the language changes, the country remains Italy."
       },
       modules: {
         "new-client": "The client file and professional relationship form one workflow. Documents, checks and rules follow the selected country.",
@@ -67,8 +67,8 @@
     fr: {
       core: {
         kind: "Workflow commun",
-        title: "Une méthode réutilisable, en quatre langues.",
-        body: "Le travail reste identique en italien, anglais, français et allemand. Le périmètre national intervient lorsque les règles, organismes, sources ou formats changent."
+        title: "Une méthode réutilisable, en cinq langues.",
+        body: "Le travail reste identique en italien, anglais, français, allemand et espagnol. Le périmètre national intervient lorsque les règles, organismes, sources ou formats changent."
       },
       mixed: {
         kind: "Socle + pack pays",
@@ -78,7 +78,7 @@
       italy: {
         kind: "Pack pays · Italie",
         title: "Règles, organismes et formats italiens.",
-        body: "Ce workflow applique un périmètre italien. Consultez-le dans les quatre langues : la langue change, le pays reste l’Italie."
+        body: "Ce workflow applique un périmètre italien. Consultez-le dans les cinq langues : la langue change, le pays reste l’Italie."
       },
       modules: {
         "new-client": "Le dossier client et la relation professionnelle forment un seul parcours. Documents, contrôles et règles suivent le pays sélectionné.",
@@ -91,8 +91,8 @@
     de: {
       core: {
         kind: "Kern-Workflow",
-        title: "Eine wiederverwendbare Methode in vier Sprachen.",
-        body: "Die Arbeit bleibt auf Italienisch, Englisch, Französisch und Deutsch dieselbe. Der nationale Rahmen kommt erst hinzu, wenn sich Regeln, Institutionen, Quellen oder Formate ändern."
+        title: "Eine wiederverwendbare Methode in fünf Sprachen.",
+        body: "Die Arbeit bleibt auf Italienisch, Englisch, Französisch, Deutsch und Spanisch dieselbe. Der nationale Rahmen kommt erst hinzu, wenn sich Regeln, Institutionen, Quellen oder Formate ändern."
       },
       mixed: {
         kind: "Kern + Länderpaket",
@@ -102,7 +102,7 @@
       italy: {
         kind: "Länderpaket · Italien",
         title: "Italienische Regeln, Institutionen und Formate.",
-        body: "Dieser Workflow hat einen italienischen Geltungsbereich. Lesen Sie ihn in allen vier Sprachen: Die Sprache wechselt, das Land bleibt Italien."
+        body: "Dieser Workflow hat einen italienischen Geltungsbereich. Lesen Sie ihn in allen fünf Sprachen: Die Sprache wechselt, das Land bleibt Italien."
       },
       modules: {
         "new-client": "Mandantenakte und Auftragsbeziehung bilden einen Ablauf. Dokumente, Prüfungen und Regeln richten sich nach dem gewählten Land.",
@@ -111,6 +111,30 @@
       },
       coreLink: "Kern-Workflows",
       italyLink: "Italien-Paket"
+    },
+    es: {
+      core: {
+        kind: "Flujo de trabajo común",
+        title: "Un método reutilizable en cinco idiomas.",
+        body: "El trabajo es el mismo en italiano, inglés, francés, alemán y español. El ámbito nacional solo interviene cuando cambian las reglas, las instituciones, las fuentes o los formatos."
+      },
+      mixed: {
+        kind: "Base común + paquete nacional",
+        title: "Un flujo de trabajo con la capa nacional separada.",
+        body: "El método de base sigue siendo reutilizable; el paquete nacional añade reglas, fuentes y formatos locales sin cambiar el idioma de la interfaz."
+      },
+      italy: {
+        kind: "Paquete nacional · Italia",
+        title: "Reglas, instituciones y formatos italianos.",
+        body: "Este flujo aplica un ámbito italiano. Puede consultarlo en los cinco idiomas: el idioma cambia, pero el país sigue siendo Italia."
+      },
+      modules: {
+        "new-client": "El expediente del cliente y la relación profesional forman un único flujo. Los documentos, controles y reglas siguen el país seleccionado.",
+        "report-builder": "El motor de informes es reutilizable. El perfil FPV, FCDE y PNRR para administraciones locales pertenece al paquete de Italia.",
+        "check-entries": "La conexión entre un asiento, su justificante y sus excepciones constituye la base común. FatturaPA es el adaptador italiano."
+      },
+      coreLink: "Flujos comunes",
+      italyLink: "Paquete de Italia"
     }
   });
 
