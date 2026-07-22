@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "prompt-optimizer",
   "display_name": "Prompt Optimizer",
   "role": "workflow",
@@ -10,55 +10,60 @@
     "assets/review-workbench-adapter.json",
     "assets/prompt-optimizer-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "The user's legal, tax or compliance question and optional local reference material"
-    ],
-    "local_processing": [
-      "Validate prompt structure and required sections",
-      "Check deterministic citation and source-hierarchy rules",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "user-question",
-        "purpose": "Understand and restructure the research request",
-        "content": "The question and facts typed or attached by the user",
-        "minimum_necessary": "The workflow cannot remove material already typed into Codex; ask the user to provide only facts needed for the research question",
-        "semantic_reasoning_required": true,
-        "full_source_expected": true
-      },
-      {
-        "id": "prompt-drafting",
-        "purpose": "Produce the source-backed Deep Research prompt",
-        "content": "Necessary facts, legal or tax scope, source hierarchy and citation requirements",
-        "minimum_necessary": "Carry forward only facts that materially constrain the research request",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "question-and-prompt",
+        "purpose": "Understand the case and write a source-backed Deep Research prompt",
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred research framing; optimized prompt; source-domain sidecars; diagnostics and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [
     {
-      "risk": "Names or case facts entered in the initial Codex prompt are already in model context before Vera can minimize them",
-      "mitigation": "State this boundary explicitly and instruct the user to omit unnecessary identifiers; do not claim deterministic anonymization"
+      "id": "source-domain-research",
+      "kind": "public_research",
+      "destination": "Public official and reliable-source websites",
+      "purpose": "Curate qualified source domains for the confirmed legal framework and issue",
+      "content": "Legal or tax issue research terms and public-source URLs; queries can reflect case facts when Codex uses them",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Codex selects domains from the confirmed framework; deterministic scripts do not choose legal sources.",
+        "The workflow does not request credentials or authenticated-source access."
+      ]
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Il testo già inserito nella conversazione è già nel contesto di Codex. Per ottimizzare il prompt, includi solo i fatti necessari alla ricerca ed evita identificativi non pertinenti.",
-    "message_en": "Text already entered in the conversation is already in Codex context. For prompt optimization, include only facts necessary for the research and omit irrelevant identifiers.",
-    "requires_confirmation": false
-  },
+  "security_controls": [
+    {
+      "id": "no-retroactive-anonymisation-claim",
+      "control": "The workflow does not claim to remove or anonymize text that the user already placed in Codex context."
+    },
+    {
+      "id": "no-model-api-in-scripts",
+      "control": "Helper scripts inspect, validate, and package files locally and do not call model APIs."
+    },
+    {
+      "id": "manual-deep-research-handoff",
+      "control": "The workflow produces a prompt package; it does not automatically submit the prompt to Deep Research."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "Vera cannot retroactively remove content already sent in the conversation",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "41665257922f046e1f5a9ab4faba7db0dbb46543d7d50dff9cee85a88001bee1"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "400f53f462b7514046b1dfa84f3a31c1aaad1c7bb430800159f1646018bf33b7"
   }
 }

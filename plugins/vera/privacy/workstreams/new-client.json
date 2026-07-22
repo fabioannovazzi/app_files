@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "new-client",
   "display_name": "New Client",
   "role": "workflow",
@@ -11,75 +11,72 @@
     "assets/review-workbench-adapter.json",
     "assets/new-client-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Byte-verified final-ready file-preparation packages or explicitly registered standalone evidence for identity, ownership, engagement, privacy, AI applicability, AML and monitoring"
-    ],
-    "local_processing": [
-      "Validate every sealed upstream output byte and promote only reviewed unambiguous fields",
-      "Verify the phase-one bounded source snapshot exactly against its sealed inventory before promotion",
-      "Validate explicit processing authority and pseudonymous professional attribution",
-      "Validate source-bound records, chronology and evidence freshness",
-      "Derive a hash-bound inclusive temporal horizon from evidence, identity, authoritative-source and template deadlines, and revalidate it against the system UTC date at Apply",
-      "Calculate approved AML factors",
-      "Check evidence coverage and provenance",
-      "Package owner-only review artifacts",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "professional-setup",
-        "purpose": "Assess missing evidence and prepare decisions reserved to the commercialista",
-        "content": "Validated case records, ownership and mandate facts, privacy and AML evidence, provenance anchors, unresolved decisions and private run metadata needed to resolve local artifacts",
-        "minimum_necessary": "Proceed only under the recorded processing authority, keep absolute local paths out of the pseudonymous review payload and widget, use validated structured records and targeted evidence anchors, and avoid reopening complete source folders unless a material ambiguity requires it",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
-      },
-      {
-        "id": "review-draft",
-        "purpose": "Prepare the professional-review dossier and monitoring plan",
-        "content": "Case-specific decision records, gaps, calculations and selected evidence excerpts",
-        "minimum_necessary": "Include only facts and excerpts supporting the proposed review item",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "relationship-case-evidence",
+        "purpose": "Prepare identity, engagement, privacy, AI-applicability, AML, document, and monitoring proposals for professional review",
+        "content": "Byte-verified file-preparation outputs or registered standalone evidence; identity, representative and beneficial-owner facts; engagement terms; privacy and AML records; source, template, chronology, and evidence passages; calculations; temporal-horizon state; gaps; proposals, review decisions, and package state"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [
     {
-      "risk": "The professional setup necessarily includes identity, ownership, mandate, privacy and AML facts about identifiable people",
-      "mitigation": "Use owner-only outputs, validated structured records, targeted evidence and explicit professional review gates"
-    },
-    {
-      "risk": "A stale or altered upstream output could otherwise be treated as reviewed evidence",
-      "mitigation": "Verify the sealed source snapshot against the inventory, re-hash every phase-one output, and fail promotion or packaging on any source-ledger, path, size, byte-hash or package-hash drift"
-    },
-    {
-      "risk": "Evidence, identity records, authoritative sources or templates can expire after packaging but before professional approval",
-      "mitigation": "Bind the earliest inclusive deadline into every review artifact, re-derive it from persisted facts at Apply, and reject approval after that date without writing final outputs"
-    },
-    {
-      "risk": "Private run metadata contains absolute local paths to source, evidence and template files",
-      "mitigation": "Keep run intake and case artifacts owner-only, expose only pseudonymous relative review references, and use absolute paths solely for local byte verification"
+      "id": "current-source-research",
+      "kind": "public_research",
+      "destination": "Current primary and professional public sources selected for the case",
+      "purpose": "Verify the current source basis for legal and professional proposals",
+      "content": "Legal or professional research topics, public-source queries and selected source URLs; direct client identifiers are not used in the public research route",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Record retrieval, version, temporal scope, and reuse status for selected sources.",
+        "Keep credentials, authentication codes, cookies, screening-provider tokens, and direct client identifiers out of public research."
+      ]
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "La preparazione tecnica dei documenti resta locale. Per predisporre identità, incarico, privacy e AML, Codex esamina i dati strutturati e le evidenze pertinenti del cliente; il fascicolo completo non viene incluso automaticamente.",
-    "message_en": "Technical document preparation remains local. To prepare identity, engagement, privacy and AML review, Codex examines the client's structured facts and relevant evidence; the complete file is not included automatically.",
-    "message_fr": "La préparation technique des documents reste locale. Pour préparer la revue de l’identité, de la mission, de la confidentialité et de la LCB-FT, Codex examine les faits structurés et les preuves pertinentes du client ; le dossier complet n’est pas inclus automatiquement.",
-    "message_de": "Die technische Dokumentvorbereitung bleibt lokal. Für die Prüfung von Identität, Auftrag, Datenschutz und AML untersucht Codex die strukturierten Mandantenangaben und die relevanten Nachweise; die vollständige Akte wird nicht automatisch einbezogen.",
-    "requires_confirmation": false
-  },
+  "security_controls": [
+    {
+      "id": "owner-only-package",
+      "control": "The dossier is written to an owner-only directory outside the repository."
+    },
+    {
+      "id": "upstream-package-integrity",
+      "control": "Before promotion, the workflow verifies the sealed phase-one source snapshot and every declared output's type, size, byte hash, and package binding; drift is rejected."
+    },
+    {
+      "id": "temporal-apply-gate",
+      "control": "Apply re-derives the earliest inclusive deadline from persisted evidence, identity, source, and template dates and rejects stale approval without writing final outputs."
+    },
+    {
+      "id": "review-persistence-binding",
+      "control": "Save and Apply use an opaque, bounded-lifetime server-held binding tied to the run and review hashes; unknown, expired, or mismatched tokens are rejected."
+    },
+    {
+      "id": "no-external-case-action",
+      "control": "The workflow does not screen externally, send client communications, sign, file, or activate the relationship."
+    },
+    {
+      "id": "no-session-secrets",
+      "control": "Credentials, authentication codes, cookies, and provider tokens are excluded from artifacts and Codex review payloads."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "The exact personal data needed depends on the relationship and professional decisions under review; the recorded authority must match the actual runtime and transfer posture",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "8f28508fa3211f102ad150e62bd4882fa9fe6c0da4803b03cbd198e9ac013f88"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "812459c7c6e67569cfcc4891ea2f4a206e84a7ad8929a78e830bb9b6b5b6de6a"
   }
 }

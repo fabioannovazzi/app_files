@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate Vera privacy-surface coverage and source freshness.
+"""Validate Vera external-boundary coverage and source freshness.
 
-The checks are deterministic because component registration, JSON shape, wrapper
-integration, and byte fingerprints are mechanically verifiable. Semantic
-necessity and notice wording remain model-reviewed manifest content.
+The checks are deterministic because registration, JSON shape, confirmation
+consistency, and byte fingerprints are mechanically verifiable. Purpose-based
+data minimisation and legal compliance remain outside this validator.
 """
 
 from __future__ import annotations
@@ -18,7 +18,18 @@ __all__ = ["main", "validate_privacy_surfaces"]
 
 SKIP_DIRS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", "__pycache__"}
 SKIP_SUFFIXES = {".pyc", ".pyo"}
-NOTICE_MARKER = "Privacy Boundary"
+CODEX_CONTEXT_POLICY = "real_case_data_may_enter_codex_context"
+BOUNDARY_KINDS = {
+    "public_research",
+    "hosted_service",
+    "external_connector",
+    "send_or_publish",
+}
+ACCOUNT_REVIEW_ITEMS = [
+    "account_or_workspace_plan",
+    "model_training_data_controls",
+    "retention_and_deletion_controls",
+]
 
 
 def _vera_root() -> Path:
@@ -117,18 +128,24 @@ def _manifest_errors(
         "display_name",
         "role",
         "governed_paths",
-        "data_flow",
-        "residual_risks",
-        "commercialista_notice",
+        "codex_context",
+        "codex_account_boundary",
+        "boundaries_beyond_codex",
+        "security_controls",
         "review",
     }
     missing = sorted(required - payload.keys())
     if missing:
         return [f"{workstream}: missing fields: {', '.join(missing)}"]
-    if payload["schema_version"] != 1:
-        errors.append(f"{workstream}: schema_version must be 1")
+    if payload["schema_version"] != 2:
+        errors.append(f"{workstream}: schema_version must be 2")
     if payload["workstream"] != workstream:
         errors.append(f"{workstream}: manifest workstream does not match filename")
+    if (
+        not isinstance(payload["display_name"], str)
+        or not payload["display_name"].strip()
+    ):
+        errors.append(f"{workstream}: display_name must be non-empty")
     if payload["role"] != expected_role:
         errors.append(f"{workstream}: role must be {expected_role}")
     governed = payload["governed_paths"]
@@ -138,68 +155,129 @@ def _manifest_errors(
         or not all(isinstance(item, str) and item for item in governed)
     ):
         errors.append(f"{workstream}: governed_paths must be non-empty strings")
-    flow = payload["data_flow"]
-    if not isinstance(flow, dict):
-        errors.append(f"{workstream}: data_flow must be an object")
+    context = payload["codex_context"]
+    if not isinstance(context, dict):
+        errors.append(f"{workstream}: codex_context must be an object")
     else:
-        for field in ("local_sources", "local_processing", "codex_context"):
-            if not isinstance(flow.get(field), list) or not flow[field]:
-                errors.append(f"{workstream}: data_flow.{field} must be non-empty")
+        if context.get("policy") != CODEX_CONTEXT_POLICY:
+            errors.append(f"{workstream}: unexpected Codex context policy")
+        classes = context.get("classes")
+        if not isinstance(classes, list) or not classes:
+            errors.append(f"{workstream}: codex_context.classes must be non-empty")
+            classes = []
         context_ids: list[str] = []
-        for index, item in enumerate(flow.get("codex_context", [])):
+        for index, item in enumerate(classes):
             if not isinstance(item, dict):
-                errors.append(f"{workstream}: codex_context[{index}] must be an object")
+                errors.append(
+                    f"{workstream}: codex_context.classes[{index}] must be an object"
+                )
                 continue
-            fields = {
-                "id",
-                "purpose",
-                "content",
-                "minimum_necessary",
-                "semantic_reasoning_required",
-                "full_source_expected",
-            }
-            if fields - item.keys():
-                errors.append(f"{workstream}: codex_context[{index}] is incomplete")
+            fields = {"id", "purpose", "content"}
+            if fields - item.keys() or not all(
+                isinstance(item.get(field), str) and item[field].strip()
+                for field in fields
+            ):
+                errors.append(
+                    f"{workstream}: codex_context.classes[{index}] is incomplete"
+                )
             context_ids.append(str(item.get("id", "")))
         if len(context_ids) != len(set(context_ids)):
             errors.append(f"{workstream}: codex_context ids must be unique")
-    risks = payload["residual_risks"]
-    if not isinstance(risks, list) or not risks:
-        errors.append(f"{workstream}: residual_risks must be non-empty")
-    notice = payload["commercialista_notice"]
-    if not isinstance(notice, dict):
-        errors.append(f"{workstream}: commercialista_notice must be an object")
+
+    account = payload["codex_account_boundary"]
+    if not isinstance(account, dict):
+        errors.append(f"{workstream}: codex_account_boundary must be an object")
     else:
-        level = notice.get("level")
-        if level not in {"none", "informational", "confirmation"}:
-            errors.append(f"{workstream}: invalid notice level")
-        confirmation = notice.get("requires_confirmation")
-        if confirmation is not (level == "confirmation"):
+        if account.get("selected_by") != "firm_or_user":
+            errors.append(f"{workstream}: account must be selected by the firm or user")
+        if account.get("vera_runtime_enforcement") != "none":
             errors.append(
-                f"{workstream}: notice confirmation flag disagrees with level"
+                f"{workstream}: Vera cannot claim to enforce account settings"
             )
-        if level != "none" and not all(
-            isinstance(notice.get(key), str) and notice[key].strip()
-            for key in ("message_it", "message_en")
+        if (
+            account.get("review_timing")
+            != "before_professional_use_and_when_account_or_terms_change"
         ):
+            errors.append(f"{workstream}: account review timing is inaccurate")
+        if account.get("review_items") != ACCOUNT_REVIEW_ITEMS:
+            errors.append(f"{workstream}: incomplete Codex account boundary review")
+        if account.get("per_case_record_required") is not False:
             errors.append(
-                f"{workstream}: visible notices require Italian and English text"
+                f"{workstream}: account review must not require a per-case record"
             )
-        for key in ("message_fr", "message_de"):
-            if key in notice and (
-                not isinstance(notice[key], str) or not notice[key].strip()
-            ):
-                errors.append(
-                    f"{workstream}: optional {key} notice text must be non-empty"
-                )
+    boundaries = payload["boundaries_beyond_codex"]
+    if not isinstance(boundaries, list):
+        errors.append(f"{workstream}: boundaries_beyond_codex must be an array")
+        boundaries = []
+    boundary_ids: list[str] = []
+    for index, boundary in enumerate(boundaries):
+        if not isinstance(boundary, dict):
+            errors.append(f"{workstream}: boundary[{index}] must be an object")
+            continue
+        fields = {
+            "id",
+            "kind",
+            "destination",
+            "purpose",
+            "content",
+            "optional",
+            "requires_confirmation",
+            "controls",
+        }
+        if fields - boundary.keys():
+            errors.append(f"{workstream}: boundary[{index}] is incomplete")
+        if not all(
+            isinstance(boundary.get(field), str) and boundary[field].strip()
+            for field in ("id", "destination", "purpose", "content")
+        ):
+            errors.append(f"{workstream}: boundary[{index}] text must be non-empty")
+        boundary_ids.append(str(boundary.get("id", "")))
+        if boundary.get("kind") not in BOUNDARY_KINDS:
+            errors.append(f"{workstream}: boundary[{index}] has invalid kind")
+        optional = boundary.get("optional")
+        confirmation = boundary.get("requires_confirmation")
+        if not isinstance(optional, bool) or not isinstance(confirmation, bool):
+            errors.append(f"{workstream}: boundary[{index}] flags must be boolean")
+        elif confirmation and not optional:
+            errors.append(
+                f"{workstream}: confirmation is allowed only for an optional boundary"
+            )
+        controls = boundary.get("controls")
+        if (
+            not isinstance(controls, list)
+            or not controls
+            or not all(isinstance(item, str) and item.strip() for item in controls)
+        ):
+            errors.append(f"{workstream}: boundary[{index}] controls must be non-empty")
+    if len(boundary_ids) != len(set(boundary_ids)):
+        errors.append(f"{workstream}: boundary ids must be unique")
+
+    controls = payload["security_controls"]
+    if not isinstance(controls, list) or not controls:
+        errors.append(f"{workstream}: security_controls must be non-empty")
+        controls = []
+    control_ids: list[str] = []
+    for index, control in enumerate(controls):
+        if not isinstance(control, dict):
+            errors.append(f"{workstream}: security_controls[{index}] must be an object")
+            continue
+        if not all(
+            isinstance(control.get(field), str) and control[field].strip()
+            for field in ("id", "control")
+        ):
+            errors.append(f"{workstream}: security_controls[{index}] is incomplete")
+        control_ids.append(str(control.get("id", "")))
+    if len(control_ids) != len(set(control_ids)):
+        errors.append(f"{workstream}: security control ids must be unique")
+
     review = payload["review"]
     if not isinstance(review, dict):
         errors.append(f"{workstream}: review must be an object")
     else:
         if review.get("reviewed_by") != "privacy-surface-review":
             errors.append(f"{workstream}: unexpected reviewer")
-        if review.get("basis") != "model_review_of_workflow_source":
-            errors.append(f"{workstream}: review basis must remain model-led")
+        if review.get("basis") != "external_boundary_review_of_workflow_source":
+            errors.append(f"{workstream}: unexpected external-boundary review basis")
         fingerprint = review.get("source_fingerprint")
         if not isinstance(fingerprint, str) or len(fingerprint) != 64:
             errors.append(f"{workstream}: invalid source fingerprint")
@@ -208,17 +286,6 @@ def _manifest_errors(
 
 def _expected_role(workstream: str, roles: dict[str, dict[str, Any]]) -> str:
     return str(roles.get(workstream, {}).get("kind", "workflow"))
-
-
-def _wrapper_errors(vera_root: Path, workstream: str, role: str) -> list[str]:
-    if role == "internal_engine":
-        return []
-    wrapper = vera_root / "skills" / workstream / "SKILL.md"
-    if not wrapper.is_file():
-        return [f"{workstream}: missing Vera wrapper skill"]
-    if NOTICE_MARKER not in wrapper.read_text(encoding="utf-8"):
-        return [f"{workstream}: wrapper does not enforce the Privacy Boundary notice"]
-    return []
 
 
 def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
@@ -243,7 +310,6 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
             payload, workstream=workstream, expected_role=role
         )
         errors.extend(manifest_errors)
-        errors.extend(_wrapper_errors(root, workstream, role))
         if manifest_errors:
             continue
         try:

@@ -612,7 +612,6 @@ def _write_review_server_fixture(output_dir: Path) -> None:
         "dependency_check": {"status": "not_run"},
         "data_posture": {
             "local_files_read": ["open_items.xlsx"],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

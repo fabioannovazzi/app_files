@@ -16,14 +16,19 @@ professional opinion, file on a client's behalf, or make decisions reserved to
 the commercialista. Judgement, approval, and professional responsibility remain
 with the commercialista.
 
-## Privacy Surface Governance
+## External Boundary Governance
 
-Every registered Vera workstream has a design-time record in
-`../../privacy/workstreams/` describing what stays local and what Codex may
-read. Each specialist wrapper shows the applicable Italian or English notice in
-the Run Intake before its first workflow-controlled evidence read. Do not turn
-that notice into a generic consent question unless its manifest explicitly
-marks an optional disclosure as requiring confirmation.
+Every registered Vera workstream has a developer-maintained record in
+`../../privacy/workstreams/` describing what Codex may read, the Codex/OpenAI
+account boundary selected by the firm or user, any data boundary beyond Codex,
+and concrete security controls. Real client and case data may be used in that
+Codex context when the professional task requires it. Ordinary Vera work does
+not show a privacy notice or ask for privacy consent merely because Codex reads
+that material.
+
+Ask for confirmation only when a genuinely optional boundary beyond Codex has
+not already been chosen by the user. The user's explicit choice of a connector,
+hosted-service action, or send/publish action is enough; do not ask again.
 
 When adding or materially changing a workstream, use
 `../privacy-surface-review/SKILL.md` to review the actual Codex-context boundary,
@@ -34,9 +39,11 @@ run:
 python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
 ```
 
-The validator enforces coverage, structure, wrapper integration, and freshness.
-It does not decide whether data is personal, anonymous, legally necessary, or
-GDPR-compliant; those are contextual judgments and professional/legal matters.
+The validator enforces coverage, structure, boundary consistency, and
+freshness. GDPR data minimisation remains a purpose-based professional and
+legal judgment; the validator does not implement it as automatic redaction or a
+minimum-context classifier. It does not certify GDPR compliance or verify the
+deployment's actual OpenAI account settings.
 
 ## Module routing
 
@@ -122,11 +129,12 @@ data permit them.
 
 ## Working rules
 
-- Keep source data local by default.
+- Keep source files and generated artifacts in the local workspace by default;
+  content Codex reads may enter the model context.
 - Never request, store, or replay SPID/CIE/CNS credentials, cookies, tokens, or
   one-time codes. An INPS browser capture requires a user-authenticated tab and
-  remains read-only. Separately verify access/delegation authority, client-data
-  processing authority, and portal permission for software-assisted capture.
+  remains read-only. Separately verify access/delegation authority and portal
+  permission for software-assisted capture.
 - For Check Entries invoice acquisition, try a bulk FatturaPA ZIP first. If the
   user chooses connection, use only a callable provider-specific connector with
   confirmed authority and read/export scope, then pass its local export to the

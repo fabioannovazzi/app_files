@@ -505,7 +505,6 @@ def write_run_intake(
                 source_inventory_path.as_posix(),
                 claims_review_path.as_posix(),
             ],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

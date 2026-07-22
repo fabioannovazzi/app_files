@@ -1,15 +1,15 @@
 ---
 name: privacy-surface-review
-description: Use when adding, changing, reviewing, or releasing a Vera workstream to trace what stays local, what Codex may read, what can be minimized mechanically, what requires semantic interpretation, what the commercialista should be told, and to update the workstream's registered privacy manifest before packaging.
+description: Use when adding, changing, reviewing, or releasing a Vera workstream to record what Codex reads, every data boundary beyond Codex, the Codex account boundary, and concrete security controls before packaging.
 ---
 
-# Privacy Surface Review
+# External Boundary Review
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
-Review the real boundary where information becomes available to Codex. Do not
-classify risk from the input-folder contents alone and do not add generic
-redaction. The relevant question is what Codex may read after local processing.
+This is a developer and release workflow, not a customer-case intake step. A
+normal Vera run does not show a privacy notice or request privacy confirmation
+merely because Codex reads professional case data.
 
 ## Review workflow
 
@@ -18,58 +18,49 @@ redaction. The relevant question is what Codex may read after local processing.
    `modules/<workstream>` in an installed package or `../<workstream>` beside
    Vera in repository source. Treat that resolved root as the plugin working
    directory for the review.
-3. Read that module's complete workflow skill plus relevant scripts, schemas,
-   MCP tools, and review-payload builders. Trace every point at which Codex reads user
-   instructions, source material, extracted text, structured results, review
-   payloads, or generated artifacts.
-4. Separate:
-   - source data and mechanical work that remain local;
-   - the minimum useful result Codex needs;
-   - original language or case facts genuinely needed for interpretation;
-   - material that enters context before the workflow can intervene, such as a
-     user's typed prompt.
-5. Use model judgment for semantic necessity. Never claim that a deterministic
-   name, identifier, or personal-data detector can establish necessity or
-   anonymization.
-6. Update `privacy/workstreams/<workstream>.json` using
-   `references/manifest-contract.md`. Write a concise Italian and English notice
-   that describes the actual boundary without claiming GDPR certification.
-7. Only after completing the semantic review, refresh the mechanical source
-   fingerprint:
+3. Read that module's complete workflow skill and the relevant scripts, schemas,
+   MCP tools, and review-payload builders.
+4. Record the classes of information the workflow can place in Codex context.
+   Real client and case data may enter Codex context. Do not promise local-only
+   processing when Codex reads the material.
+5. Record every boundary beyond Codex: public research or URL fetching, a
+   hosted service, an external connector, or a send/publish action. An empty
+   list is a valid and useful result.
+6. For each boundary, state the destination, purpose, content, whether it is
+   optional, whether confirmation is required, and the controls enforced by
+   the workflow. A separate confirmation is required only when the route is
+   optional and the user has not already chosen it. The user's explicit route
+   choice is the confirmation; do not ask again.
+7. Record concrete security controls and the Codex/OpenAI account boundary.
+   Vera cannot inspect or enforce the user's plan, model-training data controls,
+   or retention/deletion controls. The firm or user checks those before
+   professional use and when the account or terms change, not in a per-case form.
+8. Update `privacy/workstreams/<workstream>.json` using
+   `references/manifest-contract.md`, then refresh its source fingerprint:
 
 ```bash
 python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py \
   --refresh <workstream>
 ```
 
-8. Validate the complete register:
+9. Validate the complete register, run the Vera package tests, and rebuild the
+   plugin ZIP:
 
 ```bash
 python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
 ```
 
-9. Run the Vera package tests and rebuild the plugin ZIP.
-
 ## Judgment boundary
 
-Use deterministic code only for schema validity, registered-workstream
-coverage, wrapper-notice integration, exact file hashing, and stale-review
-detection. These checks are mechanically verifiable and audit-sensitive.
+Use deterministic code only for JSON shape, registered-workstream coverage,
+allowed boundary kinds, confirmation consistency, exact file hashing, and
+stale-review detection.
 
-Use model-led reasoning for whether content is necessary, whether local
-reduction preserves professional quality, which residual privacy issue matters,
-and what notice is useful. A validator must never overrule that judgment.
+GDPR data minimisation remains a legal principle. Do not implement it here as
+deterministic deletion, automatic anonymisation, personal-data detection, or a
+`minimum useful context` classifier. Whether a fact is relevant to the
+professional purpose is semantic, case-specific judgment outside the
+validator. A name or tax identifier may be relevant and may be read by Codex.
 
-## Notice policy
-
-- `none`: Codex receives no customer or case material for the workflow.
-- `informational`: explain the boundary in the Run Intake before the first
-  workflow-controlled evidence read; do not ask for redundant confirmation.
-- `confirmation`: use only when a genuinely optional disclosure or processing
-  route requires a user choice before it occurs.
-
-If the user already typed case material into Codex, state that the material is
-already in context. Do not imply that Vera can remove it retroactively.
-
-Never describe a manifest as legal advice, a DPIA, automatic anonymization, or
-proof of GDPR compliance.
+The register is an engineering boundary review. It is not legal advice, a DPIA,
+an account-configuration audit, or proof or certification of GDPR compliance.

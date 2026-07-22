@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "client-file-preparation",
   "display_name": "New Client · File Preparation",
   "role": "internal_engine",
@@ -10,87 +10,54 @@
     "assets/review-workbench-adapter.json",
     "assets/client-file-preparation-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Incoming client folders, fiscal documents, invoices, notices, scans and email files"
-    ],
-    "local_processing": [
-      "Recursive inventory",
-      "Bounded local OCR and text extraction for supported PDF, image, text, DOCX, XLSX and EML content",
-      "Formal and XML checks",
-      "Structured fiscal-field extraction",
-      "Missing-document analysis",
-      "Bounded SHA-256 source ledger with non-followed symlink records and a final source type/byte-integrity check before sealing",
-      "Per-output byte hashing and package sealing after review write-back",
-      "Issue a bounded opaque hosted-review persistence binding so Save and Apply can reach the server-held run without exposing its local directory",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "evidence-synthesis",
-        "purpose": "Prepare the studio intake synthesis and document requests",
-        "content": "Generated inventory, structured fields, formal-check results, extraction diagnostics and sanitized run metadata; relative filenames needed for document review; source excerpts, fiscal evidence snippets and generated draft previews only when the operator explicitly enables preview mode",
-        "minimum_necessary": "Keep review previews off by default, remove the explicit client name and absolute workstation paths from the browser/MCP payload, treat relative filenames as potentially identifying, and use generated evidence first. Explicit preview mode adds bounded excerpts from every readable inventoried document, fiscal-field evidence snippets, and bounded previews of the generated studio brief, memo and client email, so enable it only for a deliberately scoped folder.",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
-      },
-      {
-        "id": "client-email-draft",
-        "purpose": "Draft a reviewable request for missing or unclear evidence",
-        "content": "Missing-item list, case context needed for clarity and selected supporting facts",
-        "minimum_necessary": "Use only facts required to explain the request and do not reproduce unrelated client data",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "client-file-evidence",
+        "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
+        "content": "Incoming client documents or extracted text; document names and evidence passages; structured fiscal fields; formal checks; extraction diagnostics; evidence locators; missing items; studio memo, client-email draft, review decisions, and package state"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [],
+  "security_controls": [
     {
-      "risk": "Structured fields and selected passages can contain direct identifiers and fiscal information",
-      "mitigation": "Keep the complete folder local and limit Codex to extracted results and passages necessary for intake synthesis"
+      "id": "local-file-processing",
+      "control": "Inventory, extraction, formal checks, XML parsing, and OCR run in the local workspace."
     },
     {
-      "risk": "An EML body may be readable while its attachments remain unprocessed",
-      "mitigation": "Record skipped attachments and keep the file unresolved until relevant attachments are supplied as separately inventoried files"
+      "id": "source-and-package-integrity",
+      "control": "The workflow does not follow source symlinks, binds extraction to a bounded SHA-256 source ledger, rejects source type, size, or byte drift, and seals reviewed outputs by hash."
     },
     {
-      "risk": "The private run intake records absolute local folder and file paths that may themselves identify a client or workstation user",
-      "mitigation": "Keep run_intake.json owner-only and local, sanitize all browser/MCP review payloads, and consult private path metadata only when needed to resolve a local artifact"
+      "id": "review-persistence-binding",
+      "control": "Save and Apply use an opaque, bounded-lifetime server-held binding tied to the run and review hashes; unknown, expired, or mismatched tokens are rejected."
     },
     {
-      "risk": "A source file or non-followed symlink can change type or content while a run is in progress",
-      "mitigation": "Bind extraction to the initial bounded source ledger, never extract entries recorded as symlinks, and reject source type, size or SHA-256 drift before sealing"
+      "id": "draft-only-email",
+      "control": "The workflow writes a reviewable email draft and never sends it automatically."
     },
     {
-      "risk": "Relative filenames in the review payload can contain client names or other identifiers",
-      "mitigation": "Retain filenames only because the reviewer must identify each document; remove explicit client-name fields and absolute paths, keep the review surface access-controlled, and rename source files before the run when filename disclosure is not acceptable"
-    },
-    {
-      "risk": "A hosted persistence token could be replayed while its short-lived server-side run binding remains valid",
-      "mitigation": "Use a random opaque token with bounded lifetime and capacity, bind it to the review hash and run identifier, and reject unknown, expired or mismatched tokens without falling back to browser-supplied paths"
-    },
-    {
-      "risk": "Explicit preview mode includes bounded excerpts from every readable inventoried document, fiscal evidence snippets and generated draft previews that may repeat the client name or other identifying facts",
-      "mitigation": "Keep previews disabled by default and enable them only for a deliberately scoped folder after the operator accepts all three bounded preview surfaces"
+      "id": "private-output-root",
+      "control": "Customer outputs are written outside the Git workspace and published folders."
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "La cartella cliente completa resta locale. La review Codex riceve risultati strutturati e nomi file relativi. Le anteprime sono disattivate: se abilitate esplicitamente, riceve anche estratti limitati di ogni documento leggibile, evidenze dei campi fiscali e bozze generate, che possono ripetere il nome cliente.",
-    "message_en": "The complete client folder remains local. Codex review receives structured results and relative filenames. Previews are off by default; if explicitly enabled, it also receives bounded excerpts from every readable document, fiscal-field evidence, and generated drafts that may repeat the client name.",
-    "message_fr": "Le dossier client complet reste local. La revue Codex reçoit les résultats structurés et les noms de fichiers relatifs. Les aperçus sont désactivés par défaut ; s’ils sont activés explicitement, elle reçoit aussi des extraits limités de chaque document lisible, les preuves des champs fiscaux et les brouillons générés, qui peuvent répéter le nom du client.",
-    "message_de": "Der vollständige Mandantenordner bleibt lokal. Die Codex-Prüfung erhält strukturierte Ergebnisse und relative Dateinamen. Vorschauen sind standardmäßig deaktiviert; bei ausdrücklicher Aktivierung erhält sie außerdem begrenzte Auszüge aus jedem lesbaren Dokument, Nachweise zu Steuerfeldern und erzeugte Entwürfe, die den Mandantennamen wiederholen können.",
-    "requires_confirmation": false
-  },
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "Document diversity can require additional passages during professional review, and EML attachments must be inventoried separately",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "cad695d7890354952ef6bf24d451c079bf919e1abdb9b42f66489153ecd0fbbe"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "baccca60434b4f1ddab31307b04ffc2df00d78ac98f1684c00c5ee53588f9bbc"
   }
 }

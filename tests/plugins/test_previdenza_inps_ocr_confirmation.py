@@ -130,16 +130,6 @@ def _write_records(
         "case_id": "CASE-OCR-001",
         "language": "it",
         "professional_question": "Quale trattamento risulta documentato?",
-        "processing_authorization": {
-            "studio_processing_authorized": True,
-            "model_processing_approved": True,
-            "processor_scope": "current_approved_codex_runtime",
-            "approved_by_id": "REV-001",
-            "approved_by_role": "professional_reviewer",
-            "recorded_at": "2026-07-16T09:00:00+02:00",
-            "basis": "Explicit authorization for the synthetic OCR case.",
-            "personal_data_minimized": True,
-        },
         "material_decisions": {gate: True for gate in gates},
         "decision_log": [
             {

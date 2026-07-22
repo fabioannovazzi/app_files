@@ -93,7 +93,6 @@
     .type { margin: 0 0 4px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
     h3 { max-width: 35ch; margin: 0; font: 600 23px/1.22 var(--serif); }
     .pill { flex: none; border: 1px solid #bcc9c5; border-radius: 999px; padding: 4px 8px; background: var(--paper); color: var(--muted); font-size: 10px; }
-    .privacy { margin: 13px 0 0; padding: 10px 12px; border: 1px solid #bdd6d1; background: var(--teal-soft); color: #315d58; font-size: 12px; }
     .section { padding: 19px 0; border-bottom: 1px solid var(--line); }
     .section:last-child { border-bottom: 0; }
     .section h4 { margin: 0 0 10px; color: var(--muted); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
@@ -134,7 +133,7 @@
       <div class="identity">
         <div class="mark" aria-hidden="true">RI</div>
         <div>
-          <p class="eyebrow">Vera · carta di lavoro locale</p>
+          <p class="eyebrow">Vera · carta di lavoro</p>
           <h1>Registro Imprese e SARI</h1>
         </div>
       </div>
@@ -165,9 +164,7 @@
       <article class="detail" id="detail"></article>
     </section>
 
-    <footer class="footer">
-      Il widget contiene solo metadati minimizzati. Attività, valori proposti, citazioni e quesito SARI restano negli artefatti locali del run.
-    </footer>
+    <footer class="footer">Nessun accesso, firma o invio è disponibile in questa revisione.</footer>
   </main>
 
   <script>
@@ -183,7 +180,6 @@
         item_count: 3,
         filing_status: "not_filed",
         filing_authorized: false,
-        privacy_notice: "Demo minimizzata: aprire gli artefatti locali per i dettagli.",
         items: [
           {
             id: "source-demo",
@@ -326,8 +322,7 @@
           <div><p class="type">${esc(TYPE_LABELS[item.item_type] || item.item_type)}</p><h3>${esc(item.title)}</h3></div>
           <span class="pill">${esc(decision.action ? ACTION_LABELS[decision.action] : "da rivedere")}</span>
         </div>
-        <p class="privacy">${esc(review().privacy_notice || "I dettagli completi restano negli artefatti locali.")}</p>
-        <section class="section"><h4>Metadati minimizzati</h4>${detailFields(item)}</section>
+        <section class="section"><h4>Dettagli di revisione</h4>${detailFields(item)}</section>
         <section class="section">
           <h4>Decisione</h4>
           <div class="decision-actions">${actions.map((action) => `<button type="button" class="decision-action ${decision.action === action ? "selected" : ""}" data-action="${esc(action)}">${esc(ACTION_LABELS[action] || action)}</button>`).join("")}</div>

@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "report-builder",
   "display_name": "Report Builder",
   "role": "workflow",
@@ -10,49 +10,42 @@
     "assets/review-workbench-adapter.json",
     "assets/report-builder-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Financial spreadsheets, CSV files and report configuration"
-    ],
-    "local_processing": [
-      "Parse and normalize tables",
-      "Calculate totals and comparisons",
-      "Prepare chart data and report diagnostics",
-      "Render report artifacts",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "report-design",
-        "purpose": "Resolve reporting structure and explain results",
-        "content": "Schema, aggregate tables, calculated metrics, chart-ready summaries, diagnostics and user instructions",
-        "minimum_necessary": "Use calculated and aggregated reporting tables; inspect raw rows only for a targeted data-quality issue",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "financial-report-evidence",
+        "purpose": "Map source tables, write the report narrative, and review the generated report",
+        "content": "User instructions; spreadsheets, CSV files or extracted PDF text; table inventories and rows; mappings; calculations; diagnostics; draft narrative; report artifacts and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [],
+  "security_controls": [
     {
-      "risk": "Small aggregates or targeted diagnostics can still reveal case-specific business information",
-      "mitigation": "Prefer aggregated reporting tables and limit raw-row inspection to explicit data-quality exceptions"
+      "id": "local-report-build",
+      "control": "Input discovery, extraction, numeric diagnostics, rendering, and audit-output generation run locally; helper scripts make no model API calls."
+    },
+    {
+      "id": "private-output-root",
+      "control": "Run artifacts are written outside the repository and published folders."
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "I file finanziari vengono trasformati e calcolati localmente. Codex lavora normalmente su tabelle aggregate, metriche e diagnostica; consulta righe di dettaglio solo per anomalie mirate.",
-    "message_en": "Financial files are transformed and calculated locally. Codex normally works from aggregate tables, metrics and diagnostics, consulting detailed rows only for targeted anomalies.",
-    "requires_confirmation": false
-  },
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "The user's requested report granularity determines whether detailed rows are necessary",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "a54837a2c045d8c9da3cc0eb5718ec59027fae75c7582a309ecae33a75b747ec"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "887ea650430817227d142539314c5b9a22ee5748ce0efb7862cb918fb606a307"
   }
 }

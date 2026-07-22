@@ -34,7 +34,7 @@ DEFAULT_VIEWPORTS = {
 }
 DEFAULT_LANGUAGES = ("en",)
 LANGUAGE_LABELS = {
-    "en": ("Save decisions", "Final outputs", "Data posture"),
+    "en": ("Save decisions", "Final outputs", "Helper execution routes"),
     "it": ("Salva decisioni", "Output finali", "Postura dati"),
     "fr": ("Enregistrer decisions", "Sorties finales", "Posture donnees"),
     "de": ("Entscheidungen speichern", "Finale Ausgaben", "Datenhaltung"),
@@ -278,7 +278,6 @@ def _localized_payload(target: WorkbenchTarget, language: str) -> dict[str, Any]
             "language": language,
             "data_posture": {
                 "local_files_read": ["input.xlsx", "evidence/"],
-                "model_excerpts_sent": [],
                 "external_connectors_used": [],
                 "upload_paths_used": [],
                 "remote_sql_execution_used": False,

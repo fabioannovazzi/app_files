@@ -2,7 +2,7 @@
   "mcpServers": {
     "registroImpreseSariReview": {
       "title": "Registro Imprese e SARI Review",
-      "description": "Validate, render, save, and apply a privacy-minimized professional review of official sources and the proposed DIRE practice plan.",
+      "description": "Validate, render, save, and apply a professional review of official sources and the proposed DIRE practice plan.",
       "icons": [
         {
           "src": "./assets/icon.svg",

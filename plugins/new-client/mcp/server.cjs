@@ -214,7 +214,6 @@ const REVIEW_FIELDS = new Set([
   "columns",
   "allowed_actions",
   "privacy",
-  "privacy_notice",
   "summary",
   "source_artifacts",
   "basis_hashes",
@@ -236,13 +235,13 @@ const REVIEW_ITEM_FIELDS = new Set([
 ]);
 const ITEM_DATA_FIELDS = {
   party_profile: new Set([
+    "client_reference",
     "client_type",
     "tax_fact_statuses",
-    "party_fact_codes",
-    "party_fact_statuses",
+    "party_facts",
     "identity_status",
     "identity_expires_on",
-    "raw_identifiers_excluded",
+    "identity_document_number",
   ]),
   party_structure: new Set([
     "representative_posture_status",
@@ -253,40 +252,40 @@ const ITEM_DATA_FIELDS = {
     "owner_count",
     "owner_verification_statuses",
     "owner_identity_statuses",
-    "raw_identifiers_excluded",
+    "representatives",
+    "beneficial_owners",
   ]),
   party_fact: new Set([
     "fact_code",
+    "value",
     "confirmation_status",
     "evidence_count",
-    "raw_value_excluded",
-    "document_type_recorded",
-    "document_number_excluded",
+    "document_type",
+    "document_number",
     "verification_date",
   ]),
   representative_fact: new Set([
     "representative_reference",
     "role",
-    "authority_basis_recorded",
+    "authority_basis",
     "confirmation_status",
     "verification_date",
-    "document_number_excluded",
+    "document_number",
     "evidence_count",
   ]),
   beneficial_owner_fact: new Set([
     "owner_reference",
-    "control_basis_recorded",
+    "control_basis",
     "confirmation_status",
     "identity_verification_status",
     "verification_date",
-    "document_number_excluded",
+    "document_number",
     "evidence_count",
   ]),
   engagement_service: new Set([
     "service_id",
     "confirmation_status",
-    "description_recorded",
-    "raw_description_excluded",
+    "description",
   ]),
   engagement: new Set([
     "engagement_kind",
@@ -301,54 +300,48 @@ const ITEM_DATA_FIELDS = {
     "insurance_reference_recorded",
   ]),
   screening_result: new Set([
-    "screening_alias",
-    "subject_alias",
+    "screening_id",
+    "subject_reference",
     "screening_type",
-    "source_recorded",
+    "source_reference",
     "checked_at",
     "outcome",
     "confirmation_status",
     "resolution_status",
     "relationship_decision",
     "resolution_evidence_count",
-    "raw_result_excluded",
   ]),
   screening_subject: new Set([
-    "subject_alias",
+    "subject_reference",
     "coverage_complete",
     "results",
-    "raw_results_excluded",
   ]),
   document_applicability: new Set([
     "topic",
     "applicability_status",
     "review_status",
-    "rationale_recorded",
+    "basis",
     "supporting_case_fact_codes",
     "supporting_case_fact_count",
-    "raw_rationale_excluded",
   ]),
   aml_risk_factor: new Set([
     "factor_code",
     "score",
     "confirmation_status",
-    "rationale_recorded",
-    "raw_rationale_excluded",
+    "basis",
     "evidence_count",
   ]),
   aml_factor_section: new Set([
     "section",
     "factors",
-    "raw_rationales_excluded",
   ]),
   aml_mandatory_trigger: new Set([
     "trigger_id",
     "status",
     "review_status",
-    "rationale_recorded",
-    "raw_rationale_excluded",
+    "basis",
   ]),
-  aml_trigger_set: new Set(["triggers", "raw_rationales_excluded"]),
+  aml_trigger_set: new Set(["triggers"]),
   aml_assessment: new Set([
     "calculation_status",
     "effective_risk",
@@ -390,7 +383,7 @@ const ITEM_DATA_FIELDS = {
   ]),
   privacy_processing: new Set([
     "decision_alias",
-    "purpose_recorded",
+    "purpose",
     "role",
     "legal_basis_code",
     "processor_authority_recorded",
@@ -409,34 +402,27 @@ const ITEM_DATA_FIELDS = {
   ]),
 };
 const FORBIDDEN_PRIVATE_KEYS = new Set([
-  "address",
-  "birth_date",
-  "client_name",
-  "codice_fiscale",
-  "date_of_birth",
-  "document_content",
-  "document_number",
-  "document_quote",
-  "email",
-  "field_value",
-  "full_name",
-  "iban",
-  "legal_name",
-  "partita_iva",
-  "phone",
-  "raw_text",
-  "raw_value",
-  "source_excerpt",
-  "source_text",
-  "street_address",
-  "tax_code",
-  "vat_number",
+  "access_token",
+  "auth_token",
+  "authorization_header",
+  "cookie",
+  "cookies",
+  "credential",
+  "credentials",
+  "evidence_path",
+  "local_path",
+  "one_time_code",
+  "otp",
+  "otp_code",
+  "password",
+  "private_session_url",
+  "raw_path",
+  "refresh_token",
+  "session_cookie",
+  "session_token",
+  "session_url",
+  "token",
 ]);
-const EMAIL_RE = /(?:^|[^\w.+-])[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?![\w.-])/;
-const TAX_CODE_RE = /(?:^|[^A-Za-z0-9])[A-Za-z]{6}[0-9]{2}[A-EHLMPRSTa-ehlmprst][0-9]{2}[A-Za-z][0-9]{3}[A-Za-z](?=$|[^A-Za-z0-9])/;
-const IBAN_RE = /(?:^|[^A-Za-z0-9])IT\d{2}[A-Z]\d{10}[A-Z0-9]{12}(?=$|[^A-Za-z0-9])/i;
-const VAT_RE = /(?:^|\D)\d{11}(?!\d)/;
-const INTERNATIONAL_PHONE_RE = /(?:\+39|0039)[ .-]?(?:\d[ .-]?){8,11}/;
 const SAFE_IDENTIFIER_RE = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/;
 const LOWERCASE_SHA256_RE = /^[0-9a-f]{64}$/;
 
@@ -463,7 +449,7 @@ function widgetMeta() {
   return {
     ui: { resourceUri: WIDGET_URI },
     "openai/widgetDescription":
-      "Privacy-minimized professional review of client facts, engagement scope, AML assessment, documents, and monitoring plan.",
+      "Professional review of client facts, engagement scope, AML assessment, documents, and monitoring plan.",
     "openai/widgetPrefersBorder": false,
     "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
     "openai/widgetDomain": "https://chatgpt.com",
@@ -486,7 +472,6 @@ function toolDefinitions() {
       items: { type: "array", maxItems: MAX_ITEMS, items: { type: "object" } },
       source_artifacts: { type: "object" },
       basis_hashes: { type: "object" },
-      privacy_notice: { type: "string" },
     },
     [
       "schema_version",
@@ -502,7 +487,6 @@ function toolDefinitions() {
       "items",
       "source_artifacts",
       "basis_hashes",
-      "privacy_notice",
     ],
   );
   const reviewInput = objectSchema(
@@ -524,7 +508,7 @@ function toolDefinitions() {
       reuse_saved_details: {
         type: "boolean",
         description:
-          "Reuse server-held decision details after a privacy-minimized reload.",
+          "Reuse server-held decision details after a reload.",
       },
     },
     ["item_id", "action"],
@@ -550,7 +534,7 @@ function toolDefinitions() {
     {
       name: TOOL_NAMES.validate,
       title: "Validate new client review",
-      description: `Validate the privacy-minimized review payload before calling ${TOOL_NAMES.render}.`,
+      description: `Validate the private professional review before calling ${TOOL_NAMES.render}.`,
       inputSchema: reviewInput,
       annotations: {
         readOnlyHint: true,
@@ -608,7 +592,7 @@ function resources() {
       uri: WIDGET_URI,
       name: "new_client_review_widget",
       title: "New Client professional setup review",
-      description: "Interactive professional review of a privacy-minimized new-client case.",
+      description: "Interactive professional review of a new-client case.",
       mimeType: WIDGET_MIME_TYPE,
       _meta: widgetMeta(),
     },
@@ -642,12 +626,9 @@ function safeIdentifier(value, field) {
   const text = requireText(value, field, 160);
   if (
     !SAFE_IDENTIFIER_RE.test(text)
-    || EMAIL_RE.test(text)
-    || TAX_CODE_RE.test(text)
-    || IBAN_RE.test(text)
     || text.includes("//")
   ) {
-    throw new Error(`${field} must be an opaque identifier without personal data`);
+    throw new Error(`${field} must be a structurally safe identifier`);
   }
   return text;
 }
@@ -676,42 +657,31 @@ function validatePublicUrl(raw, field) {
   }
 }
 
-function assertPrivacySafeText(value, field, maxLength = MAX_TEXT_LENGTH) {
+function assertSessionSafeText(value, field, maxLength = MAX_TEXT_LENGTH) {
   const text = optionalText(value, field, maxLength);
   if (!text) return text;
-  if (
-    EMAIL_RE.test(text)
-    || TAX_CODE_RE.test(text)
-    || IBAN_RE.test(text)
-    || VAT_RE.test(text)
-    || INTERNATIONAL_PHONE_RE.test(text)
-  ) {
-    throw new Error(`${field} must omit direct client identifiers`);
-  }
   for (const match of text.matchAll(/https?:\/\/[^\s<>"']+/gi)) {
     validatePublicUrl(match[0].replace(/[.,);\]]+$/, ""), field);
   }
   return text;
 }
 
-function auditPrivacy(value, field = "review_payload") {
+function auditSecretBoundaries(value, field = "review_payload") {
   if (Array.isArray(value)) {
-    value.forEach((entry, index) => auditPrivacy(entry, `${field}[${index}]`));
+    value.forEach((entry, index) => auditSecretBoundaries(entry, `${field}[${index}]`));
     return;
   }
   if (isObject(value)) {
     for (const [key, entry] of Object.entries(value)) {
       if (FORBIDDEN_PRIVATE_KEYS.has(key.toLowerCase())) {
-        throw new Error(`${field}.${key} is forbidden in the privacy-minimized payload`);
+        throw new Error(`${field}.${key} contains local-path, credential, or session material`);
       }
-      auditPrivacy(entry, `${field}.${key}`);
+      auditSecretBoundaries(entry, `${field}.${key}`);
     }
     return;
   }
-  // Cryptographic bindings are opaque evidence, not client identifiers. Avoid
-  // treating an incidental numeric run inside a digest as an Italian VAT number.
-  if (typeof value === "string" && !LOWERCASE_SHA256_RE.test(value)) {
-    assertPrivacySafeText(value, field);
+  if (typeof value === "string") {
+    assertSessionSafeText(value, field);
   }
 }
 
@@ -870,13 +840,13 @@ function validateRelativeBasename(value, field) {
 
 function validateSourceArtifact(value, field) {
   if (!isObject(value)) {
-    throw new Error(`${field} must be a privacy-minimized object`);
+    throw new Error(`${field} must be a bounded source-reference object`);
   }
   const keys = Object.keys(value);
   if (keys.length === 0) throw new Error(`${field} must not be empty`);
   for (const key of keys) {
     if (!SOURCE_ARTIFACT_FIELDS.has(key)) {
-      throw new Error(`${field}.${key} is not allowed in a privacy-minimized source reference`);
+      throw new Error(`${field}.${key} is not allowed in a source reference`);
     }
   }
   if (value.path == null) throw new Error(`${field} must include path`);
@@ -963,9 +933,9 @@ function validateCalculatedBand(value, field) {
   const fields = new Set(["code", "label_it", "interval", "baseline_verification_mode"]);
   assertAllowedKeys(value, fields, field);
   safeIdentifier(value.code, `${field}.code`);
-  const label = assertPrivacySafeText(value.label_it, `${field}.label_it`, 120);
+  const label = assertSessionSafeText(value.label_it, `${field}.label_it`, 120);
   if (!label) throw new Error(`${field}.label_it must be non-empty`);
-  const interval = assertPrivacySafeText(value.interval, `${field}.interval`, 40);
+  const interval = assertSessionSafeText(value.interval, `${field}.interval`, 40);
   if (!interval) throw new Error(`${field}.interval must be non-empty`);
   if (!["simplified", "ordinary", "enhanced"].includes(value.baseline_verification_mode)) {
     throw new Error(`${field}.baseline_verification_mode is not supported`);
@@ -1010,8 +980,7 @@ function validateReviewItemData(data, itemType, field) {
     "owner_reference",
     "identity_verification_status",
     "service_id",
-    "screening_alias",
-    "subject_alias",
+    "screening_id",
     "screening_type",
     "outcome",
     "resolution_status",
@@ -1043,24 +1012,12 @@ function validateReviewItemData(data, itemType, field) {
     if (data[key] != null) safeIdentifier(data[key], `${field}.${key}`);
   }
   for (const key of [
-    "raw_value_excluded",
-    "document_type_recorded",
-    "document_number_excluded",
-    "authority_basis_recorded",
-    "control_basis_recorded",
-    "description_recorded",
-    "raw_description_excluded",
-    "source_recorded",
-    "raw_result_excluded",
-    "rationale_recorded",
-    "raw_rationale_excluded",
     "uses_proposed_inputs",
     "professional_review_required",
     "public_url_recorded_locally",
     "final_ready",
     "reviewed_client_file_preparation",
     "relationship_blocker",
-    "purpose_recorded",
     "processor_authority_recorded",
     "relationship_export_blocking",
   ]) {
@@ -1106,10 +1063,22 @@ function validateReviewItemData(data, itemType, field) {
   }
   for (const key of ["title", "issuer", "version"]) {
     if (data[key] != null) {
-      const text = assertPrivacySafeText(data[key], `${field}.${key}`, 400);
+      const text = assertSessionSafeText(data[key], `${field}.${key}`, 400);
       if (!text) throw new Error(`${field}.${key} must be non-empty`);
     }
   }
+  for (const key of [
+    "authority_basis",
+    "basis",
+    "control_basis",
+    "description",
+    "document_number",
+    "purpose",
+    "source_reference",
+  ]) {
+    if (data[key] != null) assertSessionSafeText(data[key], `${field}.${key}`);
+  }
+  auditSecretBoundaries(data, field);
 }
 
 function validateItem(item, index, seenIds) {
@@ -1121,7 +1090,7 @@ function validateItem(item, index, seenIds) {
   seenIds.add(id);
   const itemType = safeIdentifier(item.item_type, `${root}.item_type`);
   if (!ITEM_TYPES.has(itemType)) throw new Error(`${root}.item_type is not supported: ${itemType}`);
-  const title = assertPrivacySafeText(item.title, `${root}.title`, 400);
+  const title = assertSessionSafeText(item.title, `${root}.title`, 400);
   if (!title) throw new Error(`${root}.title must be a non-empty string`);
   if (!Array.isArray(item.allowed_actions) || item.allowed_actions.length === 0) {
     throw new Error(`${root}.allowed_actions must be a non-empty array`);
@@ -1388,7 +1357,7 @@ function validateUiDecisionIdentity(uiDecisions, review) {
     throw new Error("ui_decisions.status is not supported");
   }
   if (uiDecisions.reviewer != null) {
-    safeIdentifier(uiDecisions.reviewer, "ui_decisions.reviewer");
+    assertSessionSafeText(uiDecisions.reviewer, "ui_decisions.reviewer", 300);
   }
 }
 
@@ -1433,14 +1402,14 @@ function validateReviewMetadata(review) {
   if (review.privacy != null) {
     if (!isObject(review.privacy)) throw new Error("review_payload.privacy must be an object");
     assertAllowedKeys(review.privacy, new Set(["classification", "excluded"]), "review_payload.privacy");
-    if (review.privacy.classification !== "pseudonymous_review_payload") {
-      throw new Error("review_payload.privacy.classification must be pseudonymous_review_payload");
+    if (review.privacy.classification !== "private_professional_review") {
+      throw new Error("review_payload.privacy.classification must be private_professional_review");
     }
     if (!Array.isArray(review.privacy.excluded) || review.privacy.excluded.length > 20) {
       throw new Error("review_payload.privacy.excluded must be a bounded array");
     }
     review.privacy.excluded.forEach((entry, index) => {
-      const text = assertPrivacySafeText(entry, `review_payload.privacy.excluded[${index}]`, 120);
+      const text = assertSessionSafeText(entry, `review_payload.privacy.excluded[${index}]`, 120);
       if (!text) throw new Error(`review_payload.privacy.excluded[${index}] must be non-empty`);
     });
   }
@@ -1454,7 +1423,6 @@ function validateReviewMetadata(review) {
       "jurisdiction",
       "country_pack",
       "language",
-      "processing_authority_status",
     ]);
     assertAllowedKeys(review.summary, summaryFields, "review_payload.summary");
     for (const key of ["review_item_count", "missing_information_count", "document_count"]) {
@@ -1467,7 +1435,6 @@ function validateReviewMetadata(review) {
       "jurisdiction",
       "country_pack",
       "language",
-      "processing_authority_status",
     ]) {
       if (review.summary[key] != null) safeIdentifier(review.summary[key], `review_payload.summary.${key}`);
     }
@@ -1528,7 +1495,7 @@ function publicUiDecisions(value, review) {
     status: typeof value.status === "string" ? value.status : "pending_review",
     reviewer:
       typeof value.reviewer === "string"
-        ? safeIdentifier(value.reviewer, "ui_decisions.reviewer")
+        ? assertSessionSafeText(value.reviewer, "ui_decisions.reviewer", 300)
         : null,
   };
 }
@@ -1634,7 +1601,6 @@ function validateReview(input) {
       `review_payload.status is not supported; expected one of ${[...REVIEW_STATUSES].join(", ")}`,
     );
   }
-  requireText(review.privacy_notice, "review_payload.privacy_notice", 1_000);
   if (!Array.isArray(review.items)) throw new Error("review_payload.items must be an array");
   if (review.items.length > MAX_ITEMS) {
     throw new Error(`review_payload.items exceeds ${MAX_ITEMS} items`);
@@ -1646,7 +1612,7 @@ function validateReview(input) {
   validateBasisHashes(review.basis_hashes);
   const seenIds = new Set();
   review.items.forEach((item, index) => validateItem(item, index, seenIds));
-  auditPrivacy(review);
+  auditSecretBoundaries(review);
   const runIntake = isObject(input.run_intake) ? input.run_intake : null;
   const uiDecisions = isObject(input.ui_decisions) ? input.ui_decisions : null;
   const finalArtifacts = isObject(input.final_artifacts) ? input.final_artifacts : null;
@@ -1690,7 +1656,7 @@ function normalizeRequestedDocuments(value, field) {
   }
   const seen = new Set();
   return value.map((entry, index) => {
-    const text = assertPrivacySafeText(entry, `${field}[${index}]`, 300);
+    const text = assertSessionSafeText(entry, `${field}[${index}]`, 300);
     if (!text) throw new Error(`${field}[${index}] must be a non-empty string`);
     if (seen.has(text)) throw new Error(`${field} contains duplicate document request: ${text}`);
     seen.add(text);
@@ -1711,11 +1677,11 @@ function normalizeDecision(decision, index, itemById, seenIds, decidedAt) {
   if (!item.allowed_actions.includes(action)) {
     throw new Error(`${root}.action is not allowed for item ${itemId}: ${action}`);
   }
-  const reviewerNote = assertPrivacySafeText(
+  const reviewerNote = assertSessionSafeText(
     decision.reviewer_note ?? decision.note,
     `${root}.reviewer_note`,
   );
-  const editValue = assertPrivacySafeText(
+  const editValue = assertSessionSafeText(
     decision.edit_value ?? decision.user_text,
     `${root}.edit_value`,
   );
@@ -1805,7 +1771,7 @@ function buildUiDecisions(input, payload = validateReview(input), savedUiDecisio
   const decisionSource = input.decision_source
     ? safeIdentifier(input.decision_source, "decision_source")
     : "mcp_widget";
-  const reviewer = input.reviewer ? safeIdentifier(input.reviewer, "reviewer") : "";
+  const reviewer = input.reviewer ? assertSessionSafeText(input.reviewer, "reviewer", 300) : "";
   const status =
     decisions.length === 0
       ? "pending_review"

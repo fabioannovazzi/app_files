@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "check-entries",
   "display_name": "Check Entries",
   "role": "workflow",
@@ -10,49 +10,57 @@
     "assets/review-workbench-adapter.json",
     "assets/check-entries-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Selected journal entries, FatturaPA ZIP or authorized connector export, and targeted supporting PDFs"
-    ],
-    "local_processing": [
-      "Parse entries and invoices",
-      "Match amounts, dates and counterparties",
-      "Identify unresolved checks",
-      "Build evidence locators",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "mapping-and-resolution",
-        "purpose": "Resolve entry mappings and interpret unresolved evidence",
-        "content": "Selected entries, deterministic match results, invoice fields and targeted document excerpts",
-        "minimum_necessary": "Use only selected entries and evidence for unresolved checks; keep bulk invoice and journal populations local",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "entry-and-support-review",
+        "purpose": "Map selected entries and resolve accounting-support checks",
+        "content": "User instructions; journal entries; FatturaPA data or connector exports; supporting PDFs; match results; evidence excerpts and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [
     {
-      "risk": "Selected entries, invoice fields and supporting excerpts may contain names, tax identifiers or transaction narratives",
-      "mitigation": "Limit context to selected entries and targeted evidence after local matching"
+      "id": "accounting-system-export",
+      "kind": "external_connector",
+      "destination": "User-selected accounting-system provider",
+      "purpose": "Acquire an invoice ZIP or folder export when the user chooses connection instead of supplying local support",
+      "content": "Authorized read/export request for the selected client and period; the resulting export is then processed locally",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Use only a callable provider-specific connector after the user chooses it and confirms access authority.",
+        "Restrict the action to read/export for the selected client and period.",
+        "Vera and the helper scripts do not request credentials, tokens, cookies, or one-time codes."
+      ]
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Registri e archivi fatture vengono confrontati localmente. Codex esamina soltanto le scritture selezionate, gli esiti dei controlli e le evidenze mirate necessarie a risolvere le eccezioni.",
-    "message_en": "Journals and invoice archives are compared locally. Codex reviews only selected entries, check results and the targeted evidence needed to resolve exceptions.",
-    "requires_confirmation": false
-  },
+  "security_controls": [
+    {
+      "id": "local-export-handoff",
+      "control": "Helper scripts receive a local connector export and do not authenticate to or call accounting-provider APIs."
+    },
+    {
+      "id": "private-output-root",
+      "control": "Run artifacts are written outside published repository paths."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "An unresolved check can require a larger supporting passage",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "66c957f98800b2c4fddb40a350565a6ec73cc6f30f213c01f7d3a4dc4124d29a"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "4f44de104fa7652ebde4235115d78689a0d272329d1d321dbc2b1e86a4ebdcd5"
   }
 }

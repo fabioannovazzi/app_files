@@ -4,7 +4,6 @@
   "type": "object",
   "required": [
     "professional_question",
-    "processing_authorization",
     "material_decisions",
     "decision_log",
     "facts"
@@ -13,31 +12,6 @@
     "case_id": {"type": "string", "minLength": 1},
     "language": {"enum": ["it", "en", "fr", "de"]},
     "professional_question": {"type": "string", "minLength": 1},
-    "processing_authorization": {
-      "type": "object",
-      "required": [
-        "studio_processing_authorized",
-        "model_processing_approved",
-        "processor_scope",
-        "approved_by_id",
-        "approved_by_role",
-        "recorded_at",
-        "basis",
-        "personal_data_minimized"
-      ],
-      "properties": {
-        "studio_processing_authorized": {"const": true},
-        "model_processing_approved": {"const": true},
-        "processor_scope": {"type": "string", "minLength": 1},
-        "approved_by_id": {"type": "string", "minLength": 1},
-        "approved_by_role": {
-          "enum": ["authorized_user", "professional_reviewer"]
-        },
-        "recorded_at": {"type": "string", "format": "date-time"},
-        "basis": {"type": "string", "minLength": 1},
-        "personal_data_minimized": {"const": true}
-      }
-    },
     "material_decisions": {
       "type": "object",
       "required": [

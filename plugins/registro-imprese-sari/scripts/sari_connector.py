@@ -390,7 +390,7 @@ def _record_network_receipt(
     )
 
 
-def _record_run_connector_posture(
+def _record_completed_connector_use(
     output_dir: Path,
     *,
     run_id: str,
@@ -398,7 +398,6 @@ def _record_run_connector_posture(
     tenant: str,
     network_approval_id: str,
     written_use_authorization_id: str,
-    phase: str,
     outputs: list[str],
 ) -> None:
     run_path = output_dir / "run_intake.json"
@@ -411,19 +410,21 @@ def _record_run_connector_posture(
     if not isinstance(data_posture, dict):
         data_posture = {}
     data_posture.setdefault("local_files_read", [])
-    data_posture.setdefault("model_excerpts_sent", [])
     data_posture.setdefault("upload_paths_used", [])
     data_posture.setdefault("hosted_notebook_execution_used", False)
     data_posture.setdefault("remote_sql_execution_used", False)
     connectors = data_posture.get("external_connectors_used")
     if not isinstance(connectors, list):
         connectors = []
+    completed_at = iso_now()
     connector_entry = {
         "connector": "authorized_sari_json_read_only",
         "origin": SARI_ORIGIN,
         "tenant": tenant,
         "operation": operation,
         "credentials_used": False,
+        "status": "completed",
+        "completed_at": completed_at,
     }
     connectors = [
         entry
@@ -444,7 +445,7 @@ def _record_run_connector_posture(
     data_posture["external_connectors_used"] = connectors
     data_posture["external_execution_approval"] = {
         "approved": True,
-        "approved_at": iso_now(),
+        "approved_at": completed_at,
         "approved_by": network_approval_id,
         "reason": written_use_authorization_id,
         "scope": (
@@ -458,7 +459,7 @@ def _record_run_connector_posture(
         trace = []
     trace.append(
         {
-            "step_id": f"sari_connector_{phase}_{len(trace) + 1}",
+            "step_id": f"sari_connector_completed_{len(trace) + 1}",
             "kind": "external_official_source_read",
             "command": [
                 "python",
@@ -468,7 +469,7 @@ def _record_run_connector_posture(
                 tenant,
             ],
             "execution_location": "external_connector",
-            "status": "passed" if phase == "completed" else "authorized",
+            "status": "passed",
             "inputs": [f"{SARI_ORIGIN}{SARI_PREFIX}{tenant}"],
             "outputs": outputs,
         }
@@ -502,25 +503,6 @@ def run_search(
         written_use_authorization_id, field="written_use_authorization_id"
     )
     safe_output = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
-    _record_network_receipt(
-        safe_output,
-        run_id=run_id,
-        operation="search_metadata",
-        tenant=tenant,
-        network_approval_id=network_approval_id,
-        written_use_authorization_id=written_use_authorization_id,
-        query_sha256=sha256_bytes(clean_query.encode("utf-8")),
-    )
-    _record_run_connector_posture(
-        safe_output,
-        run_id=run_id,
-        operation="search",
-        tenant=tenant,
-        network_approval_id=network_approval_id,
-        written_use_authorization_id=written_use_authorization_id,
-        phase="authorized",
-        outputs=["sari_network_receipt.json"],
-    )
     active_client = client or SariClient()
     tenant_page = active_client.initialize_tenant(
         tenant, expected_chamber=expected_chamber
@@ -571,14 +553,22 @@ def run_search(
         },
     )
     write_private_json(safe_output / "official_sources.json", manifest)
-    _record_run_connector_posture(
+    _record_network_receipt(
+        safe_output,
+        run_id=run_id,
+        operation="search_metadata",
+        tenant=active_client.tenant,
+        network_approval_id=network_approval_id,
+        written_use_authorization_id=written_use_authorization_id,
+        query_sha256=sha256_bytes(clean_query.encode("utf-8")),
+    )
+    _record_completed_connector_use(
         safe_output,
         run_id=run_id,
         operation="search",
         tenant=active_client.tenant,
         network_approval_id=network_approval_id,
         written_use_authorization_id=written_use_authorization_id,
-        phase="completed",
         outputs=[
             "sari_search_candidates.json",
             "official_sources.json",
@@ -612,25 +602,6 @@ def run_detail(
         written_use_authorization_id, field="written_use_authorization_id"
     )
     safe_output = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
-    _record_network_receipt(
-        safe_output,
-        run_id=run_id,
-        operation="selected_card_detail",
-        tenant=tenant,
-        network_approval_id=network_approval_id,
-        written_use_authorization_id=written_use_authorization_id,
-        query_sha256=None,
-    )
-    _record_run_connector_posture(
-        safe_output,
-        run_id=run_id,
-        operation="detail",
-        tenant=tenant,
-        network_approval_id=network_approval_id,
-        written_use_authorization_id=written_use_authorization_id,
-        phase="authorized",
-        outputs=["sari_network_receipt.json"],
-    )
     active_client = client or SariClient()
     tenant_page = active_client.initialize_tenant(
         tenant, expected_chamber=expected_chamber
@@ -682,14 +653,22 @@ def run_detail(
         },
     )
     write_private_json(safe_output / "official_sources.json", manifest)
-    _record_run_connector_posture(
+    _record_network_receipt(
+        safe_output,
+        run_id=run_id,
+        operation="selected_card_detail",
+        tenant=active_client.tenant,
+        network_approval_id=network_approval_id,
+        written_use_authorization_id=written_use_authorization_id,
+        query_sha256=None,
+    )
+    _record_completed_connector_use(
         safe_output,
         run_id=run_id,
         operation="detail",
         tenant=active_client.tenant,
         network_approval_id=network_approval_id,
         written_use_authorization_id=written_use_authorization_id,
-        phase="completed",
         outputs=[
             result_path.name,
             "official_sources.json",

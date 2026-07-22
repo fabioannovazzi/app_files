@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "workstream": "deep-research-validator",
   "display_name": "Deep Research Validator",
   "role": "workflow",
@@ -10,48 +10,57 @@
     "assets/review-workbench-adapter.json",
     "assets/deep-research-review-widget.html"
   ],
-  "data_flow": {
-    "local_sources": [
-      "Deep Research report, cited sources and validation configuration"
-    ],
-    "local_processing": [
-      "Parse report claims and citations",
-      "Check URLs and deterministic citation structure",
-      "Build claim-by-claim review records",
-      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
-    ],
-    "codex_context": [
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
       {
-        "id": "claim-validation",
-        "purpose": "Judge whether each cited source supports the report claim",
-        "content": "Report claims, surrounding language, citations, relevant source passages and validation diagnostics",
-        "minimum_necessary": "Use claim-level passages and cited-source excerpts; load broader report or source context only when meaning depends on it",
-        "semantic_reasoning_required": true,
-        "full_source_expected": false
+        "id": "report-and-source-review",
+        "purpose": "Judge claim support, reasoning quality, and proposed corrections",
+        "content": "Deep Research report; claims and surrounding text; citations; fetched or local source passages; diagnostics; proposed corrections and review decisions"
       }
     ]
   },
-  "residual_risks": [
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "boundaries_beyond_codex": [
     {
-      "risk": "Claims and cited passages may reproduce case-specific facts from the research request",
-      "mitigation": "Validate at claim level and use only the surrounding text and source passages needed to judge support"
+      "id": "cited-url-fetch",
+      "kind": "public_research",
+      "destination": "Public hosts named by URLs cited in the report",
+      "purpose": "Retrieve cited source pages for claim-support review",
+      "content": "Each complete cited HTTP or HTTPS URL, request metadata, and the resulting public page response",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Fetch only URLs extracted from the supplied report inventory.",
+        "Read at most 1,000,000 response bytes per URL with a bounded timeout.",
+        "Use --no-fetch and local source files when network retrieval is unavailable or inappropriate."
+      ]
     }
   ],
-  "commercialista_notice": {
-    "level": "informational",
-    "timing": "workstream_start",
-    "message_it": "Il report viene scomposto e controllato localmente. Codex esamina le singole affermazioni, il contesto necessario e i passaggi delle fonti citate per valutarne il supporto.",
-    "message_en": "The report is parsed and checked locally. Codex reviews individual claims, necessary context and cited-source passages to assess support.",
-    "requires_confirmation": false
-  },
+  "security_controls": [
+    {
+      "id": "no-model-api-in-scripts",
+      "control": "Helper scripts do not call model APIs."
+    },
+    {
+      "id": "private-output-root",
+      "control": "Run artifacts are written outside published repository paths."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
-    "basis": "model_review_of_workflow_source",
-    "limitations": [
-      "Some claims require wider report or source context to avoid a misleading validation",
-      "This is a design-time data-flow review, not a GDPR legal determination"
-    ],
-    "source_fingerprint": "2f1f6bdba00458e7c1dcb33c224468724c74af9e91c56d093d379b8fddb0b722"
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "c51f133fcefb6f6f74eab13671794659e5a8725633789ee48896e4fa9bce7aad"
   }
 }

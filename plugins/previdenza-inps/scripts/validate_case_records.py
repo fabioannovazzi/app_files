@@ -21,7 +21,7 @@ from case_core import (
     read_fragment_text,
     write_json,
 )
-from privacy_guard import privacy_issue, safe_identifier
+from privacy_guard import safe_identifier, session_url_issue
 
 __all__ = ["validate_case_records", "main"]
 
@@ -309,7 +309,7 @@ def _validate_material_decisions(
                 issues,
                 code="missing_decision_actor_id",
                 field=f"{field}.decided_by_id",
-                message="Record a stable reviewer or user ID without exposing unnecessary personal data.",
+                message="Record a stable reviewer or user reference.",
             )
         if not _validate_iso_datetime(record.get("recorded_at")):
             _issue(
@@ -332,55 +332,6 @@ def _validate_material_decisions(
             code="incomplete_decision_log",
             field="decision_log",
             message=f"Missing decision records for: {', '.join(missing_gates)}.",
-        )
-
-
-def _validate_processing_authorization(
-    records: dict[str, Any], issues: list[dict[str, str]]
-) -> None:
-    authorization = records.get("processing_authorization")
-    if not isinstance(authorization, dict):
-        _issue(
-            issues,
-            code="missing_processing_authorization",
-            field="processing_authorization",
-            message="Studio and model-processing authority must be recorded before semantic review.",
-        )
-        return
-    true_fields = (
-        "studio_processing_authorized",
-        "model_processing_approved",
-        "personal_data_minimized",
-    )
-    for name in true_fields:
-        if authorization.get(name) is not True:
-            _issue(
-                issues,
-                code="unconfirmed_processing_authorization",
-                field=f"processing_authorization.{name}",
-                message="Processing authorization and data minimization must be explicit.",
-            )
-    for name in ("processor_scope", "approved_by_id", "basis"):
-        if not _nonempty(authorization.get(name)):
-            _issue(
-                issues,
-                code="incomplete_processing_authorization",
-                field=f"processing_authorization.{name}",
-                message="Processing authorization field must be non-empty.",
-            )
-    if authorization.get("approved_by_role") not in APPROVING_ROLES:
-        _issue(
-            issues,
-            code="invalid_processing_approver_role",
-            field="processing_authorization.approved_by_role",
-            message="Processing must be approved by an authorized user or professional reviewer.",
-        )
-    if not _validate_iso_datetime(authorization.get("recorded_at")):
-        _issue(
-            issues,
-            code="invalid_processing_authorization_timestamp",
-            field="processing_authorization.recorded_at",
-            message="Processing authorization needs an ISO date-time with timezone.",
         )
 
 
@@ -422,7 +373,7 @@ def _validate_fact_evidence(
                 issues,
                 code="unsafe_document_id",
                 field=f"{anchor_path}.document_id",
-                message="Evidence document IDs must be opaque and identifier-free.",
+                message="Evidence document IDs must use the stable machine-ID format.",
             )
             continue
         if document_id not in documents:
@@ -441,12 +392,12 @@ def _validate_fact_evidence(
                 message="Evidence locator must identify a page, sheet, or document fragment.",
             )
             continue
-        if privacy_issue(locator.get("value")):
+        if session_url_issue(locator.get("value")):
             _issue(
                 issues,
                 code="unsafe_evidence_locator",
                 field=f"{anchor_path}.locator.value",
-                message="Evidence locators must omit identifiers and private or tokenized URLs.",
+                message="Evidence locators must omit private or tokenized session URLs.",
             )
             continue
         fragment = fragments.get(_locator_key(document_id, locator))
@@ -485,12 +436,12 @@ def _validate_fact_evidence(
                 message="Evidence quote must be non-empty.",
             )
             continue
-        if privacy_issue(quote):
+        if session_url_issue(quote):
             _issue(
                 issues,
                 code="unsafe_evidence_quote",
                 field=f"{anchor_path}.quote",
-                message="Evidence quotes must omit raw identity, tax codes, email, and private URLs.",
+                message="Evidence quotes must omit private or tokenized session URLs.",
             )
             continue
         raw_source_text = read_fragment_text(inventory_dir, fragment)
@@ -551,7 +502,7 @@ def _validate_facts(
                 issues,
                 code="invalid_or_duplicate_fact_id",
                 field=f"{fact_path}.fact_id",
-                message="fact_id must be opaque, identifier-free, and unique.",
+                message="fact_id must use the stable machine-ID format and be unique.",
             )
         else:
             fact_ids.add(fact_id)
@@ -562,26 +513,26 @@ def _validate_facts(
                 field=f"{fact_path}.statement",
                 message="Fact statement must be non-empty.",
             )
-        elif privacy_issue(fact.get("statement")):
+        elif session_url_issue(fact.get("statement")):
             _issue(
                 issues,
                 code="unsafe_fact_statement",
                 field=f"{fact_path}.statement",
-                message="Fact statements must omit raw identifiers and private or tokenized URLs.",
+                message="Fact statements must omit private or tokenized session URLs.",
             )
         if not _nonempty(fact.get("review_label")):
             _issue(
                 issues,
                 code="missing_safe_review_label",
                 field=f"{fact_path}.review_label",
-                message="A concise identifier-free review label is required.",
+                message="A concise review label is required.",
             )
-        elif privacy_issue(fact.get("review_label")):
+        elif session_url_issue(fact.get("review_label")):
             _issue(
                 issues,
                 code="unsafe_fact_review_label",
                 field=f"{fact_path}.review_label",
-                message="Review labels must omit raw identity, tax codes, email, and private URLs.",
+                message="Review labels must omit private or tokenized session URLs.",
             )
         if "value" not in fact or fact.get("value") is None:
             _issue(
@@ -590,12 +541,12 @@ def _validate_facts(
                 field=f"{fact_path}.value",
                 message="Every fact must include an explicit value.",
             )
-        elif privacy_issue(fact.get("value")):
+        elif session_url_issue(fact.get("value")):
             _issue(
                 issues,
                 code="unsafe_fact_value",
                 field=f"{fact_path}.value",
-                message="Review data fields must omit raw identifiers and private or tokenized URLs.",
+                message="Review data fields must omit private or tokenized session URLs.",
             )
         value_type = str(fact.get("value_type", ""))
         if value_type not in VALUE_TYPES:
@@ -669,7 +620,7 @@ def _validate_timeline(
                 issues,
                 code="invalid_or_duplicate_event_id",
                 field=f"{event_path}.event_id",
-                message="event_id must be opaque, identifier-free, and unique.",
+                message="event_id must use the stable machine-ID format and be unique.",
             )
         else:
             event_ids.add(event_id)
@@ -680,12 +631,12 @@ def _validate_timeline(
                 field=f"{event_path}.description",
                 message="Timeline event description must be non-empty.",
             )
-        elif privacy_issue(event.get("description")):
+        elif session_url_issue(event.get("description")):
             _issue(
                 issues,
                 code="unsafe_timeline_description",
                 field=f"{event_path}.description",
-                message="Timeline descriptions must omit raw identifiers and private or tokenized URLs.",
+                message="Timeline descriptions must omit private or tokenized session URLs.",
             )
         precision = str(event.get("date_precision", ""))
         if precision not in DATE_PRECISIONS or not _validate_iso_date(
@@ -858,14 +809,13 @@ def validate_case_records(
             field="professional_question",
             message="The professional question must be stated explicitly.",
         )
-    elif privacy_issue(records.get("professional_question")):
+    elif session_url_issue(records.get("professional_question")):
         _issue(
             issues,
             code="unsafe_professional_question",
             field="professional_question",
-            message="The professional question must omit raw identifiers and private or tokenized URLs.",
+            message="The professional question must omit private or tokenized session URLs.",
         )
-    _validate_processing_authorization(records, issues)
     _validate_material_decisions(records, issues)
     fact_ids = _validate_facts(
         records,
