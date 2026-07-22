@@ -25,7 +25,7 @@ _SOURCE_URL = "https://github.com/fabioannovazzi/app_files"
 _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     "en": {
         "meta_description": (
-            "The two processing categories for Vera and Clara: ordinary work inside "
+            "The two processing categories for Vera and Clara: work inside "
             "Codex and separate Mparanza-hosted services."
         ),
         "skip_label": "Skip to main content",
@@ -34,7 +34,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Security, privacy and data",
         "title": "How your data is handled.",
         "summary": (
-            "Vera and Clara follow one policy. Ordinary plugin functions run inside "
+            "Vera and Clara follow one policy. Plugin functions run inside "
             "Codex; Mparanza-hosted services form a separate processing boundary."
         ),
         "video": {
@@ -49,19 +49,19 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "unsupported": "Your browser does not support embedded video.",
         },
         "boundary": {
-            "title": "Ordinary Vera and Clara functions inside Codex.",
+            "title": "When Vera and Clara work inside Codex.",
             "intro": (
                 "Vera and Clara do not automatically anonymise data. They may use local "
                 "Python to filter or aggregate information when useful. Data supplied "
                 "to the model is processed through the user's existing ChatGPT plan. "
-                "Ordinary workflows do not send client files, prompts, or "
+                "Workflows inside Codex do not send client files, prompts, or "
                 "model-context content to Mparanza."
             ),
             "local_label": "Your computer",
             "local_detail": "Local files · local Python · local outputs",
             "account_label": "Your existing ChatGPT plan",
             "account_detail": "Model context · plan terms · data controls",
-            "exclusion": "Ordinary workflows send no client or work content to Mparanza.",
+            "exclusion": "Workflows inside Codex send no client or work content to Mparanza.",
         },
         "sections": [
             {
@@ -85,7 +85,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Mapped once per workflow, not once per prompt.",
                 "paragraphs": [
                     (
-                        "Each ordinary workflow is reviewed when it is added or changed. "
+                        "Each workflow inside Codex is reviewed when it is added or changed. "
                         "The review records what normally stays local and what Codex may "
                         "read. It does not create a form, consent step, or record for each "
                         "prompt."
@@ -119,7 +119,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     (
                         "The plugins also contact Mparanza to check for updates and the "
                         "status of previously submitted feedback. Those requests contain "
-                        "no client or work content, although ordinary technical connection "
+                        "no client or work content, although technical connection "
                         "records may still be logged. Feedback content is sent only through "
                         "the explicit submission workflow."
                     ),
@@ -178,7 +178,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     },
     "it": {
         "meta_description": (
-            "Le due categorie di trattamento per Vera e Clara: il lavoro ordinario "
+            "Le due categorie di trattamento per Vera e Clara: il lavoro svolto "
             "dentro Codex e i servizi hosted di Mparanza, che hanno un confine separato."
         ),
         "skip_label": "Vai al contenuto principale",
@@ -187,8 +187,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sicurezza, privacy e dati",
         "title": "Come vengono gestiti i tuoi dati.",
         "summary": (
-            "Vera e Clara seguono la stessa regola. Le normali funzioni dei plugin "
-            "operano dentro Codex; i servizi hosted di Mparanza hanno un confine "
+            "Vera e Clara seguono la stessa regola. Le funzioni dei plugin vengono "
+            "eseguite dentro Codex; i servizi hosted di Mparanza hanno un confine "
             "di trattamento separato."
         ),
         "video": {
@@ -203,19 +203,19 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "unsupported": "Il browser non supporta i video incorporati.",
         },
         "boundary": {
-            "title": "Le normali funzioni di Vera e Clara dentro Codex.",
+            "title": "Quando Vera e Clara lavorano dentro Codex.",
             "intro": (
                 "Vera e Clara non anonimizzano automaticamente i dati. Possono usare "
                 "Python in locale per filtrare o aggregare le informazioni quando è "
                 "utile. I dati forniti al modello vengono trattati attraverso il piano "
-                "ChatGPT già utilizzato dall'utente. I workflow ordinari non inviano a "
+                "ChatGPT già utilizzato dall'utente. I workflow dentro Codex non inviano a "
                 "Mparanza file dei clienti, prompt o contenuti del contesto del modello."
             ),
             "local_label": "Il tuo computer",
             "local_detail": "File locali · Python locale · risultati locali",
             "account_label": "Il tuo piano ChatGPT esistente",
             "account_detail": "Contesto del modello · termini · controlli sui dati",
-            "exclusion": "I workflow ordinari non inviano a Mparanza contenuti del cliente o del lavoro.",
+            "exclusion": "I workflow dentro Codex non inviano a Mparanza contenuti del cliente o del lavoro.",
         },
         "sections": [
             {
@@ -239,7 +239,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Una mappa per workflow, non una per prompt.",
                 "paragraphs": [
                     (
-                        "Ogni workflow ordinario viene riesaminato quando viene aggiunto o "
+                        "Ogni workflow dentro Codex viene riesaminato quando viene aggiunto o "
                         "modificato. La mappa registra che cosa resta normalmente locale e "
                         "che cosa può leggere Codex. Non crea un modulo, un consenso o una "
                         "registrazione per ogni prompt."
@@ -276,7 +276,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "I plugin contattano inoltre Mparanza per verificare gli aggiornamenti "
                         "e lo stato dei feedback già inviati. Queste richieste non includono "
                         "contenuti del cliente o del lavoro, anche se possono essere registrati "
-                        "normali dati tecnici di connessione. Il contenuto di un feedback viene "
+                        "dati tecnici di connessione. Il contenuto di un feedback viene "
                         "inviato soltanto tramite il flusso esplicito di trasmissione."
                     ),
                 ],
@@ -335,7 +335,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     },
     "fr": {
         "meta_description": (
-            "Les deux catégories de traitement de Vera et Clara : le travail ordinaire "
+            "Les deux catégories de traitement de Vera et Clara : le travail effectué "
             "dans Codex et les services hébergés par Mparanza, qui ont un périmètre distinct."
         ),
         "skip_label": "Aller au contenu principal",
@@ -344,8 +344,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sécurité, confidentialité et données",
         "title": "Comment vos données sont traitées.",
         "summary": (
-            "Vera et Clara suivent la même règle. Les fonctions ordinaires des plugins "
-            "s'exécutent dans Codex ; les services hébergés par Mparanza ont un périmètre "
+            "Vera et Clara suivent la même règle. Les fonctions des plugins s'exécutent "
+            "dans Codex ; les services hébergés par Mparanza ont un périmètre "
             "de traitement distinct."
         ),
         "video": {
@@ -360,20 +360,20 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "unsupported": "Votre navigateur ne prend pas en charge la vidéo intégrée.",
         },
         "boundary": {
-            "title": "Les fonctions ordinaires de Vera et Clara dans Codex.",
+            "title": "Quand Vera et Clara travaillent dans Codex.",
             "intro": (
                 "Vera et Clara n'anonymisent pas automatiquement les données. Elles "
                 "peuvent utiliser Python localement pour filtrer ou agréger des "
                 "informations lorsque cela est utile. Les données fournies au modèle "
                 "sont traitées dans le cadre de l'offre ChatGPT existante de l'utilisateur. "
-                "Les workflows ordinaires n'envoient à Mparanza ni fichiers clients, "
+                "Les workflows dans Codex n'envoient à Mparanza ni fichiers clients, "
                 "ni prompts, ni contenu du contexte du modèle."
             ),
             "local_label": "Votre ordinateur",
             "local_detail": "Fichiers locaux · Python local · livrables locaux",
             "account_label": "Votre offre ChatGPT existante",
             "account_detail": "Contexte du modèle · conditions · contrôles des données",
-            "exclusion": "Les workflows ordinaires n'envoient à Mparanza aucun contenu client ou de travail.",
+            "exclusion": "Les workflows dans Codex n'envoient à Mparanza aucun contenu client ou de travail.",
         },
         "sections": [
             {
@@ -398,7 +398,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Une cartographie par workflow, pas une par prompt.",
                 "paragraphs": [
                     (
-                        "Chaque workflow ordinaire est revu lorsqu'il est ajouté ou "
+                        "Chaque workflow dans Codex est revu lorsqu'il est ajouté ou "
                         "modifié. La cartographie indique ce qui reste normalement local "
                         "et ce que Codex peut lire. Elle ne crée ni formulaire, ni étape "
                         "de consentement, ni enregistrement pour chaque prompt."
@@ -437,7 +437,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Les plugins contactent également Mparanza pour vérifier les mises à "
                         "jour et le statut des retours déjà transmis. Ces requêtes ne "
                         "contiennent aucun contenu client ou de travail, même si des données "
-                        "techniques ordinaires de connexion peuvent être journalisées. Le "
+                        "techniques de connexion peuvent être journalisées. Le "
                         "contenu d'un retour n'est envoyé que par le workflow de transmission "
                         "explicite."
                     ),
@@ -497,7 +497,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     },
     "de": {
         "meta_description": (
-            "Die zwei Verarbeitungskategorien für Vera und Clara: normale Arbeit in "
+            "Die zwei Verarbeitungskategorien für Vera und Clara: Arbeit in "
             "Codex und Mparanza-gehostete Dienste mit eigener Grenze."
         ),
         "skip_label": "Zum Hauptinhalt springen",
@@ -506,7 +506,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sicherheit, Datenschutz und Daten",
         "title": "So werden Ihre Daten verarbeitet.",
         "summary": (
-            "Für Vera und Clara gilt dieselbe Regel. Normale Plugin-Funktionen laufen "
+            "Für Vera und Clara gilt dieselbe Regel. Plugin-Funktionen laufen "
             "in Codex; Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze."
         ),
         "video": {
@@ -521,20 +521,20 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "unsupported": "Ihr Browser unterstützt keine eingebetteten Videos.",
         },
         "boundary": {
-            "title": "Normale Vera- und Clara-Funktionen in Codex.",
+            "title": "Wenn Vera und Clara in Codex arbeiten.",
             "intro": (
                 "Vera und Clara anonymisieren Daten nicht automatisch. Sie können "
                 "Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, "
                 "wenn dies nützlich ist. Daten, die dem Modell bereitgestellt werden, "
                 "werden im Rahmen des bestehenden ChatGPT-Tarifs des Nutzers verarbeitet. "
-                "Normale Workflows senden keine Mandantendateien, Prompts oder Inhalte "
+                "Workflows in Codex senden keine Mandantendateien, Prompts oder Inhalte "
                 "des Modellkontexts an Mparanza."
             ),
             "local_label": "Ihr Computer",
             "local_detail": "Lokale Dateien · lokales Python · lokale Ergebnisse",
             "account_label": "Ihr bestehender ChatGPT-Tarif",
             "account_detail": "Modellkontext · Bedingungen · Datenkontrollen",
-            "exclusion": "Normale Workflows senden keine Mandanten- oder Arbeitsinhalte an Mparanza.",
+            "exclusion": "Workflows in Codex senden keine Mandanten- oder Arbeitsinhalte an Mparanza.",
         },
         "sections": [
             {
@@ -558,7 +558,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Eine Zuordnung pro Workflow, nicht pro Prompt.",
                 "paragraphs": [
                     (
-                        "Jeder normale Workflow wird geprüft, wenn er hinzugefügt oder "
+                        "Jeder Workflow in Codex wird geprüft, wenn er hinzugefügt oder "
                         "geändert wird. Die Zuordnung hält fest, was normalerweise lokal "
                         "bleibt und was Codex lesen kann. Sie erzeugt kein Formular, keine "
                         "Einwilligungsstufe und keinen Nachweis für jeden Prompt."
@@ -595,7 +595,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     (
                         "Die Plugins kontaktieren Mparanza außerdem, um nach Updates und dem "
                         "Status bereits übermittelten Feedbacks zu sehen. Diese Anfragen "
-                        "enthalten keine Mandanten- oder Arbeitsinhalte; übliche technische "
+                        "enthalten keine Mandanten- oder Arbeitsinhalte; technische "
                         "Verbindungsdaten können dennoch protokolliert werden. Feedback-Inhalte "
                         "werden nur über den ausdrücklichen Übermittlungsablauf gesendet."
                     ),
@@ -655,7 +655,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     },
     "es": {
         "meta_description": (
-            "Las dos categorías de tratamiento para Vera y Clara: el trabajo ordinario "
+            "Las dos categorías de tratamiento para Vera y Clara: el trabajo "
             "dentro de Codex y los servicios alojados por Mparanza, con un límite separado."
         ),
         "skip_label": "Ir al contenido principal",
@@ -664,8 +664,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Seguridad, privacidad y datos",
         "title": "Cómo se tratan tus datos.",
         "summary": (
-            "Vera y Clara siguen una misma política. Las funciones ordinarias de los "
-            "plugins se ejecutan dentro de Codex; los servicios alojados por Mparanza "
+            "Vera y Clara siguen una misma política. Las funciones de los plugins se "
+            "ejecutan dentro de Codex; los servicios alojados por Mparanza "
             "constituyen un límite de tratamiento separado."
         ),
         "video": {
@@ -680,12 +680,12 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "unsupported": "Tu navegador no admite vídeos incrustados.",
         },
         "boundary": {
-            "title": "Funciones ordinarias de Vera y Clara dentro de Codex.",
+            "title": "Cuando Vera y Clara trabajan dentro de Codex.",
             "intro": (
                 "Vera y Clara no anonimizan los datos automáticamente. Pueden usar Python "
                 "en local para filtrar o agregar información cuando resulte útil. Los datos "
                 "facilitados al modelo se tratan mediante el plan de ChatGPT que ya usa el "
-                "usuario. Los flujos ordinarios no envían a Mparanza archivos de clientes, "
+                "usuario. Los flujos dentro de Codex no envían a Mparanza archivos de clientes, "
                 "prompts ni contenido del contexto del modelo."
             ),
             "local_label": "Tu ordenador",
@@ -693,7 +693,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "account_label": "Tu plan de ChatGPT actual",
             "account_detail": "Contexto del modelo · condiciones del plan · controles de datos",
             "exclusion": (
-                "Los flujos ordinarios no envían contenido de clientes ni del trabajo "
+                "Los flujos dentro de Codex no envían contenido de clientes ni del trabajo "
                 "a Mparanza."
             ),
         },
@@ -719,7 +719,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Un mapeo por flujo de trabajo, no por prompt.",
                 "paragraphs": [
                     (
-                        "Cada flujo ordinario se revisa cuando se añade o modifica. La revisión "
+                        "Cada flujo dentro de Codex se revisa cuando se añade o modifica. La revisión "
                         "registra qué permanece normalmente en local y qué puede leer Codex. "
                         "No crea un formulario, un paso de consentimiento ni un registro para "
                         "cada prompt."
@@ -756,7 +756,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Los plugins también contactan con Mparanza para comprobar actualizaciones "
                         "y el estado de comentarios enviados anteriormente. Esas solicitudes no "
                         "contienen contenido de clientes ni del trabajo, aunque pueden registrarse "
-                        "los datos técnicos de conexión habituales. El contenido de los comentarios "
+                        "los datos técnicos de conexión. El contenido de los comentarios "
                         "solo se envía mediante el flujo de envío explícito."
                     ),
                 ],
