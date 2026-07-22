@@ -16,7 +16,11 @@ import openpyxl
 import polars as pl
 
 try:
-    from .review_session import write_review_session_artifacts, write_run_intake
+    from .review_session import (
+        workbook_sheet_name,
+        write_review_session_artifacts,
+        write_run_intake,
+    )
 except ImportError:  # pragma: no cover - supports direct script imports
     import importlib.util
 
@@ -29,6 +33,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
     _review_session = importlib.util.module_from_spec(_review_session_spec)
     sys.modules[_review_session_spec.name] = _review_session
     _review_session_spec.loader.exec_module(_review_session)
+    workbook_sheet_name = _review_session.workbook_sheet_name
     write_review_session_artifacts = _review_session.write_review_session_artifacts
     write_run_intake = _review_session.write_run_intake
 
@@ -1217,7 +1222,10 @@ def run_sample(
     sample_xlsx = output_dir / "journal_sample.xlsx"
     sample.write_csv(sample_csv)
     try:
-        sample.write_excel(sample_xlsx)
+        sample.write_excel(
+            sample_xlsx,
+            worksheet=workbook_sheet_name(language_code),
+        )
     except (ImportError, ModuleNotFoundError, RuntimeError, ValueError) as exc:
         LOGGER.warning("Could not write XLSX sample; CSV is available: %s", exc)
 

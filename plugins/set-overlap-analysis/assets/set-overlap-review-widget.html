@@ -396,7 +396,7 @@
     <div class="shell">
       <section class="topbar">
         <div>
-          <h1>Set Overlap Review</h1>
+          <h1 id="page-title">Set Overlap Review</h1>
           <p class="subtitle" id="subtitle">Loading payload...</p>
         </div>
         <span class="pill" id="status-pill">MCP widget</span>
@@ -409,14 +409,14 @@
       <section class="content">
         <div class="panel">
           <div class="panel-header">
-            <h2>Review items</h2>
+            <h2 id="items-title">Review items</h2>
             <span id="count"></span>
           </div>
           <div class="rows" id="rows"></div>
         </div>
         <div class="panel">
           <div class="panel-header">
-            <h2>Detail</h2>
+            <h2 id="detail-title">Detail</h2>
           </div>
           <div class="details" id="details"></div>
         </div>
@@ -424,14 +424,57 @@
     </div>
   </main>
   <script>
-    const TYPE_LABELS = {
-      set_summary: "Set summary",
-      overlap_intersection: "Intersection",
-      pair_overlap: "Pair overlap",
-      chart_artifact: "Chart",
-      context_artifact: "Context",
-      report_artifact: "Artifact",
-      review_artifact: "Review artifact",
+    const UI_COPY = {
+      en: {
+        pageTitle: "Set Overlap Review",
+        search: "Search sets, intersections, pairs, charts, artifacts",
+        itemsTitle: "Review items",
+        detailTitle: "Detail",
+        run: "Run",
+        all: "All",
+        noMatches: "No item matches the current filters.",
+        selectItem: "Select a review item.",
+        data: "Data",
+        sourceRecords: "Source Records",
+        metrics: ["Selected sets", "Items", "Intersections", "Memberships", "Charts", "Review items"],
+        fields: ["Type", "Action", "Source", "Output"],
+        types: {
+          set_summary: "Set summary",
+          overlap_intersection: "Intersection",
+          pair_overlap: "Pair overlap",
+          chart_artifact: "Chart",
+          context_artifact: "Context",
+          report_artifact: "Artifact",
+          review_artifact: "Review artifact",
+        },
+        actions: { accept: "Accept", reject: "Reject", edit: "Edit", mark_unclear: "Mark unclear", request_more_documents: "Request more documents", skip: "Skip", review: "Review" },
+        statuses: { ready_for_review: "Ready for review", needs_review: "Needs review", pending_review: "Pending review", reviewed: "Reviewed", partial_review: "Partially reviewed", empty: "Empty" },
+      },
+      es: {
+        pageTitle: "Revisión del solapamiento de conjuntos",
+        search: "Buscar conjuntos, intersecciones, pares, gráficos o artefactos",
+        itemsTitle: "Elementos de revisión",
+        detailTitle: "Detalle",
+        run: "Ejecución",
+        all: "Todos",
+        noMatches: "Ningún elemento coincide con los filtros actuales.",
+        selectItem: "Seleccione un elemento para revisar.",
+        data: "Datos",
+        sourceRecords: "Registros fuente",
+        metrics: ["Conjuntos seleccionados", "Elementos", "Intersecciones", "Pertenencias", "Gráficos", "Elementos de revisión"],
+        fields: ["Tipo", "Acción", "Fuente", "Salida"],
+        types: {
+          set_summary: "Resumen del conjunto",
+          overlap_intersection: "Intersección",
+          pair_overlap: "Solapamiento por pares",
+          chart_artifact: "Gráfico",
+          context_artifact: "Contexto",
+          report_artifact: "Artefacto",
+          review_artifact: "Artefacto de revisión",
+        },
+        actions: { accept: "Aceptar", reject: "Rechazar", edit: "Editar", mark_unclear: "Marcar como dudoso", request_more_documents: "Solicitar más documentos", skip: "Omitir", review: "Revisar" },
+        statuses: { ready_for_review: "Listo para revisión", needs_review: "Requiere revisión", pending_review: "Revisión pendiente", reviewed: "Revisado", partial_review: "Revisado parcialmente", empty: "Vacío" },
+      },
     };
     const FALLBACK = {
       widget_type: "set_overlap_review",
@@ -468,6 +511,38 @@
       return state.payload.review_payload || FALLBACK.review_payload;
     }
 
+    function language() {
+      const value = reviewPayload().language || state.payload.run_intake?.language || "en";
+      const code = String(value).trim().toLowerCase().replace("_", "-").split("-", 1)[0];
+      return code === "es" ? "es" : "en";
+    }
+
+    function copy() {
+      return UI_COPY[language()];
+    }
+
+    function typeLabel(value) {
+      return copy().types[value] || value;
+    }
+
+    function actionLabel(value) {
+      return copy().actions[value] || value;
+    }
+
+    function statusLabel(value) {
+      return copy().statuses[value] || value;
+    }
+
+    function renderStaticCopy() {
+      const text = copy();
+      document.documentElement.lang = language();
+      document.title = text.pageTitle;
+      document.getElementById("page-title").textContent = text.pageTitle;
+      document.getElementById("search").placeholder = text.search;
+      document.getElementById("items-title").textContent = text.itemsTitle;
+      document.getElementById("detail-title").textContent = text.detailTitle;
+    }
+
     function items() {
       return Array.isArray(reviewPayload().items) ? reviewPayload().items : [];
     }
@@ -489,15 +564,16 @@
     function renderSummary() {
       const payload = reviewPayload();
       const summary = payload.summary || {};
-      document.getElementById("subtitle").textContent = `Run ${payload.run_id || "n/a"}`;
-      document.getElementById("status-pill").textContent = payload.status || "ready_for_review";
+      const text = copy();
+      document.getElementById("subtitle").textContent = `${text.run} ${payload.run_id || "n/a"}`;
+      document.getElementById("status-pill").textContent = statusLabel(payload.status || "ready_for_review");
       document.getElementById("summary").innerHTML = [
-        metric("Selected sets", summary.selected_set_count ?? 0),
-        metric("Items", summary.item_count ?? 0),
-        metric("Intersections", summary.intersection_count ?? 0),
-        metric("Memberships", summary.canonical_memberships ?? 0),
-        metric("Charts", summary.chart_count ?? 0),
-        metric("Review items", payload.item_count ?? 0),
+        metric(text.metrics[0], summary.selected_set_count ?? 0),
+        metric(text.metrics[1], summary.item_count ?? 0),
+        metric(text.metrics[2], summary.intersection_count ?? 0),
+        metric(text.metrics[3], summary.canonical_memberships ?? 0),
+        metric(text.metrics[4], summary.chart_count ?? 0),
+        metric(text.metrics[5], payload.item_count ?? 0),
       ].join("");
     }
 
@@ -507,7 +583,7 @@
         counts.set(item.item_type, (counts.get(item.item_type) || 0) + 1);
       }
       document.getElementById("tabs").innerHTML = Array.from(counts.entries()).map(([type, count]) => {
-        const label = type === "all" ? "All" : (TYPE_LABELS[type] || type);
+        const label = type === "all" ? copy().all : typeLabel(type);
         return `<button class="tab" data-type="${esc(type)}" aria-pressed="${type === state.selectedType}">${esc(label)} (${count})</button>`;
       }).join("");
     }
@@ -515,12 +591,12 @@
     function rowHtml(item) {
       const selected = item.id === state.selectedId ? " is-selected" : "";
       return `<button class="row${selected}" data-id="${esc(item.id)}" data-kind="${esc(item.item_type)}">
-        <span class="type">${esc(TYPE_LABELS[item.item_type] || item.item_type)}</span>
+        <span class="type">${esc(typeLabel(item.item_type))}</span>
         <span>
           <span class="title">${esc(item.title)}</span>
           <span class="path">${esc(item.source_path || item.output_path || "")}</span>
         </span>
-        <span class="action">${esc(item.recommended_action || "review")}</span>
+        <span class="action">${esc(actionLabel(item.recommended_action || "review"))}</span>
       </button>`;
     }
 
@@ -529,7 +605,7 @@
       document.getElementById("count").textContent = `${rows.length} / ${items().length}`;
       document.getElementById("rows").innerHTML = rows.length
         ? rows.map(rowHtml).join("")
-        : '<div class="empty">No item matches the current filters.</div>';
+        : `<div class="empty">${esc(copy().noMatches)}</div>`;
       if (!state.selectedId && rows[0]) state.selectedId = rows[0].id;
       if (state.selectedId && !items().some((item) => item.id === state.selectedId)) {
         state.selectedId = rows[0]?.id || null;
@@ -538,19 +614,20 @@
     }
 
     function detailsHtml(item) {
-      if (!item) return '<div class="empty">Select a review item.</div>';
+      if (!item) return `<div class="empty">${esc(copy().selectItem)}</div>`;
+      const text = copy();
       const fields = [
-        ["Type", TYPE_LABELS[item.item_type] || item.item_type],
-        ["Action", item.recommended_action || ""],
-        ["Source", item.source_path || ""],
-        ["Output", item.output_path || ""],
+        [text.fields[0], typeLabel(item.item_type)],
+        [text.fields[1], actionLabel(item.recommended_action || "")],
+        [text.fields[2], item.source_path || ""],
+        [text.fields[3], item.output_path || ""],
       ].filter(([, value]) => value);
       return `
         <h3>${esc(item.title)}</h3>
         <dl>${fields.map(([key, value]) => `<dt>${esc(key)}</dt><dd>${esc(value)}</dd>`).join("")}</dl>
-        <h4>Data</h4>
+        <h4>${esc(text.data)}</h4>
         <pre>${esc(JSON.stringify(item.data || {}, null, 2))}</pre>
-        <h4>Source Records</h4>
+        <h4>${esc(text.sourceRecords)}</h4>
         <pre>${esc(JSON.stringify(item.source_records || [], null, 2))}</pre>
       `;
     }
@@ -561,6 +638,7 @@
     }
 
     function render() {
+      renderStaticCopy();
       renderSummary();
       renderTabs();
       renderRows();

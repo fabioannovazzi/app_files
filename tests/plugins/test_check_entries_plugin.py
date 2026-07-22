@@ -252,7 +252,7 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
         ],
     )
 
-    core.run_entry_checks(
+    result = core.run_entry_checks(
         journal_path,
         support_dir,
         output_dir,
@@ -261,6 +261,10 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
     )
 
     review_notes = (output_dir / "review_notes.md").read_text(encoding="utf-8")
+    review_handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
@@ -268,6 +272,19 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
         output
         for output in final_artifacts["outputs"]
         if output["path"] == "review_notes.md"
+    )
+    handoff_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "review_handoff.md"
+    )
+    missing_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "missing_support"
+    )
+    artifact_item = next(
+        item for item in review_payload["items"] if item["id"] == "check-results-xlsx"
     )
 
     assert review_notes.startswith(
@@ -281,6 +298,36 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
         "## Recuento por estado",
         "## Política de revisión",
     ]
+    assert result.frame.to_dicts()[0]["status"] == "missing_support"
+    assert result.frame.to_dicts()[0]["review_notes"] == (
+        "Ningún PDF justificativo coincide con el número de movimiento."
+    )
+    assert review_payload["language"] == "es"
+    assert review_payload["columns"] == [
+        {"field": "item_type", "label": "Tipo"},
+        {"field": "title", "label": "Asiento"},
+        {"field": "recommended_action", "label": "Acción sugerida"},
+        {"field": "source_path", "label": "Fuente"},
+        {"field": "output_path", "label": "Salida"},
+        {"field": "status", "label": "Estado"},
+    ]
+    assert missing_item["recommended_action"] == "request_more_documents"
+    assert missing_item["data"]["requested_document"] == (
+        "PDF justificativo del movimiento ES-1"
+    )
+    assert missing_item["data"]["reason"] == (
+        "Ningún PDF justificativo coincide con el número de movimiento."
+    )
+    assert artifact_item["title"] == "Libro de resultados de la comprobación"
+    assert review_handoff.startswith(
+        "# Entrega para revisión: Comprobación de asientos\n"
+    )
+    assert "## Revisión en Codex" in review_handoff
+    assert handoff_output["required_text"][0] == "Entrega para revisión"
+    assert final_artifacts["caveats"][0].startswith(
+        "Los scripts solo comparan evidencias deterministas"
+    )
+    assert final_artifacts["next_actions"][0].startswith("Revise las filas")
     contract_report = validate_contract(
         output_dir,
         strict_data_posture=True,
@@ -542,6 +589,11 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
         ],
         "item_count": 2,
         "columns": [],
+        "source_artifacts": {
+            "run_intake": "run_intake.json",
+            "check_results_csv": "check_results.csv",
+            "check_results_xlsx": "check_results.xlsx",
+        },
         "evidence": {},
         "allowed_actions": [
             "accept",
@@ -921,3 +973,114 @@ def test_check_entries_mcp_server_rejects_invalid_review_decisions(
     assert result["isError"] is True
     assert expected_error in result["structuredContent"]["error"]
     assert not (tmp_path / "ui_decisions.json").exists()
+
+
+def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "check-entries",
+        "workflow": "check-entries",
+        "run_id": "check-entries-es-runtime",
+        "language": "es-ES",
+        "review_type": "journal_entry_support_review",
+        "items": [
+            {
+                "id": "entry-es-1",
+                "item_type": "supported_entry",
+                "title": "ES-1",
+                "allowed_actions": ["accept", "skip"],
+                "recommended_action": "accept",
+            }
+        ],
+        "item_count": 1,
+        "status": "ready_for_review",
+    }
+    run_intake = {
+        "run_id": review_payload["run_id"],
+        "language": "es",
+        "output_dir": tmp_path.as_posix(),
+    }
+    decision = {"item_id": "entry-es-1", "action": "accept"}
+    invalid_payload = {**review_payload, "items": "invalid"}
+    messages = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {"_meta": {"locale": "es-ES"}},
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_check_entries_review",
+                "arguments": {"review_payload": review_payload},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "save_check_entries_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": [decision],
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_check_entries_decisions",
+                "arguments": {
+                    "run_intake": run_intake,
+                    "review_payload": review_payload,
+                    "decisions": [decision],
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_check_entries_review",
+                "arguments": {"review_payload": invalid_payload},
+            },
+        },
+    ]
+
+    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+    validation = responses[2]["result"]["structuredContent"]
+    saved = responses[3]["result"]["structuredContent"]
+    applied = responses[4]["result"]["structuredContent"]
+    invalid = responses[5]["result"]["structuredContent"]
+    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+
+    assert (
+        "Use validate_check_entries_review antes"
+        in responses[1]["result"]["instructions"]
+    )
+    assert validation["message"].startswith("Los datos de revisión")
+    assert saved["message"].startswith("Las decisiones son válidas")
+    assert applied["message"].startswith("Se aplicaron 1 decisiones")
+    assert applied["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    handoff_output = next(
+        output
+        for output in applied["final_artifacts"]["outputs"]
+        if output["path"] == "review_handoff.md"
+    )
+    assert handoff.startswith("# Entrega para revisión: Comprobación de asientos\n")
+    assert "## Revisión en Codex" in handoff
+    assert "<!-- Review Handoff -->" in handoff
+    assert handoff_output["required_text"][:2] == [
+        "Entrega para revisión",
+        "Review Handoff",
+    ]
+    assert invalid["error"] == "review_payload.items debe ser una matriz"

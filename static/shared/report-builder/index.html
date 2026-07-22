@@ -368,10 +368,10 @@
         <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
       <div class="nav-right">
-        <nav class="nav-links" aria-label="Section links">
+        <nav class="nav-links" aria-label="Sezioni della pagina" data-accessibility-label="sections">
           <a href="#journey" data-journey="nav.overview">In breve</a><a href="#journey-workflow" data-journey="nav.workflow">Percorso</a><a href="#proof" data-journey="nav.proof">Guarda</a><a href="#related" data-journey="nav.next">Da altri lavori</a><a href="#prompts" data-journey="nav.prompt">Prompt</a><a href="#download" data-journey="nav.open">Apri Vera</a>
         </nav>
-        <div class="lang-switch" aria-label="Language">
+        <div class="lang-switch" aria-label="Lingua" data-accessibility-label="language">
           <button type="button" data-lang="it">IT</button>
           <button type="button" data-lang="en">EN</button>
           <button type="button" data-lang="fr">FR</button>
@@ -657,10 +657,21 @@
     const initialLang = params.get("lang") || document.documentElement.lang || "it";
     const supported = new Set(["it", "en", "fr", "de", "es"]);
 
+    const accessibilityLabels = {
+      it: { sections: "Sezioni della pagina", language: "Lingua" },
+      en: { sections: "Page sections", language: "Language" },
+      fr: { sections: "Sections de la page", language: "Langue" },
+      de: { sections: "Seitenabschnitte", language: "Sprache" },
+      es: { sections: "Secciones de la página", language: "Idioma" }
+    };
+
     function setLanguage(lang) {
       const safeLang = supported.has(lang) ? lang : "it";
       document.documentElement.lang = safeLang;
       document.title = `${copy[safeLang]["hero.title"]} | Vera`;
+      document.querySelectorAll("[data-accessibility-label]").forEach((node) => {
+        node.setAttribute("aria-label", accessibilityLabels[safeLang][node.dataset.accessibilityLabel]);
+      });
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const key = node.dataset.i18n;
         if (copy[safeLang] && copy[safeLang][key]) {

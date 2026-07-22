@@ -78,38 +78,63 @@ def _write_review_handoff_card(
     render_tool: str,
     save_tool: str,
     apply_tool: str,
+    language: str,
 ) -> Path:
     path = output_dir / "review_handoff.md"
-    lines = [
-        f"# {title} Review Handoff",
-        "",
-        f"- Run ID: `{run_id}`",
-        "- Review payload: `review_payload.json`",
-        "- Run intake: `run_intake.json`",
-        "- Pending decisions: `ui_decisions.json`",
-        "- Applied decisions: `applied_decisions.json`",
-        "- Final artifacts: `final_artifacts.json`",
-        "",
-        "## Review In Codex",
-        f"1. Validate the payload with `{validate_tool}`.",
-        f"2. Render the review workbench with `{render_tool}`.",
-        f"3. Save reviewer actions with `{save_tool}`.",
-        f"4. Apply reviewer actions with `{apply_tool}`.",
-        "",
-        "Persistent save/apply requires the MCP or local-server review surface. "
-        "Static HTML fallback can copy or download decision JSON only.",
-    ]
+    if _is_spanish(language):
+        lines = [
+            f"# Entrega para revisión: {title}",
+            "",
+            f"- ID de ejecución: `{run_id}`",
+            "- Datos de revisión: `review_payload.json`",
+            "- Datos de entrada de la ejecución: `run_intake.json`",
+            "- Decisiones pendientes: `ui_decisions.json`",
+            "- Decisiones aplicadas: `applied_decisions.json`",
+            "- Artefactos finales: `final_artifacts.json`",
+            "",
+            "## Revisión en Codex",
+            f"1. Valide los datos con `{validate_tool}`.",
+            f"2. Muestre el espacio de revisión con `{render_tool}`.",
+            f"3. Guarde las acciones de revisión con `{save_tool}`.",
+            f"4. Aplique las acciones de revisión con `{apply_tool}`.",
+            "",
+            "El guardado y la aplicación persistentes requieren la interfaz de revisión MCP o del servidor local. "
+            "La alternativa HTML estática solo permite copiar o descargar el JSON de decisiones.",
+            "",
+            "<!-- Review Handoff -->",
+        ]
+    else:
+        lines = [
+            f"# {title} Review Handoff",
+            "",
+            f"- Run ID: `{run_id}`",
+            "- Review payload: `review_payload.json`",
+            "- Run intake: `run_intake.json`",
+            "- Pending decisions: `ui_decisions.json`",
+            "- Applied decisions: `applied_decisions.json`",
+            "- Final artifacts: `final_artifacts.json`",
+            "",
+            "## Review In Codex",
+            f"1. Validate the payload with `{validate_tool}`.",
+            f"2. Render the review workbench with `{render_tool}`.",
+            f"3. Save reviewer actions with `{save_tool}`.",
+            f"4. Apply reviewer actions with `{apply_tool}`.",
+            "",
+            "Persistent save/apply requires the MCP or local-server review surface. "
+            "Static HTML fallback can copy or download decision JSON only.",
+        ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
 
-def _review_handoff_output_record(path: Path) -> dict[str, Any]:
+def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
     return {
         "path": path.name,
         "kind": "md",
         "status": "written",
         "required_text": [
-            "Review Handoff",
+            "Entrega para revisión" if _is_spanish(language) else "Review Handoff",
+            *(["Review Handoff"] if _is_spanish(language) else []),
             "review_payload.json",
             "ui_decisions.json",
             "applied_decisions.json",
@@ -184,6 +209,12 @@ def _clean_text(value: Any) -> str:
     return " ".join(str(value or "").strip().split())
 
 
+def _is_spanish(language: object) -> bool:
+    return (
+        str(language or "").strip().lower().replace("_", "-").split("-", 1)[0] == "es"
+    )
+
+
 def _rows(frame: Any) -> list[dict[str, Any]]:
     if frame is None:
         return []
@@ -221,7 +252,16 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    if _is_spanish(language):
+        return [
+            {"field": "item_type", "label": "Tipo"},
+            {"field": "title", "label": "Movimiento"},
+            {"field": "recommended_action", "label": "Acción sugerida"},
+            {"field": "source_path", "label": "Fuente"},
+            {"field": "output_path", "label": "Salida"},
+            {"field": "status", "label": "Estado"},
+        ]
     return [
         {"field": "item_type", "label": "Type"},
         {"field": "title", "label": "Movement"},
@@ -242,29 +282,56 @@ def _transaction_title(row: dict[str, Any], fallback: str) -> str:
     return " | ".join(part for part in parts if part) or fallback
 
 
-def _match_title(row: dict[str, Any], index: int) -> str:
+def _match_title(row: dict[str, Any], index: int, language: str) -> str:
     parts = [
         _clean_text(row.get("bank_amount")),
         _clean_text(row.get("shared_references")),
         _clean_text(row.get("stage")),
     ]
-    return " | ".join(part for part in parts if part) or f"Matched pair {index}"
+    fallback = (
+        f"Par conciliado {index}" if _is_spanish(language) else f"Matched pair {index}"
+    )
+    return " | ".join(part for part in parts if part) or fallback
 
 
 def _requested_reconciliation_evidence(
-    row: dict[str, Any], side: str
+    row: dict[str, Any], side: str, language: str
 ) -> tuple[str, str]:
     reference = _clean_text(row.get("reference") or row.get("movement_number"))
     amount = _clean_text(row.get("amount_signed") or row.get("amount_abs"))
-    descriptor = reference or amount or "unmatched transaction"
+    descriptor = (
+        reference
+        or amount
+        or (
+            "transacción sin conciliar"
+            if _is_spanish(language)
+            else "unmatched transaction"
+        )
+    )
     if side == "bank":
         return (
-            f"Journal or ledger support for bank transaction {descriptor}",
-            "Bank transaction has no deterministic journal match.",
+            (
+                f"Justificante del diario o del mayor para la transacción bancaria {descriptor}"
+                if _is_spanish(language)
+                else f"Journal or ledger support for bank transaction {descriptor}"
+            ),
+            (
+                "La transacción bancaria no tiene una correspondencia determinista en el diario."
+                if _is_spanish(language)
+                else "Bank transaction has no deterministic journal match."
+            ),
         )
     return (
-        f"Bank statement or payment evidence for journal transaction {descriptor}",
-        "Journal transaction has no deterministic bank match.",
+        (
+            f"Extracto bancario o justificante de pago para la transacción del diario {descriptor}"
+            if _is_spanish(language)
+            else f"Bank statement or payment evidence for journal transaction {descriptor}"
+        ),
+        (
+            "La transacción del diario no tiene una correspondencia bancaria determinista."
+            if _is_spanish(language)
+            else "Journal transaction has no deterministic bank match."
+        ),
     )
 
 
@@ -273,12 +340,20 @@ def _unmatched_items(
     *,
     side: str,
     output_path: str,
+    language: str,
 ) -> list[dict[str, Any]]:
     item_type = "unmatched_bank" if side == "bank" else "unmatched_journal"
-    source_label = "Bank" if side == "bank" else "Journal"
+    if _is_spanish(language):
+        source_label = "Banco" if side == "bank" else "Diario"
+        row_label = "fila"
+    else:
+        source_label = "Bank" if side == "bank" else "Journal"
+        row_label = "row"
     items: list[dict[str, Any]] = []
     for index, row in enumerate(rows[:MAX_UNMATCHED_ITEMS], start=1):
-        requested_document, reason = _requested_reconciliation_evidence(row, side)
+        requested_document, reason = _requested_reconciliation_evidence(
+            row, side, language
+        )
         data = dict(row)
         data["requested_document"] = requested_document
         data["reason"] = reason
@@ -292,7 +367,7 @@ def _unmatched_items(
                     for part in (
                         _clean_text(row.get("source_file")),
                         (
-                            f"row {_clean_text(row.get('source_row'))}"
+                            f"{row_label} {_clean_text(row.get('source_row'))}"
                             if _clean_text(row.get("source_row"))
                             else ""
                         ),
@@ -334,7 +409,11 @@ def _unmatched_items(
             _base_item(
                 f"{item_type}-truncated",
                 "review_artifact",
-                f"{source_label} unmatched rows truncated in widget",
+                (
+                    f"Filas sin conciliar del {source_label.lower()} truncadas en el widget"
+                    if _is_spanish(language)
+                    else f"{source_label} unmatched rows truncated in widget"
+                ),
                 output_path=output_path,
                 allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
@@ -348,7 +427,7 @@ def _unmatched_items(
     return items
 
 
-def _match_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def _match_items(rows: Sequence[dict[str, Any]], language: str) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, row in enumerate(rows[:MAX_MATCH_ITEMS], start=1):
         data = dict(row)
@@ -357,14 +436,15 @@ def _match_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
         data["target_record_id"] = str(row.get("bank_transaction_id") or "")
         data["target_field"] = "review_note"
         data["edit_hint"] = (
-            "Editing this matched pair updates review_note in "
-            "reconciliation_matches.csv for the matching bank_transaction_id."
+            "Editar este par conciliado actualiza review_note en reconciliation_matches.csv para el bank_transaction_id correspondiente."
+            if _is_spanish(language)
+            else "Editing this matched pair updates review_note in reconciliation_matches.csv for the matching bank_transaction_id."
         )
         items.append(
             _base_item(
                 f"matched-pair-{index}",
                 "matched_pair",
-                _match_title(row, index),
+                _match_title(row, index, language),
                 output_path="reconciliation_matches.csv",
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
                 recommended_action="accept",
@@ -383,17 +463,56 @@ def _match_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
     return items
 
 
-def _artifact_items(audit: dict[str, Any], output_dir: Path) -> list[dict[str, Any]]:
+def _artifact_items(
+    audit: dict[str, Any], output_dir: Path, language: str
+) -> list[dict[str, Any]]:
     outputs = audit.get("outputs") if isinstance(audit.get("outputs"), dict) else {}
+    spanish = _is_spanish(language)
     labels = {
-        "normalized_bank_csv": ("review_artifact", "Normalized bank CSV"),
-        "normalized_journal_csv": ("review_artifact", "Normalized journal CSV"),
-        "reconciliation_matches_csv": ("review_artifact", "Reconciliation matches CSV"),
-        "unmatched_bank_csv": ("review_artifact", "Unmatched bank CSV"),
-        "unmatched_journal_csv": ("review_artifact", "Unmatched journal CSV"),
-        "workbook_xlsx": ("workpaper_artifact", "Journal-bank reconciliation workbook"),
-        "audit_json": ("review_artifact", "Reconciliation audit JSON"),
-        "review_notes_md": ("review_artifact", "Review notes"),
+        "normalized_bank_csv": (
+            "review_artifact",
+            "CSV bancario normalizado" if spanish else "Normalized bank CSV",
+        ),
+        "normalized_journal_csv": (
+            "review_artifact",
+            "CSV del diario normalizado" if spanish else "Normalized journal CSV",
+        ),
+        "reconciliation_matches_csv": (
+            "review_artifact",
+            (
+                "CSV de coincidencias de conciliación"
+                if spanish
+                else "Reconciliation matches CSV"
+            ),
+        ),
+        "unmatched_bank_csv": (
+            "review_artifact",
+            "CSV bancario sin conciliar" if spanish else "Unmatched bank CSV",
+        ),
+        "unmatched_journal_csv": (
+            "review_artifact",
+            "CSV del diario sin conciliar" if spanish else "Unmatched journal CSV",
+        ),
+        "workbook_xlsx": (
+            "workpaper_artifact",
+            (
+                "Libro de conciliación entre diario y banco"
+                if spanish
+                else "Journal-bank reconciliation workbook"
+            ),
+        ),
+        "audit_json": (
+            "review_artifact",
+            (
+                "JSON de auditoría de la conciliación"
+                if spanish
+                else "Reconciliation audit JSON"
+            ),
+        ),
+        "review_notes_md": (
+            "review_artifact",
+            "Notas de revisión" if spanish else "Review notes",
+        ),
     }
     items: list[dict[str, Any]] = []
     for index, (field, (item_type, title)) in enumerate(labels.items(), start=1):
@@ -698,6 +817,7 @@ def write_run_intake(
     """Write run intake before deterministic matching."""
 
     run_id = _run_id(bank_path, journal_path)
+    spanish = _is_spanish(language)
     local_files_read = [bank_path.as_posix(), journal_path.as_posix()]
     if recipe_path is not None:
         local_files_read.append(recipe_path.as_posix())
@@ -731,7 +851,11 @@ def write_run_intake(
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": (
+                "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
+                if spanish
+                else "Codex should run scripts/check_dependencies.py before helper scripts."
+            ),
         },
         "data_posture": {
             "local_files_read": local_files_read,
@@ -740,8 +864,16 @@ def write_run_intake(
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
             "notes": [
-                "Matching scripts read bank, journal, optional recipe, and optional sample files locally.",
-                "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+                (
+                    "Los scripts de conciliación leen localmente los archivos bancarios, del diario, de la receta opcional y de la muestra opcional."
+                    if spanish
+                    else "Matching scripts read bank, journal, optional recipe, and optional sample files locally."
+                ),
+                (
+                    "De forma predeterminada no se utiliza ningún conector externo, ruta de carga, SQL remoto ni cuaderno alojado."
+                    if spanish
+                    else "No external connector, upload path, remote SQL, or hosted notebook execution is used by default."
+                ),
             ],
         },
         "status": "ready_for_reconciliation_run",
@@ -769,12 +901,14 @@ def write_review_session_artifacts(
     unmatched_bank_rows = _rows(unmatched_bank)
     unmatched_journal_rows = _rows(unmatched_journal)
     bank_pdf_non_movement_rows = _rows(bank_pdf_non_movements)
+    language = str(audit.get("language") or "en")
     items: list[dict[str, Any]] = []
     items.extend(
         _unmatched_items(
             unmatched_bank_rows,
             side="bank",
             output_path="unmatched_bank.csv",
+            language=language,
         )
     )
     items.extend(
@@ -782,10 +916,11 @@ def write_review_session_artifacts(
             unmatched_journal_rows,
             side="journal",
             output_path="unmatched_journal.csv",
+            language=language,
         )
     )
-    items.extend(_match_items(match_rows))
-    items.extend(_artifact_items(audit, output_dir))
+    items.extend(_match_items(match_rows, language))
+    items.extend(_artifact_items(audit, output_dir, language))
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -793,7 +928,7 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": audit.get("language", "en"),
+        "language": language,
         "source_paths": [
             audit.get("bank_path"),
             audit.get("journal_path"),
@@ -802,7 +937,7 @@ def write_review_session_artifacts(
         "review_type": "journal_bank_reconciliation_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "audit": "reconciliation_audit.json",
@@ -868,11 +1003,16 @@ def write_review_session_artifacts(
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
-        title="Journal-Bank Reconciliation",
+        title=(
+            "Conciliación entre diario y banco"
+            if _is_spanish(language)
+            else "Journal-Bank Reconciliation"
+        ),
         validate_tool="validate_journal_bank_review",
         render_tool="render_journal_bank_review",
         save_tool="save_journal_bank_decisions",
         apply_tool="apply_journal_bank_decisions",
+        language=language,
     )
     outputs = _output_records(
         output_dir,
@@ -889,7 +1029,9 @@ def write_review_session_artifacts(
             isinstance(output, dict) and output.get("path") == review_handoff_path.name
         )
     ]
-    outputs.append(_review_handoff_output_record(review_handoff_path))
+    outputs.append(_review_handoff_output_record(review_handoff_path, language))
+
+    spanish = _is_spanish(language)
 
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
@@ -901,14 +1043,38 @@ def write_review_session_artifacts(
             "completed_at": _utc_now(),
             "outputs": outputs,
             "caveats": [
-                "Deterministic matches are accepted only by the script rules; unmatched rows require explicit Codex or reviewer interpretation.",
-                "The MCP review payload is bounded; use CSV/XLSX/JSON outputs as the complete evidence set.",
-                "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions.",
+                (
+                    "Las coincidencias deterministas solo se aceptan conforme a las reglas del script; las filas sin conciliar requieren la interpretación explícita de Codex o de la persona revisora."
+                    if spanish
+                    else "Deterministic matches are accepted only by the script rules; unmatched rows require explicit Codex or reviewer interpretation."
+                ),
+                (
+                    "Los datos de revisión MCP tienen un límite; use las salidas CSV, XLSX y JSON como conjunto completo de evidencias."
+                    if spanish
+                    else "The MCP review payload is bounded; use CSV/XLSX/JSON outputs as the complete evidence set."
+                ),
+                (
+                    "ui_decisions.json queda pendiente hasta que Codex, el widget MCP o la revisión alternativa registren las decisiones."
+                    if spanish
+                    else "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions."
+                ),
             ],
             "next_actions": [
-                "Call validate_journal_bank_review, then render_journal_bank_review when MCP is available.",
-                "Review unmatched bank and journal rows before treating the package as complete.",
-                "Do not promote ambiguous rows to matched without changing deterministic rules and rerunning.",
+                (
+                    "Ejecute validate_journal_bank_review y, cuando MCP esté disponible, render_journal_bank_review."
+                    if spanish
+                    else "Call validate_journal_bank_review, then render_journal_bank_review when MCP is available."
+                ),
+                (
+                    "Revise las filas bancarias y del diario sin conciliar antes de considerar completo el paquete."
+                    if spanish
+                    else "Review unmatched bank and journal rows before treating the package as complete."
+                ),
+                (
+                    "No convierta filas ambiguas en coincidencias sin modificar las reglas deterministas y volver a ejecutar el proceso."
+                    if spanish
+                    else "Do not promote ambiguous rows to matched without changing deterministic rules and rerunning."
+                ),
             ],
             "status": "written_pending_review",
         },

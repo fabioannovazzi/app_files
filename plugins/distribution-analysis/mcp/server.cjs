@@ -50,11 +50,85 @@ function isPlainObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
 }
 
+function normalizeLanguage(value) {
+  const normalized = String(value || "en").trim().toLowerCase().replaceAll("_", "-");
+  return ["es", "spa", "spanish", "espanol", "español"].includes(
+    normalized.split("-", 1)[0],
+  )
+    ? "es"
+    : "en";
+}
+
+function requestLanguage(inputArgs) {
+  const args = isPlainObject(inputArgs) ? inputArgs : {};
+  const reviewPayload = isPlainObject(args.review_payload) ? args.review_payload : {};
+  const runIntake = isPlainObject(args.run_intake) ? args.run_intake : {};
+  const meta = isPlainObject(args._meta) ? args._meta : {};
+  return normalizeLanguage(
+    reviewPayload.language || runIntake.language || args.language || args.locale || meta.locale,
+  );
+}
+
+function responseCopy(inputArgs) {
+  if (requestLanguage(inputArgs) !== "es") {
+    return {
+      saved: (count) => `Saved ${count} Distribution decisions.`,
+      saveWithoutPath:
+        "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+      applied: (count) => `Applied ${count} Distribution decisions.`,
+      applyWithoutPath:
+        "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+      valid:
+        "Distribution review payload is valid. It is safe to call render_distribution_review once.",
+      instructions:
+        "Use validate_distribution_review before render_distribution_review. Prefer the MCP widget for Distribution review handoff; use save_distribution_decisions to persist reviewer actions to ui_decisions.json and apply_distribution_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+    };
+  }
+  return {
+    saved: (count) => `Se han guardado ${count} decisiones de la revisión de distribución.`,
+    saveWithoutPath:
+      "Las decisiones son válidas. No se ha indicado run_intake.output_dir, por lo que no se ha escrito ningún archivo.",
+    applied: (count) => `Se han aplicado ${count} decisiones de la revisión de distribución.`,
+    applyWithoutPath:
+      "Las decisiones aplicadas son válidas. No se ha indicado run_intake.output_dir, por lo que no se ha escrito ningún archivo.",
+    valid:
+      "Los datos de revisión de distribución son válidos. Ya puede llamar una vez a render_distribution_review.",
+    instructions:
+      "Use validate_distribution_review antes de render_distribution_review. Utilice preferentemente el widget MCP para entregar la revisión de distribución; use save_distribution_decisions para guardar las decisiones en ui_decisions.json y apply_distribution_decisions para escribir applied_decisions.json y actualizar el estado de final_artifacts.json. Recurra a la revisión Markdown o estática solo si MCP no está disponible.",
+  };
+}
+
+function localizedErrorMessage(inputArgs, message) {
+  if (requestLanguage(inputArgs) !== "es") return message;
+  if (message.includes("edit_value") && message.includes("required")) {
+    return "decisions[].edit_value es obligatorio cuando la acción es edit.";
+  }
+  if (message.includes("run_intake.run_id") && message.includes("match")) {
+    return "run_intake.run_id debe coincidir con review_payload.run_id.";
+  }
+  if (message.includes("review_payload.items") && message.includes("array")) {
+    return "review_payload.items debe ser una lista válida de elementos de revisión.";
+  }
+  if (message.includes("item_count") && message.includes("equal")) {
+    return "review_payload.item_count debe coincidir con el número de elementos de review_payload.items.";
+  }
+  if (message.includes("item_id") && message.includes("not in review_payload.items")) {
+    return "decisions[].item_id no corresponde a ningún elemento de review_payload.items.";
+  }
+  if (message.includes("action") && message.includes("not allowed")) {
+    return "La acción indicada no está permitida para este elemento de revisión.";
+  }
+  if (message.includes("action") && message.includes("not supported")) {
+    return "La acción indicada no es compatible con esta revisión.";
+  }
+  return "No se ha podido completar la solicitud de revisión. Revise los datos enviados y vuelva a intentarlo.";
+}
+
 function objectSchema(properties, required = [], additionalProperties = true) {
   return { type: "object", properties, required, additionalProperties };
 }
 
-function toolUiMeta(resourceUri, toolName = null) {
+function toolUiMeta(resourceUri, toolName = null, language = "en") {
   const meta = {
     ui: { resourceUri, visibility: ["model"] },
     "ui/resourceUri": resourceUri,
@@ -62,8 +136,10 @@ function toolUiMeta(resourceUri, toolName = null) {
     "openai/widgetAccessible": true,
   };
   if (toolName === TOOL_NAMES.renderReview) {
-    meta["openai/toolInvocation/invoking"] = "Rendering Distribution review";
-    meta["openai/toolInvocation/invoked"] = "Rendered Distribution review";
+    meta["openai/toolInvocation/invoking"] =
+      language === "es" ? "Abriendo la revisión de distribución" : "Rendering Distribution review";
+    meta["openai/toolInvocation/invoked"] =
+      language === "es" ? "Revisión de distribución abierta" : "Rendered Distribution review";
   }
   return meta;
 }
@@ -86,6 +162,7 @@ function toolDefinitions() {
       plugin: { type: "string" },
       workflow: { type: "string" },
       run_id: { type: "string" },
+      language: { type: "string" },
       review_type: { type: "string" },
       items: { type: "array", items: { type: "object" } },
       item_count: { type: "number" },
@@ -422,6 +499,7 @@ function buildUiDecisions(inputArgs) {
 }
 
 function saveDecisionPayload(inputArgs) {
+  const copy = responseCopy(inputArgs);
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   let persisted = false;
   if (decisionOutputPath) {
@@ -439,8 +517,8 @@ function saveDecisionPayload(inputArgs) {
     persisted,
     ui_decisions_path: persisted ? decisionOutputPath : null,
     message: persisted
-      ? `Saved ${uiDecisions.decision_count} Distribution decisions.`
-      : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ? copy.saved(uiDecisions.decision_count)
+      : copy.saveWithoutPath,
     ui_decisions: uiDecisions,
   };
 }
@@ -1163,6 +1241,7 @@ function statusFromEffects(effects, itemCount) {
 }
 
 const REVIEW_HANDOFF_PLUGINS = new Set([
+  "distribution-analysis",
   "check-entries",
   "client-file-preparation",
   "journal-sampling",
@@ -1198,21 +1277,38 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
   fs.mkdirSync(outputDir, { recursive: true });
   if (!fs.existsSync(handoffPath)) {
     const displayName = PLUGIN_MANIFEST.name || pluginName || "Review";
-    const text = [
-      `# ${displayName} Review Handoff`,
-      "",
-      "- Review payload: `review_payload.json`",
-      "- Run intake: `run_intake.json`",
-      "- Pending decisions: `ui_decisions.json`",
-      "- Applied decisions: `applied_decisions.json`",
-      "- Final artifacts: `final_artifacts.json`",
-      "",
-      "## Review In Codex",
-      `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
-      `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
-      `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
-      `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
-    ].join("\n");
+    const text = requestLanguage(inputArgs) === "es"
+      ? [
+          `# Entrega de revisión de ${displayName}`,
+          "<!-- Review Handoff -->",
+          "",
+          "- Datos de revisión: `review_payload.json`",
+          "- Datos de la ejecución: `run_intake.json`",
+          "- Decisiones pendientes: `ui_decisions.json`",
+          "- Decisiones aplicadas: `applied_decisions.json`",
+          "- Artefactos finales: `final_artifacts.json`",
+          "",
+          "## Revisar en Codex",
+          `1. Valide los datos con \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Abra el entorno de revisión con \`${TOOL_NAMES.renderReview}\`.`,
+          `3. Guarde las decisiones con \`${TOOL_NAMES.saveDecisions}\`.`,
+          `4. Aplique las decisiones con \`${TOOL_NAMES.applyDecisions}\`.`,
+        ].join("\n")
+      : [
+          `# ${displayName} Review Handoff`,
+          "",
+          "- Review payload: `review_payload.json`",
+          "- Run intake: `run_intake.json`",
+          "- Pending decisions: `ui_decisions.json`",
+          "- Applied decisions: `applied_decisions.json`",
+          "- Final artifacts: `final_artifacts.json`",
+          "",
+          "## Review In Codex",
+          `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
+          `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
+          `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
+        ].join("\n");
     fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
   }
   return reviewHandoffOutputRecord();
@@ -1257,7 +1353,12 @@ function finalArtifactsWithApplication(
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
-    next_actions: nextActionsWithReviewApplication(current.next_actions, appliedDecisions, blockers),
+    next_actions: nextActionsWithReviewApplication(
+      current.next_actions,
+      appliedDecisions,
+      blockers,
+      requestLanguage(inputArgs),
+    ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
     review_application: {
@@ -1302,21 +1403,44 @@ function effectsToBlockers(effects) {
     });
 }
 
-function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers) {
+function nextActionsWithReviewApplication(
+  currentNextActions,
+  appliedDecisions,
+  blockers,
+  language = "en",
+) {
   const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
+  const spanish = language === "es";
   if (blockers.length) {
-    nextActions.push("Resolve blocked review decisions before treating final artifacts as ready.");
+    nextActions.push(
+      spanish
+        ? "Resuelva las decisiones de revisión bloqueadas antes de considerar listos los artefactos finales."
+        : "Resolve blocked review decisions before treating final artifacts as ready.",
+    );
   } else if (appliedDecisions.native_regeneration_count) {
-    nextActions.push("Regenerate native DOCX/XLSX/PDF outputs before final handoff.");
+    nextActions.push(
+      spanish
+        ? "Vuelva a generar las salidas DOCX/XLSX/PDF nativas antes de la entrega final."
+        : "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
+    );
   } else if (appliedDecisions.application_status === "final_ready") {
-    nextActions.push("Use final_artifacts.json as the reviewed artifact gallery for handoff.");
+    nextActions.push(
+      spanish
+        ? "Use final_artifacts.json como galería de artefactos revisados para la entrega."
+        : "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
+    );
   } else if (appliedDecisions.application_status === "partial_review_applied") {
-    nextActions.push("Complete remaining review decisions before final handoff.");
+    nextActions.push(
+      spanish
+        ? "Complete las decisiones de revisión pendientes antes de la entrega final."
+        : "Complete remaining review decisions before final handoff.",
+    );
   }
   return Array.from(new Set(nextActions));
 }
 
 function applyDecisionPayload(inputArgs) {
+  const copy = responseCopy(inputArgs);
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
@@ -1441,8 +1565,8 @@ function applyDecisionPayload(inputArgs) {
     final_artifacts_path: finalArtifactsPath,
     run_intake_path: runIntakePath,
     message: persisted
-      ? `Applied ${responseAppliedDecisions.decision_count} Distribution decisions.`
-      : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ? copy.applied(responseAppliedDecisions.decision_count)
+      : copy.applyWithoutPath,
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
@@ -1465,8 +1589,7 @@ function callTool(name, args = {}) {
       run_id: payload.review_payload.run_id,
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
-      message:
-        "Distribution review payload is valid. It is safe to call render_distribution_review once.",
+      message: responseCopy(args).valid,
       review_payload: payload.review_payload,
     };
   }
@@ -1488,7 +1611,9 @@ function toolResult(payload, toolName) {
     structuredContent: payload,
     isError: false,
   };
-  if (toolName === TOOL_NAMES.renderReview) result._meta = toolUiMeta(WIDGET_URI, toolName);
+  if (toolName === TOOL_NAMES.renderReview) {
+    result._meta = toolUiMeta(WIDGET_URI, toolName, requestLanguage(payload));
+  }
   return result;
 }
 
@@ -1523,8 +1648,7 @@ function handleRpc(message) {
           resources: {},
           prompts: {},
         },
-        instructions:
-          "Use validate_distribution_review before render_distribution_review. Prefer the MCP widget for Distribution review handoff; use save_distribution_decisions to persist reviewer actions to ui_decisions.json and apply_distribution_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+        instructions: responseCopy(params).instructions,
       });
     }
     if (method === "notifications/initialized") return null;
@@ -1542,7 +1666,12 @@ function handleRpc(message) {
       } catch (error) {
         return rpcResponse(
           messageId,
-          toolError(error instanceof Error ? error.message : String(error)),
+          toolError(
+            localizedErrorMessage(
+              args,
+              error instanceof Error ? error.message : String(error),
+            ),
+          ),
         );
       }
     }

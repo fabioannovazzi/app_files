@@ -807,3 +807,213 @@ def test_run_distribution_applies_like_for_like_recipe_cohort(
     assert cohort_audit["like_for_like"]["retained_entity_count"] == 1
     assert cohort_audit["like_for_like"]["removed_entity_count"] == 3
     assert used_recipe["options"]["cohort_definition"]["activity_rule"] == "Sales > 0.0"
+
+
+def _write_spanish_distribution_review(
+    tmp_path: Path,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    core = load_plugin_module(
+        "distribution_core_spanish_review", "distribution_core.py"
+    )
+    input_path = tmp_path / "ventas.csv"
+    output_dir = tmp_path / "revision_distribucion"
+    output_dir.mkdir()
+    input_path.write_text("Period,Sales\nAC,10\n", encoding="utf-8")
+    (output_dir / "distribution_context.json").write_text(
+        '{"summary": "datos de distribución"}\n', encoding="utf-8"
+    )
+    (output_dir / "distribution_summary.csv").write_text(
+        "Period,rows,mean,median,std,min,max\nAC,1,10,10,0,10,10\n",
+        encoding="utf-8",
+    )
+    recipe = {
+        "language": "es-MX",
+        "mappings": {
+            "metric_column": "Sales",
+            "distribution_dimension": "Marca",
+            "small_multiples_dimension": None,
+        },
+        "options": {"currency": "EUR", "selected_periods": ["AC"]},
+    }
+    intake = core.write_run_intake(
+        output_dir,
+        input_path,
+        recipe_path=None,
+        recipe=recipe,
+        source_row_count=1,
+    )
+    core.write_review_session_artifacts(
+        output_dir,
+        input_path,
+        run_id=intake.run_id,
+        run_intake_path=intake.path,
+        recipe_path=None,
+        recipe=recipe,
+        summary_rows=[
+            {
+                "Period": None,
+                "rows": 1,
+                "mean": 10.0,
+                "median": 10.0,
+                "std": 0.0,
+                "min": 10.0,
+                "max": 10.0,
+            }
+        ],
+        audit={"charts": []},
+    )
+    return (
+        json.loads((output_dir / "run_intake.json").read_text(encoding="utf-8")),
+        json.loads((output_dir / "review_payload.json").read_text(encoding="utf-8")),
+        json.loads((output_dir / "final_artifacts.json").read_text(encoding="utf-8")),
+    )
+
+
+def test_spanish_distribution_review_artifacts_are_localized_and_strict(
+    tmp_path: Path,
+) -> None:
+    run_intake, review_payload, final_artifacts = _write_spanish_distribution_review(
+        tmp_path
+    )
+    output_dir = Path(run_intake["output_dir"])
+    core = load_plugin_module(
+        "distribution_core_spanish_summary", "distribution_core.py"
+    )
+    summary = core._summary_markdown(
+        {
+            "language": "es",
+            "mappings": {
+                "metric_column": "Sales",
+                "distribution_dimension": "Marca",
+                "small_multiples_dimension": None,
+            },
+        },
+        [],
+        pl.DataFrame(
+            {
+                "Period": ["AC"],
+                "rows": [1],
+                "mean": [10.0],
+                "median": [10.0],
+                "std": [0.0],
+                "min": [10.0],
+                "max": [10.0],
+            }
+        ),
+    )
+
+    report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    widget = (PLUGIN_ROOT / "assets" / "distribution-review-widget.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert report.ok, report.errors
+    assert run_intake["language"] == "es"
+    assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "es"
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Elemento",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    assert any(item["title"] == "Periodo 1" for item in review_payload["items"])
+    assert any(
+        item["title"] == "Contexto de distribución" for item in review_payload["items"]
+    )
+    assert "Los datos de los gráficos" in final_artifacts["caveats"][0]
+    assert "Chart payloads" not in json.dumps(final_artifacts)
+    assert summary.startswith("# Análisis de distribución")
+    assert "## Summary by Period" not in summary
+    assert "es: {" in widget
+    assert "Revisión de distribución" in widget
+    assert "reviewPayload().language" in widget
+
+
+def test_spanish_distribution_mcp_responses_errors_and_handoff(
+    tmp_path: Path,
+) -> None:
+    run_intake, review_payload, final_artifacts = _write_spanish_distribution_review(
+        tmp_path
+    )
+    ui_decisions = json.loads(
+        (Path(run_intake["output_dir"]) / "ui_decisions.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    first_item = review_payload["items"][0]
+    common = {
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "ui_decisions": ui_decisions,
+        "final_artifacts": final_artifacts,
+    }
+    responses = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_distribution_review",
+                    "arguments": common,
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "save_distribution_decisions",
+                    "arguments": {
+                        **common,
+                        "decisions": [{"item_id": first_item["id"], "action": "edit"}],
+                    },
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "tools/call",
+                "params": {
+                    "name": "apply_distribution_decisions",
+                    "arguments": {
+                        **common,
+                        "decisions": [
+                            {"item_id": first_item["id"], "action": "accept"}
+                        ],
+                    },
+                },
+            },
+        ]
+    )
+    payloads = [response["result"]["structuredContent"] for response in responses]
+    handoff = (Path(run_intake["output_dir"]) / "review_handoff.md").read_text(
+        encoding="utf-8"
+    )
+    strict_report = validate_contract(
+        Path(run_intake["output_dir"]),
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+
+    assert "son válidos" in payloads[0]["message"]
+    assert "is valid" not in payloads[0]["message"]
+    assert responses[1]["result"]["isError"] is True
+    assert "es obligatorio" in payloads[1]["error"]
+    assert "is required" not in payloads[1]["error"]
+    assert "Se han aplicado" in payloads[2]["message"]
+    assert handoff.startswith("# Entrega de revisión")
+    assert "<!-- Review Handoff -->" in handoff
+    assert "Review payload:" not in handoff
+    assert strict_report.ok, strict_report.errors

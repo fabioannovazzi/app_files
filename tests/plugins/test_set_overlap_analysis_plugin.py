@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import plotly.graph_objects as go
 import polars as pl
 import pytest
-import plotly.graph_objects as go
 from PIL import Image
 
 from scripts.validate_plugin_review_contract import validate_contract
@@ -301,6 +301,110 @@ def test_run_set_overlap_applies_filters_and_records_title_scope(
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_set_overlap_spanish_run_writes_localized_review_and_strict_contract(
+    tmp_path: Path,
+) -> None:
+    core = load_plugin_module("set_overlap_core_spanish", "set_overlap_core.py")
+    input_path = tmp_path / "solapamiento.csv"
+    recipe_path = tmp_path / "receta.json"
+    output_dir = tmp_path / "solapamiento"
+    sample_overlap_frame().write_csv(input_path)
+    recipe = explicit_recipe()
+    recipe["language"] = "es-ES"
+    recipe["options"]["set_values"] = ["A", "B"]
+    recipe_path.write_text(json.dumps(recipe), encoding="utf-8")
+
+    result = core.run_set_overlap(
+        input_path,
+        output_dir,
+        recipe_path,
+        language="es",
+        artifact_mode="data_only",
+    )
+
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    widget = (PLUGIN_ROOT / "assets" / "set-overlap-review-widget.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert run_intake["language"] == "es"
+    assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "es"
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Elemento de solapamiento",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    titles = {item["title"] for item in review_payload["items"]}
+    assert "Contexto del solapamiento de conjuntos" in titles
+    assert "Auditoría del solapamiento de conjuntos" in titles
+    assert any(title.endswith("elementos") for title in titles)
+    assert "Entrega para revisión" in handoff
+    assert "Revisión en Codex" in handoff
+    assert "Review Handoff" in handoff
+    assert "solapamiento por" in result.context["chart_audits"]["venn"]["title"]
+    assert "Revisión del solapamiento de conjuntos" in widget
+    assert "function language()" in widget
+    assert all(
+        text.startswith("Utilice")
+        or text.startswith("El diagrama")
+        or "permanece" in text
+        for text in final_artifacts["caveats"]
+    )
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
+def test_set_overlap_mcp_localizes_spanish_success_and_error_messages() -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "set-overlap-analysis",
+        "workflow": "set-overlap-analysis",
+        "run_id": "overlap-es",
+        "language": "es",
+        "item_count": 0,
+        "items": [],
+    }
+    invalid_payload = {**review_payload, "item_count": 1}
+    responses = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_set_overlap_review",
+                    "arguments": {"review_payload": review_payload},
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_set_overlap_review",
+                    "arguments": {"review_payload": invalid_payload},
+                },
+            },
+        ]
+    )
+    by_id = {response["id"]: response["result"] for response in responses}
+    success = json.loads(by_id[1]["content"][0]["text"])
+    failure = json.loads(by_id[2]["content"][0]["text"])
+
+    assert "son válidos" in success["message"]
+    assert "debe coincidir" in failure["error"]
 
 
 def test_run_set_overlap_skips_venn_when_more_than_three_sets_selected(

@@ -898,16 +898,36 @@ def _normalize_artifact_mode(artifact_mode: str) -> str:
     return normalized
 
 
+def _output_language(recipe: Mapping[str, Any]) -> str:
+    text = str(recipe.get("language") or "en").strip().lower().replace("_", "-")
+    return "es" if text.split("-", 1)[0] == "es" else "en"
+
+
+def _localized_chart_name(chart_name: str, language: str) -> str:
+    if language != "es":
+        return chart_name
+    return {
+        "UpSet small multiples": "Múltiples gráficos UpSet",
+        "UpSet": "UpSet",
+        "Venn": "Venn",
+    }.get(chart_name, chart_name)
+
+
 def _chart_title_lines(recipe: dict[str, Any], *, chart_name: str) -> list[str]:
     mappings = recipe["mappings"]
     options = recipe["options"]
-    period = options.get("selected_period") or ALL_PERIOD_LABEL
+    language = _output_language(recipe)
+    period = options.get("selected_period") or (
+        "Todos los periodos" if language == "es" else ALL_PERIOD_LABEL
+    )
     first_line = reporting_subject_label_from_recipe(recipe)
+    relationship = "solapamiento por" if language == "es" else "overlap by"
     return [
         line
         for line in (
             first_line,
-            f"{chart_name}: {mappings['item_column']} overlap by {mappings['set_column']}",
+            f"{_localized_chart_name(chart_name, language)}: "
+            f"{mappings['item_column']} {relationship} {mappings['set_column']}",
             str(period),
         )
         if line
@@ -930,10 +950,14 @@ def _small_multiple_panel_title(
 ) -> str:
     mappings = recipe["mappings"]
     options = recipe["options"]
-    period = options.get("selected_period") or ALL_PERIOD_LABEL
+    language = _output_language(recipe)
+    period = options.get("selected_period") or (
+        "Todos los periodos" if language == "es" else ALL_PERIOD_LABEL
+    )
+    relationship = "solapamiento por" if language == "es" else "overlap by"
     lines = [
         f"{facet_dimension}: {facet_value}",
-        f"UpSet: {mappings['item_column']} overlap by {mappings['set_column']}",
+        f"UpSet: {mappings['item_column']} {relationship} {mappings['set_column']}",
         str(period),
     ]
     if html_title:
@@ -1350,12 +1374,13 @@ def _write_upset_small_multiples_chart(
         }
 
     page_title = _chart_title(recipe, chart_name="UpSet small multiples")
+    html_language = _output_language(recipe)
     html_path = output_dir / "upset_small_multiples.html"
     html_path.write_text(
         "\n".join(
             [
                 "<!doctype html>",
-                "<html>",
+                f'<html lang="{html_language}">',
                 "<head>",
                 '<meta charset="utf-8">',
                 f"<title>{html.escape(page_title)}</title>",

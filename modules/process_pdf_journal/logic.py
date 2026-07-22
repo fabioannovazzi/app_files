@@ -602,6 +602,7 @@ def _parse_journal_any_impl(
     """Parse a journal PDF using multiple strategies."""
 
     pdf_bytes = _ensure_bytes(data)
+    ocr_language = normalize_ocr_language(locale_hint)
     strategies = list(strategy_order or DEFAULT_STRATEGY_ORDER)
     attempts: List[dict[str, Any]] = []
     mapping: dict[str, Any] = {
@@ -696,11 +697,11 @@ def _parse_journal_any_impl(
                 df, tokens = _build_df_from_tables(pdf_bytes, header_row)
             elif strat == "text":
                 df, tokens = _build_df_from_text(
-                    pdf_bytes, use_ocr=False, lang=locale_hint or "eng"
+                    pdf_bytes, use_ocr=False, lang=ocr_language
                 )
             elif strat == "ocr":
                 df, tokens = _build_df_from_text(
-                    pdf_bytes, use_ocr=True, lang=locale_hint or "eng"
+                    pdf_bytes, use_ocr=True, lang=ocr_language
                 )
             else:
                 continue

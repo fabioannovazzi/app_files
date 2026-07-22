@@ -396,7 +396,7 @@
     <div class="shell">
       <section class="topbar">
         <div>
-          <h1>Mix Contribution Review</h1>
+          <h1 id="page-title">Mix Contribution Review</h1>
           <p class="subtitle" id="subtitle">Loading payload...</p>
         </div>
         <span class="pill" id="status-pill">MCP widget</span>
@@ -409,14 +409,14 @@
       <section class="content">
         <div class="panel">
           <div class="panel-header">
-            <h2>Review items</h2>
+            <h2 id="items-title">Review items</h2>
             <span id="count"></span>
           </div>
           <div class="rows" id="rows"></div>
         </div>
         <div class="panel">
           <div class="panel-header">
-            <h2>Detail</h2>
+            <h2 id="detail-title">Detail</h2>
           </div>
           <div class="details" id="details"></div>
         </div>
@@ -424,17 +424,70 @@
     </div>
   </main>
   <script>
-    const TYPE_LABELS = {
-      contribution_driver: "Contribution",
-      chart_artifact: "Chart",
-      context_artifact: "Context",
-      followup_request: "Follow-up",
-      report_artifact: "Report",
-      review_artifact: "Artifact",
+    const UI_TEXT = {
+      en: {
+        documentTitle: "Mix Contribution Review",
+        title: "Mix Contribution Review",
+        loading: "Loading payload...",
+        widget: "MCP widget",
+        search: "Search contribution, chart, context, follow-up, artifact",
+        reviewItems: "Review items",
+        detail: "Detail",
+        run: "Run",
+        unavailable: "n/a",
+        all: "All",
+        review: "review",
+        noMatch: "No item matches the current filters.",
+        selectItem: "Select a review item.",
+        data: "Data",
+        sourceRecords: "Source Records",
+        types: {
+          contribution_driver: "Contribution",
+          chart_artifact: "Chart",
+          context_artifact: "Context",
+          followup_request: "Follow-up",
+          report_artifact: "Report",
+          review_artifact: "Artifact",
+        },
+        fields: { type: "Type", action: "Action", source: "Source", output: "Output", status: "Status" },
+        metrics: { total: "Total", topItem: "Top item", topShare: "Top share", charts: "Charts", written: "Written", followups: "Follow-ups" },
+        actions: { accept: "Accept", reject: "Reject", edit: "Edit", mark_unclear: "Mark unclear", request_more_documents: "Request documents", skip: "Skip" },
+        statuses: { empty: "Empty", ready_for_review: "Ready for review", needs_review: "Needs review" },
+      },
+      es: {
+        documentTitle: "Revisión de contribución al mix",
+        title: "Revisión de contribución al mix",
+        loading: "Cargando datos...",
+        widget: "Widget MCP",
+        search: "Buscar contribución, gráfico, contexto, seguimiento o artefacto",
+        reviewItems: "Elementos para revisar",
+        detail: "Detalle",
+        run: "Ejecución",
+        unavailable: "no disponible",
+        all: "Todos",
+        review: "revisar",
+        noMatch: "Ningún elemento coincide con los filtros actuales.",
+        selectItem: "Seleccione un elemento para revisar.",
+        data: "Datos",
+        sourceRecords: "Registros de origen",
+        types: {
+          contribution_driver: "Contribución",
+          chart_artifact: "Gráfico",
+          context_artifact: "Contexto",
+          followup_request: "Seguimiento",
+          report_artifact: "Informe",
+          review_artifact: "Artefacto",
+        },
+        fields: { type: "Tipo", action: "Acción", source: "Fuente", output: "Salida", status: "Estado" },
+        metrics: { total: "Total", topItem: "Principal elemento", topShare: "Mayor cuota", charts: "Gráficos", written: "Generados", followups: "Seguimientos" },
+        actions: { accept: "Aceptar", reject: "Rechazar", edit: "Editar", mark_unclear: "Marcar como incierto", request_more_documents: "Solicitar documentos", skip: "Omitir" },
+        statuses: { empty: "Vacío", ready_for_review: "Listo para revisión", needs_review: "Pendiente de revisión" },
+      },
     };
     const FALLBACK = {
       widget_type: "mix_contribution_review",
       review_payload: {
+        language: "en",
         run_id: "preview",
         status: "empty",
         item_count: 0,
@@ -467,6 +520,44 @@
       return state.payload.review_payload || FALLBACK.review_payload;
     }
 
+    function normalizeLanguage(value) {
+      const normalized = String(value || "en").trim().toLowerCase().replaceAll("_", "-");
+      return ["es", "spa", "spanish", "espanol", "español"].includes(normalized.split("-", 1)[0]) ? "es" : "en";
+    }
+
+    function language() {
+      return normalizeLanguage(reviewPayload().language || state.payload.run_intake?.language);
+    }
+
+    function ui() {
+      return UI_TEXT[language()] || UI_TEXT.en;
+    }
+
+    function typeLabel(value) {
+      return ui().types[value] || value;
+    }
+
+    function actionLabel(value) {
+      if (value === "review") return ui().review;
+      return ui().actions[value] || value;
+    }
+
+    function statusLabel(value) {
+      return ui().statuses[value] || value;
+    }
+
+    function applyLanguage() {
+      const copy = ui();
+      document.documentElement.lang = language();
+      document.title = copy.documentTitle;
+      document.getElementById("page-title").textContent = copy.title;
+      document.getElementById("subtitle").textContent = copy.loading;
+      document.getElementById("status-pill").textContent = copy.widget;
+      document.getElementById("search").placeholder = copy.search;
+      document.getElementById("items-title").textContent = copy.reviewItems;
+      document.getElementById("detail-title").textContent = copy.detail;
+    }
+
     function items() {
       return Array.isArray(reviewPayload().items) ? reviewPayload().items : [];
     }
@@ -482,17 +573,17 @@
     }
 
     function formatNumber(value) {
-      if (value == null || value === "") return "n/a";
+      if (value == null || value === "") return ui().unavailable;
       const number = Number(value);
       if (!Number.isFinite(number)) return String(value);
-      return new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(number);
+      return new Intl.NumberFormat(language() === "es" ? "es-ES" : undefined, { maximumFractionDigits: 1 }).format(number);
     }
 
     function formatShare(value) {
-      if (value == null || value === "") return "n/a";
+      if (value == null || value === "") return ui().unavailable;
       const number = Number(value);
       if (!Number.isFinite(number)) return String(value);
-      return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(number * 100)}%`;
+      return `${new Intl.NumberFormat(language() === "es" ? "es-ES" : undefined, { maximumFractionDigits: 1 }).format(number * 100)}%`;
     }
 
     function metric(label, value) {
@@ -502,15 +593,16 @@
     function renderSummary() {
       const payload = reviewPayload();
       const summary = payload.summary || {};
-      document.getElementById("subtitle").textContent = `Run ${payload.run_id || "n/a"}`;
-      document.getElementById("status-pill").textContent = payload.status || "ready_for_review";
+      const copy = ui();
+      document.getElementById("subtitle").textContent = `${copy.run} ${payload.run_id || copy.unavailable}`;
+      document.getElementById("status-pill").textContent = statusLabel(payload.status || "ready_for_review");
       document.getElementById("summary").innerHTML = [
-        metric("Total", formatNumber(summary.total)),
-        metric("Top item", summary.top_item || "n/a"),
-        metric("Top share", formatShare(summary.top_item_share)),
-        metric("Charts", summary.chart_count ?? 0),
-        metric("Written", summary.legacy_chart_written_count ?? 0),
-        metric("Follow-ups", summary.followup_request_count ?? 0),
+        metric(copy.metrics.total, formatNumber(summary.total)),
+        metric(copy.metrics.topItem, summary.top_item || copy.unavailable),
+        metric(copy.metrics.topShare, formatShare(summary.top_item_share)),
+        metric(copy.metrics.charts, summary.chart_count ?? 0),
+        metric(copy.metrics.written, summary.legacy_chart_written_count ?? 0),
+        metric(copy.metrics.followups, summary.followup_request_count ?? 0),
       ].join("");
     }
 
@@ -518,7 +610,7 @@
       const counts = new Map([["all", items().length]]);
       for (const item of items()) counts.set(item.item_type, (counts.get(item.item_type) || 0) + 1);
       document.getElementById("tabs").innerHTML = Array.from(counts.entries()).map(([type, count]) => {
-        const label = type === "all" ? "All" : (TYPE_LABELS[type] || type);
+        const label = type === "all" ? ui().all : typeLabel(type);
         return `<button class="tab" data-type="${esc(type)}" aria-pressed="${type === state.selectedType}">${esc(label)} (${count})</button>`;
       }).join("");
     }
@@ -526,12 +618,12 @@
     function rowHtml(item) {
       const selected = item.id === state.selectedId ? " is-selected" : "";
       return `<button class="row${selected}" data-id="${esc(item.id)}" data-kind="${esc(item.item_type)}">
-        <span class="type">${esc(TYPE_LABELS[item.item_type] || item.item_type)}</span>
+        <span class="type">${esc(typeLabel(item.item_type))}</span>
         <span>
           <span class="title">${esc(item.title)}</span>
           <span class="path">${esc(item.source_path || item.output_path || "")}</span>
         </span>
-        <span class="action">${esc(item.recommended_action || "review")}</span>
+        <span class="action">${esc(actionLabel(item.recommended_action || "review"))}</span>
       </button>`;
     }
 
@@ -540,7 +632,7 @@
       document.getElementById("count").textContent = `${rows.length} / ${items().length}`;
       document.getElementById("rows").innerHTML = rows.length
         ? rows.map(rowHtml).join("")
-        : '<div class="empty">No item matches the current filters.</div>';
+        : `<div class="empty">${esc(ui().noMatch)}</div>`;
       if (!state.selectedId && rows[0]) state.selectedId = rows[0].id;
       if (state.selectedId && !items().some((item) => item.id === state.selectedId)) {
         state.selectedId = rows[0]?.id || null;
@@ -549,20 +641,21 @@
     }
 
     function detailsHtml(item) {
-      if (!item) return '<div class="empty">Select a review item.</div>';
+      if (!item) return `<div class="empty">${esc(ui().selectItem)}</div>`;
+      const copy = ui();
       const fields = [
-        ["Type", TYPE_LABELS[item.item_type] || item.item_type],
-        ["Action", item.recommended_action || ""],
-        ["Source", item.source_path || ""],
-        ["Output", item.output_path || ""],
-        ["Status", item.status || ""],
+        [copy.fields.type, typeLabel(item.item_type)],
+        [copy.fields.action, actionLabel(item.recommended_action || "")],
+        [copy.fields.source, item.source_path || ""],
+        [copy.fields.output, item.output_path || ""],
+        [copy.fields.status, statusLabel(item.status || "")],
       ].filter(([, value]) => value);
       return `
         <h3>${esc(item.title)}</h3>
         <dl>${fields.map(([key, value]) => `<dt>${esc(key)}</dt><dd>${esc(value)}</dd>`).join("")}</dl>
-        <h4>Data</h4>
+        <h4>${esc(copy.data)}</h4>
         <pre>${esc(JSON.stringify(item.data || {}, null, 2))}</pre>
-        <h4>Source Records</h4>
+        <h4>${esc(copy.sourceRecords)}</h4>
         <pre>${esc(JSON.stringify(item.source_records || [], null, 2))}</pre>
       `;
     }
@@ -573,6 +666,7 @@
     }
 
     function render() {
+      applyLanguage();
       renderSummary();
       renderTabs();
       renderRows();

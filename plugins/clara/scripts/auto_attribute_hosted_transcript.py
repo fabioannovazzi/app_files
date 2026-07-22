@@ -69,6 +69,11 @@ def _normalise_space(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip()
 
 
+def _is_spanish(value: str) -> bool:
+    clean = value.strip().lower().replace("_", "-")
+    return clean in {"es", "spa", "spanish", "español"} or clean.startswith("es-")
+
+
 def _extract_markdown_section(markdown: str, heading: str) -> str:
     lines = markdown.replace("\r\n", "\n").splitlines()
     collected: list[str] = []
@@ -87,9 +92,10 @@ def _extract_markdown_section(markdown: str, heading: str) -> str:
 
 
 def _main_transcript_text(raw_markdown: str) -> str:
-    consultant = _extract_markdown_section(raw_markdown, "Consultant")
-    if consultant:
-        return consultant
+    for heading in ("Consultant", "Consultor", "Consultora"):
+        consultant = _extract_markdown_section(raw_markdown, heading)
+        if consultant:
+            return consultant
     return raw_markdown.strip()
 
 
@@ -146,14 +152,28 @@ def _attributed_transcript_markdown(
     method: str,
     source_metadata: Mapping[str, Any],
     call_metadata: Mapping[str, Any],
+    output_language: str = "en",
 ) -> str:
+    spanish = _is_spanish(output_language)
     lines = [
-        "# Speaker-Attributed Hosted Voice Transcript",
+        (
+            "# Transcripción de Hosted Voice con hablantes atribuidos"
+            if spanish
+            else "# Speaker-Attributed Hosted Voice Transcript"
+        ),
         "",
-        f"Source raw transcript: {raw_transcript_path.name}",
-        f"Attribution method: {method}",
+        (
+            f"Transcripción original: {raw_transcript_path.name}"
+            if spanish
+            else f"Source raw transcript: {raw_transcript_path.name}"
+        ),
+        (
+            f"Método de atribución: {method}"
+            if spanish
+            else f"Attribution method: {method}"
+        ),
         "",
-        "## Attribution Inputs",
+        "## Datos para la atribución" if spanish else "## Attribution Inputs",
         "",
         "```json",
         json.dumps(
@@ -166,7 +186,7 @@ def _attributed_transcript_markdown(
         ),
         "```",
         "",
-        "## Attributed Transcript",
+        "## Transcripción atribuida" if spanish else "## Attributed Transcript",
         "",
     ]
     if method == "metadata_single_speaker":
@@ -186,12 +206,55 @@ def _attribution_task_markdown(
     source_metadata: Mapping[str, Any],
     call_metadata: Mapping[str, Any],
     unresolved_notes: Sequence[str],
+    output_language: str = "en",
 ) -> str:
+    spanish = _is_spanish(output_language)
     candidates = (
         ", ".join(candidate_speaker_names)
         if candidate_speaker_names
-        else "Not supplied"
+        else ("No facilitados" if spanish else "Not supplied")
     )
+    if spanish:
+        return "\n".join(
+            [
+                "# Tarea de atribución de hablantes",
+                "",
+                "Esta transcripción necesita que Clara/Codex atribuya los hablantes antes de utilizarla en un trabajo de revisión del deck.",
+                "",
+                "## Resultado obligatorio",
+                "",
+                f"- Escribe `{ATTRIBUTED_TRANSCRIPT_FILENAME}` en esta carpeta de sesión de voz.",
+                "- Asigna los turnos de habla a partir del texto de la transcripción y los metadatos de la llamada.",
+                "- Si se desconocen los nombres reales, utiliza etiquetas estables como `Hablante 1` y `Hablante 2`.",
+                "- Conserva el orden y el contenido de la transcripción; no la resumas.",
+                "- Mantén visible la incertidumbre en lugar de adivinar.",
+                "",
+                "## Metadatos de hablantes disponibles",
+                "",
+                f"- Posibles nombres de hablantes: {candidates}",
+                "",
+                "## Datos para la atribución",
+                "",
+                "```json",
+                json.dumps(
+                    {
+                        "source_metadata": dict(source_metadata),
+                        "call_metadata": dict(call_metadata),
+                        "unresolved_notes": list(unresolved_notes),
+                    },
+                    indent=2,
+                    ensure_ascii=True,
+                ),
+                "```",
+                "",
+                "## Transcripción que atribuir",
+                "",
+                f"Transcripción original: `{raw_transcript_path.name}`",
+                "",
+                main_text.strip(),
+                "",
+            ]
+        )
     return "\n".join(
         [
             "# Speaker Attribution Task",
@@ -282,6 +345,7 @@ def _attribution_plan(
     *,
     main_text: str,
     source_metadata: Mapping[str, Any],
+    output_language: str = "en",
 ) -> tuple[str, str, tuple[str, ...], tuple[str, ...], bool, list[str]]:
     metadata_candidates = _metadata_speaker_candidates(source_metadata)
     explicit_labels = _explicit_main_transcript_labels(main_text)
@@ -294,24 +358,59 @@ def _attribution_plan(
             False,
             [],
         )
+    spanish = _is_spanish(output_language)
     unresolved = [
-        "Speaker attribution requires local Clara/Codex review from transcript text; "
-        "deterministic code cannot assign turn boundaries safely.",
+        (
+            "La atribución de hablantes requiere una revisión local de Clara/Codex "
+            "a partir del texto; el código determinista no puede asignar de forma "
+            "segura los límites de los turnos."
+            if spanish
+            else (
+                "Speaker attribution requires local Clara/Codex review from "
+                "transcript text; deterministic code cannot assign turn boundaries "
+                "safely."
+            )
+        ),
     ]
     if len(metadata_candidates) > 1:
         unresolved.append(
-            "Multiple metadata speaker names were supplied; Clara/Codex must map "
-            "transcript turns to the correct names.",
+            (
+                "Se facilitaron varios nombres de hablantes en los metadatos; "
+                "Clara/Codex debe vincular cada turno de la transcripción con el "
+                "nombre correcto."
+                if spanish
+                else (
+                    "Multiple metadata speaker names were supplied; Clara/Codex "
+                    "must map transcript turns to the correct names."
+                )
+            ),
         )
     elif not metadata_candidates:
         unresolved.append(
-            "No speaker names were supplied in call metadata; use Speaker labels "
-            "until Clara/Codex can infer or the user supplies names."
+            (
+                "Los metadatos de la llamada no incluyen nombres; utiliza etiquetas "
+                "de Hablante hasta que Clara/Codex pueda inferirlos o el usuario los "
+                "facilite."
+                if spanish
+                else (
+                    "No speaker names were supplied in call metadata; use Speaker "
+                    "labels until Clara/Codex can infer or the user supplies names."
+                )
+            )
         )
     if explicit_labels:
         unresolved.append(
-            "The transcript text already contains speaker-like labels; Clara/Codex "
-            "must verify or replace them before registering an attributed transcript."
+            (
+                "El texto ya contiene etiquetas que parecen corresponder a "
+                "hablantes; Clara/Codex debe verificarlas o sustituirlas antes de "
+                "registrar una transcripción atribuida."
+                if spanish
+                else (
+                    "The transcript text already contains speaker-like labels; "
+                    "Clara/Codex must verify or replace them before registering an "
+                    "attributed transcript."
+                )
+            )
         )
     return (
         "needs_model_attribution",
@@ -333,6 +432,7 @@ def auto_attribute_hosted_transcript(
     attributed_transcript_path: Path | None = None,
     attribution_task_path: Path | None = None,
     report_path: Path | None = None,
+    output_language: str = "",
     now: datetime | None = None,
 ) -> AutoTranscriptAttributionResult:
     """Create safe local speaker attribution artifacts for a hosted transcript.
@@ -347,6 +447,12 @@ def auto_attribute_hosted_transcript(
     raw_path = raw_transcript_path.expanduser()
     if not raw_path.is_file():
         raise CaseWorkspaceError(f"raw transcript does not exist: {raw_path}")
+    resolved_output_language = output_language
+    if not resolved_output_language:
+        manifest_path = case_dir / "case_manifest.json"
+        if manifest_path.is_file():
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            resolved_output_language = str(manifest.get("output_language", ""))
     session_dir = raw_path.parent
     attributed_path = (
         attributed_transcript_path.expanduser()
@@ -373,6 +479,7 @@ def auto_attribute_hosted_transcript(
     status, method, labels, candidates, requires_review, unresolved = _attribution_plan(
         main_text=main_text,
         source_metadata=metadata,
+        output_language=resolved_output_language,
     )
     finalized: FinalizeHostedTranscriptResult | None = None
     attributed_path_out: Path | None = None
@@ -386,6 +493,7 @@ def auto_attribute_hosted_transcript(
                 method=method,
                 source_metadata=metadata,
                 call_metadata=call,
+                output_language=resolved_output_language,
             ),
             encoding="utf-8",
         )
@@ -416,6 +524,7 @@ def auto_attribute_hosted_transcript(
                 source_metadata=metadata,
                 call_metadata=call,
                 unresolved_notes=unresolved,
+                output_language=resolved_output_language,
             ),
             encoding="utf-8",
         )

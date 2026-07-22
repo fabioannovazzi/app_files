@@ -181,7 +181,7 @@ classification guesses, and unreviewed extractions remain bound upstream but
 are not promoted as relationship facts.
 
 The shipped professional-setup country pack is `IT`. Languages `it`, `en`,
-`fr`, and `de` localize review and generated studio drafts for that pack; they
+`fr`, `de`, and `es` localize review and generated studio drafts for that pack; they
 do not imply that Swiss or UK professional-setup packs exist.
 
 Treat `references/source-registry.json` as a maintained seed, not as proof that

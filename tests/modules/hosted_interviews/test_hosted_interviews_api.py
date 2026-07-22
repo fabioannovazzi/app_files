@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from starlette.responses import HTMLResponse
 
 from modules.auth import dependencies as auth_dependencies
 from modules.auth.config import get_auth_config
@@ -56,6 +57,28 @@ def _client_for_viewer(viewer_email: str) -> TestClient:
     )
     client.cookies.set(config.session_cookie_name, session_cookie)
     return client
+
+
+def _capture_output_template(
+    monkeypatch: pytest.MonkeyPatch,
+) -> dict[str, object]:
+    """Capture the hosted-output template context despite the test Jinja stub."""
+
+    captured: dict[str, object] = {}
+
+    def template_response(
+        request: object,
+        name: str,
+        context: dict[str, object],
+        **kwargs: object,
+    ) -> HTMLResponse:
+        captured["request"] = request
+        captured["name"] = name
+        captured["context"] = context
+        return HTMLResponse("ok", status_code=int(kwargs.get("status_code", 200)))
+
+    monkeypatch.setattr(api.templates, "TemplateResponse", template_response)
+    return captured
 
 
 def _prepare_test_interview(
@@ -173,6 +196,35 @@ def _sample_review() -> dict:
     }
 
 
+def _store_completed_output(
+    tmp_path: Path,
+    record: dict,
+    *,
+    review: dict | None = None,
+) -> None:
+    """Store a minimal completed interview for output-page rendering tests."""
+
+    session_dir = tmp_path / "sessions" / record["token_hash"]
+    record_path = session_dir / "interview.json"
+    stored_record = json.loads(record_path.read_text(encoding="utf-8"))
+    stored_record["status"] = api.INTERVIEW_STATUS_COMPLETED
+    api._write_json(record_path, stored_record)
+    api._write_json(
+        session_dir / "completed.json",
+        {
+            "completed_at": "2026-07-22T12:00:00+00:00",
+            "elapsed_seconds": 42,
+            "transcript_words": 6,
+            "transcript_source": "post_call_interviewee_audio",
+            "assistant_transcript": "¿Quién toma la decisión final?",
+            "user_transcript": "La responsable de producción toma la decisión.",
+            "interviewee_audio_transcription": {"status": "complete"},
+        },
+    )
+    if review is not None:
+        api._write_json(session_dir / "review.json", review)
+
+
 @pytest.fixture(autouse=True)
 def _disable_post_call_interviewee_transcription(monkeypatch) -> None:
     monkeypatch.setenv(api.NOTIFICATION_EMAIL_ENV, TEST_NOTIFICATION_EMAIL)
@@ -181,6 +233,128 @@ def _disable_post_call_interviewee_transcription(monkeypatch) -> None:
         "_post_call_interviewee_transcription_enabled",
         lambda: False,
     )
+
+
+def test_spanish_hosted_output_page_localizes_completed_interview(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch, language="es")
+    _store_completed_output(tmp_path, record, review=_sample_review())
+    captured = _capture_output_template(monkeypatch)
+    client = _client()
+
+    response = client.get(f"/case-notes/interview/{token}/output")
+
+    assert response.status_code == 200
+    assert captured["name"] == "hosted_interview_output.html"
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["output_language"] == "es"
+    copy = context["copy"]
+    assert isinstance(copy, dict)
+    assert copy["page_title"] == "Resultado de la entrevista alojada"
+    assert copy["campaign"] == "Campaña"
+    assert copy["interviewee_role"] == "Rol de la persona entrevistada"
+    assert copy["transcript_source"] == "Fuente de la transcripción"
+    assert copy["open_json_bundle"] == "Abrir paquete JSON"
+    assert copy["open_quality_review"] == "Abrir revisión de calidad"
+    assert copy["quality_review"] == "Revisión de calidad"
+    assert copy["key_findings"] == "Hallazgos principales"
+    assert copy["dialog_transcript"] == "Transcripción del diálogo"
+    assert (
+        copy["final_interviewee_transcript"]
+        == "Transcripción final de la persona entrevistada"
+    )
+    value_labels = context["value_labels"]
+    assert isinstance(value_labels, dict)
+    assert value_labels["interview_status"]["completed"] == "Finalizada"
+    assert (
+        value_labels["transcript_source"]["post_call_interviewee_audio"]
+        == "Audio de la persona entrevistada procesado tras la llamada"
+    )
+    assert value_labels["speaker"]["Interviewer"] == "Persona entrevistadora"
+    template = Path("templates/hosted_interview_output.html").read_text(
+        encoding="utf-8"
+    )
+    assert '<html lang="{{ output_language }}">' in template
+    assert '<title>{{ copy["page_title"] }}</title>' in template
+    assert '{{ copy["quality_review"] }}' in template
+    assert '{{ copy["dialog_transcript"] }}' in template
+
+
+def test_spanish_hosted_output_page_localizes_empty_state(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    token, _record = _prepare_test_interview(tmp_path, monkeypatch, language="es")
+    captured = _capture_output_template(monkeypatch)
+    client = _client()
+
+    response = client.get(f"/case-notes/interview/{token}/output")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert isinstance(context, dict)
+    copy = context["copy"]
+    assert isinstance(copy, dict)
+    assert copy["not_completed_yet"] == "Esta entrevista aún no ha finalizado."
+    template = Path("templates/hosted_interview_output.html").read_text(
+        encoding="utf-8"
+    )
+    assert '{{ copy["not_completed_yet"] }}' in template
+
+
+def test_spanish_hosted_output_page_localizes_loading_error(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch, language="es")
+    session_dir = tmp_path / "sessions" / record["token_hash"]
+    (session_dir / "completed.json").write_text("{", encoding="utf-8")
+    captured = _capture_output_template(monkeypatch)
+    client = _client()
+
+    response = client.get(f"/case-notes/interview/{token}/output")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["output_language"] == "es"
+    assert context["error_message"] == (
+        "No se puede leer el registro de la entrevista."
+    )
+    copy = context["copy"]
+    assert isinstance(copy, dict)
+    assert copy["output_unavailable"] == "Resultado no disponible"
+    template = Path("templates/hosted_interview_output.html").read_text(
+        encoding="utf-8"
+    )
+    assert '{{ copy["output_unavailable"] }}' in template
+    assert "{{ error_message }}" in template
+
+
+def test_english_hosted_output_page_preserves_existing_copy(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    token, _record = _prepare_test_interview(tmp_path, monkeypatch, language="en")
+    captured = _capture_output_template(monkeypatch)
+    client = _client()
+
+    response = client.get(f"/case-notes/interview/{token}/output")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["output_language"] == "en"
+    assert context["value_labels"] == {}
+    copy = context["copy"]
+    assert isinstance(copy, dict)
+    assert copy["page_title"] == "Hosted interview output"
+    assert copy["open_json_bundle"] == "Open JSON bundle"
+    assert copy["open_quality_review"] == "Open quality review"
+    assert copy["not_completed_yet"] == "This interview has not been completed yet."
 
 
 def test_prepared_interview_is_case_agnostic(tmp_path: Path, monkeypatch) -> None:
@@ -1279,13 +1453,13 @@ def test_event_audio_and_completion_are_saved_and_notify_recipients(
     )
 
     assert output_response.status_code == 200
-    assert "Dialog Transcript" in output_template
-    assert "Quality Review" in output_template
-    assert "Open quality review" in output_template
-    assert "Transcript source" in output_template
-    assert "Mic transcript" in output_template
-    assert "Final Interviewee Transcript" in output_template
-    assert "Open JSON bundle" in output_template
+    assert '{{ copy["dialog_transcript"] }}' in output_template
+    assert '{{ copy["quality_review"] }}' in output_template
+    assert '{{ copy["open_quality_review"] }}' in output_template
+    assert '{{ copy["transcript_source"] }}' in output_template
+    assert '{{ copy["mic_transcript"] }}' in output_template
+    assert '{{ copy["final_interviewee_transcript"] }}' in output_template
+    assert '{{ copy["open_json_bundle"] }}' in output_template
 
 
 def test_post_call_mic_transcription_replaces_live_interviewee_transcript(

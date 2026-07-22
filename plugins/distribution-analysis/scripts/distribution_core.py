@@ -1067,6 +1067,14 @@ def _summary_markdown(
     summary_frame: pl.DataFrame,
 ) -> str:
     metric = recipe["mappings"]["metric_column"]
+    language = str(recipe.get("language") or "en").strip().lower().replace("_", "-")
+    spanish = language.split("-", 1)[0] in {
+        "es",
+        "spa",
+        "spanish",
+        "espanol",
+        "español",
+    }
     written = [
         audit for audit in chart_audits if audit.get("status") == "written_legacy"
     ]
@@ -1078,24 +1086,40 @@ def _summary_markdown(
         for audit in chart_audits
         if audit.get("status") not in {"written_legacy", "data_written"}
     ]
-    lines = [
-        "# Distribution Analysis",
-        "",
-        f"Metric: `{metric}`",
-        f"Distribution dimension: `{recipe['mappings'].get('distribution_dimension')}`",
-        f"Small multiples: `{recipe['mappings'].get('small_multiples_dimension')}`",
-        f"Legacy charts written: {len(written)} of {len(chart_audits)}",
-        f"Chart data candidates: {len(data_only)}",
-        "",
-        "## Summary by Period",
-        "",
-        summary_frame.write_csv().strip(),
-    ]
+    lines = (
+        [
+            "# Análisis de distribución",
+            "",
+            f"Métrica: `{metric}`",
+            f"Dimensión de distribución: `{recipe['mappings'].get('distribution_dimension')}`",
+            f"Múltiplos pequeños: `{recipe['mappings'].get('small_multiples_dimension')}`",
+            f"Gráficos heredados generados: {len(written)} de {len(chart_audits)}",
+            f"Candidatos con datos de gráficos: {len(data_only)}",
+            "",
+            "## Resumen por periodo",
+            "",
+            summary_frame.write_csv().strip(),
+        ]
+        if spanish
+        else [
+            "# Distribution Analysis",
+            "",
+            f"Metric: `{metric}`",
+            f"Distribution dimension: `{recipe['mappings'].get('distribution_dimension')}`",
+            f"Small multiples: `{recipe['mappings'].get('small_multiples_dimension')}`",
+            f"Legacy charts written: {len(written)} of {len(chart_audits)}",
+            f"Chart data candidates: {len(data_only)}",
+            "",
+            "## Summary by Period",
+            "",
+            summary_frame.write_csv().strip(),
+        ]
+    )
     if failed:
         lines.extend(
             [
                 "",
-                "## Legacy Failures",
+                "## Errores de gráficos heredados" if spanish else "## Legacy Failures",
                 "",
                 *[
                     f"- `{audit.get('chart')}`: {audit.get('error') or audit.get('status')}"

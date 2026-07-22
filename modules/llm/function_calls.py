@@ -109,5 +109,17 @@ def mapping_examples() -> str:
                      "account":"Account",
                      "amount":"Amount",
                      "beneficiary":"Beneficiary"}}
+
+        Example 7 (Spanish – libro diario)
+        Columns: ["Fecha","N.º asiento","Cuenta","Descripción cuenta","Debe","Haber","Concepto"]
+        Row 0 : 05/01/24 | 1082 | 572000 | Banco | 250,00 | 0,00 | Cobro de cliente
+        → {"layout":"posting_split_amt",
+           "fields":{"date":"Fecha",
+                     "movement_number":"N.º asiento",
+                     "account":"Cuenta",
+                     "account_desc":"Descripción cuenta",
+                     "debit_amount":"Debe",
+                     "credit_amount":"Haber",
+                     "line_desc":"Concepto"}}
         """
     return examples

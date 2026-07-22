@@ -314,6 +314,44 @@ def test_build_attribute_tables_from_package_writes_selected_template(
     ).exists()
 
 
+def test_build_attribute_tables_from_package_localizes_spanish_html_and_manifest(
+    tmp_path: Path,
+) -> None:
+    package_dir = tmp_path / "empty_package"
+    output_dir = tmp_path / "spanish_out"
+    package_dir.mkdir()
+
+    result = build_attribute_tables_from_package(
+        package_dir,
+        output_dir=output_dir,
+        table_keys=["attribute_bridge_table"],
+        language="es-ES",
+    )
+
+    manifest = json.loads(
+        (output_dir / "attribute_tables" / "manifest.json").read_text(encoding="utf-8")
+    )
+    html_text = (
+        output_dir / "attribute_tables" / "attribute_bridge_table.html"
+    ).read_text(encoding="utf-8")
+    table = result["tables"][0]
+    assert result["table_keys"] == ["attribute_bridge_table"]
+    assert table["table_key"] == "attribute_bridge_table"
+    assert table["title"] == "Puente entre señales ganadoras y emergentes"
+    assert table["columns"][:2] == ["signal_bundle", "alignment"]
+    assert manifest["tables"][0]["table_key"] == "attribute_bridge_table"
+    assert manifest["tables"][0]["columns"] == table["columns"]
+    assert '<html lang="es">' in html_text
+    assert "Puente entre señales ganadoras y emergentes" in html_text
+    assert "Se muestran hasta 5 filas." in html_text
+    assert "Conjunto de señales" in html_text
+    assert "Alineación" in html_text
+    assert "No hay filas que cumplan los criterios." in html_text
+    assert "Winner and Emerging Signal Bridge" not in html_text
+    assert "Showing up to" not in html_text
+    assert "No qualifying rows" not in html_text
+
+
 def test_build_attribute_tables_from_package_rejects_invalid_request(
     tmp_path: Path,
 ) -> None:

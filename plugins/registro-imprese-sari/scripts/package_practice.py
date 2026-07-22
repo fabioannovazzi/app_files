@@ -23,6 +23,9 @@ __all__ = ["package_practice", "main"]
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 DISCLAIMER = "BOZZA PER REVISIONE PROFESSIONALE — NON PRONTA PER IL DEPOSITO"
+SPANISH_DISCLAIMER = (
+    "BORRADOR PARA REVISIÓN PROFESIONAL — NO ESTÁ LISTO PARA SU PRESENTACIÓN"
+)
 PLAN_SECTIONS = (
     ("classification_proposals", "Qualificazioni da confermare"),
     ("position_matrix", "Matrice delle posizioni e degli enti"),
@@ -31,6 +34,15 @@ PLAN_SECTIONS = (
     ("application_fields", "Campi da predisporre"),
     ("risks", "Rischi e controlli"),
     ("missing_information", "Informazioni mancanti"),
+)
+SPANISH_PLAN_SECTIONS = (
+    ("classification_proposals", "Calificaciones pendientes de confirmación"),
+    ("position_matrix", "Matriz de posiciones y organismos"),
+    ("dire_steps", "Itinerario propuesto en DIRE"),
+    ("required_documents", "Documentos y anexos"),
+    ("application_fields", "Campos que deben prepararse"),
+    ("risks", "Riesgos y controles"),
+    ("missing_information", "Información pendiente"),
 )
 ITEM_TYPES = {
     "classification_proposals": "case_fact",
@@ -56,6 +68,30 @@ REVIEW_HANDOFF_REQUIRED_TEXT = [
     "applied_decisions.json",
     "final_artifacts.json",
 ]
+
+
+def _output_language(output_dir: Path) -> str:
+    """Resolve the supported language persisted by the initialized run."""
+
+    run_intake = load_json_object(output_dir / "run_intake.json")
+    value = str(run_intake.get("language") or "").strip().lower().replace("_", "-")
+    primary = value.split("-", 1)[0]
+    aliases = {"eng": "en", "ita": "it", "fra": "fr", "deu": "de", "spa": "es"}
+    primary = aliases.get(primary, primary)
+    return primary if primary in {"it", "en", "fr", "de", "es"} else "it"
+
+
+def _review_handoff_required_text(language: str) -> list[str]:
+    if language != "es":
+        return REVIEW_HANDOFF_REQUIRED_TEXT
+    return [
+        "Review Handoff",
+        "Entrega para revisión",
+        "review_payload.json",
+        "ui_decisions.json",
+        "applied_decisions.json",
+        "final_artifacts.json",
+    ]
 
 
 def _verify_hash(path: Path, expected: object, *, label: str) -> None:
@@ -87,26 +123,34 @@ def _item_sources(item: dict[str, Any]) -> str:
     return ", ".join(map(str, sources)) if isinstance(sources, list) else "—"
 
 
-def _case_scope_rows(intake: dict[str, Any]) -> list[list[object]]:
+def _case_scope_rows(intake: dict[str, Any], *, language: str) -> list[list[object]]:
     """Return private case details selected for the professional workpaper."""
 
     rows: list[list[object]] = [
-        ["Riferimento interno", intake["client_reference"], "registrato"],
+        [
+            "Referencia interna" if language == "es" else "Riferimento interno",
+            intake["client_reference"],
+            "registrada" if language == "es" else "registrato",
+        ],
     ]
     identity = intake.get("client_identity")
     if not isinstance(identity, dict):
         return rows
     labels = (
-        ("name", "Cliente / soggetto"),
-        ("tax_code", "Codice fiscale"),
-        ("vat_number", "Partita IVA"),
-        ("email", "Email"),
+        ("name", "Cliente / sujeto" if language == "es" else "Cliente / soggetto"),
+        ("tax_code", "Código fiscal" if language == "es" else "Codice fiscale"),
+        ("vat_number", "Número de IVA" if language == "es" else "Partita IVA"),
+        ("email", "Correo electrónico" if language == "es" else "Email"),
         ("pec", "PEC"),
-        ("phone", "Telefono"),
-        ("address", "Indirizzo"),
+        ("phone", "Teléfono" if language == "es" else "Telefono"),
+        ("address", "Dirección" if language == "es" else "Indirizzo"),
     )
     rows.extend(
-        [label, identity[field], "dato del fascicolo"]
+        [
+            label,
+            identity[field],
+            "dato del expediente" if language == "es" else "dato del fascicolo",
+        ]
         for field, label in labels
         if identity.get(field)
     )
@@ -118,53 +162,64 @@ def _checklist_markdown(
     plan: dict[str, Any],
     sources: dict[str, Any],
     audit: dict[str, Any],
+    *,
+    language: str,
 ) -> str:
     chamber = intake["competent_chamber"]
     operation = intake["requested_operation"]
+    spanish = language == "es"
     lines = [
-        f"# {DISCLAIMER}",
+        f"# {SPANISH_DISCLAIMER if spanish else DISCLAIMER}",
         "",
-        "## Perimetro del caso",
+        "## Alcance del caso" if spanish else "## Perimetro del caso",
         "",
         *_markdown_table(
-            ["Voce", "Valore", "Stato"],
+            ["Concepto", "Valor", "Estado"] if spanish else ["Voce", "Valore", "Stato"],
             [
-                *_case_scope_rows(intake),
-                ["Camera competente", chamber["name"], chamber["confirmation_status"]],
+                *_case_scope_rows(intake, language=language),
+                [
+                    "Cámara competente" if spanish else "Camera competente",
+                    chamber["name"],
+                    chamber["confirmation_status"],
+                ],
                 ["Tenant SARI", chamber["tenant"], chamber["confirmation_status"]],
                 [
-                    "Forma giuridica",
+                    "Forma jurídica" if spanish else "Forma giuridica",
                     intake["subject"]["legal_form"],
                     intake["subject"]["confirmation_status"],
                 ],
                 [
-                    "Attività",
+                    "Actividad" if spanish else "Attività",
                     intake["activity"]["description"],
                     intake["activity"]["classification_status"],
                 ],
                 [
-                    "Operazione",
+                    "Operación" if spanish else "Operazione",
                     operation["description"],
                     operation["confirmation_status"],
                 ],
                 [
-                    "Data effetto",
+                    "Fecha de efecto" if spanish else "Data effetto",
                     operation["effective_date"],
                     operation["confirmation_status"],
                 ],
                 [
-                    "Posizioni considerate",
+                    "Posiciones consideradas" if spanish else "Posizioni considerate",
                     ", ".join(operation["position_types"]),
                     operation["confirmation_status"],
                 ],
             ],
         ),
         "",
-        "## Quesito professionale",
+        "## Cuestión profesional" if spanish else "## Quesito professionale",
         "",
         intake["professional_question"],
         "",
-        "## Fonti ufficiali selezionate",
+        (
+            "## Fuentes oficiales seleccionadas"
+            if spanish
+            else "## Fonti ufficiali selezionate"
+        ),
         "",
     ]
     source_rows: list[list[object]] = []
@@ -182,16 +237,37 @@ def _checklist_markdown(
         )
     lines.extend(
         _markdown_table(
-            ["ID", "Titolo", "Territorio", "Data fonte/acquisizione", "URL"],
+            (
+                ["ID", "Título", "Territorio", "Fecha de la fuente/adquisición", "URL"]
+                if spanish
+                else ["ID", "Titolo", "Territorio", "Data fonte/acquisizione", "URL"]
+            ),
             source_rows,
         )
     )
-    lines.extend(["", "## Sintesi del caso", "", plan["case_summary"], ""])
-    for key, title in PLAN_SECTIONS:
+    lines.extend(
+        [
+            "",
+            "## Resumen del caso" if spanish else "## Sintesi del caso",
+            "",
+            plan["case_summary"],
+            "",
+        ]
+    )
+    for key, title in (SPANISH_PLAN_SECTIONS if spanish else PLAN_SECTIONS):
         lines.extend([f"## {title}", ""])
         items = plan.get(key) or []
         if not items:
-            lines.extend(["_Nessuna voce proposta._", ""])
+            lines.extend(
+                [
+                    (
+                        "_No se ha propuesto ningún elemento._"
+                        if spanish
+                        else "_Nessuna voce proposta._"
+                    ),
+                    "",
+                ]
+            )
             continue
         ordered = sorted(
             items,
@@ -208,16 +284,23 @@ def _checklist_markdown(
                     "",
                     item["detail"],
                     "",
-                    f"- Sistema/area: {item.get('system') or 'non indicato'}",
-                    f"- Stato revisione: {item['review_status']}",
-                    f"- Fonti: {_item_sources(item)}",
-                    f"- Fatti del caso: {', '.join(item.get('case_fact_ids') or []) or 'nessuno indicato'}",
+                    f"- {'Sistema/área' if spanish else 'Sistema/area'}: "
+                    f"{item.get('system') or ('no indicado' if spanish else 'non indicato')}",
+                    f"- {'Estado de la revisión' if spanish else 'Stato revisione'}: "
+                    f"{item['review_status']}",
+                    f"- {'Fuentes' if spanish else 'Fonti'}: {_item_sources(item)}",
+                    f"- {'Hechos del caso' if spanish else 'Fatti del caso'}: "
+                    f"{', '.join(item.get('case_fact_ids') or []) or ('ninguno indicado' if spanish else 'nessuno indicato')}",
                     "",
                 ]
             )
     lines.extend(
         [
-            "## Domanda da inviare al supporto SARI (bozza)",
+            (
+                "## Pregunta para el servicio de soporte SARI (borrador)"
+                if spanish
+                else "## Domanda da inviare al supporto SARI (bozza)"
+            ),
             "",
             plan["sari_question_draft"],
             "",
@@ -226,7 +309,7 @@ def _checklist_markdown(
     if plan["limitations"]:
         lines.extend(
             [
-                "## Limiti",
+                "## Limitaciones" if spanish else "## Limiti",
                 "",
                 *(f"- {item}" for item in plan["limitations"]),
                 "",
@@ -234,32 +317,53 @@ def _checklist_markdown(
         )
     lines.extend(
         [
-            "## Esito dei controlli meccanici",
+            (
+                "## Resultado de los controles mecánicos"
+                if spanish
+                else "## Esito dei controlli meccanici"
+            ),
             "",
-            f"- Stato: {audit['status']}",
-            f"- Errori: {audit['error_count']}",
-            f"- Blocchi: {audit['blocker_count']}",
-            "- Nessuna classificazione giuridica è stata scelta dagli script.",
+            f"- {'Estado' if spanish else 'Stato'}: {audit['status']}",
+            f"- {'Errores' if spanish else 'Errori'}: {audit['error_count']}",
+            f"- {'Bloqueos' if spanish else 'Blocchi'}: {audit['blocker_count']}",
+            (
+                "- Los scripts no han elegido ninguna clasificación jurídica."
+                if spanish
+                else "- Nessuna classificazione giuridica è stata scelta dagli script."
+            ),
             "",
         ]
     )
     return "\n".join(lines)
 
 
-def _sari_question_markdown(intake: dict[str, Any], plan: dict[str, Any]) -> str:
+def _sari_question_markdown(
+    intake: dict[str, Any], plan: dict[str, Any], *, language: str
+) -> str:
     chamber = intake["competent_chamber"]
+    spanish = language == "es"
     return "\n".join(
         [
-            "# Quesito per il supporto SARI — bozza",
+            (
+                "# Pregunta para el servicio de soporte SARI — borrador"
+                if spanish
+                else "# Quesito per il supporto SARI — bozza"
+            ),
             "",
-            f"Destinatario proposto: {chamber['name']}",
-            f"Riferimento del caso: {intake['client_reference']}",
+            f"{'Destinatario propuesto' if spanish else 'Destinatario proposto'}: "
+            f"{chamber['name']}",
+            f"{'Referencia del caso' if spanish else 'Riferimento del caso'}: "
+            f"{intake['client_reference']}",
             "",
-            "## Quesito",
+            "## Pregunta" if spanish else "## Quesito",
             "",
             plan["sari_question_draft"],
             "",
-            "_Far approvare il testo dal professionista prima di qualsiasi invio manuale. Vera non invia il quesito._",
+            (
+                "_El profesional debe aprobar el texto antes de cualquier envío manual. Vera no envía la pregunta._"
+                if spanish
+                else "_Far approvare il testo dal professionista prima di qualsiasi invio manuale. Vera non invia il quesito._"
+            ),
             "",
         ]
     )
@@ -269,7 +373,10 @@ def _review_items(
     plan: dict[str, Any],
     sources: dict[str, Any],
     audit: dict[str, Any],
+    *,
+    language: str,
 ) -> list[dict[str, Any]]:
+    spanish = language == "es"
     items: list[dict[str, Any]] = []
     for source in sources["sources"]:
         source_id = source["source_id"]
@@ -277,7 +384,12 @@ def _review_items(
             {
                 "id": f"source-{source_id}",
                 "item_type": "official_source",
-                "title": source.get("title") or f"Fonte ufficiale {source_id}",
+                "title": source.get("title")
+                or (
+                    f"Fuente oficial {source_id}"
+                    if spanish
+                    else f"Fonte ufficiale {source_id}"
+                ),
                 "source_path": source.get("artifact_path"),
                 "output_path": "official_sources.json",
                 "allowed_actions": ALLOWED_ACTIONS,
@@ -346,7 +458,11 @@ def _review_items(
         {
             "id": "audit-practice-validation",
             "item_type": "audit_check",
-            "title": "Controlli meccanici della pratica",
+            "title": (
+                "Controles mecánicos de la práctica"
+                if spanish
+                else "Controlli meccanici della pratica"
+            ),
             "source_path": "practice_validation_audit.json",
             "output_path": None,
             "allowed_actions": ["accept", "mark_unclear", "skip"],
@@ -445,6 +561,7 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
     """Create review artifacts after verifying exact validation bindings."""
 
     output_dir = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
+    language = _output_language(output_dir)
     intake_path = output_dir / "case_intake_validated.json"
     plan_path = output_dir / "practice_plan_validated.json"
     sources_path = output_dir / "official_sources.json"
@@ -491,13 +608,19 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
     dire_plan_path = write_private_json(output_dir / "dire_practice_plan.json", plan)
     checklist_path = write_private_text(
         output_dir / "studio_checklist.md",
-        _checklist_markdown(intake, plan, sources, audit),
+        _checklist_markdown(
+            intake,
+            plan,
+            sources,
+            audit,
+            language=language,
+        ),
     )
     question_path = write_private_text(
         output_dir / "sari_question_draft.md",
-        _sari_question_markdown(intake, plan),
+        _sari_question_markdown(intake, plan, language=language),
     )
-    review_items = _review_items(plan, sources, audit)
+    review_items = _review_items(plan, sources, audit, language=language)
     package_status = (
         "ready_for_professional_review"
         if audit["status"] == "passed"
@@ -508,6 +631,7 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
         "plugin": PLUGIN_NAME,
         "workflow": PLUGIN_NAME,
         "run_id": intake["run_id"],
+        "language": language,
         "source_paths": [
             "case_intake_validated.json",
             "practice_plan_validated.json",
@@ -538,6 +662,7 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
             "plugin": PLUGIN_NAME,
             "workflow": PLUGIN_NAME,
             "run_id": intake["run_id"],
+            "language": language,
             "review_payload_path": review_payload_path.name,
             "review_payload_sha256": sha256_file(review_payload_path),
             "decisions": [],
@@ -548,23 +673,38 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
             "status": "pending_review",
         },
     )
+    handoff_lines = (
+        [
+            "# Entrega para revisión",
+            "<!-- Review Handoff -->",
+            "",
+            "Artefactos: review_payload.json → ui_decisions.json → applied_decisions.json → final_artifacts.json.",
+            "",
+            "1. Valide con `validate_registro_imprese_sari_review`.",
+            "2. Abra la revisión profesional en Codex con `render_registro_imprese_sari_review`.",
+            "3. Guarde las decisiones con `save_registro_imprese_sari_decisions`.",
+            "4. Aplique el manifiesto de decisiones con `apply_registro_imprese_sari_decisions`.",
+            "",
+            "La aplicación de decisiones nunca inicia sesión, firma, presenta ni marca la práctica como lista para su presentación.",
+            "",
+        ]
+        if language == "es"
+        else [
+            "# Review Handoff",
+            "",
+            "Artifacts: review_payload.json → ui_decisions.json → applied_decisions.json → final_artifacts.json.",
+            "",
+            "1. Validate with `validate_registro_imprese_sari_review`.",
+            "2. Open the professional review in Codex with `render_registro_imprese_sari_review`.",
+            "3. Persist choices with `save_registro_imprese_sari_decisions`.",
+            "4. Apply the decision manifest with `apply_registro_imprese_sari_decisions`.",
+            "",
+            "Applying decisions never logs in, signs, submits, or marks the practice ready to file.",
+            "",
+        ]
+    )
     handoff_path = write_private_text(
-        output_dir / "review_handoff.md",
-        "\n".join(
-            [
-                "# Review Handoff",
-                "",
-                "Artifacts: review_payload.json → ui_decisions.json → applied_decisions.json → final_artifacts.json.",
-                "",
-                "1. Validate with `validate_registro_imprese_sari_review`.",
-                "2. Open the professional review in Codex with `render_registro_imprese_sari_review`.",
-                "3. Persist choices with `save_registro_imprese_sari_decisions`.",
-                "4. Apply the decision manifest with `apply_registro_imprese_sari_decisions`.",
-                "",
-                "Applying decisions never logs in, signs, submits, or marks the practice ready to file.",
-                "",
-            ]
-        ),
+        output_dir / "review_handoff.md", "\n".join(handoff_lines)
     )
     outputs = [
         _artifact_record(dire_plan_path, output_dir, kind="json"),
@@ -576,7 +716,7 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
             handoff_path,
             output_dir,
             kind="md",
-            required_text=REVIEW_HANDOFF_REQUIRED_TEXT,
+            required_text=_review_handoff_required_text(language),
         ),
         _artifact_record(audit_path, output_dir, kind="json"),
     ]
@@ -584,7 +724,11 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
         {
             "code": issue["code"],
             "path": issue["path"],
-            "message": issue["message"],
+            "message": (
+                "Este control de validación no se ha superado; consulte practice_validation_audit.json para el diagnóstico técnico."
+                if language == "es"
+                else issue["message"]
+            ),
         }
         for issue in audit["issues"]
         if issue["severity"] == "blocker"
@@ -594,6 +738,7 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
         "plugin": PLUGIN_NAME,
         "workflow": PLUGIN_NAME,
         "run_id": intake["run_id"],
+        "language": language,
         "created_at": iso_now(),
         "status": package_status,
         "professional_review_required": True,
@@ -608,14 +753,30 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
         "outputs": outputs,
         "caveats": [
             *plan["limitations"],
-            f"Mechanical validation status: {audit['status']}.",
-            "A selected SARI or institutional source still requires professional applicability review.",
+            (
+                f"Estado de la validación mecánica: {audit['status']}."
+                if language == "es"
+                else f"Mechanical validation status: {audit['status']}."
+            ),
+            (
+                "Toda fuente SARI o institucional seleccionada requiere todavía que un profesional confirme su aplicabilidad."
+                if language == "es"
+                else "A selected SARI or institutional source still requires professional applicability review."
+            ),
         ],
-        "next_actions": [
-            "Resolve every recorded blocker and visually confirm any OCR-derived text.",
-            "Complete the validate/render/save/apply professional review handoff.",
-            "Keep portal access, signature, and submission in the studio's separate authorized process.",
-        ],
+        "next_actions": (
+            [
+                "Resuelva todos los bloqueos registrados y confirme visualmente cualquier texto obtenido mediante OCR.",
+                "Complete la secuencia profesional de validación, visualización, guardado y aplicación.",
+                "Mantenga el acceso al portal, la firma y la presentación dentro del proceso autorizado y separado del despacho.",
+            ]
+            if language == "es"
+            else [
+                "Resolve every recorded blocker and visually confirm any OCR-derived text.",
+                "Complete the validate/render/save/apply professional review handoff.",
+                "Keep portal access, signature, and submission in the studio's separate authorized process.",
+            ]
+        ),
         "blockers": blockers,
     }
     write_private_json(output_dir / "final_artifacts.json", final_artifacts)

@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ output_language }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow,noarchive" />
-    <title>Hosted interview output</title>
+    <title>{{ copy["page_title"] }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -242,97 +242,102 @@
   <body>
     <main>
       {% if error_message %}
-        <p class="eyebrow">Hosted interview</p>
-        <h1>Output unavailable</h1>
+        <p class="eyebrow">{{ copy["hosted_interview"] }}</p>
+        <h1>{{ copy["output_unavailable"] }}</h1>
         <p class="error">{{ error_message }}</p>
       {% else %}
-        <p class="eyebrow">{{ record.get("case_name", "Hosted interview") }}</p>
-        <h1>{{ record.get("interview_title", "Interview") }}</h1>
+        <p class="eyebrow">{{ record.get("case_name", copy["hosted_interview"]) }}</p>
+        <h1>{{ record.get("interview_title", copy["interview"]) }}</h1>
         {% if record.get("purpose") %}
           <p class="summary">{{ record.get("purpose") }}</p>
         {% endif %}
 
         {% set mic_transcription = completion.get("interviewee_audio_transcription", {}) if completion else {} %}
-        <div class="meta" aria-label="Interview metadata">
+        <div class="meta" aria-label="{{ copy["metadata_aria"] }}">
           <div class="metric">
-            <span>Campaign</span>
+            <span>{{ copy["campaign"] }}</span>
             <strong>{{ record.get("interview_campaign_id", "legacy-unclassified-v1") }}</strong>
           </div>
           <div class="metric">
-            <span>Status</span>
-            <strong>{{ record.get("status", "") }}</strong>
+            <span>{{ copy["status"] }}</span>
+            {% set interview_status = record.get("status", "") %}
+            <strong>{{ value_labels.get("interview_status", {}).get(interview_status, interview_status) }}</strong>
           </div>
           <div class="metric">
-            <span>Completed</span>
-            <strong>{{ completion.get("completed_at", "Not completed") }}</strong>
+            <span>{{ copy["completed"] }}</span>
+            <strong>{{ completion.get("completed_at", copy["not_completed"]) }}</strong>
           </div>
           <div class="metric">
-            <span>Duration</span>
-            <strong>{{ completion.get("elapsed_seconds", 0) | int }} seconds</strong>
+            <span>{{ copy["duration"] }}</span>
+            <strong>{{ completion.get("elapsed_seconds", 0) | int }} {{ copy["seconds"] }}</strong>
           </div>
           <div class="metric">
-            <span>Language</span>
+            <span>{{ copy["language"] }}</span>
             <strong>{{ record.get("language", "") }}</strong>
           </div>
           <div class="metric">
-            <span>Interviewee role</span>
-            <strong>{{ record.get("interviewee_role", "") or "Not specified" }}</strong>
+            <span>{{ copy["interviewee_role"] }}</span>
+            <strong>{{ record.get("interviewee_role", "") or copy["not_specified"] }}</strong>
           </div>
           <div class="metric">
-            <span>Transcript words</span>
+            <span>{{ copy["transcript_words"] }}</span>
             <strong>{{ completion.get("transcript_words", 0) }}</strong>
           </div>
           <div class="metric">
-            <span>Transcript source</span>
-            <strong>{{ completion.get("transcript_source", "Not available") }}</strong>
+            <span>{{ copy["transcript_source"] }}</span>
+            {% set transcript_source = completion.get("transcript_source", "") %}
+            <strong>{{ value_labels.get("transcript_source", {}).get(transcript_source, transcript_source or copy["not_available"]) }}</strong>
           </div>
           <div class="metric">
-            <span>Mic transcript</span>
-            <strong>{{ mic_transcription.get("status", "Not available") }}</strong>
+            <span>{{ copy["mic_transcript"] }}</span>
+            {% set transcription_status = mic_transcription.get("status", "") %}
+            <strong>{{ value_labels.get("transcription_status", {}).get(transcription_status, transcription_status or copy["not_available"]) }}</strong>
           </div>
           <div class="metric">
-            <span>Audio chunks</span>
+            <span>{{ copy["audio_chunks"] }}</span>
             <strong>{{ audio_chunk_count }}</strong>
           </div>
           <div class="metric">
-            <span>Saved events</span>
+            <span>{{ copy["saved_events"] }}</span>
             <strong>{{ event_count }}</strong>
           </div>
         </div>
 
         <div class="actions">
-          <a class="button" href="{{ bundle_url }}">Open JSON bundle</a>
-          <a class="button" href="{{ review_url }}">Open quality review</a>
+          <a class="button" href="{{ bundle_url }}">{{ copy["open_json_bundle"] }}</a>
+          <a class="button" href="{{ review_url }}">{{ copy["open_quality_review"] }}</a>
         </div>
 
         {% if completion %}
           <section>
-            <h2>Quality Review</h2>
+            <h2>{{ copy["quality_review"] }}</h2>
             {% if review %}
               <div class="review-grid">
                 <article class="review-block">
-                  <h3>Summary</h3>
+                  <h3>{{ copy["summary"] }}</h3>
                   <p class="dialogue-text">{{ review.get("summary", "") }}</p>
                   <p class="review-meta">
-                    Overall quality: {{ review.get("overall_quality", "") }}
-                    {% if review.get("model") %} · Model: {{ review.get("model") }}{% endif %}
-                    {% if review.get("generated_at") %} · Generated: {{ review.get("generated_at") }}{% endif %}
+                    {% set review_quality = review.get("overall_quality", "") %}
+                    {{ copy["overall_quality"] }}: {{ value_labels.get("review_quality", {}).get(review_quality, review_quality) }}
+                    {% if review.get("model") %} · {{ copy["model"] }}: {{ review.get("model") }}{% endif %}
+                    {% if review.get("generated_at") %} · {{ copy["generated"] }}: {{ review.get("generated_at") }}{% endif %}
                   </p>
                 </article>
 
                 {% if review.get("key_findings") %}
                   <article class="review-block">
-                    <h3>Key Findings</h3>
+                    <h3>{{ copy["key_findings"] }}</h3>
                     <ul>
                       {% for finding in review.get("key_findings", []) %}
                         <li>
-                          <strong>{{ finding.get("severity", "") }} · {{ finding.get("category", "") }}</strong><br />
+                          {% set severity = finding.get("severity", "") %}
+                          <strong>{{ value_labels.get("severity", {}).get(severity, severity) }} · {{ finding.get("category", "") }}</strong><br />
                           {{ finding.get("diagnosis", "") }}
                           {% if finding.get("evidence") %}
-                            <p class="review-meta">Evidence: {{ finding.get("evidence", "") }}</p>
+                            <p class="review-meta">{{ copy["evidence"] }}: {{ finding.get("evidence", "") }}</p>
                           {% endif %}
                           {% if finding.get("suggested_improvement") %}
-                            <p class="review-meta">Improvement: {{ finding.get("suggested_improvement", "") }}</p>
+                            <p class="review-meta">{{ copy["improvement"] }}: {{ finding.get("suggested_improvement", "") }}</p>
                           {% endif %}
                         </li>
                       {% endfor %}
@@ -342,13 +347,13 @@
 
                 {% if review.get("evidence_backed_claims") %}
                   <article class="review-block">
-                    <h3>Evidence-Backed Claims</h3>
+                    <h3>{{ copy["evidence_backed_claims"] }}</h3>
                     <ul>
                       {% for claim in review.get("evidence_backed_claims", []) %}
                         <li>
                           {{ claim.get("claim", "") }}
                           {% if claim.get("supporting_quote") %}
-                            <p class="review-meta">Quote: {{ claim.get("supporting_quote", "") }}</p>
+                            <p class="review-meta">{{ copy["quote"] }}: {{ claim.get("supporting_quote", "") }}</p>
                           {% endif %}
                         </li>
                       {% endfor %}
@@ -357,11 +362,11 @@
                 {% endif %}
 
                 {% for label, values in [
-                  ("Missed Opportunities", review.get("missed_opportunities", [])),
-                  ("Uncertainties", review.get("uncertainties", [])),
-                  ("Follow-Up Questions", review.get("follow_up_questions", [])),
-                  ("Pipeline Improvements", review.get("pipeline_improvements", [])),
-                  ("Do Not Change", review.get("do_not_change", []))
+                  (copy["missed_opportunities"], review.get("missed_opportunities", [])),
+                  (copy["uncertainties"], review.get("uncertainties", [])),
+                  (copy["follow_up_questions"], review.get("follow_up_questions", [])),
+                  (copy["pipeline_improvements"], review.get("pipeline_improvements", [])),
+                  (copy["do_not_change"], review.get("do_not_change", []))
                 ] %}
                   {% if values %}
                     <article class="review-block">
@@ -377,13 +382,13 @@
 
                 {% if review.get("contradictions") %}
                   <article class="review-block">
-                    <h3>Contradictions</h3>
+                    <h3>{{ copy["contradictions"] }}</h3>
                     <ul>
                       {% for contradiction in review.get("contradictions", []) %}
                         <li>
                           {{ contradiction.get("description", "") }}
                           {% if contradiction.get("evidence") %}
-                            <p class="review-meta">Evidence: {{ contradiction.get("evidence", "") }}</p>
+                            <p class="review-meta">{{ copy["evidence"] }}: {{ contradiction.get("evidence", "") }}</p>
                           {% endif %}
                         </li>
                       {% endfor %}
@@ -392,36 +397,39 @@
                 {% endif %}
               </div>
             {% elif review_error %}
-              <p class="error">Quality review unavailable: {{ review_error.get("error", "") }}</p>
+              <p class="error">
+                {{ copy["quality_review_unavailable"] }}:
+                {% if output_language == "es" %}{{ copy["quality_review_error_detail"] }}{% else %}{{ review_error.get("error", "") }}{% endif %}
+              </p>
             {% else %}
-              <p class="empty">No quality review was generated.</p>
+              <p class="empty">{{ copy["no_quality_review"] }}</p>
             {% endif %}
           </section>
 
           <section>
-            <h2>Dialog Transcript</h2>
+            <h2>{{ copy["dialog_transcript"] }}</h2>
             {% if dialog_turns %}
               <div class="dialogue">
                 {% for turn in dialog_turns %}
                   <article class="dialogue-turn" data-speaker="{{ turn.speaker }}">
-                    <p class="dialogue-speaker">{{ turn.speaker }}</p>
+                    <p class="dialogue-speaker">{{ value_labels.get("speaker", {}).get(turn.speaker, turn.speaker) }}</p>
                     <p class="dialogue-text">{{ turn.text }}</p>
                   </article>
                 {% endfor %}
               </div>
             {% else %}
-              <p class="empty">No dialog transcript was saved.</p>
+              <p class="empty">{{ copy["no_dialog_transcript"] }}</p>
             {% endif %}
           </section>
 
           {% if completion.get("transcript_source") == "post_call_interviewee_audio" and completion.get("user_transcript") %}
             <section>
-              <h2>Final Interviewee Transcript</h2>
+              <h2>{{ copy["final_interviewee_transcript"] }}</h2>
               <p class="dialogue-text">{{ completion.get("user_transcript", "") }}</p>
             </section>
           {% endif %}
         {% else %}
-          <p class="empty">This interview has not been completed yet.</p>
+          <p class="empty">{{ copy["not_completed_yet"] }}</p>
         {% endif %}
       {% endif %}
     </main>

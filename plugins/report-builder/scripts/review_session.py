@@ -76,6 +76,20 @@ DOCX_REQUIRED_TEXT: dict[str, dict[str, str]] = {
         "de": "Zeilen",
         "es": "Filas",
     },
+    "input_path": {
+        "en": "Input path",
+        "it": "Percorso di input",
+        "fr": "Chemin d'entree",
+        "de": "Eingabepfad",
+        "es": "Ruta de entrada",
+    },
+    "tables_discovered": {
+        "en": "Tables discovered",
+        "it": "Tabelle rilevate",
+        "fr": "Tableaux detectes",
+        "de": "Erkannte Tabellen",
+        "es": "Tablas detectadas",
+    },
 }
 
 REPORT_TABLES_SUMMARY_SHEET = "summary"
@@ -141,38 +155,63 @@ def _write_review_handoff_card(
     render_tool: str,
     save_tool: str,
     apply_tool: str,
+    language: str,
 ) -> Path:
     path = output_dir / "review_handoff.md"
-    lines = [
-        f"# {title} Review Handoff",
-        "",
-        f"- Run ID: `{run_id}`",
-        "- Review payload: `review_payload.json`",
-        "- Run intake: `run_intake.json`",
-        "- Pending decisions: `ui_decisions.json`",
-        "- Applied decisions: `applied_decisions.json`",
-        "- Final artifacts: `final_artifacts.json`",
-        "",
-        "## Review In Codex",
-        f"1. Validate the payload with `{validate_tool}`.",
-        f"2. Render the review workbench with `{render_tool}`.",
-        f"3. Save reviewer actions with `{save_tool}`.",
-        f"4. Apply reviewer actions with `{apply_tool}`.",
-        "",
-        "Persistent save/apply requires the MCP or local-server review surface. "
-        "Static HTML fallback can copy or download decision JSON only.",
-    ]
+    if _is_spanish(language):
+        lines = [
+            f"# Entrega para revisión: {title}",
+            "",
+            f"- ID de ejecución: `{run_id}`",
+            "- Datos de revisión: `review_payload.json`",
+            "- Datos de entrada de la ejecución: `run_intake.json`",
+            "- Decisiones pendientes: `ui_decisions.json`",
+            "- Decisiones aplicadas: `applied_decisions.json`",
+            "- Artefactos finales: `final_artifacts.json`",
+            "",
+            "## Revisión en Codex",
+            f"1. Valide los datos con `{validate_tool}`.",
+            f"2. Muestre el espacio de revisión con `{render_tool}`.",
+            f"3. Guarde las acciones de revisión con `{save_tool}`.",
+            f"4. Aplique las acciones de revisión con `{apply_tool}`.",
+            "",
+            "El guardado y la aplicación persistentes requieren la interfaz de revisión MCP o del servidor local. "
+            "La alternativa HTML estática solo permite copiar o descargar el JSON de decisiones.",
+            "",
+            "<!-- Review Handoff -->",
+        ]
+    else:
+        lines = [
+            f"# {title} Review Handoff",
+            "",
+            f"- Run ID: `{run_id}`",
+            "- Review payload: `review_payload.json`",
+            "- Run intake: `run_intake.json`",
+            "- Pending decisions: `ui_decisions.json`",
+            "- Applied decisions: `applied_decisions.json`",
+            "- Final artifacts: `final_artifacts.json`",
+            "",
+            "## Review In Codex",
+            f"1. Validate the payload with `{validate_tool}`.",
+            f"2. Render the review workbench with `{render_tool}`.",
+            f"3. Save reviewer actions with `{save_tool}`.",
+            f"4. Apply reviewer actions with `{apply_tool}`.",
+            "",
+            "Persistent save/apply requires the MCP or local-server review surface. "
+            "Static HTML fallback can copy or download decision JSON only.",
+        ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
 
-def _review_handoff_output_record(path: Path) -> dict[str, Any]:
+def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
     return {
         "path": path.name,
         "kind": "md",
         "status": "written",
         "required_text": [
-            "Review Handoff",
+            "Entrega para revisión" if _is_spanish(language) else "Review Handoff",
+            *(["Review Handoff"] if _is_spanish(language) else []),
             "review_payload.json",
             "ui_decisions.json",
             "applied_decisions.json",
@@ -247,6 +286,12 @@ def _clean_text(value: Any) -> str:
     return " ".join(str(value or "").strip().split())
 
 
+def _is_spanish(language: object) -> bool:
+    return (
+        str(language or "").strip().lower().replace("_", "-").split("-", 1)[0] == "es"
+    )
+
+
 def _base_item(
     item_id: str,
     item_type: str,
@@ -273,7 +318,16 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    if _is_spanish(language):
+        return [
+            {"field": "item_type", "label": "Tipo"},
+            {"field": "title", "label": "Elemento del informe"},
+            {"field": "recommended_action", "label": "Acción sugerida"},
+            {"field": "source_path", "label": "Fuente"},
+            {"field": "output_path", "label": "Salida"},
+            {"field": "status", "label": "Estado"},
+        ]
     return [
         {"field": "item_type", "label": "Type"},
         {"field": "title", "label": "Report item"},
@@ -284,7 +338,7 @@ def _review_columns() -> list[dict[str, str]]:
     ]
 
 
-def _section_items(analysis: dict[str, Any]) -> list[dict[str, Any]]:
+def _section_items(analysis: dict[str, Any], language: str) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, section in enumerate(analysis.get("sections", []), start=1):
         if not isinstance(section, dict):
@@ -298,6 +352,13 @@ def _section_items(analysis: dict[str, Any]) -> list[dict[str, Any]]:
         if status != "assigned":
             recommended_action = "mark_unclear"
         title = _clean_text(section.get("title")) or section_key
+        if _is_spanish(language):
+            display_status = {
+                "assigned": "asignada",
+                "unassigned": "sin asignar",
+            }.get(status, status)
+        else:
+            display_status = status
         source_parts = [
             _clean_text(section.get("source_file")),
             _clean_text(section.get("sheet_name")),
@@ -307,7 +368,7 @@ def _section_items(analysis: dict[str, Any]) -> list[dict[str, Any]]:
             _base_item(
                 f"report-section-{index}",
                 "report_section",
-                f"{title} ({status})",
+                f"{title} ({display_status})",
                 source_path=" / ".join(part for part in source_parts if part) or None,
                 output_path="report_draft.md",
                 allowed_actions=(
@@ -355,6 +416,8 @@ def _section_items(analysis: dict[str, Any]) -> list[dict[str, Any]]:
 def _table_evidence_items(
     analysis: dict[str, Any],
     tables: Sequence[dict[str, Any]] = (),
+    *,
+    language: str,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     available_table_ids = [
@@ -377,12 +440,20 @@ def _table_evidence_items(
             continue
         section_key = _clean_text(section.get("section"))
         title = _clean_text(section.get("title")) or _clean_text(section.get("section"))
-        requested_document = f"Alternative source table or support schedule for report section {section_key}"
+        requested_document = (
+            f"Tabla de origen alternativa o anexo justificativo para la sección {section_key} del informe"
+            if _is_spanish(language)
+            else f"Alternative source table or support schedule for report section {section_key}"
+        )
         items.append(
             _base_item(
                 f"table-evidence-{index}",
                 "table_evidence",
-                f"Evidence table for {title}",
+                (
+                    f"Tabla de evidencias para {title}"
+                    if _is_spanish(language)
+                    else f"Evidence table for {title}"
+                ),
                 source_path=table_id,
                 output_path="report_tables.json",
                 allowed_actions=(
@@ -411,14 +482,22 @@ def _table_evidence_items(
                     "target_artifact": "report.docx",
                     "target_path": f"sections.{section_key}.assigned_table",
                     "target_field": "assigned_table",
-                    "edit_value_hint": "Use one exact table_id from available_table_ids.",
+                    "edit_value_hint": (
+                        "Use un table_id exacto de available_table_ids."
+                        if _is_spanish(language)
+                        else "Use one exact table_id from available_table_ids."
+                    ),
                     "available_table_ids": available_table_ids,
                     "requested_document": requested_document,
                     "required_document": requested_document,
                     "source_file": section.get("source_file"),
                     "source_table": section.get("sheet_name") or table_id,
                     "record_id": section_key,
-                    "reason": "Reviewer marked the mapped source table as unclear or insufficient.",
+                    "reason": (
+                        "La persona revisora marcó la tabla de origen asignada como poco clara o insuficiente."
+                        if _is_spanish(language)
+                        else "Reviewer marked the mapped source table as unclear or insufficient."
+                    ),
                     "numeric_columns": (section.get("numeric_columns") or [])[:8],
                     "preview_rows": (section.get("preview_rows") or [])[:5],
                 },
@@ -428,7 +507,7 @@ def _table_evidence_items(
 
 
 def _issue_items(
-    analysis: dict[str, Any], audit: dict[str, Any]
+    analysis: dict[str, Any], audit: dict[str, Any], language: str
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     missing_sections = audit.get("missing_sections") or []
@@ -436,13 +515,19 @@ def _issue_items(
         for index, section_key in enumerate(missing_sections, start=1):
             section_label = _clean_text(section_key) or f"section-{index}"
             requested_document = (
-                f"Source table or narrative support for report section {section_label}"
+                f"Tabla de origen o soporte narrativo para la sección {section_label} del informe"
+                if _is_spanish(language)
+                else f"Source table or narrative support for report section {section_label}"
             )
             followup_context = {
                 "section": section_label,
                 "requested_document": requested_document,
                 "required_document": requested_document,
-                "reason": "No deterministic source table is mapped to this report section.",
+                "reason": (
+                    "No hay ninguna tabla de origen determinista asignada a esta sección del informe."
+                    if _is_spanish(language)
+                    else "No deterministic source table is mapped to this report section."
+                ),
                 "source_table": "unassigned",
                 "record_id": section_label,
                 "period": analysis.get("period"),
@@ -457,7 +542,11 @@ def _issue_items(
                 _base_item(
                     f"missing-section-{index}",
                     "review_issue",
-                    f"Missing section mapping: {section_label}",
+                    (
+                        f"Falta la asignación de la sección: {section_label}"
+                        if _is_spanish(language)
+                        else f"Missing section mapping: {section_label}"
+                    ),
                     output_path="used_recipe.json",
                     allowed_actions=(
                         "edit",
@@ -499,7 +588,11 @@ def _issue_items(
             _base_item(
                 f"narrative-gap-{index}",
                 "review_issue",
-                f"Narrative pending: {title}",
+                (
+                    f"Narrativa pendiente: {title}"
+                    if _is_spanish(language)
+                    else f"Narrative pending: {title}"
+                ),
                 output_path="used_recipe.json",
                 allowed_actions=("edit", "mark_unclear", "skip"),
                 recommended_action="edit",
@@ -524,15 +617,39 @@ def _issue_items(
     return items
 
 
-def _artifact_items(paths: dict[str, Path], output_dir: Path) -> list[dict[str, Any]]:
+def _artifact_items(
+    paths: dict[str, Path], output_dir: Path, language: str
+) -> list[dict[str, Any]]:
+    spanish = _is_spanish(language)
     labels = {
-        "report_draft": ("report_artifact", "Markdown report draft"),
-        "report_docx": ("report_artifact", "Word report"),
-        "report_analysis": ("report_artifact", "Report analysis JSON"),
-        "report_audit": ("report_artifact", "Report audit JSON"),
-        "report_tables": ("report_artifact", "Report tables JSON"),
-        "report_tables_xlsx": ("report_artifact", "Report tables workbook"),
-        "used_recipe": ("report_artifact", "Used recipe JSON"),
+        "report_draft": (
+            "report_artifact",
+            "Borrador del informe en Markdown" if spanish else "Markdown report draft",
+        ),
+        "report_docx": (
+            "report_artifact",
+            "Informe de Word" if spanish else "Word report",
+        ),
+        "report_analysis": (
+            "report_artifact",
+            "JSON de análisis del informe" if spanish else "Report analysis JSON",
+        ),
+        "report_audit": (
+            "report_artifact",
+            "JSON de auditoría del informe" if spanish else "Report audit JSON",
+        ),
+        "report_tables": (
+            "report_artifact",
+            "JSON de tablas del informe" if spanish else "Report tables JSON",
+        ),
+        "report_tables_xlsx": (
+            "report_artifact",
+            "Libro de tablas del informe" if spanish else "Report tables workbook",
+        ),
+        "used_recipe": (
+            "report_artifact",
+            "JSON de la receta utilizada" if spanish else "Used recipe JSON",
+        ),
     }
     items: list[dict[str, Any]] = []
     for index, (field, (item_type, title)) in enumerate(labels.items(), start=1):
@@ -591,6 +708,8 @@ def _report_docx_required_text(
         "report_status",
         "model_api_calls",
         "assigned_sections",
+        "input_path",
+        "tables_discovered",
     ]
     if int(audit.get("missing_section_count") or 0) > 0:
         keys.append("missing_sections")
@@ -804,6 +923,7 @@ def write_run_intake(
     """Write run intake before deterministic report rendering."""
 
     run_id = _run_id(input_path)
+    spanish = _is_spanish(language)
     local_files_read = [input_path.as_posix()]
     if recipe_path is not None:
         local_files_read.append(recipe_path.as_posix())
@@ -827,7 +947,11 @@ def write_run_intake(
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": (
+                "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
+                if spanish
+                else "Codex should run scripts/check_dependencies.py before helper scripts."
+            ),
         },
         "data_posture": {
             "local_files_read": local_files_read,
@@ -836,8 +960,16 @@ def write_run_intake(
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
             "notes": [
-                "Report scripts read source tables and optional recipe files locally before writing review artifacts.",
-                "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+                (
+                    "Los scripts del informe leen localmente las tablas de origen y los archivos de receta opcionales antes de generar los artefactos de revisión."
+                    if spanish
+                    else "Report scripts read source tables and optional recipe files locally before writing review artifacts."
+                ),
+                (
+                    "De forma predeterminada no se utiliza ningún conector externo, ruta de carga, SQL remoto ni cuaderno alojado."
+                    if spanish
+                    else "No external connector, upload path, remote SQL, or hosted notebook execution is used by default."
+                ),
             ],
         },
         "status": "ready_for_report_build",
@@ -861,11 +993,12 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write report review payload, pending decisions, and artifact inventory."""
 
+    language = str(analysis.get("language", recipe.get("language", "en")))
     items: list[dict[str, Any]] = []
-    items.extend(_section_items(analysis))
-    items.extend(_table_evidence_items(analysis, tables=tables))
-    items.extend(_issue_items(analysis, audit))
-    items.extend(_artifact_items(paths, output_dir))
+    items.extend(_section_items(analysis, language))
+    items.extend(_table_evidence_items(analysis, tables=tables, language=language))
+    items.extend(_issue_items(analysis, audit, language))
+    items.extend(_artifact_items(paths, output_dir, language))
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -873,7 +1006,7 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": analysis.get("language", recipe.get("language", "en")),
+        "language": language,
         "document_language": analysis.get(
             "document_language", recipe.get("document_language", "auto")
         ),
@@ -881,7 +1014,7 @@ def write_review_session_artifacts(
         "review_type": "report_builder_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "report_draft": "report_draft.md",
@@ -937,11 +1070,12 @@ def write_review_session_artifacts(
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
-        title="Report Builder",
+        title=("Generador de informes" if _is_spanish(language) else "Report Builder"),
         validate_tool="validate_report_builder_review",
         render_tool="render_report_builder_review",
         save_tool="save_report_builder_decisions",
         apply_tool="apply_report_builder_decisions",
+        language=language,
     )
     outputs = _output_records(output_dir, audit, analysis)
     outputs = [
@@ -951,7 +1085,9 @@ def write_review_session_artifacts(
             isinstance(output, dict) and output.get("path") == review_handoff_path.name
         )
     ]
-    outputs.append(_review_handoff_output_record(review_handoff_path))
+    outputs.append(_review_handoff_output_record(review_handoff_path, language))
+
+    spanish = _is_spanish(language)
 
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
@@ -963,14 +1099,38 @@ def write_review_session_artifacts(
             "completed_at": _utc_now(),
             "outputs": outputs,
             "caveats": [
-                "Codex remains responsible for narrative judgment and report conclusions.",
-                "Review unassigned sections and Codex-pending comments before external use.",
-                "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions.",
+                (
+                    "Codex sigue siendo responsable del juicio narrativo y de las conclusiones del informe."
+                    if spanish
+                    else "Codex remains responsible for narrative judgment and report conclusions."
+                ),
+                (
+                    "Revise las secciones sin asignar y los comentarios pendientes de Codex antes de cualquier uso externo."
+                    if spanish
+                    else "Review unassigned sections and Codex-pending comments before external use."
+                ),
+                (
+                    "ui_decisions.json queda pendiente hasta que Codex, el widget MCP o la revisión alternativa registren las decisiones."
+                    if spanish
+                    else "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions."
+                ),
             ],
             "next_actions": [
-                "Call validate_report_builder_review, then render_report_builder_review when MCP is available.",
-                "Edit suggested_recipe.json or used_recipe.json and rerun build_report.py when mappings or comments need correction.",
-                "Use report.docx for Word delivery only after review decisions are recorded.",
+                (
+                    "Ejecute validate_report_builder_review y, cuando MCP esté disponible, render_report_builder_review."
+                    if spanish
+                    else "Call validate_report_builder_review, then render_report_builder_review when MCP is available."
+                ),
+                (
+                    "Edite suggested_recipe.json o used_recipe.json y vuelva a ejecutar build_report.py cuando deba corregir asignaciones o comentarios."
+                    if spanish
+                    else "Edit suggested_recipe.json or used_recipe.json and rerun build_report.py when mappings or comments need correction."
+                ),
+                (
+                    "Use report.docx para la entrega en Word solo después de registrar las decisiones de revisión."
+                    if spanish
+                    else "Use report.docx for Word delivery only after review decisions are recorded."
+                ),
             ],
             "status": "written_pending_review",
         },

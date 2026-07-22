@@ -769,6 +769,111 @@ def test_scatter_bubble_applies_like_for_like_recipe_cohort(
     assert used_recipe["options"]["cohort_definition"]["activity_rule"] == "Sales > 0.0"
 
 
+def test_scatter_bubble_spanish_run_writes_localized_review_and_strict_contract(
+    tmp_path: Path,
+) -> None:
+    input_path = tmp_path / "ventas.csv"
+    output_dir = tmp_path / "relaciones"
+    sample_sales_frame().write_csv(input_path)
+
+    core.run_scatter_bubble(
+        input_path,
+        output_dir,
+        language="es_ES",
+        artifact_mode="data_only",
+    )
+
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    summary = (output_dir / "scatter_bubble_summary.md").read_text(encoding="utf-8")
+    client_report = (output_dir / "scatter_bubble_client_report.md").read_text(
+        encoding="utf-8"
+    )
+    review_html = (output_dir / "scatter_bubble_review.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert run_intake["language"] == "es"
+    assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "es"
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Elemento",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    assert "Contexto de dispersión y burbujas" in {
+        item["title"] for item in review_payload["items"]
+    }
+    assert "Entrega para revisión" in handoff
+    assert "Revisión en Codex" in handoff
+    assert "Review Handoff" in handoff
+    assert "# Datos fuente del análisis de dispersión y burbujas" in summary
+    assert "## Puntos principales" in summary
+    assert "Scatter & Bubble Source Data" not in summary
+    assert "# Análisis de dispersión y burbujas" in client_report
+    assert "## Archivos fuente" in client_report
+    assert "Scatter & Bubble Analysis" not in client_report
+    assert '<html lang="es">' in review_html
+    assert "Análisis de relaciones" in review_html
+    assert all(
+        "Los datos" in text or "permanece" in text
+        for text in final_artifacts["caveats"]
+    )
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
+def test_scatter_bubble_mcp_localizes_spanish_success_and_error_messages() -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "scatter-bubble-analysis",
+        "workflow": "scatter-bubble-analysis",
+        "run_id": "scatter-es",
+        "language": "es",
+        "item_count": 0,
+        "items": [],
+    }
+    invalid_payload = {**review_payload, "item_count": 1}
+    responses = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_scatter_bubble_review",
+                    "arguments": {"review_payload": review_payload},
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_scatter_bubble_review",
+                    "arguments": {"review_payload": invalid_payload},
+                },
+            },
+        ]
+    )
+    by_id = {response["id"]: response["result"] for response in responses}
+    success = json.loads(by_id[1]["content"][0]["text"])
+    failure = json.loads(by_id[2]["content"][0]["text"])
+
+    assert "son válidos" in success["message"]
+    assert "debe coincidir" in failure["error"]
+
+
 def test_legacy_scatter_context_weights_grouped_price(
     tmp_path: Path, monkeypatch: Any
 ) -> None:

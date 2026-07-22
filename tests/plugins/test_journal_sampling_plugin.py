@@ -206,6 +206,143 @@ def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_spanish_run_localizes_review_artifacts_and_workbook_sheet(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    normalized_csv = tmp_path / "diario_normalizado.csv"
+    output_dir = tmp_path / "muestra"
+    core.pl.DataFrame(
+        {
+            "entry_date": ["2026-01-15", "2026-01-16"],
+            "movement_number": ["MOV-1", "MOV-2"],
+            "line_number": [1, 2],
+            "account": ["6000", "7000"],
+            "account_desc": ["Servicios", "Ingresos"],
+            "line_desc": ["Asesoría", "Venta"],
+            "debit": [125.0, 0.0],
+            "credit": [0.0, 210.0],
+            "amount_signed": [125.0, -210.0],
+            "amount_abs": [125.0, 210.0],
+            "source_file": ["diario_es.xlsx", "diario_es.xlsx"],
+            "source_sheet": ["Diario", "Diario"],
+            "source_page": [2, 3],
+            "source_row": [10, 11],
+        }
+    ).write_csv(normalized_csv)
+
+    result = core.run_sample(
+        normalized_csv,
+        output_dir,
+        method="random",
+        size=1,
+        language="es-ES",
+    )
+
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    handoff_text = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    workbook = openpyxl.load_workbook(
+        output_dir / "journal_sample.xlsx",
+        read_only=True,
+        data_only=True,
+    )
+
+    assert result.audit["language"] == "es"
+    assert run_intake["language"] == "es"
+    assert run_intake["dependency_check"]["note"].startswith("Codex debe ejecutar")
+    assert run_intake["data_posture"]["notes"][0].startswith("Los scripts de muestreo")
+    assert review_payload["language"] == "es"
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Asiento o artefacto",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    control = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "sampling_control"
+    )
+    sampled_entry = next(
+        item for item in review_payload["items"] if item["item_type"] == "sampled_entry"
+    )
+    artifact_titles = {
+        item["title"]
+        for item in review_payload["items"]
+        if item["item_type"] in {"sample_artifact", "review_artifact"}
+    }
+    assert control["title"] == "Muestra aleatoria: 1 de 2"
+    assert "página" in sampled_entry["source_path"]
+    assert "fila" in sampled_entry["source_path"]
+    assert artifact_titles == {
+        "CSV de la muestra del diario",
+        "Libro Excel de la muestra del diario",
+        "JSON de auditoría del muestreo",
+    }
+    assert handoff_text.startswith("# Muestreo del diario · Entrega para revisión")
+    assert "## Revisión en Codex" in handoff_text
+    assert "El guardado y la aplicación persistentes" in handoff_text
+    assert "# Journal Sampling Review Handoff" not in handoff_text
+    assert final_artifacts["caveats"][0].startswith("La muestra determinista")
+    assert final_artifacts["next_actions"][1].startswith("Revise los parámetros")
+    assert workbook.sheetnames == ["Muestra del diario"]
+    sheet = workbook["Muestra del diario"]
+    assert [cell.value for cell in sheet[1]] == core.CANONICAL_COLUMNS
+
+    workbook_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "journal_sample.xlsx"
+    )
+    handoff_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "review_handoff.md"
+    )
+    assert workbook_output["required_sheets"] == ["Muestra del diario"]
+    assert workbook_output["required_sheet_headers"] == {
+        "Muestra del diario": [
+            "entry_date",
+            "account",
+            "account_desc",
+            "line_desc",
+            "amount_abs",
+            "source_file",
+            "source_row",
+        ]
+    }
+    assert "Muestra del diario" in workbook_output["required_cells"]
+    assert handoff_output["required_text"][:3] == [
+        "Review Handoff",
+        "Entrega para revisión",
+        "Revisión en Codex",
+    ]
+
+    adapter = json.loads(
+        (
+            ROOT
+            / "plugins"
+            / "journal-sampling"
+            / "assets"
+            / "review-workbench-adapter.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert adapter["localized"]["es"]["title"] == "Revisión de muestreo contable"
+
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
 def test_plugin_print_friendly_excel_extracts_detail_rows(tmp_path: Path) -> None:
     core = load_core()
     journal_path = tmp_path / "print_friendly.xlsx"
@@ -433,3 +570,145 @@ def test_journal_sampling_mcp_server_validates_and_renders_review_payload() -> N
     assert "ui://widget/journal-sampling-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
     assert "Journal Sampling Review" in widget_html
+
+
+def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "mcp-es"
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "journal-sampling",
+        "workflow": "journal-sampling",
+        "run_id": "journal-sampling-es",
+        "language": "es-ES",
+        "review_type": "journal_sampling_review",
+        "items": [
+            {
+                "id": "sampling-control",
+                "item_type": "sampling_control",
+                "title": "Muestra aleatoria: 1 de 1",
+                "allowed_actions": ["accept", "mark_unclear"],
+                "recommended_action": "accept",
+                "status": "needs_review",
+            }
+        ],
+        "item_count": 1,
+        "status": "ready_for_review",
+    }
+    decisions = [{"item_id": "sampling-control", "action": "accept"}]
+    run_intake = {
+        "run_id": "journal-sampling-es",
+        "output_dir": str(output_dir),
+        "language": "es",
+    }
+    final_artifacts = {
+        "schema_version": "1.0",
+        "plugin": "journal-sampling",
+        "workflow": "journal-sampling",
+        "run_id": "journal-sampling-es",
+        "outputs": [],
+        "next_actions": [],
+    }
+    invalid_payload = {**review_payload, "item_count": 2}
+    messages: list[dict[str, object]] = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+                "protocolVersion": "2024-11-05",
+                "_meta": {"language": "es"},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_journal_sampling_review",
+                "arguments": {"review_payload": review_payload},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "save_journal_sampling_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": decisions,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_journal_sampling_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": decisions,
+                    "final_artifacts": final_artifacts,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_journal_sampling_decisions",
+                "arguments": {
+                    "run_intake": run_intake,
+                    "review_payload": review_payload,
+                    "decisions": decisions,
+                    "final_artifacts": final_artifacts,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 6,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_journal_sampling_review",
+                "arguments": {"review_payload": invalid_payload},
+            },
+        },
+    ]
+
+    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+
+    assert (
+        "antes de render_journal_sampling_review"
+        in responses[1]["result"]["instructions"]
+    )
+    assert responses[2]["result"]["structuredContent"]["message"].startswith(
+        "El payload de revisión"
+    )
+    assert (
+        "No se proporcionó run_intake.output_dir"
+        in responses[3]["result"]["structuredContent"]["message"]
+    )
+    no_output_apply = responses[4]["result"]["structuredContent"]
+    assert "No se proporcionó run_intake.output_dir" in no_output_apply["message"]
+    assert no_output_apply["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    persisted_apply = responses[5]["result"]["structuredContent"]
+    assert persisted_apply["message"].startswith("Se han aplicado 1 decisiones")
+    assert persisted_apply["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    assert "<!-- Review Handoff -->" in handoff
+    assert "Entrega para revisión" in handoff
+    assert "## Revisión en Codex" in handoff
+    error_result = responses[6]["result"]
+    assert error_result["isError"] is True
+    assert error_result["structuredContent"]["error"].startswith(
+        "No se pudo validar la solicitud:"
+    )

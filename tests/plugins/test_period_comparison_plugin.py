@@ -8,6 +8,7 @@ import shutil
 import struct
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -1398,3 +1399,221 @@ def test_period_comparison_dependency_checker_collects_import_warnings(
     assert checker.collect_import_warnings("plotly") == [
         "RuntimeWarning: dependency pins are inconsistent"
     ]
+
+
+def _write_spanish_period_review(
+    tmp_path: Path,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    core = load_core()
+    input_path = tmp_path / "ventas.csv"
+    output_dir = tmp_path / "revision_periodos"
+    output_dir.mkdir()
+    input_path.write_text("Date,AC,PY\n2025-01-31,10,8\n", encoding="utf-8")
+    (output_dir / "period_comparison_context.json").write_text(
+        '{"comparison":{"current":{"year":2025},"previous":{"year":2024}},'
+        '"totals":{"current":10,"previous":8,"delta":2,"delta_percent":25}}\n',
+        encoding="utf-8",
+    )
+    (output_dir / "period_comparison_monthly.csv").write_text(
+        "Date,AC,PY\n2025-01-31,10,8\n", encoding="utf-8"
+    )
+    recipe = {
+        "language": "spa",
+        "mappings": {"amount_column": "Sales", "dimensions": ["Marca"]},
+        "options": {
+            "currency": "EUR",
+            "period_comparison_mode": "previous_year",
+            "period_window": {
+                "current": {"year": 2025},
+                "previous": {"year": 2024},
+            },
+        },
+    }
+    intake = core.write_run_intake(
+        output_dir,
+        input_path,
+        recipe_path=None,
+        recipe=recipe,
+        source_row_count=1,
+    )
+    core.write_review_session_artifacts(
+        output_dir,
+        input_path,
+        run_id=intake.run_id,
+        run_intake_path=intake.path,
+        recipe_path=None,
+        recipe=recipe,
+        monthly_rows=[{"Date": None, "AC": 10.0, "PY": 8.0}],
+        by_period_rows=[
+            {
+                "window": None,
+                "current": 10.0,
+                "previous": 8.0,
+                "delta": 2.0,
+                "delta_percent": 25.0,
+            }
+        ],
+        audit={},
+    )
+    return (
+        json.loads((output_dir / "run_intake.json").read_text(encoding="utf-8")),
+        json.loads((output_dir / "review_payload.json").read_text(encoding="utf-8")),
+        json.loads((output_dir / "final_artifacts.json").read_text(encoding="utf-8")),
+    )
+
+
+def test_spanish_period_review_artifacts_are_localized_and_strict(
+    tmp_path: Path,
+) -> None:
+    run_intake, review_payload, final_artifacts = _write_spanish_period_review(tmp_path)
+    output_dir = Path(run_intake["output_dir"])
+    core = load_core()
+    recipe = {
+        "language": "es",
+        "source_file": "ventas.csv",
+        "mappings": {"amount_column": "Sales", "dimensions": ["Marca"]},
+        "options": {
+            "currency": "EUR",
+            "period_window": {
+                "current": {"year": 2025},
+                "previous": {"year": 2024},
+            },
+            "reporting_entity": "Compañía Ejemplo",
+        },
+    }
+    totals = {"current": 10.0, "previous": 8.0, "delta": 2.0}
+    summary = core.build_summary_markdown(recipe, totals, {"dimension": None})
+    core.write_client_report(recipe, totals, [], output_dir)
+    client_report = (output_dir / "period_comparison_client_report.md").read_text(
+        encoding="utf-8"
+    )
+    monthly = pl.DataFrame({"Date": [date(2025, 1, 31)], "PY": [8.0], "AC": [10.0]})
+    by_period = pl.DataFrame(
+        {
+            "window": ["52w"],
+            "previous": [8.0],
+            "current": [10.0],
+            "delta": [2.0],
+            "delta_percent": [25.0],
+        }
+    )
+    core.write_native_reporting_tables(monthly, by_period, recipe, output_dir)
+    table_html = (output_dir / "comparison_table.html").read_text(encoding="utf-8")
+
+    report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    widget = (
+        PLUGIN_ROOT / "assets" / "period-comparison-review-widget.html"
+    ).read_text(encoding="utf-8")
+
+    assert report.ok, report.errors
+    assert run_intake["language"] == "es"
+    assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "es"
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Elemento",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    assert any(item["title"] == "Mes 1" for item in review_payload["items"])
+    assert any(item["title"] == "Ventana 1" for item in review_payload["items"])
+    assert any(
+        item["title"] == "Contexto de comparación de periodos"
+        for item in review_payload["items"]
+    )
+    assert "Los datos de los gráficos" in final_artifacts["caveats"][0]
+    assert "Chart payloads" not in json.dumps(final_artifacts)
+    assert summary.startswith("# Datos de origen de la comparación de periodos")
+    assert "Previous period total" not in summary
+    assert client_report.startswith("# Comparación de periodos")
+    assert "Current period totals" not in client_report
+    assert '<html lang="es">' in table_html
+    assert "Escenario" in table_html
+    assert "Variación" in table_html
+    assert "Fuente: period_comparison_by_period.csv" in table_html
+    assert ">Scenario<" not in table_html
+    assert "es: {" in widget
+    assert "Revisión de comparación de periodos" in widget
+    assert "reviewPayload().language" in widget
+
+
+def test_spanish_period_mcp_responses_errors_and_handoff(tmp_path: Path) -> None:
+    run_intake, review_payload, final_artifacts = _write_spanish_period_review(tmp_path)
+    output_dir = Path(run_intake["output_dir"])
+    ui_decisions = json.loads(
+        (output_dir / "ui_decisions.json").read_text(encoding="utf-8")
+    )
+    first_item = review_payload["items"][0]
+    common = {
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "ui_decisions": ui_decisions,
+        "final_artifacts": final_artifacts,
+    }
+    responses = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_period_comparison_review",
+                    "arguments": common,
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "save_period_comparison_decisions",
+                    "arguments": {
+                        **common,
+                        "decisions": [{"item_id": first_item["id"], "action": "edit"}],
+                    },
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "tools/call",
+                "params": {
+                    "name": "apply_period_comparison_decisions",
+                    "arguments": {
+                        **common,
+                        "decisions": [
+                            {"item_id": first_item["id"], "action": "accept"}
+                        ],
+                    },
+                },
+            },
+        ]
+    )
+    payloads = [response["result"]["structuredContent"] for response in responses]
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    strict_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+
+    assert "son válidos" in payloads[0]["message"]
+    assert "is valid" not in payloads[0]["message"]
+    assert responses[1]["result"]["isError"] is True
+    assert "es obligatorio" in payloads[1]["error"]
+    assert "is required" not in payloads[1]["error"]
+    assert "Se han aplicado" in payloads[2]["message"]
+    assert handoff.startswith("# Entrega de revisión")
+    assert "<!-- Review Handoff -->" in handoff
+    assert "Review payload:" not in handoff
+    assert strict_report.ok, strict_report.errors
