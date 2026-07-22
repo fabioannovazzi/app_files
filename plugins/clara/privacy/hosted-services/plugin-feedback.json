@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "service_id": "plugin-feedback",
+  "display_name": "Mparanza Plugin Feedback",
+  "provider_or_recipients": [
+    "Mparanza plugin change-request service"
+  ],
+  "workflows": [
+    "clara"
+  ],
+  "governed_paths": [
+    "skills/clara/SKILL.md",
+    "scripts/change_requests.py",
+    "scripts/check_for_update.py",
+    "repository/modules/pdp/legal_content.py"
+  ],
+  "trigger": "A problem or suggestion is submitted only after the user sees and approves the exact sanitized request. After a receipt exists, SessionStart may automatically poll its opaque status token for a fixed-version notification.",
+  "automatic": true,
+  "data_sent": [
+    {
+      "id": "approved-text-request",
+      "when": "After explicit consent to transmit one sanitized problem or suggestion",
+      "content": "Schema version, problem or capability kind, plugin name and version, idempotency identifier, and the selected JSON request. The Clara skill instructs Codex to show, sanitize, and obtain consent for that request, but the helper accepts arbitrary JSON within its size and shape limits and does not detect personal data or enforce sanitization."
+    },
+    {
+      "id": "optional-suggestion-interview",
+      "when": "After the user separately chooses the short hosted voice route for a general improvement suggestion",
+      "content": "Plugin name and version, generic client-free opportunity text, language, and submission identifier; the participant's later hosted explanation is outside the text-submission payload"
+    },
+    {
+      "id": "automatic-status-poll",
+      "when": "On SessionStart after a prior request has returned a pending receipt",
+      "content": "Change-request identifier and opaque status token for each locally pending request; no original case or request text is resent by this poll"
+    }
+  ],
+  "data_returned": [
+    {
+      "id": "submission-receipt",
+      "when": "After a successful problem or suggestion submission",
+      "content": "Change-request identifier, opaque status token, open or fixed status, fixed version when available, and validated install URL"
+    },
+    {
+      "id": "suggestion-interview-link",
+      "when": "After creating the optional one-minute suggestion interview",
+      "content": "Mparanza interview URL and associated durable receipt fields"
+    },
+    {
+      "id": "status-update",
+      "when": "During automatic polling of previously submitted requests",
+      "content": "Whether each request exists and is open or fixed, fixed version, and install URL"
+    }
+  ],
+  "access": {
+    "arrangement": "The client submits to fixed Mparanza HTTPS endpoints and stores the returned opaque status token locally. Plugin source does not establish who inside Mparanza can access request content. Optional suggestion interviews use a returned Mparanza browser URL.",
+    "controls": [
+      "Remote requests are restricted to HTTPS mparanza.com or www.mparanza.com outside local tests.",
+      "Payload and response sizes are bounded.",
+      "A durable idempotency record prevents a network retry from creating a second request.",
+      "The skill requires separate consent for a problem report and a suggestion."
+    ]
+  },
+  "retention": {
+    "status": "documented",
+    "statement": "Submitted feedback remains a Mparanza support record until administrative deletion. The plugin also stores local pending payloads, receipts, and status tokens for retry and status notification until local plugin state is removed."
+  },
+  "security_controls": [
+    {
+      "id": "fixed-origin-and-bounded-payloads",
+      "control": "The helper restricts remote requests to the Mparanza HTTPS origin and bounds request and response sizes before storing a receipt."
+    },
+    {
+      "id": "idempotent-submission",
+      "control": "A durable idempotency identifier and local receipt prevent a network retry from creating a second feedback request."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "hosted_service_boundary_review_of_source",
+    "source_fingerprint": "18296c05abeb76134f10c91781a74e754b244f3b376dd86e81b8dc1cdee3cbbd"
+  }
+}

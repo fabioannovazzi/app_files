@@ -11,7 +11,7 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 Use this skill for audit sample-entry workflows where each customer's journal format may differ. The plugin is a guided Codex workflow: Codex inspects the files, asks only for unresolved mapping or sampling assumptions, runs deterministic helper scripts, reviews diagnostics, and delivers outputs.
 
-The workflow is not Italian-only. Support the same four working locales used by the reconciliation plugin: `it`, `en`, `fr`, and `de`. Keep canonical data column names in English for stability, but speak to the user and write summaries in the chosen working language.
+The workflow is not Italian-only. Support the same five working locales used by the reconciliation plugin: `it`, `en`, `fr`, `de`, and `es`. Keep canonical data column names in English for stability, but speak to the user and write summaries in the chosen working language.
 
 Detailed parser, mapping, sampling, and review-status notes live in `references/workflow-reference.md`. Load that reference only when the run needs extra detail beyond the workflow below.
 
@@ -65,7 +65,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_journal.py <input-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/inspect_journal.py <input-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 4. Read the inspection artifacts. If confidence is low or required fields are missing, ask the user for the smallest needed decision, such as the header row or which column is account/date/debit/credit.
@@ -73,13 +73,13 @@ python scripts/inspect_journal.py <input-file-or-folder> --output-dir <output-di
 6. Normalize rows:
 
 ```bash
-python scripts/normalize_journal.py <input-file-or-folder> --output-dir <output-dir> --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/normalize_journal.py <input-file-or-folder> --output-dir <output-dir> --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 7. Run deterministic sampling:
 
 ```bash
-python scripts/run_sample.py <output-dir>/normalized_journal.csv --output-dir <output-dir>/sample --method random --size 25 --language <it|en|fr|de>
+python scripts/run_sample.py <output-dir>/normalized_journal.csv --output-dir <output-dir>/sample --method random --size 25 --language <it|en|fr|de|es>
 ```
 
 8. Review `normalization_diagnostics.json` and `sampling_audit.json` before final delivery. Report parser confidence, missing fields, population size after filters, sample size, and output paths.
@@ -96,10 +96,10 @@ OCR-only scanned PDFs are not a v1 target. If inspection returns no rows for a s
 
 Ask for or infer two language assumptions:
 
-- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`.
-- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`.
+- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`, `es`.
+- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`, `es`.
 
-Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, or German, set `document_language` accordingly without asking unless ambiguity matters.
+Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, German, or Spanish, set `document_language` accordingly without asking unless ambiguity matters.
 
 Starter prompts:
 
@@ -108,6 +108,7 @@ IT: Usa Journal Sampling sulla cartella /percorso/input. Lingua: it. Lingua docu
 EN: Use Journal Sampling on /path/input. Language: en. Document language: auto. Inspect the files, ask only for essential ambiguities, then generate the sample, diagnostics, and audit trail.
 FR: Utilise Journal Sampling sur /chemin/input. Langue: fr. Langue des documents: auto. Inspecte les fichiers, demande uniquement les ambiguïtés essentielles, puis génère l'échantillon, les diagnostics et l'audit trail.
 DE: Verwende Journal Sampling für /pfad/input. Sprache: de. Dokumentsprache: auto. Prüfe die Dateien, frage nur wesentliche Unklarheiten ab und erstelle Stichprobe, Diagnostik und Audit-Trail.
+ES: Usa Journal Sampling en /ruta/input. Idioma: es. Idioma de los documentos: auto. Inspecciona los archivos, pregunta solo por las ambigüedades esenciales y genera la muestra, los diagnósticos y el registro de auditoría.
 ```
 
 ## Mapping Recipe Rules
@@ -180,4 +181,6 @@ When there is something useful to report, write a short improvement note with:
 - relevant input/output file names when available;
 - suggested next engineering action.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

@@ -29,6 +29,11 @@ it to Mparanza unless the user separately asks for that follow-on work. If the
 user asks for a presentation after the checked HTML report is complete, hand
 the finished report to Clara's `html-deck` workflow as a new, explicit step.
 
+Report files and image bytes remain local. Mapping and report evidence that
+Codex reads may enter model context through the user's existing ChatGPT plan;
+the component helper scripts make no separate model API call. The authenticated
+retail-data bridge remains a distinct Mparanza-hosted service.
+
 Do not use this workflow for Brand Fit. When the user wants to compare completed
 retailer signals with both a brand's current presence at that retailer and the
 brand-owned catalogue, route to Clara's distinct `brand-fit` skill.

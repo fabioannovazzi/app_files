@@ -10,7 +10,7 @@
   ],
   "properties": {
     "case_id": {"type": "string", "minLength": 1},
-    "language": {"enum": ["it", "en", "fr", "de"]},
+    "language": {"enum": ["it", "en", "fr", "de", "es"]},
     "professional_question": {"type": "string", "minLength": 1},
     "material_decisions": {
       "type": "object",

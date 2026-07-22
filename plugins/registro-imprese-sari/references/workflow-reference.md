@@ -71,7 +71,9 @@ client identifiers.
 
 `inventory_case.py` loads the shared `vera_ocr` adapter when it is available.
 It does not duplicate the PaddleOCR engine. Model weights may use the network
-only with both `--allow-ocr-model-download` and a stable approval ID. Case-image
+only when the user explicitly selects `--allow-ocr-model-download`; the run
+records the selected route and actual network use without manufacturing an
+approval ID. Case-image
 bytes remain local. Every OCR-derived fact carries
 `ocr_text_requires_visual_confirmation`; a professional must check the source
 image before confirmation.

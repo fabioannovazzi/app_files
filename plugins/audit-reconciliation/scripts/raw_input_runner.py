@@ -7,11 +7,6 @@ details must be passed through ``assumptions``.
 
 from __future__ import annotations
 
-from collections import defaultdict
-from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
-from decimal import Decimal, InvalidOperation
-from functools import lru_cache
 import hashlib
 import io
 import json
@@ -19,6 +14,11 @@ import os
 import re
 import sys
 import zipfile
+from collections import defaultdict
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
+from decimal import Decimal, InvalidOperation
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
@@ -53,17 +53,6 @@ else:
     PDFPLUMBER_IMPORT_ERROR = None
 
 try:
-    from .reconciliation_helpers import (
-        clean_text,
-        document_key,
-        parse_decimal,
-        parse_date,
-        reconcile_open_items,
-        reconciliation_checks,
-        checks_pass,
-    )
-    from .reconciliation_workflow import build_reconciliation_artifacts
-    from .review_session import write_review_session_artifacts
     from .build_missing_evidence_requests import (
         build_missing_evidence_request_pack,
         write_missing_evidence_workbook,
@@ -75,21 +64,33 @@ try:
         language_candidates,
         normalize_language,
     )
+    from .reconciliation_helpers import (
+        checks_pass,
+        clean_text,
+        document_key,
+        parse_date,
+        parse_decimal,
+        reconcile_open_items,
+        reconciliation_checks,
+    )
+    from .reconciliation_workflow import build_reconciliation_artifacts
+    from .review_session import write_review_session_artifacts
 except ImportError:  # pragma: no cover - direct import support
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
+    import importlib.util
+
     from reconciliation_helpers import (  # type: ignore
+        checks_pass,
         clean_text,
         document_key,
-        parse_decimal,
         parse_date,
+        parse_decimal,
         reconcile_open_items,
         reconciliation_checks,
-        checks_pass,
     )
     from reconciliation_workflow import build_reconciliation_artifacts  # type: ignore
-    import importlib.util
 
     _review_session_path = Path(__file__).resolve().parent / "review_session.py"
     _review_session_spec = importlib.util.spec_from_file_location(
@@ -105,7 +106,13 @@ except ImportError:  # pragma: no cover - direct import support
         build_missing_evidence_request_pack,
         write_missing_evidence_workbook,
     )
-    from locale_support import any_keyword_in, configured_language, keyword_tuple, language_candidates, normalize_language  # type: ignore
+    from locale_support import (  # type: ignore
+        any_keyword_in,
+        configured_language,
+        keyword_tuple,
+        language_candidates,
+        normalize_language,
+    )
 
 
 DATE_DMY4_RE = re.compile(r"\b\d{2}/\d{2}/\d{4}\b")
@@ -309,7 +316,7 @@ def configure_ocr_environment(cache_dir: Path) -> None:
 def _ocr_language(language: object | None) -> str:
     text = clean_text(language).lower().replace("_", "-")
     code = text.split("-", 1)[0]
-    return code if code in {"de", "en", "fr", "it"} else "en"
+    return code if code in {"de", "en", "fr", "it", "es"} else "en"
 
 
 def _shared_ocr_text_from_image_bytes(
@@ -412,8 +419,8 @@ def _local_paddle_ocr_text_from_image_bytes(
     lang: str,
     text_recognition_model_name: str | None = None,
 ) -> str:
-    from PIL import Image  # type: ignore
     import numpy as np  # type: ignore
+    from PIL import Image  # type: ignore
 
     image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     engine = _get_local_paddle_ocr(
@@ -2061,7 +2068,7 @@ def run_raw_input_reconciliation(
     input_dir: str | Path,
     output_dir: str | Path,
     assumptions: dict[str, Any] | None = None,
-    title: str = "Relazione di riconciliazione contabile",
+    title: str | None = None,
     narrative: str = "",
     language: str = "it",
 ) -> dict[str, Any]:

@@ -26,7 +26,7 @@ __all__ = [
 ]
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED_LOCALES = ("it", "fr", "de")
+REQUIRED_LOCALES = ("it", "fr", "de", "es")
 MIN_DEMO_ITEMS = 2
 MIN_WORKFLOW_PANELS = 3
 MATERIAL_REVIEW_ACTIONS = {

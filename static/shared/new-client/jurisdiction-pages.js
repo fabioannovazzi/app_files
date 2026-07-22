@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de"];
+  const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"];
   const OPEN_VERA_URL =
     "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d";
   const OG_LOCALES = {
@@ -9,6 +9,7 @@
     en: "en_GB",
     fr: "fr_FR",
     de: "de_DE",
+    es: "es_ES",
   };
 
   const interfaceCopy = {
@@ -291,6 +292,99 @@
         button: "Installer Vera",
       },
     },
+    es: {
+      homeAria: "Página de inicio de Mparanza",
+      navAria: "Secciones de la página",
+      languageAria: "Idioma de presentación",
+      nav: {
+        workflow: "Recorrido",
+        documents: "Documentos",
+        outputs: "Salidas",
+        download: "Instalación",
+      },
+      breadcrumbAria: "Ruta de la página",
+      breadcrumbHub: "Nuevo cliente",
+      scopeTitle: "Lo que recibe el despacho",
+      scopeLabels: {
+        input: "Material",
+        processing: "Tratamiento",
+        output: "Salidas",
+        focus: "Alcance",
+      },
+      scopeProcessing:
+        "Inventario, OCR local cuando sea útil, clasificación, extracción y puntos de revisión",
+      scopeOutput:
+        "Informe del despacho, preguntas al cliente, estado de lectura y archivos CSV",
+      jurisdictionLabel: "Jurisdicción",
+      languageLabel: "Idioma de presentación",
+      languageName: "Español",
+      contextAria: "Contexto de la página",
+      workflow: {
+        eyebrow: "Recorrido",
+        title: "De la carpeta del cliente a un expediente de trabajo",
+        copy:
+          "La primera pasada responde a las preguntas prácticas: qué ha llegado, qué es legible, qué parece faltar y qué debe aclarar el cliente.",
+        cards: [
+          {
+            title: "Inventariar",
+            copy:
+              "Cada archivo se registra con su ruta, periodo fiscal probable, tipo de documento, estado de legibilidad y posibles señales de duplicado.",
+          },
+          {
+            title: "Leer",
+            copy:
+              "El texto se extrae de los PDF; el OCR local puede ayudar con escaneos e imágenes cuando el entorno lo permite.",
+          },
+          {
+            title: "Resumir",
+            copy:
+              "El resumen vincula los documentos leídos, el estado de lectura y los puntos abiertos con un informe conciso del despacho y preguntas concretas para el cliente.",
+          },
+        ],
+      },
+      outputs: {
+        eyebrow: "Salidas",
+        title: "Un expediente de trabajo para el despacho",
+        copy:
+          "Los documentos, extractos, puntos abiertos y solicitudes al cliente permanecen vinculados al material fuente leído.",
+        tableAria: "Salidas para el nuevo cliente",
+        headers: ["Salida", "Uso", "Detalle"],
+        rows: [
+          [
+            "Inventario",
+            "Abrir rápidamente el expediente e identificar las familias de documentos.",
+            "Categorías prudentes, periodos fiscales y estado de lectura.",
+          ],
+          [
+            "Documentos faltantes",
+            "Convertir las carencias de la carpeta en solicitudes claras al cliente.",
+            "Solicitudes vinculadas a los documentos realmente encontrados.",
+          ],
+          [
+            "Informe del despacho",
+            "Resumir lo encontrado, lo incierto y lo que requiere seguimiento.",
+            "Resumen vinculado a los documentos y extractos disponibles.",
+          ],
+          [
+            "Borrador de correo al cliente",
+            "Solicitar los documentos o aclaraciones necesarios para continuar.",
+            "Borrador listo para que el despacho lo adapte.",
+          ],
+        ],
+      },
+      next: {
+        eyebrow: "Recorrido Nuevo cliente",
+        title: "Vuelva al recorrido Nuevo cliente.",
+        copy:
+          "La preparación documental está disponible para este mercado; la configuración profesional continúa actualmente con el paquete nacional de Italia.",
+        button: "Ver el recorrido",
+      },
+      download: {
+        eyebrow: "Instalación",
+        title: "Instale Vera y empiece por la carpeta del cliente",
+        button: "Instalar Vera",
+      },
+    },
     de: {
       homeAria: "Mparanza Startseite",
       navAria: "Seitenabschnitte",
@@ -549,6 +643,58 @@
           installCopy:
             "Ajoutez les pièces dans ChatGPT et demandez à Vera de préparer le premier dossier fiscal genevois.",
         },
+        es: {
+          metaTitle: "Nuevo cliente · Ginebra | Vera",
+          metaDescription:
+            "Primera revisión de un expediente fiscal de Ginebra con inventario, puntos abiertos, informe del despacho y solicitud al cliente preparados con Vera.",
+          ogDescription:
+            "Del expediente fiscal recibido a una base de trabajo legible para el despacho.",
+          name: "Ginebra",
+          jurisdiction: "Ginebra · Suiza",
+          eyebrow: "Nuevo cliente · Ginebra",
+          title: "Primera revisión de un expediente fiscal de Ginebra",
+          subtitle:
+            "Organice los documentos recibidos, aísle lo que falta y prepare las preguntas que enviar al cliente antes de la revisión fiscal.",
+          heroCopy:
+            "Úselo cuando los justificantes lleguen como PDF, imágenes, exportaciones o archivos mixtos. Vera lee la carpeta localmente, prepara el inventario, identifica los puntos inciertos y genera un informe del despacho con un borrador de correo al cliente.",
+          scopeInput:
+            "PDF, imágenes, exportaciones bancarias y justificantes fiscales",
+          scopeFocus: "Expedientes fiscales de Ginebra",
+          documents: {
+            eyebrow: "Documentos",
+            title: "Documentos ordenados",
+            copy:
+              "La página está adaptada a las familias documentales habituales en un expediente fiscal de Ginebra: ingresos, patrimonio, seguros, previsión, inmuebles y situaciones que deben aclararse.",
+            cards: [
+              {
+                title: "Ingresos y patrimonio",
+                items: [
+                  "Certificados salariales y declaraciones de pensiones.",
+                  "Extractos bancarios, valores, inversiones y saldos.",
+                  "Documentos relativos al patrimonio mobiliario o inmobiliario.",
+                ],
+              },
+              {
+                title: "Deducciones y justificantes",
+                items: [
+                  "Seguro médico, segundo pilar y tercer pilar.",
+                  "Gastos médicos, cuidado de hijos, formación y donaciones.",
+                  "Hipoteca, intereses, obras y documentos de propiedad.",
+                ],
+              },
+              {
+                title: "Puntos que aclarar",
+                items: [
+                  "Retención en origen y cambios de circunstancias.",
+                  "Ingresos o bienes en el extranjero.",
+                  "Archivos ilegibles, incompletos o de otro periodo fiscal.",
+                ],
+              },
+            ],
+          },
+          installCopy:
+            "Añada los documentos en ChatGPT y pida a Vera que prepare el primer expediente fiscal de Ginebra.",
+        },
         de: {
           metaTitle: "Neuer Mandant · Genf | Vera",
           metaDescription:
@@ -765,6 +911,58 @@
           installCopy:
             "Ajoutez les pièces dans ChatGPT et demandez à Vera de préparer le premier dossier fiscal zurichois.",
         },
+        es: {
+          metaTitle: "Nuevo cliente · Zúrich | Vera",
+          metaDescription:
+            "Primera revisión de un expediente fiscal de Zúrich con inventario, puntos abiertos, informe del despacho y solicitud al cliente preparados con Vera.",
+          ogDescription:
+            "Del expediente fiscal recibido a una base de trabajo legible para el despacho fiduciario.",
+          name: "Zúrich",
+          jurisdiction: "Zúrich · Suiza",
+          eyebrow: "Nuevo cliente · Zúrich",
+          title: "Primera revisión de un expediente fiscal de Zúrich",
+          subtitle:
+            "Primera pasada por el expediente: documentos recibidos, puntos abiertos, notas formales, informe interno y borrador de correo al cliente.",
+          heroCopy:
+            "Úselo cuando los documentos lleguen como PDF, imágenes, exportaciones y justificantes mixtos. La primera revisión ordena el expediente, extrae el texto legible y prepara una base de trabajo para la siguiente fase.",
+          scopeInput:
+            "Carpeta del cliente con PDF, imágenes, exportaciones y justificantes",
+          scopeFocus: "Expedientes fiscales de Zúrich",
+          documents: {
+            eyebrow: "Documentos",
+            title: "Documentos ordenados para el nuevo cliente",
+            copy:
+              "La primera revisión de Zúrich cubre las familias documentales habituales en la práctica fiduciaria: ingresos, patrimonio, seguros, previsión, inmuebles y casos que deben aclararse.",
+            cards: [
+              {
+                title: "Ingresos y patrimonio",
+                items: [
+                  "Certificados salariales y declaraciones de pensiones.",
+                  "Extractos bancarios y postales, valores y saldos.",
+                  "Justificantes de activos en Suiza o en el extranjero.",
+                ],
+              },
+              {
+                title: "Deducciones y justificantes",
+                items: [
+                  "Primas de seguro, segundo pilar y pilar 3a.",
+                  "Gastos médicos, formación continua, cuidado de hijos y donaciones.",
+                  "Gastos laborales, intereses hipotecarios y mantenimiento de inmuebles.",
+                ],
+              },
+              {
+                title: "Puntos que aclarar",
+                items: [
+                  "Retención en origen y liquidación ordinaria posterior.",
+                  "Ingresos o elementos patrimoniales en el extranjero.",
+                  "Archivos ilegibles, incompletos o de otro periodo fiscal.",
+                ],
+              },
+            ],
+          },
+          installCopy:
+            "Añada los documentos en ChatGPT y pida a Vera que prepare el primer expediente fiscal de Zúrich.",
+        },
         de: {
           metaTitle: "Neuer Mandant · Zürich | Vera",
           metaDescription:
@@ -980,6 +1178,58 @@
           },
           installCopy:
             "Ajoutez les pièces dans ChatGPT et demandez à Vera de préparer le premier dossier Self Assessment au Royaume-Uni.",
+        },
+        es: {
+          metaTitle: "Nuevo cliente · Self Assessment del Reino Unido | Vera",
+          metaDescription:
+            "Organice una carpeta de cliente para Self Assessment en el Reino Unido, estructure los puntos abiertos y prepare un informe del despacho y una solicitud al cliente con Vera.",
+          ogDescription:
+            "De la carpeta fiscal recibida a un expediente de trabajo legible para el despacho.",
+          name: "Reino Unido",
+          jurisdiction: "Reino Unido",
+          eyebrow: "Nuevo cliente · Reino Unido",
+          title: "Nuevo cliente para Self Assessment",
+          subtitle:
+            "Primera revisión de la carpeta de Self Assessment: documentos recibidos, carencias que resolver, informe del despacho y correo de seguimiento al cliente.",
+          heroCopy:
+            "Úselo cuando el material del cliente llegue como PDF, imágenes, exportaciones y justificantes mixtos. Vera clasifica la carpeta, extrae el texto legible y prepara un expediente de trabajo antes de elaborar o revisar la declaración.",
+          scopeInput:
+            "Carpeta del cliente con PDF, imágenes, exportaciones y justificantes",
+          scopeFocus: "Expedientes de Self Assessment del Reino Unido",
+          documents: {
+            eyebrow: "Documentos",
+            title: "Documentos ordenados para el nuevo cliente",
+            copy:
+              "El recorrido se estructura en torno a las familias documentales que suelen llegar antes de preparar el Self Assessment.",
+            cards: [
+              {
+                title: "Empleo y pensiones",
+                items: [
+                  "P60, P45, P11D y nóminas.",
+                  "Declaraciones de pensiones y justificantes de prestaciones sujetas a impuestos.",
+                  "Justificantes de Student Loan, Gift Aid y aportaciones a pensiones.",
+                ],
+              },
+              {
+                title: "Ingresos y ganancias",
+                items: [
+                  "Actividad por cuenta propia, sociedades y registros de inmuebles.",
+                  "Ingresos extranjeros, extractos de inversiones y cuadros de plusvalías.",
+                  "Extractos bancarios, exportaciones contables y facturas.",
+                ],
+              },
+              {
+                title: "Preguntas abiertas",
+                items: [
+                  "Extractos faltantes, ejercicios fiscales inciertos y escaneos ilegibles.",
+                  "Justificantes de gastos, kilometraje, trabajo desde casa y costes inmobiliarios.",
+                  "Registros de IVA y documentos justificativos relacionados.",
+                ],
+              },
+            ],
+          },
+          installCopy:
+            "Añada los documentos en ChatGPT y pida a Vera que prepare el primer expediente de Self Assessment del Reino Unido.",
         },
         de: {
           metaTitle: "Self-Assessment-Erstprüfung · Vereinigtes Königreich | Vera",

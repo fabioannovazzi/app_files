@@ -102,9 +102,29 @@ def _default_it_lexicon() -> Dict[str, List[str]]:
 
 def _default_en_lexicon() -> Dict[str, List[str]]:
     return {
-        "tax_tokens": ["vat", "tax", "taxes", "hmrc", "irs", "inland revenue", "revenue"],
-        "sdd_tokens": [" direct debit", " dd ", " ach debit", " auto debit", " autodirect"],
-        "bonifico_tokens": [" bank transfer", " transfer", " wire", " sepa", " faster payment"],
+        "tax_tokens": [
+            "vat",
+            "tax",
+            "taxes",
+            "hmrc",
+            "irs",
+            "inland revenue",
+            "revenue",
+        ],
+        "sdd_tokens": [
+            " direct debit",
+            " dd ",
+            " ach debit",
+            " auto debit",
+            " autodirect",
+        ],
+        "bonifico_tokens": [
+            " bank transfer",
+            " transfer",
+            " wire",
+            " sepa",
+            " faster payment",
+        ],
         "fee_tokens": [
             " fee",
             " fees",
@@ -116,44 +136,222 @@ def _default_en_lexicon() -> Dict[str, List[str]]:
             " stamp duty",
         ],
         "riba_tokens": [" riba"],
-        "card_tokens": [" card payment", " credit card", " debit card", " visa ", " mastercard", " pos "],
+        "card_tokens": [
+            " card payment",
+            " credit card",
+            " debit card",
+            " visa ",
+            " mastercard",
+            " pos ",
+        ],
         "withdrawal_terms": [" withdrawal", " cash withdrawal", " cash out", " cash"],
         "deposit_terms": [" deposit", " deposits", " cash deposit"],
         "atm_terms": [" atm", " cashpoint", " cash machine", " branch"],
-        "payroll_tokens": ["SALARY", "SALARIES", "PAYROLL", "WAGE", "WAGES", "PAYCHECK", "PAY CHEQUE", "PAYSLIP", "NET PAY", "GROSS PAY"],
-        "tax_ledger_tokens": ["vat", "tax", "taxes", "hmrc", "irs", "inland revenue", "revenue", "stamp duty"],
+        "payroll_tokens": [
+            "SALARY",
+            "SALARIES",
+            "PAYROLL",
+            "WAGE",
+            "WAGES",
+            "PAYCHECK",
+            "PAY CHEQUE",
+            "PAYSLIP",
+            "NET PAY",
+            "GROSS PAY",
+        ],
+        "tax_ledger_tokens": [
+            "vat",
+            "tax",
+            "taxes",
+            "hmrc",
+            "irs",
+            "inland revenue",
+            "revenue",
+            "stamp duty",
+        ],
     }
 
 
 def _default_de_lexicon() -> Dict[str, List[str]]:
     return {
-        "tax_tokens": ["steuer", "mwst", "mehrwertsteuer", "umsatzsteuer", "steueramt", "finanzamt"],
+        "tax_tokens": [
+            "steuer",
+            "mwst",
+            "mehrwertsteuer",
+            "umsatzsteuer",
+            "steueramt",
+            "finanzamt",
+        ],
         "sdd_tokens": [" lastschrift", " sepa-lastschrift", "einzug"],
         "bonifico_tokens": [" überweisung", " ueberweisung", " sepa", " transfer"],
-        "fee_tokens": ["gebühr", "gebuehr", "entgelt", "kosten", "kontoführung", "kartengebühr"],
+        "fee_tokens": [
+            "gebühr",
+            "gebuehr",
+            "entgelt",
+            "kosten",
+            "kontoführung",
+            "kartengebühr",
+        ],
         "riba_tokens": [" riba"],
-        "card_tokens": ["karte", "kartenzahlung", "visa", "mastercard", " pos ", "girocard", "ec-karte"],
+        "card_tokens": [
+            "karte",
+            "kartenzahlung",
+            "visa",
+            "mastercard",
+            " pos ",
+            "girocard",
+            "ec-karte",
+        ],
         "withdrawal_terms": ["abhebung", "barabhebung", "bargeld", "abheben"],
         "deposit_terms": ["einzahlung", "einzahlungen", "bareinzahlung"],
         "atm_terms": ["atm", "geldautomat", "bancomat", "filiale"],
-        "payroll_tokens": ["gehalt", "gehälter", "lohn", "löhne", "salär", "lohnabrechnung", "payroll"],
-        "tax_ledger_tokens": ["steuer", "mwst", "mehrwertsteuer", "umsatzsteuer", "lohnsteuer", "kirchensteuer", "finanzamt", "steueramt"],
+        "payroll_tokens": [
+            "gehalt",
+            "gehälter",
+            "lohn",
+            "löhne",
+            "salär",
+            "lohnabrechnung",
+            "payroll",
+        ],
+        "tax_ledger_tokens": [
+            "steuer",
+            "mwst",
+            "mehrwertsteuer",
+            "umsatzsteuer",
+            "lohnsteuer",
+            "kirchensteuer",
+            "finanzamt",
+            "steueramt",
+        ],
     }
 
 
 def _default_fr_lexicon() -> Dict[str, List[str]]:
     return {
-        "tax_tokens": ["tva", "impôt", "impots", "taxe", "taxes", "trésor public", "tresor public", "urssaf"],
+        "tax_tokens": [
+            "tva",
+            "impôt",
+            "impots",
+            "taxe",
+            "taxes",
+            "trésor public",
+            "tresor public",
+            "urssaf",
+        ],
         "sdd_tokens": [" prélèvement", " prelevement", " sepa"],
         "bonifico_tokens": [" virement", " sepa", " transfert"],
-        "fee_tokens": ["frais", "commission", "tenue de compte", "frais mensuels", "frais bancaires"],
+        "fee_tokens": [
+            "frais",
+            "commission",
+            "tenue de compte",
+            "frais mensuels",
+            "frais bancaires",
+        ],
         "riba_tokens": [" riba"],
-        "card_tokens": ["carte", "paiement carte", "cb ", "visa", "mastercard", " tpe "],
-        "withdrawal_terms": ["retrait", "distributeur", "guichet", "espèces", "especes"],
+        "card_tokens": [
+            "carte",
+            "paiement carte",
+            "cb ",
+            "visa",
+            "mastercard",
+            " tpe ",
+        ],
+        "withdrawal_terms": [
+            "retrait",
+            "distributeur",
+            "guichet",
+            "espèces",
+            "especes",
+        ],
         "deposit_terms": ["dépôt", "depot", "versement", "versements"],
         "atm_terms": ["dab", "distributeur", "guichet", "atm"],
-        "payroll_tokens": ["salaire", "salaires", "paie", "payroll", "bulletin de paie", "fiche de paie", "paye"],
-        "tax_ledger_tokens": ["tva", "impôt", "impots", "taxe", "taxes", "urssaf", "trésor public", "tresor public"],
+        "payroll_tokens": [
+            "salaire",
+            "salaires",
+            "paie",
+            "payroll",
+            "bulletin de paie",
+            "fiche de paie",
+            "paye",
+        ],
+        "tax_ledger_tokens": [
+            "tva",
+            "impôt",
+            "impots",
+            "taxe",
+            "taxes",
+            "urssaf",
+            "trésor public",
+            "tresor public",
+        ],
+    }
+
+
+def _default_es_lexicon() -> Dict[str, List[str]]:
+    return {
+        "tax_tokens": [
+            "iva",
+            "impuesto",
+            "impuestos",
+            "agencia tributaria",
+            "aeat",
+            "hacienda",
+        ],
+        "sdd_tokens": [
+            "adeudo directo",
+            "adeudo domiciliado",
+            "domiciliacion",
+            "recibo domiciliado",
+        ],
+        "bonifico_tokens": [
+            "transferencia",
+            "giro bancario",
+            "sepa",
+            "bizum",
+        ],
+        "fee_tokens": [
+            "comision",
+            "comisiones",
+            "gastos bancarios",
+            "mantenimiento de cuenta",
+            "cuota de mantenimiento",
+        ],
+        "riba_tokens": ["recibo bancario", "remesa"],
+        "card_tokens": [
+            "tarjeta",
+            "pago con tarjeta",
+            "visa",
+            "mastercard",
+            "tpv",
+        ],
+        "withdrawal_terms": [
+            "retirada",
+            "reintegro",
+            "extraccion",
+            "sacar efectivo",
+            "efectivo",
+        ],
+        "deposit_terms": ["ingreso", "deposito", "consignacion"],
+        "atm_terms": ["atm", "cajero", "cajero automatico", "sucursal"],
+        "payroll_tokens": [
+            "SALARIO",
+            "SALARIOS",
+            "SUELDO",
+            "SUELDOS",
+            "NOMINA",
+            "NOMINAS",
+        ],
+        "tax_ledger_tokens": [
+            "iva",
+            "impuesto",
+            "impuestos",
+            "agencia tributaria",
+            "aeat",
+            "hacienda",
+            "retencion",
+            "retenciones",
+        ],
     }
 
 
@@ -168,6 +366,9 @@ def _load_lang_lexicon(lang: str) -> Dict[str, List[str]]:
     elif lang.startswith("fr"):
         cfg = LEXICON_DIR / "fr.json"
         base = _default_fr_lexicon()
+    elif lang.startswith("es"):
+        cfg = LEXICON_DIR / "es.json"
+        base = _default_es_lexicon()
     else:
         cfg = LEXICON_DIR / "it.json"
         base = _default_it_lexicon()
@@ -210,6 +411,13 @@ def _lex_for(lang: Optional[str]) -> Dict[str, List[str]]:
         except NameError:
             _FR_LEXICON = _load_lang_lexicon("fr")
         return _FR_LEXICON
+    if l.startswith("es"):
+        global _ES_LEXICON
+        try:
+            _ES_LEXICON
+        except NameError:
+            _ES_LEXICON = _load_lang_lexicon("es")
+        return _ES_LEXICON
     return _IT_LEXICON
 
 
@@ -241,10 +449,9 @@ def classify_op(description: str, lang: Optional[str] = None) -> str:
     if any(tok in s for tok in lex.get("bonifico_tokens", [])):
         return "BONIFICO"
     if (
-        (any(tok in s for tok in lex.get("withdrawal_terms", []))
-         or any(tok in s for tok in lex.get("deposit_terms", [])))
-        and any(tok in s for tok in lex.get("atm_terms", []))
-    ):
+        any(tok in s for tok in lex.get("withdrawal_terms", []))
+        or any(tok in s for tok in lex.get("deposit_terms", []))
+    ) and any(tok in s for tok in lex.get("atm_terms", [])):
         return "ATM"
     if any(tok in s for tok in lex.get("card_tokens", [])):
         return "CARD"

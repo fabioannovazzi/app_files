@@ -373,7 +373,7 @@ class MappingResponse(BaseModel):
 
 
 class RunRequest(BaseModel):
-    lang: str = Field("eng", description="OCR language (eng/ita/fra/deu)")
+    lang: str = Field("eng", description="OCR language (eng/ita/fra/deu/spa)")
     debug: bool = False
     amount_tolerance: float = 1.0
     date_window: int = 3
@@ -464,11 +464,16 @@ def check_entries_page(
 
 @router.post("/upload", response_model=UploadResponse)
 async def upload_journal(
+    request: Request,
     file: UploadFile = File(...),
 ) -> UploadResponse:
     content = await file.read()
     try:
-        session = store.create_session(file.filename, content)
+        session = store.create_session(
+            file.filename,
+            content,
+            lang=_resolve_ocr_lang(resolve_language(request)),
+        )
     except Exception as exc:  # pragma: no cover - surfaced to client
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     preview = _dataframe_preview(session)
@@ -765,6 +770,11 @@ _OCR_TO_LOCALE = {
     "de": "de",
     "german": "de",
     "deutsch": "de",
+    "spa": "es",
+    "es": "es",
+    "spanish": "es",
+    "español": "es",
+    "espanol": "es",
 }
 
 
@@ -773,6 +783,7 @@ _OCR_LANG_BY_LOCALE = {
     "it": "ita",
     "fr": "fra",
     "de": "deu",
+    "es": "spa",
 }
 
 

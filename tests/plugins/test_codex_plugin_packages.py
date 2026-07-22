@@ -2255,10 +2255,10 @@ def test_new_client_jurisdiction_pages_define_local_scope() -> None:
         assert 'src="jurisdiction-pages.js?v=' in page
         assert f'slug: "{filename}"' in jurisdiction_source
         assert f'defaultLanguage: "{default_language}"' in jurisdiction_source
-        for language in ("it", "en", "fr", "de"):
+        for language in ("it", "en", "fr", "de", "es"):
             assert f'hreflang="{language}"' in page
 
-    assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de"]' in (
+    assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"]' in (
         jurisdiction_source
     )
     assert "const page = jurisdictions[document.body.dataset.jurisdiction]" in (
@@ -2331,9 +2331,9 @@ def test_journal_sampling_page_matches_plugin_site_pattern() -> None:
 def test_homepage_routes_accountant_plugins_through_vera() -> None:
     source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
 
-    assert source.count('"href": "/static/shared/vera/index.html"') == 4
-    assert source.count('"label": "Vera"') == 4
-    assert source.count('"tooltip_key": "vera"') == 4
+    assert source.count('"href": "/static/shared/vera/index.html"') == 5
+    assert source.count('"label": "Vera"') == 5
+    assert source.count('"tooltip_key": "vera"') == 5
     for direct_workflow_link in (
         '"href": "/static/shared/audit-reconciliation/index.html"',
         '"href": "/static/shared/report-builder/index.html"',
@@ -2397,7 +2397,7 @@ def test_new_client_keeps_language_and_market_selection_separate() -> None:
         "uk": ("uk.html?lang=it", 'localizedHref("uk.html", lang)'),
     }
 
-    for language in ("it", "en", "fr", "de"):
+    for language in ("it", "en", "fr", "de", "es"):
         assert f'data-lang="{language}"' in page
     assert "return `${path}?lang=${lang}${fragment}`;" in page
     for market, (initial_href, localized_call) in market_links.items():
@@ -2456,6 +2456,7 @@ def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
     assert "FatturaPA" in italy
     assert 'src="../video-library.js?v=2026072002"' in page
     assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
+    assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
     assert (
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
         in page
@@ -2495,11 +2496,11 @@ def test_vera_page_localizes_every_module_title() -> None:
     )
     for title_key in title_keys:
         assert page.count(f'data-i18n="{title_key}"') == 1
-        assert page.count(f'"{title_key}":') == 4
+        assert page.count(f'"{title_key}":') == 5
 
     visible_copy_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
     for copy_key in visible_copy_keys:
-        assert page.count(f'"{copy_key}":') == 4, copy_key
+        assert page.count(f'"{copy_key}":') == 5, copy_key
 
     for untranslated_italian_copy in (
         "matching rivedibile",
@@ -2806,10 +2807,12 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Dalle fonti al documento da rivedere",
         "From data to a clear answer",
         "Dai dati a una risposta chiara",
-        "images and reports stay on your computer",
-        "immagini e report restano sul tuo computer",
-        "no API key is required",
-        "non serve una chiave API",
+        "Vera and Clara follow the same two-category policy.",
+        "Vera e Clara seguono la stessa regola con due categorie.",
+        "Retail data and reviewed mappings use a Mparanza-hosted service",
+        "I dati retail e le mappature riviste usano un servizio hosted di Mparanza",
+        "No separate API key is required; model work uses your existing ChatGPT plan.",
+        "Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
         "Install Clara and open your first project",
         "Installa Clara e apri il primo progetto",
         "You can find Clara in the OpenAI Marketplace.",
@@ -2880,8 +2883,31 @@ def test_clara_public_page_browser_title_is_clara() -> None:
     )
 
     assert "<title>Clara</title>" in page
-    assert page.count('title: "Clara"') == 4
+    assert page.count('title: "Clara"') == 5
     assert "Clara | Mparanza" not in page
+
+
+def test_clara_public_page_language_buttons_and_copy_keys_stay_in_sync() -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    copy_start = page.index("const copy = {")
+    copy_end = page.index("\n    };", copy_start)
+    copy_block = page[copy_start:copy_end]
+    copy_languages = set(
+        re.findall(r"^      ([a-z]{2}): \{$", copy_block, re.MULTILINE)
+    )
+    language_buttons = set(re.findall(r'data-lang="([a-z]{2})"', page))
+    visible_keys = set(
+        re.findall(r'data-i18n(?:-aria-label|-content)?="([^"]+)"', page)
+    )
+
+    assert language_buttons == copy_languages == {"en", "it", "fr", "de", "es"}
+    assert visible_keys
+    for key in visible_keys:
+        assert copy_block.count(f'"{key}"') == len(copy_languages), key
+    for language in copy_languages:
+        assert f'hreflang="{language}"' in page
 
 
 def test_clara_public_page_routes_presentation_video_by_language() -> None:
@@ -2894,8 +2920,10 @@ def test_clara_public_page_routes_presentation_video_by_language() -> None:
         "it": "mU-QhOp7EOk",
         "fr": "Qe8rbIh8fhg",
         "de": "BPp_fcfYRS8",
+        "es": "3zvFm3fGdQ8",
     }.items():
         assert f'{language}: {{ id: "{video_id}"' in page
+    assert 'es: { id: "3zvFm3fGdQ8", duration: "0:37", catalogLanguage: "es" }' in page
     assert 'id="presentation-video-thumbnail"' in page
     assert 'id="presentation-video-duration"' in page
 
@@ -2904,32 +2932,41 @@ def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
+    copy_start = page.index("const copy = {")
+    copy_end = page.index("\n    };", copy_start)
+    copy_block = page[copy_start:copy_end]
 
     for text in (
         "Create or correct high-impact HTML decks and PowerPoint presentations.",
         "Crea e correggi deck HTML di impatto e presentazioni PowerPoint.",
         "Créez ou corrigez des decks HTML percutants et des présentations PowerPoint.",
         "Erstellen oder korrigieren Sie wirkungsvolle HTML-Decks und PowerPoint-Präsentationen.",
+        "Crea o corrige presentaciones PowerPoint y decks HTML de alto impacto.",
         "Analyze Excel, CSV, and Parquet files with checked calculations and charts chosen to fit the question.",
         "Analizza file Excel, CSV e Parquet con calcoli controllati e grafici scelti in base alla domanda.",
         "Analysez des fichiers Excel, CSV et Parquet avec des calculs vérifiés et des graphiques choisis en fonction de la question.",
         "Analysieren Sie Excel-, CSV- und Parquet-Dateien mit geprüften Berechnungen und Diagrammen, die zur Fragestellung passen.",
+        "Analiza archivos Excel, CSV y Parquet con cálculos comprobados y gráficos elegidos para responder a la pregunta.",
         "Start with an Excel, CSV, or Parquet file and describe the business question.",
         "Parti da un file Excel, CSV o Parquet e descrivi la domanda di business.",
         "Partez d'un fichier Excel, CSV ou Parquet et décrivez votre question métier.",
         "Beginnen Sie mit einer Excel-, CSV- oder Parquet-Datei und beschreiben Sie die geschäftliche Fragestellung.",
+        "Parte de un archivo Excel, CSV o Parquet y describe la pregunta de negocio.",
         "Choose the deck format",
         "Scegli il formato del deck",
         "Choisissez le format du deck",
         "Wählen Sie das Deck-Format",
+        "Elige el formato del deck",
         "choose an HTML deck for interactivity, navigation, and animations.",
         "scegli un deck HTML quando vuoi interattività, navigazione e animazioni.",
         "choisissez un deck HTML pour l'interactivité, la navigation et les animations.",
         "wählen Sie ein HTML-Deck für Interaktivität, Navigation und Animationen.",
+        "elige un deck HTML para disponer de interactividad, navegación y animaciones.",
         "The project is not just a presentation",
         "Il progetto non è solo una presentazione",
         "Le projet n'est pas seulement une présentation",
         "Das Projekt ist nicht nur eine Präsentation",
+        "El proyecto no es solo una presentación",
     ):
         assert text in page
 
@@ -2941,8 +2978,19 @@ def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
         "formats.html.title.link",
         "retail.retailer_signals.copy.link",
         "retail.brand_fit.copy.link",
+        "data.title",
+        "data.copy",
+        "data.local.kicker",
+        "data.local.title",
+        "data.local.copy",
+        "data.local.model",
+        "data.hosted.kicker",
+        "data.hosted.title",
+        "data.hosted.copy",
+        "data.hosted.detail",
+        "data.link",
     ):
-        assert page.count(f'"{key}"') == 5
+        assert copy_block.count(f'"{key}"') == 5
 
     for stale_text in (
         "browser presentations",
@@ -2966,6 +3014,81 @@ def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
         'index.html#cover" target="_blank" rel="noopener noreferrer" '
         'data-i18n="formats.html.title.link">interactive</a>'
     ) in page
+
+
+@pytest.mark.parametrize(
+    (
+        "two_categories",
+        "automatic_anonymisation",
+        "chatgpt_plan",
+        "additional_recipient",
+        "hosted_boundary",
+        "prompt_documentation",
+    ),
+    (
+        (
+            "Vera and Clara follow the same two-category policy.",
+            "do not automatically anonymise data",
+            "user’s existing ChatGPT plan",
+            "do not send client files, prompts, or model-context content to Mparanza",
+            "A separate processing boundary",
+            "There is no prompt-by-prompt documentation.",
+        ),
+        (
+            "Vera e Clara seguono la stessa regola con due categorie.",
+            "non anonimizzano automaticamente i dati",
+            "piano ChatGPT già utilizzato dall'utente",
+            "non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello",
+            "Un confine di trattamento separato",
+            "Non esiste documentazione prompt per prompt.",
+        ),
+        (
+            "Vera et Clara suivent la même règle en deux catégories.",
+            "n'anonymisent pas automatiquement les données",
+            "l'offre ChatGPT existante de l'utilisateur",
+            "n'envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle",
+            "Un périmètre de traitement distinct",
+            "Il n'y a pas de documentation prompt par prompt.",
+        ),
+        (
+            "Für Vera und Clara gilt dieselbe Regel mit zwei Kategorien.",
+            "anonymisieren Daten nicht automatisch",
+            "bestehenden ChatGPT-Tarif des Nutzers",
+            "senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza",
+            "Eine separate Verarbeitungsgrenze",
+            "Eine Dokumentation für jeden Prompt gibt es nicht.",
+        ),
+        (
+            "Vera y Clara siguen la misma política de dos categorías.",
+            "no anonimizan los datos automáticamente",
+            "plan de ChatGPT que ya utiliza el usuario",
+            "no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo",
+            "Un límite de tratamiento separado",
+            "No existe documentación prompt por prompt.",
+        ),
+    ),
+)
+def test_clara_public_page_localizes_two_category_data_policy(
+    two_categories: str,
+    automatic_anonymisation: str,
+    chatgpt_plan: str,
+    additional_recipient: str,
+    hosted_boundary: str,
+    prompt_documentation: str,
+) -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for text in (
+        two_categories,
+        automatic_anonymisation,
+        chatgpt_plan,
+        additional_recipient,
+        hosted_boundary,
+        prompt_documentation,
+    ):
+        assert text in page
 
 
 def test_homepage_routes_report_builder_through_vera() -> None:
@@ -3219,7 +3342,7 @@ def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
 
     assert '"href": "/static/shared/reporting/index.html"' not in source
     assert "/static/shared/pro-charting/index.html" not in source
-    assert source.count('"href": "/static/shared/clara/index.html"') == 4
+    assert source.count('"href": "/static/shared/clara/index.html"') == 5
     assert '"href": "/static/shared/variance-analysis/index.html"' not in source
     assert '"href": "/static/shared/period-comparison/index.html"' not in source
     assert '"href": "/static/shared/mix-contribution-analysis/index.html"' not in source
@@ -3227,10 +3350,10 @@ def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
     assert '"href": "/static/shared/distribution-analysis/index.html"' not in source
     assert "pro_charting_plugin" not in source
     assert '"label": "Reporting"' not in source
-    assert source.count('"label": "Clara"') == 4
+    assert source.count('"label": "Clara"') == 5
 
 
-@pytest.mark.parametrize("lang", ("en", "it", "fr", "de"))
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
 def test_homepage_content_exposes_clara_without_reporting_or_pro_badges(
     lang: str,
 ) -> None:
@@ -3270,6 +3393,10 @@ def test_homepage_content_exposes_clara_without_reporting_or_pro_badges(
             "de",
             "Ein Codex-Plugin für Präsentationen und die fortlaufende "
             "Arbeit an Projekten.",
+        ),
+        (
+            "es",
+            "Un plugin de Codex para presentaciones y trabajo continuo en proyectos.",
         ),
     ),
 )
@@ -3327,6 +3454,12 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
                 "Für Beraterinnen und Berater",
             ),
             ("Attributanalyse", "Deck-Toolkit"),
+        ),
+        (
+            "es",
+            ("Codex para profesionales contables", "Codex para consultores"),
+            ("Para profesionales contables", "Para consultores"),
+            ("Análisis de atributos", "Herramientas de presentación"),
         ),
     ),
 )
@@ -3401,6 +3534,14 @@ def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
             '"title": "Codex für Beraterinnen und Berater"',
             ("Clara",),
         ),
+        (
+            '"title": "Codex para profesionales contables"',
+            ("Vera",),
+        ),
+        (
+            '"title": "Codex para consultores"',
+            ("Clara",),
+        ),
     )
 
     for section_title, labels in expected_orders:
@@ -3463,6 +3604,7 @@ def test_companion_install_flow_routes_login_to_same_listing(
         "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Clara.",
         "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Clara.",
         "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Claras Eintrag.",
+        "¿No has iniciado sesión? ChatGPT te pedirá que la inicies y después abrirá la ficha de Clara.",
     ),
 )
 def test_clara_install_flow_localizes_logged_out_guidance(
@@ -3541,6 +3683,7 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
         ("it", "Aperti per scelta.", "esaminare"),
         ("fr", "Ouverts par conception.", "examiner"),
         ("de", "Offen konzipiert.", "prüfen"),
+        ("es", "Abiertos por diseño.", "examinar"),
     ),
 )
 def test_homepage_makes_open_source_explicit(
@@ -3594,6 +3737,13 @@ def test_homepage_makes_open_source_explicit(
             "freuen uns über Beiträge zu ihrer Weiterentwicklung. Mparanza berechnet "
             "Beratungs- und Implementierungsleistungen sowie gehostete Services.",
         ),
+        (
+            "es",
+            "Gratuitos por diseño.",
+            "Vera y Clara se pueden instalar y usar gratuitamente. Agradecemos las "
+            "contribuciones a su desarrollo. Mparanza cobra por la consultoría, la "
+            "implementación y los servicios alojados.",
+        ),
     ),
 )
 def test_homepage_makes_free_business_model_explicit(
@@ -3612,7 +3762,7 @@ def test_homepage_makes_free_business_model_explicit(
     }
 
 
-@pytest.mark.parametrize("lang", ("en", "it", "fr", "de"))
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
 def test_homepage_sections_omit_redundant_eyebrows(lang: str) -> None:
     _restore_application_import_path()
 
@@ -3660,7 +3810,7 @@ def test_homepage_tablet_header_reflows_before_mobile_breakpoint() -> None:
     assert "justify-content: space-between" in tablet_css
 
 
-@pytest.mark.parametrize("lang", ("en", "it", "fr", "de"))
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
 @pytest.mark.parametrize(
     ("group_index", "expected_group_id"), ((0, "vera"), (1, "clara"))
 )
@@ -3727,6 +3877,12 @@ def test_homepage_content_explains_codex_harness_and_each_plugin(
             "steuerliche und regulatorische Recherchen",
             "normalen Worten",
         ),
+        (
+            "es",
+            "Vera trabaja directamente con los archivos del despacho.",
+            "investigaciones fiscales y regulatorias",
+            "lenguaje ordinario",
+        ),
     ),
 )
 def test_homepage_vera_describes_the_task_without_literal_or_internal_language(
@@ -3790,6 +3946,14 @@ def test_homepage_vera_describes_the_task_without_literal_or_internal_language(
             "Fachperson entscheidet",
             "Halluzinationen",
         ),
+        (
+            "es",
+            "Plugins de Codex para el trabajo profesional",
+            "La IA aporta la potencia. Codex aporta el control.",
+            "control",
+            "el profesional decide",
+            "alucinaciones",
+        ),
     ),
 )
 def test_homepage_positions_control_as_the_codex_harness(
@@ -3845,6 +4009,12 @@ def test_homepage_positions_control_as_the_codex_harness(
             "Codex-Arbeitsumgebung auf zwei Berufsgruppen ausrichten.",
             "ersten beiden",
         ),
+        (
+            "es",
+            "Mparanza es Vera y Clara: dos plugins que aplican el mismo entorno de "
+            "Codex a dos profesiones distintas.",
+            "los dos primeros",
+        ),
     ),
 )
 def test_homepage_presents_vera_and_clara_as_the_complete_pair(
@@ -3885,6 +4055,11 @@ def test_homepage_presents_vera_and_clara_as_the_complete_pair(
             "Ein Codex-Plugin bringt die fachliche Methode mit und legt die zu "
             "erstellenden Ergebnisse fest.",
             "Mparanza-Plugin liefert",
+        ),
+        (
+            "es",
+            "Un plugin de Codex define el método especializado y los resultados esperados.",
+            "el plugin de Mparanza aporta",
         ),
     ),
 )

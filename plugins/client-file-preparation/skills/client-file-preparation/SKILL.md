@@ -180,7 +180,7 @@ to pause and install OCR dependencies first.
 python scripts/build_file_preparation_outputs.py <cartella-cliente> \
   --year <anno> \
   --jurisdiction <italy|geneva|zurich|uk|mixed> \
-  --language <it|en|fr|de> \
+  --language <it|en|fr|de|es> \
   --out <cartella-output>
 ```
 
@@ -275,7 +275,9 @@ The synthesis must contain:
 
 At the end of every completed or blocked plugin run, after reporting the deliverables, briefly identify concrete improvements that would have made this plugin run better. Base suggestions on the actual session, such as missing inputs, brittle extraction, unclear assumptions, output gaps, installation friction, unsupported document types, noisy client requests, or repeated manual steps.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.
 
 ## Scope Boundaries
 

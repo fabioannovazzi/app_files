@@ -162,7 +162,7 @@ Use this checklist when creating, reviewing, or releasing first-party Codex plug
   validation, is covered.
 - When a local browser is available,
   `scripts/audit_non_plotting_review_workbench_visuals.py --format markdown
-  --fail-on high --languages en,it,fr,de --screenshots-dir
+  --fail-on high --languages en,it,fr,de,es --screenshots-dir
   /private/tmp/non_plotting_workbench_visuals_i18n`
   opens each generated workbench at desktop and mobile sizes, loads the sample
   review payload in each listed language, checks rows/details/decision

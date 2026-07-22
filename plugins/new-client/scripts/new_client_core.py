@@ -67,7 +67,7 @@ APPLICABILITY_TOPICS = (
     "aml_assessment",
 )
 SCREENING_TYPES = ("pep", "sanctions", "country")
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 SUPPORTED_JURISDICTIONS = ("IT",)
 ITALY_COUNTRY_PACK = "it-professional-setup-2026"
 TEMPORAL_VALIDITY_POLICY = "inclusive_earliest_material_deadline_v1"
@@ -143,72 +143,84 @@ _REVIEW_COPY: dict[str, dict[str, str]] = {
         "en": "Privacy processing decision — purpose {number}",
         "fr": "Décision relative au traitement des données — finalité {number}",
         "de": "Entscheidung zur Datenverarbeitung — Zweck {number}",
+        "es": "Decisión sobre el tratamiento de datos — finalidad {number}",
     },
     "title.marketing_consent": {
         "it": "Consenso marketing separato",
         "en": "Separate marketing-consent record",
         "fr": "Consentement marketing distinct",
         "de": "Gesonderte Einwilligung für Marketing",
+        "es": "Consentimiento de marketing separado",
     },
     "title.applicability": {
         "it": "Applicabilità — {topic}",
         "en": "Applicability — {topic}",
         "fr": "Applicabilité — {topic}",
         "de": "Anwendbarkeit — {topic}",
+        "es": "Aplicabilidad — {topic}",
     },
     "title.aml_table_1": {
         "it": "Applicabilità della Tabella 1 antiriciclaggio",
         "en": "AML Table 1 applicability",
         "fr": "Applicabilité du tableau 1 LCB-FT",
         "de": "Anwendbarkeit der AML-Tabelle 1",
+        "es": "Aplicabilidad de la tabla 1 de prevención del blanqueo",
     },
     "title.monitoring_plan": {
         "it": "Calendario dei riesami periodici",
         "en": "Ongoing-review schedule",
         "fr": "Calendrier des réexamens périodiques",
         "de": "Zeitplan für regelmäßige Überprüfungen",
+        "es": "Calendario de revisiones periódicas",
     },
     "title.party_profile": {
         "it": "Profilo del cliente e documenti di identità",
         "en": "Client profile and identity evidence",
         "fr": "Profil du client et justificatifs d’identité",
         "de": "Mandantenprofil und Identitätsnachweise",
+        "es": "Perfil del cliente y documentos de identidad",
     },
     "title.party_structure": {
         "it": "Rappresentanti, esecutore e titolarità effettiva",
         "en": "Representatives, executor and beneficial ownership",
         "fr": "Représentants, exécutant et bénéficiaires effectifs",
         "de": "Vertreter, ausführende Person und wirtschaftlich Berechtigte",
+        "es": "Representantes, ejecutor y titularidad real",
     },
     "title.engagement": {
         "it": "Ambito e condizioni dell’incarico",
         "en": "Engagement scope and terms",
         "fr": "Périmètre et conditions de la mission",
         "de": "Umfang und Bedingungen des Auftrags",
+        "es": "Alcance y condiciones del encargo",
     },
     "title.screening_subject": {
         "it": "Copertura delle verifiche — {subject_reference}",
         "en": "Screening coverage — {subject_reference}",
         "fr": "Couverture des vérifications — {subject_reference}",
         "de": "Abdeckung der Prüfungen — {subject_reference}",
+        "es": "Cobertura de las verificaciones — {subject_reference}",
     },
     "title.aml_factor_section": {
         "it": "Sezione {section} dei fattori di rischio antiriciclaggio",
         "en": "AML risk-factor section {section}",
         "fr": "Section {section} des facteurs de risque LCB-FT",
         "de": "Abschnitt {section} der AML-Risikofaktoren",
+        "es": "Sección {section} de los factores de riesgo de blanqueo",
     },
     "title.aml_trigger_set": {
         "it": "Indicatori che impongono misure rafforzate",
         "en": "Mandatory enhanced-measure triggers",
         "fr": "Facteurs imposant des mesures de vigilance renforcée",
         "de": "Auslöser für verpflichtende verstärkte Maßnahmen",
+        "es": "Indicadores que exigen medidas reforzadas",
     },
     "title.missing_evidence": {
         "it": "Evidenze mancanti e informazioni irrisolte",
         "en": "Missing evidence and unresolved information",
         "fr": "Justificatifs manquants et informations non résolues",
         "de": "Fehlende Nachweise und ungeklärte Angaben",
+        "es": "Evidencias pendientes e información sin resolver",
     },
 }
 
@@ -218,30 +230,35 @@ _REVIEW_TOPIC_COPY: dict[str, dict[str, str]] = {
         "en": "professional engagement",
         "fr": "mission professionnelle",
         "de": "Berufsauftrag",
+        "es": "encargo profesional",
     },
     "privacy_notice": {
         "it": "informativa privacy",
         "en": "privacy notice",
         "fr": "information sur la protection des données",
         "de": "Datenschutzhinweis",
+        "es": "información sobre protección de datos",
     },
     "ai_transparency_notice": {
         "it": "informativa sull’uso dell’IA",
         "en": "AI transparency notice",
         "fr": "information sur l’utilisation de l’IA",
         "de": "Information zum KI-Einsatz",
+        "es": "información sobre el uso de IA",
     },
     "article_28_terms": {
         "it": "nomina ai sensi dell’articolo 28",
         "en": "Article 28 terms",
         "fr": "clauses de l’article 28",
         "de": "Vereinbarung nach Artikel 28",
+        "es": "cláusulas del artículo 28",
     },
     "aml_assessment": {
         "it": "valutazione antiriciclaggio",
         "en": "AML assessment",
         "fr": "évaluation LCB-FT",
         "de": "AML-Risikobewertung",
+        "es": "evaluación de prevención del blanqueo",
     },
 }
 

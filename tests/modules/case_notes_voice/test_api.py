@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import asyncio
-import base64
 import json
 import os
 import re
-import zlib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
@@ -27,6 +25,7 @@ def _patch_voice_retention_roots(
     """Keep every Hosted Voice storage class isolated in one test directory."""
 
     roots = {
+        "tokens": tmp_path / "voice-tokens",
         "jobs": tmp_path / "voice-jobs",
         "sources": tmp_path / "voice-sources",
         "chunks": tmp_path / "voice-chunks",
@@ -35,6 +34,7 @@ def _patch_voice_retention_roots(
     }
     for root in roots.values():
         root.mkdir(parents=True)
+    monkeypatch.setattr(api, "_voice_launch_token_root", lambda: roots["tokens"])
     monkeypatch.setattr(api, "_upload_job_root", lambda: roots["jobs"])
     monkeypatch.setattr(
         api,
@@ -94,6 +94,22 @@ def test_browser_assets_do_not_expose_api_key() -> None:
     assert "OPENAI_API_KEY" not in script
     assert "Authorization" not in page
     assert "Authorization" not in script
+
+
+def test_voice_capture_discloses_hosted_processing_and_retention() -> None:
+    page = (ROOT / "templates" / "case_notes_voice.html").read_text(encoding="utf-8")
+    normalized_page = " ".join(page.split())
+
+    assert "Clara Voice Capture è un servizio hosted da Mparanza." in page
+    assert "Mparanza e OpenAI" in page
+    assert "Il video dello schermo resta nel browser" in page
+    assert "I file audio e di lavoro hosted vengono cancellati" in page
+    assert "piano ChatGPT esistente e l'ambiente di" in page
+    assert "lavoro Codex dello studio" in page
+    assert "/data-handling?lang=it" in page
+    assert "Clara Voice Capture es un servicio alojado por Mparanza." in page
+    assert "Los archivos de audio y de trabajo alojados se eliminan" in normalized_page
+    assert "/data-handling?lang=es" in page
 
 
 def test_audio_upload_controls_are_inactive_without_plugin_launch() -> None:
@@ -268,9 +284,12 @@ def test_launch_token_is_short_lived_metadata_only(
     token_files = list(tmp_path.glob("*.json"))
 
     assert metadata["email"] == user.email
+    assert metadata["language"] == "it"
     assert api.TOKEN_TTL_SECONDS == 8 * 60 * 60
-    assert "." in token
-    assert len(token_files) == 0
+    assert re.fullmatch(r"[A-Za-z0-9_-]+", token)
+    assert user.email not in token
+    assert len(token_files) == 1
+    assert token_files[0].stat().st_mode & 0o777 == 0o600
 
 
 def test_launch_token_can_store_case_context(
@@ -289,7 +308,31 @@ def test_launch_token_can_store_case_context(
     metadata = api.verify_voice_launch_token(token=token, user=user, now=now)
 
     assert metadata["case_context"] == "Client: ExampleCo\nProject: succession"
-    assert list(tmp_path.glob("*.json")) == []
+    assert "ExampleCo" not in token
+    assert len(list(tmp_path.glob("*.json"))) == 1
+
+
+def test_expired_launch_token_metadata_is_deleted(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("CASE_NOTES_VOICE_TOKEN_ROOT", str(tmp_path))
+    user = AuthenticatedUser(email="advisor@example.com")
+    issued_at = datetime(2026, 1, 2, 10, 0, tzinfo=timezone.utc)
+    token = api.issue_voice_launch_token(
+        user=user,
+        case_context="Client: ExampleCo",
+        now=issued_at,
+    )
+
+    with pytest.raises(api.VoiceSessionError, match="has expired"):
+        api.verify_voice_launch_token(
+            token=token,
+            user=user,
+            now=issued_at + timedelta(seconds=api.TOKEN_TTL_SECONDS),
+        )
+
+    assert not list(tmp_path.glob("*.json"))
 
 
 def test_source_metadata_drops_confidentiality() -> None:
@@ -307,26 +350,30 @@ def test_source_metadata_drops_confidentiality() -> None:
     assert metadata == {"source_type": "interview", "title": "ExampleCo"}
 
 
-def test_launch_route_decodes_compressed_case_context(
+def test_launch_routes_keep_case_context_out_of_urls(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
     monkeypatch.setenv("CASE_NOTES_VOICE_TOKEN_ROOT", str(tmp_path))
     user = AuthenticatedUser(email="advisor@example.com")
-    encoded = base64.urlsafe_b64encode(
-        zlib.compress("Client: ExampleCo".encode("utf-8"), level=9)
-    ).decode("ascii")
-
-    response = api.launch_voice_page(
-        case_context_z=encoded,
+    response = api.create_voice_launch(
+        api.VoiceLaunchRequest(
+            case_context="Client: ExampleCo",
+            language="es",
+        ),
         user=user,
     )
-    query = parse_qs(urlsplit(response.headers["location"]).query)
+    payload = json.loads(response.body)
+    launch_path = payload["launch_path"]
+    query = parse_qs(urlsplit(launch_path).query)
     session = query["session"][0]
     metadata = api.verify_voice_launch_token(token=session, user=user)
 
     assert metadata["case_context"] == "Client: ExampleCo"
-    assert "mode" not in query
+    assert metadata["language"] == "es"
+    assert "ExampleCo" not in launch_path
+    assert "ExampleCo" not in session
+    assert "case_context" not in query
 
 
 def test_realtime_transcription_session_uses_transcription_only_config(
@@ -372,6 +419,42 @@ def test_realtime_transcription_session_uses_transcription_only_config(
         "language": "it",
         "delay": "low",
     }
+
+
+def test_realtime_transcription_session_uses_selected_case_context_as_prompt(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("CASE_NOTES_VOICE_TOKEN_ROOT", str(tmp_path))
+    user = AuthenticatedUser(email="advisor@example.com")
+    token = api.issue_voice_launch_token(
+        user=user,
+        case_context="Client: ExampleCo\nParticipant: Fabio Annovazzi",
+    )
+    captured: dict[str, object] = {}
+
+    def fake_realtime_call(**kwargs):
+        captured.update(kwargs)
+        return RealtimeCallResult(sdp="answer-sdp", call_id="call_context_asr")
+
+    monkeypatch.setattr(api, "_resolve_openai_api_key", lambda: "sk-test")
+    monkeypatch.setattr(api, "create_realtime_call_with_metadata", fake_realtime_call)
+
+    api.create_realtime_transcription_session(
+        api.RealtimeTranscriptionSessionRequest(
+            launch_token=token,
+            sdp="offer-sdp",
+            language="it",
+        ),
+        user=user,
+    )
+
+    session_config = captured["session_config"]
+    assert isinstance(session_config, dict)
+    prompt = session_config["audio"]["input"]["transcription"]["prompt"]
+    assert "improve transcription" in prompt
+    assert "ExampleCo" in prompt
+    assert "Fabio Annovazzi" in prompt
 
 
 def test_realtime_transcription_session_rejects_invalid_launch_token(
@@ -1318,6 +1401,7 @@ def test_upload_audio_route_accepts_spanish_source_language(
             background_tasks=background_tasks,
             launch_token=token,
             language="es",
+            case_context="Client: ExampleCo\nRisk: governance remains informal.",
             source_metadata_json=json.dumps(
                 {
                     "source_type": "interview",
@@ -1358,6 +1442,7 @@ def test_upload_audio_route_rejects_unsupported_source_language() -> None:
                 background_tasks=BackgroundTasks(),
                 launch_token="unused",
                 language="xx",
+                case_context="",
                 source_metadata_json="{}",
                 audio_file=FakeUpload(),
                 user=None,
@@ -1396,6 +1481,7 @@ def test_chunked_audio_upload_route_returns_background_job(
         api.start_chunked_audio_upload(
             launch_token=token,
             language="it",
+            case_context="Client: ExampleCo\nRisk: governance remains informal.",
             source_metadata_json=json.dumps(
                 {
                     "source_type": "interview",
@@ -1567,6 +1653,7 @@ def test_chunked_audio_upload_rejects_wrong_chunk_size(
         api.start_chunked_audio_upload(
             launch_token=token,
             language="it",
+            case_context="",
             source_metadata_json="{}",
             filename="meeting.wav",
             content_type="audio/wav",
@@ -2521,6 +2608,7 @@ def test_start_chunked_audio_upload_cleans_stale_upload_state(
         api.start_chunked_audio_upload(
             launch_token=token,
             language="it",
+            case_context="",
             source_metadata_json="{}",
             filename="meeting.wav",
             content_type="audio/wav",
@@ -2555,6 +2643,7 @@ def test_launch_token_rejects_wrong_or_expired_user(
             user=user,
             now=now + timedelta(seconds=api.TOKEN_TTL_SECONDS + 1),
         )
+    assert not api._voice_launch_token_path(token).exists()
 
 
 def test_browser_downloads_local_bundle_instead_of_posting_content() -> None:

@@ -15,7 +15,7 @@ and FatturaPA XML/PDF support, asks only for unresolved mapping or review
 assumptions, runs deterministic helper scripts, reviews diagnostics, and
 delivers outputs.
 
-The workflow is not Italian-only. Support the same four working locales used by the reconciliation plugin: `it`, `en`, `fr`, and `de`. Keep canonical output column names in English for stability, but speak to the user and write summaries in the chosen working language.
+The workflow is not Italian-only. Support the same five working locales used by the reconciliation plugin: `it`, `en`, `fr`, `de`, and `es`. Keep canonical output column names in English for stability, but speak to the user and write summaries in the chosen working language.
 
 ## Codex-Native Run UX
 
@@ -96,7 +96,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_entries.py <journal-file> <support-zip-xml-or-folder> --output-dir <output-dir> --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/inspect_entries.py <journal-file> <support-zip-xml-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 4. Read `inspection.json` and `suggested_recipe.json`. If required mappings are missing or confidence is low, ask the user the smallest needed decision, such as which column is movement number, debit, credit, amount, date, or beneficiary.
@@ -104,7 +104,7 @@ python scripts/inspect_entries.py <journal-file> <support-zip-xml-or-folder> --o
 6. Run deterministic checks:
 
 ```bash
-python scripts/run_checks.py <journal-file> <support-zip-xml-or-folder> --output-dir <output-dir>/checks --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/run_checks.py <journal-file> <support-zip-xml-or-folder> --output-dir <output-dir>/checks --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 7. Review `check_audit.json`, `pdf_inventory.json`, `check_results.csv`, and `review_notes.md` before final delivery. Report support matching coverage, status counts, unresolved/manual-review rows, mismatches, and output paths.
@@ -207,10 +207,10 @@ The UI handoff follows the OpenAI-style local MCP/widget pattern:
 
 Ask for or infer two language assumptions:
 
-- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`.
-- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`.
+- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`, `es`.
+- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`, `es`.
 
-Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, or German, set `document_language` accordingly without asking unless ambiguity matters.
+Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, German, or Spanish, set `document_language` accordingly without asking unless ambiguity matters.
 
 Starter prompts:
 
@@ -240,4 +240,6 @@ When there is something useful to report, write a short improvement note with:
 - relevant input/output file names when available;
 - suggested next engineering action.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

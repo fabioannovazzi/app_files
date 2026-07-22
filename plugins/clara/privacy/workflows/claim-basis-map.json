@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "workflow": "claim-basis-map",
+  "display_name": "Claim Basis Map",
+  "governed_paths": [
+    "skills/claim-basis-map/SKILL.md",
+    "skills/claim-basis-map/scripts"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "deck-claims-and-sources",
+        "purpose": "Capture or audit the basis for claims in a presentation",
+        "content": "PPTX visible text and shape names; slide titles and claims; source titles, locators and URLs; calculation inputs and methods; reasoning inputs, assumptions, and cross-slide claim references"
+      },
+      {
+        "id": "drift-review",
+        "purpose": "Identify changed, missing, moved, untracked, or unsupported claims",
+        "content": "Generation-time claim snapshots, current-deck text, matched support, drift statuses, ungrounded items, and required semantic refresh decisions"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [],
+  "boundaries_beyond_codex": [],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "6532f6688f3e34d4ef0b8c2e6cdcb466958437c0e062f8c32ddaa2b38157e1f5"
+  }
+}

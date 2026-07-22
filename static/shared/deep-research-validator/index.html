@@ -9,6 +9,7 @@
   <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=en">
   <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=fr">
   <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=es">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/deep-research-validator/index.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
@@ -22,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../vera-scope.css?v=20260721">
-  <script src="../vera-scope.js?v=20260721" defer></script>
+  <script src="../vera-scope.js?v=20260722" defer></script>
   <style>
     :root {
       --bg: #ffffff;
@@ -196,6 +197,7 @@
           <button type="button" data-lang="it">It</button>
           <button type="button" data-lang="fr">Fr</button>
           <button type="button" data-lang="de">De</button>
+          <button type="button" data-lang="es">Es</button>
         </span>
       </nav>
     </header>
@@ -325,7 +327,8 @@
       it: { id: "vA2JO3cG7Cw", locale: "it_IT" },
       en: { id: "GRAPmp9D7ds", locale: "en_US" },
       fr: { id: "v0CI1-lm-Qg", locale: "fr_FR" },
-      de: { id: "hL488KRscW0", locale: "de_DE" }
+      de: { id: "hL488KRscW0", locale: "de_DE" },
+      es: { id: "GRAPmp9D7ds", locale: "es_ES" }
     };
 
     const translations = {
@@ -544,6 +547,78 @@
         "download.button": "Ouvrir Vera",
         footer: "Vera · De la recherche à une revue traçable.",
         prompt: "Utilise Valider Deep Research sur cette sortie. Langue : fr. Inspecte le document et les sources, choisis les affirmations matérielles, évalue séparément le support des sources et le raisonnement, signale limites ou corrections et prépare le paquet de validation pour ma revue."
+      },
+      es: {
+        title: "Conclusiones respaldadas por las fuentes | Vera",
+        metaDescription: "Vera revisa un resultado de Deep Research por afirmación material, comprueba las fuentes y el razonamiento y entrega un documento corregido con una trazabilidad revisable.",
+        ogTitle: "Conclusiones respaldadas por las fuentes | Vera",
+        ogDescription: "Del resultado de Deep Research a una revisión por afirmación, manteniendo separados el respaldo de las fuentes, las correcciones y la incertidumbre residual.",
+        skip: "Ir al contenido",
+        "nav.aria": "Navegación principal",
+        "language.aria": "Idioma",
+        "breadcrumb.aria": "Ruta de navegación",
+        "nav.workflow": "Revisión",
+        "nav.result": "Resultado",
+        "nav.starter": "Prompt inicial",
+        "nav.details": "Detalles",
+        "nav.download": "Abrir Vera",
+        "module.name": "Validar Deep Research",
+        "hero.eyebrow": "Vera · Validación de la investigación",
+        "hero.title": "Sepa qué conclusiones se sostienen antes de utilizarlas.",
+        "hero.lead": "Aporte el resultado de Deep Research. Vera selecciona las afirmaciones materiales, separa el acceso a las fuentes, su respaldo y el razonamiento, y prepara correcciones e incertidumbre residual para su revisión.",
+        "hero.action": "Pruebe el prompt inicial ↓",
+        "hero.previous": "Antes de investigar: prepare el encargo ←",
+        "summary.title": "Cuándo utilizarlo",
+        "route.provide.label": "Proporcione",
+        "route.provide": "Resultado de Deep Research, citas y fuentes locales disponibles",
+        "route.prepare.label": "Vera prepara",
+        "route.prepare": "Revisión de afirmaciones, fuentes y razonamiento",
+        "route.receive.label": "Reciba",
+        "route.receive": "Veredictos, documento corregido y trazabilidad de la revisión",
+        "workflow.title": "Revisión por afirmación material",
+        "workflow.copy": "Defina qué es importante en el documento. Vera comprueba las afirmaciones, las fuentes y el razonamiento, registra las correcciones y hace que la revisión sea repetible y legible.",
+        "workflow.item1.title": "Aporte el resultado",
+        "workflow.item1.copy": "Adjunte el documento de Deep Research con citas, URL y las fuentes locales que el revisor pueda utilizar.",
+        "workflow.item2.title": "Seleccione las afirmaciones",
+        "workflow.item2.copy": "Vera propone las afirmaciones que cambian conclusiones, cifras, fechas, elegibilidad o riesgo; usted confirma el alcance de la revisión.",
+        "workflow.item3.title": "Compruebe las fuentes",
+        "workflow.item3.copy": "Separa la disponibilidad de una fuente de su pertinencia y califica el respaldo como completo, parcial, ausente, contradictorio o incierto.",
+        "workflow.item4.title": "Revise las correcciones",
+        "workflow.item4.copy": "Lea el razonamiento, las correcciones propuestas y los límites. Acepte, edite o deje abierto cada punto material.",
+        "workflow.item5.title": "Reciba el paquete",
+        "workflow.item5.copy": "Obtenga veredictos por afirmación, una auditoría, un documento corregido y un resumen de lo que queda por decidir.",
+        "proof.kicker": "Resultado real · Guía en vídeo",
+        "proof.title": "Muchas citas no significan un respaldo sólido.",
+        "proof.copy": "La guía muestra una revisión concreta: cada afirmación material recibe un veredicto, el razonamiento permanece separado de la existencia de la fuente y las correcciones siguen visibles.",
+        "proof.artifactLabel": "Abrir primero",
+        "proof.videoAction": "Ver la guía",
+        "proof.videoMeta": "Inglés · Se abre en YouTube",
+        "proof.videoAlt": "Vista previa de la guía Muchas citas no significan un respaldo sólido",
+        "proof.videoAria": "Ver la guía de Validar Deep Research en YouTube",
+        "next.title": "La validación cierra el ciclo de investigación.",
+        "next.copy": "Si la revisión descubre un problema de planteamiento, vuelva al encargo. Si el documento se sostiene, lleve el resultado revisado a Report Builder.",
+        "next.step1.title": "Prompt Optimizer",
+        "next.step1.copy": "Prepara el encargo y los sitios.",
+        "next.backLink": "Volver a abrir el encargo ←",
+        "next.step2.copy": "Ejecuta la investigación con el encargo optimizado.",
+        "next.step3.title": "Deep Research Validator",
+        "next.step3.copy": "Comprueba afirmaciones, fuentes y razonamiento.",
+        "next.step4.title": "Report Builder",
+        "next.step4.copy": "Convierte el resultado revisado en un entregable.",
+        "next.forwardLink": "Continuar al informe →",
+        "starter.title": "Un solo prompt para empezar.",
+        "starter.copy": "Adjunte el resultado de Deep Research y use estas instrucciones. Vera solo solicitará más información cuando una fuente o decisión de revisión cambie el resultado.",
+        "details.title": "El detalle técnico documenta la revisión.",
+        "details.copy": "Ábralo para examinar el paquete, los veredictos aplicados y las decisiones de revisión registradas.",
+        "details.summary": "Archivos, veredictos y alcance",
+        "details.outputs.title": "Archivos generados",
+        "details.scope.title": "Veredictos y decisiones de revisión",
+        "details.scope.copy": "Supported, partially_supported, not_supported, contradicted y uncertain separan el respaldo de las fuentes; el paquete registra después las decisiones aplicadas durante la revisión.",
+        "download.title": "Vera incluye este flujo.",
+        "download.copy": "Abra Vera, adjunte el resultado de Deep Research y use el prompt inicial. La revisión de las afirmaciones y el documento corregido forman parte del mismo recorrido.",
+        "download.button": "Abrir Vera",
+        footer: "Vera · De la investigación a una revisión trazable.",
+        prompt: "Usa Validar Deep Research con este resultado. Idioma: es. Examina el documento y las fuentes, selecciona las afirmaciones materiales, evalúa por separado el respaldo de las fuentes y el razonamiento, señala límites o correcciones y prepara el paquete de validación para mi revisión."
       },
       de: {
         title: "Schlussfolgerungen mit Quellenstützung | Vera",

@@ -39,7 +39,7 @@ from review_session import write_review_session_artifacts, write_run_intake
 
 LOGGER = logging.getLogger(__name__)
 
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 SUPPORTED_JOURNAL_SUFFIXES = {".csv", ".xls", ".xlsx", ".xlsm", ".pdf"}
 PDF_SUFFIXES = {".pdf"}
 CANONICAL_ENTRY_COLUMNS = [
@@ -994,6 +994,35 @@ def _status_counts(frame: pl.DataFrame) -> dict[str, int]:
 
 
 def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
+    if audit.get("language") == "es":
+        lines = [
+            "# Notas de revisión de la comprobación de asientos",
+            "",
+            f"- Idioma: {audit['language']}",
+            f"- Asientos del diario: {audit['journal_row_count']}",
+            f"- PDF justificativos: {audit['pdf_count']}",
+            f"- XML FatturaPA: {audit['invoice_count']}",
+            f"- Filas de resultados: {audit['result_row_count']}",
+            "",
+            "## Recuento por estado",
+        ]
+        counts = audit.get("status_counts", {})
+        if counts:
+            for status, count in sorted(counts.items()):
+                lines.append(f"- {status}: {count}")
+        else:
+            lines.append("- ninguno")
+        lines.extend(
+            [
+                "",
+                "## Política de revisión",
+                "Los scripts solo comparan evidencias deterministas. Codex debe explicar los casos no resueltos, inspeccionar los justificantes cuando sea necesario y mantener explícito el juicio profesional.",
+                "",
+            ]
+        )
+        path.write_text("\n".join(lines), encoding="utf-8")
+        return
+
     lines = [
         "# Check Entries Review Notes",
         "",
@@ -1167,10 +1196,10 @@ def run_entry_checks(
 def add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--language",
-        help="Working/output language locale: it, en, fr, or de. Defaults to recipe or en.",
+        help="Working/output language locale: it, en, fr, de, or es. Defaults to recipe or en.",
     )
     parser.add_argument(
         "--document-language",
-        help="Source-document language locale: it, en, fr, de, or auto. Defaults to recipe or auto.",
+        help="Source-document language locale: it, en, fr, de, es, or auto. Defaults to recipe or auto.",
     )
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging.")

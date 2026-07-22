@@ -9,20 +9,20 @@ bank/ledger loaders. Implementations were previously in
 
 import io
 import itertools
+import json
 import logging
 import re
+import tempfile
+import unicodedata
 from contextlib import contextmanager
-from typing import Dict, List, Optional, Sequence, Callable, Any
-
-import polars as pl
 from datetime import date, datetime
 from decimal import Decimal
-import tempfile
 from pathlib import Path
-import json
+from typing import Any, Callable, Dict, List, Optional, Sequence
+
+import polars as pl
 
 from src.bank_keywords import BASE_BANK_KEYWORDS
-import unicodedata
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ except Exception:  # pragma: no cover - fallback when helper is unavailable
         finally:
             local_logger.setLevel(previous_level)
 
+
 def _norm_token(s: str) -> str:
     """lowercase, strip accents, remove punctuation/spaces for robust matching."""
     if s is None:
@@ -48,6 +49,7 @@ def _norm_token(s: str) -> str:
     s = "".join(c for c in s if not unicodedata.combining(c)).lower()
     s = re.sub(r"\s+", " ", s).strip()
     return re.sub(r"[^a-z0-9]", "", s)
+
 
 # Normalised keyword groups for quick membership checks
 _KW_NORM = {k: {_norm_token(x) for x in v} for k, v in BASE_BANK_KEYWORDS.items()}
@@ -164,18 +166,20 @@ def _rebuild_df_with_header(content: bytes, header_row: int | None) -> pl.DataFr
         mask = None
         for c in df.columns:
             col = df.get_column(c)
-            col_mask = col.is_not_null() & (col.cast(pl.Utf8).str.strip_chars().cast(pl.Utf8) != "")
+            col_mask = col.is_not_null() & (
+                col.cast(pl.Utf8).str.strip_chars().cast(pl.Utf8) != ""
+            )
             mask = col_mask if mask is None else (mask | col_mask)
         if mask is not None:
             df = df.filter(mask)
     except Exception as e:
-        logger.exception(
-            "Failed to drop empty rows in rebuilt Excel frame: %s", e
-        )
+        logger.exception("Failed to drop empty rows in rebuilt Excel frame: %s", e)
     return df
 
 
-def _infer_columns(headers: Sequence[str], known_keys: Dict[str, List[str]]) -> Dict[str, Optional[int]]:
+def _infer_columns(
+    headers: Sequence[str], known_keys: Dict[str, List[str]]
+) -> Dict[str, Optional[int]]:
     """Infer column indices for known fields from a list of headers."""
     mapping: Dict[str, Optional[int]] = {}
     lowered = [h.lower().strip() for h in headers]
@@ -320,7 +324,14 @@ def guess_columns_from_data(df: pl.DataFrame, sample_rows: int = 20) -> Dict[str
                 pos += 1 if amt > 0 else 0
                 neg += 1 if amt < 0 else 0
         stats.append(
-            {"idx": idx, "date": date_count, "num": num_count, "pos": pos, "neg": neg, "rows": present}
+            {
+                "idx": idx,
+                "date": date_count,
+                "num": num_count,
+                "pos": pos,
+                "neg": neg,
+                "rows": present,
+            }
         )
 
     mapping: Dict[str, int] = {}
@@ -458,7 +469,9 @@ def ocr_extract_pdf_text(
         to keep PDF OCR concerns outside the main logic module. OCR is local-only.
     """
     try:
-        from modules.pdf_utils.pdf_utils import extract_pdf_text_with_ocr  # type: ignore
+        from modules.pdf_utils.pdf_utils import (
+            extract_pdf_text_with_ocr,  # type: ignore
+        )
     except Exception as exc:  # pragma: no cover - optional dependency
         raise ImportError("extract_pdf_text_with_ocr not available") from exc
 
@@ -556,7 +569,11 @@ def parse_pdf_prepare(
                 for r in rows:
                     desc = (r.description or "").strip()
                     ben = getattr(r, "counterparty", None) or None
-                    amt = float(r.amount) if isinstance(r.amount, Decimal) else float(r.amount)
+                    amt = (
+                        float(r.amount)
+                        if isinstance(r.amount, Decimal)
+                        else float(r.amount)
+                    )
                     d = r.booking_date if isinstance(r.booking_date, date) else None
                     if d is None and isinstance(r.booking_date, datetime):
                         d = r.booking_date.date()
@@ -566,7 +583,9 @@ def parse_pdf_prepare(
                             "amount": amt,
                             "description": desc,
                             "beneficiary": ben,
-                            "reference_ids": list(getattr(r, "reference_ids", []) or []),
+                            "reference_ids": list(
+                                getattr(r, "reference_ids", []) or []
+                            ),
                         }
                     )
                 # keep rows and allow supplemental parsing below
@@ -575,12 +594,10 @@ def parse_pdf_prepare(
             pass
         finally:
             try:
-                if 'tmp_path' in locals():
+                if "tmp_path" in locals():
                     Path(tmp_path).unlink(missing_ok=True)
             except Exception as e:
-                logger.exception(
-                    "Temporary file cleanup failed: %s", e
-                )
+                logger.exception("Temporary file cleanup failed: %s", e)
     except Exception:
         # Optional dependency may be unavailable
         pass
@@ -594,7 +611,11 @@ def parse_pdf_prepare(
             if parsed_tx:
                 for t in parsed_tx:
                     desc = (t.description or "").strip()
-                    d = t.date.date() if isinstance(t.date, datetime) else (t.date if isinstance(t.date, date) else None)
+                    d = (
+                        t.date.date()
+                        if isinstance(t.date, datetime)
+                        else (t.date if isinstance(t.date, date) else None)
+                    )
                     rows_out.append(
                         {
                             "date": d,
@@ -606,28 +627,25 @@ def parse_pdf_prepare(
                     )
                 # keep rows, allow manual fallbacks to add missing movements
         except Exception as e:
-            logger.exception(
-                "bank_agent parsing failed: %s", e
-            )
+            logger.exception("bank_agent parsing failed: %s", e)
     except Exception as e:
-        logger.exception(
-            "bank_agent import failed: %s", e
-        )
+        logger.exception("bank_agent import failed: %s", e)
 
     # 3) fallback: manual parsing for statement layouts not handled above
     try:
         extra_rows = _parse_pdf_prelevi_fallback(content, language=language)
         if extra_rows:
-            existing = {(row.get("date"), round(float(row.get("amount", 0.0)), 2)) for row in rows_out}
+            existing = {
+                (row.get("date"), round(float(row.get("amount", 0.0)), 2))
+                for row in rows_out
+            }
             for r in extra_rows:
                 key = (r.get("date"), round(float(r.get("amount", 0.0)), 2))
                 if key not in existing:
                     rows_out.append(r)
                     existing.add(key)
     except Exception as e:
-        logger.exception(
-            "Manual PDF fallback failed: %s", e
-        )
+        logger.exception("Manual PDF fallback failed: %s", e)
 
     return rows_out
 
@@ -678,7 +696,9 @@ def _parse_pdf_prelevi_fallback(content: bytes, *, language: str) -> list[dict]:
     except Exception:
         return []
 
-    pattern = re.compile(r"^(\d{2}/\d{2}/\d{2})\s+(\d{2}/\d{2}/\d{2})\s+([0-9.,]+)\s+(.*)$")
+    pattern = re.compile(
+        r"^(\d{2}/\d{2}/\d{2})\s+(\d{2}/\d{2}/\d{2})\s+([0-9.,]+)\s+(.*)$"
+    )
     results: list[dict] = []
     seen: set[tuple[date, float]] = set()
     i = 0
@@ -726,7 +746,11 @@ def _parse_pdf_prelevi_fallback(content: bytes, *, language: str) -> list[dict]:
 
 
 def _finalise_bank_row_prepare(
-    row: Dict[str, Any], filename: str, month: Optional[int], year: Optional[int], language: Optional[str] = None
+    row: Dict[str, Any],
+    filename: str,
+    month: Optional[int],
+    year: Optional[int],
+    language: Optional[str] = None,
 ) -> Optional[dict]:
     """Convert parsed text row into a dict with date/amount/description.
 
@@ -794,7 +818,11 @@ def parse_bank_text_prepare(
                 t = _finalise_bank_row_prepare(current, filename, month, year, language)
                 if t:
                     rows.append(t)
-            current = {"date": m.group(1), "rest": ln[m.end():].strip(), "description_lines": []}
+            current = {
+                "date": m.group(1),
+                "rest": ln[m.end() :].strip(),
+                "description_lines": [],
+            }
         elif current:
             current["description_lines"].append(ln.strip())
     if current:
@@ -841,7 +869,9 @@ def load_bank_rows(
         if name_lower.endswith((".xlsx", ".xls", ".csv")):
             # Spreadsheet path
             try:
-                df, mapping = parse_spreadsheet_prepare(content, filename, max_header_scan_rows=50)
+                df, mapping = parse_spreadsheet_prepare(
+                    content, filename, max_header_scan_rows=50
+                )
             except Exception:
                 continue
             if df is None or df.height == 0:
@@ -879,8 +909,16 @@ def load_bank_rows(
                 if "amount" in resolved:
                     amt = _parse_amount_local(row.get(resolved["amount"]))
                 if amt is None:
-                    debit = _parse_amount_local(row.get(resolved.get("debit"))) if "debit" in resolved else None
-                    credit = _parse_amount_local(row.get(resolved.get("credit"))) if "credit" in resolved else None
+                    debit = (
+                        _parse_amount_local(row.get(resolved.get("debit")))
+                        if "debit" in resolved
+                        else None
+                    )
+                    credit = (
+                        _parse_amount_local(row.get(resolved.get("credit")))
+                        if "credit" in resolved
+                        else None
+                    )
                     if debit is not None and credit is not None:
                         amt = credit - debit
                     elif credit is not None:
@@ -891,7 +929,9 @@ def load_bank_rows(
                     continue
 
                 desc = str(row.get(resolved.get("description"), "") or "").strip()
-                beneficiary = str(row.get(resolved.get("beneficiary"), "") or "").strip() or None
+                beneficiary = (
+                    str(row.get(resolved.get("beneficiary"), "") or "").strip() or None
+                )
 
                 # Join small printable cells as details
                 try:
@@ -912,7 +952,11 @@ def load_bank_rows(
                         "amount": float(amt),
                         "description": desc,
                         "beneficiary": beneficiary,
-                        "metadata": {"source": filename, "details": combined_details, "language": language},
+                        "metadata": {
+                            "source": filename,
+                            "details": combined_details,
+                            "language": language,
+                        },
                     }
                 )
 
@@ -931,7 +975,12 @@ def load_bank_rows(
                 d = r.get("date")
                 if d and month and isinstance(d, date) and d.month != month:
                     continue
-                if d and year and isinstance(d, date) and d.year not in {year, year % 100}:
+                if (
+                    d
+                    and year
+                    and isinstance(d, date)
+                    and d.year not in {year, year % 100}
+                ):
                     continue
                 out.append(
                     {
@@ -947,6 +996,8 @@ def load_bank_rows(
             continue
 
     return out
+
+
 # ----------------------
 # Ledger-specific helpers
 # ----------------------
@@ -1074,7 +1125,12 @@ def _default_ledger_headers() -> Dict[str, List[str]]:
 
 def _load_ledger_headers(path: Path | None = None) -> Dict[str, List[str]]:
     base = _default_ledger_headers()
-    p = path or (Path(__file__).resolve().parent.parent / "config" / "lexicon" / "ledger_headers.json")
+    p = path or (
+        Path(__file__).resolve().parent.parent
+        / "config"
+        / "lexicon"
+        / "ledger_headers.json"
+    )
     try:
         if p.exists():
             data = json.loads(p.read_text(encoding="utf-8"))
@@ -1117,6 +1173,7 @@ def load_ledger_rows(
     try:
         from finance.ledger.ignore_patterns import load_ignore_patterns  # type: ignore
     except Exception:  # pragma: no cover
+
         def load_ignore_patterns(_path):  # type: ignore
             return []
 
@@ -1174,8 +1231,16 @@ def load_ledger_rows(
                 if "amount" in resolved:
                     amt = _parse_amount_local(row.get(resolved["amount"]))
                 if amt is None:
-                    debit = _parse_amount_local(row.get(resolved.get("debit"))) if "debit" in resolved else None
-                    credit = _parse_amount_local(row.get(resolved.get("credit"))) if "credit" in resolved else None
+                    debit = (
+                        _parse_amount_local(row.get(resolved.get("debit")))
+                        if "debit" in resolved
+                        else None
+                    )
+                    credit = (
+                        _parse_amount_local(row.get(resolved.get("credit")))
+                        if "credit" in resolved
+                        else None
+                    )
                     if debit is not None and credit is not None:
                         amt = credit - debit
                     elif credit is not None:
@@ -1194,18 +1259,27 @@ def load_ledger_rows(
                         if text:
                             extra_desc_val = text
                 try:
-                    if extra_desc_val is None and any(p.search(desc.upper()) for p in patterns):
+                    if extra_desc_val is None and any(
+                        p.search(desc.upper()) for p in patterns
+                    ):
                         continue
                 except Exception as e:
                     logger.exception(
                         "Failed to apply description filters for CSV row: %s", e
                     )
-                beneficiary = str(row.get(resolved.get("beneficiary"), "") or "").strip() or None
+                beneficiary = (
+                    str(row.get(resolved.get("beneficiary"), "") or "").strip() or None
+                )
                 # Metadata fields
-                account = str(row.get(account_col)).strip() if account_col and row.get(account_col) is not None else None
+                account = (
+                    str(row.get(account_col)).strip()
+                    if account_col and row.get(account_col) is not None
+                    else None
+                )
                 account_desc = (
                     str(row.get(resolved["account_desc"])).strip()
-                    if "account_desc" in resolved and row.get(resolved["account_desc"]) is not None
+                    if "account_desc" in resolved
+                    and row.get(resolved["account_desc"]) is not None
                     else None
                 )
                 extra_desc = (
@@ -1215,7 +1289,8 @@ def load_ledger_rows(
                 )
                 counter_account_desc = (
                     str(row.get(resolved["counter_account_desc"])).strip()
-                    if "counter_account_desc" in resolved and row.get(resolved["counter_account_desc"]) is not None
+                    if "counter_account_desc" in resolved
+                    and row.get(resolved["counter_account_desc"]) is not None
                     else None
                 )
                 # Combined details text
@@ -1230,10 +1305,15 @@ def load_ledger_rows(
                     combined_details = " ".join(row_texts)
                 except Exception:
                     combined_details = ""
-                meta: Dict[str, object] = {"source": filename, "details": combined_details, "language": language}
+                meta: Dict[str, object] = {
+                    "source": filename,
+                    "details": combined_details,
+                    "language": language,
+                }
                 jid = (
                     str(row.get(resolved.get("journal_id")))
-                    if "journal_id" in resolved and row.get(resolved.get("journal_id")) is not None
+                    if "journal_id" in resolved
+                    and row.get(resolved.get("journal_id")) is not None
                     else None
                 )
                 if jid:
@@ -1258,13 +1338,19 @@ def load_ledger_rows(
         elif name_lower.endswith(".pdf"):
             # Try parser(s) that can extract tabular rows from ledger PDFs
             try:
-                from parsers.process_pdf_journal.logic import parse_journal  # type: ignore
+                from modules.process_pdf_journal.logic import (  # type: ignore
+                    normalize_ocr_language,
+                    parse_journal,
+                )
             except Exception:
                 parse_journal = None  # type: ignore
             parsed_rows: List[dict] = []
             if parse_journal is not None:
                 try:
-                    df = parse_journal(content)
+                    df = parse_journal(
+                        content,
+                        lang=normalize_ocr_language(language),
+                    )
                     if df.height > 0:
                         columns = [str(c) for c in df.columns]
                         headers = [str(col) for col in columns]
@@ -1282,7 +1368,9 @@ def load_ledger_rows(
                                 if re.search(r"\b\d{4}-\d{2}-\d{2}\b", s):
                                     core = s[:10]
                                     parts = core.split("-")
-                                    d = date(int(parts[0]), int(parts[1]), int(parts[2]))
+                                    d = date(
+                                        int(parts[0]), int(parts[1]), int(parts[2])
+                                    )
                                 elif re.search(r"\b\d{2}/\d{2}/\d{2,4}\b", s):
                                     a, b, c = s.split("/")
                                     yy = int(c)
@@ -1302,8 +1390,16 @@ def load_ledger_rows(
                             if "amount" in resolved:
                                 amt = _parse_amount_local(row.get(resolved["amount"]))
                             if amt is None:
-                                debit = _parse_amount_local(row.get(resolved.get("debit"))) if "debit" in resolved else None
-                                credit = _parse_amount_local(row.get(resolved.get("credit"))) if "credit" in resolved else None
+                                debit = (
+                                    _parse_amount_local(row.get(resolved.get("debit")))
+                                    if "debit" in resolved
+                                    else None
+                                )
+                                credit = (
+                                    _parse_amount_local(row.get(resolved.get("credit")))
+                                    if "credit" in resolved
+                                    else None
+                                )
                                 if debit is not None and credit is not None:
                                     amt = credit - debit
                                 elif credit is not None:
@@ -1312,8 +1408,15 @@ def load_ledger_rows(
                                     amt = -debit
                             if amt is None:
                                 continue
-                            desc = str(row.get(resolved.get("description"), "") or "").strip()
-                            beneficiary = str(row.get(resolved.get("beneficiary"), "") or "").strip() or None
+                            desc = str(
+                                row.get(resolved.get("description"), "") or ""
+                            ).strip()
+                            beneficiary = (
+                                str(
+                                    row.get(resolved.get("beneficiary"), "") or ""
+                                ).strip()
+                                or None
+                            )
                             meta = {"source": filename, "language": language}
                             out.append(
                                 {
@@ -1325,12 +1428,12 @@ def load_ledger_rows(
                                 }
                             )
                 except Exception as e:
-                    logger.exception(
-                        "Failed to decode uploaded Excel row: %s", e
-                    )
+                    logger.exception("Failed to decode uploaded Excel row: %s", e)
             if not parsed_rows:
                 # fallback: try generic/bank-agent PDF parse
-                rows = parse_pdf_prepare(content, filename, language=language, deterministic_only=True)
+                rows = parse_pdf_prepare(
+                    content, filename, language=language, deterministic_only=True
+                )
                 for r in rows:
                     d = r.get("date")
                     if d and month and d.month != month:
@@ -1351,6 +1454,7 @@ def load_ledger_rows(
             continue
 
     return out
+
 
 # local helper used by loaders only
 def _parse_amount_local(value: object) -> Optional[float]:

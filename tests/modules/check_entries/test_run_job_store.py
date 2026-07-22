@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import asyncio
+import io
 import json
 import sys
 import types
@@ -7,6 +9,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 import markupsafe
+import polars as pl
 import pytest
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
@@ -87,6 +90,7 @@ from modules.check_entries.api import (
     RunJobCreateResponse,
     RunJobStore,
     RunResponse,
+    _map_lang_code,
     _resolve_ocr_lang,
 )
 
@@ -109,7 +113,50 @@ def test_resolve_ocr_lang_from_locale() -> None:
     assert _resolve_ocr_lang("it") == "ita"
     assert _resolve_ocr_lang("fr") == "fra"
     assert _resolve_ocr_lang("de") == "deu"
-    assert _resolve_ocr_lang("es") == "eng"
+    assert _resolve_ocr_lang("es") == "spa"
+
+
+def test_upload_journal_forwards_spanish_ocr_language(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, str] = {}
+    dataframe = pl.DataFrame({"movement_number": ["1"]})
+
+    def fake_create_session(filename: str, content: bytes, *, lang: str) -> Any:
+        assert filename == "diario.pdf"
+        assert content == b"%PDF-spanish"
+        captured["lang"] = lang
+        return types.SimpleNamespace(
+            session_id="spanish-session",
+            filename=filename,
+            raw_content=content,
+            dataframe=dataframe,
+            columns=["movement_number"],
+            row_count=1,
+        )
+
+    monkeypatch.setattr(api_mod.store, "create_session", fake_create_session)
+    monkeypatch.setattr(api_mod, "resolve_language", lambda _request: "es")
+    request = Request(
+        {
+            "type": "http",
+            "method": "POST",
+            "path": "/check/upload",
+            "query_string": b"lang=es",
+            "headers": [],
+        }
+    )
+    upload = api_mod.UploadFile(filename="diario.pdf", file=io.BytesIO(b"%PDF-spanish"))
+
+    response = asyncio.run(api_mod.upload_journal(request, upload))
+
+    assert captured == {"lang": "spa"}
+    assert response.session_id == "spanish-session"
+
+
+@pytest.mark.parametrize("raw", ("spa", "es", "spanish", "español", "espanol"))
+def test_map_lang_code_recognizes_spanish_ocr_aliases(raw: str) -> None:
+    assert _map_lang_code(raw) == "es"
 
 
 def test_cancel_job_marks_entry_cancelled(temp_store: RunJobStore) -> None:

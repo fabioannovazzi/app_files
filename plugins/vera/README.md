@@ -27,6 +27,13 @@ release control, while its deterministic validator enforces complete coverage
 and fails when governed workflow source changes without a refreshed review.
 It is not a GDPR certification and it does not add routine notices to case work.
 
+Shared Vera services are registered once under `privacy/services/`. The
+`plugin-update-check` record covers only the automatic public version check.
+The `plugin-feedback` record covers user-chosen problem, suggestion, and short
+voice-interview submissions plus later automatic status polling for their
+stored receipts, including the Mparanza/OpenAI boundary and retention posture.
+These service records do not add per-case paperwork or automatic anonymization.
+
 The New Client workflow verifies a final-ready document-preparation phase—or an
 explicit standalone-evidence posture—and turns studio instructions into an
 owner-only review dossier for identity, engagement, per-subject screening,

@@ -25,36 +25,56 @@ DOCX_REQUIRED_TEXT: dict[str, dict[str, str]] = {
         "it": "Sintesi",
         "fr": "Synthese",
         "de": "Zusammenfassung",
+        "es": "Resumen ejecutivo",
     },
     "audit_appendix": {
         "en": "Audit appendix",
         "it": "Appendice audit",
         "fr": "Annexe d'audit",
         "de": "Audit-Anhang",
+        "es": "Anexo de auditoría",
     },
     "report_status": {
         "en": "Report status",
         "it": "Stato report",
         "fr": "Statut du rapport",
         "de": "Berichtsstatus",
+        "es": "Estado del informe",
     },
     "model_api_calls": {
         "en": "Model API calls from scripts",
         "it": "Chiamate API modello dagli script",
         "fr": "Appels API modele par les scripts",
         "de": "Modell-API-Aufrufe aus Skripten",
+        "es": "Llamadas a la API del modelo desde los scripts",
     },
     "assigned_sections": {
         "en": "Assigned sections",
         "it": "Sezioni assegnate",
         "fr": "Sections assignees",
         "de": "Zugeordnete Abschnitte",
+        "es": "Secciones asignadas",
     },
     "missing_sections": {
         "en": "Missing sections",
         "it": "Sezioni mancanti",
         "fr": "Sections manquantes",
         "de": "Fehlende Abschnitte",
+        "es": "Secciones pendientes",
+    },
+    "source": {
+        "en": "Source",
+        "it": "Fonte",
+        "fr": "Source",
+        "de": "Quelle",
+        "es": "Fuente",
+    },
+    "rows": {
+        "en": "Rows",
+        "it": "Righe",
+        "fr": "Lignes",
+        "de": "Zeilen",
+        "es": "Filas",
     },
 }
 
@@ -580,13 +600,19 @@ def _report_docx_required_text(
 
 
 def _report_markdown_required_text(analysis: dict[str, Any]) -> list[str]:
-    required = ["## Executive summary"]
+    language = _clean_text(analysis.get("language")) or "en"
+    required = [f"## {_localized_docx_text('executive_summary', language)}"]
     required.extend(f"## {title}" for title in _section_titles(analysis))
     if any(
         isinstance(section, dict) and section.get("status") == "assigned"
         for section in analysis.get("sections", [])
     ):
-        required.extend(["Source:", "Rows:"])
+        required.extend(
+            [
+                f"{_localized_docx_text('source', language)}:",
+                f"{_localized_docx_text('rows', language)}:",
+            ]
+        )
     return required
 
 

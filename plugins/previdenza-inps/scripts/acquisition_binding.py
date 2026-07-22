@@ -23,6 +23,13 @@ _KNOWN_CHANNELS = {
     "inps_registered_local_export",
 }
 _KNOWN_CONNECTORS = {"inps_browser_read_only"}
+_EXTERNAL_ROUTE_FIELDS = {
+    "route",
+    "destination_or_origin",
+    "payload_category",
+    "network_used",
+    "access_basis",
+}
 _OCR_PROJECTION_FIELDS = (
     "enabled",
     "engine",
@@ -32,7 +39,6 @@ _OCR_PROJECTION_FIELDS = (
     "successful_page_count",
     "case_content_network_transfer",
     "model_download_allowed",
-    "model_download_approval_id",
     "model_network_used",
     "visual_confirmation_required",
 )
@@ -87,6 +93,36 @@ def _boolean(value: Any, *, field: str) -> bool:
     return value
 
 
+def _external_routes(value: Any) -> list[dict[str, Any]]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise AcquisitionBindingError(
+            "data_posture.external_routes_used must be an array"
+        )
+    routes: list[dict[str, Any]] = []
+    for index, record in enumerate(value):
+        field = f"data_posture.external_routes_used[{index}]"
+        if not isinstance(record, dict) or set(record) != _EXTERNAL_ROUTE_FIELDS:
+            raise AcquisitionBindingError(f"{field} has invalid fields")
+        if record.get("route") != "inps_browser_read_only":
+            raise AcquisitionBindingError(f"{field}.route is unsupported")
+        for name in ("destination_or_origin", "payload_category"):
+            if not isinstance(record.get(name), str) or not record[name].strip():
+                raise AcquisitionBindingError(f"{field}.{name} must be non-empty")
+        if record.get("network_used") is not True:
+            raise AcquisitionBindingError(f"{field}.network_used must be true")
+        access_basis = record.get("access_basis")
+        if access_basis is not None and (
+            not isinstance(access_basis, str) or not access_basis.strip()
+        ):
+            raise AcquisitionBindingError(
+                f"{field}.access_basis must be null or non-empty"
+            )
+        routes.append(dict(record))
+    return routes
+
+
 def _receipt(
     posture: dict[str, Any], *, name: str, channel: str
 ) -> dict[str, Any] | None:
@@ -138,6 +174,7 @@ def _acquisition_projection(run_intake: dict[str, Any]) -> dict[str, Any]:
         field="data_posture.external_connectors_used",
         allowed=_KNOWN_CONNECTORS,
     )
+    external_routes = _external_routes(posture.get("external_routes_used"))
     posture["acquisition_channels_used"] = channels
     capture_receipt = _receipt(
         posture,
@@ -151,11 +188,36 @@ def _acquisition_projection(run_intake: dict[str, Any]) -> dict[str, Any]:
     )
     if capture_receipt is not None and connectors != ["inps_browser_read_only"]:
         raise AcquisitionBindingError(
-            "portal capture requires the approved inps_browser_read_only connector"
+            "portal capture requires the inps_browser_read_only connector"
         )
     if capture_receipt is None and connectors:
         raise AcquisitionBindingError(
             "external connector posture requires a portal capture receipt"
+        )
+    if capture_receipt is not None and len(external_routes) != 1:
+        raise AcquisitionBindingError(
+            "portal capture requires one factual external route record"
+        )
+    if capture_receipt is not None and external_routes:
+        route = external_routes[0]
+        if route["destination_or_origin"] != capture_receipt.get("approved_origin"):
+            raise AcquisitionBindingError(
+                "portal capture route origin must match its receipt"
+            )
+        if (
+            route["payload_category"]
+            != "visible_page_content_received_from_selected_tab"
+        ):
+            raise AcquisitionBindingError(
+                "portal capture route payload category is unsupported"
+            )
+        if capture_receipt.get("route_selected") is not True:
+            raise AcquisitionBindingError(
+                "portal capture receipt must record route selection"
+            )
+    if capture_receipt is None and external_routes:
+        raise AcquisitionBindingError(
+            "external route record requires a portal capture receipt"
         )
     local_only = _boolean(posture.get("local_only"), field="data_posture.local_only")
     network_calls = _boolean(
@@ -175,16 +237,6 @@ def _acquisition_projection(run_intake: dict[str, Any]) -> dict[str, Any]:
         raise AcquisitionBindingError(
             "OCR model network use must remain non-local and network-recorded"
         )
-    approval = posture.get("external_execution_approval")
-    if capture_receipt is not None:
-        if not isinstance(approval, dict) or approval.get("approved") is not True:
-            raise AcquisitionBindingError(
-                "portal capture requires recorded external execution approval"
-            )
-    elif approval is not None:
-        raise AcquisitionBindingError(
-            "external execution approval requires a portal capture receipt"
-        )
     return {
         "schema_version": run_intake.get("schema_version"),
         "plugin": "previdenza-inps",
@@ -202,7 +254,7 @@ def _acquisition_projection(run_intake: dict[str, Any]) -> dict[str, Any]:
             ),
             "acquisition_channels_used": channels,
             "external_connectors_used": connectors,
-            "external_execution_approval": approval,
+            "external_routes_used": external_routes,
             "portal_capture_receipt": capture_receipt,
             "portal_export_receipt": export_receipt,
             "ocr": ocr,
@@ -216,7 +268,7 @@ def build_acquisition_binding(
     """Bind exact inventory bytes and fixed acquisition posture for later audits.
 
     The deterministic projection is justified by auditability: package-owned trace
-    fields may evolve, while acquisition channels, approvals, and receipts must not.
+    fields may evolve, while acquisition channels, route facts, and receipts must not.
     """
 
     inventory = _load_object(file_inventory_path, label="file_inventory.json")

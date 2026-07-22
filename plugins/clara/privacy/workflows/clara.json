@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "workflow": "clara",
+  "display_name": "Clara Advisory Case",
+  "governed_paths": [
+    "README.md",
+    ".codex-plugin/plugin.json",
+    "hooks/hooks.json",
+    "skills/clara/SKILL.md",
+    "scripts"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "case-and-source-material",
+        "purpose": "Understand and organize an advisory engagement",
+        "content": "Client and project labels; objectives and audience; company, participant and stakeholder identities; source documents, decks, spreadsheets, notes, transcripts, recordings, dates, facts, financial or operating data, constraints, risks, and open questions"
+      },
+      {
+        "id": "advisory-judgement-and-evidence",
+        "purpose": "Weigh evidence and prepare decision-ready advice",
+        "content": "Material summaries, evidence maps, source limitations, consultant and advisor judgement, Codex inferences, contradictions, hypotheses, options, recommendations, implementation conditions, pending inclusion decisions, and case issues"
+      },
+      {
+        "id": "human-visible-outputs",
+        "purpose": "Draft and review workpapers, briefs, decks, memos, and decision packs",
+        "content": "Narrative, charts, claims, citations, speaker notes, review findings, approved content, and final deliverables"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [
+    "hosted-voice",
+    "plugin-feedback",
+    "plugin-update-check"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "authorized-public-research",
+      "kind": "public_research",
+      "destination": "Public or otherwise authorized external sources selected for the engagement",
+      "purpose": "Obtain current industry, market, governance, legal, or other external context relevant to the advisory question",
+      "content": "Research questions, search terms, selected URLs, retrieved public material, and concise source takeaways; queries may reflect engagement facts when Codex uses them",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Use public or authorized sources only.",
+        "Do not copy proprietary case material into a public research source or shared playbook."
+      ]
+    },
+    {
+      "id": "optional-hosted-voice",
+      "kind": "hosted_service",
+      "hosted_service_id": "hosted-voice",
+      "destination": "Mparanza Hosted Voice and its configured realtime/transcription provider",
+      "purpose": "Capture or upload a spoken debrief and return a transcript bundle",
+      "content": "Compact case context when enabled, live or uploaded recording content, source metadata, transcript, and media metadata",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Hosted Voice is used only after the user selects a voice capture or upload route.",
+        "The separate hosted-service record states the source-backed access and retention position."
+      ]
+    },
+    {
+      "id": "consented-plugin-feedback",
+      "kind": "hosted_service",
+      "hosted_service_id": "plugin-feedback",
+      "destination": "Mparanza plugin feedback service",
+      "purpose": "Transmit a technical problem or improvement suggestion to the developer and check its status",
+      "content": "The exact sanitized request approved by the user, plugin name and version, request kind, idempotency metadata, and later receipt identifiers and status tokens",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "The Clara skill instructs Codex to show and sanitize the exact submission before invoking the helper; the helper itself accepts arbitrary bounded JSON.",
+        "The skill instructs Codex to exclude client, source, case, credential, secret, and identifying material.",
+        "The skill requires separate consent for problem reports and suggestions; the command-line helper cannot prove that consent occurred."
+      ]
+    },
+    {
+      "id": "automatic-plugin-update-check",
+      "kind": "hosted_service",
+      "hosted_service_id": "plugin-update-check",
+      "destination": "Mparanza public plugin-version manifest",
+      "purpose": "Notify the user when a newer Clara version is published",
+      "content": "A GET request with a fixed update-check User-Agent; no case files, prompts, transcripts, or client content are included by the plugin",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The request uses a fixed HTTPS manifest URL and a three-second timeout.",
+        "The check is rate-limited locally and fails open without blocking Clara."
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "536bdba4867bca2f2e74ec0520645496e7c4309d11b421a02fc407cf7f41c5fe"
+  }
+}

@@ -75,7 +75,7 @@ environment allows it, or explain what dependency capability is missing.
 4. Run the deterministic table:
 
 ```bash
-python scripts/run_statement_analysis.py <input-file> --output-dir <output-dir> --recipe <recipe.json>
+python scripts/run_statement_analysis.py <input-file> --output-dir <output-dir> --recipe <recipe.json> --language <en|it|fr|de|es>
 ```
 
 5. Review `pnl_statement_table_chart_context.json`,

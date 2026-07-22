@@ -4,7 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Clara is the AI companion for consultants: it organizes sources, conducts or transcribes interviews, creates or corrects presentations, and analyzes retail assortments and business data in Codex." data-i18n-content="meta.description">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta property="og:url" content="https://mparanza.com/static/shared/clara/index.html">
+  <meta id="og-title" property="og:title" content="Clara">
+  <meta id="og-description" property="og:description" content="Clara is the AI companion for consultants: it organizes sources, conducts or transcribes interviews, creates or corrects presentations, and analyzes retail assortments and business data in Codex.">
+  <meta id="og-image" property="og:image" content="https://i.ytimg.com/vi/3zvFm3fGdQ8/maxresdefault.jpg">
+  <meta id="og-locale" property="og:locale" content="en_US">
   <link rel="canonical" href="https://mparanza.com/static/shared/clara/index.html">
+  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/clara/index.html?lang=en">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/clara/index.html?lang=it">
+  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/clara/index.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/clara/index.html?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/clara/index.html?lang=es">
+  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/clara/index.html">
   <title>Clara</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +37,7 @@
           <a href="#presentations" data-i18n="nav.presentations">Presentations</a>
           <a href="#retail-intelligence" data-i18n="nav.capabilities">Retail, interviews &amp; data</a>
           <a href="#workflow" data-i18n="nav.workflow">How it works</a>
+          <a href="#data-handling" data-i18n="nav.data">Data</a>
           <a href="#videos" data-i18n="nav.videos">Videos</a>
           <a href="#download" data-i18n="nav.download">Install</a>
           <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -32,6 +47,7 @@
           <button type="button" data-lang="it">IT</button>
           <button type="button" data-lang="fr">FR</button>
           <button type="button" data-lang="de">DE</button>
+          <button type="button" data-lang="es">ES</button>
         </div>
       </div>
     </div>
@@ -128,7 +144,7 @@
     <section id="workflow">
       <div class="section-head">
         <h2 data-i18n="workflow.title">Open the project folder and describe what you need</h2>
-        <p data-i18n="workflow.copy">Write in your own words: you do not need to learn commands, and no API key is required.</p>
+        <p data-i18n="workflow.copy">Write in your own words: you do not need to learn commands. No separate API key is required; model work uses your existing ChatGPT plan.</p>
       </div>
       <div class="method">
         <div class="plain-list">
@@ -149,6 +165,29 @@
             <span><span data-i18n="workflow.review.copy">Open the result and describe the changes in your own words. Clara works on a copy and checks the updated version.</span><span class="quote" data-i18n="workflow.review.quote">"Shorten slide 4 and add my contact details to the last slide."</span></span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id="data-handling">
+      <div class="section-head">
+        <h2 data-i18n="data.title">Where Clara processes data</h2>
+        <p data-i18n="data.copy">Vera and Clara follow the same two-category policy. The distinction depends on the processing boundary, not on the profession.</p>
+      </div>
+      <div class="grid two-col">
+        <article class="card">
+          <p class="kicker" data-i18n="data.local.kicker">Work inside Codex</p>
+          <h3 data-i18n="data.local.title">Ordinary plugin functions</h3>
+          <p data-i18n="data.local.copy">Vera and Clara do not automatically anonymise data. They may use local Python to filter or aggregate information when useful.</p>
+          <p data-i18n="data.local.model">Data supplied to the model is processed through the user’s existing ChatGPT plan. Ordinary workflows do not send client files, prompts, or model-context content to Mparanza.</p>
+          <p data-i18n="data.local.detail">Each workflow is mapped when it is added or changed: what normally stays local and what Codex may read. No record is created for each prompt.</p>
+        </article>
+        <article class="card">
+          <p class="kicker" data-i18n="data.hosted.kicker">Mparanza-hosted service</p>
+          <h3 data-i18n="data.hosted.title">A separate processing boundary</h3>
+          <p data-i18n="data.hosted.copy">Remote Interview, Transcription/Voice Capture, and the retail-data service are hosted by Mparanza. The content needed for those functions reaches Mparanza systems and, where required, OpenAI services.</p>
+          <p data-i18n="data.hosted.detail">Each hosted service is documented once at service level, including access and retention or deletion arrangements. There is no prompt-by-prompt documentation.</p>
+          <a class="button secondary" href="/data-handling?lang=en" data-data-handling-link data-i18n="data.link">Read how data is handled</a>
+        </article>
       </div>
     </section>
 
@@ -176,11 +215,11 @@
     <section id="retail-intelligence">
       <div class="section-head">
         <h2 data-i18n="retail.title">From product data to a checked retail report</h2>
-        <p data-i18n="retail.copy">Retailer Signals compares new products and best sellers with the rest of the assortment. Brand Fit relates those signals to the brand's presence and catalogue. Clara uses the stored data available; images and reports stay on your computer.</p>
+        <p data-i18n="retail.copy">Retailer Signals compares new products and best sellers with the rest of the assortment. Brand Fit relates those signals to the brand's presence and catalogue. Retail data and reviewed mappings use a Mparanza-hosted service; product images and generated reports are saved in your project folder.</p>
       </div>
       <div class="promise-strip retail-flow">
         <article class="promise">
-          <p data-i18n="retail.flow.collect">Use the data already stored. Clara starts with the records available for the selected retailer and category. The installed version does not yet collect new data from retailer pages.</p>
+          <p data-i18n="retail.flow.collect">Use the data already available in the Mparanza-hosted retail service. Clara starts with the records for the selected retailer and category. The installed version does not yet collect new data from retailer pages.</p>
         </article>
         <article class="promise">
           <p data-i18n="retail.flow.map">Standardize and verify the attributes. Clara maps the values to a common taxonomy; a second review checks the mappings.</p>
@@ -189,7 +228,7 @@
           <p data-i18n="retail.flow.analyze">Compare the groups. New products are those the retailer presents as new. Clara compares new products and best sellers with the rest of the assortment using checked calculations.</p>
         </article>
         <article class="promise">
-          <p data-i18n="retail.flow.report">Create the report. Clara prepares a private HTML report on your computer and checks its calculations, readability, and appearance.</p>
+          <p data-i18n="retail.flow.report">Create the report. Clara saves an HTML report on your computer and checks its calculations, readability, and appearance.</p>
         </article>
       </div>
       <div class="grid two-col retail-paths">
@@ -213,20 +252,20 @@
         <article class="card" id="interviews-and-transcription">
           <p class="kicker" data-i18n="capabilities.interview.kicker">Remote interview</p>
           <h3 data-i18n="capabilities.interview.title">Conduct an interview with a dedicated link</h3>
-          <p data-i18n="capabilities.interview.copy">The participant opens the link without signing up, authorizes the microphone, and responds for up to 15 minutes. The questions adapt to the answers; the audio is recorded and transcribed.</p>
+          <p data-i18n="capabilities.interview.copy">The participant opens a Mparanza-hosted link without signing up. Mparanza and OpenAI process the audio and answers to conduct and transcribe the adaptive interview. The interview record remains hosted until manual or administrative deletion; link expiry is not deletion.</p>
           <span class="quote" data-i18n="capabilities.interview.prompt">"Prepare a 15-minute interview in Italian for this participant."</span>
         </article>
         <article class="card">
           <p class="kicker" data-i18n="capabilities.transcribe.kicker">Transcription</p>
           <h3 data-i18n="capabilities.transcribe.title">Transcribe a meeting or recording</h3>
-          <p data-i18n="capabilities.transcribe.copy">Record the conversation or add an existing audio file. Clara prepares a transcript, helps identify the speakers, and adds the reviewed material to the project.</p>
+          <p data-i18n="capabilities.transcribe.copy">Record the conversation or upload an existing audio file through Mparanza-hosted Voice Capture. The audio reaches Mparanza and OpenAI for transcription. Hosted working files are deleted before the completed bundle is returned; Codex may then read the local transcript for speaker attribution and review.</p>
           <span class="quote" data-i18n="capabilities.transcribe.prompt">"Transcribe this recording and identify the speakers."</span>
         </article>
         <article class="card">
           <p class="kicker" data-i18n="capabilities.attributes.kicker">Advisory work</p>
           <h3 data-i18n="capabilities.attributes.title">From sources to a document for review</h3>
           <p data-i18n="capabilities.attributes.copy">Using the documents, notes, and conversations in the project folder, Clara prepares a first draft as a Word document or presentation and flags what is missing before review.</p>
-          <p data-i18n="capabilities.attributes.local">The sources, open questions, and versions stay in the project folder.</p>
+          <p data-i18n="capabilities.attributes.local">Sources, open questions, and versions are stored in the project folder. Content Codex interprets may enter the model context through your ChatGPT plan.</p>
           <span class="quote" data-i18n="capabilities.attributes.prompt">"Organize the sources, identify what is missing, and prepare a Word document for review."</span>
         </article>
         <article class="card" id="business-data">
@@ -292,6 +331,7 @@
         "nav.presentations": "Presentations",
         "nav.capabilities": "Retail, interviews & data",
         "nav.workflow": "How it works",
+        "nav.data": "Data",
         "nav.videos": "Videos",
         "nav.download": "Install",
         "hero.eyebrow": "Clara AI companion for consultants",
@@ -332,7 +372,7 @@
         "formats.html.copy": "A self-contained 16:9 HTML deck with speaker notes, fullscreen mode, keyboard or touch navigation, and animations. It does not require PowerPoint.",
         "formats.html.prompt": "\"Deliver an interactive HTML deck with speaker notes.\"",
         "workflow.title": "Open the project folder and describe what you need",
-        "workflow.copy": "Write in your own words: you do not need to learn commands, and no API key is required.",
+        "workflow.copy": "Write in your own words: you do not need to learn commands. No separate API key is required; model work uses your existing ChatGPT plan.",
         "workflow.open.title": "Gather the project materials",
         "workflow.open.copy": "Put documents, presentations, data, images, notes, or recordings in the folder, then open it in Codex.",
         "workflow.open.quote": "\"Use Clara in this folder.\"",
@@ -345,6 +385,18 @@
         "workflow.review.title": "Review and correct",
         "workflow.review.copy": "Open the result and describe the changes in your own words. Clara works on a copy and checks the updated version.",
         "workflow.review.quote": "\"Shorten slide 4 and add my contact details to the last slide.\"",
+        "data.title": "Where Clara processes data",
+        "data.copy": "Vera and Clara follow the same two-category policy. The distinction depends on the processing boundary, not on the profession.",
+        "data.local.kicker": "Work inside Codex",
+        "data.local.title": "Ordinary plugin functions",
+        "data.local.copy": "Vera and Clara do not automatically anonymise data. They may use local Python to filter or aggregate information when useful.",
+        "data.local.model": "Data supplied to the model is processed through the user’s existing ChatGPT plan. Ordinary workflows do not send client files, prompts, or model-context content to Mparanza.",
+        "data.local.detail": "Each workflow is mapped when it is added or changed: what normally stays local and what Codex may read. No record is created for each prompt.",
+        "data.hosted.kicker": "Mparanza-hosted service",
+        "data.hosted.title": "A separate processing boundary",
+        "data.hosted.copy": "Remote Interview, Transcription/Voice Capture, and the retail-data service are hosted by Mparanza. The content needed for those functions reaches Mparanza systems and, where required, OpenAI services.",
+        "data.hosted.detail": "Each hosted service is documented once at service level, including access and retention or deletion arrangements. There is no prompt-by-prompt documentation.",
+        "data.link": "Read how data is handled",
         "handles.title": "The project is not just a presentation",
         "handles.copy": "Clara organizes sources, distinguishes facts, inferences, and professional judgment, and surfaces gaps and contradictions. You decide what goes into the client materials.",
         "card.materials.title": "Sources and conclusions stay connected",
@@ -354,11 +406,11 @@
         "card.judgement.title": "Pick up where you left off",
         "card.judgement.copy": "Reopen the same folder in a new Codex session and continue from the materials, notes, and drafts already there.",
         "retail.title": "From product data to a checked retail report",
-        "retail.copy": "Retailer Signals compares new products and best sellers with the rest of the assortment. Brand Fit relates those signals to the brand's presence and catalogue. Clara uses the stored data available; images and reports stay on your computer.",
-        "retail.flow.collect": "Use the data already stored. Clara starts with the records available for the selected retailer and category. The installed version does not yet collect new data from retailer pages.",
+        "retail.copy": "Retailer Signals compares new products and best sellers with the rest of the assortment. Brand Fit relates those signals to the brand's presence and catalogue. Retail data and reviewed mappings use a Mparanza-hosted service; product images and generated reports are saved in your project folder.",
+        "retail.flow.collect": "Use the data already available in the Mparanza-hosted retail service. Clara starts with the records for the selected retailer and category. The installed version does not yet collect new data from retailer pages.",
         "retail.flow.map": "Standardize and verify the attributes. Clara maps the values to a common taxonomy; a second review checks the mappings.",
         "retail.flow.analyze": "Compare the groups. New products are those the retailer presents as new. Clara compares new products and best sellers with the rest of the assortment using checked calculations.",
-        "retail.flow.report": "Create the report. Clara prepares a private HTML report on your computer and checks its calculations, readability, and appearance.",
+        "retail.flow.report": "Create the report. Clara saves an HTML report on your computer and checks its calculations, readability, and appearance.",
         "retail.retailer_signals.title": "Retailer Signals",
         "retail.retailer_signals.copy.before": "For one retailer and category, compare new products and best sellers with the rest of the assortment and generate a verified ",
         "retail.retailer_signals.copy.link": "report",
@@ -371,16 +423,16 @@
         "capabilities.copy": "Clara conducts interviews, transcribes recordings, prepares working documents, and analyzes business data.",
         "capabilities.interview.kicker": "Remote interview",
         "capabilities.interview.title": "Conduct an interview with a dedicated link",
-        "capabilities.interview.copy": "The participant opens the link without signing up, authorizes the microphone, and responds for up to 15 minutes. The questions adapt to the answers; the audio is recorded and transcribed.",
+        "capabilities.interview.copy": "The participant opens a Mparanza-hosted link without signing up. Mparanza and OpenAI process the audio and answers to conduct and transcribe the adaptive interview. The interview record remains hosted until manual or administrative deletion; link expiry is not deletion.",
         "capabilities.interview.prompt": "\"Prepare a 15-minute interview in Italian for this participant.\"",
         "capabilities.transcribe.kicker": "Transcription",
         "capabilities.transcribe.title": "Transcribe a meeting or recording",
-        "capabilities.transcribe.copy": "Record the conversation or add an existing audio file. Clara prepares a transcript, helps identify the speakers, and adds the reviewed material to the project.",
+        "capabilities.transcribe.copy": "Record the conversation or upload an existing audio file through Mparanza-hosted Voice Capture. The audio reaches Mparanza and OpenAI for transcription. Hosted working files are deleted before the completed bundle is returned; Codex may then read the local transcript for speaker attribution and review.",
         "capabilities.transcribe.prompt": "\"Transcribe this recording and identify the speakers.\"",
         "capabilities.attributes.kicker": "Advisory work",
         "capabilities.attributes.title": "From sources to a document for review",
         "capabilities.attributes.copy": "Using the documents, notes, and conversations in the project folder, Clara prepares a first draft as a Word document or presentation and flags what is missing before review.",
-        "capabilities.attributes.local": "The sources, open questions, and versions stay in the project folder.",
+        "capabilities.attributes.local": "Sources, open questions, and versions are stored in the project folder. Content Codex interprets may enter the model context through your ChatGPT plan.",
         "capabilities.attributes.prompt": "\"Organize the sources, identify what is missing, and prepare a Word document for review.\"",
         "capabilities.charts.kicker": "Business data",
         "capabilities.charts.title": "From data to a clear answer",
@@ -413,6 +465,7 @@
         "nav.presentations": "Presentazioni",
         "nav.capabilities": "Retail, interviste e dati",
         "nav.workflow": "Come funziona",
+        "nav.data": "Dati",
         "nav.videos": "Video",
         "nav.download": "Installa",
         "hero.eyebrow": "Clara AI companion for consultants",
@@ -453,7 +506,7 @@
         "formats.html.copy": "Un deck 16:9 con note per chi presenta, modalità schermo intero, navigazione da tastiera o touch e animazioni. Non richiede PowerPoint.",
         "formats.html.prompt": "\"Consegna un deck HTML interattivo con le note per chi presenta.\"",
         "workflow.title": "Apri la cartella del progetto e descrivi ciò che ti serve",
-        "workflow.copy": "Scrivi con parole tue: non devi imparare comandi e non serve una chiave API.",
+        "workflow.copy": "Scrivi con parole tue: non devi imparare comandi. Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
         "workflow.open.title": "Raccogli i materiali del progetto",
         "workflow.open.copy": "Metti nella cartella documenti, presentazioni, dati, immagini, appunti o registrazioni, poi aprila in Codex.",
         "workflow.open.quote": "\"Usa Clara in questa cartella.\"",
@@ -466,6 +519,18 @@
         "workflow.review.title": "Rivedi e correggi",
         "workflow.review.copy": "Apri il risultato e descrivi le modifiche con parole tue. Clara lavora su una copia e verifica la versione aggiornata.",
         "workflow.review.quote": "\"Accorcia la slide 4 e aggiungi i miei contatti nell'ultima slide.\"",
+        "data.title": "Dove Clara tratta i dati",
+        "data.copy": "Vera e Clara seguono la stessa regola con due categorie. La distinzione dipende dal confine di trattamento, non dalla professione.",
+        "data.local.kicker": "Lavoro dentro Codex",
+        "data.local.title": "Normali funzioni dei plugin",
+        "data.local.copy": "Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.",
+        "data.local.model": "I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall'utente. I workflow ordinari non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello.",
+        "data.local.detail": "Ogni workflow viene mappato quando viene aggiunto o modificato: che cosa resta normalmente locale e che cosa può leggere Codex. Non viene creata una registrazione per ogni prompt.",
+        "data.hosted.kicker": "Servizio hosted da Mparanza",
+        "data.hosted.title": "Un confine di trattamento separato",
+        "data.hosted.copy": "Intervista remota, Trascrizione/Voice Capture e il servizio dati retail sono ospitati da Mparanza. I contenuti necessari raggiungono i sistemi Mparanza e, quando serve, i servizi OpenAI.",
+        "data.hosted.detail": "Ogni servizio hosted viene documentato una volta a livello di servizio, compresi accesso e modalità di conservazione o cancellazione. Non esiste documentazione prompt per prompt.",
+        "data.link": "Leggi come vengono gestiti i dati",
         "handles.title": "Il progetto non è solo una presentazione",
         "handles.copy": "Clara organizza le fonti, distingue fatti, inferenze e giudizio professionale e fa emergere lacune e contraddizioni. Sei tu a decidere che cosa entra nel materiale per il cliente.",
         "card.materials.title": "Fonti e conclusioni restano collegate",
@@ -475,11 +540,11 @@
         "card.judgement.title": "Riprendi da dove eri arrivato",
         "card.judgement.copy": "Riapri la stessa cartella in una nuova sessione Codex e continua dai materiali, dalle note e dalle bozze già presenti.",
         "retail.title": "Dai dati di prodotto a un report retail verificato",
-        "retail.copy": "Retailer Signals confronta novità e best seller con il resto dell'assortimento. Brand Fit mette questi segnali in relazione con la presenza e il catalogo del brand. Clara usa i dati archiviati disponibili; immagini e report restano sul tuo computer.",
-        "retail.flow.collect": "Usa i dati già archiviati. Clara parte dai record disponibili per il retailer e la categoria scelti. La versione installata non acquisisce ancora nuovi dati dalle pagine del retailer.",
+        "retail.copy": "Retailer Signals confronta novità e best seller con il resto dell'assortimento. Brand Fit mette questi segnali in relazione con la presenza e il catalogo del brand. I dati retail e le mappature riviste usano un servizio hosted di Mparanza; immagini prodotto e report generati vengono salvati nella cartella del progetto.",
+        "retail.flow.collect": "Usa i dati già disponibili nel servizio retail hosted da Mparanza. Clara parte dai record per il retailer e la categoria scelti. La versione installata non acquisisce ancora nuovi dati dalle pagine del retailer.",
         "retail.flow.map": "Uniforma e verifica gli attributi. Clara riconduce i valori a una tassonomia comune; una seconda revisione controlla le associazioni.",
         "retail.flow.analyze": "Confronta i gruppi. “Nuovi” sono i prodotti che il retailer presenta come tali. Clara confronta novità e best seller con il resto dell'assortimento usando calcoli verificati.",
-        "retail.flow.report": "Crea il report. Clara prepara sul tuo computer un report HTML privato e ne verifica i calcoli, la leggibilità e la resa visiva.",
+        "retail.flow.report": "Crea il report. Clara salva sul tuo computer un report HTML e ne verifica i calcoli, la leggibilità e la resa visiva.",
         "retail.retailer_signals.title": "Retailer Signals",
         "retail.retailer_signals.copy.before": "Confronta, per un retailer e una categoria, novità e best seller con il resto dell'assortimento e genera un ",
         "retail.retailer_signals.copy.link": "report",
@@ -492,16 +557,16 @@
         "capabilities.copy": "Clara conduce interviste, trascrive registrazioni, prepara documenti di lavoro e analizza dati aziendali.",
         "capabilities.interview.kicker": "Intervista da remoto",
         "capabilities.interview.title": "Conduci un'intervista con un link dedicato",
-        "capabilities.interview.copy": "Il partecipante apre il link senza registrarsi, autorizza il microfono e risponde per un massimo di 15 minuti. Le domande si adattano alle risposte; l'audio viene registrato e trascritto.",
+        "capabilities.interview.copy": "Il partecipante apre un link ospitato da Mparanza senza registrarsi. Mparanza e OpenAI trattano audio e risposte per condurre e trascrivere l'intervista adattiva. I dati dell'intervista restano ospitati fino alla cancellazione manuale o amministrativa; la scadenza del link non è cancellazione.",
         "capabilities.interview.prompt": "\"Prepara un'intervista di 15 minuti in italiano per questa persona.\"",
         "capabilities.transcribe.kicker": "Trascrizione",
         "capabilities.transcribe.title": "Trascrivi una riunione o una registrazione",
-        "capabilities.transcribe.copy": "Registra la conversazione o aggiungi un file audio. Clara prepara la trascrizione, aiuta a identificare chi parla e aggiunge al progetto la versione rivista.",
+        "capabilities.transcribe.copy": "Registra la conversazione o carica un file audio con Voice Capture, ospitato da Mparanza. L'audio raggiunge Mparanza e OpenAI per la trascrizione. I file di lavoro hosted vengono cancellati prima della restituzione del bundle completo; Codex può poi leggere la trascrizione locale per attribuire i parlanti e rivederla.",
         "capabilities.transcribe.prompt": "\"Trascrivi questa registrazione e identifica chi parla.\"",
         "capabilities.attributes.kicker": "Lavoro di consulenza",
         "capabilities.attributes.title": "Dalle fonti al documento da rivedere",
         "capabilities.attributes.copy": "Con documenti, note e conversazioni nella cartella del progetto, Clara prepara una prima bozza in Word o una presentazione e segnala ciò che manca prima della revisione.",
-        "capabilities.attributes.local": "Le fonti, le domande aperte e le versioni restano nella cartella del progetto.",
+        "capabilities.attributes.local": "Fonti, domande aperte e versioni vengono conservate nella cartella del progetto. I contenuti interpretati da Codex possono entrare nel contesto del modello tramite il piano ChatGPT.",
         "capabilities.attributes.prompt": "\"Organizza le fonti, indica ciò che manca e prepara un documento Word da rivedere.\"",
         "capabilities.charts.kicker": "Dati aziendali",
         "capabilities.charts.title": "Dai dati a una risposta chiara",
@@ -534,6 +599,7 @@
         "nav.presentations": "Présentations",
         "nav.capabilities": "Retail, entretiens et données",
         "nav.workflow": "Fonctionnement",
+        "nav.data": "Données",
         "nav.videos": "Vidéos",
         "nav.download": "Installer",
         "hero.eyebrow": "Clara AI companion for consultants",
@@ -574,7 +640,7 @@
         "formats.html.copy": "Un deck HTML autonome au format 16:9, avec notes, mode plein écran, navigation au clavier ou tactile et animations. PowerPoint n'est pas nécessaire.",
         "formats.html.prompt": "\"Livre un deck HTML interactif avec des notes pour la personne qui le présentera.\"",
         "workflow.title": "Ouvrez le dossier du projet et décrivez ce dont vous avez besoin",
-        "workflow.copy": "Écrivez avec vos propres mots : vous n'avez pas à apprendre de commandes et aucune clé API n'est nécessaire.",
+        "workflow.copy": "Écrivez avec vos propres mots : vous n'avez pas à apprendre de commandes. Aucune clé API distincte n'est requise ; le travail du modèle utilise votre offre ChatGPT existante.",
         "workflow.open.title": "Rassemblez les éléments du projet",
         "workflow.open.copy": "Placez dans le dossier des documents, présentations, données, images, notes ou enregistrements, puis ouvrez-le dans Codex.",
         "workflow.open.quote": "\"Utilise Clara dans ce dossier.\"",
@@ -587,6 +653,18 @@
         "workflow.review.title": "Relisez et corrigez",
         "workflow.review.copy": "Ouvrez le résultat et décrivez les modifications avec vos propres mots. Clara travaille sur une copie et vérifie la version mise à jour.",
         "workflow.review.quote": "\"Raccourcis la diapositive 4 et ajoute mes coordonnées à la dernière diapositive.\"",
+        "data.title": "Où Clara traite les données",
+        "data.copy": "Vera et Clara suivent la même règle en deux catégories. La distinction dépend du périmètre de traitement, pas de la profession.",
+        "data.local.kicker": "Travail dans Codex",
+        "data.local.title": "Fonctions ordinaires des plugins",
+        "data.local.copy": "Vera et Clara n'anonymisent pas automatiquement les données. Elles peuvent utiliser Python en local pour filtrer ou agréger des informations lorsque cela est utile.",
+        "data.local.model": "Les données fournies au modèle sont traitées dans le cadre de l'offre ChatGPT existante de l'utilisateur. Les workflows ordinaires n'envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle.",
+        "data.local.detail": "Chaque workflow est cartographié lorsqu'il est ajouté ou modifié : ce qui reste normalement local et ce que Codex peut lire. Aucun enregistrement n'est créé pour chaque prompt.",
+        "data.hosted.kicker": "Service hébergé par Mparanza",
+        "data.hosted.title": "Un périmètre de traitement distinct",
+        "data.hosted.copy": "L'entretien à distance, la transcription/Voice Capture et le service de données retail sont hébergés par Mparanza. Les contenus nécessaires à ces fonctions atteignent les systèmes Mparanza et, lorsque c'est requis, les services OpenAI.",
+        "data.hosted.detail": "Chaque service hébergé est documenté une seule fois au niveau du service, notamment pour l'accès et les modalités de conservation ou de suppression. Il n'y a pas de documentation prompt par prompt.",
+        "data.link": "Lire comment les données sont traitées",
         "handles.title": "Le projet n'est pas seulement une présentation",
         "handles.copy": "Clara organise les sources, distingue les faits, les inférences et le jugement professionnel, et met en évidence les lacunes et les contradictions. C'est vous qui décidez de ce qui entre dans les livrables destinés au client.",
         "card.materials.title": "Les conclusions restent reliées à leurs sources",
@@ -596,11 +674,11 @@
         "card.judgement.title": "Reprenez là où vous en étiez",
         "card.judgement.copy": "Rouvrez le même dossier dans une nouvelle session Codex et poursuivez le travail à partir des éléments, des notes et des brouillons déjà présents.",
         "retail.title": "Des données produit à un rapport retail vérifié",
-        "retail.copy": "Retailer Signals compare les nouveautés et les meilleures ventes au reste de l'assortiment. Brand Fit met ces signaux en regard de la présence et du catalogue de la marque. Clara utilise les données déjà archivées ; les images et les rapports restent sur votre ordinateur.",
-        "retail.flow.collect": "Utilisez les données déjà archivées. Clara part des fiches disponibles pour le retailer et la catégorie choisis. La version installée ne collecte pas encore de nouvelles données sur les pages du retailer.",
+        "retail.copy": "Retailer Signals compare les nouveautés et les meilleures ventes au reste de l'assortiment. Brand Fit met ces signaux en regard de la présence et du catalogue de la marque. Les données retail et les mappings relus utilisent un service hébergé par Mparanza ; les images produit et les rapports générés sont enregistrés dans le dossier du projet.",
+        "retail.flow.collect": "Utilisez les données déjà disponibles dans le service retail hébergé par Mparanza. Clara part des fiches du retailer et de la catégorie choisis. La version installée ne collecte pas encore de nouvelles données sur les pages du retailer.",
         "retail.flow.map": "Harmonisez et vérifiez les attributs. Clara rattache les valeurs à une taxonomie commune ; une seconde revue contrôle les correspondances.",
         "retail.flow.analyze": "Comparez les groupes. Les « nouveautés » sont les produits que le retailer présente comme tels. Clara compare les nouveautés et les meilleures ventes au reste de l'assortiment à l'aide de calculs vérifiés.",
-        "retail.flow.report": "Créez le rapport. Clara prépare sur votre ordinateur un rapport HTML privé et en vérifie les calculs, la lisibilité et le rendu visuel.",
+        "retail.flow.report": "Créez le rapport. Clara enregistre un rapport HTML sur votre ordinateur et en vérifie les calculs, la lisibilité et le rendu visuel.",
         "retail.retailer_signals.title": "Retailer Signals",
         "retail.retailer_signals.copy.before": "Pour un retailer et une catégorie, Clara compare les nouveautés et les meilleures ventes au reste de l'assortiment et génère un ",
         "retail.retailer_signals.copy.link": "rapport",
@@ -613,16 +691,16 @@
         "capabilities.copy": "Clara mène des entretiens, transcrit des enregistrements, prépare des documents de travail et analyse des données métier.",
         "capabilities.interview.kicker": "Entretien à distance",
         "capabilities.interview.title": "Menez un entretien grâce à un lien dédié",
-        "capabilities.interview.copy": "La personne ouvre le lien sans s'inscrire, autorise le microphone et répond pendant 15 minutes au maximum. Les questions s'adaptent aux réponses ; l'audio est enregistré et transcrit.",
+        "capabilities.interview.copy": "La personne ouvre un lien hébergé par Mparanza sans s'inscrire. Mparanza et OpenAI traitent l'audio et les réponses pour mener et transcrire l'entretien adaptatif. Le dossier de l'entretien reste hébergé jusqu'à sa suppression manuelle ou administrative ; l'expiration du lien n'est pas une suppression.",
         "capabilities.interview.prompt": "\"Prépare un entretien de 15 minutes en français pour cette personne.\"",
         "capabilities.transcribe.kicker": "Transcription",
         "capabilities.transcribe.title": "Transcrivez une réunion ou un enregistrement",
-        "capabilities.transcribe.copy": "Enregistrez la conversation ou ajoutez un fichier audio existant. Clara prépare la transcription, aide à identifier les personnes qui parlent et ajoute au projet le contenu relu.",
+        "capabilities.transcribe.copy": "Enregistrez la conversation ou chargez un fichier audio via Voice Capture, hébergé par Mparanza. L'audio atteint Mparanza et OpenAI pour la transcription. Les fichiers de travail hébergés sont supprimés avant le retour du bundle final ; Codex peut ensuite lire la transcription locale pour attribuer les locuteurs et la relire.",
         "capabilities.transcribe.prompt": "\"Transcris cet enregistrement et identifie les personnes qui parlent.\"",
         "capabilities.attributes.kicker": "Travail de conseil",
         "capabilities.attributes.title": "Des sources au document à relire",
         "capabilities.attributes.copy": "À partir des documents, des notes et des conversations du dossier du projet, Clara prépare une première ébauche sous forme de document Word ou de présentation, et signale ce qui manque avant la relecture.",
-        "capabilities.attributes.local": "Les sources, les questions en suspens et les versions restent dans le dossier du projet.",
+        "capabilities.attributes.local": "Les sources, les questions en suspens et les versions sont conservées dans le dossier du projet. Les contenus interprétés par Codex peuvent entrer dans le contexte du modèle via votre offre ChatGPT.",
         "capabilities.attributes.prompt": "\"Organise les sources, indique ce qui manque et prépare un document Word à relire.\"",
         "capabilities.charts.kicker": "Données métier",
         "capabilities.charts.title": "Des données à une réponse claire",
@@ -655,6 +733,7 @@
         "nav.presentations": "Präsentationen",
         "nav.capabilities": "Retail, Interviews und Daten",
         "nav.workflow": "So funktioniert Clara",
+        "nav.data": "Daten",
         "nav.videos": "Videos",
         "nav.download": "Installieren",
         "hero.eyebrow": "Clara AI companion for consultants",
@@ -695,7 +774,7 @@
         "formats.html.copy": "Ein eigenständiges HTML-Deck im Format 16:9 mit Sprechernotizen, Vollbildmodus, Tastatur- oder Touch-Navigation und Animationen. PowerPoint ist nicht erforderlich.",
         "formats.html.prompt": "\"Liefere ein interaktives HTML-Deck mit Sprechernotizen.\"",
         "workflow.title": "Öffnen Sie den Projektordner und beschreiben Sie, was Sie benötigen",
-        "workflow.copy": "Formulieren Sie Ihre Anfrage in eigenen Worten: Sie müssen keine Befehle lernen, und ein API-Schlüssel ist nicht erforderlich.",
+        "workflow.copy": "Formulieren Sie Ihre Anfrage in eigenen Worten: Sie müssen keine Befehle lernen. Kein separater API-Schlüssel ist erforderlich; die Modellarbeit nutzt Ihren bestehenden ChatGPT-Tarif.",
         "workflow.open.title": "Stellen Sie die Projektmaterialien zusammen",
         "workflow.open.copy": "Legen Sie Dokumente, Präsentationen, Daten, Bilder, Notizen oder Aufnahmen im Ordner ab und öffnen Sie ihn anschließend in Codex.",
         "workflow.open.quote": "\"Nutze Clara in diesem Ordner.\"",
@@ -708,6 +787,18 @@
         "workflow.review.title": "Prüfen und korrigieren",
         "workflow.review.copy": "Öffnen Sie das Ergebnis und beschreiben Sie die Änderungen in Ihren eigenen Worten. Clara arbeitet an einer Kopie und prüft die aktualisierte Version.",
         "workflow.review.quote": "\"Kürze Folie 4 und füge meine Kontaktdaten auf der letzten Folie hinzu.\"",
+        "data.title": "Wo Clara Daten verarbeitet",
+        "data.copy": "Für Vera und Clara gilt dieselbe Regel mit zwei Kategorien. Entscheidend ist die Verarbeitungsgrenze, nicht der Beruf.",
+        "data.local.kicker": "Arbeit in Codex",
+        "data.local.title": "Normale Plugin-Funktionen",
+        "data.local.copy": "Vera und Clara anonymisieren Daten nicht automatisch. Sie können lokales Python zum Filtern oder Aggregieren einsetzen, wenn dies hilfreich ist.",
+        "data.local.model": "Daten, die dem Modell bereitgestellt werden, werden über den bestehenden ChatGPT-Tarif des Nutzers verarbeitet. Normale Workflows senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza.",
+        "data.local.detail": "Jeder Workflow wird beim Hinzufügen oder Ändern zugeordnet: was normalerweise lokal bleibt und was Codex lesen kann. Für einzelne Prompts wird kein Nachweis erstellt.",
+        "data.hosted.kicker": "Von Mparanza gehosteter Dienst",
+        "data.hosted.title": "Eine separate Verarbeitungsgrenze",
+        "data.hosted.copy": "Remote-Interview, Transkription/Voice Capture und der Retail-Datendienst werden von Mparanza gehostet. Die dafür benötigten Inhalte erreichen Mparanza-Systeme und, soweit erforderlich, OpenAI-Dienste.",
+        "data.hosted.detail": "Jeder gehostete Dienst wird einmal auf Dienstebene dokumentiert, einschließlich Zugang sowie Aufbewahrungs- oder Löschregelung. Eine Dokumentation für jeden Prompt gibt es nicht.",
+        "data.link": "Lesen, wie Daten verarbeitet werden",
         "handles.title": "Das Projekt ist nicht nur eine Präsentation",
         "handles.copy": "Clara ordnet die Quellen, unterscheidet zwischen Fakten, Schlussfolgerungen und fachlichen Einschätzungen und macht Lücken und Widersprüche sichtbar. Sie entscheiden, was in die Unterlagen für den Kunden einfließt.",
         "card.materials.title": "Quellen und Schlussfolgerungen bleiben verknüpft",
@@ -717,11 +808,11 @@
         "card.judgement.title": "Machen Sie dort weiter, wo Sie aufgehört haben",
         "card.judgement.copy": "Öffnen Sie denselben Ordner in einer neuen Codex-Sitzung und arbeiten Sie mit den bereits vorhandenen Materialien, Notizen und Entwürfen weiter.",
         "retail.title": "Von Produktdaten zum geprüften Retail-Bericht",
-        "retail.copy": "Retailer Signals vergleicht Neuheiten und Bestseller mit dem übrigen Sortiment. Brand Fit setzt diese Signale mit der Präsenz und dem Katalog der Marke in Beziehung. Clara nutzt die verfügbaren gespeicherten Daten; Bilder und Berichte bleiben auf Ihrem Computer.",
-        "retail.flow.collect": "Nutzen Sie die bereits gespeicherten Daten. Clara beginnt mit den verfügbaren Datensätzen für den ausgewählten Retailer und die ausgewählte Kategorie. Die installierte Version erfasst noch keine neuen Daten von den Seiten des Retailers.",
+        "retail.copy": "Retailer Signals vergleicht Neuheiten und Bestseller mit dem übrigen Sortiment. Brand Fit setzt diese Signale mit der Präsenz und dem Katalog der Marke in Beziehung. Retail-Daten und geprüfte Zuordnungen nutzen einen von Mparanza gehosteten Dienst; Produktbilder und erstellte Berichte werden im Projektordner gespeichert.",
+        "retail.flow.collect": "Nutzen Sie die Daten, die bereits im von Mparanza gehosteten Retail-Dienst verfügbar sind. Clara beginnt mit den Datensätzen für den ausgewählten Retailer und die ausgewählte Kategorie. Die installierte Version erfasst noch keine neuen Daten von den Seiten des Retailers.",
         "retail.flow.map": "Vereinheitlichen und prüfen Sie die Attribute. Clara ordnet die Werte einer gemeinsamen Taxonomie zu; eine zweite Prüfung kontrolliert die Zuordnungen.",
         "retail.flow.analyze": "Vergleichen Sie die Gruppen. „Neu“ sind Produkte, die der Retailer als solche kennzeichnet. Clara vergleicht Neuheiten und Bestseller anhand geprüfter Berechnungen mit dem übrigen Sortiment.",
-        "retail.flow.report": "Erstellen Sie den Bericht. Clara bereitet auf Ihrem Computer einen privaten HTML-Bericht vor und prüft die Berechnungen, die Lesbarkeit und die visuelle Darstellung.",
+        "retail.flow.report": "Erstellen Sie den Bericht. Clara speichert einen HTML-Bericht auf Ihrem Computer und prüft die Berechnungen, die Lesbarkeit und die visuelle Darstellung.",
         "retail.retailer_signals.title": "Retailer Signals",
         "retail.retailer_signals.copy.before": "Vergleichen Sie für einen Retailer und eine Kategorie Neuheiten und Bestseller mit dem übrigen Sortiment und erstellen Sie einen geprüften ",
         "retail.retailer_signals.copy.link": "Bericht",
@@ -734,16 +825,16 @@
         "capabilities.copy": "Clara führt Interviews, transkribiert Aufnahmen, erstellt Arbeitsdokumente und analysiert Geschäftsdaten.",
         "capabilities.interview.kicker": "Interview aus der Ferne",
         "capabilities.interview.title": "Führen Sie ein Interview über einen eigenen Link",
-        "capabilities.interview.copy": "Die teilnehmende Person öffnet den Link ohne Registrierung, erlaubt den Mikrofonzugriff und antwortet bis zu 15 Minuten lang. Die Fragen passen sich den Antworten an; das Audio wird aufgezeichnet und transkribiert.",
+        "capabilities.interview.copy": "Die teilnehmende Person öffnet ohne Registrierung einen von Mparanza gehosteten Link. Mparanza und OpenAI verarbeiten Audio und Antworten, um das adaptive Interview durchzuführen und zu transkribieren. Der Interviewdatensatz bleibt bis zur manuellen oder administrativen Löschung gespeichert; der Ablauf des Links ist keine Löschung.",
         "capabilities.interview.prompt": "\"Bereite für diese Person ein 15-minütiges Interview auf Deutsch vor.\"",
         "capabilities.transcribe.kicker": "Transkription",
         "capabilities.transcribe.title": "Transkribieren Sie eine Besprechung oder Aufnahme",
-        "capabilities.transcribe.copy": "Zeichnen Sie das Gespräch auf oder fügen Sie eine Audiodatei hinzu. Clara erstellt das Transkript, hilft dabei, die sprechenden Personen zu identifizieren, und fügt dem Projekt die geprüfte Fassung hinzu.",
+        "capabilities.transcribe.copy": "Zeichnen Sie das Gespräch auf oder laden Sie über das von Mparanza gehostete Voice Capture eine Audiodatei hoch. Das Audio erreicht Mparanza und OpenAI zur Transkription. Gehostete Arbeitsdateien werden gelöscht, bevor das fertige Paket zurückgegeben wird; anschließend kann Codex das lokale Transkript zur Sprecherzuordnung und Prüfung lesen.",
         "capabilities.transcribe.prompt": "\"Transkribiere diese Aufnahme und ordne die Sprecher zu.\"",
         "capabilities.attributes.kicker": "Beratungsarbeit",
         "capabilities.attributes.title": "Von den Quellen zum Dokument zur Durchsicht",
         "capabilities.attributes.copy": "Aus den Dokumenten, Notizen und Gesprächen im Projektordner erstellt Clara einen ersten Entwurf als Word-Dokument oder Präsentation und weist vor der Durchsicht auf fehlende Informationen hin.",
-        "capabilities.attributes.local": "Quellen, offene Fragen und Versionen bleiben im Projektordner.",
+        "capabilities.attributes.local": "Quellen, offene Fragen und Versionen werden im Projektordner gespeichert. Inhalte, die Codex auswertet, können über Ihren ChatGPT-Tarif in den Modellkontext gelangen.",
         "capabilities.attributes.prompt": "\"Ordne die Quellen, zeige auf, was fehlt, und erstelle ein Word-Dokument zur Durchsicht.\"",
         "capabilities.charts.kicker": "Geschäftsdaten",
         "capabilities.charts.title": "Von den Daten zu einer klaren Antwort",
@@ -767,16 +858,154 @@
         "install.open": "Clara installieren",
         "install.signed_out": "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Claras Eintrag.",
       },
+      es: {
+        title: "Clara",
+        "meta.description": "Clara es la asistente de IA para consultores: organiza fuentes, realiza o transcribe entrevistas, crea o corrige presentaciones y analiza surtidos retail y datos empresariales en Codex.",
+        "aria.page_navigation": "Navegación de la página",
+        "aria.language": "Idioma",
+        "aria.promise_strip": "Qué puedes hacer con Clara",
+        "nav.presentations": "Presentaciones",
+        "nav.capabilities": "Retail, entrevistas y datos",
+        "nav.workflow": "Cómo funciona",
+        "nav.data": "Datos",
+        "nav.videos": "Vídeos",
+        "nav.download": "Instalar",
+        "hero.eyebrow": "Clara, asistente de IA para consultores",
+        "hero.title": "Clara prepara el trabajo. El criterio sigue siendo tuyo.",
+        "hero.lead": "Clara organiza las fuentes, señala lagunas y contradicciones y convierte materiales, conversaciones y datos en presentaciones, documentos y análisis para revisar. Clara trabaja contigo dentro de Codex.",
+        "hero.summary1": "Crea o corrige presentaciones PowerPoint y decks HTML de alto impacto.",
+        "hero.summary2": "Realiza entrevistas y convierte grabaciones en transcripciones revisadas.",
+        "hero.summary3": "Mapea atributos retail y compara novedades y productos superventas con el resto del surtido.",
+        "hero.summary4": "Analiza archivos Excel, CSV y Parquet con cálculos comprobados y gráficos elegidos para responder a la pregunta.",
+        "presentations.title": "Crea o corrige una presentación con el estilo de tu empresa",
+        "presentations.copy": "Describe el resultado que buscas. Puedes partir de los materiales del proyecto o de una presentación existente.",
+        "presentations.video.kicker": "Resumen de 37 segundos",
+        "presentations.video.title": "Ver: de los materiales del proyecto a una presentación lista para decidir",
+        "presentations.video.meta": "Narración en inglés · Se abre en YouTube",
+        "videos.title": "Mira cómo trabaja Clara",
+        "videos.copy": "Guías breves sobre las principales funciones de Clara. Mientras se preparan las versiones en español, los vídeos se ofrecen en inglés.",
+        "videos.open": "Se abre en YouTube",
+        "presentations.create.kicker": "Nueva presentación",
+        "presentations.create.title": "Parte de los materiales del proyecto",
+        "presentations.create.copy": "Añade documentos Word, PDF y PowerPoint, imágenes, hojas de cálculo, notas o grabaciones. Indica la audiencia, el objetivo y la duración: Clara propone la estructura y prepara la presentación.",
+        "presentations.create.prompt": "\"Crea una presentación de 20 minutos para esta audiencia a partir de los materiales de esta carpeta.\"",
+        "presentations.correct.kicker": "Presentación existente",
+        "presentations.correct.title": "Corrige lo que haya que cambiar",
+        "presentations.correct.copy": "Escribe las correcciones o grábalas en voz alta. Clara actualiza una copia y comprueba que todo lo demás permanezca sin cambios.",
+        "presentations.correct.prompt": "\"Graba mis comentarios, aplícalos a una copia y deja todo lo demás sin cambios.\"",
+        "presentations.style.kicker": "Referencias visuales",
+        "presentations.style.title": "Respeta tu estilo visual",
+        "presentations.style.copy": "Añade una plantilla de PowerPoint, una presentación de referencia, un logotipo o las directrices de marca. Clara los utiliza para el diseño y el estilo.",
+        "presentations.style.prompt": "\"Usa este PowerPoint como referencia visual para la nueva presentación.\"",
+        "formats.title": "Elige el formato del deck",
+        "formats.copy": "Ambos formatos son editables. Elige PowerPoint cuando el archivo deba abrirse y modificarse en PowerPoint; elige un deck HTML para disponer de interactividad, navegación y animaciones.",
+        "formats.pptx.title": "Un PowerPoint editable",
+        "formats.pptx.copy": "Un archivo .pptx que puede abrirse y editarse en PowerPoint. Elígelo cuando debas seguir una plantilla existente o entregar el archivo a otra persona para que lo edite.",
+        "formats.pptx.prompt": "\"Entrega un PowerPoint editable y comprueba cada diapositiva.\"",
+        "formats.html.title.before": "Un deck HTML ",
+        "formats.html.title.link": "interactivo",
+        "formats.html.title.after": "",
+        "formats.html.copy": "Un deck HTML autónomo en formato 16:9 con notas del presentador, modo de pantalla completa, navegación mediante teclado o gestos táctiles y animaciones. No requiere PowerPoint.",
+        "formats.html.prompt": "\"Entrega un deck HTML interactivo con notas del presentador.\"",
+        "workflow.title": "Abre la carpeta del proyecto y describe lo que necesitas",
+        "workflow.copy": "Escríbelo con tus propias palabras: no necesitas aprender comandos. No hace falta una clave de API independiente; el trabajo del modelo utiliza tu plan de ChatGPT actual.",
+        "workflow.open.title": "Reúne los materiales del proyecto",
+        "workflow.open.copy": "Coloca documentos, presentaciones, datos, imágenes, notas o grabaciones en la carpeta y ábrela en Codex.",
+        "workflow.open.quote": "\"Usa Clara en esta carpeta.\"",
+        "workflow.materials.title": "Describe lo que quieres conseguir",
+        "workflow.materials.copy": "Explica qué necesitas, para quién es y en qué formato. Si se trata de una presentación, indica también la duración.",
+        "workflow.materials.quote": "\"Crea un PowerPoint editable de 20 minutos para esta audiencia.\"",
+        "workflow.notes.title": "Indica el contenido y el estilo que debe seguir",
+        "workflow.notes.copy": "Señala qué documentos deben utilizarse para el contenido y qué plantilla o presentación debe utilizarse para el estilo.",
+        "workflow.notes.quote": "\"Usa este archivo Word para el contenido y este PowerPoint para el estilo.\"",
+        "workflow.review.title": "Revisa y corrige",
+        "workflow.review.copy": "Abre el resultado y describe los cambios con tus propias palabras. Clara trabaja sobre una copia y comprueba la versión actualizada.",
+        "workflow.review.quote": "\"Acorta la diapositiva 4 y añade mis datos de contacto a la última diapositiva.\"",
+        "data.title": "Dónde procesa Clara los datos",
+        "data.copy": "Vera y Clara siguen la misma política de dos categorías. La distinción depende del límite de tratamiento, no de la profesión.",
+        "data.local.kicker": "Trabajo dentro de Codex",
+        "data.local.title": "Funciones ordinarias del plugin",
+        "data.local.copy": "Vera y Clara no anonimizan los datos automáticamente. Pueden utilizar Python en local para filtrar o agregar información cuando resulte útil.",
+        "data.local.model": "Los datos proporcionados al modelo se procesan mediante el plan de ChatGPT que ya utiliza el usuario. Los flujos de trabajo ordinarios no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo.",
+        "data.local.detail": "Cada flujo de trabajo se mapea cuando se añade o modifica: qué permanece normalmente en local y qué puede leer Codex. No se crea un registro para cada prompt.",
+        "data.hosted.kicker": "Servicio alojado por Mparanza",
+        "data.hosted.title": "Un límite de tratamiento separado",
+        "data.hosted.copy": "Remote Interview, Transcription/Voice Capture y el servicio de datos retail están alojados por Mparanza. El contenido necesario para esas funciones llega a los sistemas de Mparanza y, cuando corresponde, a los servicios de OpenAI.",
+        "data.hosted.detail": "Cada servicio alojado se documenta una vez a nivel de servicio, incluidos los acuerdos de acceso y conservación o eliminación. No existe documentación prompt por prompt.",
+        "data.link": "Consulta cómo se tratan los datos",
+        "handles.title": "El proyecto no es solo una presentación",
+        "handles.copy": "Clara organiza las fuentes, distingue entre hechos, inferencias y criterio profesional y señala lagunas y contradicciones. Tú decides qué se incorpora a los materiales para el cliente.",
+        "card.materials.title": "Las fuentes y las conclusiones permanecen conectadas",
+        "card.materials.copy": "Clara deja claro qué procede de los documentos y qué se basa en interpretación o criterio profesional.",
+        "card.notes.title": "Lo que falta permanece visible",
+        "card.notes.copy": "Clara mantiene visibles la información que falta, las contradicciones y las decisiones pendientes.",
+        "card.judgement.title": "Retoma el trabajo donde lo dejaste",
+        "card.judgement.copy": "Vuelve a abrir la misma carpeta en una nueva sesión de Codex y continúa a partir de los materiales, notas y borradores que ya contiene.",
+        "retail.title": "De los datos de producto a un informe retail comprobado",
+        "retail.copy": "Retailer Signals compara las novedades y los productos superventas con el resto del surtido. Brand Fit relaciona esas señales con la presencia y el catálogo de la marca. Los datos retail y los mapeos revisados utilizan un servicio alojado por Mparanza; las imágenes de producto y los informes generados se guardan en la carpeta del proyecto.",
+        "retail.flow.collect": "Utiliza los datos ya disponibles en el servicio retail alojado por Mparanza. Clara parte de los registros del retailer y la categoría seleccionados. La versión instalada todavía no recopila datos nuevos de las páginas del retailer.",
+        "retail.flow.map": "Normaliza y verifica los atributos. Clara mapea los valores a una taxonomía común; una segunda revisión comprueba los mapeos.",
+        "retail.flow.analyze": "Compara los grupos. Los productos nuevos son aquellos que el retailer presenta como novedades. Clara compara las novedades y los productos superventas con el resto del surtido mediante cálculos comprobados.",
+        "retail.flow.report": "Crea el informe. Clara guarda un informe HTML en tu ordenador y comprueba los cálculos, la legibilidad y la presentación visual.",
+        "retail.retailer_signals.title": "Retailer Signals",
+        "retail.retailer_signals.copy.before": "Para un retailer y una categoría, compara las novedades y los productos superventas con el resto del surtido y genera un ",
+        "retail.retailer_signals.copy.link": "informe",
+        "retail.retailer_signals.copy.after": " verificado.",
+        "retail.brand_fit.title": "Brand Fit",
+        "retail.brand_fit.copy.before": "Parte de un análisis Retailer Signals verificado y compara los hallazgos del surtido con la presencia de la marca en el retailer y con su catálogo. Utiliza datos almacenados, no una comprobación del lineal en tiempo real. La comparación se presenta en un ",
+        "retail.brand_fit.copy.link": "informe",
+        "retail.brand_fit.copy.after": ".",
+        "capabilities.title": "Entrevistas, documentos y análisis de datos",
+        "capabilities.copy": "Clara realiza entrevistas, transcribe grabaciones, prepara documentos de trabajo y analiza datos empresariales.",
+        "capabilities.interview.kicker": "Entrevista remota",
+        "capabilities.interview.title": "Realiza una entrevista mediante un enlace específico",
+        "capabilities.interview.copy": "La persona participante abre un enlace alojado por Mparanza sin registrarse. Mparanza y OpenAI procesan el audio y las respuestas para realizar y transcribir la entrevista adaptativa. El registro de la entrevista permanece alojado hasta su eliminación manual o administrativa; la caducidad del enlace no lo elimina.",
+        "capabilities.interview.prompt": "\"Prepara una entrevista de 15 minutos en español para esta persona.\"",
+        "capabilities.transcribe.kicker": "Transcripción",
+        "capabilities.transcribe.title": "Transcribe una reunión o una grabación",
+        "capabilities.transcribe.copy": "Graba la conversación o carga un archivo de audio existente mediante Voice Capture, alojado por Mparanza. El audio llega a Mparanza y OpenAI para su transcripción. Los archivos de trabajo alojados se eliminan antes de devolver el paquete completo; después, Codex puede leer la transcripción local para atribuir los hablantes y revisarla.",
+        "capabilities.transcribe.prompt": "\"Transcribe esta grabación e identifica a los hablantes.\"",
+        "capabilities.attributes.kicker": "Trabajo de consultoría",
+        "capabilities.attributes.title": "De las fuentes a un documento para revisar",
+        "capabilities.attributes.copy": "A partir de los documentos, las notas y las conversaciones de la carpeta del proyecto, Clara prepara un primer borrador como documento Word o presentación y señala lo que falta antes de la revisión.",
+        "capabilities.attributes.local": "Las fuentes, las preguntas abiertas y las versiones se guardan en la carpeta del proyecto. El contenido que interpreta Codex puede entrar en el contexto del modelo a través de tu plan de ChatGPT.",
+        "capabilities.attributes.prompt": "\"Organiza las fuentes, identifica lo que falta y prepara un documento Word para revisar.\"",
+        "capabilities.charts.kicker": "Datos empresariales",
+        "capabilities.charts.title": "De los datos a una respuesta clara",
+        "capabilities.charts.copy.before": "Parte de un archivo Excel, CSV o Parquet y describe la pregunta de negocio. Clara elige el análisis, realiza cálculos comprobados, crea el gráfico más útil y explica el ",
+        "capabilities.charts.copy.link": "resultado",
+        "capabilities.charts.copy.after": ".",
+        "capabilities.charts.prompt": "\"Analiza esta hoja de cálculo, elige el gráfico más útil y explica el resultado.\"",
+        "download.title": "Instala Clara y abre tu primer proyecto",
+        "download.copy": "Puedes encontrar Clara en el Marketplace de OpenAI. Tras instalarla, abre la carpeta del proyecto en Codex y describe el resultado que quieres conseguir.",
+        "download.step1": "Abre la página oficial de Clara en el Marketplace de OpenAI.",
+        "download.step2": "Inicia la instalación desde la página.",
+        "download.step3": "Abre Codex, ve a Plugins y confirma que Clara está instalada y activada.",
+        "download.step4": "Abre la carpeta del proyecto y describe lo que quieres conseguir.",
+        "download.help.title": "Si la instalación no funciona",
+        "download.help.marketplace.title": "La instalación no está disponible",
+        "download.help.marketplace.copy": "Comprueba que has iniciado sesión en OpenAI y vuelve a abrir la página oficial de Clara.",
+        "download.help.plugin.title": "Clara no aparece",
+        "download.help.plugin.copy": "Comprueba que Clara está instalada y activada y abre un nuevo chat de Codex en la carpeta del proyecto.",
+        "download.prompt": "\"Usa Clara en esta carpeta.\"",
+        "install.button": "Instalar Clara",
+        "install.open": "Instalar Clara",
+        "install.signed_out": "¿No has iniciado sesión? ChatGPT te pedirá que la inicies y después abrirá la ficha de Clara.",
+      },
     };
     const params = new URLSearchParams(window.location.search);
-    const lang = ["en", "it", "fr", "de"].includes(params.get("lang")) ? params.get("lang") : "en";
+    const supportedLanguages = new Set(["en", "it", "fr", "de", "es"]);
+    const requestedLanguage = params.get("lang");
+    const lang = supportedLanguages.has(requestedLanguage) ? requestedLanguage : "en";
     const safeLang = lang || "en";
     const activeCopy = { ...copy.en, ...(copy[safeLang] || {}) };
     const presentationVideos = {
-      en: { id: "3zvFm3fGdQ8", duration: "0:37" },
-      it: { id: "mU-QhOp7EOk", duration: "0:48" },
-      fr: { id: "Qe8rbIh8fhg", duration: "0:50" },
-      de: { id: "BPp_fcfYRS8", duration: "0:46" },
+      en: { id: "3zvFm3fGdQ8", duration: "0:37", catalogLanguage: "en" },
+      it: { id: "mU-QhOp7EOk", duration: "0:48", catalogLanguage: "it" },
+      fr: { id: "Qe8rbIh8fhg", duration: "0:50", catalogLanguage: "fr" },
+      de: { id: "BPp_fcfYRS8", duration: "0:46", catalogLanguage: "de" },
+      // Spanish narration is not yet published. The Spanish catalog identifies the English audio explicitly.
+      es: { id: "3zvFm3fGdQ8", duration: "0:37", catalogLanguage: "es" },
     };
     const activePresentationVideo = presentationVideos[safeLang];
     document.getElementById("presentation-video-link").href = `https://youtu.be/${activePresentationVideo.id}`;
@@ -784,6 +1013,11 @@
     document.getElementById("presentation-video-duration").textContent = activePresentationVideo.duration;
     document.documentElement.lang = safeLang;
     document.title = activeCopy.title || copy.en.title;
+    document.getElementById("og-title").setAttribute("content", activeCopy.title || copy.en.title);
+    document.getElementById("og-description").setAttribute("content", activeCopy["meta.description"] || copy.en["meta.description"]);
+    document.getElementById("og-image").setAttribute("content", `https://i.ytimg.com/vi/${activePresentationVideo.id}/maxresdefault.jpg`);
+    const ogLocales = { en: "en_US", it: "it_IT", fr: "fr_FR", de: "de_DE", es: "es_ES" };
+    document.getElementById("og-locale").setAttribute("content", ogLocales[safeLang]);
     document.querySelectorAll("[data-i18n]").forEach((node) => {
       const value = activeCopy[node.dataset.i18n];
       if (typeof value === "string") node.textContent = value;
@@ -809,7 +1043,11 @@
     document.querySelectorAll('a[href="/"]').forEach((link) => {
       link.href = `/?lang=${safeLang}`;
     });
-    window.MparanzaVideos?.mount({ product: "clara", lang: safeLang, openLabel: activeCopy["videos.open"] });
+    document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
+      link.href = `/data-handling?lang=${safeLang}`;
+    });
+    const videoCatalogLanguage = activePresentationVideo.catalogLanguage || safeLang;
+    window.MparanzaVideos?.mount({ product: "clara", lang: videoCatalogLanguage, openLabel: activeCopy["videos.open"] });
   </script>
 </body>
 </html>

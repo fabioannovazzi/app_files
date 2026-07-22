@@ -1,8 +1,9 @@
 """Row Candidate Detector for bank statements."""
+
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 from typing import Dict, List, Sequence
 
 from .filters import is_header_footer, is_summary_or_notice, is_total_or_balance_only
@@ -12,20 +13,30 @@ from .schemas import RowCandidate
 ROW_HINTS = {
     "it": ["disposizione", "bonifico", "addebito", "accredito", "valuta"],
     "de": ["buchung", "\u00fcberweisung", "lastschrift", "gutschrift", "valuta"],
-    "fr": ["op\u00e9ration", "virement", "pr\u00e9l\u00e8vement", "cr\u00e9dit", "valeur"],
+    "fr": [
+        "op\u00e9ration",
+        "virement",
+        "pr\u00e9l\u00e8vement",
+        "cr\u00e9dit",
+        "valeur",
+    ],
     "en": ["transaction", "transfer", "debit", "credit", "value date"],
+    "es": [
+        "operación",
+        "operacion",
+        "transferencia",
+        "adeudo",
+        "abono",
+        "fecha valor",
+    ],
 }
 
 
 class RowCandidateDetector:
     """Detect transaction-like rows from raw lines."""
 
-    DATE_RE = re.compile(
-        r"\b(\d{1,2}[./-]\d{1,2}[./-]\d{2,4}|\d{4}-\d{2}-\d{2})\b"
-    )
-    AMOUNT_RE = re.compile(
-        r"[+-]?\d{1,3}(?:[.,'\s]\d{3})*(?:[.,]\d{2})"
-    )
+    DATE_RE = re.compile(r"\b(\d{1,2}[./-]\d{1,2}[./-]\d{2,4}|\d{4}-\d{2}-\d{2})\b")
+    AMOUNT_RE = re.compile(r"[+-]?\d{1,3}(?:[.,'\s]\d{3})*(?:[.,]\d{2})")
 
     def detect(
         self,

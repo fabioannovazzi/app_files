@@ -59,6 +59,14 @@
     "Finding"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n de Deep Research",
+      "reviewTitle": "Revisi\u00f3n de afirmaciones y citas",
+      "queueTitle": "Afirmaciones",
+      "detailTitle": "Evidencia de la afirmaci\u00f3n",
+      "detailHelp": "Compare la afirmaci\u00f3n, la fuente citada y el hallazgo de validaci\u00f3n antes de decidir.",
+      "search": "Buscar afirmaci\u00f3n, cita, fuente, gravedad, salida"
+    },
     "it": {
       "title": "Revisione Deep Research",
       "reviewTitle": "Revisione claim e citazioni",

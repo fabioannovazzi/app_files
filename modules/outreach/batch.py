@@ -73,6 +73,11 @@ _LANGUAGE_ALIASES = {
     "deu": "de",
     "ger": "de",
     "german": "de",
+    "es": "es",
+    "spa": "es",
+    "spanish": "es",
+    "español": "es",
+    "espanol": "es",
 }
 _LOCALE_ALIASES = {
     "it": "italy",
@@ -81,6 +86,12 @@ _LOCALE_ALIASES = {
     "italiano": "italy",
     "italia": "italy",
     "italy": "italy",
+    "es": "spain",
+    "esp": "spain",
+    "spanish": "spain",
+    "españa": "spain",
+    "espana": "spain",
+    "spain": "spain",
     "geneva": "geneva",
     "geneve": "geneva",
     "zurich": "zurich",
@@ -109,6 +120,12 @@ _QUOTA_KEY_ALIASES = {
     "italy-organizations": "italy-organization",
     "italian": "italy",
     "italiano": "italy",
+    "es": "spain",
+    "esp": "spain",
+    "spanish": "spain",
+    "españa": "spain",
+    "espana": "spain",
+    "spain": "spain",
     "odcec": "italy-organization",
     "geneva": "swiss-romande",
     "geneve": "swiss-romande",
@@ -286,7 +303,7 @@ def parse_outreach_template(path: Path) -> OutreachMessage:
     label, separator, subject = first_line.partition(":")
     if not separator:
         raise ValueError(f"Template first line must contain a subject: {path}")
-    if label.strip().casefold() not in {"subject", "oggetto", "objet"}:
+    if label.strip().casefold() not in {"subject", "oggetto", "objet", "asunto"}:
         raise ValueError(f"Unsupported template subject label: {label!r}")
     cleaned_subject = subject.strip()
     if not cleaned_subject:
@@ -952,11 +969,13 @@ def _record_language(record: dict[str, object]) -> str:
         if city_locale == "zurich":
             return "de"
     country_locale = normalise_locale(country) if country else ""
+    if country_locale == "spain":
+        return "es"
     if country_locale == "usa":
         return "en"
     if campaign_id:
         prefix = campaign_id.split("-", 1)[0]
-        if prefix in {"it", "fr", "de", "en"}:
+        if prefix in {"it", "fr", "de", "en", "es"}:
             return normalise_language(prefix)
     return ""
 
@@ -974,6 +993,8 @@ def _record_quota_key(record: dict[str, object]) -> str:
     campaign_id = str(record["campaign_id"]) if "campaign_id" in record else ""
     if campaign_id.startswith("italy-"):
         return "italy"
+    if campaign_id.startswith("spain-"):
+        return "spain"
     if campaign_id.startswith("swiss-") or "switzerland" in campaign_id:
         return "switzerland"
     if campaign_id.startswith("usa-") or campaign_id.startswith("us-"):

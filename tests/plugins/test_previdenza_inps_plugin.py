@@ -305,7 +305,6 @@ def _write_run_intake(output_dir: Path, run_id: str) -> dict[str, object]:
                 "successful_page_count": 0,
                 "case_content_network_transfer": False,
                 "model_download_allowed": False,
-                "model_download_approval_id": None,
                 "model_network_used": False,
                 "visual_confirmation_required": False,
             },
@@ -393,13 +392,21 @@ def _package_bound_browser_capture_case(
             "network_calls_by_scripts": True,
             "acquisition_channels_used": ["inps_conditional_browser_capture"],
             "external_connectors_used": ["inps_browser_read_only"],
-            "external_execution_approval": {
-                "approved": True,
-                "approval_id": "APR-SYNTHETIC-001",
-                "scope": "Read-only capture for this synthetic test case.",
-            },
+            "external_routes_used": [
+                {
+                    "route": "inps_browser_read_only",
+                    "destination_or_origin": "https://www.inps.it",
+                    "payload_category": (
+                        "visible_page_content_received_from_selected_tab"
+                    ),
+                    "network_used": True,
+                    "access_basis": None,
+                }
+            ],
             "portal_capture_receipt": {
                 "manifest_sha256": "a" * 64,
+                "route_selected": True,
+                "approved_origin": "https://www.inps.it",
                 "case_content_uploaded": False,
             },
         }
@@ -1420,7 +1427,7 @@ def test_previdenza_inps_mcp_render_uses_opaque_persistence_token(
     assert "untrusted" not in json.dumps(result)
 
 
-def test_previdenza_inps_mcp_render_discloses_only_safe_connector_approval(
+def test_previdenza_inps_mcp_render_does_not_invent_connector_approval(
     tmp_path: Path,
 ) -> None:
     node = _node_or_skip()
@@ -1431,13 +1438,15 @@ def test_previdenza_inps_mcp_render_discloses_only_safe_connector_approval(
         "local_only": False,
         "network_calls_by_scripts": True,
         "external_connectors_used": ["inps_browser_read_only"],
-        "external_execution_approval": {
-            "approved": True,
-            "approved_at": "2026-07-16T10:00:00+02:00",
-            "approved_by": "AUTH-PRIVATE-001",
-            "reason": "Private case purpose",
-            "scope": "Private approved scope",
-        },
+        "external_routes_used": [
+            {
+                "route": "inps_browser_read_only",
+                "destination_or_origin": "https://www.inps.it",
+                "payload_category": "visible_page_content_received_from_selected_tab",
+                "network_used": True,
+                "access_basis": "PRIVATE-ACCESS-BASIS",
+            }
+        ],
     }
     run_intake["execution_trace"] = [
         {
@@ -1446,7 +1455,7 @@ def test_previdenza_inps_mcp_render_discloses_only_safe_connector_approval(
             "status": "passed",
             "execution_location": "external_connector",
             "command": "python scripts/capture_portal_snapshot.py",
-            "inputs": ["approved_open_browser_tab"],
+            "inputs": ["selected_open_browser_tab"],
             "outputs": [
                 "portal_capture_manifest.json",
                 "portal_full_page.png",
@@ -1463,10 +1472,9 @@ def test_previdenza_inps_mcp_render_discloses_only_safe_connector_approval(
 
     posture = result["run_intake"]["data_posture"]
     assert posture["external_connectors_used"] == []
-    assert posture["external_execution_approval"] == {"approved": False}
-    assert "AUTH-PRIVATE-001" not in json.dumps(result)
-    assert "Private case purpose" not in json.dumps(result)
-    assert "Private approved scope" not in json.dumps(result)
+    assert posture["external_routes_used"] == []
+    assert "external_execution_approval" not in posture
+    assert "PRIVATE-ACCESS-BASIS" not in json.dumps(result)
     assert (
         result["run_intake"]["execution_trace"][0]["kind"] == "deterministic_packaging"
     )
@@ -1580,7 +1588,7 @@ def test_previdenza_inps_mcp_rejects_post_package_acquisition_posture_tamper(
     posture["network_calls_by_scripts"] = False
     posture["acquisition_channels_used"] = []
     posture["external_connectors_used"] = []
-    posture.pop("external_execution_approval", None)
+    posture.pop("external_routes_used", None)
     posture.pop("portal_capture_receipt", None)
     run_intake_path.write_text(
         json.dumps(tampered_run_intake, ensure_ascii=False), encoding="utf-8"

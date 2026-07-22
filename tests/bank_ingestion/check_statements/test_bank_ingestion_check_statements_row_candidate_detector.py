@@ -78,3 +78,20 @@ def test_detect_filters_total_or_balance_only_no_candidate():
 
     # Assert
     assert res == []
+
+
+def test_detect_marks_spanish_transaction_hint() -> None:
+    det = RowCandidateDetector()
+    line = make_line(
+        "12/03/2024 Transferencia recibida 123,45",
+        50.0,
+        500.0,
+        120.0,
+        140.0,
+    )
+
+    result = det.detect([line], page_index=0, page_height=1000.0, lang="es")
+
+    assert len(result) == 1
+    assert result[0].lang == "es"
+    assert result[0].features["lexical_hint"] == 1.0

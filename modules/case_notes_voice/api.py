@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-import base64
-import binascii
 import fcntl
 import hashlib
-import hmac
 import json
 import logging
 import math
@@ -18,7 +15,6 @@ import tempfile
 import threading
 import urllib.error
 import urllib.request
-import zlib
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
@@ -81,7 +77,7 @@ POST_TRANSCRIPTION_PROCESSING_NOTE = (
     "Preserve uncertainty instead of guessing."
 )
 TOKEN_TTL_SECONDS = 8 * 60 * 60
-MAX_CASE_CONTEXT_BYTES = 32_000
+VOICE_LAUNCH_TOKEN_BYTES = 32
 MAX_CASE_CONTEXT_CHARS = 12_000
 MAX_AUDIO_UPLOAD_BYTES = 2 * 1024 * 1024 * 1024
 # Keep a safety margin below OpenAI's 25 MB transcription file limit because the
@@ -251,6 +247,13 @@ class RealtimeTranscriptionSessionRequest(BaseModel):
     language: str = "it"
 
 
+class VoiceLaunchRequest(BaseModel):
+    """Case context supplied in an authenticated HTTPS request body."""
+
+    case_context: str = Field(default="", max_length=MAX_CASE_CONTEXT_CHARS)
+    language: str = "it"
+
+
 def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
@@ -300,40 +303,73 @@ def _token_hash(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
-def _base64url_encode(raw_value: bytes) -> str:
-    return base64.urlsafe_b64encode(raw_value).decode("ascii").rstrip("=")
-
-
-def _base64url_decode(encoded_value: str) -> bytes:
-    padding = "=" * (-len(encoded_value) % 4)
-    try:
-        return base64.urlsafe_b64decode((encoded_value + padding).encode("ascii"))
-    except (binascii.Error, UnicodeEncodeError) as exc:
-        raise VoiceSessionError("Invalid Clara voice launch token.") from exc
-
-
-def _voice_launch_token_secret() -> bytes:
-    load_env_from_secrets_file()
-    _load_simple_env_file(_repo_root() / ".env")
-    secret = (
-        os.getenv("CASE_NOTES_VOICE_TOKEN_SECRET", "").strip()
-        or os.getenv("AUTH_SESSION_SECRET", "").strip()
+def _voice_launch_token_root() -> Path:
+    configured_root = os.getenv("CASE_NOTES_VOICE_TOKEN_ROOT", "").strip()
+    root = (
+        Path(configured_root).expanduser().resolve()
+        if configured_root
+        else get_cache_dir("case_notes_voice_launch_tokens")
     )
-    if secret:
-        return secret.encode("utf-8")
-    auth_enabled = os.getenv("AUTH_ENABLED", "").strip().lower()
-    if auth_enabled in {"1", "true", "on", "yes"}:
-        raise VoiceSessionError("Voice launch token secret is not configured.")
-    return b"case-notes-voice-local-development-token-secret"
+    root.mkdir(parents=True, exist_ok=True, mode=0o700)
+    root.chmod(0o700)
+    return root
 
 
-def _sign_voice_launch_payload(payload_segment: str) -> str:
-    digest = hmac.new(
-        _voice_launch_token_secret(),
-        payload_segment.encode("ascii"),
-        hashlib.sha256,
-    ).digest()
-    return _base64url_encode(digest)
+def _voice_launch_token_path(token: str) -> Path:
+    return _voice_launch_token_root() / f"{_token_hash(token)}.json"
+
+
+def _write_voice_launch_token(token: str, payload: Mapping[str, Any]) -> None:
+    path = _voice_launch_token_path(token)
+    temp_path = path.with_name(f".{path.stem}.{secrets.token_hex(8)}.tmp")
+    serialized = json.dumps(dict(payload), ensure_ascii=False, separators=(",", ":"))
+    descriptor: int | None = None
+    try:
+        descriptor = os.open(
+            temp_path,
+            os.O_WRONLY | os.O_CREAT | os.O_EXCL,
+            0o600,
+        )
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            descriptor = None
+            handle.write(serialized)
+            handle.flush()
+            os.fsync(handle.fileno())
+        temp_path.replace(path)
+        path.chmod(0o600)
+    except OSError:
+        if descriptor is not None:
+            os.close(descriptor)
+        temp_path.unlink(missing_ok=True)
+        raise
+
+
+def _cleanup_expired_voice_launch_tokens(now: datetime | None = None) -> int:
+    """Delete expired, corrupt, and abandoned Hosted Voice launch metadata."""
+
+    timestamp = _utc_timestamp(now)
+    removed = 0
+    root = _voice_launch_token_root()
+    for path in root.iterdir():
+        if path.suffix == ".tmp":
+            if _path_is_stale(
+                path,
+                now=timestamp,
+                stale_seconds=VOICE_ORPHAN_STALE_SECONDS,
+            ):
+                removed += int(_remove_voice_file(path))
+            continue
+        if path.suffix != ".json":
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            expires_at = _parse_iso_timestamp(str(payload.get("expires_at", "")))
+        except (OSError, AttributeError, TypeError, ValueError, json.JSONDecodeError):
+            removed += int(_remove_voice_file(path))
+            continue
+        if expires_at <= timestamp:
+            removed += int(_remove_voice_file(path))
+    return removed
 
 
 def _upload_job_root() -> Path:
@@ -928,6 +964,7 @@ def cleanup_voice_retention_state(
 
     timestamp = _utc_timestamp(now)
     return {
+        "launch_tokens": _cleanup_expired_voice_launch_tokens(timestamp),
         "jobs": _mark_stale_upload_jobs(timestamp),
         "job_temp_files": _cleanup_stale_upload_job_temp_files(timestamp),
         "chunk_uploads": _cleanup_stale_chunked_uploads(timestamp),
@@ -1032,24 +1069,6 @@ def _parse_source_metadata_json(raw_value: str) -> dict[str, str]:
     return metadata
 
 
-def _decode_case_context_payload(encoded: str) -> str:
-    clean = encoded.strip()
-    if not clean:
-        return ""
-    try:
-        compressed = base64.urlsafe_b64decode(clean.encode("ascii"))
-        decompressor = zlib.decompressobj()
-        inflated = decompressor.decompress(compressed, MAX_CASE_CONTEXT_BYTES + 1)
-        if len(inflated) > MAX_CASE_CONTEXT_BYTES:
-            raise VoiceSessionError("Clara case-context payload is too large.")
-        inflated += decompressor.flush(MAX_CASE_CONTEXT_BYTES + 1 - len(inflated))
-    except (UnicodeEncodeError, binascii.Error, ValueError, zlib.error) as exc:
-        raise VoiceSessionError("Invalid Clara case-context payload.") from exc
-    if len(inflated) > MAX_CASE_CONTEXT_BYTES:
-        raise VoiceSessionError("Clara case-context payload is too large.")
-    return _normalize_case_context(inflated.decode("utf-8", errors="replace"))
-
-
 def _parse_iso_timestamp(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
@@ -1061,36 +1080,34 @@ def issue_voice_launch_token(
     *,
     user: AuthenticatedUser | None,
     case_context: str = "",
+    language: str = "it",
     now: datetime | None = None,
 ) -> str:
-    """Create a short-lived launch token for one hosted voice session."""
+    """Create an opaque token backed by short-lived server-side metadata."""
 
     if user is None:
         raise VoiceSessionError("Authentication is required for voice launch.")
+    normalized_language = str(language or "it").strip().lower()
+    if normalized_language not in SUPPORTED_TRANSCRIPTION_LANGUAGES:
+        raise VoiceSessionError(f"Unsupported language: {normalized_language}")
     timestamp = now or datetime.now(timezone.utc)
     if timestamp.tzinfo is None:
         timestamp = timestamp.replace(tzinfo=timezone.utc)
     timestamp = timestamp.astimezone(timezone.utc).replace(microsecond=0)
-    payload = {
+    payload: dict[str, Any] = {
         "schema_version": 1,
         "email": user.email.strip().lower(),
+        "language": normalized_language,
         "issued_at": timestamp.isoformat(),
         "expires_at": (timestamp + timedelta(seconds=TOKEN_TTL_SECONDS)).isoformat(),
-        "nonce": secrets.token_urlsafe(18),
     }
     normalized_context = _normalize_case_context(case_context)
     if normalized_context:
         payload["case_context"] = normalized_context
-    payload_segment = _base64url_encode(
-        json.dumps(
-            payload,
-            ensure_ascii=True,
-            separators=(",", ":"),
-            sort_keys=True,
-        ).encode("utf-8")
-    )
-    signature_segment = _sign_voice_launch_payload(payload_segment)
-    return f"{payload_segment}.{signature_segment}"
+    _cleanup_expired_voice_launch_tokens(timestamp)
+    token = secrets.token_urlsafe(VOICE_LAUNCH_TOKEN_BYTES)
+    _write_voice_launch_token(token, payload)
+    return token
 
 
 def verify_voice_launch_token(
@@ -1099,23 +1116,21 @@ def verify_voice_launch_token(
     user: AuthenticatedUser | None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
-    """Validate a launch token against the authenticated user."""
+    """Validate an opaque launch token against short-lived server metadata."""
 
     if user is None:
         raise VoiceSessionError("Authentication is required for voice launch.")
     clean_token = token.strip()
     if not clean_token:
         raise VoiceSessionError("Missing Clara voice launch token.")
-    parts = clean_token.split(".")
-    if len(parts) != 2 or not parts[0] or not parts[1]:
+    if len(clean_token) > 256 or not re.fullmatch(r"[A-Za-z0-9_-]+", clean_token):
         raise VoiceSessionError("Invalid or expired Clara voice launch token.")
-    payload_segment, signature_segment = parts
-    expected_signature = _sign_voice_launch_payload(payload_segment)
-    if not hmac.compare_digest(signature_segment, expected_signature):
+    path = _voice_launch_token_path(clean_token)
+    if not path.exists():
         raise VoiceSessionError("Invalid or expired Clara voice launch token.")
     try:
-        payload = json.loads(_base64url_decode(payload_segment).decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
         raise VoiceSessionError("Invalid Clara voice launch token.") from exc
     if not isinstance(payload, dict):
         raise VoiceSessionError("Invalid Clara voice launch token.")
@@ -1132,6 +1147,7 @@ def verify_voice_launch_token(
     except (TypeError, ValueError) as exc:
         raise VoiceSessionError("Invalid Clara voice launch token.") from exc
     if expires_at <= timestamp:
+        _remove_voice_file(path)
         raise VoiceSessionError("Clara voice launch token has expired.")
     payload["token_hash"] = _token_hash(clean_token)
     return payload
@@ -2908,16 +2924,28 @@ def _validate_uploaded_audio_request_fields(
         raise VoiceSessionError(f"Unsupported language: {language}")
 
 
-def _build_realtime_transcription_session_config(*, language: str) -> dict[str, Any]:
+def _build_realtime_transcription_session_config(
+    *,
+    language: str,
+    case_context: str = "",
+) -> dict[str, Any]:
+    transcription: dict[str, Any] = {
+        "model": DEFAULT_REALTIME_TRANSCRIPTION_MODEL,
+        "language": language,
+        "delay": DEFAULT_LIVE_TRANSCRIPTION_DELAY,
+    }
+    normalized_context = _normalize_case_context(case_context)
+    if normalized_context:
+        transcription["prompt"] = (
+            "Use this case context only to improve transcription of names, "
+            "organizations, and professional terms. Do not add facts that were "
+            f"not spoken.\n\n{normalized_context}"
+        )
     return {
         "type": "transcription",
         "audio": {
             "input": {
-                "transcription": {
-                    "model": DEFAULT_REALTIME_TRANSCRIPTION_MODEL,
-                    "language": language,
-                    "delay": DEFAULT_LIVE_TRANSCRIPTION_DELAY,
-                },
+                "transcription": transcription,
                 "turn_detection": None,
             },
         },
@@ -2929,7 +2957,7 @@ def _queue_uploaded_audio_job(
     background_tasks: BackgroundTasks,
     user: AuthenticatedUser | None,
     job_id: str,
-    launch_metadata: Mapping[str, Any],
+    case_context: str,
     source_metadata: dict[str, str],
     audio_path: Path,
     audio_size_bytes: int,
@@ -2941,7 +2969,7 @@ def _queue_uploaded_audio_job(
     try:
         _mark_stale_upload_jobs()
         _validate_audio_upload_metadata(filename, audio_size_bytes)
-        case_context = str(launch_metadata.get("case_context", ""))
+        normalized_case_context = _normalize_case_context(case_context)
         api_key = _resolve_openai_api_key()
         email = _email_for_user(user)
         job_path = _upload_job_path(job_id)
@@ -2967,7 +2995,7 @@ def _queue_uploaded_audio_job(
             content_type=content_type or "application/octet-stream",
             language=language,
             source_metadata=source_metadata,
-            case_context=case_context,
+            case_context=normalized_case_context,
             safety_identifier=_safety_identifier(user),
         )
     except OSError as exc:
@@ -3093,9 +3121,11 @@ def voice_page(
 
     session_ready = False
     token_error = ""
+    language = "it"
     if session:
         try:
-            verify_voice_launch_token(token=session, user=user)
+            launch_metadata = verify_voice_launch_token(token=session, user=user)
+            language = str(launch_metadata.get("language") or "it")
             session_ready = True
         except VoiceSessionError as exc:
             token_error = str(exc)
@@ -3109,6 +3139,7 @@ def voice_page(
             "session_token": session if session_ready else "",
             "session_ready": session_ready,
             "token_error": token_error,
+            "language": language,
         },
         headers={
             "Cache-Control": "no-store, private",
@@ -3120,14 +3151,12 @@ def voice_page(
 
 @site_router.get("/voice/launch")
 def launch_voice_page(
-    case_context_z: str = Query(default="", max_length=24_000),
     user: AuthenticatedUser | None = Depends(require_site_permission_for_request),
 ) -> RedirectResponse:
     """Issue a short-lived token and redirect into the hosted voice page."""
 
     try:
-        case_context = _decode_case_context_payload(case_context_z)
-        token = issue_voice_launch_token(user=user, case_context=case_context)
+        token = issue_voice_launch_token(user=user)
     except VoiceSessionError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -3136,6 +3165,34 @@ def launch_voice_page(
     return RedirectResponse(
         f"/case-notes/voice?{urlencode({'session': token})}",
         status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+    )
+
+
+@router.post("/launch")
+def create_voice_launch(
+    payload: VoiceLaunchRequest,
+    user: AuthenticatedUser | None = Depends(require_site_permission_for_request),
+) -> JSONResponse:
+    """Issue an opaque launch token from authenticated body-supplied context."""
+
+    try:
+        token = issue_voice_launch_token(
+            user=user,
+            case_context=payload.case_context,
+            language=payload.language,
+        )
+    except VoiceSessionError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+    return JSONResponse(
+        {
+            "status": "ready",
+            "launch_token": token,
+            "launch_path": f"/case-notes/voice?{urlencode({'session': token})}",
+        },
+        headers={"Cache-Control": "no-store, private", "Pragma": "no-cache"},
     )
 
 
@@ -3152,7 +3209,8 @@ def create_realtime_transcription_session(
             token=payload.launch_token, user=user
         )
         session_config = _build_realtime_transcription_session_config(
-            language=payload.language
+            language=payload.language,
+            case_context=str(launch_metadata.get("case_context", "")),
         )
         realtime_call = create_realtime_call_with_metadata(
             api_key=_resolve_openai_api_key(),
@@ -3187,6 +3245,7 @@ async def upload_audio(
     background_tasks: BackgroundTasks,
     launch_token: str = Form(...),
     language: str = Form("it"),
+    case_context: str = Form(""),
     source_metadata_json: str = Form("{}"),
     audio_file: UploadFile = File(..., alias="audio"),
     user: AuthenticatedUser | None = Depends(require_site_permission_for_request),
@@ -3207,7 +3266,7 @@ async def upload_audio(
             background_tasks=background_tasks,
             user=user,
             job_id=job_id,
-            launch_metadata=launch_metadata,
+            case_context=(case_context or str(launch_metadata.get("case_context", ""))),
             source_metadata=source_metadata,
             audio_path=audio_path,
             audio_size_bytes=audio_size_bytes,
@@ -3237,6 +3296,7 @@ async def upload_audio(
 async def start_chunked_audio_upload(
     launch_token: str = Form(...),
     language: str = Form("it"),
+    case_context: str = Form(""),
     source_metadata_json: str = Form("{}"),
     filename: str = Form(...),
     content_type: str = Form("application/octet-stream"),
@@ -3283,7 +3343,9 @@ async def start_chunked_audio_upload(
                 "expected_chunk_bytes": expected_chunk_bytes,
                 "language": language,
                 "source_metadata": source_metadata,
-                "case_context": str(launch_metadata.get("case_context", "")),
+                "case_context": _normalize_case_context(
+                    case_context or str(launch_metadata.get("case_context", ""))
+                ),
                 "received_chunks": [],
                 "chunk_bytes": {},
                 "chunk_sha256": {},
@@ -3415,7 +3477,7 @@ async def finish_chunked_audio_upload(
             background_tasks=background_tasks,
             user=user,
             job_id=job_id,
-            launch_metadata={"case_context": metadata.get("case_context", "")},
+            case_context=str(metadata.get("case_context", "")),
             source_metadata=dict(metadata.get("source_metadata", {})),
             audio_path=audio_path,
             audio_size_bytes=audio_size_bytes,

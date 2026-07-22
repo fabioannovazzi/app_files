@@ -111,7 +111,10 @@ def test_summarize_results_golden_path_eng():
     expected_beneficiaries = pl.DataFrame(
         {"movement_number": ["M3"], "beneficiary_extracted": ["Acm"]}
     )
-    assert_frame_equal(metrics["beneficiary_mismatches"].sort("movement_number"), expected_beneficiaries)
+    assert_frame_equal(
+        metrics["beneficiary_mismatches"].sort("movement_number"),
+        expected_beneficiaries,
+    )
 
 
 def test_summarize_results_no_mismatches_only_intro_and_metrics():
@@ -148,6 +151,79 @@ def test_summarize_results_no_mismatches_only_intro_and_metrics():
     # No mismatch breakdown or beneficiary section expected
     assert metrics["mismatch_breakdown"].height == 0
     assert "beneficiary_mismatches" not in metrics
+
+
+def test_summarize_results_localizes_complete_spanish_summary() -> None:
+    df = pl.DataFrame(
+        [
+            {
+                "movement_number": "A1",
+                "check_status": "mismatch",
+                "mismatch_type": "amount_mismatch",
+                "explanation": (
+                    "Diferencia de importe: se esperaba 100, se encontró 80"
+                ),
+                "severity": "Crítico",
+                "beneficiary_extracted": None,
+            },
+            {
+                "movement_number": "A2",
+                "check_status": "mismatch",
+                "mismatch_type": "date_mismatch",
+                "explanation": (
+                    "Diferencia de fecha: se esperaba 2026-01-10±0 días, "
+                    "se encontró 2026-01-12"
+                ),
+                "severity": "Mayor",
+                "beneficiary_extracted": None,
+            },
+            {
+                "movement_number": "A3",
+                "check_status": "mismatch",
+                "mismatch_type": "beneficiary_mismatch",
+                "explanation": (
+                    "Beneficiario diferente: se esperaba ACME, se encontró Acm"
+                ),
+                "severity": "Menor",
+                "beneficiary_extracted": "Acm",
+            },
+            {
+                "movement_number": "A4",
+                "check_status": "verified",
+                "mismatch_type": None,
+                "explanation": None,
+                "severity": None,
+                "beneficiary_extracted": None,
+            },
+            {
+                "movement_number": "A5",
+                "check_status": "no_pdf",
+                "mismatch_type": None,
+                "explanation": None,
+                "severity": None,
+                "beneficiary_extracted": None,
+            },
+        ]
+    )
+
+    summary_text, _metrics = summarize_results(None, df, "es")
+
+    assert (
+        "El control revisó 4 asientos con PDF: 1 sin discrepancias, 3 con "
+        "discrepancias y 1 sin PDF." in summary_text
+    )
+    assert "Discrepancias totales:" in summary_text
+    assert "1 Crítico" in summary_text
+    assert "1 Mayor" in summary_text
+    assert "1 Menor" in summary_text
+    assert "Categorías de discrepancia" in summary_text
+    assert "1 asiento tenía una discrepancia de beneficiario" in summary_text
+    assert "- asiento A3: Acm" in summary_text
+    assert "Ejemplos representativos" in summary_text
+    assert "(diferencia 20.0)" in summary_text
+    assert "(2 días)" in summary_text
+    assert "Mismatch" not in summary_text
+    assert "Representative" not in summary_text
 
 
 def test_summarize_results_unknown_severity_defaults_and_reports_message():

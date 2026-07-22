@@ -270,6 +270,7 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 
 .card + .card { border-left: 1px solid var(--cyan); }
 .card p { margin-top: 11px; color: var(--blue); }
+.card .button { margin-top: 22px; }
 
 .method {
   max-width: none;

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import sys
 from pathlib import Path
 
 from docx import Document
 from openpyxl import load_workbook
+
+from scripts.validate_plugin_review_contract import validate_contract
 
 OUTPUTS = (
     Path(__file__).resolve().parents[2]
@@ -13,12 +17,27 @@ OUTPUTS = (
     / "scripts"
     / "workpaper_outputs.py"
 )
+REVIEW_SESSION = OUTPUTS.with_name("review_session.py")
 
 
 def load_outputs():
     spec = importlib.util.spec_from_file_location("audit_workpaper_outputs", OUTPUTS)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_review_session():
+    script_dir = str(REVIEW_SESSION.parent)
+    if script_dir not in sys.path:
+        sys.path.insert(0, script_dir)
+    spec = importlib.util.spec_from_file_location(
+        "audit_workpaper_review_session", REVIEW_SESSION
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -174,10 +193,178 @@ def test_write_excel_workpaper_adds_italian_presentation_tabs_without_removing_r
         for row in workbook["Assunzioni"].iter_rows(values_only=False)
         for cell in row
     ]
-    assert "Factoring pro-soluto chiude con evidenza esterna allocata" in assumption_values
+    assert (
+        "Factoring pro-soluto chiude con evidenza esterna allocata" in assumption_values
+    )
     assert "factoring_pro_soluto_closes_item" not in {
         str(value) for value in assumption_values
     }
+
+
+def test_spanish_workpapers_and_review_contract_are_fully_localized(tmp_path):
+    outputs = load_outputs()
+    excel_path = tmp_path / "conciliacion_auditoria.xlsx"
+    word_path = tmp_path / "informe_conciliacion.docx"
+    assumptions = {
+        "scope_year": "2024",
+        "cutoff_date": "2024-12-31",
+        "currency": "EUR",
+        "factoring_pro_soluto_closes_item": True,
+        "post_cutoff_events_excluded": True,
+    }
+    reconciliation_rows = [
+        {
+            "record_id": "open-1",
+            "document_no": "FAC-001",
+            "amount": "100.00",
+            "reconciliation_status": "needs_evidence",
+            "rule_applied": "internal_closure_without_external",
+            "matched_evidence_type": "internal_closure",
+        }
+    ]
+    checks = [{"check": "review_packet", "status": "WARN"}]
+    review_rows = [{"record_id": "open-1", "review_status": "PENDING"}]
+    sheets = outputs.build_audit_workbook_sheets(
+        assumptions=assumptions,
+        source_inventory=[{"source_role": "bank_statement"}],
+        normalized_records=[],
+        reconciliation_rows=reconciliation_rows,
+        checks=checks,
+        review_rows=review_rows,
+        language="es",
+    )
+
+    outputs.write_excel_workpaper(excel_path, sheets, language="es-ES")
+    outputs.write_word_report(
+        word_path,
+        title="Informe de conciliación de auditoría",
+        metadata={"scope_year": "2024", "cutoff_date": "2024-12-31"},
+        summary_rows=sheets["Summary"],
+        assumptions=assumptions,
+        next_steps=["Obtener la evidencia pendiente."],
+        source_inventory=[{"source_role": "bank_statement"}],
+        checks=checks,
+        review_rows=review_rows,
+        language="spa",
+    )
+
+    workbook = load_workbook(excel_path)
+    assert "Índice" in workbook.sheetnames
+    assert "Supuestos" in workbook.sheetnames
+    assert "Detalle de conciliación" in workbook.sheetnames
+    assert "Revisión Codex" in workbook.sheetnames
+    assert workbook["Reconciliation detail"].sheet_state == "hidden"
+    detail_values = {
+        str(cell.value)
+        for row in workbook["Detalle de conciliación"].iter_rows()
+        for cell in row
+        if cell.value is not None
+    }
+    assert "Estado de conciliación" in detail_values
+    assert "Regla aplicada" in detail_values
+    assert "Requiere evidencia adicional" in detail_values
+    assert "Cierre interno sin evidencia externa" in detail_values
+    assert "Asiento de cierre" in detail_values
+    assert "needs_evidence" not in detail_values
+    assert "internal_closure_without_external" not in detail_values
+    assumption_values = {
+        str(cell.value)
+        for row in workbook["Supuestos"].iter_rows()
+        for cell in row
+        if cell.value is not None
+    }
+    assert "Año del alcance" in assumption_values
+    assert (
+        "El factoring sin recurso cierra con evidencia externa asignada"
+        in assumption_values
+    )
+    assert "Sí" in assumption_values
+
+    report = document_text(word_path)
+    for expected in (
+        "Resumen ejecutivo",
+        "Papel de trabajo de conciliación determinista",
+        "Alcance y método",
+        "Cómo interpretar los resultados",
+        "Requiere evidencia adicional",
+        "Cierre interno sin evidencia externa",
+        "Extracto bancario",
+        "Controles automáticos",
+        "Aviso",
+        "Revisión manual de Codex",
+        "Pendiente",
+        "Limitaciones del procedimiento",
+        "Referencia al archivo Excel",
+    ):
+        assert expected in report
+    for internal_or_english in (
+        "needs_evidence",
+        "internal_closure_without_external",
+        "bank_statement",
+        "Deterministic reconciliation workpaper",
+        "Scope and Method",
+        "Procedure Limits",
+    ):
+        assert internal_or_english not in report
+
+    review_session = load_review_session()
+    run_intake = review_session.write_run_intake(
+        tmp_path,
+        assumptions=assumptions,
+        language="spa",
+        source_hint="auditoria-es",
+    )
+    result = {
+        "excel_path": excel_path,
+        "word_path": word_path,
+        "assumptions": assumptions,
+        "reconciliation_rows": reconciliation_rows,
+        "checks": checks,
+        "review_rows": review_rows,
+        "checks_pass": False,
+    }
+    review_result = review_session.write_review_session_artifacts(
+        tmp_path,
+        run_id=run_intake.run_id,
+        run_intake_path=run_intake.path,
+        result=result,
+        language="spa",
+    )
+    final_artifacts = json.loads(
+        review_result.final_artifacts_path.read_text(encoding="utf-8")
+    )
+    audit_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output.get("artifact_role") == "audit_workpaper"
+    )
+    word_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output.get("artifact_role") == "word_report"
+    )
+    assert audit_output["required_sheets"] == [
+        "Índice",
+        "Supuestos",
+        "Detalle de conciliación",
+        "Resumen",
+        "Controles",
+        "Revisión Codex",
+    ]
+    assert audit_output["required_sheet_headers"] == {
+        "Índice": ["Hoja", "Líneas"],
+        "Supuestos": ["Campo", "Valor"],
+    }
+    assert audit_output["required_cells"]["Supuestos"]["A2"] == "Año del alcance"
+    assert word_output["required_text"][0] == "Resumen ejecutivo"
+    assert word_output["required_text"][-1] == "Referencia al archivo Excel"
+    contract_report = validate_contract(tmp_path, strict_output_content=True)
+    artifact_errors = [
+        error
+        for error in contract_report.errors
+        if excel_path.name in error or word_path.name in error
+    ]
+    assert artifact_errors == []
 
 
 def test_write_word_report_defaults_to_italian_labels(tmp_path):

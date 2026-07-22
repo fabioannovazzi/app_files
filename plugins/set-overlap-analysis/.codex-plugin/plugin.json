@@ -1,6 +1,6 @@
 {
   "name": "set-overlap-analysis",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "Deterministic Venn and UpSet overlap chart workflow for CSV and Excel datasets.",
   "author": {
     "name": "Mparanza",

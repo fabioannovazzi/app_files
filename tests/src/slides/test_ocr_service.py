@@ -47,6 +47,14 @@ def _disable_llm_correction(monkeypatch) -> None:
     monkeypatch.setattr("src.slides.ocr_service._build_local_llm_wrapper", lambda: None)
 
 
+def test_spanish_ocr_language_uses_spanish_prompt_and_configured_model() -> None:
+    language_label = ocr_service._resolve_ocr_language_label("spa")
+    model_name = ocr_service._slide_text_recognition_model_name("spa")
+
+    assert language_label == "Spanish"
+    assert model_name == ocr_service._SLIDE_PADDLE_TEXT_RECOGNITION_MODEL
+
+
 def test_build_deck_ocr_payload_uses_layout_guided_text_blocks_only(
     monkeypatch, tmp_path: Path
 ) -> None:

@@ -1,12 +1,12 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-21T14:13:41+00:00",
+  "generatedAt": "2026-07-22T10:30:06+00:00",
   "publicationStatus": "local_rendered",
   "remotePublish": false,
   "generator": "scripts/build_vera_local_video_guides.py",
   "frameTemplate": "../guide-frame.html",
   "specification": "../vera-missing-guides.json",
-  "assetCount": 19,
+  "assetCount": 24,
   "assets": [
     {
       "conceptId": "from-client-folder-to-operational-file",
@@ -375,6 +375,97 @@
     {
       "conceptId": "from-client-folder-to-operational-file",
       "module": "new-client",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "es",
+      "languageLabel": "Español",
+      "title": "Vera | De los documentos fuente al expediente de cliente operativo",
+      "status": "local_rendered",
+      "targetDurationSeconds": 60.0,
+      "speechDurationSeconds": 58.4,
+      "voice": {
+        "name": "Mónica",
+        "rate": 100,
+        "interScenePauseMs": 2891,
+        "effectiveInterScenePauseSeconds": 2.891
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/new-client/index.html#core-model"
+      ],
+      "cueCount": 12,
+      "sceneSpeechDurationsSeconds": [
+        7.4,
+        4.15,
+        4.336,
+        4.162,
+        11.952,
+        11.946
+      ],
+      "sceneDurationsSeconds": [
+        9.646,
+        7.041,
+        7.227,
+        7.053,
+        14.842,
+        14.192
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          9.646,
+          16.687,
+          23.914,
+          30.966,
+          45.808
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "new-client/core/es/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2293452,
+          "sha256": "8a3ceee96871abee248777723f60284d2bdeaee266f8775fc1bfb41d0115d30a"
+        },
+        "poster": {
+          "path": "new-client/core/es/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 92462,
+          "sha256": "3134af2a27884e9c6aeed6408f38a91d35ef5719d05f856911ea67c0bc63877a"
+        },
+        "captions": {
+          "path": "new-client/core/es/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1156,
+          "sha256": "a41b3622e1665d8ae3f3ab5e4bab459bc095a74e118238ece0e141fd44d3b88e"
+        },
+        "transcript": {
+          "path": "new-client/core/es/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 818,
+          "sha256": "023ed5623486ec905fe3bbe5eb4e315d8e02afba039267f080997072ac412f5b"
+        }
+      },
+      "media": {
+        "durationSeconds": 60.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "new-client",
       "edition": "italy",
       "scope": "country",
       "jurisdiction": "IT",
@@ -722,6 +813,97 @@
           "mimeType": "text/plain",
           "bytes": 889,
           "sha256": "1a6f96836b55d13ec81cf15914653e73e8535fcbe9fda5d9d7564b0f5d87e04d"
+        }
+      },
+      "media": {
+        "durationSeconds": 70.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-client-folder-to-operational-file",
+      "module": "new-client",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "es",
+      "languageLabel": "Español",
+      "title": "Vera | Encargo, privacidad y PBC para un nuevo cliente",
+      "status": "local_rendered",
+      "targetDurationSeconds": 70.0,
+      "speechDurationSeconds": 68.4,
+      "voice": {
+        "name": "Mónica",
+        "rate": 100,
+        "interScenePauseMs": 2164,
+        "effectiveInterScenePauseSeconds": 2.164
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/new-client/index.html#italy"
+      ],
+      "cueCount": 18,
+      "sceneSpeechDurationsSeconds": [
+        11.325,
+        8.852,
+        10.814,
+        8.701,
+        12.021,
+        5.868
+      ],
+      "sceneDurationsSeconds": [
+        13.207,
+        11.016,
+        12.978,
+        10.864,
+        14.185,
+        7.75
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          13.207,
+          24.223,
+          37.201,
+          48.065,
+          62.25
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "new-client/italy/es/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2735917,
+          "sha256": "f24e83430cbe7b5584a45e9912645302c0085c5d23b9a68bfa69e5a4520e4fb2"
+        },
+        "poster": {
+          "path": "new-client/italy/es/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 88576,
+          "sha256": "393ae12b8f9b7854b925ea2299a40a690c501ae26a39aac9a03ae7a0229319d2"
+        },
+        "captions": {
+          "path": "new-client/italy/es/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1546,
+          "sha256": "8826f85e1569f0ac362c5cf35dfd1154b2c9d45911a0a12e4dbef396f21eeb23"
+        },
+        "transcript": {
+          "path": "new-client/italy/es/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 992,
+          "sha256": "c676a445293ad625e91419716640e6088e5fd7ca6b78954c5dc50389a52f8e61"
         }
       },
       "media": {
@@ -1105,6 +1287,98 @@
       }
     },
     {
+      "conceptId": "from-journal-to-reproducible-sample",
+      "module": "journal-sampling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "es",
+      "languageLabel": "Español",
+      "title": "Vera | Del diario a una muestra reproducible",
+      "status": "local_rendered",
+      "targetDurationSeconds": 55.0,
+      "speechDurationSeconds": 53.4,
+      "voice": {
+        "name": "Mónica",
+        "rate": 100,
+        "interScenePauseMs": 2293,
+        "effectiveInterScenePauseSeconds": 2.293
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/journal-sampling/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        3.801,
+        9.305,
+        10.802,
+        5.05,
+        8.527,
+        4.452
+      ],
+      "sceneDurationsSeconds": [
+        5.748,
+        11.597,
+        13.095,
+        7.342,
+        10.82,
+        6.398
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          5.748,
+          17.345,
+          30.44,
+          37.782,
+          48.602
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "journal-sampling/core/es/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 2045476,
+          "sha256": "9efe329cd5ce4322495a4d05c879a46c3f464b6861912b43de1fa35aa7481865"
+        },
+        "poster": {
+          "path": "journal-sampling/core/es/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 90305,
+          "sha256": "b8eda5e9fd6bdfab3a4a6e97c33c29afb98548080884c477b9d6f8b1f87f6f68"
+        },
+        "captions": {
+          "path": "journal-sampling/core/es/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1046,
+          "sha256": "724f2de2665ba52f34127149b69acef500b7d0150e2a04c3c3e80fbcf1160ae0"
+        },
+        "transcript": {
+          "path": "journal-sampling/core/es/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 720,
+          "sha256": "85b6d4277652d5c849e865597fc10baf3064edbe6c7ba11fa9c6a4d570c527f0"
+        }
+      },
+      "media": {
+        "durationSeconds": 55.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
       "conceptId": "from-sampled-entry-to-verified-support",
       "module": "check-entries",
       "edition": "core",
@@ -1471,6 +1745,97 @@
     {
       "conceptId": "from-sampled-entry-to-verified-support",
       "module": "check-entries",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "es",
+      "languageLabel": "Español",
+      "title": "Vera | Del asiento seleccionado al justificante verificado",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.4,
+      "voice": {
+        "name": "Mónica",
+        "rate": 100,
+        "interScenePauseMs": 855,
+        "effectiveInterScenePauseSeconds": 0.855
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#journey"
+      ],
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        5.014,
+        7.691,
+        8.079,
+        10.082,
+        9.108,
+        4.15
+      ],
+      "sceneDurationsSeconds": [
+        6.242,
+        8.546,
+        8.935,
+        10.937,
+        9.963,
+        5.377
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.242,
+          14.788,
+          23.722,
+          34.66,
+          44.623
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "check-entries/core/es/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1953319,
+          "sha256": "799068ef523ca1490eed882413f14183bb1e818202e2769978753d4aa11a12ef"
+        },
+        "poster": {
+          "path": "check-entries/core/es/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 89661,
+          "sha256": "3b8262ed93ed5c68370d387f8572add7c6de981c3a76c1e1b0e8d3d66fcaa140"
+        },
+        "captions": {
+          "path": "check-entries/core/es/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1115,
+          "sha256": "0f0516d97ca7fc62eef01d51857cbe2987958093ab9510674ba2165114387853"
+        },
+        "transcript": {
+          "path": "check-entries/core/es/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 803,
+          "sha256": "22fe3ba1c5e088d2e927ecda13e11a929906a9b68558ddc1c9a1ca5bb315bafa"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
       "edition": "italy-fatturapa",
       "scope": "country",
       "jurisdiction": "IT",
@@ -1727,6 +2092,97 @@
           "mimeType": "text/plain",
           "bytes": 633,
           "sha256": "595f7ea2b0e79455df85f307e1c9e4dde9f87d91f1b790e784f9d07603dafce8"
+        }
+      },
+      "media": {
+        "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "from-sampled-entry-to-verified-support",
+      "module": "check-entries",
+      "edition": "italy-fatturapa",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "language": "es",
+      "languageLabel": "Español",
+      "title": "Vera | Asientos · Italia · FatturaPA",
+      "status": "local_rendered",
+      "targetDurationSeconds": 50.0,
+      "speechDurationSeconds": 48.4,
+      "voice": {
+        "name": "Mónica",
+        "rate": 100,
+        "interScenePauseMs": 1638,
+        "effectiveInterScenePauseSeconds": 1.638
+      },
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/check-entries/index.html#italy-adapter"
+      ],
+      "cueCount": 11,
+      "sceneSpeechDurationsSeconds": [
+        4.48,
+        7.435,
+        6.779,
+        10.082,
+        7.285,
+        4.15
+      ],
+      "sceneDurationsSeconds": [
+        6.099,
+        9.073,
+        8.417,
+        11.72,
+        8.923,
+        5.769
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          6.099,
+          15.172,
+          23.589,
+          35.309,
+          44.231
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "check-entries/italy-fatturapa/es/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 1705201,
+          "sha256": "2240bc9dfb6dd85dfce9e39ba8579c2d007329a863568d86814ff49ef1c1acaa"
+        },
+        "poster": {
+          "path": "check-entries/italy-fatturapa/es/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 76088,
+          "sha256": "4da1b4355d89d5048b4bedf92f54fbd2bad6136fcdd204a286fd779015128d25"
+        },
+        "captions": {
+          "path": "check-entries/italy-fatturapa/es/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1052,
+          "sha256": "b9a6a30c0945d4b15d2c404e7ec3ec6df7432af0a65bff32960d753e27623ad0"
+        },
+        "transcript": {
+          "path": "check-entries/italy-fatturapa/es/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 720,
+          "sha256": "feb8149fcad2e7cf9c59d529e16f9791d3665eb03b0d84e99d140d6cb8137ac2"
         }
       },
       "media": {

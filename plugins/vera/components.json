@@ -14,6 +14,10 @@
     "previdenza-inps",
     "registro-imprese-sari"
   ],
+  "shared_services": [
+    "plugin-update-check",
+    "plugin-feedback"
+  ],
   "workflow_roles": {
     "new-client": {
       "kind": "workflow",

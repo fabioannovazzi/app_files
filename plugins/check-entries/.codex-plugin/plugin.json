@@ -1,6 +1,6 @@
 {
   "name": "check-entries",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Journal-entry testing against FatturaPA XML and PDF support, guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -26,7 +26,7 @@
   "interface": {
     "displayName": "Check Entries",
     "shortDescription": "Match sampled entries to FatturaPA XMLs, connector exports, or targeted PDFs.",
-    "longDescription": "Codex workflow for checking selected journal entries against supporting documents. It first accepts a bulk FatturaPA XML ZIP, can record a local export produced by an authorized accounting-system connector, and then falls back to PDFs only for unresolved sampled entries. Deterministic scripts parse structured fields, require a unique multi-signal invoice match, compare PDF evidence, and export CSV/XLSX/JSON evidence, audit, diagnostics, and review notes. Supports it/en/fr/de and leaves ambiguous professional judgment to Codex and the reviewer.",
+    "longDescription": "Codex workflow for checking selected journal entries against supporting documents. It first accepts a bulk FatturaPA XML ZIP, can record a local export produced by an authorized accounting-system connector, and then falls back to PDFs only for unresolved sampled entries. Deterministic scripts parse structured fields, require a unique multi-signal invoice match, compare PDF evidence, and export CSV/XLSX/JSON evidence, audit, diagnostics, and review notes. Supports it/en/fr/de/es and leaves ambiguous professional judgment to Codex and the reviewer.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",

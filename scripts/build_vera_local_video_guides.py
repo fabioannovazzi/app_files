@@ -33,12 +33,14 @@ VOICE_BY_LANGUAGE = {
     "en": "Samantha",
     "fr": "Thomas",
     "de": "Anna",
+    "es": "Mónica",
 }
 LANGUAGE_LABELS = {
     "it": "Italiano",
     "en": "English",
     "fr": "Français",
     "de": "Deutsch",
+    "es": "Español",
 }
 FRAME_WIDTH = 1280
 FRAME_HEIGHT = 720
@@ -58,21 +60,26 @@ EXPECTED_LOCALIZATIONS = {
     ("new-client", "core", "en"),
     ("new-client", "core", "fr"),
     ("new-client", "core", "de"),
+    ("new-client", "core", "es"),
     ("new-client", "italy", "it"),
     ("new-client", "italy", "en"),
     ("new-client", "italy", "fr"),
     ("new-client", "italy", "de"),
+    ("new-client", "italy", "es"),
     ("journal-sampling", "core", "it"),
     ("journal-sampling", "core", "en"),
     ("journal-sampling", "core", "fr"),
     ("journal-sampling", "core", "de"),
+    ("journal-sampling", "core", "es"),
     ("check-entries", "core", "it"),
     ("check-entries", "core", "en"),
     ("check-entries", "core", "fr"),
     ("check-entries", "core", "de"),
+    ("check-entries", "core", "es"),
     ("check-entries", "italy-fatturapa", "en"),
     ("check-entries", "italy-fatturapa", "fr"),
     ("check-entries", "italy-fatturapa", "de"),
+    ("check-entries", "italy-fatturapa", "es"),
 }
 CORE_CHECK_ENTRY_FRAME_REPLACEMENTS = {
     "FatturaPA · TD01": "DOC-184",
@@ -1200,6 +1207,7 @@ def build_vera_local_video_guides(
     modules: set[str] | None = None,
     editions: set[str] | None = None,
     *,
+    languages: set[str] | None = None,
     captions_only: bool = False,
 ) -> Path:
     """Render selected Vera guide modules and write the complete manifest."""
@@ -1235,6 +1243,17 @@ def build_vera_local_video_guides(
             raise ValueError(
                 f"Unknown Vera guide editions: {sorted(unknown_editions)!r}"
             )
+    available_languages = {
+        language
+        for concept in spec["concepts"]
+        for language in concept["localizations"]
+    }
+    if languages:
+        unknown_languages = languages - available_languages
+        if unknown_languages:
+            raise ValueError(
+                f"Unknown Vera guide languages: {sorted(unknown_languages)!r}"
+            )
     selected_concepts = [
         concept
         for concept in spec["concepts"]
@@ -1260,6 +1279,8 @@ def build_vera_local_video_guides(
             raise ValueError("Caption-only rendering requires an existing manifest")
         for concept in selected_concepts:
             for language, localization in concept["localizations"].items():
+                if languages and language not in languages:
+                    continue
                 identity = (concept["module"], concept["edition"], language)
                 if identity not in existing_entries:
                     raise ValueError(
@@ -1300,6 +1321,8 @@ def build_vera_local_video_guides(
             try:
                 for concept in selected_concepts:
                     for language, localization in concept["localizations"].items():
+                        if languages and language not in languages:
+                            continue
                         rendered_entries.append(
                             _build_one_guide(
                                 page=page,
@@ -1316,7 +1339,7 @@ def build_vera_local_video_guides(
                 browser.close()
 
     entries_by_identity: dict[tuple[str, str, str], dict[str, Any]] = {}
-    if modules or editions or captions_only:
+    if modules or editions or languages or captions_only:
         entries_by_identity.update(existing_entries)
     entries_by_identity.update(
         {
@@ -1382,6 +1405,12 @@ def _parse_args() -> argparse.Namespace:
         help="Render only this edition and preserve other validated manifest entries.",
     )
     parser.add_argument(
+        "--language",
+        action="append",
+        dest="languages",
+        help="Render only this language and preserve other validated manifest entries.",
+    )
+    parser.add_argument(
         "--captions-only",
         action="store_true",
         help="Rebuild captions from matching rendered media without changing it.",
@@ -1400,6 +1429,7 @@ def main() -> int:
     build_vera_local_video_guides(
         set(args.modules) if args.modules else None,
         set(args.editions) if args.editions else None,
+        languages=set(args.languages) if args.languages else None,
         captions_only=args.captions_only,
     )
     return 0

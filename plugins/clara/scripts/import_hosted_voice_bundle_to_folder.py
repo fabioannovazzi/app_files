@@ -46,7 +46,7 @@ MARKER_PATTERN = re.compile(
     re.DOTALL,
 )
 TRANSCRIPT_HEADING_PATTERN = re.compile(
-    r"^##\s+(?:Transcript|Trascrizione|Transcription|Transkript)\s*$",
+    r"^##\s+(?:Transcript|Trascrizione|Transcription|Transkript|Transcripción)\s*$",
     re.IGNORECASE | re.MULTILINE,
 )
 
@@ -741,9 +741,11 @@ def _duration_seconds(payload: Mapping[str, Any]) -> float | None:
         return None
 
 
-def _format_duration(seconds: float | None) -> str:
+def _format_duration(
+    seconds: float | None, *, unavailable: str = "not available"
+) -> str:
     if seconds is None:
-        return "not available"
+        return unavailable
     total = max(0, round(seconds))
     hours, remainder = divmod(total, 3600)
     minutes, secs = divmod(remainder, 60)
@@ -760,8 +762,10 @@ def _transcript_markdown(
     metadata = _source_metadata(payload)
     language = str(payload.get("language", "")).strip()
     italian = language.lower().startswith("it")
+    spanish = language.lower().startswith("es")
     source_title = str(metadata.get("title", "")).strip()
-    title = (title_override or source_title or "Hosted voice").strip()
+    default_title = "Voz alojada" if spanish else "Hosted voice"
+    title = (title_override or source_title or default_title).strip()
     participants = str(metadata.get("participants", "")).strip()
     captured_at = str(payload.get("captured_at", "")).strip()
     marker = json.dumps(
@@ -790,6 +794,23 @@ def _transcript_markdown(
             "il testo o altra evidenza autorizzata lo supportano."
         )
         section = "## Trascrizione"
+        unavailable = "non disponibile"
+    elif spanish:
+        heading = f"# {title} — Transcripción de la llamada"
+        labels = {
+            "captured": "Grabada",
+            "duration": "Duración",
+            "participants": "Participantes indicados en los metadatos",
+            "language": "Idioma",
+            "source": "Archivo de origen",
+        }
+        status = (
+            "Esta transcripción automática se conserva sin atribución "
+            "verificada de cada intervención. Corrige o atribuye hablantes solo "
+            "cuando lo respalden el texto u otra evidencia autorizada."
+        )
+        section = "## Transcripción"
+        unavailable = "no disponible"
     else:
         heading = f"# {title} — Call transcript"
         labels = {
@@ -805,15 +826,19 @@ def _transcript_markdown(
             "the text or other authorized evidence."
         )
         section = "## Transcript"
-    participant_value = participants or "not available"
-    language_value = language or "not available"
+        unavailable = "not available"
+    participant_value = participants or unavailable
+    language_value = language or unavailable
     return "\n".join(
         [
             f"<!-- clara-plain-voice-import: {marker} -->",
             heading,
             "",
             f"- {labels['captured']}: {captured_at}",
-            f"- {labels['duration']}: {_format_duration(_duration_seconds(payload))}",
+            (
+                f"- {labels['duration']}: "
+                f"{_format_duration(_duration_seconds(payload), unavailable=unavailable)}"
+            ),
             f"- {labels['participants']}: {participant_value}",
             f"- {labels['language']}: {language_value}",
             f"- {labels['source']}: `{source_bundle_name}`",

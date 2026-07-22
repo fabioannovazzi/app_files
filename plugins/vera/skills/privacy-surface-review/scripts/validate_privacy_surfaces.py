@@ -25,11 +25,21 @@ BOUNDARY_KINDS = {
     "external_connector",
     "send_or_publish",
 }
+SERVICE_BOUNDARY_KINDS = {"hosted_service", "send_or_publish"}
 ACCOUNT_REVIEW_ITEMS = [
     "account_or_workspace_plan",
     "model_training_data_controls",
     "retention_and_deletion_controls",
 ]
+ORDINARY_PROCESSING = {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": (
+        "existing_chatgpt_or_codex_account_selected_by_firm_or_user"
+    ),
+    "separate_vera_recipient": False,
+    "automatic_anonymization": False,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+}
 
 
 def _vera_root() -> Path:
@@ -41,6 +51,11 @@ def _components(vera_root: Path) -> tuple[set[str], dict[str, dict[str, Any]]]:
     names = set(payload["plugins"])
     roles = payload.get("workflow_roles", {})
     return names, roles
+
+
+def _shared_services(vera_root: Path) -> set[str]:
+    payload = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    return set(payload.get("shared_services", []))
 
 
 def _component_root(vera_root: Path, workstream: str) -> Path:
@@ -74,14 +89,74 @@ def _governed_files(component_root: Path, paths: Iterable[str]) -> list[Path]:
     return sorted(files, key=lambda item: item.relative_to(component_root).as_posix())
 
 
+def _shared_governed_files(
+    vera_root: Path, paths: Iterable[str], *, packaged: bool
+) -> dict[str, Path]:
+    """Resolve package-relative shared files from source or an installed Vera."""
+
+    logical_files: dict[str, Path] = {}
+    source_root = vera_root if packaged else vera_root.parent / "_shared"
+    resolved_source_root = source_root.resolve()
+    for value in paths:
+        relative = Path(value)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(f"governed shared path must be package-relative: {value}")
+        target = source_root / relative
+        if target.is_symlink():
+            raise ValueError(f"governed shared path must not be a symlink: {target}")
+        try:
+            target.resolve(strict=True).relative_to(resolved_source_root)
+        except (FileNotFoundError, ValueError) as exc:
+            raise FileNotFoundError(
+                f"governed shared path not found or outside source root: {target}"
+            ) from exc
+        if target.is_file():
+            logical_files[f"vera-shared/{relative.as_posix()}"] = target
+            continue
+        if not target.is_dir():
+            raise FileNotFoundError(f"governed shared path not found: {target}")
+        for path in target.rglob("*"):
+            if path.is_symlink():
+                raise ValueError(
+                    f"governed shared source must not use symlinks: {path}"
+                )
+            if not path.is_file():
+                continue
+            rel_parts = path.relative_to(target).parts
+            if any(part in SKIP_DIRS for part in rel_parts):
+                continue
+            if path.suffix in SKIP_SUFFIXES:
+                continue
+            logical_path = relative / path.relative_to(target)
+            logical_files[f"vera-shared/{logical_path.as_posix()}"] = path
+    return logical_files
+
+
 def _fingerprint(
-    component_root: Path, paths: Iterable[str], *, wrapper: Path | None = None
+    component_root: Path,
+    paths: Iterable[str],
+    *,
+    wrapper: Path | None = None,
+    vera_root: Path | None = None,
+    shared_paths: Iterable[str] = (),
 ) -> str:
     governed_paths = tuple(paths)
     logical_files = {
         path.relative_to(component_root).as_posix(): path
         for path in _governed_files(component_root, governed_paths)
     }
+    shared_governed_paths = tuple(shared_paths)
+    if shared_governed_paths:
+        if vera_root is None:
+            raise ValueError("vera_root is required for governed shared paths")
+        try:
+            component_root.resolve().relative_to((vera_root / "modules").resolve())
+            packaged = True
+        except ValueError:
+            packaged = False
+        logical_files.update(
+            _shared_governed_files(vera_root, shared_governed_paths, packaged=packaged)
+        )
     projected_review_server = "scripts/review_server.py"
     adapter = component_root / "assets" / "review-workbench-adapter.json"
     source_review_server = component_root / projected_review_server
@@ -118,6 +193,151 @@ def _fingerprint(
     return digest.hexdigest()
 
 
+def _boundary_errors(
+    boundaries: Any,
+    *,
+    scope: str,
+    allowed_kinds: set[str],
+    require_retention: bool = False,
+    require_activation: bool = False,
+) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(boundaries, list):
+        return [f"{scope}: boundaries_beyond_codex must be an array"]
+    boundary_ids: list[str] = []
+    for index, boundary in enumerate(boundaries):
+        if not isinstance(boundary, dict):
+            errors.append(f"{scope}: boundary[{index}] must be an object")
+            continue
+        fields = {
+            "id",
+            "kind",
+            "destination",
+            "purpose",
+            "content",
+            "optional",
+            "requires_confirmation",
+            "controls",
+        }
+        text_fields = ["id", "destination", "purpose", "content"]
+        if require_retention:
+            fields.add("retention")
+            text_fields.append("retention")
+        if require_activation:
+            fields.add("activation")
+            text_fields.append("activation")
+        if fields - boundary.keys():
+            errors.append(f"{scope}: boundary[{index}] is incomplete")
+        if not all(
+            isinstance(boundary.get(field), str) and boundary[field].strip()
+            for field in text_fields
+        ):
+            errors.append(f"{scope}: boundary[{index}] text must be non-empty")
+        boundary_ids.append(str(boundary.get("id", "")))
+        if boundary.get("kind") not in allowed_kinds:
+            errors.append(f"{scope}: boundary[{index}] has invalid kind")
+        optional = boundary.get("optional")
+        confirmation = boundary.get("requires_confirmation")
+        if not isinstance(optional, bool) or not isinstance(confirmation, bool):
+            errors.append(f"{scope}: boundary[{index}] flags must be boolean")
+        elif confirmation and not optional:
+            errors.append(
+                f"{scope}: confirmation is allowed only for an optional boundary"
+            )
+        if require_activation:
+            activation = boundary.get("activation")
+            automatic = {
+                "automatic_session_start",
+                "automatic_after_prior_submission",
+            }
+            if activation not in automatic | {"explicit_user_choice"}:
+                errors.append(f"{scope}: boundary[{index}] has invalid activation")
+            elif activation == "explicit_user_choice" and (
+                optional is not True or confirmation is not True
+            ):
+                errors.append(
+                    f"{scope}: explicit user choice must be optional and confirmed"
+                )
+            elif activation in automatic and (
+                optional is not False or confirmation is not False
+            ):
+                errors.append(
+                    f"{scope}: automatic boundary cannot request confirmation"
+                )
+        controls = boundary.get("controls")
+        if (
+            not isinstance(controls, list)
+            or not controls
+            or not all(isinstance(item, str) and item.strip() for item in controls)
+        ):
+            errors.append(f"{scope}: boundary[{index}] controls must be non-empty")
+    if len(boundary_ids) != len(set(boundary_ids)):
+        errors.append(f"{scope}: boundary ids must be unique")
+    return errors
+
+
+def _security_control_errors(
+    controls: Any,
+    *,
+    scope: str,
+    governed_paths: Iterable[str] = (),
+    require_implementation: bool = False,
+) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(controls, list):
+        return [f"{scope}: security_controls must be an array"]
+    control_ids: list[str] = []
+    for index, control in enumerate(controls):
+        if not isinstance(control, dict):
+            errors.append(f"{scope}: security_controls[{index}] must be an object")
+            continue
+        if not all(
+            isinstance(control.get(field), str) and control[field].strip()
+            for field in ("id", "control")
+        ):
+            errors.append(f"{scope}: security_controls[{index}] is incomplete")
+        if require_implementation:
+            implementations = control.get("implemented_by")
+            on_violation = control.get("on_violation")
+            if (
+                not isinstance(implementations, list)
+                or not implementations
+                or not all(
+                    isinstance(item, str) and item.strip() for item in implementations
+                )
+                or not isinstance(on_violation, str)
+                or not on_violation.strip()
+            ):
+                errors.append(
+                    f"{scope}: security_controls[{index}] lacks executable support"
+                )
+            else:
+                governed = tuple(governed_paths)
+                for implementation in implementations:
+                    implementation_path = Path(implementation)
+                    if (
+                        implementation_path.is_absolute()
+                        or ".." in implementation_path.parts
+                    ):
+                        errors.append(
+                            f"{scope}: security_controls[{index}] has unsafe implementation path"
+                        )
+                        continue
+                    covered = any(
+                        implementation == path
+                        or implementation.startswith(path.rstrip("/") + "/")
+                        for path in governed
+                    )
+                    if not covered:
+                        errors.append(
+                            f"{scope}: security_controls[{index}] implementation is not governed"
+                        )
+        control_ids.append(str(control.get("id", "")))
+    if len(control_ids) != len(set(control_ids)):
+        errors.append(f"{scope}: security control ids must be unique")
+    return errors
+
+
 def _manifest_errors(
     payload: dict[str, Any], *, workstream: str, expected_role: str
 ) -> list[str]:
@@ -130,6 +350,7 @@ def _manifest_errors(
         "governed_paths",
         "codex_context",
         "codex_account_boundary",
+        "ordinary_processing",
         "boundaries_beyond_codex",
         "security_controls",
         "review",
@@ -155,6 +376,11 @@ def _manifest_errors(
         or not all(isinstance(item, str) and item for item in governed)
     ):
         errors.append(f"{workstream}: governed_paths must be non-empty strings")
+    shared_governed = payload.get("governed_shared_paths", [])
+    if not isinstance(shared_governed, list) or not all(
+        isinstance(item, str) and item for item in shared_governed
+    ):
+        errors.append(f"{workstream}: governed_shared_paths must be strings")
     context = payload["codex_context"]
     if not isinstance(context, dict):
         errors.append(f"{workstream}: codex_context must be an object")
@@ -205,70 +431,18 @@ def _manifest_errors(
             errors.append(
                 f"{workstream}: account review must not require a per-case record"
             )
-    boundaries = payload["boundaries_beyond_codex"]
-    if not isinstance(boundaries, list):
-        errors.append(f"{workstream}: boundaries_beyond_codex must be an array")
-        boundaries = []
-    boundary_ids: list[str] = []
-    for index, boundary in enumerate(boundaries):
-        if not isinstance(boundary, dict):
-            errors.append(f"{workstream}: boundary[{index}] must be an object")
-            continue
-        fields = {
-            "id",
-            "kind",
-            "destination",
-            "purpose",
-            "content",
-            "optional",
-            "requires_confirmation",
-            "controls",
-        }
-        if fields - boundary.keys():
-            errors.append(f"{workstream}: boundary[{index}] is incomplete")
-        if not all(
-            isinstance(boundary.get(field), str) and boundary[field].strip()
-            for field in ("id", "destination", "purpose", "content")
-        ):
-            errors.append(f"{workstream}: boundary[{index}] text must be non-empty")
-        boundary_ids.append(str(boundary.get("id", "")))
-        if boundary.get("kind") not in BOUNDARY_KINDS:
-            errors.append(f"{workstream}: boundary[{index}] has invalid kind")
-        optional = boundary.get("optional")
-        confirmation = boundary.get("requires_confirmation")
-        if not isinstance(optional, bool) or not isinstance(confirmation, bool):
-            errors.append(f"{workstream}: boundary[{index}] flags must be boolean")
-        elif confirmation and not optional:
-            errors.append(
-                f"{workstream}: confirmation is allowed only for an optional boundary"
-            )
-        controls = boundary.get("controls")
-        if (
-            not isinstance(controls, list)
-            or not controls
-            or not all(isinstance(item, str) and item.strip() for item in controls)
-        ):
-            errors.append(f"{workstream}: boundary[{index}] controls must be non-empty")
-    if len(boundary_ids) != len(set(boundary_ids)):
-        errors.append(f"{workstream}: boundary ids must be unique")
-
-    controls = payload["security_controls"]
-    if not isinstance(controls, list) or not controls:
-        errors.append(f"{workstream}: security_controls must be non-empty")
-        controls = []
-    control_ids: list[str] = []
-    for index, control in enumerate(controls):
-        if not isinstance(control, dict):
-            errors.append(f"{workstream}: security_controls[{index}] must be an object")
-            continue
-        if not all(
-            isinstance(control.get(field), str) and control[field].strip()
-            for field in ("id", "control")
-        ):
-            errors.append(f"{workstream}: security_controls[{index}] is incomplete")
-        control_ids.append(str(control.get("id", "")))
-    if len(control_ids) != len(set(control_ids)):
-        errors.append(f"{workstream}: security control ids must be unique")
+    if payload["ordinary_processing"] != ORDINARY_PROCESSING:
+        errors.append(f"{workstream}: ordinary Codex processing policy is inaccurate")
+    errors.extend(
+        _boundary_errors(
+            payload["boundaries_beyond_codex"],
+            scope=workstream,
+            allowed_kinds=BOUNDARY_KINDS,
+        )
+    )
+    errors.extend(
+        _security_control_errors(payload["security_controls"], scope=workstream)
+    )
 
     review = payload["review"]
     if not isinstance(review, dict):
@@ -281,6 +455,67 @@ def _manifest_errors(
         fingerprint = review.get("source_fingerprint")
         if not isinstance(fingerprint, str) or len(fingerprint) != 64:
             errors.append(f"{workstream}: invalid source fingerprint")
+    return errors
+
+
+def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> list[str]:
+    errors: list[str] = []
+    required = {
+        "schema_version",
+        "service_id",
+        "display_name",
+        "governed_paths",
+        "boundaries_beyond_codex",
+        "security_controls",
+        "review",
+    }
+    missing = sorted(required - payload.keys())
+    if missing:
+        return [f"{service_id}: missing fields: {', '.join(missing)}"]
+    if payload["schema_version"] != 1:
+        errors.append(f"{service_id}: schema_version must be 1")
+    if payload["service_id"] != service_id:
+        errors.append(f"{service_id}: manifest service_id does not match filename")
+    if (
+        not isinstance(payload["display_name"], str)
+        or not payload["display_name"].strip()
+    ):
+        errors.append(f"{service_id}: display_name must be non-empty")
+    governed = payload["governed_paths"]
+    if (
+        not isinstance(governed, list)
+        or not governed
+        or not all(isinstance(item, str) and item for item in governed)
+    ):
+        errors.append(f"{service_id}: governed_paths must be non-empty strings")
+    errors.extend(
+        _boundary_errors(
+            payload["boundaries_beyond_codex"],
+            scope=service_id,
+            allowed_kinds=SERVICE_BOUNDARY_KINDS,
+            require_retention=True,
+            require_activation=True,
+        )
+    )
+    errors.extend(
+        _security_control_errors(
+            payload["security_controls"],
+            scope=service_id,
+            governed_paths=payload["governed_paths"],
+            require_implementation=True,
+        )
+    )
+    review = payload["review"]
+    if not isinstance(review, dict):
+        errors.append(f"{service_id}: review must be an object")
+    else:
+        if review.get("reviewed_by") != "privacy-surface-review":
+            errors.append(f"{service_id}: unexpected reviewer")
+        if review.get("basis") != "external_boundary_review_of_shared_service_source":
+            errors.append(f"{service_id}: unexpected external-boundary review basis")
+        fingerprint = review.get("source_fingerprint")
+        if not isinstance(fingerprint, str) or len(fingerprint) != 64:
+            errors.append(f"{service_id}: invalid source fingerprint")
     return errors
 
 
@@ -320,7 +555,11 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
                 else None
             )
             actual = _fingerprint(
-                component_root, payload["governed_paths"], wrapper=wrapper
+                component_root,
+                payload["governed_paths"],
+                wrapper=wrapper,
+                vera_root=root,
+                shared_paths=payload.get("governed_shared_paths", []),
             )
         except (OSError, ValueError) as exc:
             errors.append(f"{workstream}: cannot fingerprint governed source: {exc}")
@@ -328,6 +567,37 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
         if actual != payload["review"]["source_fingerprint"]:
             errors.append(
                 f"{workstream}: privacy review is stale; run the review skill, then --refresh"
+            )
+
+    service_names = _shared_services(root)
+    service_dir = root / "privacy" / "services"
+    service_manifests = {path.stem: path for path in service_dir.glob("*.json")}
+    for missing in sorted(service_names - service_manifests.keys()):
+        errors.append(f"{missing}: registered shared service has no privacy manifest")
+    for extra in sorted(service_manifests.keys() - service_names):
+        errors.append(f"{extra}: privacy manifest is not a registered shared service")
+    for service_id in sorted(service_names & service_manifests.keys()):
+        path = service_manifests[service_id]
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"{service_id}: cannot read manifest: {exc}")
+            continue
+        manifest_errors = _service_manifest_errors(payload, service_id=service_id)
+        errors.extend(manifest_errors)
+        if manifest_errors:
+            continue
+        try:
+            actual = _fingerprint(root, payload["governed_paths"])
+        except (OSError, ValueError) as exc:
+            errors.append(
+                f"{service_id}: cannot fingerprint governed service source: {exc}"
+            )
+            continue
+        if actual != payload["review"]["source_fingerprint"]:
+            errors.append(
+                f"{service_id}: privacy review is stale; run the review skill, "
+                "then --refresh-service"
             )
     return errors
 
@@ -349,7 +619,11 @@ def _refresh(workstream: str, vera_root: Path) -> None:
             else None
         )
         payload["review"]["source_fingerprint"] = _fingerprint(
-            component_root, payload["governed_paths"], wrapper=wrapper
+            component_root,
+            payload["governed_paths"],
+            wrapper=wrapper,
+            vera_root=vera_root,
+            shared_paths=payload.get("governed_shared_paths", []),
         )
         manifest_path.write_text(
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -357,16 +631,43 @@ def _refresh(workstream: str, vera_root: Path) -> None:
         print(f"refreshed {name}")
 
 
+def _refresh_service(service_id: str, vera_root: Path) -> None:
+    names = _shared_services(vera_root)
+    selected = sorted(names) if service_id == "all" else [service_id]
+    for name in selected:
+        if name not in names:
+            raise ValueError(f"unknown registered shared service: {name}")
+        manifest_path = vera_root / "privacy" / "services" / f"{name}.json"
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        payload["review"]["source_fingerprint"] = _fingerprint(
+            vera_root, payload["governed_paths"]
+        )
+        manifest_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        print(f"refreshed service {name}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--refresh", metavar="WORKSTREAM")
+    parser.add_argument("--refresh-service", metavar="SERVICE")
     parser.add_argument("--refresh-all", action="store_true")
     args = parser.parse_args()
     root = _vera_root()
-    if args.refresh and args.refresh_all:
-        parser.error("choose --refresh or --refresh-all")
-    if args.refresh or args.refresh_all:
-        _refresh("all" if args.refresh_all else args.refresh, root)
+    selected_refreshes = sum(
+        bool(value) for value in (args.refresh, args.refresh_service, args.refresh_all)
+    )
+    if selected_refreshes > 1:
+        parser.error("choose --refresh, --refresh-service, or --refresh-all")
+    if args.refresh_all:
+        _refresh("all", root)
+        _refresh_service("all", root)
+    elif args.refresh:
+        _refresh(args.refresh, root)
+    elif args.refresh_service:
+        _refresh_service(args.refresh_service, root)
     errors = validate_privacy_surfaces(root)
     if errors:
         for error in errors:

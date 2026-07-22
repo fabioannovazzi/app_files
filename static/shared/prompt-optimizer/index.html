@@ -9,6 +9,7 @@
   <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/prompt-optimizer/index.html?lang=en">
   <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/prompt-optimizer/index.html?lang=fr">
   <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/prompt-optimizer/index.html?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/prompt-optimizer/index.html?lang=es">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/prompt-optimizer/index.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
@@ -22,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../vera-scope.css?v=20260721">
-  <script src="../vera-scope.js?v=20260721" defer></script>
+  <script src="../vera-scope.js?v=20260722" defer></script>
   <style>
     :root {
       --bg: #ffffff;
@@ -277,6 +278,7 @@
           <button type="button" data-lang="it">It</button>
           <button type="button" data-lang="fr">Fr</button>
           <button type="button" data-lang="de">De</button>
+          <button type="button" data-lang="es">Es</button>
         </span>
       </nav>
     </header>
@@ -405,7 +407,8 @@
       it: { id: "F7BmRTl7s1o", locale: "it_IT" },
       en: { id: "FdZhrFCHwV4", locale: "en_US" },
       fr: { id: "qWKkHNGBQIo", locale: "fr_FR" },
-      de: { id: "YtmKX5Obcuk", locale: "de_DE" }
+      de: { id: "YtmKX5Obcuk", locale: "de_DE" },
+      es: { id: "FdZhrFCHwV4", locale: "es_ES" }
     };
 
     const translations = {
@@ -609,6 +612,73 @@
         "download.button": "Ouvrir Vera",
         footer: "Vera · De la question au brief de recherche vérifiable.",
         prompt: "Utilise Optimiser le prompt sur cette question juridique ou fiscale. Langue de sortie : fr. Préserve tous les faits et sépare langue, droit applicable et objectif. Si un choix matériel est incertain, demande-moi confirmation. Prépare et valide un brief Deep Research avec sources prioritaires, citations, limites, hypothèses et contrôles finaux."
+      },
+      es: {
+        title: "Un encargo de investigación que puede revisar | Vera",
+        metaDescription: "Vera convierte una pregunta jurídica, fiscal o de cumplimiento en un encargo revisable, listo para Deep Research y la posterior validación de sus fuentes.",
+        ogTitle: "Un encargo de investigación revisable | Vera",
+        ogDescription: "De una pregunta desordenada a un prompt de Deep Research con hechos, alcance, fuentes y controles preservados.",
+        skip: "Ir al contenido",
+        "nav.aria": "Navegación principal",
+        "language.aria": "Idioma",
+        "breadcrumb.aria": "Ruta de navegación",
+        "nav.workflow": "Recorrido",
+        "nav.result": "Resultado",
+        "nav.starter": "Prompt inicial",
+        "nav.details": "Detalles",
+        "nav.download": "Abrir Vera",
+        "module.name": "Optimizar prompt",
+        "hero.eyebrow": "Vera · Investigación jurídica y fiscal",
+        "hero.title": "Un encargo que Deep Research puede seguir y usted puede revisar.",
+        "hero.lead": "Empiece con una pregunta, aunque esté desordenada. Vera preserva los hechos, hace visibles las decisiones de alcance y entrega un prompt de investigación con las fuentes y los controles ya estructurados.",
+        "hero.action": "Pruebe el prompt inicial ↓",
+        "hero.next": "Después de investigar: valide el resultado →",
+        "summary.title": "Cuándo utilizarlo",
+        "route.provide.label": "Proporcione",
+        "route.provide": "Pregunta, hechos, enlaces e idioma de trabajo",
+        "route.prepare.label": "Vera prepara",
+        "route.prepare": "Alcance, jerarquía de fuentes y controles",
+        "route.receive.label": "Reciba",
+        "route.receive": "Encargo optimizado y sitios cualificados para Deep Research",
+        "workflow.title": "Cómo se prepara el encargo",
+        "workflow.copy": "El objetivo, el derecho aplicable, el alcance y las hipótesis guían el encargo. Vera los hace explícitos, estructura las fuentes y aplica los controles finales.",
+        "workflow.item1.title": "Aporte la pregunta",
+        "workflow.item1.copy": "Pegue la pregunta con fechas, importes, partes, lugares, enlaces y peticiones explícitas. No necesita depurarla antes.",
+        "workflow.item2.title": "Confirme las decisiones materiales",
+        "workflow.item2.copy": "Vera mantiene separados el idioma, el derecho aplicable y el enfoque de la investigación; solo solicita confirmación cuando una decisión cambia el análisis.",
+        "workflow.item3.title": "Revise el encargo",
+        "workflow.item3.copy": "Compruebe los hechos preservados, las fuentes prioritarias, el formato esperado, los límites, las hipótesis y las reglas de citación.",
+        "workflow.item4.title": "Ejecute Deep Research",
+        "workflow.item4.copy": "Use optimized_prompt.md como instrucción y source_domains_comma.txt en el campo de sitios web. El encargo se valida antes de la entrega.",
+        "proof.kicker": "Resultado real · Guía en vídeo",
+        "proof.title": "De una pregunta desordenada a una investigación controlable.",
+        "proof.copy": "La guía muestra el resultado, no una promesa abstracta: un encargo con los hechos preservados, las fuentes ordenadas y puntos de revisión que puede pasar directamente a la investigación.",
+        "proof.artifactLabel": "Abrir primero",
+        "proof.videoAction": "Ver la guía",
+        "proof.videoMeta": "Inglés · Se abre en YouTube",
+        "proof.videoAlt": "Vista previa de la guía De una pregunta desordenada a una investigación controlable",
+        "proof.videoAria": "Ver la guía de Optimizar prompt en YouTube",
+        "next.title": "Un paso dentro de un recorrido más largo.",
+        "next.copy": "Optimice la pregunta, ejecute el encargo en Deep Research y compruebe después si las fuentes respaldan realmente las conclusiones.",
+        "next.step1.title": "Prompt Optimizer",
+        "next.step1.copy": "Prepara el encargo y la lista de sitios.",
+        "next.step2.copy": "Ejecute la investigación con el encargo optimizado.",
+        "next.step3.title": "Deep Research Validator",
+        "next.step3.copy": "Revise afirmaciones, fuentes y razonamiento.",
+        "next.link": "Continuar con la validación →",
+        "starter.title": "Un solo prompt para empezar.",
+        "starter.copy": "Pegue su pregunta después de estas instrucciones. Vera recogerá únicamente las confirmaciones necesarias antes de preparar el encargo.",
+        "details.title": "El detalle técnico documenta el recorrido.",
+        "details.copy": "Ábralo para examinar el encargo, los controles aplicados y la entrega a la investigación.",
+        "details.summary": "Archivos, controles y alcance",
+        "details.outputs.title": "Archivos generados",
+        "details.scope.title": "Alcance y entrega a la investigación",
+        "details.scope.copy": "El idioma, el derecho aplicable, los hechos, el marco, las fuentes prioritarias y los controles permanecen explícitos en el encargo entregado a Deep Research.",
+        "download.title": "Vera incluye este flujo.",
+        "download.copy": "Abra Vera y use el prompt inicial. Optimizar prompt, sus artefactos de control y la entrega al Validator forman parte del mismo recorrido.",
+        "download.button": "Abrir Vera",
+        footer: "Vera · De la pregunta al encargo de investigación verificable.",
+        prompt: "Usa Optimizar prompt con esta pregunta jurídica o fiscal. Idioma de salida: es. Preserva todos los hechos y mantén separados el idioma de salida, el derecho aplicable y el objetivo. Si una decisión material es incierta, pídeme confirmación. Prepara y valida un encargo de Deep Research con fuentes prioritarias, citas, límites, hipótesis y controles finales."
       },
       de: {
         title: "Ein prüfbares Recherche-Briefing | Vera",

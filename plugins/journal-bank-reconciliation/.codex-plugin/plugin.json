@@ -1,6 +1,6 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Deterministic journal-to-bank reconciliation guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -23,7 +23,7 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Journal-Bank Reconciliation",
-    "shortDescription": "Reconcile bank statements with journal or ledger exports in Italian, English, French, or German.",
+    "shortDescription": "Reconcile bank statements with journal or ledger exports in Italian, English, French, German, or Spanish.",
     "longDescription": "Codex workflow for deterministic bank-to-journal reconciliation. Codex inspects local bank and journal files, asks only for non-inferable mappings or assumptions, runs deterministic scripts, reviews exceptions, and explains limits. The plugin normalizes rows, filters sample movements when supplied, performs staged amount/date/reference/beneficiary/description matching, and automatically writes the natural full package: CSV/XLSX/JSON outputs, audit, diagnostics, review notes, and Codex review, without direct model API calls from scripts.",
     "developerName": "Fabio",
     "category": "Productivity",

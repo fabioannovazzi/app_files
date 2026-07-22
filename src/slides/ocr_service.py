@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup  # type: ignore[import]
 from openai import OpenAIError
 from PIL import Image, ImageOps
 
+import modules.utilities.config as config_module
 from modules.llm.batch_runner import run_step_json, run_step_text
 from modules.llm.llm_call_wrapper import init_llm_wrapper
 from modules.slides.ocr import (
@@ -26,9 +27,7 @@ from modules.slides.ocr import (
     extract_structured_ocr_from_image_path,
     extract_text_from_raw_ocr_result,
 )
-import modules.utilities.config as config_module
 from modules.utilities.session_context import SessionContext
-from src.slides.layout_service import build_deck_layout_payload
 from src.slides.layout_semantics import (
     BULLET_BLOCK_TYPES,
     TEXT_BEARING_BLOCK_TYPES,
@@ -40,6 +39,7 @@ from src.slides.layout_semantics import (
     normalize_reading_order,
     normalize_render_mode,
 )
+from src.slides.layout_service import build_deck_layout_payload
 from src.slides.models import Deck, Slide
 from src.slides.notebooklm_style import load_notebooklm_style
 from src.slides.ocr_cleanup import clean_ocr_items, clean_ocr_text
@@ -86,6 +86,8 @@ _SLIDE_PADDLE_TEXT_RECOGNITION_MODEL_LANGS = {
     "fra",
     "it",
     "ita",
+    "es",
+    "spa",
 }
 try:
     _SLIDES_PDF_OCR_RASTER_SCALE = max(
@@ -150,6 +152,8 @@ def _resolve_ocr_language_label(lang: str) -> str:
         return "French"
     if code in {"de", "deu", "ger"}:
         return "German"
+    if code in {"es", "spa"}:
+        return "Spanish"
     return code or "the original language"
 
 

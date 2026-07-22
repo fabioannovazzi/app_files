@@ -85,7 +85,6 @@ def _write_inventory(
                 "successful_page_count": 1,
                 "case_content_network_transfer": False,
                 "model_download_allowed": False,
-                "model_download_approval_id": None,
                 "model_network_used": False,
                 "visual_confirmation_required": True,
             },

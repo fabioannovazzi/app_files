@@ -1449,7 +1449,7 @@ function publicRunIntake(value, review) {
     workflow: value.workflow || PLUGIN_NAME,
     run_id: review.run_id,
     reference_date: value.reference_date || null,
-    language: ["it", "en", "fr", "de"].includes(value.language)
+    language: ["it", "en", "fr", "de", "es"].includes(value.language)
       ? value.language
       : null,
     status: value.status || null,

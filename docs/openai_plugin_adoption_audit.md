@@ -69,7 +69,7 @@ The following checks passed in the current worktree:
 - `.venv/bin/python -m pytest tests/scripts/test_audit_non_plotting_review_workbench_demos.py -q`
 - `.venv/bin/python scripts/audit_non_plotting_review_workbench_demos.py --format markdown --fail-on medium`
 - `.venv/bin/python -m pytest tests/scripts/test_audit_non_plotting_review_workbench_visuals.py -q`
-- `.venv/bin/python scripts/audit_non_plotting_review_workbench_visuals.py --format markdown --fail-on high --languages en,it,fr,de --screenshots-dir /private/tmp/non_plotting_workbench_visuals_i18n`
+- `.venv/bin/python scripts/audit_non_plotting_review_workbench_visuals.py --format markdown --fail-on high --languages en,it,fr,de,es --screenshots-dir /private/tmp/non_plotting_workbench_visuals_i18n`
 - `.venv/bin/python scripts/audit_local_review_workbench_writeback.py --format markdown --fail-on high --screenshots-dir /private/tmp/local_review_writeback`
 - `.venv/bin/python -m pytest tests/scripts/test_serve_review_workbench.py -q`
 - `.venv/bin/python -m pytest tests/scripts/test_audit_review_payload_contract_coverage.py -q`
@@ -103,8 +103,9 @@ normal package check.
 The workbench demo audit reports 9 generated non-plotting adapters audited, all
 with `ok` status. It verifies the embedded sample review payloads have at least
 two review items, multiple item types and recommended actions, evidence rows,
-explicit edit-target metadata, populated detail groups, and Italian, French, and
-German workflow labels. It also checks adapter demo item types and actions
+explicit edit-target metadata, populated detail groups, and English, Italian,
+French, German, and Spanish workflow labels. It also checks adapter demo item
+types and actions
 against each plugin MCP server's declared validator sets, so rendered demo rows
 cannot use values the save/apply writer rejects. The audit now reports each
 adapter's workflow mode and fails duplicate `detailMode` values or shallow
@@ -130,7 +131,7 @@ plugin cannot be packaged without generated-output contract validation coverage
 from a workflow-like scenario.
 
 The visual smoke audit reports 9 generated non-plotting workbenches audited, all
-with `ok` status across English, Italian, French, and German at both desktop and
+with `ok` status across English, Italian, French, German, and Spanish at both desktop and
 mobile viewports. It opens each local HTML widget in headless Chrome, injects a
 sample MCP-style review payload for each language, checks that queue rows,
 detail decision controls, localized labels, final outputs, data posture,
@@ -267,7 +268,7 @@ the FastAPI app. This is a test-hygiene fix, not a production change.
   desktop/mobile browser smoke checks, and responsive visual QA across the nine
   generated non-plotting review widgets.
 - This audit does not include a full `pytest -q` or `make check` run.
-- The visual QA now covers English, Italian, French, and German sample payloads,
+- The visual QA now covers English, Italian, French, German, and Spanish sample payloads,
   but it still uses generated demos rather than real customer payloads.
 - This audit does not prove every native artifact type can be semantically
   edited and regenerated. Several DOCX/XLSX/PDF/PPTX paths still require

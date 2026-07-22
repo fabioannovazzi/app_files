@@ -9,6 +9,9 @@
     "mcp",
     "schemas"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_ocr"
+  ],
   "codex_context": {
     "policy": "real_case_data_may_enter_codex_context",
     "classes": [
@@ -29,6 +32,13 @@
       "retention_and_deletion_controls"
     ],
     "per_case_record_required": false
+  },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
   },
   "boundaries_beyond_codex": [
     {
@@ -54,7 +64,7 @@
       "optional": true,
       "requires_confirmation": true,
       "controls": [
-        "Require separate written rights-holder permission and a case-specific network approval; user or studio approval alone is insufficient.",
+        "Require a separate written rights-holder permission reference; invoking the connector is the explicit network-route choice and creates no second approval identifier.",
         "Allow only the exact HTTPS SARI host and path, reject redirects, cap results and bytes, and fetch at most one selected card.",
         "Keep anonymous cookies in memory and never call login, support, upload, or submission routes."
       ]
@@ -64,11 +74,12 @@
       "kind": "hosted_service",
       "destination": "Configured PaddleOCR model-weight host",
       "purpose": "Download missing OCR model weights before local recognition",
-      "content": "Model-weight request and approval reference; no case screenshots or extracted case content",
+      "content": "Pinned Hugging Face model repository and revision requests plus ordinary connection metadata; no case screenshots, extracted case content, or approval identifier are sent",
       "optional": true,
       "requires_confirmation": true,
       "controls": [
-        "Disabled by default and enabled only with both the download flag and a stable approval ID.",
+        "Disabled by default and enabled only when the user explicitly selects the --allow-ocr-model-download route.",
+        "The run records route selection and actual network use without treating an arbitrary identifier as authorization.",
         "Only model weights cross the boundary; screenshot recognition remains local."
       ]
     }
@@ -81,16 +92,12 @@
     {
       "id": "no-authentication-or-filing",
       "control": "The workflow never receives authentication material, operates a filing session, signs, pays, contacts support, or submits a practice."
-    },
-    {
-      "id": "draft-status",
-      "control": "Generated packages remain professional-review drafts and keep ready_to_file false."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "666ab38e2dbdf2835be6a0c55a3644993a61b4e3bbe6b04368389a2f30fb20ca"
+    "source_fingerprint": "226f4939780d4e82e6f1cce33cce9eb36ffd3120735c5fa027a954179fe46c5a"
   }
 }

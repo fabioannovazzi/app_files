@@ -157,6 +157,20 @@ def test_default_next_steps_uses_selected_language():
     assert any("Obtain the evidence" in step for step in steps)
 
 
+def test_default_report_title_uses_spanish_language(tmp_path):
+    workflow = load_workflow()
+
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=[],
+        evidence_rows=[],
+        assumptions={"scope_year": "2026"},
+        language="es_ES",
+    )
+
+    assert "Informe de conciliación contable" in document_text(result["word_path"])
+
+
 def test_workflow_can_require_completed_review(tmp_path):
     workflow = load_workflow()
 

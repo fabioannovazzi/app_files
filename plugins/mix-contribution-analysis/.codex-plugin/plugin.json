@@ -1,6 +1,6 @@
 {
   "name": "mix-contribution-analysis",
-  "version": "0.1.96",
+  "version": "0.1.97",
   "description": "Legacy-backed mix, composition and contribution chart-family workflow with source packs and Codex interpretation.",
   "author": {
     "name": "Mparanza",

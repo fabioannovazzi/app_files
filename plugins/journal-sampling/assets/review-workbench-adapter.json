@@ -51,6 +51,14 @@
     "Finding"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n de muestreo contable",
+      "reviewTitle": "Revisi\u00f3n de extracci\u00f3n y muestra",
+      "queueTitle": "L\u00edneas de la muestra",
+      "detailTitle": "Justificaci\u00f3n de la muestra",
+      "detailHelp": "Revise los campos extra\u00eddos, la base de muestreo y la trazabilidad de la salida.",
+      "search": "Buscar muestra, l\u00ednea contable, mapeo, extracci\u00f3n, salida"
+    },
     "it": {
       "title": "Revisione campionamento contabile",
       "reviewTitle": "Revisione estrazione e campione",

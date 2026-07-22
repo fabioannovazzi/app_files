@@ -58,8 +58,8 @@ _ensure_jinja_stub()
 ensure_tagging_stub()
 
 from modules.slides import api as slides_api
-from src.slides.models import Deck, Section, Slide, Subsection
 from src.slides.layout_service import build_deck_layout_payload
+from src.slides.models import Deck, Section, Slide, Subsection
 from src.slides.pptx_template_manifest import (
     DECK_PPTX_TEMPLATE_FILENAME,
     DECK_PPTX_TEMPLATE_MANIFEST_FILENAME,
@@ -643,7 +643,7 @@ def test_deck_ocr_sends_completion_email_notification_after_deck_processing(
 
     fake_payload = {
         "deck_id": "deckOcrNotify",
-        "lang": "ita",
+        "lang": "spa",
         "generated_at": "2026-02-17T00:00:00+00:00",
         "slides": [
             {
@@ -665,7 +665,7 @@ def test_deck_ocr_sends_completion_email_notification_after_deck_processing(
         "build_deck_layout_payload",
         lambda *args, **kwargs: {
             "deck_id": "deckOcrNotify",
-            "lang": "ita",
+            "lang": "spa",
             "generated_at": "2026-02-17T00:00:00+00:00",
             "slides": [
                 {
@@ -691,7 +691,7 @@ def test_deck_ocr_sends_completion_email_notification_after_deck_processing(
 
     monkeypatch.setattr(slides_api, "notify_finished", _capture_notify, raising=False)
 
-    response = client.post("/slides/deck/deckOcrNotify/ocr", json={"lang": "ita"})
+    response = client.post("/slides/deck/deckOcrNotify/ocr", json={"lang": "spa"})
 
     assert response.status_code == 200
     assert len(notifications) == 1
@@ -699,7 +699,7 @@ def test_deck_ocr_sends_completion_email_notification_after_deck_processing(
     assert elapsed_sec >= 0
     assert step == "deck_processing"
     assert session_data["notify_email"] == user.email
-    assert session_data["notify_lang"] == "it"
+    assert session_data["notify_lang"] == "es"
 
 
 def test_slides_ocr_returns_raw_payload_and_plain_text(
@@ -2887,7 +2887,11 @@ def test_upload_pdf_enqueues_server_side_processing(
 
     response = client.post(
         "/slides/deck/upload-pdf",
-        data={"deckId": "queuedPdfDeck", "promptStyle": "uniform"},
+        data={
+            "deckId": "queuedPdfDeck",
+            "promptStyle": "uniform",
+            "lang": "es",
+        },
         files={"file": ("queued.pdf", payload, "application/pdf")},
     )
 
@@ -2902,7 +2906,7 @@ def test_upload_pdf_enqueues_server_side_processing(
     assert not (deck_path / "slide_analysis.json").exists()
     assert len(submitted) == 1
     assert submitted[0][1] == ("queuedPdfDeck",)
-    assert submitted[0][2] == {"lang": "eng"}
+    assert submitted[0][2] == {"lang": "spa"}
 
     status_response = client.get("/slides/deck/queuedPdfDeck/ocr/status")
 
@@ -2912,7 +2916,7 @@ def test_upload_pdf_enqueues_server_side_processing(
     assert status_payload["builtPages"] == 0
     assert status_payload["totalPages"] == 1
     assert status_payload["step"] == "layout"
-    assert status_payload["lang"] == "eng"
+    assert status_payload["lang"] == "spa"
     assert status_payload["updatedAt"]
 
 

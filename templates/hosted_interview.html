@@ -176,6 +176,15 @@
         max-width: 58ch;
       }
 
+      .notice a {
+        color: inherit;
+        text-underline-offset: 0.16em;
+      }
+
+      .processing-notice + .notice {
+        margin-top: 12px;
+      }
+
       .error {
         color: var(--danger);
       }
@@ -240,18 +249,55 @@
 
         <div class="controls">
           <button class="primary" id="startButton" {% if not session_ready %}disabled{% endif %}>
-            {{ "Inizia l'intervista" if language == "it" else "Start interview" }}
+            {% if language == "it" %}Inizia l'intervista{% elif language == "es" %}Iniciar entrevista{% else %}Start interview{% endif %}
           </button>
           <button class="secondary hidden" id="endButton" disabled>
-            {{ "Termina e salva" if language == "it" else "End and save" }}
+            {% if language == "it" %}Termina e salva{% elif language == "es" %}Finalizar y guardar{% else %}End and save{% endif %}
           </button>
         </div>
+
+        <p class="notice processing-notice" id="processingNotice">
+          {% if language == "it" %}
+            Questa intervista è un servizio hosted da Mparanza. Mparanza e OpenAI
+            trattano audio, risposte e trascrizione per condurre, trascrivere e
+            rivedere l'intervista. I dati dell'intervista restano hosted fino alla
+            cancellazione manuale o amministrativa; la scadenza del link non li
+            cancella. <a href="/data-handling?lang=it" target="_blank" rel="noopener noreferrer">Scopri come vengono gestiti i dati</a>.
+          {% elif language == "fr" %}
+            Cet entretien est un service hébergé par Mparanza. Mparanza et OpenAI
+            traitent l'audio, les réponses et la transcription afin de mener,
+            transcrire et relire l'entretien. Les données de l'entretien restent
+            hébergées jusqu'à leur suppression manuelle ou administrative ;
+            l'expiration du lien ne les supprime pas. <a href="/data-handling?lang=fr" target="_blank" rel="noopener noreferrer">Voir comment les données sont traitées</a>.
+          {% elif language == "de" %}
+            Dieses Interview ist ein von Mparanza gehosteter Dienst. Mparanza und
+            OpenAI verarbeiten Audio, Antworten und das Transkript, um das Interview
+            durchzuführen, zu transkribieren und zu prüfen. Die Interviewdaten
+            bleiben bis zur manuellen oder administrativen Löschung gespeichert;
+            der Ablauf des Links löscht sie nicht. <a href="/data-handling?lang=de" target="_blank" rel="noopener noreferrer">Lesen, wie Daten verarbeitet werden</a>.
+          {% elif language == "es" %}
+            Esta entrevista es un servicio alojado por Mparanza. Mparanza y OpenAI
+            procesan el audio, las respuestas y la transcripción para realizar,
+            transcribir y revisar la entrevista. Los datos de la entrevista permanecen
+            alojados hasta su eliminación manual o administrativa; la caducidad del
+            enlace no los elimina. <a href="/data-handling?lang=es" target="_blank" rel="noopener noreferrer">Consulta cómo se tratan los datos</a>.
+          {% else %}
+            This interview is a Mparanza-hosted service. Mparanza and OpenAI process
+            the audio, answers, and transcript to conduct, transcribe, and review the
+            interview. The interview record remains hosted until manual or
+            administrative deletion; link expiry does not delete it. <a href="/data-handling?lang=en" target="_blank" rel="noopener noreferrer">Read how data is handled</a>.
+          {% endif %}
+        </p>
 
         <p class="notice" id="notice">
           {% if language == "it" %}
             Puoi terminare l'intervista in qualsiasi momento. Tieni aperta
             questa pagina finché non compare la conferma di salvataggio. Sul
             telefono, non bloccare lo schermo e non passare a un'altra app.
+          {% elif language == "es" %}
+            Puedes finalizar la entrevista en cualquier momento. Mantén esta
+            página abierta hasta que aparezca la confirmación de guardado. En el
+            móvil, no bloquees el teléfono ni cambies a otra aplicación.
           {% else %}
             You can end the interview at any time. Keep this page open until the
             save confirmation appears. On mobile, do not lock the phone or switch
@@ -260,6 +306,6 @@
         </p>
       </section>
     </main>
-    <script src="/static/js/hosted-interview.js?v=20260719-plugin-improvement-v1" defer></script>
+    <script src="/static/js/hosted-interview.js?v=20260722-spanish-v1" defer></script>
   </body>
 </html>

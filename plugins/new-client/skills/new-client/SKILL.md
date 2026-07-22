@@ -83,8 +83,8 @@ signature.
    packaging, and professional review.
 2. Show a Run Intake table with the case reference, verified Client
    File Preparation binding or explicit standalone-evidence mode, output directory,
-   jurisdiction, reference date, language, local/model-processing posture, and
-   assumptions.
+   jurisdiction, reference date, language, any selected route beyond Codex, and
+   assumptions. Do not create a per-case model-processing approval field.
 3. Show a compact Decision Table for unresolved identity, service, per-subject
    screening, Table 1, Section B, AML trigger, privacy-role, marketing-record,
    document-applicability, source, and template-reference choices.
@@ -364,5 +364,6 @@ improvements that would have made this workflow better, based on the actual
 case: a missing parser, weak evidence locator, source-version gap, ambiguous
 review gate, template friction, repeated manual step, or missing integration.
 
-Keep the improvement note local to chat or run artifacts. Do not transmit it
-automatically.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

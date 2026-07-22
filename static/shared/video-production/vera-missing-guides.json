@@ -75,6 +75,18 @@
             "Anfragen · Aktionen · Historie",
             "Dokumente und Regeln je Land"
           ]
+        },
+        "es": {
+          "title": "Vera | De los documentos fuente al expediente de cliente operativo",
+          "narration": "La edición Core muestra cómo construir el expediente de un nuevo cliente a partir de los documentos y de otras evidencias disponibles. El primer paso registra los documentos recibidos y su procedencia. El segundo vincula la identidad del cliente con las personas relacionadas. El tercero organiza los servicios solicitados y los datos del encargo. Las solicitudes abiertas, las acciones, las fechas y el historial permanecen diferenciados pero conectados, para que cada dato pueda rastrearse hasta su fuente o hasta la decisión que lo originó. Cada jurisdicción vincula sus documentos, comprobaciones y reglas con esta estructura y produce un expediente legible que muestra lo conocido, lo pendiente y la evolución de la relación profesional.",
+          "onScreen": [
+            "De los documentos al expediente",
+            "Evidencias · procedencia",
+            "Identidad · personas relacionadas",
+            "Servicios · datos del encargo",
+            "Solicitudes · acciones · historial",
+            "Documentos y reglas por jurisdicción"
+          ]
         }
       }
     },
@@ -145,6 +157,18 @@
             "Dokumentpläne · Entwurf AML-Bewertung · Monitoring",
             "Mandanten-Arbeitsakte"
           ]
+        },
+        "es": {
+          "title": "Vera | Encargo, privacidad y PBC para un nuevo cliente",
+          "narration": "Un nuevo cliente aporta documentos, datos, personas y decisiones que a menudo quedan repartidos en archivos distintos. Vera los acompaña a través de un único proceso conectado. Empieza por la carpeta recibida, crea el inventario, reúne los datos legibles y convierte las cuestiones abiertas en solicitudes precisas. Después reutiliza esas evidencias para estructurar los datos identificativos, los representantes, los titulares reales, los servicios y las condiciones del encargo. Los planes del encargo, la privacidad y la información sobre inteligencia artificial comparten esa base con un borrador de evaluación de PBC. Las acciones, las fechas y las revisiones ayudan a mantener actualizado el expediente de trabajo. El despacho distingue qué está documentado, qué sigue abierto y qué requiere revisión profesional. Desde la primera carpeta hasta un expediente de cliente operativo que puede actualizarse con el tiempo.",
+          "onScreen": [
+            "Nuevo cliente · Italia",
+            "Documentos y datos recibidos",
+            "Inventario · datos · solicitudes",
+            "Identidad · personas · encargo",
+            "Planes documentales · borrador PBC · seguimiento",
+            "Expediente de cliente operativo"
+          ]
         }
       }
     },
@@ -188,6 +212,11 @@
           "title": "Vera | Vom Journal zur reproduzierbaren Stichprobe",
           "narration": "Eine nützliche Stichprobe beginnt mit einer klaren Frage und einem lesbaren Journal. Vera importiert die Datei, erkennt Datum, Konten, Texte, Soll und Haben und macht Zeitraum und Grundgesamtheit sichtbar. Danach wird das gewählte Verfahren angewendet: Betragsabdeckung, ungewöhnliche Buchungen, Intervalle, gezielte Auswahl oder eine passende Kombination. Jede ausgewählte Zeile behält den Bezug zur Grundgesamtheit und den Auswahlgrund. Die Kanzlei erhält Stichprobe, normalisierte Population und eine kurze Methodenübersicht, sodass der Schritt wiederholt und geprüft werden kann. Vom vollständigen Journal zu den Buchungen für die gezielte Kontrolle.",
           "onScreen": ["Das vollständige Journal", "Felder und Zeitraum", "Zweck der Stichprobe", "Reproduzierbare Auswahl", "Zeilen und Gründe", "Bereit für Buchungsprüfungen"]
+        },
+        "es": {
+          "title": "Vera | Del diario a una muestra reproducible",
+          "narration": "Una muestra útil parte de una pregunta clara y de un diario legible. Vera importa el archivo, identifica fechas, cuentas, descripciones, débitos y créditos y hace explícitos el periodo y la población. Después aplica el enfoque elegido: cobertura por importe, asientos inusuales, intervalos, selección dirigida o una combinación adecuada para la comprobación. Cada línea seleccionada conserva su referencia a la población y el motivo de selección. El despacho recibe la muestra, la población normalizada y un resumen conciso del método, para que el paso pueda repetirse y revisarse. Del diario completo a los asientos que merecen una comprobación específica.",
+          "onScreen": ["El diario completo", "Campos y periodo", "Objetivo de la muestra", "Selección reproducible", "Líneas y motivos", "Lista para comprobar asientos"]
         }
       }
     },
@@ -230,6 +259,11 @@
           "title": "Vera | Von der Stichprobenbuchung zum geprüften Beleg",
           "narration": "Eine Buchung zu prüfen bedeutet zu verstehen, ob die verfügbaren Nachweise sie stützen. Vera beginnt bei der ausgewählten Journalzeile und sucht in den bereitgestellten Dokumenten sowie in autorisierten Archiven oder Exporten. Betrag, Datum, Belegnummer, Beschreibung und Gegenpartei werden verglichen, während jede Quelle sichtbar bleibt. Starke Treffer gehen in die belegte Gruppe. Mehrdeutige Fälle bleiben mit Grund und genauem Prüfbeleg in der Review-Liste. Das Ergebnis ist ein Arbeitspapier, das jede geprüfte Buchung mit ihren Nachweisen verbindet, Ausnahmen trennt und den Prüfpfad erhält. Von der Stichprobenzeile zum nachvollziehbaren Beleg.",
           "onScreen": ["Die Stichprobenbuchung", "Verfügbare Dokumente und Archive", "Betrag · Datum · Nummer · Partei", "Trefferstärke", "Review-Liste", "Nachvollziehbares Arbeitspapier"]
+        },
+        "es": {
+          "title": "Vera | Del asiento seleccionado al justificante verificado",
+          "narration": "Comprobar un asiento significa entender si las evidencias disponibles lo respaldan. Vera parte de la línea seleccionada del diario y busca en los documentos proporcionados y en los archivos o exportaciones autorizados. Compara el importe, la fecha, el número de documento, la descripción y la contraparte mientras mantiene visible cada fuente. Las coincidencias sólidas pasan al conjunto respaldado. Los casos ambiguos permanecen en la cola de revisión con el motivo y el documento concreto que debe examinarse. El resultado es un papel de trabajo que vincula cada asiento comprobado con sus evidencias, separa las excepciones y conserva la ruta de verificación. De una línea seleccionada a un justificante que el revisor puede seguir.",
+          "onScreen": ["El asiento seleccionado", "Documentos y archivos disponibles", "Importe · fecha · número · contraparte", "Solidez de la coincidencia", "Cola de revisión", "Papel de trabajo trazable"]
         }
       }
     },
@@ -276,6 +310,11 @@
           "title": "Vera | Buchungen · Italien · FatturaPA",
           "narration": "Eine Buchung zu prüfen heißt zu verstehen, ob der richtige Beleg sie stützt. Vera beginnt bei der ausgewählten Journalzeile und sucht zuerst in FatturaPA-XML und autorisierten Exporten. Betrag, Datum, Belegnummer und Gegenpartei werden verglichen, während jede Quelle sichtbar bleibt. Starke Treffer gehen in die belegte Gruppe. Mehrdeutige Fälle bleiben mit Grund und genauem Prüfbeleg in der Review-Liste. Das Ergebnis ist ein Arbeitspapier, das jede geprüfte Buchung mit ihrem Nachweis verbindet und Ausnahmen getrennt hält. Von der Stichprobenzeile zum nachvollziehbaren Beleg.",
           "onScreen": ["Italien · FatturaPA", "Mögliche Belege", "Betrag · Datum · Nummer · Partei", "Trefferstärke", "Review-Liste", "Geprüfter Beleg"]
+        },
+        "es": {
+          "title": "Vera | Asientos · Italia · FatturaPA",
+          "narration": "Comprobar un asiento significa entender si el documento correcto lo respalda. Vera parte de la línea seleccionada del diario y busca primero en los XML FatturaPA y en las exportaciones autorizadas. Compara el importe, la fecha, el número de documento y la contraparte mientras mantiene visible cada fuente. Las coincidencias sólidas pasan al conjunto respaldado. Los casos ambiguos permanecen en la cola de revisión con el motivo y el documento concreto que debe examinarse. El resultado es un papel de trabajo que vincula cada asiento comprobado con su evidencia y mantiene separadas las excepciones. De una línea seleccionada a un justificante que el revisor puede seguir.",
+          "onScreen": ["Italia · FatturaPA", "Evidencias candidatas", "Importe · fecha · número · contraparte", "Solidez de la coincidencia", "Cola de revisión", "Justificante verificado"]
         }
       }
     }

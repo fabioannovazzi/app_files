@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "service_id": "plugin-update-check",
+  "display_name": "Plugin update check",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "hooks/hooks.json",
+    "scripts/check_for_update.py"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "automatic-version-check",
+      "kind": "hosted_service",
+      "destination": "Mparanza's fixed HTTPS plugin-version manifest",
+      "purpose": "Check whether a newer published Vera version is available",
+      "content": "An HTTP GET with ordinary connection metadata and a generic update-check User-Agent. No client, case, prompt, plugin version, or locally stored file content is placed in the URL or request body.",
+      "retention": "When Codex supplies a plugin-data directory, Vera stores the downloaded public manifest and check time locally and reuses them for up to 24 hours. Without that directory, the hook performs a new check at each startup or resume. Any Mparanza access-log retention is a hosted-service setting outside the plugin's control.",
+      "activation": "automatic_session_start",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The trusted SessionStart hook starts from one fixed HTTPS manifest URL and uses a three-second timeout; a 24-hour local cache is used only when Codex supplies a plugin-data directory.",
+        "The request has no query string or request body and is not built from case or conversation content."
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "6bd25ecfbe4e50f03d5fe944f5b7a2b4397c9add290c195f306bca82acc06e18"
+  }
+}

@@ -19,7 +19,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("source_file", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--recipe", type=Path, default=None)
-    parser.add_argument("--language", default="en", choices=("en", "it", "fr", "de"))
+    parser.add_argument(
+        "--language", default="en", choices=("en", "it", "fr", "de", "es")
+    )
     return parser.parse_args(argv)
 
 
@@ -47,4 +49,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -35,7 +35,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
 
 LOGGER = logging.getLogger(__name__)
 
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 SUPPORTED_INPUT_SUFFIXES = {".csv", ".xls", ".xlsx", ".xlsm", ".pdf"}
 TRANSACTION_COLUMNS = [
     "side",
@@ -1197,6 +1197,36 @@ def _write_workbook(path: Path, sheets: dict[str, pl.DataFrame]) -> None:
 
 
 def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
+    if audit.get("language") == "es":
+        lines = [
+            "# Notas de revisión de la conciliación entre diario y banco",
+            "",
+            f"- Idioma: {audit['language']}",
+            f"- Movimientos bancarios: {audit['bank_row_count']}",
+            f"- Asientos del diario: {audit['journal_row_count']}",
+            f"- Filas conciliadas: {audit['matched_count']}",
+            f"- Movimientos bancarios sin conciliar: {audit['unmatched_bank_count']}",
+            f"- Asientos del diario sin conciliar: {audit['unmatched_journal_count']}",
+            "",
+            "## Recuento por etapa",
+        ]
+        counts = audit.get("stage_counts", {})
+        if counts:
+            for stage, count in sorted(counts.items()):
+                lines.append(f"- {stage}: {count}")
+        else:
+            lines.append("- ninguno")
+        lines.extend(
+            [
+                "",
+                "## Política de revisión",
+                "Los scripts solo concilian evidencias deterministas. Codex debe explicar los casos no resueltos, inspeccionar las filas de origen cuando sea necesario y mantener explícito el juicio profesional.",
+                "",
+            ]
+        )
+        path.write_text("\n".join(lines), encoding="utf-8")
+        return
+
     lines = [
         "# Journal-Bank Reconciliation Review Notes",
         "",
@@ -1348,10 +1378,10 @@ def run_reconciliation(
 def add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--language",
-        help="Working/output language locale: it, en, fr, or de. Defaults to recipe or en.",
+        help="Working/output language locale: it, en, fr, de, or es. Defaults to recipe or en.",
     )
     parser.add_argument(
         "--document-language",
-        help="Source-document language locale: it, en, fr, de, or auto. Defaults to recipe or auto.",
+        help="Source-document language locale: it, en, fr, de, es, or auto. Defaults to recipe or auto.",
     )
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging.")

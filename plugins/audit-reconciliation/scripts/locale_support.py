@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 DEFAULT_LANGUAGE = "it"
 
 
@@ -409,6 +409,122 @@ LANGUAGE_PACKS: dict[str, dict[str, Any]] = {
             "internal_accounting_only": "Es liegt nur eine interne Hauptbuch-/Journalbuchung vor; externen Bank-, Factor-/Operator- oder dokumentierten Verrechnungsnachweis beschaffen.",
             "compensation_needs_external_support": "Eine Verrechnung ist erkennbar, aber die konfigurierte Regel verlangt Bank-/externen Nachweis.",
             "default": "Dokumentspezifischen Nachweis beschaffen: Bankbewegung, Factor-/Operator-Auszug, dokumentierte Verrechnung oder Quelldetail aus dem Hauptbuch.",
+        },
+    },
+    "es": {
+        "output_labels": {
+            "metadata_field": "Campo",
+            "metadata_value": "Valor",
+            "conclusion": "Conclusiones",
+            "summary": "Resumen",
+            "assumptions": "Supuestos",
+            "next_steps": "Próximos pasos",
+            "fallback_narrative": "El detalle línea por línea de la conciliación se encuentra en el archivo Excel.",
+            "excel_authority": "El libro Excel es el papel de trabajo de auditoría de referencia a nivel de línea.",
+        },
+        "role_keywords": {
+            "bank_statement": (
+                "extracto bancario",
+                "estado de cuenta",
+                "cuenta bancaria",
+                "banco",
+            ),
+            "factoring_statement": (
+                "factoring",
+                "factor",
+                "anticipo",
+                "cesión de créditos",
+                "cesion de creditos",
+                "sin recurso",
+            ),
+            "payment_order": (
+                "orden de pago",
+                "lote de pagos",
+                "remesa de pagos",
+            ),
+            "journal": ("diario", "libro diario"),
+            "ledger": (
+                "libro mayor",
+                "mayor contable",
+                "auxiliar",
+                "ficha de cuenta",
+            ),
+            "open_items": (
+                "partidas abiertas",
+                "partida abierta",
+                "estado de cliente",
+                "estado de proveedor",
+                "mayor de clientes",
+                "mayor de proveedores",
+            ),
+        },
+        "side_keywords": {
+            "customer": ("cliente", "clientes", "cuenta por cobrar"),
+            "supplier": ("proveedor", "proveedores", "cuenta por pagar"),
+        },
+        "evidence_keywords": {
+            "invoice": ("factura", "facturas"),
+            "closure": (
+                "pagada",
+                "pagado",
+                "cobrada",
+                "cobrado",
+                "liquidada",
+                "liquidado",
+                "cerrada",
+                "cerrado",
+                "compensada",
+                "compensado",
+            ),
+            "compensation": ("compensación", "compensacion"),
+            "netting": ("netting", "compensación de saldos"),
+            "factoring": (
+                "factoring",
+                "factor",
+                "sin recurso",
+                "cesión",
+                "cesion",
+                "cesión de créditos",
+                "cesion de creditos",
+                "anticipo",
+            ),
+            "bank": (
+                "banco",
+                "extracto bancario",
+                "estado de cuenta",
+                "transferencia",
+                "sepa",
+                "pago",
+                "cobro",
+                "ingreso",
+            ),
+            "batch": ("lote", "remesa", "lote de pagos"),
+        },
+        "payment_order_terms": {
+            "header": ("orden de pago", "lote de pagos", "remesa de pagos"),
+            "date_prefix": ("del", "fecha"),
+            "total": ("total orden de pago", "total remesa", "total lote"),
+            "value_date": ("fecha valor", "valor"),
+            "invoice": ("factura",),
+        },
+        "next_steps": {
+            "probable_payment": "Revisar las líneas clasificadas como probable_payment: existe un movimiento bancario probable, pero debe confirmarse la asignación a la línea o documento antes de tratarlo como cierre definitivo.",
+            "needs_evidence": "Obtener las evidencias indicadas en las líneas clasificadas como needs_evidence.",
+            "unresolved": "Asignar manualmente las líneas unresolved a los documentos fuente o solicitar detalle contable adicional.",
+            "complete": "Conservar el libro Excel y los documentos fuente como papel de trabajo de auditoría.",
+        },
+        "missing_evidence": {
+            "probable_bank_payment_candidate": "Hay un pago bancario probable vinculado a esta línea; verifique el lote de pagos, la descripción bancaria o el detalle de asignación antes de tratarlo como cierre definitivo.",
+            "payment_order_only": "La orden de pago solo constituye evidencia puente; obtenga el extracto bancario, el justificante bancario o el extracto del factor u operador vinculado al lote.",
+            "payment_order_amount_mismatch": "Existe una orden de pago, pero el importe asignado no coincide con la partida abierta; obtenga el detalle de asignación o confirme la liquidación parcial.",
+            "factoring_bridge_only": "El asiento del factor u operador solo constituye evidencia puente; obtenga el extracto bancario o del operador vinculado a la factura o al lote.",
+            "unallocated_external_bank_requires_allocation": "Existe un movimiento bancario, pero no está asignado a la factura o partida abierta concreta; obtenga el detalle de asignación, el aviso de pago o el desglose del lote.",
+            "internal_closure_without_external": "Existe un cierre interno; obtenga evidencia externa bancaria, del factor u operador, o de una compensación documentada vinculada a la línea.",
+            "internal_booking_open_support": "La posición abierta está respaldada por un asiento o saldo interno; para rebatirla se necesita evidencia externa de cierre específica de la línea.",
+            "grouped_open_amount_internal_booking_support": "La posición abierta está respaldada por un asiento interno agregado que coincide con la suma de las partidas abiertas del mismo documento; para rebatirla se necesita evidencia externa de cierre específica de la línea.",
+            "internal_accounting_only": "Solo existe un asiento interno de mayor o diario; obtenga evidencia externa bancaria, del factor u operador, o de una compensación documentada.",
+            "compensation_needs_external_support": "Se indica una compensación, pero la regla configurada exige soporte bancario o externo.",
+            "default": "Obtenga evidencia específica del documento: movimiento bancario, extracto del factor u operador, compensación documentada o detalle del libro mayor fuente.",
         },
     },
 }

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "workflow": "beautify-deck",
+  "display_name": "Beautify Deck",
+  "governed_paths": [
+    "skills/beautify-deck/SKILL.md"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "source-deck-images-and-text",
+        "purpose": "Generate a visually improved but content-faithful image deck",
+        "content": "Rendered source-slide images and extracted slide text, including names, numbers, labels, claims, tables, charts, footers, and advisory logic"
+      },
+      {
+        "id": "generated-pages-and-fidelity-review",
+        "purpose": "Review and regenerate pages until content fidelity passes",
+        "content": "Generation prompts, generated slide images, text ledgers, fidelity findings, regenerated pages, assembled PDF pages, and residual issues"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [],
+  "boundaries_beyond_codex": [],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "d2aa61663508cb781284ea4ec432af54bd4da380fc309b8a75ced8327a309c9e"
+  }
+}

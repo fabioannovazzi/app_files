@@ -109,7 +109,7 @@ environment allows it, or explain which dependency capability is missing.
 3. Run deterministic inspection:
 
 ```bash
-python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <it|en|fr|de>
+python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <it|en|fr|de|es>
 ```
 
 4. Read `suggested_recipe.json`. Summarize mappings, warnings, and only

@@ -6,13 +6,13 @@ import io
 import logging
 import re
 from dataclasses import dataclass
+from decimal import Decimal
 from typing import List, Protocol
 
 import pdfplumber
-from decimal import Decimal
 
 from .bank_statement_locale import DATE_PATTERNS, NEGATIVE_HINTS, POSITIVE_HINTS
-from .lexicon import Lexicon
+from .lexicon import Lexicon, canonical_header
 from .model import BankTransaction
 from .normalize import combine_debit_credit, detect_language, parse_amount, parse_date
 
@@ -164,19 +164,21 @@ class TabularExtractionStrategy:
                     break
             if header_idx is None:
                 continue
-            header = [c.lower() if c else "" for c in table[header_idx]]
+            header_text = " ".join(c for c in table[header_idx] if c)
+            language = detect_language(header_text)
+            header = [canonical_header(c or "", lex.headers) for c in table[header_idx]]
             for row in table[header_idx + 1 :]:
                 raw = {header[i]: row[i] for i in range(len(header))}
-                posted = parse_date(row[0], "en")
+                posted = parse_date(row[0], language)
                 if posted is None:
                     continue
                 amount = None
                 if "debit" in header and "credit" in header:
                     debit = row[header.index("debit")]
                     credit = row[header.index("credit")]
-                    amount = combine_debit_credit(debit, credit, "en")
+                    amount = combine_debit_credit(debit, credit, language)
                 elif "amount" in header:
-                    amount = parse_amount(row[header.index("amount")], "en")
+                    amount = parse_amount(row[header.index("amount")], language)
                 if amount is None:
                     continue
                 desc = (
@@ -291,6 +293,7 @@ class OCRStrategy:
     ) -> List[BankTransaction]:  # pragma: no cover - optional
         try:
             from PIL import Image
+
             from modules.slides.ocr import extract_text_from_image_bytes
         except Exception as e:
             logging.exception(e)
