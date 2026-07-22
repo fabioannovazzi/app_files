@@ -52,23 +52,27 @@ const ACTION_STATUS = {
   request_more_documents: "needs_documents",
   skip: "skipped",
 };
-const FORBIDDEN_REVIEW_KEYS = new Set([
-  "activity_description",
-  "case_summary",
-  "client_name",
-  "codice_fiscale",
-  "document_quote",
-  "email",
-  "full_name",
-  "partita_iva",
-  "proposed_value",
-  "sari_question_draft",
+const PROHIBITED_SECRET_KEYS = new Set([
+  "access_token",
+  "api_key",
+  "cie",
+  "cns",
+  "cookie",
+  "cookies",
+  "credential",
+  "credentials",
+  "one_time_code",
+  "otp",
+  "passcode",
+  "password",
+  "refresh_token",
+  "session",
+  "session_cookie",
+  "session_id",
+  "signature",
+  "spid",
+  "token",
 ]);
-const EMAIL_RE = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
-const TAX_CODE_RE = /\b[A-Z]{6}[0-9]{2}[A-EHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]\b/i;
-const VAT_RE = /(^|\D)\d{11}(?!\d)/;
-const PHONE_RE = /(^|\W)(?:\+?39[ .-]?)?(?:0\d{1,3}|3\d{2})[ .-]?\d{5,8}(?!\w)/;
-
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
@@ -92,7 +96,7 @@ function widgetMeta() {
   return {
     ui: { resourceUri: WIDGET_URI },
     "openai/widgetDescription":
-      "Revisione locale e minimizzata di fonti ufficiali, passaggi DIRE, informazioni mancanti e controlli della pratica Registro Imprese.",
+      "Revisione professionale di fonti ufficiali, passaggi DIRE, informazioni mancanti e controlli della pratica Registro Imprese.",
     "openai/widgetPrefersBorder": false,
     "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
     "openai/widgetDomain": "https://chatgpt.com",
@@ -110,7 +114,6 @@ function toolDefinitions() {
       status: { type: "string" },
       item_count: { type: "number" },
       items: { type: "array", items: { type: "object" } },
-      privacy_notice: { type: "string" },
       filing_status: { type: "string" },
       filing_authorized: { type: "boolean" },
     },
@@ -153,7 +156,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.validate,
       title: "Valida revisione Registro Imprese e SARI",
       description:
-        `Valida il payload minimizzato prima della visualizzazione. Chiamare prima di ${TOOL_NAMES.render}.`,
+        `Valida il payload di revisione prima della visualizzazione. Chiamare prima di ${TOOL_NAMES.render}.`,
       inputSchema: reviewInput,
       annotations: {
         readOnlyHint: true,
@@ -166,7 +169,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.render,
       title: "Apri revisione Registro Imprese e SARI",
       description:
-        "Mostra fonti ufficiali, passaggi DIRE, informazioni mancanti e controlli senza includere dati identificativi o testi integrali del caso.",
+        "Mostra fonti ufficiali, passaggi DIRE, informazioni mancanti e controlli della pratica.",
       inputSchema: reviewInput,
       _meta: toolUiMeta(),
       annotations: {
@@ -241,38 +244,50 @@ function optionalText(value, field, maxLength = MAX_TEXT_LENGTH) {
   return value.trim();
 }
 
-function auditPrivacy(value, field = "review_payload") {
+function auditSecrets(value, field = "review_payload") {
   if (Array.isArray(value)) {
-    value.forEach((entry, index) => auditPrivacy(entry, `${field}[${index}]`));
+    value.forEach((entry, index) => auditSecrets(entry, `${field}[${index}]`));
     return;
   }
   if (isObject(value)) {
     for (const [key, entry] of Object.entries(value)) {
-      if (FORBIDDEN_REVIEW_KEYS.has(key.toLowerCase())) {
-        throw new Error(`${field}.${key} is forbidden in the minimized review payload`);
+      const normalizedKey = key.trim().toLowerCase().replaceAll("-", "_").replaceAll(" ", "_");
+      if (PROHIBITED_SECRET_KEYS.has(normalizedKey)) {
+        throw new Error(`${field}.${key} contains prohibited credential or session material`);
       }
-      auditPrivacy(entry, `${field}.${key}`);
+      auditSecrets(entry, `${field}.${key}`);
     }
-    return;
-  }
-  if (
-    typeof value === "string"
-    && (EMAIL_RE.test(value) || TAX_CODE_RE.test(value) || VAT_RE.test(value) || PHONE_RE.test(value))
-  ) {
-    throw new Error(`${field} contains a direct identifier`);
   }
 }
 
-function publicRunIntake(value, review) {
+function reviewRunIntake(value, review) {
   if (!isObject(value)) return null;
-  return {
+  const projected = {
     schema_version: value.schema_version || null,
     plugin: value.plugin || null,
     workflow: value.workflow || null,
     run_id: review.run_id,
     reference_date: value.reference_date || null,
+    language: value.language || null,
     status: value.status || null,
   };
+  for (const field of [
+    "client_reference",
+    "client_name",
+    "client_identity",
+    "professional_question",
+    "case_summary",
+    "activity",
+    "requested_operation",
+    "inferred_task",
+    "assumptions",
+    "unresolved_questions",
+    "data_posture",
+  ]) {
+    if (value[field] != null) projected[field] = value[field];
+  }
+  auditSecrets(projected, "run_intake");
+  return projected;
 }
 
 function validateItem(item, index) {
@@ -325,7 +340,7 @@ function validateReview(args) {
     throw new Error("review_payload.item_count must equal review_payload.items.length");
   }
   review.items.forEach(validateItem);
-  auditPrivacy(review);
+  auditSecrets(review);
   if (review.filing_authorized !== false || review.filing_status !== "not_filed") {
     throw new Error("review payload must remain not_filed with filing_authorized=false");
   }
@@ -350,10 +365,10 @@ function validateReview(args) {
   }
   const payload = {
     widget_type: "registro_imprese_sari_review",
-    run_intake: publicRunIntake(runIntake, review),
+    run_intake: reviewRunIntake(runIntake, review),
     review_payload: review,
     ui_decisions: isObject(args.ui_decisions) ? args.ui_decisions : null,
-    final_artifacts: publicFinalArtifacts(finalArtifacts, review),
+    final_artifacts: reviewFinalArtifacts(finalArtifacts, review),
     decision_policy: {
       save_tool: TOOL_NAMES.save,
       apply_tool: TOOL_NAMES.apply,
@@ -368,7 +383,7 @@ function validateReview(args) {
   return payload;
 }
 
-function publicFinalArtifacts(value, review) {
+function reviewFinalArtifacts(value, review) {
   const finalArtifacts = isObject(value) ? value : null;
   if (!finalArtifacts) return null;
   return {
@@ -383,8 +398,10 @@ function publicFinalArtifacts(value, review) {
     portal_access_performed: false,
     signature_performed: false,
     submission_performed: false,
-    blocker_count: Array.isArray(finalArtifacts.blockers) ? finalArtifacts.blockers.length : 0,
-    output_count: Array.isArray(finalArtifacts.outputs) ? finalArtifacts.outputs.length : 0,
+    blockers: Array.isArray(finalArtifacts.blockers) ? finalArtifacts.blockers : [],
+    outputs: Array.isArray(finalArtifacts.outputs) ? finalArtifacts.outputs : [],
+    caveats: Array.isArray(finalArtifacts.caveats) ? finalArtifacts.caveats : [],
+    next_actions: Array.isArray(finalArtifacts.next_actions) ? finalArtifacts.next_actions : [],
   };
 }
 
@@ -581,7 +598,7 @@ function normalizeDecision(decision, index, itemById, seen, decidedAt) {
 function buildUiDecisions(args, review) {
   if (!Array.isArray(args.decisions)) throw new Error("decisions must be an array");
   if (args.decisions.length > review.items.length) throw new Error("too many decisions");
-  auditPrivacy(args.decisions, "decisions");
+  auditSecrets(args.decisions, "decisions");
   const itemById = new Map(review.items.map((item) => [item.id, item]));
   const seen = new Set();
   const decidedAt = new Date().toISOString();
@@ -590,8 +607,8 @@ function buildUiDecisions(args, review) {
   );
   const reviewer = optionalText(args.reviewer, "reviewer", 160);
   const decisionSource = optionalText(args.decision_source, "decision_source", 120) || "mcp_widget";
-  if (reviewer) auditPrivacy(reviewer, "reviewer");
-  auditPrivacy(decisionSource, "decision_source");
+  if (reviewer) auditSecrets(reviewer, "reviewer");
+  auditSecrets(decisionSource, "decision_source");
   const status = decisions.length === 0
     ? "pending_review"
     : decisions.length === review.items.length
@@ -761,7 +778,7 @@ function applyDecisions(args) {
     portal_actions_performed: false,
     message: "Decisioni applicate alla sola carta di lavoro; nessun accesso o invio è stato eseguito.",
     applied_decisions: applied,
-    final_artifacts: publicFinalArtifacts(updatedFinal, review),
+    final_artifacts: reviewFinalArtifacts(updatedFinal, review),
   };
 }
 

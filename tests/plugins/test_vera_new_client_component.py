@@ -121,14 +121,6 @@ def _generate_package(tmp_path: Path) -> Path:
     assert json.loads(initialized.stdout)["status"] == "new_client_input_initialized"
     intake_path = output_dir / "new_client_input.json"
     intake = json.loads(intake_path.read_text(encoding="utf-8"))
-    intake["processing_authority"].update(
-        {
-            "status": "authorized",
-            "authorized_by": "test-reviewer-01",
-            "authorized_by_role": "professional",
-            "authorized_at": "2026-07-20T10:00:00+02:00",
-        }
-    )
     intake_path.write_text(
         json.dumps(intake, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -227,9 +219,6 @@ def _strict_review_payload() -> dict[str, Any]:
             "monitoring": digest,
             "sources": digest,
         },
-        "privacy_notice": (
-            "Pseudonymous professional review; direct identifiers stay local."
-        ),
         "professional_review_required": True,
         "signature_performed": False,
         "client_communication_sent": False,
@@ -635,7 +624,7 @@ def test_widget_visible_payload_persists_with_opaque_token(tmp_path: Path) -> No
     assert (output_dir / applied["review_history_path"]).is_file()
 
 
-def test_privacy_minimized_reload_reuses_saved_decision_details(
+def test_reload_reuses_saved_decision_details(
     tmp_path: Path,
 ) -> None:
     output_dir = _generate_package(tmp_path)
@@ -863,7 +852,7 @@ def test_save_invalidates_ready_gate_until_new_decisions_are_applied(
     )
 
 
-def test_persistent_ready_gate_requires_professional_reviewer_alias(
+def test_persistent_ready_gate_requires_professional_reviewer_reference(
     tmp_path: Path,
 ) -> None:
     output_dir = _generate_package(tmp_path)
@@ -910,7 +899,7 @@ def test_persistent_ready_gate_requires_professional_reviewer_alias(
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": accepted,
-                    "reviewer": "reviewer-fg",
+                    "reviewer": "Fabio Annovazzi <fabio@example.it>",
                     "expected_decision_revision": 1,
                 },
             )
@@ -918,8 +907,12 @@ def test_persistent_ready_gate_requires_professional_reviewer_alias(
     )[1]["result"]["structuredContent"]
 
     assert with_reviewer["application_status"] == "ready_for_professional_export"
-    assert with_reviewer["ui_decisions"]["reviewer"] == "reviewer-fg"
-    assert with_reviewer["applied_decisions"]["reviewer"] == "reviewer-fg"
+    assert with_reviewer["ui_decisions"]["reviewer"] == (
+        "Fabio Annovazzi <fabio@example.it>"
+    )
+    assert with_reviewer["applied_decisions"]["reviewer"] == (
+        "Fabio Annovazzi <fabio@example.it>"
+    )
     assert with_reviewer["final_artifacts"]["export_gate"]["relationship_ready"] is True
     assert core.validate_contract(output_dir)["status"] == (
         "contract_validated_for_professional_review"
@@ -1027,7 +1020,7 @@ def test_persistence_token_rejects_altered_review_and_direct_path_mismatch(
         )["result"]["structuredContent"]
         token = rendered["decision_policy"]["persistence_token"]
         altered_review = json.loads(json.dumps(review_payload))
-        altered_review["privacy_notice"] += " Professional reviewer view."
+        altered_review["items"][0]["title"] += " — revised"
         altered_response = _exchange_mcp(
             process,
             _tool_call(
@@ -1272,24 +1265,23 @@ def test_new_client_mcp_requires_complete_basis_hashes() -> None:
         (
             "screening_result",
             {
-                "screening_alias": "SCREENING-01",
-                "subject_alias": "SUBJECT-01",
+                "screening_id": "SCREENING-CLIENT-PEP",
+                "subject_reference": "Fabio Annovazzi",
                 "screening_type": "pep",
-                "source_recorded": True,
+                "source_reference": "Studio screening record for Fabio Annovazzi",
                 "checked_at": "2026-07-20T10:30:00Z",
                 "outcome": "clear",
                 "confirmation_status": "verified",
                 "resolution_status": None,
                 "relationship_decision": None,
                 "resolution_evidence_count": 0,
-                "raw_result_excluded": True,
             },
         ),
         (
             "privacy_processing",
             {
                 "decision_alias": "PROCESSING-01",
-                "purpose_recorded": True,
+                "purpose": "Prepare Fabio Annovazzi's client file.",
                 "role": "controller",
                 "legal_basis_code": None,
                 "processor_authority_recorded": False,
@@ -1850,6 +1842,8 @@ def test_new_client_widget_state_excludes_free_text_decisions() -> None:
     assert "decisions: state.decisions" not in widget
     assert "expected_decision_revision" in widget
     assert 'id="reviewer-alias"' in widget
+    assert "A real professional name is allowed" in widget
+    assert "pseudonymous" not in widget
     assert "reviewer: reviewerAliasValue() || null" in widget
     assert (
         "if (result.ui_decisions) state.payload.ui_decisions = result.ui_decisions;"
@@ -1857,7 +1851,7 @@ def test_new_client_widget_state_excludes_free_text_decisions() -> None:
     )
 
 
-def test_new_client_widget_forwards_reviewer_alias_and_keeps_professional_rows_individual() -> (
+def test_new_client_widget_forwards_reviewer_attribution_and_keeps_professional_rows_individual() -> (
     None
 ):
     widget_path = PLUGIN_ROOT / "assets" / "new-client-review-widget.html"
@@ -1951,10 +1945,10 @@ vm.createContext(context);
 new vm.Script(`${match[1]}
 applyRecommendedToVisible();
 validateDecisionInputs(collectDecisionInputs());
-state.reviewerAlias = "reviewer with spaces";
+state.reviewerAlias = "session_token=do-not-store";
 let invalidAliasError = "";
 try { validateDecisionInputs(collectDecisionInputs()); } catch (error) { invalidAliasError = error.message; }
-state.reviewerAlias = "reviewer-fg";
+state.reviewerAlias = "Fabio Annovazzi";
 validateDecisionInputs(collectDecisionInputs());
 persistWidgetState();
 globalThis.__result = {
@@ -1979,10 +1973,13 @@ process.stdout.write(JSON.stringify(context.__result));
     result = json.loads(completed.stdout)
 
     assert result["decisionIds"] == ["party-1"]
-    assert result["reviewer"] == "reviewer-fg"
-    assert result["fallbackReviewer"] == "reviewer-fg"
-    assert result["storedReviewer"] == "reviewer-fg"
-    assert "reviewer alias" in result["invalidAliasError"].lower()
+    assert result["reviewer"] == "Fabio Annovazzi"
+    assert result["fallbackReviewer"] == "Fabio Annovazzi"
+    assert result["storedReviewer"] == "Fabio Annovazzi"
+    assert (
+        "credentials, session material, or raw local paths"
+        in result["invalidAliasError"]
+    )
     assert "9" in result["statusMessage"]
 
 

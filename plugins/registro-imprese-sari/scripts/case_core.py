@@ -1,4 +1,4 @@
-"""Shared safety, privacy, and serialization helpers for Registro Imprese cases."""
+"""Shared safety, public-query, and serialization helpers for Registro Imprese cases."""
 
 from __future__ import annotations
 
@@ -118,7 +118,7 @@ def sha256_file(path: Path) -> str:
 
 
 def safe_identifier(value: object, *, field: str) -> str:
-    """Validate a stable pseudonymous identifier."""
+    """Validate a stable artifact identifier."""
 
     text = str(value or "").strip()
     if not SAFE_IDENTIFIER_RE.fullmatch(text):

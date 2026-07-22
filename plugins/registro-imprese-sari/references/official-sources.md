@@ -50,8 +50,8 @@ Default posture:
 2. select the exact chamber explicitly;
 3. search only topical words, with no client identifier;
 4. let a person select the relevant result;
-5. register minimal metadata and, only when permitted, a user-provided local
-   snapshot;
+5. register the metadata needed for provenance and, only when permitted, a
+   user-provided local snapshot;
 6. use the result as evidence requiring professional applicability review.
 
 The direct `sari_connector.py` route is available only when the studio records

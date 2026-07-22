@@ -1563,7 +1563,6 @@ def build_file_preparation_outputs(
     *,
     jurisdiction: str = "italy",
     language: str = "it",
-    include_review_previews: bool = False,
     max_pages: int = 50,
 ) -> BuildResult:
     """Run the prototype first-intake workflow on a customer folder."""
@@ -1788,7 +1787,6 @@ def build_file_preparation_outputs(
         xml_records=xml_records,
         jurisdiction=jurisdiction,
         language=language,
-        include_previews=include_review_previews,
     )
 
     return BuildResult(
@@ -1837,11 +1835,6 @@ def _parse_args() -> argparse.Namespace:
         help="Lingua di lavoro del fascicolo.",
     )
     parser.add_argument(
-        "--include-review-previews",
-        action="store_true",
-        help="Include estratti testuali nel payload di revisione locale.",
-    )
-    parser.add_argument(
         "--max-pages",
         type=int,
         default=50,
@@ -1861,7 +1854,6 @@ def main() -> int:
         ocr_lang=args.ocr_lang,
         jurisdiction=args.jurisdiction,
         language=args.language,
-        include_review_previews=args.include_review_previews,
         max_pages=args.max_pages,
     )
     LOGGER.info("Output creati in %s", result.output_dir)

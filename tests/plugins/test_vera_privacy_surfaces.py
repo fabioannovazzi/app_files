@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 import jsonschema
 
@@ -18,6 +19,7 @@ VALIDATOR = (
     / "scripts"
     / "validate_privacy_surfaces.py"
 )
+CONTEXT_POLICY = "real_case_data_may_enter_codex_context"
 
 
 def _validator_module():
@@ -26,6 +28,13 @@ def _validator_module():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _manifests() -> list[dict[str, Any]]:
+    return [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted((VERA_ROOT / "privacy" / "workstreams").glob("*.json"))
+    ]
 
 
 def test_vera_privacy_register_covers_current_workstreams_and_is_fresh() -> None:
@@ -43,36 +52,119 @@ def test_vera_privacy_manifests_match_the_published_schema() -> None:
         )
     )
     validator = jsonschema.Draft202012Validator(schema)
-    manifests = sorted((VERA_ROOT / "privacy" / "workstreams").glob("*.json"))
-
     errors = {
-        manifest.name: [
-            error.message
-            for error in validator.iter_errors(
-                json.loads(manifest.read_text(encoding="utf-8"))
-            )
+        str(manifest["workstream"]): [
+            error.message for error in validator.iter_errors(manifest)
         ]
-        for manifest in manifests
+        for manifest in _manifests()
     }
 
     assert errors
     assert all(not manifest_errors for manifest_errors in errors.values()), errors
 
 
-def test_new_client_privacy_notices_cover_supported_working_languages() -> None:
-    for workstream in ("client-file-preparation", "new-client"):
-        manifest = json.loads(
-            (VERA_ROOT / "privacy" / "workstreams" / f"{workstream}.json").read_text(
-                encoding="utf-8"
-            )
-        )
-        notice = manifest["commercialista_notice"]
+def test_vera_privacy_contract_allows_real_case_data_without_minimum_classifier() -> (
+    None
+):
+    forbidden_fields = {
+        "commercialista_notice",
+        "data_flow",
+        "full_source_expected",
+        "minimum_necessary",
+        "residual_risks",
+        "semantic_reasoning_required",
+    }
 
-        assert all(
-            isinstance(notice.get(f"message_{language}"), str)
-            and notice[f"message_{language}"].strip()
-            for language in ("it", "en", "fr", "de")
-        )
+    for manifest in _manifests():
+        assert manifest["schema_version"] == 2
+        codex_context = manifest["codex_context"]
+        assert codex_context["policy"] == CONTEXT_POLICY
+        assert codex_context["classes"]
+        assert forbidden_fields.isdisjoint(manifest)
+        for context_class in codex_context["classes"]:
+            assert forbidden_fields.isdisjoint(context_class)
+
+
+def test_vera_account_boundary_is_explicit_and_not_a_per_case_form() -> None:
+    expected_items = [
+        "account_or_workspace_plan",
+        "model_training_data_controls",
+        "retention_and_deletion_controls",
+    ]
+
+    for manifest in _manifests():
+        boundary = manifest["codex_account_boundary"]
+        assert boundary == {
+            "selected_by": "firm_or_user",
+            "vera_runtime_enforcement": "none",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": expected_items,
+            "per_case_record_required": False,
+        }
+
+
+def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:
+    for manifest in _manifests():
+        assert isinstance(manifest["boundaries_beyond_codex"], list)
+        for boundary in manifest["boundaries_beyond_codex"]:
+            if boundary["requires_confirmation"]:
+                assert boundary["optional"] is True
+
+
+def test_vera_workflow_wrappers_do_not_show_routine_privacy_notices() -> None:
+    components = json.loads((VERA_ROOT / "components.json").read_text(encoding="utf-8"))
+    roles = components.get("workflow_roles", {})
+
+    for workstream in components["plugins"]:
+        if roles.get(workstream, {}).get("kind") == "internal_engine":
+            continue
+        wrapper = VERA_ROOT / "skills" / workstream / "SKILL.md"
+        text = wrapper.read_text(encoding="utf-8")
+        assert "## Privacy Boundary" not in text
+        assert "commercialista_notice" not in text
+
+
+def test_vera_governance_uses_the_selected_account_boundary_without_double_confirmation() -> (
+    None
+):
+    readme = (VERA_ROOT / "README.md").read_text(encoding="utf-8")
+    umbrella = (VERA_ROOT / "skills" / "vera" / "SKILL.md").read_text(encoding="utf-8")
+    review = (VERA_ROOT / "skills" / "privacy-surface-review" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "account boundary selected by the firm or user" in readme
+    assert "account boundary selected by the firm or user" in umbrella
+    assert "approved Codex" not in readme
+    assert "approved Codex" not in umbrella
+    assert "do not ask again" in umbrella
+    assert "do not ask again" in review
+
+
+def test_vera_component_guidance_avoids_fake_minimums_and_ambiguous_authority() -> None:
+    new_client = (
+        ROOT / "plugins" / "new-client" / "skills" / "new-client" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    registro_skill = (
+        ROOT
+        / "plugins"
+        / "registro-imprese-sari"
+        / "skills"
+        / "registro-imprese-sari"
+        / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    registro_sources = (
+        ROOT
+        / "plugins"
+        / "registro-imprese-sari"
+        / "references"
+        / "official-sources.md"
+    ).read_text(encoding="utf-8")
+
+    assert "client-relationship privacy role or processing basis" in new_client
+    assert "processing authority" not in new_client
+    assert "minimum metadata needed for provenance" not in registro_skill
+    assert "register minimal metadata" not in registro_sources
 
 
 def test_vera_privacy_validator_reports_unregistered_manifest_gap(
@@ -189,17 +281,22 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     )
 
 
-def test_vera_privacy_validator_rejects_confirmation_flag_mismatch(
+def test_vera_privacy_validator_rejects_confirmation_on_required_boundary(
     tmp_path: Path,
 ) -> None:
     validator = _validator_module()
     vera_root = tmp_path / "plugins" / "vera"
     shutil.copytree(VERA_ROOT, vera_root)
-    manifest_path = vera_root / "privacy" / "workstreams" / "prompt-optimizer.json"
+    manifest_path = (
+        vera_root / "privacy" / "workstreams" / "deep-research-validator.json"
+    )
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["commercialista_notice"]["requires_confirmation"] = True
+    manifest["boundaries_beyond_codex"][0]["requires_confirmation"] = True
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     errors = validator.validate_privacy_surfaces(vera_root)
 
-    assert "prompt-optimizer: notice confirmation flag disagrees with level" in errors
+    assert (
+        "deep-research-validator: confirmation is allowed only for an optional boundary"
+        in errors
+    )

@@ -1,37 +1,38 @@
-# Privacy manifest contract
+# External-boundary manifest contract
 
 Each file in `privacy/workstreams/` records one component from
-`components.json`. It is a design-time register, not a runtime scan of customer
-files and not a legal compliance determination.
+`components.json`. It is a developer-maintained design record, not runtime
+inspection of customer files and not a legal compliance determination.
 
 ## Required fields
 
-- `schema_version`: currently `1`.
-- `workstream`: exact registered component ID.
-- `display_name`: human-readable workflow name.
-- `role`: `workflow` or `internal_engine`, matching `components.json`.
-- `governed_paths`: component-relative files or directories whose bytes form
-  the freshness fingerprint. Normally include `skills`, `scripts`, `mcp`, and
-  `schemas` when present.
-- `data_flow.local_sources`: source classes that remain in the local workspace.
-- `data_flow.local_processing`: mechanical processing performed before Codex
-  reasoning.
-- `data_flow.codex_context`: every distinct Codex-reading surface. Each entry
-  records `id`, `purpose`, `content`, `minimum_necessary`,
-  `semantic_reasoning_required`, and `full_source_expected`.
-- `residual_risks`: remaining context risks and their design mitigations.
-- `commercialista_notice`: `level`, `timing`, `message_it`, `message_en`, and
-  `requires_confirmation`.
-- `review`: review basis, limitations, date, and deterministic source
+- `schema_version`: currently `2`.
+- `workstream`, `display_name`, and `role`: registered component identity.
+- `governed_paths`: component-relative files whose bytes form the freshness
   fingerprint.
+- `codex_context.policy`: always `real_case_data_may_enter_codex_context`.
+- `codex_context.classes`: distinct classes Codex can read, each with an `id`,
+  `purpose`, and factual description of `content`.
+- `codex_account_boundary`: states that the firm or user selects the account and
+  that Vera cannot inspect or enforce its plan, model-training data controls, or
+  retention/deletion controls. Those settings are checked before professional
+  use and when the account or terms change; no per-case record is required.
+- `boundaries_beyond_codex`: public research, hosted service, external
+  connector, and send/publish boundaries. The array may be empty.
+- `security_controls`: concrete controls enforced by the workstream.
+- `review`: review date, basis, reviewer, and deterministic source fingerprint.
 
 ## Drafting rules
 
-Describe content classes, not hypothetical identifiers. Do not say that data is
-anonymous merely because a deterministic parser did not recognize a name.
-`minimum_necessary` is a design judgment about the workflow, not a GDPR legal
-conclusion. Set `full_source_expected` to true only when normal professional
-quality requires the complete source in Codex context.
+Describe what the source actually does. Do not equate local preprocessing with
+anonymisation, and do not claim that Codex sees only a deterministically defined
+minimum. Real names and case facts may enter Codex context when the professional
+work requires them.
 
-Notices must say what Codex receives and what remains local. Avoid warnings that
-repeat the same point or ask for consent when no optional choice exists.
+An external boundary needs confirmation only when the route itself is optional
+and has not already been chosen by the user. Ordinary Codex work has no routine
+privacy notice or consent step.
+
+GDPR data minimisation remains applicable as a purpose-based professional and
+legal judgment. The manifest and validator neither decide that judgment nor
+certify GDPR compliance.

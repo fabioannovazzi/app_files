@@ -17,12 +17,15 @@ delegation, MCP server dispatch, and a shared local PaddleOCR adapter used by
 modules that preserve their own page-level evidence. Each specialist workflow
 retains its own deterministic checks, evidence trail, and review surfaces.
 
-Every registered workstream also has a versioned privacy-surface manifest under
-`privacy/workstreams/`. It records what remains local, what Codex may read, the
-minimum useful context, residual risks, and the notice shown to the
-commercialista. The `privacy-surface-review` skill supplies the semantic review;
-its deterministic validator enforces complete coverage and fails when governed
-workflow source changes without a refreshed review.
+Every registered workstream also has a versioned external-boundary manifest
+under `privacy/workstreams/`. It records what Codex may read, the Codex/OpenAI
+account boundary selected by the firm or user, any route beyond Codex, and
+concrete security controls. Real case data may enter that Codex context when
+the work requires it; Vera does not pretend that deterministic redaction can decide
+professional relevance. The `privacy-surface-review` skill is a developer and
+release control, while its deterministic validator enforces complete coverage
+and fails when governed workflow source changes without a refreshed review.
+It is not a GDPR certification and it does not add routine notices to case work.
 
 The New Client workflow verifies a final-ready document-preparation phase—or an
 explicit standalone-evidence posture—and turns studio instructions into an

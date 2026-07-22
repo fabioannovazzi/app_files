@@ -45,7 +45,11 @@ const PERSISTENCE_CONTEXT_TTL_MS = 4 * 60 * 60 * 1000;
 const PERSISTENCE_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
 const PERSISTENCE_CONTEXTS = new Map();
 const PACKAGE_HASH_BASIS = "sorted_outputs_path_size_sha256_canonical_json_v1";
-const REVIEWER_ALIAS_RE = /^[A-Za-z][A-Za-z0-9._:-]{2,63}$/;
+const MAX_REVIEWER_REFERENCE_LENGTH = 160;
+const REVIEWER_REFERENCE_SECRET_RE =
+  /(?:password|passwd|api[_ -]?key|access[_ -]?token|refresh[_ -]?token|session[_ -]?(?:token|cookie)|authorization)\s*[:=]/i;
+const REVIEWER_REFERENCE_CREDENTIAL_VALUE_RE =
+  /^(?:sk-[A-Za-z0-9_-]{16,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.)/;
 const PROTECTED_RUN_FILES = new Set([
   "final_artifacts.json",
   "review_payload.json",
@@ -161,11 +165,10 @@ function toolDefinitions() {
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: {
         type: "string",
-        minLength: 3,
-        maxLength: 64,
-        pattern: "^[A-Za-z][A-Za-z0-9._:-]{2,63}$",
+        minLength: 1,
+        maxLength: MAX_REVIEWER_REFERENCE_LENGTH,
         description:
-          "Stable pseudonymous reviewer alias. Required before a complete review can become final_ready; do not enter a name, email, or fiscal identifier.",
+          "Stable professional or account reference. A real professional name is allowed. Required before a complete review can become final_ready; do not enter credentials, session material, or raw local paths.",
       },
     },
     ["review_payload", "decisions"],
@@ -288,15 +291,23 @@ function canonicalSha256(value) {
   return crypto.createHash("sha256").update(canonicalJson(value), "utf8").digest("hex");
 }
 
-function normalizeReviewerAlias(value, fieldPath = "reviewer") {
-  const alias = boundedOptionalString(value, fieldPath);
-  if (!alias) return "";
-  if (!REVIEWER_ALIAS_RE.test(alias) || alias.includes("@") || alias.includes("//")) {
+function normalizeReviewerReference(value, fieldPath = "reviewer") {
+  const reference = boundedOptionalString(value, fieldPath);
+  if (!reference) return "";
+  const containsControlCharacter = /[\u0000-\u001f\u007f]/.test(reference);
+  const containsRawPath = reference.includes("/") || reference.includes("\\");
+  if (
+    reference.length > MAX_REVIEWER_REFERENCE_LENGTH
+    || containsControlCharacter
+    || containsRawPath
+    || REVIEWER_REFERENCE_SECRET_RE.test(reference)
+    || REVIEWER_REFERENCE_CREDENTIAL_VALUE_RE.test(reference)
+  ) {
     throw new Error(
-      `${fieldPath} must be a stable pseudonymous alias using 3-64 ASCII letters, digits, dots, colons, underscores, or hyphens`,
+      `${fieldPath} must be a stable professional or account reference of at most ${MAX_REVIEWER_REFERENCE_LENGTH} characters and must not contain credentials, session material, or raw local paths`,
     );
   }
-  return alias;
+  return reference;
 }
 
 function validateItem(item, index) {
@@ -325,10 +336,6 @@ function sanitizedRunIntakeForReview(value) {
   const sanitized = { ...value, input_paths: [] };
   delete sanitized.output_dir;
   delete sanitized.source_snapshot;
-  if (isPlainObject(value.assumptions)) {
-    sanitized.assumptions = { ...value.assumptions };
-    delete sanitized.assumptions.client_name;
-  }
   if (isPlainObject(value.data_posture)) {
     const localFiles = Array.isArray(value.data_posture.local_files_read)
       ? value.data_posture.local_files_read
@@ -365,8 +372,13 @@ function sanitizedFinalArtifactsForReview(value) {
   if (Array.isArray(sanitized.outputs)) {
     sanitized.outputs = sanitized.outputs.map((output) => {
       if (!isPlainObject(output)) return output;
-      const { required_text: _privateRequiredText, ...safeOutput } = output;
-      return safeOutput;
+      if (
+        typeof output.path === "string"
+        && (path.isAbsolute(output.path) || /^[A-Za-z]:[\\/]/.test(output.path))
+      ) {
+        return { ...output, path: "<local-path>" };
+      }
+      return output;
     });
   }
   return sanitized;
@@ -525,7 +537,7 @@ function buildUiDecisions(inputArgs) {
   );
   const decisionSource =
     boundedOptionalString(inputArgs.decision_source, "decision_source") || "mcp_widget";
-  const reviewer = normalizeReviewerAlias(inputArgs.reviewer, "reviewer");
+  const reviewer = normalizeReviewerReference(inputArgs.reviewer, "reviewer");
   const currentUiDecisions = isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null;
   const reviewPayloadPath =
     typeof currentUiDecisions?.review_payload_path === "string"
@@ -1310,10 +1322,10 @@ function inputArgsWithPersistentOutput(inputArgs, reviewPayload) {
 }
 
 function stabilizeReviewer(uiDecisions, currentUiDecisions) {
-  const currentReviewer = normalizeReviewerAlias(currentUiDecisions?.reviewer, "ui_decisions.reviewer");
-  const submittedReviewer = normalizeReviewerAlias(uiDecisions.reviewer, "reviewer");
+  const currentReviewer = normalizeReviewerReference(currentUiDecisions?.reviewer, "ui_decisions.reviewer");
+  const submittedReviewer = normalizeReviewerReference(uiDecisions.reviewer, "reviewer");
   if (currentReviewer && submittedReviewer && currentReviewer !== submittedReviewer) {
-    throw new Error("reviewer alias must remain stable for the run");
+    throw new Error("reviewer reference must remain stable for the run");
   }
   const reviewer = currentReviewer || submittedReviewer;
   if (reviewer) uiDecisions.reviewer = reviewer;
@@ -2129,7 +2141,7 @@ function applyDecisionPayload(inputArgs) {
   const persistence = validatePersistentState(persistentInputArgs, reviewPayload);
   const reviewer = persistence
     ? stabilizeReviewer(uiDecisions, persistence.currentUiDecisions)
-    : normalizeReviewerAlias(uiDecisions.reviewer, "reviewer");
+    : normalizeReviewerReference(uiDecisions.reviewer, "reviewer");
   if (persistence) {
     uiDecisions.review_payload_sha256 = persistence.reviewBytesHash;
     uiDecisions.review_payload_canonical_sha256 = persistence.reviewCanonicalHash;
@@ -2170,7 +2182,7 @@ function applyDecisionPayload(inputArgs) {
     const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
     if (applicationStatus === "final_ready" && !reviewer) {
       throw new Error(
-        "reviewer is required as a stable pseudonymous alias before phase-one review can become final_ready",
+        "reviewer is required as a stable professional or account reference before phase-one review can become final_ready",
       );
     }
     const appliedDecisions = {

@@ -169,16 +169,6 @@ def _complete_new_client_input(tmp_path: Path) -> dict[str, Any]:
     payload["evidence_register"] = [
         _evidence(evidence_id, path) for evidence_id, path in evidence_paths.items()
     ]
-    payload["processing_authority"] = {
-        "status": "authorized",
-        "scope": "new_client_professional_setup",
-        "runtime": "local_codex_workspace",
-        "minimization": "structured_facts_and_selected_excerpts",
-        "external_transfer_authorized": False,
-        "authorized_by": "reviewer-01",
-        "authorized_by_role": "professional",
-        "authorized_at": PROFESSIONAL_CONFIRMED_AT,
-    }
     payload["tax_facts"] = {
         "codice_fiscale": {
             "value": "RSSMRA80A01H501U",
@@ -1306,11 +1296,9 @@ def test_initialize_case_writes_owner_only_file_outside_repository(
                 "profile": "Profilo del cliente e documenti di identità",
                 "structure": "Rappresentanti, esecutore e titolarità effettiva",
                 "engagement": "Ambito e condizioni dell’incarico",
-                "screening": "Copertura delle verifiche — review-subject-client",
+                "screening": "Copertura delle verifiche — CASE-ALPHA",
                 "aml_section": ("Sezione A dei fattori di rischio antiriciclaggio"),
                 "triggers": "Indicatori che impongono misure rafforzate",
-                "notice": "Dati di revisione pseudonimizzati",
-                "excluded_names": "nomi",
             },
         ),
         (
@@ -1324,11 +1312,9 @@ def test_initialize_case_writes_owner_only_file_outside_repository(
                 "profile": "Client profile and identity evidence",
                 "structure": "Representatives, executor and beneficial ownership",
                 "engagement": "Engagement scope and terms",
-                "screening": "Screening coverage — review-subject-client",
+                "screening": "Screening coverage — CASE-ALPHA",
                 "aml_section": "AML risk-factor section A",
                 "triggers": "Mandatory enhanced-measure triggers",
-                "notice": "Pseudonymous review payload",
-                "excluded_names": "names",
             },
         ),
         (
@@ -1344,11 +1330,9 @@ def test_initialize_case_writes_owner_only_file_outside_repository(
                 "profile": "Profil du client et justificatifs d’identité",
                 "structure": ("Représentants, exécutant et bénéficiaires effectifs"),
                 "engagement": "Périmètre et conditions de la mission",
-                "screening": ("Couverture des vérifications — review-subject-client"),
+                "screening": ("Couverture des vérifications — CASE-ALPHA"),
                 "aml_section": "Section A des facteurs de risque LCB-FT",
                 "triggers": ("Facteurs imposant des mesures de vigilance renforcée"),
-                "notice": "Données de révision pseudonymisées",
-                "excluded_names": "noms",
             },
         ),
         (
@@ -1364,11 +1348,9 @@ def test_initialize_case_writes_owner_only_file_outside_repository(
                     "Vertreter, ausführende Person und wirtschaftlich Berechtigte"
                 ),
                 "engagement": "Umfang und Bedingungen des Auftrags",
-                "screening": "Abdeckung der Prüfungen — review-subject-client",
+                "screening": "Abdeckung der Prüfungen — CASE-ALPHA",
                 "aml_section": "Abschnitt A der AML-Risikofaktoren",
                 "triggers": "Auslöser für verpflichtende verstärkte Maßnahmen",
-                "notice": "Pseudonymisierte Prüfdaten",
-                "excluded_names": "Namen",
             },
         ),
     ],
@@ -1403,11 +1385,9 @@ def test_package_localizes_professional_review_copy(
     assert titles["party:profile"] == expected["profile"]
     assert titles["party:structure"] == expected["structure"]
     assert titles["engagement:scope-and-terms"] == expected["engagement"]
-    assert titles["screening_subject:review-subject-client"] == expected["screening"]
+    assert titles["screening_subject:CASE-ALPHA"] == expected["screening"]
     assert titles["aml_factor_section:A"] == expected["aml_section"]
     assert titles["aml:mandatory-trigger-set"] == expected["triggers"]
-    assert expected["notice"] in review["privacy_notice"]
-    assert review["privacy"]["excluded"][0] == expected["excluded_names"]
     assert items["applicability:mandate"]["item_type"] == "document_applicability"
     assert items["applicability:mandate"]["data"]["topic"] == "mandate"
     assert items["applicability:mandate"]["allowed_actions"] == [
@@ -1532,7 +1512,7 @@ def test_package_new_client_e2e_is_private_reviewable_and_hash_bound(
     )
 
 
-def test_review_payload_is_minimized_and_covers_professional_review_types(
+def test_review_payload_preserves_professional_data_and_covers_review_types(
     tmp_path: Path,
 ) -> None:
     intake = _complete_new_client_input(tmp_path)
@@ -1569,7 +1549,7 @@ def test_review_payload_is_minimized_and_covers_professional_review_types(
         "uses_proposed_inputs": False,
         "professional_review_required": True,
     }
-    for forbidden_value in (
+    for professionally_useful_value in (
         "RSSMRA80A01H501U",
         "01234567890",
         "PARTY-DOC-SECRET",
@@ -1578,11 +1558,13 @@ def test_review_payload_is_minimized_and_covers_professional_review_types(
         "CASE-ALPHA",
         "REP-EXECUTOR-01",
         "OWNER-01",
+        "screening-case-alpha-pep",
         "controlled-pep-source",
-        (tmp_path / "case-evidence").as_posix(),
         "Sensitive registered identity",
     ):
-        assert forbidden_value not in serialized
+        assert professionally_useful_value in serialized
+    assert (tmp_path / "case-evidence").as_posix() not in serialized
+    assert review["privacy"]["classification"] == "private_professional_review"
     assert "client_reference" not in review
     assert isinstance(review["source_artifacts"], dict)
     assert set(review["source_artifacts"]) == {
@@ -2619,44 +2601,12 @@ def test_runtime_source_registry_rejects_third_party_authority(tmp_path: Path) -
         load_source_registry(path)
 
 
-def test_packaging_requires_explicit_processing_authority(tmp_path: Path) -> None:
-    payload = _complete_new_client_input(tmp_path)
-    payload["processing_authority"] = build_template(
-        "CASE-AUTHORITY",
-        client_type="company",
-        engagement_kind="ongoing",
-        assessment_date="2026-01-31",
-    )["processing_authority"]
-    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
-
-    with pytest.raises(ValidationError, match="Semantic/model processing is blocked"):
-        package_new_client(
-            input_path,
-            tmp_path / "authority-blocked",
-            generated_at="2026-02-01T10:00:00+00:00",
-        )
-
-
-@pytest.mark.parametrize(
-    ("declared_runtime", "transfer_authorized"),
-    [
-        ("local_codex_workspace", False),
-        ("managed_codex_runtime", True),
-    ],
-    ids=("local-no-transfer", "managed-transfer-authorized"),
-)
-def test_run_intake_separates_declared_authority_from_observed_packaging(
+def test_run_intake_does_not_claim_model_authority_or_processing_observation(
     tmp_path: Path,
-    declared_runtime: str,
-    transfer_authorized: bool,
 ) -> None:
     payload = _complete_new_client_input(tmp_path)
-    payload["processing_authority"]["runtime"] = declared_runtime
-    payload["processing_authority"][
-        "external_transfer_authorized"
-    ] = transfer_authorized
     input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
-    output_dir = tmp_path / f"authority-trace-{declared_runtime}"
+    output_dir = tmp_path / "no-false-processing-trace"
 
     package_new_client(
         input_path,
@@ -2665,17 +2615,8 @@ def test_run_intake_separates_declared_authority_from_observed_packaging(
     )
 
     run_intake = load_json(output_dir / "run_intake.json")
-    declaration = run_intake["processing_authority_declaration"]
-    observed = run_intake["observed_processing"]
-    assert declaration == payload["processing_authority"]
-    assert declaration["runtime"] == declared_runtime
-    assert declaration["external_transfer_authorized"] is transfer_authorized
-    assert observed == {
-        "scope": "package_new_client_deterministic_invocation",
-        "runtime": "local_python_process",
-        "model_processing_performed": False,
-        "external_transfer_performed": False,
-    }
+    assert "processing_authority_declaration" not in run_intake
+    assert "observed_processing" not in run_intake
     assert {step["execution_location"] for step in run_intake["execution_trace"]} == {
         "local_python_process"
     }
@@ -2730,14 +2671,6 @@ def test_company_ownership_and_executor_postures_must_be_explicit(
     payload = _complete_new_client_input(tmp_path / "executor-role")
     payload["representative_posture"]["executor_reference"] = "REP-LEGAL-02"
     with pytest.raises(ValidationError, match="whose role is executor"):
-        validate_new_client_input(payload)
-
-
-def test_processing_authority_requires_pseudonymous_actor(tmp_path: Path) -> None:
-    payload = _complete_new_client_input(tmp_path)
-    payload["processing_authority"]["authorized_by"] = None
-
-    with pytest.raises(ValidationError, match="processing_authority.authorized_by"):
         validate_new_client_input(payload)
 
 
@@ -2922,7 +2855,6 @@ def test_promotion_uses_only_reviewed_unambiguous_tax_code(
     intake = load_json(target)
     assert intake["jurisdiction"] == "IT"
     assert intake["language"] == "fr"
-    assert intake["processing_authority"]["status"] == "pending"
     assert intake["tax_facts"]["codice_fiscale"] == {
         "value": expected_value,
         "verification_status": "reported",

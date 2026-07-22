@@ -37,7 +37,6 @@ from new_client_core import (  # noqa: E402
     utc_now,
     validate_contract,
     validate_new_client_input,
-    validate_processing_authority,
     validate_source_references,
     verify_client_file_preparation_binding,
     verify_evidence_register,
@@ -900,9 +899,6 @@ def _package_new_client_into(
     generated_at_value = generated_at or utc_now()
     resolved_input = input_path.expanduser().resolve()
     intake = validate_new_client_input(load_json(resolved_input))
-    validate_processing_authority(
-        intake["processing_authority"], require_authorized=True
-    )
     source_registry = load_source_registry(source_registry_path.expanduser().resolve())
     validate_source_references(intake, source_registry)
     resolved_output = ensure_private_output_directory(output_dir)
@@ -1047,13 +1043,6 @@ def _package_new_client_into(
         "language": intake["language"],
         "temporal_validity": temporal_validity,
         "client_reference": intake["client_reference"],
-        "processing_authority_declaration": dict(intake["processing_authority"]),
-        "observed_processing": {
-            "scope": "package_new_client_deterministic_invocation",
-            "runtime": "local_python_process",
-            "model_processing_performed": False,
-            "external_transfer_performed": False,
-        },
         "input_paths": [resolved_input.as_posix()],
         "output_dir": reported_output.as_posix(),
         "inferred_task": "prepare_reviewable_professional_new_client",
@@ -1078,15 +1067,14 @@ def _package_new_client_into(
         },
         "data_posture": {
             "local_files_read": local_files_read,
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
             "output_directory_mode": "owner_only_0700",
             "artifact_file_mode": "owner_only_0600",
-            "review_payload": "pseudonymous_minimized",
-            "sensitive_facts": "local_artifacts_only",
+            "review_payload": "private_professional_review",
+            "professional_case_data": "included_in_private_review_when_useful",
             "external_uploads": [],
         },
         "execution_trace": [

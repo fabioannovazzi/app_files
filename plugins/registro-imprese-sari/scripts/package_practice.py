@@ -87,6 +87,32 @@ def _item_sources(item: dict[str, Any]) -> str:
     return ", ".join(map(str, sources)) if isinstance(sources, list) else "—"
 
 
+def _case_scope_rows(intake: dict[str, Any]) -> list[list[object]]:
+    """Return private case details selected for the professional workpaper."""
+
+    rows: list[list[object]] = [
+        ["Riferimento interno", intake["client_reference"], "registrato"],
+    ]
+    identity = intake.get("client_identity")
+    if not isinstance(identity, dict):
+        return rows
+    labels = (
+        ("name", "Cliente / soggetto"),
+        ("tax_code", "Codice fiscale"),
+        ("vat_number", "Partita IVA"),
+        ("email", "Email"),
+        ("pec", "PEC"),
+        ("phone", "Telefono"),
+        ("address", "Indirizzo"),
+    )
+    rows.extend(
+        [label, identity[field], "dato del fascicolo"]
+        for field, label in labels
+        if identity.get(field)
+    )
+    return rows
+
+
 def _checklist_markdown(
     intake: dict[str, Any],
     plan: dict[str, Any],
@@ -98,14 +124,12 @@ def _checklist_markdown(
     lines = [
         f"# {DISCLAIMER}",
         "",
-        "> Questa carta di lavoro prepara la revisione del professionista. Non accede a portali, non compila una pratica live, non firma e non invia.",
-        "",
         "## Perimetro del caso",
         "",
         *_markdown_table(
             ["Voce", "Valore", "Stato"],
             [
-                ["Riferimento", intake["client_reference"], "pseudonimo"],
+                *_case_scope_rows(intake),
                 ["Camera competente", chamber["name"], chamber["confirmation_status"]],
                 ["Tenant SARI", chamber["tenant"], chamber["confirmation_status"]],
                 [
@@ -197,10 +221,19 @@ def _checklist_markdown(
             "",
             plan["sari_question_draft"],
             "",
-            "## Limiti",
-            "",
-            *(f"- {item}" for item in plan["limitations"]),
-            "",
+        ]
+    )
+    if plan["limitations"]:
+        lines.extend(
+            [
+                "## Limiti",
+                "",
+                *(f"- {item}" for item in plan["limitations"]),
+                "",
+            ]
+        )
+    lines.extend(
+        [
             "## Esito dei controlli meccanici",
             "",
             f"- Stato: {audit['status']}",
@@ -217,16 +250,16 @@ def _sari_question_markdown(intake: dict[str, Any], plan: dict[str, Any]) -> str
     chamber = intake["competent_chamber"]
     return "\n".join(
         [
-            f"# {DISCLAIMER}",
+            "# Quesito per il supporto SARI — bozza",
             "",
             f"Destinatario proposto: {chamber['name']}",
-            f"Riferimento pseudonimo: {intake['client_reference']}",
+            f"Riferimento del caso: {intake['client_reference']}",
             "",
             "## Quesito",
             "",
             plan["sari_question_draft"],
             "",
-            "_Rimuovere ogni dato personale non necessario e far approvare il testo dal professionista prima di qualsiasi invio manuale._",
+            "_Far approvare il testo dal professionista prima di qualsiasi invio manuale. Vera non invia il quesito._",
             "",
         ]
     )
@@ -244,7 +277,7 @@ def _review_items(
             {
                 "id": f"source-{source_id}",
                 "item_type": "official_source",
-                "title": f"Fonte ufficiale {source_id}",
+                "title": source.get("title") or f"Fonte ufficiale {source_id}",
                 "source_path": source.get("artifact_path"),
                 "output_path": "official_sources.json",
                 "allowed_actions": ALLOWED_ACTIONS,
@@ -258,6 +291,8 @@ def _review_items(
                     "source_date": source.get("updated_date")
                     or source.get("retrieved_at")
                     or source.get("registered_at"),
+                    "official_url": source.get("official_url")
+                    or source.get("source_url"),
                     "applicability_status": source.get("applicability_status")
                     or source.get("selection_status"),
                     "target_artifact": "official_sources.json",
@@ -269,15 +304,14 @@ def _review_items(
             }
         )
     for array_name, _ in PLAN_SECTIONS:
-        for index, item in enumerate(plan.get(array_name) or [], start=1):
+        for item in plan.get(array_name) or []:
             item_id = item["id"]
             item_type = ITEM_TYPES[array_name]
-            label = array_name.replace("_", " ").rstrip("s")
             items.append(
                 {
                     "id": f"plan-{item_id}",
                     "item_type": item_type,
-                    "title": f"{label.capitalize()} {index}",
+                    "title": item["title"],
                     "source_path": "practice_plan_validated.json",
                     "output_path": "dire_practice_plan.json",
                     "allowed_actions": ALLOWED_ACTIONS,
@@ -293,9 +327,13 @@ def _review_items(
                         "record_id": item_id,
                         "system": item.get("system"),
                         "sequence": item.get("sequence"),
+                        "detail": item["detail"],
+                        "proposed_value": item.get("proposed_value"),
+                        "document_quotes": item.get("document_quotes") or [],
                         "review_status": item["review_status"],
                         "source_ids": item["source_ids"],
                         "case_fact_ids": item["case_fact_ids"],
+                        "confirmation": item.get("confirmation"),
                         "target_artifact": "dire_practice_plan.json",
                         "target_id_field": "id",
                         "target_record_id": item_id,
@@ -325,6 +363,24 @@ def _review_items(
         }
     )
     return items
+
+
+def _case_context(intake: dict[str, Any], plan: dict[str, Any]) -> dict[str, Any]:
+    """Return the real private case context needed for professional review."""
+
+    return {
+        "client_reference": intake["client_reference"],
+        "client_identity": intake.get("client_identity") or {},
+        "competent_chamber": intake["competent_chamber"],
+        "subject": intake["subject"],
+        "activity": intake["activity"],
+        "requested_operation": intake["requested_operation"],
+        "current_positions": intake.get("current_positions") or [],
+        "professional_question": intake["professional_question"],
+        "case_summary": plan["case_summary"],
+        "review_context": plan.get("review_context") or {},
+        "sari_question_draft": plan["sari_question_draft"],
+    }
 
 
 def _artifact_record(
@@ -460,6 +516,7 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
         ],
         "review_type": "registro_imprese_practice_review",
         "status": package_status,
+        "case_context": _case_context(intake, plan),
         "item_count": len(review_items),
         "items": review_items,
         "columns": ["id", "item_type", "title", "status"],
@@ -468,11 +525,6 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
             {"path": "practice_validation_audit.json", "status": audit["status"]},
         ],
         "allowed_actions": ALLOWED_ACTIONS,
-        "privacy_notice": (
-            "The widget payload omits the case summary, activity text, proposed values, "
-            "document quotes, direct identifiers, and the SARI question. Review the local "
-            "artifacts for full detail."
-        ),
         "filing_status": "not_filed",
         "filing_authorized": False,
     }
@@ -502,12 +554,10 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
             [
                 "# Review Handoff",
                 "",
-                f"**{DISCLAIMER}**",
-                "",
                 "Artifacts: review_payload.json → ui_decisions.json → applied_decisions.json → final_artifacts.json.",
                 "",
                 "1. Validate with `validate_registro_imprese_sari_review`.",
-                "2. Open the local review with `render_registro_imprese_sari_review`.",
+                "2. Open the professional review in Codex with `render_registro_imprese_sari_review`.",
                 "3. Persist choices with `save_registro_imprese_sari_decisions`.",
                 "4. Apply the decision manifest with `apply_registro_imprese_sari_decisions`.",
                 "",

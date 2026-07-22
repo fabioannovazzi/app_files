@@ -43,26 +43,9 @@ def _load_inventory_script() -> ModuleType:
     return module
 
 
-def _authority_kwargs() -> dict[str, object]:
+def _registration_kwargs() -> dict[str, object]:
     return {
         "source_origin": "https://www.inps.it",
-        "authority_actor_id": "ACT-PORTAL-001",
-        "authority_actor_role": "authorized_delegate",
-        "authority_recorded_at": "2026-07-16T10:15:00+02:00",
-        "authority_scope": "Read and export the authorized client's contribution records.",
-        "human_authority_basis": "Explicit instruction recorded by the responsible professional.",
-        "profile_authority_basis": "Access through the approved professional portal profile.",
-        "delegation_authority_basis": "Active client delegation checked before the manual export.",
-        "processing_approved_by_id": "REV-DATA-001",
-        "processing_approved_by_role": "professional_reviewer",
-        "processing_recorded_at": "2026-07-16T10:20:00+02:00",
-        "processor_scope": "Local evidence registration and later professional case review.",
-        "processing_approval_basis": "Studio processing approval for this bounded client case.",
-        "confirm_human_authority": True,
-        "confirm_profile_authority": True,
-        "confirm_delegation_authority": True,
-        "approve_client_data_processing": True,
-        "confirm_user_downloaded_files": True,
     }
 
 
@@ -77,7 +60,7 @@ def _register(
     output_dir: Path,
     **overrides: object,
 ) -> Path:
-    options = _authority_kwargs()
+    options = _registration_kwargs()
     options.update(overrides)
     return module.register_portal_exports(
         source_files,
@@ -86,7 +69,7 @@ def _register(
     )
 
 
-def test_register_portal_exports_writes_private_minimized_verified_manifest(
+def test_register_portal_exports_writes_private_verified_manifest(
     tmp_path: Path,
 ) -> None:
     module = _load_script()
@@ -101,13 +84,19 @@ def test_register_portal_exports_writes_private_minimized_verified_manifest(
     manifest = json.loads(manifest_text)
 
     assert manifest_path == output_dir / "manifest.json"
+    assert set(manifest) == {
+        "schema_version",
+        "manifest_type",
+        "registration_id",
+        "created_at",
+        "source_origin",
+        "safety",
+        "artifacts",
+    }
+    assert manifest["schema_version"] == "2.0"
     assert manifest["source_origin"] == "https://www.inps.it"
-    assert manifest["authority"]["human_authority_confirmed"] is True
-    assert manifest["authority"]["profile_authority_confirmed"] is True
-    assert manifest["authority"]["delegation_authority_confirmed"] is True
-    assert manifest["processing_approval"]["client_data_processing_approved"] is True
     assert manifest["safety"] == {
-        "source_files_user_downloaded": True,
+        "source_files_supplied_locally": True,
         "network_access_performed": False,
         "portal_automation_performed": False,
         "credentials_collected": False,
@@ -214,54 +203,6 @@ def test_register_portal_exports_rejects_non_exact_or_unsafe_origin(
 
 
 @pytest.mark.parametrize(
-    "confirmation_field",
-    (
-        "confirm_human_authority",
-        "confirm_profile_authority",
-        "confirm_delegation_authority",
-        "approve_client_data_processing",
-        "confirm_user_downloaded_files",
-    ),
-)
-def test_register_portal_exports_requires_each_explicit_confirmation(
-    tmp_path: Path, confirmation_field: str
-) -> None:
-    module = _load_script()
-    source = _write_pdf(tmp_path / "export.pdf")
-    output_dir = tmp_path / "registered"
-
-    with pytest.raises(module.PortalExportError, match="explicitly confirmed"):
-        _register(
-            module,
-            [source],
-            output_dir,
-            **{confirmation_field: False},
-        )
-
-    assert not output_dir.exists()
-
-
-@pytest.mark.parametrize(
-    ("overrides", "message"),
-    (
-        ({"authority_actor_id": "Example Client"}, "pseudonymous"),
-        ({"processing_approved_by_id": "reviewer@example.com"}, "pseudonymous"),
-        ({"authority_recorded_at": "2026-07-16T10:15:00"}, "timezone"),
-        ({"processing_recorded_at": "not-a-time"}, "ISO date-time"),
-        ({"authority_scope": "short"}, "8-1000"),
-    ),
-)
-def test_register_portal_exports_rejects_unbounded_authority_metadata(
-    tmp_path: Path, overrides: dict[str, object], message: str
-) -> None:
-    module = _load_script()
-    source = _write_pdf(tmp_path / "export.pdf")
-
-    with pytest.raises(module.PortalExportError, match=message):
-        _register(module, [source], tmp_path / "registered", **overrides)
-
-
-@pytest.mark.parametrize(
     ("filename", "content"),
     (
         ("portal.html", b"<!doctype html><html></html>"),
@@ -357,17 +298,20 @@ def test_verify_portal_export_rejects_unsafe_manifest_flag(tmp_path: Path) -> No
         module.verify_portal_export(output_dir)
 
 
-def test_verify_portal_export_rejects_malformed_authority_value(tmp_path: Path) -> None:
+@pytest.mark.parametrize("legacy_field", ["authority", "processing_approval"])
+def test_verify_portal_export_rejects_legacy_self_attestation_fields(
+    tmp_path: Path, legacy_field: str
+) -> None:
     module = _load_script()
     source = _write_pdf(tmp_path / "export.pdf")
     output_dir = tmp_path / "registered"
     manifest_path = _register(module, [source], output_dir)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["authority"]["human_actor_role"] = ["authorized_delegate"]
+    manifest[legacy_field] = {"confirmed": True}
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     manifest_path.chmod(0o600)
 
-    with pytest.raises(module.PortalExportError, match="role"):
+    with pytest.raises(module.PortalExportError, match="exactly the declared fields"):
         module.verify_portal_export(output_dir)
 
 
@@ -407,35 +351,6 @@ def test_cli_register_and_verify_without_portal_or_network_access(
         str(output_dir),
         "--source-origin",
         "https://www.inps.it",
-        "--authority-actor-id",
-        "ACT-PORTAL-001",
-        "--authority-actor-role",
-        "authorized_delegate",
-        "--authority-recorded-at",
-        "2026-07-16T10:15:00+02:00",
-        "--authority-scope",
-        "Read and export the authorized client contribution records.",
-        "--human-authority-basis",
-        "Explicit instruction recorded by the responsible professional.",
-        "--profile-authority-basis",
-        "Access through the approved professional portal profile.",
-        "--delegation-authority-basis",
-        "Active client delegation checked before the manual export.",
-        "--processing-approved-by-id",
-        "REV-DATA-001",
-        "--processing-approved-by-role",
-        "professional_reviewer",
-        "--processing-recorded-at",
-        "2026-07-16T10:20:00+02:00",
-        "--processor-scope",
-        "Local evidence registration and later professional case review.",
-        "--processing-approval-basis",
-        "Studio processing approval for this bounded client case.",
-        "--confirm-human-authority",
-        "--confirm-profile-authority",
-        "--confirm-delegation-authority",
-        "--approve-client-data-processing",
-        "--confirm-user-downloaded-files",
     ]
 
     registered = subprocess.run(
@@ -495,11 +410,11 @@ def test_inventory_records_verified_export_and_excludes_private_manifest(
     run_intake_text = (output_dir / "run_intake.json").read_text(encoding="utf-8")
     run_intake = json.loads(run_intake_text)
     posture = run_intake["data_posture"]
-    assert posture["acquisition_channels_used"] == ["inps_official_user_export"]
+    assert posture["acquisition_channels_used"] == ["inps_registered_local_export"]
     assert posture["external_connectors_used"] == []
     assert posture["network_calls_by_scripts"] is False
     assert posture["portal_export_receipt"]["artifact_count"] == 1
-    assert posture["portal_export_receipt"]["source_files_user_downloaded"] is True
+    assert posture["portal_export_receipt"]["source_files_supplied_locally"] is True
     assert sensitive_name not in run_intake_text
     assert source.as_posix() not in run_intake_text
 

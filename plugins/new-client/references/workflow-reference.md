@@ -53,8 +53,9 @@ The review lifecycle is:
 5. `final_artifacts.json`
 
 `review_payload.json` includes `source_artifacts`, exact basis hashes, the
-upstream-intake verification posture, a privacy notice, and only minimized case
-aliases. Full client data remains in private local artifacts.
+upstream-intake verification posture, and the professionally useful client and
+case data needed for review. Credentials, session material, and raw local paths
+remain outside the review payload.
 `review_handoff.md` names the validate, render, save, and apply tools and is
 included in `final_artifacts.json` with QA metadata.
 
@@ -123,17 +124,10 @@ as separate fields. These values are professional decisions. Marketing consent
 has its own record and scope; professional review confirms the accuracy of the
 record, not the client's consent itself.
 
-Before semantic/model processing, the intake must also contain an explicit
-`processing_authority` with approved runtime, scope, minimization posture,
-external-transfer choice, pseudonymous approving actor, professional role, and
-timestamp. A pending authority record permits local deterministic preparation
-but blocks packaging and semantic processing.
-
-`run_intake.json` preserves that declaration as
-`processing_authority_declaration` and records the packaging invocation's
-actual behavior separately under `observed_processing`. An authorized managed
-runtime or external transfer is permission, not evidence that this local
-packaging invocation used it.
+Real client data may enter the Codex context when it is useful for this
+professional work. The workflow does not add a per-case model-use authority or
+minimisation declaration that it cannot verify. Credentials, cookies, tokens,
+session URLs, and raw local paths remain outside the review payload.
 
 ## AML mechanical contract
 

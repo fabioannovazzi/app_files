@@ -414,7 +414,6 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "source_inventory.json",
                 "claims_review.json",
             ],
-            "model_excerpts_sent": [],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

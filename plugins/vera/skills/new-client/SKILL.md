@@ -5,14 +5,6 @@ description: "Use whenever a studio starts work on a new client: prepare incomin
 
 # New Client
 
-## Privacy Boundary
-
-Before reading customer source or module-generated evidence, read
-`../../privacy/workstreams/new-client.json` and, when phase one is used,
-`../../privacy/workstreams/client-file-preparation.json`. Show the applicable
-notice in the conversation language in the Run Intake. Continue without a
-redundant consent question unless a manifest explicitly requires confirmation.
-
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 This is Vera's sole new-client workflow. Do not route users to separate
@@ -49,10 +41,10 @@ resolved `new-client` module's
 manifest and every listed output, inherits the phase-one language, and must
 reject non-Italian or mixed runs rather than implying another country pack.
 
-Before phase-two packaging, require the explicit `processing_authority` record,
-including a stable pseudonymous approving actor reference. Do not substitute a
-name, email address, tax identifier, or a general privacy notice for that
-case-specific authority record.
+Real client data may enter the Codex context when useful for the professional
+work. Do not add a per-case model-use authority or minimisation declaration
+that Vera cannot verify. Keep credentials, cookies, tokens, session URLs, and
+raw local paths outside the review payload.
 
 When host MCP tools are unavailable, use each resolved module's persistent
 loopback workbench instead of treating chat text as saved decisions. From an

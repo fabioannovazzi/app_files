@@ -85,7 +85,6 @@ def _base_contract(tmp_path: Path) -> Path:
             "dependency_check": {"status": "passed"},
             "data_posture": {
                 "local_files_read": ["entries.xlsx", "support/"],
-                "model_excerpts_sent": [],
                 "external_connectors_used": [],
                 "upload_paths_used": [],
                 "remote_sql_execution_used": False,
@@ -526,92 +525,19 @@ def test_validate_contract_requires_review_apply_trace_outputs(
     ) in report.errors
 
 
-def test_validate_contract_rejects_non_list_data_posture_fields(
+def test_validate_contract_does_not_require_unobservable_model_context_log(
     tmp_path: Path,
 ) -> None:
     output_dir = _base_contract(tmp_path)
     run_intake_path = output_dir / "run_intake.json"
     run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    run_intake["data_posture"]["model_excerpts_sent"] = "none"
-    _write_json(run_intake_path, run_intake)
-
-    report = validator.validate_contract(output_dir, strict_data_posture=True)
-
-    assert report.ok is False
-    assert (
-        "run_intake.json data_posture.model_excerpts_sent must be a list"
-        in report.errors
-    )
-
-
-def test_validate_contract_accepts_structured_model_excerpt_metadata(
-    tmp_path: Path,
-) -> None:
-    output_dir = _base_contract(tmp_path)
-    run_intake_path = output_dir / "run_intake.json"
-    run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    run_intake["data_posture"]["model_excerpts_sent"] = [
-        {
-            "excerpt_id": "claim-001",
-            "source": "claim_review.csv",
-            "purpose": "claim validation review",
-            "content_type": "bounded row summary",
-            "redaction_status": "redacted",
-            "row_count": 2,
-            "character_count": 480,
-        }
-    ]
+    assert "model_excerpts_sent" not in run_intake["data_posture"]
     _write_json(run_intake_path, run_intake)
 
     report = validator.validate_contract(output_dir, strict_data_posture=True)
 
     assert report.ok is True
     assert report.errors == []
-
-
-def test_validate_contract_rejects_raw_model_excerpt_content(
-    tmp_path: Path,
-) -> None:
-    output_dir = _base_contract(tmp_path)
-    run_intake_path = output_dir / "run_intake.json"
-    run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    run_intake["data_posture"]["model_excerpts_sent"] = [
-        {
-            "excerpt_id": "claim-001",
-            "source": "claim_review.csv",
-            "purpose": "claim validation review",
-            "content_type": "bounded row summary",
-            "redaction_status": "redacted",
-            "text": "Sensitive source text should not be repeated here.",
-        }
-    ]
-    _write_json(run_intake_path, run_intake)
-
-    report = validator.validate_contract(output_dir, strict_data_posture=True)
-
-    assert report.ok is False
-    assert (
-        "run_intake.json data_posture.model_excerpts_sent[0] must not include "
-        "raw excerpt content fields: text"
-    ) in report.errors
-
-
-def test_validate_contract_rejects_unstructured_model_excerpt_entries(
-    tmp_path: Path,
-) -> None:
-    output_dir = _base_contract(tmp_path)
-    run_intake_path = output_dir / "run_intake.json"
-    run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
-    run_intake["data_posture"]["model_excerpts_sent"] = ["claim-001"]
-    _write_json(run_intake_path, run_intake)
-
-    report = validator.validate_contract(output_dir, strict_data_posture=True)
-
-    assert report.ok is False
-    assert (
-        "run_intake.json data_posture.model_excerpts_sent[0] must be an object "
-        "with excerpt_id, source, purpose, content_type, and redaction_status"
-    ) in report.errors
 
 
 def test_validate_contract_requires_execution_location_fields_in_strict_mode(

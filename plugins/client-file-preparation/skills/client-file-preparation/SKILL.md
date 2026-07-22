@@ -133,9 +133,9 @@ For a beta user's first run, guide the work in this order:
    the resolved installed module root so the same save/apply contract remains
    persistent. Fall back to Markdown/chat only if neither service can run, and
    then keep review decisions pending. A final-ready review must record a stable
-   pseudonymous reviewer alias; never put the reviewer's name, email address, or
-   another direct identifier in that field. A skipped or incomplete review does
-   not make the package final-ready.
+   professional or account reference. A real professional name is allowed; do
+   not put credentials, session material, or raw local paths in that field. A
+   skipped or incomplete review does not make the package final-ready.
 9. Record any complete replacement of `07_scheda_codex_per_studio.md` or
    `04_bozza_email_cliente.md` as an explicit review edit before Apply. Apply
    performs the change transactionally, reruns the declared text QA, and
@@ -187,12 +187,13 @@ python scripts/build_file_preparation_outputs.py <cartella-cliente> \
 Use `--no-ocr` only when OCR is not installed or the user explicitly wants a
 text-only pass.
 
-Text previews stay out of `review_payload.json` by default. Use
-`--include-review-previews` only when the reviewer explicitly accepts that the
-review payload will contain bounded excerpts from every readable document in
+`review_payload.json` includes bounded excerpts from every readable document in
 the selected folder, fiscal-field evidence snippets, and previews of the
-generated studio brief, memo, and client email. Those drafts can repeat the
-client name; preview mode is not limited to individually selected passages.
+generated studio brief, memo, and client email by default. These may contain
+real client data needed for professional review. The limits are for interface
+and payload performance; they are not anonymization and do not enumerate
+everything Codex may have read. Credentials, session material, and raw absolute
+local paths remain excluded.
 DOCX, XLSX, and EML bodies are extracted locally;
 EML attachments, MSG, and other unsupported formats remain explicit unread
 evidence and must not receive an automatic accept recommendation.

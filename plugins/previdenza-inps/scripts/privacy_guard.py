@@ -1,4 +1,4 @@
-"""Mechanical privacy guards for review-visible INPS case metadata."""
+"""Mechanical session and credential guards for INPS case metadata."""
 
 from __future__ import annotations
 
@@ -7,18 +7,9 @@ import re
 from typing import Any
 from urllib.parse import urlsplit
 
-__all__ = ["privacy_issue", "safe_identifier", "safe_source_reference"]
+__all__ = ["safe_identifier", "safe_source_reference", "session_url_issue"]
 
-_EMAIL = re.compile(
-    r"(?i)(?<![\w.+-])[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+(?![\w.-])"
-)
-_ITALIAN_TAX_CODE = re.compile(
-    r"(?i)(?<![a-z0-9])[a-z]{6}[0-9]{2}[a-ehlmprst][0-9]{2}[a-z][0-9]{3}[a-z](?![a-z0-9])"
-)
 _URL = re.compile(r"(?i)https?://[^\s<>'\"]+")
-_IDENTITY_LABEL = re.compile(
-    r"(?i)(?:^|\b)(?:codice\s+fiscale|tax\s+code|e-?mail|nome|cognome|full\s+name|name)\s*[:=]"
-)
 _OPAQUE_PATH_SEGMENT = re.compile(r"^[A-Za-z0-9_-]{48,}$")
 _SAFE_IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
@@ -53,21 +44,15 @@ def _url_issue(raw: str) -> str | None:
     return None
 
 
-def privacy_issue(value: Any) -> str | None:
-    """Identify mechanically verifiable identifiers or private/tokenized URLs.
+def session_url_issue(value: Any) -> str | None:
+    """Identify private, credentialed, or tokenized URLs.
 
-    Fixed rules are used only for security/auditability; this function does not
-    attempt semantic name detection or decide legal relevance.
+    Personal data is legitimate evidence in this private professional workflow.
+    This guard is limited to session and credential exposure.
     """
 
     if not isinstance(value, str) or not value:
         return None
-    if _EMAIL.search(value):
-        return "email_address"
-    if _ITALIAN_TAX_CODE.search(value):
-        return "italian_tax_code"
-    if _IDENTITY_LABEL.search(value):
-        return "raw_identity_label"
     for match in _URL.finditer(value):
         issue = _url_issue(match.group(0).rstrip(".,);]"))
         if issue:
@@ -76,19 +61,19 @@ def privacy_issue(value: Any) -> str | None:
 
 
 def safe_identifier(value: Any) -> bool:
-    """Return whether a review-visible ID is opaque and identifier-free."""
+    """Return whether a machine identifier is structurally safe."""
 
     return (
         isinstance(value, str)
         and bool(_SAFE_IDENTIFIER.fullmatch(value))
-        and privacy_issue(value) is None
+        and session_url_issue(value) is None
     )
 
 
 def safe_source_reference(value: Any) -> bool:
-    """Permit a public canonical HTTPS citation or identifier-free citation text."""
+    """Permit citation text or a public canonical HTTPS citation."""
 
-    if not isinstance(value, str) or not value.strip() or privacy_issue(value):
+    if not isinstance(value, str) or not value.strip() or session_url_issue(value):
         return False
     text = value.strip()
     if "://" not in text:
