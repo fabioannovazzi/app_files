@@ -39,7 +39,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         ),
         "video": {
             "eyebrow": "Vera + Clara · Video",
-            "title": "A plain-language guide.",
+            "title": "How Vera and Clara handle data.",
             "description": (
                 "See what can stay on your computer, what may enter a language-model "
                 "call through Codex, and when Mparanza becomes a separate processing "
@@ -193,7 +193,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         ),
         "video": {
             "eyebrow": "Vera + Clara · Video",
-            "title": "Una guida semplice.",
+            "title": "Come Vera e Clara gestiscono i dati.",
             "description": (
                 "Scopri che cosa può restare sul tuo computer, che cosa può entrare "
                 "in una chiamata a un modello linguistico tramite Codex e quando "
@@ -350,7 +350,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         ),
         "video": {
             "eyebrow": "Vera + Clara · Vidéo",
-            "title": "Un guide en termes simples.",
+            "title": "Comment Vera et Clara traitent les données.",
             "description": (
                 "Découvrez ce qui peut rester sur votre ordinateur, ce qui peut entrer "
                 "dans un appel à un modèle de langage via Codex et quand Mparanza "
@@ -511,7 +511,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         ),
         "video": {
             "eyebrow": "Vera + Clara · Video",
-            "title": "Einfach erklärt.",
+            "title": "Wie Vera und Clara Daten verarbeiten.",
             "description": (
                 "Sehen Sie, was auf Ihrem Computer bleiben kann, was über Codex in "
                 "eine Sprachmodell-Anfrage eingehen kann und wann Mparanza zu einer "
@@ -670,7 +670,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         ),
         "video": {
             "eyebrow": "Vera + Clara · Vídeo",
-            "title": "Una guía clara.",
+            "title": "Cómo tratan los datos Vera y Clara.",
             "description": (
                 "Descubre qué puede permanecer en tu ordenador, qué puede entrar en "
                 "una llamada a un modelo de lenguaje a través de Codex y cuándo "
