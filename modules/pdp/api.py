@@ -3714,7 +3714,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "compliance": {
             "id": "compliance",
-            "title": "Cumplimiento por diseño.",
+            "title": "Conformes por diseño.",
             "lead": (
                 "El trabajo profesional puede requerir que Codex lea datos reales de "
                 "clientes."
