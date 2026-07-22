@@ -235,14 +235,58 @@ HOSTED_INTERVIEW_OUTPUT_VALUE_LABELS = {
     },
 }
 HOSTED_INTERVIEW_OUTPUT_ERROR_COPY = {
+    "Missing interview token.": "El enlace de la entrevista no es válido.",
     "Invalid interview token.": "El enlace de la entrevista no es válido.",
     "Invalid or expired interview link.": (
         "El enlace de la entrevista no es válido o ha caducado."
     ),
+    "This interview link has been revoked.": (
+        "El enlace de la entrevista ha sido revocado."
+    ),
+    "This interview has already been completed.": ("Esta entrevista ya ha finalizado."),
+    "This interview link is not active.": (
+        "El enlace de la entrevista no está activo."
+    ),
+    "This interview link has expired.": "El enlace de la entrevista ha caducado.",
     "Interview record is not readable.": (
         "No se puede leer el registro de la entrevista."
     ),
     "Interview record is invalid.": "El registro de la entrevista no es válido.",
+}
+HOSTED_INTERVIEW_PAGE_ERROR_COPY = {
+    "it": {
+        "Invalid interview token.": "Questo link non è valido o è scaduto.",
+        "Invalid or expired interview link.": "Questo link non è valido o è scaduto.",
+        "This interview link has been revoked.": "Questo link è stato revocato.",
+        "This interview has already been completed.": (
+            "Questa intervista è già stata completata."
+        ),
+        "This interview link is not active.": "Questo link non è attivo.",
+        "This interview link has expired.": "Questo link è scaduto.",
+    },
+    "es": {
+        "Invalid interview token.": "Este enlace no es válido o ha caducado.",
+        "Invalid or expired interview link.": (
+            "Este enlace no es válido o ha caducado."
+        ),
+        "This interview link has been revoked.": "Este enlace ha sido revocado.",
+        "This interview has already been completed.": (
+            "Esta entrevista ya ha finalizado."
+        ),
+        "This interview link is not active.": "Este enlace no está activo.",
+        "This interview link has expired.": "Este enlace ha caducado.",
+    },
+    "en": {},
+}
+HOSTED_INTERVIEW_PAGE_ERROR_FALLBACK = {
+    "it": "Non è possibile aprire questa intervista.",
+    "es": "No se puede abrir esta entrevista.",
+    "en": "This interview cannot be opened.",
+}
+HOSTED_INTERVIEW_PAGE_ERROR_DETAIL = {
+    "it": "Chiedi a chi ti ha invitato di inviarti un nuovo link.",
+    "es": "Pide a la persona que te invitó que te envíe un enlace nuevo.",
+    "en": "Ask the person who invited you to send a new link.",
 }
 INTERVIEW_STATUS_READY = "ready"
 INTERVIEW_STATUS_STARTED = "started"
@@ -647,6 +691,17 @@ def _hosted_interview_output_language(record: Mapping[str, Any]) -> str:
     return "es" if language.startswith("es") else "en"
 
 
+def _stored_interview_language(token: str, *, default: str) -> str:
+    """Return a stored locale without requiring an active interview link."""
+
+    try:
+        record = _read_json(_record_path(_session_dir(token)))
+    except HostedInterviewError:
+        return default
+    language = str(record.get("language", "")).strip().lower()
+    return language if language in SUPPORTED_LANGUAGES else default
+
+
 def _hosted_interview_output_error(error: str, language: str) -> str:
     """Return a localized safe message for an output-page loading error."""
 
@@ -656,6 +711,21 @@ def _hosted_interview_output_error(error: str, language: str) -> str:
         error,
         "No se pudo cargar el resultado de la entrevista.",
     )
+
+
+def _hosted_interview_page_error(error: str, language: str) -> tuple[str, str]:
+    """Return localized public-page copy for an unavailable interview."""
+
+    normalized = language if language in {"it", "es"} else "en"
+    message = HOSTED_INTERVIEW_PAGE_ERROR_COPY[normalized].get(
+        error,
+        (
+            error
+            if normalized == "en"
+            else HOSTED_INTERVIEW_PAGE_ERROR_FALLBACK[normalized]
+        ),
+    )
+    return message, HOSTED_INTERVIEW_PAGE_ERROR_DETAIL[normalized]
 
 
 def _clean_interview_mode(value: str) -> str:
@@ -2209,6 +2279,26 @@ def _interview_review_prompt(
     return json.dumps(payload, ensure_ascii=False, indent=2)
 
 
+def _interview_review_system_prompt(record: Mapping[str, Any]) -> str:
+    """Return review instructions aligned with the interview language."""
+
+    lines = [
+        "You are an interview quality auditor for Clara hosted interviews.",
+        "Your job is to diagnose the interview process and resulting transcript, not to repair the transcript.",
+        "Separate observed evidence from inference. Every key finding must cite a short transcript or event evidence snippet.",
+        "Assess whether the interview asked useful follow-ups, detected evasive answers, separated facts from opinions, grounded claims, preserved uncertainty, avoided language drift, and produced material usable by a consultant, analyst, researcher, or operator.",
+        "Suggest pipeline improvements only when supported by the supplied evidence. Also identify what should not be changed.",
+        "Do not invent facts, names, dates, metrics, quotes, or contradictions that are not present in the transcript.",
+    ]
+    if _clean_language(str(record.get("language", "it"))) == "es":
+        lines.append(
+            "Write every human-readable narrative field in Spanish. Preserve short "
+            "evidence quotes in their source language, and keep schema keys and "
+            "enumerated values exactly as defined."
+        )
+    return "\n".join(lines)
+
+
 def _generate_interview_quality_review(
     *,
     api_key: str,
@@ -2222,16 +2312,7 @@ def _generate_interview_quality_review(
 ) -> dict[str, Any]:
     """Generate an evidence-first diagnostic review of a completed interview."""
 
-    system_prompt = "\n".join(
-        [
-            "You are an interview quality auditor for Clara hosted interviews.",
-            "Your job is to diagnose the interview process and resulting transcript, not to repair the transcript.",
-            "Separate observed evidence from inference. Every key finding must cite a short transcript or event evidence snippet.",
-            "Assess whether the interview asked useful follow-ups, detected evasive answers, separated facts from opinions, grounded claims, preserved uncertainty, avoided language drift, and produced material usable by a consultant, analyst, researcher, or operator.",
-            "Suggest pipeline improvements only when supported by the supplied evidence. Also identify what should not be changed.",
-            "Do not invent facts, names, dates, metrics, quotes, or contradictions that are not present in the transcript.",
-        ]
-    )
+    system_prompt = _interview_review_system_prompt(record)
     body = json.dumps(
         {
             "model": model or _default_review_model(),
@@ -2691,7 +2772,9 @@ def hosted_interview_output_page(
 
     del user
     record: dict[str, Any] = {}
-    output_language = "en"
+    output_language = _hosted_interview_output_language(
+        {"language": _stored_interview_language(token, default="en")}
+    )
     try:
         record = _load_record_for_token(token)
         output_language = _hosted_interview_output_language(record)
@@ -2745,6 +2828,7 @@ def hosted_interview_output_page(
 def hosted_interview_page(token: str, request: Request):
     """Render the no-login interview page."""
 
+    language = _stored_interview_language(token, default="it")
     try:
         record = _load_record_for_token(token)
         language = record.get("language", "it")
@@ -2804,17 +2888,10 @@ def hosted_interview_page(token: str, request: Request):
             )
     except HostedInterviewError as exc:
         record = {}
-        language = "it"
         session_ready = False
-        status_message = {
-            "Invalid interview token.": "Questo link non è valido o è scaduto.",
-            "Invalid or expired interview link.": "Questo link non è valido o è scaduto.",
-            "This interview link has been revoked.": "Questo link è stato revocato.",
-            "This interview has already been completed.": "Questa intervista è già stata completata.",
-            "This interview link is not active.": "Questo link non è attivo.",
-            "This interview link has expired.": "Questo link è scaduto.",
-        }.get(str(exc), "Non è possibile aprire questa intervista.")
-        status_detail = "Chiedi a chi ti ha invitato di inviarti un nuovo link."
+        status_message, status_detail = _hosted_interview_page_error(
+            str(exc), str(language)
+        )
     participant_intro = record.get("participant_intro", "")
     interview_title = record.get("interview_title", "Interview")
     try:
