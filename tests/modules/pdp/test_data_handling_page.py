@@ -58,36 +58,41 @@ def _copy_shape(value: Any) -> Any:
 
 
 @pytest.mark.parametrize(
-    ("lang", "page_title", "video_title", "closing"),
+    ("lang", "page_title", "video_title", "boundary_title", "closing"),
     (
         (
             "en",
             "How your data is handled.",
             "How Vera and Clara handle data.",
+            "When Vera and Clara work inside Codex.",
             "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
         ),
         (
             "it",
             "Come vengono gestiti i tuoi dati.",
             "Come Vera e Clara gestiscono i dati.",
+            "Quando Vera e Clara lavorano dentro Codex.",
             "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
         ),
         (
             "fr",
             "Comment vos données sont traitées.",
             "Comment Vera et Clara traitent les données.",
+            "Quand Vera et Clara travaillent dans Codex.",
             "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
         ),
         (
             "de",
             "So werden Ihre Daten verarbeitet.",
             "Wie Vera und Clara Daten verarbeiten.",
+            "Wenn Vera und Clara in Codex arbeiten.",
             "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
         ),
         (
             "es",
             "Cómo se tratan tus datos.",
             "Cómo tratan los datos Vera y Clara.",
+            "Cuando Vera y Clara trabajan dentro de Codex.",
             "Una política para Vera y Clara. Sin documentación para cada prompt.",
         ),
     ),
@@ -97,6 +102,7 @@ def test_data_handling_page_is_public_and_localized(
     lang: str,
     page_title: str,
     video_title: str,
+    boundary_title: str,
     closing: str,
 ) -> None:
     captured = _capture_template_response(monkeypatch)
@@ -116,6 +122,7 @@ def test_data_handling_page_is_public_and_localized(
     assert isinstance(page, dict)
     assert page["title"] == page_title
     assert page["video"]["title"] == video_title
+    assert page["boundary"]["title"] == boundary_title
     assert page["closing"] == closing
 
 
@@ -312,9 +319,7 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
     page = get_data_handling_content("en")
     sections = {section["id"]: section for section in page["sections"]}
 
-    assert page["boundary"]["title"] == (
-        "Ordinary Vera and Clara functions inside Codex."
-    )
+    assert page["boundary"]["title"] == "When Vera and Clara work inside Codex."
     assert "do not automatically anonymise data" in page["boundary"]["intro"]
     assert "local Python to filter or aggregate" in page["boundary"]["intro"]
     assert "user's existing ChatGPT plan" in page["boundary"]["intro"]
