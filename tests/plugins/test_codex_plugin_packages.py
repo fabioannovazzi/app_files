@@ -3636,6 +3636,9 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     assert narrative_positions == sorted(narrative_positions)
     assert template.count("<h1") == 1
     assert 'id="main-content"' in template
+    assert '<footer class="landing-footer">' in template
+    assert template.index('<footer class="landing-footer">') > template.index("</main>")
+    assert "{{ copy.operator_disclosure }}" in template
     assert 'href="#{{ group.id }}"' in template
     assert 'id="{{ group.id }}"' in template
     assert "{{ group.lead }}" in template
@@ -3673,6 +3676,11 @@ def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
     assert "harness.eyebrow" not in template
     assert "bridge.eyebrow" not in template
     assert ".landing-home .landing-product" in css
+    footer_css = css.split(".landing-home .landing-footer p {", maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    assert "color: var(--landing-muted);" in footer_css
+    assert "font-size: 0.75rem;" in footer_css
     assert "@media (prefers-reduced-motion: reduce)" in css
 
 
@@ -3712,36 +3720,37 @@ def test_homepage_makes_open_source_explicit(
             "en",
             "Free by design.",
             "Vera and Clara are free to install and use. We welcome contributions "
-            "to their development. Mparanza charges for consulting, implementation, "
+            "to their development. We charge for consulting, implementation, "
             "and hosted services.",
         ),
         (
             "it",
             "Gratuiti per scelta.",
             "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
-            "volentieri contributi al loro sviluppo. Mparanza offre a pagamento "
+            "volentieri contributi al loro sviluppo. Offriamo a pagamento "
             "consulenza, implementazione e servizi hosted.",
         ),
         (
             "fr",
             "Gratuits par conception.",
             "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
-            "volontiers les contributions à leur développement. Mparanza facture ses "
-            "prestations de conseil et de mise en œuvre, ainsi que ses services "
+            "volontiers les contributions à leur développement. Nous facturons nos "
+            "prestations de conseil et de mise en œuvre, ainsi que nos services "
             "hébergés.",
         ),
         (
             "de",
             "Kostenlos konzipiert.",
             "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
-            "freuen uns über Beiträge zu ihrer Weiterentwicklung. Mparanza berechnet "
-            "Beratungs- und Implementierungsleistungen sowie gehostete Services.",
+            "freuen uns über Beiträge zu ihrer Weiterentwicklung. Wir stellen "
+            "Beratungs- und Implementierungsleistungen sowie gehostete Services "
+            "in Rechnung.",
         ),
         (
             "es",
             "Gratuitos por diseño.",
             "Vera y Clara se pueden instalar y usar gratuitamente. Agradecemos las "
-            "contribuciones a su desarrollo. Mparanza cobra por la consultoría, la "
+            "contribuciones a su desarrollo. Cobramos por la consultoría, la "
             "implementación y los servicios alojados.",
         ),
     ),
