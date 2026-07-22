@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/concordato-plan-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -16,7 +18,8 @@
       "Extract plan tables",
       "Recalculate totals and roll-forwards",
       "Tie schedules to source evidence",
-      "Build discrepancy diagnostics"
+      "Build discrepancy diagnostics",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -50,6 +53,6 @@
       "Some plan conclusions depend on language distributed across multiple sections",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "8f7f5cbe0ce0f4efc7ba2f5a5f8093881e420d054b5f71be61840827986ea53a"
+    "source_fingerprint": "6f484a767c1a0e5466044da293085e26fb21faa3795e4cdc3995e4aeb0c65042"
   }
 }

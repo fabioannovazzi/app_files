@@ -17,7 +17,11 @@ Before running helper scripts or write-heavy work, identify material choices tha
 
 Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Codex-written review files are not choices to propose when they are natural outputs of that plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
 
-Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
+Default currency policy follows the document and jurisdiction: Italy uses
+`EUR`, Swiss cantonal matters normally use `CHF`, and UK matters normally use
+`GBP`. Preserve an explicit source currency. Ask only when an unresolved
+currency would materially change the intake; otherwise record the applicable
+jurisdiction default as an assumption.
 
 Use Codex-native UI artifacts as part of the workflow, scaled to this
 sub-workflow. Start with a visible checklist, show a Run Intake table for the

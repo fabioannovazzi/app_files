@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import logging
 import re
+import secrets
 import unicodedata
 from dataclasses import dataclass
 from datetime import datetime
@@ -33,14 +35,23 @@ __all__ = [
     "CATEGORY_UK_SELF_ASSESSMENT",
     "CATEGORY_UK_YEAR_END_PAYROLL",
     "FileRecord",
+    "MAX_SOURCE_ENTRIES",
+    "MAX_SOURCE_FILE_BYTES",
+    "MAX_SOURCE_FILES",
+    "MAX_SOURCE_TOTAL_BYTES",
     "classify_file",
     "extract_years",
     "scan_folder",
+    "verify_source_snapshot",
     "write_index_markdown",
     "write_inventory_csv",
 ]
 
 LOGGER = logging.getLogger(__name__)
+MAX_SOURCE_ENTRIES = 20_000
+MAX_SOURCE_FILES = 5_000
+MAX_SOURCE_FILE_BYTES = 256 * 1024 * 1024
+MAX_SOURCE_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
 
 CATEGORY_CU = "CU"
 CATEGORY_730 = "730 / precompilata"
@@ -79,6 +90,7 @@ class FileRecord:
     extension: str
     size_bytes: int
     modified_iso: str
+    sha256: str
     category: str
     confidence: str
     years: tuple[int, ...]
@@ -93,6 +105,7 @@ class FileRecord:
             "extension": self.extension,
             "size_bytes": self.size_bytes,
             "modified_iso": self.modified_iso,
+            "sha256": self.sha256,
             "category": self.category,
             "confidence": self.confidence,
             "years": ";".join(str(year) for year in self.years),
@@ -118,8 +131,41 @@ def _matches(text: str, patterns: Sequence[str]) -> bool:
     return any(re.search(pattern, text) for pattern in patterns)
 
 
+def _looks_like_fatturapa_xml(path: Path) -> bool:
+    """Recognize the FatturaElettronica root in a bounded local prefix."""
+
+    if path.is_symlink() or not path.is_file():
+        return False
+    try:
+        with path.open("rb") as handle:
+            prefix = handle.read(128 * 1024)
+    except OSError:
+        return False
+    return bool(
+        re.search(
+            rb"<(?:[A-Za-z_][A-Za-z0-9_.-]*:)?FatturaElettronica(?:\s|>)",
+            prefix,
+            flags=re.IGNORECASE,
+        )
+    )
+
+
+def _sha256_regular_file(path: Path) -> str:
+    """Hash one regular source file without loading it into memory."""
+
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def classify_file(
-    path: Path, root: Path, target_year: int | None = None
+    path: Path,
+    root: Path,
+    target_year: int | None = None,
+    *,
+    jurisdiction: str = "italy",
 ) -> tuple[str, str, tuple[str, ...]]:
     """Classify a file by path, extension, and conservative filename rules."""
 
@@ -128,7 +174,11 @@ def classify_file(
     extension = path.suffix.lower()
     notes: list[str] = []
 
-    if extension == ".xml":
+    if (
+        extension == ".xml"
+        and jurisdiction in {"italy", "mixed"}
+        and _looks_like_fatturapa_xml(path)
+    ):
         category = CATEGORY_FATTURE_XML
         confidence = "media"
     elif _matches(
@@ -292,6 +342,8 @@ def classify_file(
 
     if extension in {".jpg", ".jpeg", ".png", ".heic"}:
         notes.append("immagine: possibile ricevuta o documento scansionato")
+    if extension == ".xml" and category != CATEGORY_FATTURE_XML:
+        notes.append("XML generico: struttura FatturaPA non individuata")
 
     return category, confidence, tuple(notes)
 
@@ -312,6 +364,9 @@ def scan_folder(
     root: Path | str,
     target_year: int | None = None,
     output_dir: Path | str | None = None,
+    *,
+    jurisdiction: str = "italy",
+    language: str = "it",
 ) -> list[FileRecord]:
     """Scan a customer folder and return classified file records."""
 
@@ -321,24 +376,93 @@ def scan_folder(
 
     output_path = Path(output_dir).expanduser().resolve() if output_dir else None
     records: list[FileRecord] = []
+    inspected_entry_count = 0
+    regular_source_bytes = 0
+    error_copy = {
+        "it": {
+            "entries": "La cartella cliente supera il limite di elementi ispezionabili",
+            "files": "La cartella cliente supera il limite di file",
+            "file_size": "Il file sorgente supera il limite di dimensione",
+            "total_size": "I file sorgente superano il limite complessivo di dimensione",
+        },
+        "en": {
+            "entries": "The client folder exceeds the inspected-entry limit",
+            "files": "The client folder exceeds the file-count limit",
+            "file_size": "The source file exceeds the per-file size limit",
+            "total_size": "The source files exceed the total-size limit",
+        },
+        "fr": {
+            "entries": "Le dossier client dépasse la limite d’éléments inspectés",
+            "files": "Le dossier client dépasse la limite de fichiers",
+            "file_size": "Le fichier source dépasse la limite de taille par fichier",
+            "total_size": "Les fichiers source dépassent la limite de taille totale",
+        },
+        "de": {
+            "entries": "Der Mandantenordner überschreitet die Grenze der geprüften Einträge",
+            "files": "Der Mandantenordner überschreitet die Dateianzahlgrenze",
+            "file_size": "Die Quelldatei überschreitet die Größenbegrenzung pro Datei",
+            "total_size": "Die Quelldateien überschreiten die Gesamtgrößenbegrenzung",
+        },
+    }.get(language)
+    if error_copy is None:
+        raise ValueError(f"Unsupported language: {language}")
 
     for path in sorted(root_path.rglob("*")):
-        if not path.is_file() or _should_skip(path, root_path, output_path):
+        inspected_entry_count += 1
+        if inspected_entry_count > MAX_SOURCE_ENTRIES:
+            raise ValueError(f"{error_copy['entries']}: {MAX_SOURCE_ENTRIES}")
+        if _should_skip(path, root_path, output_path):
             continue
 
-        category, confidence, notes = classify_file(path, root_path, target_year)
-        stat = path.stat()
+        relative = path.relative_to(root_path)
+        cursor = root_path
+        contains_symlink = False
+        for part in relative.parts:
+            cursor /= part
+            if cursor.is_symlink():
+                contains_symlink = True
+                break
+        if not contains_symlink and not path.is_file():
+            continue
+
+        category, confidence, notes = classify_file(
+            path,
+            root_path,
+            target_year,
+            jurisdiction=jurisdiction,
+        )
+        stat = path.lstat() if contains_symlink else path.stat()
+        if contains_symlink:
+            category = CATEGORY_NON_CLASSIFICATI
+            confidence = "bassa"
+            notes = (*notes, "collegamento simbolico non seguito")
+        if len(records) >= MAX_SOURCE_FILES:
+            raise ValueError(f"{error_copy['files']}: {MAX_SOURCE_FILES}")
+        if not contains_symlink:
+            if stat.st_size > MAX_SOURCE_FILE_BYTES:
+                raise ValueError(
+                    f"{error_copy['file_size']}: {relative.as_posix()} "
+                    f"({stat.st_size} > {MAX_SOURCE_FILE_BYTES} byte)"
+                )
+            regular_source_bytes += stat.st_size
+            if regular_source_bytes > MAX_SOURCE_TOTAL_BYTES:
+                raise ValueError(
+                    f"{error_copy['total_size']}: "
+                    f"{regular_source_bytes} > {MAX_SOURCE_TOTAL_BYTES} byte"
+                )
         modified = datetime.fromtimestamp(stat.st_mtime).replace(microsecond=0)
+        source_hash = "" if contains_symlink else _sha256_regular_file(path)
         records.append(
             FileRecord(
-                relative_path=path.relative_to(root_path).as_posix(),
+                relative_path=relative.as_posix(),
                 file_name=path.name,
                 extension=path.suffix.lower(),
                 size_bytes=stat.st_size,
                 modified_iso=modified.isoformat(),
+                sha256=source_hash,
                 category=category,
                 confidence=confidence,
-                years=extract_years(path.relative_to(root_path).as_posix()),
+                years=extract_years(relative.as_posix()),
                 notes=notes,
             )
         )
@@ -358,6 +482,7 @@ def write_inventory_csv(records: Iterable[FileRecord], output_path: Path | str) 
         "extension",
         "size_bytes",
         "modified_iso",
+        "sha256",
         "category",
         "confidence",
         "years",
@@ -368,6 +493,44 @@ def write_inventory_csv(records: Iterable[FileRecord], output_path: Path | str) 
         writer.writeheader()
         writer.writerows(rows)
     return path
+
+
+def verify_source_snapshot(records: Sequence[FileRecord], root: Path | str) -> None:
+    """Fail if a source changed type or content after the initial scan."""
+
+    root_path = Path(root).expanduser().resolve()
+    for record in records:
+        source_path = root_path / record.relative_path
+        cursor = root_path
+        contains_symlink = False
+        for part in Path(record.relative_path).parts:
+            cursor /= part
+            if cursor.is_symlink():
+                contains_symlink = True
+                if not record.sha256:
+                    break
+                raise RuntimeError(
+                    f"Il file sorgente è diventato un link simbolico durante il run: {record.relative_path}"
+                )
+        if not record.sha256:
+            if not contains_symlink:
+                raise RuntimeError(
+                    "Il collegamento simbolico sorgente è cambiato tipo durante "
+                    f"il run: {record.relative_path}"
+                )
+            continue
+        if not source_path.is_file():
+            raise RuntimeError(
+                f"Il file sorgente non è più disponibile durante il run: {record.relative_path}"
+            )
+        if source_path.stat().st_size != record.size_bytes:
+            raise RuntimeError(
+                f"Il file sorgente è cambiato durante il run: {record.relative_path}"
+            )
+        if _sha256_regular_file(source_path) != record.sha256:
+            raise RuntimeError(
+                f"Il file sorgente è cambiato durante il run: {record.relative_path}"
+            )
 
 
 def _category_counts(records: Sequence[FileRecord]) -> dict[str, int]:
@@ -382,36 +545,146 @@ def write_index_markdown(
     output_path: Path | str,
     root: Path | str,
     target_year: int | None = None,
+    *,
+    language: str = "it",
 ) -> Path:
     """Write a readable markdown index for the customer folder."""
 
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     root_path = Path(root)
-    year_text = str(target_year) if target_year is not None else "non indicato"
+    labels = {
+        "it": {
+            "title": "Indice fascicolo",
+            "folder": "Cartella",
+            "year": "Anno target",
+            "year_missing": "non indicato",
+            "files": "File analizzati",
+            "categories": "Categorie individuate",
+            "none": "Nessun file trovato.",
+            "detail": "Dettaglio file",
+        },
+        "en": {
+            "title": "Client file index",
+            "folder": "Local folder",
+            "year": "Target year",
+            "year_missing": "not specified",
+            "files": "Files reviewed",
+            "categories": "Categories identified",
+            "none": "No files found.",
+            "detail": "File details",
+        },
+        "fr": {
+            "title": "Index du dossier client",
+            "folder": "Dossier local",
+            "year": "Année cible",
+            "year_missing": "non indiquée",
+            "files": "Fichiers examinés",
+            "categories": "Catégories identifiées",
+            "none": "Aucun fichier trouvé.",
+            "detail": "Détail des fichiers",
+        },
+        "de": {
+            "title": "Index der Mandantenakte",
+            "folder": "Lokaler Ordner",
+            "year": "Zieljahr",
+            "year_missing": "nicht angegeben",
+            "files": "Geprüfte Dateien",
+            "categories": "Erkannte Kategorien",
+            "none": "Keine Dateien gefunden.",
+            "detail": "Dateidetails",
+        },
+    }[language]
+    category_labels = {
+        "en": {
+            CATEGORY_FATTURE_XML: "electronic invoices (XML)",
+            CATEGORY_RICEVUTE_SANITARIE: "medical receipts",
+            CATEGORY_MUTUO: "mortgage",
+            CATEGORY_AVVISI: "notices / communications",
+            CATEGORY_CONTRATTI: "contracts",
+            CATEGORY_NON_CLASSIFICATI: "unclassified documents",
+        },
+        "fr": {
+            CATEGORY_FATTURE_XML: "factures électroniques XML",
+            CATEGORY_RICEVUTE_SANITARIE: "reçus médicaux",
+            CATEGORY_MUTUO: "prêt hypothécaire",
+            CATEGORY_AVVISI: "avis / communications",
+            CATEGORY_CONTRATTI: "contrats",
+            CATEGORY_NON_CLASSIFICATI: "documents non classés",
+        },
+        "de": {
+            CATEGORY_FATTURE_XML: "elektronische Rechnungen (XML)",
+            CATEGORY_RICEVUTE_SANITARIE: "Gesundheitsbelege",
+            CATEGORY_MUTUO: "Hypothek",
+            CATEGORY_AVVISI: "Bescheide / Mitteilungen",
+            CATEGORY_CONTRATTI: "Verträge",
+            CATEGORY_NON_CLASSIFICATI: "nicht klassifizierte Dokumente",
+        },
+    }.get(language, {})
+    year_text = str(target_year) if target_year is not None else labels["year_missing"]
     counts = _category_counts(records)
 
     lines: list[str] = [
-        "# Indice fascicolo",
+        f"# {labels['title']}",
         "",
-        f"- Cartella: `{root_path}`",
-        f"- Anno target: {year_text}",
-        f"- File analizzati: {len(records)}",
+        f"- {labels['folder']}: `{root_path}`",
+        f"- {labels['year']}: {year_text}",
+        f"- {labels['files']}: {len(records)}",
         "",
-        "## Categorie individuate",
+        f"## {labels['categories']}",
         "",
     ]
     if counts:
-        lines.extend(f"- {category}: {count}" for category, count in counts.items())
+        lines.extend(
+            f"- {category_labels.get(category, category)}: {count}"
+            for category, count in counts.items()
+        )
     else:
-        lines.append("- Nessun file trovato.")
+        lines.append(f"- {labels['none']}")
 
-    lines.extend(["", "## Dettaglio file", ""])
+    lines.extend(["", f"## {labels['detail']}", ""])
+    confidence_labels = {
+        "it": {"alta": "alta", "media": "media", "bassa": "bassa"},
+        "en": {"alta": "high", "media": "medium", "bassa": "low"},
+        "fr": {"alta": "élevée", "media": "moyenne", "bassa": "faible"},
+        "de": {"alta": "hoch", "media": "mittel", "bassa": "niedrig"},
+    }[language]
     for record in records:
-        note = f" — {', '.join(record.notes)}" if record.notes else ""
+        localized_notes: list[str] = []
+        for note_value in record.notes:
+            if note_value == "classificazione non certa":
+                localized_notes.append(
+                    {
+                        "it": note_value,
+                        "en": "classification uncertain",
+                        "fr": "classification incertaine",
+                        "de": "Klassifizierung unklar",
+                    }[language]
+                )
+            elif note_value.startswith("anno non coerente"):
+                localized_notes.append(
+                    {
+                        "it": note_value,
+                        "en": f"year differs from target {target_year}",
+                        "fr": f"année différente de la cible {target_year}",
+                        "de": f"Jahr weicht vom Zieljahr {target_year} ab",
+                    }[language]
+                )
+            elif note_value.startswith("immagine"):
+                localized_notes.append(
+                    {
+                        "it": note_value,
+                        "en": "image: possible receipt or scanned document",
+                        "fr": "image : reçu possible ou document numérisé",
+                        "de": "Bild: möglicher Beleg oder gescanntes Dokument",
+                    }[language]
+                )
+            else:
+                localized_notes.append(note_value)
+        note = f" — {', '.join(localized_notes)}" if localized_notes else ""
         lines.append(
-            f"- `{record.relative_path}` — {record.category} "
-            f"({record.confidence}){note}"
+            f"- `{record.relative_path}` — {category_labels.get(record.category, record.category)} "
+            f"({confidence_labels.get(record.confidence, record.confidence)}){note}"
         )
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -428,7 +701,13 @@ def _parse_args() -> argparse.Namespace:
         "--out",
         type=Path,
         default=None,
-        help="Cartella output. Default: <folder>/out",
+        help="Cartella output. Default: sibling output/client-file-preparation-<id>.",
+    )
+    parser.add_argument(
+        "--jurisdiction",
+        choices=("italy", "geneva", "zurich", "uk", "mixed"),
+        default="italy",
+        help="Giurisdizione usata per classificare i file XML.",
     )
     return parser.parse_args()
 
@@ -436,8 +715,18 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     args = _parse_args()
-    out_dir = args.out or args.folder / "out"
-    records = scan_folder(args.folder, target_year=args.year, output_dir=out_dir)
+    out_dir = (
+        args.out
+        or args.folder.parent
+        / "output"
+        / f"client-file-preparation-{secrets.token_hex(8)}"
+    )
+    records = scan_folder(
+        args.folder,
+        target_year=args.year,
+        output_dir=out_dir,
+        jurisdiction=args.jurisdiction,
+    )
     write_inventory_csv(records, out_dir / "01_document_inventory.csv")
     write_index_markdown(
         records,

@@ -59,7 +59,11 @@
       "queueTitle": "Decisioni sul rapporto",
       "detailTitle": "Evidenza, base e decisione",
       "detailHelp": "Rivedi il fatto minimizzato, la base citata e l'impatto sul dossier prima di registrare la decisione professionale.",
-      "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco"
+      "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco",
+      "reviewerAlias": "Alias revisore",
+      "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare l'export professionale; non inserire nome, email o identificativi fiscali.",
+      "reviewerAliasInvalid": "L'alias revisore puo contenere solo lettere, numeri, punti, trattini bassi, due punti o trattini.",
+      "bulkProfessionalSkipped": "Applicate {applied} raccomandazioni sicure. {skipped} decisioni professionali richiedono ancora una revisione individuale."
     },
     "fr": {
       "title": "Revue nouveau client",
@@ -67,7 +71,11 @@
       "queueTitle": "Decisions sur la relation",
       "detailTitle": "Preuve, fondement et decision",
       "detailHelp": "Examinez le fait minimise, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision professionnelle.",
-      "search": "Chercher fait, service, facteur AML, document, source, blocage"
+      "search": "Chercher fait, service, facteur AML, document, source, blocage",
+      "reviewerAlias": "Alias du reviseur",
+      "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour finaliser l'export professionnel; ne saisissez ni nom, ni email, ni identifiant fiscal.",
+      "reviewerAliasInvalid": "L'alias du reviseur ne peut contenir que des lettres, chiffres, points, tirets bas, deux-points ou tirets.",
+      "bulkProfessionalSkipped": "{applied} recommandations sures appliquees. {skipped} decisions professionnelles exigent encore une revue individuelle."
     },
     "de": {
       "title": "Review neuer Mandant",
@@ -75,7 +83,11 @@
       "queueTitle": "Entscheidungen zum Mandat",
       "detailTitle": "Nachweis, Grundlage und Entscheidung",
       "detailHelp": "Minimierten Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der professionellen Entscheidung pruefen.",
-      "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen"
+      "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen",
+      "reviewerAlias": "Prueferalias",
+      "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den professionellen Export erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
+      "reviewerAliasInvalid": "Das Prueferalias darf nur Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten.",
+      "bulkProfessionalSkipped": "{applied} sichere Empfehlungen angewendet. {skipped} professionelle Entscheidungen muessen einzeln geprueft werden."
     }
   },
   "saveTool": "save_new_client_decisions",
@@ -204,5 +216,27 @@
     ]
   },
   "persistDecisionTextInWidgetState": false,
-  "useDecisionRevision": true
+  "useDecisionRevision": true,
+  "bulkProtectedItemTypes": [
+    "party_profile",
+    "party_structure",
+    "engagement",
+    "engagement_service",
+    "screening_subject",
+    "screening_result",
+    "privacy_processing",
+    "marketing_consent",
+    "document_applicability",
+    "aml_risk_factor",
+    "aml_factor_section",
+    "aml_mandatory_trigger",
+    "aml_trigger_set",
+    "aml_assessment",
+    "missing_evidence",
+    "document_plan",
+    "monitoring_plan",
+    "official_source",
+    "client_file_preparation_binding"
+  ],
+  "requiresReviewerAlias": true
 }
