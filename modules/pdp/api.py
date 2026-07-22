@@ -2922,7 +2922,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Free by design.",
             "description": (
                 "Vera and Clara are free to install and use. We welcome contributions "
-                "to their development. Mparanza charges for consulting, implementation, "
+                "to their development. We charge for consulting, implementation, "
                 "and hosted services."
             ),
         },
@@ -3117,7 +3117,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Gratuiti per scelta.",
             "description": (
                 "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
-                "volentieri contributi al loro sviluppo. Mparanza offre a pagamento "
+                "volentieri contributi al loro sviluppo. Offriamo a pagamento "
                 "consulenza, implementazione e servizi hosted."
             ),
         },
@@ -3307,8 +3307,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Gratuits par conception.",
             "description": (
                 "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
-                "volontiers les contributions à leur développement. Mparanza facture ses "
-                "prestations de conseil et de mise en œuvre, ainsi que ses services "
+                "volontiers les contributions à leur développement. Nous facturons nos "
+                "prestations de conseil et de mise en œuvre, ainsi que nos services "
                 "hébergés."
             ),
         },
@@ -3502,8 +3502,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Kostenlos konzipiert.",
             "description": (
                 "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
-                "freuen uns über Beiträge zu ihrer Weiterentwicklung. Mparanza berechnet "
-                "Beratungs- und Implementierungsleistungen sowie gehostete Services."
+                "freuen uns über Beiträge zu ihrer Weiterentwicklung. Wir stellen "
+                "Beratungs- und Implementierungsleistungen sowie gehostete Services "
+                "in Rechnung."
             ),
         },
         "security": {
@@ -3693,7 +3694,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Gratuitos por diseño.",
             "description": (
                 "Vera y Clara se pueden instalar y usar gratuitamente. Agradecemos las "
-                "contribuciones a su desarrollo. Mparanza cobra por la consultoría, la "
+                "contribuciones a su desarrollo. Cobramos por la consultoría, la "
                 "implementación y los servicios alojados."
             ),
         },

@@ -133,6 +133,24 @@ PAGE_COPY: Dict[str, Dict[str, Any]] = {
             "fr": "Sélecteur de langue",
             "de": "Sprachauswahl",
         },
+        "operator_disclosure": {
+            "en": (
+                "Mparanza is operated by Mparanza LLC, a Delaware limited "
+                "liability company."
+            ),
+            "it": (
+                "Mparanza è gestita da Mparanza LLC, una società a responsabilità "
+                "limitata del Delaware."
+            ),
+            "fr": (
+                "Mparanza est exploitée par Mparanza LLC, une société à responsabilité "
+                "limitée du Delaware."
+            ),
+            "de": (
+                "Mparanza wird von Mparanza LLC betrieben, einer Gesellschaft mit "
+                "beschränkter Haftung nach dem Recht des US-Bundesstaats Delaware."
+            ),
+        },
         "sign_out_button": {
             "en": "Sign out",
             "it": "Esci",

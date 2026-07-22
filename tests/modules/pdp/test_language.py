@@ -154,26 +154,59 @@ def test_get_page_copy_returns_nested_translations() -> None:
         "lang",
         "expected_primary_navigation",
         "expected_language_selector",
+        "expected_operator_disclosure",
         "expected_sign_out",
     ),
     (
-        ("en", "Primary navigation", "Language selector", "Sign out"),
-        ("it", "Navigazione principale", "Selezione della lingua", "Esci"),
-        ("fr", "Navigation principale", "Sélecteur de langue", "Se déconnecter"),
-        ("de", "Hauptnavigation", "Sprachauswahl", "Abmelden"),
-        ("es", "Navegación principal", "Selector de idioma", "Cerrar sesión"),
+        (
+            "en",
+            "Primary navigation",
+            "Language selector",
+            "Mparanza is operated by Mparanza LLC, a Delaware limited liability company.",
+            "Sign out",
+        ),
+        (
+            "it",
+            "Navigazione principale",
+            "Selezione della lingua",
+            "Mparanza è gestita da Mparanza LLC, una società a responsabilità limitata del Delaware.",
+            "Esci",
+        ),
+        (
+            "fr",
+            "Navigation principale",
+            "Sélecteur de langue",
+            "Mparanza est exploitée par Mparanza LLC, une société à responsabilité limitée du Delaware.",
+            "Se déconnecter",
+        ),
+        (
+            "de",
+            "Hauptnavigation",
+            "Sprachauswahl",
+            "Mparanza wird von Mparanza LLC betrieben, einer Gesellschaft mit beschränkter Haftung nach dem Recht des US-Bundesstaats Delaware.",
+            "Abmelden",
+        ),
+        (
+            "es",
+            "Navegación principal",
+            "Selector de idioma",
+            "Mparanza es operada por Mparanza LLC, una sociedad de responsabilidad limitada de Delaware.",
+            "Cerrar sesión",
+        ),
     ),
 )
-def test_get_page_copy_localizes_landing_header_controls(
+def test_get_page_copy_localizes_landing_shell_copy(
     lang: str,
     expected_primary_navigation: str,
     expected_language_selector: str,
+    expected_operator_disclosure: str,
     expected_sign_out: str,
 ) -> None:
     copy = get_page_copy("landing", lang)
 
     assert copy["primary_navigation_label"] == expected_primary_navigation
     assert copy["language_selector_label"] == expected_language_selector
+    assert copy["operator_disclosure"] == expected_operator_disclosure
     assert copy["sign_out_button"] == expected_sign_out
 
 
