@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/deep-research-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -15,7 +17,8 @@
     "local_processing": [
       "Parse report claims and citations",
       "Check URLs and deterministic citation structure",
-      "Build claim-by-claim review records"
+      "Build claim-by-claim review records",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -49,6 +52,6 @@
       "Some claims require wider report or source context to avoid a misleading validation",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "4d20b19945b8ff191c07a068cc5977dab98924bee9d4e83ce4041615dbab0030"
+    "source_fingerprint": "2f1f6bdba00458e7c1dcb33c224468724c74af9e91c56d093d379b8fddb0b722"
   }
 }

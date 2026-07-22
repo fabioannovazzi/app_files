@@ -55,7 +55,10 @@
       "queueTitle": "Documenti da rivedere",
       "detailTitle": "Decisione documento",
       "detailHelp": "Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.",
-      "search": "Cerca documento, mancante, memo, email, blocco"
+      "search": "Cerca documento, mancante, memo, email, blocco",
+      "reviewerAlias": "Alias revisore",
+      "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare la revisione; non inserire nome, email o identificativi fiscali.",
+      "reviewerAliasInvalid": "L'alias revisore deve iniziare con una lettera e contenere da 3 a 64 lettere ASCII, numeri, punti, trattini bassi, due punti o trattini."
     },
     "fr": {
       "title": "Nouveau client \u00b7 Preparation des documents",
@@ -63,7 +66,10 @@
       "queueTitle": "Documents a revoir",
       "detailTitle": "Decision document",
       "detailHelp": "Classez les documents, confirmez les manquants et saisissez la prochaine demande client.",
-      "search": "Chercher document, manquant, memo, email, blocage"
+      "search": "Chercher document, manquant, memo, email, blocage",
+      "reviewerAlias": "Alias du reviseur",
+      "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour terminer la revue; ne saisissez ni nom, ni email, ni identifiant fiscal.",
+      "reviewerAliasInvalid": "L'alias du reviseur doit commencer par une lettre et contenir de 3 a 64 lettres ASCII, chiffres, points, tirets bas, deux-points ou tirets."
     },
     "de": {
       "title": "Neuer Mandant \u00b7 Unterlagen vorbereiten",
@@ -71,7 +77,10 @@
       "queueTitle": "Zu pruefende Dokumente",
       "detailTitle": "Dokumententscheidung",
       "detailHelp": "Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.",
-      "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen"
+      "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen",
+      "reviewerAlias": "Prueferalias",
+      "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den Abschluss der Pruefung erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
+      "reviewerAliasInvalid": "Das Prueferalias muss mit einem Buchstaben beginnen und 3 bis 64 ASCII-Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten."
     }
   },
   "saveTool": "save_client_file_preparation_decisions",
@@ -143,5 +152,6 @@
         ]
       }
     ]
-  }
+  },
+  "requiresReviewerAlias": true
 }

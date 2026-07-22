@@ -13,6 +13,18 @@ from scripts import generate_non_plotting_review_widgets as widget_generator
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def _bundled_node_or_skip() -> str:
+    node = shutil.which("node")
+    if node is not None:
+        return node
+    candidates = sorted(
+        (Path.home() / ".cache" / "codex-runtimes").glob("*/dependencies/node/bin/node")
+    )
+    if not candidates:
+        pytest.skip("Node.js is required to exercise review widget behavior.")
+    return candidates[-1].as_posix()
+
+
 WORKBENCH_WIDGETS = [
     (
         "check-entries",
@@ -123,6 +135,14 @@ REVIEW_SAVE_TOOLS = [
     ),
 ]
 
+# Client File Preparation deliberately refuses ad-hoc persistent directories: its
+# own integration suite builds and seals a real phase-one run before Save/Apply.
+# The generic persistence fixtures below exercise only servers whose contract
+# permits synthetic unsealed output directories.
+GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS = [
+    tool for tool in REVIEW_SAVE_TOOLS if tool[0] != "client-file-preparation"
+]
+
 REVIEW_RENDER_TOOLS = {
     "check-entries": "render_check_entries_review",
     "deep-research-validator": "render_deep_research_review",
@@ -172,6 +192,130 @@ def test_non_plotting_review_assets_match_generator(
         ensure_ascii=True,
         indent=2,
     ) + "\n"
+
+
+def test_client_file_preparation_widget_forwards_pseudonymous_reviewer() -> None:
+    plugin_root = ROOT / "plugins" / "client-file-preparation"
+    widget_path = plugin_root / "assets" / "client-file-preparation-review-widget.html"
+    widget = widget_path.read_text(encoding="utf-8")
+    adapter = json.loads(
+        (plugin_root / "assets" / "review-workbench-adapter.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    script = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const html = fs.readFileSync(process.argv[1], "utf8");
+const match = html.match(/<script>([\s\S]*)<\/script>/);
+if (!match) throw new Error("widget script missing");
+
+const elements = new Map();
+function element(id = "") {
+  return {
+    id, textContent: "", innerHTML: "", className: "", value: "",
+    disabled: false, style: {}, dataset: {}, addEventListener() {},
+    appendChild() {}, remove() {}, select() {}, setAttribute() {},
+    closest() { return null; },
+  };
+}
+const document = {
+  title: "", documentElement: { lang: "en" }, body: element("body"),
+  getElementById(id) {
+    if (!elements.has(id)) elements.set(id, element(id));
+    return elements.get(id);
+  },
+  createElement(tag) { return element(tag); },
+  execCommand() { return true; },
+};
+const item = {
+  id: "document-1", item_type: "document_inventory", title: "Document",
+  allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept",
+  status: "needs_review", data: {}, evidence: [],
+};
+const toolOutput = {
+  widget_type: "client_file_preparation_review",
+  run_intake: { run_id: "opaque-run", input_paths: [], data_posture: {}, execution_trace: [] },
+  review_payload: {
+    schema_version: "1.0", plugin: "client-file-preparation",
+    workflow: "client-file-preparation", run_id: "opaque-run",
+    status: "ready_for_review", items: [item], item_count: 1, summary: {},
+  },
+  ui_decisions: { decisions: [], decision_count: 0, status: "pending_review" },
+  final_artifacts: { outputs: [{ path: "review_payload.json" }] },
+  decision_policy: {
+    save_tool: "save_client_file_preparation_decisions",
+    apply_tool: "apply_client_file_preparation_decisions",
+    can_persist: true,
+    persistence_token: "a".repeat(43),
+  },
+};
+const context = {
+  Blob, URL, URLSearchParams, console, document, navigator: {}, setTimeout, clearTimeout,
+  window: {
+    location: { search: "" },
+    openai: {
+      toolOutput, widgetState: null, lastState: null,
+      setWidgetState(value) { this.lastState = value; },
+    },
+  },
+};
+context.globalThis = context;
+vm.createContext(context);
+new vm.Script(`${match[1]}
+ensureDecision(state.payload.review_payload.items[0], "accept");
+state.reviewerAlias = "reviewer with spaces";
+let invalidAliasError = "";
+try { validateDecisionInputs(collectDecisionInputs()); } catch (error) { invalidAliasError = error.message; }
+state.reviewerAlias = "reviewer-fg";
+validateDecisionInputs(collectDecisionInputs());
+persistWidgetState();
+const persistentSave = saveToolArgs();
+const persistentApply = applyToolArgs();
+state.payload.decision_policy.can_persist = false;
+delete state.payload.decision_policy.persistence_token;
+const nonpersistentApply = applyToolArgs();
+globalThis.__result = {
+  saveReviewer: persistentSave.reviewer,
+  applyReviewer: persistentApply.reviewer,
+  fallbackReviewer: fallbackUiDecisions().reviewer,
+  storedReviewer: window.openai.lastState?.reviewer_alias || null,
+  savePersistenceToken: persistentSave.persistence_token,
+  applyPersistenceToken: persistentApply.persistence_token,
+  persistentHasFinalArtifacts: Object.hasOwn(persistentApply, "final_artifacts"),
+  nonpersistentHasFinalArtifacts: Object.hasOwn(nonpersistentApply, "final_artifacts"),
+  invalidAliasError,
+};`).runInContext(context);
+process.stdout.write(JSON.stringify(context.__result));
+"""
+
+    completed = subprocess.run(
+        [_bundled_node_or_skip(), "-e", script, widget_path.as_posix()],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=20,
+    )
+    result = json.loads(completed.stdout)
+
+    assert adapter["requiresReviewerAlias"] is True
+    assert "useDecisionRevision" not in adapter
+    assert 'id="reviewer-alias"' in widget
+    assert 'maxlength="64"' in widget
+    assert "expected_decision_revision" not in widget
+    assert "reuse_saved_details" not in widget
+    assert result == {
+        "saveReviewer": "reviewer-fg",
+        "applyReviewer": "reviewer-fg",
+        "fallbackReviewer": "reviewer-fg",
+        "storedReviewer": "reviewer-fg",
+        "savePersistenceToken": "a" * 43,
+        "applyPersistenceToken": "a" * 43,
+        "persistentHasFinalArtifacts": False,
+        "nonpersistentHasFinalArtifacts": True,
+        "invalidAliasError": "Reviewer alias must use 3-64 supported characters and start with a letter.",
+    }
 
 
 def _assert_widget_resource_meta(meta: dict[str, object], uri: str) -> None:
@@ -238,7 +382,7 @@ def _assert_review_tool_annotations(
         assert annotations == {
             "readOnlyHint": False,
             "destructiveHint": True,
-            "idempotentHint": True,
+            "idempotentHint": "client_file_preparation" not in tool_name,
             "openWorldHint": False,
         }
 
@@ -876,7 +1020,8 @@ def _demo_target_artifact_outputs(
 
 
 @pytest.mark.parametrize(
-    ("plugin", "save_tool", "apply_tool", "_item_type"), REVIEW_SAVE_TOOLS
+    ("plugin", "save_tool", "apply_tool", "_item_type"),
+    GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_save_and_apply_tools_accept_adapter_demo_payloads(
     tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, _item_type: str
@@ -1035,7 +1180,8 @@ def _structured_edit_review_payload(
 
 
 @pytest.mark.parametrize(
-    ("plugin", "save_tool", "apply_tool", "item_type"), REVIEW_SAVE_TOOLS
+    ("plugin", "save_tool", "apply_tool", "item_type"),
+    GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_save_and_apply_tools_persist_review_results(
     tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, item_type: str
@@ -1181,7 +1327,8 @@ def test_non_plotting_review_save_and_apply_tools_persist_review_results(
 
 
 @pytest.mark.parametrize(
-    ("plugin", "save_tool", "apply_tool", "item_type"), REVIEW_SAVE_TOOLS
+    ("plugin", "save_tool", "apply_tool", "item_type"),
+    GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_save_and_apply_tools_handle_partial_and_blocked_states(
     tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, item_type: str
@@ -1334,7 +1481,8 @@ def test_non_plotting_review_save_and_apply_tools_handle_partial_and_blocked_sta
 
 
 @pytest.mark.parametrize(
-    ("plugin", "save_tool", "apply_tool", "item_type"), REVIEW_SAVE_TOOLS
+    ("plugin", "save_tool", "apply_tool", "item_type"),
+    GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_request_more_documents_uses_explicit_item_metadata(
     tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, item_type: str
@@ -1490,7 +1638,8 @@ def test_non_plotting_review_request_more_documents_uses_explicit_item_metadata(
 
 
 @pytest.mark.parametrize(
-    ("plugin", "_save_tool", "apply_tool", "item_type"), REVIEW_SAVE_TOOLS
+    ("plugin", "_save_tool", "apply_tool", "item_type"),
+    GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_apply_tools_update_safe_text_artifacts_for_edit_decisions(
     tmp_path: Path, plugin: str, _save_tool: str, apply_tool: str, item_type: str
@@ -1627,7 +1776,8 @@ def test_non_plotting_review_apply_tools_update_safe_text_artifacts_for_edit_dec
 
 
 @pytest.mark.parametrize(
-    ("plugin", "_save_tool", "apply_tool", "item_type"), REVIEW_SAVE_TOOLS
+    ("plugin", "_save_tool", "apply_tool", "item_type"),
+    GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_apply_tools_keep_binary_targets_revision_only(
     tmp_path: Path, plugin: str, _save_tool: str, apply_tool: str, item_type: str
@@ -1729,7 +1879,8 @@ def test_non_plotting_review_apply_tools_keep_binary_targets_revision_only(
 
 
 @pytest.mark.parametrize(
-    ("plugin", "_save_tool", "apply_tool", "item_type"), REVIEW_SAVE_TOOLS
+    ("plugin", "_save_tool", "apply_tool", "item_type"),
+    GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_apply_tools_update_csv_rows_when_target_contract_is_explicit(
     tmp_path: Path, plugin: str, _save_tool: str, apply_tool: str, item_type: str

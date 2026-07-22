@@ -1,7 +1,14 @@
 {
   "schema_version": "1.1",
+  "jurisdiction": "IT",
+  "country_pack": "it-professional-setup-2026",
   "registry_version": "2026-07-21",
   "last_reviewed": "2026-07-21",
+  "currentness": {
+    "status": "verified_current",
+    "reviewed_on": "2026-07-21",
+    "review_by": "2026-08-21"
+  },
   "policy": {
     "professional_review_required": true,
     "semantic_applicability": "model-assisted or professional, never inferred by the arithmetic engine",

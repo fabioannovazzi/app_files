@@ -109,6 +109,7 @@ CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS = 3
 CHATGPT_UPLOAD_MAX_SUBTITLE_LENGTH = 30
 CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
+CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CHATGPT_UPLOAD_SUBTITLE_OVERRIDES = {
     "vera": "AI companion for accountants",
 }
@@ -854,8 +855,9 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         raise ValueError("ChatGPT upload ZIPs must contain exactly one root plugin")
     plugin_name = package.plugin_names[0]
     prefix = f"{package.package_root}/plugins/{plugin_name}/"
+    packaged_entries = expected_zip_entries(package)
     entries: dict[str, bytes] = {"LICENSE": LICENSE_PATH.read_bytes()}
-    for packaged_name, content in expected_zip_entries(package).items():
+    for packaged_name, content in packaged_entries.items():
         if not packaged_name.startswith(prefix):
             continue
         name = packaged_name.removeprefix(prefix)
@@ -863,6 +865,15 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
         if "mcp" in path_parts:
+            if path_parts[-2:] == ["mcp", "server.cjs"]:
+                component_prefix = name.removesuffix("mcp/server.cjs")
+                adapter_name = (
+                    f"{prefix}{component_prefix}assets/" "review-workbench-adapter.json"
+                )
+                if adapter_name in packaged_entries:
+                    entries[f"{component_prefix}{CHATGPT_UPLOAD_REVIEW_MCP_SERVER}"] = (
+                        content
+                    )
             continue
         if name == ".codex-plugin/plugin.json":
             content = project_chatgpt_manifest(content)

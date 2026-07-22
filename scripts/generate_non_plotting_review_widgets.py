@@ -282,6 +282,7 @@ TARGETS: list[dict[str, Any]] = [
     },
     {
         "plugin": "client-file-preparation",
+        "requiresReviewerAlias": True,
         "asset": "client-file-preparation-review-widget.html",
         "title": "New Client · File Preparation",
         "reviewTitle": "File Preparation Review",
@@ -386,6 +387,28 @@ TARGETS: list[dict[str, Any]] = [
         "detailHelp": "Review the minimized fact, cited basis, and downstream dossier impact before recording a professional decision.",
         "persistDecisionTextInWidgetState": False,
         "useDecisionRevision": True,
+        "requiresReviewerAlias": True,
+        "bulkProtectedItemTypes": [
+            "party_profile",
+            "party_structure",
+            "engagement",
+            "engagement_service",
+            "screening_subject",
+            "screening_result",
+            "privacy_processing",
+            "marketing_consent",
+            "document_applicability",
+            "aml_risk_factor",
+            "aml_factor_section",
+            "aml_mandatory_trigger",
+            "aml_trigger_set",
+            "aml_assessment",
+            "missing_evidence",
+            "document_plan",
+            "monitoring_plan",
+            "official_source",
+            "client_file_preparation_binding",
+        ],
         "detailGroups": [
             {
                 "title": "Client and Engagement",
@@ -2124,6 +2147,9 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Decisione documento",
             "detailHelp": "Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.",
             "search": "Cerca documento, mancante, memo, email, blocco",
+            "reviewerAlias": "Alias revisore",
+            "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare la revisione; non inserire nome, email o identificativi fiscali.",
+            "reviewerAliasInvalid": "L'alias revisore deve iniziare con una lettera e contenere da 3 a 64 lettere ASCII, numeri, punti, trattini bassi, due punti o trattini.",
         },
         "fr": {
             "title": "Nouveau client · Preparation des documents",
@@ -2132,6 +2158,9 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Decision document",
             "detailHelp": "Classez les documents, confirmez les manquants et saisissez la prochaine demande client.",
             "search": "Chercher document, manquant, memo, email, blocage",
+            "reviewerAlias": "Alias du reviseur",
+            "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour terminer la revue; ne saisissez ni nom, ni email, ni identifiant fiscal.",
+            "reviewerAliasInvalid": "L'alias du reviseur doit commencer par une lettre et contenir de 3 a 64 lettres ASCII, chiffres, points, tirets bas, deux-points ou tirets.",
         },
         "de": {
             "title": "Neuer Mandant · Unterlagen vorbereiten",
@@ -2140,6 +2169,9 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Dokumententscheidung",
             "detailHelp": "Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.",
             "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen",
+            "reviewerAlias": "Prueferalias",
+            "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den Abschluss der Pruefung erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
+            "reviewerAliasInvalid": "Das Prueferalias muss mit einem Buchstaben beginnen und 3 bis 64 ASCII-Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten.",
         },
     },
     "new-client": {
@@ -2150,6 +2182,10 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Evidenza, base e decisione",
             "detailHelp": "Rivedi il fatto minimizzato, la base citata e l'impatto sul dossier prima di registrare la decisione professionale.",
             "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco",
+            "reviewerAlias": "Alias revisore",
+            "reviewerAliasHelp": "Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare l'export professionale; non inserire nome, email o identificativi fiscali.",
+            "reviewerAliasInvalid": "L'alias revisore puo contenere solo lettere, numeri, punti, trattini bassi, due punti o trattini.",
+            "bulkProfessionalSkipped": "Applicate {applied} raccomandazioni sicure. {skipped} decisioni professionali richiedono ancora una revisione individuale.",
         },
         "fr": {
             "title": "Revue nouveau client",
@@ -2158,6 +2194,10 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Preuve, fondement et decision",
             "detailHelp": "Examinez le fait minimise, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision professionnelle.",
             "search": "Chercher fait, service, facteur AML, document, source, blocage",
+            "reviewerAlias": "Alias du reviseur",
+            "reviewerAliasHelp": "Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour finaliser l'export professionnel; ne saisissez ni nom, ni email, ni identifiant fiscal.",
+            "reviewerAliasInvalid": "L'alias du reviseur ne peut contenir que des lettres, chiffres, points, tirets bas, deux-points ou tirets.",
+            "bulkProfessionalSkipped": "{applied} recommandations sures appliquees. {skipped} decisions professionnelles exigent encore une revue individuelle.",
         },
         "de": {
             "title": "Review neuer Mandant",
@@ -2166,6 +2206,10 @@ WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
             "detailTitle": "Nachweis, Grundlage und Entscheidung",
             "detailHelp": "Minimierten Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der professionellen Entscheidung pruefen.",
             "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen",
+            "reviewerAlias": "Prueferalias",
+            "reviewerAliasHelp": "Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den professionellen Export erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.",
+            "reviewerAliasInvalid": "Das Prueferalias darf nur Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten.",
+            "bulkProfessionalSkipped": "{applied} sichere Empfehlungen angewendet. {skipped} professionelle Entscheidungen muessen einzeln geprueft werden.",
         },
     },
     "audit-reconciliation": {
@@ -2461,7 +2505,7 @@ TEMPLATE = """<!doctype html>
       line-height: 1.35;
       overflow-wrap: anywhere;
     }}
-    .review-store {{
+{reviewer_alias_css}    .review-store {{
       grid-column: 1 / -1;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
@@ -3365,7 +3409,7 @@ TEMPLATE = """<!doctype html>
           <div class=\"progress-rail\" aria-hidden=\"true\"><span id=\"decision-progress-fill\"></span></div>
           <span class=\"status-message\" id=\"save-status\"></span>
         </div>
-        <div class=\"action-buttons\">
+{reviewer_alias_html}        <div class=\"action-buttons\">
           <button class=\"button\" id=\"use-recommended\" type=\"button\">Use recommended</button>
           <button class=\"button primary\" id=\"save-decisions\" type=\"button\">Save decisions</button>
           <button class=\"button\" id=\"apply-decisions\" type=\"button\">Apply decisions</button>
@@ -3472,7 +3516,7 @@ TEMPLATE = """<!doctype html>
       final_artifacts: null,
       decision_policy: {{ save_tool: CONFIG.saveTool, apply_tool: CONFIG.applyTool, can_persist: false, fallback: \"copy_json\" }},
     }};
-    const state = {{ payload: FALLBACK, selectedType: \"all\", selectedState: \"all\", selectedId: null, query: \"\", decisions: {{}}, recovery: {{ savedDecisionCount: 0, draftDecisionCount: 0, lastIssue: null }} }};
+    const state = {{ payload: FALLBACK, selectedType: \"all\", selectedState: \"all\", selectedId: null, query: \"\", decisions: {{}}, {state_extra}recovery: {{ savedDecisionCount: 0, draftDecisionCount: 0, lastIssue: null }} }};
 
     function pickPayload(raw) {{
       if (!raw || typeof raw !== \"object\") return null;
@@ -4271,7 +4315,7 @@ TEMPLATE = """<!doctype html>
         const item = itemById(decision.item_id);
         return {{ item_id: decision.item_id, item_type: item?.item_type || \"\", title: item?.title || \"\", action: decision.action, status: ACTION_STATUSES[decision.action] || \"reviewed\", decided_at: now, ...(decision.reviewer_note ? {{ reviewer_note: decision.reviewer_note }} : {{}}), ...(decision.edit_value ? {{ edit_value: decision.edit_value }} : {{}}), ...(decision.requested_documents?.length ? {{ requested_documents: decision.requested_documents }} : {{}}) }};
       }});
-      return {{ schema_version: payload.schema_version || {schema_version_json}, plugin: payload.plugin || CONFIG.plugin, workflow: payload.workflow || CONFIG.plugin, run_id: payload.run_id || \"preview\", decided_at: decisions.length ? now : null, decision_source: \"mcp_widget_export\", review_payload_path: state.payload.ui_decisions?.review_payload_path || \"review_payload.json\", decisions, decision_count: decisions.length, item_count: items().length, status: decisions.length === 0 ? \"pending_review\" : decisions.length === items().length ? \"reviewed\" : \"partial_review\" }};
+      return {{ schema_version: payload.schema_version || {schema_version_json}, plugin: payload.plugin || CONFIG.plugin, workflow: payload.workflow || CONFIG.plugin, run_id: payload.run_id || \"preview\", decided_at: decisions.length ? now : null, decision_source: \"mcp_widget_export\", review_payload_path: state.payload.ui_decisions?.review_payload_path || \"review_payload.json\", {fallback_extra_fields_js}decisions, decision_count: decisions.length, item_count: items().length, status: decisions.length === 0 ? \"pending_review\" : decisions.length === items().length ? \"reviewed\" : \"partial_review\" }};
     }}
 {tool_args_js}
     function parseToolResult(result) {{
@@ -4369,7 +4413,7 @@ TEMPLATE = """<!doctype html>
         }}
       }}
       const widgetState = window.openai?.widgetState;
-      let draftDecisionCount = 0;
+{load_initial_extra_js}      let draftDecisionCount = 0;
       if (widgetState?.run_id === reviewPayload().run_id && widgetState.decisions && typeof widgetState.decisions === \"object\") {{
         for (const [itemId, decision] of Object.entries(widgetState.decisions)) if (itemById(itemId) && decision?.action) {{
 {widget_state_load_js}
@@ -4395,7 +4439,7 @@ TEMPLATE = """<!doctype html>
       setButtonText(\"apply-decisions\", ui(\"buttons\", \"applyDecisions\", \"Apply decisions\"));
       setButtonText(\"copy-decisions\", ui(\"buttons\", \"copyJson\", \"Copy JSON\"));
       setButtonText(\"download-decisions\", ui(\"buttons\", \"downloadJson\", \"Download JSON\"));
-      document.getElementById(\"search\").placeholder = workflowText(\"search\", \"{search}\");
+{render_chrome_extra_js}      document.getElementById(\"search\").placeholder = workflowText(\"search\", \"{search}\");
       document.getElementById(\"queue-title\").textContent = workflowText(\"queueTitle\", uiText(\"reviewQueue\", \"Review queue\"));
       document.getElementById(\"detail-title\").textContent = workflowText(\"detailTitle\", uiText(\"evidenceDecision\", \"Evidence and decision\"));
     }}
@@ -4414,7 +4458,7 @@ TEMPLATE = """<!doctype html>
     }});
     document.getElementById(\"details\").addEventListener(\"click\", (event) => {{ const button = event.target.closest(\"button[data-decision-action]\"); if (!button) return; setDecisionAction(itemById(state.selectedId), button.dataset.decisionAction); }});
     document.getElementById(\"details\").addEventListener(\"input\", (event) => {{ const field = event.target.closest(\"[data-decision-field]\"); if (!field) return; setDecisionField(itemById(state.selectedId), field.dataset.decisionField, field.value); }});
-    document.getElementById(\"use-recommended\").addEventListener(\"click\", applyRecommendedToVisible);
+{event_listener_extra_js}    document.getElementById(\"use-recommended\").addEventListener(\"click\", applyRecommendedToVisible);
     document.getElementById(\"save-decisions\").addEventListener(\"click\", handleSaveDecisions);
     document.getElementById(\"apply-decisions\").addEventListener(\"click\", handleApplyDecisions);
     document.getElementById(\"copy-decisions\").addEventListener(\"click\", () => copyDecisionJson().then(() => setSaveStatus(uiText(\"jsonCopied\", \"JSON copied.\"), \"ok\")).catch((error) => setSaveStatus(error.message || String(error), \"error\")));
@@ -4430,6 +4474,13 @@ TEMPLATE = """<!doctype html>
 
 def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     legacy = {
+        "reviewer_alias_css": "",
+        "reviewer_alias_html": "",
+        "state_extra": "",
+        "fallback_extra_fields_js": "",
+        "load_initial_extra_js": "",
+        "render_chrome_extra_js": "",
+        "event_listener_extra_js": "",
         "artifact_count_js": (
             "      const artifactCount = summary.artifact_count ?? items().filter((item) => "
             'String(item.item_type || "").includes("artifact")).length;'
@@ -4494,13 +4545,196 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "saved_decision_load_js": '          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };',
         "widget_state_load_js": "          current[itemId] = decision;",
     }
+    if target["plugin"] == "client-file-preparation":
+        return {
+            **legacy,
+            "reviewer_alias_css": """    .review-actions > .progress-meter { grid-column: 1; grid-row: 1; }
+    .review-actions > .action-buttons { grid-column: 2; grid-row: 1; }
+    .reviewer-alias-field {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: minmax(9rem, 0.28fr) minmax(12rem, 1fr);
+      gap: 0.28rem 0.75rem;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 0.72rem;
+    }
+    .reviewer-alias-field input {
+      width: min(100%, 30rem);
+      min-height: 2.45rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 0.48rem 0.65rem;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+    .reviewer-alias-field input:focus { border-color: var(--accent); }
+    .reviewer-alias-help {
+      grid-column: 2;
+      max-width: 72ch;
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.35;
+    }
+    @media (max-width: 980px) {
+      .review-actions > .progress-meter,
+      .review-actions > .action-buttons,
+      .reviewer-alias-field { grid-column: 1; grid-row: auto; }
+      .reviewer-alias-field { grid-template-columns: 1fr; }
+      .reviewer-alias-help { grid-column: 1; }
+    }
+""",
+            "reviewer_alias_html": """        <label class=\"reviewer-alias-field\" for=\"reviewer-alias\">
+          <span class=\"field-label\" id=\"reviewer-alias-label\">Reviewer alias</span>
+          <input id=\"reviewer-alias\" type=\"text\" maxlength=\"64\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"reviewer-fg\">
+          <small class=\"reviewer-alias-help\" id=\"reviewer-alias-help\">Use a stable pseudonymous studio alias to complete review. Do not enter a name or email.</small>
+        </label>
+""",
+            "state_extra": 'reviewerAlias: "", ',
+            "fallback_extra_fields_js": "...(reviewerAliasValue() ? { reviewer: reviewerAliasValue() } : {}), ",
+            "load_initial_extra_js": """      state.reviewerAlias = String(
+        state.payload.ui_decisions?.reviewer
+        || (widgetState?.run_id === reviewPayload().run_id ? widgetState.reviewer_alias : "")
+        || ""
+      ).trim();
+""",
+            "render_chrome_extra_js": """      const reviewerAliasInput = document.getElementById("reviewer-alias");
+      if (reviewerAliasInput && reviewerAliasInput.value !== state.reviewerAlias) reviewerAliasInput.value = state.reviewerAlias;
+      const reviewerAliasLabel = document.getElementById("reviewer-alias-label");
+      if (reviewerAliasLabel) reviewerAliasLabel.textContent = workflowText("reviewerAlias", "Reviewer alias");
+      const reviewerAliasHelp = document.getElementById("reviewer-alias-help");
+      if (reviewerAliasHelp) reviewerAliasHelp.textContent = workflowText("reviewerAliasHelp", "Use a stable pseudonymous studio alias to complete review.");
+""",
+            "event_listener_extra_js": """    document.getElementById("reviewer-alias")?.addEventListener("input", (event) => {
+      state.reviewerAlias = String(event.target.value || "").trim();
+      persistWidgetState();
+    });
+""",
+            "decision_input_js": r"""    const SAFE_REVIEWER_ALIAS_RE = /^[A-Za-z][A-Za-z0-9._:-]{2,63}$/;
+    function reviewerAliasValue() { return String(state.reviewerAlias || "").trim(); }
+    function validateReviewerAlias(decisions) {
+      if (!decisions.length) return;
+      const alias = reviewerAliasValue();
+      if (alias && !SAFE_REVIEWER_ALIAS_RE.test(alias)) throw new Error(workflowText("reviewerAliasInvalid", "Reviewer alias must use 3-64 supported characters and start with a letter."));
+    }
+"""
+            + legacy["decision_input_js"],
+            "validate_decision_inputs_js": """    function validateDecisionInputs(decisions) {
+      validateReviewerAlias(decisions);
+      for (const decision of decisions) {
+        if (decision.action === "edit" && !decision.edit_value) throw new Error(uiText("editRequired", "Edit value required for {item}.").replace("{item}", itemById(decision.item_id)?.title || decision.item_id));
+      }
+    }""",
+            "tool_args_js": """    function saveToolArgs() {
+      return {
+        run_intake: state.payload.run_intake || null,
+        persistence_token: state.payload.decision_policy?.persistence_token || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
+      };
+    }
+    function applyToolArgs() {
+      return {
+        run_intake: state.payload.run_intake || null,
+        persistence_token: state.payload.decision_policy?.persistence_token || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        ...(state.payload.decision_policy?.persistence_token
+          ? {}
+          : { final_artifacts: state.payload.final_artifacts || null }),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
+      };
+    }""",
+            "widget_state_js": """    function applyRecommendedToVisible() { for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear"); persistWidgetState(); renderRows(); }
+    function persistWidgetState() {
+      try { window.openai?.setWidgetState?.({ run_id: reviewPayload().run_id || null, reviewer_alias: reviewerAliasValue() || null, decisions: state.decisions }); } catch { }
+    }""",
+        }
     if target["plugin"] != "new-client":
         return legacy
 
     return {
+        "reviewer_alias_css": """    .review-actions > .progress-meter { grid-column: 1; grid-row: 1; }
+    .review-actions > .action-buttons { grid-column: 2; grid-row: 1; }
+    .reviewer-alias-field {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: minmax(9rem, 0.28fr) minmax(12rem, 1fr);
+      gap: 0.28rem 0.75rem;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 0.72rem;
+    }
+    .reviewer-alias-field input {
+      width: min(100%, 30rem);
+      min-height: 2.45rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 0.48rem 0.65rem;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+    .reviewer-alias-field input:focus { border-color: var(--accent); }
+    .reviewer-alias-help {
+      grid-column: 2;
+      max-width: 72ch;
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.35;
+    }
+    @media (max-width: 980px) {
+      .review-actions > .progress-meter,
+      .review-actions > .action-buttons,
+      .reviewer-alias-field { grid-column: 1; grid-row: auto; }
+      .reviewer-alias-field { grid-template-columns: 1fr; }
+      .reviewer-alias-help { grid-column: 1; }
+    }
+""",
+        "reviewer_alias_html": """        <label class=\"reviewer-alias-field\" for=\"reviewer-alias\">
+          <span class=\"field-label\" id=\"reviewer-alias-label\">Reviewer alias</span>
+          <input id=\"reviewer-alias\" type=\"text\" maxlength=\"160\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"reviewer-fg\">
+          <small class=\"reviewer-alias-help\" id=\"reviewer-alias-help\">Use a stable pseudonymous studio alias to complete professional export. Do not enter a name or email.</small>
+        </label>
+""",
+        "state_extra": 'reviewerAlias: "", ',
+        "fallback_extra_fields_js": "...(reviewerAliasValue() ? { reviewer: reviewerAliasValue() } : {}), ",
+        "load_initial_extra_js": """      state.reviewerAlias = String(
+        state.payload.ui_decisions?.reviewer
+        || (widgetState?.run_id === reviewPayload().run_id ? widgetState.reviewer_alias : "")
+        || ""
+      ).trim();
+""",
+        "render_chrome_extra_js": """      const reviewerAliasInput = document.getElementById("reviewer-alias");
+      if (reviewerAliasInput && reviewerAliasInput.value !== state.reviewerAlias) reviewerAliasInput.value = state.reviewerAlias;
+      const reviewerAliasLabel = document.getElementById("reviewer-alias-label");
+      if (reviewerAliasLabel) reviewerAliasLabel.textContent = workflowText("reviewerAlias", "Reviewer alias");
+      const reviewerAliasHelp = document.getElementById("reviewer-alias-help");
+      if (reviewerAliasHelp) reviewerAliasHelp.textContent = workflowText("reviewerAliasHelp", "Use a stable pseudonymous studio alias to complete professional export.");
+""",
+        "event_listener_extra_js": """    document.getElementById("reviewer-alias")?.addEventListener("input", (event) => {
+      state.reviewerAlias = String(event.target.value || "").trim();
+      persistWidgetState();
+    });
+""",
         "artifact_count_js": """      const writtenArtifactCount = artifactRecords().length;
       const artifactCount = summary.artifact_count ?? (writtenArtifactCount || items().filter((item) => String(item.item_type || "").includes("artifact")).length);""",
-        "decision_input_js": r"""    function ensureDecision(item, action = null) {
+        "decision_input_js": r"""    const SAFE_REVIEWER_ALIAS_RE = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/;
+    function reviewerAliasValue() { return String(state.reviewerAlias || "").trim(); }
+    function validateReviewerAlias(decisions) {
+      if (!decisions.length) return;
+      const alias = reviewerAliasValue();
+      if (alias && !SAFE_REVIEWER_ALIAS_RE.test(alias)) throw new Error(workflowText("reviewerAliasInvalid", "Reviewer alias contains unsupported characters."));
+    }
+    function ensureDecision(item, action = null) {
       if (!item) return null;
       const current = state.decisions[item.id] || {};
       const nextAction = action || current.action || item.recommended_action || item.allowed_actions?.[0] || "mark_unclear";
@@ -4535,6 +4769,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       });
     }""",
         "validate_decision_inputs_js": """    function validateDecisionInputs(decisions) {
+      validateReviewerAlias(decisions);
       for (const decision of decisions) {
         if (decision.action === "edit" && !decision.edit_value && decision.reuse_saved_details !== true) throw new Error(uiText("editRequired", "Edit value required for {item}.").replace("{item}", itemById(decision.item_id)?.title || decision.item_id));
       }
@@ -4547,7 +4782,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         ui_decisions: state.payload.ui_decisions || null,
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
-        reviewer: state.payload.ui_decisions?.reviewer || null,
+        reviewer: reviewerAliasValue() || null,
         ...(CONFIG.useDecisionRevision ? { expected_decision_revision: Number(state.payload.ui_decisions?.decision_revision || 0) } : {}),
       };
     }
@@ -4562,7 +4797,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
           : { final_artifacts: state.payload.final_artifacts || null }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
-        reviewer: state.payload.ui_decisions?.reviewer || null,
+        reviewer: reviewerAliasValue() || null,
         ...(CONFIG.useDecisionRevision ? { expected_decision_revision: Number(state.payload.ui_decisions?.decision_revision || 0) } : {}),
       };
     }""",
@@ -4570,7 +4805,26 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
             "        if (result.ui_decisions) "
             "state.payload.ui_decisions = result.ui_decisions;\n"
         ),
-        "widget_state_js": """    function applyRecommendedToVisible() { for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear"); persistWidgetState(); renderRows(); }
+        "widget_state_js": """    function applyRecommendedToVisible() {
+      const protectedTypes = new Set(Array.isArray(CONFIG.bulkProtectedItemTypes) ? CONFIG.bulkProtectedItemTypes : []);
+      let applied = 0;
+      let skipped = 0;
+      for (const item of filteredItems()) {
+        if (protectedTypes.has(item.item_type)) { skipped += 1; continue; }
+        ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear");
+        applied += 1;
+      }
+      persistWidgetState();
+      renderRows();
+      if (skipped) {
+        setSaveStatus(
+          workflowText("bulkProfessionalSkipped", "{applied} safe recommendations applied. {skipped} professional decisions require individual review.")
+            .replace("{applied}", applied)
+            .replace("{skipped}", skipped),
+          "ok",
+        );
+      }
+    }
     function widgetStateDecision(decision) {
       if (!decision || !decision.item_id || !decision.action) return null;
       return { item_id: decision.item_id, action: decision.action };
@@ -4586,6 +4840,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       try {
         window.openai?.setWidgetState?.({
           run_id: reviewPayload().run_id || null,
+          reviewer_alias: reviewerAliasValue() || null,
           decisions: decisionsForWidgetState(),
         });
       } catch { }
@@ -4645,6 +4900,9 @@ def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
             "persistDecisionTextInWidgetState", False
         )
         config["useDecisionRevision"] = target.get("useDecisionRevision", True)
+        config["bulkProtectedItemTypes"] = target.get("bulkProtectedItemTypes", [])
+    if target.get("requiresReviewerAlias"):
+        config["requiresReviewerAlias"] = True
     if target["plugin"] == "deep-research-validator":
         config["widgetType"] = "deep_research_review"
     if target["plugin"] == "report-builder":

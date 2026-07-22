@@ -30,10 +30,16 @@ const pluginRoot = path.resolve(__dirname, "..");
 const packagedRoot = path.join(pluginRoot, "modules", component);
 const sourceRoot = path.resolve(pluginRoot, "..", component);
 const componentRoot = fs.existsSync(packagedRoot) ? packagedRoot : sourceRoot;
-const serverPath = path.join(componentRoot, "mcp", "server.cjs");
+const serverCandidates = [
+  path.join(componentRoot, "mcp", "server.cjs"),
+  path.join(componentRoot, "scripts", "review_mcp_server.cjs"),
+];
+const serverPath = serverCandidates.find((candidate) => fs.existsSync(candidate));
 
-if (!fs.existsSync(serverPath)) {
-  process.stderr.write(`MCP server not found for ${component}: ${serverPath}\n`);
+if (!serverPath) {
+  process.stderr.write(
+    `MCP server not found for ${component}: ${serverCandidates.join(", ")}\n`,
+  );
   process.exit(2);
 }
 

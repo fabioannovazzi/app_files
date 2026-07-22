@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/check-entries-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -16,7 +18,8 @@
       "Parse entries and invoices",
       "Match amounts, dates and counterparties",
       "Identify unresolved checks",
-      "Build evidence locators"
+      "Build evidence locators",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -50,6 +53,6 @@
       "An unresolved check can require a larger supporting passage",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "bc3e9afe25fca4b80dccf9ecf1bae3b48f3751177b7fbfbbd28c6f7483471014"
+    "source_fingerprint": "66c957f98800b2c4fddb40a350565a6ec73cc6f30f213c01f7d3a4dc4124d29a"
   }
 }

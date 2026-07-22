@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import secrets
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -9,9 +11,32 @@ from typing import Any, Sequence
 
 from detect_duplicates import DuplicateCandidate
 from extract_documents import DocumentEvidence
-from parse_fatturapa_xml import InvoiceXmlRecord
-from parse_fiscal_forms import FiscalField
-from scan_folder import CATEGORY_NON_CLASSIFICATI, FileRecord
+from parse_fatturapa_xml import InvoiceXmlRecord, localize_formal_anomaly
+from parse_fiscal_forms import (
+    SUMMARY_COPY,
+    FiscalField,
+    localize_field_label,
+    localize_warning,
+)
+from scan_folder import (
+    CATEGORY_CH_BANK_TAX,
+    CATEGORY_CH_GE_TAX,
+    CATEGORY_CH_SALARY_CERTIFICATE,
+    CATEGORY_CH_TAX_ASSESSMENT,
+    CATEGORY_CH_TAX_RETURN,
+    CATEGORY_CH_ZH_TAX,
+    CATEGORY_NON_CLASSIFICATI,
+    CATEGORY_UK_BANK_TAX,
+    CATEGORY_UK_HMRC_NOTICE,
+    CATEGORY_UK_PAYSLIP,
+    CATEGORY_UK_SELF_ASSESSMENT,
+    CATEGORY_UK_YEAR_END_PAYROLL,
+    MAX_SOURCE_ENTRIES,
+    MAX_SOURCE_FILE_BYTES,
+    MAX_SOURCE_FILES,
+    MAX_SOURCE_TOTAL_BYTES,
+    FileRecord,
+)
 
 __all__ = [
     "ReviewSessionResult",
@@ -24,12 +49,14 @@ SCHEMA_VERSION = "1.0"
 PLUGIN_NAME = "client-file-preparation"
 WORKFLOW_NAME = "client-file-preparation"
 MAX_PREVIEW_CHARS = 2000
+PACKAGE_HASH_BASIS = "sorted_outputs_path_size_sha256_canonical_json_v1"
 INVENTORY_REQUIRED_COLUMNS = [
     "relative_path",
     "file_name",
     "extension",
     "size_bytes",
     "modified_iso",
+    "sha256",
     "category",
     "confidence",
     "years",
@@ -53,6 +80,118 @@ XML_SUMMARY_REQUIRED_COLUMNS = [
     "total_amount",
     "malformed",
 ]
+
+CONFIDENCE_COPY = {
+    "it": {"alta": "alta", "media": "media", "bassa": "bassa"},
+    "en": {"alta": "high", "media": "medium", "bassa": "low"},
+    "fr": {"alta": "élevée", "media": "moyenne", "bassa": "faible"},
+    "de": {"alta": "hoch", "media": "mittel", "bassa": "niedrig"},
+}
+
+CATEGORY_COPY = {
+    "en": {
+        "730 / precompilata": "Italian 730 / pre-filled return",
+        "fatture elettroniche XML": "electronic invoices (XML)",
+        "ricevute sanitarie": "medical receipts",
+        "mutuo": "mortgage",
+        "affitto / locazione": "rent / lease",
+        "assicurazioni": "insurance",
+        "previdenza": "social security",
+        "avvisi / comunicazioni": "notices / communications",
+        "contratti": "contracts",
+        "documenti non classificati": "unclassified documents",
+    },
+    "fr": {
+        "730 / precompilata": "déclaration italienne 730 / préremplie",
+        "fatture elettroniche XML": "factures électroniques XML",
+        "ricevute sanitarie": "reçus médicaux",
+        "mutuo": "prêt hypothécaire",
+        "affitto / locazione": "loyer / bail",
+        "assicurazioni": "assurances",
+        "previdenza": "prévoyance sociale",
+        "avvisi / comunicazioni": "avis / communications",
+        "contratti": "contrats",
+        "documenti non classificati": "documents non classés",
+        CATEGORY_CH_GE_TAX: "documents fiscaux genevois",
+        CATEGORY_CH_ZH_TAX: "documents fiscaux zurichois",
+        CATEGORY_CH_TAX_RETURN: "déclaration fiscale suisse",
+        CATEGORY_CH_TAX_ASSESSMENT: "taxation suisse",
+        CATEGORY_CH_SALARY_CERTIFICATE: "certificat de salaire suisse",
+        CATEGORY_CH_BANK_TAX: "attestations fiscales bancaires et d’impôt anticipé suisses",
+        CATEGORY_UK_YEAR_END_PAYROLL: "documents britanniques P60 / P45 / P11D",
+        CATEGORY_UK_PAYSLIP: "bulletin de salaire britannique",
+        CATEGORY_UK_SELF_ASSESSMENT: "déclaration britannique Self Assessment",
+        CATEGORY_UK_HMRC_NOTICE: "avis HMRC britanniques",
+        CATEGORY_UK_BANK_TAX: "attestations fiscales bancaires et d’investissement britanniques",
+    },
+    "de": {
+        "730 / precompilata": "italienische Erklärung 730 / vorausgefüllt",
+        "fatture elettroniche XML": "elektronische Rechnungen (XML)",
+        "ricevute sanitarie": "Gesundheitsbelege",
+        "mutuo": "Hypothek",
+        "affitto / locazione": "Miete / Pacht",
+        "assicurazioni": "Versicherungen",
+        "previdenza": "Sozialversicherung",
+        "avvisi / comunicazioni": "Bescheide / Mitteilungen",
+        "contratti": "Verträge",
+        "documenti non classificati": "nicht klassifizierte Dokumente",
+        CATEGORY_CH_GE_TAX: "Genfer Steuerunterlagen",
+        CATEGORY_CH_ZH_TAX: "Zürcher Steuerunterlagen",
+        CATEGORY_CH_TAX_RETURN: "Schweizer Steuererklärung",
+        CATEGORY_CH_TAX_ASSESSMENT: "Schweizer Steuerveranlagung",
+        CATEGORY_CH_SALARY_CERTIFICATE: "Schweizer Lohnausweis",
+        CATEGORY_CH_BANK_TAX: "Schweizer Bank- und Verrechnungssteuerbescheinigungen",
+        CATEGORY_UK_YEAR_END_PAYROLL: "britische P60-/P45-/P11D-Unterlagen",
+        CATEGORY_UK_PAYSLIP: "britische Lohnabrechnung",
+        CATEGORY_UK_SELF_ASSESSMENT: "britische Self-Assessment-Steuererklärung",
+        CATEGORY_UK_HMRC_NOTICE: "britische HMRC-Mitteilungen",
+        CATEGORY_UK_BANK_TAX: "britische Bank- und Kapitalertragsteuerbescheinigungen",
+    },
+}
+
+
+def _localized_confidence(value: str, language: str) -> str:
+    return CONFIDENCE_COPY[language].get(value, value)
+
+
+def _localized_category(value: str, language: str) -> str:
+    return CATEGORY_COPY.get(language, {}).get(value, value)
+
+
+def _localized_note(value: str, language: str, target_year: int | None = None) -> str:
+    if language == "it":
+        return value
+    if value == "classificazione non certa":
+        return {
+            "en": "classification uncertain",
+            "fr": "classification incertaine",
+            "de": "Klassifizierung unklar",
+        }[language]
+    if value.startswith("anno non coerente"):
+        return {
+            "en": f"year differs from target {target_year}",
+            "fr": f"année différente de la cible {target_year}",
+            "de": f"Jahr weicht vom Zieljahr {target_year} ab",
+        }[language]
+    if value.startswith("immagine"):
+        return {
+            "en": "image: possible receipt or scanned document",
+            "fr": "image : reçu possible ou document numérisé",
+            "de": "Bild: möglicher Beleg oder gescanntes Dokument",
+        }[language]
+    if value.startswith("XML generico"):
+        return {
+            "en": "generic XML: FatturaPA structure not identified",
+            "fr": "XML générique : structure FatturaPA non identifiée",
+            "de": "Generisches XML: FatturaPA-Struktur nicht erkannt",
+        }[language]
+    if value == "collegamento simbolico non seguito":
+        return {
+            "en": "symbolic link not followed",
+            "fr": "lien symbolique non suivi",
+            "de": "symbolischer Link wurde nicht verfolgt",
+        }[language]
+    return value
 
 
 @dataclass(frozen=True)
@@ -78,14 +217,9 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def _safe_slug(value: str) -> str:
-    slug = re.sub(r"[^a-zA-Z0-9_.-]+", "-", value).strip("-._").lower()
-    return slug or "run"
-
-
-def _run_id(root: Path) -> str:
+def _run_id() -> str:
     timestamp = re.sub(r"[^0-9]", "", _utc_now())
-    return f"{PLUGIN_NAME}-{_safe_slug(root.name)}-{timestamp}"
+    return f"{PLUGIN_NAME}-{timestamp}-{secrets.token_hex(8)}"
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> Path:
@@ -94,38 +228,115 @@ def _write_json(path: Path, payload: dict[str, Any]) -> Path:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    path.chmod(0o600)
     return path
+
+
+def _harden_owner_only_tree(output_dir: Path) -> None:
+    """Make the completed local review package private before returning it."""
+
+    output_dir.chmod(0o700)
+    for path in output_dir.rglob("*"):
+        if path.is_symlink():
+            raise ValueError(f"L'output non può contenere link simbolici: {path}")
+        path.chmod(0o700 if path.is_dir() else 0o600)
 
 
 def _write_review_handoff_card(
     output_dir: Path,
     *,
     run_id: str,
-    title: str,
     validate_tool: str,
     render_tool: str,
     save_tool: str,
     apply_tool: str,
+    language: str = "it",
 ) -> Path:
     path = output_dir / "review_handoff.md"
+    copy = {
+        "it": {
+            "product": "Preparazione del fascicolo cliente",
+            "title": "Passaggio alla revisione",
+            "run": "ID esecuzione",
+            "payload": "Payload di revisione",
+            "intake": "Dati di esecuzione",
+            "pending": "Decisioni in attesa",
+            "applied": "Decisioni applicate",
+            "artifacts": "Artefatti finali",
+            "heading": "Revisione in Codex",
+            "validate": "Validare il payload con",
+            "render": "Aprire l’area di revisione con",
+            "save": "Salvare le decisioni con",
+            "apply": "Applicare le decisioni con",
+            "notice": "Il salvataggio e l’applicazione persistenti richiedono la superficie MCP o il server locale. Il fallback HTML statico può soltanto copiare o scaricare il JSON delle decisioni.",
+        },
+        "en": {
+            "product": "Client file preparation",
+            "title": "Review handoff",
+            "run": "Run ID",
+            "payload": "Review payload",
+            "intake": "Run intake",
+            "pending": "Pending decisions",
+            "applied": "Applied decisions",
+            "artifacts": "Final artifacts",
+            "heading": "Review in Codex",
+            "validate": "Validate the payload with",
+            "render": "Open the review workbench with",
+            "save": "Save reviewer actions with",
+            "apply": "Apply reviewer actions with",
+            "notice": "Persistent save and apply require the MCP or local-server review surface. The static HTML fallback can only copy or download decision JSON.",
+        },
+        "fr": {
+            "product": "Préparation du dossier client",
+            "title": "Passage à la revue",
+            "run": "ID d’exécution",
+            "payload": "Données de revue",
+            "intake": "Paramètres d’exécution",
+            "pending": "Décisions en attente",
+            "applied": "Décisions appliquées",
+            "artifacts": "Livrables finaux",
+            "heading": "Revue dans Codex",
+            "validate": "Valider les données avec",
+            "render": "Ouvrir l’espace de revue avec",
+            "save": "Enregistrer les décisions avec",
+            "apply": "Appliquer les décisions avec",
+            "notice": "L’enregistrement et l’application persistants exigent la surface MCP ou le serveur local. Le mode HTML statique peut uniquement copier ou télécharger le JSON des décisions.",
+        },
+        "de": {
+            "product": "Vorbereitung der Mandantenakte",
+            "title": "Übergabe zur Prüfung",
+            "run": "Lauf-ID",
+            "payload": "Prüfdaten",
+            "intake": "Laufdaten",
+            "pending": "Ausstehende Entscheidungen",
+            "applied": "Angewandte Entscheidungen",
+            "artifacts": "Endartefakte",
+            "heading": "Prüfung in Codex",
+            "validate": "Prüfdaten validieren mit",
+            "render": "Prüfansicht öffnen mit",
+            "save": "Entscheidungen speichern mit",
+            "apply": "Entscheidungen anwenden mit",
+            "notice": "Dauerhaftes Speichern und Anwenden erfordern die MCP- oder lokale Server-Prüfansicht. Der statische HTML-Fallback kann Entscheidungs-JSON nur kopieren oder herunterladen.",
+        },
+    }[language]
     lines = [
-        f"# {title} Review Handoff",
+        f"# {copy['product']} · {copy['title']}",
+        "<!-- review-contract: Review Handoff -->",
         "",
-        f"- Run ID: `{run_id}`",
-        "- Review payload: `review_payload.json`",
-        "- Run intake: `run_intake.json`",
-        "- Pending decisions: `ui_decisions.json`",
-        "- Applied decisions: `applied_decisions.json`",
-        "- Final artifacts: `final_artifacts.json`",
+        f"- {copy['run']}: `{run_id}`",
+        f"- {copy['payload']}: `review_payload.json`",
+        f"- {copy['intake']}: `run_intake.json`",
+        f"- {copy['pending']}: `ui_decisions.json`",
+        f"- {copy['applied']}: `applied_decisions.json`",
+        f"- {copy['artifacts']}: `final_artifacts.json`",
         "",
-        "## Review In Codex",
-        f"1. Validate the payload with `{validate_tool}`.",
-        f"2. Render the review workbench with `{render_tool}`.",
-        f"3. Save reviewer actions with `{save_tool}`.",
-        f"4. Apply reviewer actions with `{apply_tool}`.",
+        f"## {copy['heading']}",
+        f"1. {copy['validate']} `{validate_tool}`.",
+        f"2. {copy['render']} `{render_tool}`.",
+        f"3. {copy['save']} `{save_tool}`.",
+        f"4. {copy['apply']} `{apply_tool}`.",
         "",
-        "Persistent save/apply requires the MCP or local-server review surface. "
-        "Static HTML fallback can copy or download decision JSON only.",
+        copy["notice"],
     ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
@@ -261,14 +472,16 @@ def _base_item(
 def _document_item(
     index: int,
     record: FileRecord,
-    root: Path,
     output_dir: Path,
     evidence: DocumentEvidence | None,
     fiscal_field_count: int,
+    *,
+    include_preview: bool,
+    language: str,
 ) -> dict[str, Any]:
     evidence_refs: list[dict[str, Any]] = []
-    if evidence and evidence.text_path:
-        text_path = output_dir / evidence.text_path
+    if include_preview and evidence and evidence.text_path:
+        text_path = output_dir / "extracted" / evidence.text_path
         evidence_refs.append(
             {
                 "kind": "extracted_text",
@@ -282,26 +495,37 @@ def _document_item(
                 "kind": "extraction_result",
                 "readable": evidence.readable,
                 "method": evidence.extraction_method,
-                "confidence": evidence.confidence,
-                "notes": list(evidence.notes),
+                "confidence": _localized_confidence(evidence.confidence, language),
+                "notes": [_localized_note(note, language) for note in evidence.notes],
             }
         )
-    source_path = root / record.relative_path
     needs_attention = (
         record.category == CATEGORY_NON_CLASSIFICATI
         or record.confidence != "alta"
         or bool(record.notes)
-        or (evidence is not None and not evidence.readable)
+        or evidence is None
+        or not evidence.readable
+        or bool(evidence.notes)
+        or evidence.extraction_method.startswith("unsupported")
     )
     return _base_item(
         f"document-{index}",
         "document_inventory",
         record.relative_path,
-        source_path=source_path.as_posix(),
-        allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+        source_path=record.relative_path,
+        allowed_actions=("accept", "mark_unclear", "skip"),
         recommended_action="mark_unclear" if needs_attention else "accept",
         evidence=evidence_refs,
-        data=record.as_row()
+        data=(
+            record.as_row()
+            | {
+                "category": _localized_category(record.category, language),
+                "confidence": _localized_confidence(record.confidence, language),
+                "notes": " | ".join(
+                    _localized_note(note, language) for note in record.notes
+                ),
+            }
+        )
         | {
             "readable": evidence.readable if evidence else None,
             "extraction_method": evidence.extraction_method if evidence else None,
@@ -314,36 +538,69 @@ def _document_item(
 def _uncertain_document_items(
     records: Sequence[FileRecord],
     evidence_lookup: dict[str, DocumentEvidence],
-    root: Path,
     target_year: int | None,
+    language: str,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, record in enumerate(records, start=1):
         evidence = evidence_lookup.get(record.relative_path)
-        reasons: list[str] = []
+        reason_codes: list[str] = []
         if record.category == CATEGORY_NON_CLASSIFICATI:
-            reasons.append("documento_non_classificato")
+            reason_codes.append("unclassified_document")
         if record.confidence != "alta":
-            reasons.append("classificazione_non_alta")
+            reason_codes.append("classification_below_high")
         if record.notes:
-            reasons.extend(record.notes)
+            reason_codes.extend(record.notes)
         if target_year is not None and record.years and target_year not in record.years:
-            reasons.append("anno_fuori_target")
+            reason_codes.append("year_outside_target")
         if evidence is not None and not evidence.readable:
-            reasons.append("testo_non_leggibile")
-        if not reasons:
+            reason_codes.append("text_unreadable")
+        if not reason_codes:
             continue
+        reason_copy = {
+            "unclassified_document": {
+                "it": "documento non classificato",
+                "en": "unclassified document",
+                "fr": "document non classé",
+                "de": "nicht klassifiziertes Dokument",
+            },
+            "classification_below_high": {
+                "it": "classificazione non alta",
+                "en": "classification confidence below high",
+                "fr": "niveau de confiance inférieur à élevé",
+                "de": "Klassifizierungsvertrauen unter hoch",
+            },
+            "year_outside_target": {
+                "it": "anno fuori target",
+                "en": "year outside target",
+                "fr": "année hors cible",
+                "de": "Jahr außerhalb des Zieljahres",
+            },
+            "text_unreadable": {
+                "it": "testo non leggibile",
+                "en": "text unreadable",
+                "fr": "texte illisible",
+                "de": "Text nicht lesbar",
+            },
+        }
+        reasons = [
+            reason_copy.get(code, {}).get(
+                language,
+                _localized_note(code, language, target_year),
+            )
+            for code in reason_codes
+        ]
         items.append(
             _base_item(
                 f"uncertain-file-{index}",
                 "uncertain_file",
                 record.relative_path,
-                source_path=(root / record.relative_path).as_posix(),
-                allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+                source_path=record.relative_path,
+                allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
                 data={
-                    "category": record.category,
-                    "confidence": record.confidence,
+                    "category": _localized_category(record.category, language),
+                    "confidence": _localized_confidence(record.confidence, language),
                     "reasons": reasons,
                     "years": list(record.years),
                 },
@@ -352,13 +609,22 @@ def _uncertain_document_items(
     return items
 
 
-def _missing_document_items(missing_items: Sequence[str]) -> list[dict[str, Any]]:
+def _missing_document_items(
+    missing_items: Sequence[str],
+    language: str,
+) -> list[dict[str, Any]]:
+    title = {
+        "it": "Richiesta mancante/incerta",
+        "en": "Missing/uncertain request",
+        "fr": "Demande manquante/incertaine",
+        "de": "Fehlende/unklare Anforderung",
+    }[language]
     return [
         _base_item(
             f"missing-document-{index}",
             "missing_document_request",
-            f"Richiesta mancante/incerta {index}",
-            allowed_actions=("accept", "reject", "edit", "request_more_documents"),
+            f"{title} {index}",
+            allowed_actions=("accept", "reject", "request_more_documents"),
             recommended_action="accept",
             output_path="02_documenti_mancanti_o_incerti.md",
             data={"request_text": item},
@@ -367,29 +633,46 @@ def _missing_document_items(missing_items: Sequence[str]) -> list[dict[str, Any]
     ]
 
 
-def _fiscal_field_items(fields: Sequence[FiscalField]) -> list[dict[str, Any]]:
-    return [
-        _base_item(
-            f"fiscal-field-{index}",
-            "extracted_fiscal_field",
-            f"{field.document_kind}: {field.label}",
-            source_path=field.relative_path,
-            output_path="extracted/structured_fiscal_fields.csv",
-            allowed_actions=("accept", "edit", "mark_unclear", "skip"),
-            recommended_action=(
-                "accept" if field.confidence in {"alta", "media"} else "mark_unclear"
-            ),
-            evidence=[
-                {
-                    "kind": "snippet",
-                    "text": field.evidence,
-                    "warnings": list(field.warnings),
-                }
-            ],
-            data=field.as_row(),
+def _fiscal_field_items(
+    fields: Sequence[FiscalField],
+    *,
+    include_preview: bool,
+    language: str,
+) -> list[dict[str, Any]]:
+    items: list[dict[str, Any]] = []
+    for index, field in enumerate(fields, start=1):
+        data = field.as_row()
+        evidence_text = data.pop("evidence", "")
+        data["label"] = localize_field_label(field.label, language)
+        data["confidence"] = _localized_confidence(field.confidence, language)
+        evidence = [
+            {
+                "kind": "structured_field_extraction",
+                "warnings": [
+                    localize_warning(warning, language) for warning in field.warnings
+                ],
+            }
+        ]
+        if include_preview and evidence_text:
+            evidence.append({"kind": "snippet", "text": evidence_text})
+        items.append(
+            _base_item(
+                f"fiscal-field-{index}",
+                "extracted_fiscal_field",
+                f"{field.document_kind}: {localize_field_label(field.label, language)}",
+                source_path=field.relative_path,
+                output_path="extracted/structured_fiscal_fields.csv",
+                allowed_actions=("accept", "mark_unclear", "skip"),
+                recommended_action=(
+                    "accept"
+                    if field.confidence in {"alta", "media"}
+                    else "mark_unclear"
+                ),
+                evidence=evidence,
+                data=data,
+            )
         )
-        for index, field in enumerate(fields, start=1)
-    ]
+    return items
 
 
 def _draft_item(
@@ -398,6 +681,8 @@ def _draft_item(
     title: str,
     output_dir: Path,
     relative_path: str,
+    *,
+    include_preview: bool,
 ) -> dict[str, Any]:
     path = output_dir / relative_path
     return _base_item(
@@ -410,13 +695,14 @@ def _draft_item(
         data={
             "path": relative_path,
             "exists": path.exists(),
-            "preview": _read_preview(path),
-        },
+        }
+        | ({"preview": _read_preview(path)} if include_preview else {}),
     )
 
 
 def _duplicate_items(
     candidates: Sequence[DuplicateCandidate],
+    language: str,
 ) -> list[dict[str, Any]]:
     return [
         _base_item(
@@ -427,13 +713,37 @@ def _duplicate_items(
             output_path="duplicate_candidates.csv",
             allowed_actions=("accept", "reject", "mark_unclear", "skip"),
             recommended_action="mark_unclear",
-            data=candidate.as_row(),
+            data=candidate.as_row()
+            | {
+                "duplicate_type": {
+                    "hash-identico": {
+                        "it": "hash identico",
+                        "en": "identical hash",
+                        "fr": "empreinte identique",
+                        "de": "identischer Hash",
+                    },
+                    "nome-dimensione-simile": {
+                        "it": "nome e dimensione simili",
+                        "en": "similar name and size",
+                        "fr": "nom et taille similaires",
+                        "de": "ähnlicher Name und ähnliche Größe",
+                    },
+                }
+                .get(candidate.duplicate_type, {})
+                .get(
+                    language,
+                    candidate.duplicate_type,
+                )
+            },
         )
         for index, candidate in enumerate(candidates, start=1)
     ]
 
 
-def _xml_anomaly_items(records: Sequence[InvoiceXmlRecord]) -> list[dict[str, Any]]:
+def _xml_anomaly_items(
+    records: Sequence[InvoiceXmlRecord],
+    language: str,
+) -> list[dict[str, Any]]:
     return [
         _base_item(
             f"xml-anomaly-{index}",
@@ -441,23 +751,42 @@ def _xml_anomaly_items(records: Sequence[InvoiceXmlRecord]) -> list[dict[str, An
             record.relative_path,
             source_path=record.relative_path,
             output_path="fatture/formal_anomalies.md",
-            allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+            allowed_actions=("accept", "mark_unclear", "skip"),
             recommended_action="mark_unclear",
-            data=record.as_json(),
+            data=record.as_json()
+            | {
+                "anomalies": [
+                    localize_formal_anomaly(value, language)
+                    for value in record.anomalies
+                ]
+            },
         )
         for index, record in enumerate(records, start=1)
         if record.malformed or record.anomalies
     ]
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    labels = {
+        "it": ("Tipo", "Elemento", "Azione suggerita", "Fonte", "Output", "Stato"),
+        "en": ("Type", "Item", "Suggested action", "Source", "Output", "Status"),
+        "fr": ("Type", "Élément", "Action suggérée", "Source", "Sortie", "Statut"),
+        "de": ("Typ", "Element", "Empfohlene Aktion", "Quelle", "Ausgabe", "Status"),
+    }[language]
     return [
-        {"field": "item_type", "label": "Tipo"},
-        {"field": "title", "label": "Elemento"},
-        {"field": "recommended_action", "label": "Azione suggerita"},
-        {"field": "source_path", "label": "Fonte"},
-        {"field": "output_path", "label": "Output"},
-        {"field": "status", "label": "Stato"},
+        {"field": field, "label": label}
+        for field, label in zip(
+            (
+                "item_type",
+                "title",
+                "recommended_action",
+                "source_path",
+                "output_path",
+                "status",
+            ),
+            labels,
+            strict=True,
+        )
     ]
 
 
@@ -500,8 +829,100 @@ def _required_text_by_path(
     professional_questions: Sequence[str],
     client_questions: Sequence[str],
     structured_fields: Sequence[FiscalField],
+    language: str,
 ) -> dict[str, list[str]]:
-    year_text = str(target_year) if target_year is not None else "non indicato"
+    copy = {
+        "it": {
+            "year_missing": "non indicato",
+            "environment": "# Controllo ambiente",
+            "index": "# Indice fascicolo",
+            "year": "Anno target",
+            "files": "File analizzati",
+            "missing": "# Documenti mancanti o incerti",
+            "questions": "# Domande interne dello studio",
+            "memo": "# Memo di istruttoria clienti",
+            "client": "Cliente",
+            "memo_year": "Anno",
+            "documents": "## Documenti ricevuti",
+            "memo_missing": "## Elementi mancanti o incerti",
+            "studio": "# Scheda per lo studio",
+            "summary": "## Sintesi del fascicolo",
+            "fields": "Campi fiscali strutturati estratti",
+            "studio_missing": "## Punti mancanti o incerti",
+            "email_subject": "Oggetto: Documenti e chiarimenti per completare l'istruttoria",
+            "email_draft": "# Bozza email cliente",
+            "email_empty": "Nessuna richiesta cliente generata automaticamente",
+            "handoff": "Passaggio alla revisione",
+        },
+        "en": {
+            "year_missing": "not specified",
+            "environment": "# Environment check",
+            "index": "# Client file index",
+            "year": "Target year",
+            "files": "Files reviewed",
+            "missing": "# Missing or uncertain documents",
+            "questions": "# Questions for the firm",
+            "memo": "# Client file-preparation memo",
+            "client": "Client",
+            "memo_year": "Year",
+            "documents": "## Documents received",
+            "memo_missing": "## Missing or uncertain items",
+            "studio": "# File-preparation brief for the firm",
+            "summary": "## File summary",
+            "fields": "Structured fiscal fields extracted",
+            "studio_missing": "## Missing or uncertain items",
+            "email_subject": "Subject: Documents and clarifications needed to complete file preparation",
+            "email_draft": "# Draft client email",
+            "email_empty": "The formal checks did not generate a client request",
+            "handoff": "Review handoff",
+        },
+        "fr": {
+            "year_missing": "non indiquée",
+            "environment": "# Contrôle de l’environnement",
+            "index": "# Index du dossier client",
+            "year": "Année cible",
+            "files": "Fichiers examinés",
+            "missing": "# Documents manquants ou incertains",
+            "questions": "# Questions internes du cabinet",
+            "memo": "# Note de préparation du dossier client",
+            "client": "Client",
+            "memo_year": "Année",
+            "documents": "## Documents reçus",
+            "memo_missing": "## Éléments manquants ou incertains",
+            "studio": "# Fiche de préparation pour le cabinet",
+            "summary": "## Synthèse du dossier",
+            "fields": "Champs fiscaux structurés extraits",
+            "studio_missing": "## Éléments manquants ou incertains",
+            "email_subject": "Objet : Documents et précisions nécessaires pour compléter le dossier",
+            "email_draft": "# Projet d’e-mail au client",
+            "email_empty": "Les contrôles formels n’ont généré aucune demande au client",
+            "handoff": "Passage à la revue",
+        },
+        "de": {
+            "year_missing": "nicht angegeben",
+            "environment": "# Umgebungsprüfung",
+            "index": "# Index der Mandantenakte",
+            "year": "Zieljahr",
+            "files": "Geprüfte Dateien",
+            "missing": "# Fehlende oder unklare Unterlagen",
+            "questions": "# Interne Fragen der Kanzlei",
+            "memo": "# Arbeitsvermerk zur Mandantenakte",
+            "client": "Mandant",
+            "memo_year": "Jahr",
+            "documents": "## Erhaltene Unterlagen",
+            "memo_missing": "## Fehlende oder unklare Punkte",
+            "studio": "# Arbeitsübersicht für die Kanzlei",
+            "summary": "## Zusammenfassung der Akte",
+            "fields": "Extrahierte strukturierte Steuerfelder",
+            "studio_missing": "## Fehlende oder unklare Punkte",
+            "email_subject": "Betreff: Unterlagen und Angaben zur Vervollständigung der Akte",
+            "email_draft": "# Entwurf der Mandanten-E-Mail",
+            "email_empty": "Aus den formalen Prüfungen ergab sich keine Anfrage an den Mandanten",
+            "handoff": "Übergabe zur Prüfung",
+        },
+    }[language]
+    fiscal_copy = SUMMARY_COPY[language]
+    year_text = str(target_year) if target_year is not None else copy["year_missing"]
     first_record = _first_record_path(records)
     first_missing = _first_clean(missing_items)
     first_professional_question = _first_clean(professional_questions)
@@ -509,35 +930,43 @@ def _required_text_by_path(
     first_field = _first_field_text(structured_fields)
 
     required = {
-        "00_environment_check.md": ["# Controllo ambiente"],
+        "00_environment_check.md": [copy["environment"]],
         "00_fascicolo_index.md": [
-            "# Indice fascicolo",
-            f"Anno target: {year_text}",
-            f"File analizzati: {len(records)}",
+            copy["index"],
+            f"{copy['year']}: {year_text}",
+            f"{copy['files']}: {len(records)}",
         ],
-        "02_documenti_mancanti_o_incerti.md": ["# Documenti mancanti o incerti"],
-        "03_domande_interne_studio.md": ["# Domande interne dello studio"],
+        "02_documenti_mancanti_o_incerti.md": [copy["missing"]],
+        "03_domande_interne_studio.md": [copy["questions"]],
         "04_bozza_email_cliente.md": [],
         "06_memo_istruttoria.md": [
-            "# Memo di istruttoria clienti",
-            f"Cliente {client_name}",
-            f"Anno {year_text}",
-            f"File analizzati: {len(records)}.",
-            "## Documenti ricevuti",
-            "## Elementi mancanti o incerti",
+            copy["memo"],
+            f"{copy['client']} {client_name}",
+            f"{copy['memo_year']} {year_text}",
+            f"{copy['files']}: {len(records)}.",
+            copy["documents"],
+            copy["memo_missing"],
         ],
         "07_scheda_codex_per_studio.md": [
-            "# Scheda per lo studio",
+            copy["studio"],
             client_name,
             year_text,
-            "## Sintesi del fascicolo",
-            f"File analizzati: {len(records)}",
-            f"Campi fiscali strutturati estratti: {len(structured_fields)}",
-            "## Punti mancanti o incerti",
+            copy["summary"],
+            f"{copy['files']}: {len(records)}",
+            f"{copy['fields']}: {len(structured_fields)}",
+            copy["studio_missing"],
         ],
         "08_dati_fiscali_strutturati.md": [
-            "# Dati fiscali strutturati",
-            f"Campi estratti: {len(structured_fields)}",
+            f"# {fiscal_copy['title']}",
+            f"{fiscal_copy['field_count']}: {len(structured_fields)}",
+        ],
+        "review_handoff.md": [
+            "Review Handoff",
+            copy["handoff"],
+            "review_payload.json",
+            "ui_decisions.json",
+            "applied_decisions.json",
+            "final_artifacts.json",
         ],
     }
 
@@ -548,14 +977,14 @@ def _required_text_by_path(
     )
     if first_client_question:
         required["04_bozza_email_cliente.md"] = [
-            "Oggetto: Documenti e chiarimenti per completare l'istruttoria",
+            copy["email_subject"],
             client_name,
             first_client_question,
         ]
     else:
         required["04_bozza_email_cliente.md"] = [
-            "# Bozza email cliente",
-            "Nessuna richiesta cliente generata automaticamente",
+            copy["email_draft"],
+            copy["email_empty"],
         ]
     _append_if_text(required["06_memo_istruttoria.md"], first_missing)
     _append_if_text(required["06_memo_istruttoria.md"], first_professional_question)
@@ -580,14 +1009,10 @@ def _output_records(
     client_questions: Sequence[str],
     structured_fields: Sequence[FiscalField],
     xml_records: Sequence[InvoiceXmlRecord],
+    language: str,
 ) -> list[dict[str, Any]]:
     outputs: list[dict[str, Any]] = []
-    review_files = {
-        "run_intake.json",
-        "review_payload.json",
-        "ui_decisions.json",
-        "final_artifacts.json",
-    }
+    review_files = {"final_artifacts.json"}
     required_text_by_path = _required_text_by_path(
         client_name=client_name,
         target_year=target_year,
@@ -596,6 +1021,7 @@ def _output_records(
         professional_questions=professional_questions,
         client_questions=client_questions,
         structured_fields=structured_fields,
+        language=language,
     )
     for path in sorted(output_dir.rglob("*")):
         if not path.is_file() or path.name in review_files:
@@ -604,6 +1030,7 @@ def _output_records(
         output = {
             "path": relative,
             "size_bytes": path.stat().st_size,
+            "sha256": _sha256_file(path),
             "kind": path.suffix.lower().lstrip(".") or "file",
             "status": "written",
         }
@@ -627,6 +1054,41 @@ def _output_records(
     return outputs
 
 
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _package_integrity(outputs: Sequence[dict[str, Any]]) -> dict[str, str]:
+    """Hash the exact output inventory for reproducible cross-phase verification."""
+
+    canonical_outputs = sorted(
+        (
+            {
+                "path": str(output["path"]),
+                "sha256": str(output["sha256"]),
+                "size_bytes": int(output["size_bytes"]),
+            }
+            for output in outputs
+        ),
+        key=lambda output: output["path"].encode("utf-8"),
+    )
+    canonical = json.dumps(
+        canonical_outputs,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return {
+        "algorithm": "sha256",
+        "package_hash_basis": PACKAGE_HASH_BASIS,
+        "package_hash": hashlib.sha256(canonical).hexdigest(),
+    }
+
+
 def write_run_intake(
     output_dir: Path,
     root: Path,
@@ -638,17 +1100,38 @@ def write_run_intake(
     require_ocr: bool,
     enable_ocr: bool,
     ocr_lang: str,
+    jurisdiction: str,
+    language: str,
 ) -> RunIntakeResult:
     """Write the intake contract as soon as folder scope is known."""
 
-    run_id = _run_id(root)
-    data_posture_notes = [
-        "Scripts inspect local customer-folder files and write bounded review artifacts for UI review.",
-        "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
-    ]
+    run_id = _run_id()
+    data_posture_notes = {
+        "it": [
+            "Gli script esaminano localmente i file della cartella cliente e producono artefatti limitati per la review nell’interfaccia.",
+            "Per impostazione predefinita non vengono usati connettori esterni, percorsi di upload, SQL remoto o notebook ospitati.",
+        ],
+        "en": [
+            "Scripts inspect local customer-folder files and write bounded review artifacts for UI review.",
+            "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+        ],
+        "fr": [
+            "Les scripts examinent localement les fichiers du dossier client et produisent des artefacts limités pour la revue dans l’interface.",
+            "Par défaut, aucun connecteur externe, chemin de téléversement, SQL distant ou notebook hébergé n’est utilisé.",
+        ],
+        "de": [
+            "Die Skripte prüfen die Dateien des Mandantenordners lokal und erzeugen begrenzte Artefakte für die Prüfung in der Oberfläche.",
+            "Standardmäßig werden keine externen Konnektoren, Upload-Pfade, Remote-SQL-Abfragen oder gehosteten Notebooks verwendet.",
+        ],
+    }[language]
     if enable_ocr or require_ocr:
         data_posture_notes.append(
-            "OCR, when enabled or required, reads local document files before bounded review artifacts are written."
+            {
+                "it": "Quando è abilitato o necessario, l’OCR legge i documenti locali prima della produzione degli artefatti limitati di review.",
+                "en": "OCR, when enabled or required, reads local document files before bounded review artifacts are written.",
+                "fr": "Lorsqu’il est activé ou requis, l’OCR lit les documents locaux avant la production des artefacts de revue limités.",
+                "de": "Wenn OCR aktiviert oder erforderlich ist, liest es lokale Dokumente, bevor begrenzte Prüfartefakte erzeugt werden.",
+            }[language]
         )
     payload = {
         "schema_version": SCHEMA_VERSION,
@@ -656,7 +1139,8 @@ def write_run_intake(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": "it",
+        "language": language,
+        "jurisdiction": jurisdiction,
         "input_paths": [root.as_posix()],
         "output_dir": output_dir.as_posix(),
         "inferred_task": "first_customer_folder_intake",
@@ -665,9 +1149,40 @@ def write_run_intake(
             "target_year": target_year,
             "ocr_requested": enable_ocr,
             "ocr_language": ocr_lang,
+            "working_language": language,
+            "jurisdiction": jurisdiction,
             "ocr_required_by_file_types": require_ocr,
             "category_counts": _category_counts(records),
             "file_count": len(records),
+        },
+        "source_snapshot": {
+            "algorithm": "sha256",
+            "limits": {
+                "max_entry_count": MAX_SOURCE_ENTRIES,
+                "max_file_count": MAX_SOURCE_FILES,
+                "max_file_bytes": MAX_SOURCE_FILE_BYTES,
+                "max_total_bytes": MAX_SOURCE_TOTAL_BYTES,
+            },
+            "observed": {
+                "file_count": len(records),
+                "regular_file_count": sum(bool(record.sha256) for record in records),
+                "symlink_count": sum(not bool(record.sha256) for record in records),
+                "total_regular_bytes": sum(
+                    record.size_bytes for record in records if record.sha256
+                ),
+            },
+            "files": [
+                {
+                    "relative_path": record.relative_path,
+                    "size_bytes": record.size_bytes,
+                    "modified_iso": record.modified_iso,
+                    "sha256": record.sha256,
+                    "entry_type": (
+                        "regular_file" if record.sha256 else "symlink_not_followed"
+                    ),
+                }
+                for record in records
+            ],
         },
         "unresolved_questions": [],
         "dependency_check": {
@@ -709,6 +1224,9 @@ def write_review_session_artifacts(
     client_questions: Sequence[str],
     duplicate_candidates: Sequence[DuplicateCandidate],
     xml_records: Sequence[InvoiceXmlRecord],
+    jurisdiction: str,
+    language: str,
+    include_previews: bool = False,
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact index."""
 
@@ -719,34 +1237,75 @@ def write_review_session_artifacts(
         _document_item(
             index,
             record,
-            root,
             output_dir,
             evidence_lookup.get(record.relative_path),
             field_counts.get(record.relative_path, 0),
+            include_preview=include_previews,
+            language=language,
         )
         for index, record in enumerate(records, start=1)
     )
-    items.extend(_uncertain_document_items(records, evidence_lookup, root, target_year))
-    items.extend(_missing_document_items(missing_items))
-    items.extend(_fiscal_field_items(structured_fields))
-    items.extend(_duplicate_items(duplicate_candidates))
-    items.extend(_xml_anomaly_items(xml_records))
+    items.extend(
+        _uncertain_document_items(
+            records,
+            evidence_lookup,
+            target_year,
+            language,
+        )
+    )
+    items.extend(_missing_document_items(missing_items, language))
+    items.extend(
+        _fiscal_field_items(
+            structured_fields,
+            include_preview=include_previews,
+            language=language,
+        )
+    )
+    items.extend(_duplicate_items(duplicate_candidates, language))
+    items.extend(_xml_anomaly_items(xml_records, language))
+    items.append(
+        _draft_item(
+            "draft-studio-brief",
+            "draft_memo_section",
+            {
+                "it": "Scheda operativa per lo studio",
+                "en": "Operational brief for the firm",
+                "fr": "Fiche opérationnelle pour le cabinet",
+                "de": "Arbeitsübersicht für die Kanzlei",
+            }[language],
+            output_dir,
+            "07_scheda_codex_per_studio.md",
+            include_preview=include_previews,
+        )
+    )
     items.append(
         _draft_item(
             "draft-memo",
             "draft_memo_section",
-            "Memo istruttoria per lo studio",
+            {
+                "it": "Memo istruttoria per lo studio",
+                "en": "File-preparation memo for the firm",
+                "fr": "Note de préparation pour le cabinet",
+                "de": "Arbeitsvermerk für die Kanzlei",
+            }[language],
             output_dir,
             "06_memo_istruttoria.md",
+            include_preview=include_previews,
         )
     )
     items.append(
         _draft_item(
             "draft-client-email",
             "draft_client_email",
-            "Bozza email cliente",
+            {
+                "it": "Bozza email cliente",
+                "en": "Draft client email",
+                "fr": "Projet d’e-mail au client",
+                "de": "Entwurf der Mandanten-E-Mail",
+            }[language],
             output_dir,
             "04_bozza_email_cliente.md",
+            include_preview=include_previews,
         )
     )
 
@@ -756,11 +1315,35 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "source_paths": [root.as_posix()],
+        "language": language,
+        "jurisdiction": jurisdiction,
+        "source_paths": [],
+        "source_scope": {
+            "kind": "local_customer_folder",
+            "local_reference": "run_intake.json",
+        },
+        "preview_policy": {
+            "mode": "explicit_opt_in",
+            "previews_included": include_previews,
+        },
         "review_type": "client_file_preparation_folder_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
+        "notices": [
+            {
+                "it": "Verificare gli elementi proposti rispetto ai file locali prima di applicare le decisioni.",
+                "en": "Check proposed items against the local files before applying decisions.",
+                "fr": "Vérifier les éléments proposés par rapport aux fichiers locaux avant d’appliquer les décisions.",
+                "de": "Vorgeschlagene Punkte vor der Anwendung von Entscheidungen anhand der lokalen Dateien prüfen.",
+            }[language],
+            {
+                "it": "I percorsi assoluti e le anteprime testuali restano locali salvo inclusione esplicita.",
+                "en": "Absolute paths and text previews remain local unless explicitly included.",
+                "fr": "Les chemins absolus et les aperçus textuels restent locaux sauf inclusion explicite.",
+                "de": "Absolute Pfade und Textvorschauen bleiben lokal, sofern sie nicht ausdrücklich einbezogen werden.",
+            }[language],
+        ],
         "source_artifacts": {},
         "evidence": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
@@ -814,11 +1397,11 @@ def write_review_session_artifacts(
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
-        title="Client File Preparation",
         validate_tool="validate_client_file_preparation_review",
         render_tool="render_client_file_preparation_review",
         save_tool="save_client_file_preparation_decisions",
         apply_tool="apply_client_file_preparation_decisions",
+        language=language,
     )
     outputs = _output_records(
         output_dir,
@@ -830,34 +1413,45 @@ def write_review_session_artifacts(
         client_questions=client_questions,
         structured_fields=structured_fields,
         xml_records=xml_records,
+        language=language,
     )
-    outputs = [
-        output
-        for output in outputs
-        if not (
-            isinstance(output, dict) and output.get("path") == review_handoff_path.name
-        )
-    ]
-    outputs.append(_review_handoff_output_record(review_handoff_path))
-
+    manifest_copy = {
+        "it": {
+            "caveat": "ui_decisions.json resta in attesa finché una revisione Codex, l’interfaccia locale o il fallback non registra le decisioni.",
+            "review": "Rivedere review_payload.json prima di modificare il memo dello studio o l’e-mail al cliente.",
+            "persist": "Registrare le decisioni di accettazione, modifica o rifiuto in ui_decisions.json quando viene eseguita la revisione.",
+        },
+        "en": {
+            "caveat": "ui_decisions.json remains pending until a Codex review, local interface, or fallback records reviewer decisions.",
+            "review": "Review review_payload.json before revising the firm memo or client email.",
+            "persist": "Record accept, edit, or reject decisions in ui_decisions.json when the review is performed.",
+        },
+        "fr": {
+            "caveat": "ui_decisions.json reste en attente jusqu’à ce qu’une revue Codex, l’interface locale ou le mode de secours enregistre les décisions.",
+            "review": "Examiner review_payload.json avant de modifier la note du cabinet ou l’e-mail au client.",
+            "persist": "Enregistrer les décisions d’acceptation, de modification ou de rejet dans ui_decisions.json lors de la revue.",
+        },
+        "de": {
+            "caveat": "ui_decisions.json bleibt ausstehend, bis eine Codex-Prüfung, die lokale Oberfläche oder der Fallback Entscheidungen erfasst.",
+            "review": "review_payload.json vor der Überarbeitung des Kanzleivermerks oder der Mandanten-E-Mail prüfen.",
+            "persist": "Annahme-, Änderungs- oder Ablehnungsentscheidungen bei der Prüfung in ui_decisions.json erfassen.",
+        },
+    }[language]
+    final_payload = {
+        "schema_version": SCHEMA_VERSION,
+        "plugin": PLUGIN_NAME,
+        "workflow": WORKFLOW_NAME,
+        "run_id": run_id,
+        "completed_at": _utc_now(),
+        "outputs": outputs,
+        "integrity": _package_integrity(outputs),
+        "caveats": [manifest_copy["caveat"]],
+        "next_actions": [manifest_copy["review"], manifest_copy["persist"]],
+        "status": "written_pending_review",
+    }
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
-        {
-            "schema_version": SCHEMA_VERSION,
-            "plugin": PLUGIN_NAME,
-            "workflow": WORKFLOW_NAME,
-            "run_id": run_id,
-            "completed_at": _utc_now(),
-            "outputs": outputs,
-            "caveats": [
-                "ui_decisions.json is pending until a Codex review, local UI, or fallback review records user decisions."
-            ],
-            "next_actions": [
-                "Review review_payload.json before revising the studio memo or client email.",
-                "Persist any accept/edit/reject decisions in ui_decisions.json when a review step is run.",
-            ],
-            "status": "written_pending_review",
-        },
+        final_payload,
     )
     _append_execution_trace(
         run_intake_path,
@@ -867,6 +1461,23 @@ def write_review_session_artifacts(
             "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
         ],
     )
+    # The trace update changes run_intake.json, so seal the package only after it.
+    sealed_outputs = _output_records(
+        output_dir,
+        client_name=client_name,
+        target_year=target_year,
+        records=records,
+        missing_items=missing_items,
+        professional_questions=professional_questions,
+        client_questions=client_questions,
+        structured_fields=structured_fields,
+        xml_records=xml_records,
+        language=language,
+    )
+    final_payload["outputs"] = sealed_outputs
+    final_payload["integrity"] = _package_integrity(sealed_outputs)
+    _write_json(final_artifacts_path, final_payload)
+    _harden_owner_only_tree(output_dir)
 
     return ReviewSessionResult(
         run_intake_path=run_intake_path,

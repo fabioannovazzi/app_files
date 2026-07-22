@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/journal-sampling-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -16,7 +18,8 @@
       "Parse and normalize the journal",
       "Calculate population statistics",
       "Select a reproducible sample",
-      "Build sampling diagnostics"
+      "Build sampling diagnostics",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -58,6 +61,6 @@
       "User-requested investigation can require additional targeted rows",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "15e7348954131f55ebe5afb81c6fcf13acff26b06b00b4ec8354d023426a61d8"
+    "source_fingerprint": "ab9d8df6a8666e169755c56f7c2ef64908f0533c3758b6dd7448d8088e6fe74b"
   }
 }

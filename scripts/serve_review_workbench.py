@@ -7,6 +7,9 @@ import argparse
 import ipaddress
 import json
 import logging
+import os
+import re
+import secrets
 import shutil
 import socket
 import subprocess
@@ -40,6 +43,8 @@ ALLOWED_ACTIONS = {
     "skip",
 }
 LOGGER = logging.getLogger(__name__)
+NODE_OVERRIDE_ENV = "MPARANZA_REVIEW_NODE"
+REVIEW_TOKEN_HEADER = "X-Mparanza-Review-Token"
 
 
 @dataclass(frozen=True)
@@ -63,9 +68,13 @@ class LocalReviewWorkbench:
 
     @property
     def mcp_server_path(self) -> Path:
-        """Return the plugin MCP server path."""
+        """Return the available plugin review-tool server path."""
 
-        return self.plugin_dir / "mcp" / "server.cjs"
+        candidates = (
+            self.plugin_dir / "mcp" / "server.cjs",
+            self.plugin_dir / "scripts" / "review_mcp_server.cjs",
+        )
+        return next((path for path in candidates if path.is_file()), candidates[0])
 
 
 def _read_json_object(path: Path, *, required: bool = False) -> dict[str, Any]:
@@ -119,9 +128,12 @@ def _plugin_dir_from_args(plugin: str | None, plugin_dir: str | None) -> Path:
         raise ValueError(
             f"plugin has no generated review workbench adapter: {directory}"
         )
-    if not (directory / "mcp" / "server.cjs").exists():
+    if not LocalReviewWorkbench(
+        plugin_dir=directory,
+        output_dir=directory,
+    ).mcp_server_path.is_file():
         raise ValueError(
-            f"plugin has no MCP server for decision write-back: {directory}"
+            f"plugin has no review-tool server for decision write-back: {directory}"
         )
     return directory
 
@@ -258,8 +270,8 @@ def _empty_ui_decisions(review_payload: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
-    """Load and validate the local review session served to the browser."""
+def _raw_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
+    """Load server-owned run artifacts without exposing them to the browser."""
 
     adapter = _adapter(workbench)
     run_intake = _read_json_object(
@@ -290,17 +302,141 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
     }
 
 
-def _bridge_html(workbench: LocalReviewWorkbench) -> str:
-    payload_json = json.dumps(
-        build_session_payload(workbench),
-        ensure_ascii=False,
-        default=str,
+def _render_tool_name(adapter: dict[str, Any]) -> str:
+    save_tool = adapter.get("saveTool")
+    if (
+        not isinstance(save_tool, str)
+        or not save_tool.startswith("save_")
+        or not save_tool.endswith("_decisions")
+    ):
+        raise ValueError("review-workbench adapter saveTool cannot resolve render tool")
+    return f"render_{save_tool.removeprefix('save_').removesuffix('_decisions')}_review"
+
+
+def _is_absolute_path(value: str) -> bool:
+    """Return whether a string is an absolute POSIX or Windows path."""
+
+    return Path(value).is_absolute() or bool(re.match(r"^[A-Za-z]:[\\/]", value))
+
+
+def _known_absolute_paths(value: Any) -> tuple[str, ...]:
+    """Collect exact absolute paths present in server-owned review artifacts."""
+
+    paths: set[str] = set()
+
+    def visit(candidate: Any) -> None:
+        if isinstance(candidate, dict):
+            for item in candidate.values():
+                visit(item)
+        elif isinstance(candidate, list):
+            for item in candidate:
+                visit(item)
+        elif isinstance(candidate, str) and _is_absolute_path(candidate):
+            paths.add(candidate)
+
+    visit(value)
+    return tuple(sorted(paths, key=len, reverse=True))
+
+
+def _sanitize_browser_payload(
+    value: Any,
+    *,
+    field: str | None = None,
+    redactions: tuple[str, ...] = (),
+) -> Any:
+    """Remove server-only paths and private QA text from any plugin render result."""
+
+    empty_path_lists = {"input_paths", "local_files_read"}
+    dropped_fields = {"output_dir", "required_text"}
+    if isinstance(value, dict):
+        sanitized: dict[str, Any] = {}
+        for key, item in value.items():
+            if key in dropped_fields:
+                continue
+            if key in empty_path_lists:
+                sanitized[key] = []
+                continue
+            sanitized[key] = _sanitize_browser_payload(
+                item,
+                field=key,
+                redactions=redactions,
+            )
+        return sanitized
+    if isinstance(value, list):
+        return [
+            _sanitize_browser_payload(item, field=field, redactions=redactions)
+            for item in value
+        ]
+    if isinstance(value, str):
+        sanitized_text = value
+        for absolute_path in redactions:
+            sanitized_text = sanitized_text.replace(absolute_path, "<local-path>")
+        if _is_absolute_path(sanitized_text):
+            return "<local-path>"
+        return sanitized_text
+    return value
+
+
+def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
+    """Return the plugin-rendered, browser-safe local review session."""
+
+    raw_session = _raw_session_payload(workbench)
+    rendered = _mcp_tool_result(
+        workbench,
+        _render_tool_name(_adapter(workbench)),
+        {
+            "run_intake": raw_session["run_intake"],
+            "review_payload": raw_session["review_payload"],
+            "ui_decisions": raw_session["ui_decisions"],
+            "final_artifacts": raw_session["final_artifacts"],
+        },
     )
-    plugin_json = json.dumps(workbench.plugin)
+    if rendered.get("ok") is False:
+        raise ValueError(str(rendered.get("error") or "plugin render tool failed"))
+    rendered_review = rendered.get("review_payload")
+    if not isinstance(rendered_review, dict):
+        raise ValueError("plugin render tool returned no review_payload")
+    if (
+        rendered_review.get("plugin") != workbench.plugin
+        or rendered_review.get("run_id") != raw_session["review_payload"]["run_id"]
+    ):
+        raise ValueError("plugin render tool returned a mismatched review session")
+    redactions = _known_absolute_paths(
+        {
+            "session": raw_session,
+            "workbench_output_dir": workbench.output_dir.resolve().as_posix(),
+        }
+    )
+    sanitized = _sanitize_browser_payload(rendered, redactions=redactions)
+    if not isinstance(sanitized, dict):
+        raise ValueError("sanitized plugin render result must remain an object")
+    return sanitized
+
+
+def _script_json(value: Any) -> str:
+    """Encode JSON for an executable script without allowing tag termination."""
+
+    return (
+        json.dumps(value, ensure_ascii=False, default=str)
+        .replace("&", "\\u0026")
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("\u2028", "\\u2028")
+        .replace("\u2029", "\\u2029")
+    )
+
+
+def _bridge_html(workbench: LocalReviewWorkbench, session_token: str) -> str:
+    payload_json = _script_json(
+        build_session_payload(workbench),
+    )
+    plugin_json = _script_json(workbench.plugin)
+    token_json = _script_json(session_token)
     return f"""<script>
     (function () {{
       const serverPayload = {payload_json};
       const pluginName = {plugin_json};
+      const reviewToken = {token_json};
       const stateKey = `${{pluginName}}:${{serverPayload.review_payload?.run_id || "run"}}`;
       function readState() {{
         try {{ return JSON.parse(window.sessionStorage.getItem(stateKey) || "null"); }}
@@ -316,7 +452,10 @@ def _bridge_html(workbench: LocalReviewWorkbench) -> str:
         async callTool(name, args) {{
           const response = await fetch("/api/call-tool", {{
             method: "POST",
-            headers: {{ "Content-Type": "application/json" }},
+            headers: {{
+              "Content-Type": "application/json",
+              "{REVIEW_TOKEN_HEADER}": reviewToken,
+            }},
             body: JSON.stringify({{ name, args: args || {{}} }}),
           }});
           const result = await response.json();
@@ -334,21 +473,26 @@ def _bridge_html(workbench: LocalReviewWorkbench) -> str:
   """
 
 
-def render_review_html(workbench: LocalReviewWorkbench) -> str:
+def render_review_html(
+    workbench: LocalReviewWorkbench,
+    *,
+    session_token: str | None = None,
+) -> str:
     """Render the generated widget with a local ``window.openai`` bridge."""
 
     html = _widget_path(workbench).read_text(encoding="utf-8")
     needle = "  <script>\n    const CONFIG = "
     if needle not in html:
         raise ValueError("review widget script insertion point not found")
-    return html.replace(needle, _bridge_html(workbench) + needle, 1)
+    token = session_token or secrets.token_urlsafe(32)
+    return html.replace(needle, _bridge_html(workbench, token) + needle, 1)
 
 
 def _server_tool_args(
     workbench: LocalReviewWorkbench,
     posted_args: dict[str, Any],
 ) -> dict[str, Any]:
-    session = build_session_payload(workbench)
+    session = _raw_session_payload(workbench)
     decisions = posted_args.get("decisions")
     if decisions is not None and not isinstance(decisions, list):
         raise ValueError("decisions must be an array when provided")
@@ -367,11 +511,34 @@ def _server_tool_args(
     return args
 
 
+def _codex_runtime_node_candidates() -> list[Path]:
+    """Return bounded Node.js candidates supplied by local Codex runtimes."""
+
+    runtime_root = Path.home() / ".cache" / "codex-runtimes"
+    if not runtime_root.is_dir():
+        return []
+    return sorted(runtime_root.glob("*/dependencies/node/bin/node"), reverse=True)
+
+
 def _node_executable() -> str:
+    override = os.environ.get(NODE_OVERRIDE_ENV)
+    if override:
+        candidate = Path(override).expanduser()
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return candidate.resolve().as_posix()
+        raise ValueError(
+            f"{NODE_OVERRIDE_ENV} must point to an executable Node.js file"
+        )
     node = shutil.which("node")
-    if node is None:
-        raise ValueError("Node.js is required to call the plugin MCP review server")
-    return node
+    if node is not None:
+        return node
+    for candidate in _codex_runtime_node_candidates():
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return candidate.resolve().as_posix()
+    raise ValueError(
+        "Node.js is required to call the plugin review-tool server; install Node.js "
+        f"or set {NODE_OVERRIDE_ENV} to its executable path"
+    )
 
 
 def _mcp_tool_result(
@@ -425,7 +592,17 @@ def call_review_tool(
     allowed_tools = {adapter["saveTool"], adapter["applyTool"]}
     if name not in allowed_tools:
         raise ValueError(f"unsupported local review tool: {name}")
-    return _mcp_tool_result(workbench, name, args)
+    result = _mcp_tool_result(workbench, name, args)
+    redactions = _known_absolute_paths(
+        {
+            "tool_args": args,
+            "workbench_output_dir": workbench.output_dir.resolve().as_posix(),
+        }
+    )
+    sanitized = _sanitize_browser_payload(result, redactions=redactions)
+    if not isinstance(sanitized, dict):
+        raise ValueError("sanitized plugin tool result must remain an object")
+    return sanitized
 
 
 def create_review_http_server(
@@ -438,12 +615,20 @@ def create_review_http_server(
 
     build_session_payload(workbench)
     safe_host = _validate_loopback_host(host)
-    httpd = _server_class(safe_host)((safe_host, port), _handler(workbench))
+    session_token = secrets.token_urlsafe(32)
+    httpd = _server_class(safe_host)(
+        (safe_host, port),
+        _handler(workbench, session_token=session_token),
+    )
     actual_port = httpd.server_address[1]
     return httpd, _review_url(safe_host, actual_port)
 
 
-def _handler(workbench: LocalReviewWorkbench) -> type[BaseHTTPRequestHandler]:
+def _handler(
+    workbench: LocalReviewWorkbench,
+    *,
+    session_token: str,
+) -> type[BaseHTTPRequestHandler]:
     class ReviewWorkbenchHandler(BaseHTTPRequestHandler):
         server_version = "LocalReviewWorkbench/1.0"
 
@@ -477,7 +662,12 @@ def _handler(workbench: LocalReviewWorkbench) -> type[BaseHTTPRequestHandler]:
             route = urlparse(self.path).path
             try:
                 if route in {"/", "/review", "/review_ui.html"}:
-                    self._html_response(render_review_html(workbench))
+                    self._html_response(
+                        render_review_html(
+                            workbench,
+                            session_token=session_token,
+                        )
+                    )
                     return
                 if route == "/api/session":
                     self._json_response(build_session_payload(workbench))
@@ -489,7 +679,6 @@ def _handler(workbench: LocalReviewWorkbench) -> type[BaseHTTPRequestHandler]:
                             "ok": True,
                             "plugin": workbench.plugin,
                             "run_id": session["review_payload"]["run_id"],
-                            "output_dir": workbench.output_dir.as_posix(),
                         }
                     )
                     return
@@ -506,6 +695,24 @@ def _handler(workbench: LocalReviewWorkbench) -> type[BaseHTTPRequestHandler]:
                 self.send_error(HTTPStatus.NOT_FOUND.value, "Not found")
                 return
             try:
+                supplied_token = self.headers.get(REVIEW_TOKEN_HEADER, "")
+                if not secrets.compare_digest(supplied_token, session_token):
+                    self._json_response(
+                        {"ok": False, "error": "invalid local review session token"},
+                        status=HTTPStatus.FORBIDDEN,
+                    )
+                    return
+                content_type = self.headers.get("Content-Type", "")
+                media_type = content_type.partition(";")[0].strip().lower()
+                if media_type != "application/json":
+                    self._json_response(
+                        {
+                            "ok": False,
+                            "error": "Content-Type must be application/json",
+                        },
+                        status=HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+                    )
+                    return
                 length = int(self.headers.get("Content-Length", "0"))
                 if length > MAX_POST_BYTES:
                     raise ValueError(f"request body exceeds {MAX_POST_BYTES} bytes")

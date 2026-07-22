@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/audit-reconciliation-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -16,7 +18,8 @@
       "Inventory and extract files",
       "Normalize accounting records",
       "Classify and reconcile rows",
-      "Build review packets and workpapers"
+      "Build review packets and workpapers",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -58,6 +61,6 @@
       "Actual context depends on the user's instructions and the evidence needed to resolve exceptions",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "398469632136ba6b07849b40630ea2b4c8df2a446665a7cbcaad9b6b41b80158"
+    "source_fingerprint": "8df86a3fc2a1506fa9db2faa7d4b3fcc92a3b00ba02d0e88540480342991cee7"
   }
 }

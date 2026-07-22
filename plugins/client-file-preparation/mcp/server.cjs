@@ -1,6 +1,8 @@
 "use strict";
 
 const fs = require("node:fs");
+const crypto = require("node:crypto");
+const os = require("node:os");
 const path = require("node:path");
 const readline = require("node:readline");
 
@@ -37,6 +39,20 @@ const ACTION_STATUSES = {
   skip: "skipped",
 };
 const MAX_DECISION_TEXT_LENGTH = 10_000;
+const MAX_LOCAL_JSON_BYTES = 25_000_000;
+const MAX_PERSISTENCE_CONTEXTS = 128;
+const PERSISTENCE_CONTEXT_TTL_MS = 4 * 60 * 60 * 1000;
+const PERSISTENCE_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
+const PERSISTENCE_CONTEXTS = new Map();
+const PACKAGE_HASH_BASIS = "sorted_outputs_path_size_sha256_canonical_json_v1";
+const REVIEWER_ALIAS_RE = /^[A-Za-z][A-Za-z0-9._:-]{2,63}$/;
+const PROTECTED_RUN_FILES = new Set([
+  "final_artifacts.json",
+  "review_payload.json",
+  "run_intake.json",
+  "ui_decisions.json",
+  "applied_decisions.json",
+]);
 const ITEM_TYPES = new Set([
   "document_inventory",
   "uncertain_file",
@@ -134,11 +150,23 @@ function toolDefinitions() {
   const decisionInputSchema = objectSchema(
     {
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
+      persistence_token: {
+        type: "string",
+        pattern: "^[A-Za-z0-9_-]{43}$",
+        description: "Opaque token returned by the render tool for path-private persistence.",
+      },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
       decisions: { type: "array", items: decisionSchema },
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
-      reviewer: { type: "string", description: "Optional reviewer name or role." },
+      reviewer: {
+        type: "string",
+        minLength: 3,
+        maxLength: 64,
+        pattern: "^[A-Za-z][A-Za-z0-9._:-]{2,63}$",
+        description:
+          "Stable pseudonymous reviewer alias. Required before a complete review can become final_ready; do not enter a name, email, or fiscal identifier.",
+      },
     },
     ["review_payload", "decisions"],
   );
@@ -179,7 +207,7 @@ function toolDefinitions() {
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
-        idempotentHint: true,
+        idempotentHint: false,
         openWorldHint: false,
       },
     },
@@ -192,7 +220,7 @@ function toolDefinitions() {
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
-        idempotentHint: true,
+        idempotentHint: false,
         openWorldHint: false,
       },
     },
@@ -242,6 +270,35 @@ function boundedOptionalString(value, fieldPath) {
   return value.trim();
 }
 
+function canonicalValue(value) {
+  if (Array.isArray(value)) return value.map(canonicalValue);
+  if (!isPlainObject(value)) return value;
+  return Object.fromEntries(
+    Object.keys(value)
+      .sort()
+      .map((key) => [key, canonicalValue(value[key])]),
+  );
+}
+
+function canonicalJson(value) {
+  return JSON.stringify(canonicalValue(value));
+}
+
+function canonicalSha256(value) {
+  return crypto.createHash("sha256").update(canonicalJson(value), "utf8").digest("hex");
+}
+
+function normalizeReviewerAlias(value, fieldPath = "reviewer") {
+  const alias = boundedOptionalString(value, fieldPath);
+  if (!alias) return "";
+  if (!REVIEWER_ALIAS_RE.test(alias) || alias.includes("@") || alias.includes("//")) {
+    throw new Error(
+      `${fieldPath} must be a stable pseudonymous alias using 3-64 ASCII letters, digits, dots, colons, underscores, or hyphens`,
+    );
+  }
+  return alias;
+}
+
 function validateItem(item, index) {
   if (!isPlainObject(item)) throw new Error(`review_payload.items[${index}] must be an object`);
   requireString(item.id, `review_payload.items[${index}].id`);
@@ -261,6 +318,58 @@ function validateItem(item, index) {
   if (item.recommended_action != null && !ALLOWED_ACTIONS.has(item.recommended_action)) {
     throw new Error(`review_payload.items[${index}].recommended_action is not supported`);
   }
+}
+
+function sanitizedRunIntakeForReview(value) {
+  if (!isPlainObject(value)) return null;
+  const sanitized = { ...value, input_paths: [] };
+  delete sanitized.output_dir;
+  delete sanitized.source_snapshot;
+  if (isPlainObject(value.assumptions)) {
+    sanitized.assumptions = { ...value.assumptions };
+    delete sanitized.assumptions.client_name;
+  }
+  if (isPlainObject(value.data_posture)) {
+    const localFiles = Array.isArray(value.data_posture.local_files_read)
+      ? value.data_posture.local_files_read
+      : [];
+    sanitized.data_posture = {
+      ...value.data_posture,
+      local_files_read: [],
+      local_files_read_count: localFiles.length,
+    };
+  }
+  if (Array.isArray(value.execution_trace)) {
+    sanitized.execution_trace = value.execution_trace.map((entry) => {
+      if (!isPlainObject(entry)) return entry;
+      const redactPath = (candidate) => {
+        const text = shortString(candidate);
+        if (!text) return text;
+        return path.isAbsolute(text) || /^[A-Za-z]:[\\/]/.test(text)
+          ? "<local-path>"
+          : text;
+      };
+      return {
+        ...entry,
+        command: Array.isArray(entry.command) ? entry.command.map(redactPath) : entry.command,
+        inputs: Array.isArray(entry.inputs) ? entry.inputs.map(redactPath) : [],
+      };
+    });
+  }
+  return sanitized;
+}
+
+function sanitizedFinalArtifactsForReview(value) {
+  if (!isPlainObject(value)) return null;
+  const sanitized = JSON.parse(JSON.stringify(value));
+  if (Array.isArray(sanitized.outputs)) {
+    sanitized.outputs = sanitized.outputs.map((output) => {
+      if (!isPlainObject(output)) return output;
+      const { required_text: _privateRequiredText, ...safeOutput } = output;
+      return safeOutput;
+    });
+  }
+  return sanitized;
 }
 
 function validateReviewPayload(inputArgs) {
@@ -285,7 +394,7 @@ function validateReviewPayload(inputArgs) {
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
   const payload = {
     widget_type: "client_file_preparation_review",
-    run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
+    run_intake: sanitizedRunIntakeForReview(inputArgs.run_intake),
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
     final_artifacts: isPlainObject(inputArgs.final_artifacts) ? inputArgs.final_artifacts : null,
@@ -300,6 +409,28 @@ function validateReviewPayload(inputArgs) {
     throw new Error(`client file preparation widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
   }
   return payload;
+}
+
+function reviewPayloadForWidget(inputArgs) {
+  const payload = validateReviewPayload(inputArgs);
+  let persistenceToken = null;
+  try {
+    persistenceToken = issuePersistenceToken(inputArgs, payload.review_payload);
+    payload.decision_policy.can_persist = Boolean(persistenceToken);
+    if (persistenceToken) {
+      payload.decision_policy.persistence_token = persistenceToken;
+    }
+    payload.final_artifacts = sanitizedFinalArtifactsForReview(inputArgs.final_artifacts);
+    if (payloadBytes(payload) > MAX_PAYLOAD_BYTES) {
+      throw new Error(
+        `client file preparation widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`,
+      );
+    }
+    return payload;
+  } catch (error) {
+    if (persistenceToken) PERSISTENCE_CONTEXTS.delete(persistenceToken);
+    throw error;
+  }
 }
 
 function resolveDecisionOutputPath(inputArgs) {
@@ -394,7 +525,7 @@ function buildUiDecisions(inputArgs) {
   );
   const decisionSource =
     boundedOptionalString(inputArgs.decision_source, "decision_source") || "mcp_widget";
-  const reviewer = boundedOptionalString(inputArgs.reviewer, "reviewer");
+  const reviewer = normalizeReviewerAlias(inputArgs.reviewer, "reviewer");
   const currentUiDecisions = isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null;
   const reviewPayloadPath =
     typeof currentUiDecisions?.review_payload_path === "string"
@@ -404,6 +535,7 @@ function buildUiDecisions(inputArgs) {
     decisions.length === 0
       ? "pending_review"
       : decisions.length === reviewPayload.items.length
+          && decisions.every((decision) => decision.action !== "skip")
         ? "reviewed"
         : "partial_review";
   const uiDecisions = {
@@ -427,11 +559,30 @@ function buildUiDecisions(inputArgs) {
 }
 
 function saveDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
+  const { uiDecisions } = buildUiDecisions(inputArgs);
+  const reviewPayload = validateReviewPayload(inputArgs).review_payload;
+  const persistentInputArgs = inputArgsWithPersistentOutput(inputArgs, reviewPayload);
+  const persistence = validatePersistentState(persistentInputArgs, reviewPayload);
+  const decisionOutputPath = persistence
+    ? path.join(persistence.outputDir, "ui_decisions.json")
+    : null;
+  if (persistence) {
+    stabilizeReviewer(uiDecisions, persistence.currentUiDecisions);
+    uiDecisions.review_payload_sha256 = persistence.reviewBytesHash;
+    uiDecisions.review_payload_canonical_sha256 = persistence.reviewCanonicalHash;
+  }
   let persisted = false;
-  if (decisionOutputPath) {
-    fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+  if (persistence && decisionOutputPath) {
+    withStagedRunDirectory(persistence.outputDir, (stagedDir) => {
+      const stagedDecisionPath = path.join(stagedDir, "ui_decisions.json");
+      const stagedFinalPath = path.join(stagedDir, "final_artifacts.json");
+      fs.writeFileSync(stagedDecisionPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+      const stagedFinal = readJsonFileIfPresent(stagedFinalPath);
+      const refreshed = refreshFinalArtifactsIntegrity(stagedDir, stagedFinal);
+      refreshed.review_payload_sha256 = persistence.reviewBytesHash;
+      refreshed.review_payload_canonical_sha256 = persistence.reviewCanonicalHash;
+      fs.writeFileSync(stagedFinalPath, `${JSON.stringify(refreshed, null, 2)}\n`, "utf8");
+    });
     persisted = true;
   }
   return {
@@ -442,7 +593,7 @@ function saveDecisionPayload(inputArgs) {
     item_count: uiDecisions.item_count,
     status: uiDecisions.status,
     persisted,
-    ui_decisions_path: persisted ? decisionOutputPath : null,
+    ui_decisions_path: persisted ? "ui_decisions.json" : null,
     message: persisted
       ? `Saved ${uiDecisions.decision_count} New Client · File Preparation decisions.`
       : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
@@ -453,7 +604,42 @@ function saveDecisionPayload(inputArgs) {
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
   const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  if (!outputDir) return null;
+  const requested = path.resolve(outputDir);
+  if (!fs.existsSync(requested)) {
+    throw new Error("run_intake.output_dir must identify an existing directory");
+  }
+  const stat = fs.lstatSync(requested);
+  if (!stat.isDirectory() || stat.isSymbolicLink()) {
+    throw new Error("run_intake.output_dir must be a regular directory without symlinks");
+  }
+  const resolved = fs.realpathSync(requested);
+  if (resolved !== requested) {
+    throw new Error("run_intake.output_dir may not traverse symlinks");
+  }
+  const protectedRoot = protectedOutputRoots().find((root) => isInsideOrEqual(resolved, root));
+  if (protectedRoot) {
+    throw new Error(
+      "run_intake.output_dir must be outside the plugin package and source repository",
+    );
+  }
+  const broadRoots = new Set([
+    path.parse(resolved).root,
+    path.resolve(os.homedir()),
+    path.resolve(os.tmpdir()),
+  ]);
+  if (broadRoots.has(resolved)) {
+    throw new Error("run_intake.output_dir must be a dedicated run directory");
+  }
+  if (process.platform !== "win32") {
+    if ((stat.mode & 0o077) !== 0) {
+      throw new Error("run_intake.output_dir must be owner-only (mode 0700)");
+    }
+    if (typeof process.getuid === "function" && stat.uid !== process.getuid()) {
+      throw new Error("run_intake.output_dir must be owned by the current user");
+    }
+  }
+  return resolved;
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -540,13 +726,85 @@ function artifactPathKey(value) {
   return normalizeRelativePath(shortString(value)).replace(/\\/g, "/").replace(/^\.\//, "");
 }
 
-function resolveSafeRunOutputPath(outputDir, value) {
+function findRepositoryRoot(start) {
+  let current = path.resolve(start);
+  while (true) {
+    if (fs.existsSync(path.join(current, ".git"))) return current;
+    const parent = path.dirname(current);
+    if (parent === current) return null;
+    current = parent;
+  }
+}
+
+function protectedOutputRoots() {
+  const roots = new Set([PLUGIN_ROOT]);
+  const repositoryRoot = findRepositoryRoot(PLUGIN_ROOT);
+  if (repositoryRoot) roots.add(repositoryRoot);
+  return [...roots].map((entry) => fs.realpathSync(entry));
+}
+
+function isInsideOrEqual(candidate, parent) {
+  const relative = path.relative(parent, candidate);
+  return (
+    relative === ""
+    || (!relative.startsWith(`..${path.sep}`) && relative !== ".." && !path.isAbsolute(relative))
+  );
+}
+
+function validateRunRelativePath(value, fieldPath = "run output path") {
   const rawPath = shortString(value);
-  if (!outputDir || !rawPath) return null;
-  const absolutePath = path.resolve(outputDir, rawPath);
+  if (!rawPath) throw new Error(`${fieldPath} is required`);
+  if (path.isAbsolute(rawPath) || rawPath.includes("\\")) {
+    throw new Error(`${fieldPath} must be a run-local POSIX relative path`);
+  }
+  const parsed = rawPath.split("/");
+  if (parsed.some((segment) => !segment || segment === "." || segment === "..")) {
+    throw new Error(`${fieldPath} must not contain empty, dot, or parent segments`);
+  }
+  const normalized = path.posix.normalize(rawPath);
+  if (normalized !== rawPath) {
+    throw new Error(`${fieldPath} must be normalized`);
+  }
+  return rawPath;
+}
+
+function assertOwnerOnlyStat(stat, fieldPath, expectedDirectory) {
+  if (process.platform === "win32") return;
+  const expectedMode = expectedDirectory ? "0700" : "0600";
+  if ((stat.mode & 0o077) !== 0) {
+    throw new Error(`${fieldPath} must be owner-only (mode ${expectedMode})`);
+  }
+  if (typeof process.getuid === "function" && stat.uid !== process.getuid()) {
+    throw new Error(`${fieldPath} must be owned by the current user`);
+  }
+}
+
+function resolveSafeRunOutputPath(outputDir, value, { mustExist = false } = {}) {
+  if (!outputDir) return null;
+  const rawPath = validateRunRelativePath(value);
+  const absolutePath = path.resolve(outputDir, ...rawPath.split("/"));
   const relativePath = path.relative(outputDir, absolutePath);
-  if (!relativePath || relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
-    return null;
+  if (!relativePath || !isInsideOrEqual(absolutePath, outputDir)) return null;
+  let current = outputDir;
+  for (const segment of rawPath.split("/")) {
+    current = path.join(current, segment);
+    if (!fs.existsSync(current)) {
+      if (mustExist) throw new Error(`run output is missing: ${rawPath}`);
+      break;
+    }
+    const stat = fs.lstatSync(current);
+    if (stat.isSymbolicLink()) {
+      throw new Error(`run output may not traverse symbolic links: ${rawPath}`);
+    }
+    if (current !== absolutePath && !stat.isDirectory()) {
+      throw new Error(`run output parent is not a directory: ${rawPath}`);
+    }
+  }
+  if (fs.existsSync(absolutePath)) {
+    const resolved = fs.realpathSync(absolutePath);
+    if (!isInsideOrEqual(resolved, outputDir)) {
+      throw new Error(`run output resolves outside the run directory: ${rawPath}`);
+    }
   }
   return {
     absolutePath,
@@ -571,10 +829,129 @@ function needsNativeRegeneration(targetArtifact) {
 
 function currentFinalArtifactsForApplication(inputArgs, finalArtifactsPath) {
   return (
-    (isPlainObject(inputArgs.final_artifacts) ? inputArgs.final_artifacts : null) ||
     readJsonFileIfPresent(finalArtifactsPath) ||
+    (isPlainObject(inputArgs.final_artifacts) ? inputArgs.final_artifacts : null) ||
     {}
   );
+}
+
+function sha256File(filePath) {
+  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+}
+
+function canonicalPackageEntries(outputs) {
+  return outputs
+    .map((output) => ({
+      path: artifactPathKey(output?.path),
+      sha256: shortString(output?.sha256).toLowerCase(),
+      size_bytes: Number(output?.size_bytes),
+    }))
+    .sort((left, right) => Buffer.compare(Buffer.from(left.path, "utf8"), Buffer.from(right.path, "utf8")));
+}
+
+function packageHash(outputs) {
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify(canonicalPackageEntries(outputs)), "utf8")
+    .digest("hex");
+}
+
+function validateManifestIntegrity(outputDir, finalArtifacts) {
+  if (!outputDir || !isPlainObject(finalArtifacts)) {
+    throw new Error("run_intake.output_dir must contain final_artifacts.json");
+  }
+  if (
+    finalArtifacts.plugin !== "client-file-preparation"
+    || finalArtifacts.workflow !== "client-file-preparation"
+  ) {
+    throw new Error("final_artifacts identity must be client-file-preparation");
+  }
+  requireString(finalArtifacts.run_id, "final_artifacts.run_id");
+  const integrity = isPlainObject(finalArtifacts.integrity) ? finalArtifacts.integrity : null;
+  if (!integrity) throw new Error("final_artifacts.integrity is required");
+  if (integrity.algorithm !== "sha256") {
+    throw new Error("final_artifacts.integrity.algorithm must be sha256");
+  }
+  if (integrity.package_hash_basis !== PACKAGE_HASH_BASIS) {
+    throw new Error(`unsupported final_artifacts package_hash_basis: ${integrity.package_hash_basis}`);
+  }
+  if (!Array.isArray(finalArtifacts.outputs) || finalArtifacts.outputs.length === 0) {
+    throw new Error("final_artifacts.outputs must be a non-empty array");
+  }
+  const outputs = finalArtifacts.outputs;
+  const seenPaths = new Set();
+  const outputRecords = new Map();
+  for (const [index, output] of outputs.entries()) {
+    const outputPath = validateRunRelativePath(
+      output?.path,
+      `final_artifacts.outputs[${index}].path`,
+    );
+    if (outputPath === "final_artifacts.json") {
+      throw new Error("final_artifacts.json may not include itself in outputs");
+    }
+    if (seenPaths.has(outputPath)) throw new Error(`duplicate final artifact path: ${outputPath}`);
+    seenPaths.add(outputPath);
+    if (!/^[a-f0-9]{64}$/.test(shortString(output?.sha256))) {
+      throw new Error(`final_artifacts.outputs[${index}].sha256 is invalid`);
+    }
+    if (!Number.isSafeInteger(output?.size_bytes) || output.size_bytes < 0) {
+      throw new Error(`final_artifacts.outputs[${index}].size_bytes is invalid`);
+    }
+    const resolved = resolveSafeRunOutputPath(outputDir, outputPath, { mustExist: true });
+    const outputStat = fs.lstatSync(resolved.absolutePath);
+    if (!outputStat.isFile() || outputStat.isSymbolicLink()) {
+      throw new Error(`final artifact is missing or unsafe: ${outputPath}`);
+    }
+    assertOwnerOnlyStat(outputStat, `final artifact ${outputPath}`, false);
+    const actualSize = outputStat.size;
+    if (actualSize !== output.size_bytes) {
+      throw new Error(`final artifact size mismatch: ${outputPath}`);
+    }
+    const actualHash = sha256File(resolved.absolutePath);
+    if (actualHash !== output.sha256) {
+      throw new Error(`final artifact sha256 mismatch: ${outputPath}`);
+    }
+    outputRecords.set(outputPath, output);
+  }
+  const expectedPackageHash = packageHash(outputs);
+  if (!/^[a-f0-9]{64}$/.test(shortString(integrity.package_hash))) {
+    throw new Error("final_artifacts.integrity.package_hash is invalid");
+  }
+  if (integrity.package_hash !== expectedPackageHash) {
+    throw new Error("final_artifacts package_hash mismatch");
+  }
+  return {
+    verified: true,
+    package_hash: expectedPackageHash,
+    output_records: outputRecords,
+  };
+}
+
+function refreshFinalArtifactsIntegrity(outputDir, finalArtifacts) {
+  if (!outputDir || !isPlainObject(finalArtifacts)) return finalArtifacts;
+  const outputs = Array.isArray(finalArtifacts.outputs) ? finalArtifacts.outputs : [];
+  const refreshedOutputs = outputs.map((output) => {
+    const outputPath = artifactPathKey(output?.path);
+    const resolved = resolveSafeRunOutputPath(outputDir, outputPath);
+    if (!resolved || !fs.existsSync(resolved.absolutePath) || !fs.statSync(resolved.absolutePath).isFile()) {
+      throw new Error(`cannot seal missing final artifact: ${outputPath || "(empty path)"}`);
+    }
+    return {
+      ...output,
+      path: outputPath,
+      size_bytes: fs.statSync(resolved.absolutePath).size,
+      sha256: sha256File(resolved.absolutePath),
+    };
+  });
+  return {
+    ...finalArtifacts,
+    outputs: refreshedOutputs,
+    integrity: {
+      algorithm: "sha256",
+      package_hash_basis: PACKAGE_HASH_BASIS,
+      package_hash: packageHash(refreshedOutputs),
+    },
+  };
 }
 
 function finalArtifactsOutputPaths(currentFinalArtifacts) {
@@ -758,6 +1135,253 @@ function readJsonFileIfPresent(filePath) {
     return isPlainObject(parsed) ? parsed : null;
   } catch {
     return null;
+  }
+}
+
+function readRunJsonFile(filePath, { required = true } = {}) {
+  if (!fs.existsSync(filePath)) {
+    if (!required) return null;
+    throw new Error(`${path.basename(filePath)} is required in the run directory`);
+  }
+  const stat = fs.lstatSync(filePath);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error(`${path.basename(filePath)} must be a regular JSON file without symlinks`);
+  }
+  assertOwnerOnlyStat(stat, path.basename(filePath), false);
+  if (stat.size > MAX_LOCAL_JSON_BYTES) {
+    throw new Error(`${path.basename(filePath)} exceeds ${MAX_LOCAL_JSON_BYTES} bytes`);
+  }
+  let value;
+  try {
+    value = JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    throw new Error(`${path.basename(filePath)} must contain valid JSON`);
+  }
+  if (!isPlainObject(value)) {
+    throw new Error(`${path.basename(filePath)} must contain a JSON object`);
+  }
+  return value;
+}
+
+function validateRunTreeNoSymlinks(outputDir) {
+  const pending = [outputDir];
+  while (pending.length) {
+    const current = pending.pop();
+    const stat = fs.lstatSync(current);
+    if (stat.isSymbolicLink()) {
+      throw new Error("run output tree may not contain symbolic links");
+    }
+    if (stat.isDirectory()) {
+      assertOwnerOnlyStat(stat, path.relative(outputDir, current) || "run output directory", true);
+      for (const entry of fs.readdirSync(current)) pending.push(path.join(current, entry));
+    } else if (stat.isFile()) {
+      assertOwnerOnlyStat(stat, path.relative(outputDir, current), false);
+    } else {
+      throw new Error(`run output tree contains a non-regular entry: ${path.relative(outputDir, current)}`);
+    }
+  }
+}
+
+function validatePersistentState(inputArgs, reviewPayload) {
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir) return null;
+  validateRunTreeNoSymlinks(outputDir);
+  const finalArtifactsPath = path.join(outputDir, "final_artifacts.json");
+  const finalArtifacts = readRunJsonFile(finalArtifactsPath);
+  const integrity = validateManifestIntegrity(outputDir, finalArtifacts);
+  const runIntake = readRunJsonFile(path.join(outputDir, "run_intake.json"));
+  if (
+    runIntake.plugin !== reviewPayload.plugin
+    || runIntake.workflow !== reviewPayload.workflow
+    || runIntake.run_id !== reviewPayload.run_id
+    || path.resolve(shortString(runIntake.output_dir)) !== outputDir
+  ) {
+    throw new Error("stored run_intake.json does not bind this review to the output directory");
+  }
+  if (
+    finalArtifacts.run_id !== reviewPayload.run_id
+    || finalArtifacts.plugin !== reviewPayload.plugin
+    || finalArtifacts.workflow !== reviewPayload.workflow
+  ) {
+    throw new Error("final_artifacts identity does not match review_payload");
+  }
+  for (const requiredPath of [
+    "run_intake.json",
+    "review_payload.json",
+    "ui_decisions.json",
+    "review_handoff.md",
+  ]) {
+    if (!integrity.output_records.has(requiredPath)) {
+      throw new Error(`final_artifacts.outputs is missing required binding: ${requiredPath}`);
+    }
+  }
+  const storedReviewPath = path.join(outputDir, "review_payload.json");
+  const storedReview = readRunJsonFile(storedReviewPath);
+  const reviewCanonicalHash = canonicalSha256(reviewPayload);
+  const storedCanonicalHash = canonicalSha256(storedReview);
+  if (storedCanonicalHash !== reviewCanonicalHash || canonicalJson(storedReview) !== canonicalJson(reviewPayload)) {
+    throw new Error("stored review_payload.json does not match the reviewed payload canonical hash");
+  }
+  const reviewBytesHash = sha256File(storedReviewPath);
+  if (integrity.output_records.get("review_payload.json").sha256 !== reviewBytesHash) {
+    throw new Error("stored review_payload.json byte hash does not match the sealed manifest");
+  }
+  if (isPlainObject(inputArgs.final_artifacts) && canonicalJson(inputArgs.final_artifacts) !== canonicalJson(finalArtifacts)) {
+    throw new Error("final_artifacts argument is stale or does not match the sealed run manifest");
+  }
+  const currentUiDecisions = readRunJsonFile(
+    path.join(outputDir, "ui_decisions.json"),
+    { required: false },
+  );
+  return {
+    outputDir,
+    finalArtifacts,
+    currentUiDecisions,
+    reviewBytesHash,
+    reviewCanonicalHash,
+  };
+}
+
+function pruneExpiredPersistenceContexts(now = Date.now()) {
+  for (const [token, context] of PERSISTENCE_CONTEXTS.entries()) {
+    if (context.expiresAt <= now) PERSISTENCE_CONTEXTS.delete(token);
+  }
+}
+
+function reservePersistenceContextSlot() {
+  pruneExpiredPersistenceContexts();
+  while (PERSISTENCE_CONTEXTS.size >= MAX_PERSISTENCE_CONTEXTS) {
+    const oldest = PERSISTENCE_CONTEXTS.keys().next().value;
+    if (oldest == null) break;
+    PERSISTENCE_CONTEXTS.delete(oldest);
+  }
+}
+
+function issuePersistenceToken(inputArgs, reviewPayload) {
+  const persistence = validatePersistentState(inputArgs, reviewPayload);
+  if (!persistence) return null;
+  reservePersistenceContextSlot();
+  const token = crypto.randomBytes(32).toString("base64url");
+  PERSISTENCE_CONTEXTS.set(token, {
+    outputDir: persistence.outputDir,
+    runId: reviewPayload.run_id,
+    reviewHash: persistence.reviewCanonicalHash,
+    expiresAt: Date.now() + PERSISTENCE_CONTEXT_TTL_MS,
+  });
+  return token;
+}
+
+function inputArgsWithPersistentOutput(inputArgs, reviewPayload) {
+  const rawToken = inputArgs.persistence_token;
+  if (rawToken == null || rawToken === "") return inputArgs;
+  if (typeof rawToken !== "string" || !PERSISTENCE_TOKEN_RE.test(rawToken)) {
+    throw new Error("persistence_token has an invalid format");
+  }
+  const directOutputDir = resolveRunOutputDir(inputArgs);
+  pruneExpiredPersistenceContexts();
+  const context = PERSISTENCE_CONTEXTS.get(rawToken);
+  if (!context || context.expiresAt <= Date.now()) {
+    // The local loopback workbench intentionally invokes a fresh Node process
+    // per tool call and supplies its server-held output directory each time.
+    // Its render-process token cannot survive, so the already-supported direct
+    // binding remains authoritative when that private path is present.
+    if (directOutputDir) return inputArgs;
+    throw new Error("persistence_token is unknown or expired; render the review again");
+  }
+  if (
+    context.runId !== reviewPayload.run_id
+    || context.reviewHash !== canonicalSha256(reviewPayload)
+  ) {
+    throw new Error("persistence_token does not match this review run");
+  }
+  const boundOutputDir = resolveRunOutputDir({
+    run_intake: { output_dir: context.outputDir },
+  });
+  if (directOutputDir && directOutputDir !== boundOutputDir) {
+    throw new Error("persistence_token and run_intake.output_dir do not match");
+  }
+  return {
+    ...inputArgs,
+    run_intake: {
+      ...(isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : {}),
+      output_dir: boundOutputDir,
+    },
+  };
+}
+
+function stabilizeReviewer(uiDecisions, currentUiDecisions) {
+  const currentReviewer = normalizeReviewerAlias(currentUiDecisions?.reviewer, "ui_decisions.reviewer");
+  const submittedReviewer = normalizeReviewerAlias(uiDecisions.reviewer, "reviewer");
+  if (currentReviewer && submittedReviewer && currentReviewer !== submittedReviewer) {
+    throw new Error("reviewer alias must remain stable for the run");
+  }
+  const reviewer = currentReviewer || submittedReviewer;
+  if (reviewer) uiDecisions.reviewer = reviewer;
+  else delete uiDecisions.reviewer;
+  return reviewer;
+}
+
+function hardenOwnerOnlyTree(outputDir) {
+  const pending = [outputDir];
+  while (pending.length) {
+    const current = pending.pop();
+    const stat = fs.lstatSync(current);
+    if (stat.isSymbolicLink()) throw new Error("transaction output may not contain symbolic links");
+    if (stat.isDirectory()) {
+      if (process.platform !== "win32") fs.chmodSync(current, 0o700);
+      for (const entry of fs.readdirSync(current)) pending.push(path.join(current, entry));
+    } else if (stat.isFile()) {
+      if (process.platform !== "win32") fs.chmodSync(current, 0o600);
+    } else {
+      throw new Error("transaction output may contain only regular files and directories");
+    }
+  }
+}
+
+function withStagedRunDirectory(outputDir, callback) {
+  const parent = path.dirname(outputDir);
+  const base = path.basename(outputDir);
+  const transactionId = crypto.randomUUID();
+  const stagedDir = path.join(parent, `.${base}.${transactionId}.tmp`);
+  const backupDir = path.join(parent, `.${base}.${transactionId}.bak`);
+  let backedUp = false;
+  let installed = false;
+  try {
+    fs.cpSync(outputDir, stagedDir, {
+      recursive: true,
+      dereference: false,
+      errorOnExist: true,
+      force: false,
+      preserveTimestamps: true,
+    });
+    hardenOwnerOnlyTree(stagedDir);
+    const result = callback(stagedDir);
+    hardenOwnerOnlyTree(stagedDir);
+    validateRunTreeNoSymlinks(stagedDir);
+    const stagedFinal = readRunJsonFile(path.join(stagedDir, "final_artifacts.json"));
+    validateManifestIntegrity(stagedDir, stagedFinal);
+    fs.renameSync(outputDir, backupDir);
+    backedUp = true;
+    fs.renameSync(stagedDir, outputDir);
+    installed = true;
+    fs.rmSync(backupDir, { recursive: true, force: true });
+    backedUp = false;
+    return result;
+  } catch (error) {
+    if (installed && fs.existsSync(outputDir)) {
+      fs.rmSync(outputDir, { recursive: true, force: true });
+      installed = false;
+    }
+    if (backedUp && fs.existsSync(backupDir)) {
+      fs.renameSync(backupDir, outputDir);
+      backedUp = false;
+    }
+    throw error;
+  } finally {
+    if (fs.existsSync(stagedDir)) fs.rmSync(stagedDir, { recursive: true, force: true });
+    if (fs.existsSync(backupDir) && !backedUp) {
+      fs.rmSync(backupDir, { recursive: true, force: true });
+    }
   }
 }
 
@@ -946,7 +1570,7 @@ function buildApplicationEffect(decision, item, appliedAt) {
   const targetRecordsKey =
     shortString(data.target_records_key) ||
     shortString(data.records_key);
-  const requiresFollowup = new Set(["reject", "mark_unclear", "request_more_documents"]).has(
+  const requiresFollowup = new Set(["reject", "mark_unclear", "request_more_documents", "skip"]).has(
     decision.action,
   );
   const requestedDocuments = requestedDocumentsFromReviewContext(decision, item, data);
@@ -1007,17 +1631,31 @@ function writeRevisionArtifacts(outputDir, effects) {
   return revisionOutputs;
 }
 
-function writeDirectTextArtifactUpdates(outputDir, effects) {
+function writeDirectTextArtifactUpdates(outputDir, effects, currentFinalArtifacts) {
   if (!outputDir) return { targetOutputs: [], backupOutputs: [] };
   const targetOutputs = [];
   const backupOutputs = [];
+  const updatedTargets = new Set();
+  const declaredPaths = finalArtifactsOutputPaths(currentFinalArtifacts);
   for (const effect of effects) {
     if (effect.action !== "edit" || !effect.edit_value) continue;
     if (!canDirectlyUpdateTextArtifact(effect.target_artifact)) continue;
-    const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
-    if (!target || !fs.existsSync(target.absolutePath)) continue;
-    const stat = fs.statSync(target.absolutePath);
-    if (!stat.isFile()) continue;
+    const targetKey = validateRunRelativePath(effect.target_artifact, `effect ${effect.item_id} target_artifact`);
+    if (PROTECTED_RUN_FILES.has(targetKey)) {
+      throw new Error(`effect ${effect.item_id} may not edit protected run artifact ${targetKey}`);
+    }
+    if (!declaredPaths.has(targetKey)) {
+      throw new Error(`effect ${effect.item_id} target_artifact is not a sealed output: ${targetKey}`);
+    }
+    if (updatedTargets.has(targetKey)) {
+      throw new Error(`multiple whole-artifact edits target ${targetKey}; combine them into one reviewed edit`);
+    }
+    updatedTargets.add(targetKey);
+    const target = resolveSafeRunOutputPath(outputDir, targetKey, { mustExist: true });
+    const stat = fs.lstatSync(target.absolutePath);
+    if (!stat.isFile() || stat.isSymbolicLink()) {
+      throw new Error(`effect ${effect.item_id} target_artifact is not a regular file`);
+    }
     const backupRelativePath = originalBackupRelativePath(effect, target.relativePath);
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
@@ -1045,19 +1683,34 @@ function writeDirectTextArtifactUpdates(outputDir, effects) {
   return { targetOutputs, backupOutputs };
 }
 
-function writeStructuredArtifactUpdates(outputDir, effects) {
+function writeStructuredArtifactUpdates(outputDir, effects, currentFinalArtifacts) {
   if (!outputDir) return { targetOutputs: [], backupOutputs: [] };
   const targetOutputs = [];
   const backupOutputs = [];
+  const updatedRecords = new Set();
+  const declaredPaths = finalArtifactsOutputPaths(currentFinalArtifacts);
   for (const effect of effects) {
     if (effect.action !== "edit" || !effect.edit_value) continue;
     const spec = structuredUpdateSpec(effect);
     if (!spec) continue;
     if (!canUpdateStructuredArtifact(effect.target_artifact)) continue;
-    const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
-    if (!target || !fs.existsSync(target.absolutePath)) continue;
-    const stat = fs.statSync(target.absolutePath);
-    if (!stat.isFile()) continue;
+    const targetKey = validateRunRelativePath(effect.target_artifact, `effect ${effect.item_id} target_artifact`);
+    if (PROTECTED_RUN_FILES.has(targetKey)) {
+      throw new Error(`effect ${effect.item_id} may not edit protected run artifact ${targetKey}`);
+    }
+    if (!declaredPaths.has(targetKey)) {
+      throw new Error(`effect ${effect.item_id} target_artifact is not a sealed output: ${targetKey}`);
+    }
+    const updateKey = [targetKey, spec.recordsKey || "", spec.idField, spec.recordId, spec.targetField].join("\u0000");
+    if (updatedRecords.has(updateKey)) {
+      throw new Error(`multiple structured edits target the same field in ${targetKey}`);
+    }
+    updatedRecords.add(updateKey);
+    const target = resolveSafeRunOutputPath(outputDir, targetKey, { mustExist: true });
+    const stat = fs.lstatSync(target.absolutePath);
+    if (!stat.isFile() || stat.isSymbolicLink()) {
+      throw new Error(`effect ${effect.item_id} target_artifact is not a regular file`);
+    }
     const backupRelativePath = originalBackupRelativePath(effect, target.relativePath);
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
@@ -1163,8 +1816,47 @@ function statusFromEffects(effects, itemCount) {
   if (!effects.length) return "pending_review";
   if (effects.some((effect) => effect.requires_followup)) return "blocked";
   if (effects.some((effect) => effect.requires_native_regeneration)) return "partial_review_applied";
+  if (effects.some((effect) => effect.artifact_update === "revision_artifact_written")) {
+    return "partial_review_applied";
+  }
   if (effects.length < itemCount) return "partial_review_applied";
   return "final_ready";
+}
+
+function validateDeclaredTextQa(outputDir, finalArtifacts) {
+  if (!outputDir || !isPlainObject(finalArtifacts)) return;
+  const outputs = Array.isArray(finalArtifacts.outputs) ? finalArtifacts.outputs : [];
+  for (const output of outputs) {
+    if (!isPlainObject(output) || !Array.isArray(output.qa_checks)) continue;
+    if (!output.qa_checks.includes("nonempty_text") && !output.qa_checks.includes("required_text")) {
+      continue;
+    }
+    const target = resolveSafeRunOutputPath(
+      outputDir,
+      validateRunRelativePath(output.path, "final_artifacts.outputs[].path"),
+      { mustExist: true },
+    );
+    const stat = fs.lstatSync(target.absolutePath);
+    if (!stat.isFile() || stat.isSymbolicLink()) {
+      throw new Error(`artifact QA target is not a regular file: ${target.relativePath}`);
+    }
+    const text = fs.readFileSync(target.absolutePath, "utf8");
+    if (output.qa_checks.includes("nonempty_text") && !text.trim()) {
+      throw new Error(`artifact QA failed nonempty_text: ${target.relativePath}`);
+    }
+    if (output.qa_checks.includes("required_text")) {
+      const required = Array.isArray(output.required_text) ? output.required_text : [];
+      if (!required.length) {
+        throw new Error(`artifact QA metadata has no required_text: ${target.relativePath}`);
+      }
+      const missing = required.filter(
+        (fragment) => typeof fragment !== "string" || !fragment || !text.includes(fragment),
+      );
+      if (missing.length) {
+        throw new Error(`artifact QA failed required_text for ${target.relativePath}`);
+      }
+    }
+  }
 }
 
 const REVIEW_HANDOFF_PLUGINS = new Set([
@@ -1202,21 +1894,93 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
   const handoffPath = path.join(outputDir, "review_handoff.md");
   fs.mkdirSync(outputDir, { recursive: true });
   if (!fs.existsSync(handoffPath)) {
-    const displayName = PLUGIN_MANIFEST.name || pluginName || "Review";
+    const language = shortString(reviewPayload.language) || "en";
+    const handoffCopy = {
+      it: {
+        product: "Preparazione del fascicolo cliente",
+        title: "Passaggio alla revisione",
+        payload: "Payload di revisione",
+        intake: "Dati di esecuzione",
+        pending: "Decisioni in attesa",
+        applied: "Decisioni applicate",
+        artifacts: "Artefatti finali",
+        heading: "Revisione in Codex",
+        validate: "Validare il payload con",
+        render: "Aprire l’area di revisione con",
+        save: "Salvare le decisioni con",
+        apply: "Applicare le decisioni con",
+      },
+      en: {
+        product: "Client file preparation",
+        title: "Review handoff",
+        payload: "Review payload",
+        intake: "Run intake",
+        pending: "Pending decisions",
+        applied: "Applied decisions",
+        artifacts: "Final artifacts",
+        heading: "Review in Codex",
+        validate: "Validate the payload with",
+        render: "Open the review workbench with",
+        save: "Save reviewer actions with",
+        apply: "Apply reviewer actions with",
+      },
+      fr: {
+        product: "Préparation du dossier client",
+        title: "Passage à la revue",
+        payload: "Données de revue",
+        intake: "Paramètres d’exécution",
+        pending: "Décisions en attente",
+        applied: "Décisions appliquées",
+        artifacts: "Livrables finaux",
+        heading: "Revue dans Codex",
+        validate: "Valider les données avec",
+        render: "Ouvrir l’espace de revue avec",
+        save: "Enregistrer les décisions avec",
+        apply: "Appliquer les décisions avec",
+      },
+      de: {
+        product: "Vorbereitung der Mandantenakte",
+        title: "Übergabe zur Prüfung",
+        payload: "Prüfdaten",
+        intake: "Laufdaten",
+        pending: "Ausstehende Entscheidungen",
+        applied: "Angewandte Entscheidungen",
+        artifacts: "Endartefakte",
+        heading: "Prüfung in Codex",
+        validate: "Prüfdaten validieren mit",
+        render: "Prüfansicht öffnen mit",
+        save: "Entscheidungen speichern mit",
+        apply: "Entscheidungen anwenden mit",
+      },
+    }[language] || {
+      product: "Client file preparation",
+      title: "Review handoff",
+      payload: "Review payload",
+      intake: "Run intake",
+      pending: "Pending decisions",
+      applied: "Applied decisions",
+      artifacts: "Final artifacts",
+      heading: "Review in Codex",
+      validate: "Validate the payload with",
+      render: "Open the review workbench with",
+      save: "Save reviewer actions with",
+      apply: "Apply reviewer actions with",
+    };
     const text = [
-      `# ${displayName} Review Handoff`,
+      `# ${handoffCopy.product} · ${handoffCopy.title}`,
+      "<!-- review-contract: Review Handoff -->",
       "",
-      "- Review payload: `review_payload.json`",
-      "- Run intake: `run_intake.json`",
-      "- Pending decisions: `ui_decisions.json`",
-      "- Applied decisions: `applied_decisions.json`",
-      "- Final artifacts: `final_artifacts.json`",
+      `- ${handoffCopy.payload}: \`review_payload.json\``,
+      `- ${handoffCopy.intake}: \`run_intake.json\``,
+      `- ${handoffCopy.pending}: \`ui_decisions.json\``,
+      `- ${handoffCopy.applied}: \`applied_decisions.json\``,
+      `- ${handoffCopy.artifacts}: \`final_artifacts.json\``,
       "",
-      "## Review In Codex",
-      `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
-      `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
-      `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
-      `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
+      `## ${handoffCopy.heading}`,
+      `1. ${handoffCopy.validate} \`${TOOL_NAMES.validateReview}\`.`,
+      `2. ${handoffCopy.render} \`${TOOL_NAMES.renderReview}\`.`,
+      `3. ${handoffCopy.save} \`${TOOL_NAMES.saveDecisions}\`.`,
+      `4. ${handoffCopy.apply} \`${TOOL_NAMES.applyDecisions}\`.`,
     ].join("\n");
     fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
   }
@@ -1262,7 +2026,12 @@ function finalArtifactsWithApplication(
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
-    next_actions: nextActionsWithReviewApplication(current.next_actions, appliedDecisions, blockers),
+    next_actions: nextActionsWithReviewApplication(
+      current.next_actions,
+      appliedDecisions,
+      blockers,
+      inputArgs.review_payload?.language || reviewPayload.language,
+    ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
     review_application: {
@@ -1307,126 +2076,234 @@ function effectsToBlockers(effects) {
     });
 }
 
-function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers) {
+function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers, language) {
   const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
+  const copy = {
+    it: {
+      blockers: "Risolvere le decisioni di review bloccanti prima di considerare pronti gli artefatti finali.",
+      regenerate: "Rigenerare gli output nativi DOCX/XLSX/PDF prima della consegna finale.",
+      ready: "Usare final_artifacts.json come galleria verificata degli artefatti per la consegna.",
+      partial: "Completare le decisioni di review mancanti prima della consegna finale.",
+    },
+    en: {
+      blockers: "Resolve blocked review decisions before treating final artifacts as ready.",
+      regenerate: "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
+      ready: "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
+      partial: "Complete remaining review decisions before final handoff.",
+    },
+    fr: {
+      blockers: "Résoudre les décisions de revue bloquantes avant de considérer les livrables finaux comme prêts.",
+      regenerate: "Régénérer les livrables natifs DOCX/XLSX/PDF avant la remise finale.",
+      ready: "Utiliser final_artifacts.json comme galerie vérifiée des livrables à remettre.",
+      partial: "Terminer les décisions de revue restantes avant la remise finale.",
+    },
+    de: {
+      blockers: "Blockierende Prüfentscheidungen klären, bevor die Endartefakte als fertig gelten.",
+      regenerate: "Native DOCX/XLSX/PDF-Ausgaben vor der endgültigen Übergabe neu erzeugen.",
+      ready: "final_artifacts.json als geprüfte Artefaktübersicht für die Übergabe verwenden.",
+      partial: "Verbleibende Prüfentscheidungen vor der endgültigen Übergabe abschließen.",
+    },
+  }[language] || {
+    blockers: "Resolve blocked review decisions before treating final artifacts as ready.",
+    regenerate: "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
+    ready: "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
+    partial: "Complete remaining review decisions before final handoff.",
+  };
   if (blockers.length) {
-    nextActions.push("Resolve blocked review decisions before treating final artifacts as ready.");
+    nextActions.push(copy.blockers);
   } else if (appliedDecisions.native_regeneration_count) {
-    nextActions.push("Regenerate native DOCX/XLSX/PDF outputs before final handoff.");
+    nextActions.push(copy.regenerate);
   } else if (appliedDecisions.application_status === "final_ready") {
-    nextActions.push("Use final_artifacts.json as the reviewed artifact gallery for handoff.");
+    nextActions.push(copy.ready);
   } else if (appliedDecisions.application_status === "partial_review_applied") {
-    nextActions.push("Complete remaining review decisions before final handoff.");
+    nextActions.push(copy.partial);
   }
   return Array.from(new Set(nextActions));
 }
 
 function applyDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
+  const { uiDecisions } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
+  const persistentInputArgs = inputArgsWithPersistentOutput(inputArgs, reviewPayload);
+  const persistence = validatePersistentState(persistentInputArgs, reviewPayload);
+  const reviewer = persistence
+    ? stabilizeReviewer(uiDecisions, persistence.currentUiDecisions)
+    : normalizeReviewerAlias(uiDecisions.reviewer, "reviewer");
+  if (persistence) {
+    uiDecisions.review_payload_sha256 = persistence.reviewBytesHash;
+    uiDecisions.review_payload_canonical_sha256 = persistence.reviewCanonicalHash;
+  }
   const itemById = new Map(reviewPayload.items.map((item) => [item.id, item]));
   const appliedAt = new Date().toISOString();
-  const effects = uiDecisions.decisions.map((decision) =>
-    buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
-  );
-  const outputDir = resolveRunOutputDir(inputArgs);
-  const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
-  const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
-  const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
-  const appliedOutputPath = resolveAppliedDecisionOutputPath(inputArgs);
-  const finalArtifactsPath = resolveFinalArtifactsOutputPath(inputArgs);
-  const currentFinalArtifacts = currentFinalArtifactsForApplication(inputArgs, finalArtifactsPath);
-  const nativeRegenerationOutputs = [
-    ...markNativeRegenerationPending(effects),
-    ...markDerivedNativeRegenerationPending(outputDir, effects, currentFinalArtifacts),
-  ];
-  const targetOutputs = [...textUpdates.targetOutputs, ...structuredUpdates.targetOutputs];
-  const backupOutputs = [...textUpdates.backupOutputs, ...structuredUpdates.backupOutputs];
-  const structuredUpdatePaths = effects
-    .filter((effect) => effect.artifact_update === "structured_artifact_updated")
-    .map((effect) => effect.target_artifact);
-  const nativeRegenerationPaths = Array.from(
-    new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
-  );
-  const blockerCount = effects.filter((effect) => effect.requires_followup).length;
-  const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
-  const appliedDecisions = {
-    schema_version: reviewPayload.schema_version,
-    plugin: reviewPayload.plugin,
-    workflow: reviewPayload.workflow,
-    run_id: reviewPayload.run_id,
-    applied_at: appliedAt,
-    decision_source: uiDecisions.decision_source || "mcp_widget",
-    review_payload: {
-      path: uiDecisions.review_payload_path || "review_payload.json",
+  function executeApplication(workingDir, workingInputArgs, currentFinalArtifacts) {
+    const effects = uiDecisions.decisions.map((decision) =>
+      buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
+    );
+    const workingDecisionPath = workingDir ? path.join(workingDir, "ui_decisions.json") : null;
+    const workingAppliedPath = workingDir ? path.join(workingDir, "applied_decisions.json") : null;
+    const workingFinalPath = workingDir ? path.join(workingDir, "final_artifacts.json") : null;
+    const revisionOutputs = writeRevisionArtifacts(workingDir, effects);
+    const textUpdates = writeDirectTextArtifactUpdates(
+      workingDir,
+      effects,
+      currentFinalArtifacts,
+    );
+    const structuredUpdates = writeStructuredArtifactUpdates(
+      workingDir,
+      effects,
+      currentFinalArtifacts,
+    );
+    const nativeRegenerationOutputs = [
+      ...markNativeRegenerationPending(effects),
+      ...markDerivedNativeRegenerationPending(workingDir, effects, currentFinalArtifacts),
+    ];
+    const targetOutputs = [...textUpdates.targetOutputs, ...structuredUpdates.targetOutputs];
+    const backupOutputs = [...textUpdates.backupOutputs, ...structuredUpdates.backupOutputs];
+    const structuredUpdatePaths = effects
+      .filter((effect) => effect.artifact_update === "structured_artifact_updated")
+      .map((effect) => effect.target_artifact);
+    const nativeRegenerationPaths = Array.from(
+      new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
+    );
+    const blockerCount = effects.filter((effect) => effect.requires_followup).length;
+    const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
+    if (applicationStatus === "final_ready" && !reviewer) {
+      throw new Error(
+        "reviewer is required as a stable pseudonymous alias before phase-one review can become final_ready",
+      );
+    }
+    const appliedDecisions = {
+      schema_version: reviewPayload.schema_version,
+      plugin: reviewPayload.plugin,
+      workflow: reviewPayload.workflow,
+      run_id: reviewPayload.run_id,
+      applied_at: appliedAt,
+      decision_source: uiDecisions.decision_source || "mcp_widget",
+      review_payload: {
+        path: uiDecisions.review_payload_path || "review_payload.json",
+        item_count: reviewPayload.items.length,
+        review_type: reviewPayload.review_type || null,
+        ...(persistence
+          ? {
+              sha256: persistence.reviewBytesHash,
+              canonical_sha256: persistence.reviewCanonicalHash,
+            }
+          : {}),
+      },
+      decisions: uiDecisions.decisions,
+      effects,
+      decision_count: uiDecisions.decision_count,
       item_count: reviewPayload.items.length,
-      review_type: reviewPayload.review_type || null,
-    },
-    decisions: uiDecisions.decisions,
-    effects,
-    decision_count: uiDecisions.decision_count,
-    item_count: reviewPayload.items.length,
-    blocker_count: blockerCount,
-    revision_count: revisionOutputs.length,
-    revision_paths: revisionOutputs.map((output) => output.path),
-    target_update_count: targetOutputs.length,
-    target_update_paths: targetOutputs.map((output) => output.path),
-    structured_update_count: structuredUpdatePaths.length,
-    structured_update_paths: structuredUpdatePaths,
-    native_regeneration_count: nativeRegenerationPaths.length,
-    native_regeneration_paths: nativeRegenerationPaths,
-    original_backup_paths: backupOutputs.map((output) => output.path),
-    application_status: applicationStatus,
-  };
-  if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
+      blocker_count: blockerCount,
+      revision_count: revisionOutputs.length,
+      revision_paths: revisionOutputs.map((output) => output.path),
+      target_update_count: targetOutputs.length,
+      target_update_paths: targetOutputs.map((output) => output.path),
+      structured_update_count: structuredUpdatePaths.length,
+      structured_update_paths: structuredUpdatePaths,
+      native_regeneration_count: nativeRegenerationPaths.length,
+      native_regeneration_paths: nativeRegenerationPaths,
+      original_backup_paths: backupOutputs.map((output) => output.path),
+      application_status: applicationStatus,
+    };
+    if (reviewer) appliedDecisions.reviewer = reviewer;
 
-  const finalArtifacts = finalArtifactsWithApplication(
-    inputArgs,
-    appliedDecisions,
-    finalArtifactsPath,
-    revisionOutputs,
-    targetOutputs,
-    backupOutputs,
-    nativeRegenerationOutputs,
-  );
-  let persisted = false;
-  if (decisionOutputPath) {
-    fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    let responseFinalArtifacts = finalArtifactsWithApplication(
+      workingInputArgs,
+      appliedDecisions,
+      workingFinalPath,
+      revisionOutputs,
+      targetOutputs,
+      backupOutputs,
+      nativeRegenerationOutputs,
+    );
+    validateDeclaredTextQa(workingDir, responseFinalArtifacts);
+    responseFinalArtifacts.review_payload_sha256 = persistence?.reviewBytesHash || null;
+    responseFinalArtifacts.review_payload_canonical_sha256 =
+      persistence?.reviewCanonicalHash || null;
+    if (workingDecisionPath) {
+      fs.writeFileSync(workingDecisionPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    }
+    if (workingAppliedPath) {
+      fs.writeFileSync(workingAppliedPath, `${JSON.stringify(appliedDecisions, null, 2)}\n`, "utf8");
+    }
+    if (workingFinalPath) {
+      fs.writeFileSync(workingFinalPath, `${JSON.stringify(responseFinalArtifacts, null, 2)}\n`, "utf8");
+    }
+    const workflowSpecificResult = applyWorkflowSpecificReviewApplication(
+      workingDir,
+      workingAppliedPath,
+      workingFinalPath,
+    );
+    const responseAppliedDecisions =
+      (isPlainObject(workflowSpecificResult?.applied_decisions)
+        ? workflowSpecificResult.applied_decisions
+        : null)
+      || readJsonFileIfPresent(workingAppliedPath)
+      || appliedDecisions;
+    responseFinalArtifacts =
+      (isPlainObject(workflowSpecificResult?.final_artifacts)
+        ? workflowSpecificResult.final_artifacts
+        : null)
+      || readJsonFileIfPresent(workingFinalPath)
+      || responseFinalArtifacts;
+    const runIntakePath = appendReviewApplicationExecutionTrace(
+      workingInputArgs,
+      workingDir,
+      responseAppliedDecisions,
+      responseFinalArtifacts,
+    );
+    if (workingDir && workingFinalPath) {
+      responseFinalArtifacts = refreshFinalArtifactsIntegrity(workingDir, responseFinalArtifacts);
+      fs.writeFileSync(
+        workingFinalPath,
+        `${JSON.stringify(responseFinalArtifacts, null, 2)}\n`,
+        "utf8",
+      );
+    }
+    return {
+      responseAppliedDecisions,
+      responseFinalArtifacts,
+      runIntakePath,
+      revisionOutputs,
+      targetOutputs,
+      structuredUpdatePaths,
+      applicationStatus,
+    };
   }
-  if (appliedOutputPath) {
-    fs.mkdirSync(path.dirname(appliedOutputPath), { recursive: true });
-    fs.writeFileSync(appliedOutputPath, `${JSON.stringify(appliedDecisions, null, 2)}\n`, "utf8");
-    persisted = true;
+
+  let result;
+  if (persistence) {
+    result = withStagedRunDirectory(persistence.outputDir, (stagedDir) => {
+      const stagedInputArgs = {
+        ...persistentInputArgs,
+        run_intake: { ...persistentInputArgs.run_intake, output_dir: stagedDir },
+        final_artifacts: readJsonFileIfPresent(path.join(stagedDir, "final_artifacts.json")),
+      };
+      return executeApplication(
+        stagedDir,
+        stagedInputArgs,
+        stagedInputArgs.final_artifacts,
+      );
+    });
+  } else {
+    result = executeApplication(
+      null,
+      inputArgs,
+      isPlainObject(inputArgs.final_artifacts) ? inputArgs.final_artifacts : {},
+    );
   }
-  if (finalArtifactsPath) {
-    fs.mkdirSync(path.dirname(finalArtifactsPath), { recursive: true });
-    fs.writeFileSync(finalArtifactsPath, `${JSON.stringify(finalArtifacts, null, 2)}\n`, "utf8");
-  }
-  const workflowSpecificResult = applyWorkflowSpecificReviewApplication(
-    outputDir,
-    appliedOutputPath,
-    finalArtifactsPath,
-  );
-  const responseAppliedDecisions =
-    (isPlainObject(workflowSpecificResult?.applied_decisions)
-      ? workflowSpecificResult.applied_decisions
-      : null) ||
-    readJsonFileIfPresent(appliedOutputPath) ||
-    appliedDecisions;
-  const responseFinalArtifacts =
-    (isPlainObject(workflowSpecificResult?.final_artifacts)
-      ? workflowSpecificResult.final_artifacts
-      : null) ||
-    readJsonFileIfPresent(finalArtifactsPath) ||
-    finalArtifacts;
-  const runIntakePath = appendReviewApplicationExecutionTrace(
-    inputArgs,
-    outputDir,
+  const {
     responseAppliedDecisions,
     responseFinalArtifacts,
-  );
+    revisionOutputs,
+    targetOutputs,
+    structuredUpdatePaths,
+    applicationStatus,
+  } = result;
+  const outputDir = persistence?.outputDir || null;
+  const persisted = Boolean(outputDir);
   return {
     ok: true,
     validation_type: "client_file_preparation_application",
@@ -1441,15 +2318,15 @@ function applyDecisionPayload(inputArgs) {
     native_regenerated_count: responseAppliedDecisions.native_regenerated_count || 0,
     application_status: responseAppliedDecisions.application_status || applicationStatus,
     persisted,
-    ui_decisions_path: decisionOutputPath,
-    applied_decisions_path: persisted ? appliedOutputPath : null,
-    final_artifacts_path: finalArtifactsPath,
-    run_intake_path: runIntakePath,
+    ui_decisions_path: persisted ? "ui_decisions.json" : null,
+    applied_decisions_path: persisted ? "applied_decisions.json" : null,
+    final_artifacts_path: persisted ? "final_artifacts.json" : null,
+    run_intake_path: persisted ? "run_intake.json" : null,
     message: persisted
       ? `Applied ${responseAppliedDecisions.decision_count} New Client · File Preparation decisions.`
       : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
     applied_decisions: responseAppliedDecisions,
-    final_artifacts: responseFinalArtifacts,
+    final_artifacts: sanitizedFinalArtifactsForReview(responseFinalArtifacts),
   };
 }
 
@@ -1475,7 +2352,7 @@ function callTool(name, args = {}) {
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    return validateReviewPayload(args);
+    return reviewPayloadForWidget(args);
   }
   if (name === TOOL_NAMES.saveDecisions) {
     return saveDecisionPayload(args);
