@@ -429,7 +429,7 @@
 <body>
   <div class="frame">
     <header>
-      <div class="brand">Mparanza <span>Vera</span></div>
+      <div class="brand">Mparanza <span id="product-brand">Vera</span></div>
       <div class="language" id="language"></div>
     </header>
     <main>
@@ -490,11 +490,11 @@
     };
 
     const moduleNames = {
-      it: {"new-client": "Nuovo cliente", "journal-sampling": "Campionamento del giornale", "check-entries": "Controllo scritture"},
-      en: {"new-client": "New Client", "journal-sampling": "Journal Sampling", "check-entries": "Check Entries"},
-      fr: {"new-client": "Nouveau client", "journal-sampling": "Échantillonnage du journal", "check-entries": "Contrôle des écritures"},
-      de: {"new-client": "Neuer Mandant", "journal-sampling": "Journal-Stichprobe", "check-entries": "Buchungen prüfen"},
-      es: {"new-client": "Nuevo cliente", "journal-sampling": "Muestreo del diario", "check-entries": "Comprobación de asientos"}
+      it: {"data-handling": "Gestione dei dati", "new-client": "Nuovo cliente", "journal-sampling": "Campionamento del giornale", "check-entries": "Controllo scritture"},
+      en: {"data-handling": "Data handling", "new-client": "New Client", "journal-sampling": "Journal Sampling", "check-entries": "Check Entries"},
+      fr: {"data-handling": "Traitement des données", "new-client": "Nouveau client", "journal-sampling": "Échantillonnage du journal", "check-entries": "Contrôle des écritures"},
+      de: {"data-handling": "Datenverarbeitung", "new-client": "Neuer Mandant", "journal-sampling": "Journal-Stichprobe", "check-entries": "Buchungen prüfen"},
+      es: {"data-handling": "Tratamiento de datos", "new-client": "Nuevo cliente", "journal-sampling": "Muestreo del diario", "check-entries": "Comprobación de asientos"}
     };
 
     const journalExamples = {
@@ -549,10 +549,11 @@
       const data = frameData;
       const copy = labels[data.lang] || labels.en;
       document.documentElement.lang = data.lang;
+      document.getElementById("product-brand").textContent = data.brand || "Vera";
       document.getElementById("language").textContent = copy.language;
       document.getElementById("module").textContent = moduleNames[data.lang][data.module];
       const title = document.getElementById("title");
-      title.textContent = data.title.replace(/^Vera\s*\|\s*/u, "");
+      title.textContent = data.title.replace(/^(?:Vera\s*\+\s*Clara|Vera)\s*\|\s*/u, "");
       title.classList.toggle("long-title", title.textContent.length > 54);
       document.getElementById("scene-label").textContent = data.onScreen[data.sceneIndex];
       document.getElementById("footer-label").textContent = copy.guide;

@@ -921,8 +921,8 @@
 
       <div class="data-position__closing">
         <p data-i18n="privacy.closing">La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.</p>
-        <a class="text-link" href="/data-handling?lang=it" data-data-handling-link>
-          <span data-i18n="privacy.dataLink">Leggi come vengono gestiti i dati</span>
+        <a class="text-link" href="/data-handling?lang=it#data-handling-video" data-compliance-video-link>
+          <span data-i18n="privacy.dataLink">Guarda il video sulla gestione dei dati</span>
           <span aria-hidden="true">→</span>
         </a>
       </div>
@@ -1112,7 +1112,7 @@
         "privacy.routes.hosted.title": "Servizi hosted da Mparanza",
         "privacy.routes.hosted.copy": "Un servizio hosted è un confine separato e viene documentato una volta a livello di servizio. Ricerche, connector, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno; non sono una terza categoria Mparanza.",
         "privacy.closing": "La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.",
-        "privacy.dataLink": "Leggi come vengono gestiti i dati",
+        "privacy.dataLink": "Guarda il video sulla gestione dei dati",
         "videos.index": "Cinque storie dal Core",
         "videos.title": "Vera al lavoro.",
         "videos.copy": "Una panoramica e quattro esempi del metodo comune. Le edizioni Italia restano accanto ai workflow che estendono.",
@@ -1230,7 +1230,7 @@
         "privacy.routes.hosted.title": "Mparanza-hosted services",
         "privacy.routes.hosted.copy": "A hosted service is a separate boundary and is documented once at service level. Searches, connectors, portals, or sends chosen by the user instead follow the external service’s terms; they are not a third Mparanza category.",
         "privacy.closing": "The same rule applies to Vera and Clara: one map per workflow, one description per hosted service, and no prompt-by-prompt documentation.",
-        "privacy.dataLink": "Read how data is handled",
+        "privacy.dataLink": "Watch the data-handling video",
         "videos.index": "Five stories from the Core",
         "videos.title": "Vera at work.",
         "videos.copy": "One overview and four examples of the common method. Italy editions stay beside the workflows they extend.",
@@ -1348,7 +1348,7 @@
         "privacy.routes.hosted.title": "Services hébergés par Mparanza",
         "privacy.routes.hosted.copy": "Un service hébergé a un périmètre distinct et est documenté une fois au niveau du service. Les recherches, connecteurs, portails ou envois choisis par l’utilisateur relèvent des conditions du service externe ; ils ne constituent pas une troisième catégorie Mparanza.",
         "privacy.closing": "La même règle s’applique à Vera et Clara : une cartographie par workflow, une description par service hébergé et aucune documentation prompt par prompt.",
-        "privacy.dataLink": "Lire comment les données sont traitées",
+        "privacy.dataLink": "Voir la vidéo sur le traitement des données",
         "videos.index": "Cinq histoires du socle",
         "videos.title": "Vera à l’œuvre.",
         "videos.copy": "Une vue d’ensemble et quatre exemples de la méthode commune. Les éditions Italie restent auprès des workflows qu’elles prolongent.",
@@ -1466,7 +1466,7 @@
         "privacy.routes.hosted.title": "Mparanza-gehostete Dienste",
         "privacy.routes.hosted.copy": "Ein gehosteter Dienst hat eine separate Grenze und wird einmal auf Dienstebene dokumentiert. Vom Nutzer gewählte Suchen, Connectoren, Portale oder Versandwege unterliegen den Bedingungen des externen Dienstes; sie sind keine dritte Mparanza-Kategorie.",
         "privacy.closing": "Für Vera und Clara gilt dieselbe Regel: eine Zuordnung pro Workflow, eine Beschreibung pro gehostetem Dienst und keine Dokumentation für jeden Prompt.",
-        "privacy.dataLink": "Lesen, wie Daten verarbeitet werden",
+        "privacy.dataLink": "Video zur Datenverarbeitung ansehen",
         "videos.index": "Fünf Geschichten aus dem Kern",
         "videos.title": "Vera bei der Arbeit.",
         "videos.copy": "Ein Überblick und vier Beispiele der gemeinsamen Methode. Italien-Editionen bleiben bei den Workflows, die sie erweitern.",
@@ -1584,7 +1584,7 @@
         "privacy.routes.hosted.title": "Servicios alojados por Mparanza",
         "privacy.routes.hosted.copy": "Un servicio alojado constituye un límite separado y se documenta una sola vez a nivel de servicio. Las búsquedas, conectores, portales o envíos elegidos por el usuario se rigen por las condiciones del servicio externo; no forman una tercera categoría de Mparanza.",
         "privacy.closing": "La misma regla se aplica a Vera y Clara: un mapa por flujo de trabajo, una descripción por servicio alojado y ninguna documentación prompt por prompt.",
-        "privacy.dataLink": "Leer cómo se tratan los datos",
+        "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
         "videos.index": "Cinco historias del núcleo",
         "videos.title": "Vera en acción.",
         "videos.copy": "Una visión general y cuatro ejemplos del método común. Las ediciones para Italia permanecen junto a los flujos que amplían. Las guías locales están en español; los vídeos remotos sin narración española indican «Audio en inglés».",
@@ -1689,6 +1689,9 @@
       document.querySelector("[data-home-link]").setAttribute("href", `/?lang=${lang}`);
       document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
         link.setAttribute("href", `/data-handling?lang=${lang}`);
+      });
+      document.querySelectorAll("[data-compliance-video-link]").forEach((link) => {
+        link.setAttribute("href", `/data-handling?lang=${lang}#data-handling-video`);
       });
       setVideos(lang, strings);
 
