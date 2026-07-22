@@ -32,10 +32,22 @@ FILE_PREPARATION_GUIDES = (
 
 
 @pytest.mark.parametrize("relative_path", LEGACY_COMPETING_PATHS)
-def test_vera_removes_competing_new_client_workflow_paths(
+def test_vera_removes_competing_new_client_workflow_sources(
     relative_path: Path,
 ) -> None:
-    assert not (ROOT / relative_path).exists()
+    path = ROOT / relative_path
+    source_files = (
+        [
+            candidate
+            for candidate in path.rglob("*")
+            if candidate.is_file()
+            and "__pycache__" not in candidate.parts
+            and candidate.suffix != ".pyc"
+        ]
+        if path.exists()
+        else []
+    )
+    assert source_files == []
 
 
 def test_vera_uses_one_new_client_workflow_with_a_subordinate_file_engine() -> None:

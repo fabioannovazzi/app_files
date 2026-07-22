@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/journal-bank-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -16,7 +18,8 @@
       "Parse and normalize bank and accounting rows",
       "Generate deterministic matches",
       "Calculate controls",
-      "Build exception and review payloads"
+      "Build exception and review payloads",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -50,6 +53,6 @@
       "Ambiguous descriptions can require targeted supporting evidence",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "213bdf843c9b55b6849130a0233952184b4f4d6d01c8237b1683159bf4968611"
+    "source_fingerprint": "4943ce13290cc37552cbcabd983378badb35c2b0aff241823d15455318642c94"
   }
 }

@@ -56,7 +56,7 @@ Gli script producono:
 - `run_intake.json` con input, assunzioni e postura dati;
 - `review_payload.json` con inventario, eccezioni e bozze;
 - `ui_decisions.json` con le decisioni raccolte;
-- `applied_decisions.json` con le decisioni applicate;
+- `applied_decisions.json`, creato solo quando la review viene applicata;
 - `final_artifacts.json` con stato e artefatti finali.
 
 Il server MCP espone i tool interni:
@@ -68,13 +68,29 @@ save_client_file_preparation_decisions
 apply_client_file_preparation_decisions
 ```
 
-Il widget usa `ui://widget/client-file-preparation-review.html`. Se il server
-MCP non è disponibile, Vera può svolgere la stessa review in Markdown/chat, ma
-mantiene le decisioni pendenti finché non vengono registrate e applicate.
+Il widget usa `ui://widget/client-file-preparation-review.html`. Se i tool MCP
+del client non sono disponibili, il pacchetto Vera include un workbench locale
+con write-back persistente, avviabile dal root del modulo con:
+
+```bash
+python scripts/review_server.py "/percorso/output/client-file-preparation"
+```
+
+La sola review in Markdown/chat non applica decisioni: in quel caso
+`ui_decisions.json` resta in attesa.
+
+Per arrivare allo stato finale la review deve essere completa e attribuita a un
+alias pseudonimo stabile del revisore. Il campo non deve contenere nome, email o
+altri identificativi diretti; una review saltata o incompleta non rende il
+fascicolo pronto.
 
 ## Copertura documentale
 
 - PDF testuali e immagini, con OCR locale opzionale;
+- DOCX, XLSX ed EML con estrazione locale; gli allegati EML restano esplicitamente
+  non letti;
+- MSG e altri formati non supportati restano nell'inventario con stato non
+  leggibile e non ricevono mai una raccomandazione automatica di accettazione;
 - CU, F24, 730 e Redditi PF leggibili;
 - FatturaPA XML, riepiloghi IVA, potenziali duplicati e anomalie formali;
 - avvisi e comunicazioni presenti nel fascicolo;
@@ -98,8 +114,9 @@ mantiene le decisioni pendenti finché non vengono registrate e applicate.
 run_intake.json
 review_payload.json
 ui_decisions.json
-applied_decisions.json
+review_handoff.md
 final_artifacts.json
+applied_decisions.json        # dopo l'applicazione della review
 duplicate_candidates.csv
 extracted/
 fatture/
@@ -121,8 +138,27 @@ python scripts/check_dependencies.py --folder "/percorso/cartella-cliente"
 python scripts/build_file_preparation_outputs.py \
   "/percorso/cartella-cliente" \
   --year 2025 \
+  --jurisdiction italy \
+  --language it \
   --out "/percorso/output/client-file-preparation"
 ```
+
+`--jurisdiction` accetta `italy`, `geneva`, `zurich`, `uk` o `mixed`;
+`--language` accetta `it`, `en`, `fr` o `de`. Le anteprime testuali non entrano
+nel payload di review salvo uso esplicito di `--include-review-previews`: tale
+opzione include estratti limitati di ogni documento leggibile nella cartella
+selezionata, evidenze dei campi fiscali e anteprime delle bozze generate, che
+possono ripetere il nome cliente; non riguarda soltanto passaggi scelti
+singolarmente.
+
+Il motore non segue link simbolici presenti nella cartella cliente. Estrazione
+PDF/testo, OCR e lettura dei formati Office/archivio supportati applicano limiti
+espliciti; un file oltre soglia resta evidenza non letta o parziale, senza
+essere considerato verificato.
+
+Ogni file elencato in `final_artifacts.json` è sigillato con dimensione e
+SHA-256. Il `package_hash` copre l'inventario canonico degli output e viene
+verificato e ricalcolato quando le decisioni vengono salvate o applicate.
 
 Le dipendenze base sono in `requirements.txt`; l'OCR opzionale è in
 `requirements-ocr.txt`.

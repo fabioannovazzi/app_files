@@ -17,6 +17,7 @@ from new_client_core import (  # noqa: E402
     AML_TRIGGER_IDS,
     SCHEMA_VERSION,
     SCREENING_TYPES,
+    SUPPORTED_JURISDICTIONS,
     SUPPORTED_LANGUAGES,
     ValidationError,
     ensure_private_output_directory,
@@ -57,13 +58,25 @@ def build_template(
     client_type: str,
     engagement_kind: str,
     assessment_date: str,
+    jurisdiction: str = "IT",
     language: str = "it",
 ) -> dict[str, Any]:
     """Build a valid intake template whose unresolved decisions remain explicit."""
 
     payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
+        "jurisdiction": jurisdiction,
         "language": language,
+        "processing_authority": {
+            "status": "pending",
+            "scope": "new_client_professional_setup",
+            "runtime": "local_codex_workspace",
+            "minimization": "structured_facts_and_selected_excerpts",
+            "external_transfer_authorized": False,
+            "authorized_by": None,
+            "authorized_by_role": None,
+            "authorized_at": None,
+        },
         "client_file_preparation_binding": {
             "mode": "standalone_evidence",
             "reason": (
@@ -97,7 +110,22 @@ def build_template(
         ],
         "party_identity_document": _identity_document(),
         "representatives": [],
+        "representative_posture": {
+            "status": "pending",
+            "executor_reference": None,
+            "basis": "Confirm whether a representative or executor is required.",
+            "evidence_ids": [],
+            "confirmed_by_role": None,
+            "confirmed_at": None,
+        },
         "beneficial_owners": [],
+        "ownership_status": {
+            "status": "pending",
+            "basis": "Confirm the beneficial-ownership posture for this client.",
+            "evidence_ids": [],
+            "confirmed_by_role": None,
+            "confirmed_at": None,
+        },
         "screening_results": [
             {
                 "screening_id": f"screening-{screening_type}",
@@ -179,6 +207,7 @@ def build_template(
                 "review_status": "proposed",
                 "basis": "Professional applicability review required.",
                 "source_ids": [],
+                "case_fact_ids": ["party-fact-01"],
             },
             {
                 "topic": "privacy_notice",
@@ -186,6 +215,7 @@ def build_template(
                 "review_status": "proposed",
                 "basis": "Professional applicability review required.",
                 "source_ids": ["gdpr_regulation", "cndcec_privacy_guide_2025"],
+                "case_fact_ids": ["party-fact-01"],
             },
             {
                 "topic": "ai_transparency_notice",
@@ -193,6 +223,7 @@ def build_template(
                 "review_status": "proposed",
                 "basis": "Professional applicability review required.",
                 "source_ids": ["italian_law_132_2025_article_13"],
+                "case_fact_ids": ["party-fact-01"],
             },
             {
                 "topic": "article_28_terms",
@@ -200,6 +231,7 @@ def build_template(
                 "review_status": "proposed",
                 "basis": "Controller/processor role analysis required.",
                 "source_ids": ["gdpr_regulation", "cndcec_privacy_guide_2025"],
+                "case_fact_ids": ["party-fact-01"],
             },
             {
                 "topic": "aml_assessment",
@@ -211,6 +243,7 @@ def build_template(
                     "cndcec_regole_tecniche_2025",
                     "cndcec_indicazioni_operative_2026",
                 ],
+                "case_fact_ids": ["party-fact-01"],
             },
         ],
         "template_references": [],
@@ -253,6 +286,7 @@ def initialize_case(
     client_type: str = "company",
     engagement_kind: str = "ongoing",
     assessment_date: str | None = None,
+    jurisdiction: str = "IT",
     language: str = "it",
     overwrite: bool = False,
 ) -> Path:
@@ -270,6 +304,7 @@ def initialize_case(
         client_type=client_type,
         engagement_kind=engagement_kind,
         assessment_date=date_value,
+        jurisdiction=jurisdiction,
         language=language,
     )
     return write_private_json(target, payload)
@@ -292,6 +327,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--engagement-kind", choices=("ongoing", "one_off"), default="ongoing"
     )
     parser.add_argument("--language", choices=SUPPORTED_LANGUAGES, default="it")
+    parser.add_argument("--jurisdiction", choices=SUPPORTED_JURISDICTIONS, default="IT")
     parser.add_argument("--assessment-date")
     parser.add_argument("--overwrite", action="store_true")
     return parser
@@ -308,6 +344,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             client_type=args.client_type,
             engagement_kind=args.engagement_kind,
             assessment_date=args.assessment_date,
+            jurisdiction=args.jurisdiction,
             language=args.language,
             overwrite=args.overwrite,
         )

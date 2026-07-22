@@ -90,7 +90,9 @@ Estrai riferimenti pratici, date, importi e documenti da recuperare.
 - `run_intake.json`;
 - `review_payload.json`;
 - `ui_decisions.json`;
+- `review_handoff.md`;
 - `final_artifacts.json`;
+- `applied_decisions.json` after decisions have been applied;
 - `duplicate_candidates.csv`;
 - `extracted/document_extraction.csv`;
 - `extracted/structured_fiscal_fields.csv`;
@@ -136,8 +138,30 @@ The internal phase follows the OpenAI-style MCP UI pattern for review surfaces:
 4. the local MCP server serves `ui://widget/client-file-preparation-review.html` and
    returns `openai/outputTemplate` metadata so the host can render the HTML
    widget;
-5. if the MCP tools are unavailable, Codex falls back to Markdown/chat review
-   using the same JSON files.
+5. if host MCP tools are unavailable, start the packaged local workbench from
+   the resolved module root with
+   `python scripts/review_server.py <output-directory>`; it uses the same tool
+   contract and persists save/apply operations into the run directory;
+6. only when neither review service can run, use Markdown/chat to inspect the
+   same JSON files and keep `ui_decisions.json` pending rather than presenting
+   an unpersisted conversation as an applied review.
 
 Do not hand-build a separate HTML page for this review handoff. The reusable MCP
 widget is the primary UI surface.
+
+## Integrity And Privacy Contract
+
+- validate that the customer folder exists and contains evidence before any
+  default output directory is created;
+- keep every inventoried file in `extracted/documents.jsonl`, including unread
+  or unsupported files;
+- keep absolute customer paths in the private local intake only; the review
+  payload uses relative paths and omits text previews unless the run explicitly
+  enables them; explicit preview mode includes bounded excerpts from every
+  readable inventoried document, fiscal-field evidence snippets, and generated
+  draft previews that can repeat the client name;
+- require `size_bytes` and `sha256` for every `final_artifacts.json` output;
+- compute `integrity.package_hash` from the UTF-8-path-sorted canonical array of
+  `{path, sha256, size_bytes}` records; `final_artifacts.json` itself is excluded;
+- verify the sealed files before review application and reseal them after every
+  save/apply mutation.

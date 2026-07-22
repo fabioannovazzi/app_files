@@ -132,6 +132,43 @@
       line-height: 1.35;
       overflow-wrap: anywhere;
     }
+    .review-actions > .progress-meter { grid-column: 1; grid-row: 1; }
+    .review-actions > .action-buttons { grid-column: 2; grid-row: 1; }
+    .reviewer-alias-field {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: minmax(9rem, 0.28fr) minmax(12rem, 1fr);
+      gap: 0.28rem 0.75rem;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 0.72rem;
+    }
+    .reviewer-alias-field input {
+      width: min(100%, 30rem);
+      min-height: 2.45rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 0.48rem 0.65rem;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+    .reviewer-alias-field input:focus { border-color: var(--accent); }
+    .reviewer-alias-help {
+      grid-column: 2;
+      max-width: 72ch;
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.35;
+    }
+    @media (max-width: 980px) {
+      .review-actions > .progress-meter,
+      .review-actions > .action-buttons,
+      .reviewer-alias-field { grid-column: 1; grid-row: auto; }
+      .reviewer-alias-field { grid-template-columns: 1fr; }
+      .reviewer-alias-help { grid-column: 1; }
+    }
     .review-store {
       grid-column: 1 / -1;
       display: grid;
@@ -1036,6 +1073,11 @@
           <div class="progress-rail" aria-hidden="true"><span id="decision-progress-fill"></span></div>
           <span class="status-message" id="save-status"></span>
         </div>
+        <label class="reviewer-alias-field" for="reviewer-alias">
+          <span class="field-label" id="reviewer-alias-label">Reviewer alias</span>
+          <input id="reviewer-alias" type="text" maxlength="64" autocomplete="off" spellcheck="false" placeholder="reviewer-fg">
+          <small class="reviewer-alias-help" id="reviewer-alias-help">Use a stable pseudonymous studio alias to complete review. Do not enter a name or email.</small>
+        </label>
         <div class="action-buttons">
           <button class="button" id="use-recommended" type="button">Use recommended</button>
           <button class="button primary" id="save-decisions" type="button">Save decisions</button>
@@ -1065,7 +1107,7 @@
     </div>
   </main>
   <script>
-    const CONFIG = {"schemaVersion":"1.0","plugin":"client-file-preparation","title":"New Client \u00b7 File Preparation","reviewTitle":"File Preparation Review","queueTitle":"Documents to Review","detailTitle":"Document Decision","detailMode":"intake-board","detailHelp":"Classify documents, confirm missing items, and capture the next client request.","detailGroups":[{"title":"Client Document","variant":"document","fields":["document","client","fiscal_year","status","source_path"],"empty":"No document fields."},{"title":"Required Evidence","variant":"checklist","fields":["requested_document","reason","status","confidence"],"empty":"No required-evidence fields."},{"title":"Memo / Email Impact","variant":"draft","fields":["memo_section","email_text","review_notes","reason"],"empty":"No draft impact."}],"panels":["Client document","Required evidence","Preparation decision"],"localized":{"it":{"title":"Nuovo cliente \u00b7 Preparazione documenti","reviewTitle":"Revisione preparazione documenti","queueTitle":"Documenti da rivedere","detailTitle":"Decisione documento","detailHelp":"Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.","search":"Cerca documento, mancante, memo, email, blocco"},"fr":{"title":"Nouveau client \u00b7 Preparation des documents","reviewTitle":"Revue de la preparation des documents","queueTitle":"Documents a revoir","detailTitle":"Decision document","detailHelp":"Classez les documents, confirmez les manquants et saisissez la prochaine demande client.","search":"Chercher document, manquant, memo, email, blocage"},"de":{"title":"Neuer Mandant \u00b7 Unterlagen vorbereiten","reviewTitle":"Unterlagenvorbereitung pruefen","queueTitle":"Zu pruefende Dokumente","detailTitle":"Dokumententscheidung","detailHelp":"Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.","search":"Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen"}},"saveTool":"save_client_file_preparation_decisions","applyTool":"apply_client_file_preparation_decisions","widgetType":"client_file_preparation_review","demo":{"review_type":"client_file_preparation_review","items":[{"id":"doc-1","item_type":"document_inventory","title":"CU 2025 - Example Client","source_path":"cliente/CU_2025.pdf","output_path":"document_inventory.json","allowed_actions":["accept","edit","mark_unclear","skip"],"recommended_action":"accept","data":{"document":"CU 2025","client":"Example Client","status":"classified","fiscal_year":"2025","target_artifact":"document_inventory.json","target_id_field":"document","target_record_id":"CU 2025","target_field":"review_notes","edit_hint":"Editing this document row updates review_notes in document_inventory.json."},"evidence":[{"kind":"document_classification","confidence":"high"}]},{"id":"missing-1","item_type":"missing_document_request","title":"Missing: F24 payment receipt","source_path":"cliente/","output_path":"missing_documents.json","allowed_actions":["accept","reject","edit","request_more_documents"],"recommended_action":"request_more_documents","data":{"document":"F24 payment receipt","status":"missing","reason":"Required to reconcile tax payments.","requested_document":"F24 payment receipt","target_artifact":"missing_documents.json","target_id_field":"document","target_record_id":"F24 payment receipt","target_field":"review_notes","edit_hint":"Editing this missing-document row updates review_notes in missing_documents.json."},"evidence":[{"kind":"missing_document_queue","requested_document":"F24"}]}]}};
+    const CONFIG = {"schemaVersion":"1.0","plugin":"client-file-preparation","title":"New Client \u00b7 File Preparation","reviewTitle":"File Preparation Review","queueTitle":"Documents to Review","detailTitle":"Document Decision","detailMode":"intake-board","detailHelp":"Classify documents, confirm missing items, and capture the next client request.","detailGroups":[{"title":"Client Document","variant":"document","fields":["document","client","fiscal_year","status","source_path"],"empty":"No document fields."},{"title":"Required Evidence","variant":"checklist","fields":["requested_document","reason","status","confidence"],"empty":"No required-evidence fields."},{"title":"Memo / Email Impact","variant":"draft","fields":["memo_section","email_text","review_notes","reason"],"empty":"No draft impact."}],"panels":["Client document","Required evidence","Preparation decision"],"localized":{"it":{"title":"Nuovo cliente \u00b7 Preparazione documenti","reviewTitle":"Revisione preparazione documenti","queueTitle":"Documenti da rivedere","detailTitle":"Decisione documento","detailHelp":"Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.","search":"Cerca documento, mancante, memo, email, blocco","reviewerAlias":"Alias revisore","reviewerAliasHelp":"Usa un alias stabile e pseudonimo dello studio, per esempio reviewer-fg. Serve per completare la revisione; non inserire nome, email o identificativi fiscali.","reviewerAliasInvalid":"L'alias revisore deve iniziare con una lettera e contenere da 3 a 64 lettere ASCII, numeri, punti, trattini bassi, due punti o trattini."},"fr":{"title":"Nouveau client \u00b7 Preparation des documents","reviewTitle":"Revue de la preparation des documents","queueTitle":"Documents a revoir","detailTitle":"Decision document","detailHelp":"Classez les documents, confirmez les manquants et saisissez la prochaine demande client.","search":"Chercher document, manquant, memo, email, blocage","reviewerAlias":"Alias du reviseur","reviewerAliasHelp":"Utilisez un alias stable et pseudonyme du cabinet, par exemple reviewer-fg. Il est requis pour terminer la revue; ne saisissez ni nom, ni email, ni identifiant fiscal.","reviewerAliasInvalid":"L'alias du reviseur doit commencer par une lettre et contenir de 3 a 64 lettres ASCII, chiffres, points, tirets bas, deux-points ou tirets."},"de":{"title":"Neuer Mandant \u00b7 Unterlagen vorbereiten","reviewTitle":"Unterlagenvorbereitung pruefen","queueTitle":"Zu pruefende Dokumente","detailTitle":"Dokumententscheidung","detailHelp":"Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.","search":"Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen","reviewerAlias":"Prueferalias","reviewerAliasHelp":"Verwenden Sie ein stabiles pseudonymes Kanzleialias, zum Beispiel reviewer-fg. Es ist fuer den Abschluss der Pruefung erforderlich; keine Namen, E-Mails oder Steuerkennungen eingeben.","reviewerAliasInvalid":"Das Prueferalias muss mit einem Buchstaben beginnen und 3 bis 64 ASCII-Buchstaben, Zahlen, Punkte, Unterstriche, Doppelpunkte oder Bindestriche enthalten."}},"saveTool":"save_client_file_preparation_decisions","applyTool":"apply_client_file_preparation_decisions","widgetType":"client_file_preparation_review","demo":{"review_type":"client_file_preparation_review","items":[{"id":"doc-1","item_type":"document_inventory","title":"CU 2025 - Example Client","source_path":"cliente/CU_2025.pdf","output_path":"document_inventory.json","allowed_actions":["accept","edit","mark_unclear","skip"],"recommended_action":"accept","data":{"document":"CU 2025","client":"Example Client","status":"classified","fiscal_year":"2025","target_artifact":"document_inventory.json","target_id_field":"document","target_record_id":"CU 2025","target_field":"review_notes","edit_hint":"Editing this document row updates review_notes in document_inventory.json."},"evidence":[{"kind":"document_classification","confidence":"high"}]},{"id":"missing-1","item_type":"missing_document_request","title":"Missing: F24 payment receipt","source_path":"cliente/","output_path":"missing_documents.json","allowed_actions":["accept","reject","edit","request_more_documents"],"recommended_action":"request_more_documents","data":{"document":"F24 payment receipt","status":"missing","reason":"Required to reconcile tax payments.","requested_document":"F24 payment receipt","target_artifact":"missing_documents.json","target_id_field":"document","target_record_id":"F24 payment receipt","target_field":"review_notes","edit_hint":"Editing this missing-document row updates review_notes in missing_documents.json."},"evidence":[{"kind":"missing_document_queue","requested_document":"F24"}]}]},"requiresReviewerAlias":true};
     const ACTION_LABELS = {
       accept: "Accept",
       reject: "Reject",
@@ -1143,7 +1185,7 @@
       final_artifacts: null,
       decision_policy: { save_tool: CONFIG.saveTool, apply_tool: CONFIG.applyTool, can_persist: false, fallback: "copy_json" },
     };
-    const state = { payload: FALLBACK, selectedType: "all", selectedState: "all", selectedId: null, query: "", decisions: {}, recovery: { savedDecisionCount: 0, draftDecisionCount: 0, lastIssue: null } };
+    const state = { payload: FALLBACK, selectedType: "all", selectedState: "all", selectedId: null, query: "", decisions: {}, reviewerAlias: "", recovery: { savedDecisionCount: 0, draftDecisionCount: 0, lastIssue: null } };
 
     function pickPayload(raw) {
       if (!raw || typeof raw !== "object") return null;
@@ -1933,6 +1975,13 @@
       node.style.display = "";
       node.innerHTML = `<div class="artifact-header"><h2>${esc(uiText("finalOutputs", "Final outputs"))}</h2><span>${records.length} ${esc(records.length === 1 ? uiText("fileSingular", "file") : uiText("filePlural", "files"))}</span></div>${artifactNotesHtml()}<div class="artifact-grid">${records.length ? records.map(artifactRecordHtml).join("") : `<div class="empty">${esc(uiText("outputsPending", "Outputs appear after the run writes final artifacts."))}</div>`}</div>`;
     }
+    const SAFE_REVIEWER_ALIAS_RE = /^[A-Za-z][A-Za-z0-9._:-]{2,63}$/;
+    function reviewerAliasValue() { return String(state.reviewerAlias || "").trim(); }
+    function validateReviewerAlias(decisions) {
+      if (!decisions.length) return;
+      const alias = reviewerAliasValue();
+      if (alias && !SAFE_REVIEWER_ALIAS_RE.test(alias)) throw new Error(workflowText("reviewerAliasInvalid", "Reviewer alias must use 3-64 supported characters and start with a letter."));
+    }
     function ensureDecision(item, action = null) {
       if (!item) return null;
       const current = state.decisions[item.id] || {};
@@ -1962,6 +2011,7 @@
       });
     }
     function validateDecisionInputs(decisions) {
+      validateReviewerAlias(decisions);
       for (const decision of decisions) {
         if (decision.action === "edit" && !decision.edit_value) throw new Error(uiText("editRequired", "Edit value required for {item}.").replace("{item}", itemById(decision.item_id)?.title || decision.item_id));
       }
@@ -1973,25 +2023,31 @@
         const item = itemById(decision.item_id);
         return { item_id: decision.item_id, item_type: item?.item_type || "", title: item?.title || "", action: decision.action, status: ACTION_STATUSES[decision.action] || "reviewed", decided_at: now, ...(decision.reviewer_note ? { reviewer_note: decision.reviewer_note } : {}), ...(decision.edit_value ? { edit_value: decision.edit_value } : {}), ...(decision.requested_documents?.length ? { requested_documents: decision.requested_documents } : {}) };
       });
-      return { schema_version: payload.schema_version || "1.0", plugin: payload.plugin || CONFIG.plugin, workflow: payload.workflow || CONFIG.plugin, run_id: payload.run_id || "preview", decided_at: decisions.length ? now : null, decision_source: "mcp_widget_export", review_payload_path: state.payload.ui_decisions?.review_payload_path || "review_payload.json", decisions, decision_count: decisions.length, item_count: items().length, status: decisions.length === 0 ? "pending_review" : decisions.length === items().length ? "reviewed" : "partial_review" };
+      return { schema_version: payload.schema_version || "1.0", plugin: payload.plugin || CONFIG.plugin, workflow: payload.workflow || CONFIG.plugin, run_id: payload.run_id || "preview", decided_at: decisions.length ? now : null, decision_source: "mcp_widget_export", review_payload_path: state.payload.ui_decisions?.review_payload_path || "review_payload.json", ...(reviewerAliasValue() ? { reviewer: reviewerAliasValue() } : {}), decisions, decision_count: decisions.length, item_count: items().length, status: decisions.length === 0 ? "pending_review" : decisions.length === items().length ? "reviewed" : "partial_review" };
     }
     function saveToolArgs() {
       return {
         run_intake: state.payload.run_intake || null,
+        persistence_token: state.payload.decision_policy?.persistence_token || null,
         review_payload: reviewPayload(),
         ui_decisions: state.payload.ui_decisions || null,
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
       };
     }
     function applyToolArgs() {
       return {
         run_intake: state.payload.run_intake || null,
+        persistence_token: state.payload.decision_policy?.persistence_token || null,
         review_payload: reviewPayload(),
         ui_decisions: state.payload.ui_decisions || null,
-        final_artifacts: state.payload.final_artifacts || null,
+        ...(state.payload.decision_policy?.persistence_token
+          ? {}
+          : { final_artifacts: state.payload.final_artifacts || null }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
       };
     }
     function parseToolResult(result) {
@@ -2080,7 +2136,7 @@
     }
     function applyRecommendedToVisible() { for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear"); persistWidgetState(); renderRows(); }
     function persistWidgetState() {
-      try { window.openai?.setWidgetState?.({ run_id: reviewPayload().run_id || null, decisions: state.decisions }); } catch { }
+      try { window.openai?.setWidgetState?.({ run_id: reviewPayload().run_id || null, reviewer_alias: reviewerAliasValue() || null, decisions: state.decisions }); } catch { }
     }
     function loadInitialDecisions() {
       const current = {};
@@ -2092,6 +2148,11 @@
         }
       }
       const widgetState = window.openai?.widgetState;
+      state.reviewerAlias = String(
+        state.payload.ui_decisions?.reviewer
+        || (widgetState?.run_id === reviewPayload().run_id ? widgetState.reviewer_alias : "")
+        || ""
+      ).trim();
       let draftDecisionCount = 0;
       if (widgetState?.run_id === reviewPayload().run_id && widgetState.decisions && typeof widgetState.decisions === "object") {
         for (const [itemId, decision] of Object.entries(widgetState.decisions)) if (itemById(itemId) && decision?.action) {
@@ -2118,6 +2179,12 @@
       setButtonText("apply-decisions", ui("buttons", "applyDecisions", "Apply decisions"));
       setButtonText("copy-decisions", ui("buttons", "copyJson", "Copy JSON"));
       setButtonText("download-decisions", ui("buttons", "downloadJson", "Download JSON"));
+      const reviewerAliasInput = document.getElementById("reviewer-alias");
+      if (reviewerAliasInput && reviewerAliasInput.value !== state.reviewerAlias) reviewerAliasInput.value = state.reviewerAlias;
+      const reviewerAliasLabel = document.getElementById("reviewer-alias-label");
+      if (reviewerAliasLabel) reviewerAliasLabel.textContent = workflowText("reviewerAlias", "Reviewer alias");
+      const reviewerAliasHelp = document.getElementById("reviewer-alias-help");
+      if (reviewerAliasHelp) reviewerAliasHelp.textContent = workflowText("reviewerAliasHelp", "Use a stable pseudonymous studio alias to complete review.");
       document.getElementById("search").placeholder = workflowText("search", "Search document, missing item, memo, email, blocker");
       document.getElementById("queue-title").textContent = workflowText("queueTitle", uiText("reviewQueue", "Review queue"));
       document.getElementById("detail-title").textContent = workflowText("detailTitle", uiText("evidenceDecision", "Evidence and decision"));
@@ -2137,6 +2204,10 @@
     });
     document.getElementById("details").addEventListener("click", (event) => { const button = event.target.closest("button[data-decision-action]"); if (!button) return; setDecisionAction(itemById(state.selectedId), button.dataset.decisionAction); });
     document.getElementById("details").addEventListener("input", (event) => { const field = event.target.closest("[data-decision-field]"); if (!field) return; setDecisionField(itemById(state.selectedId), field.dataset.decisionField, field.value); });
+    document.getElementById("reviewer-alias")?.addEventListener("input", (event) => {
+      state.reviewerAlias = String(event.target.value || "").trim();
+      persistWidgetState();
+    });
     document.getElementById("use-recommended").addEventListener("click", applyRecommendedToVisible);
     document.getElementById("save-decisions").addEventListener("click", handleSaveDecisions);
     document.getElementById("apply-decisions").addEventListener("click", handleApplyDecisions);

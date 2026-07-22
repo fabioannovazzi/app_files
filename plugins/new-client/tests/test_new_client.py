@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import copy
+import csv
 import json
 import shutil
 import stat
 import subprocess
 import sys
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,7 @@ if str(REPOSITORY_ROOT) not in sys.path:
 
 import check_dependencies as dependency_check
 import new_client_core
+import package_new_client as package_new_client_module
 from initialize_case import (
     build_template,
     initialize_case,
@@ -45,6 +47,7 @@ from new_client_core import (
     validate_new_client_input,
 )
 from package_new_client import package_new_client
+from promote_client_file_preparation import promote_client_file_preparation
 
 from scripts.validate_plugin_review_contract import (
     validate_contract as validate_shared_review_contract,
@@ -166,6 +169,16 @@ def _complete_new_client_input(tmp_path: Path) -> dict[str, Any]:
     payload["evidence_register"] = [
         _evidence(evidence_id, path) for evidence_id, path in evidence_paths.items()
     ]
+    payload["processing_authority"] = {
+        "status": "authorized",
+        "scope": "new_client_professional_setup",
+        "runtime": "local_codex_workspace",
+        "minimization": "structured_facts_and_selected_excerpts",
+        "external_transfer_authorized": False,
+        "authorized_by": "reviewer-01",
+        "authorized_by_role": "professional",
+        "authorized_at": PROFESSIONAL_CONFIRMED_AT,
+    }
     payload["tax_facts"] = {
         "codice_fiscale": {
             "value": "RSSMRA80A01H501U",
@@ -213,6 +226,14 @@ def _complete_new_client_input(tmp_path: Path) -> dict[str, Any]:
             "identity_document": _verified_identity("ev-rep-2", "REP-DOC-SECRET-02"),
         },
     ]
+    payload["representative_posture"] = {
+        "status": "recorded",
+        "executor_reference": "REP-EXECUTOR-01",
+        "basis": "Executor and representative authority recorded.",
+        "evidence_ids": ["ev-rep-1"],
+        "confirmed_by_role": None,
+        "confirmed_at": None,
+    }
     payload["beneficial_owners"] = [
         {
             "owner_reference": "OWNER-01",
@@ -233,6 +254,13 @@ def _complete_new_client_input(tmp_path: Path) -> dict[str, Any]:
             ),
         },
     ]
+    payload["ownership_status"] = {
+        "status": "owners_recorded",
+        "basis": "Beneficial owners recorded from controlled evidence.",
+        "evidence_ids": ["ev-owner-1", "ev-owner-2"],
+        "confirmed_by_role": None,
+        "confirmed_at": None,
+    }
     payload["screening_results"] = [
         {
             "screening_id": f"screening-{subject.casefold()}-{screening_type}",
@@ -345,47 +373,468 @@ def _write_new_client_input(tmp_path: Path, payload: dict[str, Any]) -> Path:
     return path
 
 
+def _write_phase_one_source_contract(
+    run_dir: Path,
+    *,
+    run_id: str,
+    jurisdiction: str = "italy",
+    language: str = "it",
+    source_rows: list[dict[str, Any]] | None = None,
+) -> list[str]:
+    records = source_rows or [
+        {
+            "relative_path": "source-record.txt",
+            "size_bytes": 19,
+            "modified_iso": "2026-01-31T09:30:00",
+            "sha256": canonical_json_hash("synthetic phase-one source"),
+            "entry_type": "regular_file",
+        }
+    ]
+    regular_records = [
+        record for record in records if record["entry_type"] == "regular_file"
+    ]
+    symlink_records = [
+        record for record in records if record["entry_type"] == "symlink_not_followed"
+    ]
+    run_intake = {
+        "schema_version": "1.0",
+        "plugin": "client-file-preparation",
+        "workflow": "client-file-preparation",
+        "run_id": run_id,
+        "jurisdiction": jurisdiction,
+        "language": language,
+        "source_snapshot": {
+            "algorithm": "sha256",
+            "limits": {
+                "max_entry_count": 20_000,
+                "max_file_count": 5_000,
+                "max_file_bytes": 256 * 1024 * 1024,
+                "max_total_bytes": 2 * 1024 * 1024 * 1024,
+            },
+            "observed": {
+                "file_count": len(records),
+                "regular_file_count": len(regular_records),
+                "symlink_count": len(symlink_records),
+                "total_regular_bytes": sum(
+                    record["size_bytes"] for record in regular_records
+                ),
+            },
+            "files": records,
+        },
+    }
+    (run_dir / "run_intake.json").write_text(
+        json.dumps(run_intake, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    inventory_columns = [
+        "relative_path",
+        "file_name",
+        "extension",
+        "size_bytes",
+        "modified_iso",
+        "sha256",
+        "category",
+        "confidence",
+        "years",
+        "notes",
+    ]
+    with (run_dir / "01_document_inventory.csv").open(
+        "w", encoding="utf-8", newline=""
+    ) as handle:
+        writer = csv.DictWriter(handle, fieldnames=inventory_columns)
+        writer.writeheader()
+        for record in records:
+            relative_path = Path(record["relative_path"])
+            writer.writerow(
+                {
+                    "relative_path": record["relative_path"],
+                    "file_name": relative_path.name,
+                    "extension": relative_path.suffix,
+                    "size_bytes": record["size_bytes"],
+                    "modified_iso": record["modified_iso"],
+                    "sha256": record["sha256"],
+                    "category": "documenti non classificati",
+                    "confidence": "bassa",
+                    "years": "",
+                    "notes": (
+                        "collegamento simbolico non seguito"
+                        if record["entry_type"] == "symlink_not_followed"
+                        else ""
+                    ),
+                }
+            )
+    return ["run_intake.json", "01_document_inventory.csv"]
+
+
 def _bind_client_file_preparation_manifest(
     tmp_path: Path,
     payload: dict[str, Any],
     *,
     status: str,
+    source_rows: list[dict[str, Any]] | None = None,
 ) -> Path:
-    manifest_path = tmp_path / f"client-file-preparation-{status}.json"
+    run_dir = tmp_path / f"client-file-preparation-{status}"
+    run_dir.mkdir()
+    run_id = "client-file-preparation-run-001"
+    source_output_names = _write_phase_one_source_contract(
+        run_dir,
+        run_id=run_id,
+        source_rows=source_rows,
+    )
+    if status == "final_ready":
+        item = {"id": "review-item-1", "item_type": "document_inventory"}
+        decision = {
+            "item_id": item["id"],
+            "item_type": item["item_type"],
+            "action": "accept",
+            "status": "accepted",
+        }
+        review_payload = {
+            "schema_version": "1.0",
+            "plugin": "client-file-preparation",
+            "workflow": "client-file-preparation",
+            "run_id": run_id,
+            "review_type": "client_file_preparation_folder_review",
+            "items": [item],
+            "item_count": 1,
+        }
+        review_path = run_dir / "review_payload.json"
+        review_path.write_text(
+            json.dumps(review_payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        review_bytes_hash = sha256_file(review_path)
+        review_canonical_hash = canonical_json_hash(review_payload)
+        json_outputs = {
+            "ui_decisions.json": {
+                "schema_version": "1.0",
+                "plugin": "client-file-preparation",
+                "workflow": "client-file-preparation",
+                "run_id": run_id,
+                "reviewer": "reviewer-binding-01",
+                "review_payload_sha256": review_bytes_hash,
+                "review_payload_canonical_sha256": review_canonical_hash,
+                "decisions": [decision],
+                "decision_count": 1,
+                "item_count": 1,
+                "status": "reviewed",
+            },
+            "applied_decisions.json": {
+                "schema_version": "1.0",
+                "plugin": "client-file-preparation",
+                "workflow": "client-file-preparation",
+                "run_id": run_id,
+                "reviewer": "reviewer-binding-01",
+                "review_payload": {
+                    "path": "review_payload.json",
+                    "item_count": 1,
+                    "sha256": review_bytes_hash,
+                    "canonical_sha256": review_canonical_hash,
+                },
+                "decisions": [decision],
+                "effects": [decision | {"applied": True}],
+                "decision_count": 1,
+                "item_count": 1,
+                "blocker_count": 0,
+                "application_status": "final_ready",
+            },
+        }
+        for name, value in json_outputs.items():
+            (run_dir / name).write_text(
+                json.dumps(value, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+        (run_dir / "review_handoff.md").write_text(
+            "# Review Handoff\n", encoding="utf-8"
+        )
+        output_names = [
+            *source_output_names,
+            "review_payload.json",
+            "ui_decisions.json",
+            "applied_decisions.json",
+            "review_handoff.md",
+        ]
+    else:
+        output_names = [*source_output_names, "studio_memo.md"]
+        (run_dir / "studio_memo.md").write_text(
+            "unreviewed studio memo\n", encoding="utf-8"
+        )
+    outputs = [
+        {
+            "path": name,
+            "status": "final_ready" if name == "applied_decisions.json" else status,
+            "size_bytes": (run_dir / name).stat().st_size,
+            "sha256": sha256_file(run_dir / name),
+        }
+        for name in output_names
+    ]
+    package_hash = canonical_json_hash(
+        [
+            {
+                "path": record["path"],
+                "sha256": record["sha256"],
+                "size_bytes": record["size_bytes"],
+            }
+            for record in sorted(outputs, key=lambda item: item["path"])
+        ]
+    )
+    manifest_path = run_dir / "final_artifacts.json"
     manifest: dict[str, Any] = {
         "schema_version": "1.0",
         "plugin": "client-file-preparation",
         "workflow": "client-file-preparation",
-        "run_id": "client-file-preparation-run-001",
+        "run_id": run_id,
         "status": status,
-        "outputs": [
-            {
-                "path": (
-                    "applied_decisions.json"
-                    if status == "final_ready"
-                    else "studio_memo.md"
-                ),
-                "status": status,
-            }
-        ],
+        "outputs": outputs,
+        "integrity": {
+            "algorithm": "sha256",
+            "package_hash_basis": ("sorted_outputs_path_size_sha256_canonical_json_v1"),
+            "package_hash": package_hash,
+        },
     }
     if status == "final_ready":
         manifest["review_status"] = "final_ready"
-        manifest["review_application"] = {"application_status": "final_ready"}
+        manifest["review_payload_sha256"] = review_bytes_hash
+        manifest["review_payload_canonical_sha256"] = review_canonical_hash
+        manifest["review_application"] = {
+            "application_status": "final_ready",
+            "decision_count": 1,
+            "item_count": 1,
+            "blocker_count": 0,
+        }
     manifest_path.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     payload["client_file_preparation_binding"] = {
         "mode": "client_file_preparation_run",
-        "run_id": "client-file-preparation-run-001",
+        "run_id": run_id,
         "final_artifacts_path": manifest_path.as_posix(),
         "final_artifacts_sha256": sha256_file(manifest_path),
+        "upstream_package_hash": package_hash,
+        "promoted_evidence_ids": [],
     }
     return manifest_path
 
 
-def _call_mcp_validate(output_dir: Path) -> dict[str, Any]:
+def _write_promotable_phase_one_run(
+    tmp_path: Path,
+    *,
+    action: str,
+    extracted_value: str,
+    edit_value: str | None = None,
+    jurisdiction: str = "italy",
+    language: str = "fr",
+) -> Path:
+    run_dir = tmp_path / f"promotable-{action}"
+    run_dir.mkdir()
+    run_id = f"client-file-preparation-{action}-001"
+    item_id = "fiscal-field-1"
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "client-file-preparation",
+        "workflow": "client-file-preparation",
+        "run_id": run_id,
+        "review_type": "client_file_preparation_folder_review",
+        "items": [
+            {
+                "id": item_id,
+                "item_type": "extracted_fiscal_field",
+                "source_path": "tax-form.pdf",
+                "data": {
+                    "relative_path": "tax-form.pdf",
+                    "document_kind": "CU",
+                    "field_code": "codice_fiscale_1",
+                    "value": extracted_value,
+                    "normalized_value": extracted_value,
+                    "confidence": "alta",
+                },
+            }
+        ],
+        "item_count": 1,
+    }
+    effect: dict[str, Any] = {
+        "item_id": item_id,
+        "item_type": "extracted_fiscal_field",
+        "action": action,
+        "applied": True,
+    }
+    if edit_value is not None:
+        effect["edit_value"] = edit_value
+    decision = {
+        "item_id": item_id,
+        "item_type": "extracted_fiscal_field",
+        "action": action,
+        "status": "edited" if action == "edit" else "accepted",
+    }
+    if edit_value is not None:
+        decision["edit_value"] = edit_value
+    review_path = run_dir / "review_payload.json"
+    review_path.write_text(
+        json.dumps(review_payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    review_bytes_hash = sha256_file(review_path)
+    review_canonical_hash = canonical_json_hash(review_payload)
+    applied_decisions = {
+        "schema_version": "1.0",
+        "plugin": "client-file-preparation",
+        "workflow": "client-file-preparation",
+        "run_id": run_id,
+        "reviewer": "reviewer-promotion-01",
+        "review_payload": {
+            "path": "review_payload.json",
+            "item_count": 1,
+            "sha256": review_bytes_hash,
+            "canonical_sha256": review_canonical_hash,
+        },
+        "decisions": [decision],
+        "application_status": "final_ready",
+        "decision_count": 1,
+        "item_count": 1,
+        "blocker_count": 0,
+        "effects": [effect],
+    }
+    source_output_names = _write_phase_one_source_contract(
+        run_dir,
+        run_id=run_id,
+        jurisdiction=jurisdiction,
+        language=language,
+        source_rows=[
+            {
+                "relative_path": "tax-form.pdf",
+                "size_bytes": 97,
+                "modified_iso": "2026-01-31T09:30:00",
+                "sha256": canonical_json_hash("synthetic reviewed tax form"),
+                "entry_type": "regular_file",
+            }
+        ],
+    )
+    json_outputs = {
+        "ui_decisions.json": {
+            "schema_version": "1.0",
+            "plugin": "client-file-preparation",
+            "workflow": "client-file-preparation",
+            "run_id": run_id,
+            "reviewer": "reviewer-promotion-01",
+            "review_payload_sha256": review_bytes_hash,
+            "review_payload_canonical_sha256": review_canonical_hash,
+            "decisions": [decision],
+            "decision_count": 1,
+            "item_count": 1,
+            "status": "reviewed",
+        },
+        "applied_decisions.json": applied_decisions,
+    }
+    for name, value in json_outputs.items():
+        (run_dir / name).write_text(
+            json.dumps(value, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    (run_dir / "review_handoff.md").write_text("# Review Handoff\n", encoding="utf-8")
+    output_names = [
+        *source_output_names,
+        "review_payload.json",
+        *json_outputs,
+        "review_handoff.md",
+    ]
+    outputs = [
+        {
+            "path": name,
+            "status": "final_ready" if name == "applied_decisions.json" else "written",
+            "size_bytes": (run_dir / name).stat().st_size,
+            "sha256": sha256_file(run_dir / name),
+        }
+        for name in output_names
+    ]
+    package_hash = canonical_json_hash(
+        [
+            {
+                "path": record["path"],
+                "sha256": record["sha256"],
+                "size_bytes": record["size_bytes"],
+            }
+            for record in sorted(outputs, key=lambda item: item["path"])
+        ]
+    )
+    manifest = {
+        "schema_version": "1.0",
+        "plugin": "client-file-preparation",
+        "workflow": "client-file-preparation",
+        "run_id": run_id,
+        "status": "final_ready",
+        "review_status": "final_ready",
+        "review_payload_sha256": review_bytes_hash,
+        "review_payload_canonical_sha256": review_canonical_hash,
+        "review_application": {
+            "application_status": "final_ready",
+            "decision_count": 1,
+            "item_count": 1,
+            "blocker_count": 0,
+        },
+        "outputs": outputs,
+        "integrity": {
+            "algorithm": "sha256",
+            "package_hash_basis": ("sorted_outputs_path_size_sha256_canonical_json_v1"),
+            "package_hash": package_hash,
+        },
+    }
+    manifest_path = run_dir / "final_artifacts.json"
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return manifest_path
+
+
+def _reseal_bound_phase_one_manifest(
+    manifest_path: Path, payload: dict[str, Any]
+) -> None:
+    manifest = load_json(manifest_path)
+    for output in manifest["outputs"]:
+        output_path = manifest_path.parent / output["path"]
+        output["size_bytes"] = output_path.stat().st_size
+        output["sha256"] = sha256_file(output_path)
+    package_hash = canonical_json_hash(
+        [
+            {
+                "path": record["path"],
+                "sha256": record["sha256"],
+                "size_bytes": record["size_bytes"],
+            }
+            for record in sorted(manifest["outputs"], key=lambda item: item["path"])
+        ]
+    )
+    manifest["integrity"]["package_hash"] = package_hash
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    binding = payload["client_file_preparation_binding"]
+    binding["final_artifacts_sha256"] = sha256_file(manifest_path)
+    binding["upstream_package_hash"] = package_hash
+
+
+def _phase_one_inventory_rows(
+    inventory_path: Path,
+) -> tuple[list[str], list[dict[str, str]]]:
+    with inventory_path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        return list(reader.fieldnames or ()), list(reader)
+
+
+def _write_phase_one_inventory_rows(
+    inventory_path: Path,
+    fieldnames: list[str],
+    rows: list[dict[str, str]],
+) -> None:
+    with inventory_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def _new_client_node_binary() -> str:
     node = shutil.which("node")
     bundled_node = (
         Path.home()
@@ -401,23 +850,37 @@ def _call_mcp_validate(output_dir: Path) -> dict[str, Any]:
         node = bundled_node.as_posix()
     if node is None:
         pytest.skip("Node.js is required to exercise the new-client MCP server.")
+    return node
+
+
+def _call_new_client_mcp(
+    output_dir: Path,
+    tool_name: str,
+    *,
+    extra_arguments: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     arguments = {
         "run_intake": load_json(output_dir / "run_intake.json"),
         "review_payload": load_json(output_dir / "review_payload.json"),
         "ui_decisions": load_json(output_dir / "ui_decisions.json"),
         "final_artifacts": load_json(output_dir / "final_artifacts.json"),
     }
+    arguments.update(extra_arguments or {})
     request = {
         "jsonrpc": "2.0",
         "id": 1,
         "method": "tools/call",
         "params": {
-            "name": "validate_new_client_review",
+            "name": tool_name,
             "arguments": arguments,
         },
     }
     completed = subprocess.run(
-        [node, str(PLUGIN_ROOT / "mcp" / "server.cjs"), "--stdio"],
+        [
+            _new_client_node_binary(),
+            str(PLUGIN_ROOT / "mcp" / "server.cjs"),
+            "--stdio",
+        ],
         input=json.dumps(request) + "\n",
         capture_output=True,
         text=True,
@@ -425,6 +888,10 @@ def _call_mcp_validate(output_dir: Path) -> dict[str, Any]:
         timeout=10,
     )
     return json.loads(completed.stdout.strip())
+
+
+def _call_mcp_validate(output_dir: Path) -> dict[str, Any]:
+    return _call_new_client_mcp(output_dir, "validate_new_client_review")
 
 
 def test_build_template_has_exact_aml_and_screening_contract() -> None:
@@ -825,13 +1292,97 @@ def test_initialize_case_writes_owner_only_file_outside_repository(
     assert load_json(target)["client_reference"] == "CASE-PRIVATE"
 
 
-def test_package_propagates_non_italian_language_to_review_contract(
+@pytest.mark.parametrize(
+    ("language", "expected"),
+    [
+        (
+            "it",
+            {
+                "privacy": "Decisione sul trattamento dei dati — finalità 01",
+                "marketing": "Consenso marketing separato",
+                "applicability": "Applicabilità — incarico professionale",
+                "table_1": "Applicabilità della Tabella 1 antiriciclaggio",
+                "monitoring": "Calendario dei riesami periodici",
+                "profile": "Profilo del cliente e documenti di identità",
+                "structure": "Rappresentanti, esecutore e titolarità effettiva",
+                "engagement": "Ambito e condizioni dell’incarico",
+                "screening": "Copertura delle verifiche — review-subject-client",
+                "aml_section": ("Sezione A dei fattori di rischio antiriciclaggio"),
+                "triggers": "Indicatori che impongono misure rafforzate",
+                "notice": "Dati di revisione pseudonimizzati",
+                "excluded_names": "nomi",
+            },
+        ),
+        (
+            "en",
+            {
+                "privacy": "Privacy processing decision — purpose 01",
+                "marketing": "Separate marketing-consent record",
+                "applicability": "Applicability — professional engagement",
+                "table_1": "AML Table 1 applicability",
+                "monitoring": "Ongoing-review schedule",
+                "profile": "Client profile and identity evidence",
+                "structure": "Representatives, executor and beneficial ownership",
+                "engagement": "Engagement scope and terms",
+                "screening": "Screening coverage — review-subject-client",
+                "aml_section": "AML risk-factor section A",
+                "triggers": "Mandatory enhanced-measure triggers",
+                "notice": "Pseudonymous review payload",
+                "excluded_names": "names",
+            },
+        ),
+        (
+            "fr",
+            {
+                "privacy": (
+                    "Décision relative au traitement des données — finalité 01"
+                ),
+                "marketing": "Consentement marketing distinct",
+                "applicability": "Applicabilité — mission professionnelle",
+                "table_1": "Applicabilité du tableau 1 LCB-FT",
+                "monitoring": "Calendrier des réexamens périodiques",
+                "profile": "Profil du client et justificatifs d’identité",
+                "structure": ("Représentants, exécutant et bénéficiaires effectifs"),
+                "engagement": "Périmètre et conditions de la mission",
+                "screening": ("Couverture des vérifications — review-subject-client"),
+                "aml_section": "Section A des facteurs de risque LCB-FT",
+                "triggers": ("Facteurs imposant des mesures de vigilance renforcée"),
+                "notice": "Données de révision pseudonymisées",
+                "excluded_names": "noms",
+            },
+        ),
+        (
+            "de",
+            {
+                "privacy": "Entscheidung zur Datenverarbeitung — Zweck 01",
+                "marketing": "Gesonderte Einwilligung für Marketing",
+                "applicability": "Anwendbarkeit — Berufsauftrag",
+                "table_1": "Anwendbarkeit der AML-Tabelle 1",
+                "monitoring": "Zeitplan für regelmäßige Überprüfungen",
+                "profile": "Mandantenprofil und Identitätsnachweise",
+                "structure": (
+                    "Vertreter, ausführende Person und wirtschaftlich Berechtigte"
+                ),
+                "engagement": "Umfang und Bedingungen des Auftrags",
+                "screening": "Abdeckung der Prüfungen — review-subject-client",
+                "aml_section": "Abschnitt A der AML-Risikofaktoren",
+                "triggers": "Auslöser für verpflichtende verstärkte Maßnahmen",
+                "notice": "Pseudonymisierte Prüfdaten",
+                "excluded_names": "Namen",
+            },
+        ),
+    ],
+    ids=("italian", "english", "french", "german"),
+)
+def test_package_localizes_professional_review_copy(
     tmp_path: Path,
+    language: str,
+    expected: dict[str, str],
 ) -> None:
     intake = _complete_new_client_input(tmp_path)
-    intake["language"] = "fr"
+    intake["language"] = language
     input_path = _write_new_client_input(tmp_path, intake)
-    output_dir = tmp_path / "french-review-package"
+    output_dir = tmp_path / f"{language}-review-package"
 
     package_new_client(
         input_path,
@@ -839,8 +1390,54 @@ def test_package_propagates_non_italian_language_to_review_contract(
         generated_at="2026-02-01T10:00:00+00:00",
     )
 
-    assert load_json(output_dir / "run_intake.json")["language"] == "fr"
-    assert load_json(output_dir / "review_payload.json")["summary"]["language"] == "fr"
+    review = load_json(output_dir / "review_payload.json")
+    items = {item["id"]: item for item in review["items"]}
+    titles = {item_id: item["title"] for item_id, item in items.items()}
+    assert load_json(output_dir / "run_intake.json")["language"] == language
+    assert review["summary"]["language"] == language
+    assert titles["privacy:processing-01"] == expected["privacy"]
+    assert titles["marketing:consent"] == expected["marketing"]
+    assert titles["applicability:mandate"] == expected["applicability"]
+    assert titles["aml:table_1"] == expected["table_1"]
+    assert titles["monitoring:plan"] == expected["monitoring"]
+    assert titles["party:profile"] == expected["profile"]
+    assert titles["party:structure"] == expected["structure"]
+    assert titles["engagement:scope-and-terms"] == expected["engagement"]
+    assert titles["screening_subject:review-subject-client"] == expected["screening"]
+    assert titles["aml_factor_section:A"] == expected["aml_section"]
+    assert titles["aml:mandatory-trigger-set"] == expected["triggers"]
+    assert expected["notice"] in review["privacy_notice"]
+    assert review["privacy"]["excluded"][0] == expected["excluded_names"]
+    assert items["applicability:mandate"]["item_type"] == "document_applicability"
+    assert items["applicability:mandate"]["data"]["topic"] == "mandate"
+    assert items["applicability:mandate"]["allowed_actions"] == [
+        "accept",
+        "reject",
+        "edit",
+        "mark_unclear",
+        "request_more_documents",
+        "skip",
+    ]
+
+
+def test_package_localizes_grouped_missing_evidence_title(tmp_path: Path) -> None:
+    intake = _complete_new_client_input(tmp_path)
+    intake["language"] = "de"
+    intake["evidence_register"][0]["status"] = "missing"
+    input_path = _write_new_client_input(tmp_path, intake)
+    output_dir = tmp_path / "de-missing-evidence-review-package"
+
+    package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    review = load_json(output_dir / "review_payload.json")
+    missing_item = next(
+        item for item in review["items"] if item["id"] == "missing:grouped"
+    )
+    assert missing_item["title"] == "Fehlende Nachweise und ungeklärte Angaben"
 
 
 def test_output_directory_inside_repository_is_rejected() -> None:
@@ -872,6 +1469,37 @@ def test_output_directory_guard_works_without_git_repository(
     assert stat.S_IMODE(allowed.stat().st_mode) == 0o700
     with pytest.raises(ValidationError, match="installed plugin directories"):
         new_client_core.ensure_private_output_directory(installed_root / "run")
+
+
+def test_output_directory_rejects_existing_content_without_mutation(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "existing-case-output"
+    output_dir.mkdir()
+    marker = output_dir / "prior-review.json"
+    marker.write_bytes(b'{"preserve":true}\n')
+
+    with pytest.raises(ValidationError, match="must be new or contain only"):
+        ensure_private_output_directory(output_dir)
+
+    assert marker.read_bytes() == b'{"preserve":true}\n'
+
+
+def test_output_directory_rejects_symlink_traversal_without_mutation(
+    tmp_path: Path,
+) -> None:
+    real_parent = tmp_path / "private-real-parent"
+    real_parent.mkdir()
+    marker = real_parent / "preserve.txt"
+    marker.write_text("keep\n", encoding="utf-8")
+    linked_parent = tmp_path / "linked-parent"
+    linked_parent.symlink_to(real_parent, target_is_directory=True)
+
+    with pytest.raises(ValidationError, match="symbolic links"):
+        ensure_private_output_directory(linked_parent / "new-case")
+
+    assert marker.read_text(encoding="utf-8") == "keep\n"
+    assert not (real_parent / "new-case").exists()
 
 
 def test_package_new_client_e2e_is_private_reviewable_and_hash_bound(
@@ -922,23 +1550,19 @@ def test_review_payload_is_minimized_and_covers_professional_review_types(
     table_1_item = next(item for item in review["items"] if item["id"] == "aml:table_1")
 
     assert {
-        "party_fact",
-        "representative_fact",
-        "beneficial_owner_fact",
-        "engagement_service",
-        "screening_result",
+        "party_profile",
+        "party_structure",
+        "engagement",
+        "screening_subject",
         "document_applicability",
-        "aml_risk_factor",
-        "aml_mandatory_trigger",
+        "aml_factor_section",
+        "aml_trigger_set",
         "aml_assessment",
-        "missing_evidence",
-        "document_plan",
         "monitoring_plan",
-        "official_source",
-        "client_file_preparation_binding",
         "privacy_processing",
         "marketing_consent",
     } <= item_types
+    assert review["item_count"] <= 20
     assert table_1_item["data"] == {
         "calculation_status": "table_1_confirmed_no_basis_recorded",
         "minimum_verification_mode_for_review": "simplified",
@@ -984,7 +1608,172 @@ def test_generated_review_payload_passes_mcp_validator(tmp_path: Path) -> None:
 
     assert "error" not in response
     assert response["result"]["structuredContent"]["ok"] is True
-    assert response["result"]["structuredContent"]["item_count"] > 20
+    assert response["result"]["structuredContent"]["item_count"] <= 20
+
+
+def _expire_evidence(
+    payload: dict[str, Any], _registry: dict[str, Any], deadline: str
+) -> None:
+    payload["evidence_register"][0]["expires_on"] = deadline
+
+
+def _expire_primary_identity(
+    payload: dict[str, Any], _registry: dict[str, Any], deadline: str
+) -> None:
+    payload["party_identity_document"]["expires_on"] = deadline
+
+
+def _expire_representative_identity(
+    payload: dict[str, Any], _registry: dict[str, Any], deadline: str
+) -> None:
+    payload["representatives"][0]["identity_document"]["expires_on"] = deadline
+
+
+def _expire_owner_identity(
+    payload: dict[str, Any], _registry: dict[str, Any], deadline: str
+) -> None:
+    payload["beneficial_owners"][0]["identity_document"]["expires_on"] = deadline
+
+
+def _expire_template_validity(
+    payload: dict[str, Any], _registry: dict[str, Any], deadline: str
+) -> None:
+    payload["template_references"][0]["valid_until"] = deadline
+
+
+def _expire_template_review(
+    payload: dict[str, Any], _registry: dict[str, Any], deadline: str
+) -> None:
+    payload["template_references"][0]["review_due_on"] = deadline
+
+
+def _expire_source_review(
+    _payload: dict[str, Any], registry: dict[str, Any], deadline: str
+) -> None:
+    registry["currentness"]["review_by"] = deadline
+
+
+@pytest.mark.parametrize(
+    ("deadline_kind", "expire"),
+    [
+        ("evidence_expires_on", _expire_evidence),
+        ("primary_identity_expires_on", _expire_primary_identity),
+        ("representative_identity_expires_on", _expire_representative_identity),
+        ("beneficial_owner_identity_expires_on", _expire_owner_identity),
+        ("template_valid_until", _expire_template_validity),
+        ("template_review_due_on", _expire_template_review),
+        ("authoritative_source_registry_review_by", _expire_source_review),
+    ],
+)
+def test_mcp_apply_fails_when_material_deadline_expires_after_packaging(
+    tmp_path: Path,
+    deadline_kind: str,
+    expire: Any,
+) -> None:
+    today = datetime.now(timezone.utc).date()
+    package_date = today - timedelta(days=1)
+    deadline = package_date.isoformat()
+    payload = _complete_new_client_input(tmp_path)
+    registry = load_json(PLUGIN_ROOT / "references" / "source-registry.json")
+    registry["last_reviewed"] = package_date.isoformat()
+    registry["currentness"].update(
+        {
+            "reviewed_on": package_date.isoformat(),
+            "review_by": (today + timedelta(days=30)).isoformat(),
+        }
+    )
+    expire(payload, registry, deadline)
+    registry_path = tmp_path / "source-registry.json"
+    registry_path.write_text(
+        json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
+    output_dir = tmp_path / f"expired-apply-{deadline_kind}"
+    package_new_client(
+        input_path,
+        output_dir,
+        source_registry_path=registry_path,
+        generated_at=f"{deadline}T10:00:00+00:00",
+    )
+    review = load_json(output_dir / "review_payload.json")
+    temporal = review["temporal_validity"]
+    deadline_rows = {row["kind"]: row for row in temporal["deadlines"]}
+    assert temporal["valid_through"] == deadline
+    assert deadline_rows[deadline_kind]["valid_through"] == deadline
+    decisions = [
+        {"item_id": item["id"], "action": "accept"} for item in review["items"]
+    ]
+
+    response = _call_new_client_mcp(
+        output_dir,
+        "apply_new_client_decisions",
+        extra_arguments={
+            "decisions": decisions,
+            "decision_source": "temporal-expiry-test",
+            "reviewer": "reviewer-temporal-01",
+        },
+    )
+
+    result = response["result"]
+    assert result["isError"] is True
+    assert result["structuredContent"] == {
+        "ok": False,
+        "error": (
+            f"New Client temporal validity expired on {deadline}; "
+            "regenerate the package before Apply"
+        ),
+    }
+    assert not (output_dir / "applied_decisions.json").exists()
+
+
+def test_mcp_apply_allows_inclusive_material_deadline_on_current_utc_date(
+    tmp_path: Path,
+) -> None:
+    today = datetime.now(timezone.utc).date()
+    deadline = today.isoformat()
+    payload = _complete_new_client_input(tmp_path)
+    payload["evidence_register"][0]["expires_on"] = deadline
+    registry = load_json(PLUGIN_ROOT / "references" / "source-registry.json")
+    registry["last_reviewed"] = deadline
+    registry["currentness"].update(
+        {
+            "reviewed_on": deadline,
+            "review_by": (today + timedelta(days=30)).isoformat(),
+        }
+    )
+    registry_path = tmp_path / "source-registry.json"
+    registry_path.write_text(
+        json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
+    output_dir = tmp_path / "inclusive-apply"
+    package_new_client(
+        input_path,
+        output_dir,
+        source_registry_path=registry_path,
+        generated_at=f"{deadline}T10:00:00+00:00",
+    )
+    review = load_json(output_dir / "review_payload.json")
+    decisions = [
+        {"item_id": item["id"], "action": "accept"} for item in review["items"]
+    ]
+
+    response = _call_new_client_mcp(
+        output_dir,
+        "apply_new_client_decisions",
+        extra_arguments={
+            "decisions": decisions,
+            "decision_source": "temporal-inclusive-test",
+            "reviewer": "reviewer-temporal-01",
+        },
+    )
+
+    result = response["result"]["structuredContent"]
+    assert result["ok"] is True
+    assert result["persisted"] is True
+    assert (output_dir / "applied_decisions.json").is_file()
 
 
 def test_validate_contract_detects_artifact_tampering(tmp_path: Path) -> None:
@@ -1047,11 +1836,6 @@ def test_client_file_preparation_binding_verifies_final_manifest_without_exposin
 
     facts = load_json(output_dir / "case_facts_validated.json")
     review = load_json(output_dir / "review_payload.json")
-    binding_item = next(
-        item
-        for item in review["items"]
-        if item["item_type"] == "client_file_preparation_binding"
-    )
     serialized_review = json.dumps(review, ensure_ascii=False)
     assert result["status"] == "pending_review"
     assert (
@@ -1061,10 +1845,167 @@ def test_client_file_preparation_binding_verifies_final_manifest_without_exposin
     assert facts["client_file_preparation_verification"][
         "manifest_sha256"
     ] == sha256_file(bound_manifest)
-    assert binding_item["data"]["reviewed_client_file_preparation"] is True
-    assert binding_item["data"]["manifest_sha256"] == sha256_file(bound_manifest)
+    assert all(
+        item["item_type"] != "client_file_preparation_binding"
+        for item in review["items"]
+    )
     assert "client-file-preparation-run-001" not in serialized_review
     assert bound_manifest.as_posix() not in serialized_review
+
+
+def test_client_file_preparation_binding_accepts_explicit_unfollowed_symlink_record(
+    tmp_path: Path,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    _bind_client_file_preparation_manifest(
+        tmp_path,
+        payload,
+        status="final_ready",
+        source_rows=[
+            {
+                "relative_path": "records/source.txt",
+                "size_bytes": 21,
+                "modified_iso": "2026-01-31T09:30:00",
+                "sha256": canonical_json_hash("synthetic regular source"),
+                "entry_type": "regular_file",
+            },
+            {
+                "relative_path": "records/external-link.pdf",
+                "size_bytes": 24,
+                "modified_iso": "2026-01-31T09:31:00",
+                "sha256": "",
+                "entry_type": "symlink_not_followed",
+            },
+        ],
+    )
+
+    package_new_client(
+        _write_new_client_input(tmp_path, payload),
+        tmp_path / "explicit-symlink-record-package",
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    verification = load_json(
+        tmp_path / "explicit-symlink-record-package" / "case_facts_validated.json"
+    )["client_file_preparation_verification"]
+    assert verification["source_snapshot_observed"] == {
+        "file_count": 2,
+        "regular_file_count": 1,
+        "symlink_count": 1,
+        "total_regular_bytes": 21,
+    }
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("missing_inventory_output", "missing sealed source provenance outputs"),
+        ("missing_source_snapshot", "source_snapshot must be an object"),
+        ("wrong_algorithm", "algorithm must be sha256"),
+        ("weakened_limit", "must be between 1 and"),
+        ("observed_count_drift", "observed does not match"),
+        ("non_normalized_path", "normalized, non-empty POSIX relative path"),
+        ("duplicate_path", "duplicate relative path"),
+        ("negative_size", "must be a non-negative integer"),
+        ("invalid_regular_hash", "must be a SHA-256 digest"),
+        ("symlink_with_hash", "must have an empty sha256"),
+        ("wrong_run_identity", "identity does not match"),
+        ("old_inventory_header", "unsupported column contract"),
+        ("inventory_path_drift", "does not exactly match inventory"),
+        ("inventory_size_drift", "does not exactly match inventory"),
+        ("inventory_modified_drift", "does not exactly match inventory"),
+        ("inventory_hash_drift", "does not exactly match inventory"),
+    ],
+)
+def test_client_file_preparation_binding_rejects_fabricated_source_snapshot(
+    tmp_path: Path,
+    mutation: str,
+    message: str,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    manifest_path = _bind_client_file_preparation_manifest(
+        tmp_path, payload, status="final_ready"
+    )
+    run_intake_path = manifest_path.parent / "run_intake.json"
+    inventory_path = manifest_path.parent / "01_document_inventory.csv"
+    run_intake = load_json(run_intake_path)
+    manifest = load_json(manifest_path)
+    inventory_fields, inventory_rows = _phase_one_inventory_rows(inventory_path)
+
+    if mutation == "missing_inventory_output":
+        manifest["outputs"] = [
+            output
+            for output in manifest["outputs"]
+            if output["path"] != "01_document_inventory.csv"
+        ]
+    elif mutation == "missing_source_snapshot":
+        run_intake.pop("source_snapshot")
+    elif mutation == "wrong_algorithm":
+        run_intake["source_snapshot"]["algorithm"] = "sha512"
+    elif mutation == "weakened_limit":
+        run_intake["source_snapshot"]["limits"]["max_file_count"] = 5_001
+    elif mutation == "observed_count_drift":
+        run_intake["source_snapshot"]["observed"]["regular_file_count"] = 0
+    elif mutation == "non_normalized_path":
+        run_intake["source_snapshot"]["files"][0][
+            "relative_path"
+        ] = "./source-record.txt"
+        inventory_rows[0]["relative_path"] = "./source-record.txt"
+    elif mutation == "duplicate_path":
+        run_intake["source_snapshot"]["files"].append(
+            copy.deepcopy(run_intake["source_snapshot"]["files"][0])
+        )
+    elif mutation == "negative_size":
+        run_intake["source_snapshot"]["files"][0]["size_bytes"] = -1
+    elif mutation == "invalid_regular_hash":
+        run_intake["source_snapshot"]["files"][0]["sha256"] = "z" * 64
+    elif mutation == "symlink_with_hash":
+        run_intake["source_snapshot"]["files"][0]["entry_type"] = "symlink_not_followed"
+        run_intake["source_snapshot"]["observed"].update(
+            {
+                "regular_file_count": 0,
+                "symlink_count": 1,
+                "total_regular_bytes": 0,
+            }
+        )
+    elif mutation == "wrong_run_identity":
+        run_intake["run_id"] = "client-file-preparation-other-run"
+    elif mutation == "old_inventory_header":
+        inventory_fields.remove("sha256")
+        for row in inventory_rows:
+            row.pop("sha256")
+    elif mutation == "inventory_path_drift":
+        inventory_rows[0]["relative_path"] = "different-source.txt"
+    elif mutation == "inventory_size_drift":
+        inventory_rows[0]["size_bytes"] = "20"
+    elif mutation == "inventory_modified_drift":
+        inventory_rows[0]["modified_iso"] = "2026-01-31T09:31:00"
+    elif mutation == "inventory_hash_drift":
+        inventory_rows[0]["sha256"] = "0" * 64
+    else:  # pragma: no cover - parameter list is the exhaustive mutation source.
+        raise AssertionError(f"Unhandled mutation: {mutation}")
+
+    run_intake_path.write_text(
+        json.dumps(run_intake, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    _write_phase_one_inventory_rows(
+        inventory_path,
+        inventory_fields,
+        inventory_rows,
+    )
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    _reseal_bound_phase_one_manifest(manifest_path, payload)
+
+    with pytest.raises(ValidationError, match=message):
+        package_new_client(
+            _write_new_client_input(tmp_path, payload),
+            tmp_path / f"fabricated-source-snapshot-{mutation}",
+            generated_at="2026-02-01T10:00:00+00:00",
+        )
 
 
 def test_client_file_preparation_binding_nonfinal_is_relationship_blocker(
@@ -1121,6 +2062,116 @@ def test_client_file_preparation_binding_hash_or_identity_mismatch_hard_fails(
         package_new_client(
             input_path,
             tmp_path / "identity-mismatch-package",
+            generated_at="2026-02-01T10:00:00+00:00",
+        )
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("missing_reviewer", "reviewer"),
+        ("missing_effect", "cover every review item"),
+        ("unknown_effect_item", "does not reference a real review item"),
+        ("wrong_count", "bound_applied_decisions.decision_count"),
+        ("incomplete_ui", "cover every review item"),
+    ],
+)
+def test_final_ready_phase_one_binding_rejects_incomplete_review_provenance(
+    tmp_path: Path,
+    mutation: str,
+    message: str,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    manifest_path = _bind_client_file_preparation_manifest(
+        tmp_path, payload, status="final_ready"
+    )
+    applied_path = manifest_path.parent / "applied_decisions.json"
+    ui_path = manifest_path.parent / "ui_decisions.json"
+    applied = load_json(applied_path)
+    ui_decisions = load_json(ui_path)
+    if mutation == "missing_reviewer":
+        applied.pop("reviewer")
+    elif mutation == "missing_effect":
+        applied["effects"] = []
+    elif mutation == "unknown_effect_item":
+        applied["effects"][0]["item_id"] = "unknown-review-item"
+    elif mutation == "wrong_count":
+        applied["decision_count"] = 0
+    elif mutation == "incomplete_ui":
+        ui_decisions["decisions"] = []
+    applied_path.write_text(
+        json.dumps(applied, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    ui_path.write_text(
+        json.dumps(ui_decisions, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    _reseal_bound_phase_one_manifest(manifest_path, payload)
+    input_path = _write_new_client_input(tmp_path, payload)
+
+    with pytest.raises(ValidationError, match=message):
+        package_new_client(
+            input_path,
+            tmp_path / f"bad-review-provenance-{mutation}",
+            generated_at="2026-02-01T10:00:00+00:00",
+        )
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("ui_edit_mismatch", "must match exactly"),
+        ("applied_edit_missing", "applied_decisions.edit_value is required"),
+        ("effect_edit_mismatch", "must match exactly"),
+        ("accepted_with_edit_value", "must not contain edit_value"),
+    ],
+)
+def test_final_ready_phase_one_binding_rejects_edit_value_provenance_drift(
+    tmp_path: Path,
+    mutation: str,
+    message: str,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    manifest_path = _bind_client_file_preparation_manifest(
+        tmp_path, payload, status="final_ready"
+    )
+    applied_path = manifest_path.parent / "applied_decisions.json"
+    ui_path = manifest_path.parent / "ui_decisions.json"
+    applied = load_json(applied_path)
+    ui_decisions = load_json(ui_path)
+    if mutation == "accepted_with_edit_value":
+        ui_decisions["decisions"][0]["edit_value"] = "unexpected replacement"
+    else:
+        for record in (
+            ui_decisions["decisions"][0],
+            applied["decisions"][0],
+            applied["effects"][0],
+        ):
+            record["action"] = "edit"
+            record["status"] = "edited"
+            record["edit_value"] = "reviewed replacement"
+        if mutation == "ui_edit_mismatch":
+            ui_decisions["decisions"][0]["edit_value"] = "different UI value"
+        elif mutation == "applied_edit_missing":
+            applied["decisions"][0].pop("edit_value")
+        elif mutation == "effect_edit_mismatch":
+            applied["effects"][0]["edit_value"] = "different effect value"
+    applied_path.write_text(
+        json.dumps(applied, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    ui_path.write_text(
+        json.dumps(ui_decisions, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    _reseal_bound_phase_one_manifest(manifest_path, payload)
+    input_path = _write_new_client_input(tmp_path, payload)
+
+    with pytest.raises(ValidationError, match=message):
+        package_new_client(
+            input_path,
+            tmp_path / f"bad-edit-value-provenance-{mutation}",
             generated_at="2026-02-01T10:00:00+00:00",
         )
 
@@ -1458,6 +2509,86 @@ def test_packaging_preserves_existing_review_history(tmp_path: Path) -> None:
     assert manifest_path.read_bytes() == original_manifest
 
 
+def test_packaging_failure_does_not_publish_partial_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    input_path = _write_new_client_input(tmp_path, _complete_new_client_input(tmp_path))
+    output_dir = tmp_path / "transactional-package"
+
+    def fail_after_structured_artifacts(*_args: Any, **_kwargs: Any) -> Path:
+        raise OSError("synthetic memo write failure")
+
+    monkeypatch.setattr(
+        package_new_client_module,
+        "_write_memo",
+        fail_after_structured_artifacts,
+    )
+
+    with pytest.raises(OSError, match="synthetic memo write failure"):
+        package_new_client_module.package_new_client(
+            input_path,
+            output_dir,
+            generated_at="2026-02-01T10:00:00+00:00",
+        )
+
+    assert not output_dir.exists()
+    assert list(tmp_path.glob(f".{output_dir.name}.*.tmp")) == []
+
+
+def test_packaging_in_case_directory_retains_the_verified_starter(
+    tmp_path: Path,
+) -> None:
+    case_dir = tmp_path / "same-directory-case"
+    case_dir.mkdir()
+    input_path = _write_new_client_input(
+        case_dir, _complete_new_client_input(tmp_path / "external-evidence")
+    )
+    original_input = input_path.read_bytes()
+
+    package_new_client(
+        input_path,
+        case_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    assert input_path.read_bytes() == original_input
+    assert (case_dir / "final_artifacts.json").is_file()
+    assert stat.S_IMODE(input_path.stat().st_mode) == 0o600
+
+
+def test_packaging_failure_in_case_directory_restores_the_starter(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    case_dir = tmp_path / "same-directory-failure"
+    case_dir.mkdir()
+    input_path = _write_new_client_input(
+        case_dir, _complete_new_client_input(tmp_path / "failure-evidence")
+    )
+    original_input = input_path.read_bytes()
+
+    def fail_after_structured_artifacts(*_args: Any, **_kwargs: Any) -> Path:
+        raise OSError("synthetic same-directory failure")
+
+    monkeypatch.setattr(
+        package_new_client_module,
+        "_write_memo",
+        fail_after_structured_artifacts,
+    )
+
+    with pytest.raises(OSError, match="synthetic same-directory failure"):
+        package_new_client_module.package_new_client(
+            input_path,
+            case_dir,
+            generated_at="2026-02-01T10:00:00+00:00",
+        )
+
+    assert list(case_dir.iterdir()) == [input_path]
+    assert input_path.read_bytes() == original_input
+    assert list(tmp_path.glob(f".{case_dir.name}.*")) == []
+
+
 def test_review_lists_only_case_used_runtime_sources(tmp_path: Path) -> None:
     input_path = _write_new_client_input(tmp_path, _complete_new_client_input(tmp_path))
     output_dir = tmp_path / "used-sources-package"
@@ -1468,9 +2599,7 @@ def test_review_lists_only_case_used_runtime_sources(tmp_path: Path) -> None:
     )
     review = load_json(output_dir / "review_payload.json")
     source_ids = {
-        item["data"]["source_id"]
-        for item in review["items"]
-        if item["item_type"] == "official_source"
+        source_id for item in review["items"] for source_id in item["source_ids"]
     }
     assert "cndcec_modulistica_aml_2026" not in source_ids
     assert source_ids == {
@@ -1488,3 +2617,506 @@ def test_runtime_source_registry_rejects_third_party_authority(tmp_path: Path) -
 
     with pytest.raises(ValidationError, match="authority is unsupported"):
         load_source_registry(path)
+
+
+def test_packaging_requires_explicit_processing_authority(tmp_path: Path) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    payload["processing_authority"] = build_template(
+        "CASE-AUTHORITY",
+        client_type="company",
+        engagement_kind="ongoing",
+        assessment_date="2026-01-31",
+    )["processing_authority"]
+    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
+
+    with pytest.raises(ValidationError, match="Semantic/model processing is blocked"):
+        package_new_client(
+            input_path,
+            tmp_path / "authority-blocked",
+            generated_at="2026-02-01T10:00:00+00:00",
+        )
+
+
+@pytest.mark.parametrize(
+    ("declared_runtime", "transfer_authorized"),
+    [
+        ("local_codex_workspace", False),
+        ("managed_codex_runtime", True),
+    ],
+    ids=("local-no-transfer", "managed-transfer-authorized"),
+)
+def test_run_intake_separates_declared_authority_from_observed_packaging(
+    tmp_path: Path,
+    declared_runtime: str,
+    transfer_authorized: bool,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    payload["processing_authority"]["runtime"] = declared_runtime
+    payload["processing_authority"][
+        "external_transfer_authorized"
+    ] = transfer_authorized
+    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
+    output_dir = tmp_path / f"authority-trace-{declared_runtime}"
+
+    package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    run_intake = load_json(output_dir / "run_intake.json")
+    declaration = run_intake["processing_authority_declaration"]
+    observed = run_intake["observed_processing"]
+    assert declaration == payload["processing_authority"]
+    assert declaration["runtime"] == declared_runtime
+    assert declaration["external_transfer_authorized"] is transfer_authorized
+    assert observed == {
+        "scope": "package_new_client_deterministic_invocation",
+        "runtime": "local_python_process",
+        "model_processing_performed": False,
+        "external_transfer_performed": False,
+    }
+    assert {step["execution_location"] for step in run_intake["execution_trace"]} == {
+        "local_python_process"
+    }
+    assert run_intake["data_posture"]["external_uploads"] == []
+
+
+def test_non_italian_country_pack_is_rejected_truthfully() -> None:
+    with pytest.raises(
+        ValidationError, match="No Vera professional-setup country pack"
+    ):
+        build_template(
+            "CASE-COUNTRY-PACK",
+            client_type="company",
+            engagement_kind="ongoing",
+            assessment_date="2026-01-31",
+            jurisdiction="CH-GE",
+            language="fr",
+        )
+
+
+def test_company_ownership_and_executor_postures_must_be_explicit(
+    tmp_path: Path,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    payload["ownership_status"] = {
+        "status": "pending",
+        "basis": "Still under review.",
+        "evidence_ids": [],
+        "confirmed_by_role": None,
+        "confirmed_at": None,
+    }
+    payload["beneficial_owners"] = []
+    payload["screening_results"] = [
+        screening
+        for screening in payload["screening_results"]
+        if not screening["subject_reference"].startswith("OWNER-")
+    ]
+    assert validate_new_client_input(payload)["ownership_status"]["status"] == "pending"
+
+    payload["representative_posture"]["executor_reference"] = "UNKNOWN-EXECUTOR"
+    with pytest.raises(
+        ValidationError, match="must identify a recorded representative"
+    ):
+        validate_new_client_input(payload)
+
+    payload = _complete_new_client_input(tmp_path / "posture-confirmation")
+    payload["representative_posture"]["confirmed_by_role"] = "professional"
+    payload["representative_posture"]["confirmed_at"] = PROFESSIONAL_CONFIRMED_AT
+    with pytest.raises(ValidationError, match="must not contain separate confirmation"):
+        validate_new_client_input(payload)
+
+    payload = _complete_new_client_input(tmp_path / "executor-role")
+    payload["representative_posture"]["executor_reference"] = "REP-LEGAL-02"
+    with pytest.raises(ValidationError, match="whose role is executor"):
+        validate_new_client_input(payload)
+
+
+def test_processing_authority_requires_pseudonymous_actor(tmp_path: Path) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    payload["processing_authority"]["authorized_by"] = None
+
+    with pytest.raises(ValidationError, match="processing_authority.authorized_by"):
+        validate_new_client_input(payload)
+
+
+def test_evidence_and_identity_dates_must_be_chronological(tmp_path: Path) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    payload["evidence_register"][0]["obtained_on"] = "2026-02-01"
+    payload["evidence_register"][0]["expires_on"] = "2026-01-31"
+    with pytest.raises(
+        ValidationError, match="expires_on must not precede obtained_on"
+    ):
+        validate_new_client_input(payload)
+
+    payload = _complete_new_client_input(tmp_path / "identity-dates")
+    payload["party_identity_document"]["issued_on"] = "2035-01-31"
+    payload["party_identity_document"]["expires_on"] = "2045-01-31"
+    with pytest.raises(ValidationError, match="verified_on must not precede issued_on"):
+        validate_new_client_input(payload)
+
+
+def test_expired_evidence_and_identity_documents_block_export(tmp_path: Path) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    evidence = next(
+        item for item in payload["evidence_register"] if item["evidence_id"] == "ev-cf"
+    )
+    evidence["expires_on"] = "2026-01-31"
+    payload["party_identity_document"]["expires_on"] = "2026-01-31"
+    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
+    output_dir = tmp_path / "expired-package"
+
+    result = package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    reasons = {
+        item["reason"]
+        for item in load_json(output_dir / "missing_evidence.json")["items"]
+    }
+    assert result["status"] == "blocked"
+    assert {"evidence_expired", "identity_document_expired"} <= reasons
+
+
+def test_available_evidence_cannot_support_verified_party_and_owner_facts(
+    tmp_path: Path,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    evidence_by_id = {
+        item["evidence_id"]: item for item in payload["evidence_register"]
+    }
+    for evidence_id in ("ev-party-id", "ev-rep-1", "ev-owner-1"):
+        evidence_by_id[evidence_id]["status"] = "available"
+    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
+    output_dir = tmp_path / "unverified-support-package"
+
+    result = package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    missing_items = load_json(output_dir / "missing_evidence.json")["items"]
+    unverified_ids = {
+        item["item_id"]
+        for item in missing_items
+        if item["reason"] == "supporting_evidence_not_verified"
+    }
+    assert result["status"] == "blocked"
+    assert {
+        "party_fact:party-fact-01:evidence",
+        "party_identity:primary:evidence",
+        "representative_authority:REP-EXECUTOR-01:evidence",
+        "representative_identity:REP-EXECUTOR-01:evidence",
+        "representative_posture:resolution:evidence",
+        "owner:OWNER-01:evidence",
+        "owner_identity:OWNER-01:evidence",
+        "ownership_status:resolution:evidence",
+    } <= unverified_ids
+
+
+def test_review_groups_all_missing_evidence_into_one_document_request(
+    tmp_path: Path,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    evidence = next(
+        item for item in payload["evidence_register"] if item["evidence_id"] == "ev-cf"
+    )
+    evidence["expires_on"] = "2026-01-31"
+    payload["party_identity_document"]["expires_on"] = "2026-01-31"
+    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
+    output_dir = tmp_path / "grouped-missing-package"
+
+    package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    missing_evidence = load_json(output_dir / "missing_evidence.json")
+    review = load_json(output_dir / "review_payload.json")
+    missing_items = [
+        item for item in review["items"] if item["item_type"] == "missing_evidence"
+    ]
+    assert len(missing_items) == 1
+    assert missing_items[0]["id"] == "missing:grouped"
+    assert missing_items[0]["recommended_action"] == "request_more_documents"
+    assert (
+        missing_items[0]["data"]["missing_evidence_count"] == missing_evidence["count"]
+    )
+
+
+def test_confirmed_terms_and_applicability_require_substance_and_case_facts(
+    tmp_path: Path,
+) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    payload["engagement"]["terms"] = {
+        "review_status": "confirmed",
+        "duration_months": None,
+        "notice_days": None,
+        "advance_amount": None,
+        "currency": "EUR",
+        "payment_terms": None,
+        "indexation_basis": None,
+        "insurance_reference": None,
+    }
+    with pytest.raises(ValidationError, match="at least one substantive term"):
+        validate_new_client_input(payload)
+
+    payload = _complete_new_client_input(tmp_path / "case-facts")
+    payload["applicability"][0]["case_fact_ids"] = []
+    with pytest.raises(ValidationError, match="case_fact_ids must identify"):
+        validate_new_client_input(payload)
+
+
+def test_bound_phase_one_artifact_drift_is_rejected(tmp_path: Path) -> None:
+    payload = _complete_new_client_input(tmp_path)
+    manifest_path = _bind_client_file_preparation_manifest(
+        tmp_path, payload, status="final_ready"
+    )
+    (manifest_path.parent / "review_payload.json").write_text(
+        '{"tampered":true}\n', encoding="utf-8"
+    )
+    input_path = _write_new_client_input(tmp_path, payload)
+
+    with pytest.raises(ValidationError, match="output (size|hash) mismatch"):
+        package_new_client(
+            input_path,
+            tmp_path / "tampered-upstream",
+            generated_at="2026-02-01T10:00:00+00:00",
+        )
+
+
+@pytest.mark.parametrize(
+    ("action", "extracted_value", "edit_value", "expected_value"),
+    [
+        ("accept", "RSSMRA80A01H501U", None, "RSSMRA80A01H501U"),
+        ("edit", "RSSMRA80A01H501X", "RSSMRA80A01H501U", "RSSMRA80A01H501U"),
+    ],
+)
+def test_promotion_uses_only_reviewed_unambiguous_tax_code(
+    tmp_path: Path,
+    action: str,
+    extracted_value: str,
+    edit_value: str | None,
+    expected_value: str,
+) -> None:
+    manifest_path = _write_promotable_phase_one_run(
+        tmp_path,
+        action=action,
+        extracted_value=extracted_value,
+        edit_value=edit_value,
+    )
+
+    target = promote_client_file_preparation(
+        manifest_path,
+        tmp_path / f"promoted-case-{action}",
+        client_reference=f"CASE-PROMOTED-{action.upper()}",
+        assessment_date="2026-02-01",
+        language="fr",
+    )
+
+    intake = load_json(target)
+    assert intake["jurisdiction"] == "IT"
+    assert intake["language"] == "fr"
+    assert intake["processing_authority"]["status"] == "pending"
+    assert intake["tax_facts"]["codice_fiscale"] == {
+        "value": expected_value,
+        "verification_status": "reported",
+        "evidence_ids": ["phase1-reviewed-decisions"],
+    }
+    assert intake["tax_facts"]["partita_iva"]["verification_status"] == "unknown"
+    assert intake["party_facts"][0]["fact_id"] == "party-fact-01"
+    assert all(
+        record["case_fact_ids"] == ["party-fact-01"]
+        for record in intake["applicability"]
+    )
+    assert intake["client_file_preparation_binding"]["promoted_evidence_ids"] == [
+        "phase1-reviewed-decisions"
+    ]
+    assert stat.S_IMODE(target.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("upstream_jurisdiction", ["geneva", "zurich", "uk", "mixed"])
+def test_promotion_rejects_unavailable_or_mixed_country_pack(
+    tmp_path: Path, upstream_jurisdiction: str
+) -> None:
+    manifest_path = _write_promotable_phase_one_run(
+        tmp_path,
+        action="accept",
+        extracted_value="RSSMRA80A01H501U",
+        jurisdiction=upstream_jurisdiction,
+    )
+
+    expected = "mixed-jurisdiction" if upstream_jurisdiction == "mixed" else "No Vera"
+    with pytest.raises(ValidationError, match=expected):
+        promote_client_file_preparation(
+            manifest_path,
+            tmp_path / "blocked-country-pack",
+            client_reference="CASE-COUNTRY-BLOCKED",
+        )
+
+
+def test_promotion_inherits_and_protects_sealed_language(tmp_path: Path) -> None:
+    manifest_path = _write_promotable_phase_one_run(
+        tmp_path,
+        action="accept",
+        extracted_value="RSSMRA80A01H501U",
+        language="de",
+    )
+    inherited = promote_client_file_preparation(
+        manifest_path,
+        tmp_path / "inherited-language",
+        client_reference="CASE-LANGUAGE-INHERITED",
+    )
+    assert load_json(inherited)["language"] == "de"
+
+    with pytest.raises(ValidationError, match="must match the sealed"):
+        promote_client_file_preparation(
+            manifest_path,
+            tmp_path / "mismatched-language",
+            client_reference="CASE-LANGUAGE-MISMATCH",
+            language="fr",
+        )
+
+
+@pytest.mark.parametrize(
+    ("language", "expected_heading"),
+    [
+        ("it", "Memo studio — nuovo cliente"),
+        ("en", "Studio new-client memo"),
+        ("fr", "Note du cabinet — nouveau client"),
+        ("de", "Kanzleivermerk — neuer Mandant"),
+    ],
+)
+def test_generated_studio_outputs_follow_selected_language(
+    tmp_path: Path, language: str, expected_heading: str
+) -> None:
+    case_root = tmp_path / language
+    payload = _complete_new_client_input(case_root)
+    payload["language"] = language
+    for template in payload["template_references"]:
+        template["language"] = language
+    input_path = _write_new_client_input(case_root, validate_new_client_input(payload))
+    output_dir = case_root / "localized-package"
+
+    package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    memo = (output_dir / "studio_new_client_memo.md").read_text(encoding="utf-8")
+    assert expected_heading in memo
+
+
+@pytest.mark.parametrize(
+    ("language", "memo_label", "missing_reason", "handoff_heading"),
+    [
+        (
+            "it",
+            "Fascia calcolata: poco significativo",
+            "non risulta disponibile",
+            "# Passaggio alla revisione — nuovo cliente",
+        ),
+        (
+            "en",
+            "Calculated band: low significance",
+            "is not currently available",
+            "# New Client Review Handoff",
+        ),
+        (
+            "fr",
+            "Niveau calculé: peu significatif",
+            "n’est pas disponible",
+            "# Transmission pour revue — nouveau client",
+        ),
+        (
+            "de",
+            "Berechnete Risikostufe: gering signifikant",
+            "liegt derzeit nicht vor",
+            "# Übergabe zur Prüfung — neuer Mandant",
+        ),
+    ],
+    ids=("italian", "english", "french", "german"),
+)
+def test_human_facing_package_artifacts_are_fully_localized(
+    tmp_path: Path,
+    language: str,
+    memo_label: str,
+    missing_reason: str,
+    handoff_heading: str,
+) -> None:
+    case_root = tmp_path / language
+    payload = _complete_new_client_input(case_root)
+    payload["language"] = language
+    payload["evidence_register"][0]["status"] = "missing"
+    for template in payload["template_references"]:
+        template["language"] = language
+    input_path = _write_new_client_input(case_root, validate_new_client_input(payload))
+    output_dir = case_root / "localized-human-artifacts"
+
+    package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    memo = (output_dir / "studio_new_client_memo.md").read_text(encoding="utf-8")
+    client_draft = (output_dir / "client_missing_information_draft.md").read_text(
+        encoding="utf-8"
+    )
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    missing_json = load_json(output_dir / "missing_evidence.json")
+    manifest = load_json(output_dir / "final_artifacts.json")
+    handoff_record = next(
+        record
+        for record in manifest["outputs"]
+        if record["path"] == "review_handoff.md"
+    )
+
+    assert memo_label in memo
+    assert missing_reason in client_draft
+    assert handoff.startswith(handoff_heading + "\n")
+    assert handoff_heading.removeprefix("# ") in handoff_record["required_text"]
+    assert any(
+        item["reason"] == "evidence_status_missing" for item in missing_json["items"]
+    )
+    human_copy = "\n".join((memo, client_draft, handoff))
+    for machine_code in (
+        "draft_for_professional_review",
+        "calculated_for_professional_review",
+        "draft_schedule_for_professional_review",
+        "approved_reusable_reference_available",
+        "evidence_status_missing",
+        "evidence_record",
+    ):
+        assert machine_code not in human_copy
+    assert "ev-cf" not in client_draft
+
+
+def test_complete_case_recommends_accept_without_unprotecting_semantic_items(
+    tmp_path: Path,
+) -> None:
+    input_path = _write_new_client_input(tmp_path, _complete_new_client_input(tmp_path))
+    output_dir = tmp_path / "recommendations"
+    package_new_client(
+        input_path,
+        output_dir,
+        generated_at="2026-02-01T10:00:00+00:00",
+    )
+
+    review = load_json(output_dir / "review_payload.json")
+    assert {item["recommended_action"] for item in review["items"]} == {"accept"}
+    adapter = load_json(PLUGIN_ROOT / "assets" / "review-workbench-adapter.json")
+    protected = set(adapter["bulkProtectedItemTypes"])
+    assert {
+        "privacy_processing",
+        "document_applicability",
+        "aml_factor_section",
+        "aml_trigger_set",
+        "aml_assessment",
+    } <= protected

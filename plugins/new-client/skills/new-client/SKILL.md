@@ -157,12 +157,34 @@ records.
 
 Prefer a reviewed `client-file-preparation` run. Verify the supplied run ID, exact
 `final_artifacts.json` byte hash, plugin/workflow identity, final-ready states,
-and required output before relying on it. Do not duplicate its OCR or
+every listed output's byte hash and size, and the canonical upstream package
+hash before relying on it. Do not duplicate its OCR or
 classification. A malformed or hash-mismatched binding is a hard failure; a
 valid but non-final binding blocks relationship export. When no prior run
 exists, select `standalone_evidence`, state why, and use stable evidence IDs and
 existing local paths. The package records hashes without copying source
 documents.
+
+For the normal handoff, create the phase-two starter deterministically:
+
+```bash
+python scripts/promote_client_file_preparation.py \
+  --final-artifacts /private/path/file-preparation-run/final_artifacts.json \
+  --case-dir /private/path/new-client-run \
+  --client-reference CLIENT-001
+```
+
+The command inherits the sealed phase-one language. Do not pass a different
+`--language`; an explicit mismatch is rejected.
+
+Promotion may carry forward only accepted or edited, semantically unambiguous
+fields as `reported`, never as verified. Ambiguous identifiers, amounts, years,
+classification guesses, and unreviewed extractions remain bound upstream but
+are not promoted as relationship facts.
+
+The shipped professional-setup country pack is `IT`. Languages `it`, `en`,
+`fr`, and `de` localize review and generated studio drafts for that pack; they
+do not imply that Swiss or UK professional-setup packs exist.
 
 Treat `references/source-registry.json` as a maintained seed, not as proof that
 law is current or applicable. For a real case, model-led research should verify
@@ -247,6 +269,11 @@ directory for regenerated domain artifacts.
 
 The normal session contains `run_intake.json`, `review_payload.json`,
 `ui_decisions.json`, `review_handoff.md`, and `final_artifacts.json`.
+The workbench groups party posture, engagement, subject screening, AML factor
+sections, and mandatory triggers. Mechanically verified bindings, source rows,
+and duplicate summaries remain in local artifacts rather than creating dozens
+of mandatory accept decisions. Missing information is represented by one
+grouped request decision when present.
 
 When MCP is available:
 
@@ -256,6 +283,13 @@ When MCP is available:
 4. apply them with `apply_new_client_decisions`, producing
    `applied_decisions.json` and updating only the review portion of the export
    gate in `final_artifacts.json`.
+
+At Apply, the service re-derives the package's inclusive temporal horizon from
+the authoritative-source `review_by`, every recorded evidence and identity
+document expiry, and every template `valid_until` and `review_due_on`. It uses
+the system UTC date and fails without writing when that date is later than the
+earliest bound deadline. Refresh the affected material and generate a new run;
+an earlier professional acceptance does not extend the deadline.
 
 Pass a stable pseudonymous studio reviewer reference in the `reviewer` field
 when applying the completed review. Do not put a name, email address, tax code,
@@ -269,8 +303,20 @@ the final state. `edit` records an explicit proposed revision; a material edit
 invalidates dependent acceptances and requires regeneration. Never silently
 mutate source facts or legal/AML conclusions in place.
 
-If the widget is unavailable, review the Markdown artifacts and leave
-`ui_decisions.json` pending until decisions are explicitly recorded.
+If the host MCP tools are unavailable, start the packaged local workbench from
+the resolved module root:
+
+```bash
+python scripts/review_server.py <new-client-output-directory>
+```
+
+It renders the same widget on loopback and persists the same save/apply tool
+calls. In repository source, the equivalent developer command from this
+component root is
+`python ../../scripts/serve_review_workbench.py <output-directory> --plugin-dir .`.
+Only if neither service can run, review the Markdown artifacts and leave
+`ui_decisions.json` pending; a conversational approval is not an applied
+professional review.
 
 ## Expected artifacts
 

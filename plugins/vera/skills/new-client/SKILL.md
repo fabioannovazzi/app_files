@@ -38,3 +38,36 @@ one. Both MCP toolsets belong to this workflow:
 
 Treat the relevant resolved module root as the plugin working directory for each
 command. Present every phase and artifact to the user under **New Client**.
+
+Phase one accepts `italy`, `geneva`, `zurich`, `uk`, or `mixed`; its review,
+memo, client request, inventory, extraction report, and fiscal summary follow
+`it`, `en`, `fr`, or `de`. Low-level machine records retain stable field and
+status codes. The current professional setup country pack is Italy only.
+Promote a reviewed phase-one run with the
+resolved `new-client` module's
+`scripts/promote_client_file_preparation.py`; the command verifies the sealed
+manifest and every listed output, inherits the phase-one language, and must
+reject non-Italian or mixed runs rather than implying another country pack.
+
+Before phase-two packaging, require the explicit `processing_authority` record,
+including a stable pseudonymous approving actor reference. Do not substitute a
+name, email address, tax identifier, or a general privacy notice for that
+case-specific authority record.
+
+When host MCP tools are unavailable, use each resolved module's persistent
+loopback workbench instead of treating chat text as saved decisions. From an
+installed/package module root, run:
+
+```bash
+python scripts/review_server.py <phase-output-directory>
+```
+
+From either component root in repository source, run:
+
+```bash
+python ../../scripts/serve_review_workbench.py <phase-output-directory> --plugin-dir .
+```
+
+The packaged workbench invokes the same validate/render/save/apply contract.
+If it cannot run, the review may continue in Markdown for inspection only;
+leave its JSON decisions pending and say they were not applied.
