@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import calendar
+import csv
 import hashlib
 import json
 import os
@@ -20,6 +21,7 @@ __all__ = [
     "EXPECTED_ARTIFACTS",
     "SCHEMA_VERSION",
     "SCREENING_TYPES",
+    "SUPPORTED_JURISDICTIONS",
     "SUPPORTED_LANGUAGES",
     "ValidationError",
     "add_months_clamped",
@@ -30,6 +32,7 @@ __all__ = [
     "build_missing_evidence",
     "build_monitoring_plan",
     "build_review_payload",
+    "build_temporal_validity",
     "calculate_aml",
     "canonical_json_hash",
     "ensure_private_output_directory",
@@ -39,6 +42,7 @@ __all__ = [
     "utc_now",
     "validate_contract",
     "validate_new_client_input",
+    "validate_processing_authority",
     "validate_review_payload_privacy",
     "validate_source_references",
     "verify_client_file_preparation_binding",
@@ -65,7 +69,32 @@ APPLICABILITY_TOPICS = (
 )
 SCREENING_TYPES = ("pep", "sanctions", "country")
 SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+SUPPORTED_JURISDICTIONS = ("IT",)
+ITALY_COUNTRY_PACK = "it-professional-setup-2026"
+TEMPORAL_VALIDITY_POLICY = "inclusive_earliest_material_deadline_v1"
+TEMPORAL_APPLY_RULE = "system_utc_date_must_not_exceed_valid_through"
 CLIENT_FILE_PREPARATION_FINAL_STATUSES = {"final_ready"}
+CLIENT_FILE_PREPARATION_PACKAGE_HASH_BASIS = (
+    "sorted_outputs_path_size_sha256_canonical_json_v1"
+)
+CLIENT_FILE_PREPARATION_SOURCE_LIMITS = {
+    "max_entry_count": 20_000,
+    "max_file_count": 5_000,
+    "max_file_bytes": 256 * 1024 * 1024,
+    "max_total_bytes": 2 * 1024 * 1024 * 1024,
+}
+CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS = (
+    "relative_path",
+    "file_name",
+    "extension",
+    "size_bytes",
+    "modified_iso",
+    "sha256",
+    "category",
+    "confidence",
+    "years",
+    "notes",
+)
 EXPECTED_ARTIFACTS = (
     "run_intake.json",
     "case_facts_validated.json",
@@ -101,6 +130,172 @@ _REVIEW_FORBIDDEN_KEYS = {
     "subject_reference",
 }
 _REFERENCE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{2,79}$")
+
+_REVIEW_COPY: dict[str, dict[str, str]] = {
+    "title.privacy_processing": {
+        "it": "Decisione sul trattamento dei dati — finalità {number}",
+        "en": "Privacy processing decision — purpose {number}",
+        "fr": "Décision relative au traitement des données — finalité {number}",
+        "de": "Entscheidung zur Datenverarbeitung — Zweck {number}",
+    },
+    "title.marketing_consent": {
+        "it": "Consenso marketing separato",
+        "en": "Separate marketing-consent record",
+        "fr": "Consentement marketing distinct",
+        "de": "Gesonderte Einwilligung für Marketing",
+    },
+    "title.applicability": {
+        "it": "Applicabilità — {topic}",
+        "en": "Applicability — {topic}",
+        "fr": "Applicabilité — {topic}",
+        "de": "Anwendbarkeit — {topic}",
+    },
+    "title.aml_table_1": {
+        "it": "Applicabilità della Tabella 1 antiriciclaggio",
+        "en": "AML Table 1 applicability",
+        "fr": "Applicabilité du tableau 1 LCB-FT",
+        "de": "Anwendbarkeit der AML-Tabelle 1",
+    },
+    "title.monitoring_plan": {
+        "it": "Calendario dei riesami periodici",
+        "en": "Ongoing-review schedule",
+        "fr": "Calendrier des réexamens périodiques",
+        "de": "Zeitplan für regelmäßige Überprüfungen",
+    },
+    "title.party_profile": {
+        "it": "Profilo del cliente e documenti di identità",
+        "en": "Client profile and identity evidence",
+        "fr": "Profil du client et justificatifs d’identité",
+        "de": "Mandantenprofil und Identitätsnachweise",
+    },
+    "title.party_structure": {
+        "it": "Rappresentanti, esecutore e titolarità effettiva",
+        "en": "Representatives, executor and beneficial ownership",
+        "fr": "Représentants, exécutant et bénéficiaires effectifs",
+        "de": "Vertreter, ausführende Person und wirtschaftlich Berechtigte",
+    },
+    "title.engagement": {
+        "it": "Ambito e condizioni dell’incarico",
+        "en": "Engagement scope and terms",
+        "fr": "Périmètre et conditions de la mission",
+        "de": "Umfang und Bedingungen des Auftrags",
+    },
+    "title.screening_subject": {
+        "it": "Copertura delle verifiche — {subject_alias}",
+        "en": "Screening coverage — {subject_alias}",
+        "fr": "Couverture des vérifications — {subject_alias}",
+        "de": "Abdeckung der Prüfungen — {subject_alias}",
+    },
+    "title.aml_factor_section": {
+        "it": "Sezione {section} dei fattori di rischio antiriciclaggio",
+        "en": "AML risk-factor section {section}",
+        "fr": "Section {section} des facteurs de risque LCB-FT",
+        "de": "Abschnitt {section} der AML-Risikofaktoren",
+    },
+    "title.aml_trigger_set": {
+        "it": "Indicatori che impongono misure rafforzate",
+        "en": "Mandatory enhanced-measure triggers",
+        "fr": "Facteurs imposant des mesures de vigilance renforcée",
+        "de": "Auslöser für verpflichtende verstärkte Maßnahmen",
+    },
+    "title.missing_evidence": {
+        "it": "Evidenze mancanti e informazioni irrisolte",
+        "en": "Missing evidence and unresolved information",
+        "fr": "Justificatifs manquants et informations non résolues",
+        "de": "Fehlende Nachweise und ungeklärte Angaben",
+    },
+    "privacy.notice": {
+        "it": (
+            "Dati di revisione pseudonimizzati: nomi, identificativi fiscali, "
+            "numeri dei documenti di identità e percorsi delle evidenze originali "
+            "restano negli artefatti locali con accesso riservato al proprietario."
+        ),
+        "en": (
+            "Pseudonymous review payload: names, tax identifiers, identity-document "
+            "numbers, and raw evidence paths remain in owner-only local artifacts."
+        ),
+        "fr": (
+            "Données de révision pseudonymisées : les noms, identifiants fiscaux, "
+            "numéros de pièces d’identité et chemins des justificatifs d’origine "
+            "restent dans des artefacts locaux accessibles uniquement à leur "
+            "propriétaire."
+        ),
+        "de": (
+            "Pseudonymisierte Prüfdaten: Namen, Steuerkennzeichen, Ausweisnummern "
+            "und Pfade zu den ursprünglichen Nachweisen verbleiben in lokalen "
+            "Artefakten, auf die nur der Eigentümer zugreifen kann."
+        ),
+    },
+    "privacy.excluded.names": {
+        "it": "nomi",
+        "en": "names",
+        "fr": "noms",
+        "de": "Namen",
+    },
+    "privacy.excluded.tax_identifiers": {
+        "it": "identificativi fiscali",
+        "en": "tax identifiers",
+        "fr": "identifiants fiscaux",
+        "de": "Steuerkennzeichen",
+    },
+    "privacy.excluded.identity_document_numbers": {
+        "it": "numeri dei documenti di identità",
+        "en": "identity-document numbers",
+        "fr": "numéros de pièces d’identité",
+        "de": "Ausweisnummern",
+    },
+    "privacy.excluded.raw_evidence_paths": {
+        "it": "percorsi delle evidenze originali",
+        "en": "raw evidence paths",
+        "fr": "chemins des justificatifs d’origine",
+        "de": "Pfade zu den ursprünglichen Nachweisen",
+    },
+    "privacy.excluded.subject_references": {
+        "it": "riferimenti del cliente e dei soggetti",
+        "en": "client and subject references",
+        "fr": "références du client et des sujets",
+        "de": "Mandanten- und Personenreferenzen",
+    },
+    "privacy.excluded.screening_sources": {
+        "it": "riferimenti alle fonti delle verifiche",
+        "en": "screening source references",
+        "fr": "références des sources de vérification",
+        "de": "Referenzen der Prüfquellen",
+    },
+}
+
+_REVIEW_TOPIC_COPY: dict[str, dict[str, str]] = {
+    "mandate": {
+        "it": "incarico professionale",
+        "en": "professional engagement",
+        "fr": "mission professionnelle",
+        "de": "Berufsauftrag",
+    },
+    "privacy_notice": {
+        "it": "informativa privacy",
+        "en": "privacy notice",
+        "fr": "information sur la protection des données",
+        "de": "Datenschutzhinweis",
+    },
+    "ai_transparency_notice": {
+        "it": "informativa sull’uso dell’IA",
+        "en": "AI transparency notice",
+        "fr": "information sur l’utilisation de l’IA",
+        "de": "Information zum KI-Einsatz",
+    },
+    "article_28_terms": {
+        "it": "nomina ai sensi dell’articolo 28",
+        "en": "Article 28 terms",
+        "fr": "clauses de l’article 28",
+        "de": "Vereinbarung nach Artikel 28",
+    },
+    "aml_assessment": {
+        "it": "valutazione antiriciclaggio",
+        "en": "AML assessment",
+        "fr": "évaluation LCB-FT",
+        "de": "AML-Risikobewertung",
+    },
+}
 
 
 class ValidationError(ValueError):
@@ -224,16 +419,59 @@ def _is_within(path: Path, parent: Path) -> bool:
     return True
 
 
-def ensure_private_output_directory(output_dir: Path) -> Path:
-    """Create an owner-only case directory outside the source repository."""
+def ensure_private_output_directory(
+    output_dir: Path,
+    *,
+    allowed_existing: Iterable[str] = (),
+) -> Path:
+    """Create or validate a dedicated owner-only case directory."""
 
-    resolved = output_dir.expanduser().resolve()
+    requested = output_dir.expanduser().absolute()
+    for component in (requested, *requested.parents):
+        if component.is_symlink():
+            raise ValidationError(
+                "New-client output paths may not traverse symbolic links."
+            )
+    resolved = requested.resolve(strict=False)
     if any(_is_within(resolved, root) for root in _protected_source_roots()):
         raise ValidationError(
             "New-client outputs must be stored outside the source repository "
             "and installed plugin directories."
         )
-    resolved.mkdir(parents=True, exist_ok=True, mode=0o700)
+    broad_roots = {
+        Path(resolved.anchor).resolve(),
+        Path.home().resolve(),
+        Path(tempfile.gettempdir()).resolve(),
+    }
+    if resolved in broad_roots:
+        raise ValidationError(
+            "New-client output must be a dedicated case directory, not a broad root."
+        )
+    allowed_names = set(allowed_existing)
+    if resolved.exists():
+        stat_result = resolved.lstat()
+        if not stat.S_ISDIR(stat_result.st_mode) or resolved.is_symlink():
+            raise ValidationError(
+                "New-client output must be a regular directory without symlinks."
+            )
+        entries = list(resolved.iterdir())
+        unexpected = sorted(
+            entry.name for entry in entries if entry.name not in allowed_names
+        )
+        if unexpected:
+            raise ValidationError(
+                "New-client output directory must be new or contain only explicitly "
+                "replaceable case files. Preserve prior contents and use a new run "
+                "directory. Unexpected entries: " + ", ".join(unexpected)
+            )
+        for entry in entries:
+            entry_stat = entry.lstat()
+            if not stat.S_ISREG(entry_stat.st_mode) or entry.is_symlink():
+                raise ValidationError(
+                    "Existing replaceable case files must be regular files without symlinks."
+                )
+    else:
+        resolved.mkdir(parents=True, mode=0o700)
     resolved.chmod(0o700)
     return resolved
 
@@ -359,6 +597,80 @@ def _validate_professional_confirmation(
         )
 
 
+def validate_processing_authority(
+    value: Any, *, require_authorized: bool = False
+) -> dict[str, Any]:
+    """Validate the explicit authority record required before semantic processing."""
+
+    authority = _require_object(value, "processing_authority")
+    expected_fields = {
+        "status",
+        "scope",
+        "runtime",
+        "minimization",
+        "external_transfer_authorized",
+        "authorized_by",
+        "authorized_by_role",
+        "authorized_at",
+    }
+    if set(authority) != expected_fields:
+        raise ValidationError(
+            "processing_authority fields must be exactly: "
+            + ", ".join(sorted(expected_fields))
+        )
+    status = authority.get("status")
+    if status not in {"pending", "authorized"}:
+        raise ValidationError(
+            "processing_authority.status must be pending or authorized."
+        )
+    if authority.get("scope") != "new_client_professional_setup":
+        raise ValidationError(
+            "processing_authority.scope must be new_client_professional_setup."
+        )
+    if authority.get("runtime") not in {
+        "local_codex_workspace",
+        "managed_codex_runtime",
+    }:
+        raise ValidationError("processing_authority.runtime is not supported.")
+    if authority.get("minimization") != "structured_facts_and_selected_excerpts":
+        raise ValidationError(
+            "processing_authority.minimization must be "
+            "structured_facts_and_selected_excerpts."
+        )
+    if not isinstance(authority.get("external_transfer_authorized"), bool):
+        raise ValidationError(
+            "processing_authority.external_transfer_authorized must be boolean."
+        )
+    if status == "authorized":
+        _require_reference(
+            authority.get("authorized_by"), "processing_authority.authorized_by"
+        )
+        if authority.get("authorized_by_role") != "professional":
+            raise ValidationError(
+                "Authorized processing_authority must be "
+                "authorized_by_role=professional."
+            )
+        _parse_timestamp(
+            authority.get("authorized_at"), "processing_authority.authorized_at"
+        )
+    elif (
+        authority.get("authorized_by") is not None
+        or authority.get("authorized_by_role") is not None
+        or authority.get("authorized_at") is not None
+        or authority.get("external_transfer_authorized") is True
+    ):
+        raise ValidationError(
+            "Pending processing_authority cannot contain authorization metadata "
+            "or authorize an external transfer."
+        )
+    if require_authorized and status != "authorized":
+        raise ValidationError(
+            "Semantic/model processing is blocked until processing_authority.status "
+            "is authorized by the professional."
+        )
+    return dict(authority)
+
+
 def _validate_factor_group(
     factors: Any,
     *,
@@ -424,9 +736,30 @@ def _validate_identity_document(
     ):
         if identity.get(text_field) is not None:
             _require_string(identity.get(text_field), f"{field}.{text_field}")
+    parsed_dates: dict[str, date] = {}
     for date_field in ("issued_on", "expires_on", "verified_on"):
         if identity.get(date_field) is not None:
-            _parse_date(identity.get(date_field), f"{field}.{date_field}")
+            parsed_dates[date_field] = _parse_date(
+                identity.get(date_field), f"{field}.{date_field}"
+            )
+    if (
+        "issued_on" in parsed_dates
+        and "expires_on" in parsed_dates
+        and parsed_dates["expires_on"] < parsed_dates["issued_on"]
+    ):
+        raise ValidationError(f"{field}.expires_on must not precede issued_on.")
+    if (
+        "issued_on" in parsed_dates
+        and "verified_on" in parsed_dates
+        and parsed_dates["verified_on"] < parsed_dates["issued_on"]
+    ):
+        raise ValidationError(f"{field}.verified_on must not precede issued_on.")
+    if (
+        "expires_on" in parsed_dates
+        and "verified_on" in parsed_dates
+        and parsed_dates["verified_on"] > parsed_dates["expires_on"]
+    ):
+        raise ValidationError(f"{field}.verified_on must not follow expires_on.")
     evidence_ids = _validate_evidence_ids(
         identity.get("evidence_ids", []),
         f"{field}.evidence_ids",
@@ -466,7 +799,9 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         raise ValidationError(f"schema_version must be {SCHEMA_VERSION!r}.")
     expected_top_level_fields = {
         "schema_version",
+        "jurisdiction",
         "language",
+        "processing_authority",
         "client_file_preparation_binding",
         "client_reference",
         "client_type",
@@ -474,7 +809,9 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         "party_facts",
         "party_identity_document",
         "representatives",
+        "representative_posture",
         "beneficial_owners",
+        "ownership_status",
         "screening_results",
         "engagement",
         "privacy_processing_decisions",
@@ -495,6 +832,14 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         raise ValidationError(
             "language must be one of " + ", ".join(SUPPORTED_LANGUAGES) + "."
         )
+    if data.get("jurisdiction") not in SUPPORTED_JURISDICTIONS:
+        raise ValidationError(
+            "No Vera professional-setup country pack is available for "
+            f"jurisdiction {data.get('jurisdiction')!r}; available packs: "
+            + ", ".join(SUPPORTED_JURISDICTIONS)
+            + "."
+        )
+    validate_processing_authority(data.get("processing_authority"))
     _require_reference(data.get("client_reference"), "client_reference")
     if data.get("client_type") not in {
         "individual",
@@ -532,15 +877,25 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
             raise ValidationError(
                 f"evidence_register[{index}].status is not supported."
             )
+        obtained_on = None
+        expires_on = None
         if evidence.get("obtained_on") is not None:
-            _parse_date(
+            obtained_on = _parse_date(
                 evidence.get("obtained_on"),
                 f"evidence_register[{index}].obtained_on",
             )
         if evidence.get("expires_on") is not None:
-            _parse_date(
+            expires_on = _parse_date(
                 evidence.get("expires_on"),
                 f"evidence_register[{index}].expires_on",
+            )
+        if (
+            obtained_on is not None
+            and expires_on is not None
+            and expires_on < obtained_on
+        ):
+            raise ValidationError(
+                f"evidence_register[{index}].expires_on must not precede obtained_on."
             )
         if evidence.get("sha256") is not None:
             _require_sha256(
@@ -568,6 +923,8 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
             "run_id",
             "final_artifacts_path",
             "final_artifacts_sha256",
+            "upstream_package_hash",
+            "promoted_evidence_ids",
         }
         if set(client_file_preparation_binding) != expected_binding_fields:
             raise ValidationError(
@@ -585,6 +942,15 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         _require_sha256(
             client_file_preparation_binding.get("final_artifacts_sha256"),
             "client_file_preparation_binding.final_artifacts_sha256",
+        )
+        _require_sha256(
+            client_file_preparation_binding.get("upstream_package_hash"),
+            "client_file_preparation_binding.upstream_package_hash",
+        )
+        _validate_evidence_ids(
+            client_file_preparation_binding.get("promoted_evidence_ids", []),
+            "client_file_preparation_binding.promoted_evidence_ids",
+            evidence_ids,
         )
     elif binding_mode == "standalone_evidence":
         expected_binding_fields = {"mode", "reason", "evidence_ids"}
@@ -717,6 +1083,110 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
             evidence_ids,
         )
 
+    representative_posture = _require_object(
+        data.get("representative_posture"), "representative_posture"
+    )
+    expected_posture_fields = {
+        "status",
+        "executor_reference",
+        "basis",
+        "evidence_ids",
+        "confirmed_by_role",
+        "confirmed_at",
+    }
+    if set(representative_posture) != expected_posture_fields:
+        raise ValidationError(
+            "representative_posture fields must be exactly: "
+            + ", ".join(sorted(expected_posture_fields))
+        )
+    posture_status = representative_posture.get("status")
+    if posture_status not in {"recorded", "none_required_confirmed", "pending"}:
+        raise ValidationError("representative_posture.status is not supported.")
+    posture_evidence_ids = _validate_evidence_ids(
+        representative_posture.get("evidence_ids", []),
+        "representative_posture.evidence_ids",
+        evidence_ids,
+    )
+    if posture_status == "recorded":
+        executor_reference = _require_reference(
+            representative_posture.get("executor_reference"),
+            "representative_posture.executor_reference",
+        )
+        if executor_reference not in representative_ids:
+            raise ValidationError(
+                "representative_posture.executor_reference must identify a recorded "
+                "representative or executor."
+            )
+        executor_record = next(
+            representative
+            for representative in representatives
+            if representative["representative_reference"] == executor_reference
+        )
+        if executor_record["role"] != "executor":
+            raise ValidationError(
+                "representative_posture.executor_reference must identify a "
+                "representative whose role is executor."
+            )
+        if not representatives:
+            raise ValidationError(
+                "representative_posture recorded requires at least one representative."
+            )
+        _require_string(
+            representative_posture.get("basis"), "representative_posture.basis"
+        )
+        if not posture_evidence_ids:
+            raise ValidationError(
+                "representative_posture recorded requires supporting evidence_ids."
+            )
+        if (
+            representative_posture.get("confirmed_by_role") is not None
+            or representative_posture.get("confirmed_at") is not None
+        ):
+            raise ValidationError(
+                "representative_posture recorded derives from the recorded parties "
+                "and must not contain separate confirmation metadata."
+            )
+    elif posture_status == "none_required_confirmed":
+        if (
+            representatives
+            or representative_posture.get("executor_reference") is not None
+        ):
+            raise ValidationError(
+                "representative_posture none_required_confirmed requires no recorded "
+                "representatives or executor_reference."
+            )
+        _require_string(
+            representative_posture.get("basis"), "representative_posture.basis"
+        )
+        if representative_posture.get("confirmed_by_role") != "professional":
+            raise ValidationError(
+                "representative_posture none_required_confirmed must be confirmed "
+                "by the professional."
+            )
+        _parse_timestamp(
+            representative_posture.get("confirmed_at"),
+            "representative_posture.confirmed_at",
+        )
+    else:
+        if (
+            any(
+                representative_posture.get(field) not in {None, ""}
+                for field in (
+                    "executor_reference",
+                    "confirmed_by_role",
+                    "confirmed_at",
+                )
+            )
+            or posture_evidence_ids
+        ):
+            raise ValidationError(
+                "Pending representative_posture cannot contain a resolved executor, "
+                "confirmation metadata, or evidence."
+            )
+        _require_string(
+            representative_posture.get("basis"), "representative_posture.basis"
+        )
+
     owners = _require_list(data.get("beneficial_owners"), "beneficial_owners")
     owner_ids: set[str] = set()
     for index, raw_owner in enumerate(owners):
@@ -753,6 +1223,104 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
             owner.get("identity_document"),
             f"beneficial_owners[{index}].identity_document",
             evidence_ids,
+        )
+
+    ownership_status = _require_object(data.get("ownership_status"), "ownership_status")
+    expected_ownership_fields = {
+        "status",
+        "basis",
+        "evidence_ids",
+        "confirmed_by_role",
+        "confirmed_at",
+    }
+    if set(ownership_status) != expected_ownership_fields:
+        raise ValidationError(
+            "ownership_status fields must be exactly: "
+            + ", ".join(sorted(expected_ownership_fields))
+        )
+    ownership_state = ownership_status.get("status")
+    if ownership_state not in {
+        "owners_recorded",
+        "none_confirmed",
+        "not_applicable_confirmed",
+        "pending",
+    }:
+        raise ValidationError("ownership_status.status is not supported.")
+    ownership_evidence_ids = _validate_evidence_ids(
+        ownership_status.get("evidence_ids", []),
+        "ownership_status.evidence_ids",
+        evidence_ids,
+    )
+    _require_string(ownership_status.get("basis"), "ownership_status.basis")
+    if data["client_type"] in {"company", "entity"}:
+        if ownership_state == "owners_recorded":
+            if not owners:
+                raise ValidationError(
+                    "A company/entity with ownership_status=owners_recorded must "
+                    "record at least one beneficial owner."
+                )
+            if not ownership_evidence_ids:
+                raise ValidationError(
+                    "ownership_status owners_recorded requires supporting evidence_ids."
+                )
+        elif ownership_state == "none_confirmed":
+            if owners:
+                raise ValidationError(
+                    "ownership_status none_confirmed requires an empty "
+                    "beneficial_owners list."
+                )
+            if ownership_status.get("confirmed_by_role") != "professional":
+                raise ValidationError(
+                    "ownership_status none_confirmed must be confirmed by the "
+                    "professional."
+                )
+            _parse_timestamp(
+                ownership_status.get("confirmed_at"),
+                "ownership_status.confirmed_at",
+            )
+        elif ownership_state == "not_applicable_confirmed":
+            raise ValidationError(
+                "ownership_status not_applicable_confirmed is not valid for a "
+                "company or entity."
+            )
+    elif ownership_state not in {"not_applicable_confirmed", "pending"}:
+        raise ValidationError(
+            "An individual/sole trader ownership_status must be "
+            "not_applicable_confirmed or pending."
+        )
+    elif owners:
+        raise ValidationError(
+            "An individual/sole trader cannot record beneficial owners while its "
+            "ownership_status is not_applicable_confirmed or pending."
+        )
+    if ownership_state in {"none_confirmed", "not_applicable_confirmed"}:
+        if ownership_status.get("confirmed_by_role") != "professional":
+            raise ValidationError(
+                "Confirmed ownership_status must be confirmed_by_role=professional."
+            )
+        _parse_timestamp(
+            ownership_status.get("confirmed_at"), "ownership_status.confirmed_at"
+        )
+    elif ownership_state == "pending":
+        if (
+            owners
+            or ownership_evidence_ids
+            or any(
+                ownership_status.get(field) is not None
+                for field in ("confirmed_by_role", "confirmed_at")
+            )
+        ):
+            raise ValidationError(
+                "Pending ownership_status cannot contain owners, evidence, or "
+                "confirmation metadata."
+            )
+    elif any(
+        ownership_status.get(field) is not None
+        for field in ("confirmed_by_role", "confirmed_at")
+    ):
+        raise ValidationError(
+            "ownership_status owners_recorded derives from recorded owners and must "
+            "not claim a separate professional confirmation."
         )
 
     screening_results = _require_list(
@@ -970,6 +1538,20 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
     ):
         if terms.get(text_field) is not None:
             _require_string(terms.get(text_field), f"engagement.terms.{text_field}")
+    if terms.get("review_status") == "confirmed" and all(
+        terms.get(field) in {None, ""}
+        for field in (
+            "duration_months",
+            "notice_days",
+            "advance_amount",
+            "payment_terms",
+            "indexation_basis",
+            "insurance_reference",
+        )
+    ):
+        raise ValidationError(
+            "Confirmed engagement terms must record at least one substantive term."
+        )
 
     privacy_decisions = _require_list(
         data.get("privacy_processing_decisions"), "privacy_processing_decisions"
@@ -1248,6 +1830,28 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         for source_index, source_id in enumerate(source_ids):
             _require_reference(
                 source_id, f"applicability[{index}].source_ids[{source_index}]"
+            )
+        case_fact_ids = _require_list(
+            record.get("case_fact_ids", []),
+            f"applicability[{index}].case_fact_ids",
+        )
+        if not case_fact_ids:
+            raise ValidationError(
+                f"applicability[{index}].case_fact_ids must identify the case facts "
+                "supporting the proposal."
+            )
+        for fact_index, fact_id in enumerate(case_fact_ids):
+            reference = _require_reference(
+                fact_id, f"applicability[{index}].case_fact_ids[{fact_index}]"
+            )
+            if reference not in party_fact_ids:
+                raise ValidationError(
+                    f"applicability[{index}].case_fact_ids[{fact_index}] refers to "
+                    f"unknown party fact {reference!r}."
+                )
+        if len(case_fact_ids) != len(set(case_fact_ids)):
+            raise ValidationError(
+                f"applicability[{index}].case_fact_ids must be unique."
             )
     if topics != set(APPLICABILITY_TOPICS):
         missing = sorted(set(APPLICABILITY_TOPICS) - topics)
@@ -1534,6 +2138,37 @@ def load_source_registry(path: Path) -> dict[str, Any]:
     registry = load_json(path)
     if registry.get("schema_version") != SCHEMA_VERSION:
         raise ValidationError("Source registry schema_version is unsupported.")
+    if registry.get("jurisdiction") != "IT":
+        raise ValidationError(
+            "The bundled professional-setup source registry must declare "
+            "jurisdiction=IT."
+        )
+    if registry.get("country_pack") != ITALY_COUNTRY_PACK:
+        raise ValidationError(
+            "The bundled source registry does not identify the supported Italy "
+            "country pack."
+        )
+    currentness = _require_object(
+        registry.get("currentness"), "source_registry.currentness"
+    )
+    if currentness.get("status") != "verified_current":
+        raise ValidationError(
+            "source_registry.currentness.status must be verified_current."
+        )
+    reviewed_on = _parse_date(
+        currentness.get("reviewed_on"), "source_registry.currentness.reviewed_on"
+    )
+    review_by = _parse_date(
+        currentness.get("review_by"), "source_registry.currentness.review_by"
+    )
+    if review_by < reviewed_on:
+        raise ValidationError(
+            "source_registry.currentness.review_by must not precede reviewed_on."
+        )
+    if registry.get("last_reviewed") != reviewed_on.isoformat():
+        raise ValidationError(
+            "source_registry.last_reviewed must match currentness.reviewed_on."
+        )
     sources = _require_list(registry.get("sources"), "source_registry.sources")
     if not sources:
         raise ValidationError("Source registry must contain at least one source.")
@@ -1570,10 +2205,167 @@ def load_source_registry(path: Path) -> dict[str, Any]:
     return registry
 
 
+def build_temporal_validity(
+    facts: Mapping[str, Any],
+    source_registry: Mapping[str, Any],
+    *,
+    generated_at: str,
+    document_plan: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Derive the inclusive Apply horizon from explicit material deadlines.
+
+    Date comparison is deterministic because expiry and review-by dates are
+    mechanically verifiable validity boundaries. No legal applicability or
+    source-quality judgment is inferred here.
+    """
+
+    evaluated_on = _parse_date(generated_at[:10], "generated_at date")
+    deadlines: dict[str, list[date]] = {
+        "authoritative_source_registry_review_by": [],
+        "evidence_expires_on": [],
+        "primary_identity_expires_on": [],
+        "representative_identity_expires_on": [],
+        "beneficial_owner_identity_expires_on": [],
+        "template_valid_until": [],
+        "template_review_due_on": [],
+    }
+    currentness = _require_object(
+        source_registry.get("currentness"), "source_registry.currentness"
+    )
+    if currentness.get("status") != "verified_current":
+        raise ValidationError(
+            "source_registry.currentness.status must be verified_current."
+        )
+    deadlines["authoritative_source_registry_review_by"].append(
+        _parse_date(
+            currentness.get("review_by"),
+            "source_registry.currentness.review_by",
+        )
+    )
+
+    for index, evidence in enumerate(
+        _require_list(facts.get("evidence_register"), "evidence_register")
+    ):
+        expires_on = _require_object(evidence, f"evidence_register[{index}]").get(
+            "expires_on"
+        )
+        if expires_on is not None:
+            deadlines["evidence_expires_on"].append(
+                _parse_date(expires_on, f"evidence_register[{index}].expires_on")
+            )
+
+    primary_identity = _require_object(
+        facts.get("party_identity_document"), "party_identity_document"
+    )
+    if primary_identity.get("expires_on") is not None:
+        deadlines["primary_identity_expires_on"].append(
+            _parse_date(
+                primary_identity["expires_on"],
+                "party_identity_document.expires_on",
+            )
+        )
+
+    for index, representative in enumerate(
+        _require_list(facts.get("representatives"), "representatives")
+    ):
+        identity = _require_object(
+            _require_object(representative, f"representatives[{index}]").get(
+                "identity_document"
+            ),
+            f"representatives[{index}].identity_document",
+        )
+        if identity.get("expires_on") is not None:
+            deadlines["representative_identity_expires_on"].append(
+                _parse_date(
+                    identity["expires_on"],
+                    f"representatives[{index}].identity_document.expires_on",
+                )
+            )
+
+    for index, owner in enumerate(
+        _require_list(facts.get("beneficial_owners"), "beneficial_owners")
+    ):
+        identity = _require_object(
+            _require_object(owner, f"beneficial_owners[{index}]").get(
+                "identity_document"
+            ),
+            f"beneficial_owners[{index}].identity_document",
+        )
+        if identity.get("expires_on") is not None:
+            deadlines["beneficial_owner_identity_expires_on"].append(
+                _parse_date(
+                    identity["expires_on"],
+                    f"beneficial_owners[{index}].identity_document.expires_on",
+                )
+            )
+
+    if document_plan is None:
+        template_records = _require_list(
+            facts.get("template_references"), "template_references"
+        )
+    else:
+        template_records = []
+        for index, raw_document in enumerate(
+            _require_list(document_plan.get("documents"), "document_plan.documents")
+        ):
+            document = _require_object(
+                raw_document, f"document_plan.documents[{index}]"
+            )
+            template = document.get("template_reference")
+            if template is not None:
+                template_records.append(
+                    _require_object(
+                        template,
+                        f"document_plan.documents[{index}].template_reference",
+                    )
+                )
+    for index, template in enumerate(template_records):
+        template_data = _require_object(template, f"template_references[{index}]")
+        if template_data.get("valid_until") is not None:
+            deadlines["template_valid_until"].append(
+                _parse_date(
+                    template_data["valid_until"],
+                    f"template_references[{index}].valid_until",
+                )
+            )
+        deadlines["template_review_due_on"].append(
+            _parse_date(
+                template_data.get("review_due_on"),
+                f"template_references[{index}].review_due_on",
+            )
+        )
+
+    deadline_summaries = [
+        {
+            "kind": kind,
+            "count": len(values),
+            "valid_through": min(values).isoformat(),
+        }
+        for kind, values in deadlines.items()
+        if values
+    ]
+    all_deadlines = [value for values in deadlines.values() for value in values]
+    valid_through = min(all_deadlines)
+    return {
+        "policy": TEMPORAL_VALIDITY_POLICY,
+        "evaluated_on": evaluated_on.isoformat(),
+        "valid_through": valid_through.isoformat(),
+        "deadline_count": len(all_deadlines),
+        "deadlines": deadline_summaries,
+        "source_currentness_status": currentness["status"],
+        "apply_rule": TEMPORAL_APPLY_RULE,
+    }
+
+
 def validate_source_references(
     intake: Mapping[str, Any], registry: Mapping[str, Any]
 ) -> None:
     """Ensure every source-backed decision cites only registered sources."""
+
+    if intake["jurisdiction"] != registry["jurisdiction"]:
+        raise ValidationError(
+            "The source registry jurisdiction does not match the new-client intake."
+        )
 
     known = {source["source_id"] for source in registry["sources"]}
     for record in intake["applicability"]:
@@ -1638,6 +2430,541 @@ def verify_evidence_register(
     return results
 
 
+def _review_records_by_item_id(
+    value: Any,
+    *,
+    field: str,
+    expected_item_ids: set[str],
+) -> dict[str, Mapping[str, Any]]:
+    records = _require_list(value, field)
+    by_item_id: dict[str, Mapping[str, Any]] = {}
+    for index, raw_record in enumerate(records):
+        record = _require_object(raw_record, f"{field}[{index}]")
+        item_id = _require_reference(record.get("item_id"), f"{field}[{index}].item_id")
+        if item_id in by_item_id:
+            raise ValidationError(f"{field} contains duplicate item_id {item_id!r}.")
+        if item_id not in expected_item_ids:
+            raise ValidationError(
+                f"{field}[{index}].item_id does not reference a real review item."
+            )
+        by_item_id[item_id] = record
+    if set(by_item_id) != expected_item_ids:
+        missing = sorted(expected_item_ids - set(by_item_id))
+        raise ValidationError(
+            f"{field} must cover every review item exactly once; missing: "
+            + ", ".join(missing)
+        )
+    return by_item_id
+
+
+def _require_exact_review_count(value: Any, *, field: str, expected: int) -> None:
+    if isinstance(value, bool) or not isinstance(value, int) or value != expected:
+        raise ValidationError(f"{field} must equal {expected}.")
+
+
+def _verify_client_file_preparation_review_provenance(
+    *,
+    manifest: Mapping[str, Any],
+    run_dir: Path,
+    bound_run_id: str,
+    outputs_by_path: Mapping[str, Mapping[str, Any]],
+    review_application: Mapping[str, Any],
+) -> None:
+    """Fail closed on final-ready phase-one reviewer and coverage provenance."""
+
+    review_payload = load_json(run_dir / "review_payload.json")
+    ui_decisions = load_json(run_dir / "ui_decisions.json")
+    applied_decisions = load_json(run_dir / "applied_decisions.json")
+    for field, payload in (
+        ("review_payload", review_payload),
+        ("ui_decisions", ui_decisions),
+        ("applied_decisions", applied_decisions),
+    ):
+        if (
+            payload.get("plugin") != "client-file-preparation"
+            or payload.get("workflow") != "client-file-preparation"
+            or payload.get("run_id") != bound_run_id
+        ):
+            raise ValidationError(
+                f"Bound {field}.json identity does not match the final-ready manifest."
+            )
+
+    raw_items = _require_list(review_payload.get("items"), "bound_review_payload.items")
+    if not raw_items:
+        raise ValidationError("Bound review_payload.items must not be empty.")
+    items_by_id: dict[str, Mapping[str, Any]] = {}
+    for index, raw_item in enumerate(raw_items):
+        item = _require_object(raw_item, f"bound_review_payload.items[{index}]")
+        item_id = _require_reference(
+            item.get("id"), f"bound_review_payload.items[{index}].id"
+        )
+        if item_id in items_by_id:
+            raise ValidationError(
+                f"Bound review_payload.items contains duplicate id {item_id!r}."
+            )
+        _require_reference(
+            item.get("item_type"),
+            f"bound_review_payload.items[{index}].item_type",
+        )
+        items_by_id[item_id] = item
+    item_count = len(items_by_id)
+    _require_exact_review_count(
+        review_payload.get("item_count"),
+        field="bound_review_payload.item_count",
+        expected=item_count,
+    )
+
+    reviewer = _require_reference(
+        applied_decisions.get("reviewer"), "bound_applied_decisions.reviewer"
+    )
+    if (
+        _require_reference(ui_decisions.get("reviewer"), "bound_ui_decisions.reviewer")
+        != reviewer
+    ):
+        raise ValidationError(
+            "Bound ui_decisions and applied_decisions must use the same stable reviewer alias."
+        )
+
+    expected_item_ids = set(items_by_id)
+    ui_by_id = _review_records_by_item_id(
+        ui_decisions.get("decisions"),
+        field="bound_ui_decisions.decisions",
+        expected_item_ids=expected_item_ids,
+    )
+    applied_by_id = _review_records_by_item_id(
+        applied_decisions.get("decisions"),
+        field="bound_applied_decisions.decisions",
+        expected_item_ids=expected_item_ids,
+    )
+    effects_by_id = _review_records_by_item_id(
+        applied_decisions.get("effects"),
+        field="bound_applied_decisions.effects",
+        expected_item_ids=expected_item_ids,
+    )
+    for item_id, item in items_by_id.items():
+        ui_action = ui_by_id[item_id].get("action")
+        applied_action = applied_by_id[item_id].get("action")
+        effect = effects_by_id[item_id]
+        if ui_action not in {"accept", "edit"}:
+            raise ValidationError(
+                "Final-ready phase-one decisions may contain only accept or edit actions."
+            )
+        if applied_action != ui_action or effect.get("action") != ui_action:
+            raise ValidationError(
+                f"Decision/effect action mismatch for phase-one review item {item_id!r}."
+            )
+        for field, record in (
+            ("ui_decisions", ui_by_id[item_id]),
+            ("applied_decisions", applied_by_id[item_id]),
+        ):
+            if record.get("item_type") != item.get("item_type"):
+                raise ValidationError(
+                    f"{field} item_type mismatch for phase-one review item {item_id!r}."
+                )
+        if effect.get("item_type") != item.get("item_type"):
+            raise ValidationError(
+                f"Effect item_type mismatch for phase-one review item {item_id!r}."
+            )
+        if effect.get("applied") is not True:
+            raise ValidationError(
+                f"Effect for phase-one review item {item_id!r} must be marked applied."
+            )
+        review_records = (
+            ("ui_decisions", ui_by_id[item_id]),
+            ("applied_decisions", applied_by_id[item_id]),
+            ("effect", effect),
+        )
+        if ui_action == "edit":
+            # Exact equality is an audit boundary: promotion must consume the same
+            # replacement the reviewer saved, applied, and sealed as an effect.
+            edit_values: list[str] = []
+            for field, record in review_records:
+                edit_value = record.get("edit_value")
+                if not isinstance(edit_value, str) or not edit_value.strip():
+                    raise ValidationError(
+                        f"{field}.edit_value is required for edited phase-one "
+                        f"review item {item_id!r}."
+                    )
+                edit_values.append(edit_value)
+            if len(set(edit_values)) != 1:
+                raise ValidationError(
+                    "UI, applied-decision, and effect edit_value must match exactly "
+                    f"for phase-one review item {item_id!r}."
+                )
+        elif any("edit_value" in record for _field, record in review_records):
+            raise ValidationError(
+                "Accepted phase-one review items must not contain edit_value: "
+                f"{item_id!r}."
+            )
+
+    for field, payload in (
+        ("bound_ui_decisions", ui_decisions),
+        ("bound_applied_decisions", applied_decisions),
+    ):
+        _require_exact_review_count(
+            payload.get("decision_count"),
+            field=f"{field}.decision_count",
+            expected=item_count,
+        )
+        _require_exact_review_count(
+            payload.get("item_count"),
+            field=f"{field}.item_count",
+            expected=item_count,
+        )
+    if ui_decisions.get("status") != "reviewed":
+        raise ValidationError("Bound ui_decisions.status must be reviewed.")
+    _require_exact_review_count(
+        applied_decisions.get("blocker_count"),
+        field="bound_applied_decisions.blocker_count",
+        expected=0,
+    )
+
+    review_output = outputs_by_path["review_payload.json"]
+    review_bytes_hash = sha256_file(run_dir / "review_payload.json")
+    review_canonical_hash = canonical_json_hash(review_payload)
+    if review_output.get("sha256") != review_bytes_hash:
+        raise ValidationError(
+            "Bound review_payload.json byte hash does not match its manifest record."
+        )
+    if manifest.get("review_payload_sha256") != review_bytes_hash:
+        raise ValidationError(
+            "Final-ready manifest must bind the review_payload.json byte hash."
+        )
+    if manifest.get("review_payload_canonical_sha256") != review_canonical_hash:
+        raise ValidationError(
+            "Final-ready manifest must bind the canonical review payload hash."
+        )
+    if (
+        ui_decisions.get("review_payload_sha256") != review_bytes_hash
+        or ui_decisions.get("review_payload_canonical_sha256") != review_canonical_hash
+    ):
+        raise ValidationError(
+            "Bound ui_decisions must bind both review payload byte and canonical hashes."
+        )
+    applied_review = _require_object(
+        applied_decisions.get("review_payload"),
+        "bound_applied_decisions.review_payload",
+    )
+    if (
+        applied_review.get("path") != "review_payload.json"
+        or applied_review.get("item_count") != item_count
+        or applied_review.get("sha256") != review_bytes_hash
+        or applied_review.get("canonical_sha256") != review_canonical_hash
+    ):
+        raise ValidationError(
+            "Bound applied_decisions.review_payload must bind path, coverage, and exact hashes."
+        )
+    _require_exact_review_count(
+        review_application.get("decision_count"),
+        field="bound_review_application.decision_count",
+        expected=item_count,
+    )
+    _require_exact_review_count(
+        review_application.get("item_count"),
+        field="bound_review_application.item_count",
+        expected=item_count,
+    )
+    _require_exact_review_count(
+        review_application.get("blocker_count"),
+        field="bound_review_application.blocker_count",
+        expected=0,
+    )
+
+
+def _source_snapshot_relative_path(value: Any, *, field: str) -> str:
+    """Return one canonical POSIX run-relative source path."""
+
+    relative_path = _require_string(value, field)
+    path_object = Path(relative_path)
+    if (
+        value != relative_path
+        or path_object.is_absolute()
+        or "\\" in relative_path
+        or relative_path != path_object.as_posix()
+        or any(part in {"", ".", ".."} for part in path_object.parts)
+        or any(ord(character) < 32 for character in relative_path)
+    ):
+        raise ValidationError(
+            f"{field} must be a normalized, non-empty POSIX relative path."
+        )
+    return relative_path
+
+
+def _source_snapshot_nonnegative_integer(value: Any, *, field: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ValidationError(f"{field} must be a non-negative integer.")
+    return value
+
+
+def _source_snapshot_modified_iso(value: Any, *, field: str) -> str:
+    modified_iso = _require_string(value, field)
+    if value != modified_iso:
+        raise ValidationError(f"{field} must be a canonical ISO-8601 timestamp.")
+    try:
+        parsed = datetime.fromisoformat(modified_iso)
+    except ValueError as exc:
+        raise ValidationError(
+            f"{field} must be a canonical ISO-8601 timestamp."
+        ) from exc
+    if parsed.isoformat() != modified_iso:
+        raise ValidationError(f"{field} must be a canonical ISO-8601 timestamp.")
+    return modified_iso
+
+
+def _verify_client_file_preparation_source_snapshot(
+    *,
+    run_dir: Path,
+    bound_run_id: str,
+) -> dict[str, int]:
+    """Verify the sealed phase-one scan ledger against its CSV inventory.
+
+    This is deliberately deterministic because paths, sizes, hashes, counts, and
+    CSV rows are a mechanical integrity boundary for downstream evidence use.
+    """
+
+    run_intake = load_json(run_dir / "run_intake.json")
+    if (
+        run_intake.get("plugin") != "client-file-preparation"
+        or run_intake.get("workflow") != "client-file-preparation"
+        or run_intake.get("run_id") != bound_run_id
+    ):
+        raise ValidationError(
+            "Bound run_intake.json identity does not match the phase-one manifest."
+        )
+
+    source_snapshot = _require_object(
+        run_intake.get("source_snapshot"), "bound_run_intake.source_snapshot"
+    )
+    if set(source_snapshot) != {"algorithm", "limits", "observed", "files"}:
+        raise ValidationError(
+            "Bound source_snapshot must contain exactly algorithm, limits, "
+            "observed, and files."
+        )
+    if source_snapshot.get("algorithm") != "sha256":
+        raise ValidationError("Bound source_snapshot.algorithm must be sha256.")
+
+    limits = _require_object(
+        source_snapshot.get("limits"), "bound_source_snapshot.limits"
+    )
+    if set(limits) != set(CLIENT_FILE_PREPARATION_SOURCE_LIMITS):
+        raise ValidationError(
+            "Bound source_snapshot.limits must contain exactly max_entry_count, "
+            "max_file_count, max_file_bytes, and max_total_bytes."
+        )
+    validated_limits: dict[str, int] = {}
+    for name, contract_maximum in CLIENT_FILE_PREPARATION_SOURCE_LIMITS.items():
+        limit = _source_snapshot_nonnegative_integer(
+            limits.get(name), field=f"bound_source_snapshot.limits.{name}"
+        )
+        if limit < 1 or limit > contract_maximum:
+            raise ValidationError(
+                f"bound_source_snapshot.limits.{name} must be between 1 and "
+                f"{contract_maximum}."
+            )
+        validated_limits[name] = limit
+    if validated_limits["max_file_count"] > validated_limits["max_entry_count"]:
+        raise ValidationError(
+            "Bound source_snapshot max_file_count must not exceed max_entry_count."
+        )
+    if validated_limits["max_file_bytes"] > validated_limits["max_total_bytes"]:
+        raise ValidationError(
+            "Bound source_snapshot max_file_bytes must not exceed max_total_bytes."
+        )
+
+    observed = _require_object(
+        source_snapshot.get("observed"), "bound_source_snapshot.observed"
+    )
+    observed_fields = {
+        "file_count",
+        "regular_file_count",
+        "symlink_count",
+        "total_regular_bytes",
+    }
+    if set(observed) != observed_fields:
+        raise ValidationError(
+            "Bound source_snapshot.observed must contain exactly file_count, "
+            "regular_file_count, symlink_count, and total_regular_bytes."
+        )
+    validated_observed = {
+        name: _source_snapshot_nonnegative_integer(
+            observed.get(name), field=f"bound_source_snapshot.observed.{name}"
+        )
+        for name in observed_fields
+    }
+
+    raw_files = _require_list(
+        source_snapshot.get("files"), "bound_source_snapshot.files"
+    )
+    if not raw_files:
+        raise ValidationError("Bound source_snapshot.files must not be empty.")
+    snapshot_by_path: dict[str, dict[str, Any]] = {}
+    regular_file_count = 0
+    symlink_count = 0
+    total_regular_bytes = 0
+    snapshot_file_fields = {
+        "relative_path",
+        "size_bytes",
+        "modified_iso",
+        "sha256",
+        "entry_type",
+    }
+    for index, raw_file in enumerate(raw_files):
+        record = _require_object(raw_file, f"bound_source_snapshot.files[{index}]")
+        if set(record) != snapshot_file_fields:
+            raise ValidationError(
+                f"bound_source_snapshot.files[{index}] must contain exactly "
+                "relative_path, size_bytes, modified_iso, sha256, and entry_type."
+            )
+        relative_path = _source_snapshot_relative_path(
+            record.get("relative_path"),
+            field=f"bound_source_snapshot.files[{index}].relative_path",
+        )
+        if relative_path in snapshot_by_path:
+            raise ValidationError(
+                "Bound source_snapshot.files contains a duplicate relative path: "
+                f"{relative_path!r}."
+            )
+        size_bytes = _source_snapshot_nonnegative_integer(
+            record.get("size_bytes"),
+            field=f"bound_source_snapshot.files[{index}].size_bytes",
+        )
+        modified_iso = _source_snapshot_modified_iso(
+            record.get("modified_iso"),
+            field=f"bound_source_snapshot.files[{index}].modified_iso",
+        )
+        entry_type = record.get("entry_type")
+        raw_hash = record.get("sha256")
+        if entry_type == "regular_file":
+            source_hash = _require_sha256(
+                raw_hash, f"bound_source_snapshot.files[{index}].sha256"
+            )
+            if raw_hash != source_hash:
+                raise ValidationError(
+                    f"bound_source_snapshot.files[{index}].sha256 must use "
+                    "canonical lowercase hexadecimal."
+                )
+            if size_bytes > validated_limits["max_file_bytes"]:
+                raise ValidationError(
+                    f"Bound regular source {relative_path!r} exceeds the declared "
+                    "per-file limit."
+                )
+            regular_file_count += 1
+            total_regular_bytes += size_bytes
+        elif entry_type == "symlink_not_followed":
+            if raw_hash != "":
+                raise ValidationError(
+                    f"Bound symlink source {relative_path!r} must have an empty sha256."
+                )
+            source_hash = ""
+            symlink_count += 1
+        else:
+            raise ValidationError(
+                f"bound_source_snapshot.files[{index}].entry_type must be "
+                "regular_file or symlink_not_followed."
+            )
+        snapshot_by_path[relative_path] = {
+            "size_bytes": size_bytes,
+            "modified_iso": modified_iso,
+            "sha256": source_hash,
+        }
+
+    calculated_observed = {
+        "file_count": len(snapshot_by_path),
+        "regular_file_count": regular_file_count,
+        "symlink_count": symlink_count,
+        "total_regular_bytes": total_regular_bytes,
+    }
+    if validated_observed != calculated_observed:
+        raise ValidationError(
+            "Bound source_snapshot.observed does not match its source file records."
+        )
+    if calculated_observed["file_count"] > validated_limits["max_entry_count"]:
+        raise ValidationError(
+            "Bound source_snapshot file count exceeds the declared entry limit."
+        )
+    if calculated_observed["file_count"] > validated_limits["max_file_count"]:
+        raise ValidationError(
+            "Bound source_snapshot file count exceeds the declared file limit."
+        )
+    if calculated_observed["total_regular_bytes"] > validated_limits["max_total_bytes"]:
+        raise ValidationError(
+            "Bound source_snapshot total regular bytes exceed the declared total limit."
+        )
+
+    inventory_path = run_dir / "01_document_inventory.csv"
+    try:
+        with inventory_path.open("r", encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle)
+            if (
+                tuple(reader.fieldnames or ())
+                != CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS
+            ):
+                raise ValidationError(
+                    "Bound 01_document_inventory.csv has an unsupported column contract."
+                )
+            inventory_rows = list(reader)
+    except (OSError, UnicodeError, csv.Error) as exc:
+        raise ValidationError(
+            f"Cannot parse bound 01_document_inventory.csv: {exc}"
+        ) from exc
+
+    inventory_by_path: dict[str, dict[str, Any]] = {}
+    for index, row in enumerate(inventory_rows):
+        if None in row or set(row) != set(CLIENT_FILE_PREPARATION_INVENTORY_COLUMNS):
+            raise ValidationError(
+                f"Bound inventory row {index + 2} does not match its column contract."
+            )
+        relative_path = _source_snapshot_relative_path(
+            row.get("relative_path"),
+            field=f"bound_inventory.rows[{index}].relative_path",
+        )
+        if relative_path in inventory_by_path:
+            raise ValidationError(
+                "Bound 01_document_inventory.csv contains a duplicate relative path: "
+                f"{relative_path!r}."
+            )
+        raw_size = row.get("size_bytes")
+        if not isinstance(raw_size, str) or not re.fullmatch(
+            r"0|[1-9][0-9]*", raw_size
+        ):
+            raise ValidationError(
+                f"bound_inventory.rows[{index}].size_bytes must be a canonical "
+                "non-negative integer."
+            )
+        modified_iso = _source_snapshot_modified_iso(
+            row.get("modified_iso"),
+            field=f"bound_inventory.rows[{index}].modified_iso",
+        )
+        raw_hash = row.get("sha256")
+        if not isinstance(raw_hash, str):
+            raise ValidationError(
+                f"bound_inventory.rows[{index}].sha256 must be a string."
+            )
+        if raw_hash:
+            source_hash = _require_sha256(
+                raw_hash, f"bound_inventory.rows[{index}].sha256"
+            )
+            if raw_hash != source_hash:
+                raise ValidationError(
+                    f"bound_inventory.rows[{index}].sha256 must use canonical "
+                    "lowercase hexadecimal."
+                )
+        else:
+            source_hash = ""
+        inventory_by_path[relative_path] = {
+            "size_bytes": int(raw_size),
+            "modified_iso": modified_iso,
+            "sha256": source_hash,
+        }
+
+    if inventory_by_path != snapshot_by_path:
+        raise ValidationError(
+            "Bound source_snapshot.files does not exactly match inventory "
+            "path, size_bytes, modified_iso, and sha256 rows."
+        )
+    return calculated_observed
+
+
 def verify_client_file_preparation_binding(
     intake: Mapping[str, Any], *, base_dir: Path
 ) -> dict[str, Any]:
@@ -1698,17 +3025,139 @@ def verify_client_file_preparation_binding(
         raise ValidationError(
             "Bound Client File Preparation final_artifacts.outputs must not be empty."
         )
+    verified_outputs: list[dict[str, Any]] = []
+    seen_output_paths: set[str] = set()
     for index, raw_output in enumerate(outputs):
         output = _require_object(
             raw_output, f"bound_client_file_preparation.outputs[{index}]"
         )
-        _require_string(
+        relative_path = _require_string(
             output.get("path"), f"bound_client_file_preparation.outputs[{index}].path"
         )
+        path_object = Path(relative_path)
+        if (
+            path_object.is_absolute()
+            or relative_path != path_object.as_posix()
+            or any(part in {"", ".", ".."} for part in path_object.parts)
+            or relative_path == "final_artifacts.json"
+        ):
+            raise ValidationError(
+                "Bound Client File Preparation outputs must use unique run-local "
+                "relative paths and must exclude final_artifacts.json."
+            )
+        if relative_path in seen_output_paths:
+            raise ValidationError(
+                "Bound Client File Preparation outputs contain a duplicate path: "
+                f"{relative_path}."
+            )
+        seen_output_paths.add(relative_path)
         _require_string(
             output.get("status"),
             f"bound_client_file_preparation.outputs[{index}].status",
         )
+        expected_size = output.get("size_bytes")
+        if isinstance(expected_size, bool) or not isinstance(expected_size, int):
+            raise ValidationError(
+                f"bound_client_file_preparation.outputs[{index}].size_bytes must "
+                "be an integer."
+            )
+        expected_hash = _require_sha256(
+            output.get("sha256"),
+            f"bound_client_file_preparation.outputs[{index}].sha256",
+        )
+        candidate = resolved.parent / path_object
+        if candidate.is_symlink():
+            raise ValidationError(
+                f"Bound Client File Preparation output {relative_path!r} must not "
+                "be a symbolic link."
+            )
+        try:
+            output_path = candidate.resolve(strict=True)
+        except OSError as exc:
+            raise ValidationError(
+                f"Cannot resolve bound Client File Preparation output "
+                f"{relative_path!r}: {exc}"
+            ) from exc
+        if not _is_within(output_path, resolved.parent) or not output_path.is_file():
+            raise ValidationError(
+                f"Bound Client File Preparation output {relative_path!r} must be "
+                "a regular file inside the run directory."
+            )
+        actual_size = output_path.stat().st_size
+        actual_output_hash = sha256_file(output_path)
+        if actual_size != expected_size:
+            raise ValidationError(
+                f"Bound Client File Preparation output size mismatch for "
+                f"{relative_path!r}."
+            )
+        if actual_output_hash != expected_hash:
+            raise ValidationError(
+                f"Bound Client File Preparation output hash mismatch for "
+                f"{relative_path!r}."
+            )
+        verified_outputs.append(
+            {
+                "path": relative_path,
+                "resolved_path": output_path.as_posix(),
+                "size_bytes": actual_size,
+                "sha256": actual_output_hash,
+                "status": output["status"],
+            }
+        )
+    integrity = _require_object(
+        manifest.get("integrity"), "bound_client_file_preparation.integrity"
+    )
+    if set(integrity) != {"algorithm", "package_hash_basis", "package_hash"}:
+        raise ValidationError(
+            "Bound Client File Preparation integrity must contain exactly algorithm, "
+            "package_hash_basis, and package_hash."
+        )
+    if integrity.get("algorithm") != "sha256":
+        raise ValidationError(
+            "Bound Client File Preparation integrity.algorithm must be sha256."
+        )
+    if (
+        integrity.get("package_hash_basis")
+        != CLIENT_FILE_PREPARATION_PACKAGE_HASH_BASIS
+    ):
+        raise ValidationError(
+            "Bound Client File Preparation package_hash_basis is unsupported."
+        )
+    expected_package_hash = _require_sha256(
+        integrity.get("package_hash"),
+        "bound_client_file_preparation.integrity.package_hash",
+    )
+    actual_package_hash = canonical_json_hash(
+        [
+            {
+                "path": record["path"],
+                "sha256": record["sha256"],
+                "size_bytes": record["size_bytes"],
+            }
+            for record in sorted(verified_outputs, key=lambda item: item["path"])
+        ]
+    )
+    if actual_package_hash != expected_package_hash:
+        raise ValidationError(
+            "Bound Client File Preparation package hash does not match its verified "
+            "outputs."
+        )
+    if binding["upstream_package_hash"].casefold() != actual_package_hash:
+        raise ValidationError(
+            "Client File Preparation binding upstream_package_hash does not match "
+            "the verified package."
+        )
+    required_source_outputs = {"run_intake.json", "01_document_inventory.csv"}
+    missing_source_outputs = sorted(required_source_outputs - seen_output_paths)
+    if missing_source_outputs:
+        raise ValidationError(
+            "Bound Client File Preparation package is missing sealed source "
+            "provenance outputs: " + ", ".join(missing_source_outputs)
+        )
+    source_snapshot_observed = _verify_client_file_preparation_source_snapshot(
+        run_dir=resolved.parent,
+        bound_run_id=bound_run_id,
+    )
     final_ready = status == "final_ready"
     if final_ready:
         if manifest.get("review_status") != "final_ready":
@@ -1739,6 +3188,37 @@ def verify_client_file_preparation_binding(
                 "Bound Client File Preparation final-ready manifest must list exactly one "
                 "applied_decisions.json output with status=final_ready."
             )
+        required_final_outputs = {
+            "run_intake.json",
+            "review_payload.json",
+            "ui_decisions.json",
+            "applied_decisions.json",
+            "review_handoff.md",
+        }
+        missing_final_outputs = sorted(required_final_outputs - seen_output_paths)
+        if missing_final_outputs:
+            raise ValidationError(
+                "Bound Client File Preparation final-ready package is missing "
+                "review provenance outputs: " + ", ".join(missing_final_outputs)
+            )
+        applied_decisions_path = resolved.parent / "applied_decisions.json"
+        applied_decisions = load_json(applied_decisions_path)
+        if applied_decisions.get("run_id") != bound_run_id:
+            raise ValidationError(
+                "Bound applied_decisions.json run_id does not match the manifest."
+            )
+        if applied_decisions.get("application_status") != "final_ready":
+            raise ValidationError(
+                "Bound applied_decisions.json must have application_status=final_ready."
+            )
+        outputs_by_path = {record["path"]: record for record in verified_outputs}
+        _verify_client_file_preparation_review_provenance(
+            manifest=manifest,
+            run_dir=resolved.parent,
+            bound_run_id=bound_run_id,
+            outputs_by_path=outputs_by_path,
+            review_application=review_application,
+        )
     return {
         "mode": "client_file_preparation_run",
         "verification_status": (
@@ -1749,9 +3229,12 @@ def verify_client_file_preparation_binding(
         "relationship_blocker": not final_ready,
         "bound_manifest_path": resolved.as_posix(),
         "manifest_sha256": actual_hash,
+        "package_hash": actual_package_hash,
         "bound_run_id_sha256": canonical_json_hash(bound_run_id),
         "bound_status": status,
         "output_count": len(outputs),
+        "source_snapshot_observed": source_snapshot_observed,
+        "verified_outputs": verified_outputs,
     }
 
 
@@ -1819,10 +3302,10 @@ def verify_template_references(
             blockers.append("not_approved_for_reuse")
         if template["reuse_scope"] is None:
             blockers.append("reuse_scope_not_recorded")
-        if template["jurisdiction"].casefold() != "it":
-            blockers.append("jurisdiction_not_it")
-        if template["language"].casefold() != "it":
-            blockers.append("language_not_it")
+        if template["jurisdiction"].casefold() != intake["jurisdiction"].casefold():
+            blockers.append("jurisdiction_mismatch")
+        if template["language"].casefold() != intake["language"].casefold():
+            blockers.append("language_mismatch")
         if freshness_status != "current":
             blockers.append(f"freshness_{freshness_status}")
         results.append(
@@ -2026,13 +3509,19 @@ def build_case_facts(
         "schema_version": SCHEMA_VERSION,
         "generated_at": generated_at,
         "status": "validated_for_professional_review",
+        "jurisdiction": intake["jurisdiction"],
+        "country_pack": ITALY_COUNTRY_PACK,
+        "language": intake["language"],
+        "processing_authority": intake["processing_authority"],
         "client_reference": intake["client_reference"],
         "client_type": intake["client_type"],
         "tax_facts": intake["tax_facts"],
         "party_facts": intake["party_facts"],
         "party_identity_document": intake["party_identity_document"],
         "representatives": intake["representatives"],
+        "representative_posture": intake["representative_posture"],
         "beneficial_owners": intake["beneficial_owners"],
+        "ownership_status": intake["ownership_status"],
         "screening_results": intake["screening_results"],
         "privacy_processing_decisions": intake["privacy_processing_decisions"],
         "marketing_consent": intake["marketing_consent"],
@@ -2087,12 +3576,35 @@ def build_missing_evidence(
     aml_result: Mapping[str, Any],
     *,
     generated_at: str,
+    as_of: date,
     client_file_preparation_verification: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Identify mechanically missing or unresolved records without judging substance."""
 
     evidence_status = _evidence_status_by_id(intake)
     items: list[dict[str, Any]] = []
+
+    def add_unverified_support(
+        *,
+        item_id: str,
+        item_type: str,
+        reference: str,
+        evidence_ids: Sequence[str],
+    ) -> None:
+        if evidence_ids and all(
+            evidence_status.get(evidence_id) == "verified"
+            for evidence_id in evidence_ids
+        ):
+            return
+        items.append(
+            {
+                "item_id": item_id,
+                "item_type": item_type,
+                "reference": reference,
+                "reason": "supporting_evidence_not_verified",
+            }
+        )
+
     for record in intake["evidence_register"]:
         if record["status"] in {"requested", "missing", "stale"}:
             items.append(
@@ -2101,6 +3613,22 @@ def build_missing_evidence(
                     "item_type": "evidence_record",
                     "reference": record["evidence_id"],
                     "reason": f"evidence_status_{record['status']}",
+                }
+            )
+        elif (
+            record.get("expires_on") is not None
+            and _parse_date(
+                record["expires_on"],
+                f"evidence_register[{record['evidence_id']}].expires_on",
+            )
+            < as_of
+        ):
+            items.append(
+                {
+                    "item_id": f"evidence:{record['evidence_id']}:expired",
+                    "item_type": "evidence_record",
+                    "reference": record["evidence_id"],
+                    "reason": "evidence_expired",
                 }
             )
     for fact_name, fact in intake["tax_facts"].items():
@@ -2135,6 +3663,13 @@ def build_missing_evidence(
                     "reason": f"verification_status_{fact['verification_status']}",
                 }
             )
+        elif fact["verification_status"] == "verified":
+            add_unverified_support(
+                item_id=f"party_fact:{fact['fact_id']}:evidence",
+                item_type="party_fact",
+                reference=fact["fact_id"],
+                evidence_ids=fact.get("evidence_ids", []),
+            )
     party_identity = intake["party_identity_document"]
     if party_identity["verification_status"] in {"unknown", "reported"}:
         items.append(
@@ -2147,7 +3682,39 @@ def build_missing_evidence(
                 ),
             }
         )
+    elif party_identity["verification_status"] == "verified":
+        add_unverified_support(
+            item_id="party_identity:primary:evidence",
+            item_type="identity_document",
+            reference="primary_party",
+            evidence_ids=party_identity.get("evidence_ids", []),
+        )
+    if (
+        party_identity.get("expires_on") is not None
+        and _parse_date(
+            party_identity["expires_on"], "party_identity_document.expires_on"
+        )
+        < as_of
+    ):
+        items.append(
+            {
+                "item_id": "party_identity:primary:expired",
+                "item_type": "identity_document",
+                "reference": "primary_party",
+                "reason": "identity_document_expired",
+            }
+        )
     for representative in intake["representatives"]:
+        add_unverified_support(
+            item_id=(
+                "representative_authority:"
+                + representative["representative_reference"]
+                + ":evidence"
+            ),
+            item_type="representative",
+            reference=representative["representative_reference"],
+            evidence_ids=representative.get("evidence_ids", []),
+        )
         identity = representative["identity_document"]
         if identity["verification_status"] != "verified":
             items.append(
@@ -2164,6 +3731,37 @@ def build_missing_evidence(
                     ),
                 }
             )
+        else:
+            add_unverified_support(
+                item_id=(
+                    "representative_identity:"
+                    + representative["representative_reference"]
+                    + ":evidence"
+                ),
+                item_type="representative",
+                reference=representative["representative_reference"],
+                evidence_ids=identity.get("evidence_ids", []),
+            )
+        if (
+            identity.get("expires_on") is not None
+            and _parse_date(
+                identity["expires_on"],
+                "representative.identity_document.expires_on",
+            )
+            < as_of
+        ):
+            items.append(
+                {
+                    "item_id": (
+                        "representative_identity:"
+                        + representative["representative_reference"]
+                        + ":expired"
+                    ),
+                    "item_type": "representative",
+                    "reference": representative["representative_reference"],
+                    "reason": "identity_document_expired",
+                }
+            )
     for owner in intake["beneficial_owners"]:
         if owner["verification_status"] != "verified":
             items.append(
@@ -2173,6 +3771,13 @@ def build_missing_evidence(
                     "reference": owner["owner_reference"],
                     "reason": f"verification_status_{owner['verification_status']}",
                 }
+            )
+        else:
+            add_unverified_support(
+                item_id=f"owner:{owner['owner_reference']}:evidence",
+                item_type="beneficial_owner",
+                reference=owner["owner_reference"],
+                evidence_ids=owner.get("evidence_ids", []),
             )
         identity = owner["identity_document"]
         if identity["verification_status"] != "verified":
@@ -2187,6 +3792,60 @@ def build_missing_evidence(
                     ),
                 }
             )
+        else:
+            add_unverified_support(
+                item_id=f"owner_identity:{owner['owner_reference']}:evidence",
+                item_type="beneficial_owner",
+                reference=owner["owner_reference"],
+                evidence_ids=identity.get("evidence_ids", []),
+            )
+        if (
+            identity.get("expires_on") is not None
+            and _parse_date(
+                identity["expires_on"], "beneficial_owner.identity_document.expires_on"
+            )
+            < as_of
+        ):
+            items.append(
+                {
+                    "item_id": f"owner_identity:{owner['owner_reference']}:expired",
+                    "item_type": "beneficial_owner",
+                    "reference": owner["owner_reference"],
+                    "reason": "identity_document_expired",
+                }
+            )
+    if intake["representative_posture"]["status"] == "pending":
+        items.append(
+            {
+                "item_id": "representative_posture:resolution",
+                "item_type": "representative_posture",
+                "reference": "representative_posture",
+                "reason": "representative_or_executor_posture_pending",
+            }
+        )
+    elif intake["representative_posture"]["status"] == "recorded":
+        add_unverified_support(
+            item_id="representative_posture:resolution:evidence",
+            item_type="representative_posture",
+            reference="representative_posture",
+            evidence_ids=intake["representative_posture"].get("evidence_ids", []),
+        )
+    if intake["ownership_status"]["status"] == "pending":
+        items.append(
+            {
+                "item_id": "ownership_status:resolution",
+                "item_type": "ownership_status",
+                "reference": "ownership_status",
+                "reason": "beneficial_ownership_posture_pending",
+            }
+        )
+    elif intake["ownership_status"]["status"] == "owners_recorded":
+        add_unverified_support(
+            item_id="ownership_status:resolution:evidence",
+            item_type="ownership_status",
+            reference="ownership_status",
+            evidence_ids=intake["ownership_status"].get("evidence_ids", []),
+        )
     for screening in intake["screening_results"]:
         resolution = screening.get("professional_resolution")
         unresolved_resolution = screening["outcome"] != "clear" and (
@@ -2365,6 +4024,8 @@ def build_document_plan(
                         "approved_at": template["approved_at"],
                         "jurisdiction": template["jurisdiction"],
                         "language": template["language"],
+                        "valid_until": template.get("valid_until"),
+                        "review_due_on": template["review_due_on"],
                         "freshness_status": (
                             verification["freshness_status"]
                             if verification is not None
@@ -2580,6 +4241,7 @@ def _review_item(
     title: str,
     data: Mapping[str, Any],
     source_ids: Iterable[str] = (),
+    recommended_action: str = "mark_unclear",
 ) -> dict[str, Any]:
     return {
         "id": item_id,
@@ -2594,10 +4256,88 @@ def _review_item(
             "request_more_documents",
             "skip",
         ],
-        "recommended_action": "mark_unclear",
+        "recommended_action": recommended_action,
         "source_ids": list(source_ids),
         "data": dict(data),
     }
+
+
+def _localized_review_copy(language: str, key: str, **values: object) -> str:
+    """Render complete reviewer-facing copy in the requested intake language."""
+
+    translations = _REVIEW_COPY.get(key)
+    if translations is None or language not in translations:
+        raise ValidationError(
+            f"Review copy {key!r} is unavailable for language {language!r}."
+        )
+    return translations[language].format(**values)
+
+
+def _localized_review_topic(language: str, topic: str) -> str:
+    """Return a display label while leaving the topic code itself unchanged."""
+
+    translations = _REVIEW_TOPIC_COPY.get(topic)
+    if translations is None or language not in translations:
+        raise ValidationError(
+            f"Review topic {topic!r} is unavailable for language {language!r}."
+        )
+    return translations[language]
+
+
+def _localize_review_items(
+    items: Sequence[Mapping[str, Any]], *, language: str
+) -> list[dict[str, Any]]:
+    """Localize every final review title and fail closed for an unmapped item type."""
+
+    static_title_keys = {
+        "marketing_consent": "title.marketing_consent",
+        "aml_assessment": "title.aml_table_1",
+        "monitoring_plan": "title.monitoring_plan",
+        "party_profile": "title.party_profile",
+        "party_structure": "title.party_structure",
+        "engagement": "title.engagement",
+        "aml_trigger_set": "title.aml_trigger_set",
+        "missing_evidence": "title.missing_evidence",
+    }
+    localized: list[dict[str, Any]] = []
+    for item in items:
+        item_type = str(item["item_type"])
+        data = item["data"]
+        if item_type == "privacy_processing":
+            title = _localized_review_copy(
+                language,
+                "title.privacy_processing",
+                number=str(item["id"]).rsplit("-", 1)[-1],
+            )
+        elif item_type == "document_applicability":
+            topic = str(data["topic"])
+            title = _localized_review_copy(
+                language,
+                "title.applicability",
+                topic=_localized_review_topic(language, topic),
+            )
+        elif item_type == "screening_subject":
+            title = _localized_review_copy(
+                language,
+                "title.screening_subject",
+                subject_alias=data["subject_alias"],
+            )
+        elif item_type == "aml_factor_section":
+            title = _localized_review_copy(
+                language,
+                "title.aml_factor_section",
+                section=data["section"],
+            )
+        elif item_type in static_title_keys:
+            title = _localized_review_copy(language, static_title_keys[item_type])
+        else:
+            raise ValidationError(
+                "Final review item type has no localized title: " f"{item_type!r}."
+            )
+        localized_item = dict(item)
+        localized_item["title"] = title
+        localized.append(localized_item)
+    return localized
 
 
 def build_review_payload(
@@ -2614,6 +4354,7 @@ def build_review_payload(
     applicability_artifact: Mapping[str, Any] | None = None,
     source_registry_artifact: Mapping[str, Any] | None = None,
     client_file_preparation_verification: Mapping[str, Any] | None = None,
+    temporal_validity: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Build a bounded, pseudonymous review payload without raw client identifiers."""
 
@@ -2649,6 +4390,9 @@ def build_review_payload(
         evidence["evidence_id"]: f"review-evidence-{index:02d}"
         for index, evidence in enumerate(intake["evidence_register"], start=1)
     }
+    fact_codes_by_id = {
+        fact["fact_id"]: fact["fact_code"] for fact in intake["party_facts"]
+    }
 
     for fact_name, fact in intake["tax_facts"].items():
         items.append(
@@ -2681,11 +4425,74 @@ def build_review_payload(
                 )
                 is True,
                 "manifest_sha256": binding_verification.get("manifest_sha256"),
+                "package_hash": binding_verification.get("package_hash"),
+                "verified_output_count": binding_verification.get("output_count", 0),
                 "relationship_blocker": binding_verification.get("relationship_blocker")
                 is True,
             },
         )
     )
+    items.append(
+        _review_item(
+            item_id="party:representative-posture",
+            item_type="representative_posture",
+            title="Representative and executor posture",
+            data={
+                "status": intake["representative_posture"]["status"],
+                "representative_count": len(intake["representatives"]),
+                "executor_selected": bool(
+                    intake["representative_posture"].get("executor_reference")
+                ),
+                "basis_recorded": bool(intake["representative_posture"].get("basis")),
+                "evidence_count": len(
+                    intake["representative_posture"].get("evidence_ids", [])
+                ),
+            },
+        )
+    )
+    items.append(
+        _review_item(
+            item_id="party:ownership-posture",
+            item_type="ownership_status",
+            title="Beneficial-ownership posture",
+            data={
+                "status": intake["ownership_status"]["status"],
+                "owner_count": len(intake["beneficial_owners"]),
+                "basis_recorded": bool(intake["ownership_status"].get("basis")),
+                "evidence_count": len(
+                    intake["ownership_status"].get("evidence_ids", [])
+                ),
+            },
+        )
+    )
+    as_of = date.fromisoformat(generated_at[:10])
+    for evidence in intake["evidence_register"]:
+        expires_on = evidence.get("expires_on")
+        items.append(
+            _review_item(
+                item_id=f"evidence:{evidence_aliases[evidence['evidence_id']]}",
+                item_type="evidence_record",
+                title=(
+                    "Evidence record — " + evidence_aliases[evidence["evidence_id"]]
+                ),
+                data={
+                    "evidence_alias": evidence_aliases[evidence["evidence_id"]],
+                    "evidence_type": evidence["evidence_type"],
+                    "declared_status": evidence["status"],
+                    "obtained_on": evidence.get("obtained_on"),
+                    "expires_on": expires_on,
+                    "freshness_status": (
+                        "expired"
+                        if expires_on is not None
+                        and _parse_date(expires_on, "review_evidence.expires_on")
+                        < as_of
+                        else "current_or_not_dated"
+                    ),
+                    "byte_hash_recorded": bool(evidence.get("sha256")),
+                    "local_path_excluded": True,
+                },
+            )
+        )
     for index, decision in enumerate(intake["privacy_processing_decisions"], start=1):
         legal_basis = decision.get("controller_legal_basis")
         items.append(
@@ -2694,6 +4501,11 @@ def build_review_payload(
                 item_type="privacy_processing",
                 title=f"Privacy processing decision — purpose {index:02d}",
                 source_ids=decision["source_ids"],
+                recommended_action=(
+                    "accept"
+                    if decision["review_status"] == "confirmed"
+                    else "mark_unclear"
+                ),
                 data={
                     "decision_alias": f"processing-{index:02d}",
                     "purpose_recorded": bool(decision["purpose"]),
@@ -2718,6 +4530,11 @@ def build_review_payload(
             item_id="marketing:consent",
             item_type="marketing_consent",
             title="Separate marketing-consent record",
+            recommended_action=(
+                "accept"
+                if marketing["review_status"] in {"confirmed", "not_required"}
+                else "mark_unclear"
+            ),
             data={
                 "scope": "marketing_only",
                 "request_status": marketing["request_status"],
@@ -2756,6 +4573,17 @@ def build_review_payload(
                 "document_type_recorded": bool(party_identity.get("document_type")),
                 "document_number_excluded": True,
                 "verification_date": party_identity.get("verified_on"),
+                "expires_on": party_identity.get("expires_on"),
+                "freshness_status": (
+                    "expired"
+                    if party_identity.get("expires_on") is not None
+                    and _parse_date(
+                        party_identity["expires_on"],
+                        "party_identity_document.expires_on",
+                    )
+                    < as_of
+                    else "current_or_not_dated"
+                ),
                 "evidence_count": len(party_identity.get("evidence_ids", [])),
             },
         )
@@ -2777,6 +4605,17 @@ def build_review_payload(
                     ),
                     "confirmation_status": identity["verification_status"],
                     "verification_date": identity.get("verified_on"),
+                    "expires_on": identity.get("expires_on"),
+                    "freshness_status": (
+                        "expired"
+                        if identity.get("expires_on") is not None
+                        and _parse_date(
+                            identity["expires_on"],
+                            "representative.identity_document.expires_on",
+                        )
+                        < as_of
+                        else "current_or_not_dated"
+                    ),
                     "document_number_excluded": True,
                     "evidence_count": len(
                         set(representative.get("evidence_ids", []))
@@ -2800,6 +4639,17 @@ def build_review_payload(
                     "confirmation_status": owner["verification_status"],
                     "identity_verification_status": identity["verification_status"],
                     "verification_date": identity.get("verified_on"),
+                    "expires_on": identity.get("expires_on"),
+                    "freshness_status": (
+                        "expired"
+                        if identity.get("expires_on") is not None
+                        and _parse_date(
+                            identity["expires_on"],
+                            "beneficial_owner.identity_document.expires_on",
+                        )
+                        < as_of
+                        else "current_or_not_dated"
+                    ),
                     "document_number_excluded": True,
                     "evidence_count": len(
                         set(owner.get("evidence_ids", []))
@@ -2823,6 +4673,24 @@ def build_review_payload(
                 },
             )
         )
+    terms = intake["engagement"]["terms"]
+    items.append(
+        _review_item(
+            item_id="engagement:terms",
+            item_type="engagement_terms",
+            title="Engagement terms",
+            data={
+                "review_status": terms["review_status"],
+                "duration_months": terms.get("duration_months"),
+                "notice_days": terms.get("notice_days"),
+                "advance_amount": terms.get("advance_amount"),
+                "currency": terms.get("currency"),
+                "payment_terms_recorded": bool(terms.get("payment_terms")),
+                "indexation_basis_recorded": bool(terms.get("indexation_basis")),
+                "insurance_reference_recorded": bool(terms.get("insurance_reference")),
+            },
+        )
+    )
     for screening in intake["screening_results"]:
         screening_alias = screening_aliases[screening["screening_id"]]
         subject_alias = subject_aliases[screening["subject_reference"]]
@@ -2877,17 +4745,28 @@ def build_review_payload(
                 )
             )
     for record in intake["applicability"]:
+        supporting_fact_codes = [
+            fact_codes_by_id[fact_id] for fact_id in record["case_fact_ids"]
+        ]
         items.append(
             _review_item(
                 item_id=f"applicability:{record['topic']}",
                 item_type="document_applicability",
                 title=f"Applicability — {record['topic']}",
                 source_ids=record.get("source_ids", []),
+                recommended_action=(
+                    "accept"
+                    if record["review_status"] == "confirmed"
+                    and record["applicability_status"] != "unclear"
+                    else "mark_unclear"
+                ),
                 data={
                     "topic": record["topic"],
                     "applicability_status": record["applicability_status"],
                     "review_status": record["review_status"],
                     "rationale_recorded": bool(record.get("basis")),
+                    "supporting_case_fact_codes": supporting_fact_codes,
+                    "supporting_case_fact_count": len(supporting_fact_codes),
                     "raw_rationale_excluded": True,
                 },
             )
@@ -2898,6 +4777,9 @@ def build_review_payload(
             item_id="aml:table_1",
             item_type="aml_assessment",
             title="AML Table 1 applicability",
+            recommended_action=(
+                "accept" if aml_result["table_1_resolved"] else "mark_unclear"
+            ),
             data={
                 "calculation_status": (
                     f"table_1_{table_1['review_status']}_{table_1['status']}_"
@@ -3033,6 +4915,11 @@ def build_review_payload(
             item_id="monitoring:plan",
             item_type="monitoring_plan",
             title="Ongoing-review schedule",
+            recommended_action=(
+                "accept"
+                if not str(monitoring_plan["status"]).startswith("blocked_")
+                else "mark_unclear"
+            ),
             data={
                 "status": monitoring_plan["status"],
                 "review_interval_months": monitoring_plan["review_interval_months"],
@@ -3043,6 +4930,300 @@ def build_review_payload(
             },
         )
     )
+    # Mechanically verified and duplicative rows remain available in the bound local
+    # artifacts. The professional workbench groups the decisions that actually need
+    # judgment so a normal company is not forced through dozens of redundant accepts.
+    omitted_types = {
+        "party_fact",
+        "representative_fact",
+        "beneficial_owner_fact",
+        "representative_posture",
+        "ownership_status",
+        "evidence_record",
+        "engagement_service",
+        "engagement_terms",
+        "screening_result",
+        "aml_risk_factor",
+        "aml_mandatory_trigger",
+        "missing_evidence",
+        "document_plan",
+        "official_source",
+        "client_file_preparation_binding",
+    }
+    items = [
+        item
+        for item in items
+        if item["item_type"] not in omitted_types and item["id"] != "aml:calculation"
+    ]
+    items.extend(
+        [
+            _review_item(
+                item_id="party:profile",
+                item_type="party_profile",
+                title="Party profile and identity evidence",
+                recommended_action=(
+                    "accept"
+                    if all(
+                        fact["verification_status"] in {"verified", "not_applicable"}
+                        for fact in intake["tax_facts"].values()
+                    )
+                    and all(
+                        fact["verification_status"] in {"verified", "not_applicable"}
+                        for fact in intake["party_facts"]
+                    )
+                    and intake["party_identity_document"]["verification_status"]
+                    in {"verified", "not_applicable"}
+                    and not any(
+                        item["reason"]
+                        in {"evidence_expired", "identity_document_expired"}
+                        for item in missing_evidence["items"]
+                    )
+                    else "mark_unclear"
+                ),
+                data={
+                    "client_type": intake["client_type"],
+                    "tax_fact_statuses": [
+                        {
+                            "tax_fact_type": name,
+                            "verification_status": fact["verification_status"],
+                        }
+                        for name, fact in intake["tax_facts"].items()
+                    ],
+                    "party_fact_codes": [
+                        fact["fact_code"] for fact in intake["party_facts"]
+                    ],
+                    "party_fact_statuses": [
+                        fact["verification_status"] for fact in intake["party_facts"]
+                    ],
+                    "identity_status": intake["party_identity_document"][
+                        "verification_status"
+                    ],
+                    "identity_expires_on": intake["party_identity_document"].get(
+                        "expires_on"
+                    ),
+                    "raw_identifiers_excluded": True,
+                },
+            ),
+            _review_item(
+                item_id="party:structure",
+                item_type="party_structure",
+                title="Representatives, executor and beneficial ownership",
+                recommended_action=(
+                    "accept"
+                    if intake["representative_posture"]["status"] != "pending"
+                    and intake["ownership_status"]["status"] != "pending"
+                    and all(
+                        representative["identity_document"]["verification_status"]
+                        == "verified"
+                        for representative in intake["representatives"]
+                    )
+                    and all(
+                        owner["verification_status"] == "verified"
+                        and owner["identity_document"]["verification_status"]
+                        == "verified"
+                        for owner in intake["beneficial_owners"]
+                    )
+                    else "mark_unclear"
+                ),
+                data={
+                    "representative_posture_status": intake["representative_posture"][
+                        "status"
+                    ],
+                    "representative_roles": [
+                        representative["role"]
+                        for representative in intake["representatives"]
+                    ],
+                    "representative_identity_statuses": [
+                        representative["identity_document"]["verification_status"]
+                        for representative in intake["representatives"]
+                    ],
+                    "executor_selected": bool(
+                        intake["representative_posture"].get("executor_reference")
+                    ),
+                    "ownership_status": intake["ownership_status"]["status"],
+                    "owner_count": len(intake["beneficial_owners"]),
+                    "owner_verification_statuses": [
+                        owner["verification_status"]
+                        for owner in intake["beneficial_owners"]
+                    ],
+                    "owner_identity_statuses": [
+                        owner["identity_document"]["verification_status"]
+                        for owner in intake["beneficial_owners"]
+                    ],
+                    "raw_identifiers_excluded": True,
+                },
+            ),
+            _review_item(
+                item_id="engagement:scope-and-terms",
+                item_type="engagement",
+                title="Engagement scope and terms",
+                recommended_action=(
+                    "accept"
+                    if all(
+                        service["assessment_status"] == "confirmed"
+                        for service in intake["engagement"]["services"]
+                    )
+                    and terms["review_status"] == "confirmed"
+                    else "mark_unclear"
+                ),
+                data={
+                    "engagement_kind": intake["engagement"]["kind"],
+                    "services": [
+                        {
+                            "service_alias": service_aliases[service["service_id"]],
+                            "assessment_status": service["assessment_status"],
+                            "description_recorded": bool(service["description"]),
+                        }
+                        for service in intake["engagement"]["services"]
+                    ],
+                    "terms_review_status": terms["review_status"],
+                    "duration_months": terms.get("duration_months"),
+                    "notice_days": terms.get("notice_days"),
+                    "advance_amount": terms.get("advance_amount"),
+                    "currency": terms.get("currency"),
+                    "payment_terms_recorded": bool(terms.get("payment_terms")),
+                    "indexation_basis_recorded": bool(terms.get("indexation_basis")),
+                    "insurance_reference_recorded": bool(
+                        terms.get("insurance_reference")
+                    ),
+                },
+            ),
+        ]
+    )
+    screenings_by_subject: dict[str, list[dict[str, Any]]] = {}
+    for screening in intake["screening_results"]:
+        resolution = screening.get("professional_resolution")
+        screenings_by_subject.setdefault(screening["subject_reference"], []).append(
+            {
+                "screening_type": screening["screening_type"],
+                "outcome": screening["outcome"],
+                "review_status": screening["review_status"],
+                "checked_at": screening.get("checked_at"),
+                "source_recorded": bool(screening.get("source_reference")),
+                "resolution_status": (
+                    resolution.get("status") if isinstance(resolution, dict) else None
+                ),
+                "relationship_decision": (
+                    resolution.get("relationship_decision")
+                    if isinstance(resolution, dict)
+                    else None
+                ),
+            }
+        )
+    for subject_reference, results in screenings_by_subject.items():
+        subject_alias = subject_aliases[subject_reference]
+        items.append(
+            _review_item(
+                item_id=f"screening_subject:{subject_alias}",
+                item_type="screening_subject",
+                title=f"Screening coverage — {subject_alias}",
+                recommended_action=(
+                    "accept"
+                    if all(
+                        result["review_status"] == "confirmed"
+                        and (
+                            result["outcome"] == "clear"
+                            or result["resolution_status"] == "confirmed"
+                        )
+                        for result in results
+                    )
+                    else "mark_unclear"
+                ),
+                data={
+                    "subject_alias": subject_alias,
+                    "coverage_complete": {
+                        result["screening_type"] for result in results
+                    }
+                    == set(SCREENING_TYPES),
+                    "results": sorted(
+                        results, key=lambda result: result["screening_type"]
+                    ),
+                    "raw_results_excluded": True,
+                },
+            )
+        )
+    for group_name, label in (("factors_a", "A"), ("factors_b", "B")):
+        factors = intake["aml"][group_name]
+        items.append(
+            _review_item(
+                item_id=f"aml_factor_section:{label}",
+                item_type="aml_factor_section",
+                title=f"AML risk-factor section {label}",
+                recommended_action=(
+                    "accept"
+                    if all(
+                        factor["assessment_status"] == "confirmed" for factor in factors
+                    )
+                    else "mark_unclear"
+                ),
+                data={
+                    "section": label,
+                    "factors": [
+                        {
+                            "factor_code": factor["factor_id"],
+                            "score": factor["score"],
+                            "assessment_status": factor["assessment_status"],
+                            "rationale_recorded": bool(factor.get("basis")),
+                            "evidence_count": len(factor.get("evidence_ids", [])),
+                        }
+                        for factor in factors
+                    ],
+                    "raw_rationales_excluded": True,
+                },
+            )
+        )
+    items.append(
+        _review_item(
+            item_id="aml:mandatory-trigger-set",
+            item_type="aml_trigger_set",
+            title="Mandatory enhanced-measure triggers",
+            recommended_action=(
+                "accept"
+                if all(
+                    trigger["review_status"] == "confirmed"
+                    and trigger["status"] != "unknown"
+                    for trigger in intake["aml"]["mandatory_enhanced_triggers"]
+                )
+                else "mark_unclear"
+            ),
+            data={
+                "triggers": [
+                    {
+                        "trigger_id": trigger["trigger_id"],
+                        "status": trigger["status"],
+                        "review_status": trigger["review_status"],
+                        "rationale_recorded": bool(trigger.get("basis")),
+                    }
+                    for trigger in intake["aml"]["mandatory_enhanced_triggers"]
+                ],
+                "raw_rationales_excluded": True,
+            },
+        )
+    )
+    if missing_evidence["count"]:
+        reason_counts: dict[str, int] = {}
+        missing_type_counts: dict[str, int] = {}
+        for missing_item in missing_evidence["items"]:
+            reason = str(missing_item["reason"])
+            item_type = str(missing_item["item_type"])
+            reason_counts[reason] = reason_counts.get(reason, 0) + 1
+            missing_type_counts[item_type] = missing_type_counts.get(item_type, 0) + 1
+        items.append(
+            _review_item(
+                item_id="missing:grouped",
+                item_type="missing_evidence",
+                title="Missing evidence and unresolved information",
+                recommended_action="request_more_documents",
+                data={
+                    "missing_evidence_count": missing_evidence["count"],
+                    "evidence_status": missing_evidence["status"],
+                    "reason_counts": reason_counts,
+                    "item_type_counts": missing_type_counts,
+                },
+            )
+        )
+    review_language = str(intake["language"])
+    items = _localize_review_items(items, language=review_language)
     case_facts_value = case_facts_artifact or build_case_facts(
         intake,
         generated_at=generated_at,
@@ -3060,6 +5241,7 @@ def build_review_payload(
         "run_id": run_id,
         "review_revision": 1,
         "generated_at": generated_at,
+        "temporal_validity": dict(temporal_validity),
         "status": "pending_review",
         "source_paths": [],
         "review_type": "professional_new_client",
@@ -3076,24 +5258,27 @@ def build_review_payload(
         "privacy": {
             "classification": "pseudonymous_review_payload",
             "excluded": [
-                "names",
-                "tax identifiers",
-                "identity-document numbers",
-                "raw evidence paths",
-                "client and subject references",
-                "screening source references",
+                _localized_review_copy(review_language, key)
+                for key in (
+                    "privacy.excluded.names",
+                    "privacy.excluded.tax_identifiers",
+                    "privacy.excluded.identity_document_numbers",
+                    "privacy.excluded.raw_evidence_paths",
+                    "privacy.excluded.subject_references",
+                    "privacy.excluded.screening_sources",
+                )
             ],
         },
-        "privacy_notice": (
-            "Pseudonymous review payload: names, tax identifiers, identity-document "
-            "numbers, and raw evidence paths remain in owner-only local artifacts."
-        ),
+        "privacy_notice": _localized_review_copy(review_language, "privacy.notice"),
         "summary": {
             "review_item_count": len(items),
             "missing_information_count": missing_evidence["count"],
             "aml_status": aml_result["status"],
             "document_count": len(document_plan["documents"]),
+            "jurisdiction": intake["jurisdiction"],
+            "country_pack": ITALY_COUNTRY_PACK,
             "language": intake["language"],
+            "processing_authority_status": intake["processing_authority"]["status"],
         },
         "source_artifacts": {
             "facts": {
@@ -3482,7 +5667,31 @@ def validate_contract(output_dir: Path) -> dict[str, Any]:
             "review_payload.basis_hashes does not match persisted source artifacts."
         )
 
+    temporal_validity = build_temporal_validity(
+        json_payloads["case_facts_validated.json"],
+        json_payloads["source_registry.json"],
+        generated_at=_require_string(
+            review_payload.get("generated_at"), "review_payload.generated_at"
+        ),
+        document_plan=json_payloads["document_plan.json"],
+    )
+    if review_payload.get("temporal_validity") != temporal_validity:
+        raise ValidationError(
+            "review_payload.temporal_validity does not match the persisted material "
+            "deadlines."
+        )
+    if json_payloads["run_intake.json"].get("temporal_validity") != temporal_validity:
+        raise ValidationError(
+            "run_intake.temporal_validity does not match the persisted material "
+            "deadlines."
+        )
+
     manifest = json_payloads["final_artifacts.json"]
+    if manifest.get("temporal_validity") != temporal_validity:
+        raise ValidationError(
+            "final_artifacts.temporal_validity does not match the persisted material "
+            "deadlines."
+        )
     records = _require_list(manifest.get("outputs"), "final_artifacts.outputs")
     by_name = {
         record.get("path"): record

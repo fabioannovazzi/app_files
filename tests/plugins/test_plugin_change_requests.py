@@ -626,6 +626,28 @@ def test_suggestion_prompt_reservation_succeeds_with_one_writable_state_store(
     assert not failed_path.exists()
 
 
+def test_suggestion_prompt_reservation_skips_when_state_is_unavailable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    plugin_root = write_plugin(tmp_path, "vera")
+    cooldown = 14 * 24 * 60 * 60
+
+    def fail_to_open_state_lock(_state_dir: Path) -> tuple[Any, Any]:
+        raise OSError("read-only runtime")
+
+    monkeypatch.setattr(client, "_open_state_lock", fail_to_open_state_lock)
+
+    result = client.reserve_suggestion_prompt(plugin_root, now=2_000.0)
+
+    assert result == {
+        "ask": False,
+        "cooldown_seconds": cooldown,
+        "reason": "state_unavailable",
+    }
+
+
 @pytest.mark.parametrize(
     ("elapsed_seconds", "expected_ask", "expected_reserved_at"),
     [

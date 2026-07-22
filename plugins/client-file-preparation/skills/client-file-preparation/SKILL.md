@@ -21,7 +21,12 @@ Before running helper scripts or write-heavy work, identify material choices tha
 
 Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Codex-written review files are not choices to propose when they are natural outputs of that plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
 
-Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
+Default currency policy follows the selected jurisdiction: Italy uses Euro
+(`EUR`), Geneva and Zurich use Swiss francs (`CHF`), and the United Kingdom
+uses pounds sterling (`GBP`). Source evidence or an explicit user instruction
+overrides that default. For a mixed case, do not invent one currency: preserve
+the currency stated by each source and ask only if an unresolved currency would
+materially change the preparation or downstream professional pack.
 
 Use Codex-native UI artifacts as part of the workflow, not as optional
 narration. At minimum:
@@ -123,11 +128,19 @@ For a beta user's first run, guide the work in this order:
    decisions are collected, call `save_client_file_preparation_decisions` and
    `apply_client_file_preparation_decisions` before treating the review as applied. The
    MCP server owns validation, HTML widget rendering, and decision persistence;
-   the Python scripts only produce the structured payload. If MCP is
-   unavailable, fall back to reading `review_payload.json` and reviewing through
-   Markdown/chat, but keep review decisions pending unless they are recorded in
-   `ui_decisions.json` and consumed into `applied_decisions.json`.
-9. Revise `07_scheda_codex_per_studio.md` and `04_bozza_email_cliente.md` only from evidence actually found and, when present, from `ui_decisions.json`.
+   the Python scripts only produce the structured payload. If host MCP is
+   unavailable, start `python scripts/review_server.py <cartella-output>` from
+   the resolved installed module root so the same save/apply contract remains
+   persistent. Fall back to Markdown/chat only if neither service can run, and
+   then keep review decisions pending. A final-ready review must record a stable
+   pseudonymous reviewer alias; never put the reviewer's name, email address, or
+   another direct identifier in that field. A skipped or incomplete review does
+   not make the package final-ready.
+9. Record any complete replacement of `07_scheda_codex_per_studio.md` or
+   `04_bozza_email_cliente.md` as an explicit review edit before Apply. Apply
+   performs the change transactionally, reruns the declared text QA, and
+   reseals the package. Never edit sealed run files manually after Apply; start
+   a new run if the evidence changes.
 10. Summarize missing/uncertain documents, formal anomalies, structured-field limits, unreadable files, and concrete next steps for the studio workflow.
 
 Expected delivery artifacts are listed in `references/workflow-reference.md`.
@@ -164,11 +177,30 @@ to pause and install OCR dependencies first.
 3. Run the deterministic intake script from the plugin root:
 
 ```bash
-python scripts/build_file_preparation_outputs.py <cartella-cliente> --year <anno> --out <cartella-output>
+python scripts/build_file_preparation_outputs.py <cartella-cliente> \
+  --year <anno> \
+  --jurisdiction <italy|geneva|zurich|uk|mixed> \
+  --language <it|en|fr|de> \
+  --out <cartella-output>
 ```
 
 Use `--no-ocr` only when OCR is not installed or the user explicitly wants a
 text-only pass.
+
+Text previews stay out of `review_payload.json` by default. Use
+`--include-review-previews` only when the reviewer explicitly accepts that the
+review payload will contain bounded excerpts from every readable document in
+the selected folder, fiscal-field evidence snippets, and previews of the
+generated studio brief, memo, and client email. Those drafts can repeat the
+client name; preview mode is not limited to individually selected passages.
+DOCX, XLSX, and EML bodies are extracted locally;
+EML attachments, MSG, and other unsupported formats remain explicit unread
+evidence and must not receive an automatic accept recommendation.
+
+The intake never follows symbolic links from the customer folder. PDF and
+plain-text extraction, OCR, and supported office/archive parsing are bounded;
+files that exceed those limits remain explicit unread or partial evidence
+rather than being silently trusted.
 
 4. Read the generated evidence files listed in `references/workflow-reference.md`,
    including the review-session files:
@@ -177,8 +209,9 @@ text-only pass.
 run_intake.json
 review_payload.json
 ui_decisions.json
-applied_decisions.json
+review_handoff.md
 final_artifacts.json
+applied_decisions.json (after application)
 ```
 
 5. Prefer the MCP review widget when available:
@@ -195,8 +228,22 @@ new HTML page for this review surface. When decisions are collected, use
 `apply_client_file_preparation_decisions` to write `applied_decisions.json` and update
 `final_artifacts.json`.
 
+If the host MCP tools are unavailable, do not replace write-back with an
+ephemeral chat approval. From the resolved installed module root run:
+
+```bash
+python scripts/review_server.py <cartella-output>
+```
+
+This opens the same review widget on loopback and persists the same save/apply
+tool calls. In repository source, the equivalent developer command from this
+component root is
+`python ../../scripts/serve_review_workbench.py <cartella-output> --plugin-dir .`.
+If neither service can run, review in Markdown/chat but leave the decisions
+pending and state that they have not been applied.
+
 6. Inspect nearby source files when useful and readable. Do not claim to have read the content of binary PDFs unless a text extraction step has actually succeeded.
-7. Write or revise the short Codex synthesis file:
+7. Draft the short Codex synthesis file before review:
 
 ```text
 07_scheda_codex_per_studio.md
@@ -217,7 +264,9 @@ The synthesis must contain:
    The script writes a conservative first draft; Codex should improve it when
    the evidence supports a clearer request. Keep only client-facing requests
    supported by the findings, remove irrelevant generic questions, and keep the
-   tone suitable for a studio email. Do not send the email automatically.
+   tone suitable for a studio email. Record a complete replacement through the
+   review decision and Apply path; do not modify the sealed file afterward and
+   do not send the email automatically.
 
 9. In the final response, tell the user where the output folder is and list the main issues found.
 

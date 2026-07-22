@@ -66,9 +66,34 @@ def _governed_files(component_root: Path, paths: Iterable[str]) -> list[Path]:
 def _fingerprint(
     component_root: Path, paths: Iterable[str], *, wrapper: Path | None = None
 ) -> str:
+    governed_paths = tuple(paths)
+    logical_files = {
+        path.relative_to(component_root).as_posix(): path
+        for path in _governed_files(component_root, governed_paths)
+    }
+    projected_review_server = "scripts/review_server.py"
+    adapter = component_root / "assets" / "review-workbench-adapter.json"
+    source_review_server = component_root / projected_review_server
+    scripts_are_governed = any(
+        relative == "scripts" or relative == projected_review_server
+        for relative in governed_paths
+    )
+    if (
+        adapter.is_file()
+        and scripts_are_governed
+        and not source_review_server.is_file()
+    ):
+        repository_root = component_root.parents[1]
+        shared_review_server = repository_root / "scripts" / "serve_review_workbench.py"
+        if not shared_review_server.is_file():
+            raise FileNotFoundError(
+                "shared review workbench source not found: " f"{shared_review_server}"
+            )
+        logical_files[projected_review_server] = shared_review_server
+
     digest = hashlib.sha256()
-    for path in _governed_files(component_root, paths):
-        relative = path.relative_to(component_root).as_posix().encode("utf-8")
+    for logical_path, path in sorted(logical_files.items()):
+        relative = logical_path.encode("utf-8")
         digest.update(len(relative).to_bytes(4, "big"))
         digest.update(relative)
         content = path.read_bytes()
@@ -160,6 +185,13 @@ def _manifest_errors(
             errors.append(
                 f"{workstream}: visible notices require Italian and English text"
             )
+        for key in ("message_fr", "message_de"):
+            if key in notice and (
+                not isinstance(notice[key], str) or not notice[key].strip()
+            ):
+                errors.append(
+                    f"{workstream}: optional {key} notice text must be non-empty"
+                )
     review = payload["review"]
     if not isinstance(review, dict):
         errors.append(f"{workstream}: review must be an object")

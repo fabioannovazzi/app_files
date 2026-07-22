@@ -40,9 +40,14 @@ def _load_core() -> Any:
 
 def _node_binary() -> str:
     node = shutil.which("node")
-    if node is None:
+    if node is not None:
+        return node
+    candidates = sorted(
+        (Path.home() / ".cache" / "codex-runtimes").glob("*/dependencies/node/bin/node")
+    )
+    if not candidates:
         pytest.skip("Node.js is required for the new-client MCP tests.")
-    return node
+    return candidates[-1].as_posix()
 
 
 def _call_mcp(messages: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
@@ -114,12 +119,25 @@ def _generate_package(tmp_path: Path) -> Path:
         text=True,
     )
     assert json.loads(initialized.stdout)["status"] == "new_client_input_initialized"
+    intake_path = output_dir / "new_client_input.json"
+    intake = json.loads(intake_path.read_text(encoding="utf-8"))
+    intake["processing_authority"].update(
+        {
+            "status": "authorized",
+            "authorized_by": "test-reviewer-01",
+            "authorized_by_role": "professional",
+            "authorized_at": "2026-07-20T10:00:00+02:00",
+        }
+    )
+    intake_path.write_text(
+        json.dumps(intake, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     packaged = subprocess.run(
         [
             sys.executable,
             str(PLUGIN_ROOT / "scripts" / "package_new_client.py"),
             "--input",
-            str(output_dir / "new_client_input.json"),
+            str(intake_path),
             "--output-dir",
             str(output_dir),
         ],
@@ -162,6 +180,22 @@ def _strict_review_payload() -> dict[str, Any]:
         "workflow": "new-client",
         "run_id": "ready-export-run",
         "review_revision": 1,
+        "generated_at": "2026-07-20T10:30:00Z",
+        "temporal_validity": {
+            "policy": "inclusive_earliest_material_deadline_v1",
+            "evaluated_on": "2026-07-20",
+            "valid_through": "2099-12-31",
+            "deadline_count": 1,
+            "deadlines": [
+                {
+                    "kind": "authoritative_source_registry_review_by",
+                    "count": 1,
+                    "valid_through": "2099-12-31",
+                }
+            ],
+            "source_currentness_status": "verified_current",
+            "apply_rule": "system_utc_date_must_not_exceed_valid_through",
+        },
         "review_type": "professional_new_client",
         "status": "pending_review",
         "item_count": 1,
@@ -620,7 +654,7 @@ def test_privacy_minimized_reload_reuses_saved_decision_details(
     semantic_item = next(
         item
         for item in review_payload["items"]
-        if item["item_type"] == "aml_risk_factor"
+        if item["item_type"] == "aml_factor_section"
     )
     missing_item = next(
         item
@@ -1098,7 +1132,7 @@ def test_new_client_mcp_enforces_semantic_and_document_request_notes(
     semantic_item = next(
         item
         for item in review_payload["items"]
-        if item["item_type"] == "aml_risk_factor"
+        if item["item_type"] == "aml_factor_section"
     )
     missing_item = next(
         item
@@ -1796,6 +1830,18 @@ def test_new_client_widget_state_excludes_free_text_decisions() -> None:
 
     assert adapter["persistDecisionTextInWidgetState"] is False
     assert adapter["useDecisionRevision"] is True
+    assert adapter["requiresReviewerAlias"] is True
+    assert set(adapter["bulkProtectedItemTypes"]) >= {
+        "party_profile",
+        "party_structure",
+        "engagement",
+        "screening_subject",
+        "aml_factor_section",
+        "aml_trigger_set",
+        "missing_evidence",
+        "privacy_processing",
+        "document_applicability",
+    }
     assert adapter["schemaVersion"] == "1.1"
     assert 'schema_version: "1.1"' in widget
     assert 'schema_version: "1.0"' not in widget
@@ -1803,10 +1849,141 @@ def test_new_client_widget_state_excludes_free_text_decisions() -> None:
     assert "return { item_id: decision.item_id, action: decision.action };" in widget
     assert "decisions: state.decisions" not in widget
     assert "expected_decision_revision" in widget
+    assert 'id="reviewer-alias"' in widget
+    assert "reviewer: reviewerAliasValue() || null" in widget
     assert (
         "if (result.ui_decisions) state.payload.ui_decisions = result.ui_decisions;"
         in widget
     )
+
+
+def test_new_client_widget_forwards_reviewer_alias_and_keeps_professional_rows_individual() -> (
+    None
+):
+    widget_path = PLUGIN_ROOT / "assets" / "new-client-review-widget.html"
+    script = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const html = fs.readFileSync(process.argv[1], "utf8");
+const match = html.match(/<script>([\s\S]*)<\/script>/);
+if (!match) throw new Error("widget script missing");
+
+const elements = new Map();
+function element(id = "") {
+  return {
+    id,
+    textContent: "",
+    innerHTML: "",
+    className: "",
+    value: "",
+    disabled: false,
+    style: {},
+    dataset: {},
+    addEventListener() {},
+    appendChild() {},
+    remove() {},
+    select() {},
+    setAttribute() {},
+    closest() { return null; },
+  };
+}
+const document = {
+  title: "",
+  documentElement: { lang: "en" },
+  body: element("body"),
+  getElementById(id) {
+    if (!elements.has(id)) elements.set(id, element(id));
+    return elements.get(id);
+  },
+  createElement(tag) { return element(tag); },
+  execCommand() { return true; },
+};
+const reviewItems = [
+  { id: "party-profile-1", item_type: "party_profile", title: "Party profile", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "party-structure-1", item_type: "party_structure", title: "Party structure", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "engagement-1", item_type: "engagement", title: "Engagement", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "screening-1", item_type: "screening_subject", title: "Screening", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "aml-1", item_type: "aml_factor_section", title: "AML factors", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "aml-triggers-1", item_type: "aml_trigger_set", title: "AML triggers", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "missing-1", item_type: "missing_evidence", title: "Missing evidence", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "privacy-1", item_type: "privacy_processing", title: "Privacy", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "applicability-1", item_type: "document_applicability", title: "Applicability", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+  { id: "party-1", item_type: "party_fact", title: "Party fact", allowed_actions: ["accept", "mark_unclear"], recommended_action: "accept", status: "needs_review", data: {} },
+];
+const toolOutput = {
+  widget_type: "new_client_review",
+  run_intake: { run_id: "review-alias-test", language: "en", input_paths: [], data_posture: {}, execution_trace: [] },
+  review_payload: {
+    schema_version: "1.1",
+    plugin: "new-client",
+    workflow: "new-client",
+    run_id: "review-alias-test",
+    status: "ready_for_review",
+    items: reviewItems,
+    item_count: reviewItems.length,
+    summary: {},
+  },
+  ui_decisions: { decisions: [], decision_count: 0, decision_revision: 0, status: "pending_review" },
+  final_artifacts: null,
+  decision_policy: { save_tool: "save_new_client_decisions", apply_tool: "apply_new_client_decisions", can_persist: true },
+};
+const context = {
+  Blob,
+  URL,
+  URLSearchParams,
+  console,
+  document,
+  navigator: {},
+  setTimeout,
+  clearTimeout,
+  window: {
+    location: { search: "" },
+    openai: {
+      toolOutput,
+      widgetState: null,
+      lastState: null,
+      setWidgetState(value) { this.lastState = value; },
+    },
+  },
+};
+context.globalThis = context;
+vm.createContext(context);
+new vm.Script(`${match[1]}
+applyRecommendedToVisible();
+validateDecisionInputs(collectDecisionInputs());
+state.reviewerAlias = "reviewer with spaces";
+let invalidAliasError = "";
+try { validateDecisionInputs(collectDecisionInputs()); } catch (error) { invalidAliasError = error.message; }
+state.reviewerAlias = "reviewer-fg";
+validateDecisionInputs(collectDecisionInputs());
+persistWidgetState();
+globalThis.__result = {
+  decisionIds: Object.keys(state.decisions).sort(),
+  reviewer: saveToolArgs().reviewer,
+  fallbackReviewer: fallbackUiDecisions().reviewer,
+  storedReviewer: window.openai.lastState?.reviewer_alias || null,
+  invalidAliasError,
+  statusMessage: document.getElementById("save-status").textContent,
+};`).runInContext(context);
+process.stdout.write(JSON.stringify(context.__result));
+"""
+
+    completed = subprocess.run(
+        [_node_binary(), "-e", script, str(widget_path)],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=20,
+    )
+    result = json.loads(completed.stdout)
+
+    assert result["decisionIds"] == ["party-1"]
+    assert result["reviewer"] == "reviewer-fg"
+    assert result["fallbackReviewer"] == "reviewer-fg"
+    assert result["storedReviewer"] == "reviewer-fg"
+    assert "reviewer alias" in result["invalidAliasError"].lower()
+    assert "9" in result["statusMessage"]
 
 
 def test_new_client_public_page_explains_one_operational_journey() -> None:
@@ -1821,7 +1998,7 @@ def test_new_client_public_page_explains_one_operational_journey() -> None:
         "Completa ciò che manca",
         "Imposta il rapporto",
         "Struttura i piani documentali e l’AML",
-        "Mantiene il fascicolo aggiornato",
+        "Prepara il seguito del fascicolo",
         "RI 30% + RS 70%",
         "Mandato",
         "Privacy",

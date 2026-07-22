@@ -10,12 +10,22 @@ service, signature system, or legal-compliance oracle.
 
 `client-file-preparation` owns file inventory, OCR, extraction, document classification,
 and the first missing-document pass. `new-client` verifies a final-ready
-run by stable run ID and exact final-manifest byte hash, then structures
+run by stable run ID, exact final-manifest byte hash, every listed artifact's
+byte hash and size, and the canonical upstream package hash, then structures
 relationship-specific facts and decisions. A structurally valid but non-final
 binding blocks export; a malformed, mismatched, or tampered binding is rejected.
 When no upstream run exists, the intake must explicitly declare
 `standalone_evidence` and explain why. Standalone evidence is never presented as
 reviewed Client File Preparation output.
+
+`promote_client_file_preparation.py` creates the phase-two starter only after
+that verification. It inherits the sealed phase-one language and accepts only
+an `italy` run for the currently shipped `IT` professional-setup country pack.
+Geneva, Zurich, UK, and mixed runs fail with an explicit unavailable/pending
+country-pack error. Promotion may carry forward a uniquely accepted or edited
+Italian codice fiscale as `reported`; ambiguous 11-digit identifiers and other
+extracted fiscal fields remain upstream evidence rather than becoming client
+facts automatically.
 
 ## State machine
 
@@ -48,6 +58,13 @@ aliases. Full client data remains in private local artifacts.
 `review_handoff.md` names the validate, render, save, and apply tools and is
 included in `final_artifacts.json` with QA metadata.
 
+The professional workbench groups related decisions: party profile, party
+structure, engagement, each subject's complete screening grid, AML factor
+sections, and mandatory triggers. Mechanical binding/source rows and duplicate
+document summaries stay in the local artifacts. When information is missing,
+one grouped review item retains the request-more-documents action without
+requiring one decision per mechanically detected row.
+
 The review payload is bound to the exact persisted domain artifacts with
 canonical SHA-256 values. File manifests use byte SHA-256 values. A material
 upstream, source, or template change breaks the current binding and validation
@@ -70,6 +87,10 @@ IDs, review hash, basis hashes, and dependent blockers before writing. It writes
 review manifests only; source facts and legal conclusions are never mutated
 silently. Review actions may clear review blockers only. Domain and artifact
 blockers remain in the export gate until the underlying package is regenerated.
+It also re-derives the hash-bound temporal horizon from source-registry
+currentness, evidence and identity expiries, and template validity/review dates.
+The deadline is inclusive; Apply fails closed without writes when the system UTC
+date is later than `valid_through`.
 
 ## Relationship export gate
 
@@ -101,6 +122,18 @@ basis or processor authority, retention rule, sources, and confirmation metadata
 as separate fields. These values are professional decisions. Marketing consent
 has its own record and scope; professional review confirms the accuracy of the
 record, not the client's consent itself.
+
+Before semantic/model processing, the intake must also contain an explicit
+`processing_authority` with approved runtime, scope, minimization posture,
+external-transfer choice, pseudonymous approving actor, professional role, and
+timestamp. A pending authority record permits local deterministic preparation
+but blocks packaging and semantic processing.
+
+`run_intake.json` preserves that declaration as
+`processing_authority_declaration` and records the packaging invocation's
+actual behavior separately under `observed_processing`. An authorized managed
+runtime or external transfer is permission, not evidence that this local
+packaging invocation used it.
 
 ## AML mechanical contract
 

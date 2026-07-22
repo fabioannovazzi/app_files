@@ -58,6 +58,10 @@ class ChangeRequestError(RuntimeError):
     """Raised when a change-request operation cannot be completed safely."""
 
 
+class _StateUnavailableError(ChangeRequestError):
+    """Raised when no change-request state location can be used."""
+
+
 class _StateLockContentionError(OSError):
     """Raised when a valid state lock is already held by another process."""
 
@@ -305,7 +309,7 @@ def _locked_state(plugin_name: str, plugin_data: Path | None) -> Iterator[list[P
         if state_dir == temporary_state_dir:
             state_directories.append(state_dir)
     if not locks:
-        raise ChangeRequestError(
+        raise _StateUnavailableError(
             "Could not access a writable change-request state directory."
         ) from (errors[0] if errors else None)
     try:
@@ -460,7 +464,7 @@ def _write_state(
         else:
             written += 1
     if written == 0:
-        raise ChangeRequestError("Could not persist change-request state.") from (
+        raise _StateUnavailableError("Could not persist change-request state.") from (
             errors[0] if errors else None
         )
 
@@ -788,19 +792,26 @@ def reserve_suggestion_prompt(
 
     plugin_name, _plugin_version = _read_plugin_identity(plugin_root)
     checked_at = time.time() if now is None else now
-    with _locked_state(plugin_name, plugin_data) as state_directories:
-        state = _load_state(plugin_name, state_directories)
-        reserved_at = state.get(PROMPT_RESERVED_AT_FIELD)
-        ask = (
-            reserved_at is None
-            or checked_at - float(reserved_at) >= PROMPT_COOLDOWN_SECONDS
-        )
-        if ask:
-            reserved_at = checked_at
-            state[PROMPT_RESERVED_AT_FIELD] = checked_at
-        # These paths are replicas: one durable write preserves the cooldown, and
-        # the next successful load/write cycle repairs a temporarily failed replica.
-        _write_state(state, state_directories)
+    try:
+        with _locked_state(plugin_name, plugin_data) as state_directories:
+            state = _load_state(plugin_name, state_directories)
+            reserved_at = state.get(PROMPT_RESERVED_AT_FIELD)
+            ask = (
+                reserved_at is None
+                or checked_at - float(reserved_at) >= PROMPT_COOLDOWN_SECONDS
+            )
+            if ask:
+                reserved_at = checked_at
+                state[PROMPT_RESERVED_AT_FIELD] = checked_at
+            # These paths are replicas: one durable write preserves the cooldown,
+            # and the next successful cycle repairs a temporarily failed replica.
+            _write_state(state, state_directories)
+    except _StateUnavailableError:
+        return {
+            "ask": False,
+            "cooldown_seconds": PROMPT_COOLDOWN_SECONDS,
+            "reason": "state_unavailable",
+        }
     next_eligible_at = float(reserved_at) + PROMPT_COOLDOWN_SECONDS
     return {
         "ask": ask,

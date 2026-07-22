@@ -59,6 +59,8 @@
         "timing": {"enum": ["not_shown", "workstream_start", "before_optional_disclosure"]},
         "message_it": {"type": "string"},
         "message_en": {"type": "string"},
+        "message_fr": {"type": "string"},
+        "message_de": {"type": "string"},
         "requires_confirmation": {"type": "boolean"}
       }
     },

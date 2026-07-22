@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/prompt-optimizer-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -14,7 +16,8 @@
     ],
     "local_processing": [
       "Validate prompt structure and required sections",
-      "Check deterministic citation and source-hierarchy rules"
+      "Check deterministic citation and source-hierarchy rules",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -56,6 +59,6 @@
       "Vera cannot retroactively remove content already sent in the conversation",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "49a1214830a6a890df162e74fd1ad92f0f295a9a0ede086be9c5bcf37e1e61a1"
+    "source_fingerprint": "41665257922f046e1f5a9ab4faba7db0dbb46543d7d50dff9cee85a88001bee1"
   }
 }

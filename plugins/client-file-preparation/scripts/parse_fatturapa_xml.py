@@ -14,6 +14,7 @@ from typing import Iterable, Sequence
 
 __all__ = [
     "InvoiceXmlRecord",
+    "localize_formal_anomaly",
     "parse_fatturapa_file",
     "parse_xml_files",
     "write_duplicate_candidates_csv",
@@ -25,6 +26,66 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 MAX_XML_BYTES = 20 * 1024 * 1024
 FORBIDDEN_XML_DECLARATIONS = (b"<!doctype", b"<!entity")
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+
+ANOMALY_COPY = {
+    "tipo documento mancante": {
+        "en": "document type missing",
+        "fr": "type de document manquant",
+        "de": "Dokumenttyp fehlt",
+    },
+    "data fattura mancante": {
+        "en": "invoice date missing",
+        "fr": "date de facture manquante",
+        "de": "Rechnungsdatum fehlt",
+    },
+    "numero fattura mancante": {
+        "en": "invoice number missing",
+        "fr": "numéro de facture manquant",
+        "de": "Rechnungsnummer fehlt",
+    },
+    "importo totale documento mancante": {
+        "en": "document total missing",
+        "fr": "total du document manquant",
+        "de": "Dokumentgesamtbetrag fehlt",
+    },
+    "partita IVA / codice fiscale cedente mancante": {
+        "en": "supplier VAT/tax identifier missing",
+        "fr": "identifiant TVA/fiscal du fournisseur manquant",
+        "de": "USt-/Steuer-ID des Lieferanten fehlt",
+    },
+    "sezione DatiRiepilogo non individuata": {
+        "en": "DatiRiepilogo section not found",
+        "fr": "section DatiRiepilogo introuvable",
+        "de": "Abschnitt DatiRiepilogo nicht gefunden",
+    },
+}
+
+
+def localize_formal_anomaly(value: str, language: str) -> str:
+    """Return a human-facing FatturaPA anomaly in the working language."""
+
+    if language == "it":
+        return value
+    direct = ANOMALY_COPY.get(value, {}).get(language)
+    if direct:
+        return direct
+    if value.startswith("data fuori anno target "):
+        year = value.removeprefix("data fuori anno target ")
+        return {
+            "en": f"date outside target year {year}",
+            "fr": f"date hors de l’année cible {year}",
+            "de": f"Datum außerhalb des Zieljahres {year}",
+        }[language]
+    if value.startswith("XML non leggibile:"):
+        detail = value.partition(":")[2].strip()
+        prefix = {
+            "en": "Unreadable XML",
+            "fr": "XML illisible",
+            "de": "XML nicht lesbar",
+        }[language]
+        return f"{prefix}: {detail}"
+    return value
 
 
 @dataclass(frozen=True)
@@ -459,21 +520,51 @@ def write_duplicate_candidates_csv(
 def write_formal_anomalies_markdown(
     records: Sequence[InvoiceXmlRecord],
     output_path: Path | str,
+    *,
+    language: str = "it",
 ) -> Path:
     """Write formal XML anomalies to markdown."""
 
+    if language not in SUPPORTED_LANGUAGES:
+        raise ValueError(f"Unsupported language: {language}")
+
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    lines = [
-        "# Anomalie formali e-fattura XML",
-        "",
-        "Questo controllo riepiloga campi XML, date, importi, natura, IVA e anomalie formali.",
-        "",
-    ]
+    copy = {
+        "it": {
+            "title": "Anomalie formali e-fattura XML",
+            "intro": "Questo controllo riepiloga campi XML, date, importi, natura, IVA e anomalie formali.",
+            "duplicates": "Duplicati potenziali",
+            "by_file": "Anomalie per file",
+            "empty": "Nessuna anomalia formale individuata nei file XML analizzati.",
+        },
+        "en": {
+            "title": "Formal electronic-invoice XML anomalies",
+            "intro": "This check summarizes XML fields, dates, amounts, VAT nature codes, VAT, and formal anomalies.",
+            "duplicates": "Potential duplicates",
+            "by_file": "Anomalies by file",
+            "empty": "No formal anomaly was identified in the XML files reviewed.",
+        },
+        "fr": {
+            "title": "Anomalies formelles des factures électroniques XML",
+            "intro": "Ce contrôle récapitule les champs XML, dates, montants, codes nature TVA, TVA et anomalies formelles.",
+            "duplicates": "Doublons potentiels",
+            "by_file": "Anomalies par fichier",
+            "empty": "Aucune anomalie formelle n’a été relevée dans les fichiers XML examinés.",
+        },
+        "de": {
+            "title": "Formale Anomalien in E-Rechnungs-XML",
+            "intro": "Diese Prüfung fasst XML-Felder, Daten, Beträge, Mehrwertsteuer-Naturcodes, Mehrwertsteuer und formale Anomalien zusammen.",
+            "duplicates": "Mögliche Duplikate",
+            "by_file": "Anomalien nach Datei",
+            "empty": "In den geprüften XML-Dateien wurden keine formalen Anomalien festgestellt.",
+        },
+    }[language]
+    lines = [f"# {copy['title']}", "", copy["intro"], ""]
 
     duplicate_groups = _duplicate_groups(records)
     if duplicate_groups:
-        lines.extend(["## Duplicati potenziali", ""])
+        lines.extend([f"## {copy['duplicates']}", ""])
         for key, group in sorted(duplicate_groups.items()):
             files = ", ".join(f"`{record.relative_path}`" for record in group)
             lines.append(f"- {key}: {files}")
@@ -481,13 +572,13 @@ def write_formal_anomalies_markdown(
 
     anomaly_records = [record for record in records if record.anomalies]
     if anomaly_records:
-        lines.extend(["## Anomalie per file", ""])
+        lines.extend([f"## {copy['by_file']}", ""])
         for record in anomaly_records:
             lines.append(f"- `{record.relative_path}`")
             for anomaly in record.anomalies:
-                lines.append(f"  - {anomaly}")
+                lines.append(f"  - {localize_formal_anomaly(anomaly, language)}")
     else:
-        lines.append("Nessuna anomalia formale individuata nei file XML analizzati.")
+        lines.append(copy["empty"])
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path

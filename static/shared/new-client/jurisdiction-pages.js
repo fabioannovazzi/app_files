@@ -93,11 +93,11 @@
         ],
       },
       next: {
-        eyebrow: "Modello comune",
-        title: "Continua dal modello condiviso di Nuovo cliente.",
+        eyebrow: "Percorso New Client",
+        title: "Torna al percorso New Client.",
         copy:
-          "Torna alla struttura comune per vedere come evidenze, persone e servizi, attività aperte e storico restano collegati in ogni mercato.",
-        button: "Vedi il modello comune",
+          "La preparazione documentale è disponibile per questo mercato; la configurazione professionale oggi prosegue con il country pack Italia.",
+        button: "Vedi il percorso",
       },
       download: {
         eyebrow: "Installazione",
@@ -186,11 +186,11 @@
         ],
       },
       next: {
-        eyebrow: "Common model",
-        title: "Continue from the shared New Client model.",
+        eyebrow: "New Client journey",
+        title: "Return to the New Client journey.",
         copy:
-          "Return to the common structure to see how evidence, people and services, open actions and history stay connected in every market.",
-        button: "See the common model",
+          "Document preparation is available for this market; professional setup currently continues with the Italy country pack.",
+        button: "See the journey",
       },
       download: {
         eyebrow: "Installation",
@@ -279,11 +279,11 @@
         ],
       },
       next: {
-        eyebrow: "Modèle commun",
-        title: "Poursuivez avec le modèle partagé Nouveau client.",
+        eyebrow: "Parcours Nouveau client",
+        title: "Revenez au parcours Nouveau client.",
         copy:
-          "Revenez à la structure commune pour voir comment les pièces, les personnes et services, les actions ouvertes et l’historique restent reliés dans chaque marché.",
-        button: "Voir le modèle commun",
+          "La préparation documentaire est disponible pour ce marché ; la mise en place professionnelle se poursuit actuellement avec le pack Italie.",
+        button: "Voir le parcours",
       },
       download: {
         eyebrow: "Installation",
@@ -372,11 +372,11 @@
         ],
       },
       next: {
-        eyebrow: "Gemeinsames Modell",
-        title: "Mit dem gemeinsamen Modell für neue Mandanten fortfahren.",
+        eyebrow: "Ablauf für neue Mandanten",
+        title: "Zurück zum Ablauf für neue Mandanten.",
         copy:
-          "Im gemeinsamen Aufbau sehen Sie, wie Nachweise, Personen und Leistungen, offene Aufgaben und Historie in jedem Markt verbunden bleiben.",
-        button: "Gemeinsames Modell ansehen",
+          "Die Dokumentvorbereitung ist für diesen Markt verfügbar; die professionelle Einrichtung wird derzeit mit dem Länderpaket Italien fortgesetzt.",
+        button: "Ablauf ansehen",
       },
       download: {
         eyebrow: "Installation",

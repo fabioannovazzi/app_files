@@ -13,6 +13,11 @@ remains current or applies to the case. Before a real run, Codex should verify
 current primary sources and the professional should confirm temporal and case
 applicability.
 
+The registry records a maintained `currentness` status, `reviewed_on`, and
+inclusive `review_by` date. That date is a mechanical re-review boundary, not a
+legal conclusion. It participates in the package's earliest-deadline horizon,
+which is rechecked against the system UTC date at Apply.
+
 ## Reuse
 
 Public availability does not establish permission to redistribute a template.

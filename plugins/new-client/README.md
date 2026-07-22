@@ -17,6 +17,13 @@ New Client coordina cinque momenti dello stesso lavoro:
 La preparazione documentale è una fase interna del percorso. Può collegarsi a
 un run `client-file-preparation` già `final_ready` oppure partire da evidenze
 autonome, registrandone in modo esplicito origine e stato di revisione.
+Il comando di promozione verifica byte, dimensione e SHA-256 di ogni artefatto
+elencato dal run, oltre all'hash canonico dell'intero pacchetto, prima di creare
+lo starter della fase professionale.
+
+La fase professionale include oggi il solo country pack italiano (`IT`). I
+quattro codici lingua `it`, `en`, `fr` e `de` controllano review, memo e richieste
+generate; non dichiarano l'esistenza di country pack svizzeri o britannici.
 
 ## Risultati
 
@@ -50,6 +57,7 @@ Dal root del componente:
 ```bash
 python scripts/check_dependencies.py
 python scripts/initialize_case.py --help
+python scripts/promote_client_file_preparation.py --help
 python scripts/package_new_client.py --help
 ```
 
@@ -57,6 +65,19 @@ Gli output di casi reali vanno scritti fuori dal repository, in una cartella
 privata. Il workflow produce almeno `run_intake.json`, `review_payload.json`,
 `ui_decisions.json`, `review_handoff.md` e `final_artifacts.json`, insieme agli
 artefatti di dominio.
+
+Prima del packaging, `processing_authority` deve registrare runtime, scope,
+minimizzazione e l'alias pseudonimo del professionista che autorizza il
+trattamento semantico. Uno starter con autorizzazione ancora `pending` resta
+utilizzabile per la sola preparazione deterministica ma non può essere
+processato o confezionato.
+
+Nel `run_intake.json`, `processing_authority_declaration` conserva ciò che lo
+studio ha autorizzato (runtime e trasferimento inclusi), mentre
+`observed_processing` registra separatamente ciò che lo script di packaging ha
+effettivamente eseguito. L'autorizzazione a un runtime gestito o a un
+trasferimento esterno non viene quindi presentata come prova che quel
+trasferimento sia avvenuto.
 
 ## Revisione
 
@@ -67,11 +88,25 @@ La review usa i tool MCP:
 3. `save_new_client_decisions`
 4. `apply_new_client_decisions`
 
+`apply` rechecks the hash-bound, inclusive `temporal_validity.valid_through`
+against the system UTC date before writing. The horizon is derived from source
+currentness, evidence and identity expiries, and template validity/review dates;
+an expired package must be regenerated.
+
 Le decisioni vengono registrate in `ui_decisions.json` e applicate in
 `applied_decisions.json`; gli artefatti di origine restano immutati. Per
 sbloccare l'export professionale, `apply` registra nel campo `reviewer` un
 riferimento pseudonimo e stabile del professionista dello studio. Nome, email e
 altri identificativi diretti restano fuori dal payload di review.
+
+Se i tool MCP del client non sono disponibili, il pacchetto Vera include lo
+stesso workbench con write-back locale. Dal root del modulo:
+
+```bash
+python scripts/review_server.py "/percorso/output/new-client"
+```
+
+La review solo in Markdown/chat resta esplicitamente non applicata.
 
 ## Fonti e template
 

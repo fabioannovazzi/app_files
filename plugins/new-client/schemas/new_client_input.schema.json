@@ -6,7 +6,9 @@
   "additionalProperties": false,
   "required": [
     "schema_version",
+    "jurisdiction",
     "language",
+    "processing_authority",
     "client_file_preparation_binding",
     "client_reference",
     "client_type",
@@ -14,7 +16,9 @@
     "party_facts",
     "party_identity_document",
     "representatives",
+    "representative_posture",
     "beneficial_owners",
+    "ownership_status",
     "screening_results",
     "engagement",
     "privacy_processing_decisions",
@@ -32,6 +36,13 @@
       "type": "string",
       "enum": ["it", "en", "fr", "de"],
       "default": "it"
+    },
+    "jurisdiction": {
+      "const": "IT",
+      "description": "Only the Italy professional-setup country pack is currently available."
+    },
+    "processing_authority": {
+      "$ref": "#/$defs/processing_authority"
     },
     "client_file_preparation_binding": {
       "$ref": "#/$defs/client_file_preparation_binding"
@@ -61,6 +72,9 @@
         "$ref": "#/$defs/beneficial_owner"
       }
     },
+    "ownership_status": {
+      "$ref": "#/$defs/ownership_status"
+    },
     "party_facts": {
       "type": "array",
       "minItems": 1,
@@ -76,6 +90,9 @@
       "items": {
         "$ref": "#/$defs/representative"
       }
+    },
+    "representative_posture": {
+      "$ref": "#/$defs/representative_posture"
     },
     "screening_results": {
       "type": "array",
@@ -122,6 +139,79 @@
     }
   },
   "$defs": {
+    "processing_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "scope",
+        "runtime",
+        "minimization",
+        "external_transfer_authorized",
+        "authorized_by",
+        "authorized_by_role",
+        "authorized_at"
+      ],
+      "properties": {
+        "status": {"enum": ["pending", "authorized"]},
+        "scope": {"const": "new_client_professional_setup"},
+        "runtime": {"enum": ["local_codex_workspace", "managed_codex_runtime"]},
+        "minimization": {"const": "structured_facts_and_selected_excerpts"},
+        "external_transfer_authorized": {"type": "boolean"},
+        "authorized_by": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/reference"}]
+        },
+        "authorized_by_role": {"enum": [null, "professional"]},
+        "authorized_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "representative_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "executor_reference",
+        "basis",
+        "evidence_ids",
+        "confirmed_by_role",
+        "confirmed_at"
+      ],
+      "properties": {
+        "status": {"enum": ["recorded", "none_required_confirmed", "pending"]},
+        "executor_reference": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/reference"}]
+        },
+        "basis": {"type": "string", "minLength": 1},
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"},
+        "confirmed_by_role": {"enum": [null, "professional"]},
+        "confirmed_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "ownership_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "evidence_ids",
+        "confirmed_by_role",
+        "confirmed_at"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "owners_recorded",
+            "none_confirmed",
+            "not_applicable_confirmed",
+            "pending"
+          ]
+        },
+        "basis": {"type": "string", "minLength": 1},
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"},
+        "confirmed_by_role": {"enum": [null, "professional"]},
+        "confirmed_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
     "reference": {
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,79}$"
@@ -139,13 +229,17 @@
             "mode",
             "run_id",
             "final_artifacts_path",
-            "final_artifacts_sha256"
+            "final_artifacts_sha256",
+            "upstream_package_hash",
+            "promoted_evidence_ids"
           ],
           "properties": {
             "mode": {"const": "client_file_preparation_run"},
             "run_id": {"$ref": "#/$defs/reference"},
             "final_artifacts_path": {"type": "string", "minLength": 1},
-            "final_artifacts_sha256": {"$ref": "#/$defs/sha256"}
+            "final_artifacts_sha256": {"$ref": "#/$defs/sha256"},
+            "upstream_package_hash": {"$ref": "#/$defs/sha256"},
+            "promoted_evidence_ids": {"$ref": "#/$defs/evidence_ids"}
           }
         },
         {
@@ -654,7 +748,8 @@
         "applicability_status",
         "review_status",
         "basis",
-        "source_ids"
+        "source_ids",
+        "case_fact_ids"
       ],
       "properties": {
         "topic": {
@@ -682,6 +777,12 @@
           "items": {
             "$ref": "#/$defs/reference"
           }
+        },
+        "case_fact_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/reference"}
         },
         "confirmed_by_role": {
           "enum": [null, "professional"]

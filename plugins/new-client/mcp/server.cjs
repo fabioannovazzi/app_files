@@ -27,6 +27,17 @@ const MAX_PERSISTENCE_CONTEXTS = 128;
 const PERSISTENCE_CONTEXT_TTL_MS = 4 * 60 * 60 * 1000;
 const PERSISTENCE_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
 const PERSISTENCE_CONTEXTS = new Map();
+const TEMPORAL_VALIDITY_POLICY = "inclusive_earliest_material_deadline_v1";
+const TEMPORAL_APPLY_RULE = "system_utc_date_must_not_exceed_valid_through";
+const TEMPORAL_DEADLINE_KINDS = [
+  "authoritative_source_registry_review_by",
+  "evidence_expires_on",
+  "primary_identity_expires_on",
+  "representative_identity_expires_on",
+  "beneficial_owner_identity_expires_on",
+  "template_valid_until",
+  "template_review_due_on",
+];
 const TOOL_NAMES = {
   validate: "validate_new_client_review",
   render: "render_new_client_review",
@@ -38,13 +49,19 @@ const TOOL_NAMES = {
 // upstream/model-led; this server only validates the resulting review contract.
 const ITEM_TYPES = new Set([
   "party_fact",
+  "party_profile",
+  "party_structure",
   "representative_fact",
   "beneficial_owner_fact",
   "engagement_service",
+  "engagement",
   "screening_result",
+  "screening_subject",
   "document_applicability",
   "aml_risk_factor",
+  "aml_factor_section",
   "aml_mandatory_trigger",
+  "aml_trigger_set",
   "aml_assessment",
   "missing_evidence",
   "document_plan",
@@ -63,11 +80,17 @@ const ALLOWED_ACTIONS = new Set([
   "skip",
 ]);
 const SEMANTIC_ITEM_TYPES = new Set([
+  "party_profile",
+  "party_structure",
   "engagement_service",
+  "engagement",
   "screening_result",
+  "screening_subject",
   "document_applicability",
   "aml_risk_factor",
+  "aml_factor_section",
   "aml_mandatory_trigger",
+  "aml_trigger_set",
   "aml_assessment",
   "document_plan",
   "monitoring_plan",
@@ -182,6 +205,7 @@ const REVIEW_FIELDS = new Set([
   "run_id",
   "review_revision",
   "generated_at",
+  "temporal_validity",
   "status",
   "client_reference",
   "source_paths",
@@ -211,6 +235,26 @@ const REVIEW_ITEM_FIELDS = new Set([
   "data",
 ]);
 const ITEM_DATA_FIELDS = {
+  party_profile: new Set([
+    "client_type",
+    "tax_fact_statuses",
+    "party_fact_codes",
+    "party_fact_statuses",
+    "identity_status",
+    "identity_expires_on",
+    "raw_identifiers_excluded",
+  ]),
+  party_structure: new Set([
+    "representative_posture_status",
+    "representative_roles",
+    "representative_identity_statuses",
+    "executor_selected",
+    "ownership_status",
+    "owner_count",
+    "owner_verification_statuses",
+    "owner_identity_statuses",
+    "raw_identifiers_excluded",
+  ]),
   party_fact: new Set([
     "fact_code",
     "confirmation_status",
@@ -244,6 +288,18 @@ const ITEM_DATA_FIELDS = {
     "description_recorded",
     "raw_description_excluded",
   ]),
+  engagement: new Set([
+    "engagement_kind",
+    "services",
+    "terms_review_status",
+    "duration_months",
+    "notice_days",
+    "advance_amount",
+    "currency",
+    "payment_terms_recorded",
+    "indexation_basis_recorded",
+    "insurance_reference_recorded",
+  ]),
   screening_result: new Set([
     "screening_alias",
     "subject_alias",
@@ -257,11 +313,19 @@ const ITEM_DATA_FIELDS = {
     "resolution_evidence_count",
     "raw_result_excluded",
   ]),
+  screening_subject: new Set([
+    "subject_alias",
+    "coverage_complete",
+    "results",
+    "raw_results_excluded",
+  ]),
   document_applicability: new Set([
     "topic",
     "applicability_status",
     "review_status",
     "rationale_recorded",
+    "supporting_case_fact_codes",
+    "supporting_case_fact_count",
     "raw_rationale_excluded",
   ]),
   aml_risk_factor: new Set([
@@ -272,6 +336,11 @@ const ITEM_DATA_FIELDS = {
     "raw_rationale_excluded",
     "evidence_count",
   ]),
+  aml_factor_section: new Set([
+    "section",
+    "factors",
+    "raw_rationales_excluded",
+  ]),
   aml_mandatory_trigger: new Set([
     "trigger_id",
     "status",
@@ -279,6 +348,7 @@ const ITEM_DATA_FIELDS = {
     "rationale_recorded",
     "raw_rationale_excluded",
   ]),
+  aml_trigger_set: new Set(["triggers", "raw_rationales_excluded"]),
   aml_assessment: new Set([
     "calculation_status",
     "effective_risk",
@@ -290,6 +360,8 @@ const ITEM_DATA_FIELDS = {
   missing_evidence: new Set([
     "missing_evidence_count",
     "evidence_status",
+    "reason_counts",
+    "item_type_counts",
     "reference",
     "reason",
   ]),
@@ -407,6 +479,7 @@ function toolDefinitions() {
       workflow: { type: "string" },
       run_id: { type: "string" },
       review_revision: { type: "integer", minimum: 1 },
+      temporal_validity: { type: "object" },
       review_type: { type: "string" },
       status: { type: "string" },
       item_count: { type: "integer", minimum: 0, maximum: MAX_ITEMS },
@@ -422,6 +495,7 @@ function toolDefinitions() {
       "workflow",
       "run_id",
       "review_revision",
+      "temporal_validity",
       "review_type",
       "status",
       "item_count",
@@ -676,6 +750,85 @@ function validateOptionalDate(value, field) {
     throw new Error(`${field} must be a YYYY-MM-DD date or null`);
   }
   return text;
+}
+
+function validateDateOnly(value, field) {
+  const text = requireText(value, field, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    throw new Error(`${field} must be a YYYY-MM-DD date`);
+  }
+  const parsed = new Date(`${text}T00:00:00.000Z`);
+  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== text) {
+    throw new Error(`${field} must be a real YYYY-MM-DD date`);
+  }
+  return text;
+}
+
+function validateTemporalValidityRecord(value, field = "review_payload.temporal_validity") {
+  if (!isObject(value)) throw new Error(`${field} must be an object`);
+  const allowed = new Set([
+    "policy",
+    "evaluated_on",
+    "valid_through",
+    "deadline_count",
+    "deadlines",
+    "source_currentness_status",
+    "apply_rule",
+  ]);
+  assertAllowedKeys(value, allowed, field);
+  if (Object.keys(value).length !== allowed.size) {
+    throw new Error(`${field} must contain the complete temporal-validity contract`);
+  }
+  if (value.policy !== TEMPORAL_VALIDITY_POLICY) {
+    throw new Error(`${field}.policy must be ${TEMPORAL_VALIDITY_POLICY}`);
+  }
+  if (value.apply_rule !== TEMPORAL_APPLY_RULE) {
+    throw new Error(`${field}.apply_rule must be ${TEMPORAL_APPLY_RULE}`);
+  }
+  if (value.source_currentness_status !== "verified_current") {
+    throw new Error(`${field}.source_currentness_status must be verified_current`);
+  }
+  const evaluatedOn = validateDateOnly(value.evaluated_on, `${field}.evaluated_on`);
+  const validThrough = validateDateOnly(value.valid_through, `${field}.valid_through`);
+  if (!Array.isArray(value.deadlines) || value.deadlines.length === 0) {
+    throw new Error(`${field}.deadlines must be a non-empty array`);
+  }
+  const seen = new Set();
+  let deadlineCount = 0;
+  let earliest = null;
+  let previousIndex = -1;
+  value.deadlines.forEach((deadline, index) => {
+    const root = `${field}.deadlines[${index}]`;
+    if (!isObject(deadline)) throw new Error(`${root} must be an object`);
+    const fields = new Set(["kind", "count", "valid_through"]);
+    assertAllowedKeys(deadline, fields, root);
+    if (Object.keys(deadline).length !== fields.size) {
+      throw new Error(`${root} must contain exactly kind, count, and valid_through`);
+    }
+    const kind = requireText(deadline.kind, `${root}.kind`, 100);
+    const kindIndex = TEMPORAL_DEADLINE_KINDS.indexOf(kind);
+    if (kindIndex < 0 || kindIndex <= previousIndex || seen.has(kind)) {
+      throw new Error(`${field}.deadlines must use unique contract kinds in canonical order`);
+    }
+    previousIndex = kindIndex;
+    seen.add(kind);
+    if (!Number.isInteger(deadline.count) || deadline.count < 1 || deadline.count > 100_000) {
+      throw new Error(`${root}.count must be a positive bounded integer`);
+    }
+    deadlineCount += deadline.count;
+    const deadlineDate = validateDateOnly(deadline.valid_through, `${root}.valid_through`);
+    earliest = earliest == null || deadlineDate < earliest ? deadlineDate : earliest;
+  });
+  if (!seen.has("authoritative_source_registry_review_by")) {
+    throw new Error(`${field}.deadlines must include authoritative source currentness`);
+  }
+  if (value.deadline_count !== deadlineCount) {
+    throw new Error(`${field}.deadline_count must equal the summed deadline counts`);
+  }
+  if (validThrough !== earliest) {
+    throw new Error(`${field}.valid_through must be the earliest material deadline`);
+  }
+  return value;
 }
 
 function validateOptionalNonNegativeInteger(value, field, maximum = 1_000_000) {
@@ -1253,6 +1406,7 @@ function validateReviewMetadata(review) {
       throw new Error("review_payload.generated_at must be an ISO-8601 timestamp with timezone");
     }
   }
+  validateTemporalValidityRecord(review.temporal_validity);
   if (review.source_paths != null) {
     if (!Array.isArray(review.source_paths) || review.source_paths.length !== 0) {
       throw new Error("review_payload.source_paths must be an empty array");
@@ -1297,7 +1451,10 @@ function validateReviewMetadata(review) {
       "missing_information_count",
       "aml_status",
       "document_count",
+      "jurisdiction",
+      "country_pack",
       "language",
+      "processing_authority_status",
     ]);
     assertAllowedKeys(review.summary, summaryFields, "review_payload.summary");
     for (const key of ["review_item_count", "missing_information_count", "document_count"]) {
@@ -1305,7 +1462,13 @@ function validateReviewMetadata(review) {
         validateOptionalNonNegativeInteger(review.summary[key], `review_payload.summary.${key}`);
       }
     }
-    for (const key of ["aml_status", "language"]) {
+    for (const key of [
+      "aml_status",
+      "jurisdiction",
+      "country_pack",
+      "language",
+      "processing_authority_status",
+    ]) {
       if (review.summary[key] != null) safeIdentifier(review.summary[key], `review_payload.summary.${key}`);
     }
   }
@@ -1930,6 +2093,156 @@ function manifestOutputRecords(outputDir, finalArtifacts) {
   return records;
 }
 
+function deriveTemporalValidity(review, facts, sources, documents) {
+  // These comparisons enforce explicit dates only. They do not infer source
+  // authority, legal applicability, or an appropriate semantic review cadence.
+  for (const [field, artifact, key] of [
+    ["case_facts_validated.generated_at", facts, "generated_at"],
+    ["source_registry.packaged_at", sources, "packaged_at"],
+    ["document_plan.generated_at", documents, "generated_at"],
+  ]) {
+    if (!isObject(artifact) || artifact[key] !== review.generated_at) {
+      throw new Error(`${field} must match review_payload.generated_at`);
+    }
+  }
+  const evaluatedOn = validateDateOnly(
+    review.generated_at.slice(0, 10),
+    "review_payload.generated_at date",
+  );
+  const deadlines = new Map(TEMPORAL_DEADLINE_KINDS.map((kind) => [kind, []]));
+  const addDeadline = (kind, raw, field) => {
+    if (raw == null) return;
+    deadlines.get(kind).push(validateDateOnly(raw, field));
+  };
+
+  if (!isObject(sources.currentness)) {
+    throw new Error("source_registry.currentness must be an object");
+  }
+  if (sources.currentness.status !== "verified_current") {
+    throw new Error("source_registry.currentness.status must be verified_current");
+  }
+  addDeadline(
+    "authoritative_source_registry_review_by",
+    sources.currentness.review_by,
+    "source_registry.currentness.review_by",
+  );
+
+  if (!Array.isArray(facts.evidence_register)) {
+    throw new Error("case_facts_validated.evidence_register must be an array");
+  }
+  facts.evidence_register.forEach((evidence, index) => {
+    if (!isObject(evidence)) {
+      throw new Error(`case_facts_validated.evidence_register[${index}] must be an object`);
+    }
+    addDeadline(
+      "evidence_expires_on",
+      evidence.expires_on,
+      `case_facts_validated.evidence_register[${index}].expires_on`,
+    );
+  });
+
+  if (!isObject(facts.party_identity_document)) {
+    throw new Error("case_facts_validated.party_identity_document must be an object");
+  }
+  addDeadline(
+    "primary_identity_expires_on",
+    facts.party_identity_document.expires_on,
+    "case_facts_validated.party_identity_document.expires_on",
+  );
+
+  if (!Array.isArray(facts.representatives)) {
+    throw new Error("case_facts_validated.representatives must be an array");
+  }
+  facts.representatives.forEach((representative, index) => {
+    if (!isObject(representative) || !isObject(representative.identity_document)) {
+      throw new Error(
+        `case_facts_validated.representatives[${index}].identity_document must be an object`,
+      );
+    }
+    addDeadline(
+      "representative_identity_expires_on",
+      representative.identity_document.expires_on,
+      `case_facts_validated.representatives[${index}].identity_document.expires_on`,
+    );
+  });
+
+  if (!Array.isArray(facts.beneficial_owners)) {
+    throw new Error("case_facts_validated.beneficial_owners must be an array");
+  }
+  facts.beneficial_owners.forEach((owner, index) => {
+    if (!isObject(owner) || !isObject(owner.identity_document)) {
+      throw new Error(
+        `case_facts_validated.beneficial_owners[${index}].identity_document must be an object`,
+      );
+    }
+    addDeadline(
+      "beneficial_owner_identity_expires_on",
+      owner.identity_document.expires_on,
+      `case_facts_validated.beneficial_owners[${index}].identity_document.expires_on`,
+    );
+  });
+
+  if (!Array.isArray(documents.documents)) {
+    throw new Error("document_plan.documents must be an array");
+  }
+  documents.documents.forEach((document, index) => {
+    if (!isObject(document)) {
+      throw new Error(`document_plan.documents[${index}] must be an object`);
+    }
+    const template = document.template_reference;
+    if (template == null) return;
+    if (!isObject(template)) {
+      throw new Error(`document_plan.documents[${index}].template_reference must be an object`);
+    }
+    addDeadline(
+      "template_valid_until",
+      template.valid_until,
+      `document_plan.documents[${index}].template_reference.valid_until`,
+    );
+    addDeadline(
+      "template_review_due_on",
+      template.review_due_on,
+      `document_plan.documents[${index}].template_reference.review_due_on`,
+    );
+  });
+
+  const summaries = [];
+  const allDeadlines = [];
+  for (const kind of TEMPORAL_DEADLINE_KINDS) {
+    const values = deadlines.get(kind);
+    if (values.length === 0) continue;
+    const earliest = [...values].sort()[0];
+    summaries.push({ kind, count: values.length, valid_through: earliest });
+    allDeadlines.push(...values);
+  }
+  if (allDeadlines.length === 0) {
+    throw new Error("no material temporal deadline was recorded");
+  }
+  const derived = {
+    policy: TEMPORAL_VALIDITY_POLICY,
+    evaluated_on: evaluatedOn,
+    valid_through: [...allDeadlines].sort()[0],
+    deadline_count: allDeadlines.length,
+    deadlines: summaries,
+    source_currentness_status: sources.currentness.status,
+    apply_rule: TEMPORAL_APPLY_RULE,
+  };
+  validateTemporalValidityRecord(derived);
+  return derived;
+}
+
+function assertTemporalValidityAtApply(temporalValidity) {
+  const record = validateTemporalValidityRecord(temporalValidity);
+  const systemUtcDate = new Date().toISOString().slice(0, 10);
+  // Expiry dates are inclusive: Apply is allowed through valid_through and
+  // fails on the following UTC calendar day.
+  if (systemUtcDate > record.valid_through) {
+    throw new Error(
+      `New Client temporal validity expired on ${record.valid_through}; regenerate the package before Apply`,
+    );
+  }
+}
+
 function verifyLocalArtifactBindings(outputDir, review, reviewHash, finalArtifacts) {
   const manifestRecords = manifestOutputRecords(outputDir, finalArtifacts);
   validateExportGate(finalArtifacts.export_gate, review, manifestRecords);
@@ -1984,6 +2297,19 @@ function verifyLocalArtifactBindings(outputDir, review, reviewHash, finalArtifac
     }
   }
 
+  const sources = readJsonIfPresent(
+    path.join(outputDir, REQUIRED_SOURCE_ARTIFACTS.sources),
+  );
+  const documents = readJsonIfPresent(
+    path.join(outputDir, REQUIRED_SOURCE_ARTIFACTS.documents),
+  );
+  const temporalValidity = deriveTemporalValidity(review, facts, sources, documents);
+  if (canonicalJson(review.temporal_validity) !== canonicalJson(temporalValidity)) {
+    throw new Error(
+      "review_payload.temporal_validity does not match the persisted material deadlines",
+    );
+  }
+
   const storedRunIntake = readJsonIfPresent(path.join(outputDir, "run_intake.json"));
   if (
     storedRunIntake.plugin !== PLUGIN_NAME
@@ -1992,6 +2318,18 @@ function verifyLocalArtifactBindings(outputDir, review, reviewHash, finalArtifac
     || path.resolve(storedRunIntake.output_dir || "") !== outputDir
   ) {
     throw new Error("stored run_intake.json does not bind this review to the output directory");
+  }
+  if (
+    canonicalJson(storedRunIntake.temporal_validity) !== canonicalJson(temporalValidity)
+  ) {
+    throw new Error(
+      "stored run_intake.json temporal validity does not match the persisted material deadlines",
+    );
+  }
+  if (canonicalJson(finalArtifacts.temporal_validity) !== canonicalJson(temporalValidity)) {
+    throw new Error(
+      "final_artifacts temporal validity does not match the persisted material deadlines",
+    );
   }
   return manifestRecords;
 }
@@ -2258,6 +2596,7 @@ function applyDecisions(input) {
   const review = payload.review_payload;
   const reviewHash = payload.review_payload_sha256;
   const persistent = preparePersistentRun(input, payload);
+  assertTemporalValidityAtApply(review.temporal_validity);
   const { uiDecisions } = buildUiDecisions(
     input,
     payload,

@@ -19,6 +19,9 @@ from extract_documents import DocumentEvidence  # noqa: E402
 
 __all__ = [
     "FiscalField",
+    "SUMMARY_COPY",
+    "localize_field_label",
+    "localize_warning",
     "parse_structured_fiscal_fields",
     "write_fiscal_fields_csv",
     "write_fiscal_fields_jsonl",
@@ -36,6 +39,258 @@ VAT_RE = re.compile(r"\b\d{11}\b")
 YEAR_RE = re.compile(r"\b20[0-4]\d\b")
 CH_AHV_RE = re.compile(r"\b756[.\s]?\d{4}[.\s]?\d{4}[.\s]?\d{2}\b")
 UK_NINO_RE = re.compile(r"\b[A-CEGHJ-PR-TW-Z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]\b")
+
+SUPPORTED_LANGUAGES = ("it", "en", "fr", "de")
+
+SUMMARY_COPY = {
+    "it": {
+        "title": "Dati fiscali strutturati",
+        "limitation": (
+            "Questa sezione riporta campi estratti da testo leggibile. Ogni "
+            "valore va verificato sul documento originale prima dell'uso operativo."
+        ),
+        "field_count": "Campi estratti",
+        "document_type_count": "Tipologie documento",
+        "empty": ("Nessun campo fiscale strutturato estratto dai documenti leggibili."),
+        "additional_fields": "... altri {count} campi nel CSV.",
+    },
+    "en": {
+        "title": "Structured fiscal data",
+        "limitation": (
+            "This section reports fields extracted from readable text. Verify every "
+            "value against the original document before operational use."
+        ),
+        "field_count": "Extracted fields",
+        "document_type_count": "Document types",
+        "empty": (
+            "No structured fiscal fields were extracted from the readable documents."
+        ),
+        "additional_fields": "... {count} more fields in the CSV.",
+    },
+    "fr": {
+        "title": "Données fiscales structurées",
+        "limitation": (
+            "Cette section présente les champs extraits du texte lisible. Chaque "
+            "valeur doit être vérifiée dans le document original avant toute "
+            "utilisation opérationnelle."
+        ),
+        "field_count": "Champs extraits",
+        "document_type_count": "Types de documents",
+        "empty": (
+            "Aucun champ fiscal structuré n’a été extrait des documents lisibles."
+        ),
+        "additional_fields": "... {count} champs supplémentaires dans le CSV.",
+    },
+    "de": {
+        "title": "Strukturierte Steuerdaten",
+        "limitation": (
+            "Dieser Abschnitt enthält Felder, die aus lesbarem Text extrahiert "
+            "wurden. Jeder Wert muss vor der operativen Verwendung anhand des "
+            "Originaldokuments geprüft werden."
+        ),
+        "field_count": "Extrahierte Felder",
+        "document_type_count": "Dokumentarten",
+        "empty": (
+            "Aus den lesbaren Dokumenten wurden keine strukturierten Steuerfelder "
+            "extrahiert."
+        ),
+        "additional_fields": "... {count} weitere Felder in der CSV-Datei.",
+    },
+}
+
+FIELD_LABELS = {
+    "it": {
+        "Salaire brut / Bruttolohn": "Retribuzione lorda",
+        "Salaire net / Nettolohn": "Retribuzione netta",
+        "Revenu imposable / steuerbares Einkommen": "Reddito imponibile",
+        "Fortune imposable / steuerbares Vermögen": "Patrimonio imponibile",
+        "Impôt anticipé / Verrechnungssteuer": "Imposta preventiva",
+        "Impôt cantonal / Kantonssteuer": "Imposta cantonale",
+        "Impôt communal / Gemeindesteuer": "Imposta comunale",
+        "Impôt fédéral direct / direkte Bundessteuer": "Imposta federale diretta",
+        "National Insurance number": "Numero di National Insurance",
+        "Unique Taxpayer Reference": "Riferimento unico del contribuente",
+        "Total pay": "Retribuzione totale",
+        "Tax deducted": "Imposta trattenuta",
+        "National Insurance": "National Insurance",
+        "Student loan": "Prestito studentesco",
+        "Benefits": "Benefit",
+        "Bank interest": "Interessi bancari",
+        "Dividends": "Dividendi",
+        "Amount due": "Importo dovuto",
+        "Repayment due": "Rimborso dovuto",
+    },
+    "en": {
+        "Codice fiscale individuato": "Tax code identified",
+        "Partita IVA / codice numerico a 11 cifre": (
+            "VAT number / 11-digit numeric code"
+        ),
+        "Anno individuato": "Year identified",
+        "Codice tributo": "Tax payment code",
+        "Anno riferimento": "Reference year",
+        "Importo a debito versato": "Debit amount paid",
+        "Importo a credito compensato": "Credit amount offset",
+        "Importo a debito": "Debit amount",
+        "Rateazione / mese": "Instalment / month",
+        "Importo a credito": "Credit amount",
+        "Redditi lavoro dipendente e assimilati": ("Employment and equivalent income"),
+        "Redditi pensione": "Pension income",
+        "Ritenute IRPEF": "IRPEF withholdings",
+        "Addizionale regionale": "Regional surtax",
+        "Addizionale comunale": "Municipal surtax",
+        "Trattamento integrativo": "Supplementary treatment",
+        "Giorni lavoro dipendente": "Days of employment",
+        "Importo da trattenere": "Amount to withhold",
+        "Importo da rimborsare": "Amount to refund",
+        "Saldo e primo acconto": "Balance and first advance payment",
+        "Secondo o unico acconto": "Second or single advance payment",
+        "Reddito complessivo": "Total income",
+        "Imposta lorda": "Gross tax",
+        "Imposta netta": "Net tax",
+        "Differenza": "Difference",
+        "Numero AVS/AHV individuato": "AVS/AHV number identified",
+        "Salaire brut / Bruttolohn": "Gross salary",
+        "Salaire net / Nettolohn": "Net salary",
+        "Revenu imposable / steuerbares Einkommen": "Taxable income",
+        "Fortune imposable / steuerbares Vermögen": "Taxable wealth",
+        "Impôt anticipé / Verrechnungssteuer": "Withholding tax",
+        "Impôt cantonal / Kantonssteuer": "Cantonal tax",
+        "Impôt communal / Gemeindesteuer": "Municipal tax",
+        "Impôt fédéral direct / direkte Bundessteuer": "Direct federal tax",
+    },
+    "fr": {
+        "Codice fiscale individuato": "Code fiscal identifié",
+        "Partita IVA / codice numerico a 11 cifre": (
+            "Numéro de TVA / code numérique à 11 chiffres"
+        ),
+        "Anno individuato": "Année identifiée",
+        "Codice tributo": "Code fiscal de paiement",
+        "Anno riferimento": "Année de référence",
+        "Importo a debito versato": "Montant débiteur versé",
+        "Importo a credito compensato": "Montant créditeur compensé",
+        "Importo a debito": "Montant débiteur",
+        "Rateazione / mese": "Échelonnement / mois",
+        "Importo a credito": "Montant créditeur",
+        "Redditi lavoro dipendente e assimilati": (
+            "Revenus d’activité salariée et assimilés"
+        ),
+        "Redditi pensione": "Revenus de pension",
+        "Ritenute IRPEF": "Retenues IRPEF",
+        "Addizionale regionale": "Impôt régional additionnel",
+        "Addizionale comunale": "Impôt communal additionnel",
+        "Trattamento integrativo": "Traitement complémentaire",
+        "Giorni lavoro dipendente": "Jours de travail salarié",
+        "Importo da trattenere": "Montant à retenir",
+        "Importo da rimborsare": "Montant à rembourser",
+        "Saldo e primo acconto": "Solde et premier acompte",
+        "Secondo o unico acconto": "Deuxième ou unique acompte",
+        "Reddito complessivo": "Revenu total",
+        "Imposta lorda": "Impôt brut",
+        "Imposta netta": "Impôt net",
+        "Differenza": "Différence",
+        "Numero AVS/AHV individuato": "Numéro AVS/AHV identifié",
+        "Salaire brut / Bruttolohn": "Salaire brut",
+        "Salaire net / Nettolohn": "Salaire net",
+        "Revenu imposable / steuerbares Einkommen": "Revenu imposable",
+        "Fortune imposable / steuerbares Vermögen": "Fortune imposable",
+        "Impôt anticipé / Verrechnungssteuer": "Impôt anticipé",
+        "Impôt cantonal / Kantonssteuer": "Impôt cantonal",
+        "Impôt communal / Gemeindesteuer": "Impôt communal",
+        "Impôt fédéral direct / direkte Bundessteuer": "Impôt fédéral direct",
+        "National Insurance number": "Numéro d’assurance nationale",
+        "Unique Taxpayer Reference": "Référence fiscale unique",
+        "Total pay": "Rémunération totale",
+        "Tax deducted": "Impôt retenu",
+        "National Insurance": "Assurance nationale",
+        "Student loan": "Prêt étudiant",
+        "Benefits": "Avantages",
+        "Bank interest": "Intérêts bancaires",
+        "Dividends": "Dividendes",
+        "Amount due": "Montant dû",
+        "Repayment due": "Remboursement dû",
+    },
+    "de": {
+        "Codice fiscale individuato": "Ermittelte italienische Steuernummer",
+        "Partita IVA / codice numerico a 11 cifre": (
+            "Umsatzsteuer-ID / 11-stelliger Zahlencode"
+        ),
+        "Anno individuato": "Ermitteltes Jahr",
+        "Codice tributo": "Steuerzahlungscode",
+        "Anno riferimento": "Bezugsjahr",
+        "Importo a debito versato": "Gezahlter Sollbetrag",
+        "Importo a credito compensato": "Verrechneter Habenbetrag",
+        "Importo a debito": "Sollbetrag",
+        "Rateazione / mese": "Ratenzahlung / Monat",
+        "Importo a credito": "Habenbetrag",
+        "Redditi lavoro dipendente e assimilati": (
+            "Einkünfte aus nichtselbstständiger Arbeit und gleichgestellte Einkünfte"
+        ),
+        "Redditi pensione": "Renteneinkünfte",
+        "Ritenute IRPEF": "IRPEF-Abzüge",
+        "Addizionale regionale": "Regionalzuschlag",
+        "Addizionale comunale": "Kommunalzuschlag",
+        "Trattamento integrativo": "Ergänzungsleistung",
+        "Giorni lavoro dipendente": "Arbeitstage",
+        "Importo da trattenere": "Einzubehaltender Betrag",
+        "Importo da rimborsare": "Zu erstattender Betrag",
+        "Saldo e primo acconto": "Saldo und erste Vorauszahlung",
+        "Secondo o unico acconto": "Zweite oder einmalige Vorauszahlung",
+        "Reddito complessivo": "Gesamteinkommen",
+        "Imposta lorda": "Bruttosteuer",
+        "Imposta netta": "Nettosteuer",
+        "Differenza": "Differenz",
+        "Numero AVS/AHV individuato": "Ermittelte AHV/AVS-Nummer",
+        "Salaire brut / Bruttolohn": "Bruttolohn",
+        "Salaire net / Nettolohn": "Nettolohn",
+        "Revenu imposable / steuerbares Einkommen": "Steuerbares Einkommen",
+        "Fortune imposable / steuerbares Vermögen": "Steuerbares Vermögen",
+        "Impôt anticipé / Verrechnungssteuer": "Verrechnungssteuer",
+        "Impôt cantonal / Kantonssteuer": "Kantonssteuer",
+        "Impôt communal / Gemeindesteuer": "Gemeindesteuer",
+        "Impôt fédéral direct / direkte Bundessteuer": "Direkte Bundessteuer",
+        "National Insurance number": "National-Insurance-Nummer",
+        "Unique Taxpayer Reference": "Einheitliche Steuerzahlerreferenz",
+        "Total pay": "Gesamtlohn",
+        "Tax deducted": "Einbehaltene Steuer",
+        "National Insurance": "National Insurance",
+        "Student loan": "Studiendarlehen",
+        "Benefits": "Sachleistungen",
+        "Bank interest": "Bankzinsen",
+        "Dividends": "Dividenden",
+        "Amount due": "Fälliger Betrag",
+        "Repayment due": "Fällige Erstattung",
+    },
+}
+
+CONFIDENCE_LABELS = {
+    "it": {"alta": "alta", "media": "media", "bassa": "bassa"},
+    "en": {"alta": "high", "media": "medium", "bassa": "low"},
+    "fr": {"alta": "élevée", "media": "moyenne", "bassa": "faible"},
+    "de": {"alta": "hoch", "media": "mittel", "bassa": "niedrig"},
+}
+
+WARNING_LABELS = {
+    "it": {
+        "campo da verificare su layout originale": (
+            "campo da verificare su layout originale"
+        )
+    },
+    "en": {
+        "campo da verificare su layout originale": (
+            "field to verify against the original layout"
+        )
+    },
+    "fr": {
+        "campo da verificare su layout originale": (
+            "champ à vérifier dans la mise en page originale"
+        )
+    },
+    "de": {
+        "campo da verificare su layout originale": (
+            "Feld anhand des Originallayouts prüfen"
+        )
+    },
+}
 
 
 @dataclass(frozen=True)
@@ -866,12 +1121,65 @@ def write_fiscal_fields_csv(
     return path
 
 
+def _localize_field_label(label: str, language: str) -> str:
+    translated = FIELD_LABELS[language].get(label)
+    if translated is not None:
+        return translated
+
+    cu_point = re.fullmatch(r"Punto CU (?P<point>\d+)", label)
+    if cu_point:
+        point = cu_point.group("point")
+        return {
+            "it": f"Punto CU {point}",
+            "en": f"CU point {point}",
+            "fr": f"Point CU {point}",
+            "de": f"CU-Feld {point}",
+        }[language]
+
+    model_amount = re.fullmatch(r"(?P<row>[A-Z]+\d+) importo (?P<position>\d+)", label)
+    if model_amount:
+        row = model_amount.group("row")
+        position = model_amount.group("position")
+        return {
+            "it": f"{row} importo {position}",
+            "en": f"{row} amount {position}",
+            "fr": f"{row} montant {position}",
+            "de": f"{row} Betrag {position}",
+        }[language]
+    return label
+
+
+def localize_field_label(label: str, language: str) -> str:
+    """Return a fiscal-field label in one of the supported working languages."""
+
+    if language not in SUPPORTED_LANGUAGES:
+        raise ValueError(f"Unsupported language: {language}")
+    return _localize_field_label(label, language)
+
+
+def localize_warning(warning: str, language: str) -> str:
+    """Return a fiscal-field warning in one supported working language."""
+
+    if language not in SUPPORTED_LANGUAGES:
+        raise ValueError(f"Unsupported language: {language}")
+    return WARNING_LABELS[language].get(warning, warning)
+
+
 def write_fiscal_fields_summary(
     fields: Sequence[FiscalField],
     output_path: Path | str,
+    *,
+    language: str = "it",
 ) -> Path:
     """Write a readable summary of structured fiscal fields."""
 
+    language = language.strip().lower()
+    if language not in SUPPORTED_LANGUAGES:
+        raise ValueError(
+            f"Lingua non supportata: {language}. "
+            f"Valori ammessi: {', '.join(SUPPORTED_LANGUAGES)}"
+        )
+    copy = SUMMARY_COPY[language]
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     by_kind: dict[str, list[FiscalField]] = {}
@@ -879,18 +1187,16 @@ def write_fiscal_fields_summary(
         by_kind.setdefault(field.document_kind, []).append(field)
 
     lines = [
-        "# Dati fiscali strutturati",
+        f"# {copy['title']}",
         "",
-        "Questa sezione riporta campi estratti da testo leggibile. Ogni valore va verificato sul documento originale prima dell'uso operativo.",
+        copy["limitation"],
         "",
-        f"- Campi estratti: {len(fields)}",
-        f"- Tipologie documento: {len(by_kind)}",
+        f"- {copy['field_count']}: {len(fields)}",
+        f"- {copy['document_type_count']}: {len(by_kind)}",
         "",
     ]
     if not fields:
-        lines.append(
-            "Nessun campo fiscale strutturato estratto dai documenti leggibili."
-        )
+        lines.append(copy["empty"])
     for kind, kind_fields in sorted(by_kind.items()):
         lines.extend([f"## {kind}", ""])
         grouped: dict[str, list[FiscalField]] = {}
@@ -899,13 +1205,20 @@ def write_fiscal_fields_summary(
         for relative_path, document_fields in sorted(grouped.items()):
             lines.extend([f"### `{relative_path}`", ""])
             for field in document_fields[:40]:
-                warning = f" — {', '.join(field.warnings)}" if field.warnings else ""
+                label = _localize_field_label(field.label, language)
+                confidence = CONFIDENCE_LABELS[language].get(
+                    field.confidence, field.confidence
+                )
+                warnings = [localize_warning(item, language) for item in field.warnings]
+                warning = f" — {', '.join(warnings)}" if warnings else ""
                 lines.append(
-                    f"- {field.label} (`{field.field_code}`): {field.normalized_value}"
-                    f" [{field.confidence}]{warning}"
+                    f"- {label} (`{field.field_code}`): {field.normalized_value}"
+                    f" [{confidence}]{warning}"
                 )
             if len(document_fields) > 40:
-                lines.append(f"- ... altri {len(document_fields) - 40} campi nel CSV.")
+                lines.append(
+                    f"- {copy['additional_fields'].format(count=len(document_fields) - 40)}"
+                )
             lines.append("")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
@@ -946,6 +1259,12 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
         help="Cartella extracted prodotta dal workflow.",
     )
+    parser.add_argument(
+        "--language",
+        choices=SUPPORTED_LANGUAGES,
+        default="it",
+        help="Lingua del riepilogo leggibile.",
+    )
     return parser.parse_args()
 
 
@@ -959,7 +1278,9 @@ def main() -> int:
         fields, args.extracted_dir / "structured_fiscal_fields.jsonl"
     )
     write_fiscal_fields_summary(
-        fields, args.extracted_dir.parent / "08_dati_fiscali_strutturati.md"
+        fields,
+        args.extracted_dir.parent / "08_dati_fiscali_strutturati.md",
+        language=args.language,
     )
     LOGGER.info("Estratti %s campi fiscali strutturati.", len(fields))
     return 0

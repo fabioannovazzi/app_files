@@ -4,6 +4,7 @@ import importlib.util
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -295,6 +296,15 @@ def load_builder():
     return module
 
 
+def _load_module_from_path(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 @pytest.fixture(scope="module")
 def extracted_clara_plugin(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Extract the configured Clara package once for installed-runtime tests."""
@@ -447,6 +457,84 @@ def test_chatgpt_upload_zip_matches_source_without_replacing_install_zip(
         assert archive.read(
             ".codex-plugin/plugin.json"
         ) == builder.project_chatgpt_manifest(source_manifest_before)
+
+
+def _bundled_node_or_skip() -> str:
+    node = shutil.which("node")
+    if node is not None:
+        return node
+    candidates = sorted(
+        (Path.home() / ".cache" / "codex-runtimes").glob("*/dependencies/node/bin/node")
+    )
+    if not candidates:
+        pytest.skip("The Codex-bundled Node.js runtime is required for this test.")
+    return candidates[-1].as_posix()
+
+
+def _projected_review_tools(
+    node: str,
+    server_path: Path,
+    *server_args: str,
+) -> set[str]:
+    message = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/list",
+        "params": {},
+    }
+    completed = subprocess.run(
+        [node, server_path.as_posix(), *server_args, "--stdio"],
+        cwd=server_path.parent.parent,
+        input=json.dumps(message) + "\n",
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=20,
+    )
+    responses = [
+        json.loads(line) for line in completed.stdout.splitlines() if line.strip()
+    ]
+    response = next(item for item in responses if item.get("id") == 1)
+    return {tool["name"] for tool in response["result"]["tools"]}
+
+
+def test_projected_vera_upload_keeps_executable_new_client_review_bridges(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    upload = builder.build_chatgpt_upload(
+        vera,
+        tmp_path / "vera-chatgpt-upload.zip",
+    )
+    extracted = tmp_path / "projected-vera"
+    with ZipFile(upload) as archive:
+        archive.extractall(extracted)
+
+    node = _bundled_node_or_skip()
+    dispatcher = extracted / "scripts" / "run_component_mcp.cjs"
+    assert dispatcher.is_file()
+    for component in ("new-client", "client-file-preparation"):
+        component_root = extracted / "modules" / component
+        projected_server = component_root / "scripts" / "review_mcp_server.cjs"
+        local_bridge = component_root / "scripts" / "review_server.py"
+
+        assert projected_server.is_file()
+        assert local_bridge.is_file()
+        assert not (component_root / "mcp").exists()
+        assert _projected_review_tools(node, dispatcher, component) == set(
+            NON_PLOTTING_REVIEW_TOOL_CONTRACTS[component]
+        )
+
+        review_server = _load_module_from_path(
+            f"projected_{component.replace('-', '_')}_review_server",
+            local_bridge,
+        )
+        workbench = review_server.LocalReviewWorkbench(
+            plugin_dir=component_root,
+            output_dir=tmp_path,
+        )
+        assert workbench.mcp_server_path == projected_server
 
 
 def test_configured_bundle_zip_matches_repo_source() -> None:
@@ -1356,18 +1444,25 @@ def test_only_clara_and_vera_have_private_zip_artifacts() -> None:
     configured_zip_paths = sorted(
         target.output_zip.relative_to(ROOT).as_posix() for target in configured_targets
     )
-    plugin_zip_paths = list((ROOT / "plugin_packages").glob("*/*.zip"))
-    zip_paths = sorted(path.relative_to(ROOT).as_posix() for path in plugin_zip_paths)
+    zip_paths = {
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "plugin_packages").glob("*/*.zip")
+    }
+    expected_install_zip_paths = {
+        "plugin_packages/clara/clara-plugin.zip",
+        "plugin_packages/vera/vera-plugin.zip",
+    }
+    allowed_upload_zip_paths = {
+        target.output_zip.with_name(f"{target.target_name}-chatgpt-upload.zip")
+        .relative_to(ROOT)
+        .as_posix()
+        for target in configured_targets
+    }
 
     assert {target.target_name for target in configured_targets} == {"clara", "vera"}
-    assert (
-        configured_zip_paths
-        == zip_paths
-        == [
-            "plugin_packages/clara/clara-plugin.zip",
-            "plugin_packages/vera/vera-plugin.zip",
-        ]
-    )
+    assert set(configured_zip_paths) == expected_install_zip_paths
+    assert expected_install_zip_paths <= zip_paths
+    assert zip_paths <= expected_install_zip_paths | allowed_upload_zip_paths
 
 
 def test_repo_plugins_declare_distinct_icons() -> None:
@@ -2176,6 +2271,32 @@ def test_new_client_jurisdiction_pages_define_local_scope() -> None:
     assert 'href="index.html?lang=${language}#core-model"' in jurisdiction_source
     assert "Report Builder" not in jurisdiction_source
     assert "dataset.jurisdiction =" not in jurisdiction_source
+    for localized_scope in (
+        "La preparazione documentale è disponibile per questo mercato; la "
+        "configurazione professionale oggi prosegue con il country pack Italia.",
+        "Document preparation is available for this market; professional setup "
+        "currently continues with the Italy country pack.",
+        "La préparation documentaire est disponible pour ce marché ; la mise en "
+        "place professionnelle se poursuit actuellement avec le pack Italie.",
+        "Die Dokumentvorbereitung ist für diesen Markt verfügbar; die "
+        "professionelle Einrichtung wird derzeit mit dem Länderpaket Italien "
+        "fortgesetzt.",
+    ):
+        assert localized_scope in jurisdiction_source
+
+
+def test_new_client_page_scopes_the_professional_country_pack_to_italy() -> None:
+    page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for localized_scope in (
+        "Il country pack professionale oggi disponibile è quello italiano.",
+        "The professional country pack currently available is Italy.",
+        "Le pack professionnel actuellement disponible est celui de l’Italie.",
+        "Das derzeit verfügbare professionelle Länderpaket ist Italien.",
+    ):
+        assert localized_scope in page
 
 
 def test_journal_sampling_page_matches_plugin_site_pattern() -> None:

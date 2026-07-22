@@ -6,7 +6,9 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/report-builder-review-widget.html"
   ],
   "data_flow": {
     "local_sources": [
@@ -16,7 +18,8 @@
       "Parse and normalize tables",
       "Calculate totals and comparisons",
       "Prepare chart data and report diagnostics",
-      "Render report artifacts"
+      "Render report artifacts",
+      "Remove known local-path fields, known absolute path occurrences, and private QA text from the browser payload served through the loopback workbench, and require a per-session token for write operations"
     ],
     "codex_context": [
       {
@@ -50,6 +53,6 @@
       "The user's requested report granularity determines whether detailed rows are necessary",
       "This is a design-time data-flow review, not a GDPR legal determination"
     ],
-    "source_fingerprint": "1a4d620ee239b44248bf0bbe998402f81d6190ff09868f11c05347d737726dde"
+    "source_fingerprint": "a54837a2c045d8c9da3cc0eb5718ec59027fae75c7582a309ecae33a75b747ec"
   }
 }
