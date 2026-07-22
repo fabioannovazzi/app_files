@@ -352,6 +352,82 @@ def test_build_attribute_tables_from_package_localizes_spanish_html_and_manifest
     assert "No qualifying rows" not in html_text
 
 
+def test_spanish_attribute_html_localizes_populated_values_and_numbers(
+    tmp_path: Path,
+) -> None:
+    package_dir = tmp_path / "package"
+    output_dir = tmp_path / "spanish_out"
+    _write_minimal_attribute_package(package_dir)
+
+    build_attribute_tables_from_package(
+        package_dir,
+        output_dir=output_dir,
+        table_keys=[
+            "attribute_bundle_comparison_table",
+            "attribute_bridge_table",
+        ],
+        language="es-ES",
+    )
+
+    table_dir = output_dir / "attribute_tables"
+    bundle_html = (table_dir / "attribute_bundle_comparison_table.html").read_text(
+        encoding="utf-8"
+    )
+    bridge_html = (table_dir / "attribute_bridge_table.html").read_text(
+        encoding="utf-8"
+    )
+    bridge_csv = (table_dir / "attribute_bridge_table.csv").read_text(encoding="utf-8")
+    assert "Ganadores actuales" in bundle_html
+    assert "Más vendidos frente al resto" in bundle_html
+    assert "Señal emergente" in bundle_html
+    assert "Recientes frente al resto" in bundle_html
+    assert "Puente" in bridge_html
+    assert "50,0%" in bridge_html
+    assert "40,0%" in bridge_html
+    assert "Winning now" not in bundle_html
+    assert "Top sellers vs others" not in bundle_html
+    assert "Bridge" not in bridge_html
+    assert "Bridge" in bridge_csv
+    assert "50.0%" in bridge_csv
+
+
+def test_spanish_attribute_html_localizes_caveats_and_large_numbers(
+    tmp_path: Path,
+) -> None:
+    frame = pl.DataFrame(
+        {
+            "cohort": ["Top seller"],
+            "rank": ["#1"],
+            "brand": ["Marca"],
+            "product": ["Producto"],
+            "matched_signal": ["Señal"],
+            "rating": ["4.8"],
+            "reviews": ["1,234"],
+            "attributes": ["Polvo"],
+            "caveat": [
+                "No review metrics in package; Sparse resolved attributes; No package image"
+            ],
+        }
+    )
+
+    write_attribute_table_artifacts(
+        {"product_signal_evidence_table": frame},
+        tmp_path,
+        table_keys=["product_signal_evidence_table"],
+        language="es",
+    )
+
+    html_text = (
+        tmp_path / "attribute_tables" / "product_signal_evidence_table.html"
+    ).read_text(encoding="utf-8")
+    assert "Más vendido" in html_text
+    assert "4,8" in html_text
+    assert "1.234" in html_text
+    assert "Sin métricas de reseñas en el paquete" in html_text
+    assert "Pocos atributos resueltos" in html_text
+    assert "Sin imagen en el paquete" in html_text
+
+
 def test_build_attribute_tables_from_package_rejects_invalid_request(
     tmp_path: Path,
 ) -> None:

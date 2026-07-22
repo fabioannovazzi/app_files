@@ -225,6 +225,15 @@ def _store_completed_output(
         api._write_json(session_dir / "review.json", review)
 
 
+def _expire_interview(tmp_path: Path, record: dict) -> None:
+    """Move a prepared interview beyond its stored expiry timestamp."""
+
+    record_path = tmp_path / "sessions" / record["token_hash"] / "interview.json"
+    stored_record = json.loads(record_path.read_text(encoding="utf-8"))
+    stored_record["expires_at"] = "2000-01-01T00:00:00+00:00"
+    api._write_json(record_path, stored_record)
+
+
 @pytest.fixture(autouse=True)
 def _disable_post_call_interviewee_transcription(monkeypatch) -> None:
     monkeypatch.setenv(api.NOTIFICATION_EMAIL_ENV, TEST_NOTIFICATION_EMAIL)
@@ -233,6 +242,14 @@ def _disable_post_call_interviewee_transcription(monkeypatch) -> None:
         "_post_call_interviewee_transcription_enabled",
         lambda: False,
     )
+
+
+def test_spanish_quality_review_prompt_requires_spanish_narrative_fields() -> None:
+    prompt = api._interview_review_system_prompt({"language": "es"})
+
+    assert "Write every human-readable narrative field in Spanish." in prompt
+    assert "Preserve short evidence quotes in their source language" in prompt
+    assert "keep schema keys and enumerated values exactly as defined" in prompt
 
 
 def test_spanish_hosted_output_page_localizes_completed_interview(
@@ -332,6 +349,44 @@ def test_spanish_hosted_output_page_localizes_loading_error(
     )
     assert '{{ copy["output_unavailable"] }}' in template
     assert "{{ error_message }}" in template
+
+
+def test_spanish_hosted_output_page_preserves_locale_for_expired_link(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch, language="es")
+    _expire_interview(tmp_path, record)
+    captured = _capture_output_template(monkeypatch)
+
+    response = _client().get(f"/case-notes/interview/{token}/output")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["output_language"] == "es"
+    assert context["error_message"] == "El enlace de la entrevista ha caducado."
+
+
+def test_spanish_public_interview_page_preserves_locale_for_expired_link(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch, language="es")
+    _expire_interview(tmp_path, record)
+    captured = _capture_output_template(monkeypatch)
+
+    response = _client().get(f"/case-notes/interview/{token}")
+
+    assert response.status_code == 200
+    assert captured["name"] == "hosted_interview.html"
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["language"] == "es"
+    assert context["status_message"] == "Este enlace ha caducado."
+    assert context["status_detail"] == (
+        "Pide a la persona que te invitó que te envíe un enlace nuevo."
+    )
 
 
 def test_english_hosted_output_page_preserves_existing_copy(

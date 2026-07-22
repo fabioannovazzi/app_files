@@ -1005,6 +1005,30 @@ SPANISH_COLUMN_LABELS = {
     "attributes": "Atributos",
     "caveat": "Salvedad",
 }
+SPANISH_CELL_VALUES = {
+    "layer": {
+        "Winning now": "Ganadores actuales",
+        "Emerging signal": "Señal emergente",
+    },
+    "comparison": {
+        "Top sellers vs others": "Más vendidos frente al resto",
+        "Recent vs rest": "Recientes frente al resto",
+    },
+    "alignment": {
+        "Bridge": "Puente",
+        "Winning-now only": "Solo ganadores actuales",
+        "Emerging only": "Solo emergentes",
+    },
+    "cohort": {
+        "Top seller": "Más vendido",
+        "Recent": "Reciente",
+    },
+    "caveat": {
+        "No review metrics in package": "Sin métricas de reseñas en el paquete",
+        "Sparse resolved attributes": "Pocos atributos resueltos",
+        "No package image": "Sin imagen en el paquete",
+    },
+}
 
 NUMERIC_COLUMNS = {
     "rank",
@@ -1064,6 +1088,53 @@ def _display_column_label(column: str, language: str = "en") -> str:
     return COLUMN_LABELS.get(column, column.replace("_", " ").title())
 
 
+def _spanish_numeric_text(value: str) -> str:
+    """Localize a preformatted numeric table value for Spanish display."""
+
+    match = re.fullmatch(
+        r"(?P<sign>[+-]?)(?P<integer>\d{1,3}(?:,\d{3})*|\d+)"
+        r"(?:\.(?P<decimal>\d+))?(?P<suffix>%| pp|x)?",
+        value,
+    )
+    if match is None:
+        return value
+    integer = match.group("integer").replace(",", ".")
+    decimal = match.group("decimal")
+    return (
+        f"{match.group('sign')}{integer}"
+        f"{f',{decimal}' if decimal else ''}{match.group('suffix') or ''}"
+    )
+
+
+def _display_cell_value(
+    column: str,
+    value: Any,
+    language: str,
+) -> str:
+    """Return a localized display value without changing canonical table data."""
+
+    text = _safe_text(value)
+    if _language_code(language) != "es" or not text:
+        return text
+    if column == "robustness":
+        robustness_match = re.fullmatch(r"(\d+)/(\d+) alpha settings", text)
+        if robustness_match:
+            return (
+                f"{robustness_match.group(1)}/{robustness_match.group(2)} "
+                "configuraciones de alfa"
+            )
+    if column == "caveat":
+        return "; ".join(
+            SPANISH_CELL_VALUES["caveat"].get(part.strip(), part.strip())
+            for part in text.split(";")
+            if part.strip()
+        )
+    localized = SPANISH_CELL_VALUES.get(column, {}).get(text, text)
+    if column in NUMERIC_COLUMNS:
+        return _spanish_numeric_text(localized)
+    return localized
+
+
 def _html_table(table_key: str, df: pl.DataFrame, language: str = "en") -> str:
     template = _template_by_key()[table_key]
     title, template_description = _template_display_copy(template, language)
@@ -1102,7 +1173,7 @@ def _html_table(table_key: str, df: pl.DataFrame, language: str = "en") -> str:
         cell_parts = []
         for column in columns:
             cell_class = " ".join(_cell_classes(column))
-            value = html.escape(_safe_text(row.get(column)))
+            value = html.escape(_display_cell_value(column, row.get(column), language))
             cell_parts.append(f'<td class="{cell_class}">{value}</td>')
         cells = "".join(cell_parts)
         body_rows.append(f"<tr{row_class}>{cells}</tr>")
