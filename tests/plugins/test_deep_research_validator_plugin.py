@@ -264,6 +264,121 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -> None:
+    package_mod = load_script(
+        "deep_research_validator_package_validation_es",
+        "package_validation.py",
+    )
+    document_inventory = tmp_path / "document_inventory.json"
+    source_inventory = tmp_path / "source_inventory.json"
+    claims_review = tmp_path / "claims_review_draft.json"
+    document_inventory.write_text(
+        json.dumps(
+            {
+                "source_name": "informe.md",
+                "character_count": 90,
+                "word_count": 14,
+                "urls": ["https://example.com/fuente"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    source_inventory.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "kind": "url",
+                        "url": "https://example.com/fuente",
+                        "status": "available",
+                        "excerpt": "La norma del IVA se aplica a la operación.",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    claims_review.write_text(
+        json.dumps(
+            {
+                "language": "es-ES",
+                "claims": [
+                    {
+                        "claim_index": 1,
+                        "claim_text": "La norma del IVA se aplica a la operación.",
+                        "verdict": "supported",
+                        "source_refs": ["https://example.com/fuente"],
+                        "source_quote": "La norma del IVA se aplica",
+                        "source_support": "La fuente respalda directamente la afirmación.",
+                        "reasoning_review": "La inferencia es directa.",
+                        "proposed_fix": "",
+                    }
+                ],
+                "validated_document": "Texto validado.",
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    paths = package_mod.write_validation_package(
+        document_inventory,
+        source_inventory,
+        claims_review,
+        tmp_path / "out",
+    )
+
+    package_text = paths["validation_package"].read_text(encoding="utf-8")
+    run_intake = json.loads(
+        (tmp_path / "out" / "run_intake.json").read_text(encoding="utf-8")
+    )
+    review_payload = json.loads(
+        (tmp_path / "out" / "review_payload.json").read_text(encoding="utf-8")
+    )
+    final_artifacts = json.loads(
+        (tmp_path / "out" / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    handoff_text = (tmp_path / "out" / "review_handoff.md").read_text(encoding="utf-8")
+    claim_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "supported_claim"
+    )
+    package_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "validation_package.md"
+    )
+
+    assert "# Paquete de validación de Deep Research" in package_text
+    assert "## Inventario del documento" in package_text
+    assert "## Revisión de afirmaciones" in package_text
+    assert "### Afirmación 1" in package_text
+    assert run_intake["language"] == "es"
+    assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "es"
+    assert review_payload["columns"][1]["label"] == "Afirmación o artefacto"
+    assert claim_item["title"].startswith("Afirmación 1:")
+    assert claim_item["data"]["edit_hint"].startswith("Al editar esta afirmación")
+    assert "Entrega para revisión" in handoff_text
+    assert "Revisión en Codex" in handoff_text
+    assert package_output["required_text"] == [
+        "# Paquete de validación de Deep Research",
+        "## Inventario del documento",
+        "## Revisión de afirmaciones",
+    ]
+    assert final_artifacts["caveats"][0].startswith("El juicio semántico")
+    assert final_artifacts["next_actions"][0].startswith("Ejecute")
+    contract_report = validate_contract(
+        tmp_path / "out",
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
 def test_package_validation_flags_missing_review_fields(tmp_path: Path) -> None:
     package_mod = load_script(
         "deep_research_validator_package_validation_missing",
@@ -488,6 +603,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         ],
         "item_count": 2,
         "columns": [],
+        "source_artifacts": {},
         "evidence": {},
         "allowed_actions": [
             "accept",
@@ -790,3 +906,140 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         strict_output_content=True,
     )
     assert contract.ok is True, contract.errors
+
+
+def test_deep_research_mcp_localizes_spanish_runtime_and_handoff(
+    tmp_path: Path,
+) -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "deep-research-validator",
+        "workflow": "deep-research-validator",
+        "run_id": "deep-research-es",
+        "language": "es_ES",
+        "review_type": "deep_research_validation_review",
+        "item_count": 1,
+        "items": [
+            {
+                "id": "artifact-1",
+                "item_type": "validation_artifact",
+                "title": "Paquete de validación",
+                "output_path": "validation_package.md",
+                "allowed_actions": ["accept", "mark_unclear", "skip"],
+                "recommended_action": "accept",
+                "status": "needs_review",
+            }
+        ],
+    }
+    run_intake = {
+        "schema_version": "1.0",
+        "plugin": "deep-research-validator",
+        "workflow": "deep-research-validator",
+        "run_id": "deep-research-es",
+        "language": "es",
+        "output_dir": tmp_path.as_posix(),
+    }
+    final_artifacts = {
+        "schema_version": "1.0",
+        "plugin": "deep-research-validator",
+        "workflow": "deep-research-validator",
+        "run_id": "deep-research-es",
+        "outputs": [],
+        "caveats": [],
+        "next_actions": [],
+        "status": "written_pending_review",
+    }
+    decisions = [{"item_id": "artifact-1", "action": "accept"}]
+    messages: list[dict[str, object]] = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+                "protocolVersion": "2024-11-05",
+                "_meta": {"locale": "es-ES"},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_deep_research_review",
+                "arguments": {"review_payload": review_payload},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_deep_research_review",
+                "arguments": {
+                    "review_payload": {**review_payload, "item_count": 2},
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "save_deep_research_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": decisions,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_deep_research_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "final_artifacts": final_artifacts,
+                    "decisions": decisions,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 6,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_deep_research_decisions",
+                "arguments": {
+                    "run_intake": run_intake,
+                    "review_payload": review_payload,
+                    "final_artifacts": final_artifacts,
+                    "decisions": decisions,
+                },
+            },
+        },
+    ]
+
+    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+    initialized = responses[1]["result"]
+    validated = responses[2]["result"]["structuredContent"]
+    invalid = responses[3]["result"]["structuredContent"]
+    saved_without_output = responses[4]["result"]["structuredContent"]
+    applied_without_output = responses[5]["result"]["structuredContent"]
+    applied = responses[6]["result"]["structuredContent"]
+
+    assert "Ejecute validate_deep_research_review" in initialized["instructions"]
+    assert "son válidos" in validated["message"]
+    assert "debe coincidir" in invalid["error"]
+    assert "no se ha escrito ningún archivo" in saved_without_output["message"]
+    assert "no se ha escrito ningún archivo" in applied_without_output["message"]
+    assert "Se ha aplicado 1 decisión" in applied["message"]
+    assert applied["final_artifacts"]["next_actions"] == [
+        "Utilice final_artifacts.json como galería revisada de artefactos para la entrega."
+    ]
+    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+    assert "Entrega para revisión" in handoff
+    assert "## Revisión en Codex" in handoff
+    assert "<!-- review-contract: Review Handoff -->" in handoff
+    assert "Validate the payload" not in handoff

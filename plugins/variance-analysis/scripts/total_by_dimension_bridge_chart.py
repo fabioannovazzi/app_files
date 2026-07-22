@@ -288,17 +288,27 @@ def _summary_markdown(context: dict[str, Any]) -> str:
 
     if context.get("status") != "written":
         return ""
+    language = str(context.get("language") or "en").lower().replace("_", "-")
+    spanish = language.split("-", 1)[0] == "es"
     lines = [
         "",
-        "## Total Variance By Dimension",
+        (
+            "## Variación total por dimensión"
+            if spanish
+            else "## Total Variance By Dimension"
+        ),
         "",
-        f"- Dimension: `{context.get('dimension')}`",
-        f"- Displayed rows: `{context.get('displayed_row_count')}`",
-        "- Source files: `total_by_dimension_bridge.png`, "
+        f"- {'Dimensión' if spanish else 'Dimension'}: `{context.get('dimension')}`",
+        f"- {'Filas mostradas' if spanish else 'Displayed rows'}: `{context.get('displayed_row_count')}`",
+        f"- {'Archivos fuente' if spanish else 'Source files'}: `total_by_dimension_bridge.png`, "
         "`total_by_dimension_bridge.csv`, "
         "`total_by_dimension_bridge_context.json`",
         "",
-        "Largest members by absolute total variance:",
+        (
+            "Elementos principales por variación total absoluta:"
+            if spanish
+            else "Largest members by absolute total variance:"
+        ),
     ]
     for row in context.get("rows", [])[:6]:
         lines.append(
@@ -311,9 +321,11 @@ def _summary_markdown(context: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "Codex must treat this as a fixed single-dimension total variance "
-            "split, not as price/units/mix decomposition and not as root-cause "
-            "variable-dimension source data.",
+            (
+                "Codex debe tratar estos datos como un desglose fijo de la variación total en una sola dimensión, no como una descomposición de precio/unidades/mix ni como datos de causas con dimensiones variables."
+                if spanish
+                else "Codex must treat this as a fixed single-dimension total variance split, not as price/units/mix decomposition and not as root-cause variable-dimension source data."
+            ),
         ]
     )
     return "\n".join(lines) + "\n"
@@ -797,6 +809,7 @@ def _context_payload(
         "schema_version": "1.0",
         "analysis_type": "total_by_dimension_bridge",
         "status": "written",
+        "language": str(recipe.get("language") or "en"),
         "capability_id": "variance.total_by_dimension_bridge",
         "chart_family": "variance_analysis",
         "chart_type": "total_by_dimension_bridge",

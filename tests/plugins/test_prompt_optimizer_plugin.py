@@ -329,6 +329,7 @@ Flag residual uncertainty.
     assert audit["failed_checks"] == []
     assert audit["jurisdiction_policy"]["default_jurisdiction"] == "unconfirmed"
     assert audit["jurisdiction_policy"]["policy_source"] == "inventory_only"
+    assert audit["jurisdiction_policy"]["policy_source"] == "inventory_only"
     assert audit["source_domains"] == [
         "https://normattiva.it/",
         "https://agenziaentrate.gov.it/",
@@ -459,6 +460,65 @@ Flag residual uncertainty.
     assert "Prompt Optimizer Package" in paths["prompt_package"].read_text(
         encoding="utf-8"
     )
+
+
+def test_spanish_validation_package_and_review_artifacts_are_localized(
+    tmp_path: Path,
+) -> None:
+    validate_mod = load_script(
+        "prompt_optimizer_validate_prompt_spanish", "validate_prompt.py"
+    )
+    question = (
+        "¿Qué tratamiento fiscal corresponde a una factura de 1.250 EUR "
+        "emitida el 31/12/2025?"
+    )
+    prompt = """
+Idioma de salida obligatorio: español.
+Conserve los hechos, importes y fechas de la pregunta.
+Separe el objetivo, el alcance y el derecho aplicable.
+Use fuentes oficiales, legislación primaria, jurisprudencia y URL estables.
+Incluya citas, conclusiones, límites y preguntas aclaratorias esenciales.
+"""
+
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        language="es",
+        source_domains=["boe.es", "agenciatributaria.es"],
+    )
+
+    package = paths["prompt_package"].read_text(encoding="utf-8")
+    readme = paths["readme_human"].read_text(encoding="utf-8")
+    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+    review = json.loads((tmp_path / "review_payload.json").read_text(encoding="utf-8"))
+    final_artifacts = json.loads(
+        (tmp_path / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+
+    assert "# Paquete de optimización del prompt" in package
+    assert "## Cómo utilizar los archivos" in package
+    assert "# Prompt Optimizer Package" not in package
+    assert "# Cómo utilizar estos archivos" in readme
+    assert "# Optimización del prompt · Entrega para revisión" in handoff
+    assert "## Revisión en Codex" in handoff
+    assert [column["label"] for column in review["columns"]] == [
+        "Tipo",
+        "Elemento del prompt",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    artifact_titles = {item["title"] for item in review["items"]}
+    assert "Prompt optimizado" in artifact_titles
+    assert "Paquete del prompt en Markdown" in artifact_titles
+    assert "Corrija draft_prompt.md" in final_artifacts["next_actions"][1]
+    assert "Angle and jurisdiction choices" not in json.dumps(
+        final_artifacts, ensure_ascii=False
+    )
+    contract_report = validate_contract(tmp_path, strict_output_content=True)
+    assert contract_report.ok, contract_report.as_dict()
 
 
 def test_validate_prompt_writes_source_domains_from_sidecar(
@@ -798,6 +858,119 @@ def test_mcp_review_server_validates_and_renders_prompt_payload() -> None:
         "resources/read", {"uri": "ui://widget/prompt-optimizer-review.html"}
     )
     assert "Prompt Optimizer Review" in widget["contents"][0]["text"]
+
+
+def test_mcp_prompt_optimizer_localizes_spanish_runtime_and_handoff(
+    tmp_path: Path,
+) -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "prompt-optimizer",
+        "workflow": "prompt-optimizer",
+        "run_id": "prompt-optimizer-es",
+        "language": "es-ES",
+        "review_type": "prompt_optimizer_review",
+        "item_count": 1,
+        "items": [
+            {
+                "id": "artifact-1",
+                "item_type": "review_artifact",
+                "title": "Paquete del prompt",
+                "output_path": "prompt_package.md",
+                "allowed_actions": ["accept", "mark_unclear", "skip"],
+                "recommended_action": "accept",
+                "status": "needs_review",
+            }
+        ],
+    }
+    run_intake = {
+        "schema_version": "1.0",
+        "plugin": "prompt-optimizer",
+        "workflow": "prompt-optimizer",
+        "run_id": "prompt-optimizer-es",
+        "language": "es",
+        "output_dir": tmp_path.as_posix(),
+    }
+    final_artifacts = {
+        "schema_version": "1.0",
+        "plugin": "prompt-optimizer",
+        "workflow": "prompt-optimizer",
+        "run_id": "prompt-optimizer-es",
+        "outputs": [],
+        "caveats": [],
+        "next_actions": [],
+        "status": "written_pending_review",
+    }
+    decisions = [{"item_id": "artifact-1", "action": "accept"}]
+
+    initialized = _call_mcp_server(
+        "initialize",
+        {"protocolVersion": "2024-11-05", "_meta": {"locale": "es-ES"}},
+    )
+    validated = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "validate_prompt_optimizer_review",
+            "arguments": {"review_payload": review_payload},
+        },
+    )["structuredContent"]
+    invalid = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "validate_prompt_optimizer_review",
+            "arguments": {
+                "review_payload": {**review_payload, "item_count": 2},
+            },
+        },
+    )["structuredContent"]
+    saved_without_output = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "save_prompt_optimizer_decisions",
+            "arguments": {
+                "review_payload": review_payload,
+                "decisions": decisions,
+            },
+        },
+    )["structuredContent"]
+    applied_without_output = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "apply_prompt_optimizer_decisions",
+            "arguments": {
+                "review_payload": review_payload,
+                "final_artifacts": final_artifacts,
+                "decisions": decisions,
+            },
+        },
+    )["structuredContent"]
+    applied = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "apply_prompt_optimizer_decisions",
+            "arguments": {
+                "run_intake": run_intake,
+                "review_payload": review_payload,
+                "final_artifacts": final_artifacts,
+                "decisions": decisions,
+            },
+        },
+    )["structuredContent"]
+
+    assert "Ejecute validate_prompt_optimizer_review" in initialized["instructions"]
+    assert "son válidos" in validated["message"]
+    assert "debe coincidir" in invalid["error"]
+    assert "no se ha escrito ningún archivo" in saved_without_output["message"]
+    assert "no se ha escrito ningún archivo" in applied_without_output["message"]
+    assert "Se ha aplicado 1 decisión" in applied["message"]
+    assert applied["final_artifacts"]["next_actions"] == [
+        "Utilice final_artifacts.json como galería revisada de artefactos para la entrega."
+    ]
+    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+    assert "Entrega para revisión" in handoff
+    assert "## Revisión en Codex" in handoff
+    assert "<!-- review-contract: Review Handoff -->" in handoff
+    assert "Validate the payload" not in handoff
 
 
 def test_mcp_apply_refreshes_prompt_package_after_prompt_edit(

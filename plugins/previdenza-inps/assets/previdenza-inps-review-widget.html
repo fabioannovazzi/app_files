@@ -255,8 +255,8 @@
       <div class="identity">
         <div class="seal" aria-hidden="true">V</div>
         <div>
-          <p class="eyebrow">Vera · fascicolo previdenziale</p>
-          <h1>Revisione previdenza INPS</h1>
+          <p class="eyebrow" id="eyebrow">Vera · fascicolo previdenziale</p>
+          <h1 id="page-heading">Revisione previdenza INPS</h1>
         </div>
       </div>
       <div class="actions">
@@ -270,20 +270,20 @@
     <section class="runbar" id="runbar" aria-label="Stato revisione"></section>
 
     <main class="workspace">
-      <aside class="queue" aria-label="Coda di revisione">
+      <aside class="queue" id="queue" aria-label="Coda di revisione">
         <div class="queue-head">
           <div class="queue-title-row">
-            <h2>Coda di revisione</h2>
+            <h2 id="queue-title">Coda di revisione</h2>
             <span class="count" id="visible-count"></span>
           </div>
           <input class="search" id="search" type="search" placeholder="Cerca fatto, fonte, periodo, evidenza">
           <div class="filters" id="type-filters" aria-label="Filtri per tipo"></div>
           <div class="queue-tools">
             <select id="state-filter" aria-label="Filtra per stato">
-              <option value="all">Tutti gli stati</option>
-              <option value="pending">Da decidere</option>
-              <option value="reviewed">Decisi</option>
-              <option value="needs_evidence">Serve evidenza</option>
+              <option id="state-all" value="all">Tutti gli stati</option>
+              <option id="state-pending" value="pending">Da decidere</option>
+              <option id="state-reviewed" value="reviewed">Decisi</option>
+              <option id="state-evidence" value="needs_evidence">Serve evidenza</option>
             </select>
             <button class="text-action" id="recommended" type="button">Usa raccomandate visibili</button>
           </div>
@@ -298,31 +298,166 @@
   </div>
 
   <script>
-    const ITEM_LABELS = {
-      fact: "Fatto",
-      finding: "Rilievo",
-      calculation: "Calcolo",
-      missing_evidence: "Evidenza mancante",
-      authority: "Fonte normativa",
-      audit_check: "Controllo",
-      artifact: "Output",
+    const UI_COPY = {
+      it: {
+        pageTitle: "Revisione previdenza INPS",
+        eyebrow: "Vera · fascicolo previdenziale",
+        heading: "Revisione previdenza INPS",
+        copyButton: "Copia JSON", cancelButton: "Annulla modifiche",
+        saveButton: "Salva decisioni", applyButton: "Applica",
+        reviewAria: "Stato revisione", queueAria: "Coda di revisione",
+        queueTitle: "Coda di revisione", searchPlaceholder: "Cerca fatto, fonte, periodo, evidenza",
+        typeFiltersAria: "Filtri per tipo", stateFilterAria: "Filtra per stato",
+        stateAll: "Tutti gli stati", statePending: "Da decidere", stateReviewed: "Decisi",
+        stateEvidence: "Serve evidenza", recommended: "Usa raccomandate visibili",
+        artifactsAria: "Output finali",
+        all: "Tutti", of: "di", none: "Nessuno",
+        cancelled: "Modifiche non salvate annullate.", localOutput: "Output locale",
+        jsonOnly: "Solo export JSON", unsaved: "Modifiche non salvate",
+        appliedCount: (count) => `${count} decisioni applicate`,
+        savedCount: (count) => `${count} decisioni salvate`,
+        noneSaved: "Nessuna decisione salvata",
+        metricRun: "Esecuzione", metricItems: "Elementi", metricDecided: "Decisi", metricGaps: "Da integrare",
+        notDeclared: "non dichiarata", externalUsed: "percorso oltre Codex usato",
+        noExternal: "nessun percorso esterno oltre Codex", jsonFallback: "fallback JSON",
+        command: "Comando", input: "Input", output: "Output", step: "Passaggio",
+        safeguards: "Script e percorsi oltre Codex", helperExecution: "Esecuzione helper",
+        beyondCodex: "Oltre Codex", payload: "Payload", persistence: "Persistenza",
+        codexNotCounted: "Il contesto del modello Codex non è conteggiato in questa sezione.",
+        noTrace: "Nessuna esecuzione helper dichiarata nel payload.",
+        noCaseTitle: "Nessun fascicolo caricato",
+        noCaseBody: "Apri il widget dal risultato di render_previdenza_inps_review.",
+        noItemsTitle: "Nessun elemento", noItemsBody: "Modifica ricerca o filtri.",
+        noEvidence: "Nessuna evidenza collegata a questo elemento.", evidence: "Evidenza",
+        proposedEdit: "Correzione proposta", editPlaceholder: "Inserisci il valore o il testo corretto",
+        requestedDocuments: "Documenti richiesti · uno per riga", professionalDecision: "Decisione professionale",
+        reviewerNote: "Nota del revisore", reviewerPlaceholder: "Motivo, cautela o prossima verifica",
+        editImpact: "La correzione resta registrata nell’esito di revisione; l’eventuale rigenerazione del documento professionale avviene nel workflow locale.",
+        blockerImpact: "Questa decisione crea un blocco visibile in final_artifacts.json.",
+        decisionImpact: "La decisione aggiorna lo stato di revisione senza modificare le fonti originali.",
+        selectTitle: "Seleziona un elemento", selectBody: "Qui compariranno evidenze, autorità, dati e decisione.",
+        noSummary: "Nessuna sintesi disponibile.", summary: "Sintesi", controlData: "Dati del controllo",
+        evidenceSources: "Evidenze e fonti", packageOutputs: "Output del fascicolo", files: "file",
+        blockers: "blocchi", outputsPending: "Gli output compariranno dopo l’esecuzione locale e l’applicazione delle decisioni.",
+        correctionRequired: (title) => `Inserisci la correzione per “${title}”.`,
+        jsonCopied: "JSON decisioni copiato.", bridgeApply: "Bridge MCP non disponibile: JSON copiato, applicazione non eseguita.",
+        bridgeSave: "Bridge MCP non disponibile: JSON copiato.", applying: "Applicazione in corso…",
+        saving: "Salvataggio in corso…", operationFailed: "Operazione non riuscita.",
+        applied: "Decisioni applicate.", saved: "Decisioni salvate.", recovery: "Copia il JSON per recuperare le decisioni.",
+        items: {
+          fact: "Fatto", finding: "Rilievo", calculation: "Calcolo",
+          missing_evidence: "Evidenza mancante", authority: "Fonte normativa",
+          audit_check: "Controllo", artifact: "Output",
+        },
+        actions: {
+          accept: "Accetta", reject: "Rifiuta", edit: "Correggi", mark_unclear: "Segna incerto",
+          request_more_documents: "Richiedi documenti", skip: "Salta",
+        },
+        statuses: {
+          pending: "Da decidere", accepted: "Accettato", rejected: "Rifiutato",
+          edited: "Corretto", needs_evidence: "Serve evidenza", skipped: "Saltato",
+          ready_for_professional_review: "Pronto per revisione professionale", validation_fail: "Validazione non superata",
+          passed: "Superato", written: "Scritto", pending_review: "Revisione in attesa",
+        },
+        fields: {
+          fact_id: "ID fatto", statement: "Dichiarazione", review_label: "Etichetta revisione",
+          value: "Valore", value_type: "Tipo valore", review_status: "Stato revisione",
+          evidence_count: "Numero evidenze", claim_id: "ID conclusione", claim_text: "Conclusione",
+          claim_type: "Tipo conclusione", verdict: "Esito", source_support: "Supporto fonti",
+          reasoning_review: "Revisione ragionamento", proposed_fix: "Correzione proposta",
+          source_count: "Numero fonti", professional_review_status: "Stato revisione professionale",
+          recipe_id: "ID calcolo", status: "Stato", description: "Descrizione", result: "Risultato",
+          unit: "Unità", inputs: "Input", request_id: "ID richiesta", request_text: "Testo richiesta",
+          path: "Percorso",
+        },
+      },
+      es: {
+        pageTitle: "Revisión de Previdenza INPS",
+        eyebrow: "Vera · expediente de previsión social",
+        heading: "Revisión de Previdenza INPS",
+        copyButton: "Copiar JSON", cancelButton: "Cancelar cambios",
+        saveButton: "Guardar decisiones", applyButton: "Aplicar",
+        reviewAria: "Estado de la revisión", queueAria: "Cola de revisión",
+        queueTitle: "Cola de revisión", searchPlaceholder: "Buscar hecho, fuente, periodo o evidencia",
+        typeFiltersAria: "Filtros por tipo", stateFilterAria: "Filtrar por estado",
+        stateAll: "Todos los estados", statePending: "Por decidir", stateReviewed: "Decididos",
+        stateEvidence: "Requiere evidencia", recommended: "Usar recomendaciones visibles",
+        artifactsAria: "Salidas finales",
+        all: "Todos", of: "de", none: "Ninguno",
+        cancelled: "Se han cancelado los cambios sin guardar.", localOutput: "Salida local",
+        jsonOnly: "Solo exportación JSON", unsaved: "Cambios sin guardar",
+        appliedCount: (count) => `${count} decisiones aplicadas`,
+        savedCount: (count) => `${count} decisiones guardadas`,
+        noneSaved: "No hay decisiones guardadas",
+        metricRun: "Ejecución", metricItems: "Elementos", metricDecided: "Decididos", metricGaps: "Pendientes",
+        notDeclared: "no declarada", externalUsed: "se ha usado una ruta fuera de Codex",
+        noExternal: "no se ha usado ninguna ruta externa fuera de Codex", jsonFallback: "modo alternativo JSON",
+        command: "Comando", input: "Entrada", output: "Salida", step: "Paso",
+        safeguards: "Scripts y rutas fuera de Codex", helperExecution: "Ejecución auxiliar",
+        beyondCodex: "Fuera de Codex", payload: "Datos", persistence: "Persistencia",
+        codexNotCounted: "El contexto del modelo Codex no se contabiliza en esta sección.",
+        noTrace: "No se ha declarado ninguna ejecución auxiliar en los datos.",
+        noCaseTitle: "No hay ningún expediente cargado",
+        noCaseBody: "Abra el widget desde el resultado de render_previdenza_inps_review.",
+        noItemsTitle: "No hay elementos", noItemsBody: "Modifique la búsqueda o los filtros.",
+        noEvidence: "Este elemento no tiene ninguna evidencia vinculada.", evidence: "Evidencia",
+        proposedEdit: "Corrección propuesta", editPlaceholder: "Introduzca el valor o el texto correcto",
+        requestedDocuments: "Documentos solicitados · uno por línea", professionalDecision: "Decisión profesional",
+        reviewerNote: "Nota del revisor", reviewerPlaceholder: "Motivo, cautela o próxima comprobación",
+        editImpact: "La corrección queda registrada en el resultado de la revisión; el documento profesional solo se vuelve a generar en el flujo local.",
+        blockerImpact: "Esta decisión crea un bloqueo visible en final_artifacts.json.",
+        decisionImpact: "La decisión actualiza el estado de la revisión sin modificar las fuentes originales.",
+        selectTitle: "Seleccione un elemento", selectBody: "Aquí aparecerán las evidencias, las fuentes, los datos y la decisión.",
+        noSummary: "No hay ningún resumen disponible.", summary: "Resumen", controlData: "Datos del control",
+        evidenceSources: "Evidencias y fuentes", packageOutputs: "Salidas del expediente", files: "archivos",
+        blockers: "bloqueos", outputsPending: "Las salidas aparecerán después de la ejecución local y de aplicar las decisiones.",
+        correctionRequired: (title) => `Introduzca la corrección para «${title}».`,
+        jsonCopied: "JSON de decisiones copiado.", bridgeApply: "El puente MCP no está disponible: se ha copiado el JSON y no se ha aplicado.",
+        bridgeSave: "El puente MCP no está disponible: se ha copiado el JSON.", applying: "Aplicando…",
+        saving: "Guardando…", operationFailed: "La operación no se ha completado.",
+        applied: "Decisiones aplicadas.", saved: "Decisiones guardadas.", recovery: "Copie el JSON para recuperar las decisiones.",
+        items: {
+          fact: "Hecho", finding: "Conclusión", calculation: "Cálculo",
+          missing_evidence: "Evidencia pendiente", authority: "Fuente normativa",
+          audit_check: "Control", artifact: "Salida",
+        },
+        actions: {
+          accept: "Aceptar", reject: "Rechazar", edit: "Corregir", mark_unclear: "Marcar como incierto",
+          request_more_documents: "Solicitar documentos", skip: "Omitir",
+        },
+        statuses: {
+          pending: "Por decidir", accepted: "Aceptado", rejected: "Rechazado",
+          edited: "Corregido", needs_evidence: "Requiere evidencia", skipped: "Omitido",
+          ready_for_professional_review: "Listo para revisión profesional", validation_fail: "Validación no superada",
+          passed: "Superado", written: "Generado", pending_review: "Pendiente de revisión",
+        },
+        fields: {
+          fact_id: "ID del hecho", statement: "Declaración", review_label: "Etiqueta de revisión",
+          value: "Valor", value_type: "Tipo de valor", review_status: "Estado de la revisión",
+          evidence_count: "Número de evidencias", claim_id: "ID de la conclusión", claim_text: "Conclusión",
+          claim_type: "Tipo de conclusión", verdict: "Resultado", source_support: "Soporte de las fuentes",
+          reasoning_review: "Revisión del razonamiento", proposed_fix: "Corrección propuesta",
+          source_count: "Número de fuentes", professional_review_status: "Estado de la revisión profesional",
+          recipe_id: "ID del cálculo", status: "Estado", description: "Descripción", result: "Resultado",
+          unit: "Unidad", inputs: "Entradas", request_id: "ID de la solicitud", request_text: "Texto de la solicitud",
+          path: "Ruta",
+        },
+      },
     };
-    const ACTION_LABELS = {
-      accept: "Accetta",
-      reject: "Rifiuta",
-      edit: "Correggi",
-      mark_unclear: "Segna incerto",
-      request_more_documents: "Richiedi documenti",
-      skip: "Salta",
-    };
-    const STATUS_LABELS = {
-      pending: "Da decidere",
-      accepted: "Accettato",
-      rejected: "Rifiutato",
-      edited: "Corretto",
-      needs_evidence: "Serve evidenza",
-      skipped: "Saltato",
-    };
+
+    function normalizeLanguage(value) {
+      const language = String(value || "").trim().toLowerCase().replaceAll("_", "-");
+      return language === "es" || language.startsWith("es-") || language === "spa" ? "es" : "it";
+    }
+    function languageFor(payload) {
+      return normalizeLanguage(
+        payload?.review_payload?.language
+        || payload?.run_intake?.working_language
+        || payload?.run_intake?.language
+        || "it"
+      );
+    }
+    function copyFor(payload) { return UI_COPY[languageFor(payload)] || UI_COPY.it; }
     const ACTION_STATUSES = {
       accept: "accepted",
       reject: "rejected",
@@ -366,6 +501,35 @@
       message: "",
       messageKind: "",
     };
+
+    function copy() { return copyFor(state.payload); }
+    function localizedValue(value) {
+      return copy().statuses[String(value || "")] || value;
+    }
+    function fieldLabel(key) { return copy().fields[key] || humanize(key); }
+    function applyStaticCopy() {
+      const text = copy();
+      document.documentElement.lang = languageFor(state.payload);
+      document.title = text.pageTitle;
+      document.getElementById("eyebrow").textContent = text.eyebrow;
+      document.getElementById("page-heading").textContent = text.heading;
+      document.getElementById("copy").textContent = text.copyButton;
+      document.getElementById("cancel").textContent = text.cancelButton;
+      document.getElementById("save").textContent = text.saveButton;
+      document.getElementById("apply").textContent = text.applyButton;
+      document.getElementById("runbar").setAttribute("aria-label", text.reviewAria);
+      document.getElementById("queue").setAttribute("aria-label", text.queueAria);
+      document.getElementById("queue-title").textContent = text.queueTitle;
+      document.getElementById("search").placeholder = text.searchPlaceholder;
+      document.getElementById("type-filters").setAttribute("aria-label", text.typeFiltersAria);
+      document.getElementById("state-filter").setAttribute("aria-label", text.stateFilterAria);
+      document.getElementById("state-all").textContent = text.stateAll;
+      document.getElementById("state-pending").textContent = text.statePending;
+      document.getElementById("state-reviewed").textContent = text.stateReviewed;
+      document.getElementById("state-evidence").textContent = text.stateEvidence;
+      document.getElementById("recommended").textContent = text.recommended;
+      document.getElementById("artifacts").setAttribute("aria-label", text.artifactsAria);
+    }
 
     function esc(value) {
       return String(value ?? "")
@@ -419,8 +583,8 @@
     function compactValue(value) {
       if (value == null || value === "") return "—";
       if (Array.isArray(value)) return value.map(compactValue).join(", ");
-      if (isObject(value)) return Object.entries(value).map(([key, nested]) => `${humanize(key)}: ${compactValue(nested)}`).join(" · ");
-      return String(value);
+      if (isObject(value)) return Object.entries(value).map(([key, nested]) => `${fieldLabel(key)}: ${compactValue(nested)}`).join(" · ");
+      return String(localizedValue(value));
     }
 
     function normalizedDecision(decision) {
@@ -476,7 +640,7 @@
       state.decisions = savedDecisionMap();
       clearDraft();
       state.dirty = false;
-      state.message = "Modifiche non salvate annullate.";
+      state.message = copy().cancelled;
       state.messageKind = "";
       render();
     }
@@ -492,7 +656,7 @@
     }
 
     function visibleItems() {
-      const query = state.query.trim().toLocaleLowerCase("it");
+      const query = state.query.trim().toLocaleLowerCase(languageFor(state.payload));
       return items().filter((item) => {
         if (state.type !== "all" && item.item_type !== state.type) return false;
         const status = statusFor(item);
@@ -500,7 +664,7 @@
         if (state.status === "reviewed" && status === "pending") return false;
         if (state.status === "needs_evidence" && status !== "needs_evidence") return false;
         if (!query) return true;
-        const haystack = [item.title, item.summary, item.item_type, item.source_path, compactValue(item.data), compactValue(item.evidence)].join(" ").toLocaleLowerCase("it");
+        const haystack = [item.title, item.summary, item.item_type, item.source_path, compactValue(item.data), compactValue(item.evidence)].join(" ").toLocaleLowerCase(languageFor(state.payload));
         return haystack.includes(query);
       });
     }
@@ -510,21 +674,21 @@
       const total = items().length;
       const decided = Object.keys(state.decisions).length;
       const gaps = items().filter((item) => statusFor(item) === "needs_evidence").length;
-      const persistLabel = state.payload.decision_policy?.can_persist ? "Output locale" : "Solo export JSON";
+      const persistLabel = state.payload.decision_policy?.can_persist ? copy().localOutput : copy().jsonOnly;
       const saved = Array.isArray(state.payload?.ui_decisions?.decisions) ? state.payload.ui_decisions.decisions.length : 0;
       const applied = Array.isArray(state.payload?.applied_decisions?.decisions) ? state.payload.applied_decisions.decisions.length : 0;
       const persistenceState = state.dirty
-        ? "Modifiche non salvate"
+        ? copy().unsaved
         : applied
-          ? `${applied} decisioni applicate`
+          ? copy().appliedCount(applied)
           : saved
-            ? `${saved} decisioni salvate`
-            : "Nessuna decisione salvata";
+            ? copy().savedCount(saved)
+            : copy().noneSaved;
       document.getElementById("runbar").innerHTML = `
-        <div class="metric"><span class="metric-label">Esecuzione</span><span class="metric-value" title="${esc(review.run_id)}">${esc(review.run_id)}</span></div>
-        <div class="metric"><span class="metric-label">Elementi</span><span class="metric-value">${total}</span></div>
-        <div class="metric"><span class="metric-label">Decisi</span><span class="metric-value">${decided} / ${total}</span></div>
-        <div class="metric"><span class="metric-label">Da integrare</span><span class="metric-value">${gaps}</span></div>
+        <div class="metric"><span class="metric-label">${esc(copy().metricRun)}</span><span class="metric-value" title="${esc(review.run_id)}">${esc(review.run_id)}</span></div>
+        <div class="metric"><span class="metric-label">${esc(copy().metricItems)}</span><span class="metric-value">${total}</span></div>
+        <div class="metric"><span class="metric-label">${esc(copy().metricDecided)}</span><span class="metric-value">${decided} / ${total}</span></div>
+        <div class="metric"><span class="metric-label">${esc(copy().metricGaps)}</span><span class="metric-value">${gaps}</span></div>
         <div class="run-message ${esc(state.messageKind)}">${esc(state.message || `${persistenceState} · ${persistLabel}`)}</div>`;
     }
 
@@ -545,49 +709,49 @@
       const trace = Array.isArray(run.execution_trace) ? run.execution_trace : [];
       const external = hasExternalUse(posture);
       const locations = [...new Set(trace.map((entry) => entry?.execution_location).filter(Boolean))];
-      const location = locations.length ? locations.join(", ") : "non dichiarata";
-      const externalLabel = external ? "percorso oltre Codex usato" : "nessun percorso esterno oltre Codex";
-      const persistence = state.payload.decision_policy?.can_persist ? "run_intake.output_dir" : "fallback JSON";
+      const location = locations.length ? locations.join(", ") : copy().notDeclared;
+      const externalLabel = external ? copy().externalUsed : copy().noExternal;
+      const persistence = state.payload.decision_policy?.can_persist ? "run_intake.output_dir" : copy().jsonFallback;
       const traceRows = trace.slice(0, 6).map((entry) => {
         const details = [
-          entry.command ? `Comando: ${entry.command}` : "",
-          Array.isArray(entry.inputs) && entry.inputs.length ? `Input: ${entry.inputs.join(", ")}` : "",
-          Array.isArray(entry.outputs) && entry.outputs.length ? `Output: ${entry.outputs.join(", ")}` : "",
+          entry.command ? `${copy().command}: ${entry.command}` : "",
+          Array.isArray(entry.inputs) && entry.inputs.length ? `${copy().input}: ${entry.inputs.join(", ")}` : "",
+          Array.isArray(entry.outputs) && entry.outputs.length ? `${copy().output}: ${entry.outputs.join(", ")}` : "",
         ].filter(Boolean).join(" · ");
-        return `<div><strong>${esc(entry.step_id || entry.kind || "Passaggio")}</strong> · ${esc(entry.status || "")}${entry.execution_location ? ` · ${esc(entry.execution_location)}` : ""}${details ? `<span>${esc(details)}</span>` : ""}</div>`;
+        return `<div><strong>${esc(entry.step_id || entry.kind || copy().step)}</strong> · ${esc(localizedValue(entry.status || ""))}${entry.execution_location ? ` · ${esc(entry.execution_location)}` : ""}${details ? `<span>${esc(details)}</span>` : ""}</div>`;
       }).join("");
       return `<details class="safeguards">
-        <summary><strong>Script e percorsi oltre Codex</strong> · ${esc(location)} · ${esc(externalLabel)} · ${items().length}/${2500} elementi</summary>
+        <summary><strong>${esc(copy().safeguards)}</strong> · ${esc(location)} · ${esc(externalLabel)} · ${items().length}/${2500} ${esc(copy().metricItems.toLowerCase())}</summary>
         <div class="safeguard-grid">
-          <div class="safeguard"><span>Esecuzione helper</span><strong>${esc(location)}</strong></div>
-          <div class="safeguard"><span>Oltre Codex</span><strong>${esc(externalLabel)}</strong></div>
-          <div class="safeguard"><span>Payload</span><strong>${items().length} di 2500</strong></div>
-          <div class="safeguard"><span>Persistenza</span><strong>${esc(persistence)}</strong></div>
+          <div class="safeguard"><span>${esc(copy().helperExecution)}</span><strong>${esc(location)}</strong></div>
+          <div class="safeguard"><span>${esc(copy().beyondCodex)}</span><strong>${esc(externalLabel)}</strong></div>
+          <div class="safeguard"><span>${esc(copy().payload)}</span><strong>${items().length} ${esc(copy().of)} 2500</strong></div>
+          <div class="safeguard"><span>${esc(copy().persistence)}</span><strong>${esc(persistence)}</strong></div>
         </div>
-        <div class="trace">Il contesto del modello Codex non è conteggiato in questa sezione.</div>
-        ${traceRows ? `<div class="trace">${traceRows}</div>` : `<div class="trace">Nessuna esecuzione helper dichiarata nel payload.</div>`}
+        <div class="trace">${esc(copy().codexNotCounted)}</div>
+        ${traceRows ? `<div class="trace">${traceRows}</div>` : `<div class="trace">${esc(copy().noTrace)}</div>`}
       </details>`;
     }
 
     function renderFilters() {
       const present = [...new Set(items().map((item) => item.item_type))];
-      const filters = [{ value: "all", label: "Tutti" }, ...present.map((value) => ({ value, label: ITEM_LABELS[value] || humanize(value) }))];
+      const filters = [{ value: "all", label: copy().all }, ...present.map((value) => ({ value, label: copy().items[value] || humanize(value) }))];
       document.getElementById("type-filters").innerHTML = filters.map((filter) => `
         <button type="button" class="filter ${state.type === filter.value ? "active" : ""}" data-type="${esc(filter.value)}">${esc(filter.label)}</button>`).join("");
     }
 
     function renderRows() {
       const visible = visibleItems();
-      document.getElementById("visible-count").textContent = `${visible.length} di ${items().length}`;
+      document.getElementById("visible-count").textContent = `${visible.length} ${copy().of} ${items().length}`;
       if (state.selectedId && !visible.some((item) => item.id === state.selectedId)) state.selectedId = null;
       if (!state.selectedId && visible.length) state.selectedId = visible[0].id;
       const node = document.getElementById("rows");
       if (!items().length) {
-        node.innerHTML = `<div class="empty"><strong>Nessun fascicolo caricato</strong>Apri il widget dal risultato di <code>render_previdenza_inps_review</code>.</div>`;
+        node.innerHTML = `<div class="empty"><strong>${esc(copy().noCaseTitle)}</strong>${esc(copy().noCaseBody)}</div>`;
         return;
       }
       if (!visible.length) {
-        node.innerHTML = `<div class="empty"><strong>Nessun elemento</strong>Modifica ricerca o filtri.</div>`;
+        node.innerHTML = `<div class="empty"><strong>${esc(copy().noItemsTitle)}</strong>${esc(copy().noItemsBody)}</div>`;
         return;
       }
       node.innerHTML = visible.map((item) => {
@@ -597,7 +761,7 @@
         const period = item.period || data.period || item.source_path || "";
         return `<button type="button" class="row ${state.selectedId === item.id ? "selected" : ""}" data-id="${esc(item.id)}">
           <span class="state-dot ${esc(status)}" aria-hidden="true"></span>
-          <span><span class="row-title">${esc(item.title)}</span><span class="row-meta"><span>${esc(ITEM_LABELS[item.item_type] || humanize(item.item_type))}</span>${period ? `<span>${esc(period)}</span>` : ""}</span></span>
+          <span><span class="row-title">${esc(item.title)}</span><span class="row-meta"><span>${esc(copy().items[item.item_type] || humanize(item.item_type))}</span>${period ? `<span>${esc(period)}</span>` : ""}</span></span>
           <span class="risk ${risk.toLowerCase() === "high" || risk.toLowerCase() === "alta" ? "high" : ""}">${esc(risk)}</span>
         </button>`;
       }).join("");
@@ -611,10 +775,10 @@
 
     function evidenceHtml(item) {
       const evidence = Array.isArray(item.evidence) ? item.evidence : [];
-      if (!evidence.length) return `<p class="lead">Nessuna evidenza collegata a questo elemento.</p>`;
+      if (!evidence.length) return `<p class="lead">${esc(copy().noEvidence)}</p>`;
       return `<div class="evidence-list">${evidence.map((entry, index) => {
-        if (!isObject(entry)) return `<div class="evidence"><div class="evidence-title"><span>Evidenza ${index + 1}</span></div><div class="evidence-meta">${esc(entry)}</div></div>`;
-        const title = entry.title || entry.authority || entry.source || entry.kind || `Evidenza ${index + 1}`;
+        if (!isObject(entry)) return `<div class="evidence"><div class="evidence-title"><span>${esc(copy().evidence)} ${index + 1}</span></div><div class="evidence-meta">${esc(entry)}</div></div>`;
+        const title = entry.title || entry.authority || entry.source || entry.kind || `${copy().evidence} ${index + 1}`;
         const locator = [entry.source_path, entry.document, entry.locator, entry.page != null ? `p. ${entry.page}` : "", entry.date].filter(Boolean).join(" · ");
         const confidence = entry.confidence || entry.status || "";
         const excerpt = entry.excerpt || entry.summary || entry.support || "";
@@ -654,18 +818,18 @@
       const allowed = Array.isArray(item.allowed_actions) ? item.allowed_actions : [];
       const action = decision?.action || "";
       const disabled = state.busy ? " disabled" : "";
-      const editField = action === "edit" ? `<div class="field"><label for="edit-value">Correzione proposta</label><textarea id="edit-value" data-field="edit_value" placeholder="Inserisci il valore o il testo corretto"${disabled}>${esc(decision?.edit_value || "")}</textarea></div>` : "";
-      const docsField = action === "request_more_documents" ? `<div class="field"><label for="requested-documents">Documenti richiesti · uno per riga</label><textarea id="requested-documents" data-field="requested_documents"${disabled}>${esc((decision?.requested_documents || explicitDocumentHints(item)).join("\n"))}</textarea></div>` : "";
+      const editField = action === "edit" ? `<div class="field"><label for="edit-value">${esc(copy().proposedEdit)}</label><textarea id="edit-value" data-field="edit_value" placeholder="${esc(copy().editPlaceholder)}"${disabled}>${esc(decision?.edit_value || "")}</textarea></div>` : "";
+      const docsField = action === "request_more_documents" ? `<div class="field"><label for="requested-documents">${esc(copy().requestedDocuments)}</label><textarea id="requested-documents" data-field="requested_documents"${disabled}>${esc((decision?.requested_documents || explicitDocumentHints(item)).join("\n"))}</textarea></div>` : "";
       const impact = action === "edit"
-        ? "La correzione resta registrata nell’esito di revisione; l’eventuale rigenerazione del documento professionale avviene nel workflow locale."
+        ? copy().editImpact
         : action === "request_more_documents" || action === "mark_unclear"
-          ? "Questa decisione crea un blocco visibile in final_artifacts.json."
-          : "La decisione aggiorna lo stato di revisione senza modificare le fonti originali.";
+          ? copy().blockerImpact
+          : copy().decisionImpact;
       return `<section class="section">
-        <p class="section-title">Decisione professionale</p>
-        <div class="decision-actions">${allowed.map((value) => `<button type="button" class="decision-action ${action === value ? "selected" : ""}" data-action="${esc(value)}"${disabled}>${esc(ACTION_LABELS[value] || humanize(value))}</button>`).join("")}</div>
+        <p class="section-title">${esc(copy().professionalDecision)}</p>
+        <div class="decision-actions">${allowed.map((value) => `<button type="button" class="decision-action ${action === value ? "selected" : ""}" data-action="${esc(value)}"${disabled}>${esc(copy().actions[value] || humanize(value))}</button>`).join("")}</div>
         ${editField}${docsField}
-        <div class="field"><label for="reviewer-note">Nota del revisore</label><textarea id="reviewer-note" data-field="reviewer_note" placeholder="Motivo, cautela o prossima verifica">${esc(decision?.reviewer_note || "")}</textarea></div>
+        <div class="field"><label for="reviewer-note">${esc(copy().reviewerNote)}</label><textarea id="reviewer-note" data-field="reviewer_note" placeholder="${esc(copy().reviewerPlaceholder)}">${esc(decision?.reviewer_note || "")}</textarea></div>
         <div class="impact">${esc(impact)}</div>
       </section>`;
     }
@@ -674,18 +838,18 @@
       const node = document.getElementById("detail");
       const item = itemById(state.selectedId);
       if (!item) {
-        node.innerHTML = `<div class="empty"><strong>Seleziona un elemento</strong>Qui compariranno evidenze, autorità, dati e decisione.</div>`;
+        node.innerHTML = `<div class="empty"><strong>${esc(copy().selectTitle)}</strong>${esc(copy().selectBody)}</div>`;
         return;
       }
       const status = statusFor(item);
       const entries = factEntries(item);
-      const summary = item.summary || item.description || (isObject(item.data) ? item.data.summary || item.data.description : "") || "Nessuna sintesi disponibile.";
+      const summary = item.summary || item.description || (isObject(item.data) ? item.data.summary || item.data.description : "") || copy().noSummary;
       node.innerHTML = `
-        <header class="detail-head"><div><p class="item-type">${esc(ITEM_LABELS[item.item_type] || humanize(item.item_type))}</p><h3>${esc(item.title)}</h3></div><span class="status ${esc(status)}">${esc(STATUS_LABELS[status] || humanize(status))}</span></header>
+        <header class="detail-head"><div><p class="item-type">${esc(copy().items[item.item_type] || humanize(item.item_type))}</p><h3>${esc(item.title)}</h3></div><span class="status ${esc(status)}">${esc(copy().statuses[status] || humanize(status))}</span></header>
         ${safeguardsHtml()}
-        <section class="section"><p class="section-title">Sintesi</p><p class="lead">${esc(summary)}</p></section>
-        ${entries.length ? `<section class="section"><p class="section-title">Dati del controllo</p><div class="facts">${entries.map(([key, value]) => `<div class="fact"><span class="fact-key">${esc(humanize(key))}</span><span class="fact-value">${esc(compactValue(value))}</span></div>`).join("")}</div></section>` : ""}
-        <section class="section"><p class="section-title">Evidenze e fonti</p>${evidenceHtml(item)}</section>
+        <section class="section"><p class="section-title">${esc(copy().summary)}</p><p class="lead">${esc(summary)}</p></section>
+        ${entries.length ? `<section class="section"><p class="section-title">${esc(copy().controlData)}</p><div class="facts">${entries.map(([key, value]) => `<div class="fact"><span class="fact-key">${esc(fieldLabel(key))}</span><span class="fact-value">${esc(compactValue(value))}</span></div>`).join("")}</div></section>` : ""}
+        <section class="section"><p class="section-title">${esc(copy().evidenceSources)}</p>${evidenceHtml(item)}</section>
         ${decisionSection(item)}`;
     }
 
@@ -693,7 +857,7 @@
       const node = document.getElementById("artifacts");
       const outputs = Array.isArray(state.payload?.final_artifacts?.outputs) ? state.payload.final_artifacts.outputs : [];
       const blockers = Array.isArray(state.payload?.final_artifacts?.blockers) ? state.payload.final_artifacts.blockers.length : 0;
-      node.innerHTML = `<div class="artifact-head"><h2>Output del fascicolo</h2><span class="count">${outputs.length} file · ${blockers} blocchi</span></div>${outputs.length ? `<div class="artifact-list">${outputs.map((output) => `<div class="artifact"><strong title="${esc(output.path || output.title)}">${esc(output.path || output.title || "Output")}</strong><span>${esc([output.kind, output.status].filter(Boolean).join(" · "))}</span></div>`).join("")}</div>` : `<span class="count">Gli output compariranno dopo l’esecuzione locale e l’applicazione delle decisioni.</span>`}`;
+      node.innerHTML = `<div class="artifact-head"><h2>${esc(copy().packageOutputs)}</h2><span class="count">${outputs.length} ${esc(copy().files)} · ${blockers} ${esc(copy().blockers)}</span></div>${outputs.length ? `<div class="artifact-list">${outputs.map((output) => `<div class="artifact"><strong title="${esc(output.path || output.title)}">${esc(output.path || output.title || copy().output)}</strong><span>${esc([output.kind, localizedValue(output.status)].filter(Boolean).join(" · "))}</span></div>`).join("")}</div>` : `<span class="count">${esc(copy().outputsPending)}</span>`}`;
     }
 
     function render() {
@@ -719,7 +883,7 @@
 
     function validateDecisions(decisions) {
       for (const decision of decisions) {
-        if (decision.action === "edit" && !decision.edit_value) throw new Error(`Inserisci la correzione per “${itemById(decision.item_id)?.title || decision.item_id}”.`);
+        if (decision.action === "edit" && !decision.edit_value) throw new Error(copy().correctionRequired(itemById(decision.item_id)?.title || decision.item_id));
       }
     }
 
@@ -780,7 +944,7 @@
         document.execCommand("copy");
         area.remove();
       }
-      state.message = "JSON decisioni copiato.";
+      state.message = copy().jsonCopied;
       state.messageKind = "ok";
       renderRunbar();
     }
@@ -803,18 +967,18 @@
       const tool = state.payload.decision_policy?.[isApply ? "apply_tool" : "save_tool"] || (isApply ? "apply_previdenza_inps_decisions" : "save_previdenza_inps_decisions");
       if (typeof window.openai?.callTool !== "function") {
         await copyJson();
-        state.message = isApply ? "Bridge MCP non disponibile: JSON copiato, applicazione non eseguita." : "Bridge MCP non disponibile: JSON copiato.";
+        state.message = isApply ? copy().bridgeApply : copy().bridgeSave;
         state.messageKind = isApply ? "error" : "ok";
         renderRunbar();
         return;
       }
       state.busy = true;
-      state.message = isApply ? "Applicazione in corso…" : "Salvataggio in corso…";
+      state.message = isApply ? copy().applying : copy().saving;
       state.messageKind = "";
       render();
       try {
         const result = parseToolResult(await window.openai.callTool(tool, toolArgs(isApply)));
-        if (!result?.ok) throw new Error(result?.error || "Operazione non riuscita.");
+        if (!result?.ok) throw new Error(result?.error || copy().operationFailed);
         const persisted = result.persisted === true;
         if (persisted) {
           if (result.ui_decisions) state.payload.ui_decisions = result.ui_decisions;
@@ -825,10 +989,10 @@
         } else {
           state.dirty = true;
         }
-        state.message = result.message || (isApply ? "Decisioni applicate." : "Decisioni salvate.");
+        state.message = result.message || (isApply ? copy().applied : copy().saved);
         state.messageKind = persisted ? "ok" : "";
       } catch (error) {
-        state.message = `${error.message || error} Copia il JSON per recuperare le decisioni.`;
+        state.message = `${error.message || error} ${copy().recovery}`;
         state.messageKind = "error";
       } finally {
         state.busy = false;
@@ -898,6 +1062,7 @@
     document.getElementById("cancel").addEventListener("click", cancelChanges);
 
     state.payload = incomingPayload();
+    applyStaticCopy();
     loadDecisions();
     render();
   </script>

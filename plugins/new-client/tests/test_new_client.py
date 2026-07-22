@@ -3039,6 +3039,12 @@ def test_human_facing_package_artifacts_are_fully_localized(
     assert missing_reason in client_draft
     assert handoff.startswith(handoff_heading + "\n")
     assert handoff_heading.removeprefix("# ") in handoff_record["required_text"]
+    if language == "es":
+        manifest_copy = json.dumps(manifest, ensure_ascii=False)
+        assert "No se activa el ciclo de vida del cliente" in manifest_copy
+        assert "Resuelva la información pendiente o poco clara" in manifest_copy
+        assert "No client lifecycle activation" not in manifest_copy
+        assert "Resolve missing or unclear information" not in manifest_copy
     assert any(
         item["reason"] == "evidence_status_missing" for item in missing_json["items"]
     )

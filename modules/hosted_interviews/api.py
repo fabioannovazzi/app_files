@@ -95,6 +95,155 @@ MAX_TRANSCRIPT_TAIL_CHARS = 5_000
 MAX_PARTNER_WHISPER_CHARS = 240
 STARTED_ATTEMPT_STALE_SECONDS = DEFAULT_INTERVIEW_DURATION_SECONDS + 5 * 60
 SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
+HOSTED_INTERVIEW_OUTPUT_COPY = {
+    "en": {
+        "page_title": "Hosted interview output",
+        "hosted_interview": "Hosted interview",
+        "output_unavailable": "Output unavailable",
+        "interview": "Interview",
+        "metadata_aria": "Interview metadata",
+        "campaign": "Campaign",
+        "status": "Status",
+        "completed": "Completed",
+        "not_completed": "Not completed",
+        "duration": "Duration",
+        "seconds": "seconds",
+        "language": "Language",
+        "interviewee_role": "Interviewee role",
+        "not_specified": "Not specified",
+        "transcript_words": "Transcript words",
+        "transcript_source": "Transcript source",
+        "not_available": "Not available",
+        "mic_transcript": "Mic transcript",
+        "audio_chunks": "Audio chunks",
+        "saved_events": "Saved events",
+        "open_json_bundle": "Open JSON bundle",
+        "open_quality_review": "Open quality review",
+        "quality_review": "Quality Review",
+        "summary": "Summary",
+        "overall_quality": "Overall quality",
+        "model": "Model",
+        "generated": "Generated",
+        "key_findings": "Key Findings",
+        "evidence": "Evidence",
+        "improvement": "Improvement",
+        "evidence_backed_claims": "Evidence-Backed Claims",
+        "quote": "Quote",
+        "missed_opportunities": "Missed Opportunities",
+        "uncertainties": "Uncertainties",
+        "follow_up_questions": "Follow-Up Questions",
+        "pipeline_improvements": "Pipeline Improvements",
+        "do_not_change": "Do Not Change",
+        "contradictions": "Contradictions",
+        "quality_review_unavailable": "Quality review unavailable",
+        "quality_review_error_detail": "The quality review could not be generated.",
+        "no_quality_review": "No quality review was generated.",
+        "dialog_transcript": "Dialog Transcript",
+        "no_dialog_transcript": "No dialog transcript was saved.",
+        "final_interviewee_transcript": "Final Interviewee Transcript",
+        "not_completed_yet": "This interview has not been completed yet.",
+    },
+    "es": {
+        "page_title": "Resultado de la entrevista alojada",
+        "hosted_interview": "Entrevista alojada",
+        "output_unavailable": "Resultado no disponible",
+        "interview": "Entrevista",
+        "metadata_aria": "Metadatos de la entrevista",
+        "campaign": "Campaña",
+        "status": "Estado",
+        "completed": "Finalizada",
+        "not_completed": "Sin finalizar",
+        "duration": "Duración",
+        "seconds": "segundos",
+        "language": "Idioma",
+        "interviewee_role": "Rol de la persona entrevistada",
+        "not_specified": "No especificado",
+        "transcript_words": "Palabras de la transcripción",
+        "transcript_source": "Fuente de la transcripción",
+        "not_available": "No disponible",
+        "mic_transcript": "Transcripción del micrófono",
+        "audio_chunks": "Fragmentos de audio",
+        "saved_events": "Eventos guardados",
+        "open_json_bundle": "Abrir paquete JSON",
+        "open_quality_review": "Abrir revisión de calidad",
+        "quality_review": "Revisión de calidad",
+        "summary": "Resumen",
+        "overall_quality": "Calidad general",
+        "model": "Modelo",
+        "generated": "Generada",
+        "key_findings": "Hallazgos principales",
+        "evidence": "Evidencia",
+        "improvement": "Mejora",
+        "evidence_backed_claims": "Afirmaciones respaldadas por evidencia",
+        "quote": "Cita",
+        "missed_opportunities": "Oportunidades no exploradas",
+        "uncertainties": "Incertidumbres",
+        "follow_up_questions": "Preguntas de seguimiento",
+        "pipeline_improvements": "Mejoras del flujo de trabajo",
+        "do_not_change": "No cambiar",
+        "contradictions": "Contradicciones",
+        "quality_review_unavailable": "Revisión de calidad no disponible",
+        "quality_review_error_detail": ("No se pudo generar la revisión de calidad."),
+        "no_quality_review": "No se generó ninguna revisión de calidad.",
+        "dialog_transcript": "Transcripción del diálogo",
+        "no_dialog_transcript": "No se guardó ninguna transcripción del diálogo.",
+        "final_interviewee_transcript": (
+            "Transcripción final de la persona entrevistada"
+        ),
+        "not_completed_yet": "Esta entrevista aún no ha finalizado.",
+    },
+}
+HOSTED_INTERVIEW_OUTPUT_VALUE_LABELS = {
+    "es": {
+        "interview_status": {
+            "ready": "Lista",
+            "started": "Iniciada",
+            "completed": "Finalizada",
+            "failed_technical": "Error técnico",
+            "incomplete": "Incompleta",
+            "unusable": "No utilizable",
+        },
+        "transcript_source": {
+            "realtime_live_asr": "Transcripción en directo",
+            "post_call_interviewee_audio": (
+                "Audio de la persona entrevistada procesado tras la llamada"
+            ),
+        },
+        "transcription_status": {
+            "queued": "En cola",
+            "unavailable": "No disponible",
+            "disabled": "Desactivada",
+            "running": "En curso",
+            "error": "Error",
+            "complete": "Finalizada",
+        },
+        "review_quality": {
+            "strong": "Fuerte",
+            "usable": "Utilizable",
+            "weak": "Débil",
+            "failed": "Fallida",
+        },
+        "severity": {
+            "high": "Alta",
+            "medium": "Media",
+            "low": "Baja",
+        },
+        "speaker": {
+            "Interviewer": "Persona entrevistadora",
+            "Interviewee": "Persona entrevistada",
+        },
+    },
+}
+HOSTED_INTERVIEW_OUTPUT_ERROR_COPY = {
+    "Invalid interview token.": "El enlace de la entrevista no es válido.",
+    "Invalid or expired interview link.": (
+        "El enlace de la entrevista no es válido o ha caducado."
+    ),
+    "Interview record is not readable.": (
+        "No se puede leer el registro de la entrevista."
+    ),
+    "Interview record is invalid.": "El registro de la entrevista no es válido.",
+}
 INTERVIEW_STATUS_READY = "ready"
 INTERVIEW_STATUS_STARTED = "started"
 INTERVIEW_STATUS_COMPLETED = "completed"
@@ -489,6 +638,24 @@ def _clean_list(values: list[str]) -> list[str]:
 def _clean_language(value: str) -> str:
     language = (value or "it").strip().lower()
     return language if language in SUPPORTED_LANGUAGES else "it"
+
+
+def _hosted_interview_output_language(record: Mapping[str, Any]) -> str:
+    """Return the output-page locale without changing legacy English rendering."""
+
+    language = str(record.get("language", "")).strip().lower()
+    return "es" if language.startswith("es") else "en"
+
+
+def _hosted_interview_output_error(error: str, language: str) -> str:
+    """Return a localized safe message for an output-page loading error."""
+
+    if language != "es":
+        return error
+    return HOSTED_INTERVIEW_OUTPUT_ERROR_COPY.get(
+        error,
+        "No se pudo cargar el resultado de la entrevista.",
+    )
 
 
 def _clean_interview_mode(value: str) -> str:
@@ -2523,8 +2690,11 @@ def hosted_interview_output_page(
     """Render a private readable output page for a completed hosted interview."""
 
     del user
+    record: dict[str, Any] = {}
+    output_language = "en"
     try:
         record = _load_record_for_token(token)
+        output_language = _hosted_interview_output_language(record)
         session_dir = _session_dir(token)
         completion = _completion_for_session(session_dir)
         review = _review_for_session(session_dir)
@@ -2543,7 +2713,9 @@ def hosted_interview_output_page(
         dialog_turns = []
         event_count = 0
         audio_chunk_count = 0
-        error_message = str(exc)
+        error_message = _hosted_interview_output_error(str(exc), output_language)
+    output_copy = HOSTED_INTERVIEW_OUTPUT_COPY[output_language]
+    value_labels = HOSTED_INTERVIEW_OUTPUT_VALUE_LABELS.get(output_language, {})
     response = templates.TemplateResponse(
         request,
         "hosted_interview_output.html",
@@ -2557,6 +2729,9 @@ def hosted_interview_output_page(
             "dialog_turns": dialog_turns,
             "event_count": event_count,
             "audio_chunk_count": audio_chunk_count,
+            "output_language": output_language,
+            "copy": output_copy,
+            "value_labels": value_labels,
             "bundle_url": f"/case-notes/api/voice/interviews/{token}/bundle",
             "review_url": f"/case-notes/api/voice/interviews/{token}/review",
             "error_message": error_message,

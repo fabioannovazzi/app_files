@@ -1,6 +1,6 @@
 {
   "name": "previdenza-inps",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Prepara un'istruttoria previdenziale INPS con OCR locale, esportazioni ufficiali registrate e revisione professionale.",
   "author": {
     "name": "Mparanza",

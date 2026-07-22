@@ -1027,6 +1027,145 @@ def test_audit_reconciliation_mcp_server_validates_and_renders_review_payload() 
     assert "Audit Reconciliation Review" in widget_html
 
 
+def test_audit_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "mcp-es"
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "audit-reconciliation",
+        "workflow": "audit-reconciliation",
+        "run_id": "audit-reconciliation-es",
+        "language": "spa",
+        "review_type": "audit_reconciliation_review",
+        "items": [
+            {
+                "id": "review:closed",
+                "item_type": "closure_evidence_review",
+                "title": "FAC-1 | 120,50 | cerrada",
+                "allowed_actions": ["accept", "mark_unclear"],
+                "recommended_action": "accept",
+                "status": "needs_review",
+            }
+        ],
+        "item_count": 1,
+        "status": "ready_for_review",
+    }
+    decisions = [{"item_id": "review:closed", "action": "accept"}]
+    run_intake = {
+        "run_id": "audit-reconciliation-es",
+        "output_dir": str(output_dir),
+        "working_language": "es_ES",
+    }
+    final_artifacts = {
+        "schema_version": "1.0",
+        "plugin": "audit-reconciliation",
+        "workflow": "audit-reconciliation",
+        "run_id": "audit-reconciliation-es",
+        "outputs": [],
+        "next_actions": [],
+    }
+    invalid_payload = {**review_payload, "item_count": 2}
+    messages: list[dict[str, object]] = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+                "protocolVersion": "2024-11-05",
+                "meta": {"locale": "es-ES"},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_audit_reconciliation_review",
+                "arguments": {"review_payload": review_payload},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "save_audit_reconciliation_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": decisions,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_audit_reconciliation_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": decisions,
+                    "final_artifacts": final_artifacts,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_audit_reconciliation_decisions",
+                "arguments": {
+                    "run_intake": run_intake,
+                    "review_payload": review_payload,
+                    "decisions": decisions,
+                    "final_artifacts": final_artifacts,
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 6,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_audit_reconciliation_review",
+                "arguments": {"review_payload": invalid_payload},
+            },
+        },
+    ]
+
+    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+
+    assert "entrega visible principal" in responses[1]["result"]["instructions"]
+    assert responses[2]["result"]["structuredContent"]["message"].startswith(
+        "El payload de revisión"
+    )
+    assert (
+        "No se proporcionó run_intake.output_dir"
+        in responses[3]["result"]["structuredContent"]["message"]
+    )
+    no_output_apply = responses[4]["result"]["structuredContent"]
+    assert "No se proporcionó run_intake.output_dir" in no_output_apply["message"]
+    assert no_output_apply["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    persisted_apply = responses[5]["result"]["structuredContent"]
+    assert persisted_apply["message"].startswith("Se han aplicado 1 decisiones")
+    assert persisted_apply["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    assert "<!-- Review Handoff -->" in handoff
+    assert "Entrega para revisión" in handoff
+    assert "## Revisión en Codex" in handoff
+    error_result = responses[6]["result"]
+    assert error_result["isError"] is True
+    assert error_result["structuredContent"]["error"].startswith(
+        "No se pudo validar la solicitud:"
+    )
+
+
 def test_audit_reconciliation_mcp_server_accepts_local_review_paths(
     tmp_path: Path,
 ) -> None:

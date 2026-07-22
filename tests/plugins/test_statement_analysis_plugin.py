@@ -191,7 +191,7 @@ def test_pnl_statement_table_run_writes_deterministic_artifacts(
     assert context["capability_id"] == "statement.pnl_table"
     assert used_recipe["language"] == "es"
     assert context["table_key"] == "pnl_statement_table"
-    assert context["statement_label"] == "Profit and loss statement"
+    assert context["statement_label"] == "Estado de resultados"
     table_artifact = manifest["artifacts"][0]
     assert table_artifact["capability_id"] == "statement.pnl_table"
     assert table_artifact["table_spec_name"] == "pnl_statement_table"
@@ -200,6 +200,81 @@ def test_pnl_statement_table_run_writes_deterministic_artifacts(
     assert "table_definition_hash" not in table_artifact
     assert '<main class="page" data-gallery-screenshot>' in html
     assert "IBCS" not in html
+
+
+def test_pnl_statement_table_localizes_spanish_generated_copy(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    source_file = tmp_path / "spanish_pnl_values.csv"
+    source_file.write_text(
+        "row_key,period,scenario,value\nsoftware_revenue,2025,AC,100\n",
+        encoding="utf-8",
+    )
+    recipe_path = tmp_path / "spanish_recipe.json"
+    recipe_path.write_text(
+        json.dumps(
+            {
+                "periods": ["2025"],
+                "scenarios_by_period": {"2025": ["AC"]},
+                "statement_rows": [
+                    {
+                        "key": "software_revenue",
+                        "label": "Software revenue",
+                        "prefix": "+",
+                        "source_key": "software_revenue",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = core.run_statement_analysis(
+        source_file,
+        tmp_path / "spanish_statement",
+        recipe_path,
+        language="es-ES",
+    )
+
+    used_recipe = json.loads(
+        (result.output_dir / "used_recipe.json").read_text(encoding="utf-8")
+    )
+    context = json.loads(result.context_path.read_text(encoding="utf-8"))
+    manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
+    html = result.html_path.read_text(encoding="utf-8")
+    with result.csv_path.open("r", encoding="utf-8", newline="") as handle:
+        csv_rows = list(csv.DictReader(handle))
+
+    assert used_recipe["language"] == "es-ES"
+    assert used_recipe["statement_label"] == "Estado de resultados"
+    assert used_recipe["scope_label"] == "2012..2015 PL y AC (FC)"
+    assert used_recipe["statement_rows"][0]["key"] == "software_revenue"
+    assert used_recipe["statement_rows"][0]["label"] == "Ingresos por software"
+    assert result.rows[0]["key"] == "software_revenue"
+    assert result.rows[0]["label"] == "Ingresos por software"
+    assert context["statement_label"] == "Estado de resultados"
+    assert context["chart_title_lines"] == [
+        "SoftCons International Inc.",
+        "Estado de resultados en mUSD",
+        "2012..2015 PL y AC (FC)",
+    ]
+    assert context["row_grain"] == (
+        "Una fila por partida ordenada del estado de resultados; las filas de "
+        "fórmula se calculan a partir de filas anteriores de la receta."
+    )
+    assert (
+        manifest["artifacts"][0]["resolved_parameters"]["statement_rows"][0]["label"]
+        == "Ingresos por software"
+    )
+    assert csv_rows[0]["key"] == "software_revenue"
+    assert csv_rows[0]["label"] == "Ingresos por software"
+    assert '<html lang="es">' in html
+    assert "Estado de resultados en mUSD" in html
+    assert "+ Ingresos por software" in html
+    assert "Fuente: spanish_pnl_values.csv" in html
+    assert "Profit and loss statement" not in html
+    assert "Source:" not in html
 
 
 def test_pnl_statement_table_rejects_missing_source_value(tmp_path: Path) -> None:

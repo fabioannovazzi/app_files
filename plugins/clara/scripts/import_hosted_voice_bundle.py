@@ -51,6 +51,54 @@ DEFAULT_TRANSCRIPT_PROCESSING_NOTE = (
     "diarization model for Clara speaker attribution. Preserve uncertainty "
     "instead of guessing."
 )
+SPANISH_TRANSCRIPT_PROCESSING_NOTE = (
+    "Tras la transcripción, Clara/Codex local debe atribuir los hablantes a partir "
+    "de la transcripción depurada y los metadatos de la fuente, comprobar la calidad "
+    "de la transcripción en el contexto del documento completo y corregir únicamente "
+    "las palabras claramente mal transcritas cuando la formulación correcta resulte "
+    "evidente por el contexto o por un glosario fiable del caso. La atribución de "
+    "hablantes es un proceso local de texto de Codex/Clara: conserva la transcripción "
+    "sin atribuir, crea una versión de trabajo con hablantes, revisa posibles turnos "
+    "fusionados o etiquetas incorrectas y corrige solo los límites respaldados con "
+    "claridad por el texto. No utilices un modelo de diarización de audio o voz para "
+    "atribuir hablantes en Clara. Mantén visible la incertidumbre en lugar de adivinar."
+)
+
+
+def _normalise_language(value: Any) -> str:
+    clean = str(value or "").strip().lower().replace("_", "-")
+    aliases = {
+        "spa": "es",
+        "spanish": "es",
+        "español": "es",
+        "eng": "en",
+        "english": "en",
+        "ita": "it",
+        "italian": "it",
+        "fra": "fr",
+        "fre": "fr",
+        "french": "fr",
+        "deu": "de",
+        "ger": "de",
+        "german": "de",
+    }
+    base = clean.split("-", 1)[0]
+    return aliases.get(clean, aliases.get(base, base))
+
+
+def _artifact_language(
+    bundle: Mapping[str, Any],
+    manifest: Mapping[str, Any],
+) -> str:
+    candidates = (
+        bundle.get("language"),
+        bundle.get("output_language"),
+        manifest.get("output_language"),
+    )
+    normalized = [_normalise_language(value) for value in candidates]
+    if "es" in normalized:
+        return "es"
+    return next((value for value in normalized if value), "en")
 
 
 @dataclass(frozen=True)
@@ -277,15 +325,30 @@ def _call_metadata(bundle: Mapping[str, Any]) -> dict[str, Any]:
     return metadata
 
 
-def _source_metadata_lines(metadata: Mapping[str, str]) -> list[str]:
-    labels = {
-        "source_type": "Source type",
-        "title": "Source title",
-        "interview_date": "Interview date",
-        "participants": "Interviewee / participants",
-        "interviewer": "Interviewer",
-        "notes": "Source notes",
-    }
+def _source_metadata_lines(
+    metadata: Mapping[str, str],
+    *,
+    language: str = "en",
+) -> list[str]:
+    labels = (
+        {
+            "source_type": "Tipo de fuente",
+            "title": "Título de la fuente",
+            "interview_date": "Fecha de la entrevista",
+            "participants": "Persona entrevistada / participantes",
+            "interviewer": "Entrevistador",
+            "notes": "Notas sobre la fuente",
+        }
+        if language == "es"
+        else {
+            "source_type": "Source type",
+            "title": "Source title",
+            "interview_date": "Interview date",
+            "participants": "Interviewee / participants",
+            "interviewer": "Interviewer",
+            "notes": "Source notes",
+        }
+    )
     lines: list[str] = []
     for key, label in labels.items():
         value = str(metadata.get(key, "")).strip()
@@ -294,10 +357,18 @@ def _source_metadata_lines(metadata: Mapping[str, str]) -> list[str]:
     return lines
 
 
-def _source_metadata_markdown(metadata: Mapping[str, str]) -> str:
-    lines = _source_metadata_lines(metadata)
+def _source_metadata_markdown(
+    metadata: Mapping[str, str],
+    *,
+    language: str = "en",
+) -> str:
+    lines = _source_metadata_lines(metadata, language=language)
     if not lines:
-        return "- No source metadata supplied."
+        return (
+            "- No se han facilitado metadatos de la fuente."
+            if language == "es"
+            else "- No source metadata supplied."
+        )
     formatted_lines = []
     for line in lines:
         label, value = line.split(":", 1)
@@ -436,7 +507,43 @@ def _update_material_source_metadata(
     )
 
 
-def _transcript_markdown(bundle: Mapping[str, Any]) -> str:
+def _transcript_markdown(
+    bundle: Mapping[str, Any],
+    *,
+    language: str = "en",
+) -> str:
+    if language == "es":
+        copy = {
+            "title": "Transcripción de Hosted Voice",
+            "captured": "Capturada",
+            "model": "Modelo",
+            "capture_source": "Fuente de captura",
+            "audio_file": "Archivo de audio",
+            "screen_video": "Vídeo de pantalla",
+            "display_surface": "Superficie capturada en pantalla",
+            "resolution": "Resolución de la captura de pantalla",
+            "consultant": "Consultor",
+            "no_consultant": "No se capturó ninguna transcripción del consultor.",
+            "prompted": "Transcripción de referencia con indicaciones",
+            "voice_model": "Modelo de voz",
+            "no_model": "No se capturó ninguna transcripción del modelo.",
+        }
+    else:
+        copy = {
+            "title": "Hosted Voice Transcript",
+            "captured": "Captured",
+            "model": "Model",
+            "capture_source": "Capture source",
+            "audio_file": "Audio file",
+            "screen_video": "Screen video",
+            "display_surface": "Screen capture display surface",
+            "resolution": "Screen capture resolution",
+            "consultant": "Consultant",
+            "no_consultant": "No consultant transcript captured.",
+            "prompted": "Prompted Reference Transcript",
+            "voice_model": "Voice Model",
+            "no_model": "No model transcript captured.",
+        }
     timestamp = str(bundle.get("captured_at", "")).strip() or _now_iso()
     capture_source = str(bundle.get("capture_source", "")).strip()
     audio_file_name = str(bundle.get("audio_file_name", "")).strip()
@@ -451,11 +558,11 @@ def _transcript_markdown(bundle: Mapping[str, Any]) -> str:
     )
     source_lines = []
     if capture_source:
-        source_lines.append(f"Capture source: {capture_source}")
+        source_lines.append(f"{copy['capture_source']}: {capture_source}")
     if audio_file_name:
-        source_lines.append(f"Audio file: {audio_file_name}")
+        source_lines.append(f"{copy['audio_file']}: {audio_file_name}")
     if video_file_name:
-        source_lines.append(f"Screen video: {video_file_name}")
+        source_lines.append(f"{copy['screen_video']}: {video_file_name}")
     if isinstance(screen_capture_metadata, Mapping):
         display_surface = str(
             screen_capture_metadata.get("display_surface", "")
@@ -463,26 +570,26 @@ def _transcript_markdown(bundle: Mapping[str, Any]) -> str:
         width = screen_capture_metadata.get("width")
         height = screen_capture_metadata.get("height")
         if display_surface:
-            source_lines.append(f"Screen capture display surface: {display_surface}")
+            source_lines.append(f"{copy['display_surface']}: {display_surface}")
         if width and height:
-            source_lines.append(f"Screen capture resolution: {width}x{height}")
-    source_lines.extend(_source_metadata_lines(metadata))
+            source_lines.append(f"{copy['resolution']}: {width}x{height}")
+    source_lines.extend(_source_metadata_lines(metadata, language=language))
     lines = [
-        "# Hosted Voice Transcript",
+        f"# {copy['title']}",
         "",
-        f"Captured: {timestamp}",
-        f"Model: {bundle.get('model', '')}",
+        f"{copy['captured']}: {timestamp}",
+        f"{copy['model']}: {bundle.get('model', '')}",
         *source_lines,
         "",
-        "## Consultant",
+        f"## {copy['consultant']}",
         "",
-        final_transcript or "No consultant transcript captured.",
+        final_transcript or copy["no_consultant"],
         "",
     ]
     if prompted_transcript and prompted_transcript != final_transcript:
         lines.extend(
             [
-                "## Prompted Reference Transcript",
+                f"## {copy['prompted']}",
                 "",
                 prompted_transcript,
                 "",
@@ -490,22 +597,29 @@ def _transcript_markdown(bundle: Mapping[str, Any]) -> str:
         )
     lines.extend(
         [
-            "## Voice Model",
+            f"## {copy['voice_model']}",
             "",
-            str(bundle.get("assistant_transcript", "")).strip()
-            or "No model transcript captured.",
+            str(bundle.get("assistant_transcript", "")).strip() or copy["no_model"],
             "",
         ]
     )
     return "\n".join(lines)
 
 
-def _paragraphize_transcript_markdown(transcript: str) -> str:
+def _paragraphize_transcript_markdown(
+    transcript: str,
+    *,
+    language: str = "en",
+) -> str:
     """Format transcript text mechanically; semantic review remains model-led."""
 
     clean = " ".join(transcript.split())
     if not clean:
-        return "No transcript available."
+        return (
+            "No hay ninguna transcripción disponible."
+            if language == "es"
+            else "No transcript available."
+        )
     sentences = re.split(r"(?<=[.!?])\s+", clean)
     paragraphs: list[str] = []
     current: list[str] = []
@@ -539,6 +653,8 @@ def _open_questions_markdown(extraction: Mapping[str, Any]) -> str:
 def _clara_review_markdown(
     bundle: Mapping[str, Any],
     extraction: Mapping[str, Any],
+    *,
+    language: str = "en",
 ) -> str:
     """Build the locally stored review workspace from the downloaded transcript.
 
@@ -553,62 +669,117 @@ def _clara_review_markdown(
         or str(bundle.get("raw_transcription_text", "")).strip()
         or final_transcript
     )
-    transcript_processing_note = (
-        str(bundle.get("transcript_processing_note", "")).strip()
-        or DEFAULT_TRANSCRIPT_PROCESSING_NOTE
-    )
+    supplied_processing_note = str(bundle.get("transcript_processing_note", "")).strip()
+    if language == "es" and supplied_processing_note in {
+        "",
+        DEFAULT_TRANSCRIPT_PROCESSING_NOTE,
+    }:
+        transcript_processing_note = SPANISH_TRANSCRIPT_PROCESSING_NOTE
+    else:
+        transcript_processing_note = (
+            supplied_processing_note or DEFAULT_TRANSCRIPT_PROCESSING_NOTE
+        )
     cleaned_transcript = _paragraphize_transcript_markdown(
         final_transcript or prompted_transcript,
+        language=language,
     )
     audio_file_name = str(bundle.get("audio_file_name", "")).strip()
     video_file_name = str(bundle.get("video_file_name", "")).strip()
+    if language == "es":
+        copy = {
+            "title": "Revisión de audio de Clara",
+            "intro": (
+                "Generado localmente por el plugin de Clara a partir del paquete "
+                "de transcripción descargado. El servidor alojado proporcionó la "
+                "transcripción; Codex/Clara debe completar las secciones de revisión "
+                "semántica siguientes mediante el plan de ChatGPT del usuario."
+            ),
+            "source": "Fuente",
+            "captured": "Capturada",
+            "audio_file": "Archivo de audio",
+            "screen_video": "Vídeo de pantalla",
+            "not_available": "no disponible",
+            "processing": "Procesamiento obligatorio de la transcripción",
+            "summary": "Resumen neutral",
+            "claims": "Tesis y afirmaciones",
+            "supported": "Puntos bien respaldados",
+            "vulnerabilities": "Vulnerabilidades y supuestos débiles",
+            "opinion": "Opinión de Clara",
+            "questions": "Preguntas de seguimiento",
+            "pending": "Pendiente de revisión local por Clara.",
+            "prompted": "Transcripción de referencia con indicaciones",
+            "cleaned": "Transcripción depurada",
+        }
+    else:
+        copy = {
+            "title": "Clara Audio Review",
+            "intro": (
+                "Generated locally by the Clara plugin from the downloaded "
+                "transcript bundle. The hosted server supplied the transcript; "
+                "Codex/Clara should fill the semantic review sections below through "
+                "the user's existing ChatGPT plan."
+            ),
+            "source": "Source",
+            "captured": "Captured",
+            "audio_file": "Audio file",
+            "screen_video": "Screen video",
+            "not_available": "not available",
+            "processing": "Required Transcript Processing",
+            "summary": "Neutral Summary",
+            "claims": "Thesis And Claims",
+            "supported": "Well-Supported Points",
+            "vulnerabilities": "Vulnerabilities And Weak Assumptions",
+            "opinion": "Clara Opinion",
+            "questions": "Follow-Up Questions",
+            "pending": "Pending local Clara review.",
+            "prompted": "Prompted Reference Transcript",
+            "cleaned": "Cleaned Transcript",
+        }
     lines = [
-        "# Clara Audio Review",
+        f"# {copy['title']}",
         "",
-        "Generated locally by the Clara plugin from the downloaded transcript bundle. "
-        "The hosted server supplied the transcript; Codex/Clara should fill the semantic "
-        "review sections below through the user's existing ChatGPT plan.",
+        copy["intro"],
         "",
-        "## Source",
+        f"## {copy['source']}",
         "",
-        f"- **Captured:** {str(bundle.get('captured_at', '')).strip() or 'not available'}",
-        f"- **Audio file:** {audio_file_name or 'not available'}",
-        f"- **Screen video:** {video_file_name or 'not available'}",
-        _source_metadata_markdown(_source_metadata(bundle)),
+        f"- **{copy['captured']}:** {str(bundle.get('captured_at', '')).strip() or copy['not_available']}",
+        f"- **{copy['audio_file']}:** {audio_file_name or copy['not_available']}",
+        f"- **{copy['screen_video']}:** {video_file_name or copy['not_available']}",
+        _source_metadata_markdown(_source_metadata(bundle), language=language),
         "",
-        "## Required Transcript Processing",
+        f"## {copy['processing']}",
         "",
         transcript_processing_note,
         "",
-        "## Neutral Summary",
+        f"## {copy['summary']}",
         "",
-        "Pending local Clara review.",
+        copy["pending"],
         "",
-        "## Thesis And Claims",
+        f"## {copy['claims']}",
         "",
-        "Pending local Clara review.",
+        copy["pending"],
         "",
-        "## Well-Supported Points",
+        f"## {copy['supported']}",
         "",
-        "Pending local Clara review.",
+        copy["pending"],
         "",
-        "## Vulnerabilities And Weak Assumptions",
+        f"## {copy['vulnerabilities']}",
         "",
-        "Pending local Clara review.",
+        copy["pending"],
         "",
-        "## Clara Opinion",
+        f"## {copy['opinion']}",
         "",
-        "Pending local Clara review.",
+        copy["pending"],
         "",
-        "## Follow-Up Questions",
+        f"## {copy['questions']}",
         "",
-        "Pending local Clara review.",
+        copy["pending"],
         "",
     ]
     if prompted_transcript and prompted_transcript != final_transcript:
         lines.extend(
             [
-                "## Prompted Reference Transcript",
+                f"## {copy['prompted']}",
                 "",
                 prompted_transcript,
                 "",
@@ -616,7 +787,7 @@ def _clara_review_markdown(
         )
     lines.extend(
         [
-            "## Cleaned Transcript",
+            f"## {copy['cleaned']}",
             "",
             cleaned_transcript,
             "",
@@ -649,6 +820,7 @@ def _discussion_review_pack_markdown(
     cleaned_notes_path: Path,
     clara_review_path: Path,
     judgement_candidates_path: Path,
+    language: str = "en",
 ) -> str:
     """Build a locally stored Codex review pack for the imported voice discussion."""
 
@@ -659,51 +831,174 @@ def _discussion_review_pack_markdown(
     open_questions = _read_text_or_empty(case_dir / "open_questions.json")
     judgement_log = _read_text_or_empty(case_dir / "judgement_log.json")
     relative_session = session_dir.relative_to(case_dir)
+    spanish = language == "es"
     audio_line = (
-        f"- Audio file: `{audio_path.relative_to(case_dir)}`"
+        f"- {'Archivo de audio' if spanish else 'Audio file'}: `{audio_path.relative_to(case_dir)}`"
         if audio_path is not None
-        else "- Audio file: not imported"
+        else (
+            "- Archivo de audio: no importado"
+            if spanish
+            else "- Audio file: not imported"
+        )
     )
     video_line = (
-        f"- Screen video: `{video_path.relative_to(case_dir)}`"
+        f"- {'Vídeo de pantalla' if spanish else 'Screen video'}: `{video_path.relative_to(case_dir)}`"
         if video_path is not None
-        else "- Screen video: not imported"
+        else (
+            "- Vídeo de pantalla: no importado"
+            if spanish
+            else "- Screen video: not imported"
+        )
     )
     timeline_line = (
-        f"- Video timeline: `{video_timeline_path.relative_to(case_dir)}`"
+        f"- {'Línea temporal del vídeo' if spanish else 'Video timeline'}: `{video_timeline_path.relative_to(case_dir)}`"
         if video_timeline_path is not None
-        else "- Video timeline: not available"
+        else (
+            "- Línea temporal del vídeo: no disponible"
+            if spanish
+            else "- Video timeline: not available"
+        )
     )
     feedback_timeline_line = (
-        f"- Feedback timeline: `{feedback_timeline_path.relative_to(case_dir)}`"
+        f"- {'Línea temporal de comentarios' if spanish else 'Feedback timeline'}: `{feedback_timeline_path.relative_to(case_dir)}`"
         if feedback_timeline_path is not None
-        else "- Feedback timeline: not available"
+        else (
+            "- Línea temporal de comentarios: no disponible"
+            if spanish
+            else "- Feedback timeline: not available"
+        )
     )
     attributed_transcript_line = (
-        f"- Attributed transcript: `{attributed_transcript_path.relative_to(case_dir)}`"
+        f"- {'Transcripción atribuida' if spanish else 'Attributed transcript'}: `{attributed_transcript_path.relative_to(case_dir)}`"
         if attributed_transcript_path is not None
-        else "- Attributed transcript: not automatically available"
+        else (
+            "- Transcripción atribuida: no disponible automáticamente"
+            if spanish
+            else "- Attributed transcript: not automatically available"
+        )
     )
     attribution_report_line = (
-        f"- Speaker attribution report: `{speaker_attribution_report_path.relative_to(case_dir)}`"
+        f"- {'Informe de atribución de hablantes' if spanish else 'Speaker attribution report'}: `{speaker_attribution_report_path.relative_to(case_dir)}`"
         if speaker_attribution_report_path is not None
-        else "- Speaker attribution report: not available"
+        else (
+            "- Informe de atribución de hablantes: no disponible"
+            if spanish
+            else "- Speaker attribution report: not available"
+        )
     )
     attribution_task_line = (
-        f"- Speaker attribution task: `{speaker_attribution_task_path.relative_to(case_dir)}`"
+        f"- {'Tarea de atribución de hablantes' if spanish else 'Speaker attribution task'}: `{speaker_attribution_task_path.relative_to(case_dir)}`"
         if speaker_attribution_task_path is not None
-        else "- Speaker attribution task: not required"
+        else (
+            "- Tarea de atribución de hablantes: no necesaria"
+            if spanish
+            else "- Speaker attribution task: not required"
+        )
     )
     deck_revision_intake_line = (
-        f"- Deck revision intake: `{deck_revision_intake_path.relative_to(case_dir)}`"
+        f"- {'Intake de revisión del deck' if spanish else 'Deck revision intake'}: `{deck_revision_intake_path.relative_to(case_dir)}`"
         if deck_revision_intake_path is not None
-        else "- Deck revision intake: not prepared"
+        else (
+            "- Intake de revisión del deck: no preparado"
+            if spanish
+            else "- Deck revision intake: not prepared"
+        )
     )
     deck_revision_gate_line = (
-        f"- Deck revision gate: `{deck_revision_gate_path.relative_to(case_dir)}`"
+        f"- {'Control de revisión del deck' if spanish else 'Deck revision gate'}: `{deck_revision_gate_path.relative_to(case_dir)}`"
         if deck_revision_gate_path is not None
-        else "- Deck revision gate: not prepared"
+        else (
+            "- Control de revisión del deck: no preparado"
+            if spanish
+            else "- Deck revision gate: not prepared"
+        )
     )
+    if spanish:
+        return "\n".join(
+            [
+                "# Paquete de revisión de la conversación para Codex (archivo local)",
+                "",
+                "Utiliza este archivo almacenado localmente con Codex después de importar el paquete de voz.",
+                "Su contenido puede entrar en el contexto del modelo mediante el plan de ChatGPT del usuario.",
+                "No envíes este paquete de vuelta al servidor de voz alojado. El servidor se ocupó únicamente del procesamiento del audio alojado.",
+                "",
+                "## Tarea de revisión",
+                "",
+                "Revisa la conversación completa como un segundo revisor consultivo.",
+                "Céntrate en lo que dijo realmente el consultor, lo que omitió el modelo de voz en directo y lo que debe convertirse en material local de Clara.",
+                "",
+                "Devuelve una revisión concisa con estas secciones:",
+                "",
+                "1. Lectura de la conversación: cuál parece ser la opinión real del consultor.",
+                "2. Señales sólidas: afirmaciones o documentos concretos que respaldan esa lectura.",
+                "3. Supuestos débiles o contradicciones: incluida cualquier respuesta cuyo hilo no siguió el modelo de voz.",
+                "4. Preguntas pendientes: las próximas preguntas prácticas que debe responder el consultor.",
+                "5. Elementos propuestos para Clara: solo JSON, manteniendo los elementos como `pending` y vinculados al material de transcripción indicado más abajo.",
+                "",
+                "Reglas:",
+                "",
+                "- Atribuye primero los hablantes localmente a partir del texto de la transcripción y los metadatos de la fuente cuando el paquete no proporcione nombres fiables; no utilices un modelo de diarización de audio o voz para atribuir hablantes en Clara.",
+                "- Conserva la transcripción sin atribuir, crea o actualiza una versión de trabajo con hablantes, revisa posibles turnos fusionados o etiquetas incorrectas y corrige únicamente los límites respaldados con claridad por el texto.",
+                "- Comprueba la calidad de la transcripción y corrige solo errores evidentes respaldados por el contexto o por un glosario fiable.",
+                "- No marques ningún elemento como listo para el paquete de decisión.",
+                "- No inventes hechos que no aparezcan en el resumen del caso o en la transcripción.",
+                "- Separa el juicio consultivo de la inferencia de Codex.",
+                "- Cuando exista vídeo de pantalla o una línea temporal del vídeo, utilízalos como procedencia de las referencias visuales solo después de comprobar el contenido visible; no infieras la diapositiva de destino únicamente a partir de la transcripción.",
+                "- Cuando exista una línea temporal de comentarios, consulta `visual_evidence_status`, `use_as_visual_evidence`, `alignment_confidence_label` y `frame_extraction_status` en cada fila antes de utilizarla.",
+                "- Trata las filas de la línea temporal como evidencia visual únicamente cuando `use_as_visual_evidence` sea verdadero y exista una ruta al fotograma extraído. Trata `timing_only`, `weak_alignment`, las rutas ausentes o los fallos de extracción como indicios de navegación para inspeccionar el vídeo o el deck originales, no como evidencia.",
+                "- Si el modelo de voz en directo formuló preguntas genéricas o poco útiles, indícalo claramente y recupera el contenido útil de las respuestas del consultor.",
+                f"- Vincula los elementos propuestos al id de material `{material_id}`.",
+                "",
+                "## Sesión local",
+                "",
+                f"- Carpeta de la sesión: `{relative_session}`",
+                f"- Id del material de transcripción: `{material_id}`",
+                f"- Transcripción original: `{raw_transcript_path.relative_to(case_dir)}`",
+                attributed_transcript_line,
+                attribution_report_line,
+                attribution_task_line,
+                audio_line,
+                video_line,
+                timeline_line,
+                feedback_timeline_line,
+                deck_revision_intake_line,
+                deck_revision_gate_line,
+                f"- Notas depuradas: `{cleaned_notes_path.relative_to(case_dir)}`",
+                f"- Revisión de Clara: `{clara_review_path.relative_to(case_dir)}`",
+                f"- Candidatos importados: `{judgement_candidates_path.relative_to(case_dir)}`",
+                "",
+                "## Resumen actual del caso",
+                "",
+                brief_text or "No hay ningún resumen del caso disponible.",
+                "",
+                "## Transcripción de voz importada",
+                "",
+                raw_transcript or "No hay ninguna transcripción disponible.",
+                "",
+                "## Notas iniciales extraídas",
+                "",
+                cleaned_notes or "No hay notas depuradas disponibles.",
+                "",
+                "## Candidatos iniciales importados",
+                "",
+                "```json",
+                judgement_candidates or '{"entries": []}',
+                "```",
+                "",
+                "## Registro actual de juicios",
+                "",
+                "```json",
+                judgement_log or '{"entries": []}',
+                "```",
+                "",
+                "## Preguntas abiertas actuales",
+                "",
+                "```json",
+                open_questions or '{"questions": []}',
+                "```",
+                "",
+            ]
+        )
     return "\n".join(
         [
             "# Codex Discussion Review Pack (local file)",
@@ -864,6 +1159,8 @@ def import_hosted_voice_bundle(
     bundle = read_hosted_voice_bundle_payload(bundle_path)
     if bundle.get("source") != "case_notes_hosted_voice":
         raise CaseWorkspaceError("hosted voice bundle has unsupported source")
+    manifest = json.loads((case_dir / "case_manifest.json").read_text(encoding="utf-8"))
+    language = _artifact_language(bundle, manifest)
 
     timestamp = str(bundle.get("captured_at", "")).strip() or _now_iso()
     session_dir = case_dir / "voice_sessions" / _compact_timestamp(timestamp)
@@ -874,7 +1171,11 @@ def import_hosted_voice_bundle(
     if not cleaned_notes:
         cleaned_notes = str(bundle.get("extraction_text", "")).strip()
     if not cleaned_notes:
-        cleaned_notes = "No cleaned notes extracted."
+        cleaned_notes = (
+            "No se extrajeron notas depuradas."
+            if language == "es"
+            else "No cleaned notes extracted."
+        )
 
     raw_transcript_path = session_dir / "raw_transcript.md"
     cleaned_notes_path = session_dir / "cleaned_notes.md"
@@ -894,10 +1195,13 @@ def import_hosted_voice_bundle(
     video_timeline_path = (
         session_dir / "video_timeline.json" if video_path is not None else None
     )
-    raw_transcript_path.write_text(_transcript_markdown(bundle), encoding="utf-8")
+    raw_transcript_path.write_text(
+        _transcript_markdown(bundle, language=language),
+        encoding="utf-8",
+    )
     cleaned_notes_path.write_text(cleaned_notes + "\n", encoding="utf-8")
     clara_review_path.write_text(
-        _clara_review_markdown(bundle, extraction),
+        _clara_review_markdown(bundle, extraction, language=language),
         encoding="utf-8",
     )
     feedback_timeline_path = _build_import_feedback_timeline(
@@ -912,8 +1216,19 @@ def import_hosted_voice_bundle(
         case_dir,
         raw_transcript_path,
         material_type="transcript",
-        title=str(_source_metadata(bundle).get("title", "")).strip() or title,
-        summary="Hosted voice transcript imported from local bundle.",
+        title=(
+            str(_source_metadata(bundle).get("title", "")).strip()
+            or (
+                "Sesión de voz alojada"
+                if language == "es" and title == "Hosted voice session"
+                else title
+            )
+        ),
+        summary=(
+            "Transcripción de voz alojada importada desde un paquete local."
+            if language == "es"
+            else "Hosted voice transcript imported from local bundle."
+        ),
     )
     source_metadata = _source_metadata(bundle)
     if audio_path is not None:
@@ -935,6 +1250,7 @@ def import_hosted_voice_bundle(
         raw_transcript_path,
         source_metadata=source_metadata,
         call_metadata=_call_metadata(bundle),
+        output_language=language,
     )
     source_metadata["speaker_attribution_report"] = str(
         attribution_result.report_path.relative_to(case_dir)
@@ -1019,6 +1335,7 @@ def import_hosted_voice_bundle(
             cleaned_notes_path=cleaned_notes_path,
             clara_review_path=clara_review_path,
             judgement_candidates_path=judgement_candidates_path,
+            language=language,
         ),
         encoding="utf-8",
     )

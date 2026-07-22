@@ -22,6 +22,23 @@ MAX_ARTIFACT_ITEMS = 300
 MAX_FOLLOWUP_ITEMS = 50
 
 
+_SPANISH_ALIASES = {"es", "spa", "spanish", "espanol", "español"}
+
+
+def _language_code(value: Any) -> str:
+    """Normalize Spanish aliases while preserving every other recipe language."""
+
+    language = str(value or "en").strip() or "en"
+    normalized = language.lower().replace("_", "-")
+    if normalized.split("-", 1)[0] in _SPANISH_ALIASES:
+        return "es"
+    return language
+
+
+def _is_spanish(language: str) -> bool:
+    return language == "es"
+
+
 @dataclass(frozen=True)
 class RunIntakeResult:
     """Run intake artifact written before mix-contribution rendering."""
@@ -181,7 +198,16 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    if _is_spanish(language):
+        return [
+            {"field": "item_type", "label": "Tipo"},
+            {"field": "title", "label": "Elemento"},
+            {"field": "recommended_action", "label": "Acción sugerida"},
+            {"field": "source_path", "label": "Fuente"},
+            {"field": "output_path", "label": "Salida"},
+            {"field": "status", "label": "Estado"},
+        ]
     return [
         {"field": "item_type", "label": "Type"},
         {"field": "title", "label": "Element"},
@@ -196,6 +222,7 @@ def _driver_items(
     summary_rows: Sequence[dict[str, Any]],
     *,
     metric: str,
+    language: str,
 ) -> list[dict[str, Any]]:
     rows = sorted(
         summary_rows,
@@ -212,7 +239,12 @@ def _driver_items(
             ),
             None,
         )
-        title = str(row.get(dimension_key) or f"Contribution row {index}")
+        fallback = (
+            f"Fila de contribución {index}"
+            if _is_spanish(language)
+            else f"Contribution row {index}"
+        )
+        title = str(row.get(dimension_key) or fallback)
         share = row.get("share_of_total")
         items.append(
             _base_item(
@@ -241,7 +273,11 @@ def _driver_items(
             _base_item(
                 "contribution-drivers-truncated",
                 "review_artifact",
-                "Contribution rows truncated in widget",
+                (
+                    "Filas de contribución truncadas en el widget"
+                    if _is_spanish(language)
+                    else "Contribution rows truncated in widget"
+                ),
                 output_path="mix_contribution_summary.csv",
                 allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
@@ -266,17 +302,18 @@ def _artifact_item_type(record: dict[str, Any]) -> str:
     return "review_artifact"
 
 
-def _artifact_title(record: dict[str, Any]) -> str:
+def _artifact_title(record: dict[str, Any], language: str) -> str:
     chart_type = record.get("chart_type")
     artifact_id = record.get("artifact_id")
-    return str(chart_type or artifact_id or record.get("path") or "Artifact")
+    fallback = "Artefacto" if _is_spanish(language) else "Artifact"
+    return str(chart_type or artifact_id or record.get("path") or fallback)
 
 
 def _artifact_output_path(record: dict[str, Any]) -> str:
     return str(record.get("pack_path") or record.get("path") or "")
 
 
-def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+def _artifact_items(manifest: dict[str, Any], language: str) -> list[dict[str, Any]]:
     records = [
         record for record in manifest.get("artifacts", []) if isinstance(record, dict)
     ][:MAX_ARTIFACT_ITEMS]
@@ -288,7 +325,7 @@ def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
             _base_item(
                 f"artifact-{index}",
                 item_type,
-                _artifact_title(record),
+                _artifact_title(record, language),
                 source_path=str(record.get("source_path") or ""),
                 output_path=_artifact_output_path(record),
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
@@ -299,7 +336,7 @@ def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     return items
 
 
-def _followup_items(followups: dict[str, Any]) -> list[dict[str, Any]]:
+def _followup_items(followups: dict[str, Any], language: str) -> list[dict[str, Any]]:
     requests = [
         item for item in followups.get("requests", []) if isinstance(item, dict)
     ][:MAX_FOLLOWUP_ITEMS]
@@ -308,7 +345,13 @@ def _followup_items(followups: dict[str, Any]) -> list[dict[str, Any]]:
             f"followup-{index}",
             "followup_request",
             str(
-                request.get("request_id") or request.get("type") or f"Follow-up {index}"
+                request.get("request_id")
+                or request.get("type")
+                or (
+                    f"Seguimiento {index}"
+                    if _is_spanish(language)
+                    else f"Follow-up {index}"
+                )
             ),
             output_path="",
             allowed_actions=("accept", "reject", "edit", "mark_unclear", "skip"),
@@ -364,13 +407,14 @@ def write_run_intake(
 
     run_id = _run_id(input_path)
     options = recipe.get("options") or {}
+    language = _language_code(recipe.get("language"))
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": recipe.get("language") or "en",
+        "language": language,
         "input_paths": [input_path.as_posix()],
         "output_dir": output_dir.as_posix(),
         "inferred_task": "mix_contribution_chart_report_payload",
@@ -388,7 +432,11 @@ def write_run_intake(
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": (
+                "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
+                if _is_spanish(language)
+                else "Codex should run scripts/check_dependencies.py before helper scripts."
+            ),
         },
         "status": "ready_for_mix_contribution_run",
     }
@@ -412,6 +460,7 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write chart/report review payload, pending decisions, and artifacts."""
 
+    language = _language_code(recipe.get("language"))
     outputs = _output_records(output_dir, generated_paths)
     mix_context = _load_json(output_dir / "mix_contribution_context.json")
     metric = str(
@@ -420,13 +469,17 @@ def write_review_session_artifacts(
     )
     contribution = mix_context.get("contribution") or {}
     items: list[dict[str, Any]] = []
-    items.extend(_driver_items(summary_rows, metric=metric))
-    items.extend(_artifact_items({"artifacts": outputs}))
+    items.extend(_driver_items(summary_rows, metric=metric, language=language))
+    items.extend(_artifact_items({"artifacts": outputs}, language))
     items.append(
         _base_item(
             "mix-contribution-context",
             "context_artifact",
-            "Mix contribution context",
+            (
+                "Contexto de contribución al mix"
+                if _is_spanish(language)
+                else "Mix contribution context"
+            ),
             output_path="mix_contribution_context.json",
             allowed_actions=("accept", "edit", "mark_unclear", "skip"),
             recommended_action="accept" if mix_context else "mark_unclear",
@@ -452,11 +505,12 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
+        "language": language,
         "source_paths": [input_path.as_posix()],
         "review_type": "mix_contribution_chart_report_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "recipe": _as_output_ref(recipe_path, output_dir),
@@ -532,15 +586,30 @@ def write_review_session_artifacts(
             "run_id": run_id,
             "completed_at": _utc_now(),
             "outputs": _output_records(output_dir, generated_paths),
-            "caveats": [
-                "Chart payloads are bounded for review; use CSV tables and context files as the full source set.",
-                "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
-            ],
-            "next_actions": [
-                "Render review_payload.json with the MCP widget when available.",
-                "Use mix_contribution_context.json before interpreting chart pixels.",
-                "Write codex_business_analysis.md or update the client report from reviewed source artifacts and caveats.",
-            ],
+            "caveats": (
+                [
+                    "Los datos de los gráficos están acotados para la revisión; utilice las tablas CSV y los archivos de contexto como conjunto completo de fuentes.",
+                    "ui_decisions.json queda pendiente hasta que Codex, la interfaz MCP o la revisión alternativa registren las decisiones.",
+                ]
+                if _is_spanish(language)
+                else [
+                    "Chart payloads are bounded for review; use CSV tables and context files as the full source set.",
+                    "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
+                ]
+            ),
+            "next_actions": (
+                [
+                    "Renderice review_payload.json con el widget MCP cuando esté disponible.",
+                    "Consulte mix_contribution_context.json antes de interpretar los píxeles de los gráficos.",
+                    "Redacte codex_business_analysis.md o actualice el informe del cliente a partir de las fuentes revisadas y las advertencias.",
+                ]
+                if _is_spanish(language)
+                else [
+                    "Render review_payload.json with the MCP widget when available.",
+                    "Use mix_contribution_context.json before interpreting chart pixels.",
+                    "Write codex_business_analysis.md or update the client report from reviewed source artifacts and caveats.",
+                ]
+            ),
             "status": "written_pending_review",
         },
     )

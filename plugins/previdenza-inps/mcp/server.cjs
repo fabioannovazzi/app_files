@@ -742,6 +742,7 @@ function reviewSchema() {
       plugin: { type: "string", const: "previdenza-inps" },
       workflow: { type: "string" },
       run_id: { type: "string" },
+      language: { type: "string" },
       review_type: { type: "string" },
       items: { type: "array", items: { type: "object" }, maxItems: MAX_ITEMS },
       item_count: { type: "number" },
@@ -940,6 +941,7 @@ function publicUiDecisions(value, review) {
     plugin: "previdenza-inps",
     workflow: "previdenza-inps",
     run_id: review.run_id,
+    ...(review.language ? { language: review.language } : {}),
     decisions,
     decision_count: decisions.length,
     status: SAFE_UI_STATUSES.has(value.status) ? value.status : "pending",
@@ -964,6 +966,7 @@ function publicFinalArtifacts(value, review) {
     plugin: "previdenza-inps",
     workflow: "previdenza-inps",
     run_id: review.run_id,
+    ...(review.language ? { language: review.language } : {}),
     status: SAFE_FINAL_STATUSES.has(value.status) ? value.status : null,
     review_status:
       SAFE_FINAL_STATUSES.has(value.review_status) ? value.review_status : null,
@@ -989,12 +992,16 @@ function validateReview(input) {
   }
   const seenIds = new Set();
   const safeItems = review.items.map((item, index) => validateItem(item, index, seenIds));
+  const language = ["it", "en", "fr", "de", "es"].includes(review.language)
+    ? review.language
+    : null;
   const persistence = resolvePersistence(input, review);
   const safeReview = {
     schema_version: "1.0",
     plugin: "previdenza-inps",
     workflow: "previdenza-inps",
     run_id: runId,
+    ...(language ? { language } : {}),
     review_type: review.review_type,
     items: safeItems,
     item_count: safeItems.length,
@@ -1110,6 +1117,7 @@ function buildDecisions(input) {
     plugin: "previdenza-inps",
     workflow: payload.review_payload.workflow,
     run_id: payload.review_payload.run_id,
+    ...(payload.review_payload.language ? { language: payload.review_payload.language } : {}),
     decided_at: decisions.length ? decidedAt : null,
     decision_source: input.decision_source
       ? safeIdentifier(input.decision_source, "decision_source")
@@ -1145,6 +1153,7 @@ function writeJson(outputDir, fileName, value) {
 function saveDecisions(input) {
   const { payload, uiDecisions, outputDir } = buildDecisions(input);
   const outputPath = writeJson(outputDir, "ui_decisions.json", uiDecisions);
+  const spanish = payload.review_payload.language === "es";
   return {
     ok: true,
     validation_type: "previdenza_inps_decisions",
@@ -1155,8 +1164,12 @@ function saveDecisions(input) {
     persisted: Boolean(outputPath),
     ui_decisions_path: outputPath,
     message: outputPath
-      ? `Saved ${uiDecisions.decision_count} previdenza INPS decisions.`
-      : "Validated decisions. Nothing was written because run_intake.output_dir was not supplied.",
+      ? spanish
+        ? `Se han guardado ${uiDecisions.decision_count} decisiones de Previdenza INPS.`
+        : `Saved ${uiDecisions.decision_count} previdenza INPS decisions.`
+      : spanish
+        ? "Las decisiones son válidas. No se ha escrito nada porque no se ha proporcionado run_intake.output_dir."
+        : "Validated decisions. Nothing was written because run_intake.output_dir was not supplied.",
     ui_decisions: publicUiDecisions(uiDecisions, payload.review_payload),
   };
 }
@@ -1187,6 +1200,7 @@ function decisionBlocker(effect) {
 
 function applyDecisions(input) {
   const { payload, uiDecisions, outputDir } = buildDecisions(input);
+  const spanish = payload.review_payload.language === "es";
   const appliedAt = new Date().toISOString();
   const blockingActions = new Set(["reject", "skip", "edit", "mark_unclear", "request_more_documents"]);
   const effects = uiDecisions.decisions.map((decision) => {
@@ -1267,6 +1281,7 @@ function applyDecisions(input) {
         plugin: "previdenza-inps",
         workflow: payload.review_payload.workflow,
         run_id: payload.review_payload.run_id,
+        ...(payload.review_payload.language ? { language: payload.review_payload.language } : {}),
         recorded_at: appliedAt,
         status: "revision_required",
         source_artifacts_modified: false,
@@ -1279,6 +1294,7 @@ function applyDecisions(input) {
     plugin: "previdenza-inps",
     workflow: payload.review_payload.workflow,
     run_id: payload.review_payload.run_id,
+    ...(payload.review_payload.language ? { language: payload.review_payload.language } : {}),
     applied_at: appliedAt,
     decision_source: uiDecisions.decision_source,
     review_payload: {
@@ -1313,19 +1329,39 @@ function applyDecisions(input) {
   }
   const nextActions = Array.isArray(current.next_actions) ? [...current.next_actions] : [];
   if (revisionRequirements) {
-    nextActions.push("Regenerate and re-review affected artifacts; edit decisions did not modify source artifacts.");
+    nextActions.push(
+      spanish
+        ? "Vuelva a generar y revisar los artefactos afectados; las correcciones no han modificado los artefactos de origen."
+        : "Regenerate and re-review affected artifacts; edit decisions did not modify source artifacts.",
+    );
   }
-  if (blockers.length) nextActions.push("Resolve all blocked previdenza INPS review decisions before professional handoff.");
-  else if (applicationStatus === "partial_review_applied") nextActions.push("Complete the remaining previdenza INPS review decisions.");
+  if (blockers.length) {
+    nextActions.push(
+      spanish
+        ? "Resuelva todas las decisiones bloqueadas de Previdenza INPS antes de la entrega profesional."
+        : "Resolve all blocked previdenza INPS review decisions before professional handoff.",
+    );
+  } else if (applicationStatus === "partial_review_applied") {
+    nextActions.push(
+      spanish
+        ? "Complete las decisiones de revisión pendientes de Previdenza INPS."
+        : "Complete the remaining previdenza INPS review decisions.",
+    );
+  }
   const caveats = Array.isArray(current.caveats) ? [...current.caveats] : [];
   if (revisionRequirements) {
-    caveats.push("Edit decisions are revision requirements only; no memo or source artifact was modified.");
+    caveats.push(
+      spanish
+        ? "Las correcciones son solo requisitos de revisión; no se ha modificado ningún memorando ni artefacto de origen."
+        : "Edit decisions are revision requirements only; no memo or source artifact was modified.",
+    );
   }
   const finalArtifacts = {
     schema_version: current.schema_version || payload.review_payload.schema_version,
     plugin: current.plugin || "previdenza-inps",
     workflow: current.workflow || payload.review_payload.workflow,
     run_id: current.run_id || payload.review_payload.run_id,
+    language: payload.review_payload.language || current.language || "it",
     review_payload_sha256: current.review_payload_sha256 || null,
     acquisition_binding: isObject(current.acquisition_binding) ? current.acquisition_binding : null,
     package_status: packageStatus,
@@ -1388,8 +1424,12 @@ function applyDecisions(input) {
     final_artifacts_path: finalArtifactsPath,
     run_intake_path: runIntakePath,
     message: appliedPath
-      ? `Applied ${uiDecisions.decision_count} previdenza INPS decisions.`
-      : "Validated application. Nothing was written because run_intake.output_dir was not supplied.",
+      ? spanish
+        ? `Se han aplicado ${uiDecisions.decision_count} decisiones de Previdenza INPS.`
+        : `Applied ${uiDecisions.decision_count} previdenza INPS decisions.`
+      : spanish
+        ? "La aplicación es válida. No se ha escrito nada porque no se ha proporcionado run_intake.output_dir."
+        : "Validated application. Nothing was written because run_intake.output_dir was not supplied.",
     applied_decisions: {
       schema_version: appliedDecisions.schema_version,
       plugin: "previdenza-inps",
@@ -1424,7 +1464,9 @@ function callTool(name, args) {
       run_id: payload.review_payload.run_id,
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
-      message: `Previdenza INPS review payload is valid. It is safe to call ${TOOL_NAMES.render}.`,
+      message: payload.review_payload.language === "es"
+        ? `Los datos de revisión de Previdenza INPS son válidos. Puede llamar a ${TOOL_NAMES.render}.`
+        : `Previdenza INPS review payload is valid. It is safe to call ${TOOL_NAMES.render}.`,
       review_payload: payload.review_payload,
     };
   }

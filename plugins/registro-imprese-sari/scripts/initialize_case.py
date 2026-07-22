@@ -37,6 +37,7 @@ def initialize_case(
     language = str(language or "").strip().lower()
     if not 2 <= len(language) <= 12 or not language.replace("-", "").isalpha():
         raise ValueError("language must be a short language tag")
+    spanish = language == "es" or language.startswith("es-")
     safe_output = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
     intake_path = safe_output / "case_intake_draft.json"
     plan_path = safe_output / "practice_plan_draft.json"
@@ -124,14 +125,29 @@ def initialize_case(
             "input_paths": [],
             "output_dir": safe_output.as_posix(),
             "inferred_task": (
-                "Prepare a source-backed Registro Imprese/DIRE position-opening "
-                "draft for professional review."
+                (
+                    "Preparar un borrador respaldado por fuentes para la apertura "
+                    "de una posición en Registro Imprese/DIRE y su revisión profesional."
+                )
+                if spanish
+                else (
+                    "Prepare a source-backed Registro Imprese/DIRE position-opening "
+                    "draft for professional review."
+                )
             ),
             "assumptions": [
-                "Initialization does not choose a legal classification, recipient position, or DIRE field."
+                (
+                    "La inicialización no elige ninguna clasificación jurídica, posición destinataria ni campo DIRE."
+                    if spanish
+                    else "Initialization does not choose a legal classification, recipient position, or DIRE field."
+                )
             ],
             "unresolved_questions": [
-                "Confirm the competent chamber, subject, activity, requested operation, and effective date."
+                (
+                    "Confirme la Cámara competente, el sujeto, la actividad, la operación solicitada y la fecha de efecto."
+                    if spanish
+                    else "Confirm the competent chamber, subject, activity, requested operation, and effective date."
+                )
             ],
             "dependency_check": {
                 "status": "not_recorded",

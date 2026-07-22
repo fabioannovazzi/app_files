@@ -526,6 +526,117 @@ def test_variance_plugin_can_disable_waterfall_chart(tmp_path: Path) -> None:
     assert result.audit["legacy_runtime"]["waterfall_chart"]["status"] == "disabled"
 
 
+def test_variance_spanish_run_writes_localized_review_and_strict_contract(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    input_path = tmp_path / "ventas.csv"
+    output_dir = tmp_path / "variaciones"
+    _write_sales_fixture(input_path)
+
+    core.run_variance_analysis(
+        input_path,
+        output_dir,
+        language="es-ES",
+        artifact_mode="data_only",
+        waterfall_chart=False,
+        waterfall_small_multiples=False,
+        root_cause_bridge=False,
+        root_cause_bridge_alternative_sweep=False,
+        total_by_dimension_bridge=False,
+        exploded_variance_bridge=False,
+    )
+
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    summary = (output_dir / "variance_summary.md").read_text(encoding="utf-8")
+    widget = (
+        ROOT
+        / "plugins"
+        / "variance-analysis"
+        / "assets"
+        / "variance-analysis-review-widget.html"
+    ).read_text(encoding="utf-8")
+
+    assert run_intake["language"] == "es"
+    assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "es"
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Elemento",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    assert "Contexto estándar de variaciones" in {
+        item["title"] for item in review_payload["items"]
+    }
+    assert "Entrega para revisión" in handoff
+    assert "Revisión en Codex" in handoff
+    assert "Review Handoff" in handoff
+    assert "# Datos fuente del análisis de variaciones" in summary
+    assert "## Principales factores por valor absoluto" in summary
+    assert "Variance Analysis Source Data" not in summary
+    assert "Largest Absolute Drivers" not in summary
+    assert all(
+        "Los datos" in text or "permanece" in text
+        for text in final_artifacts["caveats"]
+    )
+    assert "Revisión del análisis de variaciones" in widget
+    assert "function language()" in widget
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
+def test_variance_mcp_localizes_spanish_success_and_error_messages() -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "variance-analysis",
+        "workflow": "variance-analysis",
+        "run_id": "variance-es",
+        "language": "es",
+        "item_count": 0,
+        "items": [],
+    }
+    invalid_payload = {**review_payload, "item_count": 1}
+    responses = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_variance_analysis_review",
+                    "arguments": {"review_payload": review_payload},
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_variance_analysis_review",
+                    "arguments": {"review_payload": invalid_payload},
+                },
+            },
+        ]
+    )
+    by_id = {response["id"]: response["result"] for response in responses}
+    success = json.loads(by_id[1]["content"][0]["text"])
+    failure = json.loads(by_id[2]["content"][0]["text"])
+
+    assert "son válidos" in success["message"]
+    assert "debe coincidir" in failure["error"]
+
+
 def test_variance_plugin_applies_like_for_like_recipe_cohort(tmp_path: Path) -> None:
     core = load_core()
     input_path = tmp_path / "sales.csv"

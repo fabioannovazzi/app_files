@@ -235,13 +235,13 @@
         <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
       <div class="nav-right">
-        <nav class="nav-links" aria-label="Page">
+        <nav class="nav-links" aria-label="Sezioni della pagina" data-accessibility-label="sections">
           <a href="#workflow" data-i18n="nav.workflow">Percorso</a>
           <a href="#result" data-i18n="nav.result">Risultato</a>
           <a href="#prompt" data-i18n="nav.prompt">Prompt</a>
           <a href="#install" data-i18n="nav.install">Apri Vera</a>
         </nav>
-        <div class="lang-switch" aria-label="Language">
+        <div class="lang-switch" aria-label="Lingua" data-accessibility-label="language">
           <button type="button" data-lang="en" aria-pressed="false">En</button>
           <button type="button" data-lang="it" aria-pressed="true">It</button>
           <button type="button" data-lang="fr" aria-pressed="false">Fr</button>
@@ -253,7 +253,7 @@
   </header>
 
   <main>
-    <nav class="breadcrumb" aria-label="Breadcrumb">
+    <nav class="breadcrumb" aria-label="Percorso pagina" data-accessibility-label="breadcrumb">
       <a id="vera-link" href="../vera/index.html?lang=it">Vera</a>
       <span aria-hidden="true">/</span>
       <span aria-current="page" data-i18n="breadcrumb.current">Pacchetto Italia · Previdenza INPS</span>
@@ -499,11 +499,22 @@
       return translations[requested] ? requested : "it";
     }
 
+    const accessibilityLabels = {
+      it: { sections: "Sezioni della pagina", language: "Lingua", breadcrumb: "Percorso pagina" },
+      en: { sections: "Page sections", language: "Language", breadcrumb: "Page path" },
+      fr: { sections: "Sections de la page", language: "Langue", breadcrumb: "Parcours de la page" },
+      de: { sections: "Seitenabschnitte", language: "Sprache", breadcrumb: "Seitenpfad" },
+      es: { sections: "Secciones de la página", language: "Idioma", breadcrumb: "Ruta de la página" }
+    };
+
     function applyLanguage(lang) {
       const safeLang = translations[lang] ? lang : "it";
       const data = translations[safeLang];
       document.documentElement.lang = safeLang;
       document.title = data.meta.title;
+      document.querySelectorAll("[data-accessibility-label]").forEach((node) => {
+        node.setAttribute("aria-label", accessibilityLabels[safeLang][node.dataset.accessibilityLabel]);
+      });
       document.getElementById("meta-description").content = data.meta.description;
       document.getElementById("og-title").content = data.meta.title;
       document.getElementById("og-description").content = data.meta.og;

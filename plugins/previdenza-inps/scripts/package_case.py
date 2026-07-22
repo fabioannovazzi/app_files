@@ -71,6 +71,8 @@ CALCULATION_GENERATED_ARTIFACTS = (
     "calculation_results.csv",
     "calculation_results.json",
 )
+SPANISH_DRAFT_HEADING = "BORRADOR PARA REVISIÓN PROFESIONAL"
+SPANISH_BLOCKED_HEADING = "EXPEDIENTE BLOQUEADO"
 
 
 def _utc_now() -> str:
@@ -98,6 +100,39 @@ def _session_safe_text(value: Any) -> Any:
     """Omit private or tokenized session URLs from generated artifacts."""
 
     return "[session_url_omitted]" if session_url_issue(value) else value
+
+
+def _package_language(
+    case_records: dict[str, Any], claims_payload: dict[str, Any]
+) -> str:
+    """Resolve the output language without changing canonical workflow values."""
+
+    for value in (case_records.get("language"), claims_payload.get("language")):
+        normalized = str(value or "").strip().lower().replace("_", "-")
+        primary = normalized.split("-", 1)[0]
+        aliases = {"eng": "en", "ita": "it", "fra": "fr", "deu": "de", "spa": "es"}
+        primary = aliases.get(primary, primary)
+        if primary in {"it", "en", "fr", "de", "es"}:
+            return primary
+    return "it"
+
+
+def _public_issues(
+    issues: list[dict[str, str]], *, language: str
+) -> list[dict[str, str]]:
+    """Keep canonical diagnostics while localizing the public manifest summary."""
+
+    if language != "es":
+        return issues
+    localized: list[dict[str, str]] = []
+    for issue in issues:
+        record = dict(issue)
+        record["message"] = (
+            "Este control de validación no se ha superado; consulte "
+            "validation_audit.json para el diagnóstico técnico."
+        )
+        localized.append(record)
+    return localized
 
 
 def _as_date(value: Any) -> bool:
@@ -867,7 +902,10 @@ def _calculation_rows(calculations: dict[str, Any] | None) -> list[dict[str, Any
 
 
 def _missing_evidence(
-    case_records: dict[str, Any], claims_payload: dict[str, Any]
+    case_records: dict[str, Any],
+    claims_payload: dict[str, Any],
+    *,
+    language: str,
 ) -> list[str]:
     items: list[str] = []
     for source in (
@@ -888,8 +926,13 @@ def _missing_evidence(
             if _nonempty(value):
                 text = str(value).strip()
                 items.append(
-                    "Request details omitted because they contain a private or tokenized "
-                    "session URL; consult the local case record."
+                    (
+                        "Se han omitido los detalles de la solicitud porque contienen "
+                        "una URL de sesión privada o con token; consulte el expediente local."
+                        if language == "es"
+                        else "Request details omitted because they contain a private or tokenized "
+                        "session URL; consult the local case record."
+                    )
                     if session_url_issue(text)
                     else text
                 )
@@ -897,8 +940,40 @@ def _missing_evidence(
 
 
 def _blocked_note_lines(
-    case_records: dict[str, Any], issues: list[dict[str, str]], missing: list[str]
+    case_records: dict[str, Any],
+    issues: list[dict[str, str]],
+    missing: list[str],
+    *,
+    language: str,
 ) -> list[str]:
+    if language == "es":
+        lines = [
+            f"# {SPANISH_BLOCKED_HEADING} — NO ES UN DICTAMEN PROFESIONAL",
+            "",
+            f"**Cuestión profesional:** {_session_safe_text(case_records.get('professional_question', ''))}",
+            "",
+            "El paquete final no se ha creado porque no se cumplen uno o varios controles de validación.",
+            "",
+            "## Bloqueos",
+            "",
+        ]
+        lines.extend(
+            (
+                f"- `{issue.get('code', 'validation_issue')}`"
+                + (f" (campo `{issue.get('field')}`)" if issue.get("field") else "")
+                + ": este control no se ha superado; consulte `validation_audit.json` para el diagnóstico técnico."
+            )
+            for issue in issues
+        )
+        lines.extend(["", "## Próximos elementos necesarios", ""])
+        if missing:
+            lines.extend(f"- {item}" for item in missing)
+        else:
+            lines.append(
+                "- Resuelva los bloqueos indicados en la auditoría y vuelva a ejecutar la validación."
+            )
+        return lines
+
     lines = [
         "# FASCICOLO BLOCCATO — NON È UN PARERE",
         "",
@@ -928,7 +1003,85 @@ def _memo_lines(
     claims: list[dict[str, Any]],
     calculations: list[dict[str, Any]],
     missing: list[str],
+    *,
+    language: str,
 ) -> list[str]:
+    if language == "es":
+        lines = [
+            f"# {SPANISH_DRAFT_HEADING}",
+            "",
+            "## Alcance",
+            "",
+            f"**Cuestión profesional:** {case_records.get('professional_question', '')}",
+            "",
+            "Este documento organiza evidencias, investigación y recálculos. No constituye un dictamen profesional. Puede incluir evidencias locales, exportaciones oficiales o, solo después de verificar por separado el permiso del servicio, una captura de solo lectura de una pestaña INPS ya autenticada; no gestiona credenciales, no activa delegaciones y no autoriza presentaciones ni trámites.",
+            "",
+            "## Hechos documentados",
+            "",
+        ]
+        for fact in _fact_rows(case_records):
+            lines.append(
+                f"- **{fact.get('fact_id', '')}** [{fact.get('review_status', '')}]: {fact.get('statement', '')}"
+            )
+        lines.extend(["", "## Cronología explícita", ""])
+        timeline = _timeline_rows(case_records)
+        if timeline:
+            for event in timeline:
+                lines.append(
+                    f"- **{event.get('date', '')}** — {event.get('description', '')} "
+                    f"(hechos: {', '.join(map(str, event.get('source_fact_ids', [])))})"
+                )
+        else:
+            lines.append("- No se ha registrado ningún evento cronológico explícito.")
+        lines.extend(["", "## Conclusiones sujetas a verificación de fuentes", ""])
+        for claim in claims:
+            lines.extend(
+                [
+                    f"### {claim['claim_id']} — {claim.get('verdict', '')}",
+                    "",
+                    str(claim.get("claim_text", "")),
+                    "",
+                    f"**Soporte:** {claim.get('source_support', '')}",
+                    "",
+                    f"**Revisión del razonamiento:** {claim.get('reasoning_review', '')}",
+                    "",
+                    f"**Incertidumbre/corrección:** {claim.get('proposed_fix') or claim.get('uncertainty') or 'No se ha indicado ninguna.'}",
+                    "",
+                    f"**Fuentes:** {', '.join(claim.get('source_refs', []))}",
+                    "",
+                    f"**Hechos de los que depende:** {', '.join(claim.get('evidence_dependencies', [])) or 'No se ha indicado ninguno.'}",
+                    "",
+                ]
+            )
+        lines.extend(["## Recálculos aprobados", ""])
+        if calculations:
+            for row in calculations:
+                lines.append(
+                    f"- **{row.get('recipe_id', '')}** [{row.get('status', '')}]: "
+                    f"{row.get('description', '')} — {row.get('result', 'no calculado')} {row.get('unit', '')}"
+                )
+        else:
+            lines.append("- No se ha incluido ningún recálculo aprobado.")
+        lines.extend(["", "## Evidencias o aclaraciones pendientes", ""])
+        if missing:
+            lines.extend(f"- {item}" for item in missing)
+        else:
+            lines.append(
+                "- No se ha registrado ninguna solicitud adicional; el profesional debe confirmar en todo caso que el expediente está completo."
+            )
+        lines.extend(
+            [
+                "",
+                "## Límites y responsabilidades",
+                "",
+                "- La selección del marco jurídico, de las fuentes y de las conclusiones se ha realizado con razonamiento guiado por el modelo y debe ser verificada por el profesional.",
+                "- Los scripts solo han comprobado la forma, la procedencia, las referencias y la aritmética aprobada de manera explícita.",
+                "- No se ha elegido automáticamente ninguna clasificación, tipo de cotización, plazo de prescripción o fecha límite.",
+                "- Estado del documento: **listo para revisión profesional**, sin firma y no apto para presentación.",
+            ]
+        )
+        return lines
+
     lines = [
         "# BOZZA PER REVISIONE PROFESSIONALE",
         "",
@@ -1055,6 +1208,8 @@ def _review_items(
     calculations: list[dict[str, Any]],
     missing: list[str],
     audit_status: str,
+    *,
+    language: str,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for fact_index, fact in enumerate(_fact_rows(case_records), start=1):
@@ -1069,7 +1224,9 @@ def _review_items(
             _item(
                 item_id=f"fact-{fact_id}",
                 item_type="fact",
-                title=f"Fact {fact_index}",
+                title=(
+                    f"Hecho {fact_index}" if language == "es" else f"Fact {fact_index}"
+                ),
                 recommended_action=(
                     "accept" if status == "confirmed" else "mark_unclear"
                 ),
@@ -1100,7 +1257,11 @@ def _review_items(
             _item(
                 item_id=f"finding-{claim['claim_id']}",
                 item_type="finding",
-                title=f"Finding {claim_index}",
+                title=(
+                    f"Conclusión {claim_index}"
+                    if language == "es"
+                    else f"Finding {claim_index}"
+                ),
                 recommended_action=action,
                 data={
                     "claim_id": claim["claim_id"],
@@ -1138,7 +1299,11 @@ def _review_items(
             _item(
                 item_id=f"calculation-{recipe_id}",
                 item_type="calculation",
-                title=f"Calculation {calculation_index}",
+                title=(
+                    f"Cálculo {calculation_index}"
+                    if language == "es"
+                    else f"Calculation {calculation_index}"
+                ),
                 recommended_action=(
                     "accept"
                     if audit_status == "passed"
@@ -1160,7 +1325,11 @@ def _review_items(
             _item(
                 item_id=f"missing-evidence-{index:03d}",
                 item_type="missing_evidence",
-                title=f"Missing evidence request {index}",
+                title=(
+                    f"Solicitud de evidencia pendiente {index}"
+                    if language == "es"
+                    else f"Missing evidence request {index}"
+                ),
                 recommended_action="request_more_documents",
                 data={"request_id": f"REQ-{index:03d}", "request_text": request},
             )
@@ -1169,7 +1338,11 @@ def _review_items(
         _item(
             item_id="audit-package",
             item_type="audit_check",
-            title="Package validation audit",
+            title=(
+                "Auditoría de validación del paquete"
+                if language == "es"
+                else "Package validation audit"
+            ),
             recommended_action="accept" if audit_status == "passed" else "reject",
             data={"status": audit_status},
             output_path="validation_audit.json",
@@ -1190,7 +1363,7 @@ def _review_items(
             _item(
                 item_id=f"artifact-{name.replace('.', '-')}",
                 item_type="artifact",
-                title=f"Artifact {name}",
+                title=(f"Artefacto {name}" if language == "es" else f"Artifact {name}"),
                 recommended_action="accept",
                 data={"path": name},
                 output_path=name,
@@ -1237,6 +1410,7 @@ def _run_intake(
     *,
     calculations_path: Path | None,
     package_status: str,
+    language: str,
 ) -> dict[str, Any]:
     payload = _load_bound_run_intake(output_dir, case_records)
     primary_outputs = (
@@ -1283,6 +1457,7 @@ def _run_intake(
         }
     )
     payload["execution_trace"] = existing_trace
+    payload["working_language"] = language
     return payload
 
 
@@ -1297,6 +1472,7 @@ def package_case(
 
     case_records = _load_object(case_records_path)
     claims_payload = _load_object(claims_review_path)
+    language = _package_language(case_records, claims_payload)
     calculations_payload = (
         _load_object(calculations_path) if calculations_path else None
     )
@@ -1360,32 +1536,51 @@ def package_case(
     normalized_claims = {
         "schema_version": "1.0",
         "plugin": "previdenza-inps",
-        "language": claims_payload.get("language"),
+        "language": language,
         "claims": claims,
         "claim_count": len(claims),
         "review_boundary": "private_professional_review",
     }
     write_json(output_dir / "claims_review_normalized.json", normalized_claims)
 
-    missing = _missing_evidence(case_records, claims_payload)
+    missing = _missing_evidence(case_records, claims_payload, language=language)
     if status == "passed":
-        memo_lines = _memo_lines(case_records, claims, calculations, missing)
+        memo_lines = _memo_lines(
+            case_records,
+            claims,
+            calculations,
+            missing,
+            language=language,
+        )
         memo_path = output_dir / "studio_memo.md"
         write_private_text(memo_path, "\n".join(memo_lines).rstrip() + "\n")
         _write_docx(output_dir / "studio_memo.docx", memo_lines)
     else:
-        blocked_lines = _blocked_note_lines(case_records, issues, missing)
+        blocked_lines = _blocked_note_lines(
+            case_records,
+            issues,
+            missing,
+            language=language,
+        )
         write_private_text(
             output_dir / "blocked_case_note.md",
             "\n".join(blocked_lines).rstrip() + "\n",
         )
     write_private_text(
         output_dir / "document_requests.md",
-        "# Document and clarification requests\n\n"
+        (
+            "# Solicitudes de documentos y aclaraciones\n\n"
+            if language == "es"
+            else "# Document and clarification requests\n\n"
+        )
         + (
             "\n".join(f"- {item}" for item in missing)
             if missing
-            else "- None recorded."
+            else (
+                "- No se ha registrado ninguna."
+                if language == "es"
+                else "- None recorded."
+            )
         )
         + "\n",
     )
@@ -1397,9 +1592,17 @@ def package_case(
         case_records,
         calculations_path=calculations_path,
         package_status=status,
+        language=language,
     )
     run_id = str(run_intake["run_id"])
-    items = _review_items(case_records, claims, calculations, missing, status)
+    items = _review_items(
+        case_records,
+        claims,
+        calculations,
+        missing,
+        status,
+        language=language,
+    )
     review_status = (
         "ready_for_professional_review" if status == "passed" else "validation_fail"
     )
@@ -1408,6 +1611,7 @@ def package_case(
         "plugin": "previdenza-inps",
         "workflow": "previdenza-inps",
         "run_id": run_id,
+        "language": language,
         "review_type": "professional_case_review",
         "items": items,
         "item_count": len(items),
@@ -1422,6 +1626,7 @@ def package_case(
             "plugin": "previdenza-inps",
             "workflow": "previdenza-inps",
             "run_id": run_id,
+            "language": language,
             "status": "pending",
             "decisions": [],
         },
@@ -1454,13 +1659,25 @@ def package_case(
                 "path": "studio_memo.md",
                 "kind": "md",
                 "status": "written",
-                "required_text": ["BOZZA PER REVISIONE PROFESSIONALE"],
+                "required_text": [
+                    (
+                        SPANISH_DRAFT_HEADING
+                        if language == "es"
+                        else "BOZZA PER REVISIONE PROFESSIONALE"
+                    )
+                ],
             },
             {
                 "path": "studio_memo.docx",
                 "kind": "docx",
                 "status": "written",
-                "required_text": ["BOZZA PER REVISIONE PROFESSIONALE"],
+                "required_text": [
+                    (
+                        SPANISH_DRAFT_HEADING
+                        if language == "es"
+                        else "BOZZA PER REVISIONE PROFESSIONALE"
+                    )
+                ],
             },
         ]
     else:
@@ -1470,7 +1687,11 @@ def package_case(
                 "path": "blocked_case_note.md",
                 "kind": "md",
                 "status": "written",
-                "required_text": ["FASCICOLO BLOCCATO", "NON È UN PARERE"],
+                "required_text": (
+                    [SPANISH_BLOCKED_HEADING, "NO ES UN DICTAMEN PROFESIONAL"]
+                    if language == "es"
+                    else ["FASCICOLO BLOCCATO", "NON È UN PARERE"]
+                ),
             },
         )
     if calculations_path is not None:
@@ -1497,6 +1718,7 @@ def package_case(
         "plugin": "previdenza-inps",
         "workflow": "previdenza-inps",
         "run_id": run_id,
+        "language": language,
         "status": review_status,
         "professional_review_required": True,
         "review_payload_sha256": review_payload_sha256,
@@ -1505,23 +1727,48 @@ def package_case(
         ),
         "outputs": outputs,
         "caveats": [
-            "The package is a draft and does not constitute a filed or signed professional opinion."
+            (
+                "El paquete es un borrador y no constituye un dictamen profesional presentado ni firmado."
+                if language == "es"
+                else "The package is a draft and does not constitute a filed or signed professional opinion."
+            )
         ],
-        "blockers": issues,
+        "blockers": _public_issues(issues, language=language),
         "next_actions": (
             [
-                "Validate and render review_payload.json, then save and apply every professional review decision."
+                (
+                    "Valide y muestre review_payload.json; después guarde y aplique todas las decisiones de revisión profesional."
+                    if language == "es"
+                    else "Validate and render review_payload.json, then save and apply every professional review decision."
+                )
             ]
             if status == "passed"
             else [
-                "Resolve every validation blocker, regenerate the affected artifacts, and rerun professional review."
+                (
+                    "Resuelva todos los bloqueos de validación, vuelva a generar los artefactos afectados y repita la revisión profesional."
+                    if language == "es"
+                    else "Resolve every validation blocker, regenerate the affected artifacts, and rerun professional review."
+                )
             ]
         ),
         "review_status": review_status,
     }
-    write_private_text(
-        output_dir / "review_handoff.md",
-        "# Previdenza INPS Review Handoff\n\n"
+    handoff = (
+        "# Entrega para revisión de Previdenza INPS\n\n"
+        "## Archivos\n\n"
+        "- Datos iniciales: `run_intake.json`\n"
+        "- Cola de revisión: `review_payload.json`\n"
+        "- Decisiones pendientes o guardadas: `ui_decisions.json`\n"
+        "- Decisiones aplicadas tras la revisión: `applied_decisions.json`\n"
+        "- Manifiesto final: `final_artifacts.json`\n\n"
+        "## Secuencia de revisión\n\n"
+        "1. Valide `review_payload.json` con `validate_previdenza_inps_review`.\n"
+        "2. Muéstrelo con `render_previdenza_inps_review`.\n"
+        "3. Guarde las decisiones del revisor con `save_previdenza_inps_decisions`.\n"
+        "4. Aplique las decisiones con `apply_previdenza_inps_decisions`.\n\n"
+        "El memorando final sigue siendo un borrador para revisión profesional.\n"
+        if language == "es"
+        else "# Previdenza INPS Review Handoff\n\n"
         "## Files\n\n"
         "- Intake: `run_intake.json`\n"
         "- Review queue: `review_payload.json`\n"
@@ -1533,8 +1780,9 @@ def package_case(
         "2. Render it with `render_previdenza_inps_review`.\n"
         "3. Save reviewer actions with `save_previdenza_inps_decisions`.\n"
         "4. Apply actions with `apply_previdenza_inps_decisions`.\n\n"
-        "The final memo remains a draft for professional review.\n",
+        "The final memo remains a draft for professional review.\n"
     )
+    write_private_text(output_dir / "review_handoff.md", handoff)
     write_json(output_dir / "final_artifacts.json", final_artifacts)
     write_json(output_dir / "run_intake.json", run_intake)
     return {

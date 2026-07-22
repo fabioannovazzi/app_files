@@ -782,7 +782,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.100"
+    assert manifest["version"] == "0.1.101"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -2098,6 +2098,41 @@ def test_clara_partner_brief_localizes_default_content_in_spanish(
     assert "Partner Brief" not in html
 
 
+def test_spanish_case_brief_localizes_wrapper_and_empty_states(
+    tmp_path: Path,
+) -> None:
+    _, case_dir = init_case(tmp_path, output_language="es")
+
+    brief = (case_dir / "case_brief.md").read_text(encoding="utf-8")
+
+    assert brief.startswith("# Resumen del caso - ClientCo")
+    assert "## Comprensión actual (lista para el paquete de decisión)" in brief
+    assert "Aún no hay hechos listos para el paquete de decisión." in brief
+    assert "No se han registrado preguntas abiertas." in brief
+    assert "## Mandato de Clara" in brief
+    assert "## Notas de control" in brief
+    assert "Derived working brief" not in brief
+    assert "No materials indexed" not in brief
+
+
+def test_spanish_kickoff_preparation_localizes_defaults_and_empty_states(
+    tmp_path: Path,
+) -> None:
+    core, case_dir = init_case(tmp_path, output_language="es")
+
+    result = core.prepare_clara_kickoff(case_dir, now=fixed_now())
+    preparation = result.preparation_path.read_text(encoding="utf-8")
+
+    assert preparation.startswith("# Preparación del kickoff de Clara - ClientCo")
+    assert "## Perspectivas para la sucesión" in preparation
+    assert "Transferencia de la propiedad y derechos económicos" in preparation
+    assert "## Señales de alerta que vigilar" in preparation
+    assert "Aún no se ha registrado investigación sectorial específica" in preparation
+    assert "## Enfoque para el kickoff" in preparation
+    assert "Clara Kickoff Preparation" not in preparation
+    assert "No external research notes recorded" not in preparation
+
+
 def test_partner_brief_surfaces_candidates_before_voice_kickoff(
     tmp_path: Path,
 ) -> None:
@@ -2300,6 +2335,19 @@ def test_decision_pack_uses_spanish_headings_and_storyline(tmp_path: Path) -> No
 
     markdown = result.markdown_path.read_text(encoding="utf-8")
     workpaper = result.workpaper_markdown_path.read_text(encoding="utf-8")
+    from docx import Document
+
+    decision_docx = Document(result.docx_path)
+    workpaper_docx = Document(result.workpaper_docx_path)
+    decision_docx_text = "\n".join(
+        paragraph.text for paragraph in decision_docx.paragraphs
+    )
+    workpaper_docx_text = "\n".join(
+        paragraph.text for paragraph in workpaper_docx.paragraphs
+    )
+    workpaper_table_headers = [
+        cell.text for cell in workpaper_docx.tables[0].rows[0].cells
+    ]
     assert "Paquete de decisión" in markdown
     assert "## Línea argumental ejecutiva" in markdown
     assert "Punto de partida." in markdown
@@ -2307,6 +2355,15 @@ def test_decision_pack_uses_spanish_headings_and_storyline(tmp_path: Path) -> No
     assert "Ruta recomendada." in markdown
     assert "Preguntas abiertas que resolver" in markdown
     assert "Documento de trabajo del paquete de decisión" in workpaper
+    assert "Este documento de trabajo incluye las rutas de las fuentes" in workpaper
+    assert "No hay elementos listos para el paquete de decisión." in workpaper
+    assert "Línea argumental ejecutiva" in decision_docx_text
+    assert "Documento de trabajo del paquete de decisión" in workpaper_docx_text
+    assert "Este documento de trabajo incluye las rutas de las fuentes" in (
+        workpaper_docx_text
+    )
+    assert workpaper_table_headers == ["Título", "Tipo", "Estado"]
+    assert "No decision-pack-ready items." not in workpaper_docx_text
 
 
 def test_pending_only_decision_pack_has_no_executive_storyline(
@@ -3297,6 +3354,28 @@ def test_support_package_includes_request_and_excludes_runtime_dirs(
     assert result.excluded_bytes >= runtime_file.stat().st_size
 
 
+def test_spanish_support_package_localizes_archived_request(tmp_path: Path) -> None:
+    core, case_dir = init_case(tmp_path, output_language="es")
+
+    result = core.prepare_support_package(
+        case_dir,
+        request="Revisar la narrativa del deck.",
+        requested_by="Socio",
+        now=fixed_now(),
+    )
+    with ZipFile(result.package_path) as archive:
+        support_note = archive.read("case/support_request.md").decode("utf-8")
+
+    assert support_note.startswith("# Solicitud de apoyo para Revisor de apoyo")
+    assert "- Solicitada por: Socio" in support_note
+    assert "## Qué se necesita" in support_note
+    assert "## Estado de Clara incluido" in support_note
+    assert "## Exclusiones locales" in support_note
+    assert "## Nota operativa" in support_note
+    assert "Support Request For" not in support_note
+    assert "not present" not in support_note
+
+
 def test_support_package_script_writes_default_package_path(
     tmp_path: Path,
 ) -> None:
@@ -3405,6 +3484,60 @@ def test_import_hosted_voice_bundle_adds_local_pending_judgement(
     assert "First assign speakers" in review_pack
     assert "correct only obvious transcription errors" in review_pack
     assert "Do not mark anything decision-pack ready." in review_pack
+
+
+@pytest.mark.parametrize(
+    ("case_language", "bundle_language"),
+    [("es", ""), ("en", "es-ES")],
+)
+def test_spanish_hosted_voice_import_localizes_review_artifacts(
+    tmp_path: Path,
+    case_language: str,
+    bundle_language: str,
+) -> None:
+    _, case_dir = init_case(tmp_path, output_language=case_language)
+    importer = load_hosted_voice_importer()
+    bundle_path = tmp_path / "case-notes-voice-es.json"
+    payload = {
+        "schema_version": 1,
+        "source": "case_notes_hosted_voice",
+        "captured_at": "2026-01-02T10:30:00+00:00",
+        "model": "gpt-realtime-2",
+        "user_transcript": "La autoridad de decisión sigue sin estar clara.",
+        "assistant_transcript": "¿Qué decisión debe aclararse primero?",
+        "extraction_json": {
+            "cleaned_notes_markdown": "",
+            "entries": [],
+            "open_questions": [],
+        },
+    }
+    if bundle_language:
+        payload["language"] = bundle_language
+    bundle_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = importer.import_hosted_voice_bundle(case_dir, bundle_path)
+    raw_transcript = result.raw_transcript_path.read_text(encoding="utf-8")
+    clara_review = result.clara_review_path.read_text(encoding="utf-8")
+    discussion_review = result.discussion_review_pack_path.read_text(encoding="utf-8")
+    attribution_task = result.speaker_attribution_task_path.read_text(encoding="utf-8")
+
+    assert raw_transcript.startswith("# Transcripción de Hosted Voice")
+    assert "## Consultor" in raw_transcript
+    assert "## Modelo de voz" in raw_transcript
+    assert clara_review.startswith("# Revisión de audio de Clara")
+    assert "## Procesamiento obligatorio de la transcripción" in clara_review
+    assert "Pendiente de revisión local por Clara." in clara_review
+    assert discussion_review.startswith(
+        "# Paquete de revisión de la conversación para Codex"
+    )
+    assert "## Tarea de revisión" in discussion_review
+    assert "## Sesión local" in discussion_review
+    assert attribution_task.startswith("# Tarea de atribución de hablantes")
+    assert "## Resultado obligatorio" in attribution_task
+    assert "`Hablante 1` y `Hablante 2`" in attribution_task
+    assert "Hosted Voice Transcript" not in raw_transcript
+    assert "Pending local Clara review" not in clara_review
+    assert "Speaker Attribution Task" not in attribution_task
 
 
 def test_find_latest_hosted_voice_bundle_skips_imported_and_invalid(
