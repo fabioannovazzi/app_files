@@ -44,6 +44,39 @@
     <p class="data-handling-summary">{{ page.summary }}</p>
   </section>
 
+  <section id="data-handling-video"
+           class="data-handling-video"
+           aria-labelledby="data-handling-video-title">
+    <div class="data-handling-video__copy">
+      <p class="data-handling-video__eyebrow">{{ page.video.eyebrow }}</p>
+      <h2 id="data-handling-video-title">{{ page.video.title }}</h2>
+      <p id="data-handling-video-description">{{ page.video.description }}</p>
+      <a class="data-handling-video__transcript"
+         href="/static/shared/video-production/rendered/data-handling/core/{{ lang }}/transcript.txt">
+        <span>{{ page.video.transcript_label }}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <figure class="data-handling-video__media">
+      <video controls
+             playsinline
+             preload="metadata"
+             poster="/static/shared/video-production/rendered/data-handling/core/{{ lang }}/poster.jpg"
+             aria-labelledby="data-handling-video-title"
+             aria-describedby="data-handling-video-description">
+        <source src="/static/shared/video-production/rendered/data-handling/core/{{ lang }}/guide.mp4"
+                type="video/mp4" />
+        <track kind="captions"
+               src="/static/shared/video-production/rendered/data-handling/core/{{ lang }}/captions.vtt"
+               srclang="{{ lang }}"
+               label="{{ language_names[lang] }}"
+               default />
+        {{ page.video.unsupported }}
+      </video>
+    </figure>
+  </section>
+
   <section class="data-boundary" aria-labelledby="data-boundary-title">
     <div class="data-boundary__heading">
       <h2 id="data-boundary-title">{{ page.boundary.title }}</h2>

@@ -66,7 +66,25 @@ def test_clara_public_page_exposes_complete_spanish_locale_contract() -> None:
     assert 'const supportedLanguages = new Set(["en", "it", "fr", "de", "es"]);' in page
     assert 'es: "es_ES"' in page
     assert "Clara prepara el trabajo. El criterio sigue siendo tuyo." in page
-    assert "Consulta cómo se tratan los datos" in page
+    assert "Ver el vídeo sobre el tratamiento de datos" in page
+
+
+def test_clara_public_page_links_all_locales_to_shared_data_handling_video() -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'href="/data-handling?lang=en#data-handling-video"' in page
+    assert "data-compliance-video-link" in page
+    assert "`/data-handling?lang=${safeLang}#data-handling-video`" in page
+    for label in (
+        "Watch the data-handling video",
+        "Guarda il video sulla gestione dei dati",
+        "Voir la vidéo sur le traitement des données",
+        "Video zur Datenverarbeitung ansehen",
+        "Ver el vídeo sobre el tratamiento de datos",
+    ):
+        assert label in page
 
 
 def test_clara_public_page_uses_truthful_english_video_fallback_for_spanish() -> None:
