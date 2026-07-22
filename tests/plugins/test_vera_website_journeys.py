@@ -66,6 +66,9 @@ VERA_RENDERED_VIDEO_IDENTITIES = {
         for language in ("en", "fr", "de", "es")
     ),
 }
+SHARED_DATA_HANDLING_VIDEO_IDENTITIES = {
+    ("data-handling", "core", language) for language in ("it", "en", "fr", "de", "es")
+}
 VERA_CORE_VIDEO_FORBIDDEN_PHRASES = (
     "fatturapa",
     "d.lgs",
@@ -706,6 +709,17 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     assert "privacy.governance" not in page
     assert section.count('class="data-position__fact"') == 4
     assert section.count('class="data-route"') == 2
+    assert 'href="/data-handling?lang=it#data-handling-video"' in section
+    assert "data-compliance-video-link" in section
+    assert "`/data-handling?lang=${lang}#data-handling-video`" in page
+    for label in (
+        "Guarda il video sulla gestione dei dati",
+        "Watch the data-handling video",
+        "Voir la vidéo sur le traitement des données",
+        "Video zur Datenverarbeitung ansehen",
+        "Ver el vídeo sobre el tratamiento de datos",
+    ):
+        assert label in page
 
 
 @pytest.mark.parametrize(
@@ -1151,8 +1165,9 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
         ("journal-sampling", "core"),
         ("check-entries", "core"),
         ("check-entries", "italy-fatturapa"),
+        ("data-handling", "core"),
     }
-    assert sum(len(concept["localizations"]) for concept in concepts) == 24
+    assert sum(len(concept["localizations"]) for concept in concepts) == 29
     for concept in concepts:
         assert len(concept["scenes"]) == 6
         assert concept["pageTargets"]
@@ -1253,6 +1268,43 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
     assert existing["jurisdiction"] == "IT"
     assert existing["youtubeId"] == "I1dp3FYVy2w"
 
+    data_handling = next(
+        concept for concept in concepts if concept["module"] == "data-handling"
+    )
+    assert data_handling["brand"] == "Vera + Clara"
+    assert set(data_handling["localizations"]) == {"it", "en", "fr", "de", "es"}
+    assert "/data-handling" in data_handling["pageTargets"]
+    for language, required_phrases in {
+        "it": (
+            "non viene anonimizzato automaticamente",
+            "piano ChatGPT",
+            "nessun contenuto",
+        ),
+        "en": (
+            "not anonymised automatically",
+            "existing ChatGPT plan",
+            "no client or work content",
+        ),
+        "fr": (
+            "n’est pas anonymisé automatiquement",
+            "offre ChatGPT existante",
+            "aucun contenu",
+        ),
+        "de": (
+            "nicht automatisch anonymisiert",
+            "bestehender ChatGPT-Tarif",
+            "keine Kunden- oder Arbeitsinhalte",
+        ),
+        "es": (
+            "no se anonimiza automáticamente",
+            "plan actual de ChatGPT",
+            "no se envía",
+        ),
+    }.items():
+        narration = data_handling["localizations"][language]["narration"]
+        for phrase in required_phrases:
+            assert phrase in narration
+
 
 def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
     manifest_path = SHARED_ROOT / "video-production" / "rendered" / "manifest.json"
@@ -1263,11 +1315,11 @@ def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
     assert manifest["schemaVersion"] == "2.0.0"
     assert manifest["publicationStatus"] == "local_rendered"
     assert manifest["remotePublish"] is False
-    assert manifest["assetCount"] == 24
-    assert len(assets) == 24
+    assert manifest["assetCount"] == 29
+    assert len(assets) == 29
     assert {
         (asset["module"], asset["edition"], asset["language"]) for asset in assets
-    } == (VERA_RENDERED_VIDEO_IDENTITIES)
+    } == (VERA_RENDERED_VIDEO_IDENTITIES | SHARED_DATA_HANDLING_VIDEO_IDENTITIES)
 
     for asset in assets:
         assert asset["status"] == "local_rendered"

@@ -317,6 +317,90 @@
           "onScreen": ["Italia · FatturaPA", "Evidencias candidatas", "Importe · fecha · número · contraparte", "Solidez de la coincidencia", "Cola de revisión", "Justificante verificado"]
         }
       }
+    },
+    {
+      "conceptId": "shared-data-handling-boundary",
+      "module": "data-handling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "brand": "Vera + Clara",
+      "targetDurationSeconds": 82,
+      "pageTargets": [
+        "/data-handling",
+        "/static/shared/vera/index.html#data-boundary",
+        "/static/shared/clara/index.html#data-handling"
+      ],
+      "scenes": [
+        "Real client data and no automatic anonymisation",
+        "Local preparation when useful",
+        "Necessary content in a language-model call",
+        "Ordinary workflows do not send client work to Mparanza",
+        "Optional hosted services are a separate boundary",
+        "One map per workflow and no per-prompt paperwork"
+      ],
+      "localizations": {
+        "en": {
+          "title": "Vera + Clara | How your data is handled",
+          "narration": "Vera and Clara are built for serious professional work. That work can require real client data: documents, names and facts. What you provide is not anonymised automatically. When useful, local Python tools can filter or aggregate material before Codex interprets it. But a mechanical filter cannot decide on its own what the work genuinely needs. If the task requires them, necessary names, documents or case facts may be included by Codex in a call to a language model. That call is governed by your existing ChatGPT plan. In ordinary workflows, no client or work content is sent to Mparanza. Optional services hosted by Mparanza have a separate, documented boundary. For each service, we state what is sent and its access and retention arrangements. Each workflow is mapped once, when it is added or materially changed. The relevant boundary appears in the workflow, without paperwork for every prompt. Professional judgement remains with you.",
+          "onScreen": [
+            "Real client data · no automatic anonymisation",
+            "Local preparation · filter · aggregate",
+            "Language-model call · your existing ChatGPT plan",
+            "Ordinary workflows · no client or work content to Mparanza",
+            "Optional hosted services · separate documented boundary",
+            "One map per workflow · no per-prompt paperwork"
+          ]
+        },
+        "it": {
+          "title": "Vera + Clara | Come vengono gestiti i tuoi dati",
+          "narration": "Vera e Clara sono pensate per il lavoro professionale serio. Quel lavoro può richiedere dati reali dei clienti: documenti, nomi e fatti. Ciò che fornisci non viene anonimizzato automaticamente. Quando è utile, strumenti Python eseguiti in locale possono filtrare o aggregare il materiale prima che Codex lo interpreti. Ma un filtro meccanico non può decidere da solo che cosa serve davvero al lavoro. Se l’attività lo richiede, Codex può includere nomi, documenti o fatti del caso necessari in una chiamata a un modello linguistico. A quella chiamata si applica il tuo piano ChatGPT esistente. Nei workflow ordinari, nessun contenuto dei clienti o del lavoro viene inviato a Mparanza. I servizi opzionali hosted da Mparanza hanno un confine separato e documentato. Per ogni servizio indichiamo che cosa viene inviato e le modalità di accesso e conservazione. Ogni workflow viene mappato una volta, quando viene aggiunto o modificato in modo sostanziale. Il confine rilevante compare nel workflow, senza burocrazia per ogni prompt. Il giudizio professionale resta nelle tue mani.",
+          "onScreen": [
+            "Dati reali · nessuna anonimizzazione automatica",
+            "Preparazione locale · filtra · aggrega",
+            "Chiamata al modello · piano ChatGPT esistente",
+            "Workflow ordinari · nessun contenuto del cliente a Mparanza",
+            "Servizi hosted opzionali · confine separato documentato",
+            "Una mappa per workflow · nessuna burocrazia per prompt"
+          ]
+        },
+        "fr": {
+          "title": "Vera + Clara | Comment vos données sont traitées",
+          "narration": "Vera et Clara sont conçues pour un travail professionnel exigeant. Ce travail peut nécessiter de vraies données client : documents, noms et faits. Ce que vous fournissez n’est pas anonymisé automatiquement. Lorsque c’est utile, des outils Python locaux peuvent filtrer ou agréger les éléments avant leur interprétation par Codex. Mais un filtre mécanique ne peut pas décider seul de ce dont le travail a réellement besoin. Si la tâche l’exige, Codex peut inclure les noms, documents ou faits du dossier nécessaires dans un appel à un modèle de langage. Cet appel est régi par votre offre ChatGPT existante. Dans les workflows ordinaires, aucun contenu concernant vos clients ou votre travail n’est envoyé à Mparanza. Les services optionnels hébergés par Mparanza ont un périmètre distinct et documenté. Pour chaque service, nous indiquons ce qui est envoyé ainsi que les modalités d’accès et de conservation. Chaque workflow est cartographié une seule fois, lors de son ajout ou d’une modification substantielle. Le périmètre pertinent apparaît dans le workflow, sans formalité à chaque prompt. Le jugement professionnel reste le vôtre.",
+          "onScreen": [
+            "Données réelles · pas d’anonymisation automatique",
+            "Préparation locale · filtrer · agréger",
+            "Appel au modèle · offre ChatGPT existante",
+            "Workflows ordinaires · aucun contenu client envoyé à Mparanza",
+            "Services hébergés optionnels · périmètre distinct documenté",
+            "Une cartographie par workflow · pas de formalité par prompt"
+          ]
+        },
+        "de": {
+          "title": "Vera + Clara | So werden Ihre Daten verarbeitet",
+          "narration": "Vera und Clara sind für anspruchsvolle professionelle Arbeit konzipiert. Dafür können echte Kundendaten nötig sein: Dokumente, Namen und Sachverhalte. Was Sie bereitstellen, wird nicht automatisch anonymisiert. Wenn es sinnvoll ist, können lokale Python-Werkzeuge Material filtern oder aggregieren, bevor Codex es interpretiert. Ein mechanischer Filter kann aber nicht allein entscheiden, was die Arbeit wirklich braucht. Wenn die Aufgabe es erfordert, kann Codex notwendige Namen, Dokumente oder Fallangaben in eine Anfrage an ein Sprachmodell aufnehmen. Für diese Anfrage gilt Ihr bestehender ChatGPT-Tarif. In normalen Workflows werden keine Kunden- oder Arbeitsinhalte an Mparanza gesendet. Optionale gehostete Mparanza-Dienste haben eine eigene, dokumentierte Grenze. Für jeden Dienst nennen wir Inhalte, Zugriff und Aufbewahrung. Jeder Workflow wird einmal erfasst: beim Hinzufügen oder bei wesentlicher Änderung. Die relevante Grenze erscheint im Workflow, ohne Papierkram pro Prompt. Die fachliche Beurteilung bleibt bei Ihnen.",
+          "onScreen": [
+            "Echte Daten · keine automatische Anonymisierung",
+            "Lokale Aufbereitung · filtern · aggregieren",
+            "Sprachmodell-Anfrage · bestehender ChatGPT-Tarif",
+            "Normale Workflows · keine Arbeitsinhalte an Mparanza",
+            "Optionale gehostete Dienste · separate dokumentierte Grenze",
+            "Einmal je Workflow erfasst · kein Prompt-Papierkram"
+          ]
+        },
+        "es": {
+          "title": "Vera + Clara | Cómo se tratan tus datos",
+          "narration": "Vera y Clara están diseñadas para un trabajo profesional serio. Ese trabajo puede requerir datos reales de clientes: documentos, nombres y hechos. Lo que proporciones no se anonimiza automáticamente. Cuando resulte útil, las herramientas Python locales pueden filtrar o agregar el material antes de que Codex lo interprete. Pero un filtro mecánico no puede decidir por sí solo qué necesita realmente el trabajo. Si la tarea lo requiere, Codex puede incluir los nombres, documentos o hechos del caso necesarios en una llamada a un modelo de lenguaje. Esa llamada se rige por tu plan actual de ChatGPT. En los flujos de trabajo habituales, no se envía a Mparanza contenido de clientes ni del trabajo. Los servicios opcionales alojados por Mparanza tienen un límite separado y documentado. Para cada servicio indicamos qué se envía y sus condiciones de acceso y conservación. Cada flujo de trabajo se mapea una vez, al añadirlo o modificarlo de forma sustancial. El límite pertinente aparece en el flujo, sin trámites para cada prompt. El criterio profesional queda en tus manos.",
+          "onScreen": [
+            "Datos reales · sin anonimización automática",
+            "Preparación local · filtrar · agregar",
+            "Llamada al modelo · plan actual de ChatGPT",
+            "Flujos habituales · ningún contenido de clientes a Mparanza",
+            "Servicios alojados opcionales · límite separado documentado",
+            "Un mapa por flujo · sin trámites para cada prompt"
+          ]
+        }
+      }
     }
   ]
 }
