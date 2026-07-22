@@ -52,6 +52,71 @@ function isPlainObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
 }
 
+function normalizeLanguage(value) {
+  const normalized = typeof value === "string" ? value.trim().toLowerCase().replaceAll("_", "-") : "";
+  const code = normalized.split("-", 1)[0];
+  return code === "es" || code === "spa" ? "es" : "en";
+}
+
+function languageFromArgs(inputArgs) {
+  if (!isPlainObject(inputArgs)) return "en";
+  const reviewPayload = isPlainObject(inputArgs.review_payload) ? inputArgs.review_payload : {};
+  const reviewSummary = isPlainObject(reviewPayload.summary) ? reviewPayload.summary : {};
+  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : {};
+  const assumptions = isPlainObject(runIntake.assumptions) ? runIntake.assumptions : {};
+  const meta = isPlainObject(inputArgs._meta)
+    ? inputArgs._meta
+    : isPlainObject(inputArgs.meta)
+      ? inputArgs.meta
+      : {};
+  const candidates = [
+    reviewPayload.language,
+    reviewSummary.language,
+    runIntake.language,
+    assumptions.language,
+    inputArgs.language,
+    inputArgs.locale,
+    meta.language,
+    meta.locale,
+    meta["openai/locale"],
+  ];
+  const selected = candidates.find((value) => typeof value === "string" && value.trim());
+  return normalizeLanguage(selected);
+}
+
+function isSpanish(language) {
+  return normalizeLanguage(language) === "es";
+}
+
+function localizeRuntimeError(message, language) {
+  if (!isSpanish(language)) return message;
+  const text = String(message || "");
+  let match;
+  if ((match = text.match(/^(.+) must be a non-empty string$/))) return `${match[1]} debe ser una cadena no vacía`;
+  if ((match = text.match(/^(.+) must be a string when provided$/))) return `${match[1]} debe ser una cadena cuando se proporcione`;
+  if ((match = text.match(/^(.+) exceeds (\d+) characters$/))) return `${match[1]} supera los ${match[2]} caracteres`;
+  if ((match = text.match(/^(.+) must be an object$/))) return `${match[1]} debe ser un objeto`;
+  if ((match = text.match(/^(.+) must be an array(?: when provided)?$/))) return `${match[1]} debe ser una matriz`;
+  if ((match = text.match(/^(.+) must equal (.+)$/))) return `${match[1]} debe ser igual a ${match[2]}`;
+  if ((match = text.match(/^(.+) exceeds (\d+) items$/))) return `${match[1]} supera el límite de ${match[2]} elementos`;
+  if ((match = text.match(/^(.+) is not supported(?:: (.+))?$/))) return `${match[1]} no es compatible${match[2] ? `: ${match[2]}` : ""}`;
+  if ((match = text.match(/^(.+) contains unsupported action: (.+)$/))) return `${match[1]} contiene una acción no compatible: ${match[2]}`;
+  if ((match = text.match(/^(.+) is not allowed for item (.+): (.+)$/))) return `${match[1]} no está permitida para el elemento ${match[2]}: ${match[3]}`;
+  if ((match = text.match(/^(.+) is not in review_payload\.items: (.+)$/))) return `${match[1]} no figura en review_payload.items: ${match[2]}`;
+  if ((match = text.match(/^(.+) is required when action is edit$/))) return `${match[1]} es obligatorio cuando la acción es edit`;
+  if ((match = text.match(/^(.+) cannot exceed (.+)$/))) return `${match[1]} no puede superar ${match[2]}`;
+  if ((match = text.match(/^(.+) payload exceeds (\d+) bytes$/i))) return `Los datos de ${match[1]} superan los ${match[2]} bytes`;
+  if (text.startsWith("decisions contains duplicate item_id:")) return text.replace("decisions contains duplicate item_id:", "decisions contiene un item_id duplicado:");
+  if (text === "run_intake.run_id must match review_payload.run_id") return "run_intake.run_id debe coincidir con review_payload.run_id";
+  if (text === "CSV parse failed: unclosed quoted field") return "No se pudo interpretar el CSV: hay un campo entrecomillado sin cerrar";
+  if (text === "structured artifact records must be an array") return "Los registros del artefacto estructurado deben ser una matriz";
+  if (text === "CSV structured edit requires a header row") return "La edición estructurada del CSV requiere una fila de encabezado";
+  if ((match = text.match(/^CSV structured edit missing (.+)$/))) return `En la edición estructurada del CSV falta ${match[1]}`;
+  if (text === "JSON structured edit requires an object, array, or explicit records_key array") return "La edición estructurada de JSON requiere un objeto, una matriz o una matriz records_key explícita";
+  if (text.endsWith(" native regeneration failed.")) return "No se pudo completar la regeneración nativa del artefacto.";
+  return text;
+}
+
 function assetDataUrl(fileName, mimeType) {
   const assetBytes = fs.readFileSync(path.join(PLUGIN_ROOT, "assets", fileName));
   return `data:${mimeType};base64,${assetBytes.toString("base64")}`;
@@ -428,6 +493,7 @@ function buildUiDecisions(inputArgs) {
 
 function saveDecisionPayload(inputArgs) {
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
+  const language = languageFromArgs(inputArgs);
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
@@ -444,8 +510,12 @@ function saveDecisionPayload(inputArgs) {
     persisted,
     ui_decisions_path: persisted ? decisionOutputPath : null,
     message: persisted
-      ? `Saved ${uiDecisions.decision_count} Concordato Plan Review decisions.`
-      : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ? isSpanish(language)
+        ? `Se guardaron ${uiDecisions.decision_count} decisiones de Revisión del plan de concordato.`
+        : `Saved ${uiDecisions.decision_count} Concordato Plan Review decisions.`
+      : isSpanish(language)
+        ? "Las decisiones son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
+        : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
     ui_decisions: uiDecisions,
   };
 }
@@ -1178,18 +1248,28 @@ const REVIEW_HANDOFF_PLUGINS = new Set([
   "concordato-plan-review",
 ]);
 
-function reviewHandoffOutputRecord() {
+function reviewHandoffOutputRecord(language = "en") {
+  const requiredText = isSpanish(language)
+    ? [
+        "Entrega para revisión",
+        "Review Handoff",
+        "review_payload.json",
+        "ui_decisions.json",
+        "applied_decisions.json",
+        "final_artifacts.json",
+      ]
+    : [
+        "Review Handoff",
+        "review_payload.json",
+        "ui_decisions.json",
+        "applied_decisions.json",
+        "final_artifacts.json",
+      ];
   return {
     path: "review_handoff.md",
     kind: "md",
     status: "written",
-    required_text: [
-      "Review Handoff",
-      "review_payload.json",
-      "ui_decisions.json",
-      "applied_decisions.json",
-      "final_artifacts.json",
-    ],
+    required_text: requiredText,
     qa_checks: ["nonempty_text", "required_text"],
   };
 }
@@ -1198,29 +1278,52 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
   const reviewPayload = isPlainObject(inputArgs.review_payload) ? inputArgs.review_payload : {};
   const pluginName = shortString(reviewPayload.plugin);
   if (!REVIEW_HANDOFF_PLUGINS.has(pluginName) || !outputDir) return null;
+  const language = languageFromArgs(inputArgs);
 
   const handoffPath = path.join(outputDir, "review_handoff.md");
   fs.mkdirSync(outputDir, { recursive: true });
-  if (!fs.existsSync(handoffPath)) {
-    const displayName = PLUGIN_MANIFEST.name || pluginName || "Review";
-    const text = [
-      `# ${displayName} Review Handoff`,
-      "",
-      "- Review payload: `review_payload.json`",
-      "- Run intake: `run_intake.json`",
-      "- Pending decisions: `ui_decisions.json`",
-      "- Applied decisions: `applied_decisions.json`",
-      "- Final artifacts: `final_artifacts.json`",
-      "",
-      "## Review In Codex",
-      `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
-      `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
-      `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
-      `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
-    ].join("\n");
+  const existingText = fs.existsSync(handoffPath) ? fs.readFileSync(handoffPath, "utf8") : "";
+  const shouldWrite = !existingText || (isSpanish(language) && !existingText.includes("Entrega para revisión"));
+  if (shouldWrite) {
+    const displayName = isSpanish(language)
+      ? "Revisión del plan de concordato"
+      : PLUGIN_MANIFEST.name || pluginName || "Review";
+    const text = isSpanish(language)
+      ? [
+          `# Entrega para revisión: ${displayName}`,
+          "",
+          "- Datos de revisión: `review_payload.json`",
+          "- Datos de entrada de la ejecución: `run_intake.json`",
+          "- Decisiones pendientes: `ui_decisions.json`",
+          "- Decisiones aplicadas: `applied_decisions.json`",
+          "- Artefactos finales: `final_artifacts.json`",
+          "",
+          "## Revisión en Codex",
+          `1. Valide los datos con \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Muestre el espacio de revisión con \`${TOOL_NAMES.renderReview}\`.`,
+          `3. Guarde las acciones de revisión con \`${TOOL_NAMES.saveDecisions}\`.`,
+          `4. Aplique las acciones de revisión con \`${TOOL_NAMES.applyDecisions}\`.`,
+          "",
+          "<!-- Review Handoff -->",
+        ].join("\n")
+      : [
+          `# ${displayName} Review Handoff`,
+          "",
+          "- Review payload: `review_payload.json`",
+          "- Run intake: `run_intake.json`",
+          "- Pending decisions: `ui_decisions.json`",
+          "- Applied decisions: `applied_decisions.json`",
+          "- Final artifacts: `final_artifacts.json`",
+          "",
+          "## Review In Codex",
+          `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
+          `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
+          `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
+        ].join("\n");
     fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
   }
-  return reviewHandoffOutputRecord();
+  return reviewHandoffOutputRecord(language);
 }
 
 function finalArtifactsWithApplication(
@@ -1262,7 +1365,12 @@ function finalArtifactsWithApplication(
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
-    next_actions: nextActionsWithReviewApplication(current.next_actions, appliedDecisions, blockers),
+    next_actions: nextActionsWithReviewApplication(
+      current.next_actions,
+      appliedDecisions,
+      blockers,
+      languageFromArgs(inputArgs),
+    ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
     review_application: {
@@ -1307,16 +1415,16 @@ function effectsToBlockers(effects) {
     });
 }
 
-function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers) {
+function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers, language = "en") {
   const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
   if (blockers.length) {
-    nextActions.push("Resolve blocked review decisions before treating final artifacts as ready.");
+    nextActions.push(isSpanish(language) ? "Resuelva las decisiones de revisión bloqueadas antes de considerar listos los artefactos finales." : "Resolve blocked review decisions before treating final artifacts as ready.");
   } else if (appliedDecisions.native_regeneration_count) {
-    nextActions.push("Regenerate native DOCX/XLSX/PDF outputs before final handoff.");
+    nextActions.push(isSpanish(language) ? "Vuelva a generar las salidas nativas DOCX, XLSX o PDF antes de la entrega final." : "Regenerate native DOCX/XLSX/PDF outputs before final handoff.");
   } else if (appliedDecisions.application_status === "final_ready") {
-    nextActions.push("Use final_artifacts.json as the reviewed artifact gallery for handoff.");
+    nextActions.push(isSpanish(language) ? "Use final_artifacts.json como galería de artefactos revisados para la entrega." : "Use final_artifacts.json as the reviewed artifact gallery for handoff.");
   } else if (appliedDecisions.application_status === "partial_review_applied") {
-    nextActions.push("Complete remaining review decisions before final handoff.");
+    nextActions.push(isSpanish(language) ? "Complete las decisiones de revisión restantes antes de la entrega final." : "Complete remaining review decisions before final handoff.");
   }
   return Array.from(new Set(nextActions));
 }
@@ -1325,6 +1433,7 @@ function applyDecisionPayload(inputArgs) {
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
+  const language = languageFromArgs(inputArgs);
   const itemById = new Map(reviewPayload.items.map((item) => [item.id, item]));
   const appliedAt = new Date().toISOString();
   const effects = uiDecisions.decisions.map((decision) =>
@@ -1446,8 +1555,12 @@ function applyDecisionPayload(inputArgs) {
     final_artifacts_path: finalArtifactsPath,
     run_intake_path: runIntakePath,
     message: persisted
-      ? `Applied ${responseAppliedDecisions.decision_count} Concordato Plan Review decisions.`
-      : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ? isSpanish(language)
+        ? `Se aplicaron ${responseAppliedDecisions.decision_count} decisiones de Revisión del plan de concordato.`
+        : `Applied ${responseAppliedDecisions.decision_count} Concordato Plan Review decisions.`
+      : isSpanish(language)
+        ? "Las decisiones aplicadas son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
+        : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
@@ -1521,7 +1634,9 @@ function callTool(name, args = {}) {
       run_id: payload.review_payload.run_id,
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
-      message: "Concordato Plan Review payload is valid. It is safe to call render_concordato_plan_review once.",
+      message: isSpanish(languageFromArgs(args))
+        ? "Los datos de Revisión del plan de concordato son válidos. Puede ejecutar render_concordato_plan_review una vez."
+        : "Concordato Plan Review payload is valid. It is safe to call render_concordato_plan_review once.",
       review_payload: payload.review_payload,
     };
   }
@@ -1534,7 +1649,11 @@ function callTool(name, args = {}) {
   if (name === TOOL_NAMES.applyDecisions) {
     return applyDecisionPayload(args);
   }
-  throw new Error(`unknown Concordato Plan Review widget tool: ${name}`);
+  throw new Error(
+    isSpanish(languageFromArgs(args))
+      ? `herramienta desconocida del widget de Revisión del plan de concordato: ${name}`
+      : `unknown Concordato Plan Review widget tool: ${name}`,
+  );
 }
 
 function toolResult(payload, toolName) {
@@ -1570,6 +1689,7 @@ function handleRpc(message) {
   const params = isPlainObject(message.params) ? message.params : {};
   try {
     if (method === "initialize") {
+      const language = languageFromArgs(params);
       return rpcResponse(messageId, {
         protocolVersion: params.protocolVersion || "2024-11-05",
         serverInfo: { name: SERVER_NAME, version: SERVER_VERSION },
@@ -1579,25 +1699,32 @@ function handleRpc(message) {
           prompts: {},
         },
         instructions:
-          "Use validate_concordato_plan_review before render_concordato_plan_review. Prefer the MCP widget for Concordato Plan Review review handoff; use save_concordato_plan_decisions to persist reviewer actions to ui_decisions.json and apply_concordato_plan_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+          isSpanish(language)
+            ? "Use validate_concordato_plan_review antes de render_concordato_plan_review. Dé prioridad al widget MCP para la entrega de la Revisión del plan de concordato; use save_concordato_plan_decisions para guardar las acciones de revisión en ui_decisions.json y apply_concordato_plan_decisions para escribir applied_decisions.json y actualizar el estado de final_artifacts.json cuando se recopilen decisiones; recurra a la revisión Markdown o estática solo si MCP no está disponible."
+            : "Use validate_concordato_plan_review before render_concordato_plan_review. Prefer the MCP widget for Concordato Plan Review review handoff; use save_concordato_plan_decisions to persist reviewer actions to ui_decisions.json and apply_concordato_plan_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
       });
     }
     if (method === "notifications/initialized") return null;
     if (method === "tools/list") return rpcResponse(messageId, { tools: toolDefinitions() });
     if (method === "tools/call") {
       const { name, arguments: args } = params;
-      if (typeof name !== "string") return rpcError(messageId, -32602, "tools/call requires a tool name");
-      if (!isPlainObject(args)) return rpcError(messageId, -32602, "tools/call arguments must be an object");
+      const language = languageFromArgs(isPlainObject(args) ? args : params);
+      if (typeof name !== "string") return rpcError(messageId, -32602, isSpanish(language) ? "tools/call requiere el nombre de una herramienta" : "tools/call requires a tool name");
+      if (!isPlainObject(args)) return rpcError(messageId, -32602, isSpanish(language) ? "Los argumentos de tools/call deben ser un objeto" : "tools/call arguments must be an object");
       try {
         return rpcResponse(messageId, toolResult(callTool(name, args), name));
       } catch (error) {
-        return rpcResponse(messageId, toolError(error instanceof Error ? error.message : String(error)));
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        return rpcResponse(messageId, toolError(localizeRuntimeError(errorMessage, language)));
       }
     }
     if (method === "resources/list") return rpcResponse(messageId, { resources: resources() });
     if (method === "resources/read") {
       const { uri } = params;
-      if (typeof uri !== "string") return rpcError(messageId, -32602, "resources/read requires a resource uri");
+      if (typeof uri !== "string") {
+        const language = languageFromArgs(params);
+        return rpcError(messageId, -32602, isSpanish(language) ? "resources/read requiere el URI de un recurso" : "resources/read requires a resource uri");
+      }
       const text = resourceText(uri);
       return rpcResponse(messageId, {
         contents: [
@@ -1612,9 +1739,10 @@ function handleRpc(message) {
     }
     if (method === "resources/templates/list") return rpcResponse(messageId, { resourceTemplates: [] });
     if (method === "prompts/list") return rpcResponse(messageId, { prompts: [] });
-    return rpcError(messageId, -32601, `method not found: ${method}`);
+    return rpcError(messageId, -32601, isSpanish(languageFromArgs(params)) ? `método no encontrado: ${method}` : `method not found: ${method}`);
   } catch (error) {
-    return rpcError(messageId, -32000, error instanceof Error ? error.message : String(error));
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return rpcError(messageId, -32000, localizeRuntimeError(errorMessage, languageFromArgs(params)));
   }
 }
 

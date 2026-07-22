@@ -1248,6 +1248,31 @@ def _table_value_scale(rows: list[dict[str, Any]]) -> tuple[float, str]:
     return 1.0, "units"
 
 
+def _recipe_language(recipe: dict[str, Any]) -> str:
+    """Return the normalized user-facing language for generated artifacts."""
+
+    value = str(recipe.get("language") or "en").strip().lower().replace("_", "-")
+    if value.split("-", 1)[0] in {
+        "es",
+        "spa",
+        "spanish",
+        "espanol",
+        "español",
+    }:
+        return "es"
+    return "en"
+
+
+def _spanish_period_caption(value: str) -> str:
+    """Localize deterministic English period qualifiers without changing labels."""
+
+    return (
+        value.replace(", YTD through ", ", acumulado hasta ")
+        .replace(", rolling through ", ", periodo móvil hasta ")
+        .replace(", through ", ", hasta ")
+    )
+
+
 def _reporting_metric_label(recipe: dict[str, Any], metric: str) -> str:
     """Return a business-facing metric label for a raw source column."""
 
@@ -1281,10 +1306,13 @@ def _reporting_metric_label(recipe: dict[str, Any], metric: str) -> str:
         normalized.startswith("value")
         and any(token in normalized for token in ("lc", "usd", "eur", "gbp"))
     ):
-        return "Sales"
+        return "Ventas" if _recipe_language(recipe) == "es" else "Sales"
     if normalized in unit_names:
-        return "Units"
-    return metric.replace("_", " ").replace("-", " ").strip().title() or "Value"
+        return "Unidades" if _recipe_language(recipe) == "es" else "Units"
+    humanized = metric.replace("_", " ").replace("-", " ").strip().title()
+    if humanized == "Value" and _recipe_language(recipe) == "es":
+        return "Valor"
+    return humanized or ("Valor" if _recipe_language(recipe) == "es" else "Value")
 
 
 def _format_scaled_value(value: float, scale: float, *, signed: bool = False) -> str:
@@ -1385,11 +1413,16 @@ def _render_reporting_table_html(
     metric: str,
     source_label: str,
     output_path: Path,
+    language: str = "en",
 ) -> None:
     """Write a compact scenario and variance table artifact."""
 
     scale, scale_label = _table_value_scale(rows)
-    measure_suffix = "" if scale_label == "units" else f" in {scale_label}"
+    measure_suffix = (
+        ""
+        if scale_label == "units"
+        else f" en {scale_label}" if language == "es" else f" in {scale_label}"
+    )
     max_abs_absolute = max(
         (abs(float(row["absolute_variance"])) for row in rows),
         default=0.0,
@@ -1402,7 +1435,7 @@ def _render_reporting_table_html(
         ),
         default=0.0,
     )
-    row_label_width = 92 if row_header == "Period" else 124
+    row_label_width = 92 if row_header in {"Period", "Periodo"} else 124
     value_width = 88
     variance_width = 172
     table_width = row_label_width + (value_width * 2) + (variance_width * 2)
@@ -1431,7 +1464,7 @@ def _render_reporting_table_html(
             "</tr>"
         )
     html = f"""<!doctype html>
-<html lang="en">
+<html lang="{escape(language)}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1639,15 +1672,15 @@ def _render_reporting_table_html(
       <thead>
         <tr class="group">
           <th></th>
-          <th colspan="2">Scenario</th>
-          <th class="group-start" colspan="2">Change</th>
+          <th colspan="2">{'Escenario' if language == 'es' else 'Scenario'}</th>
+          <th class="group-start" colspan="2">{'Variación' if language == 'es' else 'Change'}</th>
         </tr>
         <tr class="labels">
           <th>{escape(row_header)}</th>
           <th>{escape(baseline_label)}</th>
           <th>{escape(comparison_label)}</th>
           <th class="group-start">{escape(comparison_label)}-{escape(baseline_label)}</th>
-          <th>% change</th>
+          <th>{'% variación' if language == 'es' else '% change'}</th>
         </tr>
       </thead>
       <tbody>
@@ -1674,17 +1707,22 @@ def write_native_reporting_tables(
 
     options = recipe.get("options") or {}
     mappings = recipe.get("mappings") or {}
+    language = _recipe_language(recipe)
     metric = str(mappings.get("amount_column") or "Value")
     metric_label = _reporting_metric_label(recipe, metric)
     unit = str(options.get("currency") or "EUR")
     baseline_label = str(options.get("previous_period_label") or PREVIOUS_PERIOD)
     comparison_label = str(options.get("current_period_label") or CURRENT_PERIOD)
-    entity_label = reporting_subject_label_from_recipe(recipe) or "Period comparison"
+    entity_label = reporting_subject_label_from_recipe(recipe) or (
+        "Comparación de periodos" if language == "es" else "Period comparison"
+    )
     comparison_caption = reporting_period_line_from_recipe(
         recipe,
         current_label=comparison_label,
         previous_label=baseline_label,
     )
+    if language == "es":
+        comparison_caption = _spanish_period_caption(comparison_caption)
     period_window = options.get("period_window") or {}
     artifacts: list[str] = []
     audit_tables: dict[str, Any] = {}
@@ -1692,7 +1730,7 @@ def write_native_reporting_tables(
     table_specs = [
         {
             "table_key": "comparison_table",
-            "row_header": "Window",
+            "row_header": "Ventana" if language == "es" else "Window",
             "frame": by_period,
             "label_column": "window",
             "baseline_column": "previous",
@@ -1701,7 +1739,7 @@ def write_native_reporting_tables(
         },
         {
             "table_key": "time_series_table",
-            "row_header": "Period",
+            "row_header": "Periodo" if language == "es" else "Period",
             "frame": monthly,
             "label_column": CANONICAL_DATE,
             "baseline_column": PREVIOUS_PERIOD,
@@ -1728,7 +1766,11 @@ def write_native_reporting_tables(
         context_path = output_dir / f"{table_key}_chart_context.json"
         _write_table_rows_csv(csv_path, rows)
         _scale, scale_label = _table_value_scale(rows)
-        measure_suffix = "" if scale_label == "units" else f" in {scale_label}"
+        measure_suffix = (
+            ""
+            if scale_label == "units"
+            else f" en {scale_label}" if language == "es" else f" in {scale_label}"
+        )
         chart_title_lines = [
             entity_label,
             f"{metric_label}{measure_suffix}",
@@ -1770,8 +1812,13 @@ def write_native_reporting_tables(
             entity_label=entity_label,
             comparison_caption=comparison_caption,
             metric=metric_label,
-            source_label=f"Source: {spec['source_table']}",
+            source_label=(
+                f"Fuente: {spec['source_table']}"
+                if language == "es"
+                else f"Source: {spec['source_table']}"
+            ),
             output_path=html_path,
+            language=language,
         )
         artifacts.extend([str(csv_path), str(html_path), str(context_path)])
         audit_tables[table_key] = {
@@ -2208,20 +2255,38 @@ def build_summary_markdown(
     """Build deterministic markdown summary."""
 
     window = (recipe.get("options") or {}).get("period_window") or {}
-    lines = [
-        "# Period Comparison Source Data",
-        "",
-        f"- Source file: `{recipe.get('source_file')}`",
-        f"- Metric: `{recipe['mappings']['amount_column']}`",
-        f"- Comparison: `{(window.get('current') or {}).get('year')}` vs `{(window.get('previous') or {}).get('year')}`",
-        f"- Previous period total: `{totals['previous']:,.2f}`",
-        f"- Current period total: `{totals['current']:,.2f}`",
-        f"- Delta: `{totals['delta']:,.2f}`",
-        f"- Small multiples dimension: `{selection.get('dimension') or 'not selected'}`",
-        "",
-        "The charts compare current period and previous-year period totals. They are not a price-volume-mix decomposition.",
-        "",
-    ]
+    spanish = _recipe_language(recipe) == "es"
+    lines = (
+        [
+            "# Datos de origen de la comparación de periodos",
+            "",
+            f"- Archivo de origen: `{recipe.get('source_file')}`",
+            f"- Métrica: `{recipe['mappings']['amount_column']}`",
+            f"- Comparación: `{(window.get('current') or {}).get('year')}` vs `{(window.get('previous') or {}).get('year')}`",
+            f"- Total del periodo anterior: `{totals['previous']:,.2f}`",
+            f"- Total del periodo actual: `{totals['current']:,.2f}`",
+            f"- Variación: `{totals['delta']:,.2f}`",
+            f"- Dimensión de múltiplos pequeños: `{selection.get('dimension') or 'no seleccionada'}`",
+            "",
+            "Los gráficos comparan los totales del periodo actual y del mismo periodo del año anterior. No representan una descomposición de precio, volumen y mix.",
+            "",
+        ]
+        if spanish
+        else [
+            "# Period Comparison Source Data",
+            "",
+            f"- Source file: `{recipe.get('source_file')}`",
+            f"- Metric: `{recipe['mappings']['amount_column']}`",
+            f"- Comparison: `{(window.get('current') or {}).get('year')}` vs `{(window.get('previous') or {}).get('year')}`",
+            f"- Previous period total: `{totals['previous']:,.2f}`",
+            f"- Current period total: `{totals['current']:,.2f}`",
+            f"- Delta: `{totals['delta']:,.2f}`",
+            f"- Small multiples dimension: `{selection.get('dimension') or 'not selected'}`",
+            "",
+            "The charts compare current period and previous-year period totals. They are not a price-volume-mix decomposition.",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -2235,13 +2300,26 @@ def write_client_report(
 
     md_path = output_dir / "period_comparison_client_report.md"
     docx_path = output_dir / "period_comparison_client_report.docx"
+    spanish = _recipe_language(recipe) == "es"
+    title = "Comparación de periodos" if spanish else "Period Comparison"
+    comparison_text = (
+        f"El total del periodo actual es {_format_millions(totals['current'])}, frente a {_format_millions(totals['previous'])} en el mismo periodo del año anterior."
+        if spanish
+        else f"Current period totals are {_format_millions(totals['current'])} versus {_format_millions(totals['previous'])} in the previous-year period."
+    )
+    movement_text = (
+        f"La variación es {_format_millions(totals['delta'])}."
+        if spanish
+        else f"The movement is {_format_millions(totals['delta'])}."
+    )
+    source_files_heading = "Archivos de origen" if spanish else "Source Files"
     lines = [
-        "# Period Comparison",
+        f"# {title}",
         "",
-        f"Current period totals are {_format_millions(totals['current'])} versus {_format_millions(totals['previous'])} in the previous-year period.",
-        f"The movement is {_format_millions(totals['delta'])}.",
+        comparison_text,
+        movement_text,
         "",
-        "## Source Files",
+        f"## {source_files_heading}",
         "",
         *[
             f"- `{Path(path).name}`"
@@ -2256,12 +2334,8 @@ def write_client_report(
         from docx.shared import Inches
 
         document = Document()
-        document.add_heading("Period Comparison", level=1)
-        document.add_paragraph(
-            f"Current period totals are {_format_millions(totals['current'])} versus "
-            f"{_format_millions(totals['previous'])} in the previous-year period. "
-            f"The movement is {_format_millions(totals['delta'])}."
-        )
+        document.add_heading(title, level=1)
+        document.add_paragraph(f"{comparison_text} {movement_text}")
         for chart_path in chart_paths:
             path = Path(chart_path)
             if path.suffix.lower() == ".png" and path.exists():

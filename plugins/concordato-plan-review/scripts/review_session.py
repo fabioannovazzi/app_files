@@ -113,38 +113,63 @@ def _write_review_handoff_card(
     render_tool: str,
     save_tool: str,
     apply_tool: str,
+    language: str,
 ) -> Path:
     path = output_dir / "review_handoff.md"
-    lines = [
-        f"# {title} Review Handoff",
-        "",
-        f"- Run ID: `{run_id}`",
-        "- Review payload: `review_payload.json`",
-        "- Run intake: `run_intake.json`",
-        "- Pending decisions: `ui_decisions.json`",
-        "- Applied decisions: `applied_decisions.json`",
-        "- Final artifacts: `final_artifacts.json`",
-        "",
-        "## Review In Codex",
-        f"1. Validate the payload with `{validate_tool}`.",
-        f"2. Render the review workbench with `{render_tool}`.",
-        f"3. Save reviewer actions with `{save_tool}`.",
-        f"4. Apply reviewer actions with `{apply_tool}`.",
-        "",
-        "Persistent save/apply requires the MCP or local-server review surface. "
-        "Static HTML fallback can copy or download decision JSON only.",
-    ]
+    if _is_spanish(language):
+        lines = [
+            f"# Entrega para revisión: {title}",
+            "",
+            f"- ID de ejecución: `{run_id}`",
+            "- Datos de revisión: `review_payload.json`",
+            "- Datos de entrada de la ejecución: `run_intake.json`",
+            "- Decisiones pendientes: `ui_decisions.json`",
+            "- Decisiones aplicadas: `applied_decisions.json`",
+            "- Artefactos finales: `final_artifacts.json`",
+            "",
+            "## Revisión en Codex",
+            f"1. Valide los datos con `{validate_tool}`.",
+            f"2. Muestre el espacio de revisión con `{render_tool}`.",
+            f"3. Guarde las acciones de revisión con `{save_tool}`.",
+            f"4. Aplique las acciones de revisión con `{apply_tool}`.",
+            "",
+            "El guardado y la aplicación persistentes requieren la interfaz de revisión MCP o del servidor local. "
+            "La alternativa HTML estática solo permite copiar o descargar el JSON de decisiones.",
+            "",
+            "<!-- Review Handoff -->",
+        ]
+    else:
+        lines = [
+            f"# {title} Review Handoff",
+            "",
+            f"- Run ID: `{run_id}`",
+            "- Review payload: `review_payload.json`",
+            "- Run intake: `run_intake.json`",
+            "- Pending decisions: `ui_decisions.json`",
+            "- Applied decisions: `applied_decisions.json`",
+            "- Final artifacts: `final_artifacts.json`",
+            "",
+            "## Review In Codex",
+            f"1. Validate the payload with `{validate_tool}`.",
+            f"2. Render the review workbench with `{render_tool}`.",
+            f"3. Save reviewer actions with `{save_tool}`.",
+            f"4. Apply reviewer actions with `{apply_tool}`.",
+            "",
+            "Persistent save/apply requires the MCP or local-server review surface. "
+            "Static HTML fallback can copy or download decision JSON only.",
+        ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
 
-def _review_handoff_output_record(path: Path) -> dict[str, Any]:
+def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
     return {
         "path": path.name,
         "kind": "md",
         "status": "written",
         "required_text": [
-            "Review Handoff",
+            "Entrega para revisión" if _is_spanish(language) else "Review Handoff",
+            *(["Review Handoff"] if _is_spanish(language) else []),
             "review_payload.json",
             "ui_decisions.json",
             "applied_decisions.json",
@@ -230,6 +255,12 @@ def _amount(value: object) -> float:
 def _format_amount(value: object) -> str:
     number = _amount(value)
     return f"{number:,.2f}"
+
+
+def _is_spanish(language: object) -> bool:
+    return (
+        str(language or "").strip().lower().replace("_", "-").split("-", 1)[0] == "es"
+    )
 
 
 def _candidate_key(candidate: Any) -> tuple[str, str, float]:
@@ -417,7 +448,16 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    if _is_spanish(language):
+        return [
+            {"field": "item_type", "label": "Tipo"},
+            {"field": "title", "label": "Elemento"},
+            {"field": "recommended_action", "label": "Acción sugerida"},
+            {"field": "source_path", "label": "Fuente"},
+            {"field": "output_path", "label": "Salida"},
+            {"field": "status", "label": "Estado"},
+        ]
     return [
         {"field": "item_type", "label": "Tipo"},
         {"field": "title", "label": "Elemento"},
@@ -441,11 +481,13 @@ def _errors_by_source(
 def _source_inventory_items(
     inventory: Sequence[dict[str, Any]],
     extraction_errors: Sequence[dict[str, str]],
+    language: str,
 ) -> list[dict[str, Any]]:
     error_lookup = _errors_by_source(extraction_errors)
     items: list[dict[str, Any]] = []
     for index, row in enumerate(inventory[:MAX_INVENTORY_ITEMS], start=1):
-        name = str(row.get("name") or row.get("relative_path") or f"source {index}")
+        fallback = f"fuente {index}" if _is_spanish(language) else f"source {index}"
+        name = str(row.get("name") or row.get("relative_path") or fallback)
         suggested_role = str(row.get("suggested_role") or "unclassified")
         supported = bool(row.get("supported"))
         source_errors = error_lookup.get(name, [])
@@ -476,7 +518,11 @@ def _source_inventory_items(
             _base_item(
                 "source-inventory-truncated",
                 "source_role_attention",
-                "Inventario sorgenti troncato nel widget",
+                (
+                    "Inventario de fuentes truncado en el widget"
+                    if _is_spanish(language)
+                    else "Inventario sorgenti troncato nel widget"
+                ),
                 output_path="inventory.json",
                 allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
@@ -493,6 +539,7 @@ def _source_inventory_items(
 def _plan_amount_items(
     candidates: Sequence[Any],
     matches: Sequence[dict[str, Any]],
+    language: str,
 ) -> list[dict[str, Any]]:
     best_matches = _best_match_by_plan_key(matches)
     items: list[dict[str, Any]] = []
@@ -510,9 +557,17 @@ def _plan_amount_items(
         )
         if match is None:
             requested_document = (
-                "Support document or explanatory schedule for concordato plan amount "
-                f"{_format_amount(candidate_data['amount'])} in "
-                f"{candidate_data['source_file']} at {candidate_data['location']}"
+                (
+                    "Justificante o anexo explicativo para el importe del plan de concordato "
+                    f"{_format_amount(candidate_data['amount'])} en "
+                    f"{candidate_data['source_file']}, {candidate_data['location']}"
+                )
+                if _is_spanish(language)
+                else (
+                    "Support document or explanatory schedule for concordato plan amount "
+                    f"{_format_amount(candidate_data['amount'])} in "
+                    f"{candidate_data['source_file']} at {candidate_data['location']}"
+                )
             )
             followup_data = {
                 "requested_document": requested_document,
@@ -521,7 +576,11 @@ def _plan_amount_items(
                 "source_table": candidate_data["location"],
                 "record_id": candidate_data["location"],
                 "amount": _format_amount(candidate_data["amount"]),
-                "reason": "No deterministic support amount matched this plan amount within tolerance.",
+                "reason": (
+                    "Ningún importe justificativo determinista coincide con este importe del plan dentro de la tolerancia."
+                    if _is_spanish(language)
+                    else "No deterministic support amount matched this plan amount within tolerance."
+                ),
             }
             items.append(
                 _base_item(
@@ -555,9 +614,11 @@ def _plan_amount_items(
                     | {
                         "match_status": "no_candidate_amount_match",
                         "review_note": (
-                            "No source amount matched within tolerance. Reviewer must "
-                            "classify whether this is unsupported, prospective, "
-                            "reclassified, or outside the available evidence."
+                            (
+                                "Ningún importe de origen coincide dentro de la tolerancia. La persona revisora debe clasificarlo como no justificado, prospectivo, reclasificado o ajeno a las evidencias disponibles."
+                                if _is_spanish(language)
+                                else "No source amount matched within tolerance. Reviewer must classify whether this is unsupported, prospective, reclassified, or outside the available evidence."
+                            )
                         ),
                     }
                     | followup_data,
@@ -597,9 +658,11 @@ def _plan_amount_items(
                     "abs_difference": match.get("abs_difference"),
                     "context_token_overlap": match.get("context_token_overlap"),
                     "review_note": (
-                        "This is a mechanical amount match only. Reviewer must "
-                        "confirm source role, context, and whether it supports the "
-                        "plan claim."
+                        (
+                            "Esta es solo una coincidencia mecánica por importe. La persona revisora debe confirmar el rol de la fuente, el contexto y si justifica la afirmación del plan."
+                            if _is_spanish(language)
+                            else "This is a mechanical amount match only. Reviewer must confirm source role, context, and whether it supports the plan claim."
+                        )
                     ),
                 },
             )
@@ -609,7 +672,11 @@ def _plan_amount_items(
             _base_item(
                 "plan-amounts-truncated",
                 "source_role_attention",
-                "Importi di piano troncati nel widget",
+                (
+                    "Importes del plan truncados en el widget"
+                    if _is_spanish(language)
+                    else "Importi di piano troncati nel widget"
+                ),
                 output_path="amount_candidates.csv",
                 allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
@@ -626,15 +693,34 @@ def _plan_amount_items(
 
 def _extraction_error_items(
     extraction_errors: Sequence[dict[str, str]],
+    language: str,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, error in enumerate(
         extraction_errors[:MAX_EXTRACTION_ERROR_ITEMS],
         start=1,
     ):
-        source_file = str(error.get("source_file") or f"Errore estrazione {index}")
-        requested_document = f"Readable source file or converted copy for {source_file}"
-        reason = str(error.get("error") or "Extraction failed for this source file.")
+        source_file = str(
+            error.get("source_file")
+            or (
+                f"Error de extracción {index}"
+                if _is_spanish(language)
+                else f"Errore estrazione {index}"
+            )
+        )
+        requested_document = (
+            f"Archivo de origen legible o copia convertida de {source_file}"
+            if _is_spanish(language)
+            else f"Readable source file or converted copy for {source_file}"
+        )
+        reason = str(
+            error.get("error")
+            or (
+                "No se pudo extraer el contenido de este archivo de origen."
+                if _is_spanish(language)
+                else "Extraction failed for this source file."
+            )
+        )
         data = dict(error) | {
             "requested_document": requested_document,
             "required_document": requested_document,
@@ -672,33 +758,38 @@ def _extraction_error_items(
     return items
 
 
-def _artifact_items(output_dir: Path) -> list[dict[str, Any]]:
+def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
+    spanish = _is_spanish(language)
     artifacts = [
         (
             "review-packet",
             "review_artifact",
-            "Review packet markdown",
+            "Paquete de revisión en Markdown" if spanish else "Review packet markdown",
             "review_packet.md",
             "accept",
         ),
         (
             "tie-out-workpaper",
             "review_artifact",
-            "Tie-out workpaper",
+            "Papel de trabajo de conciliación" if spanish else "Tie-out workpaper",
             "concordato_tie_out_workpaper.xlsx",
             "accept",
         ),
         (
             "summary-docx",
             "review_artifact",
-            "Word tie-out summary",
+            "Resumen de conciliación en Word" if spanish else "Word tie-out summary",
             "concordato_review_summary.docx",
             "accept",
         ),
         (
             "codex-review-memo",
             "codex_review_memo",
-            "Codex auditor review memo",
+            (
+                "Memorando de revisión de auditoría de Codex"
+                if spanish
+                else "Codex auditor review memo"
+            ),
             "codex_run_review.md",
             "mark_unclear",
         ),
@@ -721,10 +812,17 @@ def _artifact_items(output_dir: Path) -> list[dict[str, Any]]:
                     "exists": path.exists(),
                     "size_bytes": path.stat().st_size if path.exists() else 0,
                     "review_note": (
-                        "Codex writes this memo after reviewing the deterministic "
-                        "outputs and any reviewer decisions."
+                        (
+                            "Codex redacta este memorando después de revisar las salidas deterministas y las decisiones de revisión."
+                            if spanish
+                            else "Codex writes this memo after reviewing the deterministic outputs and any reviewer decisions."
+                        )
                         if item_type == "codex_review_memo"
-                        else "Generated deterministic artifact for review."
+                        else (
+                            "Artefacto determinista generado para su revisión."
+                            if spanish
+                            else "Generated deterministic artifact for review."
+                        )
                     ),
                 },
             )
@@ -761,11 +859,20 @@ def _output_records(
                 "## Codex review required",
             ]
         ),
-        "concordato_review_summary.docx": [
-            "Revisione piano concordato - sintesi tie-out",
-            "Conclusione operativa",
-            "Da spiegare nel memo del revisore",
-        ],
+        "concordato_review_summary.docx": (
+            [
+                "Revisión del plan de concordato: resumen de conciliación",
+                "Conclusión operativa",
+                "Aspectos que deben explicarse en el memorando de revisión",
+                "Archivos analizados",
+            ]
+            if is_spanish
+            else [
+                "Revisione piano concordato - sintesi tie-out",
+                "Conclusione operativa",
+                "Da spiegare nel memo del revisore",
+            ]
+        ),
     }
     outputs: list[dict[str, Any]] = []
     for path in sorted(output_dir.rglob("*")):
@@ -851,6 +958,7 @@ def write_run_intake(
     """Write the intake contract once folder scope has been inventoried."""
 
     run_id = _run_id(input_dir)
+    spanish = _is_spanish(language)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
@@ -873,7 +981,11 @@ def write_run_intake(
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": (
+                "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
+                if spanish
+                else "Codex should run scripts/check_dependencies.py before helper scripts."
+            ),
         },
         "data_posture": {
             "local_files_read": [input_dir.as_posix()],
@@ -882,8 +994,16 @@ def write_run_intake(
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
             "notes": [
-                "Concordato review scripts inventory and compare local support files from the input directory.",
-                "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+                (
+                    "Los scripts de revisión del concordato inventarían y comparan los archivos justificativos locales de la carpeta de entrada."
+                    if spanish
+                    else "Concordato review scripts inventory and compare local support files from the input directory."
+                ),
+                (
+                    "De forma predeterminada no se utiliza ningún conector externo, ruta de carga, SQL remoto ni cuaderno alojado."
+                    if spanish
+                    else "No external connector, upload path, remote SQL, or hosted notebook execution is used by default."
+                ),
             ],
         },
         "status": "ready_for_extraction",
@@ -921,10 +1041,10 @@ def write_review_session_artifacts(
         if _candidate_key(candidate) not in matched_keys
     )
     items: list[dict[str, Any]] = []
-    items.extend(_source_inventory_items(inventory, extraction_errors))
-    items.extend(_plan_amount_items(candidates, matches))
-    items.extend(_extraction_error_items(extraction_errors))
-    items.extend(_artifact_items(output_dir))
+    items.extend(_source_inventory_items(inventory, extraction_errors, language))
+    items.extend(_plan_amount_items(candidates, matches, language))
+    items.extend(_extraction_error_items(extraction_errors, language))
+    items.extend(_artifact_items(output_dir, language))
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -932,11 +1052,13 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
+        "language": language,
+        "document_language": document_language,
         "source_paths": [input_dir.as_posix()],
         "review_type": "concordato_plan_support_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "inventory": "inventory.json",
@@ -1002,11 +1124,16 @@ def write_review_session_artifacts(
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
-        title="Concordato Plan Review",
+        title=(
+            "Revisión del plan de concordato"
+            if _is_spanish(language)
+            else "Concordato Plan Review"
+        ),
         validate_tool="validate_concordato_plan_review",
         render_tool="render_concordato_plan_review",
         save_tool="save_concordato_plan_decisions",
         apply_tool="apply_concordato_plan_decisions",
+        language=language,
     )
     outputs = _output_records(
         output_dir,
@@ -1022,7 +1149,9 @@ def write_review_session_artifacts(
             isinstance(output, dict) and output.get("path") == review_handoff_path.name
         )
     ]
-    outputs.append(_review_handoff_output_record(review_handoff_path))
+    outputs.append(_review_handoff_output_record(review_handoff_path, language))
+
+    spanish = _is_spanish(language)
 
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
@@ -1034,13 +1163,33 @@ def write_review_session_artifacts(
             "completed_at": _utc_now(),
             "outputs": outputs,
             "caveats": [
-                "Exact amount matches are candidate evidence only and still require semantic review.",
-                "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
+                (
+                    "Las coincidencias exactas por importe son solo evidencias candidatas y todavía requieren revisión semántica."
+                    if spanish
+                    else "Exact amount matches are candidate evidence only and still require semantic review."
+                ),
+                (
+                    "ui_decisions.json queda pendiente hasta que Codex, la interfaz MCP o la revisión alternativa registren las decisiones."
+                    if spanish
+                    else "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions."
+                ),
             ],
             "next_actions": [
-                "Review review_payload.json in the MCP widget when available.",
-                "Use accepted/edited decisions when writing codex_run_review.md.",
-                "Classify unmatched plan amounts as unsupported, prospective, reclassified, or outside supplied evidence.",
+                (
+                    "Revise review_payload.json en el widget MCP cuando esté disponible."
+                    if spanish
+                    else "Review review_payload.json in the MCP widget when available."
+                ),
+                (
+                    "Use las decisiones aceptadas o editadas al redactar codex_run_review.md."
+                    if spanish
+                    else "Use accepted/edited decisions when writing codex_run_review.md."
+                ),
+                (
+                    "Clasifique los importes del plan sin coincidencia como no justificados, prospectivos, reclasificados o ajenos a las evidencias aportadas."
+                    if spanish
+                    else "Classify unmatched plan amounts as unsupported, prospective, reclassified, or outside supplied evidence."
+                ),
             ],
             "status": "written_pending_review",
         },

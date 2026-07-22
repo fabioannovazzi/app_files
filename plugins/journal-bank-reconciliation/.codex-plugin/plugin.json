@@ -1,6 +1,6 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "Deterministic journal-to-bank reconciliation guided by Codex.",
   "author": {
     "name": "Mparanza",

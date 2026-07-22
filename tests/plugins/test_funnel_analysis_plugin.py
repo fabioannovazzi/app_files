@@ -114,25 +114,30 @@ def _write_lead_fixture(path: Path) -> None:
         writer.writerows(rows)
 
 
-def test_funnel_stage_table_run_writes_deterministic_artifacts(tmp_path: Path) -> None:
+@pytest.mark.parametrize("language", ["es", "es-ES"])
+def test_funnel_stage_table_run_writes_deterministic_artifacts(
+    tmp_path: Path, language: str
+) -> None:
     core = load_core()
     source_file = tmp_path / "leads.csv"
     output_dir = tmp_path / "funnel"
     _write_lead_fixture(source_file)
 
-    result = core.run_funnel_analysis(source_file, output_dir, language="es")
+    result = core.run_funnel_analysis(source_file, output_dir, language=language)
 
     assert result.html_path.exists()
     assert result.csv_path.exists()
     assert result.context_path.exists()
     assert result.manifest_path.exists()
-    assert result.rows[0]["stage"] == "Created records"
+    assert result.rows[0]["stage_id"] == "created_records"
+    assert result.rows[0]["stage"] == "Registros creados"
+    assert result.rows[0]["note"] == "Todos los registros de origen."
     assert result.rows[0]["pass_count"] == 4
-    assert result.rows[2]["stage"] == "Source classified"
+    assert result.rows[2]["stage"] == "Fuente clasificada"
     assert result.rows[2]["drop_off"] == -1
-    assert result.rows[4]["stage"] == "Country identified"
+    assert result.rows[4]["stage"] == "País identificado"
     assert result.rows[4]["pass_count"] == 1
-    assert result.rows[-1]["stage"] == "Sales accepted"
+    assert result.rows[-1]["stage"] == "Lead aceptado por ventas"
     assert result.rows[-1]["pass_count"] == 1
 
     context = json.loads(result.context_path.read_text(encoding="utf-8"))
@@ -143,22 +148,32 @@ def test_funnel_stage_table_run_writes_deterministic_artifacts(tmp_path: Path) -
     )
 
     assert context["capability_id"] == "funnel.stage_table"
-    assert used_recipe["language"] == "es"
+    assert used_recipe["language"] == language
     assert context["table_key"] == "funnel_stage_table"
-    assert context["metric_label"] == "Lead readiness funnel"
+    assert context["metric_label"] == "Embudo de preparación de leads"
     assert context["chart_title_lines"] == [
-        "Baby CRM extract",
-        "Lead readiness funnel in records",
-        "Sequential gates",
+        "Extracto del CRM de ejemplo",
+        "Embudo de preparación de leads en registros",
+        "Etapas secuenciales",
     ]
-    assert context["title_contract"]["when"] == "Sequential gates"
+    assert context["title_contract"]["when"] == "Etapas secuenciales"
+    assert context["row_grain"] == (
+        "Una fila por definición de etapa ordenada; cada fila filtra los registros "
+        "que superaron la etapa anterior."
+    )
+    assert used_recipe["stage_definitions"][0]["stage"] == "Registros creados"
     table_artifact = manifest["artifacts"][0]
     assert table_artifact["capability_id"] == "funnel.stage_table"
     assert table_artifact["table_spec_name"] == "funnel_stage_table"
     assert table_artifact["artifact_type"] == "table"
     assert result.manifest_path.name == "artifact_manifest.json"
     assert "table_definition_hash" not in table_artifact
+    assert '<html lang="es">' in html
     assert '<main class="page" data-gallery-screenshot>' in html
+    assert '<th class="stage">Etapa</th>' in html
+    assert "<th>Abandono</th>" in html
+    assert "Fuente: leads.csv" in html
+    assert "Source:" not in html
     assert "IBCS" not in html
 
 
@@ -198,7 +213,7 @@ def test_funnel_stage_table_accepts_explicit_stage_count_mappings(
     )
 
     result = core.run_funnel_analysis(
-        source_file, tmp_path / "mapped_funnel", recipe_path
+        source_file, tmp_path / "mapped_funnel", recipe_path, language="es"
     )
 
     assert [row["stage"] for row in result.rows] == [
@@ -208,6 +223,9 @@ def test_funnel_stage_table_accepts_explicit_stage_count_mappings(
     ]
     assert result.rows[0]["drop_off"] == -30
     assert result.rows[-1]["stage_conversion"] == pytest.approx(0.4)
+    assert result.rows[0]["note"] == (
+        "Recuentos obtenidos de las columnas asignadas de la tabla de etapas."
+    )
     assert {stage["source"] for stage in result.context["stage_definitions"]} == {
         "stage_table_mappings"
     }

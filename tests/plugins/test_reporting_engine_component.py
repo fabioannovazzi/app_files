@@ -826,6 +826,44 @@ def test_render_capability_dispatches_embedded_component_runner(
     assert capture_output is True
 
 
+def test_render_capability_passes_spanish_to_attribute_table_builder(
+    tmp_path: Path,
+) -> None:
+    renderer = _load_module(
+        "reporting_engine_renderer_spanish_attribute_test",
+        PLUGIN_ROOT / "scripts" / "render_capability.py",
+    )
+    package_dir = tmp_path / "attribute_package"
+    output_dir = tmp_path / "attribute_render"
+    package_dir.mkdir()
+    request = renderer.RenderRequest(
+        capability_id="attributes.attribute_bridge_table",
+        input_file=package_dir,
+        output_dir=output_dir,
+        role_bindings={"package_dir": str(package_dir)},
+        language="es-ES",
+    )
+
+    manifest = renderer.render_capability(request, root=PLUGIN_ROOT)
+
+    html_text = (
+        output_dir / "attribute_tables" / "attribute_bridge_table.html"
+    ).read_text(encoding="utf-8")
+    table_manifest = json.loads(
+        (output_dir / "attribute_tables" / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["component_name"] == "attribute-reporting"
+    assert manifest["runner"]["runner_type"] == "attribute_table_builder"
+    assert manifest["render_proof"]["status"] == "rendered"
+    assert table_manifest["tables"][0]["table_key"] == "attribute_bridge_table"
+    assert table_manifest["tables"][0]["title"] == (
+        "Puente entre señales ganadoras y emergentes"
+    )
+    assert '<html lang="es">' in html_text
+    assert "Conjunto de señales" in html_text
+    assert "No hay filas que cumplan los criterios." in html_text
+
+
 def test_render_capability_fails_when_expected_render_is_missing(
     tmp_path: Path, monkeypatch: Any
 ) -> None:

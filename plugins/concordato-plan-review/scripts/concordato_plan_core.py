@@ -651,6 +651,7 @@ def _write_summary_docx(
     candidates: list[AmountCandidate],
     matches: list[dict[str, Any]],
     extraction_errors: list[dict[str, str]],
+    language: str,
 ) -> None:
     """Write a readable Word summary with match / no-match status."""
 
@@ -671,38 +672,118 @@ def _write_summary_docx(
         role = str(item["suggested_role"])
         role_counts[role] = role_counts.get(role, 0) + 1
 
-    document = Document()
-    document.add_heading("Revisione piano concordato - sintesi tie-out", 0)
-    document.add_paragraph(f"Cartella analizzata: {input_dir}")
-    document.add_paragraph(f"Data di riferimento: {reference_date or 'non indicata'}")
-    document.add_paragraph(f"Tolleranza importi: {_format_amount(tolerance)} euro")
-
-    document.add_heading("Conclusione operativa", level=1)
-    document.add_paragraph(
-        "Il documento distingue i numeri del piano che hanno almeno un match "
-        "meccanico per importo nei file di supporto dai numeri per cui non e "
-        "stato trovato un importo corrispondente entro la tolleranza. Il match "
-        "per importo e una prova candidata: prima di chiudere la verifica serve "
-        "controllare contesto, voce e fonte."
-    )
-
-    _add_docx_table(
-        document,
-        ["Area", "Esito"],
-        [
+    if language == "es":
+        title = "Revisión del plan de concordato: resumen de conciliación"
+        folder_label = "Carpeta analizada"
+        date_label = "Fecha de referencia"
+        no_date = "no indicada"
+        tolerance_label = "Tolerancia de importes"
+        conclusion_heading = "Conclusión operativa"
+        conclusion = (
+            "El documento distingue los importes del plan que tienen al menos una "
+            "coincidencia mecánica por importe en los archivos justificativos de "
+            "aquellos para los que no se encontró un importe correspondiente dentro "
+            "de la tolerancia. La coincidencia por importe es una evidencia candidata: "
+            "antes de cerrar la revisión deben comprobarse el contexto, la partida y la fuente."
+        )
+        outcome_headers = ["Área", "Resultado"]
+        outcome_rows = [
+            ["Archivos analizados", str(len(inventory))],
+            ["Importes candidatos del plan", str(len(plan_candidates))],
+            ["Importes del plan con coincidencia", str(len(matched_plan))],
+            ["Importes del plan sin coincidencia", str(len(unmatched_plan))],
+            ["Coincidencias candidatas totales", str(len(matches))],
+        ]
+        sources_heading = "Fuentes reconocidas"
+        sources_headers = ["Rol sugerido", "Archivos"]
+        matched_heading = "Ejemplos de importes que coinciden"
+        matched_headers = [
+            "Plan",
+            "Importe del plan",
+            "Fuente",
+            "Referencia de la fuente",
+            "Diferencia",
+        ]
+        no_matches = "No se encontraron coincidencias por importe."
+        unmatched_heading = "Ejemplos de importes que no coinciden"
+        unmatched_headers = ["Plan", "Importe del plan", "Contexto"]
+        all_matched = "Todos los importes candidatos del plan tienen al menos una coincidencia por importe."
+        memo_heading = "Aspectos que deben explicarse en el memorando de revisión"
+        memo_points = (
+            "El paso de la fuente contable a la rectificación y al valor del plan debe documentarse partida por partida.",
+            "Las coincidencias por el mismo importe no bastan cuando la misma cifra aparece en varios anexos.",
+            "Las rectificaciones de la persona revisora citadas en el plan deben vincularse a un justificante o a un memorando independiente.",
+            "Las reclasificaciones y compensaciones del concordato deben separarse de las rectificaciones contables.",
+            "Los importes prospectivos no tienen que coincidir con saldos históricos, pero deben basarse en hipótesis explícitas y verificables.",
+        )
+        errors_heading = "Errores de extracción"
+        error_headers = ["Archivo", "Error"]
+    else:
+        title = "Revisione piano concordato - sintesi tie-out"
+        folder_label = "Cartella analizzata"
+        date_label = "Data di riferimento"
+        no_date = "non indicata"
+        tolerance_label = "Tolleranza importi"
+        conclusion_heading = "Conclusione operativa"
+        conclusion = (
+            "Il documento distingue i numeri del piano che hanno almeno un match "
+            "meccanico per importo nei file di supporto dai numeri per cui non e "
+            "stato trovato un importo corrispondente entro la tolleranza. Il match "
+            "per importo e una prova candidata: prima di chiudere la verifica serve "
+            "controllare contesto, voce e fonte."
+        )
+        outcome_headers = ["Area", "Esito"]
+        outcome_rows = [
             ["File analizzati", str(len(inventory))],
             ["Numeri candidati nel piano", str(len(plan_candidates))],
             ["Numeri del piano con match per importo", str(len(matched_plan))],
             ["Numeri del piano senza match per importo", str(len(unmatched_plan))],
             ["Match candidati complessivi", str(len(matches))],
-        ],
-    )
+        ]
+        sources_heading = "Fonti riconosciute"
+        sources_headers = ["Ruolo suggerito", "File"]
+        matched_heading = "Esempi di numeri che battono per importo"
+        matched_headers = [
+            "Piano",
+            "Importo piano",
+            "Fonte",
+            "Riferimento fonte",
+            "Differenza",
+        ]
+        no_matches = "Nessun match per importo trovato."
+        unmatched_heading = "Esempi di numeri che non battono"
+        unmatched_headers = ["Piano", "Importo piano", "Contesto"]
+        all_matched = (
+            "Tutti i numeri candidati del piano hanno almeno un match per importo."
+        )
+        memo_heading = "Da spiegare nel memo del revisore"
+        memo_points = (
+            "Il passaggio fonte contabile -> rettifica -> valore di piano deve essere documentato voce per voce.",
+            "I match per importo uguale non bastano quando la stessa cifra compare in piu prospetti.",
+            "Le rettifiche del revisore richiamate dal piano devono essere collegate a un supporto o a un memo autonomo.",
+            "Le riclassifiche e compensazioni concordatarie devono essere separate dalle rettifiche contabili.",
+            "I numeri prospettici non devono battere sui saldi storici, ma devono avere assunzioni esplicite e verificabili.",
+        )
+        errors_heading = "Errori di estrazione"
+        error_headers = ["File", "Errore"]
 
-    document.add_heading("Fonti riconosciute", level=1)
+    document = Document()
+    document.core_properties.title = title
+    document.add_heading(title, 0)
+    document.add_paragraph(f"{folder_label}: {input_dir}")
+    document.add_paragraph(f"{date_label}: {reference_date or no_date}")
+    document.add_paragraph(f"{tolerance_label}: {_format_amount(tolerance)} euro")
+
+    document.add_heading(conclusion_heading, level=1)
+    document.add_paragraph(conclusion)
+
+    _add_docx_table(document, outcome_headers, outcome_rows)
+
+    document.add_heading(sources_heading, level=1)
     source_rows = [[role, str(count)] for role, count in sorted(role_counts.items())]
-    _add_docx_table(document, ["Ruolo suggerito", "File"], source_rows)
+    _add_docx_table(document, sources_headers, source_rows)
 
-    document.add_heading("Esempi di numeri che battono per importo", level=1)
+    document.add_heading(matched_heading, level=1)
     matched_rows: list[list[str]] = []
     for item in sorted(matched_plan, key=lambda row: abs(row.amount), reverse=True)[
         :12
@@ -720,13 +801,13 @@ def _write_summary_docx(
     if matched_rows:
         _add_docx_table(
             document,
-            ["Piano", "Importo piano", "Fonte", "Riferimento fonte", "Differenza"],
+            matched_headers,
             matched_rows,
         )
     else:
-        document.add_paragraph("Nessun match per importo trovato.")
+        document.add_paragraph(no_matches)
 
-    document.add_heading("Esempi di numeri che non battono", level=1)
+    document.add_heading(unmatched_heading, level=1)
     unmatched_rows = [
         [item.location, _format_amount(item.amount), item.context[:180]]
         for item in sorted(
@@ -736,29 +817,21 @@ def _write_summary_docx(
     if unmatched_rows:
         _add_docx_table(
             document,
-            ["Piano", "Importo piano", "Contesto"],
+            unmatched_headers,
             unmatched_rows,
         )
     else:
-        document.add_paragraph(
-            "Tutti i numeri candidati del piano hanno almeno un match per importo."
-        )
+        document.add_paragraph(all_matched)
 
-    document.add_heading("Da spiegare nel memo del revisore", level=1)
-    for sentence in (
-        "Il passaggio fonte contabile -> rettifica -> valore di piano deve essere documentato voce per voce.",
-        "I match per importo uguale non bastano quando la stessa cifra compare in piu prospetti.",
-        "Le rettifiche del revisore richiamate dal piano devono essere collegate a un supporto o a un memo autonomo.",
-        "Le riclassifiche e compensazioni concordatarie devono essere separate dalle rettifiche contabili.",
-        "I numeri prospettici non devono battere sui saldi storici, ma devono avere assunzioni esplicite e verificabili.",
-    ):
+    document.add_heading(memo_heading, level=1)
+    for sentence in memo_points:
         document.add_paragraph(sentence, style="List Bullet")
 
     if extraction_errors:
-        document.add_heading("Errori di estrazione", level=1)
+        document.add_heading(errors_heading, level=1)
         _add_docx_table(
             document,
-            ["File", "Errore"],
+            error_headers,
             [[str(row["source_file"]), str(row["error"])] for row in extraction_errors],
         )
 
@@ -855,10 +928,11 @@ def run_concordato_review(
         "candidate_match_count": len(matches),
         "extraction_errors": extraction_errors,
         "deterministic_boundary": (
-            "Inventory, extraction, number parsing, arithmetic and candidate amount "
-            "matching are deterministic for auditability. Semantic support, "
-            "omissions, legal/tax relevance and going-concern criticalities are "
-            "Codex/reviewer judgment."
+            (
+                "El inventario, la extracción, la interpretación de cifras, la aritmética y la búsqueda de coincidencias candidatas por importe son deterministas para facilitar la auditoría. La suficiencia semántica del soporte, las omisiones, la relevancia jurídica o fiscal y los aspectos críticos de empresa en funcionamiento requieren el juicio de Codex o de la persona revisora."
+                if language == "es"
+                else "Inventory, extraction, number parsing, arithmetic and candidate amount matching are deterministic for auditability. Semantic support, omissions, legal/tax relevance and going-concern criticalities are Codex/reviewer judgment."
+            )
         ),
     }
 
@@ -924,6 +998,7 @@ def run_concordato_review(
         candidates=candidates,
         matches=matches,
         extraction_errors=extraction_errors,
+        language=language,
     )
     review_session = write_review_session_artifacts(
         output_dir,

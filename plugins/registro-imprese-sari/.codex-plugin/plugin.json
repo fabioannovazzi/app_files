@@ -1,6 +1,6 @@
 {
   "name": "registro-imprese-sari",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Prepara una pratica Registro Imprese/DIRE da fonti ufficiali SARI e CCIAA, con provenienza e revisione professionale.",
   "author": {
     "name": "Mparanza",

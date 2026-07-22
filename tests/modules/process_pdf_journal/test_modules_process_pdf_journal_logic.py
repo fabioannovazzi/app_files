@@ -213,6 +213,44 @@ def test_spanish_ocr_language_reaches_pdf_text_extraction(
     assert captured == {"lang": "spa"}
 
 
+@pytest.mark.parametrize("locale_hint", ("es", "es-ES"))
+def test_parse_journal_any_normalizes_spanish_locale_for_ocr(
+    monkeypatch: pytest.MonkeyPatch,
+    locale_hint: str,
+) -> None:
+    from modules.process_pdf_journal import logic
+
+    captured: dict[str, str] = {}
+
+    class RejectingRouter:
+        def __init__(self, _parsers: object) -> None:
+            pass
+
+        def route(self, _pdf_bytes: bytes, *, meta: dict[str, object]) -> object:
+            raise logic.ParserConfidenceError("use requested OCR strategy")
+
+    def fake_extract(pdf_bytes: bytes, *, lang: str) -> SimpleNamespace:
+        assert pdf_bytes == b"%PDF-spanish-public-path"
+        captured["lang"] = lang
+        return SimpleNamespace(
+            text=("data_registrazione conto dare\n" "01/01/2026 6000 10,00"),
+            method="ocr",
+        )
+
+    monkeypatch.setattr(logic, "Router", RejectingRouter)
+    monkeypatch.setattr(logic, "_extract_pdf_text_with_ocr_once", fake_extract)
+
+    result = logic.parse_journal_any(
+        b"%PDF-spanish-public-path",
+        strategy_order=["ocr"],
+        locale_hint=locale_hint,
+        min_rows=1,
+    )
+
+    assert result.height == 1
+    assert captured == {"lang": "spa"}
+
+
 @pytest.mark.parametrize("language", ("es", "es-ES", "es_ES", "spa", "español"))
 def test_normalize_ocr_language_maps_spanish_aliases(language: str) -> None:
     from modules.process_pdf_journal.logic import normalize_ocr_language

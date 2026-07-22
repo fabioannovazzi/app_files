@@ -10,6 +10,7 @@ from typing import Any, Sequence
 __all__ = [
     "ReviewSessionResult",
     "RunIntakeResult",
+    "workbook_sheet_name",
     "write_review_session_artifacts",
     "write_run_intake",
 ]
@@ -18,6 +19,146 @@ SCHEMA_VERSION = "1.0"
 PLUGIN_NAME = "journal-sampling"
 WORKFLOW_NAME = "journal-sampling"
 MAX_SAMPLE_ITEMS = 750
+
+_REVIEW_COPY: dict[str, dict[str, Any]] = {
+    "en": {
+        "product_title": "Journal Sampling",
+        "handoff_title": "Review Handoff",
+        "run_id": "Run ID",
+        "review_payload": "Review payload",
+        "run_intake": "Run intake",
+        "pending_decisions": "Pending decisions",
+        "applied_decisions": "Applied decisions",
+        "final_artifacts": "Final artifacts",
+        "review_in_codex": "Review In Codex",
+        "validate_step": "Validate the payload with `{tool}`.",
+        "render_step": "Render the review workbench with `{tool}`.",
+        "save_step": "Save reviewer actions with `{tool}`.",
+        "apply_step": "Apply reviewer actions with `{tool}`.",
+        "handoff_notice": (
+            "Persistent save/apply requires the MCP or local-server review "
+            "surface. Static HTML fallback can copy or download decision JSON only."
+        ),
+        "columns": (
+            "Type",
+            "Entry or artifact",
+            "Suggested action",
+            "Source",
+            "Output",
+            "Status",
+        ),
+        "sampled_entry": "Sampled entry {index}",
+        "page": "page",
+        "row": "row",
+        "sample_control": "{method} sample: {sample_size} of {population}",
+        "methods": {
+            "random": "random",
+            "systematic": "systematic",
+            "stratified": "stratified",
+            "mus": "monetary-unit",
+        },
+        "artifact_titles": {
+            "csv": "Journal sample CSV",
+            "xlsx": "Journal sample workbook",
+            "audit": "Sampling audit JSON",
+        },
+        "workbook_sheet": "Sheet1",
+        "dependency_note": (
+            "Codex should run scripts/check_dependencies.py before helper scripts."
+        ),
+        "data_posture_notes": [
+            "Sampling scripts read the normalized journal CSV locally and write bounded sample review artifacts.",
+            "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+        ],
+        "caveats": [
+            "The deterministic sample is governed by sampling_audit.json; review does not change the sample without rerunning.",
+            "The MCP review payload is bounded; use CSV/XLSX/JSON outputs as the complete evidence set.",
+            "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions.",
+        ],
+        "next_actions": [
+            "Call validate_journal_sampling_review, then render_journal_sampling_review when MCP is available.",
+            "Review sampling parameters, filters, population counts, and sampled entries before delivery.",
+            "Change method, size, filters, or mappings and rerun when the sample basis is wrong.",
+        ],
+    },
+    "es": {
+        "product_title": "Muestreo del diario",
+        "handoff_title": "Entrega para revisión",
+        "run_id": "ID de ejecución",
+        "review_payload": "Datos de revisión",
+        "run_intake": "Datos de ejecución",
+        "pending_decisions": "Decisiones pendientes",
+        "applied_decisions": "Decisiones aplicadas",
+        "final_artifacts": "Artefactos finales",
+        "review_in_codex": "Revisión en Codex",
+        "validate_step": "Valide los datos con `{tool}`.",
+        "render_step": "Abra el área de revisión con `{tool}`.",
+        "save_step": "Guarde las decisiones del revisor con `{tool}`.",
+        "apply_step": "Aplique las decisiones del revisor con `{tool}`.",
+        "handoff_notice": (
+            "El guardado y la aplicación persistentes requieren la superficie MCP "
+            "o el servidor local. El modo HTML estático solo permite copiar o "
+            "descargar el JSON de decisiones."
+        ),
+        "columns": (
+            "Tipo",
+            "Asiento o artefacto",
+            "Acción sugerida",
+            "Fuente",
+            "Salida",
+            "Estado",
+        ),
+        "sampled_entry": "Asiento muestreado {index}",
+        "page": "página",
+        "row": "fila",
+        "sample_control": "Muestra {method}: {sample_size} de {population}",
+        "methods": {
+            "random": "aleatoria",
+            "systematic": "sistemática",
+            "stratified": "estratificada",
+            "mus": "por unidad monetaria",
+        },
+        "artifact_titles": {
+            "csv": "CSV de la muestra del diario",
+            "xlsx": "Libro Excel de la muestra del diario",
+            "audit": "JSON de auditoría del muestreo",
+        },
+        "workbook_sheet": "Muestra del diario",
+        "dependency_note": (
+            "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
+        ),
+        "data_posture_notes": [
+            "Los scripts de muestreo leen localmente el CSV del diario normalizado y generan artefactos acotados para la revisión de la muestra.",
+            "De forma predeterminada no se utilizan conectores externos, rutas de carga, SQL remoto ni cuadernos alojados.",
+        ],
+        "caveats": [
+            "La muestra determinista se rige por sampling_audit.json; la revisión no modifica la muestra sin volver a ejecutar el proceso.",
+            "Los datos de revisión MCP están acotados; utilice las salidas CSV, XLSX y JSON como conjunto completo de evidencias.",
+            "ui_decisions.json permanece pendiente hasta que Codex, el widget MCP o la revisión alternativa registren las decisiones.",
+        ],
+        "next_actions": [
+            "Ejecute validate_journal_sampling_review y, cuando MCP esté disponible, render_journal_sampling_review.",
+            "Revise los parámetros, los filtros, los recuentos de la población y los asientos muestreados antes de la entrega.",
+            "Cambie el método, el tamaño, los filtros o las asignaciones y vuelva a ejecutar el proceso si la base de muestreo es incorrecta.",
+        ],
+    },
+}
+
+
+def _normalize_language(language: object | None) -> str:
+    text = str(language or "en").strip().lower().replace("_", "-")
+    code = text.split("-", 1)[0]
+    return code if code in _REVIEW_COPY else "en"
+
+
+def _review_copy(language: object | None) -> dict[str, Any]:
+    return _REVIEW_COPY[_normalize_language(language)]
+
+
+def workbook_sheet_name(language: object | None) -> str:
+    """Return the localized workbook sheet title for a review language."""
+
+    return str(_review_copy(language)["workbook_sheet"])
 
 
 @dataclass(frozen=True)
@@ -67,43 +208,51 @@ def _write_review_handoff_card(
     output_dir: Path,
     *,
     run_id: str,
-    title: str,
+    language: str,
     validate_tool: str,
     render_tool: str,
     save_tool: str,
     apply_tool: str,
 ) -> Path:
+    copy = _review_copy(language)
     path = output_dir / "review_handoff.md"
     lines = [
-        f"# {title} Review Handoff",
+        f"# {copy['product_title']} · {copy['handoff_title']}",
+        "<!-- review-contract: Review Handoff -->",
         "",
-        f"- Run ID: `{run_id}`",
-        "- Review payload: `review_payload.json`",
-        "- Run intake: `run_intake.json`",
-        "- Pending decisions: `ui_decisions.json`",
-        "- Applied decisions: `applied_decisions.json`",
-        "- Final artifacts: `final_artifacts.json`",
+        f"- {copy['run_id']}: `{run_id}`",
+        f"- {copy['review_payload']}: `review_payload.json`",
+        f"- {copy['run_intake']}: `run_intake.json`",
+        f"- {copy['pending_decisions']}: `ui_decisions.json`",
+        f"- {copy['applied_decisions']}: `applied_decisions.json`",
+        f"- {copy['final_artifacts']}: `final_artifacts.json`",
         "",
-        "## Review In Codex",
-        f"1. Validate the payload with `{validate_tool}`.",
-        f"2. Render the review workbench with `{render_tool}`.",
-        f"3. Save reviewer actions with `{save_tool}`.",
-        f"4. Apply reviewer actions with `{apply_tool}`.",
+        f"## {copy['review_in_codex']}",
+        f"1. {copy['validate_step'].format(tool=validate_tool)}",
+        f"2. {copy['render_step'].format(tool=render_tool)}",
+        f"3. {copy['save_step'].format(tool=save_tool)}",
+        f"4. {copy['apply_step'].format(tool=apply_tool)}",
         "",
-        "Persistent save/apply requires the MCP or local-server review surface. "
-        "Static HTML fallback can copy or download decision JSON only.",
+        copy["handoff_notice"],
     ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
 
-def _review_handoff_output_record(path: Path) -> dict[str, Any]:
+def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
+    copy = _review_copy(language)
+    localized_required_text = (
+        [copy["handoff_title"], copy["review_in_codex"]]
+        if _normalize_language(language) == "es"
+        else []
+    )
     return {
         "path": path.name,
         "kind": "md",
         "status": "written",
         "required_text": [
             "Review Handoff",
+            *localized_required_text,
             "review_payload.json",
             "ui_decisions.json",
             "applied_decisions.json",
@@ -215,18 +364,23 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    labels = _review_copy(language)["columns"]
+    fields = (
+        "item_type",
+        "title",
+        "recommended_action",
+        "source_path",
+        "output_path",
+        "status",
+    )
     return [
-        {"field": "item_type", "label": "Type"},
-        {"field": "title", "label": "Entry or artifact"},
-        {"field": "recommended_action", "label": "Suggested action"},
-        {"field": "source_path", "label": "Source"},
-        {"field": "output_path", "label": "Output"},
-        {"field": "status", "label": "Status"},
+        {"field": field, "label": str(label)}
+        for field, label in zip(fields, labels, strict=True)
     ]
 
 
-def _entry_title(row: dict[str, Any], index: int) -> str:
+def _entry_title(row: dict[str, Any], index: int, language: str) -> str:
     parts = [
         _clean_text(row.get("entry_date")),
         _clean_text(row.get("movement_number") or row.get("line_number")),
@@ -234,26 +388,31 @@ def _entry_title(row: dict[str, Any], index: int) -> str:
         _clean_text(row.get("amount_signed") or row.get("amount_abs")),
         _clean_text(row.get("line_desc") or row.get("account_desc")),
     ]
-    return " | ".join(part for part in parts if part) or f"Sampled entry {index}"
+    return " | ".join(part for part in parts if part) or str(
+        _review_copy(language)["sampled_entry"]
+    ).format(index=index)
 
 
-def _sample_items(sample_rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def _sample_items(
+    sample_rows: Sequence[dict[str, Any]], language: str
+) -> list[dict[str, Any]]:
+    copy = _review_copy(language)
     return [
         _base_item(
             f"sampled-entry-{index}",
             "sampled_entry",
-            _entry_title(row, index),
+            _entry_title(row, index, language),
             source_path="; ".join(
                 part
                 for part in (
                     _clean_text(row.get("source_file")),
                     (
-                        f"page {_clean_text(row.get('source_page'))}"
+                        f"{copy['page']} {_clean_text(row.get('source_page'))}"
                         if _clean_text(row.get("source_page"))
                         else ""
                     ),
                     (
-                        f"row {_clean_text(row.get('source_row'))}"
+                        f"{copy['row']} {_clean_text(row.get('source_row'))}"
                         if _clean_text(row.get("source_row"))
                         else ""
                     ),
@@ -280,18 +439,25 @@ def _sample_items(sample_rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]
     ]
 
 
-def _control_items(audit: dict[str, Any]) -> list[dict[str, Any]]:
+def _control_items(audit: dict[str, Any], language: str) -> list[dict[str, Any]]:
+    copy = _review_copy(language)
     sample_size = int(audit.get("sample_size") or 0)
     requested = int(audit.get("requested_size") or 0)
     population = int(audit.get("population_size_after_filters") or 0)
     action = "accept"
     if population == 0 or sample_size < min(requested, population):
         action = "mark_unclear"
+    method = str(audit.get("method") or "sample")
+    method_label = copy["methods"].get(method, method)
     return [
         _base_item(
             "sampling-control",
             "sampling_control",
-            f"{audit.get('method', 'sample')} sample: {sample_size} of {population}",
+            str(copy["sample_control"]).format(
+                method=method_label,
+                sample_size=sample_size,
+                population=population,
+            ),
             output_path="sampling_audit.json",
             allowed_actions=("accept", "edit", "mark_unclear", "skip"),
             recommended_action=action,
@@ -316,12 +482,15 @@ def _control_items(audit: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
-def _artifact_items(audit: dict[str, Any], output_dir: Path) -> list[dict[str, Any]]:
+def _artifact_items(
+    audit: dict[str, Any], output_dir: Path, language: str
+) -> list[dict[str, Any]]:
     outputs = audit.get("outputs") if isinstance(audit.get("outputs"), dict) else {}
+    titles = _review_copy(language)["artifact_titles"]
     labels = {
-        "csv": ("sample_artifact", "Journal sample CSV"),
-        "xlsx": ("sample_artifact", "Journal sample workbook"),
-        "audit": ("review_artifact", "Sampling audit JSON"),
+        "csv": ("sample_artifact", titles["csv"]),
+        "xlsx": ("sample_artifact", titles["xlsx"]),
+        "audit": ("review_artifact", titles["audit"]),
     }
     outputs = {**outputs, "audit": (output_dir / "sampling_audit.json").as_posix()}
     items: list[dict[str, Any]] = []
@@ -378,7 +547,6 @@ SAMPLE_REQUIRED_COLUMNS = [
     "source_file",
     "source_row",
 ]
-SAMPLE_WORKBOOK_SHEET = "Sheet1"
 
 
 def _column_letters(index: int) -> str:
@@ -417,7 +585,7 @@ def _sample_required_text(sample_rows: Sequence[dict[str, Any]]) -> list[str]:
 
 
 def _sample_required_cells(
-    sample_rows: Sequence[dict[str, Any]],
+    sample_rows: Sequence[dict[str, Any]], language: str
 ) -> dict[str, dict[str, str]]:
     cells: dict[str, str] = {}
     fields = [
@@ -434,11 +602,14 @@ def _sample_required_cells(
         first_row = sample_rows[0]
         for field in fields:
             _add_cell_check(cells, _cell_reference(field, 2), first_row.get(field))
-    return {SAMPLE_WORKBOOK_SHEET: cells}
+    return {workbook_sheet_name(language): cells}
 
 
 def _output_records(
-    output_dir: Path, audit: dict[str, Any], sample_rows: Sequence[dict[str, Any]]
+    output_dir: Path,
+    audit: dict[str, Any],
+    sample_rows: Sequence[dict[str, Any]],
+    language: str,
 ) -> list[dict[str, Any]]:
     review_files = {
         "run_intake.json",
@@ -468,12 +639,11 @@ def _output_records(
                 "required_text",
             ]
         elif relative == "journal_sample.xlsx":
+            sheet_name = workbook_sheet_name(language)
             output["source_row_count"] = int(audit.get("sample_size", 0))
-            output["required_sheets"] = [SAMPLE_WORKBOOK_SHEET]
-            output["required_sheet_headers"] = {
-                SAMPLE_WORKBOOK_SHEET: SAMPLE_REQUIRED_COLUMNS
-            }
-            output["required_cells"] = _sample_required_cells(sample_rows)
+            output["required_sheets"] = [sheet_name]
+            output["required_sheet_headers"] = {sheet_name: SAMPLE_REQUIRED_COLUMNS}
+            output["required_cells"] = _sample_required_cells(sample_rows, language)
             output["qa_checks"] = [
                 "office_zip",
                 "workbook_xml",
@@ -502,6 +672,8 @@ def write_run_intake(
 ) -> RunIntakeResult:
     """Write run intake before deterministic sample selection."""
 
+    language_code = _normalize_language(language)
+    copy = _review_copy(language_code)
     run_id = _run_id(normalized_csv)
     payload = {
         "schema_version": SCHEMA_VERSION,
@@ -509,7 +681,7 @@ def write_run_intake(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": language,
+        "language": language_code,
         "input_paths": [normalized_csv.as_posix()],
         "output_dir": output_dir.as_posix(),
         "inferred_task": "journal_sampling_review_payload",
@@ -525,13 +697,13 @@ def write_run_intake(
             "date_end": date_end,
             "min_abs": min_abs,
             "keyword": keyword,
-            "language": language,
+            "language": language_code,
             "currency": "EUR",
         },
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": copy["dependency_note"],
         },
         "data_posture": {
             "local_files_read": [normalized_csv.as_posix()],
@@ -539,10 +711,7 @@ def write_run_intake(
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
-            "notes": [
-                "Sampling scripts read the normalized journal CSV locally and write bounded sample review artifacts.",
-                "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
-            ],
+            "notes": list(copy["data_posture_notes"]),
         },
         "status": "ready_for_sampling_run",
     }
@@ -562,11 +731,13 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact inventory."""
 
+    language = _normalize_language(audit.get("language"))
+    copy = _review_copy(language)
     sample_rows = _rows(sample)
     items: list[dict[str, Any]] = []
-    items.extend(_control_items(audit))
-    items.extend(_sample_items(sample_rows))
-    items.extend(_artifact_items(audit, output_dir))
+    items.extend(_control_items(audit, language))
+    items.extend(_sample_items(sample_rows, language))
+    items.extend(_artifact_items(audit, output_dir, language))
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -574,12 +745,12 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": audit.get("language", "en"),
+        "language": language,
         "source_paths": [audit.get("normalized_csv")],
         "review_type": "journal_sampling_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "sampling_audit": "sampling_audit.json",
@@ -638,13 +809,13 @@ def write_review_session_artifacts(
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
-        title="Journal Sampling",
+        language=language,
         validate_tool="validate_journal_sampling_review",
         render_tool="render_journal_sampling_review",
         save_tool="save_journal_sampling_decisions",
         apply_tool="apply_journal_sampling_decisions",
     )
-    outputs = _output_records(output_dir, audit, sample_rows)
+    outputs = _output_records(output_dir, audit, sample_rows, language)
     outputs = [
         output
         for output in outputs
@@ -652,7 +823,7 @@ def write_review_session_artifacts(
             isinstance(output, dict) and output.get("path") == review_handoff_path.name
         )
     ]
-    outputs.append(_review_handoff_output_record(review_handoff_path))
+    outputs.append(_review_handoff_output_record(review_handoff_path, language))
 
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
@@ -663,16 +834,8 @@ def write_review_session_artifacts(
             "run_id": run_id,
             "completed_at": _utc_now(),
             "outputs": outputs,
-            "caveats": [
-                "The deterministic sample is governed by sampling_audit.json; review does not change the sample without rerunning.",
-                "The MCP review payload is bounded; use CSV/XLSX/JSON outputs as the complete evidence set.",
-                "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions.",
-            ],
-            "next_actions": [
-                "Call validate_journal_sampling_review, then render_journal_sampling_review when MCP is available.",
-                "Review sampling parameters, filters, population counts, and sampled entries before delivery.",
-                "Change method, size, filters, or mappings and rerun when the sample basis is wrong.",
-            ],
+            "caveats": list(copy["caveats"]),
+            "next_actions": list(copy["next_actions"]),
             "status": "written_pending_review",
         },
     )

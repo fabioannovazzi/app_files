@@ -21,6 +21,115 @@ MAX_INTERSECTION_ITEMS = 120
 MAX_PAIR_ITEMS = 80
 MAX_ARTIFACT_ITEMS = 300
 
+_REVIEW_COPY: dict[str, dict[str, Any]] = {
+    "en": {
+        "product_title": "Set Overlap Analysis",
+        "handoff_title": "Review Handoff",
+        "run_id": "Run ID",
+        "review_payload": "Review payload",
+        "run_intake": "Run intake",
+        "pending_decisions": "Pending decisions",
+        "applied_decisions": "Applied decisions",
+        "final_artifacts": "Final artifacts",
+        "review_in_codex": "Review In Codex",
+        "validate_step": "Validate the payload with `{tool}`.",
+        "render_step": "Render the review workbench with `{tool}`.",
+        "save_step": "Save reviewer actions with `{tool}`.",
+        "apply_step": "Apply reviewer actions with `{tool}`.",
+        "columns": (
+            "Type",
+            "Overlap item",
+            "Suggested action",
+            "Source",
+            "Output",
+            "Status",
+        ),
+        "set": "Set {index}",
+        "set_items": "{name}: {count} items",
+        "intersection": "Intersection {index}",
+        "intersection_items": "{name}: {count} items",
+        "pair_items": "{left} + {right}: {count} shared items",
+        "artifact": "Artifact {index}",
+        "context_title": "Set overlap context",
+        "audit_title": "Set overlap audit",
+        "dependency_note": (
+            "Codex should run scripts/check_dependencies.py before helper scripts."
+        ),
+        "data_posture_notes": [
+            "Set-overlap scripts read the source table and optional recipe locally and write bounded review artifacts.",
+            "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+        ],
+        "caveats": [
+            "Use CSV tables and set_overlap_context.json before interpreting Venn or UpSet pixels.",
+            "Venn is valid only when exactly two or three selected sets were rendered.",
+            "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
+        ],
+        "next_actions": [
+            "Call validate_set_overlap_review, then render_set_overlap_review when MCP is available.",
+            "Review largest exact intersections and pairwise overlaps before final interpretation.",
+            "Record accepted/edited/rejected review decisions before treating the overlap package as reviewed.",
+        ],
+    },
+    "es": {
+        "product_title": "Análisis de solapamiento de conjuntos",
+        "handoff_title": "Entrega para revisión",
+        "run_id": "ID de ejecución",
+        "review_payload": "Datos de revisión",
+        "run_intake": "Datos de ejecución",
+        "pending_decisions": "Decisiones pendientes",
+        "applied_decisions": "Decisiones aplicadas",
+        "final_artifacts": "Artefactos finales",
+        "review_in_codex": "Revisión en Codex",
+        "validate_step": "Valide los datos con `{tool}`.",
+        "render_step": "Abra el área de revisión con `{tool}`.",
+        "save_step": "Guarde las decisiones del revisor con `{tool}`.",
+        "apply_step": "Aplique las decisiones del revisor con `{tool}`.",
+        "columns": (
+            "Tipo",
+            "Elemento de solapamiento",
+            "Acción sugerida",
+            "Fuente",
+            "Salida",
+            "Estado",
+        ),
+        "set": "Conjunto {index}",
+        "set_items": "{name}: {count} elementos",
+        "intersection": "Intersección {index}",
+        "intersection_items": "{name}: {count} elementos",
+        "pair_items": "{left} + {right}: {count} elementos compartidos",
+        "artifact": "Artefacto {index}",
+        "context_title": "Contexto del solapamiento de conjuntos",
+        "audit_title": "Auditoría del solapamiento de conjuntos",
+        "dependency_note": (
+            "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
+        ),
+        "data_posture_notes": [
+            "Los scripts de solapamiento leen localmente la tabla fuente y la receta opcional y generan artefactos acotados para la revisión.",
+            "De forma predeterminada no se utilizan conectores externos, rutas de carga, SQL remoto ni cuadernos alojados.",
+        ],
+        "caveats": [
+            "Utilice las tablas CSV y set_overlap_context.json antes de interpretar los píxeles de Venn o UpSet.",
+            "El diagrama de Venn solo es válido cuando se han representado exactamente dos o tres conjuntos seleccionados.",
+            "ui_decisions.json permanece pendiente hasta que Codex, la interfaz MCP o la revisión alternativa registren las decisiones.",
+        ],
+        "next_actions": [
+            "Ejecute validate_set_overlap_review y, cuando MCP esté disponible, render_set_overlap_review.",
+            "Revise las mayores intersecciones exactas y los solapamientos por pares antes de la interpretación final.",
+            "Registre las decisiones aceptadas, editadas o rechazadas antes de considerar revisado el paquete de solapamiento.",
+        ],
+    },
+}
+
+
+def _normalize_language(language: object | None) -> str:
+    text = str(language or "en").strip().lower().replace("_", "-")
+    code = text.split("-", 1)[0]
+    return code if code in _REVIEW_COPY else "en"
+
+
+def _review_copy(language: object | None) -> dict[str, Any]:
+    return _REVIEW_COPY[_normalize_language(language)]
+
 
 @dataclass(frozen=True)
 class RunIntakeResult:
@@ -63,6 +172,58 @@ def _write_json(path: Path, payload: dict[str, Any]) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def _write_review_handoff_card(
+    output_dir: Path,
+    *,
+    run_id: str,
+    language: str,
+) -> Path:
+    copy = _review_copy(language)
+    path = output_dir / "review_handoff.md"
+    lines = [
+        f"# {copy['product_title']} · {copy['handoff_title']}",
+        "<!-- review-contract: Review Handoff -->",
+        "",
+        f"- {copy['run_id']}: `{run_id}`",
+        f"- {copy['review_payload']}: `review_payload.json`",
+        f"- {copy['run_intake']}: `run_intake.json`",
+        f"- {copy['pending_decisions']}: `ui_decisions.json`",
+        f"- {copy['applied_decisions']}: `applied_decisions.json`",
+        f"- {copy['final_artifacts']}: `final_artifacts.json`",
+        "",
+        f"## {copy['review_in_codex']}",
+        f"1. {copy['validate_step'].format(tool='validate_set_overlap_review')}",
+        f"2. {copy['render_step'].format(tool='render_set_overlap_review')}",
+        f"3. {copy['save_step'].format(tool='save_set_overlap_decisions')}",
+        f"4. {copy['apply_step'].format(tool='apply_set_overlap_decisions')}",
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
+
+def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
+    copy = _review_copy(language)
+    localized_required_text = (
+        [copy["handoff_title"], copy["review_in_codex"]]
+        if _normalize_language(language) == "es"
+        else []
+    )
+    return {
+        "path": path.name,
+        "kind": "md",
+        "status": "written",
+        "required_text": [
+            "Review Handoff",
+            *localized_required_text,
+            "review_payload.json",
+            "ui_decisions.json",
+            "applied_decisions.json",
+            "final_artifacts.json",
+        ],
+        "qa_checks": ["nonempty_text", "required_text"],
+    }
 
 
 def _local_output_refs(final_artifacts_path: Path) -> list[str]:
@@ -136,7 +297,9 @@ def _as_output_ref(path: str | Path | None, output_dir: Path) -> str | None:
         return candidate.as_posix()
 
 
-def _data_posture(input_path: Path, recipe_path: Path | None) -> dict[str, Any]:
+def _data_posture(
+    input_path: Path, recipe_path: Path | None, language: str
+) -> dict[str, Any]:
     local_files = [input_path.as_posix()]
     if recipe_path is not None:
         local_files.append(recipe_path.as_posix())
@@ -147,6 +310,7 @@ def _data_posture(input_path: Path, recipe_path: Path | None) -> dict[str, Any]:
         "remote_sql_execution_used": False,
         "hosted_notebook_execution_used": False,
         "calculation_mode": "local_deterministic_scripts",
+        "notes": list(_review_copy(language)["data_posture_notes"]),
     }
 
 
@@ -183,29 +347,42 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    fields = (
+        "item_type",
+        "title",
+        "recommended_action",
+        "source_path",
+        "output_path",
+        "status",
+    )
+    labels = _review_copy(language)["columns"]
     return [
-        {"field": "item_type", "label": "Type"},
-        {"field": "title", "label": "Overlap item"},
-        {"field": "recommended_action", "label": "Suggested action"},
-        {"field": "source_path", "label": "Source"},
-        {"field": "output_path", "label": "Output"},
-        {"field": "status", "label": "Status"},
+        {"field": field, "label": str(label)}
+        for field, label in zip(fields, labels, strict=True)
     ]
 
 
-def _set_summary_items(context: dict[str, Any]) -> list[dict[str, Any]]:
+def _set_summary_items(context: dict[str, Any], language: str) -> list[dict[str, Any]]:
+    copy = _review_copy(language)
     rows = [row for row in context.get("set_summary", []) if isinstance(row, dict)]
     rows.sort(key=lambda row: _num(row.get("item_count")), reverse=True)
     items: list[dict[str, Any]] = []
     for index, row in enumerate(rows, start=1):
-        set_name = str(row.get("set") or row.get("Retailer") or f"Set {index}")
+        set_name = str(
+            row.get("set")
+            or row.get("Retailer")
+            or str(copy["set"]).format(index=index)
+        )
         selected = bool(row.get("selected", True))
         items.append(
             _base_item(
                 f"set-summary-{index}",
                 "set_summary",
-                f"{set_name}: {int(_num(row.get('item_count')))} items",
+                str(copy["set_items"]).format(
+                    name=set_name,
+                    count=int(_num(row.get("item_count"))),
+                ),
                 output_path="set_overlap_set_summary.csv",
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
                 recommended_action="accept" if selected else "skip",
@@ -223,18 +400,24 @@ def _set_summary_items(context: dict[str, Any]) -> list[dict[str, Any]]:
     return items
 
 
-def _intersection_items(context: dict[str, Any]) -> list[dict[str, Any]]:
+def _intersection_items(context: dict[str, Any], language: str) -> list[dict[str, Any]]:
+    copy = _review_copy(language)
     rows = [row for row in context.get("intersections", []) if isinstance(row, dict)]
     rows.sort(key=lambda row: _num(row.get("item_count")), reverse=True)
     items: list[dict[str, Any]] = []
     for index, row in enumerate(rows[:MAX_INTERSECTION_ITEMS], start=1):
-        title = str(row.get("intersection") or f"Intersection {index}")
+        title = str(
+            row.get("intersection") or str(copy["intersection"]).format(index=index)
+        )
         item_count = int(_num(row.get("item_count")))
         items.append(
             _base_item(
                 f"intersection-{index}",
                 "overlap_intersection",
-                f"{title}: {item_count} items",
+                str(copy["intersection_items"]).format(
+                    name=title,
+                    count=item_count,
+                ),
                 output_path="set_overlap_intersections.csv",
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
                 recommended_action="accept" if item_count else "mark_unclear",
@@ -252,7 +435,8 @@ def _intersection_items(context: dict[str, Any]) -> list[dict[str, Any]]:
     return items
 
 
-def _pair_items(context: dict[str, Any]) -> list[dict[str, Any]]:
+def _pair_items(context: dict[str, Any], language: str) -> list[dict[str, Any]]:
+    copy = _review_copy(language)
     rows = [row for row in context.get("pairwise_overlap", []) if isinstance(row, dict)]
     rows.sort(key=lambda row: _num(row.get("item_count")), reverse=True)
     items: list[dict[str, Any]] = []
@@ -264,7 +448,11 @@ def _pair_items(context: dict[str, Any]) -> list[dict[str, Any]]:
             _base_item(
                 f"pair-overlap-{index}",
                 "pair_overlap",
-                f"{left} + {right}: {item_count} shared items",
+                str(copy["pair_items"]).format(
+                    left=left,
+                    right=right,
+                    count=item_count,
+                ),
                 output_path="set_overlap_pairs.csv",
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
                 recommended_action="accept" if item_count else "skip",
@@ -333,7 +521,7 @@ def _artifact_item_type(record: dict[str, Any]) -> str:
     return "review_artifact"
 
 
-def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+def _artifact_items(manifest: dict[str, Any], language: str) -> list[dict[str, Any]]:
     records = [
         record for record in manifest.get("artifacts", []) if isinstance(record, dict)
     ][:MAX_ARTIFACT_ITEMS]
@@ -344,7 +532,8 @@ def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
             _base_item(
                 f"artifact-{index}",
                 _artifact_item_type(record),
-                output_path or f"Artifact {index}",
+                output_path
+                or str(_review_copy(language)["artifact"]).format(index=index),
                 output_path=output_path,
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
                 recommended_action="accept",
@@ -395,6 +584,8 @@ def write_run_intake(
 ) -> RunIntakeResult:
     """Write run intake before deterministic set-overlap analysis."""
 
+    language = _normalize_language(recipe.get("language"))
+    copy = _review_copy(language)
     run_id = _run_id(input_path)
     payload = {
         "schema_version": SCHEMA_VERSION,
@@ -402,11 +593,11 @@ def write_run_intake(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": recipe.get("language") or "en",
+        "language": language,
         "input_paths": [input_path.as_posix()],
         "output_dir": output_dir.as_posix(),
         "inferred_task": "set_overlap_review_payload",
-        "data_posture": _data_posture(input_path, recipe_path),
+        "data_posture": _data_posture(input_path, recipe_path, language),
         "assumptions": {
             "source_row_count": source_row_count,
             "recipe_path": recipe_path.as_posix() if recipe_path else None,
@@ -416,7 +607,7 @@ def write_run_intake(
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": copy["dependency_note"],
         },
         "status": "ready_for_set_overlap_run",
     }
@@ -439,18 +630,20 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact inventory."""
 
+    language = _normalize_language(recipe.get("language"))
+    copy = _review_copy(language)
     outputs = _output_records(output_dir)
     items: list[dict[str, Any]] = []
-    items.extend(_set_summary_items(context))
-    items.extend(_intersection_items(context))
-    items.extend(_pair_items(context))
+    items.extend(_set_summary_items(context, language))
+    items.extend(_intersection_items(context, language))
+    items.extend(_pair_items(context, language))
     items.extend(_chart_items(context))
-    items.extend(_artifact_items({"artifacts": outputs}))
+    items.extend(_artifact_items({"artifacts": outputs}, language))
     items.append(
         _base_item(
             "set-overlap-context",
             "context_artifact",
-            "Set overlap context",
+            str(copy["context_title"]),
             output_path="set_overlap_context.json",
             allowed_actions=("accept", "edit", "mark_unclear", "skip"),
             recommended_action="accept",
@@ -461,7 +654,7 @@ def write_review_session_artifacts(
         _base_item(
             "set-overlap-audit",
             "review_artifact",
-            "Set overlap audit",
+            str(copy["audit_title"]),
             output_path="set_overlap_audit.json",
             allowed_actions=("accept", "edit", "mark_unclear", "skip"),
             recommended_action="accept",
@@ -476,11 +669,12 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
+        "language": language,
         "source_paths": [input_path.as_posix()],
         "review_type": "set_overlap_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "recipe": _as_output_ref(recipe_path, output_dir),
@@ -540,6 +734,21 @@ def write_review_session_artifacts(
         },
     )
 
+    review_handoff_path = _write_review_handoff_card(
+        output_dir,
+        run_id=run_id,
+        language=language,
+    )
+    outputs = _output_records(output_dir)
+    outputs = [
+        output
+        for output in outputs
+        if not (
+            isinstance(output, dict) and output.get("path") == review_handoff_path.name
+        )
+    ]
+    outputs.append(_review_handoff_output_record(review_handoff_path, language))
+
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
         {
@@ -548,17 +757,9 @@ def write_review_session_artifacts(
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
             "completed_at": _utc_now(),
-            "outputs": _output_records(output_dir),
-            "caveats": [
-                "Use CSV tables and set_overlap_context.json before interpreting Venn or UpSet pixels.",
-                "Venn is valid only when exactly two or three selected sets were rendered.",
-                "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
-            ],
-            "next_actions": [
-                "Call validate_set_overlap_review, then render_set_overlap_review when MCP is available.",
-                "Review largest exact intersections and pairwise overlaps before final interpretation.",
-                "Record accepted/edited/rejected review decisions before treating the overlap package as reviewed.",
-            ],
+            "outputs": outputs,
+            "caveats": list(copy["caveats"]),
+            "next_actions": list(copy["next_actions"]),
             "status": "written_pending_review",
         },
     )

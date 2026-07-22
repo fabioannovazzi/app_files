@@ -1101,24 +1101,38 @@ def _dominant_component(components: list[dict[str, Any]]) -> dict[str, Any]:
     return max(components, key=lambda item: abs(float(item["variance_amount"] or 0.0)))
 
 
+def _output_language(value: object | None) -> str:
+    text = str(value or "en").strip().lower().replace("_", "-")
+    return "es" if text.split("-", 1)[0] == "es" else "en"
+
+
 def _small_multiples_summary_markdown(context: dict[str, Any]) -> str:
     """Return a markdown chart-data block for Codex's business interpretation."""
 
     if context.get("status") != "written":
         return ""
+    spanish = _output_language(context.get("language")) == "es"
     lines = [
         "",
-        "## Standard Variance Small Multiples",
+        (
+            "## Múltiples gráficos de variaciones estándar"
+            if spanish
+            else "## Standard Variance Small Multiples"
+        ),
         "",
-        f"- Dimension: `{context.get('dimension')}`",
-        f"- Panel count: `{context.get('panel_count')}`",
-        f"- Other member panel: `{context.get('has_other_member_panel')}`",
-        f"- Any residual Balance component: `{context.get('has_residual_balance_component')}`",
-        "- Source files: `waterfall_small_multiples.png`, "
+        f"- {'Dimensión' if spanish else 'Dimension'}: `{context.get('dimension')}`",
+        f"- {'Número de paneles' if spanish else 'Panel count'}: `{context.get('panel_count')}`",
+        f"- {'Panel de Otros' if spanish else 'Other member panel'}: `{context.get('has_other_member_panel')}`",
+        f"- {'Componente Saldo residual' if spanish else 'Any residual Balance component'}: `{context.get('has_residual_balance_component')}`",
+        f"- {'Archivos fuente' if spanish else 'Source files'}: `waterfall_small_multiples.png`, "
         "`waterfall_small_multiples_summary.csv`, "
         "`waterfall_small_multiples_context.json`",
         "",
-        "Top panels by absolute variance:",
+        (
+            "Paneles principales por variación absoluta:"
+            if spanish
+            else "Top panels by absolute variance:"
+        ),
     ]
     for panel in context.get("panels", [])[:6]:
         dominant = panel.get("dominant_component") or {}
@@ -1132,9 +1146,11 @@ def _small_multiples_summary_markdown(context: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "Codex must use this source data when explaining whether the standard "
-            "variance story is concentrated in specific dimension members or "
-            "spread across the selected dimension.",
+            (
+                "Codex debe utilizar estos datos fuente para explicar si la variación estándar se concentra en elementos concretos o se distribuye por la dimensión seleccionada."
+                if spanish
+                else "Codex must use this source data when explaining whether the standard variance story is concentrated in specific dimension members or spread across the selected dimension."
+            ),
         ]
     )
     return "\n".join(lines) + "\n"
@@ -1262,6 +1278,7 @@ def write_waterfall_small_multiples_chart_data(
     context = {
         "analysis_type": "standard_variance_small_multiples",
         "status": "written",
+        "language": _output_language(recipe.get("language")),
         "dimension": dimension,
         "panel_limit": SMALL_MULTIPLES_PANEL_LIMIT,
         "panel_count": len(panel_specs),
@@ -3499,14 +3516,19 @@ def write_pvm_decomposition_ladder_chart_data(
             )
     table_path = output_dir / "pvm_decomposition_ladder.csv"
     pl.DataFrame(rows).write_csv(table_path)
+    spanish = _output_language(recipe.get("language")) == "es"
     summary = [
         "",
-        "## PVM Decomposition Ladder",
+        (
+            "## Escalera de descomposición PVM"
+            if spanish
+            else "## PVM Decomposition Ladder"
+        ),
         "",
         (
-            "This chart compares the same total variance at three calculation "
-            "depths: combined Price/Units/Mix, Price plus Units & Mix, and "
-            "Price/Units/Mix separately."
+            "Este gráfico compara la misma variación total en tres niveles de cálculo: Precio/Unidades/Mix combinados, Precio más Unidades y Mix, y Precio/Unidades/Mix por separado."
+            if spanish
+            else "This chart compares the same total variance at three calculation depths: combined Price/Units/Mix, Price plus Units & Mix, and Price/Units/Mix separately."
         ),
         "",
     ]
@@ -3517,7 +3539,8 @@ def write_pvm_decomposition_ladder_chart_data(
             if abs(float(item["variance_amount"] or 0.0)) > TOLERANCE
         )
         summary.append(
-            f"- Level {level['level']} `{level['calculation']}`: {components}"
+            f"- {'Nivel' if spanish else 'Level'} {level['level']} "
+            f"`{level['calculation']}`: {components}"
         )
     return (
         [str(table_path), str(context_path)],
@@ -3601,19 +3624,65 @@ def build_summary_markdown(result: pl.DataFrame, recipe: dict[str, Any]) -> str:
 
     mappings = recipe["mappings"]
     options = recipe.get("options") or {}
+    spanish = _output_language(recipe.get("language")) == "es"
+    labels = (
+        {
+            "title": "Datos fuente del análisis de variaciones",
+            "comparison_basis": "Base de comparación",
+            "period_mode": "Modo de comparación de periodos",
+            "baseline": "Periodo base",
+            "comparison": "Periodo de comparación",
+            "amount": "Columna de importe",
+            "dimensions": "Dimensiones",
+            "grain": "Nivel de cálculo",
+            "rows": "Filas de resultados",
+            "totals": "Totales",
+            "date_column": "Columna de fecha",
+            "baseline_window": "Ventana de fechas base",
+            "comparison_window": "Ventana de fechas de comparación",
+            "drivers": "Principales factores por valor absoluto",
+            "total": "Total",
+            "boundary": "Límite de interpretación",
+            "boundary_text": "Las cifras anteriores son cálculos deterministas. Codex debe utilizarlas como datos fuente, identificar los factores principales, señalar asignaciones ausentes o salvedades por denominadores cero y no modificar silenciosamente los resultados deterministas.",
+            "to": "a",
+            "unknown": "desconocido",
+        }
+        if spanish
+        else {
+            "title": "Variance Analysis Source Data",
+            "comparison_basis": "Comparison basis",
+            "period_mode": "Period comparison mode",
+            "baseline": "Baseline period",
+            "comparison": "Comparison period",
+            "amount": "Amount column",
+            "dimensions": "Dimensions",
+            "grain": "Calculation grain",
+            "rows": "Result rows",
+            "totals": "Totals",
+            "date_column": "Date column",
+            "baseline_window": "Baseline date window",
+            "comparison_window": "Comparison date window",
+            "drivers": "Largest Absolute Drivers",
+            "total": "Total",
+            "boundary": "Interpretation Boundary",
+            "boundary_text": "The figures above are deterministic calculations. Codex should use them as source data, identify the largest drivers, call out missing mappings or zero-denominator caveats, and avoid changing deterministic results silently.",
+            "to": "to",
+            "unknown": "unknown",
+        }
+    )
     lines = [
-        "# Variance Analysis Source Data",
+        f"# {labels['title']}",
         "",
-        f"- Comparison basis: `{options.get('comparison_basis') or 'unknown'}`",
-        f"- Period comparison mode: `{options.get('period_comparison_mode') or 'unknown'}`",
-        f"- Baseline period: `{mappings['baseline_period']}`",
-        f"- Comparison period: `{mappings['comparison_period']}`",
-        f"- Amount column: `{mappings['amount_column']}`",
-        f"- Dimensions: `{', '.join(mappings.get('dimensions') or ['Total'])}`",
-        f"- Calculation grain: `{', '.join(mappings.get('calculation_grain') or mappings.get('dimensions') or ['Total'])}`",
-        f"- Result rows: `{result.height}`",
+        f"- {labels['comparison_basis']}: `{options.get('comparison_basis') or labels['unknown']}`",
+        f"- {labels['period_mode']}: `{options.get('period_comparison_mode') or labels['unknown']}`",
+        f"- {labels['baseline']}: `{mappings['baseline_period']}`",
+        f"- {labels['comparison']}: `{mappings['comparison_period']}`",
+        f"- {labels['amount']}: `{mappings['amount_column']}`",
+        f"- {labels['dimensions']}: `{', '.join(mappings.get('dimensions') or [labels['total']])}`",
+        f"- {labels['grain']}: `{', '.join(mappings.get('calculation_grain') or mappings.get('dimensions') or [labels['total']])}`",
+        f"- {labels['rows']}: `{result.height}`",
         "",
-        "## Totals",
+        f"## {labels['totals']}",
         "",
     ]
     period_window = options.get("period_window") or {}
@@ -3621,14 +3690,14 @@ def build_summary_markdown(result: pl.DataFrame, recipe: dict[str, Any]) -> str:
         baseline = period_window.get("baseline", {})
         comparison = period_window.get("comparison", {})
         lines[7:7] = [
-            f"- Date column: `{period_window.get('date_column')}`",
+            f"- {labels['date_column']}: `{period_window.get('date_column')}`",
             (
-                "- Baseline date window: "
-                f"`{baseline.get('start_date')}` to `{baseline.get('end_date')}`"
+                f"- {labels['baseline_window']}: "
+                f"`{baseline.get('start_date')}` {labels['to']} `{baseline.get('end_date')}`"
             ),
             (
-                "- Comparison date window: "
-                f"`{comparison.get('start_date')}` to `{comparison.get('end_date')}`"
+                f"- {labels['comparison_window']}: "
+                f"`{comparison.get('start_date')}` {labels['to']} `{comparison.get('end_date')}`"
             ),
         ]
     totals = result.select(
@@ -3654,56 +3723,89 @@ def build_summary_markdown(result: pl.DataFrame, recipe: dict[str, Any]) -> str:
             if isinstance(value, (int, float))
             else f"- `{key}`: {value}"
         )
-    lines.extend(["", "## Largest Absolute Drivers", ""])
+    lines.extend(["", f"## {labels['drivers']}", ""])
     for row in top_driver_rows(result, 10):
         dims = [
             f"{dimension}={row.get(dimension)}"
             for dimension in mappings.get("dimensions") or ["segment"]
             if dimension in row
         ]
-        label = ", ".join(dims) if dims else "Total"
+        label = ", ".join(dims) if dims else labels["total"]
         delta = row.get("total_delta")
         lines.append(f"- {label}: total_delta={float(delta):,.2f}")
     lines.extend(
         [
             "",
-            "## Interpretation Boundary",
+            f"## {labels['boundary']}",
             "",
-            "The figures above are deterministic calculations. Codex should use them as source data, identify the largest drivers, call out missing mappings or zero-denominator caveats, and avoid changing deterministic results silently.",
+            labels["boundary_text"],
         ]
     )
     return "\n".join(lines) + "\n"
 
 
 def append_bridge_dimension_summary(
-    summary: str, bridge_audit: dict[str, Any] | None
+    summary: str,
+    bridge_audit: dict[str, Any] | None,
+    *,
+    language: str = "en",
 ) -> str:
     """Append requested-versus-emitted root-cause dimensions to the summary."""
 
     if not bridge_audit or not bridge_audit.get("enabled"):
         return summary
 
+    spanish = _output_language(language) == "es"
+
     def formatted(values: Any) -> str:
         if not values:
-            return "`none`"
+            return "`ninguna`" if spanish else "`none`"
         return "`" + ", ".join(values) + "`"
 
     lines = [
         "",
-        "## Root-Cause Variance Analysis",
+        (
+            "## Análisis de las causas de la variación"
+            if spanish
+            else "## Root-Cause Variance Analysis"
+        ),
         "",
-        "- Requested report dimensions: "
-        f"{formatted(bridge_audit.get('requested_report_dimensions'))}",
-        "- Requested calculation grain: "
-        f"{formatted(bridge_audit.get('requested_calculation_grain'))}",
-        "- Effective root-cause dimensions: "
-        f"{formatted(bridge_audit.get('effective_bridge_dimensions'))}",
-        "- Emitted root-cause dimensions: "
-        f"{formatted(bridge_audit.get('emitted_bridge_dimensions'))}",
-        "- Dropped root-cause dimensions: "
-        f"{formatted(bridge_audit.get('dropped_bridge_dimensions'))}",
-        "- Internally added root-cause dimensions: "
-        f"{formatted(bridge_audit.get('internally_added_bridge_dimensions'))}",
+        (
+            "- Dimensiones solicitadas del informe: "
+            if spanish
+            else "- Requested report dimensions: "
+        )
+        + formatted(bridge_audit.get("requested_report_dimensions")),
+        (
+            "- Nivel de cálculo solicitado: "
+            if spanish
+            else "- Requested calculation grain: "
+        )
+        + formatted(bridge_audit.get("requested_calculation_grain")),
+        (
+            "- Dimensiones efectivas de causa: "
+            if spanish
+            else "- Effective root-cause dimensions: "
+        )
+        + formatted(bridge_audit.get("effective_bridge_dimensions")),
+        (
+            "- Dimensiones de causa generadas: "
+            if spanish
+            else "- Emitted root-cause dimensions: "
+        )
+        + formatted(bridge_audit.get("emitted_bridge_dimensions")),
+        (
+            "- Dimensiones de causa descartadas: "
+            if spanish
+            else "- Dropped root-cause dimensions: "
+        )
+        + formatted(bridge_audit.get("dropped_bridge_dimensions")),
+        (
+            "- Dimensiones de causa añadidas internamente: "
+            if spanish
+            else "- Internally added root-cause dimensions: "
+        )
+        + formatted(bridge_audit.get("internally_added_bridge_dimensions")),
     ]
     return summary.rstrip() + "\n" + "\n".join(lines) + "\n"
 
@@ -4015,39 +4117,85 @@ def _root_cause_sweep_interpretation_brief(
     """Return a Codex-facing markdown brief for root-cause sweep analysis."""
 
     contract = context_payload["codex_interpretation_contract"]
+    spanish = _output_language(context_payload.get("language")) == "es"
+    required_points = (
+        [
+            "Separe los hechos deterministas de la interpretación empresarial.",
+            "Identifique qué alternativas combinan realmente varias dimensiones.",
+            "Explique que cada fila es el residual después de las filas seleccionadas anteriormente.",
+            "Clasifique las alternativas como útiles, posiblemente útiles o engañosas/ruidosas.",
+            "Recomiende desgloses solo a partir de las filas y los detalles generados.",
+            "Indique las salvedades cuando falten etiquetas, supuestos de moneda, unidades o el significado de la jerarquía.",
+        ]
+        if spanish
+        else contract["required_interpretation_points"]
+    )
+    forbidden_claims = (
+        [
+            "No describa alternativas de una sola dimensión como puentes de dimensiones variables.",
+            "No interprete una fila mixta posterior como el total de esa dimensión.",
+            "No invente filas ni causas que no figuren en los archivos generados.",
+        ]
+        if spanish
+        else contract["forbidden_claims"]
+    )
     lines = [
-        "# Codex Root-Cause Sweep Interpretation Brief",
+        (
+            "# Guía de Codex para interpretar el barrido de causas"
+            if spanish
+            else "# Codex Root-Cause Sweep Interpretation Brief"
+        ),
         "",
-        "This file is a model-facing handoff. The figures are deterministic; the narrative interpretation is Codex's job.",
+        (
+            "Este archivo sirve de entrega al modelo. Las cifras son deterministas; Codex debe realizar la interpretación narrativa."
+            if spanish
+            else "This file is a model-facing handoff. The figures are deterministic; the narrative interpretation is Codex's job."
+        ),
         "",
-        "## Output To Write",
+        "## Salida que debe redactarse" if spanish else "## Output To Write",
         "",
-        f"- Write: `{contract['codex_output_file']}`",
-        "- Use: `root_cause_sweep_model_context.json`, `root_cause_sweep_summary.csv`, and the generated `root_cause_bridge_alt_<n>.png` charts.",
+        f"- {'Redacte' if spanish else 'Write'}: `{contract['codex_output_file']}`",
+        (
+            "- Utilice: `root_cause_sweep_model_context.json`, `root_cause_sweep_summary.csv` y los gráficos `root_cause_bridge_alt_<n>.png` generados."
+            if spanish
+            else "- Use: `root_cause_sweep_model_context.json`, `root_cause_sweep_summary.csv`, and the generated `root_cause_bridge_alt_<n>.png` charts."
+        ),
         "",
-        "## Interpretation Boundary",
+        "## Límite de interpretación" if spanish else "## Interpretation Boundary",
         "",
-        f"- {contract['deterministic_boundary']}",
-        "- Later rows are residual after earlier selected rows, not standalone totals for that dimension.",
+        (
+            "- El plugin ya ha seleccionado y conciliado las alternativas. Codex puede interpretarlas, compararlas y recomendar desgloses, pero no debe modificar las filas, los importes, las dimensiones ni los residuales calculados."
+            if spanish
+            else f"- {contract['deterministic_boundary']}"
+        ),
+        (
+            "- Las filas posteriores son residuales después de las filas seleccionadas anteriormente, no totales independientes de esa dimensión."
+            if spanish
+            else "- Later rows are residual after earlier selected rows, not standalone totals for that dimension."
+        ),
         "",
-        "## Required Analysis",
+        "## Análisis requerido" if spanish else "## Required Analysis",
         "",
     ]
-    lines.extend(f"- {item}" for item in contract["required_interpretation_points"])
+    lines.extend(f"- {item}" for item in required_points)
     lines.extend(
         [
             "",
-            "## Forbidden Claims",
+            "## Afirmaciones prohibidas" if spanish else "## Forbidden Claims",
             "",
         ]
     )
-    lines.extend(f"- {item}" for item in contract["forbidden_claims"])
+    lines.extend(f"- {item}" for item in forbidden_claims)
     lines.extend(
         [
             "",
-            "## Alternative Overview",
+            "## Resumen de alternativas" if spanish else "## Alternative Overview",
             "",
-            "| Alternative | Rows | Mixed dimensions | Other residual | Drilldown | Selected rows |",
+            (
+                "| Alternativa | Filas | Dimensiones mixtas | Residual Otros | Desglose | Filas seleccionadas |"
+                if spanish
+                else "| Alternative | Rows | Mixed dimensions | Other residual | Drilldown | Selected rows |"
+            ),
             "| --- | ---: | --- | ---: | --- | --- |",
         ]
     )
@@ -4065,13 +4213,33 @@ def _root_cause_sweep_interpretation_brief(
     lines.extend(
         [
             "",
-            "## Recommended Structure",
+            "## Estructura recomendada" if spanish else "## Recommended Structure",
             "",
-            "1. Executive read: which alternatives are most useful and why.",
-            "2. Deterministic facts: total delta, selected rows, residuals, and mixed-dimension flags.",
-            "3. Interpretation: what the useful alternatives suggest, with residual logic explained.",
-            "4. Drilldown recommendations: which generated rows deserve follow-up.",
-            "5. Caveats: labels, currency assumptions, missing hierarchy meaning, and alternatives that are noisy or misleading.",
+            (
+                "1. Lectura ejecutiva: qué alternativas son más útiles y por qué."
+                if spanish
+                else "1. Executive read: which alternatives are most useful and why."
+            ),
+            (
+                "2. Hechos deterministas: variación total, filas seleccionadas, residuales e indicadores de dimensiones mixtas."
+                if spanish
+                else "2. Deterministic facts: total delta, selected rows, residuals, and mixed-dimension flags."
+            ),
+            (
+                "3. Interpretación: qué sugieren las alternativas útiles, explicando la lógica residual."
+                if spanish
+                else "3. Interpretation: what the useful alternatives suggest, with residual logic explained."
+            ),
+            (
+                "4. Recomendaciones de desglose: qué filas generadas requieren seguimiento."
+                if spanish
+                else "4. Drilldown recommendations: which generated rows deserve follow-up."
+            ),
+            (
+                "5. Salvedades: etiquetas, supuestos de moneda, significado ausente de la jerarquía y alternativas ruidosas o engañosas."
+                if spanish
+                else "5. Caveats: labels, currency assumptions, missing hierarchy meaning, and alternatives that are noisy or misleading."
+            ),
             "",
         ]
     )
@@ -4255,6 +4423,7 @@ def _write_root_cause_sweep_outputs(
         paths.append(str(summary_path))
     context_payload = {
         "analysis_type": "root_cause_alternative_sweep",
+        "language": _output_language(recipe.get("language")),
         "codex_interpretation_contract": _root_cause_sweep_interpretation_contract(),
         "interpretation_rule": (
             "Each selected row is residual after all prior selected rows have "
@@ -5038,7 +5207,11 @@ def run_variance_analysis(
         summary += small_multiples_summary
         summary += total_by_dimension_export.summary_markdown
         summary += exploded_bridge_export.summary_markdown
-        summary = append_bridge_dimension_summary(summary, bridge_audit)
+        summary = append_bridge_dimension_summary(
+            summary,
+            bridge_audit,
+            language=str(recipe.get("language") or "en"),
+        )
         artifact_paths = [
             *bridge_paths,
             *waterfall_export.paths,

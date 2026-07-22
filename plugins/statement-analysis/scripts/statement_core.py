@@ -179,6 +179,32 @@ DEFAULT_STATEMENT_ROWS: tuple[dict[str, Any], ...] = (
         ],
     },
 )
+SPANISH_DEFAULT_COPY = {
+    "Profit and loss statement": "Estado de resultados",
+    "2012..2015 PL and AC (FC)": "2012..2015 PL y AC (FC)",
+}
+SPANISH_STATEMENT_LABELS = {
+    "Software revenue": "Ingresos por software",
+    "Support revenue": "Ingresos por soporte",
+    "Consulting revenue": "Ingresos por consultoría",
+    "Revenue": "Ingresos",
+    "Cost of sales": "Coste de ventas",
+    "Gross profit": "Beneficio bruto",
+    "Research and development expenses": "Gastos de investigación y desarrollo",
+    "Selling and general administrative expenses": (
+        "Gastos de venta, generales y administrativos"
+    ),
+    "Other operating income": "Otros ingresos de explotación",
+    "Other operating expenses": "Otros gastos de explotación",
+    "Other financial income, net": "Otros ingresos financieros, netos",
+    "Income from continuing operations before tax": (
+        "Resultado de operaciones continuadas antes de impuestos"
+    ),
+    "Income tax expenses": "Gastos por impuesto sobre beneficios",
+    "Income from continuing operations": "Resultado de operaciones continuadas",
+    "Income from discontinued operations": "Resultado de operaciones interrumpidas",
+    "Net income": "Resultado neto",
+}
 
 
 @dataclass(frozen=True)
@@ -450,9 +476,61 @@ def _scenario_bar_class(scenario: str) -> str:
     return "plan"
 
 
+def _language_code(recipe: dict[str, Any]) -> str:
+    language = str(recipe.get("language") or "en").strip().lower().replace("_", "-")
+    return language.split("-", maxsplit=1)[0]
+
+
+def _localize_spanish_defaults(
+    recipe: dict[str, Any], rows: list[dict[str, Any]]
+) -> None:
+    """Localize generated defaults without changing source or machine identifiers."""
+
+    if _language_code(recipe) != "es":
+        return
+
+    for field in ("statement_label", "scope_label"):
+        value = str(recipe.get(field) or "")
+        recipe[field] = SPANISH_DEFAULT_COPY.get(value, value)
+
+    statement_rows = recipe.get("statement_rows")
+    if isinstance(statement_rows, list):
+        for row in statement_rows:
+            if not isinstance(row, dict):
+                continue
+            label = str(row.get("label") or "")
+            row["label"] = SPANISH_STATEMENT_LABELS.get(label, label)
+    for row in rows:
+        label = str(row.get("label") or "")
+        row["label"] = SPANISH_STATEMENT_LABELS.get(label, label)
+
+
+def _visible_copy(recipe: dict[str, Any]) -> dict[str, str]:
+    if _language_code(recipe) == "es":
+        return {
+            "html_lang": "es",
+            "in": "en",
+            "source": "Fuente",
+            "row_grain": (
+                "Una fila por partida ordenada del estado de resultados; las filas "
+                "de fórmula se calculan a partir de filas anteriores de la receta."
+            ),
+        }
+    return {
+        "html_lang": "en",
+        "in": "in",
+        "source": "Source",
+        "row_grain": (
+            "One row per ordered P&L statement line; formula rows are computed "
+            "from prior rows in the recipe."
+        ),
+    }
+
+
 def _render_html(
     rows: list[dict[str, Any]], recipe: dict[str, Any], source_name: str
 ) -> str:
+    copy = _visible_copy(recipe)
     periods = [str(item) for item in recipe["periods"]]
     scenarios_by_period = recipe["scenarios_by_period"]
     pairs = _period_scenario_pairs(recipe)
@@ -482,10 +560,9 @@ def _render_html(
             f'<td class="label">{escape(label)}</td>'
             f"{value_cells}</tr>"
         )
-    statement_line = f"{recipe['statement_label']} in {recipe['unit']}"
     title_lines = _title_contract_lines(recipe)
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{copy['html_lang']}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -621,7 +698,7 @@ tbody .total td {{
       {''.join(body_rows)}
     </tbody>
   </table>
-  <p class="source">Source: {escape(source_name)}</p>
+  <p class="source">{copy['source']}: {escape(source_name)}</p>
 </main>
 </body>
 </html>
@@ -631,9 +708,10 @@ tbody .total td {{
 def _title_contract_lines(recipe: dict[str, Any]) -> list[str]:
     """Return the visible three-row title contract for the statement table."""
 
+    copy = _visible_copy(recipe)
     return [
         str(recipe["title"]),
-        f"{recipe['statement_label']} in {recipe['unit']}",
+        f"{recipe['statement_label']} {copy['in']} {recipe['unit']}",
         str(recipe["scope_label"]),
     ]
 
@@ -643,6 +721,7 @@ def _build_context(
     recipe: dict[str, Any],
     source_file: Path,
 ) -> dict[str, Any]:
+    copy = _visible_copy(recipe)
     title_lines = _title_contract_lines(recipe)
     return {
         "schema_version": "1.0",
@@ -665,7 +744,7 @@ def _build_context(
             "what": title_lines[1],
             "when": title_lines[2],
         },
-        "row_grain": "One row per ordered P&L statement line; formula rows are computed from prior rows in the recipe.",
+        "row_grain": copy["row_grain"],
         "statement_rows": recipe["statement_rows"],
         "table_rows": rows,
     }
@@ -726,6 +805,7 @@ def run_statement_analysis(
     recipe["language"] = language
     values = _read_values(source_file, recipe)
     rows = resolve_statement_rows(values, recipe)
+    _localize_spanish_defaults(recipe, rows)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     html_path = output_dir / "pnl_statement_table.html"

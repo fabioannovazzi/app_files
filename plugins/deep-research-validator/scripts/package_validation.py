@@ -53,6 +53,11 @@ ALLOWED_VERDICTS = {
 }
 
 
+def _language_code(value: object | None) -> str:
+    text = str(value or "en").strip().lower().replace("_", "-")
+    return "es" if text.startswith("es") else "en"
+
+
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -156,6 +161,7 @@ def _package_markdown(
     audit: dict[str, Any],
     validated_document: str,
 ) -> str:
+    spanish = _language_code(claims_review.get("language")) == "es"
     claims = claims_review.get("claims", [])
     claim_lines: list[str] = []
     if isinstance(claims, list):
@@ -163,30 +169,74 @@ def _package_markdown(
             claim_lines.append(
                 "\n".join(
                     [
-                        f"### Claim {claim.get('claim_index', '')}".strip(),
-                        f"Verdict: {claim.get('verdict', '')}",
+                        (
+                            f"### Afirmación {claim.get('claim_index', '')}"
+                            if spanish
+                            else f"### Claim {claim.get('claim_index', '')}"
+                        ).strip(),
+                        (
+                            f"Veredicto: {claim.get('verdict', '')}"
+                            if spanish
+                            else f"Verdict: {claim.get('verdict', '')}"
+                        ),
                         str(claim.get("claim_text", "")).strip(),
-                        f"Source support: {claim.get('source_support', '')}",
-                        f"Reasoning: {claim.get('reasoning_review', '')}",
-                        f"Proposed fix: {claim.get('proposed_fix', '')}",
+                        (
+                            f"Respaldo de las fuentes: {claim.get('source_support', '')}"
+                            if spanish
+                            else f"Source support: {claim.get('source_support', '')}"
+                        ),
+                        (
+                            f"Revisión del razonamiento: {claim.get('reasoning_review', '')}"
+                            if spanish
+                            else f"Reasoning: {claim.get('reasoning_review', '')}"
+                        ),
+                        (
+                            f"Corrección propuesta: {claim.get('proposed_fix', '')}"
+                            if spanish
+                            else f"Proposed fix: {claim.get('proposed_fix', '')}"
+                        ),
                     ]
                 ).strip()
             )
-    sections = [
-        "# Deep Research Validation Package",
-        f"Audit status: {audit.get('status')}",
-        f"Claims reviewed: {audit.get('claim_count')}",
-        f"Sources inspected: {audit.get('source_count')}",
-        "## Document Inventory",
-        f"Words: {document_inventory.get('word_count', 0)}",
-        f"URLs: {document_inventory.get('urls', [])}",
-        "## Source Inventory",
-        json.dumps(source_inventory, ensure_ascii=False, indent=2),
-        "## Claims Review",
-        "\n\n".join(claim_lines) if claim_lines else "No claims reviewed.",
-    ]
+    if spanish:
+        sections = [
+            "# Paquete de validación de Deep Research",
+            f"Estado de la auditoría: {audit.get('status')}",
+            f"Afirmaciones revisadas: {audit.get('claim_count')}",
+            f"Fuentes examinadas: {audit.get('source_count')}",
+            "## Inventario del documento",
+            f"Palabras: {document_inventory.get('word_count', 0)}",
+            f"URL: {document_inventory.get('urls', [])}",
+            "## Inventario de fuentes",
+            json.dumps(source_inventory, ensure_ascii=False, indent=2),
+            "## Revisión de afirmaciones",
+            (
+                "\n\n".join(claim_lines)
+                if claim_lines
+                else "No se revisaron afirmaciones."
+            ),
+        ]
+    else:
+        sections = [
+            "# Deep Research Validation Package",
+            f"Audit status: {audit.get('status')}",
+            f"Claims reviewed: {audit.get('claim_count')}",
+            f"Sources inspected: {audit.get('source_count')}",
+            "## Document Inventory",
+            f"Words: {document_inventory.get('word_count', 0)}",
+            f"URLs: {document_inventory.get('urls', [])}",
+            "## Source Inventory",
+            json.dumps(source_inventory, ensure_ascii=False, indent=2),
+            "## Claims Review",
+            "\n\n".join(claim_lines) if claim_lines else "No claims reviewed.",
+        ]
     if validated_document.strip():
-        sections.extend(["## Validated Document", validated_document.strip()])
+        sections.extend(
+            [
+                "## Documento validado" if spanish else "## Validated Document",
+                validated_document.strip(),
+            ]
+        )
     return "\n\n".join(sections).strip() + "\n"
 
 

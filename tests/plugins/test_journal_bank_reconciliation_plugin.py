@@ -363,6 +363,7 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
         [
             ["Date", "Description", "Amount", "Reference"],
             ["2026-01-15", "Pago factura ES100", 75.25, "ES100"],
+            ["2026-01-16", "Comisión bancaria", -4.5, "COM-ES"],
         ],
     )
     _save_workbook(
@@ -382,6 +383,10 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
     )
 
     review_notes = (output_dir / "review_notes.md").read_text(encoding="utf-8")
+    review_handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
@@ -389,6 +394,21 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
         output
         for output in final_artifacts["outputs"]
         if output["path"] == "review_notes.md"
+    )
+    handoff_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "review_handoff.md"
+    )
+    unmatched_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "unmatched_bank"
+    )
+    artifact_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "workpaper_artifact"
     )
 
     assert review_notes.startswith(
@@ -402,6 +422,30 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
         "## Recuento por etapa",
         "## Política de revisión",
     ]
+    assert review_payload["language"] == "es"
+    assert review_payload["columns"] == [
+        {"field": "item_type", "label": "Tipo"},
+        {"field": "title", "label": "Movimiento"},
+        {"field": "recommended_action", "label": "Acción sugerida"},
+        {"field": "source_path", "label": "Fuente"},
+        {"field": "output_path", "label": "Salida"},
+        {"field": "status", "label": "Estado"},
+    ]
+    assert unmatched_item["recommended_action"] == "request_more_documents"
+    assert unmatched_item["data"]["requested_document"] == (
+        "Justificante del diario o del mayor para la transacción bancaria COM-ES"
+    )
+    assert unmatched_item["data"]["reason"] == (
+        "La transacción bancaria no tiene una correspondencia determinista en el diario."
+    )
+    assert artifact_item["title"] == "Libro de conciliación entre diario y banco"
+    assert review_handoff.startswith(
+        "# Entrega para revisión: Conciliación entre diario y banco\n"
+    )
+    assert "## Revisión en Codex" in review_handoff
+    assert handoff_output["required_text"][0] == "Entrega para revisión"
+    assert final_artifacts["caveats"][0].startswith("Las coincidencias deterministas")
+    assert final_artifacts["next_actions"][1].startswith("Revise las filas bancarias")
     contract_report = validate_contract(
         output_dir,
         strict_data_posture=True,
@@ -790,6 +834,11 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         ],
         "item_count": 2,
         "columns": [],
+        "source_artifacts": {
+            "run_intake": "run_intake.json",
+            "matches": "reconciliation_matches.csv",
+            "workbook": "journal_bank_reconciliation.xlsx",
+        },
         "evidence": {},
         "allowed_actions": [
             "accept",
@@ -1082,3 +1131,114 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         strict_output_content=True,
     )
     assert contract.ok is True, contract.errors
+
+
+def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "journal-bank-reconciliation",
+        "workflow": "journal-bank-reconciliation",
+        "run_id": "journal-bank-es-runtime",
+        "language": "es",
+        "review_type": "journal_bank_reconciliation_review",
+        "items": [
+            {
+                "id": "matched-es-1",
+                "item_type": "matched_pair",
+                "title": "ES-1",
+                "allowed_actions": ["accept", "skip"],
+                "recommended_action": "accept",
+            }
+        ],
+        "item_count": 1,
+        "status": "ready_for_review",
+    }
+    run_intake = {
+        "run_id": review_payload["run_id"],
+        "language": "es-ES",
+        "output_dir": tmp_path.as_posix(),
+    }
+    decision = {"item_id": "matched-es-1", "action": "accept"}
+    messages = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {"_meta": {"locale": "es"}},
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_journal_bank_review",
+                "arguments": {"review_payload": review_payload},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "save_journal_bank_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": [decision],
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_journal_bank_decisions",
+                "arguments": {
+                    "run_intake": run_intake,
+                    "review_payload": review_payload,
+                    "decisions": [decision],
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_journal_bank_review",
+                "arguments": {"review_payload": {**review_payload, "items": "invalid"}},
+            },
+        },
+    ]
+
+    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+    validation = responses[2]["result"]["structuredContent"]
+    saved = responses[3]["result"]["structuredContent"]
+    applied = responses[4]["result"]["structuredContent"]
+    invalid = responses[5]["result"]["structuredContent"]
+    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+
+    assert (
+        "Use validate_journal_bank_review antes"
+        in responses[1]["result"]["instructions"]
+    )
+    assert validation["message"].startswith("Los datos de revisión")
+    assert saved["message"].startswith("Las decisiones son válidas")
+    assert applied["message"].startswith("Se aplicaron 1 decisiones")
+    assert applied["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    assert handoff.startswith(
+        "# Entrega para revisión: Conciliación entre diario y banco\n"
+    )
+    assert "<!-- Review Handoff -->" in handoff
+    handoff_output = next(
+        output
+        for output in applied["final_artifacts"]["outputs"]
+        if output["path"] == "review_handoff.md"
+    )
+    assert handoff_output["required_text"][:2] == [
+        "Entrega para revisión",
+        "Review Handoff",
+    ]
+    assert invalid["error"] == "review_payload.items debe ser una matriz"

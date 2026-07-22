@@ -12,9 +12,7 @@ from typing import Any
 import polars as pl
 from ibcs_titles import build_ibcs_title, measure_line_segments
 from PIL import Image, ImageDraw, ImageFont
-from total_by_dimension_bridge_chart import (
-    DEFAULT_TOP_N as DEFAULT_PARENT_TOP_N,
-)
+from total_by_dimension_bridge_chart import DEFAULT_TOP_N as DEFAULT_PARENT_TOP_N
 from total_by_dimension_bridge_chart import (
     NULL_LABEL,
     OTHER_LABEL,
@@ -622,6 +620,7 @@ def build_exploded_variance_bridge_spec(
         "schema_version": "1.0",
         "analysis_type": "exploded_variance_bridge",
         "status": "written",
+        "language": str(recipe.get("language") or "en"),
         "capability_id": "variance.exploded_variance_bridge",
         "chart_family": "variance_analysis",
         "chart_type": "exploded_variance_bridge",
@@ -1052,6 +1051,7 @@ def _context_payload(
         "schema_version": "1.0",
         "analysis_type": "exploded_variance_bridge",
         "status": "written",
+        "language": spec.get("language") or "en",
         "capability_id": "variance.exploded_variance_bridge",
         "chart_family": "variance_analysis",
         "chart_type": "exploded_variance_bridge",
@@ -1097,16 +1097,23 @@ def _chart_data_payload(spec: dict[str, Any]) -> dict[str, Any]:
 def _summary_markdown(context: dict[str, Any]) -> str:
     children = context.get("drilldowns") or []
     expanded = ", ".join(str(child.get("parent_dimension_value")) for child in children)
-    expanded_text = expanded if expanded else "none"
+    language = str(context.get("language") or "en").lower().replace("_", "-")
+    spanish = language.split("-", 1)[0] == "es"
+    expanded_text = expanded if expanded else ("ninguna" if spanish else "none")
     return (
-        "\n\n## Exploded Variance Bridge\n\n"
-        "- Source files: `exploded_variance_bridge.png`, "
+        (
+            "\n\n## Puente ampliado de variaciones\n\n"
+            if spanish
+            else "\n\n## Exploded Variance Bridge\n\n"
+        )
+        + ("- Archivos fuente: " if spanish else "- Source files: ")
+        + "`exploded_variance_bridge.png`, "
         "`exploded_variance_bridge_spec.json`, "
         "`exploded_variance_bridge_chart_data.json`, "
         "`exploded_variance_bridge_context.json`\n"
-        f"- Parent dimension: `{context.get('parent_dimension')}`\n"
-        f"- Child dimension: `{context.get('child_dimension')}`\n"
-        f"- Expanded parent rows: {expanded_text}\n"
+        + f"- {'Dimensión principal' if spanish else 'Parent dimension'}: `{context.get('parent_dimension')}`\n"
+        + f"- {'Dimensión secundaria' if spanish else 'Child dimension'}: `{context.get('child_dimension')}`\n"
+        + f"- {'Filas principales ampliadas' if spanish else 'Expanded parent rows'}: {expanded_text}\n"
     )
 
 

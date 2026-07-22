@@ -299,6 +299,117 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
     assert "non battono" in document_text
 
 
+def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "concordato-plan-review",
+        "workflow": "concordato-plan-review",
+        "run_id": "concordato-es-runtime",
+        "language": "es",
+        "review_type": "concordato_plan_support_review",
+        "items": [
+            {
+                "id": "source-es-1",
+                "item_type": "source_inventory",
+                "title": "plan.xlsx",
+                "allowed_actions": ["accept", "skip"],
+                "recommended_action": "accept",
+            }
+        ],
+        "item_count": 1,
+        "status": "ready_for_review",
+    }
+    run_intake = {
+        "run_id": review_payload["run_id"],
+        "language": "spa",
+        "output_dir": tmp_path.as_posix(),
+    }
+    decision = {"item_id": "source-es-1", "action": "accept"}
+    messages = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {"_meta": {"locale": "es-ES"}},
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_concordato_plan_review",
+                "arguments": {"review_payload": review_payload},
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "save_concordato_plan_decisions",
+                "arguments": {
+                    "review_payload": review_payload,
+                    "decisions": [decision],
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "apply_concordato_plan_decisions",
+                "arguments": {
+                    "run_intake": run_intake,
+                    "review_payload": review_payload,
+                    "decisions": [decision],
+                },
+            },
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_concordato_plan_review",
+                "arguments": {"review_payload": {**review_payload, "items": "invalid"}},
+            },
+        },
+    ]
+
+    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+    validation = responses[2]["result"]["structuredContent"]
+    saved = responses[3]["result"]["structuredContent"]
+    applied = responses[4]["result"]["structuredContent"]
+    invalid = responses[5]["result"]["structuredContent"]
+    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+
+    assert (
+        "Use validate_concordato_plan_review antes"
+        in responses[1]["result"]["instructions"]
+    )
+    assert validation["message"].startswith("Los datos de Revisión")
+    assert saved["message"].startswith("Las decisiones son válidas")
+    assert applied["message"].startswith("Se aplicaron 1 decisiones")
+    assert applied["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    assert handoff.startswith(
+        "# Entrega para revisión: Revisión del plan de concordato\n"
+    )
+    assert "<!-- Review Handoff -->" in handoff
+    handoff_output = next(
+        output
+        for output in applied["final_artifacts"]["outputs"]
+        if output["path"] == "review_handoff.md"
+    )
+    assert handoff_output["required_text"][:2] == [
+        "Entrega para revisión",
+        "Review Handoff",
+    ]
+    assert invalid["error"] == "review_payload.items debe ser una matriz"
+
+
 def test_spanish_run_localizes_review_packet_workbook_and_contract(
     tmp_path: Path,
 ) -> None:
@@ -332,7 +443,31 @@ def test_spanish_run_localizes_review_packet_workbook_and_contract(
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    review_handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    document = Document(output_dir / "concordato_review_summary.docx")
+    document_text = "\n".join(
+        [paragraph.text for paragraph in document.paragraphs]
+        + [
+            cell.text
+            for table in document.tables
+            for row in table.rows
+            for cell in row.cells
+        ]
+    )
     outputs_by_path = {output["path"]: output for output in final_artifacts["outputs"]}
+    unmatched_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "unmatched_plan_amount"
+    )
+    artifact_item = next(
+        item
+        for item in review_payload["items"]
+        if item["output_path"] == "concordato_review_summary.docx"
+    )
 
     assert review_packet.startswith("# Paquete de revisión del plan de concordato\n")
     assert "- Idioma: `es`" in review_packet
@@ -362,6 +497,54 @@ def test_spanish_run_localizes_review_packet_workbook_and_contract(
         "Importes candidatos",
         "Coincidencias candidatas",
     }
+    assert review_payload["language"] == "es"
+    assert review_payload["document_language"] == "es"
+    assert review_payload["columns"] == [
+        {"field": "item_type", "label": "Tipo"},
+        {"field": "title", "label": "Elemento"},
+        {"field": "recommended_action", "label": "Acción sugerida"},
+        {"field": "source_path", "label": "Fuente"},
+        {"field": "output_path", "label": "Salida"},
+        {"field": "status", "label": "Estado"},
+    ]
+    assert unmatched_item["recommended_action"] == "request_more_documents"
+    assert unmatched_item["data"]["requested_document"].startswith(
+        "Justificante o anexo explicativo para el importe del plan de concordato"
+    )
+    assert unmatched_item["data"]["reason"].startswith(
+        "Ningún importe justificativo determinista"
+    )
+    assert unmatched_item["data"]["review_note"].startswith(
+        "Ningún importe de origen coincide"
+    )
+    assert artifact_item["title"] == "Resumen de conciliación en Word"
+    assert review_handoff.startswith(
+        "# Entrega para revisión: Revisión del plan de concordato\n"
+    )
+    assert "## Revisión en Codex" in review_handoff
+    assert outputs_by_path["review_handoff.md"]["required_text"][0] == (
+        "Entrega para revisión"
+    )
+    assert outputs_by_path["concordato_review_summary.docx"]["required_text"] == [
+        "Revisión del plan de concordato: resumen de conciliación",
+        "Conclusión operativa",
+        "Aspectos que deben explicarse en el memorando de revisión",
+        "Archivos analizados",
+    ]
+    assert "Revisión del plan de concordato: resumen de conciliación" in document_text
+    assert "Conclusión operativa" in document_text
+    assert "Archivos analizados" in document_text
+    assert "Fuentes reconocidas" in document_text
+    assert "Ejemplos de importes que no coinciden" in document_text
+    assert "Aspectos que deben explicarse" in document_text
+    assert "Revisione piano concordato" not in document_text
+    assert "Conclusione operativa" not in document_text
+    assert final_artifacts["caveats"][0].startswith(
+        "Las coincidencias exactas por importe"
+    )
+    assert final_artifacts["next_actions"][2].startswith(
+        "Clasifique los importes del plan"
+    )
     contract_report = validate_contract(
         output_dir,
         strict_data_posture=True,
@@ -676,6 +859,10 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
         ],
         "item_count": 1,
         "columns": [],
+        "source_artifacts": {
+            "run_intake": "run_intake.json",
+            "summary_docx": "concordato_review_summary.docx",
+        },
         "evidence": {"codex_review_memo": "codex_run_review.md"},
         "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
         "status": "ready_for_review",

@@ -813,6 +813,7 @@ def _render_attribute_table(
         Path(package_dir),
         output_dir=request.output_dir,
         table_keys=[_attribute_table_key(request.capability_id)],
+        language=request.language,
     )
     return {
         "status": "ok",

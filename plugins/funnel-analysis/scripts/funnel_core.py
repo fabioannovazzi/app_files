@@ -24,6 +24,22 @@ CAPABILITY_ID = "funnel.stage_table"
 TABLE_KEY = "funnel_stage_table"
 TABLE_SPEC_NAME = "funnel_stage_table"
 EMPTY_STRINGS = {"", "-", "na", "n/a", "nan", "none", "null"}
+SPANISH_DEFAULT_COPY = {
+    "Baby CRM extract": "Extracto del CRM de ejemplo",
+    "Lead readiness funnel": "Embudo de preparación de leads",
+    "records": "registros",
+    "Sequential gates": "Etapas secuenciales",
+}
+SPANISH_STAGE_COPY = {
+    "Created records": "Registros creados",
+    "Owner assigned": "Responsable asignado",
+    "Source classified": "Fuente clasificada",
+    "Activity logged": "Actividad registrada",
+    "Country identified": "País identificado",
+    "Industry identified": "Sector identificado",
+    "Positive revenue captured": "Ingresos positivos registrados",
+    "Sales accepted": "Lead aceptado por ventas",
+}
 DEFAULT_STAGE_DEFINITIONS: tuple[dict[str, Any], ...] = (
     {
         "stage": "Created records",
@@ -163,6 +179,25 @@ def _predicate_note(predicate: dict[str, Any]) -> str:
         values = ", ".join(str(item) for item in predicate["values"])
         return f"{predicate['column']} in {values}."
     return predicate_type or "Custom predicate."
+
+
+def _spanish_predicate_note(predicate: dict[str, Any]) -> str:
+    predicate_type = str(predicate.get("type") or "")
+    if predicate_type == "all":
+        return "Todos los registros de origen."
+    if predicate_type == "nonblank":
+        return f"Valor presente en {predicate['column']}."
+    if predicate_type == "any_nonblank":
+        columns = ", ".join(str(item) for item in predicate["columns"])
+        return f"Valor presente en alguna de estas columnas: {columns}."
+    if predicate_type == "positive_number":
+        return f"{predicate['column']} > 0."
+    if predicate_type == "equals":
+        return f"{predicate['column']} = {predicate['value']}."
+    if predicate_type == "in":
+        values = ", ".join(str(item) for item in predicate["values"])
+        return f"{predicate['column']} entre {values}."
+    return predicate_type or "Predicado personalizado."
 
 
 def _matches_predicate(row: dict[str, str], predicate: dict[str, Any]) -> bool:
@@ -409,9 +444,98 @@ def _render_cumulative_cell(value: float | None) -> str:
     )
 
 
+def _language_code(recipe: dict[str, Any]) -> str:
+    language = str(recipe.get("language") or "en").strip().lower().replace("_", "-")
+    return language.split("-", maxsplit=1)[0]
+
+
+def _localize_spanish_defaults(
+    recipe: dict[str, Any], rows: list[dict[str, Any]]
+) -> None:
+    """Localize generated defaults without changing source or machine identifiers."""
+
+    if _language_code(recipe) != "es":
+        return
+
+    for field in ("title", "metric_label", "unit", "scope_label"):
+        value = str(recipe.get(field) or "")
+        recipe[field] = SPANISH_DEFAULT_COPY.get(value, value)
+
+    stage_definitions = recipe.get("stage_definitions")
+    stage_table_mappings = recipe.get("stage_table_mappings")
+    if isinstance(stage_definitions, list):
+        for index, stage in enumerate(stage_definitions):
+            if not isinstance(stage, dict):
+                continue
+            stage_label = str(stage.get("stage") or "")
+            localized_stage = SPANISH_STAGE_COPY.get(stage_label, stage_label)
+            stage["stage"] = localized_stage
+            explicit_note = stage.get("note")
+            if explicit_note:
+                note = str(explicit_note)
+                localized_note = (
+                    "Todos los registros de origen."
+                    if note == "All source records."
+                    else note
+                )
+                stage["note"] = localized_note
+            if isinstance(stage_table_mappings, dict) or index >= len(rows):
+                continue
+            row = rows[index]
+            row["stage"] = localized_stage
+            if explicit_note:
+                row["note"] = stage["note"]
+                continue
+            predicate = stage.get("predicate")
+            if isinstance(predicate, dict):
+                row["note"] = _spanish_predicate_note(predicate)
+    for row in rows:
+        if row.get("note") == "Counts supplied by mapped stage table columns.":
+            row["note"] = (
+                "Recuentos obtenidos de las columnas asignadas de la tabla de etapas."
+            )
+
+
+def _visible_copy(recipe: dict[str, Any]) -> dict[str, str]:
+    if _language_code(recipe) == "es":
+        return {
+            "html_lang": "es",
+            "in": "en",
+            "stage": "Etapa",
+            "start": "Inicio",
+            "pass": "Pasan",
+            "drop_off": "Abandono",
+            "stage_percent": "% de etapa",
+            "cumulative_percent": "% acumulado",
+            "note": "Nota",
+            "source": "Fuente",
+            "row_grain": (
+                "Una fila por definición de etapa ordenada; cada fila filtra los "
+                "registros que superaron la etapa anterior."
+            ),
+        }
+    return {
+        "html_lang": "en",
+        "in": "in",
+        "stage": "Stage",
+        "start": "Start",
+        "pass": "Pass",
+        "drop_off": "Drop-off",
+        "stage_percent": "Stage %",
+        "cumulative_percent": "Cumulative %",
+        "note": "Note",
+        "source": "Source",
+        "row_grain": (
+            "One row per ordered stage definition; each row filters the rows "
+            "that passed the prior stage."
+        ),
+    }
+
+
 def _render_html(
     rows: list[dict[str, Any]], recipe: dict[str, Any], source_name: str
 ) -> str:
+    copy = _visible_copy(recipe)
     max_drop = max((abs(int(row["drop_off"])) for row in rows), default=0)
     body_rows: list[str] = []
     for row in rows:
@@ -426,9 +550,9 @@ def _render_html(
             f'<td class="note">{escape(str(row["note"]))}</td>'
             "</tr>"
         )
-    metric_line = f"{recipe['metric_label']} in {recipe['unit']}"
+    metric_line = f"{recipe['metric_label']} {copy['in']} {recipe['unit']}"
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{copy['html_lang']}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -589,20 +713,20 @@ tbody tr:last-child td {{
   <table>
     <thead>
       <tr>
-        <th class="stage">Stage</th>
-        <th>Start</th>
-        <th>Pass</th>
-        <th>Drop-off</th>
-        <th>Stage %</th>
-        <th>Cumulative %</th>
-        <th class="note">Note</th>
+        <th class="stage">{copy['stage']}</th>
+        <th>{copy['start']}</th>
+        <th>{copy['pass']}</th>
+        <th>{copy['drop_off']}</th>
+        <th>{copy['stage_percent']}</th>
+        <th>{copy['cumulative_percent']}</th>
+        <th class="note">{copy['note']}</th>
       </tr>
     </thead>
     <tbody>
       {''.join(body_rows)}
     </tbody>
   </table>
-  <p class="source">Source: {escape(source_name)}</p>
+  <p class="source">{copy['source']}: {escape(source_name)}</p>
 </main>
 </body>
 </html>
@@ -614,9 +738,10 @@ def _build_context(
     recipe: dict[str, Any],
     source_file: Path,
 ) -> dict[str, Any]:
+    copy = _visible_copy(recipe)
     chart_title_lines = [
         str(recipe["title"]),
-        f"{recipe['metric_label']} in {recipe['unit']}",
+        f"{recipe['metric_label']} {copy['in']} {recipe['unit']}",
         str(recipe["scope_label"]),
     ]
     return {
@@ -637,7 +762,7 @@ def _build_context(
             "when": chart_title_lines[2],
         },
         "source_file": source_file.name,
-        "row_grain": "One row per ordered stage definition; each row filters the rows that passed the prior stage.",
+        "row_grain": copy["row_grain"],
         "stage_definitions": recipe.get("resolved_stage_definitions")
         or recipe["stage_definitions"],
         "table_rows": rows,
@@ -712,6 +837,7 @@ def run_funnel_analysis(
         if not isinstance(stage_definitions, list):
             raise ValueError("Recipe stage_definitions must be a list.")
         funnel_rows = compute_funnel_rows(rows, stage_definitions)
+    _localize_spanish_defaults(recipe, funnel_rows)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     html_path = output_dir / "funnel_stage_table.html"

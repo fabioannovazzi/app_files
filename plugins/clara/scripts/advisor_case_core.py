@@ -2192,21 +2192,111 @@ def _render_clara_kickoff_preparation_markdown(
     external_research: Sequence[Mapping[str, str]],
     generated_at: str,
 ) -> str:
+    language = _ui_language(manifest)
+    if language == "es":
+        copy = {
+            "title": "Preparación del kickoff de Clara",
+            "intro": (
+                "Preparación interna para el kickoff con el socio. Clara ha leído "
+                "los resúmenes de los materiales del caso y el playbook controlado. "
+                "Toda investigación web debe registrarse mediante enlaces a las "
+                "fuentes y conclusiones, sin copiar el texto de las fuentes."
+            ),
+            "generated": "Generado",
+            "snapshot": "Resumen del caso",
+            "project": "Proyecto",
+            "objective": "Objetivo",
+            "audience": "Destinatario",
+            "output_language": "Idioma de salida",
+            "materials": "Materiales de referencia",
+            "no_materials": "Aún no hay materiales del caso indexados.",
+            "lenses": "Perspectivas para la sucesión",
+            "red_flags": "Señales de alerta que vigilar",
+            "industry": "Contexto sectorial",
+            "no_industry": (
+                "Aún no se ha registrado investigación sectorial específica. "
+                "Clara debe añadir implicaciones sectoriales concisas y respaldadas "
+                "por fuentes antes de basarse en afirmaciones sobre el sector."
+            ),
+            "research": "Notas de investigación externa",
+            "source": "Fuente",
+            "no_takeaway": "No se ha registrado ninguna conclusión.",
+            "no_research": "No se han registrado notas de investigación externa.",
+            "posture": "Enfoque para el kickoff",
+            "posture_items": (
+                "El socio informa a Clara; Clara no dirige un interrogatorio.",
+                "Clara formula únicamente las preguntas de aclaración imprescindibles "
+                "cuando falta un dato que impide comprender el caso.",
+                "Clara debe inferir de la explicación del socio si el caso es "
+                "analítico, político, orientado primero a la presentación o mixto, "
+                "sin preguntar directamente por esa clasificación.",
+                "Clara no debe presentar el contenido del playbook como una "
+                "conclusión. El playbook es una perspectiva para preparar y dar "
+                "seguimiento al trabajo.",
+            ),
+        }
+    else:
+        copy = {
+            "title": "Clara Kickoff Preparation",
+            "intro": (
+                "Internal preparation for the partner kickoff. Clara has read the "
+                "case material summaries and the controlled playbook. Any web "
+                "research should be recorded as source links and takeaways, not "
+                "copied source text."
+            ),
+            "generated": "Generated",
+            "snapshot": "Case Snapshot",
+            "project": "Project",
+            "objective": "Objective",
+            "audience": "Audience",
+            "output_language": "Output language",
+            "materials": "Material Anchors",
+            "no_materials": "No case materials indexed yet.",
+            "lenses": "Succession Lenses",
+            "red_flags": "Red Flags To Watch",
+            "industry": "Industry Context",
+            "no_industry": (
+                "No industry-specific research has been recorded yet. Clara should "
+                "add concise, source-backed industry implications before relying on "
+                "industry claims."
+            ),
+            "research": "External Research Notes",
+            "source": "Source",
+            "no_takeaway": "No takeaway recorded.",
+            "no_research": "No external research notes recorded.",
+            "posture": "Kickoff Posture",
+            "posture_items": (
+                "The partner briefs Clara; Clara does not run an interrogation.",
+                "Clara asks only essential clarification questions when a missing "
+                "point blocks understanding.",
+                "Clara should infer whether the case is analytical, political, "
+                "presentation-first, or mixed from the partner's explanation rather "
+                "than asking that classification directly.",
+                "Clara should not present playbook material as a conclusion. The "
+                "playbook is a lens for preparation and follow-up.",
+            ),
+        }
+    localized_lenses = _localized_default_items(succession_lenses, language)
+    localized_red_flags = _localized_default_items(red_flags, language)
+    localized_research = _localized_default_research_items(
+        external_research,
+        language,
+    )
     lines = [
-        f"# Clara Kickoff Preparation - {manifest['client']}",
+        f"# {copy['title']} - {manifest['client']}",
         "",
-        "Internal preparation for the partner kickoff. Clara has read the case material summaries and the controlled playbook. Any web research should be recorded as source links and takeaways, not copied source text.",
+        copy["intro"],
         "",
-        f"Generated: {generated_at}",
+        f"{copy['generated']}: {generated_at}",
         "",
-        "## Case Snapshot",
+        f"## {copy['snapshot']}",
         "",
-        f"- Project: {manifest['project']}",
-        f"- Objective: {manifest['objective']}",
-        f"- Audience: {manifest['audience']}",
-        f"- Output language: {manifest['output_language']}",
+        f"- {copy['project']}: {manifest['project']}",
+        f"- {copy['objective']}: {manifest['objective']}",
+        f"- {copy['audience']}: {manifest['audience']}",
+        f"- {copy['output_language']}: {manifest['output_language']}",
         "",
-        "## Material Anchors",
+        f"## {copy['materials']}",
         "",
     ]
     if material_anchors:
@@ -2215,37 +2305,32 @@ def _render_clara_kickoff_preparation_markdown(
             for item in material_anchors
         )
     else:
-        lines.append("- No case materials indexed yet.")
-    lines.extend(["", "## Succession Lenses", ""])
-    lines.extend(f"- {item}" for item in succession_lenses)
-    lines.extend(["", "## Red Flags To Watch", ""])
-    lines.extend(f"- {item}" for item in red_flags)
-    lines.extend(["", "## Industry Context", ""])
+        lines.append(f"- {copy['no_materials']}")
+    lines.extend(["", f"## {copy['lenses']}", ""])
+    lines.extend(f"- {item}" for item in localized_lenses)
+    lines.extend(["", f"## {copy['red_flags']}", ""])
+    lines.extend(f"- {item}" for item in localized_red_flags)
+    lines.extend(["", f"## {copy['industry']}", ""])
     if industry_context:
         lines.extend(f"- {item}" for item in industry_context)
     else:
-        lines.append(
-            "- No industry-specific research has been recorded yet. Clara should add concise, source-backed industry implications before relying on industry claims."
-        )
-    lines.extend(["", "## External Research Notes", ""])
-    if external_research:
-        for item in external_research:
-            label = item.get("title") or item.get("url") or "Source"
-            takeaway = item.get("takeaway") or "No takeaway recorded."
+        lines.append(f"- {copy['no_industry']}")
+    lines.extend(["", f"## {copy['research']}", ""])
+    if localized_research:
+        for item in localized_research:
+            label = item.get("title") or item.get("url") or copy["source"]
+            takeaway = item.get("takeaway") or copy["no_takeaway"]
             url = item.get("url", "")
             source = f" ({url})" if url else ""
             lines.append(f"- {label}{source}: {takeaway}")
     else:
-        lines.append("- No external research notes recorded.")
+        lines.append(f"- {copy['no_research']}")
     lines.extend(
         [
             "",
-            "## Kickoff Posture",
+            f"## {copy['posture']}",
             "",
-            "- The partner briefs Clara; Clara does not run an interrogation.",
-            "- Clara asks only essential clarification questions when a missing point blocks understanding.",
-            "- Clara should infer whether the case is analytical, political, presentation-first, or mixed from the partner's explanation rather than asking that classification directly.",
-            "- Clara should not present playbook material as a conclusion. The playbook is a lens for preparation and follow-up.",
+            *(f"- {item}" for item in copy["posture_items"]),
             "",
         ]
     )
@@ -2282,6 +2367,7 @@ def prepare_clara_kickoff(
     )
     material_items = _material_anchors(materials)
     industry_items = _clean_string_list(industry_context)
+    language = _ui_language(manifest)
     preparation = {
         "case_snapshot": {
             "client": manifest["client"],
@@ -2296,9 +2382,15 @@ def prepare_clara_kickoff(
         "industry_context": industry_items,
         "external_research": research_items,
         "preparation_note": (
-            "Clara is prepared for a partner briefing. The partner should explain "
-            "the case naturally; Clara should listen and ask only essential "
-            "clarifications."
+            "Clara está preparada para el briefing del socio. El socio debe explicar "
+            "el caso con naturalidad; Clara debe escuchar y formular únicamente las "
+            "preguntas de aclaración imprescindibles."
+            if language == "es"
+            else (
+                "Clara is prepared for a partner briefing. The partner should "
+                "explain the case naturally; Clara should listen and ask only "
+                "essential clarifications."
+            )
         ),
     }
     mandate["status"] = "prepared"
@@ -3542,13 +3634,17 @@ def export_case_workspace_archive(
     )
 
 
-def _support_markdown_value(value: Any) -> str:
+def _support_markdown_value(value: Any, *, missing: str = "Not recorded") -> str:
     text = str(value or "").strip()
-    return text or "Not recorded"
+    return text or missing
 
 
-def _support_request_block(request: str) -> str:
-    lines = request.strip().splitlines() or ["No request text provided."]
+def _support_request_block(
+    request: str,
+    *,
+    empty: str = "No request text provided.",
+) -> str:
+    lines = request.strip().splitlines() or [empty]
     return "\n".join(f"> {line}" if line.strip() else ">" for line in lines)
 
 
@@ -3563,6 +3659,78 @@ def _render_support_request_markdown(
     excluded_file_count: int,
     excluded_bytes: int,
 ) -> str:
+    language = _ui_language(manifest)
+    if language == "es":
+        copy = {
+            "title": "Solicitud de apoyo para {recipient}",
+            "created": "Creada el",
+            "requested_by": "Solicitada por",
+            "recipient": "Destinatario",
+            "client": "Cliente",
+            "project": "Proyecto",
+            "objective": "Objetivo",
+            "audience": "Destinatario del trabajo",
+            "language": "Idioma",
+            "needed": "Qué se necesita",
+            "included_state": "Estado de Clara incluido",
+            "included": "incluido",
+            "not_present": "no presente",
+            "generated_only": "generado únicamente para este paquete",
+            "exclusions": "Exclusiones locales",
+            "excluded_count": "Número de archivos locales o de ejecución excluidos",
+            "excluded_bytes": "Bytes locales o de ejecución excluidos",
+            "exclusion_note": (
+                "No se incluyen las carpetas ocultas de dependencias de OCR o de "
+                "ejecución, como `.codex_*_py`, los entornos virtuales, las cachés, "
+                "los metadatos de macOS ni las exportaciones de intercambio anteriores."
+            ),
+            "operating_note": "Nota operativa",
+            "operating_body": (
+                "La carpeta local de Clara de quien realiza la solicitud sigue "
+                "siendo la copia de trabajo autoritativa. El destinatario puede "
+                "utilizar Clara, Pro, edición manual o cambios del plugin para "
+                "desbloquear la entrega. El material devuelto que resulte útil debe "
+                "registrarse de nuevo en el caso cuando sea pertinente."
+            ),
+            "missing": "No registrado",
+            "empty_request": "No se ha facilitado el texto de la solicitud.",
+            "default_recipient": "Revisor de apoyo",
+        }
+    else:
+        copy = {
+            "title": "Support Request For {recipient}",
+            "created": "Created at",
+            "requested_by": "Requested by",
+            "recipient": "Recipient",
+            "client": "Client",
+            "project": "Project",
+            "objective": "Objective",
+            "audience": "Audience",
+            "language": "Language",
+            "needed": "What Is Needed",
+            "included_state": "Included Clara State",
+            "included": "included",
+            "not_present": "not present",
+            "generated_only": "generated for this package only",
+            "exclusions": "Local Exclusions",
+            "excluded_count": "Excluded local/runtime file count",
+            "excluded_bytes": "Excluded local/runtime bytes",
+            "exclusion_note": (
+                "Hidden OCR/runtime dependency folders such as `.codex_*_py`, "
+                "virtual environments, caches, macOS metadata, and prior exchange "
+                "exports are not included."
+            ),
+            "operating_note": "Operating Note",
+            "operating_body": (
+                "The requester's local Clara folder remains the authoritative "
+                "working copy. The recipient may use Clara, Pro, manual editing, "
+                "or plugin changes to unblock delivery. Useful returned material "
+                "should be registered back into the case when it matters."
+            ),
+            "missing": "Not recorded",
+            "empty_request": "No request text provided.",
+            "default_recipient": "Support reviewer",
+        }
     tracked_artifacts = (
         "case_manifest.json",
         "case_brief.md",
@@ -3581,42 +3749,44 @@ def _render_support_request_markdown(
     for artifact in tracked_artifacts:
         if artifact.endswith("/"):
             status = (
-                "included"
+                copy["included"]
                 if any(path.startswith(artifact) for path in included_set)
-                else "not present"
+                else copy["not_present"]
             )
         else:
-            status = "included" if artifact in included_set else "not present"
+            status = (
+                copy["included"] if artifact in included_set else copy["not_present"]
+            )
         included_artifact_lines.append(f"- `{artifact}`: {status}")
 
-    request_block = _support_request_block(request)
-    requested_by_value = _support_markdown_value(requested_by)
-    recipient_value = _support_markdown_value(recipient)
+    request_block = _support_request_block(request, empty=copy["empty_request"])
+    requested_by_value = _support_markdown_value(
+        requested_by,
+        missing=copy["missing"],
+    )
+    recipient_value = _support_markdown_value(recipient, missing=copy["missing"])
+    if language == "es" and recipient_value == "Support reviewer":
+        recipient_value = copy["default_recipient"]
     return (
-        f"# Support Request For {recipient_value}\n\n"
-        f"- Created at: {created_at}\n"
-        f"- Requested by: {requested_by_value}\n"
-        f"- Recipient: {recipient_value}\n"
-        f"- Client: {_support_markdown_value(manifest.get('client'))}\n"
-        f"- Project: {_support_markdown_value(manifest.get('project'))}\n"
-        f"- Objective: {_support_markdown_value(manifest.get('objective'))}\n"
-        f"- Audience: {_support_markdown_value(manifest.get('audience'))}\n"
-        f"- Language: {_support_markdown_value(manifest.get('output_language'))}\n\n"
-        "## What Is Needed\n\n"
+        f"# {copy['title'].format(recipient=recipient_value)}\n\n"
+        f"- {copy['created']}: {created_at}\n"
+        f"- {copy['requested_by']}: {requested_by_value}\n"
+        f"- {copy['recipient']}: {recipient_value}\n"
+        f"- {copy['client']}: {_support_markdown_value(manifest.get('client'), missing=copy['missing'])}\n"
+        f"- {copy['project']}: {_support_markdown_value(manifest.get('project'), missing=copy['missing'])}\n"
+        f"- {copy['objective']}: {_support_markdown_value(manifest.get('objective'), missing=copy['missing'])}\n"
+        f"- {copy['audience']}: {_support_markdown_value(manifest.get('audience'), missing=copy['missing'])}\n"
+        f"- {copy['language']}: {_support_markdown_value(manifest.get('output_language'), missing=copy['missing'])}\n\n"
+        f"## {copy['needed']}\n\n"
         f"{request_block}\n\n"
-        "## Included Clara State\n\n" + "\n".join(included_artifact_lines) + "\n"
-        f"- `{SUPPORT_REQUEST_FILENAME}`: generated for this package only\n\n"
-        "## Local Exclusions\n\n"
-        f"- Excluded local/runtime file count: {excluded_file_count}\n"
-        f"- Excluded local/runtime bytes: {excluded_bytes}\n"
-        "- Hidden OCR/runtime dependency folders such as `.codex_*_py`, virtual "
-        "environments, caches, macOS metadata, and prior exchange exports are "
-        "not included.\n\n"
-        "## Operating Note\n\n"
-        "The requester's local Clara folder remains the authoritative working "
-        "copy. The recipient may use Clara, Pro, manual editing, or plugin "
-        "changes to unblock delivery. Useful returned material should be "
-        "registered back into the case when it matters.\n"
+        f"## {copy['included_state']}\n\n" + "\n".join(included_artifact_lines) + "\n"
+        f"- `{SUPPORT_REQUEST_FILENAME}`: {copy['generated_only']}\n\n"
+        f"## {copy['exclusions']}\n\n"
+        f"- {copy['excluded_count']}: {excluded_file_count}\n"
+        f"- {copy['excluded_bytes']}: {excluded_bytes}\n"
+        f"- {copy['exclusion_note']}\n\n"
+        f"## {copy['operating_note']}\n\n"
+        f"{copy['operating_body']}\n"
     )
 
 
@@ -4146,6 +4316,8 @@ def import_case_update(
 def _entry_source_suffix(
     entry: Mapping[str, Any],
     material_labels: Mapping[str, str],
+    *,
+    source_label: str = "Sources",
 ) -> str:
     source_ids = entry.get("source_material_ids", [])
     labels = [
@@ -4154,7 +4326,7 @@ def _entry_source_suffix(
         if source_id in material_labels
     ]
     if labels:
-        return f" Sources: {', '.join(labels)}."
+        return f" {source_label}: {', '.join(labels)}."
     return ""
 
 
@@ -4163,13 +4335,17 @@ def _brief_entry_line(
     material_labels: Mapping[str, str],
     *,
     include_kind: bool = False,
+    source_label: str = "Sources",
+    kind_labels: Mapping[str, str] | None = None,
 ) -> str:
     prefix = ""
     if include_kind:
-        prefix += f"[{str(entry['kind']).replace('_', ' ')}] "
+        kind = str(entry["kind"])
+        kind_label = (kind_labels or {}).get(kind, kind.replace("_", " "))
+        prefix += f"[{kind_label}] "
     return (
         f"- {prefix}{str(entry['text']).strip()}"
-        f"{_entry_source_suffix(entry, material_labels)}"
+        f"{_entry_source_suffix(entry, material_labels, source_label=source_label)}"
     )
 
 
@@ -4179,18 +4355,30 @@ def _brief_lines_for_entries(
     *,
     empty_text: str,
     include_kind: bool = False,
+    source_label: str = "Sources",
+    kind_labels: Mapping[str, str] | None = None,
 ) -> list[str]:
     if not entries:
         return [f"- {empty_text}"]
     return [
-        _brief_entry_line(entry, material_labels, include_kind=include_kind)
+        _brief_entry_line(
+            entry,
+            material_labels,
+            include_kind=include_kind,
+            source_label=source_label,
+            kind_labels=kind_labels,
+        )
         for entry in entries
     ]
 
 
-def _brief_material_lines(materials: Sequence[Mapping[str, Any]]) -> list[str]:
+def _brief_material_lines(
+    materials: Sequence[Mapping[str, Any]],
+    *,
+    no_materials: str = "No materials indexed.",
+) -> list[str]:
     if not materials:
-        return ["- No materials indexed."]
+        return [f"- {no_materials}"]
     lines = []
     for item in materials:
         summary = str(item.get("summary", "")).strip()
@@ -4202,20 +4390,33 @@ def _brief_material_lines(materials: Sequence[Mapping[str, Any]]) -> list[str]:
     return lines
 
 
-def _brief_question_lines(questions: Sequence[Mapping[str, Any]]) -> list[str]:
+def _brief_question_lines(
+    questions: Sequence[Mapping[str, Any]],
+    *,
+    no_questions: str = "No open questions registered.",
+    why_label: str = "Why it matters",
+) -> list[str]:
     open_items = [item for item in questions if item.get("status") == "open"]
     if not open_items:
-        return ["- No open questions registered."]
+        return [f"- {no_questions}"]
     return [
-        f"- {item['question']} Why it matters: {item['why_it_matters']}"
+        f"- {item['question']} {why_label}: {item['why_it_matters']}"
         for item in open_items
     ]
 
 
-def _brief_issue_lines(issues: Sequence[Mapping[str, Any]]) -> list[str]:
+def _brief_issue_lines(
+    issues: Sequence[Mapping[str, Any]],
+    *,
+    no_issues: str = "No active case issues registered.",
+    evidence_label: str = "Evidence links",
+    supporting_label: str = "supporting",
+    opposing_label: str = "opposing",
+    open_test_label: str = "open test",
+) -> list[str]:
     active_issues = [item for item in issues if item.get("status") != "resolved"]
     if not active_issues:
-        return ["- No active case issues registered."]
+        return [f"- {no_issues}"]
     lines: list[str] = []
     for issue in active_issues:
         synthesis = str(issue.get("current_synthesis", "")).strip()
@@ -4228,10 +4429,170 @@ def _brief_issue_lines(issues: Sequence[Mapping[str, Any]]) -> list[str]:
         evidence_against = len(issue.get("evidence_against", []))
         open_tests = len(issue.get("open_tests", []))
         lines.append(
-            f"  Evidence links: {evidence_for} supporting, "
-            f"{evidence_against} opposing, {open_tests} open test."
+            f"  {evidence_label}: {evidence_for} {supporting_label}, "
+            f"{evidence_against} {opposing_label}, {open_tests} {open_test_label}."
         )
     return lines
+
+
+def _case_brief_copy(manifest: Mapping[str, Any]) -> dict[str, Any]:
+    if _ui_language(manifest) == "es":
+        return {
+            "title": "Resumen del caso",
+            "derived": (
+                "Resumen de trabajo derivado. La fuente de referencia sigue siendo "
+                "el conjunto de archivos JSON del caso."
+            ),
+            "pending_gate": (
+                "Los elementos pendientes sirven únicamente para revisión y no "
+                "pueden alimentar el paquete de decisión del cliente hasta que se "
+                "marquen como listos para dicho paquete."
+            ),
+            "generated": "Generado",
+            "updated": "Caso actualizado",
+            "snapshot": "Resumen del caso",
+            "project": "Proyecto",
+            "objective": "Objetivo",
+            "audience": "Destinatario",
+            "status": "Estado",
+            "output_language": "Idioma de salida",
+            "materials_indexed": "Materiales indexados",
+            "approved_count": "Elementos de juicio listos para el paquete de decisión",
+            "pending_count": "Elementos de juicio pendientes",
+            "rejected_count": "Elementos de juicio rechazados",
+            "active_issues_count": "Cuestiones activas del caso",
+            "current": "Comprensión actual (lista para el paquete de decisión)",
+            "facts": "Hechos",
+            "advisor": "Juicio consultivo",
+            "inferences": "Inferencias de Codex",
+            "decisions": "Implicaciones para la decisión",
+            "no_facts": "Aún no hay hechos listos para el paquete de decisión.",
+            "no_advisor": (
+                "Aún no hay juicios consultivos listos para el paquete de decisión."
+            ),
+            "no_inferences": (
+                "Aún no hay inferencias de Codex listas para el paquete de decisión."
+            ),
+            "no_decisions": (
+                "Aún no hay implicaciones listas para el paquete de decisión."
+            ),
+            "candidate_review": (
+                "Revisión de candidatos (no listos para el paquete de decisión)"
+            ),
+            "candidate_note": (
+                "Estos elementos se han registrado para su revisión. No constituyen "
+                "asesoramiento final."
+            ),
+            "no_pending": "No hay elementos de juicio pendientes.",
+            "questions": "Preguntas abiertas",
+            "no_questions": "No se han registrado preguntas abiertas.",
+            "why": "Por qué es importante",
+            "issues": "Cuestiones del caso",
+            "no_issues": "No se han registrado cuestiones activas del caso.",
+            "evidence": "Vínculos de evidencia",
+            "supporting": "a favor",
+            "opposing": "en contra",
+            "open_test": "prueba abierta",
+            "mandate": "Mandato de Clara",
+            "current_understanding": "Comprensión actual",
+            "partner_orientation": "Orientación del socio",
+            "not_recorded": "Aún no registrado.",
+            "clarifications": "Aclaraciones imprescindibles",
+            "no_clarifications": "Aún no se han registrado aclaraciones de Clara.",
+            "next_steps": "Próximos pasos de Clara",
+            "no_next_steps": "Aún no se han registrado próximos pasos de Clara.",
+            "materials": "Materiales",
+            "no_materials": "No hay materiales indexados.",
+            "control": "Notas de control",
+            "control_brief": (
+                "`case_brief.md` se deriva de `case_manifest.json`, "
+                "`material_registry.json`, `judgement_log.json`, "
+                "`open_questions.json`, `case_issues.json` y `clara_mandate.json`."
+            ),
+            "control_pack": (
+                "`decision_pack.md` y `decision_pack.docx` utilizan únicamente "
+                "juicios listos para el paquete de decisión."
+            ),
+            "control_rebuild": (
+                "Vuelve a generar este resumen con `scripts/build_case_brief.py` si "
+                "se han realizado cambios externos en los archivos JSON."
+            ),
+            "sources": "Fuentes",
+            "kind_labels": {
+                "fact": "hecho",
+                "advisor_judgement": "juicio consultivo",
+                "codex_inference": "inferencia de Codex",
+                "decision_implication": "implicación para la decisión",
+            },
+        }
+    return {
+        "title": "Case Brief",
+        "derived": "Derived working brief. The source of truth remains the JSON case files.",
+        "pending_gate": (
+            "Pending items are review material only and cannot feed the client "
+            "decision pack until marked decision-pack ready."
+        ),
+        "generated": "Generated",
+        "updated": "Case updated",
+        "snapshot": "Case Snapshot",
+        "project": "Project",
+        "objective": "Objective",
+        "audience": "Audience",
+        "status": "Status",
+        "output_language": "Output language",
+        "materials_indexed": "Materials indexed",
+        "approved_count": "Decision-pack-ready judgement entries",
+        "pending_count": "Pending judgement entries",
+        "rejected_count": "Rejected judgement entries",
+        "active_issues_count": "Active case issues",
+        "current": "Current Understanding (decision-pack ready)",
+        "facts": "Facts",
+        "advisor": "Consultant Judgement",
+        "inferences": "Codex Inferences",
+        "decisions": "Decision Implications",
+        "no_facts": "No decision-pack-ready facts yet.",
+        "no_advisor": "No decision-pack-ready consultant judgement yet.",
+        "no_inferences": "No decision-pack-ready Codex inferences yet.",
+        "no_decisions": "No decision-pack-ready decision implications yet.",
+        "candidate_review": "Candidate Review (not decision-pack ready)",
+        "candidate_note": "These items are captured for review. They are not final advice.",
+        "no_pending": "No pending judgement entries.",
+        "questions": "Open Questions",
+        "no_questions": "No open questions registered.",
+        "why": "Why it matters",
+        "issues": "Case Issues",
+        "no_issues": "No active case issues registered.",
+        "evidence": "Evidence links",
+        "supporting": "supporting",
+        "opposing": "opposing",
+        "open_test": "open test",
+        "mandate": "Clara Mandate",
+        "current_understanding": "Current understanding",
+        "partner_orientation": "Partner orientation",
+        "not_recorded": "Not recorded yet.",
+        "clarifications": "Essential Clarifications",
+        "no_clarifications": "No Clara clarifications recorded yet.",
+        "next_steps": "Clara Next Steps",
+        "no_next_steps": "No Clara next steps recorded yet.",
+        "materials": "Materials",
+        "no_materials": "No materials indexed.",
+        "control": "Control Notes",
+        "control_brief": (
+            "`case_brief.md` is derived from `case_manifest.json`, "
+            "`material_registry.json`, `judgement_log.json`, "
+            "`open_questions.json`, `case_issues.json`, and `clara_mandate.json`."
+        ),
+        "control_pack": (
+            "`decision_pack.md` and `decision_pack.docx` use decision-pack-ready "
+            "judgement only."
+        ),
+        "control_rebuild": (
+            "Rebuild this brief with `scripts/build_case_brief.py` if external "
+            "edits were made to the JSON files."
+        ),
+        "sources": "Sources",
+        "kind_labels": {},
+    }
 
 
 def _render_case_brief(
@@ -4244,6 +4605,7 @@ def _render_case_brief(
     clara_mandate: Mapping[str, Any],
     generated_at: str,
 ) -> str:
+    copy = _case_brief_copy(manifest)
     grouped = _group_approved_entries(entries)
     material_labels = _material_label_by_id(materials)
     pending_entries = [entry for entry in entries if entry["status"] == "pending"]
@@ -4254,109 +4616,126 @@ def _render_case_brief(
     clarification_lines = [
         f"- {item}"
         for item in _clean_string_list(mandate_body.get("essential_clarifications", []))
-    ] or ["- No Clara clarifications recorded yet."]
+    ] or [f"- {copy['no_clarifications']}"]
     next_step_lines = [
         f"- {item}" for item in _clean_string_list(mandate_body.get("next_steps", []))
-    ] or ["- No Clara next steps recorded yet."]
+    ] or [f"- {copy['no_next_steps']}"]
 
     lines = [
-        f"# Case Brief - {manifest['client']}",
+        f"# {copy['title']} - {manifest['client']}",
         "",
-        "Derived working brief. The source of truth remains the JSON case files.",
-        "Pending items are review material only and cannot feed the client decision pack until marked decision-pack ready.",
+        copy["derived"],
+        copy["pending_gate"],
         "",
-        f"Generated: {generated_at}",
-        f"Case updated: {manifest.get('updated_at', '')}",
+        f"{copy['generated']}: {generated_at}",
+        f"{copy['updated']}: {manifest.get('updated_at', '')}",
         "",
-        "## Case Snapshot",
+        f"## {copy['snapshot']}",
         "",
-        f"- Project: {manifest['project']}",
-        f"- Objective: {manifest['objective']}",
-        f"- Audience: {manifest['audience']}",
-        f"- Status: {manifest['status']}",
-        f"- Output language: {manifest['output_language']}",
-        f"- Materials indexed: {len(materials)}",
-        f"- Decision-pack-ready judgement entries: {approved_count}",
-        f"- Pending judgement entries: {len(pending_entries)}",
-        f"- Rejected judgement entries: {rejected_count}",
-        f"- Active case issues: {sum(1 for issue in issues if issue.get('status') == 'active')}",
+        f"- {copy['project']}: {manifest['project']}",
+        f"- {copy['objective']}: {manifest['objective']}",
+        f"- {copy['audience']}: {manifest['audience']}",
+        f"- {copy['status']}: {manifest['status']}",
+        f"- {copy['output_language']}: {manifest['output_language']}",
+        f"- {copy['materials_indexed']}: {len(materials)}",
+        f"- {copy['approved_count']}: {approved_count}",
+        f"- {copy['pending_count']}: {len(pending_entries)}",
+        f"- {copy['rejected_count']}: {rejected_count}",
+        f"- {copy['active_issues_count']}: {sum(1 for issue in issues if issue.get('status') == 'active')}",
         "",
-        "## Current Understanding (decision-pack ready)",
+        f"## {copy['current']}",
         "",
-        "### Facts",
+        f"### {copy['facts']}",
         "",
         *_brief_lines_for_entries(
             grouped["fact"],
             material_labels,
-            empty_text="No decision-pack-ready facts yet.",
+            empty_text=copy["no_facts"],
+            source_label=copy["sources"],
         ),
         "",
-        "### Consultant Judgement",
+        f"### {copy['advisor']}",
         "",
         *_brief_lines_for_entries(
             grouped["advisor_judgement"],
             material_labels,
-            empty_text="No decision-pack-ready consultant judgement yet.",
+            empty_text=copy["no_advisor"],
+            source_label=copy["sources"],
         ),
         "",
-        "### Codex Inferences",
+        f"### {copy['inferences']}",
         "",
         *_brief_lines_for_entries(
             grouped["codex_inference"],
             material_labels,
-            empty_text="No decision-pack-ready Codex inferences yet.",
+            empty_text=copy["no_inferences"],
+            source_label=copy["sources"],
         ),
         "",
-        "### Decision Implications",
+        f"### {copy['decisions']}",
         "",
         *_brief_lines_for_entries(
             grouped["decision_implication"],
             material_labels,
-            empty_text="No decision-pack-ready decision implications yet.",
+            empty_text=copy["no_decisions"],
+            source_label=copy["sources"],
         ),
         "",
-        "## Candidate Review (not decision-pack ready)",
+        f"## {copy['candidate_review']}",
         "",
-        "These items are captured for review. They are not final advice.",
+        copy["candidate_note"],
         "",
         *_brief_lines_for_entries(
             pending_entries,
             material_labels,
-            empty_text="No pending judgement entries.",
+            empty_text=copy["no_pending"],
             include_kind=True,
+            source_label=copy["sources"],
+            kind_labels=copy["kind_labels"],
         ),
         "",
-        "## Open Questions",
+        f"## {copy['questions']}",
         "",
-        *_brief_question_lines(open_questions),
+        *_brief_question_lines(
+            open_questions,
+            no_questions=copy["no_questions"],
+            why_label=copy["why"],
+        ),
         "",
-        "## Case Issues",
+        f"## {copy['issues']}",
         "",
-        *_brief_issue_lines(issues),
+        *_brief_issue_lines(
+            issues,
+            no_issues=copy["no_issues"],
+            evidence_label=copy["evidence"],
+            supporting_label=copy["supporting"],
+            opposing_label=copy["opposing"],
+            open_test_label=copy["open_test"],
+        ),
         "",
-        "## Clara Mandate",
+        f"## {copy['mandate']}",
         "",
-        f"- Status: {mandate_status}",
-        f"- Current understanding: {str(mandate_body.get('clara_understanding', '')).strip() or 'Not recorded yet.'}",
-        f"- Partner orientation: {str(mandate_body.get('partner_starting_orientation', '')).strip() or 'Not recorded yet.'}",
+        f"- {copy['status']}: {mandate_status}",
+        f"- {copy['current_understanding']}: {str(mandate_body.get('clara_understanding', '')).strip() or copy['not_recorded']}",
+        f"- {copy['partner_orientation']}: {str(mandate_body.get('partner_starting_orientation', '')).strip() or copy['not_recorded']}",
         "",
-        "### Essential Clarifications",
+        f"### {copy['clarifications']}",
         "",
         *clarification_lines,
         "",
-        "### Clara Next Steps",
+        f"### {copy['next_steps']}",
         "",
         *next_step_lines,
         "",
-        "## Materials",
+        f"## {copy['materials']}",
         "",
-        *_brief_material_lines(materials),
+        *_brief_material_lines(materials, no_materials=copy["no_materials"]),
         "",
-        "## Control Notes",
+        f"## {copy['control']}",
         "",
-        "- `case_brief.md` is derived from `case_manifest.json`, `material_registry.json`, `judgement_log.json`, `open_questions.json`, `case_issues.json`, and `clara_mandate.json`.",
-        "- `decision_pack.md` and `decision_pack.docx` use decision-pack-ready judgement only.",
-        "- Rebuild this brief with `scripts/build_case_brief.py` if external edits were made to the JSON files.",
+        f"- {copy['control_brief']}",
+        f"- {copy['control_pack']}",
+        f"- {copy['control_rebuild']}",
         "",
     ]
     return "\n".join(lines)
@@ -5016,6 +5395,7 @@ def _entry_line(
     material_labels: Mapping[str, str],
     *,
     include_sources: bool = True,
+    sources_label: str = "sources",
 ) -> str:
     text = str(entry["text"]).strip()
     source_ids = entry.get("source_material_ids", [])
@@ -5025,7 +5405,7 @@ def _entry_line(
         if source_id in material_labels
     ]
     if include_sources and labels:
-        return f"{text} (sources: {', '.join(labels)})"
+        return f"{text} ({sources_label}: {', '.join(labels)})"
     return text
 
 
@@ -5033,12 +5413,18 @@ def _markdown_section(
     title: str,
     entries: Sequence[Mapping[str, Any]],
     material_labels: Mapping[str, str],
+    *,
+    no_items: str = "No decision-pack-ready items.",
+    sources_label: str = "sources",
 ) -> list[str]:
     lines = [f"## {title}", ""]
     if not entries:
-        lines.extend(["No decision-pack-ready items.", ""])
+        lines.extend([no_items, ""])
         return lines
-    lines.extend(f"- {_entry_line(entry, material_labels)}" for entry in entries)
+    lines.extend(
+        f"- {_entry_line(entry, material_labels, sources_label=sources_label)}"
+        for entry in entries
+    )
     lines.append("")
     return lines
 
@@ -5179,6 +5565,36 @@ LANGUAGE_COPY = {
 def _copy(manifest: Mapping[str, Any], key: str) -> str:
     language = str(manifest.get("output_language") or "en")
     return LANGUAGE_COPY.get(language, LANGUAGE_COPY["en"])[key]
+
+
+def _workpaper_output_copy(manifest: Mapping[str, Any]) -> dict[str, str]:
+    if _ui_language(manifest) == "es":
+        return {
+            "explanation": (
+                "Este documento de trabajo incluye las rutas de las fuentes y el "
+                "control de inclusión. No está destinado al cliente."
+            ),
+            "no_materials": "No hay materiales indexados.",
+            "no_questions": "No se han registrado preguntas abiertas.",
+            "no_items": "No hay elementos listos para el paquete de decisión.",
+            "sources": "fuentes",
+            "title_header": "Título",
+            "type_header": "Tipo",
+            "status_header": "Estado",
+        }
+    return {
+        "explanation": (
+            "This workpaper includes source paths and inclusion control. It is not "
+            "client-facing."
+        ),
+        "no_materials": "No materials indexed.",
+        "no_questions": "No open questions registered.",
+        "no_items": "No decision-pack-ready items.",
+        "sources": "sources",
+        "title_header": "Title",
+        "type_header": "Type",
+        "status_header": "Status",
+    }
 
 
 def _client_section(
@@ -5345,6 +5761,7 @@ def _render_workpaper_markdown(
     entries: Sequence[Mapping[str, Any]],
     open_questions: Sequence[Mapping[str, Any]],
 ) -> str:
+    workpaper_copy = _workpaper_output_copy(manifest)
     grouped = _group_approved_entries(entries)
     material_labels = _material_label_by_id(materials)
     pending_count = sum(1 for entry in entries if entry["status"] == "pending")
@@ -5358,7 +5775,7 @@ def _render_workpaper_markdown(
         f"{_copy(manifest, 'objective')}: {manifest['objective']}",
         f"{_copy(manifest, 'audience')}: {manifest['audience']}",
         "",
-        "This workpaper includes source paths and inclusion control. It is not client-facing.",
+        workpaper_copy["explanation"],
         "",
         f"## {_copy(manifest, 'materials')}",
         "",
@@ -5369,7 +5786,7 @@ def _render_workpaper_markdown(
             for item in materials
         )
     else:
-        lines.append("No materials indexed.")
+        lines.append(workpaper_copy["no_materials"])
     lines.append("")
 
     sections = [
@@ -5379,7 +5796,15 @@ def _render_workpaper_markdown(
         (_copy(manifest, "decisions"), grouped["decision_implication"]),
     ]
     for title, section_entries in sections:
-        lines.extend(_markdown_section(title, section_entries, material_labels))
+        lines.extend(
+            _markdown_section(
+                title,
+                section_entries,
+                material_labels,
+                no_items=workpaper_copy["no_items"],
+                sources_label=workpaper_copy["sources"],
+            )
+        )
 
     lines.extend([f"## {_copy(manifest, 'questions')}", ""])
     open_items = [item for item in open_questions if item["status"] == "open"]
@@ -5389,7 +5814,7 @@ def _render_workpaper_markdown(
             for item in open_items
         )
     else:
-        lines.append("No open questions registered.")
+        lines.append(workpaper_copy["no_questions"])
     lines.extend(
         [
             "",
@@ -5404,9 +5829,14 @@ def _render_workpaper_markdown(
     return "\n".join(lines)
 
 
-def _add_docx_bullets(document: Any, items: Sequence[str]) -> None:
+def _add_docx_bullets(
+    document: Any,
+    items: Sequence[str],
+    *,
+    empty_text: str = "No decision-pack-ready items.",
+) -> None:
     if not items:
-        document.add_paragraph("No decision-pack-ready items.")
+        document.add_paragraph(empty_text)
         return
     for item in items:
         document.add_paragraph(item, style="List Bullet")
@@ -5429,6 +5859,7 @@ def _render_docx(
         ) from exc
 
     grouped = _group_approved_entries(entries)
+    workpaper_copy = _workpaper_output_copy(manifest)
     material_labels = _material_label_by_id(materials)
     approved_count = sum(1 for entry in entries if entry["status"] == "approved")
     document = Document()
@@ -5475,6 +5906,7 @@ def _render_docx(
                 _entry_line(entry, material_labels, include_sources=False)
                 for entry in section_entries
             ],
+            empty_text=workpaper_copy["no_items"],
         )
 
     document.add_heading(_copy(manifest, "questions"), level=1)
@@ -5485,6 +5917,7 @@ def _render_docx(
             f"{item['question']} ({_copy(manifest, 'why')}: {item['why_it_matters']})"
             for item in open_items
         ],
+        empty_text=workpaper_copy["no_questions"],
     )
     document.add_paragraph(_copy(manifest, "workpaper_note"))
 
@@ -5509,6 +5942,7 @@ def _render_workpaper_docx(
         ) from exc
 
     grouped = _group_approved_entries(entries)
+    workpaper_copy = _workpaper_output_copy(manifest)
     material_labels = _material_label_by_id(materials)
     document = Document()
     styles = document.styles
@@ -5530,21 +5964,22 @@ def _render_workpaper_docx(
         paragraph.add_run(f"{label}: ").bold = True
         paragraph.add_run(str(value))
 
+    document.add_paragraph(workpaper_copy["explanation"])
     document.add_heading(_copy(manifest, "materials"), level=1)
     if materials:
         table = document.add_table(rows=1, cols=3)
         table.style = "Table Grid"
         header = table.rows[0].cells
-        header[0].text = "Title"
-        header[1].text = "Type"
-        header[2].text = "Status"
+        header[0].text = workpaper_copy["title_header"]
+        header[1].text = workpaper_copy["type_header"]
+        header[2].text = workpaper_copy["status_header"]
         for item in materials:
             row = table.add_row().cells
             row[0].text = str(item["title"])
             row[1].text = str(item["material_type"])
             row[2].text = str(item["status"])
     else:
-        document.add_paragraph("No materials indexed.")
+        document.add_paragraph(workpaper_copy["no_materials"])
 
     for title_text, section_entries in (
         (_copy(manifest, "facts"), grouped["fact"]),
@@ -5555,7 +5990,15 @@ def _render_workpaper_docx(
         document.add_heading(title_text, level=1)
         _add_docx_bullets(
             document,
-            [_entry_line(entry, material_labels) for entry in section_entries],
+            [
+                _entry_line(
+                    entry,
+                    material_labels,
+                    sources_label=workpaper_copy["sources"],
+                )
+                for entry in section_entries
+            ],
+            empty_text=workpaper_copy["no_items"],
         )
 
     document.add_heading(_copy(manifest, "questions"), level=1)
@@ -5566,6 +6009,7 @@ def _render_workpaper_docx(
             f"{item['question']} {_copy(manifest, 'why')}: {item['why_it_matters']}"
             for item in open_items
         ],
+        empty_text=workpaper_copy["no_questions"],
     )
 
     pending_count = sum(1 for entry in entries if entry["status"] == "pending")

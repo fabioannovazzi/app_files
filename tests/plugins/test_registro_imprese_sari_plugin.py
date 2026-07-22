@@ -170,7 +170,11 @@ def _confirmation() -> dict[str, object]:
 
 
 def _prepare_case(
-    tmp_path: Path, *, package_case: bool = True, output_name: str = "private-case"
+    tmp_path: Path,
+    *,
+    package_case: bool = True,
+    output_name: str = "private-case",
+    language: str = "it",
 ) -> tuple[Path, dict[str, object]]:
     initialize_case = _load_script("initialize_case")
     register_source = _load_script("register_official_source")
@@ -183,6 +187,7 @@ def _prepare_case(
         run_id="SARI-TEST-001",
         reference_date="2026-07-16",
         client_reference="CLIENT-REF-001",
+        language=language,
     )
     intake = _read_json(paths["intake"])
     intake.update(
@@ -769,6 +774,81 @@ def test_synthetic_case_validates_and_packages_only_for_professional_review(
     assert PRIVATE_PROPOSED_VALUE in review_text
     assert PRIVATE_DOCUMENT_QUOTE in review_text
     assert PRIVATE_SARI_QUESTION in review_text
+
+
+def test_spanish_case_packages_localized_checklist_handoff_and_review_payload(
+    tmp_path: Path,
+) -> None:
+    output_dir, audit = _prepare_case(tmp_path, language="es")
+
+    checklist = (output_dir / "studio_checklist.md").read_text(encoding="utf-8")
+    sari_question = (output_dir / "sari_question_draft.md").read_text(encoding="utf-8")
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    review = _read_json(output_dir / "review_payload.json")
+    run_intake = _read_json(output_dir / "run_intake.json")
+    final_artifacts = _read_json(output_dir / "final_artifacts.json")
+    assert audit["status"] == "passed"
+    assert "BORRADOR PARA REVISIÓN PROFESIONAL" in checklist
+    assert "| Concepto | Valor | Estado |" in checklist
+    assert "## Fuentes oficiales seleccionadas" in checklist
+    assert "## Resultado de los controles mecánicos" in checklist
+    assert "Pregunta para el servicio de soporte SARI — borrador" in sari_question
+    assert "El profesional debe aprobar el texto" in sari_question
+    assert "# Entrega para revisión" in handoff
+    assert "La aplicación de decisiones nunca inicia sesión" in handoff
+    assert review["language"] == "es"
+    assert run_intake["language"] == "es"
+    assert str(run_intake["inferred_task"]).startswith("Preparar un borrador")
+    assert final_artifacts["language"] == "es"
+    assert final_artifacts["caveats"][-1].startswith("Toda fuente SARI")
+    assert final_artifacts["next_actions"][0].startswith("Resuelva todos")
+    audit_item = next(
+        item for item in review["items"] if item["item_type"] == "audit_check"
+    )
+    assert audit_item["title"] == "Controles mecánicos de la práctica"
+    contract = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "validate_plugin_review_contract.py"),
+            str(output_dir),
+            "--strict-data-posture",
+            "--strict-output-paths",
+            "--strict-execution-trace",
+            "--strict-output-content",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    assert contract.returncode == 0, contract.stdout + contract.stderr
+
+
+def test_registro_imprese_widget_selects_spanish_copy_from_review_language() -> None:
+    widget_path = PLUGIN_ROOT / "assets" / "registro-imprese-sari-review-widget.html"
+    script = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const html = fs.readFileSync(process.argv[1], "utf8");
+const body = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const definitions = body.split('document.getElementById("search").addEventListener')[0];
+const context = {};
+vm.createContext(context);
+new vm.Script(`${definitions}\nglobalThis.result = { language: languageFor({ review_payload: { language: "es" } }), queue: copyFor({ review_payload: { language: "es" } }).queueTitle, save: copyFor({ review_payload: { language: "es" } }).saveButton };`).runInContext(context);
+process.stdout.write(JSON.stringify(context.result));
+"""
+    completed = subprocess.run(
+        [_node_or_skip(), "-e", script, str(widget_path)],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout) == {
+        "language": "es",
+        "queue": "Cola de revisión",
+        "save": "Guardar",
+    }
 
 
 @pytest.mark.parametrize("secret_field", ["credentials", "cookie", "token", "session"])

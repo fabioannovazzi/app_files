@@ -542,10 +542,10 @@
         <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
       <div class="nav-right">
-        <nav class="nav-links" aria-label="Sezioni principali">
+        <nav class="nav-links" aria-label="Sezioni della pagina" data-accessibility-label="sections">
           <a href="#journey" data-journey="nav.overview">In breve</a><a href="#journey-workflow" data-journey="nav.workflow">Percorso</a><a href="#proof" data-journey="nav.proof">Guarda</a><a href="#related" data-journey="nav.next">Riconciliazioni</a><a href="#prompt" data-journey="nav.prompt">Prompt</a><a href="#scarica" data-journey="nav.open">Apri Vera</a>
         </nav>
-        <div class="lang-switch" aria-label="Lingua">
+        <div class="lang-switch" aria-label="Lingua" data-accessibility-label="language">
           <button type="button" data-lang="it">It</button>
           <button type="button" data-lang="en">En</button>
           <button type="button" data-lang="fr">Fr</button>
@@ -567,7 +567,7 @@
         <div class="journey-hero-action"><a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-journey="cta.open">Apri Vera</a></div>
       </div>
 
-      <aside class="hero-card" aria-label="Problema che risolve">
+      <aside class="hero-card" aria-label="Problema che risolve" data-accessibility-label="problem">
         <div class="label" data-i18n="hero.cardLabel">Cosa dai / cosa ottieni</div>
         <ul class="hero-list" id="hero-list">
           <li>Dagli partite, mastrini, banche, giornale e supporti.</li>
@@ -1107,12 +1107,23 @@ nel file Excel:
       rows.forEach((row) => container.appendChild(itemBuilder(row)));
     }
 
+    const accessibilityLabels = {
+      it: { sections: "Sezioni della pagina", language: "Lingua", problem: "Problema che risolve" },
+      en: { sections: "Page sections", language: "Language", problem: "Problem solved" },
+      fr: { sections: "Sections de la page", language: "Langue", problem: "Problème résolu" },
+      de: { sections: "Seitenabschnitte", language: "Sprache", problem: "Gelöstes Problem" },
+      es: { sections: "Secciones de la página", language: "Idioma", problem: "Problema resuelto" }
+    };
+
     function setLanguage(lang) {
       const safeLang = translations[lang] ? lang : "it";
       const data = translations[safeLang];
       document.documentElement.lang = safeLang;
       document.title = data.hero.title + " | Vera";
       document.getElementById("home-link").href = "/?lang=" + safeLang;
+      document.querySelectorAll("[data-accessibility-label]").forEach((node) => {
+        node.setAttribute("aria-label", accessibilityLabels[safeLang][node.dataset.accessibilityLabel]);
+      });
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const value = getValue(data, node.dataset.i18n);
         if (typeof value === "string") {
