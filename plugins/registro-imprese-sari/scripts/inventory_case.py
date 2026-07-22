@@ -66,6 +66,7 @@ def _update_run_intake(
         if record.get("sha256")
     ]
     data_posture.setdefault("external_connectors_used", [])
+    data_posture.setdefault("external_routes_used", [])
     data_posture.setdefault("upload_paths_used", [])
     data_posture.setdefault("hosted_notebook_execution_used", False)
     data_posture.setdefault("remote_sql_execution_used", False)
@@ -181,33 +182,25 @@ def inventory_case(
     use_ocr: bool = True,
     ocr_cache_dir: Path | None = None,
     allow_ocr_model_download: bool = False,
-    ocr_model_download_approval_id: str | None = None,
 ) -> dict[str, Any]:
     """Inventory regular local files without semantic legal classification."""
 
     run_id = safe_identifier(run_id, field="run_id")
     if input_dir.is_symlink() or not input_dir.is_dir():
         raise ValueError("input directory must be a regular local directory")
-    if (
-        allow_ocr_model_download
-        and not str(ocr_model_download_approval_id or "").strip()
-    ):
-        raise ValueError(
-            "--allow-ocr-model-download requires --ocr-model-download-approval-id"
-        )
     safe_output = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
     extracted_dir = safe_output / "extracted"
     extracted_dir.mkdir(mode=0o700, exist_ok=True)
     extracted_dir.chmod(0o700)
     if allow_ocr_model_download:
         write_private_json(
-            safe_output / "ocr_model_download_authorization.json",
+            safe_output / "ocr_model_download_receipt.json",
             {
                 "schema_version": "1.0",
                 "plugin": PLUGIN_NAME,
                 "run_id": run_id,
                 "recorded_at": iso_now(),
-                "approval_id": str(ocr_model_download_approval_id).strip(),
+                "route_selected": True,
                 "model_download_allowed": True,
                 "case_content_network_transfer": False,
             },
@@ -308,7 +301,6 @@ def inventory_case(
             "successful_image_count": ocr_successes,
             "case_content_network_transfer": False,
             "model_download_allowed": allow_ocr_model_download,
-            "model_download_approval_id": ocr_model_download_approval_id,
             "model_network_used": model_network_used,
             "visual_confirmation_required": ocr_attempts > 0,
         },
@@ -335,7 +327,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--no-ocr", action="store_true")
     parser.add_argument("--ocr-cache-dir", type=Path)
     parser.add_argument("--allow-ocr-model-download", action="store_true")
-    parser.add_argument("--ocr-model-download-approval-id")
     args = parser.parse_args(argv)
     try:
         payload = inventory_case(
@@ -346,7 +337,6 @@ def main(argv: list[str] | None = None) -> int:
             use_ocr=not args.no_ocr,
             ocr_cache_dir=args.ocr_cache_dir,
             allow_ocr_model_download=args.allow_ocr_model_download,
-            ocr_model_download_approval_id=args.ocr_model_download_approval_id,
         )
     except (OSError, ValueError) as exc:
         LOGGER.error("INVENTORY_BLOCKED: %s", exc)

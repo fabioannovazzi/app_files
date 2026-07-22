@@ -590,11 +590,19 @@ def _output_records(
                 "required_cells",
             ]
         elif relative == "review_notes.md":
-            output["required_text"] = [
-                "# Check Entries Review Notes",
-                "## Status Counts",
-                "## Review Policy",
-            ]
+            output["required_text"] = (
+                [
+                    "# Notas de revisión de la comprobación de asientos",
+                    "## Recuento por estado",
+                    "## Política de revisión",
+                ]
+                if audit.get("language") == "es"
+                else [
+                    "# Check Entries Review Notes",
+                    "## Status Counts",
+                    "## Review Policy",
+                ]
+            )
             output["qa_checks"] = ["nonempty_text", "required_text"]
         outputs.append(output)
     return outputs
@@ -661,6 +669,21 @@ def write_run_intake(
         "data_posture": {
             "local_files_read": local_files_read,
             "external_connectors_used": [connector_name] if connector_name else [],
+            "external_routes_used": (
+                [
+                    {
+                        "route": connector_name,
+                        "destination_or_origin": connector_name,
+                        "payload_category": (
+                            "accounting_system_export_materialized_as_local_support"
+                        ),
+                        "network_used": True,
+                        "access_basis": None,
+                    }
+                ]
+                if connector_name
+                else []
+            ),
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,

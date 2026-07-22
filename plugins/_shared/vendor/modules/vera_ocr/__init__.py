@@ -28,16 +28,22 @@ _RECOGNITION_MODEL_ENV = "VERA_OCR_RECOGNITION_MODEL_DIR"
 _LANGUAGE_ALIASES = {
     "deu": "de",
     "eng": "en",
+    "esp": "es",
+    "espanol": "es",
+    "español": "es",
     "fra": "fr",
     "fre": "fr",
     "ger": "de",
     "ita": "it",
+    "spa": "es",
+    "spanish": "es",
 }
 _RECOGNITION_MODEL_BY_LANGUAGE = {
     "de": "latin_PP-OCRv5_mobile_rec",
     "en": "en_PP-OCRv5_mobile_rec",
     "fr": "latin_PP-OCRv5_mobile_rec",
     "it": "latin_PP-OCRv5_mobile_rec",
+    "es": "latin_PP-OCRv5_mobile_rec",
 }
 _MODEL_REVISION_BY_NAME = {
     "PP-OCRv5_server_det": "ca867c897ecbca8873081573a802ad70d499cb94",

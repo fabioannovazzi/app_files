@@ -76,6 +76,27 @@ def test_strategy_layout_returns_empty_when_no_header_match() -> None:
     assert txs == []
 
 
+def test_strategy_layout_extracts_spanish_debit_credit_rows() -> None:
+    table = [
+        ["Fecha", "Fecha valor", "Cargo", "Abono", "Concepto", "Moneda"],
+        ["15/01/2023", "16/01/2023", "10,00", "", "Compra", "EUR"],
+        ["17/01/2023", "18/01/2023", "", "25,50", "Reembolso", "EUR"],
+    ]
+    page = _FakePageTable(table)
+
+    result = strategy_layout(page, Lexicon(), "es")
+
+    assert [transaction.description for transaction in result] == [
+        "Compra",
+        "Reembolso",
+    ]
+    assert [transaction.amount for transaction in result] == [
+        Decimal("-10.00"),
+        Decimal("25.50"),
+    ]
+    assert all(transaction.currency == "EUR" for transaction in result)
+
+
 def test_strategy_stream_parses_lines_and_stops_at_sentinel() -> None:
     # Arrange: two valid lines then a sentinel (further lines ignored)
     text = "\n".join(
@@ -99,6 +120,21 @@ def test_strategy_stream_parses_lines_and_stops_at_sentinel() -> None:
     assert [t.posted_date for t in txs] == [date(2023, 1, 13), date(2023, 1, 14)]
     assert all(t.source_page == 3 for t in txs)
     assert [t.line_no for t in txs] == [1, 2]
+
+
+def test_strategy_stream_stops_at_spanish_summary() -> None:
+    text = "\n".join(
+        [
+            "13/01/2023 Compra 12,34",
+            "Resumen de comisiones",
+            "14/01/2023 Movimiento posterior 50,00",
+        ]
+    )
+    page = _FakePageText(text, page_number=1)
+
+    result = strategy_stream(page, Lexicon(), "es")
+
+    assert [transaction.description for transaction in result] == ["Compra"]
 
 
 def test_strategy_stream_skips_unparsable_date_line() -> None:

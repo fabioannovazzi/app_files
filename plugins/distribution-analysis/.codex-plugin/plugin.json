@@ -1,6 +1,6 @@
 {
   "name": "distribution-analysis",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "description": "Legacy-backed distribution chart workflow with standard and small-multiple Plotly outputs.",
   "author": {
     "name": "Mparanza",

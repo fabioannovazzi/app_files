@@ -366,6 +366,129 @@ def test_ibcs_title_describes_rolling_period_and_small_multiples() -> None:
     ]
 
 
+@pytest.mark.parametrize(
+    ("chart_kind", "expected_what"),
+    [
+        ("standard_variance", "Varianza de ventas | EUR"),
+        (
+            "pvm_decomposition_ladder",
+            "Varianza de ventas: precio, unidades y mix | EUR",
+        ),
+        ("standard_small_multiples", "Varianza de ventas por dimensión | EUR"),
+        ("total_by_dimension", "Varianza total de ventas por dimensión | EUR"),
+        ("root_cause", "Varianza de ventas por causa raíz | EUR"),
+        ("root_cause_total", "Varianza total de ventas por causa raíz | EUR"),
+        (
+            "variable_root_cause_total",
+            "Varianza total de ventas por causa raíz y dimensión variable | EUR",
+        ),
+        (
+            "root_cause_component",
+            "Varianza de componentes de ventas por causa raíz | EUR",
+        ),
+        (
+            "variable_root_cause",
+            "Varianza de ventas por causa raíz y dimensión variable | EUR",
+        ),
+        (
+            "root_cause_drilldown",
+            "Desglose de causa raíz de ventas | EUR",
+        ),
+    ],
+)
+def test_ibcs_title_localizes_spanish_chart_kinds(
+    chart_kind: str,
+    expected_what: str,
+) -> None:
+    titles = load_ibcs_titles()
+    recipe = {
+        "language": "es",
+        "mappings": {"baseline_period": "PL", "comparison_period": "AC"},
+        "options": {"currency": "EUR", "comparison_basis": "scenario"},
+    }
+
+    title = titles.build_ibcs_title(recipe, chart_kind=chart_kind)
+
+    assert title.lines() == ["Ventas", expected_what, "AC vs PL"]
+
+
+def test_ibcs_title_localizes_spanish_rolling_period_framework_text() -> None:
+    titles = load_ibcs_titles()
+    recipe = {
+        "source_file": "/tmp/adventureworks.xlsx",
+        "language": "es_ES",
+        "mappings": {
+            "baseline_period": "~Jun-2018",
+            "comparison_period": "~Jun-2019",
+        },
+        "options": {
+            "currency": "EUR",
+            "comparison_basis": "period",
+            "period_comparison_mode": "rolling_period",
+            "period_window": {"rolling_window_months": 12},
+        },
+    }
+
+    title = titles.build_ibcs_title(
+        recipe,
+        chart_kind="standard_small_multiples",
+        dimension="Línea de producto",
+    )
+
+    assert title.lines() == [
+        "AdventureWorks",
+        "Varianza de ventas por Línea de producto | EUR",
+        "~Jun-2019 vs ~Jun-2018, periodo móvil de 12 meses",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("baseline", "comparison", "period_options", "expected_when"),
+    [
+        (
+            "2023 YTD",
+            "2024 YTD",
+            {
+                "period_comparison_mode": "year_to_date",
+                "period_window": {"current": {"end_date": "2024-06-30"}},
+            },
+            "2024 YTD vs 2023 YTD, acumulado del año hasta 2024-06-30",
+        ),
+        (
+            "2023",
+            "2024",
+            {"period_comparison_mode": "calendar_period"},
+            "2024 vs 2023, periodo natural",
+        ),
+        (
+            "2023",
+            "2024",
+            {"period_comparison_mode": "custom"},
+            "2024 vs 2023, comparación personalizada",
+        ),
+    ],
+)
+def test_ibcs_title_localizes_spanish_period_modes(
+    baseline: str,
+    comparison: str,
+    period_options: dict[str, Any],
+    expected_when: str,
+) -> None:
+    titles = load_ibcs_titles()
+    recipe = {
+        "language": "es",
+        "mappings": {
+            "baseline_period": baseline,
+            "comparison_period": comparison,
+        },
+        "options": {"comparison_basis": "period", **period_options},
+    }
+
+    title = titles.build_ibcs_title(recipe, chart_kind="standard_variance")
+
+    assert title.when == expected_when
+
+
 def test_ibcs_title_html_emphasizes_only_sales_measure_subject() -> None:
     titles = load_ibcs_titles()
     title = titles.IBCSTitle(
@@ -1560,6 +1683,79 @@ def test_root_cause_client_report_uses_period_comparison_labels(
     assert "Actual vs Plan" not in client_report
 
 
+def test_root_cause_client_report_localizes_spanish_markdown_and_docx(
+    tmp_path: Path,
+) -> None:
+    report = load_root_cause_client_report()
+    summary_rows = [
+        {
+            "alternative_result": 1,
+            "selected_labels": "Producto A - Volume",
+            "selected_amounts": "300",
+            "other_residual": "0",
+            "row_count": 1,
+            "chart_path": "",
+        }
+    ]
+    recipe = {
+        "language": "es-ES",
+        "source_file": "ventas.csv",
+        "mappings": {
+            "baseline_period": "~Dec-2023",
+            "comparison_period": "~Dec-2024",
+        },
+        "options": {
+            "comparison_basis": "period",
+            "period_comparison_mode": "rolling_period",
+            "currency": "EUR",
+        },
+    }
+
+    _paths, audit = report.write_root_cause_client_report(
+        summary_rows=summary_rows,
+        recipe=recipe,
+        output_dir=tmp_path,
+    )
+
+    client_report = (tmp_path / "root_cause_client_report.md").read_text(
+        encoding="utf-8"
+    )
+    assert audit["status"] == "written"
+    assert set(report._text("en")) <= set(report._text("es"))
+    assert (
+        report._comparison_metadata(
+            {
+                "mappings": {"baseline_period": "PL", "comparison_period": "AC"},
+                "options": {"comparison_basis": "scenario"},
+            },
+            "es",
+        )["comparison"]
+        == "Real frente a Plan (AC frente a PL)"
+    )
+    assert "# Análisis de las causas de la varianza de ventas" in client_report
+    assert "## Datos de soporte principales" in client_report
+    assert "## Notas de lectura" in client_report
+    assert (
+        "periodo actual frente a periodo del año anterior "
+        "(~Dec-2024 frente a ~Dec-2023)" in client_report
+    )
+    assert "Producto A - Volumen" in client_report
+    assert "Los importes se presentan en EUR" in client_report
+    for english_text in (
+        "Sales Variance Root-Cause Analysis",
+        "Key Source Data",
+        "Reading Notes",
+        "current period",
+        "prior-year period",
+        "Producto A - Volume +",
+    ):
+        assert english_text not in client_report
+    with ZipFile(tmp_path / "root_cause_client_report.docx") as docx_file:
+        document_xml = docx_file.read("word/document.xml").decode("utf-8")
+    assert "Análisis de las causas de la varianza de ventas" in document_xml
+    assert "periodo actual frente a periodo del año anterior" in document_xml
+
+
 def test_variance_plugin_root_cause_alternative_result_uses_legacy_option(
     tmp_path: Path,
 ) -> None:
@@ -1916,6 +2112,8 @@ def test_run_variance_cli_passes_root_cause_legacy_options(
             str(tmp_path / "sales.csv"),
             "--output-dir",
             str(tmp_path / "variance"),
+            "--language",
+            "es",
             "--root-cause-bridge",
             "--root-cause-bridge-alternative-result",
             "3",
@@ -1948,6 +2146,7 @@ def test_run_variance_cli_passes_root_cause_legacy_options(
     )
 
     assert runner.main() == 0
+    assert captured["kwargs"]["language"] == "es"
     assert captured["kwargs"]["root_cause_bridge"] is True
     assert captured["kwargs"]["root_cause_bridge_alternative_result"] == 3
     assert captured["kwargs"]["root_cause_bridge_drilldown_rows"] == [1, 2]

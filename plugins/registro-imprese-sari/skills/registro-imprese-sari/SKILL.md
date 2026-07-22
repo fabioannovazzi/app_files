@@ -139,15 +139,16 @@ python scripts/inventory_case.py /absolute/input-folder \
   --no-ocr
 ```
 
-For image OCR, omit `--no-ocr`. Use existing local models by default. A first
-model download is an external approval-sensitive step and requires both:
+For image OCR, omit `--no-ocr`. Use existing local models by default. If the
+user explicitly chooses the optional first model-download route, add:
 
 ```bash
---allow-ocr-model-download \
---ocr-model-download-approval-id STABLE-APPROVAL-ID
+--allow-ocr-model-download
 ```
 
-The shared PaddleOCR adapter runs locally and never transfers case-image bytes.
+The run records whether that route was selected and whether network access
+actually occurred; it does not manufacture an approval ID. The shared
+PaddleOCR adapter runs locally and never transfers case-image bytes.
 Visually compare every OCR passage used in a proposal with its source image.
 
 ## 4. Consult current official sources
@@ -197,9 +198,10 @@ reserves reuse rights. Do not use `scripts/sari_connector.py` unless evidence of
 written permission from the relevant rights holder has been checked separately.
 User or studio approval alone is not that permission.
 
-If written permission exists, record its stable reference plus a case-specific
-network approval. Run a metadata search first, select one result manually, then
-fetch at most that one card:
+If written permission exists, record its stable reference. Invoking the command
+is the explicit network-route choice; do not create a second network approval
+identifier. Run a metadata search first, select one result manually, then fetch
+at most that one card:
 
 ```bash
 python scripts/sari_connector.py search \
@@ -209,7 +211,6 @@ python scripts/sari_connector.py search \
   --expected-chamber "Official chamber title" \
   --query "generic topical terms" \
   --limit 10 \
-  --network-approval-id CASE-NETWORK-APPROVAL \
   --written-use-authorization-id RIGHTS-HOLDER-AUTHORIZATION
 ```
 
@@ -220,7 +221,6 @@ python scripts/sari_connector.py detail \
   --tenant exact-current-tenant \
   --expected-chamber "Official chamber title" \
   --card-id HUMAN-SELECTED-ID \
-  --network-approval-id CASE-NETWORK-APPROVAL \
   --written-use-authorization-id RIGHTS-HOLDER-AUTHORIZATION
 ```
 
@@ -306,5 +306,6 @@ statement that no portal action occurred.
 
 ## Plugin Improvement Feedback
 
-Keep the improvement note local to chat or run artifacts. Do not email, upload,
-or transmit feedback automatically.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import polars as pl
@@ -36,6 +37,25 @@ def _build_session() -> backend.CheckEntriesSession:
     )
 
 
+def test_create_pdf_session_forwards_spanish_ocr_language(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured: dict[str, str] = {}
+
+    def fake_parse_journal(content: bytes, *, lang: str) -> pl.DataFrame:
+        assert content == b"%PDF-spanish-journal"
+        captured["lang"] = lang
+        return pl.DataFrame({"movement_number": ["1"], "amount": [10.0]})
+
+    monkeypatch.setattr(backend, "parse_journal", fake_parse_journal)
+    store = backend.CheckEntriesStore(storage_dir=tmp_path / "sessions")
+
+    session = store.create_session("diario.pdf", b"%PDF-spanish-journal", lang="spa")
+
+    assert captured == {"lang": "spa"}
+    assert session.row_count == 1
+
+
 def test_run_checks_uses_shared_runner_output(monkeypatch: pytest.MonkeyPatch) -> None:
     session = _build_session()
     wrapper = _Wrapper()
@@ -67,7 +87,9 @@ def test_run_checks_uses_shared_runner_output(monkeypatch: pytest.MonkeyPatch) -
 
     monkeypatch.setattr(backend, "_build_llm_wrapper", lambda: wrapper)
     monkeypatch.setattr(
-        backend, "select_provider", lambda _step: {"provider": "openai", "model": "gpt-test"}
+        backend,
+        "select_provider",
+        lambda _step: {"provider": "openai", "model": "gpt-test"},
     )
     monkeypatch.setattr(backend, "run_check_entries", fake_run_check_entries)
     monkeypatch.setattr(backend.store, "save", lambda s: saved_sessions.append(s))
@@ -117,9 +139,13 @@ def test_run_checks_preserves_partial_results(monkeypatch: pytest.MonkeyPatch) -
 
     monkeypatch.setattr(backend, "_build_llm_wrapper", lambda: wrapper)
     monkeypatch.setattr(
-        backend, "select_provider", lambda _step: {"provider": "openai", "model": "gpt-test"}
+        backend,
+        "select_provider",
+        lambda _step: {"provider": "openai", "model": "gpt-test"},
     )
-    monkeypatch.setattr(backend, "run_check_entries", lambda *args, **kwargs: partial_result)
+    monkeypatch.setattr(
+        backend, "run_check_entries", lambda *args, **kwargs: partial_result
+    )
     monkeypatch.setattr(backend.store, "save", lambda s: saved_sessions.append(s))
 
     output = backend.run_checks(session, {"lang": "eng"})

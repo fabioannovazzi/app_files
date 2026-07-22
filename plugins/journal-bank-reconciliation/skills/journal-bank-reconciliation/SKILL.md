@@ -11,7 +11,7 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 Use this skill when bank statement movements must be reconciled to accounting journal or ledger rows. The plugin is a guided Codex workflow: Codex inspects the files, asks only for unresolved mapping or review assumptions, runs deterministic helper scripts, reviews diagnostics, and delivers outputs.
 
-The workflow is not Italian-only. Support the same four working locales used by the other accounting plugins: `it`, `en`, `fr`, and `de`. Keep canonical output column names in English for stability, but speak to the user and write summaries in the chosen working language.
+The workflow is not Italian-only. Support the same five working locales used by the other accounting plugins: `it`, `en`, `fr`, `de`, and `es`. Keep canonical output column names in English for stability, but speak to the user and write summaries in the chosen working language.
 
 Detailed parser, mapping, reconciliation-stage, and review-status notes live in `references/workflow-reference.md`. Load that reference only when the run needs extra detail beyond the workflow below.
 
@@ -82,7 +82,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_inputs.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/inspect_inputs.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Add `--sample <sample-file>` when a sample movement list is provided.
@@ -92,7 +92,7 @@ Add `--sample <sample-file>` when a sample movement list is provided.
 6. Run deterministic reconciliation:
 
 ```bash
-python scripts/run_reconciliation.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir>/reconciliation --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de> --document-language <auto|it|en|fr|de>
+python scripts/run_reconciliation.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir>/reconciliation --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Use `--tolerance <amount>` and `--date-window-days <days>` when the user provides explicit thresholds.
@@ -178,10 +178,10 @@ native Plan-mode choices.
 
 Ask for or infer two language assumptions:
 
-- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`.
-- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`.
+- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`, `es`.
+- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`, `es`.
 
-Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, or German, set `document_language` accordingly without asking unless ambiguity matters.
+Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, German, or Spanish, set `document_language` accordingly without asking unless ambiguity matters.
 
 Starter prompts:
 
@@ -211,4 +211,6 @@ When there is something useful to report, write a short improvement note with:
 - relevant input/output file names when available;
 - suggested next engineering action.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

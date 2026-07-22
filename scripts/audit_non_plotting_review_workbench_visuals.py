@@ -38,6 +38,7 @@ LANGUAGE_LABELS = {
     "it": ("Salva decisioni", "Output finali", "Postura dati"),
     "fr": ("Enregistrer decisions", "Sorties finales", "Posture donnees"),
     "de": ("Entscheidungen speichern", "Finale Ausgaben", "Datenhaltung"),
+    "es": ("Guardar decisiones", "Salidas finales", "Rutas de ejecución auxiliares"),
 }
 SEVERITY_RANK = {
     "info": 1,
@@ -767,7 +768,7 @@ def main(argv: list[str] | None = None) -> int:
         "--languages",
         type=_parse_languages,
         default=DEFAULT_LANGUAGES,
-        help="Comma-separated UI languages to smoke test. Supported: en,it,fr,de.",
+        help="Comma-separated UI languages to smoke test. Supported: en,it,fr,de,es.",
     )
     parser.add_argument(
         "--fail-on",

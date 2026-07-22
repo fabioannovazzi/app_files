@@ -1366,6 +1366,26 @@ def test_run_scope_records_supported_jurisdiction_language_and_default_previews(
                 "posture_note": "Die Skripte prüfen die Dateien",
             },
         ),
+        (
+            "es",
+            "italy",
+            {
+                "index": "# Índice del expediente del cliente",
+                "memo": "# Memoria de preparación del expediente del cliente",
+                "email": "Asunto: Documentos y aclaraciones necesarios para completar el expediente",
+                "limits": "## Limitaciones de lectura",
+                "handoff": "Entrega para revisión",
+                "column": "Acción sugerida",
+                "fiscal_title": "# Datos fiscales estructurados",
+                "fiscal_count": "- Campos extraídos: 0",
+                "fiscal_limit": "Cada valor debe verificarse",
+                "fiscal_empty": "No se extrajeron campos fiscales estructurados",
+                "anomalies": "# Anomalías formales",
+                "xml_anomalies": "# Anomalías formales en XML de factura electrónica",
+                "confidence": "baja",
+                "posture_note": "Los scripts examinan localmente",
+            },
+        ),
     ],
 )
 def test_language_controls_user_facing_run_outputs(
@@ -1582,7 +1602,7 @@ def test_selected_jurisdiction_gates_italian_completeness_requests(
     ("field", "value", "message"),
     [
         ("jurisdiction", "canada", "Giurisdizione non supportata"),
-        ("language", "es", "Lingua non supportata"),
+        ("language", "pt", "Lingua non supportata"),
     ],
 )
 def test_build_rejects_unsupported_scope_values(

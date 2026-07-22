@@ -48,6 +48,14 @@
     "Review decision"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n de Prompt Optimizer",
+      "reviewTitle": "Revisi\u00f3n del prompt de investigaci\u00f3n",
+      "queueTitle": "Comprobaciones del prompt",
+      "detailTitle": "Revisi\u00f3n del prompt",
+      "detailHelp": "Revise el alcance, el enfoque de fuentes y los cambios requeridos antes del prompt final.",
+      "search": "Buscar prompt, fuentes, alcance, bloqueo, salida"
+    },
     "it": {
       "title": "Revisione Prompt Optimizer",
       "reviewTitle": "Revisione prompt di ricerca",

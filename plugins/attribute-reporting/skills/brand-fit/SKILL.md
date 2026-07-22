@@ -10,7 +10,7 @@ Use this workflow only downstream of a completed Retailer Signals run. Brand Fit
 - the brand's current presence at that retailer, read from the current server database snapshot;
 - the brand's mapped owned catalogue, read from the central server database.
 
-Do not call a product a fit merely because one attribute matches. Codex agents decide signal importance, gap meaning, candidate relevance, and narrative. Deterministic code owns source rows, exact bundle matches, hashes, rendering, and correctness mechanics. Helper scripts call no model API.
+Do not call a product a fit merely because one attribute matches. Codex agents decide signal importance, gap meaning, candidate relevance, and narrative through the user's existing ChatGPT plan. Deterministic code owns source rows, exact bundle matches, hashes, rendering, and correctness mechanics. Helper scripts make no separate model API call.
 
 ## Boundary
 
@@ -19,6 +19,9 @@ Do not call a product a fit merely because one attribute matches. Codex agents d
 - The source report is never uploaded. The authenticated create request sends only its SHA-256, exact verdict (`Correct` or `Correct with caveats`), and the actor-owned source evidence job id derived from that run's hash-pinned `local_download_receipt.json`.
 - The retailer-presence evidence is a `current_database_snapshot`, not a claim that the retailer website was freshly scraped. Disclose the package `read_at` timestamp.
 - Treat ranked reference candidates as leads for Codex evaluation, not automatic listing, launch, or assortment recommendations.
+
+The files named as local remain on the user's machine, but their contents may
+enter model context when Codex reads them for interpretation or review.
 
 ## Preconditions
 

@@ -31,6 +31,13 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [
     {
       "id": "cited-url-fetch",
@@ -49,10 +56,6 @@
   ],
   "security_controls": [
     {
-      "id": "no-model-api-in-scripts",
-      "control": "Helper scripts do not call model APIs."
-    },
-    {
       "id": "private-output-root",
       "control": "Run artifacts are written outside published repository paths."
     }
@@ -61,6 +64,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c51f133fcefb6f6f74eab13671794659e5a8725633789ee48896e4fa9bce7aad"
+    "source_fingerprint": "d34e1676a470f1286546bfc3dc07cb77618029a13b0e68c65e4d9adffff1f60a"
   }
 }

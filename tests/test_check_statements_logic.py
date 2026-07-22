@@ -560,6 +560,37 @@ def test_load_ledger_files_preserves_account_metadata(col: str) -> None:
     assert txns[0].metadata.get("account_id") == col.upper()
 
 
+def test_load_ledger_files_forwards_spanish_ocr_language(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import src.check_statements_logic as statements_logic
+
+    captured: dict[str, str] = {}
+
+    def fake_parse_journal(content: bytes, *, lang: str) -> pl.DataFrame:
+        assert content == b"%PDF-spanish-ledger"
+        captured["lang"] = lang
+        return pl.DataFrame(
+            {
+                "date": [date(2026, 1, 15)],
+                "description": ["Servicio"],
+                "amount": [125.0],
+            }
+        )
+
+    monkeypatch.setattr(statements_logic, "parse_journal", fake_parse_journal)
+
+    transactions = statements_logic.load_ledger_files(
+        [("diario.pdf", b"%PDF-spanish-ledger")],
+        language="es",
+        use_llm=False,
+    )
+
+    assert captured == {"lang": "spa"}
+    assert len(transactions) == 1
+    assert transactions[0].metadata["language"] == "es"
+
+
 def test_ledger_account_column_allows_ui_and_reconcile_exclusion() -> None:
     """Ledger accounts are exposed to the UI and can be excluded."""
 

@@ -303,7 +303,7 @@ def test_skill_tells_codex_user_does_not_run_cli_directly() -> None:
 
     assert "The user should not interact directly with CLI scripts" in skill_text
     assert "scripts/check_dependencies.py" in skill_text
-    assert "it`, `en`, `fr`, and `de`" in skill_text
+    assert "it`, `en`, `fr`, `de`, and `es`" in skill_text
     assert "missing deterministic extraction script" in skill_text
     assert "suggested next engineering action" in skill_text
     assert "Keep the improvement note local to chat or run artifacts." in skill_text

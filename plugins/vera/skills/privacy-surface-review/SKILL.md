@@ -1,6 +1,6 @@
 ---
 name: privacy-surface-review
-description: Use when adding, changing, reviewing, or releasing a Vera workstream to record what Codex reads, every data boundary beyond Codex, the Codex account boundary, and concrete security controls before packaging.
+description: Use when adding, changing, reviewing, or releasing a Vera workstream or shared service to record what Codex reads, every data boundary beyond Codex, the Codex account boundary, and concrete security controls before packaging.
 ---
 
 # External Boundary Review
@@ -13,7 +13,8 @@ merely because Codex reads professional case data.
 
 ## Review workflow
 
-1. Resolve the Vera root and read `components.json`.
+1. Resolve the Vera root and read `components.json`, including registered
+   workstreams and shared services.
 2. Select the changed workstream and resolve its source as
    `modules/<workstream>` in an installed package or `../<workstream>` beside
    Vera in repository source. Treat that resolved root as the plugin working
@@ -31,16 +32,26 @@ merely because Codex reads professional case data.
    the workflow. A separate confirmation is required only when the route is
    optional and the user has not already chosen it. The user's explicit route
    choice is the confirmation; do not ask again.
-7. Record concrete security controls and the Codex/OpenAI account boundary.
+7. Record only concrete security controls and the Codex/OpenAI account
+   boundary. An empty security-control array is more accurate than relabelling
+   local processing, draft status, or policy wording as security.
    Vera cannot inspect or enforce the user's plan, model-training data controls,
    or retention/deletion controls. The firm or user checks those before
    professional use and when the account or terms change, not in a per-case form.
-8. Update `privacy/workstreams/<workstream>.json` using
-   `references/manifest-contract.md`, then refresh its source fingerprint:
+   For ordinary Codex model processing, record that the existing ChatGPT/Codex
+   account arrangement applies, Vera is not a separate recipient, nothing is
+   automatically anonymized, and local filtering or aggregation is used only
+   when it helps the work.
+8. Update `privacy/workstreams/<workstream>.json` or
+   `privacy/services/<service>.json` using `references/manifest-contract.md`,
+   then refresh its source fingerprint:
 
 ```bash
 python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py \
   --refresh <workstream>
+
+python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py \
+  --refresh-service <service>
 ```
 
 9. Validate the complete register, run the Vera package tests, and rebuild the

@@ -210,6 +210,70 @@
           "title": "Clara | Retailer-Produktsprache vergleichbar strukturieren"
         }
       ]
+    },
+    "es": {
+      "featured": {
+        "id": "3zvFm3fGdQ8",
+        "duration": "0:37",
+        "audioLanguage": "en"
+      },
+      "videos": [
+        {
+          "id": "s3vtavYiUco",
+          "title": "Clara | Una entrevista que sigue el hilo que realmente importa",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "T_cklFKk3WA",
+          "title": "Clara | De los comentarios a una revisión verificada de la presentación",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "Ol9yz9NWOlw",
+          "title": "Clara | De una pregunta de negocio a un gráfico verificado",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "i-EtiyVeBQ8",
+          "title": "Clara | De una grabación a información útil y verificable",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "OdEdNAVu0hY",
+          "title": "Clara | De las señales del retailer a una conversación sobre la marca",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "u_UmkF7pDZ8",
+          "title": "Clara | Descubre qué está cambiando en el surtido de un retailer",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "zMQjPiyiDnA",
+          "title": "Clara | De la fidelidad a las fuentes a una presentación nativa del navegador",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "0vM_PmJccwY",
+          "title": "Clara | De la carpeta del proyecto a un documento que merece ser revisado",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "6HCRTPbOanc",
+          "title": "Clara | Una presentación clara, con sus fundamentos a mano",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "LPjR9Off3sc",
+          "title": "Clara | Renueva el aspecto sin cambiar ningún hecho",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "KVGdOyK-Vmc",
+          "title": "Clara | Estructura comparable para el lenguaje de producto del retailer",
+          "audioLanguage": "en"
+        }
+      ]
     }
   },
   "vera": {
@@ -424,6 +488,70 @@
           "title": "Vera | Vom Befund zu einer klaren Mandantenanfrage"
         }
       ]
+    },
+    "es": {
+      "featured": {
+        "id": "Lqt3odBszD0",
+        "duration": "0:45",
+        "audioLanguage": "en"
+      },
+      "videos": [
+        {
+          "id": "Qn9YTSX388I",
+          "title": "Vera | Del extracto bancario a una conciliación revisable",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "VnOXN2SnqNE",
+          "title": "Vera | De las partidas abiertas a un papel de trabajo revisable",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "KfABIkftuoE",
+          "title": "Vera | De las tablas fuente a un informe Word revisable",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "LYNGc7XVmsI",
+          "title": "Vera | Del plan a una revisión que muestra qué importes cuadran",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "jbZ34kOeQRc",
+          "title": "Vera | De documentos dispersos a un expediente INPS revisable",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "wbeoePNN4YA",
+          "title": "Vera | Una solicitud y varias posiciones que deben mantenerse separadas",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "FdZhrFCHwV4",
+          "title": "Vera | De una pregunta desordenada a una investigación controlable",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "GRAPmp9D7ds",
+          "title": "Vera | Muchas citas no garantizan un respaldo sólido",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "wvZ1xR7waRQ",
+          "title": "Vera | De los formularios fiscales a campos revisables",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "9gJxX-dya70",
+          "title": "Vera | De una notificación fiscal a un expediente inicial útil",
+          "audioLanguage": "en"
+        },
+        {
+          "id": "EItLLt-gVgo",
+          "title": "Vera | De un hallazgo a una solicitud clara para el cliente",
+          "audioLanguage": "en"
+        }
+      ]
     }
   }
 };
@@ -596,6 +724,22 @@
       "email-cliente": ["Mandanten-E-Mail", "Macht aus einem Befund eine klare, belegbezogene Mandantenanfrage."],
       "prompt-optimizer": ["Prompt optimieren", "Macht aus der Fachfrage kontrollierbare Rechercheanweisungen."],
       "deep-research-validator": ["Recherche validieren", "Prüft wesentliche Aussagen gegen die zitierten Quellen."]
+    },
+    es: {
+      "new-client": ["Nuevo cliente", "Pasa de los documentos fuente a un expediente operativo con acciones e historial vinculados."],
+      "journal-sampling": ["Muestreo del diario", "Pasa del diario completo a una muestra de revisión reproducible."],
+      "check-entries": ["Comprobación de asientos", "Vincula los asientos seleccionados con las evidencias que los respaldan."],
+      "journal-bank-reconciliation": ["Conciliación bancaria", "Reúne los movimientos bancarios y contables en una conciliación revisable."],
+      "riconciliazione-partite": ["Conciliación de partidas abiertas", "Resuelve partidas abiertas en un papel de trabajo que conserva sus evidencias."],
+      "report-builder": ["Generador de informes", "Traslada tablas fuente y citas a un informe Word estructurado."],
+      "concordato-plan-review": ["Revisión del Concordato", "Muestra qué cifras del plan cuadran con los saldos y los anexos."],
+      "previdenza-inps": ["Revisión de expedientes INPS", "Organiza las evidencias contributivas en un expediente legible."],
+      "registro-imprese-sari": ["Registro Mercantil y SARI", "Prepara el trámite a partir de los hechos del caso y las fuentes camerales."],
+      "dati-fiscali-strutturati": ["Datos fiscales estructurados", "Convierte formularios fiscales en campos revisables conservando la fuente."],
+      "avviso-intake": ["Recepción de notificaciones", "Convierte una notificación fiscal en un primer expediente organizado."],
+      "email-cliente": ["Correo al cliente", "Convierte un hallazgo en una solicitud clara y vinculada a las evidencias."],
+      "prompt-optimizer": ["Optimizador de prompts", "Convierte una pregunta profesional en instrucciones de investigación controlables."],
+      "deep-research-validator": ["Validador de investigación", "Contrasta las afirmaciones relevantes con las fuentes citadas."]
     }
   };
 
@@ -632,19 +776,22 @@
         it: "Vera | Dai documenti al fascicolo cliente",
         en: "Vera | From source documents to a working client file",
         fr: "Vera | Des documents sources au dossier client de travail",
-        de: "Vera | Von Quelldokumenten zur arbeitsfähigen Mandantenakte"
+        de: "Vera | Von Quelldokumenten zur arbeitsfähigen Mandantenakte",
+        es: "Vera | De los documentos fuente al expediente de cliente operativo"
       },
       moduleLabels: {
         it: "Nuovo cliente · Modello comune",
         en: "New Client · Common model",
         fr: "Nouveau client · Modèle commun",
-        de: "Neuer Mandant · Gemeinsames Modell"
+        de: "Neuer Mandant · Gemeinsames Modell",
+        es: "Nuevo cliente · Modelo común"
       },
       descriptions: {
         it: "Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.",
         en: "Explain the stable fields that country implementations map documents, rules and actions onto.",
         fr: "Explique les champs stables auxquels les implémentations nationales rattachent documents, règles et actions.",
-        de: "Erklärt die stabilen Felder, denen Länderimplementierungen Dokumente, Regeln und Aktionen zuordnen."
+        de: "Erklärt die stabilen Felder, denen Länderimplementierungen Dokumente, Regeln und Aktionen zuordnen.",
+        es: "Explica los campos estables a los que cada implementación jurisdiccional vincula documentos, reglas y acciones."
       }
     },
     {
@@ -662,19 +809,22 @@
         it: "Vera | Incarico, privacy e AML per il nuovo cliente",
         en: "Vera | Engagement, privacy and AML for a new client",
         fr: "Vera | Mission, confidentialité et LCB-FT pour un nouveau client",
-        de: "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten"
+        de: "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten",
+        es: "Vera | Encargo, privacidad y PBC para un nuevo cliente"
       },
       moduleLabels: {
         it: "Nuovo cliente · Edizione Italia",
         en: "New Client · Italy edition",
         fr: "Nouveau client · Édition Italie",
-        de: "Neuer Mandant · Italien-Edition"
+        de: "Neuer Mandant · Italien-Edition",
+        es: "Nuevo cliente · Edición Italia"
       },
       descriptions: {
         it: "Illustra il percorso Italia per piani di incarico, privacy e informativa AI, bozza di valutazione AML e monitoraggio del fascicolo di lavoro.",
         en: "Explain the Italy workflow for engagement, privacy and AI-information plans, a draft AML assessment, and working-file monitoring.",
         fr: "Explique le parcours Italie pour les plans de mission, de confidentialité et d’information IA, un projet d’évaluation LCB-FT et le suivi du dossier de travail.",
-        de: "Erläutert den Italien-Ablauf für Auftrags-, Datenschutz- und KI-Informationspläne, den Entwurf einer AML-Bewertung und die Pflege der Arbeitsakte."
+        de: "Erläutert den Italien-Ablauf für Auftrags-, Datenschutz- und KI-Informationspläne, den Entwurf einer AML-Bewertung und die Pflege der Arbeitsakte.",
+        es: "Explica el proceso italiano para los planes de encargo, privacidad e información sobre inteligencia artificial, un borrador de evaluación de PBC y el seguimiento del expediente."
       }
     },
     {
@@ -693,7 +843,8 @@
         it: "Vera | Dal giornale al campione riproducibile",
         en: "Vera | From journal to reproducible sample",
         fr: "Vera | Du journal à un échantillon reproductible",
-        de: "Vera | Vom Journal zur reproduzierbaren Stichprobe"
+        de: "Vera | Vom Journal zur reproduzierbaren Stichprobe",
+        es: "Vera | Del diario a una muestra reproducible"
       }
     },
     {
@@ -711,7 +862,8 @@
         it: "Vera | Dalla scrittura campionata al supporto verificato",
         en: "Vera | From sampled entry to verified support",
         fr: "Vera | De l’écriture sélectionnée au justificatif vérifié",
-        de: "Vera | Von der Stichprobenbuchung zum geprüften Beleg"
+        de: "Vera | Von der Stichprobenbuchung zum geprüften Beleg",
+        es: "Vera | Del asiento seleccionado al justificante verificado"
       }
     },
     {
@@ -728,12 +880,14 @@
       titles: {
         en: "Vera | Check Entries · Italy · FatturaPA",
         fr: "Vera | Écritures · Italie · FatturaPA",
-        de: "Vera | Buchungen · Italien · FatturaPA"
+        de: "Vera | Buchungen · Italien · FatturaPA",
+        es: "Vera | Asientos · Italia · FatturaPA"
       },
       descriptions: {
         en: "Add FatturaPA XML and authorized exports to the entry-to-support check.",
         fr: "Ajoute les XML FatturaPA et les exports autorisés au contrôle écriture-justificatif.",
-        de: "Ergänzt FatturaPA-XML und autorisierte Exporte in der Buchungs-Beleg-Prüfung."
+        de: "Ergänzt FatturaPA-XML und autorisierte Exporte in der Buchungs-Beleg-Prüfung.",
+        es: "Añade XML FatturaPA y exportaciones autorizadas a la comprobación entre asientos y justificantes."
       }
     }
   ]);
@@ -745,13 +899,15 @@
       it: ["Panoramica Vera", "Dal lavoro dello studio al prossimo passo preparato."],
       en: ["Vera overview", "From the firm's work to a prepared next step."],
       fr: ["Vue d’ensemble de Vera", "Du travail du cabinet à l’étape suivante préparée."],
-      de: ["Vera im Überblick", "Von der Kanzleiarbeit zum vorbereiteten nächsten Schritt."]
+      de: ["Vera im Überblick", "Von der Kanzleiarbeit zum vorbereiteten nächsten Schritt."],
+      es: ["Resumen de Vera", "Del trabajo del despacho al siguiente paso preparado."]
     },
     clara: {
       it: ["Panoramica Clara", "Dal materiale di progetto a un risultato pronto da condividere."],
       en: ["Clara overview", "From project material to a result ready to share."],
       fr: ["Vue d’ensemble de Clara", "Du matériel de projet au résultat prêt à partager."],
-      de: ["Clara im Überblick", "Vom Projektmaterial zum teilbaren Ergebnis."]
+      de: ["Clara im Überblick", "Vom Projektmaterial zum teilbaren Ergebnis."],
+      es: ["Resumen de Clara", "Del material del proyecto a un resultado listo para compartir."]
     }
   };
 
@@ -768,18 +924,21 @@
 
   function normalizeVideo(product, lang, video) {
     if (product !== "vera") {
+      const audioLanguage = video.audioLanguage || lang;
       return {
         ...video,
         sourceKind: "youtube",
         kind: "guide",
         language: lang,
+        audioLanguage,
         shortTitle: stripProductPrefix(video.title),
         lastVerifiedAt
       };
     }
 
     const identity = veraYoutubeIdentityById.get(video.id);
-    if (!identity || identity.language !== lang) {
+    const audioLanguage = video.audioLanguage || lang;
+    if (!identity || identity.language !== audioLanguage) {
       throw new Error(`Missing Vera video identity for ${lang}/${video.id}`);
     }
     const { module, edition, scope, jurisdiction, jurisdictions, kind } = identity;
@@ -797,6 +956,7 @@
       workstream: veraWorkstream[module],
       kind,
       language: lang,
+      audioLanguage,
       shortTitle: stripProductPrefix(video.title),
       description,
       duration: video.duration || null,
@@ -833,6 +993,7 @@
           workstream: veraWorkstream[module],
           kind: "guide",
           language: lang,
+          audioLanguage: lang,
           shortTitle: stripProductPrefix(title),
           description,
           duration,
@@ -870,6 +1031,9 @@
         workstream: "overview",
         kind: "overview",
         language: lang,
+        ...(product === "clara" ? {
+          audioLanguage: selection.featured.audioLanguage || lang
+        } : {}),
         shortTitle: overviewLabel,
         description: overviewDescription,
         status: "published",
@@ -950,7 +1114,10 @@
 
     const meta = document.createElement("span");
     meta.className = "video-guide__meta";
-    meta.textContent = video.duration ? `${video.duration} · ${openLabel}` : openLabel;
+    const fallbackAudio = video.audioLanguage && video.audioLanguage !== video.language
+      ? ({it: "Audio in inglese", en: "English audio", fr: "Audio en anglais", de: "Englischer Ton", es: "Audio en inglés"}[video.language] || "English audio")
+      : "";
+    meta.textContent = [video.duration || "", fallbackAudio, openLabel].filter(Boolean).join(" · ");
 
     thumbnail.append(image, play);
     body.append(title);

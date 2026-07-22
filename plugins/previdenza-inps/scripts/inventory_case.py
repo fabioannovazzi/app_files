@@ -185,6 +185,7 @@ def _initial_run_intake(
             "network_access_allowed_for_model_weights": (args.allow_ocr_model_download),
             "local_files_read": [args.input_dir.expanduser().resolve().as_posix()],
             "external_connectors_used": [],
+            "external_routes_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
@@ -198,9 +199,6 @@ def _initial_run_intake(
                 "successful_page_count": 0,
                 "case_content_network_transfer": False,
                 "model_download_allowed": args.allow_ocr_model_download,
-                "model_download_approval_id": (
-                    args.ocr_model_download_approval_id or None
-                ),
                 "model_network_used": False,
                 "visual_confirmation_required": None,
             },
@@ -241,51 +239,36 @@ def _initial_run_intake(
     if portal_capture is None:
         return payload
 
-    approval = portal_capture["approval"]
+    guardrails = portal_capture["guardrails"]
     posture["acquisition_channels_used"].append("inps_conditional_browser_capture")
     posture["external_connectors_used"] = ["inps_browser_read_only"]
-    posture["external_execution_approval"] = {
-        "approved": True,
-        "approved_at": approval["approved_at"],
-        "approved_by": approval["approved_by"],
-        "reason": approval["reason"],
-        "scope": approval["scope"],
-    }
+    posture["external_routes_used"] = [
+        {
+            "route": "inps_browser_read_only",
+            "destination_or_origin": portal_capture["approved_origin"],
+            "payload_category": "visible_page_content_received_from_selected_tab",
+            "network_used": True,
+            "access_basis": None,
+        }
+    ]
     posture["portal_capture_receipt"] = {
         "capture_id": portal_capture["capture_id"],
         "captured_at": portal_capture["captured_at"],
+        "route_selected": portal_capture["route_selected"],
+        "capture_method": portal_capture["capture_method"],
         "approved_origin": portal_capture["approved_origin"],
         "source_url_sha256": portal_capture["source_url_sha256"],
         "manifest_sha256": portal_capture["manifest_sha256"],
-        "case_content_uploaded": False,
-        "browser_state_exported": False,
-        "navigation_performed": False,
-        "page_actions_performed": False,
-        "own_or_authorized_credentials_confirmed": approval[
-            "own_or_authorized_credentials_confirmed"
+        "authentication_performed_by_connector": guardrails[
+            "authentication_performed_by_connector"
         ],
-        "human_access_authority_confirmed": approval[
-            "human_access_authority_confirmed"
-        ],
-        "human_access_authority_basis_sha256": hashlib.sha256(
-            approval["human_access_authority_basis"].encode("utf-8")
-        ).hexdigest(),
-        "portal_profile_authority_confirmed": approval[
-            "portal_profile_authority_confirmed"
-        ],
-        "portal_profile_authority_basis_sha256": hashlib.sha256(
-            approval["portal_profile_authority_basis"].encode("utf-8")
-        ).hexdigest(),
-        "delegation_or_subject_authority_confirmed": approval[
-            "delegation_or_subject_authority_confirmed"
-        ],
-        "delegation_or_subject_authority_basis_sha256": hashlib.sha256(
-            approval["delegation_or_subject_authority_basis"].encode("utf-8")
-        ).hexdigest(),
-        "portal_capture_permission_confirmed": True,
-        "portal_permission_basis_sha256": hashlib.sha256(
-            approval["portal_permission_basis"].encode("utf-8")
-        ).hexdigest(),
+        "navigation_performed": guardrails["navigation_performed"],
+        "page_actions_performed": guardrails["page_actions_performed"],
+        "cookies_read": guardrails["cookies_read"],
+        "storage_state_read": guardrails["storage_state_read"],
+        "page_html_read": guardrails["page_html_read"],
+        "browser_closed": guardrails["browser_closed"],
+        "case_content_uploaded": guardrails["case_content_uploaded"],
     }
     payload["execution_trace"].append(
         {
@@ -294,7 +277,7 @@ def _initial_run_intake(
             "status": "passed",
             "execution_location": "external_connector",
             "command": "python scripts/capture_portal_snapshot.py",
-            "inputs": ["approved_open_browser_tab"],
+            "inputs": ["selected_open_browser_tab"],
             "outputs": [
                 PORTAL_CAPTURE_MANIFEST_NAME,
                 "portal_full_page.png",
@@ -388,7 +371,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input_dir", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--language", choices=("it", "en", "fr", "de"), default="it")
+    parser.add_argument(
+        "--language", choices=("it", "en", "fr", "de", "es"), default="it"
+    )
     parser.add_argument("--reference-date", default="")
     parser.add_argument(
         "--portal-capture-manifest",
@@ -413,7 +398,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--ocr-language",
-        choices=("it", "en", "fr", "de"),
+        choices=("it", "en", "fr", "de", "es"),
         help="OCR language; defaults to --language.",
     )
     parser.add_argument("--ocr-cache-dir", type=Path)
@@ -422,34 +407,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--allow-ocr-model-download",
         action="store_true",
-        help="Allow downloading OCR model weights after explicit approval.",
-    )
-    parser.add_argument(
-        "--ocr-model-download-approval-id",
-        default="",
-        help="Stable actor or approval ID required when model download is allowed.",
+        help="Explicitly select the optional OCR model-weight download route.",
     )
     args = parser.parse_args(argv)
     if args.portal_capture_manifest and args.portal_export_manifest:
         parser.error(
             "--portal-capture-manifest and --portal-export-manifest are mutually exclusive"
         )
-    if (
-        args.allow_ocr_model_download
-        and not args.ocr_model_download_approval_id.strip()
-    ):
-        parser.error(
-            "--ocr-model-download-approval-id is required with "
-            "--allow-ocr-model-download"
-        )
-    if (
-        args.ocr_model_download_approval_id.strip()
-        and not args.allow_ocr_model_download
-    ):
-        parser.error(
-            "--ocr-model-download-approval-id requires " "--allow-ocr-model-download"
-        )
-
     ocr_language = args.ocr_language or args.language
 
     try:

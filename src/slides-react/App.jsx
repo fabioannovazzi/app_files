@@ -49,6 +49,7 @@ const OCR_LANG_MAP = {
   it: "ita",
   fr: "fra",
   de: "deu",
+  es: "spa",
 };
 
 const OCR_LANG_LABELS = {
@@ -56,6 +57,7 @@ const OCR_LANG_LABELS = {
   ita: "Italian",
   fra: "French",
   deu: "German",
+  spa: "Spanish",
 };
 
 function ptToPx(pt) {

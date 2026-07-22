@@ -33,7 +33,7 @@ command. Present every phase and artifact to the user under **New Client**.
 
 Phase one accepts `italy`, `geneva`, `zurich`, `uk`, or `mixed`; its review,
 memo, client request, inventory, extraction report, and fiscal summary follow
-`it`, `en`, `fr`, or `de`. Low-level machine records retain stable field and
+`it`, `en`, `fr`, `de`, or `es`. Low-level machine records retain stable field and
 status codes. The current professional setup country pack is Italy only.
 Promote a reviewed phase-one run with the
 resolved `new-client` module's

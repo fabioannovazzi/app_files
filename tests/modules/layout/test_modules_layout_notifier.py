@@ -96,7 +96,13 @@ def test_notify_failed_sends_error_email_conditionally(monkeypatch, session, exp
         assert sent == []
 
 
-def test_notify_finished_uses_session_language(monkeypatch):
+@pytest.mark.parametrize(
+    ("language_alias", "expected_language"),
+    (("ita", "it"), ("spa", "es"), ("español", "es")),
+)
+def test_notify_finished_uses_session_language(
+    monkeypatch, language_alias: str, expected_language: str
+):
     langs: list[str] = []
 
     monkeypatch.setattr(notifier, "_ping_browser", lambda _notifier, label: None)
@@ -108,11 +114,60 @@ def test_notify_finished_uses_session_language(monkeypatch):
     )
     monkeypatch.setattr(notifier, "is_resend_configured", lambda: True)
 
-    session = {"notify_email": "user@example.com", "notify_lang": "ita"}
+    session = {"notify_email": "user@example.com", "notify_lang": language_alias}
 
     notifier.notify_finished(42, "entries", session)
 
-    assert langs == ["it"]
+    assert langs == [expected_language]
+
+
+def test_send_email_uses_spanish_content_and_cta(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+
+    monkeypatch.setattr(notifier, "is_resend_configured", lambda: True)
+
+    def fake_send_email(
+        recipients, subject, text_body, *, cta_label=None, cta_url=None, **kwargs
+    ) -> bool:
+        captured["subject"] = subject
+        captured["text_body"] = text_body
+        captured["cta_label"] = cta_label
+        return True
+
+    monkeypatch.setattr(notifier, "send_email", fake_send_email)
+
+    notifier._send_email(
+        "user@example.com",
+        "1 min 05 s",
+        "report",
+        "es",
+        "https://mparanza.com/results/123",
+    )
+
+    assert captured["subject"] == "Tu informe está listo"
+    assert "El informe acaba de generarse" in str(captured["text_body"])
+    assert "Resultados: https://mparanza.com/results/123" in str(captured["text_body"])
+    assert captured["cta_label"] == "Abrir resultados"
+
+
+def test_send_error_email_uses_spanish_content(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+
+    monkeypatch.setattr(notifier, "is_resend_configured", lambda: True)
+
+    def fake_send_email(
+        recipients, subject, text_body, *, cta_label=None, cta_url=None, **kwargs
+    ) -> bool:
+        captured["subject"] = subject
+        captured["text_body"] = text_body
+        return True
+
+    monkeypatch.setattr(notifier, "send_email", fake_send_email)
+
+    notifier._send_error_email("user@example.com", "entries", "es")
+
+    assert captured["subject"] == "Problema con la revisión de asientos"
+    assert "Puedes descargar los resultados parciales" in str(captured["text_body"])
 
 
 def test_send_email_uses_localized_cta_for_success_link(monkeypatch) -> None:

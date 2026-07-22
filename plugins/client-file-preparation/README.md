@@ -145,7 +145,7 @@ python scripts/build_file_preparation_outputs.py \
 ```
 
 `--jurisdiction` accetta `italy`, `geneva`, `zurich`, `uk` o `mixed`;
-`--language` accetta `it`, `en`, `fr` o `de`. Il payload di review include per
+`--language` accetta `it`, `en`, `fr`, `de` o `es`. Il payload di review include per
 impostazione predefinita estratti limitati di ogni documento leggibile,
 evidenze dei campi fiscali e anteprime della scheda per lo studio, del memo e
 dell'e-mail al cliente. Possono contenere dati reali del cliente necessari alla

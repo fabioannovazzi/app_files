@@ -38,6 +38,65 @@ def _model_directories(tmp_path: Path) -> tuple[Path, Path]:
     return detection, recognition
 
 
+@pytest.mark.parametrize(
+    "language", ("es", "es-ES", "spa", "esp", "español", "spanish")
+)
+def test_spanish_language_uses_the_latin_recognition_model(
+    adapter: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    language: str,
+) -> None:
+    detection, recognition = _model_directories(tmp_path)
+    engine_calls: list[tuple[str, str, str, str]] = []
+
+    class FakeEngine:
+        def predict(self, _image: object) -> list[dict[str, object]]:
+            return [{"rec_texts": ["texto en español"]}]
+
+    def fake_engine(
+        normalized_language: str,
+        detection_path: str,
+        recognition_path: str,
+        recognition_model_name: str,
+    ) -> FakeEngine:
+        engine_calls.append(
+            (
+                normalized_language,
+                detection_path,
+                recognition_path,
+                recognition_model_name,
+            )
+        )
+        return FakeEngine()
+
+    monkeypatch.setattr(adapter, "ocr_available", lambda: True)
+    monkeypatch.setattr(adapter, "_decode_image", lambda _value: object())
+    monkeypatch.setattr(adapter, "_get_engine", fake_engine)
+
+    result = adapter.extract_text_from_image_bytes(
+        b"image",
+        language=language,
+        detection_model_dir=detection,
+        recognition_model_dir=recognition,
+    )
+
+    assert result.status == "ok"
+    assert result.language == "es"
+    assert result.model_names == (
+        "PP-OCRv5_server_det",
+        "latin_PP-OCRv5_mobile_rec",
+    )
+    assert engine_calls == [
+        (
+            "es",
+            str(detection),
+            str(recognition),
+            "latin_PP-OCRv5_mobile_rec",
+        )
+    ]
+
+
 def test_vera_vendors_only_shared_ocr_module() -> None:
     config_path = ROOT / "scripts" / "plugin_vendor_modules.json"
 

@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara-workflow-privacy-surface-v1.json",
+  "title": "Clara workflow privacy-surface review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow",
+    "display_name",
+    "governed_paths",
+    "codex_context",
+    "ordinary_codex_model_processing",
+    "codex_account_boundary",
+    "hosted_service_ids",
+    "boundaries_beyond_codex",
+    "security_controls",
+    "review"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "workflow": {"type": "string", "minLength": 1},
+    "display_name": {"type": "string", "minLength": 1},
+    "governed_paths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "codex_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "classes"],
+      "properties": {
+        "policy": {"const": "real_professional_data_may_enter_codex_context"},
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "purpose", "content"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "purpose": {"type": "string", "minLength": 1},
+              "content": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "ordinary_codex_model_processing": {
+      "const": {
+        "scope": "content_supplied_to_the_codex_model",
+        "account_arrangement": "user_selected_chatgpt_or_codex_account",
+        "separate_clara_recipient_or_arrangement": false,
+        "automatic_anonymisation": false,
+        "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+        "plan_visibility": "not_inspected_or_enforced_by_clara"
+      }
+    },
+    "codex_account_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_by",
+        "clara_runtime_enforcement",
+        "review_timing",
+        "review_items",
+        "per_case_record_required"
+      ],
+      "properties": {
+        "selected_by": {"const": "firm_or_user"},
+        "clara_runtime_enforcement": {"const": "none"},
+        "review_timing": {
+          "const": "before_professional_use_and_when_account_or_terms_change"
+        },
+        "review_items": {
+          "const": [
+            "account_or_workspace_plan",
+            "model_training_data_controls",
+            "retention_and_deletion_controls"
+          ]
+        },
+        "per_case_record_required": {"const": false}
+      }
+    },
+    "hosted_service_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "boundaries_beyond_codex": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "destination",
+          "purpose",
+          "content",
+          "optional",
+          "requires_confirmation",
+          "controls"
+        ],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {
+            "enum": [
+              "public_research",
+              "hosted_service",
+              "external_connector",
+              "send_or_publish"
+            ]
+          },
+          "hosted_service_id": {"type": "string", "minLength": 1},
+          "destination": {"type": "string", "minLength": 1},
+          "purpose": {"type": "string", "minLength": 1},
+          "content": {"type": "string", "minLength": 1},
+          "optional": {"type": "boolean"},
+          "requires_confirmation": {"type": "boolean"},
+          "controls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {"kind": {"const": "hosted_service"}},
+              "required": ["kind"]
+            },
+            "then": {"required": ["hosted_service_id"]},
+            "else": {"not": {"required": ["hosted_service_id"]}}
+          },
+          {
+            "if": {
+              "properties": {"requires_confirmation": {"const": true}},
+              "required": ["requires_confirmation"]
+            },
+            "then": {"properties": {"optional": {"const": true}}}
+          }
+        ]
+      }
+    },
+    "security_controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "control"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "control": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewed_at", "reviewed_by", "basis", "source_fingerprint"],
+      "properties": {
+        "reviewed_at": {"type": "string", "format": "date"},
+        "reviewed_by": {"const": "privacy-surface-review"},
+        "basis": {"const": "external_boundary_review_of_workflow_source"},
+        "source_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

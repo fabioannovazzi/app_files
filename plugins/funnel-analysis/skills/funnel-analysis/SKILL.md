@@ -73,7 +73,7 @@ environment allows it, or explain what dependency capability is missing.
 4. Run the deterministic table:
 
 ```bash
-python scripts/run_funnel_analysis.py <input-file> --output-dir <output-dir> --recipe <recipe.json>
+python scripts/run_funnel_analysis.py <input-file> --output-dir <output-dir> --recipe <recipe.json> --language <en|it|fr|de|es>
 ```
 
 5. Review `funnel_stage_table_chart_context.json`,

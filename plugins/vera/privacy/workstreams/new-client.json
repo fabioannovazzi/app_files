@@ -32,6 +32,13 @@
     ],
     "per_case_record_required": false
   },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
   "boundaries_beyond_codex": [
     {
       "id": "current-source-research",
@@ -77,6 +84,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "812459c7c6e67569cfcc4891ea2f4a206e84a7ad8929a78e830bb9b6b5b6de6a"
+    "source_fingerprint": "e7f1d4026e5885bb07606657dc881d5c329cd848ca595a99ae0113b37b8b2748"
   }
 }

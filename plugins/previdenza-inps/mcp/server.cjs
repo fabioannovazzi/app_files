@@ -22,6 +22,13 @@ const ACQUISITION_CHANNELS = new Set([
   "inps_registered_local_export",
 ]);
 const ACQUISITION_CONNECTORS = new Set(["inps_browser_read_only"]);
+const ACQUISITION_EXTERNAL_ROUTE_FIELDS = new Set([
+  "route",
+  "destination_or_origin",
+  "payload_category",
+  "network_used",
+  "access_basis",
+]);
 const ACQUISITION_OCR_FIELDS = [
   "enabled",
   "engine",
@@ -31,7 +38,6 @@ const ACQUISITION_OCR_FIELDS = [
   "successful_page_count",
   "case_content_network_transfer",
   "model_download_allowed",
-  "model_download_approval_id",
   "model_network_used",
   "visual_confirmation_required",
 ];
@@ -99,7 +105,7 @@ const SAFE_TRACE_LOCATIONS = new Set([
   "local_mcp_server",
 ]);
 const SAFE_TRACE_INPUT_NAMES = new Set([
-  "approved_open_browser_tab",
+  "selected_open_browser_tab",
   "locally_supplied_official_portal_exports",
   "validated_case_records",
   "claims_review",
@@ -332,6 +338,42 @@ function acquisitionBoolean(value, field) {
   return value;
 }
 
+function acquisitionExternalRoutes(value) {
+  if (value == null) return [];
+  if (!Array.isArray(value)) {
+    throw new Error("data_posture.external_routes_used must be an array");
+  }
+  return value.map((record, index) => {
+    const field = `data_posture.external_routes_used[${index}]`;
+    if (!isObject(record)) throw new Error(`${field} must be an object`);
+    const keys = new Set(Object.keys(record));
+    if (
+      keys.size !== ACQUISITION_EXTERNAL_ROUTE_FIELDS.size ||
+      [...keys].some((name) => !ACQUISITION_EXTERNAL_ROUTE_FIELDS.has(name))
+    ) {
+      throw new Error(`${field} has invalid fields`);
+    }
+    if (record.route !== "inps_browser_read_only") {
+      throw new Error(`${field}.route is unsupported`);
+    }
+    for (const name of ["destination_or_origin", "payload_category"]) {
+      if (typeof record[name] !== "string" || record[name].trim() === "") {
+        throw new Error(`${field}.${name} must be non-empty`);
+      }
+    }
+    if (record.network_used !== true) {
+      throw new Error(`${field}.network_used must be true`);
+    }
+    if (
+      record.access_basis !== null &&
+      (typeof record.access_basis !== "string" || record.access_basis.trim() === "")
+    ) {
+      throw new Error(`${field}.access_basis must be null or non-empty`);
+    }
+    return { ...record };
+  });
+}
+
 function acquisitionReceipt(posture, name, channel, channels) {
   const value = posture[name];
   if (value == null) {
@@ -377,6 +419,7 @@ function acquisitionProjection(runIntake) {
     "data_posture.external_connectors_used",
     ACQUISITION_CONNECTORS,
   );
+  const externalRoutes = acquisitionExternalRoutes(posture.external_routes_used);
   const captureReceipt = acquisitionReceipt(
     posture,
     "portal_capture_receipt",
@@ -390,10 +433,28 @@ function acquisitionProjection(runIntake) {
     channels,
   );
   if (captureReceipt !== null && canonicalJson(connectors) !== canonicalJson(["inps_browser_read_only"])) {
-    throw new Error("portal capture requires the approved inps_browser_read_only connector");
+    throw new Error("portal capture requires the inps_browser_read_only connector");
   }
   if (captureReceipt === null && connectors.length > 0) {
     throw new Error("external connector posture requires a portal capture receipt");
+  }
+  if (captureReceipt !== null && externalRoutes.length !== 1) {
+    throw new Error("portal capture requires one factual external route record");
+  }
+  if (captureReceipt !== null && externalRoutes.length === 1) {
+    const route = externalRoutes[0];
+    if (route.destination_or_origin !== captureReceipt.approved_origin) {
+      throw new Error("portal capture route origin must match its receipt");
+    }
+    if (route.payload_category !== "visible_page_content_received_from_selected_tab") {
+      throw new Error("portal capture route payload category is unsupported");
+    }
+    if (captureReceipt.route_selected !== true) {
+      throw new Error("portal capture receipt must record route selection");
+    }
+  }
+  if (captureReceipt === null && externalRoutes.length > 0) {
+    throw new Error("external route record requires a portal capture receipt");
   }
   const localOnly = acquisitionBoolean(posture.local_only, "data_posture.local_only");
   const networkCalls = acquisitionBoolean(
@@ -409,13 +470,6 @@ function acquisitionProjection(runIntake) {
   }
   if (ocr.model_network_used === true && (localOnly || !networkCalls)) {
     throw new Error("OCR model network use must remain non-local and network-recorded");
-  }
-  const approval = valueOrNull(posture.external_execution_approval);
-  if (captureReceipt !== null && (!isObject(approval) || approval.approved !== true)) {
-    throw new Error("portal capture requires recorded external execution approval");
-  }
-  if (captureReceipt === null && approval !== null) {
-    throw new Error("external execution approval requires a portal capture receipt");
   }
   return {
     schema_version: valueOrNull(runIntake.schema_version),
@@ -434,7 +488,7 @@ function acquisitionProjection(runIntake) {
       ),
       acquisition_channels_used: channels,
       external_connectors_used: connectors,
-      external_execution_approval: approval,
+      external_routes_used: externalRoutes,
       portal_capture_receipt: captureReceipt,
       portal_export_receipt: exportReceipt,
       ocr,
@@ -619,7 +673,7 @@ function publicRunIntake(runIntake, persistence) {
     workflow: runIntake.workflow === "previdenza-inps" ? "previdenza-inps" : null,
     run_id: SAFE_ID.test(runIntake.run_id || "") ? runIntake.run_id : null,
     created_at: safeIsoDateTime(runIntake.created_at) ? runIntake.created_at : null,
-    working_language: ["it", "en", "fr", "de"].includes(runIntake.working_language)
+    working_language: ["it", "en", "fr", "de", "es"].includes(runIntake.working_language)
       ? runIntake.working_language
       : null,
     reference_date:
@@ -635,11 +689,25 @@ function publicRunIntake(runIntake, persistence) {
       external_connectors_used: Array.isArray(posture.external_connectors_used)
         ? [...new Set(posture.external_connectors_used.filter((name) => SAFE_CONNECTORS.has(name)))]
         : [],
-      external_execution_approval: {
-        approved:
-          isObject(posture.external_execution_approval) &&
-          posture.external_execution_approval.approved === true,
-      },
+      external_routes_used: Array.isArray(posture.external_routes_used)
+        ? posture.external_routes_used
+            .filter(
+              (record) =>
+                isObject(record) &&
+                record.route === "inps_browser_read_only" &&
+                typeof record.destination_or_origin === "string" &&
+                /^https:\/\/(?:[a-z0-9-]+\.)*inps\.it$/i.test(record.destination_or_origin) &&
+                record.payload_category === "visible_page_content_received_from_selected_tab" &&
+                record.network_used === true,
+            )
+            .slice(0, 1)
+            .map((record) => ({
+              route: record.route,
+              destination_or_origin: record.destination_or_origin,
+              payload_category: record.payload_category,
+              network_used: true,
+            }))
+        : [],
     },
     execution_trace: trace.slice(0, 100).map((entry) => ({
       step_id: safeTraceField(entry?.step_id, SAFE_TRACE_STEP_IDS),

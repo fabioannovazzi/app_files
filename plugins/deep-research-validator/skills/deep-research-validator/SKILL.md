@@ -11,7 +11,7 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 Use this skill when a completed Deep Research output must be reviewed against its cited sources. Codex owns the judgment work: selecting material claims, evaluating source support, reviewing reasoning, deciding whether fixes are needed, and drafting a corrected document.
 
-The workflow is not Italian-only. Support the same four working locales used by the Mparanza plugins: `it`, `en`, `fr`, and `de`. Keep artifact file names and JSON keys in English for stability, but speak to the user in the chosen working language.
+The workflow is not Italian-only. Support the same five working locales used by the Mparanza plugins: `it`, `en`, `fr`, `de`, and `es`. Keep artifact file names and JSON keys in English for stability, but speak to the user in the chosen working language.
 
 Detailed validation criteria live in `references/workflow-reference.md`. Load that reference when a run needs source-support categories, claim-review JSON details, or output wording guidance.
 
@@ -61,7 +61,7 @@ Required:
 
 Optional:
 
-- working language: `it`, `en`, `fr`, or `de`;
+- working language: `it`, `en`, `fr`, `de`, or `es`;
 - validation objective, such as source support only, reasoning review, or corrected-document generation;
 - local source files when cited URLs are unavailable or gated.
 
@@ -222,4 +222,6 @@ When there is something useful to report, write a short improvement note with:
 - relevant input/output file names when available;
 - suggested next engineering action.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

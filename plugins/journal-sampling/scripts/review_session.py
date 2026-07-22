@@ -580,7 +580,7 @@ def write_review_session_artifacts(
         "items": items,
         "item_count": len(items),
         "columns": _review_columns(),
-        "evidence": {
+        "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "sampling_audit": "sampling_audit.json",
             "journal_sample_csv": "journal_sample.csv",

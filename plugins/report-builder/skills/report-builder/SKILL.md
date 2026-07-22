@@ -11,7 +11,7 @@ Never write run outputs inside this Git workspace, `static/shared`, `protected_d
 
 Use this skill when a finance or audit report must be assembled from variable workbooks, CSV exports, readable PDFs, or ZIP folders. The plugin is a guided Codex workflow: Codex inspects the files, proposes table-to-section mapping, asks only for unresolved business choices, writes or refines narrative comments in an editable recipe, runs deterministic helper scripts, reviews diagnostics, and delivers outputs.
 
-The workflow is not Italian-only. Support the same four working locales used by the other accounting plugins: `it`, `en`, `fr`, and `de`. Keep canonical output file names and JSON keys in English for stability, but speak to the user and write summaries in the chosen working language.
+The workflow is not Italian-only. Support the same five working locales used by the other accounting plugins: `it`, `en`, `fr`, `de`, and `es`. Keep canonical output file names and JSON keys in English for stability, but speak to the user and write summaries in the chosen working language.
 
 Detailed input, mapping, narrative-boundary, and rendering notes live in `references/workflow-reference.md`. Load that reference only when the run needs extra detail beyond the workflow below.
 
@@ -81,7 +81,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run deterministic inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_inputs.py <input-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de> --document-language <auto|it|en|fr|de> --report-type <management_report|local_government_review|annual_financial_statement>
+python scripts/inspect_inputs.py <input-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
 ```
 
 4. Read `inspection.json` and `suggested_recipe.json`. Summarize discovered tables, suggested section matches, low-confidence or unassigned tables, and extraction limitations.
@@ -90,7 +90,7 @@ python scripts/inspect_inputs.py <input-file-or-folder> --output-dir <output-dir
 7. Run deterministic build:
 
 ```bash
-python scripts/build_report.py <input-file-or-folder> --output-dir <output-dir>/report --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de> --document-language <auto|it|en|fr|de> --report-type <management_report|local_government_review|annual_financial_statement>
+python scripts/build_report.py <input-file-or-folder> --output-dir <output-dir>/report --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
 ```
 
 8. Review `report_analysis.json`, `report_audit.json`, `report_draft.md`, and the styled `report.docx` before final delivery. Report assigned sections, missing sections, tables discovered, narrative sections filled by Codex, and output paths.
@@ -169,10 +169,10 @@ consumed into `report/applied_decisions.json`.
 
 Ask for or infer two language assumptions:
 
-- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`.
-- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`.
+- `language`: working/output language for Codex's questions and final summary; one of `it`, `en`, `fr`, `de`, `es`.
+- `document_language`: source-document language used to interpret labels; one of `auto`, `it`, `en`, `fr`, `de`, `es`.
 
-Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, or German, set `document_language` accordingly without asking unless ambiguity matters.
+Store both assumptions in the generated recipe and preserve them in diagnostics/audit JSON. If the user writes in English, default `language=en` and `document_language=auto`. If the source files are clearly Italian, French, German, or Spanish, set `document_language` accordingly without asking unless ambiguity matters.
 
 Starter prompts:
 
@@ -203,4 +203,6 @@ When there is something useful to report, write a short improvement note with:
 - relevant input/output file names when available;
 - suggested next engineering action.
 
-Keep the improvement note local to chat or run artifacts.
+Keep the improvement note local to chat or run artifacts. Do not submit it to
+Mparanza automatically. When this workflow runs through Vera, use Vera's
+consent-based Plugin Improvement Feedback process for any transmission.

@@ -22,7 +22,9 @@ def main() -> int:
     parser.add_argument("--project", required=True)
     parser.add_argument("--objective", required=True)
     parser.add_argument("--audience", default="Decision maker")
-    parser.add_argument("--language", default="it", choices=["it", "en", "fr", "de"])
+    parser.add_argument(
+        "--language", default="it", choices=["it", "en", "fr", "de", "es"]
+    )
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")

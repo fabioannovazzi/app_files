@@ -385,7 +385,7 @@ def test_inventory_counts_shared_paddleocr_ok_result(
     )
 
 
-def test_inventory_records_model_download_approval_before_ocr(
+def test_inventory_records_model_download_route_before_ocr(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     inventory = _load_script("inventory_case")
@@ -395,8 +395,9 @@ def test_inventory_records_model_download_approval_before_ocr(
     output_dir = tmp_path / "private-inventory"
 
     def fake_ocr(*_args: object, **_kwargs: object) -> dict[str, object]:
-        receipt = _read_json(output_dir / "ocr_model_download_authorization.json")
-        assert receipt["approval_id"] == "OCR-MODEL-APPROVAL-001"
+        receipt = _read_json(output_dir / "ocr_model_download_receipt.json")
+        assert receipt["route_selected"] is True
+        assert receipt["model_download_allowed"] is True
         assert receipt["case_content_network_transfer"] is False
         return {
             "status": "models_unavailable",
@@ -413,10 +414,9 @@ def test_inventory_records_model_download_approval_before_ocr(
         output_dir,
         run_id="OCR-APPROVAL-001",
         allow_ocr_model_download=True,
-        ocr_model_download_approval_id="OCR-MODEL-APPROVAL-001",
     )
 
-    assert (output_dir / "ocr_model_download_authorization.json").exists()
+    assert (output_dir / "ocr_model_download_receipt.json").exists()
 
 
 def test_direct_connector_fails_closed_without_written_use_authorization(
@@ -438,7 +438,6 @@ def test_direct_connector_fails_closed_without_written_use_authorization(
             tenant="ptpo",
             expected_chamber="Camera di commercio",
             query="apertura posizione subagente assicurativo",
-            network_approval_id="NETWORK-APPROVAL-001",
             written_use_authorization_id="",
             client=NetworkMustNotRun(),
         )
@@ -524,7 +523,6 @@ def test_authorized_search_uses_exactly_two_requests_and_records_budget(
         tenant="ptpo",
         expected_chamber="Camera di commercio sintetica",
         query="apertura posizione subagente assicurativo",
-        network_approval_id="NETWORK-APPROVAL-001",
         written_use_authorization_id="RIGHTS-HOLDER-AUTHORIZATION-001",
         client=client,
     )
@@ -533,10 +531,17 @@ def test_authorized_search_uses_exactly_two_requests_and_records_budget(
     run_intake = _read_json(output_dir / "run_intake.json")
     connector_entries = run_intake["data_posture"]["external_connectors_used"]
     connector_entry = connector_entries[0]
+    route_entry = run_intake["data_posture"]["external_routes_used"][0]
     connector_step = run_intake["execution_trace"][-1]
     assert result["returned_candidate_count"] == 0
     assert opener.call_count == connector.MAX_REQUESTS_PER_OPERATION == 2
     assert receipt["request_limit"] == 2
+    assert receipt["route_selected"] is True
+    assert receipt["network_used"] is True
+    assert "network_approval_id" not in receipt
+    assert receipt["written_use_authorization_id"] == (
+        "RIGHTS-HOLDER-AUTHORIZATION-001"
+    )
     assert len(connector_entries) == 1
     assert connector_entry["connector"] == "authorized_sari_json_read_only"
     assert connector_entry["origin"] == connector.SARI_ORIGIN
@@ -545,7 +550,16 @@ def test_authorized_search_uses_exactly_two_requests_and_records_budget(
     assert connector_entry["credentials_used"] is False
     assert connector_entry["status"] == "completed"
     assert connector_entry["completed_at"]
-    assert run_intake["data_posture"]["external_execution_approval"]["approved"] is True
+    assert route_entry == {
+        "route": "authorized_sari_json_read_only",
+        "destination_or_origin": connector.SARI_ORIGIN,
+        "payload_category": "generic_public_query_or_selected_card_identifier",
+        "network_used": True,
+        "access_basis": (
+            "written_use_authorization_id:RIGHTS-HOLDER-AUTHORIZATION-001"
+        ),
+    }
+    assert "external_execution_approval" not in run_intake["data_posture"]
     assert connector_step["kind"] == "external_official_source_read"
     assert connector_step["status"] == "passed"
 
@@ -572,13 +586,13 @@ def test_connector_failure_does_not_record_use_or_completion(tmp_path: Path) -> 
             tenant="ptpo",
             expected_chamber="Camera di commercio sintetica",
             query="apertura posizione subagente assicurativo",
-            network_approval_id="NETWORK-APPROVAL-001",
             written_use_authorization_id="RIGHTS-HOLDER-AUTHORIZATION-001",
             client=FailingClient(),
         )
 
     run_intake = _read_json(output_dir / "run_intake.json")
     assert run_intake["data_posture"]["external_connectors_used"] == []
+    assert run_intake["data_posture"]["external_routes_used"] == []
     assert "external_execution_approval" not in run_intake["data_posture"]
     assert not (output_dir / "sari_network_receipt.json").exists()
     assert len(run_intake["execution_trace"]) == 1
@@ -678,6 +692,7 @@ def test_browser_selected_source_registers_metadata_only_and_forbids_snapshot(
     run_intake = _read_json(output_dir / "run_intake.json")
     assert manifest["source_count"] == 1
     assert run_intake["data_posture"]["external_connectors_used"] == []
+    assert run_intake["data_posture"]["external_routes_used"] == []
     assert "external_execution_approval" not in run_intake["data_posture"]
     assert run_intake["execution_trace"][-1]["kind"] == "local_source_registration"
 

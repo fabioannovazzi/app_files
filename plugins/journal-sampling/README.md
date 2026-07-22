@@ -57,7 +57,7 @@ fallback review surface.
 
 ## Supported Languages
 
-Working/output language supports `it`, `en`, `fr`, and `de`. Source-document language can be `auto`, `it`, `en`, `fr`, or `de`.
+Working/output language supports `it`, `en`, `fr`, `de`, and `es`. Source-document language can be `auto`, `it`, `en`, `fr`, `de`, or `es`.
 
 ## Release
 

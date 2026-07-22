@@ -131,13 +131,15 @@ RECOMMENDED_EXECUTION_POSTURE_FIELDS = {
 }
 EXTERNAL_DATA_POSTURE_FIELDS = {
     "external_connectors_used",
+    "external_routes_used",
     "upload_paths_used",
 }
-EXTERNAL_EXECUTION_APPROVAL_REQUIRED_FIELDS = {
-    "approved_at",
-    "approved_by",
-    "reason",
-    "scope",
+EXTERNAL_ROUTE_REQUIRED_FIELDS = {
+    "access_basis",
+    "destination_or_origin",
+    "network_used",
+    "payload_category",
+    "route",
 }
 EXECUTION_TRACE_REQUIRED_FIELDS = {
     "command",
@@ -527,29 +529,60 @@ def _validate_data_posture(
         errors.append(
             "run_intake.json data_posture.hosted_notebook_execution_used must be a boolean"
         )
-    if external_entries or remote_sql is True or hosted_execution is True:
-        approval = data_posture.get("external_execution_approval")
-        if not isinstance(approval, dict) or approval.get("approved") is not True:
+    external_activity = bool(
+        external_entries or remote_sql is True or hosted_execution is True
+    )
+    routes = data_posture.get("external_routes_used")
+    if routes is None:
+        if external_activity:
             errors.append(
-                "run_intake.json data_posture external execution requires "
-                "external_execution_approval.approved=true"
+                "run_intake.json data_posture external use requires a factual "
+                "external_routes_used record"
             )
-            return
-        missing_approval_fields = sorted(
-            EXTERNAL_EXECUTION_APPROVAL_REQUIRED_FIELDS - set(approval)
+        return
+    if not isinstance(routes, list):
+        errors.append(
+            "run_intake.json data_posture.external_routes_used must be a list"
         )
-        if missing_approval_fields:
+        return
+    if external_activity and not routes:
+        errors.append(
+            "run_intake.json data_posture external use requires a factual "
+            "external_routes_used record"
+        )
+        return
+    any_network_used = False
+    for index, route in enumerate(routes):
+        prefix = f"run_intake.json data_posture.external_routes_used[{index}]"
+        if not isinstance(route, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        missing_fields = sorted(EXTERNAL_ROUTE_REQUIRED_FIELDS - set(route))
+        unexpected_fields = sorted(set(route) - EXTERNAL_ROUTE_REQUIRED_FIELDS)
+        if missing_fields:
+            errors.append(f"{prefix} missing fields: " + ", ".join(missing_fields))
+        if unexpected_fields:
             errors.append(
-                "run_intake.json data_posture external_execution_approval "
-                "missing fields: " + ", ".join(missing_approval_fields)
+                f"{prefix} has unexpected fields: " + ", ".join(unexpected_fields)
             )
-        for field_name in sorted(EXTERNAL_EXECUTION_APPROVAL_REQUIRED_FIELDS):
-            value = approval.get(field_name)
+        for field_name in ("route", "destination_or_origin", "payload_category"):
+            value = route.get(field_name)
             if value is not None and (not isinstance(value, str) or not value.strip()):
-                errors.append(
-                    "run_intake.json data_posture external_execution_approval."
-                    f"{field_name} must be a non-empty string"
-                )
+                errors.append(f"{prefix}.{field_name} must be a non-empty string")
+        network_used = route.get("network_used")
+        if network_used is not None and not isinstance(network_used, bool):
+            errors.append(f"{prefix}.network_used must be a boolean")
+        any_network_used = any_network_used or network_used is True
+        access_basis = route.get("access_basis")
+        if access_basis is not None and (
+            not isinstance(access_basis, str) or not access_basis.strip()
+        ):
+            errors.append(f"{prefix}.access_basis must be null or a non-empty string")
+    if external_activity and routes and not any_network_used:
+        errors.append(
+            "run_intake.json data_posture.external_routes_used must record actual "
+            "network use"
+        )
 
 
 def _is_non_empty_string(value: Any) -> bool:
@@ -719,16 +752,16 @@ def _validate_execution_trace(
 
     if remote_locations:
         data_posture = run_intake.get("data_posture")
-        approval = (
-            data_posture.get("external_execution_approval")
+        routes = (
+            data_posture.get("external_routes_used")
             if isinstance(data_posture, dict)
             else None
         )
-        if not isinstance(approval, dict) or approval.get("approved") is not True:
+        if not isinstance(routes, list) or not routes:
             errors.append(
                 "run_intake.json execution_trace includes remote execution_location "
                 f"{', '.join(sorted(remote_locations))} but data_posture "
-                "external_execution_approval.approved=true is missing"
+                "external_routes_used is missing"
             )
 
     if not strict:

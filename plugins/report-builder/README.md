@@ -11,7 +11,7 @@ Build Report is a Codex-guided reporting workflow for variable finance and audit
 - Lets Codex map tables, ask only essential questions, and write narrative fields in the recipe.
 - Builds `report_tables.json`, `report_analysis.json`, `report_draft.md`, a styled `report.docx`, `report_audit.json`, and `used_recipe.json`.
 - Writes a local review handoff: `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and `final_artifacts.json` in the report output folder.
-- Supports working locales `it`, `en`, `fr`, and `de`.
+- Supports working locales `it`, `en`, `fr`, `de`, and `es`.
 
 ## What It Does Not Do
 

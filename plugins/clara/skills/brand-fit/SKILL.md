@@ -30,7 +30,8 @@ in the stored database snapshot. Do not describe that snapshot as a live shelf
 check. The local Retailer Signals report is not uploaded to the server.
 
 Codex owns semantic interpretation, report authorship, and independent review.
-The server and user need no model-provider API key. Product images and the HTML
-report remain local unless the user explicitly asks to share a finished output.
+That model work uses the user's existing ChatGPT plan and needs no separate API
+key. Product images and the HTML report remain local unless the user explicitly
+asks to share a finished output.
 Do not register the report in an advisory case, convert it to a presentation, or
 publish it unless the user separately asks for that follow-on work.

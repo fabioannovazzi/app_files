@@ -238,6 +238,59 @@ def test_plugin_inspects_entries_and_runs_deterministic_checks(
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) -> None:
+    core = load_core()
+    journal_path = tmp_path / "entries.xlsx"
+    support_dir = tmp_path / "support"
+    output_dir = tmp_path / "output"
+    support_dir.mkdir()
+    _save_workbook(
+        journal_path,
+        [
+            ["Movement", "Date", "Amount"],
+            ["ES-1", "2026-01-15", 75.25],
+        ],
+    )
+
+    core.run_entry_checks(
+        journal_path,
+        support_dir,
+        output_dir,
+        language="es-ES",
+        document_language="en",
+    )
+
+    review_notes = (output_dir / "review_notes.md").read_text(encoding="utf-8")
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    review_notes_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output["path"] == "review_notes.md"
+    )
+
+    assert review_notes.startswith(
+        "# Notas de revisión de la comprobación de asientos\n"
+    )
+    assert "- Idioma: es" in review_notes
+    assert "## Recuento por estado" in review_notes
+    assert "## Política de revisión" in review_notes
+    assert review_notes_output["required_text"] == [
+        "# Notas de revisión de la comprobación de asientos",
+        "## Recuento por estado",
+        "## Política de revisión",
+    ]
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
 def test_plugin_marks_missing_support_without_model_calls(tmp_path: Path) -> None:
     core = load_core()
     journal_path = tmp_path / "entries.xlsx"
@@ -350,6 +403,17 @@ def test_plugin_records_authorized_connector_and_requests_targeted_fallback(
     assert run_intake["data_posture"]["external_connectors_used"] == [
         "authorized-accounting-system"
     ]
+    assert run_intake["data_posture"]["external_routes_used"] == [
+        {
+            "route": "authorized-accounting-system",
+            "destination_or_origin": "authorized-accounting-system",
+            "payload_category": (
+                "accounting_system_export_materialized_as_local_support"
+            ),
+            "network_used": True,
+            "access_basis": None,
+        }
+    ]
     assert run_intake["assumptions"]["invoice_count"] == 2
 
 
@@ -364,7 +428,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "The user should not interact directly with CLI scripts" in skill_text
     assert "must not make direct OpenAI API calls" in skill_text
     assert "scripts/check_dependencies.py" in skill_text
-    assert "it`, `en`, `fr`, and `de`" in skill_text
+    assert "`it`, `en`, `fr`, `de`, and `es`" in skill_text
     assert "missing deterministic extraction script" in skill_text
     assert "Keep the improvement note local to chat or run artifacts." in skill_text
     assert "validate_check_entries_review" in skill_text
@@ -375,7 +439,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "model_router" not in script_text
 
 
-def test_static_page_exposes_four_language_switch() -> None:
+def test_static_page_exposes_five_language_switch() -> None:
     page = (ROOT / "static" / "shared" / "check-entries" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -385,10 +449,12 @@ def test_static_page_exposes_four_language_switch() -> None:
         'data-lang="en"',
         'data-lang="fr"',
         'data-lang="de"',
-        "Abbina le fatture senza chiedere a Maria di stamparne duecento.",
-        "Match invoices without asking for hundreds of printed copies.",
-        "Rapprocher les factures sans demander des centaines d'impressions.",
-        "Rechnungen zuordnen, ohne Hunderte Ausdrucke anzufordern.",
+        'data-lang="es"',
+        "Dalla scrittura campionata al supporto che la spiega.",
+        "From a sampled entry to the document that explains it.",
+        "De l'écriture échantillonnée au document qui l'explique.",
+        "Von der ausgewählten Buchung zum erklärenden Beleg.",
+        "Del asiento muestreado al documento que lo explica.",
         "authorized_connector_export",
         "invoice_inventory.json",
     ):

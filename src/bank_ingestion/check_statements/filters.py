@@ -1,4 +1,5 @@
 """Helpers to filter out non-transaction lines."""
+
 from __future__ import annotations
 
 from typing import Iterable
@@ -8,6 +9,14 @@ SUMMARY_KEYWORDS = {
     "de": ["zusammenfassung", "zinsen", "geb\u00fchren", "mitteilung"],
     "fr": ["r\u00e9capitulatif", "int\u00e9r\u00eats", "frais", "communication"],
     "en": ["summary", "interest", "fees", "notice"],
+    "es": [
+        "resumen",
+        "intereses",
+        "comisiones",
+        "comunicación",
+        "comunicacion",
+        "aviso",
+    ],
 }
 
 

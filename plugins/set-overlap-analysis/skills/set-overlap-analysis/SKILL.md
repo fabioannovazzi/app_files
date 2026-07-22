@@ -86,7 +86,7 @@ requirement.
 3. Run deterministic inspection:
 
 ```bash
-python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <en|it|fr|de>
+python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <en|it|fr|de|es>
 ```
 
 4. Read `inspection.json` and `suggested_recipe.json`. Ask only for unresolved

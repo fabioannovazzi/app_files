@@ -716,7 +716,7 @@ def _gate_markdown(payload: Mapping[str, Any]) -> str:
     lines = [
         "# Deck Revision Gate",
         "",
-        "This is a local Codex/Clara review artifact. The hosted server captured files only; it did not decide whether this is a deck-correction call.",
+        "This review artifact is stored locally. Codex/Clara may read it through the user's existing ChatGPT plan. The hosted server captured files only; it did not decide whether this is a deck-correction call.",
         "",
         "## Required Order",
         "",

@@ -299,6 +299,79 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
     assert "non battono" in document_text
 
 
+def test_spanish_run_localizes_review_packet_workbook_and_contract(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+    _save_workbook(
+        input_dir / "Empresa plan concordato.xlsx",
+        [
+            ["Concepto", "Importe"],
+            ["Deuda tributaria", 250000.25],
+        ],
+    )
+
+    core.run_concordato_review(
+        input_dir,
+        output_dir,
+        reference_date="2026-01-31",
+        language="es-ES",
+        document_language="es-ES",
+        tolerance=0.01,
+    )
+
+    review_packet = (output_dir / "review_packet.md").read_text(encoding="utf-8")
+    workbook = openpyxl.load_workbook(
+        output_dir / "concordato_tie_out_workpaper.xlsx",
+        data_only=True,
+        read_only=True,
+    )
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    outputs_by_path = {output["path"]: output for output in final_artifacts["outputs"]}
+
+    assert review_packet.startswith("# Paquete de revisión del plan de concordato\n")
+    assert "- Idioma: `es`" in review_packet
+    assert "## Recuentos deterministas" in review_packet
+    assert "## Revisión requerida por Codex" in review_packet
+    assert workbook.sheetnames == [
+        "Inventario",
+        "Importes candidatos",
+        "Coincidencias candidatas",
+    ]
+    assert workbook["Inventario"]["A1"].value == "path"
+    assert workbook["Importes candidatos"]["B1"].value == "source_role"
+    assert outputs_by_path["review_packet.md"]["required_text"] == [
+        "# Paquete de revisión del plan de concordato",
+        "## Recuentos deterministas",
+        "## Revisión requerida por Codex",
+    ]
+    assert outputs_by_path["concordato_tie_out_workpaper.xlsx"]["required_sheets"] == [
+        "Inventario",
+        "Importes candidatos",
+        "Coincidencias candidatas",
+    ]
+    assert set(
+        outputs_by_path["concordato_tie_out_workpaper.xlsx"]["required_sheet_headers"]
+    ) == {
+        "Inventario",
+        "Importes candidatos",
+        "Coincidencias candidatas",
+    }
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
 def test_concordato_request_more_documents_prefills_blocker_context(
     tmp_path: Path,
 ) -> None:
@@ -431,8 +504,9 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "Concordato Plan Review",
         "Révision du plan de concordat",
         "Concordato-Plan prüfen",
-        "Installa Vera dal marketplace",
-        "Install Vera from the marketplace",
+        "Installa Vera",
+        "Install Vera",
+        "Instalar Vera",
     ):
         assert snippet in page
 

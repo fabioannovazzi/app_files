@@ -58,6 +58,14 @@
     "Finding"
   ],
   "localized": {
+    "es": {
+      "title": "Revisi\u00f3n de Check Entries",
+      "reviewTitle": "Revisi\u00f3n de justificantes de asientos",
+      "queueTitle": "Asientos",
+      "detailTitle": "Asiento y justificante",
+      "detailHelp": "Compare el asiento, el justificante y el hallazgo antes de decidir.",
+      "search": "Buscar movimiento, PDF, estado, anomal\u00eda, beneficiario"
+    },
     "it": {
       "title": "Revisione Check Entries",
       "reviewTitle": "Revisione supporto scritture",

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterator
+from typing import Any, Iterator
 
 import pytest
 
@@ -49,28 +49,41 @@ def _capture_template_response(
     return captured
 
 
+def _copy_shape(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: _copy_shape(child) for key, child in value.items()}
+    if isinstance(value, list):
+        return [_copy_shape(child) for child in value]
+    return type(value)
+
+
 @pytest.mark.parametrize(
     ("lang", "page_title", "closing"),
     (
         (
             "en",
             "How your data is handled.",
-            "Local processing changes the route, not the nature, of the data.",
+            "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
         ),
         (
             "it",
             "Come vengono gestiti i tuoi dati.",
-            "L'elaborazione locale cambia il percorso, non la natura dei dati.",
+            "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
         ),
         (
             "fr",
             "Comment vos données sont traitées.",
-            "Le traitement local change le parcours, pas la nature des données.",
+            "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
         ),
         (
             "de",
             "So werden Ihre Daten verarbeitet.",
-            "Lokale Verarbeitung ändert den Weg, nicht die Art der Daten.",
+            "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
+        ),
+        (
+            "es",
+            "Cómo se tratan tus datos.",
+            "Una política para Vera y Clara. Sin documentación para cada prompt.",
         ),
     ),
 )
@@ -97,6 +110,16 @@ def test_data_handling_page_is_public_and_localized(
     assert isinstance(page, dict)
     assert page["title"] == page_title
     assert page["closing"] == closing
+
+
+def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:
+    english_landing = _get_landing_page_content("en")
+    spanish_landing = _get_landing_page_content("es")
+    english_data_handling = get_data_handling_content("en")
+    spanish_data_handling = get_data_handling_content("es")
+
+    assert _copy_shape(spanish_landing) == _copy_shape(english_landing)
+    assert _copy_shape(spanish_data_handling) == _copy_shape(english_data_handling)
 
 
 @pytest.mark.parametrize(
@@ -130,6 +153,13 @@ def test_data_handling_page_is_public_and_localized(
             "Sicher konzipiert.",
             "Für Codex konzipiert.",
         ),
+        (
+            "es",
+            "Abiertos por diseño.",
+            "Gratuitos por diseño.",
+            "Seguros por diseño.",
+            "Codex por diseño.",
+        ),
     ),
 )
 def test_homepage_design_copy_is_localized(
@@ -149,7 +179,7 @@ def test_homepage_design_copy_is_localized(
     assert content["bridge"]["title"] == bridge_title
 
 
-@pytest.mark.parametrize("lang", ("en", "it", "fr", "de"))
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
 def test_homepage_passes_free_section_to_template(
     monkeypatch: pytest.MonkeyPatch, lang: str
 ) -> None:
@@ -163,6 +193,26 @@ def test_homepage_passes_free_section_to_template(
     context = captured["context"]
     assert isinstance(context, dict)
     assert context["free"] == _get_landing_page_content(lang)["free"]
+
+
+def test_homepage_passes_complete_spanish_locale_context(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured = _capture_template_response(monkeypatch)
+    client = TestClient(app)
+
+    response = client.get("/?lang=es")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert isinstance(context, dict)
+    assert context["language_order"] == ["en", "it", "fr", "de", "es"]
+    assert context["language_names"]["es"] == "Español"
+    assert context["language_labels"]["es"] == "Es"
+    assert set(context["language_tooltips"]) == set(pdp_api.TOOLTIP_CONTENT["en"])
+    assert context["language_tooltips"]["slides_editor"] == (
+        "Crea y edita diapositivas ejecutivas directamente en el navegador."
+    )
 
 
 @pytest.mark.parametrize(
@@ -188,6 +238,11 @@ def test_homepage_passes_free_section_to_template(
             "Mparanza entwickelt Codex-Plugins. Jedes gibt Codex eine fachliche "
             "Arbeitsweise für professionelle Aufgaben.",
         ),
+        (
+            "es",
+            "Mparanza crea plugins de Codex. Cada uno proporciona a Codex una "
+            "forma de trabajo especializada para tareas profesionales.",
+        ),
     ),
 )
 def test_homepage_describes_mparanza_as_codex_plugins(
@@ -204,12 +259,12 @@ def test_homepage_uses_the_approved_english_security_copy() -> None:
     assert security["title"] == "Secure by design."
     assert (
         security["lead"]
-        == "In local Vera and Clara workflows, Mparanza does not receive your work."
+        == "In ordinary Vera and Clara workflows, Mparanza does not receive your client work."
     )
     assert (
         security["description"]
-        == "In local workflows, Vera and Clara run inside your existing Codex "
-        "environment. Your prompts, files, and outputs do not pass through Mparanza."
+        == "Ordinary plugin workflows run inside your existing Codex environment. "
+        "Your client prompts, files, and outputs do not pass through Mparanza."
     )
     assert security["cta_label"] == "See how your data is handled"
 
@@ -228,104 +283,174 @@ def test_homepage_places_free_and_security_after_open_by_design() -> None:
     assert 'href="{{ security.cta_href }}?lang={{ lang }}"' in template
 
 
-def test_data_handling_page_explains_local_execution_and_account_boundary() -> None:
+def test_data_handling_page_explains_the_two_processing_categories() -> None:
     page = get_data_handling_content("en")
     sections = {section["id"]: section for section in page["sections"]}
 
-    assert sections["local-execution"]["title"] == (
-        "Local processing is useful. It is not anonymization."
+    assert page["boundary"]["title"] == (
+        "Ordinary Vera and Clara functions inside Codex."
     )
-    assert "does not mean its contents stay out" in (
+    assert "do not automatically anonymise data" in page["boundary"]["intro"]
+    assert "local Python to filter or aggregate" in page["boundary"]["intro"]
+    assert "user's existing ChatGPT plan" in page["boundary"]["intro"]
+    assert (
+        "do not send client files, prompts, or model-context content"
+        in page["boundary"]["intro"]
+    )
+    assert sections["local-execution"]["title"] == (
+        "Local processing is used when it helps the work."
+    )
+    assert "names, documents, original language, or case facts" in (
         sections["local-execution"]["paragraphs"][1]
     )
-    assert sections["security"]["title"] == "Codex may read real client data."
-    assert "do not automatically anonymize case material" in (
+    assert sections["security"]["title"] == (
+        "Mapped once per workflow, not once per prompt."
+    )
+    assert "does not create a form, consent step, or record for each prompt" in (
         sections["security"]["paragraphs"][0]
     )
-    assert "documents, passages, facts, or other content" in page["boundary"]["intro"]
-    assert "enter the model context" in page["boundary"]["intro"]
     assert "session material" in sections["security"]["paragraphs"][1]
     assert sections["hosted-features"]["title"] == (
-        "Local, hosted, and external are different routes."
+        "Mparanza-hosted services are a separate boundary."
     )
-    assert "Public searches, portals, and external services" in (
+    assert "content needed for that service reaches Mparanza-controlled systems" in (
+        sections["hosted-features"]["paragraphs"][0]
+    )
+    assert "documented once at service level" in (
+        sections["hosted-features"]["paragraphs"][1]
+    )
+    assert "not a third Mparanza processing category" in (
         sections["hosted-features"]["paragraphs"][2]
     )
-    assert sections["gdpr"]["title"] == "Compliance follows the actual data flow."
-    assert "The firm chooses the Codex/OpenAI account" in (
-        sections["gdpr"]["paragraphs"][1]
+    assert "check for updates" in sections["hosted-features"]["paragraphs"][3]
+    assert "no client or work content" in sections["hosted-features"]["paragraphs"][3]
+    assert (
+        "explicit submission workflow" in sections["hosted-features"]["paragraphs"][3]
     )
-    assert "separate routes" in sections["gdpr"]["paragraphs"][1]
+    assert sections["gdpr"]["title"] == "One policy for Vera and Clara."
+    assert "first category when they run inside Codex" in (
+        sections["gdpr"]["paragraphs"][0]
+    )
+    assert "falls in the second category" in sections["gdpr"]["paragraphs"][1]
 
 
 @pytest.mark.parametrize(
-    ("lang", "not_anonymization", "purpose_based"),
+    (
+        "lang",
+        "automatic_anonymisation",
+        "local_python",
+        "chatgpt_plan",
+        "hosted_boundary",
+        "no_prompt_documentation",
+    ),
     (
         (
             "en",
-            "It is not anonymization",
-            "GDPR data minimisation is purpose-based",
+            "do not automatically anonymise data",
+            "Local Python can sort, calculate, reconcile, filter, aggregate",
+            "user's existing ChatGPT plan",
+            "Mparanza-hosted services are a separate boundary.",
+            "There is no prompt-by-prompt documentation.",
         ),
         (
             "it",
-            "Non è anonimizzazione",
-            "minimizzazione prevista dal GDPR dipende dallo scopo",
+            "non anonimizzano automaticamente i dati",
+            "Python in locale può ordinare, calcolare, riconciliare, filtrare, aggregare",
+            "piano ChatGPT già utilizzato dall'utente",
+            "I servizi hosted di Mparanza hanno un confine separato.",
+            "Non esiste documentazione prompt per prompt.",
         ),
         (
             "fr",
-            "Ce n'est pas une anonymisation",
-            "minimisation prévue par le RGPD dépend de la finalité",
+            "n'anonymisent pas automatiquement les données",
+            "Python peut localement trier, calculer, rapprocher, filtrer, agréger",
+            "offre ChatGPT existante de l'utilisateur",
+            "Les services hébergés par Mparanza ont un périmètre distinct.",
+            "Il n'existe aucune documentation prompt par prompt.",
         ),
         (
             "de",
-            "Sie ist keine Anonymisierung",
-            "Datenminimierung nach der DSGVO richtet sich nach dem Zweck",
+            "anonymisieren Daten nicht automatisch",
+            "Lokales Python kann sortieren, berechnen, abstimmen, filtern, aggregieren",
+            "bestehenden ChatGPT-Tarifs des Nutzers",
+            "Mparanza-gehostete Dienste haben eine separate Grenze.",
+            "Es gibt keine Dokumentation für jeden einzelnen Prompt.",
+        ),
+        (
+            "es",
+            "no anonimizan los datos automáticamente",
+            "Python en local puede ordenar, calcular, conciliar, filtrar, agregar",
+            "plan de ChatGPT que ya usa el usuario",
+            "Los servicios alojados por Mparanza tienen un límite separado.",
+            "No hay documentación para cada prompt.",
         ),
     ),
 )
-def test_data_handling_page_localizes_the_local_processing_limit(
-    lang: str, not_anonymization: str, purpose_based: str
+def test_data_handling_page_localizes_the_two_category_policy(
+    lang: str,
+    automatic_anonymisation: str,
+    local_python: str,
+    chatgpt_plan: str,
+    hosted_boundary: str,
+    no_prompt_documentation: str,
 ) -> None:
     page = get_data_handling_content(lang)
     sections = {section["id"]: section for section in page["sections"]}
 
-    assert not_anonymization in sections["local-execution"]["title"]
-    assert purpose_based in sections["gdpr"]["paragraphs"][0]
+    assert automatic_anonymisation in page["boundary"]["intro"]
+    assert local_python in sections["local-execution"]["paragraphs"][0]
+    assert chatgpt_plan in page["boundary"]["intro"]
+    assert sections["hosted-features"]["title"] == hosted_boundary
+    assert no_prompt_documentation in sections["hosted-features"]["paragraphs"][1]
 
 
 @pytest.mark.parametrize(
-    ("lang", "model_input", "automatic_limit"),
+    ("lang", "model_input", "workflow_mapping", "external_destination"),
     (
         (
             "en",
-            "documents, passages, facts, or other content it reads",
-            "do not automatically anonymize case material",
+            "names, documents, original language, or case facts",
+            "what normally stays local and what Codex may read",
+            "external destination, not a third Mparanza processing category",
         ),
         (
             "it",
-            "i documenti, i passaggi, i fatti o gli altri contenuti che legge",
-            "non anonimizzano automaticamente il materiale del caso",
+            "nomi, documenti, testo originale o fatti del caso",
+            "che cosa resta normalmente locale e che cosa può leggere Codex",
+            "destinazione esterna, non una terza categoria di trattamento Mparanza",
         ),
         (
             "fr",
-            "les documents, passages, faits ou autres contenus qu'il lit",
-            "n'anonymisent pas automatiquement les dossiers",
+            "noms, des documents, le texte original ou des faits propres au dossier",
+            "ce qui reste normalement local et ce que Codex peut lire",
+            "destination externe, pas une troisième catégorie de traitement Mparanza",
         ),
         (
             "de",
-            "Dokumente, Passagen, Fakten oder anderen Inhalte, die Codex liest",
-            "anonymisieren Fallmaterial nicht automatisch",
+            "Namen, Dokumente, Originalformulierungen oder Fallfakten",
+            "was normalerweise lokal bleibt und was Codex lesen kann",
+            "externes Ziel, keine dritte Mparanza-Verarbeitungskategorie",
+        ),
+        (
+            "es",
+            "nombres, documentos, el idioma original o hechos del caso",
+            "qué permanece normalmente en local y qué puede leer Codex",
+            "destino externo, no de una tercera categoría de tratamiento de Mparanza",
         ),
     ),
 )
-def test_data_handling_page_names_what_codex_reads_without_claiming_detection(
-    lang: str, model_input: str, automatic_limit: str
+def test_data_handling_page_names_model_data_and_workflow_level_mapping(
+    lang: str,
+    model_input: str,
+    workflow_mapping: str,
+    external_destination: str,
 ) -> None:
     page = get_data_handling_content(lang)
     sections = {section["id"]: section for section in page["sections"]}
 
-    assert model_input in page["boundary"]["intro"]
-    assert automatic_limit in sections["security"]["paragraphs"][0]
+    assert model_input in sections["local-execution"]["paragraphs"][1]
+    assert workflow_mapping in sections["security"]["paragraphs"][0]
+    assert external_destination in sections["hosted-features"]["paragraphs"][2]
 
 
 def test_data_handling_template_has_one_heading_and_a_main_target() -> None:

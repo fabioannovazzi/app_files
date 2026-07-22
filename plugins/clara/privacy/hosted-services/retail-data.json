@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "service_id": "retail-data",
+  "display_name": "Mparanza Retail Data and Mapping Service",
+  "provider_or_recipients": [
+    "Mparanza Attribute Reporting service"
+  ],
+  "workflows": [
+    "attribute-reporting",
+    "brand-fit"
+  ],
+  "governed_paths": [
+    "skills/attribute-reporting/SKILL.md",
+    "skills/brand-fit/SKILL.md",
+    "modules/attribute-reporting/skills/attribute-reporting/SKILL.md",
+    "modules/attribute-reporting/skills/attribute-reporting/references/server-boundary.md",
+    "modules/attribute-reporting/skills/brand-fit/SKILL.md",
+    "modules/attribute-reporting/scripts/server_bridge_client.py",
+    "modules/attribute-reporting/scripts/project_pipeline.py",
+    "repository/modules/pdp/legal_content.py"
+  ],
+  "trigger": "The user selects the installed current-database Retailer Signals workflow, the downstream Brand Fit workflow, or an explicit development fresh-scrape persistence path.",
+  "automatic": false,
+  "data_sent": [
+    {
+      "id": "authentication",
+      "when": "When requesting or consuming a magic link or using a persisted authenticated session",
+      "content": "Authorized email and redirect path, consumed magic link or Mparanza session cookie, and ordinary connection metadata"
+    },
+    {
+      "id": "retailer-signals-job",
+      "when": "When requesting taxonomy, evidence packages, or mapping worksets",
+      "content": "Retailer, category, taxonomy version and hash, evidence job and mapping submission identifiers, mapping mode, and explicit correction reason when used"
+    },
+    {
+      "id": "reviewed-mapping-submission",
+      "when": "At the explicit authenticated server-write checkpoint",
+      "content": "Pinned mapping workset identity and hash, idempotency key, complete mapping tasks, Codex decisions, validated mappings, and independent mapping review"
+    },
+    {
+      "id": "brand-fit-job",
+      "when": "When creating a downstream Brand Fit package",
+      "content": "Actor-owned source evidence-job identifier, brand source retailer, brand name, source Retailer Signals report SHA-256 and verdict, and optional owned or retailer category aliases; the local report file is not sent"
+    },
+    {
+      "id": "development-scrape-persistence",
+      "when": "Only when an app_files development run explicitly requests a fresh scrape",
+      "content": "Structured locally captured retailer listing and product-detail records written to the server-backed database; this upload path is not available in the installed Clara plugin"
+    }
+  ],
+  "data_returned": [
+    {
+      "id": "taxonomy-and-worksets",
+      "when": "During Retailer Signals preparation and mapping",
+      "content": "Published category taxonomy, immutable public mapping worksets, task coverage, source identifiers, mapping acceptance receipts, and sanitization/provenance receipts"
+    },
+    {
+      "id": "retailer-evidence-packages",
+      "when": "After actor-owned evidence jobs are ready",
+      "content": "Checksum-bound structured retail records, cohort comparisons, accepted mapping state, package provenance, and public image URLs; packages contain no server paths or image bytes"
+    },
+    {
+      "id": "brand-fit-package",
+      "when": "After an actor-owned Brand Fit job is ready",
+      "content": "Checksum-bound current retailer-presence rows, brand-owned catalogue rows, accepted mapping-state snapshot, scope metrics, candidate-product evidence, timestamps, and public image URLs"
+    }
+  ],
+  "access": {
+    "arrangement": "The installed bridge uses an authenticated Mparanza session. Artifacts and jobs are actor-owned and another authenticated user receives no information about whether an artifact exists. The plugin receives no database credentials. Development persistence uses the app_files runtime rather than the installed plugin.",
+    "controls": [
+      "The remote bridge accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+      "A supplied cookie is attached only to the exact approved origin; a persistent cookie jar must be a private 0600 regular file outside run and repository folders.",
+      "Downloads are size-limited, origin-pinned, content-type checked, checksum-verified, and safely extracted.",
+      "Mapping writes are transactional, idempotent, and require the complete independently reviewed artifact set."
+    ]
+  },
+  "retention": {
+    "status": "partially_documented",
+    "statement": "The bridge prunes evidence jobs after 30 days, mapping worksets after 7 days, and mapping submissions after 180 days, subject to live dependency retention and actor quotas. Those periods do not apply to central structured product records, taxonomy, accepted mappings, retailer-presence data, or owned-catalogue data; their automatic retention schedule is not established by the reviewed source."
+  },
+  "security_controls": [
+    {
+      "id": "report-not-uploaded",
+      "control": "Local Retailer Signals and Brand Fit HTML, report models, semantic reviews, browser QA, and hydrated image bytes are not uploaded by the installed workflows."
+    },
+    {
+      "id": "source-report-hash-only",
+      "control": "Brand Fit sends the source report hash, verdict, and actor-owned evidence-job identifier rather than the report file."
+    },
+    {
+      "id": "no-direct-database-access",
+      "control": "The installed plugin uses the authenticated bridge and never receives direct database credentials."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "hosted_service_boundary_review_of_source",
+    "source_fingerprint": "e9eb0f50e6a4f76ce2b1c6f3611c947540a7f9a6d7f5be6bf976e92ca10a356b"
+  }
+}

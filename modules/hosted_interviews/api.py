@@ -94,7 +94,7 @@ MAX_SIDEBAND_TURNS = 18
 MAX_TRANSCRIPT_TAIL_CHARS = 5_000
 MAX_PARTNER_WHISPER_CHARS = 240
 STARTED_ATTEMPT_STALE_SECONDS = DEFAULT_INTERVIEW_DURATION_SECONDS + 5 * 60
-SUPPORTED_LANGUAGES = {"it", "en", "fr", "de"}
+SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
 INTERVIEW_STATUS_READY = "ready"
 INTERVIEW_STATUS_STARTED = "started"
 INTERVIEW_STATUS_COMPLETED = "completed"
@@ -123,6 +123,8 @@ POST_COMPLETION_EVENT_TYPES = {
 MIN_COMPLETED_INTERVIEWEE_WORDS = 25
 MIN_PLUGIN_IMPROVEMENT_INTERVIEWEE_WORDS = 3
 NON_SUBSTANTIVE_INTERVIEWER_TURN_NORMALIZED = {
+    "de acuerdo",
+    "de acuerdo entiendo",
     "daccord je vois",
     "d accord je vois",
     "einen moment",
@@ -131,8 +133,10 @@ NON_SUBSTANTIVE_INTERVIEWER_TURN_NORMALIZED = {
     "one possibility is",
     "right i see",
     "take",
+    "entiendo",
     "un attimo",
     "un instant",
+    "un momento",
 }
 INTERVIEW_MODE_CASE = "case_interview"
 INTERVIEW_MODE_PLUGIN_IMPROVEMENT = "plugin_improvement_interview"
@@ -859,6 +863,8 @@ def _thinking_bridge_examples(language: str) -> str:
         return "'Un instant.' or 'D’accord, je vois.'"
     if normalized.startswith("de"):
         return "'Einen Moment.' or 'Gut, ich verstehe.'"
+    if normalized.startswith("es"):
+        return "'Un momento.' or 'De acuerdo, entiendo.'"
     return "'One moment.' or 'Right, I see.'"
 
 
@@ -888,6 +894,8 @@ def _plugin_improvement_closing_handoff(language: str) -> str:
         return "Merci. Appuyez maintenant sur « End and save »."
     if normalized.startswith("de"):
         return "Vielen Dank. Klicken Sie jetzt auf „End and save“."
+    if normalized.startswith("es"):
+        return 'Gracias. Pulsa "Finalizar y guardar" ahora.'
     return 'Thank you. Press "End and save" now.'
 
 
@@ -2566,33 +2574,58 @@ def hosted_interview_page(token: str, request: Request):
         record = _load_record_for_token(token)
         language = record.get("language", "it")
         is_italian = str(language).lower().startswith("it")
+        is_spanish = str(language).lower().startswith("es")
         session_ready = record.get("status") != INTERVIEW_STATUS_COMPLETED
         if not session_ready:
             status_message = (
-                "Intervista completata" if is_italian else "Interview completed"
+                "Intervista completata"
+                if is_italian
+                else "Entrevista completada" if is_spanish else "Interview completed"
             )
             status_detail = (
                 "Grazie. Le risposte sono state salvate."
                 if is_italian
-                else "Thank you. The responses have been saved."
+                else (
+                    "Gracias. Las respuestas se han guardado."
+                    if is_spanish
+                    else "Thank you. The responses have been saved."
+                )
             )
         elif record.get("status") in RETRYABLE_INTERVIEW_STATUSES:
-            status_message = "Puoi riprovare" if is_italian else "You can try again"
+            status_message = (
+                "Puoi riprovare"
+                if is_italian
+                else "Puedes volver a intentarlo" if is_spanish else "You can try again"
+            )
             status_detail = (
                 "Il browser chiederà di nuovo l'accesso al microfono."
                 if is_italian
-                else "The browser will request microphone access again."
+                else (
+                    "El navegador volverá a solicitar acceso al micrófono."
+                    if is_spanish
+                    else "The browser will request microphone access again."
+                )
             )
         else:
-            status_message = "Prima di iniziare" if is_italian else "Before you begin"
+            status_message = (
+                "Prima di iniziare"
+                if is_italian
+                else "Antes de empezar" if is_spanish else "Before you begin"
+            )
             status_detail = (
                 "Il browser ti chiederà di autorizzare il microfono. Le tue "
                 "risposte vocali verranno registrate e trascritte; le domande "
                 "cambieranno in base alle tue risposte."
                 if is_italian
-                else "The browser will ask for microphone access. Your spoken "
-                "responses will be recorded and transcribed; the questions will "
-                "change based on your answers."
+                else (
+                    "El navegador te pedirá permiso para usar el micrófono. "
+                    "Tus respuestas de voz se grabarán y transcribirán; las "
+                    "preguntas cambiarán según tus respuestas."
+                    if is_spanish
+                    else "The browser will ask for microphone access. Your spoken "
+                    "responses will be recorded and transcribed; the questions will "
+                    "change based on your answers."
+                )
             )
     except HostedInterviewError as exc:
         record = {}
@@ -2608,12 +2641,16 @@ def hosted_interview_page(token: str, request: Request):
         }.get(str(exc), "Non è possibile aprire questa intervista.")
         status_detail = "Chiedi a chi ti ha invitato di inviarti un nuovo link."
     participant_intro = record.get("participant_intro", "")
-    if not participant_intro and language == "it":
-        try:
-            campaign = get_interview_campaign(record.get("interview_campaign_id", ""))
-            participant_intro = campaign.participant_intro
-        except UnknownInterviewCampaignError:
-            participant_intro = ""
+    interview_title = record.get("interview_title", "Interview")
+    try:
+        campaign = get_interview_campaign(record.get("interview_campaign_id", ""))
+        localized_title, localized_intro = campaign.participant_copy(str(language))
+        if localized_title != campaign.interview_title:
+            interview_title = localized_title
+        if not participant_intro:
+            participant_intro = localized_intro
+    except UnknownInterviewCampaignError:
+        pass
     if not participant_intro:
         participant_intro = record.get("purpose", "")
     response = templates.TemplateResponse(
@@ -2625,7 +2662,7 @@ def hosted_interview_page(token: str, request: Request):
             "session_ready": session_ready,
             "status_message": status_message,
             "status_detail": status_detail,
-            "interview_title": record.get("interview_title", "Interview"),
+            "interview_title": interview_title,
             "page_label": record.get("participant_name") or record.get("case_name", ""),
             "participant_intro": participant_intro,
             "interview_mode": record.get("interview_mode", INTERVIEW_MODE_CASE),

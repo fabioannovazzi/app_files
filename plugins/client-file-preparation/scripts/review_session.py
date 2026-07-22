@@ -87,6 +87,7 @@ CONFIDENCE_COPY = {
     "en": {"alta": "high", "media": "medium", "bassa": "low"},
     "fr": {"alta": "élevée", "media": "moyenne", "bassa": "faible"},
     "de": {"alta": "hoch", "media": "mittel", "bassa": "niedrig"},
+    "es": {"alta": "alta", "media": "media", "bassa": "baja"},
 }
 
 CATEGORY_COPY = {
@@ -148,6 +149,29 @@ CATEGORY_COPY = {
         CATEGORY_UK_HMRC_NOTICE: "britische HMRC-Mitteilungen",
         CATEGORY_UK_BANK_TAX: "britische Bank- und Kapitalertragsteuerbescheinigungen",
     },
+    "es": {
+        "730 / precompilata": "declaración italiana 730 / precompletada",
+        "fatture elettroniche XML": "facturas electrónicas XML",
+        "ricevute sanitarie": "recibos médicos",
+        "mutuo": "hipoteca",
+        "affitto / locazione": "alquiler / arrendamiento",
+        "assicurazioni": "seguros",
+        "previdenza": "seguridad social",
+        "avvisi / comunicazioni": "avisos / comunicaciones",
+        "contratti": "contratos",
+        "documenti non classificati": "documentos sin clasificar",
+        CATEGORY_CH_GE_TAX: "documentos fiscales de Ginebra",
+        CATEGORY_CH_ZH_TAX: "documentos fiscales de Zúrich",
+        CATEGORY_CH_TAX_RETURN: "declaración fiscal suiza",
+        CATEGORY_CH_TAX_ASSESSMENT: "liquidación fiscal suiza",
+        CATEGORY_CH_SALARY_CERTIFICATE: "certificado salarial suizo",
+        CATEGORY_CH_BANK_TAX: "certificados fiscales bancarios y de retención suizos",
+        CATEGORY_UK_YEAR_END_PAYROLL: "documentos británicos P60 / P45 / P11D",
+        CATEGORY_UK_PAYSLIP: "nómina británica",
+        CATEGORY_UK_SELF_ASSESSMENT: "declaración británica Self Assessment",
+        CATEGORY_UK_HMRC_NOTICE: "avisos británicos de HMRC",
+        CATEGORY_UK_BANK_TAX: "certificados fiscales bancarios y de inversión británicos",
+    },
 }
 
 
@@ -167,30 +191,35 @@ def _localized_note(value: str, language: str, target_year: int | None = None) -
             "en": "classification uncertain",
             "fr": "classification incertaine",
             "de": "Klassifizierung unklar",
+            "es": "clasificación incierta",
         }[language]
     if value.startswith("anno non coerente"):
         return {
             "en": f"year differs from target {target_year}",
             "fr": f"année différente de la cible {target_year}",
             "de": f"Jahr weicht vom Zieljahr {target_year} ab",
+            "es": f"el año difiere del objetivo {target_year}",
         }[language]
     if value.startswith("immagine"):
         return {
             "en": "image: possible receipt or scanned document",
             "fr": "image : reçu possible ou document numérisé",
             "de": "Bild: möglicher Beleg oder gescanntes Dokument",
+            "es": "imagen: posible recibo o documento escaneado",
         }[language]
     if value.startswith("XML generico"):
         return {
             "en": "generic XML: FatturaPA structure not identified",
             "fr": "XML générique : structure FatturaPA non identifiée",
             "de": "Generisches XML: FatturaPA-Struktur nicht erkannt",
+            "es": "XML genérico: no se ha identificado la estructura FatturaPA",
         }[language]
     if value == "collegamento simbolico non seguito":
         return {
             "en": "symbolic link not followed",
             "fr": "lien symbolique non suivi",
             "de": "symbolischer Link wurde nicht verfolgt",
+            "es": "no se ha seguido el enlace simbólico",
         }[language]
     return value
 
@@ -318,6 +347,22 @@ def _write_review_handoff_card(
             "save": "Entscheidungen speichern mit",
             "apply": "Entscheidungen anwenden mit",
             "notice": "Dauerhaftes Speichern und Anwenden erfordern die MCP- oder lokale Server-Prüfansicht. Der statische HTML-Fallback kann Entscheidungs-JSON nur kopieren oder herunterladen.",
+        },
+        "es": {
+            "product": "Preparación del expediente del cliente",
+            "title": "Entrega para revisión",
+            "run": "ID de ejecución",
+            "payload": "Datos de revisión",
+            "intake": "Datos de ejecución",
+            "pending": "Decisiones pendientes",
+            "applied": "Decisiones aplicadas",
+            "artifacts": "Artefactos finales",
+            "heading": "Revisión en Codex",
+            "validate": "Validar los datos con",
+            "render": "Abrir el área de revisión con",
+            "save": "Guardar las decisiones con",
+            "apply": "Aplicar las decisiones con",
+            "notice": "El guardado y la aplicación persistentes requieren la superficie MCP o el servidor local. El modo HTML estático solo permite copiar o descargar el JSON de decisiones.",
         },
     }[language]
     lines = [
@@ -563,24 +608,28 @@ def _uncertain_document_items(
                 "en": "unclassified document",
                 "fr": "document non classé",
                 "de": "nicht klassifiziertes Dokument",
+                "es": "documento sin clasificar",
             },
             "classification_below_high": {
                 "it": "classificazione non alta",
                 "en": "classification confidence below high",
                 "fr": "niveau de confiance inférieur à élevé",
                 "de": "Klassifizierungsvertrauen unter hoch",
+                "es": "confianza de clasificación inferior a alta",
             },
             "year_outside_target": {
                 "it": "anno fuori target",
                 "en": "year outside target",
                 "fr": "année hors cible",
                 "de": "Jahr außerhalb des Zieljahres",
+                "es": "año fuera del objetivo",
             },
             "text_unreadable": {
                 "it": "testo non leggibile",
                 "en": "text unreadable",
                 "fr": "texte illisible",
                 "de": "Text nicht lesbar",
+                "es": "texto ilegible",
             },
         }
         reasons = [
@@ -618,6 +667,7 @@ def _missing_document_items(
         "en": "Missing/uncertain request",
         "fr": "Demande manquante/incertaine",
         "de": "Fehlende/unklare Anforderung",
+        "es": "Solicitud faltante o incierta",
     }[language]
     return [
         _base_item(
@@ -723,12 +773,14 @@ def _duplicate_items(
                         "en": "identical hash",
                         "fr": "empreinte identique",
                         "de": "identischer Hash",
+                        "es": "hash idéntico",
                     },
                     "nome-dimensione-simile": {
                         "it": "nome e dimensione simili",
                         "en": "similar name and size",
                         "fr": "nom et taille similaires",
                         "de": "ähnlicher Name und ähnliche Größe",
+                        "es": "nombre y tamaño similares",
                     },
                 }
                 .get(candidate.duplicate_type, {})
@@ -774,6 +826,7 @@ def _review_columns(language: str) -> list[dict[str, str]]:
         "en": ("Type", "Item", "Suggested action", "Source", "Output", "Status"),
         "fr": ("Type", "Élément", "Action suggérée", "Source", "Sortie", "Statut"),
         "de": ("Typ", "Element", "Empfohlene Aktion", "Quelle", "Ausgabe", "Status"),
+        "es": ("Tipo", "Elemento", "Acción sugerida", "Fuente", "Salida", "Estado"),
     }[language]
     return [
         {"field": field, "label": label}
@@ -921,6 +974,28 @@ def _required_text_by_path(
             "email_draft": "# Entwurf der Mandanten-E-Mail",
             "email_empty": "Aus den formalen Prüfungen ergab sich keine Anfrage an den Mandanten",
             "handoff": "Übergabe zur Prüfung",
+        },
+        "es": {
+            "year_missing": "no especificado",
+            "environment": "# Comprobación del entorno",
+            "index": "# Índice del expediente del cliente",
+            "year": "Año objetivo",
+            "files": "Archivos revisados",
+            "missing": "# Documentos faltantes o inciertos",
+            "questions": "# Preguntas internas del despacho",
+            "memo": "# Informe de preparación del expediente del cliente",
+            "client": "Cliente",
+            "memo_year": "Año",
+            "documents": "## Documentos recibidos",
+            "memo_missing": "## Elementos faltantes o inciertos",
+            "studio": "# Ficha de preparación para el despacho",
+            "summary": "## Resumen del expediente",
+            "fields": "Campos fiscales estructurados extraídos",
+            "studio_missing": "## Elementos faltantes o inciertos",
+            "email_subject": "Asunto: Documentos y aclaraciones necesarios para completar el expediente",
+            "email_draft": "# Borrador de correo al cliente",
+            "email_empty": "Las comprobaciones formales no generaron ninguna solicitud al cliente",
+            "handoff": "Entrega para revisión",
         },
     }[language]
     fiscal_copy = SUMMARY_COPY[language]
@@ -1125,6 +1200,10 @@ def write_run_intake(
             "Die Skripte prüfen die Dateien des Mandantenordners lokal und erzeugen für die Oberfläche Prüfartefakte mit größenbegrenzten Vorschauen.",
             "Standardmäßig werden keine externen Konnektoren, Upload-Pfade, Remote-SQL-Abfragen oder gehosteten Notebooks verwendet.",
         ],
+        "es": [
+            "Los scripts examinan localmente los archivos de la carpeta del cliente y generan artefactos de revisión con vistas previas de tamaño limitado para la interfaz.",
+            "De forma predeterminada no se utilizan conectores externos, rutas de carga, SQL remoto ni cuadernos alojados.",
+        ],
     }[language]
     if enable_ocr or require_ocr:
         data_posture_notes.append(
@@ -1133,6 +1212,7 @@ def write_run_intake(
                 "en": "OCR, when enabled or required, reads local document files before review artifacts with size-limited previews are written.",
                 "fr": "Lorsqu’il est activé ou requis, l’OCR lit les documents locaux avant la production des artefacts de revue avec des aperçus de taille limitée.",
                 "de": "Wenn OCR aktiviert oder erforderlich ist, liest es lokale Dokumente, bevor Prüfartefakte mit größenbegrenzten Vorschauen erzeugt werden.",
+                "es": "Cuando está activado o es necesario, el OCR lee los documentos locales antes de generar artefactos de revisión con vistas previas de tamaño limitado.",
             }[language]
         )
     payload = {
@@ -1270,6 +1350,7 @@ def write_review_session_artifacts(
                 "en": "Operational brief for the firm",
                 "fr": "Fiche opérationnelle pour le cabinet",
                 "de": "Arbeitsübersicht für die Kanzlei",
+                "es": "Ficha operativa para el despacho",
             }[language],
             output_dir,
             "07_scheda_codex_per_studio.md",
@@ -1284,6 +1365,7 @@ def write_review_session_artifacts(
                 "en": "File-preparation memo for the firm",
                 "fr": "Note de préparation pour le cabinet",
                 "de": "Arbeitsvermerk für die Kanzlei",
+                "es": "Informe de preparación para el despacho",
             }[language],
             output_dir,
             "06_memo_istruttoria.md",
@@ -1298,6 +1380,7 @@ def write_review_session_artifacts(
                 "en": "Draft client email",
                 "fr": "Projet d’e-mail au client",
                 "de": "Entwurf der Mandanten-E-Mail",
+                "es": "Borrador de correo al cliente",
             }[language],
             output_dir,
             "04_bozza_email_cliente.md",
@@ -1332,12 +1415,14 @@ def write_review_session_artifacts(
                 "en": "Check proposed items against the local files before applying decisions.",
                 "fr": "Vérifier les éléments proposés par rapport aux fichiers locaux avant d’appliquer les décisions.",
                 "de": "Vorgeschlagene Punkte vor der Anwendung von Entscheidungen anhand der lokalen Dateien prüfen.",
+                "es": "Comprobar los elementos propuestos con los archivos locales antes de aplicar las decisiones.",
             }[language],
             {
                 "it": "La review include, quando disponibili, anteprime testuali limitate e professionalmente utili. I limiti servono a mantenere gestibile l’interfaccia; non anonimizzano i contenuti.",
                 "en": "The review includes size-limited, professionally useful text previews when available. The limits keep the interface manageable; they do not anonymize the content.",
                 "fr": "La revue inclut, lorsqu’ils sont disponibles, des aperçus textuels de taille limitée et utiles au travail professionnel. Ces limites rendent l’interface gérable; elles n’anonymisent pas le contenu.",
                 "de": "Die Prüfung enthält, soweit verfügbar, größenbegrenzte und fachlich nützliche Textvorschauen. Die Grenzen halten die Oberfläche handhabbar; sie anonymisieren die Inhalte nicht.",
+                "es": "La revisión incluye, cuando están disponibles, vistas previas de texto de tamaño limitado y útiles para el trabajo profesional. Los límites mantienen la interfaz manejable; no anonimizan el contenido.",
             }[language],
         ],
         "source_artifacts": {},
@@ -1431,6 +1516,11 @@ def write_review_session_artifacts(
             "caveat": "ui_decisions.json bleibt ausstehend, bis eine Codex-Prüfung, die lokale Oberfläche oder der Fallback Entscheidungen erfasst.",
             "review": "review_payload.json vor der Überarbeitung des Kanzleivermerks oder der Mandanten-E-Mail prüfen.",
             "persist": "Annahme-, Änderungs- oder Ablehnungsentscheidungen bei der Prüfung in ui_decisions.json erfassen.",
+        },
+        "es": {
+            "caveat": "ui_decisions.json permanece pendiente hasta que una revisión de Codex, la interfaz local o el modo alternativo registren las decisiones.",
+            "review": "Revisar review_payload.json antes de modificar el informe del despacho o el correo al cliente.",
+            "persist": "Registrar en ui_decisions.json las decisiones de aceptación, modificación o rechazo cuando se realice la revisión.",
         },
     }[language]
     final_payload = {

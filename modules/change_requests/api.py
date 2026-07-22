@@ -216,7 +216,7 @@ class ChangeRequestInterviewSubmission(BaseModel):
     plugin: Literal["clara", "vera"]
     plugin_version: str = Field(min_length=1, max_length=128)
     opportunity: str = Field(min_length=1, max_length=4_000)
-    language: Literal["it", "en", "fr", "de"] = "it"
+    language: Literal["it", "en", "fr", "de", "es"] = "it"
 
 
 class ChangeRequestInterviewReceipt(ChangeRequestReceipt):
@@ -402,6 +402,10 @@ def start_change_request_interview(
                     "Klären Sie in einer Minute das gewünschte konkrete Ergebnis. "
                     "Nennen Sie keine Kunden und teilen Sie keine Kundendaten."
                 ),
+                "es": (
+                    "En un minuto, aclara el resultado concreto que deseas. "
+                    "No menciones a clientes ni compartas sus datos."
+                ),
             }[payload.language]
             plugin_name = payload.plugin.title()
             opening_question = {
@@ -409,6 +413,7 @@ def start_change_request_interview(
                 "en": f"What should {plugin_name} do better?",
                 "fr": f"Que devrait mieux faire {plugin_name} ?",
                 "de": f"Was sollte {plugin_name} besser machen?",
+                "es": f"¿Qué debería hacer mejor {plugin_name}?",
             }[payload.language]
             _token, interview = create_prepared_interview(
                 PreparedInterviewRequest(

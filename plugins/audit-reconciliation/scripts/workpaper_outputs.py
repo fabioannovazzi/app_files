@@ -7,9 +7,9 @@ the required Excel and Word deliverables from deterministic reconciliation rows.
 
 from __future__ import annotations
 
-from decimal import Decimal, InvalidOperation
 import json
 import sys
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
@@ -145,6 +145,114 @@ REPORT_TEXT: dict[str, dict[str, str]] = {
         "no_rows": "Nessuna riga disponibile per questa sezione.",
         "rows": "righe",
         "amount": "importo",
+    },
+    "es": {
+        "executive_summary": "Resumen ejecutivo",
+        "scope_method": "Alcance y método",
+        "how_to_read": "Cómo interpretar los resultados",
+        "external_evidence": "Evidencia externa considerada",
+        "rollforward": "Control de saldo / roll-forward",
+        "account_rollforward": "Control de saldos del mayor y el diario",
+        "post_cutoff": "Evidencia posterior a la fecha de corte",
+        "post_cutoff_detail": "Principales candidatos",
+        "additional_analyses": "Análisis deterministas adicionales",
+        "aging": "Antigüedad de partidas abiertas",
+        "evidence_concentration": "Concentración por tipo de evidencia",
+        "review_signals": "Líneas prioritarias para revisión",
+        "document_source_map": "Mapa de documentos y fuentes",
+        "reversal_candidates": "Posibles reversiones, traspasos o compensaciones",
+        "cutoff_window": "Movimientos próximos a la fecha de corte",
+        "checks": "Controles automáticos",
+        "review": "Revisión manual de Codex",
+        "limitations": "Limitaciones del procedimiento",
+        "excel_reference": "Referencia al archivo Excel",
+        "scope_copy": (
+            "El procedimiento concilia las partidas abiertas con la evidencia "
+            "contable, bancaria y documental disponible. Las reglas son "
+            "deterministas: una partida solo se cierra cuando se conserva en el "
+            "libro una regla reproducible y una referencia a la fuente."
+        ),
+        "executive_copy": (
+            "Este documento resume el resultado de la conciliación y explica cómo "
+            "interpretar las categorías. No sustituye la revisión línea por línea: "
+            "el libro Excel sigue siendo el papel de trabajo principal para "
+            "comprobar fuentes, reglas, importes y notas de revisión."
+        ),
+        "status_closed": (
+            "Cerrada por evidencia cualificada: la línea queda saldada o cerrada "
+            "conforme a las reglas y los supuestos indicados."
+        ),
+        "status_probable_payment": (
+            "Pago probable pendiente de verificación: existe un movimiento bancario "
+            "probable vinculado a la línea, pero aún debe confirmarse su asignación "
+            "a la línea o al documento antes de considerarla cerrada definitivamente."
+        ),
+        "status_open_supported": (
+            "Abierta pero respaldada: la posición sigue respaldada por los documentos "
+            "disponibles; no se encontró evidencia externa específica que la cierre."
+        ),
+        "status_needs_evidence": (
+            "Requiere evidencia adicional: existe una posible explicación, pero aún "
+            "falta un documento necesario para considerarla evidencia sólida."
+        ),
+        "status_unresolved": (
+            "No resuelta: el procedimiento no encontró vínculos suficientes; se "
+            "requiere revisión manual o documentación adicional."
+        ),
+        "external_copy": (
+            "Esta sección resume la evidencia externa agregada, por ejemplo de bancos, "
+            "factores, operadores de pago, lotes de pago o compensaciones. Los importes "
+            "agregados ayudan a entender el conjunto, pero la conclusión auditable "
+            "permanece línea por línea en el libro."
+        ),
+        "rollforward_copy": (
+            "Esta sección compara los movimientos contables disponibles con el saldo "
+            "reconstruido. Es un control de coherencia agregado y no sustituye la "
+            "conciliación de cada línea."
+        ),
+        "account_rollforward_copy": (
+            "Esta sección compara, para cada cuenta significativa, los saldos inicial "
+            "y final del mayor con los movimientos del diario. Una diferencia indica "
+            "que el perímetro de movimientos no explica por completo el saldo contable "
+            "y debe investigarse antes de extraer conclusiones."
+        ),
+        "post_cutoff_copy": (
+            "Esta sección resume la evidencia posterior a la fecha de referencia que "
+            "comparte una referencia documental con una partida abierta. Puede explicar "
+            "cobros, pagos o cancelaciones posteriores, pero no cierra por sí sola la "
+            "posición en la fecha de corte."
+        ),
+        "additional_analyses_copy": (
+            "Los análisis siguientes son controles exploratorios deterministas: "
+            "señalan concentraciones, excepciones y vínculos entre fuentes. Por sí "
+            "solos no modifican el estado de conciliación de las líneas."
+        ),
+        "checks_copy": (
+            "Los controles automáticos comprueban la integridad técnica, la coherencia "
+            "de las líneas procesadas y la presencia del paquete de revisión. Los "
+            "elementos con AVISO o ERROR deben resolverse o explicarse antes de usar "
+            "el trabajo como base para una conclusión."
+        ),
+        "review_copy": (
+            "El paquete de revisión selecciona líneas de importe elevado, líneas "
+            "dudosas y una muestra reproducible. Las líneas PENDIENTES requieren "
+            "confirmación o una nota manual antes de completar la revisión."
+        ),
+        "limitations_copy": (
+            "Una línea no conciliada no demuestra automáticamente un error o una "
+            "irregularidad. Significa que los documentos disponibles y las reglas "
+            "aplicadas no aportaron evidencia suficiente. Pueden ser necesarios "
+            "documentos fuente, evidencia bancaria o del factor, acuerdos de "
+            "compensación o detalles de asignación."
+        ),
+        "excel_copy": (
+            "El detalle auditable línea por línea se encuentra en el libro Excel: "
+            "cada línea conserva la fuente, la regla, el estado, el importe, la "
+            "evidencia y la justificación del tratamiento."
+        ),
+        "no_rows": "No hay líneas disponibles para esta sección.",
+        "rows": "líneas",
+        "amount": "importe",
     },
     "en": {
         "executive_summary": "Executive Summary",
@@ -429,6 +537,192 @@ ITALIAN_REVIEW_STATUS_LABELS = {
     "UNKNOWN": "Non indicata",
 }
 
+SPANISH_SHEET_LABELS = {
+    "Index": "Índice",
+    "Assumptions": "Supuestos",
+    "Source inventory": "Inventario de fuentes",
+    "Normalized records": "Registros normalizados",
+    "Reconciliation detail": "Detalle de conciliación",
+    "Bank allocation candidates": "Candidatos bancarios",
+    "External evidence aggregate": "Resumen evidencia externa",
+    "External evidence detail": "Detalle evidencia externa",
+    "Ledger balance check": "Control de saldos del mayor",
+    "Account rollforward check": "Roll-forward de cuentas",
+    "Journal rollforward": "Roll-forward del diario",
+    "Journal detail": "Detalle del diario",
+    "Post-cutoff candidates": "Candidatos post-corte",
+    "Open item aging": "Antigüedad de partidas",
+    "Evidence concentration": "Concentración de evidencias",
+    "Review signals": "Señales de revisión",
+    "Document source map": "Mapa documento-fuentes",
+    "Reversal candidates": "Candidatos a reversión",
+    "Cutoff window movements": "Movimientos cerca del corte",
+    "Summary": "Resumen",
+    "Checks": "Controles",
+    "Review": "Revisión Codex",
+}
+
+SPANISH_FIELD_LABELS = {
+    "account": "Cuenta",
+    "account_name": "Nombre de la cuenta",
+    "age_days_at_reference": "Días a la fecha de referencia",
+    "aging_bucket": "Tramo de antigüedad",
+    "amount": "Importe",
+    "amount_abs_total": "Importe absoluto",
+    "bank_rows": "Líneas bancarias",
+    "candidate_id": "ID del candidato",
+    "candidate_reasons": "Motivos del candidato",
+    "candidate_type": "Tipo de candidato",
+    "check": "Control",
+    "compensation_requires_bank": "La compensación requiere evidencia bancaria",
+    "closing_balance_signed_debit_minus_credit": "Saldo final debe menos haber",
+    "closing_difference_journal_minus_ledger": "Diferencia final diario-mayor",
+    "closing_net_debit_minus_credit": "Saldo final neto debe menos haber",
+    "cutoff_date": "Fecha de corte",
+    "cutoff_window_timing": "Periodo respecto al corte",
+    "description": "Descripción",
+    "document_date": "Fecha del documento",
+    "document_key": "Clave del documento",
+    "document_no": "Documento",
+    "document_no_examples": "Ejemplos de documentos",
+    "evidence_amount": "Importe de la evidencia",
+    "evidence_concentration": "Concentración de evidencias",
+    "evidence_date": "Fecha de la evidencia",
+    "evidence_level": "Solidez de la evidencia",
+    "evidence_source_file": "Archivo fuente de la evidencia",
+    "evidence_type": "Tipo de evidencia",
+    "exact_amount_match": "Importe exacto",
+    "expected": "Esperado",
+    "factoring_pro_soluto_closes_item": "El factoring sin recurso cierra con evidencia externa asignada",
+    "factoring_rows": "Líneas del factor",
+    "files": "Archivos",
+    "currency": "Moneda",
+    "document_date_tolerance_days": "Tolerancia de fecha del documento en días",
+    "document_language": "Idioma del documento",
+    "factoring_operator_keywords": "Términos del factor u operador",
+    "journal_rows": "Líneas del diario",
+    "ledger_rows": "Líneas del mayor",
+    "matched_evidence_amounts": "Importes de evidencia conciliada",
+    "matched_evidence_id": "ID de evidencia conciliada",
+    "matched_evidence_reference": "Referencia de evidencia conciliada",
+    "matched_evidence_type": "Tipo de evidencia conciliada",
+    "message": "Mensaje",
+    "metadata_field": "Campo",
+    "metadata_value": "Valor",
+    "missing_evidence": "Evidencia pendiente",
+    "open_amount": "Importe abierto",
+    "open_amount_total": "Importe abierto total",
+    "open_item_rows": "Líneas de partidas abiertas",
+    "opening_difference_journal_minus_ledger": "Diferencia inicial diario-mayor",
+    "payment_order_rows": "Líneas de órdenes de pago",
+    "payment_orders_are_bank_evidence": "Las órdenes de pago constituyen evidencia bancaria",
+    "post_cutoff_events_excluded": "Eventos posteriores al corte excluidos del cierre",
+    "probable_bank_exact_matches_close": "Las coincidencias bancarias probables exactas cierran la partida",
+    "promote_probable_bank_payments": "Promover los pagos bancarios probables",
+    "prior_reconciliation_status": "Estado anterior",
+    "record_id": "ID de línea",
+    "reconciliation_status": "Estado de conciliación",
+    "reconciliation_status_counts": "Estados de conciliación",
+    "review_note": "Nota de revisión",
+    "review_result": "Resultado de la revisión",
+    "review_signal_rank": "Prioridad de revisión",
+    "review_signals": "Señales de revisión",
+    "review_status": "Estado de la revisión",
+    "rows": "Líneas",
+    "rule_applied": "Regla aplicada",
+    "scope_year": "Año del alcance",
+    "share_of_abs_amount_percent": "Peso %",
+    "sheet": "Hoja",
+    "source_file": "Archivo de origen",
+    "source_page": "Página de origen",
+    "source_role": "Función de la fuente",
+    "source_row": "Línea de origen",
+    "source_sheet": "Hoja de origen",
+    "status": "Estado",
+    "support_bucket": "Tipo de respaldo",
+    "report_language": "Idioma del informe",
+    "amount_tolerance": "Tolerancia de importe",
+    "value": "Valor",
+}
+
+SPANISH_RECONCILIATION_STATUS_LABELS = {
+    "closed": "Cerrada por evidencia",
+    "probable_payment": "Pago probable pendiente de verificación",
+    "open_supported": "Abierta pero respaldada",
+    "needs_evidence": "Requiere evidencia adicional",
+    "unresolved": "No resuelta",
+    "out_of_scope": "Fuera de alcance",
+    "unknown": "Sin clasificar",
+}
+
+SPANISH_RULE_LABELS = {
+    "direct_external_or_documented": "Evidencia directa externa o documentada",
+    "documented_compensation": "Compensación documentada",
+    "external_bank_match": "Movimiento bancario externo conciliado",
+    "factoring_bridge_only": "Solo evidencia puente del factor o anticipo",
+    "factoring_or_advance_match": "Factor o anticipo conciliado",
+    "factoring_with_bank_or_external_support": "Factor con respaldo bancario o externo",
+    "grouped_open_amount_internal_booking_support": "Respaldo interno agregado por documento",
+    "grouped_payment_external_match": "Pago agregado con evidencia externa",
+    "internal_accounting_only": "Solo asiento contable interno",
+    "internal_booking_open_support": "Respaldo interno de partida abierta",
+    "internal_closure_without_external": "Cierre interno sin evidencia externa",
+    "out_of_scope": "Fuera de alcance",
+    "payment_order_amount_mismatch": "Orden de pago con importe no coincidente",
+    "payment_order_only": "Solo orden o lote de pago",
+    "probable_bank_payment_candidate": "Pago bancario probable",
+    "unallocated_external_bank_requires_allocation": "Movimiento bancario externo sin asignar",
+    "unresolved": "No resuelta",
+    "unknown": "Sin clasificar",
+}
+
+SPANISH_SOURCE_ROLE_LABELS = {
+    "bank_statement": "Extracto bancario",
+    "factoring_statement": "Extracto del factor o anticipo",
+    "journal": "Libro diario",
+    "ledger": "Libro mayor",
+    "open_items": "Partidas abiertas",
+    "payment_order": "Orden o lote de pago",
+    "unknown": "Sin clasificar",
+}
+
+SPANISH_EVIDENCE_LEVEL_LABELS = {
+    "strong_external": "Evidencia externa sólida",
+    "external": "Evidencia externa",
+    "bridge": "Evidencia puente",
+    "internal": "Evidencia interna",
+    "none": "Sin evidencia",
+    "unknown": "Sin clasificar",
+}
+
+SPANISH_REVIEW_SIGNAL_LABELS = {
+    "before_cutoff": "Antes de la fecha de corte",
+    "exact_amount_match": "Importe exacto",
+    "high_value": "Importe elevado",
+    "needs_evidence": "Requiere evidencia",
+    "open_supported": "Abierta pero respaldada",
+    "opposite_sign_amount": "Importe de signo opuesto",
+    "probable_payment": "Pago probable",
+    "stale_open_item": "Partida antigua",
+    "unresolved": "No resuelta",
+}
+
+SPANISH_CUTOFF_TIMING_LABELS = {
+    "before_cutoff": "Antes de la fecha de corte",
+    "after_cutoff": "Después de la fecha de corte",
+    "on_cutoff": "En la fecha de corte",
+    "unknown": "Sin clasificar",
+}
+
+SPANISH_REVIEW_STATUS_LABELS = {
+    "APPROVED": "Aprobada",
+    "CHALLENGED": "Pendiente de aclaración",
+    "FAIL": "Error",
+    "PASS": "Correcta",
+    "PENDING": "Pendiente",
+    "UNKNOWN": "No indicada",
+}
+
 
 def _headers(
     rows: list[dict[str, Any]], preferred: list[str] | None = None
@@ -449,15 +743,50 @@ def _decimal(value: object) -> Decimal:
         return Decimal("0.00")
 
 
+def _language_code(language: object | None) -> str:
+    text = str(language or "it").strip().lower().replace("_", "-")
+    code = text.split("-", 1)[0]
+    return {
+        "esp": "es",
+        "espanol": "es",
+        "español": "es",
+        "spa": "es",
+        "spanish": "es",
+    }.get(code, code)
+
+
+def _is_italian(language: object | None) -> bool:
+    return _language_code(language) == "it"
+
+
+def _is_spanish(language: object | None) -> bool:
+    return _language_code(language) == "es"
+
+
+def _is_localized(language: object | None) -> bool:
+    return _language_code(language) in {"it", "es"}
+
+
+def _locale_catalog(
+    language: object | None,
+    italian: dict[str, str],
+    spanish: dict[str, str],
+) -> dict[str, str]:
+    if _is_italian(language):
+        return italian
+    if _is_spanish(language):
+        return spanish
+    return {}
+
+
 def _labels(language: str) -> dict[str, str]:
-    return output_labels(language)
+    return output_labels(_language_code(language))
 
 
 def _sheet_label(sheet_name: object, language: str) -> str:
     value = str(sheet_name or "")
-    if not _is_italian(language):
-        return value
-    return ITALIAN_SHEET_LABELS.get(value, value)
+    labels = _locale_catalog(language, ITALIAN_SHEET_LABELS, SPANISH_SHEET_LABELS)
+    return labels.get(value, value)
 
 
 def _fallback_label(value: object) -> str:
@@ -470,9 +799,10 @@ def _fallback_label(value: object) -> str:
 
 def _field_label(field: object, language: str) -> str:
     value = str(field or "")
-    if not _is_italian(language):
+    labels = _locale_catalog(language, ITALIAN_FIELD_LABELS, SPANISH_FIELD_LABELS)
+    if not labels:
         return value
-    return ITALIAN_FIELD_LABELS.get(value.lower(), _fallback_label(value))
+    return labels.get(value.lower(), _fallback_label(value))
 
 
 def _mapped_label(value: object, labels: dict[str, str]) -> str:
@@ -483,53 +813,72 @@ def _mapped_label(value: object, labels: dict[str, str]) -> str:
 
 
 def _reconciliation_status_label(status: object, language: str) -> str:
-    if not _is_italian(language):
+    labels = _locale_catalog(
+        language,
+        ITALIAN_RECONCILIATION_STATUS_LABELS,
+        SPANISH_RECONCILIATION_STATUS_LABELS,
+    )
+    if not labels:
         return str(status or "")
-    return _mapped_label(status, ITALIAN_RECONCILIATION_STATUS_LABELS)
+    return _mapped_label(status, labels)
 
 
 def _rule_label(rule: object, language: str) -> str:
-    if not _is_italian(language):
+    labels = _locale_catalog(language, ITALIAN_RULE_LABELS, SPANISH_RULE_LABELS)
+    if not labels:
         return str(rule or "")
-    return _mapped_label(rule, ITALIAN_RULE_LABELS)
+    return _mapped_label(rule, labels)
 
 
 def _source_role_label(source_role: object, language: str) -> str:
-    if not _is_italian(language):
+    labels = _locale_catalog(
+        language, ITALIAN_SOURCE_ROLE_LABELS, SPANISH_SOURCE_ROLE_LABELS
+    )
+    if not labels:
         return str(source_role or "")
-    return _mapped_label(source_role, ITALIAN_SOURCE_ROLE_LABELS)
+    return _mapped_label(source_role, labels)
 
 
 def _evidence_level_label(evidence_level: object, language: str) -> str:
-    if not _is_italian(language):
+    labels = _locale_catalog(
+        language, ITALIAN_EVIDENCE_LEVEL_LABELS, SPANISH_EVIDENCE_LEVEL_LABELS
+    )
+    if not labels:
         return str(evidence_level or "")
-    return _mapped_label(evidence_level, ITALIAN_EVIDENCE_LEVEL_LABELS)
+    return _mapped_label(evidence_level, labels)
 
 
 def _review_status_label(review_status: object, language: str) -> str:
     text = str(review_status or "").strip()
-    if not _is_italian(language):
+    labels = _locale_catalog(
+        language, ITALIAN_REVIEW_STATUS_LABELS, SPANISH_REVIEW_STATUS_LABELS
+    )
+    if not labels:
         return text
-    return ITALIAN_REVIEW_STATUS_LABELS.get(text.upper(), _fallback_label(text))
+    return labels.get(text.upper(), _fallback_label(text))
 
 
 def _review_signal_label(signal: object, language: str) -> str:
-    if not _is_italian(language):
+    labels = _locale_catalog(
+        language, ITALIAN_REVIEW_SIGNAL_LABELS, SPANISH_REVIEW_SIGNAL_LABELS
+    )
+    if not labels:
         return str(signal or "")
-    return _mapped_label(signal, ITALIAN_REVIEW_SIGNAL_LABELS)
+    return _mapped_label(signal, labels)
 
 
 def _cutoff_timing_label(timing: object, language: str) -> str:
-    if not _is_italian(language):
+    labels = _locale_catalog(
+        language, ITALIAN_CUTOFF_TIMING_LABELS, SPANISH_CUTOFF_TIMING_LABELS
+    )
+    if not labels:
         return str(timing or "")
-    return _mapped_label(timing, ITALIAN_CUTOFF_TIMING_LABELS)
+    return _mapped_label(timing, labels)
 
 
-def _localized_semicolon_list(
-    value: object, language: str, labeler: Any
-) -> str:
+def _localized_semicolon_list(value: object, language: str, labeler: Any) -> str:
     text = str(value or "").strip()
-    if not text or not _is_italian(language):
+    if not text or not _is_localized(language):
         return text
     parts = [part.strip() for part in text.split(";") if part.strip()]
     if not parts:
@@ -539,7 +888,7 @@ def _localized_semicolon_list(
 
 def _localized_status_counts(value: object, language: str) -> str:
     text = str(value or "").strip()
-    if not text or not _is_italian(language):
+    if not text or not _is_localized(language):
         return text
     parts: list[str] = []
     for part in text.split(";"):
@@ -557,7 +906,7 @@ def _localized_status_counts(value: object, language: str) -> str:
 
 
 def _localize_value(field: object, value: object, language: str) -> object:
-    if not _is_italian(language):
+    if not _is_localized(language):
         return value
     if value is None:
         return ""
@@ -601,7 +950,7 @@ def _localize_value(field: object, value: object, language: str) -> object:
 
 
 def _localize_row(row: dict[str, Any], language: str) -> dict[str, Any]:
-    if not _is_italian(language):
+    if not _is_localized(language):
         return dict(row)
     return {
         _field_label(key, language): _localize_value(key, value, language)
@@ -609,9 +958,7 @@ def _localize_row(row: dict[str, Any], language: str) -> dict[str, Any]:
     }
 
 
-def _localize_rows(
-    rows: list[dict[str, Any]], language: str
-) -> list[dict[str, Any]]:
+def _localize_rows(rows: list[dict[str, Any]], language: str) -> list[dict[str, Any]]:
     return [_localize_row(row, language) for row in rows]
 
 
@@ -620,9 +967,14 @@ def _localized_excel_sheets(
     ordered_names: list[str],
     language: str,
 ) -> dict[str, list[dict[str, Any]]]:
-    if not _is_italian(language):
+    if not _is_localized(language):
         return {}
 
+    output = _labels(language)
+    field_header = output["metadata_field"]
+    value_header = output["metadata_value"]
+    sheet_header = _field_label("sheet", language)
+    rows_header = _field_label("rows", language)
     localized: dict[str, list[dict[str, Any]]] = {}
     for sheet_name in ordered_names:
         display_name = _sheet_label(sheet_name, language)
@@ -630,20 +982,41 @@ def _localized_excel_sheets(
         if sheet_name == "Index":
             localized[display_name] = [
                 {
-                    "Foglio": _sheet_label(row.get("Sheet"), language),
-                    "Righe": row.get("Rows", ""),
+                    sheet_header: _sheet_label(row.get("Sheet"), language),
+                    rows_header: row.get("Rows", ""),
                 }
                 for row in rows
             ]
         elif sheet_name == "Assumptions":
             assumption_rows: list[dict[str, Any]] = []
             for row in rows:
-                field = row["Campo"] if "Campo" in row else row.get("Field", "")
-                value = row["Valore"] if "Valore" in row else row.get("Value", "")
+                field = next(
+                    (
+                        row[key]
+                        for key in (field_header, "Field", "Campo", "Champ", "Feld")
+                        if key in row
+                    ),
+                    "",
+                )
+                value = next(
+                    (
+                        row[key]
+                        for key in (
+                            value_header,
+                            "Value",
+                            "Valore",
+                            "Valor",
+                            "Valeur",
+                            "Wert",
+                        )
+                        if key in row
+                    ),
+                    "",
+                )
                 assumption_rows.append(
                     {
-                        "Campo": _field_label(field, language),
-                        "Valore": _localize_value(field, value, language),
+                        field_header: _field_label(field, language),
+                        value_header: _localize_value(field, value, language),
                     }
                 )
             localized[display_name] = assumption_rows
@@ -766,13 +1139,31 @@ def _column_widths(headers: list[str]) -> list[float]:
     weights = []
     for header in headers:
         lower = str(header).lower()
-        if any(token in lower for token in ("rows", "righe", "files", "checks")):
+        if any(
+            token in lower
+            for token in ("rows", "righe", "líneas", "files", "archivos", "checks")
+        ):
             weights.append(0.65)
-        elif any(token in lower for token in ("amount", "importo", "status", "stato")):
+        elif any(
+            token in lower
+            for token in ("amount", "importo", "importe", "status", "stato", "estado")
+        ):
             weights.append(1.0)
         elif any(
             token in lower
-            for token in ("rule", "regola", "source", "evidence", "note", "expected")
+            for token in (
+                "rule",
+                "regola",
+                "regla",
+                "source",
+                "fuente",
+                "evidence",
+                "evidencia",
+                "note",
+                "nota",
+                "expected",
+                "esperado",
+            )
         ):
             weights.append(2.0)
         else:
@@ -835,7 +1226,7 @@ def _add_callout(
 
 
 def _report_text(language: str) -> dict[str, str]:
-    code = str(language or "it").split("_", 1)[0].lower()
+    code = _language_code(language)
     return REPORT_TEXT.get(code, REPORT_TEXT["en"])
 
 
@@ -886,12 +1277,13 @@ def _summary_by_status(
     summary_rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
     text = _report_text(language)
-    status_header = "Esito" if _is_italian(language) else "status"
+    status_header = _field_label("status", language)
     buckets: dict[str, dict[str, Any]] = {}
     for row in summary_rows:
         status = str(
             row.get("reconciliation_status")
             or row.get("Esito")
+            or row.get("Estado")
             or row.get("Status")
             or "unknown"
         )
@@ -899,10 +1291,19 @@ def _summary_by_status(
             status, {"status": status, text["rows"]: 0, text["amount"]: Decimal("0.00")}
         )
         bucket[text["rows"]] += int(
-            _decimal(row.get("rows") or row.get("Righe") or row.get("Rows") or 0)
+            _decimal(
+                row.get("rows")
+                or row.get("Righe")
+                or row.get("Líneas")
+                or row.get("Rows")
+                or 0
+            )
         )
         bucket[text["amount"]] += _decimal(
-            row.get("amount") or row.get("Importo") or row.get("Amount")
+            row.get("amount")
+            or row.get("Importo")
+            or row.get("Importe")
+            or row.get("Amount")
         )
     return [
         {
@@ -921,8 +1322,12 @@ def _check_summary(
     for row in checks:
         status = str(row.get("status") or "UNKNOWN")
         buckets[status] = buckets.get(status, 0) + 1
-    status_header = "Esito" if _is_italian(language) else "status"
-    checks_header = "Controlli" if _is_italian(language) else "checks"
+    status_header = _field_label("status", language)
+    checks_header = (
+        "Controlli"
+        if _is_italian(language)
+        else ("Controles" if _is_spanish(language) else "checks")
+    )
     return [
         {
             status_header: _status_label(status, language),
@@ -932,22 +1337,27 @@ def _check_summary(
     ]
 
 
-def _is_italian(language: str) -> bool:
-    return str(language or "it").lower().startswith("it")
-
-
 def _status_label(status: object, language: str) -> str:
     value = str(status or "UNKNOWN").upper()
-    if not _is_italian(language):
-        return value
-    return {
-        "PASS": "OK",
-        "DIFFERENCE": "Differenza",
-        "FAIL": "Errore",
-        "MISSING_JOURNAL_OR_LEDGER": "Manca giornale o mastro",
-        "UNKNOWN": "Non indicato",
-        "WARN": "Avviso",
-    }.get(value, value)
+    if _is_italian(language):
+        return {
+            "PASS": "OK",
+            "DIFFERENCE": "Differenza",
+            "FAIL": "Errore",
+            "MISSING_JOURNAL_OR_LEDGER": "Manca giornale o mastro",
+            "UNKNOWN": "Non indicato",
+            "WARN": "Avviso",
+        }.get(value, value)
+    if _is_spanish(language):
+        return {
+            "PASS": "Correcto",
+            "DIFFERENCE": "Diferencia",
+            "FAIL": "Error",
+            "MISSING_JOURNAL_OR_LEDGER": "Falta el diario o el mayor",
+            "UNKNOWN": "No indicado",
+            "WARN": "Aviso",
+        }.get(value, value)
+    return value
 
 
 def _yes_no_label(value: object, language: str) -> str:
@@ -958,35 +1368,57 @@ def _yes_no_label(value: object, language: str) -> str:
             if normalized == "YES"
             else ("No" if normalized == "NO" else normalized)
         )
+    if _is_spanish(language):
+        return (
+            "Sí"
+            if normalized == "YES"
+            else ("No" if normalized == "NO" else normalized)
+        )
     return normalized
 
 
 def _evidence_type_label(evidence_type: object, language: str) -> str:
     value = str(evidence_type or "unknown")
-    if not _is_italian(language):
-        return value
-    return {
-        "external_bank": "Banca",
-        "probable_external_bank": "Banca probabile",
-        "unallocated_external_bank": "Banca non allocata",
-        "external_factoring": "Factor",
-        "factoring_bridge": "Factor / anticipo",
-        "internal_accounting": "Prima nota",
-        "internal_booking": "Scrittura interna",
-        "internal_closure": "Scrittura di chiusura",
-        "compensation": "Compensazione",
-        "payment_order": "Ordine di pagamento",
-        "payment_order_bridge": "Distinta / ordine di pagamento",
-        "open_item": "Partita aperta",
-        "unknown": "Non classificata",
-    }.get(value, value)
+    if _is_italian(language):
+        return {
+            "external_bank": "Banca",
+            "probable_external_bank": "Banca probabile",
+            "unallocated_external_bank": "Banca non allocata",
+            "external_factoring": "Factor",
+            "factoring_bridge": "Factor / anticipo",
+            "internal_accounting": "Prima nota",
+            "internal_booking": "Scrittura interna",
+            "internal_closure": "Scrittura di chiusura",
+            "compensation": "Compensazione",
+            "payment_order": "Ordine di pagamento",
+            "payment_order_bridge": "Distinta / ordine di pagamento",
+            "open_item": "Partita aperta",
+            "unknown": "Non classificata",
+        }.get(value, value)
+    if _is_spanish(language):
+        return {
+            "external_bank": "Banco",
+            "probable_external_bank": "Movimiento bancario probable",
+            "unallocated_external_bank": "Movimiento bancario sin asignar",
+            "external_factoring": "Factor",
+            "factoring_bridge": "Factor o anticipo",
+            "internal_accounting": "Contabilidad interna",
+            "internal_booking": "Asiento interno",
+            "internal_closure": "Asiento de cierre",
+            "compensation": "Compensación",
+            "payment_order": "Orden de pago",
+            "payment_order_bridge": "Lote u orden de pago",
+            "open_item": "Partida abierta",
+            "unknown": "Sin clasificar",
+        }.get(value, value)
+    return value
 
 
 def _account_rollforward_report_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "account": "Conto",
             "account_name": "Nome conto",
             "status": "Esito",
@@ -994,8 +1426,17 @@ def _account_rollforward_report_rows(
             "closing_diff": "Differenza chiusura",
             "review_note": "Nota",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "account": "Cuenta",
+            "account_name": "Nombre de la cuenta",
+            "status": "Estado",
+            "opening_diff": "Diferencia inicial",
+            "closing_diff": "Diferencia final",
+            "review_note": "Nota",
+        }
+    else:
+        labels = {
             "account": "Account",
             "account_name": "Account name",
             "status": "Status",
@@ -1003,7 +1444,6 @@ def _account_rollforward_report_rows(
             "closing_diff": "Closing difference",
             "review_note": "Note",
         }
-    )
 
     def sort_key(row: dict[str, Any]) -> tuple[int, int, Decimal, str]:
         account = str(row.get("account") or "")
@@ -1040,23 +1480,30 @@ def _account_rollforward_report_rows(
 def _post_cutoff_summary_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "evidence_type": "Tipo evidenza",
             "exact_match": "Importo esatto",
             "rows": "Righe",
             "open_amount": "Importo aperto",
             "evidence_amount": "Importo evidenza",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "evidence_type": "Tipo de evidencia",
+            "exact_match": "Importe exacto",
+            "rows": "Líneas",
+            "open_amount": "Importe abierto",
+            "evidence_amount": "Importe de la evidencia",
+        }
+    else:
+        labels = {
             "evidence_type": "Evidence type",
             "exact_match": "Exact amount",
             "rows": "Rows",
             "open_amount": "Open amount",
             "evidence_amount": "Evidence amount",
         }
-    )
     buckets: dict[tuple[str, str], dict[str, Any]] = {}
     for row in rows:
         evidence_type = _evidence_type_label(row.get("evidence_type"), language)
@@ -1097,8 +1544,8 @@ def _post_cutoff_summary_rows(
 def _post_cutoff_detail_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "document_no": "Documento",
             "document_date": "Data documento",
             "open_amount": "Importo aperto",
@@ -1107,8 +1554,18 @@ def _post_cutoff_detail_rows(
             "exact_match": "Importo esatto",
             "source": "Fonte",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "document_no": "Documento",
+            "document_date": "Fecha del documento",
+            "open_amount": "Importe abierto",
+            "evidence_date": "Fecha de la evidencia",
+            "evidence_type": "Tipo de evidencia",
+            "exact_match": "Importe exacto",
+            "source": "Fuente",
+        }
+    else:
+        labels = {
             "document_no": "Document",
             "document_date": "Document date",
             "open_amount": "Open amount",
@@ -1117,7 +1574,6 @@ def _post_cutoff_detail_rows(
             "exact_match": "Exact amount",
             "source": "Source",
         }
-    )
 
     def sort_key(row: dict[str, Any]) -> tuple[Decimal, str, str]:
         return (
@@ -1148,26 +1604,38 @@ def _post_cutoff_detail_rows(
 
 def _support_bucket_label(value: object, language: str) -> str:
     bucket = str(value or "unknown")
-    if not _is_italian(language):
-        return bucket
-    return {
-        "bank": "Banca",
-        "bank_probable": "Banca probabile",
-        "factor_or_advance": "Factor / anticipo",
-        "payment_order": "Distinta / ordine di pagamento",
-        "compensation": "Compensazione",
-        "internal_accounting": "Supporto interno",
-        "bridge_only": "Documento ponte",
-        "no_evidence": "Nessuna evidenza",
-        "unknown": "Non classificata",
-    }.get(bucket, bucket)
+    if _is_italian(language):
+        return {
+            "bank": "Banca",
+            "bank_probable": "Banca probabile",
+            "factor_or_advance": "Factor / anticipo",
+            "payment_order": "Distinta / ordine di pagamento",
+            "compensation": "Compensazione",
+            "internal_accounting": "Supporto interno",
+            "bridge_only": "Documento ponte",
+            "no_evidence": "Nessuna evidenza",
+            "unknown": "Non classificata",
+        }.get(bucket, bucket)
+    if _is_spanish(language):
+        return {
+            "bank": "Banco",
+            "bank_probable": "Movimiento bancario probable",
+            "factor_or_advance": "Factor o anticipo",
+            "payment_order": "Lote u orden de pago",
+            "compensation": "Compensación",
+            "internal_accounting": "Respaldo interno",
+            "bridge_only": "Documento puente",
+            "no_evidence": "Sin evidencia",
+            "unknown": "Sin clasificar",
+        }.get(bucket, bucket)
+    return bucket
 
 
 def _review_signal_report_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "rank": "Priorita",
             "document": "Documento",
             "amount": "Importo",
@@ -1175,8 +1643,17 @@ def _review_signal_report_rows(
             "status": "Esito",
             "signals": "Motivo",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "rank": "Prioridad",
+            "document": "Documento",
+            "amount": "Importe",
+            "age": "Días",
+            "status": "Estado",
+            "signals": "Motivo",
+        }
+    else:
+        labels = {
             "rank": "Priority",
             "document": "Document",
             "amount": "Amount",
@@ -1184,7 +1661,6 @@ def _review_signal_report_rows(
             "status": "Status",
             "signals": "Reason",
         }
-    )
     return [
         {
             labels["rank"]: row.get("review_signal_rank", ""),
@@ -1205,8 +1681,8 @@ def _review_signal_report_rows(
 def _document_source_report_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "document": "Documento",
             "open_amount": "Importo aperto",
             "open_rows": "Righe aperte",
@@ -1217,8 +1693,20 @@ def _document_source_report_rows(
             "factor": "Factor",
             "note": "Nota",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "document": "Documento",
+            "open_amount": "Importe abierto",
+            "open_rows": "Líneas abiertas",
+            "ledger": "Mayor",
+            "journal": "Diario",
+            "bank": "Banco",
+            "payment": "Órdenes de pago",
+            "factor": "Factor",
+            "note": "Nota",
+        }
+    else:
+        labels = {
             "document": "Document",
             "open_amount": "Open amount",
             "open_rows": "Open rows",
@@ -1229,7 +1717,6 @@ def _document_source_report_rows(
             "factor": "Factor",
             "note": "Note",
         }
-    )
     return [
         {
             labels["document"]: row.get("document_no_examples")
@@ -1250,8 +1737,8 @@ def _document_source_report_rows(
 def _reversal_report_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "document": "Documento",
             "open_amount": "Importo aperto",
             "evidence_amount": "Importo evidenza",
@@ -1259,8 +1746,17 @@ def _reversal_report_rows(
             "date": "Data evidenza",
             "reason": "Motivo",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "document": "Documento",
+            "open_amount": "Importe abierto",
+            "evidence_amount": "Importe de la evidencia",
+            "evidence_type": "Tipo de evidencia",
+            "date": "Fecha de la evidencia",
+            "reason": "Motivo",
+        }
+    else:
+        labels = {
             "document": "Document",
             "open_amount": "Open amount",
             "evidence_amount": "Evidence amount",
@@ -1268,7 +1764,6 @@ def _reversal_report_rows(
             "date": "Evidence date",
             "reason": "Reason",
         }
-    )
     return [
         {
             labels["document"]: row.get("document_no") or row.get("document_key", ""),
@@ -1289,21 +1784,27 @@ def _reversal_report_rows(
 def _cutoff_window_summary_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "timing": "Periodo",
             "evidence_type": "Tipo evidenza",
             "rows": "Righe",
             "amount": "Importo",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "timing": "Periodo",
+            "evidence_type": "Tipo de evidencia",
+            "rows": "Líneas",
+            "amount": "Importe",
+        }
+    else:
+        labels = {
             "timing": "Timing",
             "evidence_type": "Evidence type",
             "rows": "Rows",
             "amount": "Amount",
         }
-    )
     buckets: dict[tuple[str, str], dict[str, Any]] = {}
     for row in rows:
         timing = _cutoff_timing_label(row.get("cutoff_window_timing"), language)
@@ -1340,23 +1841,30 @@ def _cutoff_window_summary_rows(
 def _evidence_concentration_report_rows(
     rows: list[dict[str, Any]], language: str
 ) -> list[dict[str, Any]]:
-    labels = (
-        {
+    if _is_italian(language):
+        labels = {
             "bucket": "Tipo evidenza",
             "status": "Esito",
             "rows": "Righe",
             "amount": "Importo assoluto",
             "share": "Peso %",
         }
-        if _is_italian(language)
-        else {
+    elif _is_spanish(language):
+        labels = {
+            "bucket": "Tipo de evidencia",
+            "status": "Estado",
+            "rows": "Líneas",
+            "amount": "Importe absoluto",
+            "share": "Peso %",
+        }
+    else:
+        labels = {
             "bucket": "Evidence type",
             "status": "Status",
             "rows": "Rows",
             "amount": "Absolute amount",
             "share": "Share %",
         }
-    )
     return [
         {
             labels["bucket"]: _support_bucket_label(
@@ -1523,15 +2031,22 @@ def write_excel_workpaper(
                     "reason",
                     "next",
                     "description",
+                    "descripción",
                     "reference",
+                    "referencia",
                     "source",
+                    "fuente",
                     "evidence",
+                    "evidencia",
                 ]
             ):
                 width = 42
-            if any(token in lower for token in ["amount", "balance", "value"]):
+            if any(
+                token in lower
+                for token in ["amount", "importe", "balance", "saldo", "value", "valor"]
+            ):
                 width = 16
-            if any(token in lower for token in ["date"]):
+            if any(token in lower for token in ["date", "fecha"]):
                 width = 14
             ws.column_dimensions[get_column_letter(idx)].width = width
             for cell in ws[get_column_letter(idx)]:
@@ -1611,7 +2126,11 @@ def write_word_report(
     subtitle.add_run(
         "Workpaper di riconciliazione deterministica"
         if _is_italian(language)
-        else "Deterministic reconciliation workpaper"
+        else (
+            "Papel de trabajo de conciliación determinista"
+            if _is_spanish(language)
+            else "Deterministic reconciliation workpaper"
+        )
     )
     _set_paragraph_spacing(subtitle, after=10)
     for run in subtitle.runs:
@@ -1621,6 +2140,7 @@ def write_word_report(
     _paragraph_border_bottom(rule)
     _set_paragraph_spacing(rule, after=12)
 
+    doc.add_heading(text["executive_summary"], level=1)
     _add_callout(
         doc,
         labels["conclusion"],
@@ -1630,7 +2150,16 @@ def write_word_report(
 
     if metadata:
         doc.add_heading(
-            "Metadati run" if _is_italian(language) else "Run Metadata", level=1
+            (
+                "Metadati run"
+                if _is_italian(language)
+                else (
+                    "Metadatos de la ejecución"
+                    if _is_spanish(language)
+                    else "Run Metadata"
+                )
+            ),
+            level=1,
         )
         table = doc.add_table(rows=1, cols=2)
         table.style = "Table Grid"
@@ -1638,8 +2167,8 @@ def write_word_report(
         table.rows[0].cells[1].text = labels["metadata_value"]
         for key, value in metadata.items():
             cells = table.add_row().cells
-            cells[0].text = str(key)
-            cells[1].text = str(value)
+            cells[0].text = _field_label(key, language)
+            cells[1].text = str(_localize_value(key, value, language))
         _format_table(table, [labels["metadata_field"], labels["metadata_value"]])
 
     doc.add_heading(text["scope_method"], level=1)
@@ -1671,7 +2200,12 @@ def write_word_report(
         doc.add_paragraph(text["no_rows"])
     if summary_rows:
         doc.add_heading(
-            "Dettaglio regole" if _is_italian(language) else "Rule Detail", level=2
+            (
+                "Dettaglio regole"
+                if _is_italian(language)
+                else ("Detalle de reglas" if _is_spanish(language) else "Rule Detail")
+            ),
+            level=2,
         )
         _add_table(doc, _localize_rows(summary_rows, language))
 

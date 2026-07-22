@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "service_id": "plugin-feedback",
+  "display_name": "Plugin improvement feedback",
+  "governed_paths": [
+    "hooks/hooks.json",
+    "scripts/check_for_update.py",
+    "scripts/change_requests.py",
+    "skills/vera/SKILL.md"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "automatic-feedback-status-poll",
+      "kind": "hosted_service",
+      "destination": "Mparanza's fixed HTTPS change-request status endpoint",
+      "purpose": "Notify the user when a previously submitted problem or suggestion has been fixed",
+      "content": "Locally stored change-request IDs and their bearer status tokens, in batches of at most 100, plus ordinary connection metadata. The submitted feedback text and client or case material are not resent.",
+      "retention": "The IDs and status tokens remain in local plugin state until that state is removed. State files are forced to mode 0600, while only the temporary fallback directories are forced to mode 0700. The corresponding change request remains in Mparanza's service record; the plugin does not enforce its deletion period.",
+      "activation": "automatic_after_prior_submission",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Polling occurs only when local state contains a receipt from an earlier user-approved submission.",
+        "The initial request URL is restricted to Mparanza HTTPS, each batch is capped at 100 receipts, the response size is bounded, and the submitted request text is not included."
+      ]
+    },
+    {
+      "id": "approved-text-feedback-submission",
+      "kind": "send_or_publish",
+      "destination": "Mparanza's fixed HTTPS change-request intake",
+      "purpose": "Submit a concrete Vera problem report or improvement suggestion to the developer",
+      "content": "The exact JSON request file selected for submission, together with request kind, Vera name and version, and an idempotent submission ID. Vera's workflow requires showing and sanitizing that request before consent, but the client accepts any JSON within its size limit and does not detect personal data or anonymize the file automatically.",
+      "retention": "Mparanza stores the submitted change request and status receipt as a service record. The plugin does not promise an automatic deletion period.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Vera must show the exact proposed request and obtain separate explicit transmission consent before invoking the submission command.",
+        "Vera's workflow instructs Codex to exclude client or customer material, source documents, run or case details, credentials, secrets, personal data, and identifying details; the client does not verify that semantic condition.",
+        "The initial request URL is restricted to Mparanza HTTPS, local request and wire sizes are capped, and the receipt is stored in a mode-0600 local state file."
+      ]
+    },
+    {
+      "id": "approved-improvement-interview",
+      "kind": "hosted_service",
+      "destination": "Mparanza's hosted interview service and its OpenAI voice and transcription services",
+      "purpose": "Capture one optional one-minute explanation of a Vera improvement suggestion",
+      "content": "The opportunity text supplied to the client, Vera name and version, language, submission ID, and—after the user opens the interview—the user's audio, transcript, and hosted interview responses. Vera's workflow supplies a generic client-free opportunity string, but the client accepts any 1–4,000-character value and does not detect personal data or anonymize it automatically.",
+      "retention": "Mparanza retains the resulting change-request and interview record until service-level deletion; link expiry is not a deletion guarantee. OpenAI-side handling follows the hosted service's configured account and terms, which the Vera plugin cannot inspect or enforce.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "The route starts only after the user chooses the voice option; Vera's skill supplies a generic opportunity string rather than case context, although the client cannot semantically verify arbitrary direct CLI input.",
+        "The interview is limited to one minute and instructs the participant not to share client, case, source, credential, secret, or identifying material.",
+        "The client accepts only an HTTPS interview URL whose hostname is Mparanza; it does not claim to enforce the full hosted-service path or retention policy."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "bounded-change-request-messages",
+      "control": "The change-request client caps request files, wire payloads, responses, and status batches before using them.",
+      "implemented_by": [
+        "scripts/change_requests.py"
+      ],
+      "on_violation": "The client rejects the oversized file, payload, response, or batch instead of continuing the operation."
+    },
+    {
+      "id": "private-local-receipt-state",
+      "control": "Submission payloads pending retry and bearer status tokens are written to state files forced to mode 0600; the temporary fallback also verifies and forces its directories to mode 0700.",
+      "implemented_by": [
+        "scripts/change_requests.py"
+      ],
+      "on_violation": "Unsafe temporary paths or failed private-state writes abort or suppress the affected feedback operation rather than exposing receipt state."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "40c7d1767a5865d7459f3a06a4b33d30bb02a1b78efbeaff89dd716244031d3c"
+  }
+}

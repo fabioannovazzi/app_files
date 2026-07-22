@@ -438,7 +438,7 @@ def test_validate_contract_rejects_untraced_final_output(
     ) in report.errors
 
 
-def test_validate_contract_rejects_unapproved_remote_execution_trace(
+def test_validate_contract_rejects_remote_trace_without_route_record(
     tmp_path: Path,
 ) -> None:
     output_dir = _base_contract(tmp_path)
@@ -457,7 +457,7 @@ def test_validate_contract_rejects_unapproved_remote_execution_trace(
     assert (
         "run_intake.json execution_trace includes remote execution_location "
         "remote_warehouse but data_posture "
-        "external_execution_approval.approved=true is missing"
+        "external_routes_used is missing"
     ) in report.errors
 
 
@@ -559,7 +559,7 @@ def test_validate_contract_requires_execution_location_fields_in_strict_mode(
     ) in report.errors
 
 
-def test_validate_contract_requires_external_execution_approval(
+def test_validate_contract_requires_factual_external_route_record(
     tmp_path: Path,
 ) -> None:
     output_dir = _base_contract(tmp_path)
@@ -572,25 +572,27 @@ def test_validate_contract_requires_external_execution_approval(
 
     assert report.ok is False
     assert (
-        "run_intake.json data_posture external execution requires "
-        "external_execution_approval.approved=true"
+        "run_intake.json data_posture external use requires a factual "
+        "external_routes_used record"
     ) in report.errors
 
 
-def test_validate_contract_accepts_approved_external_execution(
+def test_validate_contract_accepts_factual_external_route_record(
     tmp_path: Path,
 ) -> None:
     output_dir = _base_contract(tmp_path)
     run_intake_path = output_dir / "run_intake.json"
     run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
     run_intake["data_posture"]["remote_sql_execution_used"] = True
-    run_intake["data_posture"]["external_execution_approval"] = {
-        "approved": True,
-        "approved_at": "2026-06-07T10:03:00Z",
-        "approved_by": "user",
-        "reason": "User selected warehouse connector for this run.",
-        "scope": "Run reconciliation query through the BigQuery connector.",
-    }
+    run_intake["data_posture"]["external_routes_used"] = [
+        {
+            "route": "bigquery_sql",
+            "destination_or_origin": "BigQuery workspace connector",
+            "payload_category": "analytical query and returned result rows",
+            "network_used": True,
+            "access_basis": "existing authorized workspace connection",
+        }
+    ]
     _write_json(run_intake_path, run_intake)
 
     report = validator.validate_contract(output_dir, strict_data_posture=True)
@@ -599,29 +601,39 @@ def test_validate_contract_accepts_approved_external_execution(
     assert report.errors == []
 
 
-def test_validate_contract_rejects_incomplete_external_execution_approval(
+def test_validate_contract_rejects_incomplete_external_route_record(
     tmp_path: Path,
 ) -> None:
     output_dir = _base_contract(tmp_path)
     run_intake_path = output_dir / "run_intake.json"
     run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
     run_intake["data_posture"]["upload_paths_used"] = ["https://example.com/upload"]
-    run_intake["data_posture"]["external_execution_approval"] = {
-        "approved": True,
-        "approved_by": "user",
-        "reason": "",
-    }
+    run_intake["data_posture"]["external_routes_used"] = [
+        {
+            "route": "upload",
+            "payload_category": "",
+            "network_used": "yes",
+            "access_basis": "",
+        }
+    ]
     _write_json(run_intake_path, run_intake)
 
     report = validator.validate_contract(output_dir, strict_data_posture=True)
 
     assert report.ok is False
     assert (
-        "run_intake.json data_posture external_execution_approval missing fields: "
-        "approved_at, scope"
+        "run_intake.json data_posture.external_routes_used[0] missing fields: "
+        "destination_or_origin"
     ) in report.errors
     assert (
-        "run_intake.json data_posture external_execution_approval.reason must be a non-empty string"
+        "run_intake.json data_posture.external_routes_used[0].payload_category "
+        "must be a non-empty string"
+    ) in report.errors
+    assert (
+        "run_intake.json data_posture.external_routes_used[0].network_used must be a boolean"
+    ) in report.errors
+    assert (
+        "run_intake.json data_posture.external_routes_used[0].access_basis must be null or a non-empty string"
         in report.errors
     )
 

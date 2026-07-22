@@ -30,7 +30,7 @@ The bridge root and its POSIX file locks are a deployment invariant. Every worke
 
 Local image hydration treats URLs as untrusted. For every initial request and redirect it rejects non-public targets, resolves and vets the numeric addresses, connects directly to one vetted address, and preserves the original hostname for the HTTP `Host` value and TLS SNI/certificate verification. This prevents a second unvetted DNS resolution between validation and connection.
 
-## Local-only data
+## Files and artifacts kept local
 
 The installed workflow keeps all of the following on the user's machine:
 
@@ -38,11 +38,14 @@ The installed workflow keeps all of the following on the user's machine:
 - downloaded ZIPs and extraction receipts;
 - image bytes hydrated from package URLs;
 - `local_image_manifest.json` and package-relative image bindings;
-- Codex working context and agent exchanges;
 - report model, claim ledger, semantic review, browser-QA screenshots, correctness artifacts, and final HTML report;
 - the resumable run ledger and stage receipts.
 
 Only the enriched mapping task JSON, decisions, normalized validation, and independent mapping review cross back to the authenticated bridge. Local image paths are relative `images/...` locators with hashes; image bytes and absolute workspace paths are never uploaded. Reports are never uploaded.
+
+Local file storage is not local model processing. Report inputs, mapping tasks,
+claims, and review evidence that Codex reads may enter model context through the
+user's existing ChatGPT plan. The helper scripts make no separate model API call.
 
 ## Development-only fresh scrape path
 

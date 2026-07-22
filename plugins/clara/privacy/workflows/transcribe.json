@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "workflow": "transcribe",
+  "display_name": "Transcribe",
+  "governed_paths": [
+    "skills/transcribe/SKILL.md",
+    "scripts/launch_hosted_voice.py",
+    "scripts/upload_hosted_audio.py",
+    "scripts/import_hosted_voice_bundle.py",
+    "scripts/import_hosted_voice_bundle_to_folder.py",
+    "scripts/import_latest_hosted_voice_bundle.py",
+    "scripts/finalize_hosted_transcript.py",
+    "scripts/integrate_transcript_review.py"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "recording-and-case-context",
+        "purpose": "Transcribe an advisor debrief, meeting, call, or existing recording in the correct project context",
+        "content": "Audio or screen-recording content; compact case brief; client and project facts; recording title, date, participants, interviewer, notes, language, and source metadata"
+      },
+      {
+        "id": "transcript-and-review",
+        "purpose": "Attribute speakers, review evidence, and integrate the transcript",
+        "content": "Raw and reviewed transcripts, speaker identities or labels, timing and media metadata, uncertainty notes, transcription corrections, review findings, judgement proposals, questions, issues, and evidence-map updates"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [
+    "hosted-voice"
+  ],
+  "boundaries_beyond_codex": [
+    {
+      "id": "hosted-voice-capture-or-upload",
+      "kind": "hosted_service",
+      "hosted_service_id": "hosted-voice",
+      "destination": "Mparanza Hosted Voice and its configured realtime/transcription provider",
+      "purpose": "Capture or upload a recording and return a transcript bundle",
+      "content": "Compact case context when enabled, microphone or uploaded audio, source metadata, and language reach Hosted Voice. Screen video, active-slide timeline, and visual capture metadata remain in the browser and local downloaded bundle; the service returns transcript and transcription metadata.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The route is used only when the user asks for hosted capture or upload; importing an existing local bundle does not call the service.",
+        "The separate hosted-service record states the source-backed access and retention position.",
+        "Authentication material is not stored in transcript or advisory artifacts."
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "eda8b2d5d53961d26886105452e8903ae957d054bcf8592705fb8970b7c0b496"
+  }
+}

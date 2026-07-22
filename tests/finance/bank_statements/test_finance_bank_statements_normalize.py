@@ -1,6 +1,4 @@
-
 import logging
-
 from datetime import date
 
 import pytest
@@ -12,15 +10,20 @@ from src.finance.bank_statements.normalize import (
 )
 
 
-def test_detect_language_with_keywords_prefers_it_without_langdetect(monkeypatch):
-    # Arrange: include known header keywords so keyword path is taken
+def test_detect_language_with_english_keywords_returns_en() -> None:
     text = "Date Debit Credit Description Balance"
 
-    # Act
-    lang = detect_language(text)
+    result = detect_language(text)
 
-    # Assert: due to equal increments across languages, first key ('it') wins
-    assert lang == "it"
+    assert result == "en"
+
+
+def test_detect_language_with_spanish_keywords_returns_es() -> None:
+    text = "Fecha valor Cargo Abono Concepto Moneda"
+
+    result = detect_language(text)
+
+    assert result == "es"
 
 
 def test_detect_language_uses_langdetect_when_no_keywords(monkeypatch):

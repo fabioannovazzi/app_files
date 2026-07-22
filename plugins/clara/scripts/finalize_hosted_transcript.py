@@ -31,13 +31,13 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 
 DEFAULT_SPEAKER_ATTRIBUTION_NOTE = (
-    "local Codex/Clara text-only pass from clean transcript and source metadata; "
+    "post-import Codex/Clara text-only pass from clean transcript and source metadata; "
     "no audio or voice diarization model used"
 )
 DEFAULT_TRANSCRIPT_SUMMARY = (
-    "Hosted voice transcript processed locally by Codex/Clara with reviewable "
-    "text-only speaker attribution. Original unattributed hosted transcript "
-    "preserved in the same voice session."
+    "Locally stored hosted voice transcript processed by Codex/Clara through the "
+    "user's ChatGPT plan with reviewable text-only speaker attribution. Original "
+    "unattributed hosted transcript preserved in the same voice session."
 )
 
 
@@ -283,11 +283,11 @@ def finalize_hosted_transcript(
     summary: str = DEFAULT_TRANSCRIPT_SUMMARY,
     now: datetime | None = None,
 ) -> FinalizeHostedTranscriptResult:
-    """Record the local text-only transcript review in the Clara registry.
+    """Record the locally stored text-only transcript review in the Clara registry.
 
     This is deterministic because it only copies exact files and updates stable
     JSON fields; speaker assignment and boundary judgement happen before this
-    helper in the local Codex/Clara review loop.
+    helper in the post-import Codex/Clara review loop.
     """
 
     _validate_workspace_or_repair_audio_pointer(

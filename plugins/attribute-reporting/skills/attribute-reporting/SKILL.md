@@ -5,7 +5,12 @@ description: Use when a user wants Codex to run or continue the local retail scr
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. Put each user run in a private local output directory outside every Git repository. Product images remain on the local machine. Reports, claim ledgers, report semantic reviews, browser QA, and correctness verdicts remain local and are never uploaded to the server. The four explicitly approved mapping artifacts, including the independent mapping review, may cross the authenticated mapping boundary described below.
+Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. Put each user run in a private local output directory outside every Git repository. Product images remain on the local machine. Reports, claim ledgers, report semantic-review artifacts, browser QA, and correctness-verdict artifacts are stored locally and are never uploaded to Mparanza. The four explicitly approved mapping artifacts, including the independent mapping review, may cross the authenticated mapping boundary described below.
+
+Local artifacts do not imply local model processing. Mapping tasks, report
+evidence, claims, and review material that Codex reads may enter model context
+through the user's existing ChatGPT plan. Helper scripts make no separate model
+API call.
 
 # Attribute Reporting
 

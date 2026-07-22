@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it">
+<html lang="{{ language | default('it') }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -282,6 +282,15 @@
         border: 1px solid var(--line);
         border-radius: 999px;
       }
+      .processing-notice {
+        max-width: 90ch;
+        margin-top: 18px;
+        font-size: 13px;
+      }
+      .processing-notice a {
+        color: inherit;
+        text-underline-offset: 0.16em;
+      }
       @media (max-width: 860px) {
         main { width: auto; margin: 0 20px; }
         .panels, .monitor, .capture-workspace { grid-template-columns: 1fr; }
@@ -296,6 +305,7 @@
     data-session-ready="{{ 'true' if session_ready else 'false' }}"
     data-transcription-model="{{ default_transcription_model }}"
     data-realtime-transcription-model="{{ realtime_transcription_model }}"
+    data-language="{{ language | default('it') }}"
   >
     <main>
       <header>
@@ -305,6 +315,27 @@
           <span>{{ participant_email or "local development" }}</span>
         </div>
       </header>
+
+      <p class="processing-notice" id="processingNotice">
+        {% if language == "es" %}
+          Clara Voice Capture es un servicio alojado por Mparanza. Mparanza y
+          OpenAI procesan el audio y el contexto resumido del proyecto asociado a
+          la sesión para crear la transcripción. El vídeo de la pantalla permanece
+          en el navegador y no se carga en Mparanza. Los archivos de audio y de
+          trabajo alojados se eliminan antes de devolver el paquete completo.
+          Después de la descarga, Codex puede leer la transcripción mediante el
+          plan de ChatGPT existente y el entorno de trabajo Codex del despacho para
+          atribuir a los hablantes y revisarla. <a href="/data-handling?lang=es" target="_blank" rel="noopener noreferrer">Consulta cómo se tratan los datos</a>.
+        {% else %}
+          Clara Voice Capture è un servizio hosted da Mparanza. Mparanza e OpenAI
+          trattano l'audio e il contesto compatto del progetto collegato alla sessione
+          per creare la trascrizione. Il video dello schermo resta nel browser e non
+          viene caricato a Mparanza. I file audio e di lavoro hosted vengono cancellati
+          prima della restituzione del bundle completo. Dopo il download, Codex può
+          leggere la trascrizione tramite il piano ChatGPT esistente e l'ambiente di
+          lavoro Codex dello studio per attribuire i parlanti e rivederla. <a href="/data-handling?lang=it" target="_blank" rel="noopener noreferrer">Scopri come vengono gestiti i dati</a>.
+        {% endif %}
+      </p>
 
       {% if not session_ready %}
         <section class="control">
@@ -320,7 +351,11 @@
       {% endif %}
 
       <select id="language" hidden aria-hidden="true">
-        <option value="it" selected>Italian</option>
+        <option value="it"{% if language == "it" %} selected{% endif %}>Italian</option>
+        <option value="en"{% if language == "en" %} selected{% endif %}>English</option>
+        <option value="fr"{% if language == "fr" %} selected{% endif %}>French</option>
+        <option value="de"{% if language == "de" %} selected{% endif %}>German</option>
+        <option value="es"{% if language == "es" %} selected{% endif %}>Spanish</option>
       </select>
 
       <section class="capture-workspace" aria-label="Capture input">

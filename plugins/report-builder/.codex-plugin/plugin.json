@@ -1,6 +1,6 @@
 {
   "name": "report-builder",
-  "version": "0.1.28",
+  "version": "0.1.29",
   "description": "Deterministic report-building workflow guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -23,7 +23,7 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Build Report",
-    "shortDescription": "Inspect financial Excel/PDF inputs and build reviewable report drafts in Italian, English, French, or German.",
+    "shortDescription": "Inspect financial Excel/PDF inputs and build reviewable report drafts in Italian, English, French, German, or Spanish.",
     "longDescription": "Codex workflow for deterministic report building. Codex inspects local workbooks, CSV files, text PDFs, or ZIP folders, asks only for section mapping or business assumptions that cannot be inferred, writes or refines the narrative in the work recipe, then automatically runs deterministic scripts to produce the natural full package: tables, diagnostics, Markdown, DOCX, audit outputs, and Codex review. The scripts do not make direct model API calls; Codex provides the reasoning and prose layer.",
     "developerName": "Fabio",
     "category": "Productivity",

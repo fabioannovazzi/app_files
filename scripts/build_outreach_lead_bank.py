@@ -21,6 +21,7 @@ LOGGER = logging.getLogger(__name__)
 
 _REGION_COUNTRY_DEFAULTS = {
     "italy": "Italy",
+    "spain": "Spain",
     "swiss-romande": "Switzerland",
     "swiss-german": "Switzerland",
     "uk": "United Kingdom",
