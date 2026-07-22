@@ -3490,6 +3490,21 @@ body.landing-body.landing-home {
   font-size: 0.8125rem;
 }
 
+.landing-home .landing-footer {
+  width: min(100%, 1240px);
+  margin: 0 auto;
+  padding: clamp(28px, 3.5vw, 44px) 0 clamp(24px, 3vw, 36px);
+}
+
+.landing-home .landing-footer p {
+  margin: 0;
+  max-width: 54ch;
+  color: var(--landing-muted);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .landing-home .landing-bridge__links a:hover span,
   .landing-home .landing-bridge__links a:focus-visible span {

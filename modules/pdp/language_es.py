@@ -13,6 +13,7 @@ SPANISH_PAGE_COPY: dict[str, dict[str, str]] = {
         "thesis_alt": "La potencia no es nada sin control.",
         "primary_navigation_label": "Navegación principal",
         "language_selector_label": "Selector de idioma",
+        "operator_disclosure": "Mparanza es operada por Mparanza LLC, una sociedad de responsabilidad limitada de Delaware.",
         "sign_out_button": "Cerrar sesión",
         "magic_link_placeholder": "nombre@ejemplo.com",
         "magic_link_email_label": "Correo electrónico",
