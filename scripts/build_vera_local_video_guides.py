@@ -56,6 +56,11 @@ MAX_INTER_SCENE_PAUSE_SECONDS = 4.0
 TRANSITION_SILENCE_MARGIN_SECONDS = 0.2
 TRANSITION_MAX_VOLUME_DB = -45.0
 EXPECTED_LOCALIZATIONS = {
+    ("data-handling", "core", "it"),
+    ("data-handling", "core", "en"),
+    ("data-handling", "core", "fr"),
+    ("data-handling", "core", "de"),
+    ("data-handling", "core", "es"),
     ("new-client", "core", "it"),
     ("new-client", "core", "en"),
     ("new-client", "core", "fr"),
@@ -665,6 +670,7 @@ def _render_frames(
     for scene_index in range(len(concept["scenes"])):
         frame_data = {
             "module": concept["module"],
+            "brand": concept.get("brand", "Vera"),
             "lang": language,
             "title": localization["title"],
             "sceneIndex": scene_index,

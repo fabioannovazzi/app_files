@@ -1,0 +1,73 @@
+WEBVTT
+
+1
+00:00:00.800 --> 00:00:05.073
+Vera e Clara sono pensate per il lavoro professionale serio.
+
+2
+00:00:05.073 --> 00:00:10.413
+Quel lavoro può richiedere dati reali dei clienti: documenti, nomi e fatti.
+
+3
+00:00:10.413 --> 00:00:14.401
+Ciò che fornisci non viene anonimizzato automaticamente.
+
+4
+00:00:15.712 --> 00:00:16.714
+Quando è utile,
+
+5
+00:00:16.714 --> 00:00:22.261
+strumenti Python eseguiti in locale possono filtrare o aggregare il materiale prima
+
+6
+00:00:22.261 --> 00:00:23.865
+che Codex lo interpreti.
+
+7
+00:00:23.865 --> 00:00:29.278
+Ma un filtro meccanico non può decidere da solo che cosa serve davvero al lavoro.
+
+8
+00:00:30.588 --> 00:00:34.119
+Se l’attività lo richiede, Codex può includere nomi,
+
+9
+00:00:34.119 --> 00:00:39.414
+documenti o fatti del caso necessari in una chiamata a un modello linguistico.
+
+10
+00:00:40.725 --> 00:00:46.638
+A quella chiamata si applica il tuo piano ChatGPT esistente. Nei workflow ordinari,
+
+11
+00:00:46.638 --> 00:00:51.412
+nessun contenuto dei clienti o del lavoro viene inviato a Mparanza.
+
+12
+00:00:52.723 --> 00:00:57.960
+I servizi opzionali hosted da Mparanza hanno un confine separato e documentato.
+
+13
+00:00:57.960 --> 00:01:00.810
+Per ogni servizio indichiamo che cosa viene
+
+14
+00:01:00.810 --> 00:01:04.059
+inviato e le modalità di accesso e conservazione.
+
+15
+00:01:05.369 --> 00:01:08.154
+Ogni workflow viene mappato una volta,
+
+16
+00:01:08.154 --> 00:01:12.185
+quando viene aggiunto o modificato in modo sostanziale.
+
+17
+00:01:12.185 --> 00:01:17.755
+Il confine rilevante compare nel workflow, senza burocrazia per ogni prompt.
+
+18
+00:01:17.755 --> 00:01:21.200
+Il giudizio professionale resta nelle tue mani.

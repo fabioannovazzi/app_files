@@ -1,12 +1,12 @@
 {
   "schemaVersion": "2.0.0",
-  "generatedAt": "2026-07-22T10:30:06+00:00",
+  "generatedAt": "2026-07-22T12:11:44+00:00",
   "publicationStatus": "local_rendered",
   "remotePublish": false,
   "generator": "scripts/build_vera_local_video_guides.py",
   "frameTemplate": "../guide-frame.html",
   "specification": "../vera-missing-guides.json",
-  "assetCount": 24,
+  "assetCount": 29,
   "assets": [
     {
       "conceptId": "from-client-folder-to-operational-file",
@@ -2187,6 +2187,466 @@
       },
       "media": {
         "durationSeconds": 50.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "shared-data-handling-boundary",
+      "module": "data-handling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "en",
+      "languageLabel": "English",
+      "title": "Vera + Clara | How your data is handled",
+      "status": "local_rendered",
+      "targetDurationSeconds": 82.0,
+      "speechDurationSeconds": 80.4,
+      "voice": {
+        "name": "Samantha",
+        "rate": 100,
+        "interScenePauseMs": 2688,
+        "effectiveInterScenePauseSeconds": 2.688
+      },
+      "pageTargets": [
+        "/data-handling",
+        "/static/shared/vera/index.html#data-boundary",
+        "/static/shared/clara/index.html#data-handling"
+      ],
+      "cueCount": 15,
+      "sceneSpeechDurationsSeconds": [
+        12.225,
+        12.258,
+        9.108,
+        9.41,
+        10.914,
+        13.044
+      ],
+      "sceneDurationsSeconds": [
+        14.37,
+        14.946,
+        11.796,
+        12.098,
+        13.602,
+        15.188
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          14.37,
+          29.316,
+          41.112,
+          53.21,
+          66.812
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "data-handling/core/en/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 3269787,
+          "sha256": "77e1b2048004e646865cb777fb008440c97ceb95861cc77e150564ccce715f31"
+        },
+        "poster": {
+          "path": "data-handling/core/en/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 91428,
+          "sha256": "70f2ffce7f026e286ca673c3515fa95b9c55dfb468d4b349135254e39ff614a0"
+        },
+        "captions": {
+          "path": "data-handling/core/en/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1454,
+          "sha256": "33cc8a4a8cd6b3ed7a9a41fcad8fc583e40647655af93c8fd6b7cfdcb5ddfc97"
+        },
+        "transcript": {
+          "path": "data-handling/core/en/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 987,
+          "sha256": "83b5139b09cfa7c475d646106f0bfbe5511bcb952c0c0e30eb5360ae82ea725d"
+        }
+      },
+      "media": {
+        "durationSeconds": 82.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "shared-data-handling-boundary",
+      "module": "data-handling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "it",
+      "languageLabel": "Italiano",
+      "title": "Vera + Clara | Come vengono gestiti i tuoi dati",
+      "status": "local_rendered",
+      "targetDurationSeconds": 82.0,
+      "speechDurationSeconds": 80.4,
+      "voice": {
+        "name": "Alice",
+        "rate": 100,
+        "interScenePauseMs": 1310,
+        "effectiveInterScenePauseSeconds": 1.31
+      },
+      "pageTargets": [
+        "/data-handling",
+        "/static/shared/vera/index.html#data-boundary",
+        "/static/shared/clara/index.html#data-handling"
+      ],
+      "cueCount": 18,
+      "sceneSpeechDurationsSeconds": [
+        13.601,
+        13.566,
+        8.826,
+        10.687,
+        11.336,
+        15.831
+      ],
+      "sceneDurationsSeconds": [
+        15.056,
+        14.877,
+        10.137,
+        11.998,
+        12.647,
+        17.286
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          15.056,
+          29.933,
+          40.07,
+          52.067,
+          64.714
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "data-handling/core/it/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 3548533,
+          "sha256": "0ae3c5c0f7525b94cdbe10b70b9730ff05a3741be7d815a58502dfd35480ea5e"
+        },
+        "poster": {
+          "path": "data-handling/core/it/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 97534,
+          "sha256": "cc233f8235837e2412a47f725dd9a2440fd66767fa9ff61606974c54cd366903"
+        },
+        "captions": {
+          "path": "data-handling/core/it/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1698,
+          "sha256": "a276b0ead02ffad312b8bc74224fbb88f5e12ee893c9d74c050cc511460d657f"
+        },
+        "transcript": {
+          "path": "data-handling/core/it/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 1137,
+          "sha256": "af90a1a2f9f099b825dcba756fe1d953685387a11fb326d8fa5879a04a1d5fb5"
+        }
+      },
+      "media": {
+        "durationSeconds": 82.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "shared-data-handling-boundary",
+      "module": "data-handling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "fr",
+      "languageLabel": "Français",
+      "title": "Vera + Clara | Comment vos données sont traitées",
+      "status": "local_rendered",
+      "targetDurationSeconds": 82.0,
+      "speechDurationSeconds": 80.4,
+      "voice": {
+        "name": "Thomas",
+        "rate": 110,
+        "interScenePauseMs": 1808,
+        "effectiveInterScenePauseSeconds": 1.808
+      },
+      "pageTargets": [
+        "/data-handling",
+        "/static/shared/vera/index.html#data-boundary",
+        "/static/shared/clara/index.html#data-handling"
+      ],
+      "cueCount": 19,
+      "sceneSpeechDurationsSeconds": [
+        12.85,
+        13.185,
+        8.005,
+        10.745,
+        11.629,
+        14.948
+      ],
+      "sceneDurationsSeconds": [
+        14.554,
+        14.992,
+        9.813,
+        12.552,
+        13.436,
+        16.652
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          14.554,
+          29.546,
+          39.359,
+          51.911,
+          65.348
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "data-handling/core/fr/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 3648138,
+          "sha256": "11022c9c225eb888fad5c1c608a5972dc0a25cfcc6b25accf5255af447bb3e0d"
+        },
+        "poster": {
+          "path": "data-handling/core/fr/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 102142,
+          "sha256": "ea73f74492d498f9945969925378c07df6f09ae301ec589d40691faa6d312ecc"
+        },
+        "captions": {
+          "path": "data-handling/core/fr/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1826,
+          "sha256": "29215448a904de801e990ac79f3681985a169d7632513ff800c7d04f33ca281d"
+        },
+        "transcript": {
+          "path": "data-handling/core/fr/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 1234,
+          "sha256": "f0ba4c0894bfc30aea9fae1708b56e569e85b2d0a5edc69d282a96d61a574b72"
+        }
+      },
+      "media": {
+        "durationSeconds": 82.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "shared-data-handling-boundary",
+      "module": "data-handling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "de",
+      "languageLabel": "Deutsch",
+      "title": "Vera + Clara | So werden Ihre Daten verarbeitet",
+      "status": "local_rendered",
+      "targetDurationSeconds": 82.0,
+      "speechDurationSeconds": 80.4,
+      "voice": {
+        "name": "Anna",
+        "rate": 112,
+        "interScenePauseMs": 1290,
+        "effectiveInterScenePauseSeconds": 1.29
+      },
+      "pageTargets": [
+        "/data-handling",
+        "/static/shared/vera/index.html#data-boundary",
+        "/static/shared/clara/index.html#data-handling"
+      ],
+      "cueCount": 16,
+      "sceneSpeechDurationsSeconds": [
+        11.029,
+        13.223,
+        15.777,
+        10.193,
+        10.228,
+        13.499
+      ],
+      "sceneDurationsSeconds": [
+        12.474,
+        14.513,
+        17.068,
+        11.483,
+        11.518,
+        14.944
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          12.474,
+          26.987,
+          44.055,
+          55.538,
+          67.056
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "data-handling/core/de/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 3632004,
+          "sha256": "a7019a2e8dce0f4509a413335c101468b171c1be842b83b75250c37f09e30b84"
+        },
+        "poster": {
+          "path": "data-handling/core/de/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 99519,
+          "sha256": "72335ee172a3219bfa911fe2690fbc60366018d0a7ad318c2611f2b871e50b32"
+        },
+        "captions": {
+          "path": "data-handling/core/de/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1587,
+          "sha256": "8519002424bc8feb49dc1ed87b0302837f98e4e68b83c6204329d154665332aa"
+        },
+        "transcript": {
+          "path": "data-handling/core/de/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 1094,
+          "sha256": "4720fde34c56feb5d477ee3dcba284535228325fc070995e2eb5f397d13e8f13"
+        }
+      },
+      "media": {
+        "durationSeconds": 82.0,
+        "width": 1280,
+        "height": 720,
+        "frameRate": "30/1",
+        "pixelFormat": "yuv420p",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "audioSampleRate": 48000,
+        "audioChannels": 2
+      }
+    },
+    {
+      "conceptId": "shared-data-handling-boundary",
+      "module": "data-handling",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "language": "es",
+      "languageLabel": "Español",
+      "title": "Vera + Clara | Cómo se tratan tus datos",
+      "status": "local_rendered",
+      "targetDurationSeconds": 82.0,
+      "speechDurationSeconds": 80.4,
+      "voice": {
+        "name": "Mónica",
+        "rate": 100,
+        "interScenePauseMs": 2550,
+        "effectiveInterScenePauseSeconds": 2.55
+      },
+      "pageTargets": [
+        "/data-handling",
+        "/static/shared/vera/index.html#data-boundary",
+        "/static/shared/clara/index.html#data-handling"
+      ],
+      "cueCount": 20,
+      "sceneSpeechDurationsSeconds": [
+        13.229,
+        12.642,
+        8.195,
+        9.502,
+        10.535,
+        13.548
+      ],
+      "sceneDurationsSeconds": [
+        15.304,
+        15.192,
+        10.745,
+        12.052,
+        13.085,
+        15.623
+      ],
+      "transitionSafety": {
+        "sentenceBoundaryOnly": true,
+        "visualCutPlacement": "inter-scene-silence-midpoint",
+        "minimumInterSceneSilenceSeconds": 0.8,
+        "validatedSilenceMarginSeconds": 0.2,
+        "maximumValidatedVolumeDb": -45.0,
+        "transitionSeconds": [
+          15.304,
+          30.495,
+          41.24,
+          53.292,
+          66.377
+        ]
+      },
+      "files": {
+        "video": {
+          "path": "data-handling/core/es/guide.mp4",
+          "mimeType": "video/mp4",
+          "bytes": 3346831,
+          "sha256": "c035b0a52e4557637d2c969805a888fdfb537c00de0b8310d2eab06d081891b4"
+        },
+        "poster": {
+          "path": "data-handling/core/es/poster.jpg",
+          "mimeType": "image/jpeg",
+          "bytes": 93404,
+          "sha256": "37c1a9af6921d43431c23bbc111c77e828417d0b2baf9af1b9958494a7c4da83"
+        },
+        "captions": {
+          "path": "data-handling/core/es/captions.vtt",
+          "mimeType": "text/vtt",
+          "bytes": 1770,
+          "sha256": "a7ebaed41b0b4b8dce77c5e206decb0f1337427d5bd58fe5398d2b863308cbf8"
+        },
+        "transcript": {
+          "path": "data-handling/core/es/transcript.txt",
+          "mimeType": "text/plain",
+          "bytes": 1134,
+          "sha256": "ac9db13fa7e13f252a6212395be4d47f5317e97faf04d37c07813f5ec2bcbd33"
+        }
+      },
+      "media": {
+        "durationSeconds": 82.0,
         "width": 1280,
         "height": 720,
         "frameRate": "30/1",

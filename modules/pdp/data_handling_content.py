@@ -37,6 +37,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "Vera and Clara follow one policy. Ordinary plugin functions run inside "
             "Codex; Mparanza-hosted services form a separate processing boundary."
         ),
+        "video": {
+            "eyebrow": "Vera + Clara · Video",
+            "title": "A plain-language guide.",
+            "description": (
+                "See what can stay on your computer, what may enter a language-model "
+                "call through Codex, and when Mparanza becomes a separate processing "
+                "boundary."
+            ),
+            "transcript_label": "Read the transcript",
+            "unsupported": "Your browser does not support embedded video.",
+        },
         "boundary": {
             "title": "Ordinary Vera and Clara functions inside Codex.",
             "intro": (
@@ -180,6 +191,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "operano dentro Codex; i servizi hosted di Mparanza hanno un confine "
             "di trattamento separato."
         ),
+        "video": {
+            "eyebrow": "Vera + Clara · Video",
+            "title": "Una guida semplice.",
+            "description": (
+                "Scopri che cosa può restare sul tuo computer, che cosa può entrare "
+                "in una chiamata a un modello linguistico tramite Codex e quando "
+                "Mparanza diventa un confine di trattamento separato."
+            ),
+            "transcript_label": "Leggi la trascrizione",
+            "unsupported": "Il browser non supporta i video incorporati.",
+        },
         "boundary": {
             "title": "Le normali funzioni di Vera e Clara dentro Codex.",
             "intro": (
@@ -326,6 +348,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "s'exécutent dans Codex ; les services hébergés par Mparanza ont un périmètre "
             "de traitement distinct."
         ),
+        "video": {
+            "eyebrow": "Vera + Clara · Vidéo",
+            "title": "Un guide en termes simples.",
+            "description": (
+                "Découvrez ce qui peut rester sur votre ordinateur, ce qui peut entrer "
+                "dans un appel à un modèle de langage via Codex et quand Mparanza "
+                "devient un périmètre de traitement distinct."
+            ),
+            "transcript_label": "Lire la transcription",
+            "unsupported": "Votre navigateur ne prend pas en charge la vidéo intégrée.",
+        },
         "boundary": {
             "title": "Les fonctions ordinaires de Vera et Clara dans Codex.",
             "intro": (
@@ -476,6 +509,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "Für Vera und Clara gilt dieselbe Regel. Normale Plugin-Funktionen laufen "
             "in Codex; Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze."
         ),
+        "video": {
+            "eyebrow": "Vera + Clara · Video",
+            "title": "Einfach erklärt.",
+            "description": (
+                "Sehen Sie, was auf Ihrem Computer bleiben kann, was über Codex in "
+                "eine Sprachmodell-Anfrage eingehen kann und wann Mparanza zu einer "
+                "separaten Verarbeitungsgrenze wird."
+            ),
+            "transcript_label": "Transkript lesen",
+            "unsupported": "Ihr Browser unterstützt keine eingebetteten Videos.",
+        },
         "boundary": {
             "title": "Normale Vera- und Clara-Funktionen in Codex.",
             "intro": (
@@ -624,6 +668,17 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             "plugins se ejecutan dentro de Codex; los servicios alojados por Mparanza "
             "constituyen un límite de tratamiento separado."
         ),
+        "video": {
+            "eyebrow": "Vera + Clara · Vídeo",
+            "title": "Una guía clara.",
+            "description": (
+                "Descubre qué puede permanecer en tu ordenador, qué puede entrar en "
+                "una llamada a un modelo de lenguaje a través de Codex y cuándo "
+                "Mparanza se convierte en un límite de tratamiento separado."
+            ),
+            "transcript_label": "Leer la transcripción",
+            "unsupported": "Tu navegador no admite vídeos incrustados.",
+        },
         "boundary": {
             "title": "Funciones ordinarias de Vera y Clara dentro de Codex.",
             "intro": (

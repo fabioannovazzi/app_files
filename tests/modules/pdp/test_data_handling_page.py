@@ -58,31 +58,36 @@ def _copy_shape(value: Any) -> Any:
 
 
 @pytest.mark.parametrize(
-    ("lang", "page_title", "closing"),
+    ("lang", "page_title", "video_title", "closing"),
     (
         (
             "en",
             "How your data is handled.",
+            "A plain-language guide.",
             "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
         ),
         (
             "it",
             "Come vengono gestiti i tuoi dati.",
+            "Una guida semplice.",
             "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
         ),
         (
             "fr",
             "Comment vos données sont traitées.",
+            "Un guide en termes simples.",
             "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
         ),
         (
             "de",
             "So werden Ihre Daten verarbeitet.",
+            "Einfach erklärt.",
             "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
         ),
         (
             "es",
             "Cómo se tratan tus datos.",
+            "Una guía clara.",
             "Una política para Vera y Clara. Sin documentación para cada prompt.",
         ),
     ),
@@ -91,6 +96,7 @@ def test_data_handling_page_is_public_and_localized(
     monkeypatch: pytest.MonkeyPatch,
     lang: str,
     page_title: str,
+    video_title: str,
     closing: str,
 ) -> None:
     captured = _capture_template_response(monkeypatch)
@@ -109,7 +115,26 @@ def test_data_handling_page_is_public_and_localized(
     page = context["page"]
     assert isinstance(page, dict)
     assert page["title"] == page_title
+    assert page["video"]["title"] == video_title
     assert page["closing"] == closing
+
+
+def test_data_handling_template_embeds_localized_accessible_video() -> None:
+    template = (ROOT / "templates" / "data_handling.html").read_text(encoding="utf-8")
+    media_root = (
+        "/static/shared/video-production/rendered/data-handling/core/{{ lang }}"
+    )
+
+    assert 'id="data-handling-video"' in template
+    assert "<video controls" in template
+    assert f"{media_root}/guide.mp4" in template
+    assert f"{media_root}/poster.jpg" in template
+    assert f"{media_root}/captions.vtt" in template
+    assert f"{media_root}/transcript.txt" in template
+    assert 'kind="captions"' in template
+    assert 'srclang="{{ lang }}"' in template
+    assert " default" in template
+    assert 'aria-describedby="data-handling-video-description"' in template
 
 
 def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:

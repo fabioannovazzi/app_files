@@ -186,7 +186,7 @@
           <h3 data-i18n="data.hosted.title">A separate processing boundary</h3>
           <p data-i18n="data.hosted.copy">Remote Interview, Transcription/Voice Capture, and the retail-data service are hosted by Mparanza. The content needed for those functions reaches Mparanza systems and, where required, OpenAI services.</p>
           <p data-i18n="data.hosted.detail">Each hosted service is documented once at service level, including access and retention or deletion arrangements. There is no prompt-by-prompt documentation.</p>
-          <a class="button secondary" href="/data-handling?lang=en" data-data-handling-link data-i18n="data.link">Read how data is handled</a>
+          <a class="button secondary" href="/data-handling?lang=en#data-handling-video" data-compliance-video-link data-i18n="data.link">Watch the data-handling video</a>
         </article>
       </div>
     </section>
@@ -396,7 +396,7 @@
         "data.hosted.title": "A separate processing boundary",
         "data.hosted.copy": "Remote Interview, Transcription/Voice Capture, and the retail-data service are hosted by Mparanza. The content needed for those functions reaches Mparanza systems and, where required, OpenAI services.",
         "data.hosted.detail": "Each hosted service is documented once at service level, including access and retention or deletion arrangements. There is no prompt-by-prompt documentation.",
-        "data.link": "Read how data is handled",
+        "data.link": "Watch the data-handling video",
         "handles.title": "The project is not just a presentation",
         "handles.copy": "Clara organizes sources, distinguishes facts, inferences, and professional judgment, and surfaces gaps and contradictions. You decide what goes into the client materials.",
         "card.materials.title": "Sources and conclusions stay connected",
@@ -530,7 +530,7 @@
         "data.hosted.title": "Un confine di trattamento separato",
         "data.hosted.copy": "Intervista remota, Trascrizione/Voice Capture e il servizio dati retail sono ospitati da Mparanza. I contenuti necessari raggiungono i sistemi Mparanza e, quando serve, i servizi OpenAI.",
         "data.hosted.detail": "Ogni servizio hosted viene documentato una volta a livello di servizio, compresi accesso e modalità di conservazione o cancellazione. Non esiste documentazione prompt per prompt.",
-        "data.link": "Leggi come vengono gestiti i dati",
+        "data.link": "Guarda il video sulla gestione dei dati",
         "handles.title": "Il progetto non è solo una presentazione",
         "handles.copy": "Clara organizza le fonti, distingue fatti, inferenze e giudizio professionale e fa emergere lacune e contraddizioni. Sei tu a decidere che cosa entra nel materiale per il cliente.",
         "card.materials.title": "Fonti e conclusioni restano collegate",
@@ -664,7 +664,7 @@
         "data.hosted.title": "Un périmètre de traitement distinct",
         "data.hosted.copy": "L'entretien à distance, la transcription/Voice Capture et le service de données retail sont hébergés par Mparanza. Les contenus nécessaires à ces fonctions atteignent les systèmes Mparanza et, lorsque c'est requis, les services OpenAI.",
         "data.hosted.detail": "Chaque service hébergé est documenté une seule fois au niveau du service, notamment pour l'accès et les modalités de conservation ou de suppression. Il n'y a pas de documentation prompt par prompt.",
-        "data.link": "Lire comment les données sont traitées",
+        "data.link": "Voir la vidéo sur le traitement des données",
         "handles.title": "Le projet n'est pas seulement une présentation",
         "handles.copy": "Clara organise les sources, distingue les faits, les inférences et le jugement professionnel, et met en évidence les lacunes et les contradictions. C'est vous qui décidez de ce qui entre dans les livrables destinés au client.",
         "card.materials.title": "Les conclusions restent reliées à leurs sources",
@@ -798,7 +798,7 @@
         "data.hosted.title": "Eine separate Verarbeitungsgrenze",
         "data.hosted.copy": "Remote-Interview, Transkription/Voice Capture und der Retail-Datendienst werden von Mparanza gehostet. Die dafür benötigten Inhalte erreichen Mparanza-Systeme und, soweit erforderlich, OpenAI-Dienste.",
         "data.hosted.detail": "Jeder gehostete Dienst wird einmal auf Dienstebene dokumentiert, einschließlich Zugang sowie Aufbewahrungs- oder Löschregelung. Eine Dokumentation für jeden Prompt gibt es nicht.",
-        "data.link": "Lesen, wie Daten verarbeitet werden",
+        "data.link": "Video zur Datenverarbeitung ansehen",
         "handles.title": "Das Projekt ist nicht nur eine Präsentation",
         "handles.copy": "Clara ordnet die Quellen, unterscheidet zwischen Fakten, Schlussfolgerungen und fachlichen Einschätzungen und macht Lücken und Widersprüche sichtbar. Sie entscheiden, was in die Unterlagen für den Kunden einfließt.",
         "card.materials.title": "Quellen und Schlussfolgerungen bleiben verknüpft",
@@ -932,7 +932,7 @@
         "data.hosted.title": "Un límite de tratamiento separado",
         "data.hosted.copy": "Remote Interview, Transcription/Voice Capture y el servicio de datos retail están alojados por Mparanza. El contenido necesario para esas funciones llega a los sistemas de Mparanza y, cuando corresponde, a los servicios de OpenAI.",
         "data.hosted.detail": "Cada servicio alojado se documenta una vez a nivel de servicio, incluidos los acuerdos de acceso y conservación o eliminación. No existe documentación prompt por prompt.",
-        "data.link": "Consulta cómo se tratan los datos",
+        "data.link": "Ver el vídeo sobre el tratamiento de datos",
         "handles.title": "El proyecto no es solo una presentación",
         "handles.copy": "Clara organiza las fuentes, distingue entre hechos, inferencias y criterio profesional y señala lagunas y contradicciones. Tú decides qué se incorpora a los materiales para el cliente.",
         "card.materials.title": "Las fuentes y las conclusiones permanecen conectadas",
@@ -1045,6 +1045,9 @@
     });
     document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
       link.href = `/data-handling?lang=${safeLang}`;
+    });
+    document.querySelectorAll("[data-compliance-video-link]").forEach((link) => {
+      link.href = `/data-handling?lang=${safeLang}#data-handling-video`;
     });
     const videoCatalogLanguage = activePresentationVideo.catalogLanguage || safeLang;
     window.MparanzaVideos?.mount({ product: "clara", lang: videoCatalogLanguage, openLabel: activeCopy["videos.open"] });

@@ -1,0 +1,61 @@
+WEBVTT
+
+1
+00:00:00.800 --> 00:00:04.732
+Vera and Clara are built for serious professional work.
+
+2
+00:00:04.732 --> 00:00:09.522
+That work can require real client data: documents, names and facts.
+
+3
+00:00:09.522 --> 00:00:13.025
+What you provide is not anonymised automatically.
+
+4
+00:00:15.714 --> 00:00:18.958
+When useful, local Python tools can filter or
+
+5
+00:00:18.958 --> 00:00:22.275
+aggregate material before Codex interprets it.
+
+6
+00:00:22.275 --> 00:00:27.972
+But a mechanical filter cannot decide on its own what the work genuinely needs.
+
+7
+00:00:30.660 --> 00:00:33.870
+If the task requires them, necessary names,
+
+8
+00:00:33.870 --> 00:00:39.768
+documents or case facts may be included by Codex in a call to a language model.
+
+9
+00:00:42.456 --> 00:00:48.288
+That call is governed by your existing ChatGPT plan. In ordinary workflows,
+
+10
+00:00:48.288 --> 00:00:51.866
+no client or work content is sent to Mparanza.
+
+11
+00:00:54.554 --> 00:00:59.731
+Optional services hosted by Mparanza have a separate, documented boundary.
+
+12
+00:00:59.731 --> 00:01:05.468
+For each service, we state what is sent and its access and retention arrangements.
+
+13
+00:01:08.156 --> 00:01:12.868
+Each workflow is mapped once, when it is added or materially changed.
+
+14
+00:01:12.868 --> 00:01:18.468
+The relevant boundary appears in the workflow, without paperwork for every prompt.
+
+15
+00:01:18.468 --> 00:01:21.200
+Professional judgement remains with you.
