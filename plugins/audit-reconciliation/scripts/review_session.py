@@ -370,7 +370,16 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    if _is_spanish(language):
+        return [
+            {"field": "item_type", "label": "Tipo"},
+            {"field": "title", "label": "Línea o artefacto"},
+            {"field": "recommended_action", "label": "Acción sugerida"},
+            {"field": "source_path", "label": "Fuente"},
+            {"field": "output_path", "label": "Salida"},
+            {"field": "status", "label": "Estado"},
+        ]
     return [
         {"field": "item_type", "label": "Type"},
         {"field": "title", "label": "Row or artifact"},
@@ -415,12 +424,16 @@ def _review_action(row: dict[str, Any]) -> str:
     return "mark_unclear"
 
 
-def _review_title(row: dict[str, Any], index: int) -> str:
+def _review_title(row: dict[str, Any], index: int, language: str) -> str:
     document = (
         _clean_text(row.get("document_no"))
         or _clean_text(row.get("document_key"))
         or _clean_text(row.get("record_id"))
-        or f"Review row {index}"
+        or (
+            f"Línea de revisión {index}"
+            if _is_spanish(language)
+            else f"Review row {index}"
+        )
     )
     amount = _num(row.get("amount") or row.get("balance") or row.get("open_amount"))
     status = _clean_text(
@@ -430,7 +443,9 @@ def _review_title(row: dict[str, Any], index: int) -> str:
     return " | ".join(part for part in (document, amount_text, status) if part)
 
 
-def _review_row_items(review_rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def _review_row_items(
+    review_rows: Sequence[dict[str, Any]], language: str
+) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     sorted_rows = sorted(
         review_rows,
@@ -454,12 +469,20 @@ def _review_row_items(review_rows: Sequence[dict[str, Any]]) -> list[dict[str, A
         source_parts = [
             _clean_text(row.get("source_file")),
             (
-                f"page {_clean_text(row.get('source_page'))}"
+                (
+                    f"página {_clean_text(row.get('source_page'))}"
+                    if _is_spanish(language)
+                    else f"page {_clean_text(row.get('source_page'))}"
+                )
                 if _clean_text(row.get("source_page"))
                 else ""
             ),
             (
-                f"row {_clean_text(row.get('source_row'))}"
+                (
+                    f"fila {_clean_text(row.get('source_row'))}"
+                    if _is_spanish(language)
+                    else f"row {_clean_text(row.get('source_row'))}"
+                )
                 if _clean_text(row.get("source_row"))
                 else ""
             ),
@@ -474,8 +497,16 @@ def _review_row_items(review_rows: Sequence[dict[str, Any]]) -> list[dict[str, A
                     "target_record_id": target_record_id,
                     "target_field": "review_notes",
                     "edit_hint": (
-                        "Editing this review row writes the reviewer note to "
-                        "review_notes in codex_review_packet.json."
+                        (
+                            "Editar esta línea de revisión escribe la nota del "
+                            "revisor en review_notes dentro de "
+                            "codex_review_packet.json."
+                        )
+                        if _is_spanish(language)
+                        else (
+                            "Editing this review row writes the reviewer note to "
+                            "review_notes in codex_review_packet.json."
+                        )
                     ),
                 }
             )
@@ -483,7 +514,7 @@ def _review_row_items(review_rows: Sequence[dict[str, Any]]) -> list[dict[str, A
             _base_item(
                 item_id,
                 _review_item_type(row),
-                _review_title(row, index),
+                _review_title(row, index, language),
                 source_path=source_ref,
                 output_path="codex_review_packet.json",
                 allowed_actions=(
@@ -523,7 +554,9 @@ def _review_row_items(review_rows: Sequence[dict[str, Any]]) -> list[dict[str, A
     return items
 
 
-def _check_items(checks: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def _check_items(
+    checks: Sequence[dict[str, Any]], language: str
+) -> list[dict[str, Any]]:
     failing = [
         row
         for row in checks
@@ -533,7 +566,8 @@ def _check_items(checks: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
         _base_item(
             f"check-{index}",
             "check_exception",
-            _clean_text(row.get("check")) or f"Check {index}",
+            _clean_text(row.get("check"))
+            or (f"Control {index}" if _is_spanish(language) else f"Check {index}"),
             output_path="run_manifest.json",
             allowed_actions=("accept", "reject", "edit", "mark_unclear", "skip"),
             recommended_action=(
@@ -561,22 +595,38 @@ def _artifact_items(
     output_dir: Path,
     *,
     missing_evidence_requests_path: str | Path | None = None,
+    language: str = "it",
 ) -> list[dict[str, Any]]:
-    artifact_specs = [
-        ("excel_path", "workpaper_artifact", "Audit reconciliation workbook"),
-        (
-            "accountant_report_path",
-            "workpaper_artifact",
-            "Commercialista operating workbook",
-        ),
-        ("word_path", "report_artifact", "Narrative reconciliation report"),
-    ]
+    if _is_spanish(language):
+        artifact_specs = [
+            ("excel_path", "workpaper_artifact", "Libro de conciliación de auditoría"),
+            (
+                "accountant_report_path",
+                "workpaper_artifact",
+                "Libro de trabajo operativo del contable",
+            ),
+            ("word_path", "report_artifact", "Informe narrativo de conciliación"),
+        ]
+    else:
+        artifact_specs = [
+            ("excel_path", "workpaper_artifact", "Audit reconciliation workbook"),
+            (
+                "accountant_report_path",
+                "workpaper_artifact",
+                "Commercialista operating workbook",
+            ),
+            ("word_path", "report_artifact", "Narrative reconciliation report"),
+        ]
     if missing_evidence_requests_path:
         artifact_specs.append(
             (
                 "missing_evidence_requests_path",
                 "evidence_request_artifact",
-                "Targeted missing-evidence requests",
+                (
+                    "Solicitudes específicas de evidencias pendientes"
+                    if _is_spanish(language)
+                    else "Targeted missing-evidence requests"
+                ),
             )
         )
         result = {
@@ -1029,6 +1079,7 @@ def _write_artifact_card(
     run_id: str,
     review_payload: dict[str, Any],
     result: dict[str, Any],
+    language: str = "it",
     missing_evidence_requests_path: str | Path | None = None,
 ) -> Path:
     review_items = int(review_payload.get("item_count") or 0)
@@ -1051,36 +1102,68 @@ def _write_artifact_card(
         output_dir,
     )
     command = f"python scripts/review_server.py {_quote_command_path(output_dir)}"
-    lines = [
-        "# Audit Reconciliation Artifact Card",
-        "",
-        f"- Run ID: `{run_id}`",
-        f"- Output folder: `{output_dir.as_posix()}`",
-        "- Review handoff: browser locale tramite `scripts/review_server.py`",
-        f"- Command: `{command}`",
-        "- Review status: `pending_review` finche non vengono salvate/applicate le decisioni",
-        f"- Review items: `{review_items}`",
-        f"- Failed checks: `{failed_check_count}`",
-        f"- Unresolved rows: `{unresolved_count}`",
-        "",
-        "## Artefatti principali",
-        "",
-        f"- Audit workbook: `{audit_workbook or 'not_written'}`",
-        f"- Scheda commercialista: `{accountant_workbook or 'not_written'}`",
-        f"- Relazione Word: `{word_report or 'not_written'}`",
-        f"- Richieste evidenze: `{missing_requests or 'not_written'}`",
-        "- Review payload: `review_payload.json`",
-        "- Decisioni: `ui_decisions.json`",
-        "- Stato finale: `final_artifacts.json`",
-        "- Fallback statico: `review_ui.html`",
-        "",
-        "## Prossima azione",
-        "",
-        "Aprire il server locale, comunicare esplicitamente l'URL al reviewer, "
-        "raccogliere le decisioni nella pagina browser e usare Apply decisions "
-        "per scrivere `ui_decisions.json`, `applied_decisions.json` e lo stato "
-        "aggiornato in `final_artifacts.json`.",
-    ]
+    if _is_spanish(language):
+        lines = [
+            "# Ficha de artefactos de la conciliación de auditoría",
+            "",
+            f"- ID de ejecución: `{run_id}`",
+            f"- Carpeta de salida: `{output_dir.as_posix()}`",
+            "- Entrega para revisión: navegador local mediante `scripts/review_server.py`",
+            f"- Comando: `{command}`",
+            "- Estado de revisión: `pending_review` hasta que se guarden o apliquen las decisiones",
+            f"- Elementos para revisar: `{review_items}`",
+            f"- Controles fallidos: `{failed_check_count}`",
+            f"- Filas sin resolver: `{unresolved_count}`",
+            "",
+            "## Artefactos principales",
+            "",
+            f"- Libro de auditoría: `{audit_workbook or 'not_written'}`",
+            f"- Ficha para el contable: `{accountant_workbook or 'not_written'}`",
+            f"- Informe Word: `{word_report or 'not_written'}`",
+            f"- Solicitudes de evidencias: `{missing_requests or 'not_written'}`",
+            "- Datos de revisión: `review_payload.json`",
+            "- Decisiones: `ui_decisions.json`",
+            "- Estado final: `final_artifacts.json`",
+            "- Alternativa estática: `review_ui.html`",
+            "",
+            "## Siguiente acción",
+            "",
+            "Abra el servidor local, comunique expresamente al revisor la URL y "
+            "recoja las decisiones en la página del navegador. Use Aplicar decisiones "
+            "para escribir `ui_decisions.json`, `applied_decisions.json` y el estado "
+            "actualizado en `final_artifacts.json`.",
+        ]
+    else:
+        lines = [
+            "# Audit Reconciliation Artifact Card",
+            "",
+            f"- Run ID: `{run_id}`",
+            f"- Output folder: `{output_dir.as_posix()}`",
+            "- Review handoff: browser locale tramite `scripts/review_server.py`",
+            f"- Command: `{command}`",
+            "- Review status: `pending_review` finche non vengono salvate/applicate le decisioni",
+            f"- Review items: `{review_items}`",
+            f"- Failed checks: `{failed_check_count}`",
+            f"- Unresolved rows: `{unresolved_count}`",
+            "",
+            "## Artefatti principali",
+            "",
+            f"- Audit workbook: `{audit_workbook or 'not_written'}`",
+            f"- Scheda commercialista: `{accountant_workbook or 'not_written'}`",
+            f"- Relazione Word: `{word_report or 'not_written'}`",
+            f"- Richieste evidenze: `{missing_requests or 'not_written'}`",
+            "- Review payload: `review_payload.json`",
+            "- Decisioni: `ui_decisions.json`",
+            "- Stato finale: `final_artifacts.json`",
+            "- Fallback statico: `review_ui.html`",
+            "",
+            "## Prossima azione",
+            "",
+            "Aprire il server locale, comunicare esplicitamente l'URL al reviewer, "
+            "raccogliere le decisioni nella pagina browser e usare Apply decisions "
+            "per scrivere `ui_decisions.json`, `applied_decisions.json` e lo stato "
+            "aggiornato in `final_artifacts.json`.",
+        ]
     path = output_dir / "artifact_card.md"
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
@@ -1100,6 +1183,19 @@ def write_run_intake(
 
     paths = _source_paths_from_inventory(source_inventory, source_paths)
     run_id = _run_id(source_hint or (paths[0] if paths else output_dir))
+    data_posture_notes = (
+        [
+            "Los scripts de conciliación leen las rutas locales de evidencias contables registradas en input_paths.",
+            "Los datos de revisión muestran líneas de conciliación y referencias de evidencias acotadas para su revisión en la interfaz.",
+            "De forma predeterminada no se utiliza ningún conector externo, ruta de carga, SQL remoto ni cuaderno alojado.",
+        ]
+        if _is_spanish(language)
+        else [
+            "Reconciliation scripts read local accounting evidence paths recorded in input_paths.",
+            "Review payloads expose bounded reconciliation rows and evidence references for UI review.",
+            "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+        ]
+    )
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
@@ -1140,11 +1236,7 @@ def write_run_intake(
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
-            "notes": [
-                "Reconciliation scripts read local accounting evidence paths recorded in input_paths.",
-                "Review payloads expose bounded reconciliation rows and evidence references for UI review.",
-                "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
-            ],
+            "notes": data_posture_notes,
         },
         "status": "ready_for_reconciliation_run",
     }
@@ -1175,13 +1267,14 @@ def write_review_session_artifacts(
     ]
     checks = [row for row in result.get("checks", []) if isinstance(row, dict)]
     items: list[dict[str, Any]] = []
-    items.extend(_review_row_items(review_rows))
-    items.extend(_check_items(checks))
+    items.extend(_review_row_items(review_rows, language))
+    items.extend(_check_items(checks, language))
     items.extend(
         _artifact_items(
             result,
             output_dir,
             missing_evidence_requests_path=missing_evidence_requests_path,
+            language=language,
         )
     )
 
@@ -1209,7 +1302,7 @@ def write_review_session_artifacts(
         "review_type": "audit_reconciliation_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "audit_workbook": _as_output_ref(result.get("excel_path"), output_dir),
@@ -1293,14 +1386,25 @@ def write_review_session_artifacts(
         ui_decisions=ui_decisions_payload,
     )
 
-    caveats = [
-        "The browser review payload is bounded; use the Excel workbook and JSON diagnostics as the complete audit evidence set.",
-        "ui_decisions.json is pending until the local browser review server or MCP widget records decisions.",
-        "Deterministic row classifications remain authoritative until reviewed issues are fixed and the workflow is rerun.",
-    ]
+    if _is_spanish(language):
+        caveats = [
+            "Los datos mostrados en el navegador están acotados; utilice el libro Excel y los diagnósticos JSON como conjunto completo de evidencias de auditoría.",
+            "ui_decisions.json permanece pendiente hasta que el servidor local o el widget MCP registre las decisiones.",
+            "Las clasificaciones deterministas de las filas siguen siendo autoritativas hasta que se corrijan las incidencias revisadas y se vuelva a ejecutar el flujo.",
+        ]
+    else:
+        caveats = [
+            "The browser review payload is bounded; use the Excel workbook and JSON diagnostics as the complete audit evidence set.",
+            "ui_decisions.json is pending until the local browser review server or MCP widget records decisions.",
+            "Deterministic row classifications remain authoritative until reviewed issues are fixed and the workflow is rerun.",
+        ]
     if rollforward_summary["exception_count"]:
         caveats.append(
-            "Account roll-forward has exception rows; review account_rollforward_check.json and the workbook roll-forward sheet before final conclusions."
+            (
+                "La conciliación de saldos contiene filas con excepciones; revise account_rollforward_check.json y la hoja de saldos del libro antes de emitir conclusiones finales."
+                if _is_spanish(language)
+                else "Account roll-forward has exception rows; review account_rollforward_check.json and the workbook roll-forward sheet before final conclusions."
+            )
         )
 
     artifact_card_path = _write_artifact_card(
@@ -1308,7 +1412,28 @@ def write_review_session_artifacts(
         run_id=run_id,
         review_payload=review_payload,
         result=result,
+        language=language,
         missing_evidence_requests_path=missing_evidence_requests_path,
+    )
+
+    next_actions = (
+        [
+            "Abra el servidor de revisión con scripts/review_server.py e indique expresamente al revisor la URL local y la ruta de artifact_card.md.",
+            "Use la página del navegador para guardar o aplicar decisiones y escribir ui_decisions.json, applied_decisions.json y final_artifacts.json en la carpeta de salida.",
+            "Use el widget MCP de validación y renderizado solo como superficie integrada opcional de Codex; no es la entrega principal para la revisión normal en navegador.",
+            "Use review_ui.html únicamente si no se puede iniciar el servidor local o abrir el navegador; la alternativa estática no puede conservar decisiones por sí sola.",
+            "Revise las filas PENDING, FAIL, sin resolver, que requieren evidencia y de pago probable antes de considerar definitivo el paquete.",
+            "Utilice las solicitudes específicas de evidencias pendientes para el seguimiento operativo cuando el proceso las haya generado.",
+        ]
+        if _is_spanish(language)
+        else [
+            "Open the browser review server with scripts/review_server.py and explicitly tell the reviewer the localhost URL and artifact_card.md path.",
+            "Use the browser page to save or apply decisions so ui_decisions.json, applied_decisions.json, and final_artifacts.json are written in the output folder.",
+            "Use the MCP validate/render widget only as an optional integrated Codex surface; it is not the primary handoff for normal browser review.",
+            "Use review_ui.html only when the local server cannot start or the browser cannot be opened; the static fallback cannot persist decisions by itself.",
+            "Review PENDING, FAIL, unresolved, needs-evidence, and probable-payment rows before treating the package as final.",
+            "Use targeted missing-evidence requests for operational follow-up when the run produced them.",
+        ]
     )
 
     final_artifacts_path = _write_json(
@@ -1361,18 +1486,15 @@ def write_review_session_artifacts(
                 },
                 "fallback": {
                     "artifact": "review_ui.html",
-                    "when": "The local review server cannot start or the browser cannot be opened.",
+                    "when": (
+                        "No se puede iniciar el servidor local de revisión o abrir el navegador."
+                        if _is_spanish(language)
+                        else "The local review server cannot start or the browser cannot be opened."
+                    ),
                     "persistence": "copy_or_download_json",
                 },
             },
-            "next_actions": [
-                "Open the browser review server with scripts/review_server.py and explicitly tell the reviewer the localhost URL and artifact_card.md path.",
-                "Use the browser page to save or apply decisions so ui_decisions.json, applied_decisions.json, and final_artifacts.json are written in the output folder.",
-                "Use the MCP validate/render widget only as an optional integrated Codex surface; it is not the primary handoff for normal browser review.",
-                "Use review_ui.html only when the local server cannot start or the browser cannot be opened; the static fallback cannot persist decisions by itself.",
-                "Review PENDING, FAIL, unresolved, needs-evidence, and probable-payment rows before treating the package as final.",
-                "Use targeted missing-evidence requests for operational follow-up when the run produced them.",
-            ],
+            "next_actions": next_actions,
             "status": "written_pending_review",
         },
     )

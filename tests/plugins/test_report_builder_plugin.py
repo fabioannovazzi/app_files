@@ -82,6 +82,8 @@ def test_spanish_docx_output_record_uses_spanish_required_text(
         "Estado del informe",
         "Llamadas a la API del modelo desde los scripts",
         "Secciones asignadas",
+        "Ruta de entrada",
+        "Tablas detectadas",
         "Secciones pendientes",
         "Resultados del periodo",
     ]
@@ -163,6 +165,99 @@ def _save_workbook(path: Path) -> None:
     cash.append(["Operating cash", 250])
     cash.append(["Investing cash", -50])
     workbook.save(path)
+
+
+def test_spanish_build_localizes_review_artifacts_docx_and_strict_contract(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    input_path = tmp_path / "informe.xlsx"
+    output_dir = tmp_path / "salida"
+    _save_workbook(input_path)
+
+    core.build_report(
+        input_path,
+        output_dir,
+        language="es-ES",
+        document_language="es-ES",
+        report_type="annual_financial_statement",
+    )
+
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    review_handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    document = Document(output_dir / "report.docx")
+    document_text = "\n".join(
+        [paragraph.text for paragraph in document.paragraphs]
+        + [
+            cell.text
+            for table in document.tables
+            for row in table.rows
+            for cell in row.cells
+        ]
+    )
+    missing_item = next(
+        item
+        for item in review_payload["items"]
+        if item["id"].startswith("missing-section-")
+    )
+    artifact_item = next(
+        item for item in review_payload["items"] if item["output_path"] == "report.docx"
+    )
+    outputs_by_path = {output["path"]: output for output in final_artifacts["outputs"]}
+
+    assert review_payload["language"] == "es"
+    assert review_payload["columns"] == [
+        {"field": "item_type", "label": "Tipo"},
+        {"field": "title", "label": "Elemento del informe"},
+        {"field": "recommended_action", "label": "Acción sugerida"},
+        {"field": "source_path", "label": "Fuente"},
+        {"field": "output_path", "label": "Salida"},
+        {"field": "status", "label": "Estado"},
+    ]
+    assert missing_item["title"].startswith("Falta la asignación de la sección:")
+    assert missing_item["data"]["requested_document"].startswith(
+        "Tabla de origen o soporte narrativo para la sección"
+    )
+    assert missing_item["data"]["reason"].startswith(
+        "No hay ninguna tabla de origen determinista"
+    )
+    assert artifact_item["title"] == "Informe de Word"
+    assert review_handoff.startswith("# Entrega para revisión: Generador de informes\n")
+    assert "## Revisión en Codex" in review_handoff
+    assert outputs_by_path["review_handoff.md"]["required_text"][0] == (
+        "Entrega para revisión"
+    )
+    assert {
+        "Resumen ejecutivo",
+        "Anexo de auditoría",
+        "Ruta de entrada",
+        "Tablas detectadas",
+    } <= set(outputs_by_path["report.docx"]["required_text"])
+    assert "Resumen ejecutivo" in document_text
+    assert "Anexo de auditoría" in document_text
+    assert "Ruta de entrada" in document_text
+    assert "Tablas detectadas" in document_text
+    assert "Columna" in document_text
+    assert "Recuento" in document_text
+    assert "Suma" in document_text
+    assert "Rango" in document_text
+    assert "Input path" not in document_text
+    assert "Tables discovered" not in document_text
+    assert final_artifacts["caveats"][0].startswith("Codex sigue siendo responsable")
+    assert final_artifacts["next_actions"][2].startswith("Use report.docx")
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
 
 
 def test_plugin_inspects_and_builds_report_without_model_calls(tmp_path: Path) -> None:
@@ -912,3 +1007,94 @@ def test_mcp_review_server_validates_and_renders_report_payload() -> None:
         "resources/read", {"uri": "ui://widget/report-builder-review.html"}
     )
     assert "Build Report Review" in widget["contents"][0]["text"]
+
+
+def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None:
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "report-builder",
+        "workflow": "report-builder",
+        "run_id": "report-builder-es-runtime",
+        "language": "es",
+        "review_type": "report_builder_review",
+        "items": [
+            {
+                "id": "section-es-1",
+                "item_type": "report_section",
+                "title": "Resultados",
+                "allowed_actions": ["accept", "skip"],
+                "recommended_action": "accept",
+            }
+        ],
+        "item_count": 1,
+        "status": "ready_for_review",
+    }
+    run_intake = {
+        "run_id": review_payload["run_id"],
+        "language": "es_ES",
+        "output_dir": tmp_path.as_posix(),
+    }
+    decision = {"item_id": "section-es-1", "action": "accept"}
+
+    initialized = _call_mcp_server("initialize", {"_meta": {"locale": "es-ES"}})
+    validation_result = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "validate_report_builder_review",
+            "arguments": {"review_payload": review_payload},
+        },
+    )
+    save_result = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "save_report_builder_decisions",
+            "arguments": {
+                "review_payload": review_payload,
+                "decisions": [decision],
+            },
+        },
+    )
+    apply_result = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "apply_report_builder_decisions",
+            "arguments": {
+                "run_intake": run_intake,
+                "review_payload": review_payload,
+                "decisions": [decision],
+            },
+        },
+    )
+    invalid_result = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "validate_report_builder_review",
+            "arguments": {"review_payload": {**review_payload, "items": "invalid"}},
+        },
+    )
+
+    validation = validation_result["structuredContent"]
+    saved = save_result["structuredContent"]
+    applied = apply_result["structuredContent"]
+    invalid = invalid_result["structuredContent"]
+    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+
+    assert "Use validate_report_builder_review antes" in initialized["instructions"]
+    assert validation["message"].startswith("Los datos de revisión")
+    assert saved["message"].startswith("Las decisiones son válidas")
+    assert applied["message"].startswith("Se aplicaron 1 decisiones")
+    assert applied["final_artifacts"]["next_actions"][-1].startswith(
+        "Use final_artifacts.json como galería"
+    )
+    assert handoff.startswith("# Entrega para revisión: Generador de informes\n")
+    assert "<!-- Review Handoff -->" in handoff
+    handoff_output = next(
+        output
+        for output in applied["final_artifacts"]["outputs"]
+        if output["path"] == "review_handoff.md"
+    )
+    assert handoff_output["required_text"][:2] == [
+        "Entrega para revisión",
+        "Review Handoff",
+    ]
+    assert invalid["error"] == "review_payload.items debe ser una matriz"

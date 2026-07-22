@@ -1,6 +1,6 @@
 {
   "name": "concordato-plan-review",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "description": "Tie-out and auditor-oriented Word/Excel review workflow for Italian concordato plan numerical sections against accounting evidence.",
   "author": {
     "name": "Mparanza",

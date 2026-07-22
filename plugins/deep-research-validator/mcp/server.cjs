@@ -50,8 +50,121 @@ const ITEM_TYPES = new Set([
   "validation_artifact",
 ]);
 
+const RUNTIME_COPY = {
+  en: {
+    handoffTitle: "Review Handoff",
+    reviewPayload: "Review payload",
+    runIntake: "Run intake",
+    pendingDecisions: "Pending decisions",
+    appliedDecisions: "Applied decisions",
+    finalArtifacts: "Final artifacts",
+    reviewInCodex: "Review In Codex",
+    validationMessage:
+      "Deep Research review payload is valid. It is safe to call render_deep_research_review once.",
+    saved: (count) => `Saved ${count} Deep Research decisions.`,
+    saveNotWritten:
+      "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+    applied: (count) => `Applied ${count} Deep Research decisions.`,
+    applyNotWritten:
+      "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+    blockers: "Resolve blocked review decisions before treating final artifacts as ready.",
+    regenerate: "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
+    ready: "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
+    partial: "Complete remaining review decisions before final handoff.",
+    instructions:
+      "Use validate_deep_research_review before render_deep_research_review. Prefer the MCP widget for Deep Research review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+  },
+  es: {
+    handoffTitle: "Entrega para revisión",
+    reviewPayload: "Datos de revisión",
+    runIntake: "Datos de ejecución",
+    pendingDecisions: "Decisiones pendientes",
+    appliedDecisions: "Decisiones aplicadas",
+    finalArtifacts: "Artefactos finales",
+    reviewInCodex: "Revisión en Codex",
+    validationMessage:
+      "Los datos de revisión de Deep Research son válidos. Ya puede ejecutar render_deep_research_review.",
+    saved: (count) =>
+      `Se ${count === 1 ? "ha" : "han"} guardado ${count} ${count === 1 ? "decisión" : "decisiones"} de Deep Research.`,
+    saveNotWritten:
+      "Las decisiones son válidas. No se ha proporcionado run_intake.output_dir, por lo que no se ha escrito ningún archivo.",
+    applied: (count) =>
+      `Se ${count === 1 ? "ha" : "han"} aplicado ${count} ${count === 1 ? "decisión" : "decisiones"} de Deep Research.`,
+    applyNotWritten:
+      "Las decisiones aplicadas son válidas. No se ha proporcionado run_intake.output_dir, por lo que no se ha escrito ningún archivo.",
+    blockers: "Resuelva las decisiones bloqueadas antes de considerar listos los artefactos finales.",
+    regenerate: "Vuelva a generar las salidas DOCX/XLSX/PDF antes de la entrega final.",
+    ready: "Utilice final_artifacts.json como galería revisada de artefactos para la entrega.",
+    partial: "Complete las decisiones de revisión pendientes antes de la entrega final.",
+    instructions:
+      "Ejecute validate_deep_research_review antes de render_deep_research_review. Utilice preferentemente el widget MCP para la entrega de la revisión de Deep Research; guarde las decisiones con save_deep_research_decisions y aplíquelas con apply_deep_research_decisions para generar applied_decisions.json y actualizar el estado de final_artifacts.json. Utilice la revisión Markdown o estática solo cuando MCP no esté disponible.",
+  },
+};
+
 function isPlainObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
+}
+
+function normalizeLanguage(value) {
+  const code = String(value || "en")
+    .trim()
+    .toLowerCase()
+    .replaceAll("_", "-")
+    .split("-", 1)[0];
+  return code === "es" ? "es" : "en";
+}
+
+function runtimeLanguage(inputArgs) {
+  const reviewPayload = isPlainObject(inputArgs?.review_payload) ? inputArgs.review_payload : {};
+  const runIntake = isPlainObject(inputArgs?.run_intake) ? inputArgs.run_intake : {};
+  const summary = isPlainObject(reviewPayload.summary) ? reviewPayload.summary : {};
+  const meta = isPlainObject(inputArgs?._meta)
+    ? inputArgs._meta
+    : isPlainObject(inputArgs?.meta)
+      ? inputArgs.meta
+      : {};
+  return normalizeLanguage(
+    reviewPayload.language ||
+      summary.language ||
+      runIntake.language ||
+      inputArgs?.language ||
+      inputArgs?.locale ||
+      meta.language ||
+      meta.locale,
+  );
+}
+
+function runtimeCopy(inputArgs) {
+  return RUNTIME_COPY[runtimeLanguage(inputArgs)];
+}
+
+function localizeErrorMessage(message, inputArgs) {
+  const original = String(message || "");
+  if (runtimeLanguage(inputArgs) !== "es") return original;
+  const replacements = [
+    ["tool arguments must be an object", "los argumentos de la herramienta deben ser un objeto"],
+    ["review_payload must be an object", "review_payload debe ser un objeto"],
+    ["must be a non-empty string", "debe ser una cadena no vacía"],
+    ["must be a string when provided", "debe ser una cadena cuando se proporciona"],
+    ["must be an object", "debe ser un objeto"],
+    ["must be an array", "debe ser una lista"],
+    ["must be a non-empty array", "debe ser una lista no vacía"],
+    ["is not supported", "no es compatible"],
+    ["contains unsupported action", "contiene una acción no compatible"],
+    ["must equal", "debe coincidir con"],
+    ["items exceeds", "supera el límite de elementos:"],
+    ["characters", "caracteres"],
+    ["is required when action is edit", "es obligatorio cuando la acción es edit"],
+    ["is not allowed for item", "no está permitida para el elemento"],
+    ["is not in review_payload.items", "no figura en review_payload.items"],
+    ["contains duplicate item_id", "contiene un item_id duplicado"],
+    ["decisions cannot exceed review_payload.items.length", "decisions no puede superar review_payload.items.length"],
+    ["run_intake.run_id must match review_payload.run_id", "run_intake.run_id debe coincidir con review_payload.run_id"],
+    ["widget payload exceeds", "los datos del widget superan"],
+  ];
+  let localized = original;
+  for (const [source, target] of replacements) localized = localized.replaceAll(source, target);
+  return localized === original ? `La solicitud no es válida: ${original}` : localized;
 }
 
 function objectSchema(properties, required = [], additionalProperties = true) {
@@ -445,8 +558,8 @@ function saveDecisionPayload(inputArgs) {
     persisted,
     ui_decisions_path: persisted ? decisionOutputPath : null,
     message: persisted
-      ? `Saved ${uiDecisions.decision_count} Deep Research decisions.`
-      : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ? runtimeCopy(inputArgs).saved(uiDecisions.decision_count)
+      : runtimeCopy(inputArgs).saveNotWritten,
     ui_decisions: uiDecisions,
   };
 }
@@ -1179,13 +1292,15 @@ const REVIEW_HANDOFF_PLUGINS = new Set([
   "concordato-plan-review",
 ]);
 
-function reviewHandoffOutputRecord() {
+function reviewHandoffOutputRecord(inputArgs) {
+  const copy = runtimeCopy(inputArgs);
   return {
     path: "review_handoff.md",
     kind: "md",
     status: "written",
     required_text: [
       "Review Handoff",
+      ...(runtimeLanguage(inputArgs) === "es" ? [copy.handoffTitle, copy.reviewInCodex] : []),
       "review_payload.json",
       "ui_decisions.json",
       "applied_decisions.json",
@@ -1204,24 +1319,27 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
   fs.mkdirSync(outputDir, { recursive: true });
   if (!fs.existsSync(handoffPath)) {
     const displayName = PLUGIN_MANIFEST.name || pluginName || "Review";
+    const copy = runtimeCopy(inputArgs);
+    const spanish = runtimeLanguage(inputArgs) === "es";
     const text = [
-      `# ${displayName} Review Handoff`,
+      spanish ? `# ${displayName} · ${copy.handoffTitle}` : `# ${displayName} Review Handoff`,
+      ...(spanish ? ["<!-- review-contract: Review Handoff -->"] : []),
       "",
-      "- Review payload: `review_payload.json`",
-      "- Run intake: `run_intake.json`",
-      "- Pending decisions: `ui_decisions.json`",
-      "- Applied decisions: `applied_decisions.json`",
-      "- Final artifacts: `final_artifacts.json`",
+      `- ${copy.reviewPayload}: \`review_payload.json\``,
+      `- ${copy.runIntake}: \`run_intake.json\``,
+      `- ${copy.pendingDecisions}: \`ui_decisions.json\``,
+      `- ${copy.appliedDecisions}: \`applied_decisions.json\``,
+      `- ${copy.finalArtifacts}: \`final_artifacts.json\``,
       "",
-      "## Review In Codex",
-      `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
-      `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
-      `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
-      `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
+      `## ${copy.reviewInCodex}`,
+      `1. ${spanish ? "Valide los datos con" : "Validate the payload with"} \`${TOOL_NAMES.validateReview}\`.`,
+      `2. ${spanish ? "Abra el área de revisión con" : "Render the review workbench with"} \`${TOOL_NAMES.renderReview}\`.`,
+      `3. ${spanish ? "Guarde las decisiones del revisor con" : "Save reviewer actions with"} \`${TOOL_NAMES.saveDecisions}\`.`,
+      `4. ${spanish ? "Aplique las decisiones del revisor con" : "Apply reviewer actions with"} \`${TOOL_NAMES.applyDecisions}\`.`,
     ].join("\n");
     fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
   }
-  return reviewHandoffOutputRecord();
+  return reviewHandoffOutputRecord(inputArgs);
 }
 
 function finalArtifactsWithApplication(
@@ -1263,7 +1381,12 @@ function finalArtifactsWithApplication(
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
-    next_actions: nextActionsWithReviewApplication(current.next_actions, appliedDecisions, blockers),
+    next_actions: nextActionsWithReviewApplication(
+      current.next_actions,
+      appliedDecisions,
+      blockers,
+      inputArgs,
+    ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
     review_application: {
@@ -1308,16 +1431,17 @@ function effectsToBlockers(effects) {
     });
 }
 
-function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers) {
+function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers, inputArgs) {
   const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
+  const copy = runtimeCopy(inputArgs);
   if (blockers.length) {
-    nextActions.push("Resolve blocked review decisions before treating final artifacts as ready.");
+    nextActions.push(copy.blockers);
   } else if (appliedDecisions.native_regeneration_count) {
-    nextActions.push("Regenerate native DOCX/XLSX/PDF outputs before final handoff.");
+    nextActions.push(copy.regenerate);
   } else if (appliedDecisions.application_status === "final_ready") {
-    nextActions.push("Use final_artifacts.json as the reviewed artifact gallery for handoff.");
+    nextActions.push(copy.ready);
   } else if (appliedDecisions.application_status === "partial_review_applied") {
-    nextActions.push("Complete remaining review decisions before final handoff.");
+    nextActions.push(copy.partial);
   }
   return Array.from(new Set(nextActions));
 }
@@ -1447,8 +1571,8 @@ function applyDecisionPayload(inputArgs) {
     final_artifacts_path: finalArtifactsPath,
     run_intake_path: runIntakePath,
     message: persisted
-      ? `Applied ${responseAppliedDecisions.decision_count} Deep Research decisions.`
-      : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ? runtimeCopy(inputArgs).applied(responseAppliedDecisions.decision_count)
+      : runtimeCopy(inputArgs).applyNotWritten,
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
@@ -1524,8 +1648,7 @@ function callTool(name, args = {}) {
       run_id: payload.review_payload.run_id,
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
-      message:
-        "Deep Research review payload is valid. It is safe to call render_deep_research_review once.",
+      message: runtimeCopy(args).validationMessage,
       review_payload: payload.review_payload,
     };
   }
@@ -1584,8 +1707,7 @@ function handleRpc(message) {
           resources: {},
           prompts: {},
         },
-        instructions:
-          "Use validate_deep_research_review before render_deep_research_review. Prefer the MCP widget for Deep Research review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+        instructions: runtimeCopy(params).instructions,
       });
     }
     if (method === "notifications/initialized") return null;
@@ -1603,7 +1725,12 @@ function handleRpc(message) {
       } catch (error) {
         return rpcResponse(
           messageId,
-          toolError(error instanceof Error ? error.message : String(error)),
+          toolError(
+            localizeErrorMessage(
+              error instanceof Error ? error.message : String(error),
+              args,
+            ),
+          ),
         );
       }
     }

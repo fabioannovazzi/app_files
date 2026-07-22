@@ -10,6 +10,7 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
+from docx import Document
 from pypdf import PdfWriter
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -32,11 +33,17 @@ def _load_script(module_name: str) -> ModuleType:
     return module
 
 
-def _write_case_records(path: Path, *, date_value: str = "2021-01-01") -> Path:
+def _write_case_records(
+    path: Path, *, date_value: str = "2021-01-01", language: str = "it"
+) -> Path:
     payload = {
         "case_id": "CASE-001",
-        "language": "it",
-        "professional_question": "Quale trattamento previdenziale risulta supportato?",
+        "language": language,
+        "professional_question": (
+            "¿Qué tratamiento de previsión social está respaldado por las evidencias?"
+            if language == "es"
+            else "Quale trattamento previdenziale risulta supportato?"
+        ),
         "material_decisions": {
             "professional_question_confirmed": True,
             "framework_confirmed": True,
@@ -66,8 +73,16 @@ def _write_case_records(path: Path, *, date_value: str = "2021-01-01") -> Path:
         "facts": [
             {
                 "fact_id": "F-001",
-                "statement": "Il rapporto decorre dal 1 gennaio 2021.",
-                "review_label": "Decorrenza del rapporto",
+                "statement": (
+                    "La relación comienza el 1 de enero de 2021."
+                    if language == "es"
+                    else "Il rapporto decorre dal 1 gennaio 2021."
+                ),
+                "review_label": (
+                    "Inicio de la relación"
+                    if language == "es"
+                    else "Decorrenza del rapporto"
+                ),
                 "value": date_value,
                 "value_type": "date",
                 "subject_ids": ["SUB-001"],
@@ -87,7 +102,11 @@ def _write_case_records(path: Path, *, date_value: str = "2021-01-01") -> Path:
                 "event_id": "EV-001",
                 "date": "2021-01-01",
                 "date_precision": "day",
-                "description": "Decorrenza del rapporto.",
+                "description": (
+                    "Inicio de la relación."
+                    if language == "es"
+                    else "Decorrenza del rapporto."
+                ),
                 "source_fact_ids": ["F-001"],
                 "review_status": "confirmed",
                 "conflict_group": None,
@@ -99,15 +118,27 @@ def _write_case_records(path: Path, *, date_value: str = "2021-01-01") -> Path:
     return path
 
 
-def _write_claims(path: Path) -> Path:
+def _write_claims(path: Path, *, language: str = "it") -> Path:
     payload = {
-        "language": "it",
-        "overall_assessment": "La conclusione resta soggetta a revisione professionale.",
+        "language": language,
+        "overall_assessment": (
+            "La conclusión sigue sujeta a revisión profesional."
+            if language == "es"
+            else "La conclusione resta soggetta a revisione professionale."
+        ),
         "claims": [
             {
                 "claim_id": "CL-001",
-                "claim_text": "Il criterio indicato si applica nel periodo esaminato.",
-                "review_label": "Applicabilità temporale del criterio",
+                "claim_text": (
+                    "El criterio indicado se aplica durante el periodo examinado."
+                    if language == "es"
+                    else "Il criterio indicato si applica nel periodo esaminato."
+                ),
+                "review_label": (
+                    "Aplicabilidad temporal del criterio"
+                    if language == "es"
+                    else "Applicabilità temporale del criterio"
+                ),
                 "claim_type": "case_application",
                 "verdict": "supported",
                 "sources": [
@@ -121,8 +152,16 @@ def _write_claims(path: Path) -> Path:
                         "snapshot_sha256": None,
                     }
                 ],
-                "source_support": "La fonte copre il criterio e il periodo.",
-                "reasoning_review": "Il passaggio dalla fonte al criterio è esplicito.",
+                "source_support": (
+                    "La fuente cubre el criterio y el periodo."
+                    if language == "es"
+                    else "La fonte copre il criterio e il periodo."
+                ),
+                "reasoning_review": (
+                    "La relación entre la fuente y el criterio es explícita."
+                    if language == "es"
+                    else "Il passaggio dalla fonte al criterio è esplicito."
+                ),
                 "evidence_dependencies": ["F-001"],
                 "period_scope": {
                     "status": "confirmed",
@@ -178,7 +217,7 @@ def _write_calculation_recipe(path: Path) -> Path:
     return path
 
 
-def _inventory_case(tmp_path: Path) -> tuple[Path, Path]:
+def _inventory_case(tmp_path: Path, *, language: str = "it") -> tuple[Path, Path]:
     inventory_case = _load_script("inventory_case")
     input_dir = tmp_path / "input"
     output_dir = tmp_path / "output"
@@ -193,6 +232,8 @@ def _inventory_case(tmp_path: Path) -> tuple[Path, Path]:
                 "--output-dir",
                 str(output_dir),
                 "--no-ocr",
+                "--language",
+                language,
             ]
         )
         == 0
@@ -888,6 +929,119 @@ def test_package_case_writes_reviewable_markdown_docx_and_handoff(
     assert ((output_dir / "studio_memo.md").stat().st_mode & 0o077) == 0
 
 
+def test_package_case_spanish_writes_localized_artifacts_and_review_payload(
+    tmp_path: Path,
+) -> None:
+    _, output_dir = _inventory_case(tmp_path, language="es")
+    records_path = _write_case_records(
+        output_dir / "case_records_draft.json", language="es"
+    )
+    claims_path = _write_claims(output_dir / "claims_review.json", language="es")
+    validator = _load_script("validate_case_records")
+    packager = _load_script("package_case")
+    audit = validator.validate_case_records(
+        records_path, output_dir / "file_inventory.json", output_dir
+    )
+    assert audit["status"] == "passed"
+
+    result = packager.package_case(
+        output_dir / "case_records_validated.json", claims_path, output_dir
+    )
+
+    memo = (output_dir / "studio_memo.md").read_text(encoding="utf-8")
+    requests = (output_dir / "document_requests.md").read_text(encoding="utf-8")
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    docx_text = "\n".join(
+        paragraph.text
+        for paragraph in Document(output_dir / "studio_memo.docx").paragraphs
+    )
+    review = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    final_artifacts = result["final_artifacts"]
+    assert "BORRADOR PARA REVISIÓN PROFESIONAL" in memo
+    assert "## Límites y responsabilidades" in memo
+    assert "Solicitudes de documentos y aclaraciones" in requests
+    assert "Entrega para revisión de Previdenza INPS" in handoff
+    assert "BORRADOR PARA REVISIÓN PROFESIONAL" in docx_text
+    assert review["language"] == "es"
+    assert run_intake["working_language"] == "es"
+    assert final_artifacts["language"] == "es"
+    assert review["items"][0]["title"].startswith("Hecho ")
+    assert final_artifacts["caveats"] == [
+        "El paquete es un borrador y no constituye un dictamen profesional presentado ni firmado."
+    ]
+    assert "Validate and render" not in " ".join(final_artifacts["next_actions"])
+    required = next(
+        output["required_text"]
+        for output in final_artifacts["outputs"]
+        if output["path"] == "studio_memo.md"
+    )
+    assert required == ["BORRADOR PARA REVISIÓN PROFESIONAL"]
+    node = shutil.which("node") or str(
+        Path.home()
+        / ".cache"
+        / "codex-runtimes"
+        / "codex-primary-runtime"
+        / "dependencies"
+        / "node"
+        / "bin"
+        / "node"
+    )
+    validated = _mcp_tool_call(
+        node,
+        "validate_previdenza_inps_review",
+        {"review_payload": review},
+    )
+    assert validated["review_payload"]["language"] == "es"
+    assert str(validated["message"]).startswith("Los datos de revisión")
+
+
+def test_previdenza_widget_selects_spanish_copy_from_review_language() -> None:
+    node = shutil.which("node")
+    if node is None:
+        fallback = (
+            Path.home()
+            / ".cache"
+            / "codex-runtimes"
+            / "codex-primary-runtime"
+            / "dependencies"
+            / "node"
+            / "bin"
+            / "node"
+        )
+        if not fallback.is_file():
+            pytest.skip("Node.js is required for the widget language test")
+        node = str(fallback)
+    widget_path = PLUGIN_ROOT / "assets" / "previdenza-inps-review-widget.html"
+    script = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const html = fs.readFileSync(process.argv[1], "utf8");
+const body = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const definitions = body.split('document.getElementById("search").addEventListener')[0];
+const context = {};
+vm.createContext(context);
+new vm.Script(`${definitions}\nglobalThis.result = { language: languageFor({ review_payload: { language: "es" } }), queue: copyFor({ review_payload: { language: "es" } }).queueTitle, save: copyFor({ review_payload: { language: "es" } }).saveButton };`).runInContext(context);
+process.stdout.write(JSON.stringify(context.result));
+"""
+    completed = subprocess.run(
+        [node, "-e", script, str(widget_path)],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout) == {
+        "language": "es",
+        "queue": "Cola de revisión",
+        "save": "Guardar decisiones",
+    }
+
+
 def test_package_case_rejects_records_that_bypassed_validator(tmp_path: Path) -> None:
     _, output_dir = _inventory_case(tmp_path)
     records_path = _write_case_records(output_dir / "case_records_validated.json")
@@ -913,6 +1067,29 @@ def test_package_case_rejects_records_that_bypassed_validator(tmp_path: Path) ->
         "FASCICOLO BLOCCATO",
         "NON È UN PARERE",
     ]
+
+
+def test_package_case_spanish_localizes_blocked_note_and_public_blockers(
+    tmp_path: Path,
+) -> None:
+    _, output_dir = _inventory_case(tmp_path, language="es")
+    records_path = _write_case_records(
+        output_dir / "case_records_validated.json", language="es"
+    )
+    claims_path = _write_claims(output_dir / "claims_review.json", language="es")
+    packager = _load_script("package_case")
+
+    result = packager.package_case(records_path, claims_path, output_dir)
+
+    blocked = (output_dir / "blocked_case_note.md").read_text(encoding="utf-8")
+    assert "EXPEDIENTE BLOQUEADO — NO ES UN DICTAMEN PROFESIONAL" in blocked
+    assert "## Próximos elementos necesarios" in blocked
+    assert "FASCICOLO BLOCCATO" not in blocked
+    assert result["final_artifacts"]["language"] == "es"
+    assert all(
+        blocker["message"].startswith("Este control de validación")
+        for blocker in result["final_artifacts"]["blockers"]
+    )
 
 
 def test_package_case_blocked_rerun_clears_stale_memo_and_review_state(

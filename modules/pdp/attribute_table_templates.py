@@ -112,6 +112,38 @@ ATTRIBUTE_TABLE_TEMPLATES: tuple[AttributeTableTemplate, ...] = (
         ),
     ),
 )
+SPANISH_TEMPLATE_COPY = {
+    "attribute_bundle_comparison_table": {
+        "title": "Comparación de conjuntos de atributos",
+        "description": (
+            "Filas de conjuntos ordenadas que comparan la cohorte de interés con "
+            "su referencia mediante recuentos, cuotas, delta, índice y amplitud de "
+            "marcas."
+        ),
+    },
+    "attribute_bridge_table": {
+        "title": "Puente entre señales ganadoras y emergentes",
+        "description": (
+            "Tabla comparativa que muestra si un conjunto aparece como señal actual "
+            "de productos más vendidos, como señal emergente de productos recientes "
+            "o en ambas."
+        ),
+    },
+    "rank_weighted_visibility_table": {
+        "title": "Visibilidad ponderada por posición",
+        "description": (
+            "Líneas de estantería digital con métricas brutas, incrementales y de "
+            "robustez según el supuesto central de ponderación por posición."
+        ),
+    },
+    "product_signal_evidence_table": {
+        "title": "Evidencia de señales de producto",
+        "description": (
+            "Ejemplos de productos vinculados a las filas de señales seleccionadas, "
+            "con campos de posición, reseñas, atributos, imagen y salvedades."
+        ),
+    },
+}
 
 
 def _empty_frame(columns: Sequence[str]) -> pl.DataFrame:
@@ -935,6 +967,44 @@ COLUMN_LABELS = {
     "cumulative": "Cumulative",
     "skus": "SKUs",
 }
+SPANISH_COLUMN_LABELS = {
+    "layer": "Capa",
+    "comparison": "Comparación",
+    "signal_bundle": "Conjunto de señales",
+    "focus_n": "n del foco",
+    "baseline_n": "n de referencia",
+    "focus_share": "Foco",
+    "baseline_share": "Referencia",
+    "delta": "Delta",
+    "index": "Índice",
+    "brands": "Marcas",
+    "alignment": "Alineación",
+    "current_n": "n actual",
+    "current_share": "Actual",
+    "current_delta": "Delta actual",
+    "current_index": "Índice actual",
+    "emerging_n": "n emergente",
+    "emerging_share": "Emergente",
+    "emerging_delta": "Delta emergente",
+    "emerging_index": "Índice emergente",
+    "current_brands": "Marcas actuales",
+    "recent_brands": "Marcas recientes",
+    "rank": "Posición",
+    "lane": "Línea",
+    "gross_weight": "Peso bruto",
+    "incremental": "Incremental",
+    "cumulative": "Acumulado",
+    "skus": "SKUs",
+    "robustness": "Robustez",
+    "cohort": "Cohorte",
+    "brand": "Marca",
+    "product": "Producto",
+    "matched_signal": "Señal coincidente",
+    "rating": "Valoración",
+    "reviews": "Reseñas",
+    "attributes": "Atributos",
+    "caveat": "Salvedad",
+}
 
 NUMERIC_COLUMNS = {
     "rank",
@@ -972,22 +1042,47 @@ STRONG_COLUMNS = {
 }
 
 
-def _display_column_label(column: str) -> str:
+def _language_code(language: str) -> str:
+    normalized = str(language or "en").strip().lower().replace("_", "-")
+    return normalized.split("-", maxsplit=1)[0]
+
+
+def _template_display_copy(
+    template: AttributeTableTemplate, language: str
+) -> tuple[str, str]:
+    if _language_code(language) == "es":
+        copy = SPANISH_TEMPLATE_COPY[template.table_key]
+        return copy["title"], copy["description"]
+    return template.title, template.description
+
+
+def _display_column_label(column: str, language: str = "en") -> str:
+    if _language_code(language) == "es":
+        return SPANISH_COLUMN_LABELS.get(
+            column, COLUMN_LABELS.get(column, column.replace("_", " ").title())
+        )
     return COLUMN_LABELS.get(column, column.replace("_", " ").title())
 
 
-def _html_table(table_key: str, df: pl.DataFrame) -> str:
+def _html_table(table_key: str, df: pl.DataFrame, language: str = "en") -> str:
     template = _template_by_key()[table_key]
+    title, template_description = _template_display_copy(template, language)
+    spanish = _language_code(language) == "es"
     frame_columns, _schema = get_schema_and_column_names(df)
     preferred_columns = HTML_DISPLAY_COLUMNS.get(table_key, tuple(frame_columns))
     columns = [column for column in preferred_columns if column in frame_columns]
     if not columns:
         columns = frame_columns
-    description = f"{template.description} Showing up to {_table_display_row_limit(table_key)} rows."
+    row_limit = _table_display_row_limit(table_key)
+    description = (
+        f"{template_description} Se muestran hasta {row_limit} filas."
+        if spanish
+        else f"{template_description} Showing up to {row_limit} rows."
+    )
     header_parts = []
     for column in columns:
         header_class = "num" if column in NUMERIC_COLUMNS else ""
-        label = html.escape(_display_column_label(column))
+        label = html.escape(_display_column_label(column, language))
         header_parts.append(f'<th class="{header_class}">{label}</th>')
     header_cells = "".join(header_parts)
     body_rows = []
@@ -1013,14 +1108,16 @@ def _html_table(table_key: str, df: pl.DataFrame) -> str:
         body_rows.append(f"<tr{row_class}>{cells}</tr>")
     if not body_rows:
         body_rows.append(
-            f'<tr><td colspan="{len(columns) or 1}" class="empty">No qualifying rows.</td></tr>'
+            f'<tr><td colspan="{len(columns) or 1}" class="empty">'
+            f"{'No hay filas que cumplan los criterios.' if spanish else 'No qualifying rows.'}"
+            "</td></tr>"
         )
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{'es' if spanish else 'en'}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{html.escape(template.title)}</title>
+  <title>{html.escape(title)}</title>
   <style>
     :root {{
       color-scheme: light;
@@ -1092,7 +1189,7 @@ def _html_table(table_key: str, df: pl.DataFrame) -> str:
 </head>
 <body>
   <main class="page">
-    <h1>{html.escape(template.title)}</h1>
+    <h1>{html.escape(title)}</h1>
     <p class="description">{html.escape(description)}</p>
     <table>
       <thead><tr>{header_cells}</tr></thead>
@@ -1140,6 +1237,7 @@ def write_attribute_table_artifacts(
     output_dir: Path,
     *,
     table_keys: Sequence[str] | None = None,
+    language: str = "en",
 ) -> list[dict[str, Any]]:
     """Persist CSV/HTML table artifacts and return manifest entries."""
 
@@ -1155,13 +1253,16 @@ def write_attribute_table_artifacts(
         html_name = f"{Path(csv_name).stem}.html"
         html_path = table_dir / html_name
         frame.write_csv(csv_path)
-        html_path.write_text(_html_table(table_key, frame), encoding="utf-8")
+        html_path.write_text(
+            _html_table(table_key, frame, language=language), encoding="utf-8"
+        )
         columns, _schema = get_schema_and_column_names(frame)
         template = templates[table_key]
+        title, _description = _template_display_copy(template, language)
         manifest_entries.append(
             {
                 "table_key": table_key,
-                "title": template.title,
+                "title": title,
                 "object_type": "table",
                 "artifact_type": "table",
                 "csv": f"{ATTRIBUTE_TABLE_DIRNAME}/{csv_name}",
@@ -1197,6 +1298,7 @@ def build_attribute_tables_from_package(
     *,
     output_dir: Path | None = None,
     table_keys: Sequence[str] | None = None,
+    language: str = "en",
 ) -> dict[str, Any]:
     """Build deterministic attribute table artifacts from one evidence package."""
 
@@ -1212,6 +1314,7 @@ def build_attribute_tables_from_package(
         table_frames,
         resolved_output_dir,
         table_keys=selected_table_keys,
+        language=language,
     )
     return {
         "status": "written",

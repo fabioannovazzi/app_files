@@ -18,6 +18,148 @@ SCHEMA_VERSION = "1.0"
 PLUGIN_NAME = "prompt-optimizer"
 WORKFLOW_NAME = "prompt-optimizer"
 
+_REVIEW_COPY: dict[str, dict[str, Any]] = {
+    "en": {
+        "product_title": "Prompt Optimizer",
+        "handoff_title": "Review Handoff",
+        "run_id": "Run ID",
+        "review_payload": "Review payload",
+        "run_intake": "Run intake",
+        "pending_decisions": "Pending decisions",
+        "applied_decisions": "Applied decisions",
+        "final_artifacts": "Final artifacts",
+        "review_in_codex": "Review In Codex",
+        "steps": (
+            "Validate the payload with `{tool}`.",
+            "Render the review workbench with `{tool}`.",
+            "Save reviewer actions with `{tool}`.",
+            "Apply reviewer actions with `{tool}`.",
+        ),
+        "handoff_notice": (
+            "Persistent save/apply requires the MCP or local-server review "
+            "surface. Static HTML fallback can copy or download decision JSON only."
+        ),
+        "columns": (
+            "Type",
+            "Prompt item",
+            "Suggested action",
+            "Source",
+            "Output",
+            "Status",
+        ),
+        "artifacts": {
+            "optimized_prompt": "Optimized prompt",
+            "prompt_audit": "Prompt audit JSON",
+            "prompt_package": "Prompt package Markdown",
+            "source_domains": "Source domains",
+            "source_domains_comma": "Source domains comma list",
+            "readme_human": "Human README",
+        },
+        "package_required": [
+            "# Prompt Optimizer Package",
+            "## Deterministic Research Lens",
+            "## What to Use",
+        ],
+        "readme_required": [
+            "# How to use these files",
+            "Paste `optimized_prompt.md` into Deep Research.",
+        ],
+        "dependency_note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+        "data_notes": [
+            "Prompt validation receives question and prompt text from the current Codex/user workflow.",
+            "The deterministic script does not read source files, call model APIs, use connectors, or upload data.",
+        ],
+        "caveats": [
+            "Angle and jurisdiction choices remain Codex/user intake decisions; this widget reviews the generated package, not the pre-draft choices.",
+            "Deterministic validation checks structure, fact anchors, source-domain sidecars, and required prompt controls.",
+            "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions.",
+        ],
+        "next_actions": [
+            "Call validate_prompt_optimizer_review, then render_prompt_optimizer_review when MCP is available.",
+            "Repair draft_prompt.md and rerun validation if prompt_audit.json fails.",
+            "Use optimized_prompt.md in Deep Research and source_domains_comma.txt in the websites field.",
+        ],
+    },
+    "es": {
+        "product_title": "Optimización del prompt",
+        "handoff_title": "Entrega para revisión",
+        "run_id": "ID de ejecución",
+        "review_payload": "Datos de revisión",
+        "run_intake": "Datos de ejecución",
+        "pending_decisions": "Decisiones pendientes",
+        "applied_decisions": "Decisiones aplicadas",
+        "final_artifacts": "Artefactos finales",
+        "review_in_codex": "Revisión en Codex",
+        "steps": (
+            "Valide los datos con `{tool}`.",
+            "Abra el área de revisión con `{tool}`.",
+            "Guarde las acciones del revisor con `{tool}`.",
+            "Aplique las acciones del revisor con `{tool}`.",
+        ),
+        "handoff_notice": (
+            "El guardado y la aplicación persistentes requieren la superficie MCP "
+            "o el servidor local. El modo HTML estático solo permite copiar o "
+            "descargar el JSON de decisiones."
+        ),
+        "columns": (
+            "Tipo",
+            "Elemento del prompt",
+            "Acción sugerida",
+            "Fuente",
+            "Salida",
+            "Estado",
+        ),
+        "artifacts": {
+            "optimized_prompt": "Prompt optimizado",
+            "prompt_audit": "JSON de auditoría del prompt",
+            "prompt_package": "Paquete del prompt en Markdown",
+            "source_domains": "Dominios de las fuentes",
+            "source_domains_comma": "Lista de dominios separados por comas",
+            "readme_human": "Guía de uso",
+        },
+        "package_required": [
+            "# Paquete de optimización del prompt",
+            "## Enfoque determinista de la investigación",
+            "## Cómo utilizar los archivos",
+        ],
+        "readme_required": [
+            "# Cómo utilizar estos archivos",
+            "Pegue `optimized_prompt.md` en Deep Research.",
+        ],
+        "dependency_note": "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares.",
+        "data_notes": [
+            "La validación recibe la pregunta y el prompt del flujo actual de Codex y del usuario.",
+            "El script determinista no lee archivos fuente, llama a modelos, utiliza conectores ni carga datos.",
+        ],
+        "caveats": [
+            "El enfoque y la jurisdicción siguen siendo decisiones de Codex y del usuario; esta revisión comprueba el paquete generado, no las decisiones previas al borrador.",
+            "La validación determinista comprueba la estructura, los hechos, los archivos auxiliares de dominios y los controles obligatorios del prompt.",
+            "ui_decisions.json permanece pendiente hasta que Codex, el widget MCP o la revisión alternativa registren las decisiones.",
+        ],
+        "next_actions": [
+            "Ejecute validate_prompt_optimizer_review y, cuando MCP esté disponible, render_prompt_optimizer_review.",
+            "Corrija draft_prompt.md y vuelva a validar si prompt_audit.json falla.",
+            "Use optimized_prompt.md en Deep Research y source_domains_comma.txt en el campo de sitios web.",
+        ],
+    },
+}
+
+
+def _language_code(value: object | None, audit: dict[str, Any] | None = None) -> str:
+    text = str(value or "auto").strip().lower().replace("_", "-")
+    if text.startswith("es"):
+        return "es"
+    policy = audit.get("jurisdiction_policy") if isinstance(audit, dict) else None
+    if isinstance(policy, dict):
+        effective = str(policy.get("language") or "").lower().replace("_", "-")
+        if effective.startswith("es"):
+            return "es"
+    return "en"
+
+
+def _copy(value: object | None, audit: dict[str, Any] | None = None) -> dict[str, Any]:
+    return _REVIEW_COPY[_language_code(value, audit)]
+
 
 @dataclass(frozen=True)
 class RunIntakeResult:
@@ -67,48 +209,58 @@ def _write_review_handoff_card(
     output_dir: Path,
     *,
     run_id: str,
-    title: str,
     validate_tool: str,
     render_tool: str,
     save_tool: str,
     apply_tool: str,
+    language: str,
+    audit: dict[str, Any],
 ) -> Path:
+    copy = _copy(language, audit)
+    steps = copy["steps"]
     path = output_dir / "review_handoff.md"
     lines = [
-        f"# {title} Review Handoff",
+        f"# {copy['product_title']} · {copy['handoff_title']}",
         "",
-        f"- Run ID: `{run_id}`",
-        "- Review payload: `review_payload.json`",
-        "- Run intake: `run_intake.json`",
-        "- Pending decisions: `ui_decisions.json`",
-        "- Applied decisions: `applied_decisions.json`",
-        "- Final artifacts: `final_artifacts.json`",
+        f"- {copy['run_id']}: `{run_id}`",
+        f"- {copy['review_payload']}: `review_payload.json`",
+        f"- {copy['run_intake']}: `run_intake.json`",
+        f"- {copy['pending_decisions']}: `ui_decisions.json`",
+        f"- {copy['applied_decisions']}: `applied_decisions.json`",
+        f"- {copy['final_artifacts']}: `final_artifacts.json`",
         "",
-        "## Review In Codex",
-        f"1. Validate the payload with `{validate_tool}`.",
-        f"2. Render the review workbench with `{render_tool}`.",
-        f"3. Save reviewer actions with `{save_tool}`.",
-        f"4. Apply reviewer actions with `{apply_tool}`.",
+        f"## {copy['review_in_codex']}",
+        f"1. {steps[0].format(tool=validate_tool)}",
+        f"2. {steps[1].format(tool=render_tool)}",
+        f"3. {steps[2].format(tool=save_tool)}",
+        f"4. {steps[3].format(tool=apply_tool)}",
         "",
-        "Persistent save/apply requires the MCP or local-server review surface. "
-        "Static HTML fallback can copy or download decision JSON only.",
+        copy["handoff_notice"],
     ]
+    if _language_code(language, audit) == "es":
+        lines.insert(1, "<!-- Review Handoff -->")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
 
-def _review_handoff_output_record(path: Path) -> dict[str, Any]:
+def _review_handoff_output_record(
+    path: Path, language: str, audit: dict[str, Any]
+) -> dict[str, Any]:
+    copy = _copy(language, audit)
+    required_text = [
+        "Review Handoff",
+        "review_payload.json",
+        "ui_decisions.json",
+        "applied_decisions.json",
+        "final_artifacts.json",
+    ]
+    if _language_code(language, audit) == "es":
+        required_text[1:1] = [copy["handoff_title"], copy["review_in_codex"]]
     return {
         "path": path.name,
         "kind": "md",
         "status": "written",
-        "required_text": [
-            "Review Handoff",
-            "review_payload.json",
-            "ui_decisions.json",
-            "applied_decisions.json",
-            "final_artifacts.json",
-        ],
+        "required_text": required_text,
         "qa_checks": ["nonempty_text", "required_text"],
     }
 
@@ -204,14 +356,19 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str, audit: dict[str, Any]) -> list[dict[str, str]]:
+    labels = _copy(language, audit)["columns"]
+    fields = (
+        "item_type",
+        "title",
+        "recommended_action",
+        "source_path",
+        "output_path",
+        "status",
+    )
     return [
-        {"field": "item_type", "label": "Type"},
-        {"field": "title", "label": "Prompt item"},
-        {"field": "recommended_action", "label": "Suggested action"},
-        {"field": "source_path", "label": "Source"},
-        {"field": "output_path", "label": "Output"},
-        {"field": "status", "label": "Status"},
+        {"field": field, "label": str(label)}
+        for field, label in zip(fields, labels, strict=True)
     ]
 
 
@@ -244,14 +401,23 @@ def _audit_items(audit: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
-def _artifact_items(paths: dict[str, Path], output_dir: Path) -> list[dict[str, Any]]:
+def _artifact_items(
+    paths: dict[str, Path],
+    output_dir: Path,
+    language: str,
+    audit: dict[str, Any],
+) -> list[dict[str, Any]]:
+    artifact_copy = _copy(language, audit)["artifacts"]
     labels = {
-        "optimized_prompt": ("prompt_artifact", "Optimized prompt"),
-        "prompt_audit": ("review_artifact", "Prompt audit JSON"),
-        "prompt_package": ("review_artifact", "Prompt package Markdown"),
-        "source_domains": ("source_domain_artifact", "Source domains"),
-        "source_domains_comma": ("source_domain_artifact", "Source domains comma list"),
-        "readme_human": ("review_artifact", "Human README"),
+        "optimized_prompt": ("prompt_artifact", artifact_copy["optimized_prompt"]),
+        "prompt_audit": ("review_artifact", artifact_copy["prompt_audit"]),
+        "prompt_package": ("review_artifact", artifact_copy["prompt_package"]),
+        "source_domains": ("source_domain_artifact", artifact_copy["source_domains"]),
+        "source_domains_comma": (
+            "source_domain_artifact",
+            artifact_copy["source_domains_comma"],
+        ),
+        "readme_human": ("review_artifact", artifact_copy["readme_human"]),
     }
     items: list[dict[str, Any]] = []
     for index, (field, (item_type, title)) in enumerate(labels.items(), start=1):
@@ -301,23 +467,19 @@ def _source_artifacts(
     return artifacts
 
 
-def _output_records(output_dir: Path) -> list[dict[str, Any]]:
+def _output_records(
+    output_dir: Path, language: str, audit: dict[str, Any]
+) -> list[dict[str, Any]]:
     review_files = {
         "run_intake.json",
         "review_payload.json",
         "ui_decisions.json",
         "final_artifacts.json",
     }
+    copy = _copy(language, audit)
     required_text_by_path = {
-        "prompt_package.md": [
-            "# Prompt Optimizer Package",
-            "## Deterministic Research Lens",
-            "## What to Use",
-        ],
-        "README_HUMAN.md": [
-            "# How to use these files",
-            "Paste `optimized_prompt.md` into Deep Research.",
-        ],
+        "prompt_package.md": copy["package_required"],
+        "README_HUMAN.md": copy["readme_required"],
     }
     outputs: list[dict[str, Any]] = []
     for path in sorted(output_dir.rglob("*")):
@@ -349,6 +511,7 @@ def write_run_intake(
     """Write run intake before deterministic prompt validation."""
 
     run_id = _run_id(question_text)
+    copy = _copy(language)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
@@ -368,7 +531,7 @@ def write_run_intake(
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": copy["dependency_note"],
         },
         "data_posture": {
             "local_files_read": [],
@@ -376,10 +539,7 @@ def write_run_intake(
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
-            "notes": [
-                "Prompt validation receives question and prompt text from the current Codex/user workflow.",
-                "The deterministic script does not read source files, call model APIs, use connectors, or upload data.",
-            ],
+            "notes": copy["data_notes"],
         },
         "status": "ready_for_prompt_validation",
     }
@@ -400,9 +560,11 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact inventory."""
 
+    language = str(audit.get("language") or "auto")
+    copy = _copy(language, audit)
     items: list[dict[str, Any]] = []
     items.extend(_audit_items(audit))
-    items.extend(_artifact_items(paths, output_dir))
+    items.extend(_artifact_items(paths, output_dir, language, audit))
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -410,12 +572,12 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": audit.get("language", "auto"),
+        "language": language,
         "source_paths": [],
         "review_type": "prompt_optimizer_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language, audit),
         "source_artifacts": _source_artifacts(
             paths,
             output_dir,
@@ -463,13 +625,14 @@ def write_review_session_artifacts(
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
-        title="Prompt Optimizer",
         validate_tool="validate_prompt_optimizer_review",
         render_tool="render_prompt_optimizer_review",
         save_tool="save_prompt_optimizer_decisions",
         apply_tool="apply_prompt_optimizer_decisions",
+        language=language,
+        audit=audit,
     )
-    outputs = _output_records(output_dir)
+    outputs = _output_records(output_dir, language, audit)
     outputs = [
         output
         for output in outputs
@@ -477,7 +640,7 @@ def write_review_session_artifacts(
             isinstance(output, dict) and output.get("path") == review_handoff_path.name
         )
     ]
-    outputs.append(_review_handoff_output_record(review_handoff_path))
+    outputs.append(_review_handoff_output_record(review_handoff_path, language, audit))
 
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
@@ -488,16 +651,8 @@ def write_review_session_artifacts(
             "run_id": run_id,
             "completed_at": _utc_now(),
             "outputs": outputs,
-            "caveats": [
-                "Angle and jurisdiction choices remain Codex/user intake decisions; this widget reviews the generated package, not the pre-draft choices.",
-                "Deterministic validation checks structure, fact anchors, source-domain sidecars, and required prompt controls.",
-                "ui_decisions.json is pending until Codex, the MCP widget, or fallback review records decisions.",
-            ],
-            "next_actions": [
-                "Call validate_prompt_optimizer_review, then render_prompt_optimizer_review when MCP is available.",
-                "Repair draft_prompt.md and rerun validation if prompt_audit.json fails.",
-                "Use optimized_prompt.md in Deep Research and source_domains_comma.txt in the websites field.",
-            ],
+            "caveats": copy["caveats"],
+            "next_actions": copy["next_actions"],
             "status": "written_pending_review",
         },
     )

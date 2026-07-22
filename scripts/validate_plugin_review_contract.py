@@ -179,6 +179,24 @@ REVIEW_HANDOFF_REQUIRED_TEXT = [
     "final_artifacts.json",
 ]
 REVIEW_HANDOFF_TOOLS = {
+    "variance-analysis": [
+        "validate_variance_analysis_review",
+        "render_variance_analysis_review",
+        "save_variance_analysis_decisions",
+        "apply_variance_analysis_decisions",
+    ],
+    "scatter-bubble-analysis": [
+        "validate_scatter_bubble_review",
+        "render_scatter_bubble_review",
+        "save_scatter_bubble_decisions",
+        "apply_scatter_bubble_decisions",
+    ],
+    "set-overlap-analysis": [
+        "validate_set_overlap_review",
+        "render_set_overlap_review",
+        "save_set_overlap_decisions",
+        "apply_set_overlap_decisions",
+    ],
     "check-entries": [
         "validate_check_entries_review",
         "render_check_entries_review",

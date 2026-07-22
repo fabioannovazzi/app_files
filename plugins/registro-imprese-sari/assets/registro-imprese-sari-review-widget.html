@@ -133,7 +133,7 @@
       <div class="identity">
         <div class="mark" aria-hidden="true">RI</div>
         <div>
-          <p class="eyebrow">Vera · carta di lavoro</p>
+          <p class="eyebrow" id="eyebrow">Vera · carta di lavoro</p>
           <h1>Registro Imprese e SARI</h1>
         </div>
       </div>
@@ -144,18 +144,18 @@
       </div>
     </header>
 
-    <section class="notice" aria-label="Riepilogo run">
-      <div class="metric"><span>Run</span><strong id="run">—</strong></div>
-      <div class="metric"><span>Stato</span><strong id="status">—</strong></div>
-      <div class="metric"><span>Elementi</span><strong id="item-count">0</strong></div>
-      <div class="metric"><span>Decisioni</span><strong id="decision-count">0</strong></div>
+    <section class="notice" id="summary" aria-label="Riepilogo run">
+      <div class="metric"><span id="run-label">Run</span><strong id="run">—</strong></div>
+      <div class="metric"><span id="status-label">Stato</span><strong id="status">—</strong></div>
+      <div class="metric"><span id="item-count-label">Elementi</span><strong id="item-count">0</strong></div>
+      <div class="metric"><span id="decision-count-label">Decisioni</span><strong id="decision-count">0</strong></div>
       <div class="message" id="message">Nessun accesso, firma o invio è disponibile in questa revisione.</div>
     </section>
 
     <section class="workspace">
       <aside class="queue">
         <div class="queue-head">
-          <div class="queue-title"><h2>Coda di revisione</h2><span class="count" id="visible-count">0</span></div>
+          <div class="queue-title"><h2 id="queue-title">Coda di revisione</h2><span class="count" id="visible-count">0</span></div>
           <input class="search" id="search" type="search" placeholder="Filtra per titolo o tipo" aria-label="Filtra la coda">
           <div class="filters" id="filters"></div>
         </div>
@@ -164,7 +164,7 @@
       <article class="detail" id="detail"></article>
     </section>
 
-    <footer class="footer">Nessun accesso, firma o invio è disponibile in questa revisione.</footer>
+    <footer class="footer" id="footer-note">Nessun accesso, firma o invio è disponibile in questa revisione.</footer>
   </main>
 
   <script>
@@ -213,22 +213,152 @@
       },
     };
 
-    const TYPE_LABELS = {
-      case_fact: "Qualificazione",
-      practice_step: "Passaggio pratica",
-      official_source: "Fonte ufficiale",
-      missing_information: "Informazione mancante",
-      audit_check: "Controllo",
-      artifact: "Artefatto",
+    const UI_COPY = {
+      it: {
+        pageTitle: "Revisione Registro Imprese e SARI",
+        eyebrow: "Vera · carta di lavoro",
+        copyButton: "Copia decisioni",
+        saveButton: "Salva",
+        applyButton: "Applica alla carta",
+        summaryAria: "Riepilogo run",
+        runLabel: "Run",
+        statusLabel: "Stato",
+        itemsLabel: "Elementi",
+        decisionsLabel: "Decisioni",
+        boundary: "Nessun accesso, firma o invio è disponibile in questa revisione.",
+        queueTitle: "Coda di revisione",
+        searchPlaceholder: "Filtra per titolo o tipo",
+        searchAria: "Filtra la coda",
+        all: "Tutti",
+        reviewDefault: "da rivedere",
+        noFilterMatch: "Nessun elemento corrisponde al filtro.",
+        selectItem: "Seleziona un elemento.",
+        reviewDetails: "Dettagli di revisione",
+        decision: "Decisione",
+        reviewerNote: "Nota del revisore",
+        proposedEdit: "Testo corretto proposto",
+        requestedDocuments: "Documenti richiesti, uno per riga",
+        impact: "Le decisioni aggiornano soltanto la carta di lavoro. “Correggi” crea una richiesta di revisione e non modifica automaticamente il piano professionale.",
+        toolMissing: "Strumento di revisione non configurato",
+        mcpUnavailable: "Salvataggio MCP non disponibile; usa Copia decisioni",
+        copied: "Decisioni copiate negli appunti.",
+        saved: "Decisioni salvate nella cartella privata del run.",
+        applied: "Decisioni applicate alla carta di lavoro; nessuna azione su portali.",
+        localSource: "Fonte locale",
+        output: "Output",
+        types: {
+          case_fact: "Qualificazione",
+          practice_step: "Passaggio pratica",
+          official_source: "Fonte ufficiale",
+          missing_information: "Informazione mancante",
+          audit_check: "Controllo",
+          artifact: "Artefatto",
+        },
+        actions: {
+          accept: "Accetta", reject: "Rifiuta", edit: "Correggi",
+          mark_unclear: "Da chiarire", request_more_documents: "Chiedi documenti", skip: "Salta",
+        },
+        statuses: {
+          ready_for_professional_review: "Pronto per revisione professionale",
+          partial_review: "Revisione parziale",
+          draft_for_professional_review: "Bozza per revisione professionale",
+          passed: "Superato",
+          needs_review: "Da rivedere",
+          confirmed: "Confermato",
+          proposed: "Proposto",
+          blocked: "Bloccato",
+        },
+        fields: {
+          type: "Tipo", source_id: "ID fonte", publisher: "Editore",
+          territorial_applicability: "Applicabilità territoriale", source_date: "Data fonte",
+          official_url: "URL ufficiale", applicability_status: "Stato applicabilità",
+          record_id: "ID record", system: "Sistema", sequence: "Sequenza", detail: "Dettaglio",
+          proposed_value: "Valore proposto", document_quotes: "Citazioni documentali",
+          review_status: "Stato revisione", source_ids: "ID fonti", case_fact_ids: "ID fatti del caso",
+          confirmation: "Conferma", validation_status: "Stato validazione",
+          error_count: "Errori", blocker_count: "Blocchi",
+        },
+      },
+      es: {
+        pageTitle: "Revisión de Registro Imprese y SARI",
+        eyebrow: "Vera · documento de trabajo",
+        copyButton: "Copiar decisiones",
+        saveButton: "Guardar",
+        applyButton: "Aplicar al documento",
+        summaryAria: "Resumen de la ejecución",
+        runLabel: "Ejecución",
+        statusLabel: "Estado",
+        itemsLabel: "Elementos",
+        decisionsLabel: "Decisiones",
+        boundary: "En esta revisión no está disponible ningún acceso, firma ni presentación.",
+        queueTitle: "Cola de revisión",
+        searchPlaceholder: "Filtrar por título o tipo",
+        searchAria: "Filtrar la cola",
+        all: "Todos",
+        reviewDefault: "por revisar",
+        noFilterMatch: "Ningún elemento coincide con el filtro.",
+        selectItem: "Seleccione un elemento.",
+        reviewDetails: "Detalles de la revisión",
+        decision: "Decisión",
+        reviewerNote: "Nota del revisor",
+        proposedEdit: "Texto corregido propuesto",
+        requestedDocuments: "Documentos solicitados, uno por línea",
+        impact: "Las decisiones solo actualizan el documento de trabajo. «Corregir» crea una solicitud de revisión y no modifica automáticamente el plan profesional.",
+        toolMissing: "La herramienta de revisión no está configurada",
+        mcpUnavailable: "El guardado MCP no está disponible; use Copiar decisiones",
+        copied: "Decisiones copiadas al portapapeles.",
+        saved: "Decisiones guardadas en la carpeta privada de la ejecución.",
+        applied: "Decisiones aplicadas al documento de trabajo; no se ha realizado ninguna acción en portales.",
+        localSource: "Fuente local",
+        output: "Salida",
+        types: {
+          case_fact: "Calificación",
+          practice_step: "Paso de la práctica",
+          official_source: "Fuente oficial",
+          missing_information: "Información pendiente",
+          audit_check: "Control",
+          artifact: "Artefacto",
+        },
+        actions: {
+          accept: "Aceptar", reject: "Rechazar", edit: "Corregir",
+          mark_unclear: "Requiere aclaración", request_more_documents: "Solicitar documentos", skip: "Omitir",
+        },
+        statuses: {
+          ready_for_professional_review: "Listo para revisión profesional",
+          partial_review: "Revisión parcial",
+          draft_for_professional_review: "Borrador para revisión profesional",
+          passed: "Superado",
+          needs_review: "Por revisar",
+          confirmed: "Confirmado",
+          proposed: "Propuesto",
+          blocked: "Bloqueado",
+        },
+        fields: {
+          type: "Tipo", source_id: "ID de la fuente", publisher: "Editor",
+          territorial_applicability: "Aplicabilidad territorial", source_date: "Fecha de la fuente",
+          official_url: "URL oficial", applicability_status: "Estado de aplicabilidad",
+          record_id: "ID del registro", system: "Sistema", sequence: "Secuencia", detail: "Detalle",
+          proposed_value: "Valor propuesto", document_quotes: "Citas documentales",
+          review_status: "Estado de la revisión", source_ids: "ID de las fuentes", case_fact_ids: "ID de los hechos del caso",
+          confirmation: "Confirmación", validation_status: "Estado de la validación",
+          error_count: "Errores", blocker_count: "Bloqueos",
+        },
+      },
     };
-    const ACTION_LABELS = {
-      accept: "Accetta",
-      reject: "Rifiuta",
-      edit: "Correggi",
-      mark_unclear: "Da chiarire",
-      request_more_documents: "Chiedi documenti",
-      skip: "Salta",
-    };
+
+    function normalizeLanguage(value) {
+      const language = String(value || "").trim().toLowerCase().replaceAll("_", "-");
+      return language === "es" || language.startsWith("es-") || language === "spa" ? "es" : "it";
+    }
+    function languageFor(payload) {
+      return normalizeLanguage(
+        payload?.review_payload?.language
+        || payload?.run_intake?.language
+        || payload?.run_intake?.working_language
+        || "it"
+      );
+    }
+    function copyFor(payload) { return UI_COPY[languageFor(payload)] || UI_COPY.it; }
     const state = {
       payload: null,
       selectedId: null,
@@ -236,6 +366,30 @@
       query: "",
       decisions: new Map(),
     };
+
+    function copy() { return copyFor(state.payload); }
+    function localizedValue(value) {
+      return copy().statuses[String(value || "")] || value;
+    }
+    function applyStaticCopy() {
+      const text = copy();
+      document.documentElement.lang = languageFor(state.payload);
+      document.title = text.pageTitle;
+      document.getElementById("eyebrow").textContent = text.eyebrow;
+      document.getElementById("copy").textContent = text.copyButton;
+      document.getElementById("save").textContent = text.saveButton;
+      document.getElementById("apply").textContent = text.applyButton;
+      document.getElementById("summary").setAttribute("aria-label", text.summaryAria);
+      document.getElementById("run-label").textContent = text.runLabel;
+      document.getElementById("status-label").textContent = text.statusLabel;
+      document.getElementById("item-count-label").textContent = text.itemsLabel;
+      document.getElementById("decision-count-label").textContent = text.decisionsLabel;
+      document.getElementById("message").textContent = text.boundary;
+      document.getElementById("queue-title").textContent = text.queueTitle;
+      document.getElementById("search").placeholder = text.searchPlaceholder;
+      document.getElementById("search").setAttribute("aria-label", text.searchAria);
+      document.getElementById("footer-note").textContent = text.boundary;
+    }
 
     function toolOutput() {
       return window.openai?.toolOutput || window.openai?.structuredContent || FALLBACK;
@@ -270,7 +424,7 @@
     }
     function renderMetrics() {
       document.getElementById("run").textContent = review().run_id || "—";
-      document.getElementById("status").textContent = review().status || "—";
+      document.getElementById("status").textContent = localizedValue(review().status) || "—";
       document.getElementById("item-count").textContent = String(items().length);
       document.getElementById("decision-count").textContent = String(state.decisions.size);
     }
@@ -278,7 +432,7 @@
       const counts = new Map([["all", items().length]]);
       for (const item of items()) counts.set(item.item_type, (counts.get(item.item_type) || 0) + 1);
       document.getElementById("filters").innerHTML = Array.from(counts.entries()).map(([type, count]) => {
-        const label = type === "all" ? "Tutti" : (TYPE_LABELS[type] || type);
+        const label = type === "all" ? copy().all : (copy().types[type] || type);
         return `<button type="button" class="filter ${state.selectedType === type ? "active" : ""}" data-type="${esc(type)}">${esc(label)} · ${count}</button>`;
       }).join("");
     }
@@ -293,43 +447,43 @@
         const decision = decisionFor(item.id);
         return `<button type="button" class="row ${state.selectedId === item.id ? "selected" : ""}" data-id="${esc(item.id)}">
           <span class="dot ${statusClass(decision)}"></span>
-          <span><span class="row-title">${esc(item.title)}</span><span class="row-meta">${esc(TYPE_LABELS[item.item_type] || item.item_type)}</span></span>
-          <span class="recommended">${esc(decision ? ACTION_LABELS[decision.action] : ACTION_LABELS[item.recommended_action] || "rivedi")}</span>
+          <span><span class="row-title">${esc(item.title)}</span><span class="row-meta">${esc(copy().types[item.item_type] || item.item_type)}</span></span>
+          <span class="recommended">${esc(decision ? copy().actions[decision.action] : copy().actions[item.recommended_action] || copy().reviewDefault)}</span>
         </button>`;
-      }).join("") : '<div class="empty">Nessun elemento corrisponde al filtro.</div>';
+      }).join("") : `<div class="empty">${esc(copy().noFilterMatch)}</div>`;
       renderDetail();
     }
     function detailFields(item) {
       const entries = [
         ["ID", item.id],
-        ["Tipo", TYPE_LABELS[item.item_type] || item.item_type],
-        ["Fonte locale", item.source_path],
-        ["Output", item.output_path],
-        ...Object.entries(item.data || {}).map(([key, value]) => [key.replaceAll("_", " "), Array.isArray(value) ? value.join(", ") : value]),
+        [copy().fields.type, copy().types[item.item_type] || item.item_type],
+        [copy().localSource, item.source_path],
+        [copy().output, item.output_path],
+        ...Object.entries(item.data || {}).map(([key, value]) => [copy().fields[key] || key.replaceAll("_", " "), Array.isArray(value) ? value.join(", ") : localizedValue(value)]),
       ].filter(([, value]) => value !== null && value !== undefined && value !== "");
       return `<dl>${entries.map(([key, value]) => `<dt>${esc(key)}</dt><dd>${esc(value)}</dd>`).join("")}</dl>`;
     }
     function renderDetail() {
       const item = items().find((candidate) => candidate.id === state.selectedId);
       if (!item) {
-        document.getElementById("detail").innerHTML = '<div class="empty">Seleziona un elemento.</div>';
+        document.getElementById("detail").innerHTML = `<div class="empty">${esc(copy().selectItem)}</div>`;
         return;
       }
       const decision = decisionFor(item.id) || { item_id: item.id, action: "", reviewer_note: "", edit_value: "", requested_documents: [] };
       const actions = item.allowed_actions || [];
       document.getElementById("detail").innerHTML = `
         <div class="detail-head">
-          <div><p class="type">${esc(TYPE_LABELS[item.item_type] || item.item_type)}</p><h3>${esc(item.title)}</h3></div>
-          <span class="pill">${esc(decision.action ? ACTION_LABELS[decision.action] : "da rivedere")}</span>
+          <div><p class="type">${esc(copy().types[item.item_type] || item.item_type)}</p><h3>${esc(item.title)}</h3></div>
+          <span class="pill">${esc(decision.action ? copy().actions[decision.action] : copy().reviewDefault)}</span>
         </div>
-        <section class="section"><h4>Dettagli di revisione</h4>${detailFields(item)}</section>
+        <section class="section"><h4>${esc(copy().reviewDetails)}</h4>${detailFields(item)}</section>
         <section class="section">
-          <h4>Decisione</h4>
-          <div class="decision-actions">${actions.map((action) => `<button type="button" class="decision-action ${decision.action === action ? "selected" : ""}" data-action="${esc(action)}">${esc(ACTION_LABELS[action] || action)}</button>`).join("")}</div>
-          <div class="field"><label for="note">Nota del revisore</label><textarea id="note">${esc(decision.reviewer_note || "")}</textarea></div>
-          ${decision.action === "edit" ? `<div class="field"><label for="edit-value">Testo corretto proposto</label><textarea id="edit-value">${esc(decision.edit_value || "")}</textarea></div>` : ""}
-          ${decision.action === "request_more_documents" ? `<div class="field"><label for="documents">Documenti richiesti, uno per riga</label><textarea id="documents">${esc((decision.requested_documents || []).join("\n"))}</textarea></div>` : ""}
-          <p class="impact">Le decisioni aggiornano soltanto la carta di lavoro. “Correggi” crea una richiesta di revisione e non modifica automaticamente il piano professionale.</p>
+          <h4>${esc(copy().decision)}</h4>
+          <div class="decision-actions">${actions.map((action) => `<button type="button" class="decision-action ${decision.action === action ? "selected" : ""}" data-action="${esc(action)}">${esc(copy().actions[action] || action)}</button>`).join("")}</div>
+          <div class="field"><label for="note">${esc(copy().reviewerNote)}</label><textarea id="note">${esc(decision.reviewer_note || "")}</textarea></div>
+          ${decision.action === "edit" ? `<div class="field"><label for="edit-value">${esc(copy().proposedEdit)}</label><textarea id="edit-value">${esc(decision.edit_value || "")}</textarea></div>` : ""}
+          ${decision.action === "request_more_documents" ? `<div class="field"><label for="documents">${esc(copy().requestedDocuments)}</label><textarea id="documents">${esc((decision.requested_documents || []).join("\n"))}</textarea></div>` : ""}
+          <p class="impact">${esc(copy().impact)}</p>
         </section>`;
     }
     function updateDecision(itemId, changes) {
@@ -358,14 +512,14 @@
       };
     }
     async function callReviewTool(toolName) {
-      if (!toolName) throw new Error("Strumento di revisione non configurato");
-      if (!window.openai?.callTool) throw new Error("Salvataggio MCP non disponibile; usa Copia decisioni");
+      if (!toolName) throw new Error(copy().toolMissing);
+      if (!window.openai?.callTool) throw new Error(copy().mcpUnavailable);
       return window.openai.callTool(toolName, toolArguments());
     }
     async function copyDecisions() {
       const text = JSON.stringify(toolArguments(), null, 2);
       await navigator.clipboard.writeText(text);
-      setMessage("Decisioni copiate negli appunti.", "ok");
+      setMessage(copy().copied, "ok");
     }
     function render() { renderMetrics(); renderFilters(); renderRows(); }
 
@@ -404,17 +558,18 @@
     document.getElementById("save").addEventListener("click", async () => {
       try {
         await callReviewTool(state.payload?.decision_policy?.save_tool);
-        setMessage("Decisioni salvate nella cartella privata del run.", "ok");
+        setMessage(copy().saved, "ok");
       } catch (error) { setMessage(error.message, "error"); }
     });
     document.getElementById("apply").addEventListener("click", async () => {
       try {
         await callReviewTool(state.payload?.decision_policy?.apply_tool);
-        setMessage("Decisioni applicate alla carta di lavoro; nessuna azione su portali.", "ok");
+        setMessage(copy().applied, "ok");
       } catch (error) { setMessage(error.message, "error"); }
     });
 
     state.payload = toolOutput();
+    applyStaticCopy();
     const previous = state.payload?.ui_decisions?.decisions;
     if (Array.isArray(previous)) previous.forEach((decision) => state.decisions.set(decision.item_id, decision));
     render();

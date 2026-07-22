@@ -268,6 +268,47 @@ _LOCALE_TEXT = {
     },
 }
 
+_FINAL_MANIFEST_COPY = {
+    "en": {
+        "explicit_non_outcomes": [
+            "No client lifecycle activation",
+            "No signature or execution of documents",
+            "No professional compliance conclusion",
+        ],
+        "caveats": [
+            "All semantic applicability and AML findings require professional review.",
+            (
+                "The document plan records verified template references; it does not "
+                "render, merge, populate, sign, or send document content."
+            ),
+        ],
+        "next_actions": [
+            "Resolve missing or unclear information.",
+            "Review every review_payload.json item.",
+            "Save and apply explicit professional decisions through the review service.",
+        ],
+    },
+    "es": {
+        "explicit_non_outcomes": [
+            "No se activa el ciclo de vida del cliente",
+            "No se firma ni formaliza ningún documento",
+            "No se emite una conclusión profesional de cumplimiento",
+        ],
+        "caveats": [
+            "Todas las conclusiones semánticas sobre aplicabilidad y prevención del blanqueo requieren revisión profesional.",
+            (
+                "El plan documental registra referencias verificadas a plantillas; "
+                "no genera, combina, rellena, firma ni envía el contenido de los documentos."
+            ),
+        ],
+        "next_actions": [
+            "Resuelva la información pendiente o poco clara.",
+            "Revise cada elemento de review_payload.json.",
+            "Guarde y aplique las decisiones profesionales expresas mediante el servicio de revisión.",
+        ],
+    },
+}
+
 _DISPLAY_COPY: dict[str, dict[str | None, dict[str, str]]] = {
     "engagement_kind": {
         "ongoing": {
@@ -1058,6 +1099,8 @@ def _package_new_client_into(
     generated_at_value = generated_at or utc_now()
     resolved_input = input_path.expanduser().resolve()
     intake = validate_new_client_input(load_json(resolved_input))
+    language = str(intake["language"])
+    final_manifest_copy = _FINAL_MANIFEST_COPY.get(language, _FINAL_MANIFEST_COPY["en"])
     source_registry = load_source_registry(source_registry_path.expanduser().resolve())
     validate_source_references(intake, source_registry)
     resolved_output = ensure_private_output_directory(output_dir)
@@ -1413,21 +1456,9 @@ def _package_new_client_into(
         "package_hash": canonical_json_hash(
             {path.name: sha256_file(path) for path in written_paths}
         ),
-        "explicit_non_outcomes": [
-            "No client lifecycle activation",
-            "No signature or execution of documents",
-            "No professional compliance conclusion",
-        ],
-        "caveats": [
-            "All semantic applicability and AML findings require professional review.",
-            "The document plan records verified template references; it does not "
-            "render, merge, populate, sign, or send document content.",
-        ],
-        "next_actions": [
-            "Resolve missing or unclear information.",
-            "Review every review_payload.json item.",
-            "Save and apply explicit professional decisions through the review service.",
-        ],
+        "explicit_non_outcomes": final_manifest_copy["explicit_non_outcomes"],
+        "caveats": final_manifest_copy["caveats"],
+        "next_actions": final_manifest_copy["next_actions"],
         "blockers": [
             *export_domain_blockers,
             *artifact_blockers,

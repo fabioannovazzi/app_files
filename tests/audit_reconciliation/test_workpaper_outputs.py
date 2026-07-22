@@ -223,7 +223,15 @@ def test_spanish_workpapers_and_review_contract_are_fully_localized(tmp_path):
         }
     ]
     checks = [{"check": "review_packet", "status": "WARN"}]
-    review_rows = [{"record_id": "open-1", "review_status": "PENDING"}]
+    review_rows = [
+        {
+            "record_id": "open-1",
+            "review_status": "PENDING",
+            "source_file": "diario.xlsx",
+            "source_page": 2,
+            "source_row": 14,
+        }
+    ]
     sheets = outputs.build_audit_workbook_sheets(
         assumptions=assumptions,
         source_inventory=[{"source_role": "bank_statement"}],
@@ -330,8 +338,65 @@ def test_spanish_workpapers_and_review_contract_are_fully_localized(tmp_path):
         result=result,
         language="spa",
     )
+    run_intake_payload = json.loads(run_intake.path.read_text(encoding="utf-8"))
+    review_payload = json.loads(
+        review_result.review_payload_path.read_text(encoding="utf-8")
+    )
     final_artifacts = json.loads(
         review_result.final_artifacts_path.read_text(encoding="utf-8")
+    )
+    assert review_payload["columns"] == [
+        {"field": "item_type", "label": "Tipo"},
+        {"field": "title", "label": "Línea o artefacto"},
+        {"field": "recommended_action", "label": "Acción sugerida"},
+        {"field": "source_path", "label": "Fuente"},
+        {"field": "output_path", "label": "Salida"},
+        {"field": "status", "label": "Estado"},
+    ]
+    review_row_item = next(
+        item for item in review_payload["items"] if item["id"] == "open-1"
+    )
+    assert review_row_item["source_path"] == "diario.xlsx; página 2; fila 14"
+    assert review_row_item["data"]["edit_hint"].startswith(
+        "Editar esta línea de revisión"
+    )
+    artifact_titles = {
+        item["title"]
+        for item in review_payload["items"]
+        if item["item_type"] in {"workpaper_artifact", "report_artifact"}
+    }
+    assert artifact_titles == {
+        "Libro de conciliación de auditoría",
+        "Informe narrativo de conciliación",
+    }
+    assert run_intake_payload["data_posture"]["notes"] == [
+        "Los scripts de conciliación leen las rutas locales de evidencias contables registradas en input_paths.",
+        "Los datos de revisión muestran líneas de conciliación y referencias de evidencias acotadas para su revisión en la interfaz.",
+        "De forma predeterminada no se utiliza ningún conector externo, ruta de carga, SQL remoto ni cuaderno alojado.",
+    ]
+    spanish_review_contract = json.dumps(
+        {"run_intake": run_intake_payload, "review_payload": review_payload},
+        ensure_ascii=False,
+    )
+    for english_copy in (
+        "Row or artifact",
+        "Suggested action",
+        "Editing this review row",
+        "Audit reconciliation workbook",
+        "Narrative reconciliation report",
+        "Review payloads expose bounded",
+    ):
+        assert english_copy not in spanish_review_contract
+    artifact_card = review_result.artifact_card_path.read_text(encoding="utf-8")
+    assert "# Ficha de artefactos de la conciliación de auditoría" in artifact_card
+    assert "## Siguiente acción" in artifact_card
+    assert "Audit Reconciliation Artifact Card" not in artifact_card
+    assert "Los datos mostrados en el navegador están acotados" in " ".join(
+        final_artifacts["caveats"]
+    )
+    assert "Abra el servidor de revisión" in final_artifacts["next_actions"][0]
+    assert "Open the browser review server" not in json.dumps(
+        final_artifacts, ensure_ascii=False
     )
     audit_output = next(
         output

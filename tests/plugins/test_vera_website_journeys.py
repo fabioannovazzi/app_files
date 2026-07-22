@@ -412,6 +412,97 @@ def test_static_pages_with_spanish_selector_have_complete_locale_objects() -> No
 
 
 @pytest.mark.parametrize(
+    ("module", "expected_spanish_labels"),
+    (
+        (
+            "check-entries",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+                "problem": "Problema resuelto",
+            },
+        ),
+        (
+            "journal-bank-reconciliation",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+                "problem": "Problema resuelto",
+            },
+        ),
+        (
+            "journal-sampling",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+                "problem": "Problema resuelto",
+            },
+        ),
+        (
+            "concordato-plan-review",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+                "problem": "Problema resuelto",
+            },
+        ),
+        (
+            "report-builder",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+            },
+        ),
+        (
+            "riconciliazione-partite",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+                "problem": "Problema resuelto",
+            },
+        ),
+        (
+            "previdenza-inps",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+                "breadcrumb": "Ruta de la página",
+            },
+        ),
+        (
+            "registro-imprese-sari",
+            {
+                "sections": "Secciones de la página",
+                "language": "Idioma",
+                "breadcrumb": "Ruta de la página",
+            },
+        ),
+    ),
+)
+def test_spanish_vera_pages_localize_accessibility_labels(
+    module: str,
+    expected_spanish_labels: dict[str, str],
+) -> None:
+    page = VERA_MODULE_PAGES[module].read_text(encoding="utf-8")
+    objects = dict(_js_named_object_literals(page))
+    accessibility_copy = _js_object_properties(objects["accessibilityLabels"])
+    spanish_copy = _js_object_properties(accessibility_copy["es"])
+
+    assert accessibility_copy.keys() == {"it", "en", "fr", "de", "es"}
+    assert {
+        key: json.loads(value) for key, value in spanish_copy.items()
+    } == expected_spanish_labels
+    assert set(re.findall(r'data-accessibility-label="([^"]+)"', page)) == set(
+        expected_spanish_labels
+    )
+    assert 'querySelectorAll("[data-accessibility-label]")' in page
+    assert (
+        'node.setAttribute("aria-label", '
+        "accessibilityLabels[safeLang][node.dataset.accessibilityLabel])"
+    ) in page
+
+
+@pytest.mark.parametrize(
     "page_path",
     tuple(VERA_MODULE_PAGES.values()),
     ids=lambda path: path.parent.name,

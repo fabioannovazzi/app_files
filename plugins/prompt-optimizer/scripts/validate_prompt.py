@@ -468,18 +468,63 @@ def _package_markdown(
     """Return a human handoff package without duplicating the full prompt."""
 
     failed = audit.get("failed_checks") or []
-    failed_text = ", ".join(failed) if failed else "none"
+    language = _package_language(audit)
+    spanish = language == "es"
+    failed_text = ", ".join(failed) if failed else ("ninguno" if spanish else "none")
     inventory = inspect_question_text(question_text)
     source_domains = audit.get("source_domains") or []
     source_domain_text = (
         "\n".join(f"- {domain}" for domain in source_domains)
         if source_domains
         else (
-            "No explicit website list was provided or extracted. Add a sidecar "
-            "source-domain file and rerun validation if Deep Research needs "
-            "a websites field."
+            (
+                "No se proporcionó ni extrajo una lista explícita de sitios web. "
+                "Añada un archivo auxiliar de dominios y vuelva a ejecutar la "
+                "validación si Deep Research necesita el campo de sitios web."
+            )
+            if spanish
+            else (
+                "No explicit website list was provided or extracted. Add a sidecar "
+                "source-domain file and rerun validation if Deep Research needs "
+                "a websites field."
+            )
         )
     )
+    if spanish:
+        sections = [
+            "# Paquete de optimización del prompt",
+            f"Estado de la auditoría: {audit.get('status')}",
+            f"Controles fallidos: {failed_text}",
+            "## Enfoque determinista de la investigación",
+            "\n".join(
+                [
+                    f"- Planteamiento: {inventory.posture_hint}",
+                    f"- Objetivo: {inventory.objective_hint}",
+                    f"- Alcance: {inventory.scope_hint}",
+                    f"- Temas: {', '.join(inventory.topic_flags) or 'ninguno'}",
+                    (
+                        "- Requiere un flujo por fases: "
+                        f"{inventory.requires_phased_workflow}"
+                    ),
+                ]
+            ),
+            "## Dominios de fuentes cualificados",
+            source_domain_text,
+            "## Pregunta de origen",
+            question_text.strip(),
+            "## Cómo utilizar los archivos",
+            "\n".join(
+                [
+                    "- Pegue `optimized_prompt.md` en Deep Research.",
+                    "- Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research.",
+                    "- Use `source_domains.txt` solo si necesita la misma lista con un sitio por línea.",
+                    "- Considere `prompt_audit.json` como metadatos de validación legibles por máquina.",
+                ]
+            ),
+            "## Ubicación del prompt optimizado",
+            "`optimized_prompt.md`",
+        ]
+        return "\n\n".join(sections).strip() + "\n"
     return (
         "\n\n".join(
             [
@@ -534,6 +579,20 @@ def render_prompt_package(
     """Render package Markdown from reviewed question, prompt, and audit state."""
 
     return _package_markdown(question_text, prompt_text, audit)
+
+
+def _package_language(audit: dict[str, Any]) -> str:
+    """Resolve the human package language without changing audit codes."""
+
+    requested = str(audit.get("language") or "auto").strip().lower().replace("_", "-")
+    if requested.startswith("es"):
+        return "es"
+    policy = audit.get("jurisdiction_policy")
+    if isinstance(policy, dict):
+        effective = str(policy.get("language") or "").strip().lower().replace("_", "-")
+        if effective.startswith("es"):
+            return "es"
+    return "en"
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -635,6 +694,29 @@ def _readme_markdown(audit: dict[str, Any]) -> str:
     """Return a short human usage guide for the generated files."""
 
     source_domains = audit.get("source_domains") or []
+    if _package_language(audit) == "es":
+        website_instruction = (
+            "2. Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research."
+            if source_domains
+            else (
+                "2. `source_domains_comma.txt` está vacío porque no se proporcionó "
+                "ni extrajo ninguna lista de sitios web."
+            )
+        )
+        return "\n".join(
+            [
+                "# Cómo utilizar estos archivos",
+                "",
+                "1. Pegue `optimized_prompt.md` en Deep Research.",
+                website_instruction,
+                "3. Use `source_domains.txt` para consultar la lista con un sitio web por línea.",
+                (
+                    "4. Consulte `prompt_audit.json` solo para depurar la validación; "
+                    "registra qué controles del plugin se superaron."
+                ),
+                "",
+            ]
+        )
     website_instruction = (
         "2. Paste `source_domains_comma.txt` into the Deep Research websites field."
         if source_domains

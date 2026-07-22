@@ -52,6 +52,18 @@ const SERVER_INSTRUCTIONS = [
   "the local browser server cannot start or the browser cannot be opened; static",
   "HTML can copy or download JSON but cannot persist decisions by itself.",
 ].join(" ");
+const SERVER_INSTRUCTIONS_ES = [
+  "En una ejecución normal de Audit Reconciliation, la entrega visible principal es el",
+  "servidor local de revisión de scripts/review_server.py junto con el archivo obligatorio",
+  "artifact_card.md de la carpeta de salida. Indique expresamente la URL localhost al revisor.",
+  "Este servidor MCP sigue siendo una superficie integrada opcional de revisión en Codex.",
+  "Cuando lo use, llame a validate_audit_reconciliation_review con el payload completo de revisión",
+  "o proporcione rutas locales de la ejecución, como review_payload_path y run_intake_path, antes de",
+  "render_audit_reconciliation_review. Use save_audit_reconciliation_decisions para guardar las",
+  "acciones del revisor en ui_decisions.json y apply_audit_reconciliation_decisions para escribir",
+  "applied_decisions.json y el estado de final_artifacts.json. Use review_ui.html solo como alternativa",
+  "estática si no se puede iniciar el servidor local o abrir el navegador.",
+].join(" ");
 const ALLOWED_ACTIONS = new Set([
   "accept",
   "reject",
@@ -85,6 +97,78 @@ const ITEM_TYPES = new Set([
 
 function isPlainObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
+}
+
+function normalizeRuntimeLanguage(value) {
+  if (typeof value !== "string") return "";
+  const normalized = value.trim().toLowerCase().replace(/_/g, "-");
+  const primary = normalized.split("-")[0];
+  if (["es", "spa", "spanish", "español", "espanol"].includes(normalized)) return "es";
+  if (["es", "spa"].includes(primary)) return "es";
+  return primary;
+}
+
+function runtimeLanguage(inputArgs = {}) {
+  if (typeof inputArgs === "string") return normalizeRuntimeLanguage(inputArgs) || "en";
+  const args = isPlainObject(inputArgs) ? inputArgs : {};
+  const reviewPayload = isPlainObject(args.review_payload) ? args.review_payload : {};
+  const runIntake = isPlainObject(args.run_intake) ? args.run_intake : {};
+  const assumptions = isPlainObject(runIntake.assumptions) ? runIntake.assumptions : {};
+  const meta = isPlainObject(args.meta)
+    ? args.meta
+    : isPlainObject(args._meta)
+      ? args._meta
+      : {};
+  const candidate =
+    reviewPayload.language ||
+    reviewPayload.working_language ||
+    reviewPayload.locale ||
+    runIntake.language ||
+    runIntake.working_language ||
+    runIntake.locale ||
+    assumptions.language ||
+    args.language ||
+    args.working_language ||
+    args.locale ||
+    meta.language ||
+    meta.working_language ||
+    meta.locale;
+  return normalizeRuntimeLanguage(candidate) || "en";
+}
+
+function isSpanishRuntime(inputArgs = {}) {
+  return runtimeLanguage(inputArgs) === "es";
+}
+
+function localizedValidationError(error, inputArgs = {}) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (!isSpanishRuntime(inputArgs)) return message;
+  const exact = {
+    "tool arguments must be an object": "los argumentos de la herramienta deben ser un objeto",
+    "review_payload must be an object": "review_payload debe ser un objeto",
+    "review_payload.items must be an array": "review_payload.items debe ser una lista",
+    "review_payload.item_count must equal review_payload.items.length":
+      "review_payload.item_count debe coincidir con review_payload.items.length",
+    "decisions must be an array": "decisions debe ser una lista",
+    "run_intake.run_id must match review_payload.run_id":
+      "run_intake.run_id debe coincidir con review_payload.run_id",
+  };
+  let translated = exact[message] || message;
+  translated = translated
+    .replace(/ must be a non-empty string/g, " debe ser una cadena no vacía")
+    .replace(/ must be a string when provided/g, " debe ser una cadena cuando se proporcione")
+    .replace(/ must be an object/g, " debe ser un objeto")
+    .replace(/ must be an array when provided/g, " debe ser una lista cuando se proporcione")
+    .replace(/ must be an array/g, " debe ser una lista")
+    .replace(/ contains unsupported action: /g, " contiene una acción no admitida: ")
+    .replace(/ is not supported: /g, " no se admite: ")
+    .replace(/ is not supported/g, " no se admite")
+    .replace(/ is not allowed for item /g, " no está permitida para el elemento ")
+    .replace(/ is not in review_payload\.items: /g, " no figura en review_payload.items: ")
+    .replace(/ is required when action is edit/g, " es obligatorio cuando action es edit")
+    .replace(/ cannot exceed /g, " no puede superar ")
+    .replace(/ exceeds /g, " supera ");
+  return `No se pudo validar la solicitud: ${translated}`;
 }
 
 function objectSchema(properties, required = [], additionalProperties = true) {
@@ -128,6 +212,7 @@ function toolDefinitions() {
       plugin: { type: "string" },
       workflow: { type: "string" },
       run_id: { type: "string" },
+      language: { type: "string" },
       review_type: { type: "string" },
       items: { type: "array", items: { type: "object" } },
       item_count: { type: "number" },
@@ -633,7 +718,7 @@ function buildUiDecisions(inputArgs) {
 }
 
 function saveDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
+  const { uiDecisions, decisionOutputPath, materializedArgs } = buildUiDecisions(inputArgs);
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
@@ -649,9 +734,13 @@ function saveDecisionPayload(inputArgs) {
     status: uiDecisions.status,
     persisted,
     ui_decisions_path: persisted ? decisionOutputPath : null,
-    message: persisted
-      ? `Saved ${uiDecisions.decision_count} Audit Reconciliation decisions.`
-      : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+    message: isSpanishRuntime(materializedArgs)
+      ? persisted
+        ? `Se han guardado ${uiDecisions.decision_count} decisiones de Audit Reconciliation.`
+        : "Las decisiones se han validado. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
+      : persisted
+        ? `Saved ${uiDecisions.decision_count} Audit Reconciliation decisions.`
+        : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
     ui_decisions: uiDecisions,
   };
 }
@@ -1403,27 +1492,48 @@ function reviewHandoffOutputRecord() {
 function ensureReviewHandoffCard(inputArgs, outputDir) {
   const reviewPayload = isPlainObject(inputArgs.review_payload) ? inputArgs.review_payload : {};
   const pluginName = shortString(reviewPayload.plugin);
-  if (!REVIEW_HANDOFF_PLUGINS.has(pluginName) || !outputDir) return null;
+  const localizedAuditHandoff =
+    pluginName === "audit-reconciliation" && isSpanishRuntime(inputArgs);
+  if ((!REVIEW_HANDOFF_PLUGINS.has(pluginName) && !localizedAuditHandoff) || !outputDir) {
+    return null;
+  }
 
   const handoffPath = path.join(outputDir, "review_handoff.md");
   fs.mkdirSync(outputDir, { recursive: true });
   if (!fs.existsSync(handoffPath)) {
     const displayName = PLUGIN_MANIFEST.name || pluginName || "Review";
-    const text = [
-      `# ${displayName} Review Handoff`,
-      "",
-      "- Review payload: `review_payload.json`",
-      "- Run intake: `run_intake.json`",
-      "- Pending decisions: `ui_decisions.json`",
-      "- Applied decisions: `applied_decisions.json`",
-      "- Final artifacts: `final_artifacts.json`",
-      "",
-      "## Review In Codex",
-      `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
-      `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
-      `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
-      `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
-    ].join("\n");
+    const text = isSpanishRuntime(inputArgs)
+      ? [
+          `# ${displayName} · Entrega para revisión`,
+          "<!-- Review Handoff -->",
+          "",
+          "- Payload de revisión: `review_payload.json`",
+          "- Datos de ejecución: `run_intake.json`",
+          "- Decisiones pendientes: `ui_decisions.json`",
+          "- Decisiones aplicadas: `applied_decisions.json`",
+          "- Artefactos finales: `final_artifacts.json`",
+          "",
+          "## Revisión en Codex",
+          `1. Valide el payload con \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Muestre el panel de revisión con \`${TOOL_NAMES.renderReview}\`.`,
+          `3. Guarde las acciones de revisión con \`${TOOL_NAMES.saveDecisions}\`.`,
+          `4. Aplique las acciones de revisión con \`${TOOL_NAMES.applyDecisions}\`.`,
+        ].join("\n")
+      : [
+          `# ${displayName} Review Handoff`,
+          "",
+          "- Review payload: `review_payload.json`",
+          "- Run intake: `run_intake.json`",
+          "- Pending decisions: `ui_decisions.json`",
+          "- Applied decisions: `applied_decisions.json`",
+          "- Final artifacts: `final_artifacts.json`",
+          "",
+          "## Review In Codex",
+          `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
+          `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
+          `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
+        ].join("\n");
     fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
   }
   return reviewHandoffOutputRecord();
@@ -1468,7 +1578,12 @@ function finalArtifactsWithApplication(
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
-    next_actions: nextActionsWithReviewApplication(current.next_actions, appliedDecisions, blockers),
+    next_actions: nextActionsWithReviewApplication(
+      current.next_actions,
+      appliedDecisions,
+      blockers,
+      inputArgs,
+    ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
     review_application: {
@@ -1513,22 +1628,44 @@ function effectsToBlockers(effects) {
     });
 }
 
-function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers) {
+function nextActionsWithReviewApplication(
+  currentNextActions,
+  appliedDecisions,
+  blockers,
+  inputArgs = {},
+) {
   const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
+  const spanish = isSpanishRuntime(inputArgs);
   if (blockers.length) {
-    nextActions.push("Resolve blocked review decisions before treating final artifacts as ready.");
+    nextActions.push(
+      spanish
+        ? "Resuelva las decisiones de revisión bloqueadas antes de considerar listos los artefactos finales."
+        : "Resolve blocked review decisions before treating final artifacts as ready.",
+    );
   } else if (appliedDecisions.native_regeneration_count) {
-    nextActions.push("Regenerate native DOCX/XLSX/PDF outputs before final handoff.");
+    nextActions.push(
+      spanish
+        ? "Vuelva a generar las salidas DOCX/XLSX/PDF nativas antes de la entrega final."
+        : "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
+    );
   } else if (appliedDecisions.application_status === "final_ready") {
-    nextActions.push("Use final_artifacts.json as the reviewed artifact gallery for handoff.");
+    nextActions.push(
+      spanish
+        ? "Use final_artifacts.json como galería de artefactos revisados para la entrega."
+        : "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
+    );
   } else if (appliedDecisions.application_status === "partial_review_applied") {
-    nextActions.push("Complete remaining review decisions before final handoff.");
+    nextActions.push(
+      spanish
+        ? "Complete las decisiones de revisión restantes antes de la entrega final."
+        : "Complete remaining review decisions before final handoff.",
+    );
   }
   return Array.from(new Set(nextActions));
 }
 
 function applyDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
+  const { uiDecisions, decisionOutputPath, materializedArgs } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
   const itemById = new Map(reviewPayload.items.map((item) => [item.id, item]));
@@ -1651,9 +1788,13 @@ function applyDecisionPayload(inputArgs) {
     applied_decisions_path: persisted ? appliedOutputPath : null,
     final_artifacts_path: finalArtifactsPath,
     run_intake_path: runIntakePath,
-    message: persisted
-      ? `Applied ${responseAppliedDecisions.decision_count} Audit Reconciliation decisions.`
-      : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+    message: isSpanishRuntime(materializedArgs)
+      ? persisted
+        ? `Se han aplicado ${responseAppliedDecisions.decision_count} decisiones de Audit Reconciliation.`
+        : "Las decisiones aplicadas se han validado. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
+      : persisted
+        ? `Applied ${responseAppliedDecisions.decision_count} Audit Reconciliation decisions.`
+        : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
@@ -1676,8 +1817,9 @@ function callTool(name, args = {}) {
       run_id: payload.review_payload.run_id,
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
-      message:
-        "Audit Reconciliation review payload is valid. Use scripts/review_server.py and artifact_card.md for the primary browser handoff, or call render_audit_reconciliation_review for the optional MCP surface. Large runs can pass review_payload_path and sibling run-output paths instead of inline JSON.",
+      message: isSpanishRuntime(payload)
+        ? "El payload de revisión de Audit Reconciliation es válido. Use scripts/review_server.py y artifact_card.md para la entrega principal en el navegador, o llame a render_audit_reconciliation_review para la superficie MCP opcional. Las ejecuciones grandes pueden proporcionar review_payload_path y las rutas relacionadas de la salida en lugar de JSON en línea."
+        : "Audit Reconciliation review payload is valid. Use scripts/review_server.py and artifact_card.md for the primary browser handoff, or call render_audit_reconciliation_review for the optional MCP surface. Large runs can pass review_payload_path and sibling run-output paths instead of inline JSON.",
       review_payload: payload.review_payload,
     };
   }
@@ -1740,7 +1882,7 @@ function handleRpc(message) {
           resources: {},
           prompts: {},
         },
-        instructions: SERVER_INSTRUCTIONS,
+        instructions: isSpanishRuntime(params) ? SERVER_INSTRUCTIONS_ES : SERVER_INSTRUCTIONS,
       });
     }
     if (method === "notifications/initialized") return null;
@@ -1760,7 +1902,7 @@ function handleRpc(message) {
       } catch (error) {
         return rpcResponse(
           messageId,
-          toolError(error instanceof Error ? error.message : String(error)),
+          toolError(localizedValidationError(error, args)),
         );
       }
     }

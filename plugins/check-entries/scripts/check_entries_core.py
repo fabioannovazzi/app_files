@@ -848,6 +848,7 @@ def _check_one_entry(
     *,
     amount_tolerance: float,
     date_window_days: int,
+    language: str = "en",
 ) -> dict[str, Any]:
     matched_pdf = _match_pdf_for_entry(entry, pdfs)
     if matched_pdf is None:
@@ -857,7 +858,11 @@ def _check_one_entry(
             "matched_pdf": None,
             "checks_run": "",
             "mismatches": "support_pdf",
-            "review_notes": "No supporting PDF matched the movement number.",
+            "review_notes": (
+                "Ningún PDF justificativo coincide con el número de movimiento."
+                if language == "es"
+                else "No supporting PDF matched the movement number."
+            ),
             "amount_found": None,
             "date_found": None,
             "beneficiary_found": None,
@@ -903,10 +908,22 @@ def _check_one_entry(
 
     if pdf_payload["error"]:
         mismatches.append("pdf_text")
-        review_notes.append(f"PDF text extraction error: {pdf_payload['error']}")
+        review_notes.append(
+            (
+                f"Error al extraer el texto del PDF: {pdf_payload['error']}"
+                if language == "es"
+                else f"PDF text extraction error: {pdf_payload['error']}"
+            )
+        )
     if not checks_run:
         status = "manual_review"
-        review_notes.append("No amount, date, or beneficiary fields were available.")
+        review_notes.append(
+            (
+                "No había campos de importe, fecha ni beneficiario disponibles."
+                if language == "es"
+                else "No amount, date, or beneficiary fields were available."
+            )
+        )
     elif mismatches:
         status = "mismatch"
     else:
@@ -934,6 +951,7 @@ def _check_entry_with_support_ladder(
     *,
     amount_tolerance: float,
     date_window_days: int,
+    language: str = "en",
 ) -> dict[str, Any]:
     """Try structured XML first and fall back to a matching PDF."""
 
@@ -960,9 +978,17 @@ def _check_entry_with_support_ladder(
             "checks_run": ",".join(signals),
             "mismatches": ",".join(mismatches),
             "review_notes": (
-                "Matched a unique FatturaPA XML using at least two independent fields."
+                (
+                    "Se encontró un único XML FatturaPA mediante al menos dos campos independientes."
+                    if language == "es"
+                    else "Matched a unique FatturaPA XML using at least two independent fields."
+                )
                 if not mismatches
-                else "Matched a unique FatturaPA XML, but one or more available fields differ."
+                else (
+                    "Se encontró un único XML FatturaPA, pero uno o varios campos disponibles no coinciden."
+                    if language == "es"
+                    else "Matched a unique FatturaPA XML, but one or more available fields differ."
+                )
             ),
             "amount_found": invoice.total_amount if "amount" in signals else None,
             "date_found": invoice.invoice_date if "date" in signals else None,
@@ -977,10 +1003,13 @@ def _check_entry_with_support_ladder(
         pdfs,
         amount_tolerance=amount_tolerance,
         date_window_days=date_window_days,
+        language=language,
     )
     if xml_issue and pdf_result["status"] == "missing_support":
         pdf_result["review_notes"] = (
-            "Multiple FatturaPA XML candidates matched; targeted support or reviewer selection is required."
+            "Coinciden varios XML FatturaPA candidatos; se necesita un justificante específico o la selección de la persona revisora."
+            if language == "es"
+            else "Multiple FatturaPA XML candidates matched; targeted support or reviewer selection is required."
         )
         pdf_result["mismatches"] = "ambiguous_invoice_support"
     return pdf_result
@@ -1079,6 +1108,7 @@ def run_entry_checks(
             pdfs,
             amount_tolerance=amount_tolerance,
             date_window_days=date_window_days,
+            language=languages["language"],
         )
         for row in entries.to_dicts()
     ]

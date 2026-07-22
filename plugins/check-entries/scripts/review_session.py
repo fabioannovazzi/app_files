@@ -72,38 +72,63 @@ def _write_review_handoff_card(
     render_tool: str,
     save_tool: str,
     apply_tool: str,
+    language: str,
 ) -> Path:
     path = output_dir / "review_handoff.md"
-    lines = [
-        f"# {title} Review Handoff",
-        "",
-        f"- Run ID: `{run_id}`",
-        "- Review payload: `review_payload.json`",
-        "- Run intake: `run_intake.json`",
-        "- Pending decisions: `ui_decisions.json`",
-        "- Applied decisions: `applied_decisions.json`",
-        "- Final artifacts: `final_artifacts.json`",
-        "",
-        "## Review In Codex",
-        f"1. Validate the payload with `{validate_tool}`.",
-        f"2. Render the review workbench with `{render_tool}`.",
-        f"3. Save reviewer actions with `{save_tool}`.",
-        f"4. Apply reviewer actions with `{apply_tool}`.",
-        "",
-        "Persistent save/apply requires the MCP or local-server review surface. "
-        "Static HTML fallback can copy or download decision JSON only.",
-    ]
+    if _is_spanish(language):
+        lines = [
+            f"# Entrega para revisión: {title}",
+            "",
+            f"- ID de ejecución: `{run_id}`",
+            "- Datos de revisión: `review_payload.json`",
+            "- Datos de entrada de la ejecución: `run_intake.json`",
+            "- Decisiones pendientes: `ui_decisions.json`",
+            "- Decisiones aplicadas: `applied_decisions.json`",
+            "- Artefactos finales: `final_artifacts.json`",
+            "",
+            "## Revisión en Codex",
+            f"1. Valide los datos con `{validate_tool}`.",
+            f"2. Muestre el espacio de revisión con `{render_tool}`.",
+            f"3. Guarde las acciones de revisión con `{save_tool}`.",
+            f"4. Aplique las acciones de revisión con `{apply_tool}`.",
+            "",
+            "El guardado y la aplicación persistentes requieren la interfaz de revisión MCP o del servidor local. "
+            "La alternativa HTML estática solo permite copiar o descargar el JSON de decisiones.",
+            "",
+            "<!-- Review Handoff -->",
+        ]
+    else:
+        lines = [
+            f"# {title} Review Handoff",
+            "",
+            f"- Run ID: `{run_id}`",
+            "- Review payload: `review_payload.json`",
+            "- Run intake: `run_intake.json`",
+            "- Pending decisions: `ui_decisions.json`",
+            "- Applied decisions: `applied_decisions.json`",
+            "- Final artifacts: `final_artifacts.json`",
+            "",
+            "## Review In Codex",
+            f"1. Validate the payload with `{validate_tool}`.",
+            f"2. Render the review workbench with `{render_tool}`.",
+            f"3. Save reviewer actions with `{save_tool}`.",
+            f"4. Apply reviewer actions with `{apply_tool}`.",
+            "",
+            "Persistent save/apply requires the MCP or local-server review surface. "
+            "Static HTML fallback can copy or download decision JSON only.",
+        ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
 
-def _review_handoff_output_record(path: Path) -> dict[str, Any]:
+def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
     return {
         "path": path.name,
         "kind": "md",
         "status": "written",
         "required_text": [
-            "Review Handoff",
+            "Entrega para revisión" if _is_spanish(language) else "Review Handoff",
+            *(["Review Handoff"] if _is_spanish(language) else []),
             "review_payload.json",
             "ui_decisions.json",
             "applied_decisions.json",
@@ -177,6 +202,12 @@ def _clean_text(value: Any) -> str:
     return str(value or "").strip()
 
 
+def _is_spanish(language: object) -> bool:
+    return (
+        str(language or "").strip().lower().replace("_", "-").split("-", 1)[0] == "es"
+    )
+
+
 def _status_counts(rows: Sequence[dict[str, Any]]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for row in rows:
@@ -223,7 +254,16 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    if _is_spanish(language):
+        return [
+            {"field": "item_type", "label": "Tipo"},
+            {"field": "title", "label": "Asiento"},
+            {"field": "recommended_action", "label": "Acción sugerida"},
+            {"field": "source_path", "label": "Fuente"},
+            {"field": "output_path", "label": "Salida"},
+            {"field": "status", "label": "Estado"},
+        ]
     return [
         {"field": "item_type", "label": "Type"},
         {"field": "title", "label": "Entry"},
@@ -256,8 +296,9 @@ def _recommended_action(status: str) -> str:
     return "mark_unclear"
 
 
-def _entry_title(row: dict[str, Any], index: int) -> str:
-    movement = str(row.get("movement_number") or f"row {index}")
+def _entry_title(row: dict[str, Any], index: int, language: str) -> str:
+    fallback = f"fila {index}" if _is_spanish(language) else f"row {index}"
+    movement = str(row.get("movement_number") or fallback)
     amount = row.get("amount_abs")
     date = row.get("entry_date")
     parts = [movement]
@@ -268,14 +309,22 @@ def _entry_title(row: dict[str, Any], index: int) -> str:
     return " | ".join(parts)
 
 
-def _requested_support_document(row: dict[str, Any]) -> str:
+def _requested_support_document(row: dict[str, Any], language: str) -> str:
     movement = _clean_text(row.get("movement_number"))
     if movement:
-        return f"Supporting PDF for movement {movement}"
-    return "Supporting PDF for unmatched journal entry"
+        return (
+            f"PDF justificativo del movimiento {movement}"
+            if _is_spanish(language)
+            else f"Supporting PDF for movement {movement}"
+        )
+    return (
+        "PDF justificativo del asiento sin correspondencia"
+        if _is_spanish(language)
+        else "Supporting PDF for unmatched journal entry"
+    )
 
 
-def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def _entry_items(rows: Sequence[dict[str, Any]], language: str) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, row in enumerate(rows[:MAX_RESULT_ITEMS], start=1):
         status = str(row.get("status") or "unknown")
@@ -285,8 +334,9 @@ def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
         data["target_record_id"] = str(row.get("source_row") or index)
         data["target_field"] = "review_notes"
         data["edit_hint"] = (
-            "Editing this row updates review_notes in check_results.csv for the "
-            "matching source_row."
+            "Editar esta fila actualiza review_notes en check_results.csv para el source_row correspondiente."
+            if _is_spanish(language)
+            else "Editing this row updates review_notes in check_results.csv for the matching source_row."
         )
         evidence = [
             {
@@ -308,11 +358,12 @@ def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
                 {"kind": "beneficiary_found", "value": row.get("beneficiary_found")}
             )
         if status == "missing_support":
-            requested_document = _requested_support_document(row)
+            requested_document = _requested_support_document(row, language)
             data["requested_document"] = requested_document
-            data["reason"] = (
-                row.get("review_notes")
-                or "No FatturaPA XML or supporting PDF uniquely matched the entry."
+            data["reason"] = row.get("review_notes") or (
+                "Ningún XML FatturaPA ni PDF justificativo coincide de forma unívoca con el asiento."
+                if _is_spanish(language)
+                else "No FatturaPA XML or supporting PDF uniquely matched the entry."
             )
             evidence.append(
                 {
@@ -326,7 +377,7 @@ def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
             _base_item(
                 f"entry-{index}",
                 _result_item_type(status),
-                _entry_title(row, index),
+                _entry_title(row, index, language),
                 source_path=str(row.get("source_file") or ""),
                 output_path="check_results.csv",
                 allowed_actions=(
@@ -346,7 +397,11 @@ def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
             _base_item(
                 "check-results-truncated",
                 "review_artifact",
-                "Check results truncated in widget",
+                (
+                    "Resultados de la comprobación truncados en el widget"
+                    if _is_spanish(language)
+                    else "Check results truncated in widget"
+                ),
                 output_path="check_results.csv",
                 allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
@@ -360,7 +415,9 @@ def _entry_items(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
     return items
 
 
-def _pdf_items(pdf_inventory: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def _pdf_items(
+    pdf_inventory: Sequence[dict[str, Any]], language: str
+) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, row in enumerate(pdf_inventory[:MAX_PDF_ITEMS], start=1):
         extractable = bool(row.get("extractable_text"))
@@ -392,7 +449,11 @@ def _pdf_items(pdf_inventory: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
             _base_item(
                 "pdf-inventory-truncated",
                 "review_artifact",
-                "PDF inventory truncated in widget",
+                (
+                    "Inventario de PDF truncado en el widget"
+                    if _is_spanish(language)
+                    else "PDF inventory truncated in widget"
+                ),
                 output_path="pdf_inventory.json",
                 allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
@@ -406,7 +467,7 @@ def _pdf_items(pdf_inventory: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
     return items
 
 
-def _mapping_items(mapping: dict[str, Any]) -> list[dict[str, Any]]:
+def _mapping_items(mapping: dict[str, Any], language: str) -> list[dict[str, Any]]:
     missing = _missing_mapping(mapping)
     if not missing:
         return []
@@ -414,7 +475,11 @@ def _mapping_items(mapping: dict[str, Any]) -> list[dict[str, Any]]:
         _base_item(
             "mapping-required-fields",
             "mapping_issue",
-            "Missing or weak required journal mapping",
+            (
+                "Falta la asignación obligatoria del diario o es insuficiente"
+                if _is_spanish(language)
+                else "Missing or weak required journal mapping"
+            ),
             output_path="check_audit.json",
             allowed_actions=("edit", "mark_unclear", "skip"),
             recommended_action="mark_unclear",
@@ -423,40 +488,59 @@ def _mapping_items(mapping: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
-def _artifact_items(output_dir: Path) -> list[dict[str, Any]]:
+def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
+    spanish = _is_spanish(language)
     artifacts = [
         (
             "normalized-entries",
             "review_artifact",
-            "Normalized entries",
+            "Asientos normalizados" if spanish else "Normalized entries",
             "normalized_entries.csv",
         ),
         (
             "check-results-csv",
             "review_artifact",
-            "Check results CSV",
+            "CSV de resultados de la comprobación" if spanish else "Check results CSV",
             "check_results.csv",
         ),
         (
             "check-results-xlsx",
             "review_artifact",
-            "Check results workbook",
+            (
+                "Libro de resultados de la comprobación"
+                if spanish
+                else "Check results workbook"
+            ),
             "check_results.xlsx",
         ),
         (
             "pdf-inventory-json",
             "review_artifact",
-            "PDF inventory",
+            "Inventario de PDF" if spanish else "PDF inventory",
             "pdf_inventory.json",
         ),
         (
             "invoice-inventory-json",
             "review_artifact",
-            "FatturaPA invoice inventory",
+            (
+                "Inventario de facturas FatturaPA"
+                if spanish
+                else "FatturaPA invoice inventory"
+            ),
             "invoice_inventory.json",
         ),
-        ("check-audit-json", "review_artifact", "Check audit JSON", "check_audit.json"),
-        ("review-notes-md", "review_artifact", "Review notes", "review_notes.md"),
+        (
+            "check-audit-json",
+            "review_artifact",
+            "JSON de auditoría de la comprobación" if spanish else "Check audit JSON",
+            "check_audit.json",
+        ),
+        (
+            "review-notes-md",
+            "review_artifact",
+            "Notas de revisión" if spanish else "Review notes",
+            "review_notes.md",
+        ),
     ]
     items: list[dict[str, Any]] = []
     for item_id, item_type, title, relative_path in artifacts:
@@ -627,6 +711,7 @@ def write_run_intake(
     """Write the run intake contract for review and replay."""
 
     run_id = _run_id(journal)
+    spanish = _is_spanish(language)
     local_files_read = [journal.as_posix(), pdf_path.as_posix()]
     if recipe_path is not None:
         local_files_read.append(recipe_path.as_posix())
@@ -655,7 +740,11 @@ def write_run_intake(
         "unresolved_questions": [
             {
                 "field": field,
-                "question": "Confirm the journal mapping before treating the check as complete.",
+                "question": (
+                    "Confirme la asignación del diario antes de considerar completada la comprobación."
+                    if spanish
+                    else "Confirm the journal mapping before treating the check as complete."
+                ),
             }
             for field in _missing_mapping(mapping)
         ],
@@ -663,7 +752,11 @@ def write_run_intake(
             "status": "not_run",
             "missing_dependency_count": None,
             "notes": [
-                "This review-session writer records local deterministic inputs; dependency checks are handled by plugin setup or explicit dependency scripts."
+                (
+                    "Este generador de la sesión de revisión registra entradas deterministas locales; la configuración del plugin o los scripts específicos gestionan las comprobaciones de dependencias."
+                    if spanish
+                    else "This review-session writer records local deterministic inputs; dependency checks are handled by plugin setup or explicit dependency scripts."
+                )
             ],
         },
         "data_posture": {
@@ -688,8 +781,16 @@ def write_run_intake(
             "remote_sql_execution_used": False,
             "hosted_notebook_execution_used": False,
             "notes": [
-                "Deterministic scripts read the journal, FatturaPA XML/PDF support, and optional recipe locally.",
-                "Connector provenance is recorded only when an authorized connector has already materialized a local export.",
+                (
+                    "Los scripts deterministas leen localmente el diario, los justificantes XML/PDF FatturaPA y la receta opcional."
+                    if spanish
+                    else "Deterministic scripts read the journal, FatturaPA XML/PDF support, and optional recipe locally."
+                ),
+                (
+                    "La procedencia del conector solo se registra cuando un conector autorizado ya ha materializado una exportación local."
+                    if spanish
+                    else "Connector provenance is recorded only when an authorized connector has already materialized a local export."
+                ),
             ],
         },
         "status": "ready_for_review",
@@ -721,10 +822,10 @@ def write_review_session_artifacts(
 
     status_counts = _status_counts(result_rows)
     items: list[dict[str, Any]] = []
-    items.extend(_mapping_items(mapping))
-    items.extend(_entry_items(result_rows))
-    items.extend(_pdf_items(pdf_inventory))
-    items.extend(_artifact_items(output_dir))
+    items.extend(_mapping_items(mapping, language))
+    items.extend(_entry_items(result_rows, language))
+    items.extend(_pdf_items(pdf_inventory, language))
+    items.extend(_artifact_items(output_dir, language))
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -732,11 +833,13 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
+        "language": language,
+        "document_language": document_language,
         "source_paths": [journal.as_posix(), pdf_path.as_posix()],
         "review_type": "journal_entry_support_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "recipe": _as_output_ref(recipe_path, output_dir),
@@ -801,11 +904,14 @@ def write_review_session_artifacts(
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
-        title="Check Entries",
+        title=(
+            "Comprobación de asientos" if _is_spanish(language) else "Check Entries"
+        ),
         validate_tool="validate_check_entries_review",
         render_tool="render_check_entries_review",
         save_tool="save_check_entries_decisions",
         apply_tool="apply_check_entries_decisions",
+        language=language,
     )
     outputs = _output_records(output_dir, audit, result_rows)
     outputs = [
@@ -815,7 +921,9 @@ def write_review_session_artifacts(
             isinstance(output, dict) and output.get("path") == review_handoff_path.name
         )
     ]
-    outputs.append(_review_handoff_output_record(review_handoff_path))
+    outputs.append(_review_handoff_output_record(review_handoff_path, language))
+
+    spanish = _is_spanish(language)
 
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
@@ -827,12 +935,28 @@ def write_review_session_artifacts(
             "completed_at": _utc_now(),
             "outputs": outputs,
             "caveats": [
-                "The scripts only compare deterministic evidence; Codex must explain unresolved cases and judgment.",
-                "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
+                (
+                    "Los scripts solo comparan evidencias deterministas; Codex debe explicar los casos no resueltos y el juicio aplicado."
+                    if spanish
+                    else "The scripts only compare deterministic evidence; Codex must explain unresolved cases and judgment."
+                ),
+                (
+                    "ui_decisions.json queda pendiente hasta que Codex, la interfaz MCP o la revisión alternativa registren las decisiones."
+                    if spanish
+                    else "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions."
+                ),
             ],
             "next_actions": [
-                "Review mismatch, missing_support, and manual_review rows before final delivery.",
-                "Use accepted/edited decisions when writing codex_run_review.md or final chat summary.",
+                (
+                    "Revise las filas mismatch, missing_support y manual_review antes de la entrega final."
+                    if spanish
+                    else "Review mismatch, missing_support, and manual_review rows before final delivery."
+                ),
+                (
+                    "Use las decisiones aceptadas o editadas al redactar codex_run_review.md o el resumen final del chat."
+                    if spanish
+                    else "Use accepted/edited decisions when writing codex_run_review.md or final chat summary."
+                ),
             ],
             "status": "written_pending_review",
         },

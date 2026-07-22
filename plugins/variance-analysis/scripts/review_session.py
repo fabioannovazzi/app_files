@@ -21,6 +21,109 @@ MAX_DRIVER_ROWS = 50
 MAX_ARTIFACT_ITEMS = 200
 MAX_FOLLOWUP_ITEMS = 50
 
+_REVIEW_COPY: dict[str, dict[str, Any]] = {
+    "en": {
+        "product_title": "Variance Analysis",
+        "handoff_title": "Review Handoff",
+        "run_id": "Run ID",
+        "review_payload": "Review payload",
+        "run_intake": "Run intake",
+        "pending_decisions": "Pending decisions",
+        "applied_decisions": "Applied decisions",
+        "final_artifacts": "Final artifacts",
+        "review_in_codex": "Review In Codex",
+        "validate_step": "Validate the payload with `{tool}`.",
+        "render_step": "Render the review workbench with `{tool}`.",
+        "save_step": "Save reviewer actions with `{tool}`.",
+        "apply_step": "Apply reviewer actions with `{tool}`.",
+        "columns": (
+            "Type",
+            "Element",
+            "Suggested action",
+            "Source",
+            "Output",
+            "Status",
+        ),
+        "driver_row": "Driver row {index}",
+        "driver_rows_truncated": "Variance driver rows truncated in widget",
+        "artifact": "Artifact",
+        "followup": "Follow-up {index}",
+        "context_title": "Standard variance context",
+        "dependency_note": (
+            "Codex should run scripts/check_dependencies.py before helper scripts."
+        ),
+        "data_posture_notes": [
+            "Variance scripts read the source table and optional recipe locally and write bounded review artifacts.",
+            "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
+        ],
+        "caveats": [
+            "Chart payloads are bounded for review; use variance_results.csv and context files as the full source set.",
+            "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
+        ],
+        "next_actions": [
+            "Render review_payload.json with the MCP widget when available.",
+            "Use the standard variance context before interpreting chart pixels.",
+            "Write codex_business_analysis.md from reviewed source artifacts and caveats.",
+        ],
+    },
+    "es": {
+        "product_title": "Análisis de variaciones",
+        "handoff_title": "Entrega para revisión",
+        "run_id": "ID de ejecución",
+        "review_payload": "Datos de revisión",
+        "run_intake": "Datos de ejecución",
+        "pending_decisions": "Decisiones pendientes",
+        "applied_decisions": "Decisiones aplicadas",
+        "final_artifacts": "Artefactos finales",
+        "review_in_codex": "Revisión en Codex",
+        "validate_step": "Valide los datos con `{tool}`.",
+        "render_step": "Abra el área de revisión con `{tool}`.",
+        "save_step": "Guarde las decisiones del revisor con `{tool}`.",
+        "apply_step": "Aplique las decisiones del revisor con `{tool}`.",
+        "columns": (
+            "Tipo",
+            "Elemento",
+            "Acción sugerida",
+            "Fuente",
+            "Salida",
+            "Estado",
+        ),
+        "driver_row": "Fila de factor {index}",
+        "driver_rows_truncated": (
+            "Filas de factores de variación acotadas en el widget"
+        ),
+        "artifact": "Artefacto",
+        "followup": "Seguimiento {index}",
+        "context_title": "Contexto estándar de variaciones",
+        "dependency_note": (
+            "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
+        ),
+        "data_posture_notes": [
+            "Los scripts de variaciones leen localmente la tabla fuente y la receta opcional y generan artefactos acotados para la revisión.",
+            "De forma predeterminada no se utilizan conectores externos, rutas de carga, SQL remoto ni cuadernos alojados.",
+        ],
+        "caveats": [
+            "Los datos de los gráficos están acotados para la revisión; utilice variance_results.csv y los archivos de contexto como conjunto completo de fuentes.",
+            "ui_decisions.json permanece pendiente hasta que Codex, la interfaz MCP o la revisión alternativa registren las decisiones.",
+        ],
+        "next_actions": [
+            "Cuando esté disponible, abra review_payload.json con el widget MCP.",
+            "Utilice el contexto estándar de variaciones antes de interpretar los píxeles de los gráficos.",
+            "Redacte codex_business_analysis.md a partir de los artefactos fuente revisados y las salvedades.",
+        ],
+    },
+}
+
+
+def _normalize_language(language: object | None) -> str:
+    text = str(language or "en").strip().lower().replace("_", "-")
+    code = text.split("-", 1)[0]
+    return code if code in _REVIEW_COPY else "en"
+
+
+def _review_copy(language: object | None) -> dict[str, Any]:
+    return _REVIEW_COPY[_normalize_language(language)]
+
 
 @dataclass(frozen=True)
 class RunIntakeResult:
@@ -62,6 +165,58 @@ def _write_json(path: Path, payload: dict[str, Any]) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def _write_review_handoff_card(
+    output_dir: Path,
+    *,
+    run_id: str,
+    language: str,
+) -> Path:
+    copy = _review_copy(language)
+    path = output_dir / "review_handoff.md"
+    lines = [
+        f"# {copy['product_title']} · {copy['handoff_title']}",
+        "<!-- review-contract: Review Handoff -->",
+        "",
+        f"- {copy['run_id']}: `{run_id}`",
+        f"- {copy['review_payload']}: `review_payload.json`",
+        f"- {copy['run_intake']}: `run_intake.json`",
+        f"- {copy['pending_decisions']}: `ui_decisions.json`",
+        f"- {copy['applied_decisions']}: `applied_decisions.json`",
+        f"- {copy['final_artifacts']}: `final_artifacts.json`",
+        "",
+        f"## {copy['review_in_codex']}",
+        f"1. {copy['validate_step'].format(tool='validate_variance_analysis_review')}",
+        f"2. {copy['render_step'].format(tool='render_variance_analysis_review')}",
+        f"3. {copy['save_step'].format(tool='save_variance_analysis_decisions')}",
+        f"4. {copy['apply_step'].format(tool='apply_variance_analysis_decisions')}",
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
+
+def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
+    copy = _review_copy(language)
+    localized_required_text = (
+        [copy["handoff_title"], copy["review_in_codex"]]
+        if _normalize_language(language) == "es"
+        else []
+    )
+    return {
+        "path": path.name,
+        "kind": "md",
+        "status": "written",
+        "required_text": [
+            "Review Handoff",
+            *localized_required_text,
+            "review_payload.json",
+            "ui_decisions.json",
+            "applied_decisions.json",
+            "final_artifacts.json",
+        ],
+        "qa_checks": ["nonempty_text", "required_text"],
+    }
 
 
 def _local_output_refs(final_artifacts_path: Path) -> list[str]:
@@ -134,7 +289,9 @@ def _as_output_ref(path: Path | None, output_dir: Path) -> str | None:
         return path.as_posix()
 
 
-def _data_posture(input_path: Path, recipe_path: Path | None) -> dict[str, Any]:
+def _data_posture(
+    input_path: Path, recipe_path: Path | None, language: str
+) -> dict[str, Any]:
     local_files = [input_path.as_posix()]
     if recipe_path is not None:
         local_files.append(recipe_path.as_posix())
@@ -145,6 +302,7 @@ def _data_posture(input_path: Path, recipe_path: Path | None) -> dict[str, Any]:
         "remote_sql_execution_used": False,
         "hosted_notebook_execution_used": False,
         "calculation_mode": "local_deterministic_scripts",
+        "notes": list(_review_copy(language)["data_posture_notes"]),
     }
 
 
@@ -174,14 +332,19 @@ def _base_item(
     }
 
 
-def _review_columns() -> list[dict[str, str]]:
+def _review_columns(language: str) -> list[dict[str, str]]:
+    fields = (
+        "item_type",
+        "title",
+        "recommended_action",
+        "source_path",
+        "output_path",
+        "status",
+    )
+    labels = _review_copy(language)["columns"]
     return [
-        {"field": "item_type", "label": "Type"},
-        {"field": "title", "label": "Element"},
-        {"field": "recommended_action", "label": "Suggested action"},
-        {"field": "source_path", "label": "Source"},
-        {"field": "output_path", "label": "Output"},
-        {"field": "status", "label": "Status"},
+        {"field": field, "label": str(label)}
+        for field, label in zip(fields, labels, strict=True)
     ]
 
 
@@ -201,7 +364,10 @@ def _top_driver_rows(result_rows: Sequence[dict[str, Any]]) -> list[dict[str, An
     return list(rows[:MAX_DRIVER_ROWS])
 
 
-def _driver_items(result_rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+def _driver_items(
+    result_rows: Sequence[dict[str, Any]], language: str
+) -> list[dict[str, Any]]:
+    copy = _review_copy(language)
     items: list[dict[str, Any]] = []
     for index, row in enumerate(_top_driver_rows(result_rows), start=1):
         dimensions = [
@@ -226,7 +392,7 @@ def _driver_items(result_rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]
             for dimension in dimensions[:3]
             if row.get(dimension) not in (None, "")
         ]
-        title = " / ".join(title_parts) or f"Driver row {index}"
+        title = " / ".join(title_parts) or str(copy["driver_row"]).format(index=index)
         items.append(
             _base_item(
                 f"variance-driver-{index}",
@@ -259,7 +425,7 @@ def _driver_items(result_rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]
             _base_item(
                 "variance-drivers-truncated",
                 "review_artifact",
-                "Variance driver rows truncated in widget",
+                str(copy["driver_rows_truncated"]),
                 output_path="variance_results.csv",
                 allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="mark_unclear",
@@ -284,13 +450,18 @@ def _artifact_item_type(record: dict[str, Any]) -> str:
     return "review_artifact"
 
 
-def _artifact_title(record: dict[str, Any]) -> str:
+def _artifact_title(record: dict[str, Any], language: str) -> str:
     chart_type = record.get("chart_type")
     artifact_id = record.get("artifact_id")
-    return str(chart_type or artifact_id or record.get("path") or "Artifact")
+    return str(
+        chart_type
+        or artifact_id
+        or record.get("path")
+        or _review_copy(language)["artifact"]
+    )
 
 
-def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+def _artifact_items(manifest: dict[str, Any], language: str) -> list[dict[str, Any]]:
     records = [
         record for record in manifest.get("artifacts", []) if isinstance(record, dict)
     ][:MAX_ARTIFACT_ITEMS]
@@ -302,7 +473,7 @@ def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
             _base_item(
                 f"artifact-{index}",
                 item_type,
-                _artifact_title(record),
+                _artifact_title(record, language),
                 source_path=str(record.get("source_path") or ""),
                 output_path=str(record.get("pack_path") or record.get("path") or ""),
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
@@ -313,7 +484,7 @@ def _artifact_items(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     return items
 
 
-def _followup_items(followups: dict[str, Any]) -> list[dict[str, Any]]:
+def _followup_items(followups: dict[str, Any], language: str) -> list[dict[str, Any]]:
     requests = [
         item for item in followups.get("requests", []) if isinstance(item, dict)
     ][:MAX_FOLLOWUP_ITEMS]
@@ -321,7 +492,10 @@ def _followup_items(followups: dict[str, Any]) -> list[dict[str, Any]]:
         _base_item(
             f"followup-{index}",
             "followup_request",
-            str(request.get("request_id") or f"Follow-up {index}"),
+            str(
+                request.get("request_id")
+                or str(_review_copy(language)["followup"]).format(index=index)
+            ),
             output_path="",
             allowed_actions=("accept", "reject", "edit", "mark_unclear", "skip"),
             recommended_action="mark_unclear",
@@ -377,6 +551,8 @@ def write_run_intake(
 ) -> RunIntakeResult:
     """Write run intake before the heavy legacy variance calculation."""
 
+    language = _normalize_language(recipe.get("language"))
+    copy = _review_copy(language)
     run_id = _run_id(input_path)
     options = recipe.get("options") or {}
     mappings = recipe.get("mappings") or {}
@@ -386,11 +562,11 @@ def write_run_intake(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
-        "language": recipe.get("language") or "en",
+        "language": language,
         "input_paths": [input_path.as_posix()],
         "output_dir": output_dir.as_posix(),
         "inferred_task": "variance_chart_report_payload",
-        "data_posture": _data_posture(input_path, recipe_path),
+        "data_posture": _data_posture(input_path, recipe_path, language),
         "assumptions": {
             "source_row_count": source_row_count,
             "recipe_path": recipe_path.as_posix() if recipe_path else None,
@@ -409,7 +585,7 @@ def write_run_intake(
         "unresolved_questions": [],
         "dependency_check": {
             "status": "not_run_by_script",
-            "note": "Codex should run scripts/check_dependencies.py before helper scripts.",
+            "note": copy["dependency_note"],
         },
         "status": "ready_for_variance_run",
     }
@@ -432,17 +608,19 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write chart/report review payload, pending decisions, and artifacts."""
 
+    language = _normalize_language(recipe.get("language"))
+    copy = _review_copy(language)
     outputs = _output_records(output_dir)
     standard_context = _load_json(output_dir / "standard_variance_context.json")
     standard_summary = _standard_context_summary(standard_context)
     items: list[dict[str, Any]] = []
-    items.extend(_driver_items(result_rows))
-    items.extend(_artifact_items({"artifacts": outputs}))
+    items.extend(_driver_items(result_rows, language))
+    items.extend(_artifact_items({"artifacts": outputs}, language))
     items.append(
         _base_item(
             "standard-variance-context",
             "context_artifact",
-            "Standard variance context",
+            str(copy["context_title"]),
             output_path="standard_variance_context.json",
             allowed_actions=("accept", "edit", "mark_unclear", "skip"),
             recommended_action="accept" if standard_context else "mark_unclear",
@@ -468,11 +646,12 @@ def write_review_session_artifacts(
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
         "created_at": _utc_now(),
+        "language": language,
         "source_paths": [input_path.as_posix()],
         "review_type": "variance_chart_report_review",
         "items": items,
         "item_count": len(items),
-        "columns": _review_columns(),
+        "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "recipe": _as_output_ref(recipe_path, output_dir),
@@ -526,6 +705,21 @@ def write_review_session_artifacts(
         },
     )
 
+    review_handoff_path = _write_review_handoff_card(
+        output_dir,
+        run_id=run_id,
+        language=language,
+    )
+    outputs = _output_records(output_dir)
+    outputs = [
+        output
+        for output in outputs
+        if not (
+            isinstance(output, dict) and output.get("path") == review_handoff_path.name
+        )
+    ]
+    outputs.append(_review_handoff_output_record(review_handoff_path, language))
+
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
         {
@@ -534,16 +728,9 @@ def write_review_session_artifacts(
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
             "completed_at": _utc_now(),
-            "outputs": _output_records(output_dir),
-            "caveats": [
-                "Chart payloads are bounded for review; use variance_results.csv and context files as the full source set.",
-                "ui_decisions.json is pending until Codex, MCP UI, or fallback review records decisions.",
-            ],
-            "next_actions": [
-                "Render review_payload.json with the MCP widget when available.",
-                "Use the standard variance context before interpreting chart pixels.",
-                "Write codex_business_analysis.md from reviewed source artifacts and caveats.",
-            ],
+            "outputs": outputs,
+            "caveats": list(copy["caveats"]),
+            "next_actions": list(copy["next_actions"]),
             "status": "written_pending_review",
         },
     )

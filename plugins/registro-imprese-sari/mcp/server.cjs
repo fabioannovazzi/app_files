@@ -110,6 +110,7 @@ function toolDefinitions() {
       plugin: { type: "string" },
       workflow: { type: "string" },
       run_id: { type: "string" },
+      language: { type: "string" },
       review_type: { type: "string" },
       status: { type: "string" },
       item_count: { type: "number" },
@@ -391,6 +392,7 @@ function reviewFinalArtifacts(value, review) {
     plugin: finalArtifacts.plugin || null,
     workflow: finalArtifacts.workflow || null,
     run_id: finalArtifacts.run_id || review.run_id,
+    language: review.language || finalArtifacts.language || null,
     status: finalArtifacts.status || null,
     professional_review_required: finalArtifacts.professional_review_required !== false,
     ready_to_file: false,
@@ -619,6 +621,7 @@ function buildUiDecisions(args, review) {
     plugin: PLUGIN_NAME,
     workflow: PLUGIN_NAME,
     run_id: review.run_id,
+    ...(review.language ? { language: review.language } : {}),
     decided_at: decisions.length ? decidedAt : null,
     decision_source: decisionSource,
     review_payload_path: "review_payload.json",
@@ -637,6 +640,7 @@ function saveDecisions(args) {
   const review = widget.review_payload;
   const uiDecisions = buildUiDecisions(args, review);
   const context = resolvePersistenceContext(args, review);
+  const spanish = review.language === "es";
   let storedPath = null;
   if (context) {
     const verified = verifyStoredPackage(context, review);
@@ -654,8 +658,12 @@ function saveDecisions(args) {
     persisted: Boolean(storedPath),
     ui_decisions_path: storedPath ? "ui_decisions.json" : null,
     message: storedPath
-      ? `Salvate ${uiDecisions.decision_count} decisioni di revisione.`
-      : "Decisioni valide; nessuna cartella di run è stata fornita per il salvataggio.",
+      ? spanish
+        ? `Se han guardado ${uiDecisions.decision_count} decisiones de revisión.`
+        : `Salvate ${uiDecisions.decision_count} decisioni di revisione.`
+      : spanish
+        ? "Las decisiones son válidas; no se ha proporcionado ninguna carpeta de ejecución para guardarlas."
+        : "Decisioni valide; nessuna cartella di run è stata fornita per il salvataggio.",
     ui_decisions: uiDecisions,
   };
 }
@@ -665,13 +673,16 @@ function applyDecisions(args) {
   const review = widget.review_payload;
   const uiDecisions = buildUiDecisions(args, review);
   const context = resolvePersistenceContext(args, review);
+  const spanish = review.language === "es";
   if (!context) {
     return {
       ok: true,
       validation_type: "registro_imprese_sari_application_preview",
       run_id: review.run_id,
       persisted: false,
-      message: "Applicazione validata; nessuna cartella di run è stata fornita.",
+      message: spanish
+        ? "La aplicación es válida; no se ha proporcionado ninguna carpeta de ejecución."
+        : "Applicazione validata; nessuna cartella di run è stata fornita.",
     };
   }
   const verified = verifyStoredPackage(context, review);
@@ -707,6 +718,7 @@ function applyDecisions(args) {
     plugin: PLUGIN_NAME,
     workflow: PLUGIN_NAME,
     run_id: review.run_id,
+    ...(review.language ? { language: review.language } : {}),
     applied_at: appliedAt,
     review_payload_sha256: verified.reviewHash,
     decision_count: uiDecisions.decision_count,
@@ -776,7 +788,9 @@ function applyDecisions(args) {
     final_artifacts_path: path.basename(verified.finalPath),
     ready_to_file: false,
     portal_actions_performed: false,
-    message: "Decisioni applicate alla sola carta di lavoro; nessun accesso o invio è stato eseguito.",
+    message: spanish
+      ? "Las decisiones se han aplicado únicamente al documento de trabajo; no se ha realizado ningún acceso ni presentación."
+      : "Decisioni applicate alla sola carta di lavoro; nessun accesso o invio è stato eseguito.",
     applied_decisions: applied,
     final_artifacts: reviewFinalArtifacts(updatedFinal, review),
   };
@@ -790,7 +804,9 @@ function callTool(name, args) {
       validation_type: "registro_imprese_sari_review",
       run_id: payload.review_payload.run_id,
       item_count: payload.review_payload.item_count,
-      message: `Payload valido. È possibile chiamare ${TOOL_NAMES.render}.`,
+      message: payload.review_payload.language === "es"
+        ? `Los datos son válidos. Puede llamar a ${TOOL_NAMES.render}.`
+        : `Payload valido. È possibile chiamare ${TOOL_NAMES.render}.`,
       review_payload: payload.review_payload,
     };
   }

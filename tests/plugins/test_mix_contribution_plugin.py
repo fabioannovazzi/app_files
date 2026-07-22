@@ -8683,3 +8683,184 @@ def test_legacy_utf8_sort_replaces_removed_categorical_set_ordering() -> None:
     sorted_frame = sort_utf8_lazy(frame, "item").collect()
 
     assert sorted_frame.get_column("item").to_list() == ["", "A", "B"]
+
+
+def _write_spanish_mix_review(
+    tmp_path: Path,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    core = load_core()
+    input_path = tmp_path / "ventas.csv"
+    output_dir = tmp_path / "revision_mix"
+    output_dir.mkdir()
+    input_path.write_text("Scenario,Sales\nAC,10\n", encoding="utf-8")
+    (output_dir / "mix_contribution_context.json").write_text(
+        '{"contribution":{"metric":"Sales","total":10,"top_items":[]}}\n',
+        encoding="utf-8",
+    )
+    (output_dir / "mix_contribution_summary.csv").write_text(
+        "Sales,share_of_total\n10,1\n", encoding="utf-8"
+    )
+    recipe = {
+        "language": "es_ES",
+        "mappings": {"amount_column": "Sales", "dimensions": ["Marca"]},
+        "options": {"currency": "EUR"},
+    }
+    intake = core.write_run_intake(
+        output_dir,
+        input_path,
+        recipe_path=None,
+        recipe=recipe,
+        source_row_count=1,
+    )
+    core.write_review_session_artifacts(
+        output_dir,
+        input_path,
+        run_id=intake.run_id,
+        run_intake_path=intake.path,
+        recipe_path=None,
+        recipe=recipe,
+        summary_rows=[{"Sales": 10.0, "share_of_total": 1.0}],
+        audit={"legacy_runtime": {"chart_audits": {}}},
+    )
+    return (
+        json.loads((output_dir / "run_intake.json").read_text(encoding="utf-8")),
+        json.loads((output_dir / "review_payload.json").read_text(encoding="utf-8")),
+        json.loads((output_dir / "final_artifacts.json").read_text(encoding="utf-8")),
+    )
+
+
+def test_spanish_mix_review_artifacts_are_localized_and_strict(
+    tmp_path: Path,
+) -> None:
+    run_intake, review_payload, final_artifacts = _write_spanish_mix_review(tmp_path)
+    output_dir = Path(run_intake["output_dir"])
+    core = load_core()
+    recipe = {
+        "language": "es",
+        "source_file": "ventas.csv",
+        "mappings": {"amount_column": "Sales", "dimensions": ["Marca"]},
+    }
+    contribution = {
+        "metric": "Sales",
+        "total": 10.0,
+        "top_items": [{"item": "A", "value": 10.0, "share_of_total": 1.0}],
+    }
+    summary = core.build_summary_markdown(recipe, contribution, {})
+    core.write_client_report(recipe, contribution, [], output_dir)
+    client_report = (output_dir / "mix_contribution_client_report.md").read_text(
+        encoding="utf-8"
+    )
+
+    report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+    widget = (PLUGIN_ROOT / "assets" / "mix-contribution-review-widget.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert report.ok, report.errors
+    assert run_intake["language"] == "es"
+    assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
+    assert review_payload["language"] == "es"
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Elemento",
+        "Acción sugerida",
+        "Fuente",
+        "Salida",
+        "Estado",
+    ]
+    assert any(
+        item["title"] == "Fila de contribución 1" for item in review_payload["items"]
+    )
+    assert any(
+        item["title"] == "Contexto de contribución al mix"
+        for item in review_payload["items"]
+    )
+    assert "Los datos de los gráficos" in final_artifacts["caveats"][0]
+    assert "Chart payloads" not in json.dumps(final_artifacts)
+    assert summary.startswith("# Datos de origen del análisis de mix y contribución")
+    assert "Top Contribution Items" not in summary
+    assert client_report.startswith("# Análisis de mix y contribución")
+    assert "Main Contribution Items" not in client_report
+    assert "es: {" in widget
+    assert "Revisión de contribución al mix" in widget
+    assert "reviewPayload().language" in widget
+
+
+def test_spanish_mix_mcp_responses_errors_and_handoff(tmp_path: Path) -> None:
+    run_intake, review_payload, final_artifacts = _write_spanish_mix_review(tmp_path)
+    output_dir = Path(run_intake["output_dir"])
+    ui_decisions = json.loads(
+        (output_dir / "ui_decisions.json").read_text(encoding="utf-8")
+    )
+    first_item = review_payload["items"][0]
+    common = {
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "ui_decisions": ui_decisions,
+        "final_artifacts": final_artifacts,
+    }
+    responses = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_mix_contribution_review",
+                    "arguments": common,
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "save_mix_contribution_decisions",
+                    "arguments": {
+                        **common,
+                        "decisions": [{"item_id": first_item["id"], "action": "edit"}],
+                    },
+                },
+            },
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "tools/call",
+                "params": {
+                    "name": "apply_mix_contribution_decisions",
+                    "arguments": {
+                        **common,
+                        "decisions": [
+                            {"item_id": first_item["id"], "action": "accept"}
+                        ],
+                    },
+                },
+            },
+        ]
+    )
+    payloads = [response["result"]["structuredContent"] for response in responses]
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+    strict_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+        strict_output_content=True,
+    )
+
+    assert "son válidos" in payloads[0]["message"]
+    assert "is valid" not in payloads[0]["message"]
+    assert responses[1]["result"]["isError"] is True
+    assert "es obligatorio" in payloads[1]["error"]
+    assert "is required" not in payloads[1]["error"]
+    assert "Se han aplicado" in payloads[2]["message"]
+    assert handoff.startswith("# Entrega de revisión")
+    assert "<!-- Review Handoff -->" in handoff
+    assert "Review payload:" not in handoff
+    assert strict_report.ok, strict_report.errors
