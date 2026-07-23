@@ -2062,6 +2062,8 @@ def test_static_plugin_pages_are_public_and_plugin_downloads_are_removed() -> No
         "/static/shared/clara/index.html",
         "/static/shared/clara/clara-page.css",
         "/static/shared/clara/icon.svg",
+        "/static/shared/product-navigation.css",
+        "/static/shared/product-navigation.js",
     ):
         response = client.get(clara_asset)
 
@@ -3326,38 +3328,106 @@ def test_clara_public_icon_matches_plugin_source() -> None:
 
 
 @pytest.mark.parametrize(
-    ("page_name", "style_path", "expected_home_link"),
+    ("page_name", "expected_home_href", "expected_product", "expected_links"),
     (
         (
             "vera",
-            "static/shared/vera/index.html",
-            '<a class="brand" href="/?lang=it" data-home-link aria-label="Mparanza">',
+            "/?lang=it",
+            "Vera",
+            ("#core", "#modello", "#data-boundary", "#video"),
         ),
         (
             "clara",
-            "static/shared/clara/clara-page.css",
-            '<a class="brand" href="/" aria-label="Mparanza">',
+            "/",
+            "Clara",
+            ("#presentations", "#workflow", "#data-handling", "#videos"),
         ),
     ),
 )
-def test_companion_header_home_link_uses_mparanza_logo(
-    page_name: str, style_path: str, expected_home_link: str
+def test_companion_headers_share_product_navigation(
+    page_name: str,
+    expected_home_href: str,
+    expected_product: str,
+    expected_links: tuple[str, ...],
 ) -> None:
     page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
         encoding="utf-8"
     )
-    header = page.split('<header class="topbar">', maxsplit=1)[1].split(
+    header = page.split('<header class="product-nav">', maxsplit=1)[1].split(
         "</header>", maxsplit=1
     )[0]
+    link_hrefs = tuple(
+        re.findall(
+            r'<a href="([^"]+)" data-i18n="nav\.[^"]+">[^<]+</a>',
+            header,
+        )
+    )
 
-    assert expected_home_link in header
+    assert 'href="../product-navigation.css?v=' in page
+    assert 'src="../product-navigation.js?v=' in page
+    assert (
+        f'<a class="product-nav__brand" href="{expected_home_href}" '
+        'data-home-link aria-label="Mparanza">' in header
+    )
     assert (
         '<img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" '
         'alt="Mparanza">' in header
     )
+    assert f'<span class="product-nav__product">{expected_product}</span>' in header
+    assert link_hrefs == expected_links
+    assert header.count("data-product-nav-menu") == 2
+    assert header.count("data-product-nav-disclosure") == 1
+    assert re.findall(r'data-lang="([a-z]{2})"', header) == [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es",
+    ]
+    assert "data-current-language" in header
+    assert "GitHub" not in header
+    assert 'data-i18n="nav.download"' not in header
     assert 'src="icon.svg"' not in header
-    styles = (ROOT / style_path).read_text(encoding="utf-8")
-    assert "width: auto; height: 34px;" in styles
+
+
+def test_companion_navigation_uses_one_scoped_responsive_system() -> None:
+    stylesheet = (
+        ROOT / "static" / "shared" / "product-navigation.css"
+    ).read_text(encoding="utf-8")
+    script = (ROOT / "static" / "shared" / "product-navigation.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert ".product-nav__inner" in stylesheet
+    assert (
+        ".product-nav__menu[data-menu-open] > .product-nav__links" in stylesheet
+    )
+    assert ".product-nav__language-list button" in stylesheet
+    assert "min-height: 44px;" in stylesheet
+    assert "@media (max-width: 840px)" in stylesheet
+    assert "@media (max-width: 380px)" in stylesheet
+    assert stylesheet.count("flex: 0 0 auto;") >= 3
+    assert "[data-product-nav-menu-trigger]" in script
+    assert "[data-product-nav-disclosure]" in script
+    assert 'event.key === "Escape"' in script
+    assert "menuTrigger?.focus()" in script
+    assert 'querySelector("summary")?.focus()' in script
+
+
+@pytest.mark.parametrize("page_name", ("vera", "clara"))
+def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> None:
+    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+        encoding="utf-8"
+    )
+    header = page.split('<header class="product-nav">', maxsplit=1)[1].split(
+        "</header>", maxsplit=1
+    )[0]
+    footer = page.split("<footer", maxsplit=1)[1].split("</footer>", maxsplit=1)[0]
+
+    assert '<a class="skip-link" href="#main-content"' in page
+    assert '<main id="main-content">' in page
+    assert "github.com/fabioannovazzi/app_files/tree/main/plugins/" not in header
+    assert f"github.com/fabioannovazzi/app_files/tree/main/plugins/{page_name}" in footer
 
 
 def test_clara_public_page_uses_vera_visual_system() -> None:

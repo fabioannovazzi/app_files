@@ -23,37 +23,51 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="clara-page.css?v=2026072302">
+  <link rel="stylesheet" href="clara-page.css?v=2026072303">
+  <link rel="stylesheet" href="../product-navigation.css?v=2026072301">
   <link rel="stylesheet" href="../video-library.css?v=2026072001">
+  <script defer src="../product-navigation.js?v=2026072301"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="nav">
-      <a class="brand" href="/" aria-label="Mparanza">
-        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
-      </a>
-      <div class="nav-right">
-        <nav class="nav-links" aria-label="Page navigation" data-i18n-aria-label="aria.page_navigation">
-          <a href="#presentations" data-i18n="nav.presentations">Presentations</a>
-          <a href="#retail-intelligence" data-i18n="nav.capabilities">Retail, interviews &amp; data</a>
+  <a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
+
+  <header class="product-nav">
+    <div class="product-nav__inner">
+      <div class="product-nav__identity">
+        <a class="product-nav__brand" href="/" data-home-link aria-label="Mparanza">
+          <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+        </a>
+        <span class="product-nav__product">Clara</span>
+      </div>
+      <div class="product-nav__menu" data-product-nav-menu>
+        <button class="product-nav__trigger" type="button" aria-controls="clara-product-navigation" aria-expanded="false" data-product-nav-menu-trigger data-i18n-aria-label="nav.menu">
+          <span class="product-nav__menu-label" data-i18n="nav.menu">Menu</span>
+          <span class="product-nav__menu-icon" aria-hidden="true"></span>
+        </button>
+        <nav class="product-nav__links" id="clara-product-navigation" aria-label="Page navigation" data-i18n-aria-label="aria.page_navigation">
+          <a href="#presentations" data-i18n="nav.capabilities">What it does</a>
           <a href="#workflow" data-i18n="nav.workflow">How it works</a>
           <a href="#data-handling" data-i18n="nav.data">Data</a>
           <a href="#videos" data-i18n="nav.videos">Videos</a>
-          <a href="#download" data-i18n="nav.download">Install</a>
-          <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-        <div class="lang-switch" aria-label="Language" data-i18n-aria-label="aria.language">
-          <button type="button" data-lang="en">EN</button>
-          <button type="button" data-lang="it">IT</button>
-          <button type="button" data-lang="fr">FR</button>
-          <button type="button" data-lang="de">DE</button>
-          <button type="button" data-lang="es">ES</button>
-        </div>
       </div>
+      <details class="product-nav__language" data-product-nav-disclosure>
+        <summary class="product-nav__trigger" aria-label="Language: English" data-language-summary>
+          <span data-current-language>EN</span>
+          <span class="product-nav__chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="product-nav__language-list">
+          <button type="button" data-lang="it"><span>Italiano</span><span>IT</span></button>
+          <button type="button" data-lang="en"><span>English</span><span>EN</span></button>
+          <button type="button" data-lang="fr"><span>Français</span><span>FR</span></button>
+          <button type="button" data-lang="de"><span>Deutsch</span><span>DE</span></button>
+          <button type="button" data-lang="es"><span>Español</span><span>ES</span></button>
+        </div>
+      </details>
     </div>
   </header>
 
-  <main>
+  <main id="main-content">
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow" data-i18n="hero.eyebrow">Clara AI companion for consultants</p>
@@ -300,7 +314,10 @@
 
   </main>
 
-  <footer data-i18n="hero.eyebrow">Clara AI companion for consultants</footer>
+  <footer>
+    <span data-i18n="hero.eyebrow">Clara AI companion for consultants</span>
+    <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </footer>
 
   <script src="../video-library.js?v=2026072001"></script>
   <script>
@@ -308,15 +325,15 @@
       en: {
         title: "Clara",
         "meta.description": "Clara is the AI companion for consultants: it organizes sources, conducts or transcribes interviews, creates or corrects presentations, and analyzes retail assortments and business data in Codex.",
+        "skip": "Skip to content",
         "aria.page_navigation": "Page navigation",
         "aria.language": "Language",
         "aria.promise_strip": "What you can do with Clara",
-        "nav.presentations": "Presentations",
-        "nav.capabilities": "Retail, interviews & data",
+        "nav.menu": "Menu",
+        "nav.capabilities": "What it does",
         "nav.workflow": "How it works",
         "nav.data": "Data",
         "nav.videos": "Videos",
-        "nav.download": "Install",
         "hero.eyebrow": "Clara AI companion for consultants",
         "hero.title": "Clara prepares the work. The judgment remains yours.",
         "hero.lead": "Clara organizes sources, surfaces gaps and contradictions, and turns materials, conversations, and data into presentations, documents, and analyses for review. Clara works with you inside Codex.",
@@ -431,15 +448,15 @@
       it: {
         title: "Clara",
         "meta.description": "Clara è l'AI companion per consulenti: organizza le fonti, conduce o trascrive interviste, crea o corregge presentazioni e analizza assortimenti retail e dati aziendali in Codex.",
+        "skip": "Vai al contenuto",
         "aria.page_navigation": "Navigazione della pagina",
         "aria.language": "Lingua",
         "aria.promise_strip": "Cosa puoi fare con Clara",
-        "nav.presentations": "Presentazioni",
-        "nav.capabilities": "Retail, interviste e dati",
+        "nav.menu": "Menu",
+        "nav.capabilities": "Cosa fa",
         "nav.workflow": "Come funziona",
         "nav.data": "Dati",
         "nav.videos": "Video",
-        "nav.download": "Installa",
         "hero.eyebrow": "Clara AI companion for consultants",
         "hero.title": "Clara prepara il lavoro. Il giudizio resta tuo.",
         "hero.lead": "Organizza le fonti, fa emergere lacune e contraddizioni e trasforma materiali, conversazioni e dati in presentazioni, documenti e analisi da rivedere. Lavora con te dentro Codex.",
@@ -554,15 +571,15 @@
       fr: {
         title: "Clara",
         "meta.description": "Clara est l'AI companion des consultants : elle organise les sources, mène ou transcrit des entretiens, crée ou corrige des présentations et analyse des assortiments retail et des données métier dans Codex.",
+        "skip": "Aller au contenu",
         "aria.page_navigation": "Navigation de la page",
         "aria.language": "Langue",
         "aria.promise_strip": "Ce que vous pouvez faire avec Clara",
-        "nav.presentations": "Présentations",
-        "nav.capabilities": "Retail, entretiens et données",
+        "nav.menu": "Menu",
+        "nav.capabilities": "Ce qu’elle fait",
         "nav.workflow": "Fonctionnement",
         "nav.data": "Données",
         "nav.videos": "Vidéos",
-        "nav.download": "Installer",
         "hero.eyebrow": "Clara AI companion for consultants",
         "hero.title": "Clara prépare le travail. Le jugement reste le vôtre.",
         "hero.lead": "Clara organise les sources, met en évidence les lacunes et les contradictions, et transforme les éléments du projet, les conversations et les données en présentations, documents et analyses à relire. Elle travaille avec vous dans Codex.",
@@ -677,15 +694,15 @@
       de: {
         title: "Clara",
         "meta.description": "Clara ist der AI Companion für Beraterinnen und Berater: Clara ordnet Quellen, führt Interviews oder transkribiert sie, erstellt oder korrigiert Präsentationen und analysiert Retail-Sortimente und Unternehmensdaten in Codex.",
+        "skip": "Zum Inhalt",
         "aria.page_navigation": "Seitennavigation",
         "aria.language": "Sprache",
         "aria.promise_strip": "Was Sie mit Clara tun können",
-        "nav.presentations": "Präsentationen",
-        "nav.capabilities": "Retail, Interviews und Daten",
-        "nav.workflow": "So funktioniert Clara",
+        "nav.menu": "Menü",
+        "nav.capabilities": "Was sie kann",
+        "nav.workflow": "So funktioniert es",
         "nav.data": "Daten",
         "nav.videos": "Videos",
-        "nav.download": "Installieren",
         "hero.eyebrow": "Clara AI companion for consultants",
         "hero.title": "Clara bereitet die Arbeit vor. Das fachliche Urteil bleibt bei Ihnen.",
         "hero.lead": "Clara ordnet Quellen, macht Lücken und Widersprüche sichtbar und verwandelt Materialien, Gespräche und Daten in Präsentationen, Dokumente und Analysen zur Überprüfung. Clara arbeitet mit Ihnen direkt in Codex.",
@@ -800,15 +817,15 @@
       es: {
         title: "Clara",
         "meta.description": "Clara es la asistente de IA para consultores: organiza fuentes, realiza o transcribe entrevistas, crea o corrige presentaciones y analiza surtidos retail y datos empresariales en Codex.",
+        "skip": "Ir al contenido",
         "aria.page_navigation": "Navegación de la página",
         "aria.language": "Idioma",
         "aria.promise_strip": "Qué puedes hacer con Clara",
-        "nav.presentations": "Presentaciones",
-        "nav.capabilities": "Retail, entrevistas y datos",
+        "nav.menu": "Menú",
+        "nav.capabilities": "Qué hace",
         "nav.workflow": "Cómo funciona",
         "nav.data": "Datos",
         "nav.videos": "Vídeos",
-        "nav.download": "Instalar",
         "hero.eyebrow": "Clara, asistente de IA para consultores",
         "hero.title": "Clara prepara el trabajo. El criterio sigue siendo tuyo.",
         "hero.lead": "Clara organiza las fuentes, señala lagunas y contradicciones y convierte materiales, conversaciones y datos en presentaciones, documentos y análisis para revisar. Clara trabaja contigo dentro de Codex.",
@@ -923,6 +940,13 @@
     };
     const params = new URLSearchParams(window.location.search);
     const supportedLanguages = new Set(["en", "it", "fr", "de", "es"]);
+    const languageNames = {
+      it: "Italiano",
+      en: "English",
+      fr: "Français",
+      de: "Deutsch",
+      es: "Español"
+    };
     const requestedLanguage = params.get("lang");
     const lang = supportedLanguages.has(requestedLanguage) ? requestedLanguage : "en";
     const safeLang = lang || "en";
@@ -976,6 +1000,13 @@
       const value = activeCopy[node.dataset.i18nContent];
       if (typeof value === "string") node.setAttribute("content", value);
     });
+    document.querySelectorAll("[data-current-language]").forEach((node) => {
+      node.textContent = safeLang.toUpperCase();
+    });
+    document.querySelector("[data-language-summary]").setAttribute(
+      "aria-label",
+      `${activeCopy["aria.language"]}: ${languageNames[safeLang]}`
+    );
     document.querySelectorAll("[data-lang]").forEach((button) => {
       const isActive = button.dataset.lang === safeLang;
       button.classList.toggle("is-active", isActive);

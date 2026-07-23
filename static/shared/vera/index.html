@@ -23,6 +23,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../product-navigation.css?v=2026072301">
+  <script defer src="../product-navigation.js?v=2026072301"></script>
   <style>
     :root {
       --navy: #002060;
@@ -56,95 +58,11 @@
     h2 { font-size: clamp(2.25rem, 5vw, 4.75rem); font-weight: 650; letter-spacing: -0.05em; }
     h3 { font-size: clamp(1.35rem, 2.2vw, 1.8rem); font-weight: 650; letter-spacing: -0.025em; }
 
-    .skip-link {
-      position: fixed;
-      top: 12px;
-      left: 12px;
-      z-index: 100;
-      padding: 10px 14px;
-      color: var(--white);
-      background: var(--navy);
-      transform: translateY(-180%);
-      transition: transform 160ms ease-out;
-    }
-
-    .skip-link:focus { transform: translateY(0); }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid var(--cyan);
-      background: rgba(255, 255, 255, 0.97);
-    }
-
-    .nav-shell,
     main,
     .footer-shell {
       width: min(var(--content), calc(100% - 48px));
       margin-inline: auto;
     }
-
-    .nav-shell {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand,
-    .nav-links a {
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      text-decoration: none;
-    }
-
-    .brand img { display: block; width: auto; height: 34px; }
-    .nav-right, .nav-links, .lang-switch { display: flex; align-items: center; }
-    .nav-right { gap: 24px; }
-    .nav-links { gap: 24px; color: var(--blue); font-size: 0.875rem; }
-    .nav-links a { position: relative; }
-    .nav-links a::after {
-      position: absolute;
-      right: 0;
-      bottom: 8px;
-      left: 0;
-      height: 1px;
-      background: var(--cyan);
-      content: "";
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 160ms ease-out;
-    }
-
-    .nav-links a:hover::after { transform: scaleX(1); }
-
-    .lang-switch {
-      gap: 2px;
-      padding: 2px;
-      border: 1px solid var(--blue);
-      border-radius: 8px;
-      background: var(--white);
-    }
-
-    .lang-switch button,
-    .footer-languages button {
-      min-width: 42px;
-      min-height: 38px;
-      border: 0;
-      background: transparent;
-      color: var(--blue);
-      cursor: pointer;
-      font-size: 0.75rem;
-      font-weight: 650;
-    }
-
-    .lang-switch button { border-radius: 5px; }
-    .lang-switch button.is-active { color: var(--white); background: var(--blue); }
-
-    section { scroll-margin-top: 76px; }
 
     .hero {
       min-height: min(760px, calc(100vh - 76px));
@@ -596,15 +514,23 @@
     .footer-languages { display: grid; gap: 8px; justify-items: end; }
     .footer-languages > span { color: var(--blue); font-size: 0.75rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; }
     .footer-language-buttons { display: flex; gap: 10px; }
-    .footer-languages button { min-width: 44px; border-bottom: 1px solid transparent; }
+    .footer-languages button {
+      min-width: 44px;
+      min-height: 44px;
+      border: 0;
+      border-bottom: 1px solid transparent;
+      background: transparent;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 650;
+    }
     .footer-languages button.is-active { border-color: var(--blue); color: var(--navy); }
 
     a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
 
     @media (max-width: 900px) {
-      .nav-shell, main, .footer-shell { width: min(var(--content), calc(100% - 40px)); }
-      .nav-right { gap: 16px; }
-      .nav-links { gap: 16px; }
+      main, .footer-shell { width: min(var(--content), calc(100% - 40px)); }
       .hero { grid-template-columns: minmax(0, 1fr) 170px; column-gap: 44px; }
       .hero-install {
         grid-template-areas:
@@ -627,25 +553,6 @@
     }
 
     @media (max-width: 720px) {
-      .nav-shell {
-        min-height: 0;
-        padding-block: 12px 0;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 0 16px;
-      }
-      .nav-right { display: contents; }
-      .brand { grid-column: 1; grid-row: 1; }
-      .lang-switch { grid-column: 2; grid-row: 1; }
-      .nav-links {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        width: 100%;
-        border-top: 1px solid var(--pale-blue);
-        justify-content: space-between;
-      }
-      .nav-links a { flex: 1; justify-content: center; }
-      section { scroll-margin-top: 126px; }
       .hero {
         min-height: 0;
         grid-template-columns: 1fr;
@@ -673,11 +580,7 @@
     }
 
     @media (max-width: 440px) {
-      .nav-shell, main, .footer-shell { width: calc(100% - 32px); }
-      .nav-shell { gap: 0 10px; }
-      .brand img { height: 27px; }
-      .lang-switch button { min-width: 32px; }
-      .nav-links { gap: 4px; font-size: 0.78rem; }
+      main, .footer-shell { width: calc(100% - 32px); }
       .hero { padding-top: 52px; }
       h1 { font-size: 4rem; }
       .journey-step { padding-block: 24px; }
@@ -701,26 +604,39 @@
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
 
-  <header class="topbar">
-    <div class="nav-shell">
-      <a class="brand" href="/?lang=it" data-home-link aria-label="Mparanza">
-        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
-      </a>
-      <div class="nav-right">
-        <nav class="nav-links" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
-          <a href="#core" data-i18n="nav.core">Core</a>
-          <a href="#italia" data-i18n="nav.italy">Italia</a>
-          <a href="#data-boundary" data-i18n="nav.data">Dati</a>
-          <a href="#video" data-i18n="nav.videos">Vera al lavoro</a>
-        </nav>
-        <div class="lang-switch" aria-label="Lingua" data-i18n-aria-label="language.label">
-          <button type="button" data-lang="it">IT</button>
-          <button type="button" data-lang="en">EN</button>
-          <button type="button" data-lang="fr">FR</button>
-          <button type="button" data-lang="de">DE</button>
-          <button type="button" data-lang="es">ES</button>
-        </div>
+  <header class="product-nav">
+    <div class="product-nav__inner">
+      <div class="product-nav__identity">
+        <a class="product-nav__brand" href="/?lang=it" data-home-link aria-label="Mparanza">
+          <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+        </a>
+        <span class="product-nav__product">Vera</span>
       </div>
+      <div class="product-nav__menu" data-product-nav-menu>
+        <button class="product-nav__trigger" type="button" aria-controls="vera-product-navigation" aria-expanded="false" data-product-nav-menu-trigger data-i18n-aria-label="nav.menu">
+          <span class="product-nav__menu-label" data-i18n="nav.menu">Menu</span>
+          <span class="product-nav__menu-icon" aria-hidden="true"></span>
+        </button>
+        <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
+          <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
+          <a href="#modello" data-i18n="nav.workflow">Come funziona</a>
+          <a href="#data-boundary" data-i18n="nav.data">Dati</a>
+          <a href="#video" data-i18n="nav.videos">Video</a>
+        </nav>
+      </div>
+      <details class="product-nav__language" data-product-nav-disclosure>
+        <summary class="product-nav__trigger" aria-label="Lingua: Italiano" data-language-summary>
+          <span data-current-language>IT</span>
+          <span class="product-nav__chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="product-nav__language-list">
+          <button type="button" data-lang="it"><span>Italiano</span><span>IT</span></button>
+          <button type="button" data-lang="en"><span>English</span><span>EN</span></button>
+          <button type="button" data-lang="fr"><span>Français</span><span>FR</span></button>
+          <button type="button" data-lang="de"><span>Deutsch</span><span>DE</span></button>
+          <button type="button" data-lang="es"><span>Español</span><span>ES</span></button>
+        </div>
+      </details>
     </div>
   </header>
 
@@ -1051,12 +967,11 @@
         "meta.description": "Vera riunisce workflow professionali multilingue e un pacchetto Italia per regole, enti e formati nazionali.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
-        "nav.paths": "Percorsi",
-        "nav.core": "Core",
-        "nav.italy": "Italia",
+        "nav.menu": "Menu",
+        "nav.capabilities": "Cosa fa",
+        "nav.workflow": "Come funziona",
         "nav.data": "Dati",
-        "nav.videos": "Vera al lavoro",
-        "nav.install": "Installa",
+        "nav.videos": "Video",
         "language.label": "Lingua",
         "hero.eyebrow": "Vera · Codex per commercialisti",
         "hero.title": "Vera",
@@ -1168,12 +1083,11 @@
         "meta.description": "Vera combines multilingual professional workflows with an Italy pack for national rules, institutions and formats.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
-        "nav.paths": "Work paths",
-        "nav.core": "Core",
-        "nav.italy": "Italy",
+        "nav.menu": "Menu",
+        "nav.capabilities": "What it does",
+        "nav.workflow": "How it works",
         "nav.data": "Data",
-        "nav.videos": "Vera at work",
-        "nav.install": "Install",
+        "nav.videos": "Videos",
         "language.label": "Language",
         "hero.eyebrow": "Vera · Codex for accountants",
         "hero.title": "Vera",
@@ -1285,12 +1199,11 @@
         "meta.description": "Vera réunit des workflows professionnels multilingues et un pack Italie pour les règles, organismes et formats nationaux.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
-        "nav.paths": "Parcours",
-        "nav.core": "Socle",
-        "nav.italy": "Italie",
+        "nav.menu": "Menu",
+        "nav.capabilities": "Ce qu’elle fait",
+        "nav.workflow": "Fonctionnement",
         "nav.data": "Données",
-        "nav.videos": "Vera à l’œuvre",
-        "nav.install": "Installer",
+        "nav.videos": "Vidéos",
         "language.label": "Langue",
         "hero.eyebrow": "Vera · Codex pour les experts-comptables",
         "hero.title": "Vera",
@@ -1402,12 +1315,11 @@
         "meta.description": "Vera verbindet mehrsprachige professionelle Workflows mit einem Italien-Paket für nationale Regeln, Institutionen und Formate.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
-        "nav.paths": "Arbeitswege",
-        "nav.core": "Kern",
-        "nav.italy": "Italien",
+        "nav.menu": "Menü",
+        "nav.capabilities": "Was sie kann",
+        "nav.workflow": "So funktioniert es",
         "nav.data": "Daten",
-        "nav.videos": "Vera bei der Arbeit",
-        "nav.install": "Installieren",
+        "nav.videos": "Videos",
         "language.label": "Sprache",
         "hero.eyebrow": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
@@ -1519,12 +1431,11 @@
         "meta.description": "Vera reúne flujos de trabajo profesionales multilingües y un paquete para Italia con sus normas, organismos y formatos nacionales.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
-        "nav.paths": "Rutas de trabajo",
-        "nav.core": "Núcleo",
-        "nav.italy": "Italia",
+        "nav.menu": "Menú",
+        "nav.capabilities": "Qué hace",
+        "nav.workflow": "Cómo funciona",
         "nav.data": "Datos",
-        "nav.videos": "Vera en acción",
-        "nav.install": "Instalar",
+        "nav.videos": "Vídeos",
         "language.label": "Idioma",
         "hero.eyebrow": "Vera · Codex para asesores fiscales y contables",
         "hero.title": "Vera",
@@ -1634,6 +1545,13 @@
     };
 
     const supported = new Set(Object.keys(copy));
+    const languageNames = {
+      it: "Italiano",
+      en: "English",
+      fr: "Français",
+      de: "Deutsch",
+      es: "Español"
+    };
     const params = new URLSearchParams(window.location.search);
     const descriptionMeta = document.querySelector('meta[name="description"]');
     const openGraphTitle = document.querySelector('meta[property="og:title"]');
@@ -1723,6 +1641,13 @@
         const key = node.dataset.i18nAriaLabel;
         if (Object.prototype.hasOwnProperty.call(strings, key)) node.setAttribute("aria-label", strings[key]);
       });
+      document.querySelectorAll("[data-current-language]").forEach((node) => {
+        node.textContent = lang.toUpperCase();
+      });
+      document.querySelector("[data-language-summary]").setAttribute(
+        "aria-label",
+        `${strings["language.label"]}: ${languageNames[lang]}`
+      );
       document.querySelectorAll("[data-lang]").forEach((button) => {
         const isActive = button.dataset.lang === lang;
         button.classList.toggle("is-active", isActive);
