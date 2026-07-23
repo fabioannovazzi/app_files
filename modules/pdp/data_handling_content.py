@@ -45,8 +45,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "call through Codex, and when Mparanza becomes a separate processing "
                 "boundary."
             ),
-            "transcript_label": "Read the transcript",
-            "unsupported": "Your browser does not support embedded video.",
+            "youtube_id": "HhmQgTEnl78",
+            "watch_label": "Watch on YouTube",
         },
         "boundary": {
             "title": "When Vera and Clara work inside Codex.",
@@ -199,8 +199,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "in una chiamata a un modello linguistico tramite Codex e quando "
                 "Mparanza diventa un confine di trattamento separato."
             ),
-            "transcript_label": "Leggi la trascrizione",
-            "unsupported": "Il browser non supporta i video incorporati.",
+            "youtube_id": "q3nS9YBaEP8",
+            "watch_label": "Guarda su YouTube",
         },
         "boundary": {
             "title": "Quando Vera e Clara lavorano dentro Codex.",
@@ -356,8 +356,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "dans un appel à un modèle de langage via Codex et quand Mparanza "
                 "devient un périmètre de traitement distinct."
             ),
-            "transcript_label": "Lire la transcription",
-            "unsupported": "Votre navigateur ne prend pas en charge la vidéo intégrée.",
+            "youtube_id": "gIpiAURzyjA",
+            "watch_label": "Voir sur YouTube",
         },
         "boundary": {
             "title": "Quand Vera et Clara travaillent dans Codex.",
@@ -517,8 +517,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "eine Sprachmodell-Anfrage eingehen kann und wann Mparanza zu einer "
                 "separaten Verarbeitungsgrenze wird."
             ),
-            "transcript_label": "Transkript lesen",
-            "unsupported": "Ihr Browser unterstützt keine eingebetteten Videos.",
+            "youtube_id": "g5XV1cZoTaI",
+            "watch_label": "Auf YouTube ansehen",
         },
         "boundary": {
             "title": "Wenn Vera und Clara in Codex arbeiten.",
@@ -676,8 +676,8 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "una llamada a un modelo de lenguaje a través de Codex y cuándo "
                 "Mparanza se convierte en un límite de tratamiento separado."
             ),
-            "transcript_label": "Leer la transcripción",
-            "unsupported": "Tu navegador no admite vídeos incrustados.",
+            "youtube_id": "LAimCM-F994",
+            "watch_label": "Ver en YouTube",
         },
         "boundary": {
             "title": "Cuando Vera y Clara trabajan dentro de Codex.",

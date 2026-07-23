@@ -2921,10 +2921,10 @@ def test_clara_public_page_routes_presentation_video_by_language() -> None:
         "it": "mU-QhOp7EOk",
         "fr": "Qe8rbIh8fhg",
         "de": "BPp_fcfYRS8",
-        "es": "3zvFm3fGdQ8",
+        "es": "8aCsIsrwWfU",
     }.items():
         assert f'{language}: {{ id: "{video_id}"' in page
-    assert 'es: { id: "3zvFm3fGdQ8", duration: "0:37", catalogLanguage: "es" }' in page
+    assert 'es: { id: "8aCsIsrwWfU", duration: "0:53", catalogLanguage: "es" }' in page
     assert 'id="presentation-video-thumbnail"' in page
     assert 'id="presentation-video-duration"' in page
 

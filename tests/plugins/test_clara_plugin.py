@@ -87,19 +87,18 @@ def test_clara_public_page_links_all_locales_to_shared_data_handling_video() -> 
         assert label in page
 
 
-def test_clara_public_page_uses_truthful_english_video_fallback_for_spanish() -> None:
+def test_clara_public_page_uses_native_spanish_presentation_video() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert 'es: { id: "3zvFm3fGdQ8", duration: "0:37", catalogLanguage: "es" }' in page
-    assert "Narración en inglés · Se abre en YouTube" in page
-    assert "Mientras se preparan las versiones en español" in page
-    assert "activePresentationVideo.catalogLanguage || safeLang" in page
-    assert "lang: videoCatalogLanguage" in page
+    assert 'es: { id: "8aCsIsrwWfU", duration: "0:53", catalogLanguage: "es" }' in page
+    assert "Español · 0:53 · Se abre en YouTube" in page
+    assert "De materiales del proyecto a una presentación lista para decidir" in page
+    assert 'es: { id: "3zvFm3fGdQ8"' not in page
 
 
-def test_clara_spanish_catalog_localizes_labels_and_discloses_english_audio() -> None:
+def test_clara_spanish_catalog_uses_only_native_spanish_audio() -> None:
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is required to execute the browser video catalog")
@@ -120,26 +119,25 @@ process.stdout.write(JSON.stringify(catalog));
     catalog = json.loads(result.stdout)
 
     assert catalog["language"] == "es"
-    assert catalog["featured"]["audioLanguage"] == "en"
+    assert catalog["featured"]["audioLanguage"] == "es"
+    assert catalog["featured"]["id"] == "8aCsIsrwWfU"
     assert catalog["featured"]["shortTitle"] == "Resumen de Clara"
     assert len(catalog["videos"]) == 11
-    assert {video["audioLanguage"] for video in catalog["videos"]} == {"en"}
+    assert {video["audioLanguage"] for video in catalog["videos"]} == {"es"}
     assert {video["language"] for video in catalog["videos"]} == {"es"}
-    assert catalog["videos"][0]["shortTitle"] == (
-        "Una entrevista que sigue el hilo que realmente importa"
-    )
+    assert catalog["videos"][0]["shortTitle"] == "Una entrevista que sigue el hilo útil"
     assert [video["id"] for video in catalog["videos"]] == [
-        "s3vtavYiUco",
-        "T_cklFKk3WA",
-        "Ol9yz9NWOlw",
-        "i-EtiyVeBQ8",
-        "OdEdNAVu0hY",
-        "u_UmkF7pDZ8",
-        "zMQjPiyiDnA",
-        "0vM_PmJccwY",
-        "6HCRTPbOanc",
-        "LPjR9Off3sc",
-        "KVGdOyK-Vmc",
+        "Rh-v4L9qN2k",
+        "UaGED7QgTNE",
+        "E_6CKkZuTJY",
+        "oPTUz-FhB-A",
+        "TzxMFJhR_vQ",
+        "0ONQKCbIv_8",
+        "hCusu-KXNJk",
+        "FCMj7mUSy5k",
+        "7K0ecDNm3ow",
+        "CxMUDaA3XG0",
+        "sJ6EJmabrrw",
     ]
 
 

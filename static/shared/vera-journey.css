@@ -559,17 +559,6 @@ body[data-vera-module="new-client"] .journey-step {
   font-size: 0.85rem;
 }
 
-.video-proof .video-transcript {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  margin-top: 4px;
-  color: var(--vj-blue);
-  font-size: 0.85rem;
-  font-weight: 650;
-  text-underline-offset: 4px;
-}
-
 .proof-copy h2 {
   margin-top: 14px;
 }

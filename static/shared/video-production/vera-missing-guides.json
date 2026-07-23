@@ -1,11 +1,10 @@
 {
-  "schemaVersion": "2.0.0",
+  "schemaVersion": "3.0.0",
   "createdAt": "2026-07-20",
-  "publicationStatus": "local_rendered",
-  "remotePublish": false,
-  "renderedAt": "2026-07-21",
-  "renderedManifest": "rendered/manifest.json",
+  "publicationStatus": "youtube_source",
+  "remotePublish": true,
   "identityModel": "module + edition + language",
+  "voicePolicy": "Italian uses Marin. English, French, German, and Spanish use Cedar. No other narration voice is permitted.",
   "voiceDirection": "Natural, calm and specific. Speak as one professional showing another a useful working method. Keep the pace measured and the ending practical.",
   "concepts": [
     {
