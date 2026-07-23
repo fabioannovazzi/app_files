@@ -89,6 +89,21 @@ artifacts. The uploader stores the returned bundle under the case workspace and
 normally imports it immediately. Use `--no-import` only when the bundle must be
 inspected before registration.
 
+For an ordinary folder that is not a Clara case, disable both case-dependent
+behaviors and choose the transcription language explicitly when it is not
+Italian:
+
+```bash
+python scripts/upload_hosted_audio.py <target-folder> <audio-file> \
+  --no-case-context --no-import --language en \
+  --magic-link-file <private-magic-link.txt>
+```
+
+The uploader saves the returned bundle under
+`<target-folder>/hosted_voice_uploads/`. Import that bundle with the ordinary
+folder importer below. If `case_manifest.json` exists, the uploader continues
+to require a valid Clara case workspace.
+
 ## Import Into a Clara Case
 
 Use the newest valid download by default:
