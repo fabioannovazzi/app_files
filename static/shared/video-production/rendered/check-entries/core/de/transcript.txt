@@ -1,3 +1,0 @@
-Vera | Von der Stichprobenbuchung zum geprüften Beleg
-
-Eine Buchung zu prüfen bedeutet zu verstehen, ob die verfügbaren Nachweise sie stützen. Vera beginnt bei der ausgewählten Journalzeile und sucht in den bereitgestellten Dokumenten sowie in autorisierten Archiven oder Exporten. Betrag, Datum, Belegnummer, Beschreibung und Gegenpartei werden verglichen, während jede Quelle sichtbar bleibt. Starke Treffer gehen in die belegte Gruppe. Mehrdeutige Fälle bleiben mit Grund und genauem Prüfbeleg in der Review-Liste. Das Ergebnis ist ein Arbeitspapier, das jede geprüfte Buchung mit ihren Nachweisen verbindet, Ausnahmen trennt und den Prüfpfad erhält. Von der Stichprobenzeile zum nachvollziehbaren Beleg.

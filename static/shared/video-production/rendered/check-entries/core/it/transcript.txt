@@ -1,3 +1,0 @@
-Vera | Dalla scrittura campionata al supporto verificato
-
-Controllare una scrittura significa capire se le evidenze disponibili la supportano. Vera parte dalla riga campionata e cerca nei documenti forniti e negli archivi o esportazioni autorizzati. Confronta importo, data, numero del documento, descrizione e controparte, mantenendo visibile ogni fonte. Le corrispondenze forti entrano nel gruppo supportato. I casi ambigui restano nella coda di revisione con il motivo e il documento preciso da esaminare. Il risultato è una carta di lavoro che collega ogni scrittura controllata alle sue evidenze, separa le eccezioni e conserva il percorso di verifica. Da una riga campionata a un supporto che il revisore può seguire.

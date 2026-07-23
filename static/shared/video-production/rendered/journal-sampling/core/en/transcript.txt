@@ -1,3 +1,0 @@
-Vera | From journal to reproducible sample
-
-A useful sample starts with a clear question and a readable journal. Vera imports the file, identifies dates, accounts, descriptions, debits and credits, and makes the period and population explicit. It then applies the selected approach: value coverage, unusual entries, intervals, targeted selection or a combination suited to the check. Every selected row retains its population reference and selection reason. The firm receives the sample, normalized population and a concise method summary, so the step can be repeated and reviewed. From the full journal to the entries that deserve focused checking.

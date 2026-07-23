@@ -368,6 +368,11 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 .download-panel h2, .download-panel p, .download-panel ul { grid-column: 1; }
 .download-panel h2 { font-size: 30px; }
 .download-panel p { margin-top: 2px; color: var(--blue); }
+.download-panel .install-video {
+  max-width: none;
+  grid-column: 1;
+  margin: 16px 0 4px;
+}
 .download-panel .output-list { margin-top: 12px; }
 .download-panel .quote { margin-top: 10px; color: var(--navy); }
 .download-actions {

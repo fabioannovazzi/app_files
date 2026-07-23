@@ -712,21 +712,6 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
             (SHARED_ROOT / "video-production" / "vera-missing-guides.json").read_text(
                 encoding="utf-8"
             ),
-            (SHARED_ROOT / "video-production" / "rendered" / "manifest.json").read_text(
-                encoding="utf-8"
-            ),
-            *(
-                path.read_text(encoding="utf-8")
-                for path in (
-                    SHARED_ROOT / "video-production" / "rendered" / "new-client"
-                ).rglob("*.txt")
-            ),
-            *(
-                path.read_text(encoding="utf-8")
-                for path in (
-                    SHARED_ROOT / "video-production" / "rendered" / "new-client"
-                ).rglob("*.vtt")
-            ),
         )
     ).casefold()
 
@@ -757,7 +742,9 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     assert "hLhP6x00ghQ" not in new_client
     assert "d9S4SA63sVw" not in new_client
     assert "Mjfz1e98oIw" not in new_client
-    assert "youtu" not in new_client.casefold()
+    assert "https://youtu.be/UwLsy2FuP8o" in new_client
+    assert "https://youtu.be/FWjVBeJYLF8" in new_client
+    assert "video-production/rendered" not in new_client
     assert '"documents.privacy.title": "Protection des données"' in new_client
 
     journey_css = (SHARED_ROOT / "vera-journey.css").read_text(encoding="utf-8")
@@ -1057,7 +1044,7 @@ def test_new_client_jurisdiction_and_presentation_language_are_independent() -> 
         assert 'hreflang="x-default"' in page
         assert f'slug: "{filename}"' in jurisdiction_script
         assert f'defaultLanguage: "{default_language}"' in jurisdiction_script
-        assert "youtu" not in page.casefold()
+        assert "i.ytimg.com/vi/" in page
 
     assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"]' in (
         jurisdiction_script
@@ -1071,7 +1058,10 @@ def test_new_client_jurisdiction_and_presentation_language_are_independent() -> 
     )
     assert "const copy = page.copy[language]" in jurisdiction_script
     assert 'href="index.html?lang=${language}#core-model"' in jurisdiction_script
-    assert "youtube" not in jurisdiction_script.casefold()
+    assert "const coreVideoIds =" in jurisdiction_script
+    assert "https://i.ytimg.com/vi/${coreVideoIds[language]}/maxresdefault.jpg" in (
+        jurisdiction_script
+    )
     assert "Report Builder" not in jurisdiction_script
     assert not re.search(r'title: "[123]\. ', jurisdiction_script)
     assert "dataset.jurisdiction =" not in jurisdiction_script
@@ -1089,167 +1079,24 @@ def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
         '"journal-bank-reconciliation", "report-builder", "prompt-optimizer"]'
     ) in page
     assert page.count("data-video-index=") == 4
-    assert page.count('class="overview-video"') == 1
-    assert "../video-production/rendered/new-client/core/it/guide.mp4" in page
-    assert "../video-production/rendered/new-client/core/it/poster.jpg" in page
-    assert "item.src || `https://youtu.be/${item.id}`" in page
-    assert "item.poster || thumbnailUrl(item.id)" in page
+    assert page.count('<a class="overview-video') == 2
+    assert "https://youtu.be/UwLsy2FuP8o" in page
+    assert "https://i.ytimg.com/vi/UwLsy2FuP8o/maxresdefault.jpg" in page
+    assert "link.href = `https://youtu.be/${item.id}`" in page
+    assert 'link.querySelector("img").src = thumbnailUrl(item.id)' in page
+    assert 'es: { id: "RKcy1G79RAs", duration: "1:20" }' in page
 
 
-def test_vera_video_catalog_v3_separates_edition_language_and_jurisdiction() -> None:
-    node = shutil.which("node")
-    if node is None:
-        pytest.skip("node is required to execute the browser video catalog")
-    script = r"""
-const fs = require("node:fs");
-global.window = {};
-eval(fs.readFileSync(process.argv[1], "utf8"));
-const catalogs = ["it", "en", "fr", "de", "es"].map((language) =>
-  window.MparanzaVideos.getCatalog("vera", language)
-);
-process.stdout.write(JSON.stringify(catalogs));
-"""
-
-    result = subprocess.run(
-        [node, "-e", script, str(SHARED_ROOT / "video-library.js")],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    catalogs = json.loads(result.stdout)
-    required_video_fields = {
-        "title",
-        "sourceKind",
-        "module",
-        "edition",
-        "scope",
-        "jurisdiction",
-        "moduleLabel",
-        "workstream",
-        "kind",
-        "language",
-        "shortTitle",
-        "description",
-        "duration",
-        "pageTargets",
-        "captions",
-        "lastVerifiedAt",
-        "status",
-    }
-    rendered_identities: set[tuple[str, str, str]] = set()
-    manifest = json.loads(
-        (SHARED_ROOT / "video-production" / "rendered" / "manifest.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    manifest_by_identity = {
-        (asset["module"], asset["edition"], asset["language"]): asset
-        for asset in manifest["assets"]
-    }
-
-    assert [catalog["language"] for catalog in catalogs] == [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es",
-    ]
-    for catalog in catalogs:
-        language = catalog["language"]
-        published_modules = {video["module"] for video in catalog["videos"]}
-
-        assert catalog["version"] == "3.1.0"
-        assert catalog["featured"]["kind"] == "overview"
-        assert catalog["featured"]["language"] == language
-        assert catalog["featured"]["edition"] == "core"
-        assert catalog["featured"]["scope"] == "core"
-        assert catalog["featured"]["jurisdiction"] is None
-        assert VERA_SITE_MODULES <= published_modules
-        assert catalog["pending"] == []
-        for video in catalog["videos"]:
-            assert required_video_fields <= video.keys()
-            assert video["language"] == language
-            assert video["pageTargets"]
-            assert video["captions"]["status"] in {"available", "pending"}
-            if video["scope"] == "core":
-                assert video["edition"] == "core"
-                assert video["jurisdiction"] is None
-            elif video["jurisdiction"] == "IT":
-                assert video["scope"] == "country"
-                assert video["edition"] in {"italy", "italy-fatturapa"}
-            else:
-                assert video["scope"] == "country"
-                assert video["edition"] == "country-aware"
-                assert video["jurisdiction"] is None
-                assert video["jurisdictions"] == ["IT", "CH-GE", "CH-ZH", "UK"]
-            if video["sourceKind"] == "local":
-                identity = (video["module"], video["edition"], language)
-                rendered_identities.add(identity)
-                assert "id" not in video
-                assert video["status"] == "local_rendered"
-                assert video["src"].startswith(
-                    "/static/shared/video-production/rendered/"
-                )
-                assert video["poster"].startswith(
-                    "/static/shared/video-production/rendered/"
-                )
-                assert video["captions"]["status"] == "available"
-                assert video["captions"]["language"] == language
-
-                asset = manifest_by_identity[identity]
-                public_prefix = "/static/shared/video-production/rendered/"
-                assert video["src"] == public_prefix + asset["files"]["video"]["path"]
-                assert (
-                    video["poster"] == public_prefix + asset["files"]["poster"]["path"]
-                )
-                assert (
-                    video["captions"]["src"]
-                    == public_prefix + asset["files"]["captions"]["path"]
-                )
-                assert (
-                    video["captions"]["transcript"]
-                    == public_prefix + asset["files"]["transcript"]["path"]
-                )
-                assert video["title"] == asset["title"]
-                assert video["pageTargets"] == asset["pageTargets"]
-                assert video["scope"] == asset["scope"]
-                assert video["jurisdiction"] == asset["jurisdiction"]
-            else:
-                assert video["sourceKind"] == "youtube"
-                assert video["status"] == "published"
-                assert video["id"]
-                if language == "es":
-                    assert video["audioLanguage"] == "en"
-
-        new_client_guides = [
-            video for video in catalog["videos"] if video["module"] == "new-client"
-        ]
-        assert len(new_client_guides) == 2
-        assert {video["edition"] for video in new_client_guides} == {"core", "italy"}
-        assert {video["sourceKind"] for video in new_client_guides} == {"local"}
-        assert len({video["moduleLabel"] for video in new_client_guides}) == 2
-        assert all("id" not in video for video in new_client_guides)
-
-    assert rendered_identities == VERA_RENDERED_VIDEO_IDENTITIES
-    italian_fatturapa = next(
-        video
-        for video in catalogs[0]["videos"]
-        if video["module"] == "check-entries" and video["edition"] == "italy-fatturapa"
-    )
-    assert italian_fatturapa["sourceKind"] == "youtube"
-    assert italian_fatturapa["id"] == "I1dp3FYVy2w"
-
-
-def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
+def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     spec_path = SHARED_ROOT / "video-production" / "vera-missing-guides.json"
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     concepts = spec["concepts"]
 
-    assert spec["schemaVersion"] == "2.0.0"
+    assert spec["schemaVersion"] == "3.0.0"
     assert spec["identityModel"] == "module + edition + language"
-    assert spec["publicationStatus"] == "local_rendered"
-    assert spec["remotePublish"] is False
-    assert spec["renderedManifest"] == "rendered/manifest.json"
+    assert spec["publicationStatus"] == "youtube_source"
+    assert spec["remotePublish"] is True
+    assert "renderedManifest" not in spec
     assert {(concept["module"], concept["edition"]) for concept in concepts} == {
         ("new-client", "core"),
         ("new-client", "italy"),
@@ -1397,152 +1244,77 @@ def test_vera_missing_guide_pack_is_complete_and_rendered_locally() -> None:
             assert phrase in narration
 
 
-def test_vera_rendered_guide_manifest_is_complete_and_local() -> None:
-    manifest_path = SHARED_ROOT / "video-production" / "rendered" / "manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    rendered_root = manifest_path.parent.resolve()
-    assets = manifest["assets"]
+def test_vera_video_catalog_v4_is_youtube_only_and_spanish_native() -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is required to execute the browser video catalog")
+    script = r"""
+const fs = require("node:fs");
+global.window = {};
+eval(fs.readFileSync(process.argv[1], "utf8"));
+const catalogs = ["it", "en", "fr", "de", "es"].map((language) =>
+  window.MparanzaVideos.getCatalog("vera", language)
+);
+process.stdout.write(JSON.stringify(catalogs));
+"""
+    result = subprocess.run(
+        [node, "-e", script, str(SHARED_ROOT / "video-library.js")],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    catalogs = {catalog["language"]: catalog for catalog in json.loads(result.stdout)}
 
-    assert manifest["schemaVersion"] == "2.0.0"
-    assert manifest["publicationStatus"] == "local_rendered"
-    assert manifest["remotePublish"] is False
-    assert manifest["assetCount"] == 29
-    assert len(assets) == 29
-    assert {
-        (asset["module"], asset["edition"], asset["language"]) for asset in assets
-    } == (VERA_RENDERED_VIDEO_IDENTITIES | SHARED_DATA_HANDLING_VIDEO_IDENTITIES)
+    assert all(catalog["version"] == "4.0.0" for catalog in catalogs.values())
+    assert catalogs["es"]["featured"]["id"] == "BEiFYgK5Wew"
+    assert catalogs["es"]["featured"]["audioLanguage"] == "es"
+    assert len(catalogs["es"]["videos"]) == 16
+    assert {video["audioLanguage"] for video in catalogs["es"]["videos"]} == {"es"}
+    assert {video["id"] for video in catalogs["es"]["videos"]} == {
+        "X3BOp9ZxiAQ",
+        "5wEggdDYrm0",
+        "PD0vpXBY7GU",
+        "bFhSQiilox8",
+        "1REbQ-wBNf8",
+        "BrCOAgSVyYg",
+        "DGrRH3MGRcg",
+        "ePe_bVrC-bs",
+        "bL-LXrQzCA4",
+        "p0OOhlz7_Sc",
+        "-TnYwnglpqE",
+        "xaWouXRwO8c",
+        "41H8PKFFmKg",
+        "Q351IGPEPxg",
+        "lHOahBSRknQ",
+        "GI6u74BPnN8",
+    }
 
-    for asset in assets:
-        assert asset["status"] == "local_rendered"
-        if asset["scope"] == "core":
-            assert asset["edition"] == "core"
-            assert asset["jurisdiction"] is None
-        else:
-            assert asset["scope"] == "country"
-            assert asset["jurisdiction"] == "IT"
-        assert asset["cueCount"] >= 6
-        assert asset["media"]["videoCodec"] == "h264"
-        assert asset["media"]["audioCodec"] == "aac"
-        assert asset["media"]["width"] == 1280
-        assert asset["media"]["height"] == 720
-        assert asset["media"]["frameRate"] == "30/1"
-        assert asset["media"]["durationSeconds"] == asset["targetDurationSeconds"]
-        assert len(asset["sceneSpeechDurationsSeconds"]) == 6
-        assert all(duration > 0 for duration in asset["sceneSpeechDurationsSeconds"])
-        transition_safety = asset["transitionSafety"]
-        assert transition_safety["sentenceBoundaryOnly"] is True
-        assert transition_safety["visualCutPlacement"] == "inter-scene-silence-midpoint"
-        assert transition_safety["minimumInterSceneSilenceSeconds"] >= 0.8
-        assert transition_safety["validatedSilenceMarginSeconds"] >= 0.2
-        assert transition_safety["maximumValidatedVolumeDb"] <= -45.0
-        assert len(transition_safety["transitionSeconds"]) == 5
-        cumulative_scene_seconds = 0.0
-        expected_transitions = []
-        for scene_duration in asset["sceneDurationsSeconds"][:-1]:
-            cumulative_scene_seconds += scene_duration
-            expected_transitions.append(cumulative_scene_seconds)
-        assert transition_safety["transitionSeconds"] == pytest.approx(
-            expected_transitions, abs=0.01
-        )
-        assert set(asset["files"]) == {
-            "video",
-            "poster",
-            "captions",
-            "transcript",
-        }
-
-        for file_record in asset["files"].values():
-            assert file_record["path"].startswith(
-                f'{asset["module"]}/{asset["edition"]}/{asset["language"]}/'
-            )
-            artifact = (manifest_path.parent / file_record["path"]).resolve()
-            assert artifact.is_relative_to(rendered_root)
-            assert artifact.is_file()
-            assert artifact.stat().st_size == file_record["bytes"]
-            assert (
-                hashlib.sha256(artifact.read_bytes()).hexdigest()
-                == file_record["sha256"]
-            )
-
-        video_path = manifest_path.parent / asset["files"]["video"]["path"]
-        poster_path = manifest_path.parent / asset["files"]["poster"]["path"]
-        captions_path = manifest_path.parent / asset["files"]["captions"]["path"]
-        transcript_path = manifest_path.parent / asset["files"]["transcript"]["path"]
-        assert video_path.read_bytes()[4:8] == b"ftyp"
-        assert poster_path.read_bytes()[:2] == b"\xff\xd8"
-        assert captions_path.read_text(encoding="utf-8").startswith("WEBVTT\n")
-        assert " --> " in captions_path.read_text(encoding="utf-8")
-        cues = _read_vtt_cues(captions_path)
-        assert len(cues) == asset["cueCount"]
-        previous_end = 0.0
-        for start, end, text in cues:
-            duration = end - start
-            assert start >= previous_end
-            assert duration >= 1.0
-            assert len(text) <= 84
-            assert len(text) / duration <= 20.0
-            previous_end = end
-        transcript = transcript_path.read_text(encoding="utf-8")
-        assert asset["title"] in transcript
-        if asset["scope"] == "core":
-            normalized_transcript = transcript.casefold()
-            for phrase in VERA_CORE_VIDEO_FORBIDDEN_PHRASES:
-                assert phrase not in normalized_transcript
-            assert not re.search(r"\baml\b", normalized_transcript)
+    for language, catalog in catalogs.items():
+        for video in catalog["videos"]:
+            assert video["sourceKind"] == "youtube"
+            assert video["status"] == "published"
+            assert video["id"]
+            assert video["language"] == language
+            assert video["audioLanguage"] == language
+            assert "src" not in video
+            assert "poster" not in video
+            assert "captions" not in video
 
 
-def test_vera_rendered_guides_are_adopted_by_their_module_pages() -> None:
+def test_replaced_vera_guides_are_linked_from_module_pages_on_youtube() -> None:
     new_client = VERA_MODULE_PAGES["new-client"].read_text(encoding="utf-8")
     sampling = VERA_MODULE_PAGES["journal-sampling"].read_text(encoding="utf-8")
     entries = VERA_MODULE_PAGES["check-entries"].read_text(encoding="utf-8")
 
-    assert new_client.count("<video") == 2
-    assert 'id="core-video"' in new_client
-    assert 'id="proof-video"' in new_client
-    assert "/rendered/new-client/core/it/guide.mp4" in new_client
-    assert "/rendered/new-client/italy/it/guide.mp4" in new_client
-    assert (
-        "`/static/shared/video-production/rendered/new-client/core/${lang}`"
-        in new_client
-    )
-    assert (
-        "`/static/shared/video-production/rendered/new-client/italy/${lang}`"
-        in new_client
-    )
-
-    assert sampling.count("<video") == 1
-    assert "/rendered/journal-sampling/core/it/guide.mp4" in sampling
-    assert (
-        "`/static/shared/video-production/rendered/journal-sampling/core/${language}`"
-        in sampling
-    )
-
-    for provisional_copy in (
-        "In preparazione",
-        "In preparation",
-        "En préparation",
-        "In Vorbereitung",
-        "proof.state",
-    ):
-        assert provisional_copy not in sampling
-
-    assert entries.count("<video") == 2
-    assert 'id="proof-core-video"' in entries
-    assert 'id="proof-italy-video"' in entries
-    assert "/rendered/check-entries/core/it/guide.mp4" in entries
-    assert "/rendered/check-entries/italy-fatturapa/en/guide.mp4" in entries
-    assert 'id="proof-italy-local" hidden' in entries
-    assert "I1dp3FYVy2w" in entries
-    assert 'id="proof-italy-youtube"' in entries
-    assert (
-        "`/static/shared/video-production/rendered/check-entries/core/${lang}`"
-        in entries
-    )
-    assert (
-        "`/static/shared/video-production/rendered/check-entries/italy-fatturapa/${lang}`"
-        in entries
-    )
-
+    assert "<video" not in new_client
+    assert "<video" not in sampling
+    assert "<video" not in entries
+    for youtube_id in ("UwLsy2FuP8o", "FWjVBeJYLF8"):
+        assert youtube_id in new_client
+    assert "HW8amlcU0Lk" in sampling
+    for youtube_id in ("xakA0V5-3-8", "I1dp3FYVy2w"):
+        assert youtube_id in entries
     for page in (new_client, sampling, entries):
-        assert re.search(r"<video[^>]+controls[^>]+playsinline[^>]+preload=", page)
-        assert 'kind="captions"' in page
+        assert "https://youtu.be/" in page
+        assert "video-production/rendered" not in page
+        assert "transcript.txt" not in page

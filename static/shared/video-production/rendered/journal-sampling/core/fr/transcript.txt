@@ -1,3 +1,0 @@
-Vera | Du journal à un échantillon reproductible
-
-Un échantillon utile commence par une question claire et un journal lisible. Vera importe le fichier, identifie dates, comptes, libellés, débits et crédits, puis rend explicites la période et la population. Elle applique ensuite l’approche choisie : couverture des montants, écritures inhabituelles, intervalles, sélection ciblée ou combinaison adaptée au contrôle. Chaque ligne retenue conserve sa référence dans la population et le motif de sélection. Le cabinet reçoit l’échantillon, la population normalisée et une synthèse de la méthode, afin de pouvoir répéter et revoir le passage. Du journal complet aux écritures qui méritent un contrôle ciblé.

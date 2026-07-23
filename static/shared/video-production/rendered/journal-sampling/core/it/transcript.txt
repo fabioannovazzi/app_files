@@ -1,3 +1,0 @@
-Vera | Dal giornale al campione riproducibile
-
-Un campione utile parte da una domanda chiara e da un giornale leggibile. Vera importa il file, riconosce date, conti, descrizioni, dare e avere e rende espliciti periodo e popolazione. Poi applica il criterio scelto: copertura degli importi, voci insolite, intervalli, selezione mirata o combinazioni adatte al controllo. Ogni riga scelta conserva il riferimento alla popolazione e la ragione della selezione. Lo studio riceve il campione, la popolazione normalizzata e una sintesi del metodo, così il passaggio può essere ripetuto e rivisto. Dal giornale completo alle scritture su cui concentrare il controllo.

@@ -1,3 +1,0 @@
-Vera | Del diario a una muestra reproducible
-
-Una muestra útil parte de una pregunta clara y de un diario legible. Vera importa el archivo, identifica fechas, cuentas, descripciones, débitos y créditos y hace explícitos el periodo y la población. Después aplica el enfoque elegido: cobertura por importe, asientos inusuales, intervalos, selección dirigida o una combinación adecuada para la comprobación. Cada línea seleccionada conserva su referencia a la población y el motivo de selección. El despacho recibe la muestra, la población normalizada y un resumen conciso del método, para que el paso pueda repetirse y revisarse. Del diario completo a los asientos que merecen una comprobación específica.

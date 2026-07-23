@@ -1,3 +1,0 @@
-Vera | Écritures · Italie · FatturaPA
-
-Contrôler une écriture consiste à comprendre si le bon document la justifie. Vera part de la ligne sélectionnée dans le journal et cherche d’abord dans les XML FatturaPA et les exports autorisés. Elle compare montant, date, numéro de document et contrepartie tout en gardant chaque source visible. Les correspondances solides rejoignent les écritures étayées. Les cas ambigus restent dans la file de revue avec le motif et le document précis à examiner. Le résultat est un dossier de travail qui relie chaque écriture contrôlée à sa preuve et sépare les exceptions. D’une ligne sélectionnée à un justificatif que le réviseur peut suivre.

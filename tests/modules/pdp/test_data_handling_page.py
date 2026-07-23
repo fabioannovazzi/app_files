@@ -126,22 +126,28 @@ def test_data_handling_page_is_public_and_localized(
     assert page["closing"] == closing
 
 
-def test_data_handling_template_embeds_localized_accessible_video() -> None:
+def test_data_handling_template_links_localized_accessible_youtube_video() -> None:
     template = (ROOT / "templates" / "data_handling.html").read_text(encoding="utf-8")
-    media_root = (
-        "/static/shared/video-production/rendered/data-handling/core/{{ lang }}"
-    )
 
     assert 'id="data-handling-video"' in template
-    assert "<video controls" in template
-    assert f"{media_root}/guide.mp4" in template
-    assert f"{media_root}/poster.jpg" in template
-    assert f"{media_root}/captions.vtt" in template
-    assert f"{media_root}/transcript.txt" in template
-    assert 'kind="captions"' in template
-    assert 'srclang="{{ lang }}"' in template
-    assert " default" in template
+    assert "https://youtu.be/{{ page.video.youtube_id }}" in template
+    assert (
+        "https://i.ytimg.com/vi/{{ page.video.youtube_id }}/maxresdefault.jpg"
+        in template
+    )
+    assert "<video" not in template
+    assert "transcript" not in template.casefold()
     assert 'aria-describedby="data-handling-video-description"' in template
+
+    expected_ids = {
+        "en": "HhmQgTEnl78",
+        "it": "q3nS9YBaEP8",
+        "fr": "gIpiAURzyjA",
+        "de": "g5XV1cZoTaI",
+        "es": "LAimCM-F994",
+    }
+    for language, youtube_id in expected_ids.items():
+        assert get_data_handling_content(language)["video"]["youtube_id"] == youtube_id
 
 
 def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:

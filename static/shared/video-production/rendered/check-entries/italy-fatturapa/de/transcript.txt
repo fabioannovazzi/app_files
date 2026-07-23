@@ -1,3 +1,0 @@
-Vera | Buchungen · Italien · FatturaPA
-
-Eine Buchung zu prüfen heißt zu verstehen, ob der richtige Beleg sie stützt. Vera beginnt bei der ausgewählten Journalzeile und sucht zuerst in FatturaPA-XML und autorisierten Exporten. Betrag, Datum, Belegnummer und Gegenpartei werden verglichen, während jede Quelle sichtbar bleibt. Starke Treffer gehen in die belegte Gruppe. Mehrdeutige Fälle bleiben mit Grund und genauem Prüfbeleg in der Review-Liste. Das Ergebnis ist ein Arbeitspapier, das jede geprüfte Buchung mit ihrem Nachweis verbindet und Ausnahmen getrennt hält. Von der Stichprobenzeile zum nachvollziehbaren Beleg.
