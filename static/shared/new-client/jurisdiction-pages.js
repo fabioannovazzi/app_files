@@ -2,8 +2,7 @@
   "use strict";
 
   const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"];
-  const OPEN_VERA_URL =
-    "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d";
+  const VERA_PAGE_URL = "../vera/index.html";
   const OG_LOCALES = {
     it: "it_IT",
     en: "en_GB",
@@ -21,7 +20,7 @@
         workflow: "Percorso",
         documents: "Documenti",
         outputs: "Risultati",
-        download: "Installazione",
+        download: "Vera",
       },
       breadcrumbAria: "Percorso della pagina",
       breadcrumbHub: "Nuovo cliente",
@@ -101,9 +100,9 @@
         button: "Vedi il percorso",
       },
       download: {
-        eyebrow: "Installazione",
-        title: "Installa Vera e inizia dalla cartella cliente",
-        button: "Installa Vera",
+        eyebrow: "Vera",
+        title: "Continua in Codex Desktop",
+        button: "Torna a Vera",
       },
     },
     en: {
@@ -114,7 +113,7 @@
         workflow: "Workflow",
         documents: "Documents",
         outputs: "Outputs",
-        download: "Installation",
+        download: "Vera",
       },
       breadcrumbAria: "Page path",
       breadcrumbHub: "New client",
@@ -194,9 +193,9 @@
         button: "See the journey",
       },
       download: {
-        eyebrow: "Installation",
-        title: "Install Vera and start with the client folder",
-        button: "Install Vera",
+        eyebrow: "Vera",
+        title: "Continue in Codex Desktop",
+        button: "Back to Vera",
       },
     },
     fr: {
@@ -207,7 +206,7 @@
         workflow: "Parcours",
         documents: "Documents",
         outputs: "Livrables",
-        download: "Installation",
+        download: "Vera",
       },
       breadcrumbAria: "Parcours de la page",
       breadcrumbHub: "Nouveau client",
@@ -287,9 +286,9 @@
         button: "Voir le parcours",
       },
       download: {
-        eyebrow: "Installation",
-        title: "Installer Vera et commencer par le dossier client",
-        button: "Installer Vera",
+        eyebrow: "Vera",
+        title: "Continuez dans Codex Desktop",
+        button: "Retour à Vera",
       },
     },
     es: {
@@ -300,7 +299,7 @@
         workflow: "Recorrido",
         documents: "Documentos",
         outputs: "Salidas",
-        download: "Instalación",
+        download: "Vera",
       },
       breadcrumbAria: "Ruta de la página",
       breadcrumbHub: "Nuevo cliente",
@@ -380,9 +379,9 @@
         button: "Ver el recorrido",
       },
       download: {
-        eyebrow: "Instalación",
-        title: "Instale Vera y empiece por la carpeta del cliente",
-        button: "Instalar Vera",
+        eyebrow: "Vera",
+        title: "Continúe en Codex Desktop",
+        button: "Volver a Vera",
       },
     },
     de: {
@@ -393,7 +392,7 @@
         workflow: "Ablauf",
         documents: "Unterlagen",
         outputs: "Ergebnisse",
-        download: "Installation",
+        download: "Vera",
       },
       breadcrumbAria: "Seitenpfad",
       breadcrumbHub: "Neuer Mandant",
@@ -473,9 +472,9 @@
         button: "Ablauf ansehen",
       },
       download: {
-        eyebrow: "Installation",
-        title: "Vera installieren und mit dem Mandantenordner beginnen",
-        button: "Vera installieren",
+        eyebrow: "Vera",
+        title: "In Codex Desktop fortfahren",
+        button: "Zurück zu Vera",
       },
     },
   };
@@ -537,7 +536,7 @@
             ],
           },
           installCopy:
-            "Aggiungi i documenti in ChatGPT e chiedi a Vera di preparare il primo fascicolo fiscale di Ginevra.",
+            "Apri la cartella dei documenti in Codex Desktop e chiedi a Vera di preparare il primo fascicolo fiscale di Ginevra.",
         },
         en: {
           metaTitle: "New client · Geneva | Vera",
@@ -589,7 +588,7 @@
             ],
           },
           installCopy:
-            "Add the records in ChatGPT and ask Vera to prepare the first Geneva tax file.",
+            "Open the records folder in Codex Desktop and ask Vera to prepare the first Geneva tax file.",
         },
         fr: {
           metaTitle: "Nouveau client · Genève | Vera",
@@ -641,7 +640,7 @@
             ],
           },
           installCopy:
-            "Ajoutez les pièces dans ChatGPT et demandez à Vera de préparer le premier dossier fiscal genevois.",
+            "Ouvrez le dossier des pièces dans Codex Desktop et demandez à Vera de préparer le premier dossier fiscal genevois.",
         },
         es: {
           metaTitle: "Nuevo cliente · Ginebra | Vera",
@@ -693,7 +692,7 @@
             ],
           },
           installCopy:
-            "Añada los documentos en ChatGPT y pida a Vera que prepare el primer expediente fiscal de Ginebra.",
+            "Abra la carpeta de documentos en Codex Desktop y pida a Vera que prepare el primer expediente fiscal de Ginebra.",
         },
         de: {
           metaTitle: "Neuer Mandant · Genf | Vera",
@@ -745,7 +744,7 @@
             ],
           },
           installCopy:
-            "Fügen Sie die Unterlagen in ChatGPT hinzu und bitten Sie Vera, die erste Genfer Steuerprüfung vorzubereiten.",
+            "Öffnen Sie den Unterlagenordner in Codex Desktop und bitten Sie Vera, die erste Genfer Steuerprüfung vorzubereiten.",
         },
       },
     },
@@ -805,7 +804,7 @@
             ],
           },
           installCopy:
-            "Aggiungi i documenti in ChatGPT e chiedi a Vera di preparare il primo fascicolo fiscale di Zurigo.",
+            "Apri la cartella dei documenti in Codex Desktop e chiedi a Vera di preparare il primo fascicolo fiscale di Zurigo.",
         },
         en: {
           metaTitle: "New client · Zurich | Vera",
@@ -857,7 +856,7 @@
             ],
           },
           installCopy:
-            "Add the records in ChatGPT and ask Vera to prepare the first Zurich tax file.",
+            "Open the records folder in Codex Desktop and ask Vera to prepare the first Zurich tax file.",
         },
         fr: {
           metaTitle: "Nouveau client · Zurich | Vera",
@@ -909,7 +908,7 @@
             ],
           },
           installCopy:
-            "Ajoutez les pièces dans ChatGPT et demandez à Vera de préparer le premier dossier fiscal zurichois.",
+            "Ouvrez le dossier des pièces dans Codex Desktop et demandez à Vera de préparer le premier dossier fiscal zurichois.",
         },
         es: {
           metaTitle: "Nuevo cliente · Zúrich | Vera",
@@ -961,7 +960,7 @@
             ],
           },
           installCopy:
-            "Añada los documentos en ChatGPT y pida a Vera que prepare el primer expediente fiscal de Zúrich.",
+            "Abra la carpeta de documentos en Codex Desktop y pida a Vera que prepare el primer expediente fiscal de Zúrich.",
         },
         de: {
           metaTitle: "Neuer Mandant · Zürich | Vera",
@@ -1013,7 +1012,7 @@
             ],
           },
           installCopy:
-            "Fügen Sie die Unterlagen in ChatGPT hinzu und lassen Sie Vera die Zürcher Erstprüfung vorbereiten.",
+            "Öffnen Sie den Unterlagenordner in Codex Desktop und lassen Sie Vera die Zürcher Erstprüfung vorbereiten.",
         },
       },
     },
@@ -1073,7 +1072,7 @@
             ],
           },
           installCopy:
-            "Aggiungi i documenti in ChatGPT e chiedi a Vera di preparare il primo fascicolo Self Assessment del Regno Unito.",
+            "Apri la cartella dei documenti in Codex Desktop e chiedi a Vera di preparare il primo fascicolo Self Assessment del Regno Unito.",
         },
         en: {
           metaTitle: "New client · UK Self Assessment | Vera",
@@ -1125,7 +1124,7 @@
             ],
           },
           installCopy:
-            "Add the records in ChatGPT and ask Vera to prepare the first UK Self Assessment file.",
+            "Open the records folder in Codex Desktop and ask Vera to prepare the first UK Self Assessment file.",
         },
         fr: {
           metaTitle: "Instruction Self Assessment · Royaume-Uni | Vera",
@@ -1177,7 +1176,7 @@
             ],
           },
           installCopy:
-            "Ajoutez les pièces dans ChatGPT et demandez à Vera de préparer le premier dossier Self Assessment au Royaume-Uni.",
+            "Ouvrez le dossier des pièces dans Codex Desktop et demandez à Vera de préparer le premier dossier Self Assessment au Royaume-Uni.",
         },
         es: {
           metaTitle: "Nuevo cliente · Self Assessment del Reino Unido | Vera",
@@ -1229,7 +1228,7 @@
             ],
           },
           installCopy:
-            "Añada los documentos en ChatGPT y pida a Vera que prepare el primer expediente de Self Assessment del Reino Unido.",
+            "Abra la carpeta de documentos en Codex Desktop y pida a Vera que prepare el primer expediente de Self Assessment del Reino Unido.",
         },
         de: {
           metaTitle: "Self-Assessment-Erstprüfung · Vereinigtes Königreich | Vera",
@@ -1281,7 +1280,7 @@
             ],
           },
           installCopy:
-            "Fügen Sie die Unterlagen in ChatGPT hinzu und bitten Sie Vera, die erste britische Self-Assessment-Prüfung vorzubereiten.",
+            "Öffnen Sie den Unterlagenordner in Codex Desktop und bitten Sie Vera, die erste britische Self-Assessment-Prüfung vorzubereiten.",
         },
       },
     },
@@ -1535,7 +1534,7 @@
           <p>${escapeHtml(copy.installCopy)}</p>
         </div>
         <div class="action-row">
-          <a class="button" href="${OPEN_VERA_URL}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+          <a class="button" href="${VERA_PAGE_URL}?lang=${language}">${escapeHtml(
             ui.download.button,
           )}</a>
         </div>

@@ -283,7 +283,7 @@ VERA_MARKETPLACE_HREF = (
     "https://chatgpt.com/auth/login?next="
     "%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
 )
-ACCOUNTING_BUNDLE_LINK = VERA_MARKETPLACE_HREF
+VERA_PRODUCT_PAGE_HREF = "../vera/index.html"
 
 
 def load_builder():
@@ -1940,7 +1940,7 @@ def test_static_plugin_pages_do_not_show_feedback_mailto_footer() -> None:
             assert snippet not in page, page_path.as_posix()
 
 
-def test_static_plugin_pages_use_the_unified_vera_install_action() -> None:
+def test_static_plugin_pages_link_back_to_the_vera_product_page() -> None:
     stale_download_snippets = (
         'href="downloads/check-entries-plugin.zip',
         'href="downloads/concordato-plan-review-plugin.zip',
@@ -1967,7 +1967,7 @@ def test_static_plugin_pages_use_the_unified_vera_install_action() -> None:
     for page_path in standard_pages:
         page = page_path.read_text(encoding="utf-8")
 
-        assert ACCOUNTING_BUNDLE_LINK in page, page_path.as_posix()
+        assert VERA_PRODUCT_PAGE_HREF in page, page_path.as_posix()
         assert "Plugins4Accountants" not in page, page_path.as_posix()
         assert "Vera" in page, page_path.as_posix()
         assert "bundle" not in page.lower(), page_path.as_posix()
@@ -2555,7 +2555,7 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         "source_domains.txt",
         "source_domains_comma.txt",
         "README_HUMAN.md",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2730,7 +2730,7 @@ def test_deep_research_validator_page_matches_plugin_site_pattern() -> None:
         "validation_audit.json",
         "validated_document.md",
         "validation_package.md",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         "/?lang=${lang}",
     ):
         assert snippet in page
@@ -2756,7 +2756,7 @@ def test_previdenza_inps_page_explains_the_reviewable_case_journey() -> None:
         "case_records_validated.json",
         "evidence_matrix.csv",
         "studio_memo.docx",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         'href="../report-builder/index.html?lang=it"',
     ):
         assert snippet in page
@@ -2782,7 +2782,7 @@ def test_registro_imprese_sari_page_explains_the_practice_plan_journey() -> None
         "practice_plan_validated.json",
         "dire_practice_plan.json",
         "review_handoff.md",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         'href="../prompt-optimizer/index.html?lang=it"',
     ):
         assert snippet in page
@@ -2822,7 +2822,7 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
         "pdf_inventory.json",
         "check_results.csv",
         "check_audit.json",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2872,7 +2872,7 @@ def test_journal_bank_reconciliation_page_matches_plugin_site_pattern() -> None:
         "unmatched_bank.csv",
         "unmatched_journal.csv",
         "reconciliation_audit.json",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2925,7 +2925,7 @@ def test_report_builder_page_matches_plugin_site_pattern() -> None:
         "report_draft.md",
         "report.docx",
         "report_audit.json",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -2992,10 +2992,10 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "I dati retail e le mappature riviste usano un servizio hosted di Mparanza",
         "No separate API key is required; model work uses your existing ChatGPT plan.",
         "Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
-        "Bring Clara into your projects.",
-        "Porta Clara nei tuoi progetti.",
-        "Clara may appear in the public Plugins Directory, but workflows stop on ChatGPT web and mobile and require Codex Desktop.",
-        "Clara può comparire nella directory pubblica dei plugin, ma i workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop.",
+        "Install Clara, then open it in Codex Desktop.",
+        "Installa Clara, poi aprila in Codex Desktop.",
+        "The button opens Clara in the Marketplace.",
+        "Il pulsante apre Clara nel Marketplace.",
         "Install Clara",
         "Installa Clara",
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
@@ -3308,7 +3308,7 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
         "concordato_review_summary.docx",
         "run_audit.json",
         "codex_run_review.md",
-        ACCOUNTING_BUNDLE_LINK,
+        VERA_PRODUCT_PAGE_HREF,
         'data-journey="cta.open"',
         "/?lang=${safeLang}",
     ):
@@ -3869,14 +3869,14 @@ def test_companion_install_flow_routes_login_to_same_listing(
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "Clara may appear in the public Plugins Directory, but workflows stop on ChatGPT web and mobile and require Codex Desktop.",
-        "Clara può comparire nella directory pubblica dei plugin, ma i workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop.",
-        "Clara peut apparaître dans le répertoire public des plugins, mais les workflows s’arrêtent sur ChatGPT web ou mobile et nécessitent Codex Desktop.",
-        "Clara kann im öffentlichen Plugin-Verzeichnis erscheinen, aber in ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und erfordern Codex Desktop.",
-        "Clara puede aparecer en el directorio público de plugins, pero los flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop.",
+        "The button opens Clara in the Marketplace. After installation, open Codex Desktop, enable Clara, and choose the folder you want to work in. Workflows do not start in ChatGPT on the web or mobile.",
+        "Il pulsante apre Clara nel Marketplace. Dopo l’installazione, apri Codex Desktop, attiva Clara e scegli la cartella su cui lavorare. I workflow non partono in ChatGPT web o mobile.",
+        "Le bouton ouvre Clara dans le Marketplace. Après l’installation, ouvrez Codex Desktop, activez Clara et choisissez le dossier sur lequel travailler. Les workflows ne démarrent pas dans ChatGPT sur le web ou mobile.",
+        "Die Schaltfläche öffnet Clara im Marketplace. Öffnen Sie nach der Installation Codex Desktop, aktivieren Sie Clara und wählen Sie den Arbeitsordner. Workflows starten nicht in ChatGPT im Web oder auf Mobilgeräten.",
+        "El botón abre Clara en el Marketplace. Después de instalarla, abre Codex Desktop, activa Clara y elige la carpeta en la que quieres trabajar. Los flujos no se inician en ChatGPT web o móvil.",
     ),
 )
-def test_clara_install_flow_localizes_desktop_requirement(
+def test_clara_install_flow_localizes_marketplace_and_desktop_handoff(
     localized_guidance: str,
 ) -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(

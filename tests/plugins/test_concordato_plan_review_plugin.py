@@ -683,13 +683,13 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "concordato_tie_out_workpaper.xlsx",
         "concordato_review_summary.docx",
         "codex_run_review.md",
-        "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
+        "../vera/index.html",
         "Concordato Plan Review",
         "Révision du plan de concordat",
         "Concordato-Plan prüfen",
-        "Installa Vera",
-        "Install Vera",
-        "Instalar Vera",
+        "Torna a Vera",
+        "Back to Vera",
+        "Volver a Vera",
     ):
         assert snippet in page
 

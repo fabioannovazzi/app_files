@@ -726,12 +726,12 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "brief controllabile",
         "encargo revisable",
         "File prodotti",
-        "Apri Vera",
-        "Open Vera",
-        "Abrir Vera",
+        "Torna a Vera",
+        "Back to Vera",
+        "Volver a Vera",
         "question_inventory.json",
         "prompt_audit.json",
-        "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d",
+        "../vera/index.html",
         "/?lang=${safeLang}",
     ):
         assert snippet in page

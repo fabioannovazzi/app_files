@@ -884,7 +884,7 @@ def test_static_page_exposes_five_language_switch_and_prompts() -> None:
         "Prompt pronti",
         "File prodotti rivedibili",
         "Usa Genera report sui file in /percorso/report.",
-        '"download.button": "Installa Vera"',
+        '"download.button": "Torna a Vera"',
     ):
         assert snippet in page
 
