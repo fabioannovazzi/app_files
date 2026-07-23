@@ -9,7 +9,7 @@
   <meta property="og:title" id="og-title" content="Campionamento del giornale | Vera">
   <meta property="og:description" id="og-description" content="Dal giornale contabile a un campione ripetibile e pronto per il controllo.">
   <meta property="og:url" content="https://mparanza.com/static/shared/journal-sampling/index.html">
-  <meta property="og:image" content="https://mparanza.com/static/shared/video-production/rendered/journal-sampling/core/it/poster.jpg">
+  <meta property="og:image" content="https://i.ytimg.com/vi/HW8amlcU0Lk/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/journal-sampling/index.html">
   <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/journal-sampling/index.html?lang=it">
@@ -457,9 +457,10 @@
     .journey-step { display: grid; grid-template-columns: 70px minmax(180px, .7fr) minmax(0, 1.3fr); gap: 22px; padding: 22px 0; border-bottom: 1px solid var(--line); }
     .journey-step h3 { margin: 0; }
     .journey-proof { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 72px); align-items: center; border-top: 2px solid var(--ink); padding-top: 30px; }
-    .journey-video-local { min-width: 0; margin: 0; }
-    .journey-video-local video { width: 100%; display: block; aspect-ratio: 16 / 9; border: 1px solid var(--line-strong); background: var(--ink); object-fit: cover; }
-    .journey-video-local figcaption { padding-top: 14px; }
+    .journey-video-local { min-width: 0; margin: 0; color: inherit; text-decoration: none; }
+    .journey-video-local__image { position: relative; width: 100%; display: block; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--line-strong); background: var(--ink); }
+    .journey-video-local__image img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .journey-video-local__play { position: absolute; inset: auto auto 16px 16px; display: grid; place-items: center; width: 44px; height: 44px; color: #fff; background: var(--accent); border-radius: 50%; }
     .journey-video-local strong { display: block; color: var(--ink); font-size: 1.18rem; line-height: 1.25; }
     .journey-video-local span { display: block; margin-top: 6px; color: var(--muted); font-size: .85rem; }
     .journey-video-local a { min-height: 44px; display: inline-flex; align-items: center; color: var(--accent); font-size: .85rem; font-weight: 650; text-underline-offset: 4px; }
@@ -632,18 +633,14 @@
     <section class="section-block" id="proof">
       <div class="journey-proof">
         <div><p class="eyebrow" data-journey="proof.eyebrow">Guida operativa</p><h2 data-journey="proof.title">Dal giornale al campione riproducibile.</h2><p data-journey="proof.copy">La guida segue popolazione, metodo, selezione e motivazioni nello stesso filo di lavoro.</p></div>
-        <figure class="journey-video-local">
-          <video id="proof-video" controls playsinline preload="metadata" poster="/static/shared/video-production/rendered/journal-sampling/core/it/poster.jpg" aria-labelledby="proof-video-title">
-            <source id="proof-video-source" src="/static/shared/video-production/rendered/journal-sampling/core/it/guide.mp4" type="video/mp4">
-            <track id="proof-video-track" kind="captions" src="/static/shared/video-production/rendered/journal-sampling/core/it/captions.vtt" srclang="it" label="Italiano" default>
-            <a id="proof-video-fallback" href="/static/shared/video-production/rendered/journal-sampling/core/it/guide.mp4">MP4</a>
-          </video>
-          <figcaption>
-            <strong id="proof-video-title" data-journey="proof.videoTitle">Dal giornale al campione riproducibile</strong>
-            <span data-journey="proof.videoMeta">Core · Italiano · 0:55</span>
-            <a id="proof-video-transcript" href="/static/shared/video-production/rendered/journal-sampling/core/it/transcript.txt" data-journey="proof.transcript">Leggi la trascrizione</a>
-          </figcaption>
-        </figure>
+        <a class="journey-video-local" id="proof-video-link" href="https://youtu.be/HW8amlcU0Lk" target="_blank" rel="noopener noreferrer">
+          <span class="journey-video-local__image" aria-hidden="true">
+            <img id="proof-video-image" src="https://i.ytimg.com/vi/HW8amlcU0Lk/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+            <span class="journey-video-local__play">▶</span>
+          </span>
+          <strong id="proof-video-title" data-journey="proof.videoTitle">Dal giornale al campione riproducibile</strong>
+          <span data-journey="proof.videoMeta">Core · Italiano · 0:55 · Si apre su YouTube</span>
+        </a>
       </div>
     </section>
 
@@ -1205,7 +1202,7 @@
           "workflow.eyebrow": "Percorso", "workflow.title": "Quattro passaggi, dalla popolazione alla selezione.", "workflow.copy": "Le scelte che cambiano il campione restano visibili nel lavoro.",
           "workflow.one.title": "Legge il giornale", "workflow.one.copy": "Individua struttura, intestazioni e campi contabili utili.", "workflow.two.title": "Rende coerente la popolazione", "workflow.two.copy": "Uniforma colonne e valori mantenendo visibili le righe che chiedono attenzione.", "workflow.three.title": "Applica il metodo", "workflow.three.copy": "Usa metodo, filtri, seed e dimensione concordati per selezionare il campione.", "workflow.four.title": "Prepara il controllo", "workflow.four.copy": "Consegna le righe selezionate e il contesto necessario al controllo dei supporti.",
           "spec.summary": "Specifiche tecniche, input e file prodotti",
-          "proof.eyebrow": "Guida operativa", "proof.title": "Dal giornale al campione riproducibile.", "proof.copy": "La guida segue popolazione, metodo, selezione e motivazioni nello stesso filo di lavoro.", "proof.videoTitle": "Dal giornale al campione riproducibile", "proof.videoMeta": "Core · Italiano · 0:55", "proof.transcript": "Leggi la trascrizione",
+          "proof.eyebrow": "Guida operativa", "proof.title": "Dal giornale al campione riproducibile.", "proof.copy": "La guida segue popolazione, metodo, selezione e motivazioni nello stesso filo di lavoro.", "proof.videoTitle": "Dal giornale al campione riproducibile", "proof.videoMeta": "Core · Italiano · 0:55",
           "related.eyebrow": "Passo successivo", "related.copy": "Dopo aver scelto le righe, collega ogni scrittura ai documenti che la supportano.", "related.link": "Continua con Controllo scritture →",
           "prompt.eyebrow": "Per iniziare", "prompt.title": "Un prompt, poi il lavoro.", "prompt.copy": "Indica cartella, metodo e dimensione. Vera organizza il resto del percorso.",
           "cta.title": "Porta il giornale in Vera.", "cta.copy": "Apri Vera, indica la cartella di lavoro e avvia il campionamento.", "cta.open": "Apri Vera"
@@ -1223,7 +1220,7 @@
           "workflow.eyebrow": "Workflow", "workflow.title": "Four steps from population to selection.", "workflow.copy": "Every choice that changes the sample stays visible in the work.",
           "workflow.one.title": "Read the journal", "workflow.one.copy": "Identify its structure, headers and useful accounting fields.", "workflow.two.title": "Make the population consistent", "workflow.two.copy": "Align columns and values while keeping attention rows visible.", "workflow.three.title": "Apply the method", "workflow.three.copy": "Use the agreed method, filters, seed and size to select the sample.", "workflow.four.title": "Prepare the test", "workflow.four.copy": "Deliver the selected rows and the context needed to check their support.",
           "spec.summary": "Technical specification, inputs and produced files",
-          "proof.eyebrow": "Working guide", "proof.title": "From journal to reproducible sample.", "proof.copy": "The guide follows population, method, selection and reasons through one line of work.", "proof.videoTitle": "From journal to reproducible sample", "proof.videoMeta": "Core · English · 0:55", "proof.transcript": "Read the transcript",
+          "proof.eyebrow": "Working guide", "proof.title": "From journal to reproducible sample.", "proof.copy": "The guide follows population, method, selection and reasons through one line of work.", "proof.videoTitle": "From journal to reproducible sample", "proof.videoMeta": "Core · English · 0:55",
           "related.eyebrow": "Next step", "related.copy": "Once the rows are selected, connect each entry to the documents that support it.", "related.link": "Continue with Check Entries →",
           "prompt.eyebrow": "Get started", "prompt.title": "One prompt, then the work.", "prompt.copy": "Give the folder, method and size. Vera organizes the rest of the path.",
           "cta.title": "Bring the journal to Vera.", "cta.copy": "Open Vera, point to the work folder and start the sample.", "cta.open": "Open Vera"
@@ -1241,7 +1238,7 @@
           "workflow.eyebrow": "Parcours", "workflow.title": "Quatre étapes, de la population à la sélection.", "workflow.copy": "Chaque choix qui modifie l'échantillon reste visible dans le travail.",
           "workflow.one.title": "Lire le journal", "workflow.one.copy": "Identifier sa structure, ses en-têtes et les champs comptables utiles.", "workflow.two.title": "Rendre la population cohérente", "workflow.two.copy": "Aligner colonnes et valeurs tout en gardant visibles les lignes à examiner.", "workflow.three.title": "Appliquer la méthode", "workflow.three.copy": "Utiliser méthode, filtres, graine et taille convenus pour sélectionner l'échantillon.", "workflow.four.title": "Préparer le contrôle", "workflow.four.copy": "Livrer les lignes retenues et le contexte nécessaire au contrôle des justificatifs.",
           "spec.summary": "Spécifications techniques, entrées et fichiers produits",
-          "proof.eyebrow": "Guide de travail", "proof.title": "Du journal à un échantillon reproductible.", "proof.copy": "Le guide suit la population, la méthode, la sélection et ses motifs dans un même fil de travail.", "proof.videoTitle": "Du journal à un échantillon reproductible", "proof.videoMeta": "Core · Français · 0:55", "proof.transcript": "Lire la transcription",
+          "proof.eyebrow": "Guide de travail", "proof.title": "Du journal à un échantillon reproductible.", "proof.copy": "Le guide suit la population, la méthode, la sélection et ses motifs dans un même fil de travail.", "proof.videoTitle": "Du journal à un échantillon reproductible", "proof.videoMeta": "Core · Français · 0:55",
           "related.eyebrow": "Étape suivante", "related.copy": "Après la sélection, reliez chaque écriture aux documents qui la justifient.", "related.link": "Continuer avec Contrôle des écritures →",
           "prompt.eyebrow": "Pour commencer", "prompt.title": "Un prompt, puis le travail.", "prompt.copy": "Indiquez dossier, méthode et taille. Vera organise la suite du parcours.",
           "cta.title": "Confiez le journal à Vera.", "cta.copy": "Ouvrez Vera, indiquez le dossier de travail et lancez l'échantillonnage.", "cta.open": "Ouvrir Vera"
@@ -1259,7 +1256,7 @@
           "workflow.eyebrow": "Recorrido", "workflow.title": "Cuatro pasos de la población a la selección.", "workflow.copy": "Cada decisión que cambia la muestra permanece visible en el trabajo.",
           "workflow.one.title": "Leer el diario", "workflow.one.copy": "Identificar su estructura, los encabezados y los campos contables útiles.", "workflow.two.title": "Hacer coherente la población", "workflow.two.copy": "Alinear columnas y valores manteniendo visibles las líneas que requieren atención.", "workflow.three.title": "Aplicar el método", "workflow.three.copy": "Usar el método, los filtros, la semilla y el tamaño acordados para seleccionar la muestra.", "workflow.four.title": "Preparar la comprobación", "workflow.four.copy": "Entregar las líneas seleccionadas y el contexto necesario para comprobar sus justificantes.",
           "spec.summary": "Especificaciones técnicas, entradas y archivos generados",
-          "proof.eyebrow": "Guía de trabajo", "proof.title": "Del diario a una muestra reproducible.", "proof.copy": "La guía sigue la población, el método, la selección y sus motivos en un mismo hilo de trabajo.", "proof.videoTitle": "Del diario a una muestra reproducible", "proof.videoMeta": "Principal · Español · 0:55", "proof.transcript": "Leer la transcripción",
+          "proof.eyebrow": "Guía de trabajo", "proof.title": "Del diario a una muestra reproducible.", "proof.copy": "La guía sigue la población, el método, la selección y sus motivos en un mismo hilo de trabajo.", "proof.videoTitle": "Del diario a una muestra reproducible", "proof.videoMeta": "Principal · Español · 0:55",
           "related.eyebrow": "Siguiente paso", "related.copy": "Una vez seleccionadas las líneas, vincule cada asiento con los documentos que lo respaldan.", "related.link": "Continuar con Comprobar asientos →",
           "prompt.eyebrow": "Para empezar", "prompt.title": "Un prompt y después el trabajo.", "prompt.copy": "Indique la carpeta, el método y el tamaño. Vera organiza el resto del recorrido.",
           "cta.title": "Lleve el diario a Vera.", "cta.copy": "Abra Vera, indique la carpeta de trabajo e inicie el muestreo.", "cta.open": "Abrir Vera"
@@ -1277,12 +1274,27 @@
           "workflow.eyebrow": "Ablauf", "workflow.title": "Vier Schritte von der Grundgesamtheit zur Auswahl.", "workflow.copy": "Jede Entscheidung, die die Stichprobe verändert, bleibt sichtbar.",
           "workflow.one.title": "Journal lesen", "workflow.one.copy": "Struktur, Überschriften und relevante Buchungsfelder erkennen.", "workflow.two.title": "Grundgesamtheit vereinheitlichen", "workflow.two.copy": "Spalten und Werte angleichen und auffällige Zeilen sichtbar halten.", "workflow.three.title": "Verfahren anwenden", "workflow.three.copy": "Mit vereinbartem Verfahren, Filtern, Seed und Umfang die Stichprobe ziehen.", "workflow.four.title": "Prüfung vorbereiten", "workflow.four.copy": "Ausgewählte Zeilen und den nötigen Kontext für die Belegprüfung bereitstellen.",
           "spec.summary": "Technische Spezifikation, Eingaben und erzeugte Dateien",
-          "proof.eyebrow": "Arbeitsanleitung", "proof.title": "Vom Journal zur reproduzierbaren Stichprobe.", "proof.copy": "Die Anleitung verbindet Grundgesamtheit, Verfahren, Auswahl und Gründe in einem Arbeitsfluss.", "proof.videoTitle": "Vom Journal zur reproduzierbaren Stichprobe", "proof.videoMeta": "Core · Deutsch · 0:55", "proof.transcript": "Transkript lesen",
+          "proof.eyebrow": "Arbeitsanleitung", "proof.title": "Vom Journal zur reproduzierbaren Stichprobe.", "proof.copy": "Die Anleitung verbindet Grundgesamtheit, Verfahren, Auswahl und Gründe in einem Arbeitsfluss.", "proof.videoTitle": "Vom Journal zur reproduzierbaren Stichprobe", "proof.videoMeta": "Core · Deutsch · 0:55",
           "related.eyebrow": "Nächster Schritt", "related.copy": "Nach der Auswahl wird jede Buchung mit ihren Belegen verbunden.", "related.link": "Weiter mit Buchungen prüfen →",
           "prompt.eyebrow": "Start", "prompt.title": "Ein Prompt, dann die Arbeit.", "prompt.copy": "Ordner, Verfahren und Umfang angeben. Vera organisiert den weiteren Ablauf.",
           "cta.title": "Journal in Vera öffnen.", "cta.copy": "Vera öffnen, Arbeitsordner angeben und die Stichprobe starten.", "cta.open": "Vera öffnen"
         }
       }
+    };
+
+    const proofVideoIds = {
+      it: "HW8amlcU0Lk",
+      en: "B7uCsSycsaQ",
+      fr: "gN93GHrymEo",
+      de: "IhrBFb5nli4",
+      es: "Q351IGPEPxg"
+    };
+    const proofVideoMeta = {
+      it: "Core · Italiano · 0:55 · Si apre su YouTube",
+      en: "Core · English · 0:55 · Opens on YouTube",
+      fr: "Core · Français · 0:55 · S’ouvre sur YouTube",
+      de: "Core · Deutsch · 0:55 · Öffnet YouTube",
+      es: "Principal · Español · 0:55 · Se abre en YouTube"
     };
 
     function applyJourneyCopy(requestedLanguage) {
@@ -1302,19 +1314,11 @@
       const relatedLink = document.querySelector("[data-related-link]");
       if (veraLink) veraLink.href = `../vera/index.html?lang=${language}`;
       if (relatedLink) relatedLink.href = `../check-entries/index.html?lang=${language}`;
-      const proofBase = `/static/shared/video-production/rendered/journal-sampling/core/${language}`;
-      const proofVideo = document.getElementById("proof-video");
-      proofVideo.pause();
-      proofVideo.poster = `${proofBase}/poster.jpg`;
-      document.getElementById("proof-video-source").src = `${proofBase}/guide.mp4`;
-      const proofTrack = document.getElementById("proof-video-track");
-      proofTrack.src = `${proofBase}/captions.vtt`;
-      proofTrack.srclang = language;
-      proofTrack.label = { it: "Italiano", en: "English", fr: "Français", de: "Deutsch", es: "Español" }[language];
-      document.getElementById("proof-video-fallback").href = `${proofBase}/guide.mp4`;
-      document.getElementById("proof-video-transcript").href = `${proofBase}/transcript.txt`;
-      document.querySelector('meta[property="og:image"]').content = `https://mparanza.com${proofBase}/poster.jpg`;
-      proofVideo.load();
+      const proofVideoId = proofVideoIds[language];
+      document.getElementById("proof-video-link").href = `https://youtu.be/${proofVideoId}`;
+      document.getElementById("proof-video-image").src = `https://i.ytimg.com/vi/${proofVideoId}/maxresdefault.jpg`;
+      document.querySelector('[data-journey="proof.videoMeta"]').textContent = proofVideoMeta[language];
+      document.querySelector('meta[property="og:image"]').content = `https://i.ytimg.com/vi/${proofVideoId}/maxresdefault.jpg`;
     }
 
     document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => applyJourneyCopy(button.dataset.lang)));

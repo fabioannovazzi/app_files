@@ -213,65 +213,53 @@
     },
     "es": {
       "featured": {
-        "id": "3zvFm3fGdQ8",
-        "duration": "0:37",
-        "audioLanguage": "en"
+        "id": "8aCsIsrwWfU",
+        "duration": "0:53"
       },
       "videos": [
         {
-          "id": "s3vtavYiUco",
-          "title": "Clara | Una entrevista que sigue el hilo que realmente importa",
-          "audioLanguage": "en"
+          "id": "Rh-v4L9qN2k",
+          "title": "Clara | Una entrevista que sigue el hilo útil"
         },
         {
-          "id": "T_cklFKk3WA",
-          "title": "Clara | De los comentarios a una revisión verificada de la presentación",
-          "audioLanguage": "en"
+          "id": "UaGED7QgTNE",
+          "title": "Clara | Convierte los comentarios en una revisión verificada de la presentación"
         },
         {
-          "id": "Ol9yz9NWOlw",
-          "title": "Clara | De una pregunta de negocio a un gráfico verificado",
-          "audioLanguage": "en"
+          "id": "E_6CKkZuTJY",
+          "title": "Clara | De una pregunta de negocio a un gráfico comprobado"
         },
         {
-          "id": "i-EtiyVeBQ8",
-          "title": "Clara | De una grabación a información útil y verificable",
-          "audioLanguage": "en"
+          "id": "oPTUz-FhB-A",
+          "title": "Clara | De una grabación a evidencia útil"
         },
         {
-          "id": "OdEdNAVu0hY",
-          "title": "Clara | De las señales del retailer a una conversación sobre la marca",
-          "audioLanguage": "en"
+          "id": "TzxMFJhR_vQ",
+          "title": "Clara | Convierte las señales del minorista en una conversación de marca"
         },
         {
-          "id": "u_UmkF7pDZ8",
-          "title": "Clara | Descubre qué está cambiando en el surtido de un retailer",
-          "audioLanguage": "en"
+          "id": "0ONQKCbIv_8",
+          "title": "Clara | Ver qué cambia en el surtido de un minorista"
         },
         {
-          "id": "zMQjPiyiDnA",
-          "title": "Clara | De la fidelidad a las fuentes a una presentación nativa del navegador",
-          "audioLanguage": "en"
+          "id": "hCusu-KXNJk",
+          "title": "Clara | Convierte la información de referencia en una presentación diseñada para el navegador"
         },
         {
-          "id": "0vM_PmJccwY",
-          "title": "Clara | De la carpeta del proyecto a un documento que merece ser revisado",
-          "audioLanguage": "en"
+          "id": "FCMj7mUSy5k",
+          "title": "Clara | Convierte una carpeta de proyecto en un documento digno de revisión"
         },
         {
-          "id": "6HCRTPbOanc",
-          "title": "Clara | Una presentación clara, con sus fundamentos a mano",
-          "audioLanguage": "en"
+          "id": "7K0ecDNm3ow",
+          "title": "Clara | Mantén limpia la presentación y el fundamento a su lado"
         },
         {
-          "id": "LPjR9Off3sc",
-          "title": "Clara | Renueva el aspecto sin cambiar ningún hecho",
-          "audioLanguage": "en"
+          "id": "CxMUDaA3XG0",
+          "title": "Clara | Haz que parezca nuevo y conserva cada hecho igual"
         },
         {
-          "id": "KVGdOyK-Vmc",
-          "title": "Clara | Estructura comparable para el lenguaje de producto del retailer",
-          "audioLanguage": "en"
+          "id": "sJ6EJmabrrw",
+          "title": "Clara | Da al lenguaje de producto del minorista una estructura comparable"
         }
       ]
     }
@@ -335,10 +323,6 @@
         "duration": "0:54"
       },
       "videos": [
-        {
-          "id": "I1dp3FYVy2w",
-          "title": "Vera | Dalla scrittura campionata al supporto verificato"
-        },
         {
           "id": "x2u-AAAuxfc",
           "title": "Vera | Dall’estratto conto a una riconciliazione verificabile"
@@ -491,137 +475,136 @@
     },
     "es": {
       "featured": {
-        "id": "Lqt3odBszD0",
-        "duration": "0:45",
-        "audioLanguage": "en"
+        "id": "BEiFYgK5Wew",
+        "duration": "0:51"
       },
       "videos": [
         {
-          "id": "Qn9YTSX388I",
-          "title": "Vera | Del extracto bancario a una conciliación revisable",
-          "audioLanguage": "en"
+          "id": "X3BOp9ZxiAQ",
+          "title": "Vera | Del extracto bancario a una conciliación lista para revisión"
         },
         {
-          "id": "VnOXN2SnqNE",
-          "title": "Vera | De las partidas abiertas a un papel de trabajo revisable",
-          "audioLanguage": "en"
+          "id": "5wEggdDYrm0",
+          "title": "Vera | De partidas abiertas a un documento de trabajo listo para revisión"
         },
         {
-          "id": "KfABIkftuoE",
-          "title": "Vera | De las tablas fuente a un informe Word revisable",
-          "audioLanguage": "en"
+          "id": "PD0vpXBY7GU",
+          "title": "Vera | De tablas de origen a un informe en Word listo para revisión"
         },
         {
-          "id": "LYNGc7XVmsI",
-          "title": "Vera | Del plan a una revisión que muestra qué importes cuadran",
-          "audioLanguage": "en"
+          "id": "bFhSQiilox8",
+          "title": "Vera | Del plan a una revisión que muestra qué cuadra de verdad"
         },
         {
-          "id": "jbZ34kOeQRc",
-          "title": "Vera | De documentos dispersos a un expediente INPS revisable",
-          "audioLanguage": "en"
+          "id": "1REbQ-wBNf8",
+          "title": "Vera | De documentos dispersos a un expediente del INPS listo para revisión"
         },
         {
-          "id": "wbeoePNN4YA",
-          "title": "Vera | Una solicitud y varias posiciones que deben mantenerse separadas",
-          "audioLanguage": "en"
+          "id": "BrCOAgSVyYg",
+          "title": "Vera | Una solicitud, varias posiciones distintas"
         },
         {
-          "id": "FdZhrFCHwV4",
-          "title": "Vera | De una pregunta desordenada a una investigación controlable",
-          "audioLanguage": "en"
+          "id": "DGrRH3MGRcg",
+          "title": "Vera | De una pregunta confusa a una investigación verificable"
         },
         {
-          "id": "GRAPmp9D7ds",
-          "title": "Vera | Muchas citas no garantizan un respaldo sólido",
-          "audioLanguage": "en"
+          "id": "ePe_bVrC-bs",
+          "title": "Vera | Muchas citas no significan mucho respaldo"
         },
         {
-          "id": "wvZ1xR7waRQ",
-          "title": "Vera | De los formularios fiscales a campos revisables",
-          "audioLanguage": "en"
+          "id": "bL-LXrQzCA4",
+          "title": "Vera | De formularios fiscales a campos revisables"
         },
         {
-          "id": "9gJxX-dya70",
-          "title": "Vera | De una notificación fiscal a un expediente inicial útil",
-          "audioLanguage": "en"
+          "id": "p0OOhlz7_Sc",
+          "title": "Vera | De un aviso fiscal a una primera revisión útil"
         },
         {
-          "id": "EItLLt-gVgo",
-          "title": "Vera | De un hallazgo a una solicitud clara para el cliente",
-          "audioLanguage": "en"
+          "id": "-TnYwnglpqE",
+          "title": "Vera | Del hallazgo inicial a una solicitud que el cliente puede atender"
         }
       ]
     }
   }
 };
 
-  const catalogVersion = "3.1.0";
-  const lastVerifiedAt = "2026-07-21";
+  const catalogVersion = "4.0.0";
+  const lastVerifiedAt = "2026-07-23";
 
   const veraYoutubeDefinitions = Object.freeze([
     {
       module: "check-entries", edition: "italy-fatturapa", scope: "country",
-      jurisdiction: "IT", kind: "guide", localizations: { it: "I1dp3FYVy2w" },
+      jurisdiction: "IT", kind: "guide",
+      localizations: {
+        it: "I1dp3FYVy2w",
+        en: "7o9knSMeN6E",
+        fr: "6ZRnAKV89JI",
+        de: "i5OyOPSI1Oc",
+        es: "GI6u74BPnN8"
+      },
       pageTargets: ["/static/shared/check-entries/index.html#italy-adapter"],
       descriptions: {
-        it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto."
+        it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto.",
+        en: "Add FatturaPA XML and authorized exports to the entry-to-support check.",
+        fr: "Ajoute les XML FatturaPA et les exports autorisés au contrôle écriture-justificatif.",
+        de: "Ergänzt FatturaPA-XML und autorisierte Exporte in der Buchungs-Beleg-Prüfung.",
+        es: "Añade XML FatturaPA y exportaciones autorizadas a la comprobación entre asientos y justificantes."
       }
     },
     {
       module: "journal-bank-reconciliation", edition: "core", scope: "core",
       jurisdiction: null, kind: "guide",
-      localizations: { en: "Qn9YTSX388I", it: "x2u-AAAuxfc", fr: "mQWMfsHGZtE", de: "lV7LIqFotpI" }
+      localizations: { en: "Qn9YTSX388I", it: "x2u-AAAuxfc", fr: "mQWMfsHGZtE", de: "lV7LIqFotpI", es: "X3BOp9ZxiAQ" }
     },
     {
       module: "riconciliazione-partite", edition: "core", scope: "core",
       jurisdiction: null, kind: "guide",
-      localizations: { en: "VnOXN2SnqNE", it: "6wOVI_rMCwk", fr: "9i-Go8clYNs", de: "tCp3wRFNHSg" }
+      localizations: { en: "VnOXN2SnqNE", it: "6wOVI_rMCwk", fr: "9i-Go8clYNs", de: "tCp3wRFNHSg", es: "5wEggdDYrm0" }
     },
     {
       module: "report-builder", edition: "core", scope: "core",
       jurisdiction: null, kind: "guide",
-      localizations: { en: "KfABIkftuoE", it: "-2gcDE8iz4A", fr: "7YBfWdDTvwY", de: "p-QbouI3kr8" }
+      localizations: { en: "KfABIkftuoE", it: "-2gcDE8iz4A", fr: "7YBfWdDTvwY", de: "p-QbouI3kr8", es: "PD0vpXBY7GU" }
     },
     {
       module: "concordato-plan-review", edition: "italy", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: { en: "LYNGc7XVmsI", it: "ndZQoJjwOpY", fr: "Fmoaxshafhg", de: "l_PI6K8fyPw" }
+      localizations: { en: "LYNGc7XVmsI", it: "ndZQoJjwOpY", fr: "Fmoaxshafhg", de: "l_PI6K8fyPw", es: "bFhSQiilox8" }
     },
     {
       module: "previdenza-inps", edition: "italy", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: { en: "jbZ34kOeQRc", it: "qsuHqT9KGBI", fr: "114s9E9NOac", de: "SG59SaDJj2M" }
+      localizations: { en: "jbZ34kOeQRc", it: "qsuHqT9KGBI", fr: "114s9E9NOac", de: "SG59SaDJj2M", es: "1REbQ-wBNf8" }
     },
     {
       module: "registro-imprese-sari", edition: "italy", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: { en: "wbeoePNN4YA", it: "-UGe1FoLu8U", fr: "v4vpOk_-J1M", de: "Yj-smt4uEzc" }
+      localizations: { en: "wbeoePNN4YA", it: "-UGe1FoLu8U", fr: "v4vpOk_-J1M", de: "Yj-smt4uEzc", es: "BrCOAgSVyYg" }
     },
     {
       module: "prompt-optimizer", edition: "core", scope: "core",
       jurisdiction: null, kind: "guide",
-      localizations: { en: "FdZhrFCHwV4", it: "F7BmRTl7s1o", fr: "qWKkHNGBQIo", de: "YtmKX5Obcuk" }
+      localizations: { en: "FdZhrFCHwV4", it: "F7BmRTl7s1o", fr: "qWKkHNGBQIo", de: "YtmKX5Obcuk", es: "DGrRH3MGRcg" }
     },
     {
       module: "deep-research-validator", edition: "core", scope: "core",
       jurisdiction: null, kind: "guide",
-      localizations: { en: "GRAPmp9D7ds", it: "vA2JO3cG7Cw", fr: "v0CI1-lm-Qg", de: "hL488KRscW0" }
+      localizations: { en: "GRAPmp9D7ds", it: "vA2JO3cG7Cw", fr: "v0CI1-lm-Qg", de: "hL488KRscW0", es: "ePe_bVrC-bs" }
     },
     {
       module: "dati-fiscali-strutturati", edition: "country-aware", scope: "country",
       jurisdiction: null, jurisdictions: ["IT", "CH-GE", "CH-ZH", "UK"], kind: "subflow",
-      localizations: { en: "wvZ1xR7waRQ", it: "ukozitFI8XM", fr: "aVwg5G9iJ8Y", de: "2zA8rIlVxPk" }
+      localizations: { en: "wvZ1xR7waRQ", it: "ukozitFI8XM", fr: "aVwg5G9iJ8Y", de: "2zA8rIlVxPk", es: "bL-LXrQzCA4" }
     },
     {
       module: "avviso-intake", edition: "country-aware", scope: "country",
       jurisdiction: null, jurisdictions: ["IT", "CH-GE", "CH-ZH", "UK"], kind: "subflow",
-      localizations: { en: "9gJxX-dya70", it: "bvL9-ckfLyw", fr: "GVpuM-QkHt8", de: "K2Pv-ef4RRg" }
+      localizations: { en: "9gJxX-dya70", it: "bvL9-ckfLyw", fr: "GVpuM-QkHt8", de: "K2Pv-ef4RRg", es: "p0OOhlz7_Sc" }
     },
     {
       module: "email-cliente", edition: "core", scope: "core",
       jurisdiction: null, kind: "subflow",
-      localizations: { en: "EItLLt-gVgo", it: "tyF49OrLlSg", fr: "PuUm9SNxag4", de: "tS56_KuQ2LI" }
+      localizations: { en: "EItLLt-gVgo", it: "tyF49OrLlSg", fr: "PuUm9SNxag4", de: "tS56_KuQ2LI", es: "-TnYwnglpqE" }
     }
   ]);
 
@@ -760,7 +743,7 @@
     "deep-research-validator": ["/static/shared/deep-research-validator/index.html"]
   };
 
-  const localGuideDefinitions = Object.freeze([
+  const publishedGuideDefinitions = Object.freeze([
     {
       module: "new-client",
       conceptId: "from-client-folder-to-operational-file",
@@ -768,6 +751,13 @@
       scope: "core",
       jurisdiction: null,
       duration: "1:00",
+      localizations: {
+        it: "UwLsy2FuP8o",
+        en: "nV7uBOlvFQE",
+        fr: "4tzHoUGKfj0",
+        de: "ZHyjGPDxcUc",
+        es: "xaWouXRwO8c"
+      },
       pageTargets: [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#core-model"
@@ -801,6 +791,13 @@
       scope: "country",
       jurisdiction: "IT",
       duration: "1:10",
+      localizations: {
+        it: "FWjVBeJYLF8",
+        en: "Krp7SPgBYkE",
+        fr: "EDUfMPnccsY",
+        de: "IwdyylSf-M4",
+        es: "41H8PKFFmKg"
+      },
       pageTargets: [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#italy"
@@ -834,6 +831,13 @@
       scope: "core",
       jurisdiction: null,
       duration: "0:55",
+      localizations: {
+        it: "HW8amlcU0Lk",
+        en: "B7uCsSycsaQ",
+        fr: "gN93GHrymEo",
+        de: "IhrBFb5nli4",
+        es: "Q351IGPEPxg"
+      },
       pageTargets: [
         "/static/shared/vera/index.html",
         "/static/shared/journal-sampling/index.html",
@@ -854,6 +858,13 @@
       scope: "core",
       jurisdiction: null,
       duration: "0:50",
+      localizations: {
+        it: "xakA0V5-3-8",
+        en: "0_3a2KTJTqY",
+        fr: "piPbok7ZW0g",
+        de: "MJnN8VDu-UM",
+        es: "lHOahBSRknQ"
+      },
       pageTargets: [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#journey"
@@ -873,17 +884,26 @@
       scope: "country",
       jurisdiction: "IT",
       duration: "0:50",
+      localizations: {
+        it: "I1dp3FYVy2w",
+        en: "7o9knSMeN6E",
+        fr: "6ZRnAKV89JI",
+        de: "i5OyOPSI1Oc",
+        es: "GI6u74BPnN8"
+      },
       pageTargets: [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#italy-adapter"
       ],
       titles: {
+        it: "Vera | Dalla scrittura campionata al supporto verificato",
         en: "Vera | Check Entries · Italy · FatturaPA",
         fr: "Vera | Écritures · Italie · FatturaPA",
         de: "Vera | Buchungen · Italien · FatturaPA",
         es: "Vera | Asientos · Italia · FatturaPA"
       },
       descriptions: {
+        it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto.",
         en: "Add FatturaPA XML and authorized exports to the entry-to-support check.",
         fr: "Ajoute les XML FatturaPA et les exports autorisés au contrôle écriture-justificatif.",
         de: "Ergänzt FatturaPA-XML und autorisierte Exporte in der Buchungs-Beleg-Prüfung.",
@@ -962,14 +982,13 @@
       duration: video.duration || null,
       status: "published",
       pageTargets: identity.pageTargets || veraPageTargets[module],
-      captions: { status: "pending", transcript: null },
       lastVerifiedAt
     };
   }
 
-  function localGuidesForLanguage(lang) {
-    return localGuideDefinitions
-      .filter((definition) => definition.titles[lang])
+  function publishedGuidesForLanguage(lang) {
+    return publishedGuideDefinitions
+      .filter((definition) => definition.titles[lang] && definition.localizations[lang])
       .map((definition) => {
         const {
           module, conceptId, edition, scope, jurisdiction, duration, pageTargets
@@ -978,12 +997,10 @@
         const [defaultModuleLabel, defaultDescription] = veraModuleCopy[lang][module];
         const moduleLabel = definition.moduleLabels?.[lang] || defaultModuleLabel;
         const description = definition.descriptions?.[lang] || defaultDescription;
-        const base = `/static/shared/video-production/rendered/${module}/${edition}/${lang}`;
         return {
-          sourceKind: "local",
+          sourceKind: "youtube",
+          id: definition.localizations[lang],
           conceptId,
-          src: `${base}/guide.mp4`,
-          poster: `${base}/poster.jpg`,
           title,
           module,
           edition,
@@ -997,14 +1014,8 @@
           shortTitle: stripProductPrefix(title),
           description,
           duration,
-          status: "local_rendered",
+          status: "published",
           pageTargets,
-          captions: {
-            status: "available",
-            src: `${base}/captions.vtt`,
-            transcript: `${base}/transcript.txt`,
-            language: lang
-          },
           lastVerifiedAt
         };
       });
@@ -1018,7 +1029,7 @@
       version: catalogVersion,
       product,
       language: lang,
-      featured: {
+      featured: selection.featured ? {
         ...selection.featured,
         sourceKind: "youtube",
         module: `${product}-overview`,
@@ -1031,19 +1042,16 @@
         workstream: "overview",
         kind: "overview",
         language: lang,
-        ...(product === "clara" ? {
-          audioLanguage: selection.featured.audioLanguage || lang
-        } : {}),
+        audioLanguage: selection.featured.audioLanguage || lang,
         shortTitle: overviewLabel,
         description: overviewDescription,
         status: "published",
         pageTargets: [`/static/shared/${product}/index.html`],
-        captions: { status: "pending", transcript: null },
         lastVerifiedAt
-      },
+      } : null,
       videos: [
         ...selection.videos.map((video) => normalizeVideo(product, lang, video)),
-        ...(product === "vera" ? localGuidesForLanguage(lang) : [])
+        ...(product === "vera" ? publishedGuidesForLanguage(lang) : [])
       ],
       pending: product === "vera" ? videoPending : []
     };
@@ -1061,6 +1069,8 @@
     const image = document.querySelector("[data-featured-video-thumb]");
     const duration = document.querySelector("[data-featured-video-duration]");
     if (!link || !image || !duration) return;
+    link.hidden = !featured;
+    if (!featured) return;
 
     link.href = `https://youtu.be/${featured.id}`;
     image.src = thumbnailUrl(featured.id);
@@ -1070,7 +1080,7 @@
   function buildGuide(video, openLabel) {
     const link = document.createElement("a");
     link.className = "video-guide";
-    link.href = video.src || `https://youtu.be/${video.id}`;
+    link.href = `https://youtu.be/${video.id}`;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.setAttribute("aria-label", `${video.shortTitle || video.title}. ${openLabel}`);
@@ -1085,7 +1095,7 @@
     thumbnail.setAttribute("aria-hidden", "true");
 
     const image = document.createElement("img");
-    image.src = video.poster || thumbnailUrl(video.id);
+    image.src = thumbnailUrl(video.id);
     image.alt = "";
     image.width = 1280;
     image.height = 720;
@@ -1114,10 +1124,7 @@
 
     const meta = document.createElement("span");
     meta.className = "video-guide__meta";
-    const fallbackAudio = video.audioLanguage && video.audioLanguage !== video.language
-      ? ({it: "Audio in inglese", en: "English audio", fr: "Audio en anglais", de: "Englischer Ton", es: "Audio en inglés"}[video.language] || "English audio")
-      : "";
-    meta.textContent = [video.duration || "", fallbackAudio, openLabel].filter(Boolean).join(" · ");
+    meta.textContent = [video.duration || "", openLabel].filter(Boolean).join(" · ");
 
     thumbnail.append(image, play);
     body.append(title);

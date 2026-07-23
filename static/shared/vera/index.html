@@ -558,6 +558,7 @@
     .install-copy { display: grid; gap: 18px; }
     .install-copy p { max-width: 650px; color: var(--blue); font-size: 1.075rem; }
     .install-action { justify-self: end; }
+    .install-panel__video { grid-column: 1 / -1; margin: 0; }
 
     footer { padding-block: 38px max(38px, env(safe-area-inset-bottom)); }
 
@@ -950,8 +951,8 @@
       </a>
 
       <div class="video-library" data-curated-videos>
-        <a class="video-guide" href="../video-production/rendered/new-client/core/it/guide.mp4" target="_blank" rel="noopener noreferrer" data-video-index="0">
-          <span class="video-guide__thumb" aria-hidden="true"><img src="../video-production/rendered/new-client/core/it/poster.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
+        <a class="video-guide" href="https://youtu.be/UwLsy2FuP8o" target="_blank" rel="noopener noreferrer" data-video-index="0">
+          <span class="video-guide__thumb" aria-hidden="true"><img src="https://i.ytimg.com/vi/UwLsy2FuP8o/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
           <span class="video-guide__body"><span class="video-kicker">Nuovo cliente · Modello comune</span><strong>Dai documenti al fascicolo cliente</strong><span class="video-description">Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.</span><span class="video-meta">Apri la guida</span></span>
         </a>
         <a class="video-guide" href="https://youtu.be/x2u-AAAuxfc" target="_blank" rel="noopener noreferrer" data-video-index="1">
@@ -987,6 +988,18 @@
           <p data-i18n="install.copy">Installa Vera in ChatGPT e inizia dal lavoro che hai davanti.</p>
         </div>
         <a class="button install-action" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa Vera</a>
+        <a class="overview-video install-panel__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer">
+          <span class="overview-video__thumb" aria-hidden="true">
+            <img id="vera-install-video-thumbnail" src="https://i.ytimg.com/vi/yAnkIabnQ1M/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+            <span class="video-play">▶</span>
+            <span class="video-duration" id="vera-install-video-duration">1:16</span>
+          </span>
+          <span class="overview-video__body">
+            <span class="video-kicker" data-i18n="install.video.kicker">Guida all’installazione</span>
+            <strong data-i18n="install.video.title">Da ChatGPT sul telefono a Vera o Clara in Codex</strong>
+            <span class="video-meta" data-i18n="install.video.meta">Narrazione in italiano · Si apre su YouTube</span>
+          </span>
+        </a>
       </div>
     </section>
   </main>
@@ -1128,6 +1141,9 @@
         "install.title": "Porta Vera nel tuo studio.",
         "install.copy": "Installa Vera in ChatGPT e inizia dal lavoro che hai davanti.",
         "install.button": "Installa Vera",
+        "install.video.kicker": "Guida all’installazione",
+        "install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex",
+        "install.video.meta": "Narrazione in italiano · Si apre su YouTube",
         "footer.product": "Vera · Codex per commercialisti",
         "footer.linksLabel": "Informazioni",
         "footer.source": "Codice sorgente",
@@ -1246,6 +1262,9 @@
         "install.title": "Bring Vera into your firm.",
         "install.copy": "Install Vera in ChatGPT and start with the work in front of you.",
         "install.button": "Install Vera",
+        "install.video.kicker": "Setup guide",
+        "install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex",
+        "install.video.meta": "English narration · Opens on YouTube",
         "footer.product": "Vera · Codex for accountants",
         "footer.linksLabel": "Information",
         "footer.source": "Source code",
@@ -1364,6 +1383,9 @@
         "install.title": "Accueillez Vera dans votre cabinet.",
         "install.copy": "Installez Vera dans ChatGPT et commencez par le travail qui vous attend.",
         "install.button": "Installer Vera",
+        "install.video.kicker": "Guide d’installation",
+        "install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex",
+        "install.video.meta": "Narration en français · S’ouvre sur YouTube",
         "footer.product": "Vera · Codex pour les experts-comptables",
         "footer.linksLabel": "Informations",
         "footer.source": "Code source",
@@ -1482,6 +1504,9 @@
         "install.title": "Holen Sie Vera in Ihre Kanzlei.",
         "install.copy": "Installieren Sie Vera in ChatGPT und beginnen Sie mit der anstehenden Aufgabe.",
         "install.button": "Vera installieren",
+        "install.video.kicker": "Installationsanleitung",
+        "install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex",
+        "install.video.meta": "Deutsche Sprachausgabe · Öffnet YouTube",
         "footer.product": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "footer.linksLabel": "Informationen",
         "footer.source": "Quellcode",
@@ -1587,19 +1612,22 @@
         "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
         "videos.index": "Cinco historias del núcleo",
         "videos.title": "Vera en acción.",
-        "videos.copy": "Una visión general y cuatro ejemplos del método común. Las ediciones para Italia permanecen junto a los flujos que amplían. Las guías locales están en español; los vídeos remotos sin narración española indican «Audio en inglés».",
+        "videos.copy": "Una visión general y cuatro ejemplos del método común. Las ediciones de Italia permanecen junto a los flujos que amplían.",
         "videos.overview.kicker": "Visión general",
         "videos.overview.title": "Del trabajo del despacho al siguiente paso preparado",
         "videos.open": "Se abre en YouTube",
         "videos.openGuide": "Abrir la guía",
         "videos.all.index": "Catálogo completo de vídeos",
         "videos.all.title": "Todas las guías en un solo lugar.",
-        "videos.all.copy": "Flujos del núcleo, ediciones de país y rutas especializadas reunidos en un único índice. Las guías locales siguen el idioma de la página; los vídeos remotos indican el idioma del audio cuando es distinto.",
+        "videos.all.copy": "Las guías publicadas con narración en español se reúnen en este índice.",
         "videos.all.label": "Todas las guías en vídeo de Vera",
         "videos.all.open": "Abrir la guía",
         "install.title": "Lleva Vera a tu despacho.",
         "install.copy": "Instala Vera en ChatGPT y empieza por el trabajo que tienes delante.",
         "install.button": "Instalar Vera",
+        "install.video.kicker": "Guía de instalación",
+        "install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex",
+        "install.video.meta": "Narración en español · Se abre en YouTube",
         "footer.product": "Vera · Codex para asesores fiscales y contables",
         "footer.linksLabel": "Información",
         "footer.source": "Código fuente",
@@ -1616,6 +1644,13 @@
     const openGraphLocale = document.getElementById("og-locale");
     const openGraphLocales = { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES" };
     const curatedVideoModules = ["new-client", "journal-bank-reconciliation", "report-builder", "prompt-optimizer"];
+    const installVideos = {
+      it: { id: "yAnkIabnQ1M", duration: "1:16" },
+      en: { id: "vU4eow_MMDA", duration: "1:16" },
+      fr: { id: "GPY7HqkH62c", duration: "1:18" },
+      de: { id: "1LJCCTxGL_8", duration: "1:20" },
+      es: { id: "RKcy1G79RAs", duration: "1:20" }
+    };
 
     function withLanguage(rawHref, lang) {
       const url = new URL(rawHref, window.location.href);
@@ -1635,23 +1670,37 @@
       const featuredLink = document.querySelector("[data-featured-video]");
       const featuredImage = document.querySelector("[data-featured-video-thumb]");
       const featuredDuration = document.querySelector("[data-featured-video-duration]");
-      featuredLink.href = `https://youtu.be/${selection.featured.id}`;
-      featuredLink.setAttribute("aria-label", strings["videos.overview.title"]);
-      featuredImage.src = thumbnailUrl(selection.featured.id);
-      featuredDuration.textContent = selection.featured.duration;
+      featuredLink.hidden = !selection.featured;
+      if (selection.featured) {
+        featuredLink.href = `https://youtu.be/${selection.featured.id}`;
+        featuredLink.setAttribute("aria-label", strings["videos.overview.title"]);
+        featuredImage.src = thumbnailUrl(selection.featured.id);
+        featuredDuration.textContent = selection.featured.duration;
+      } else {
+        featuredLink.removeAttribute("href");
+        featuredImage.removeAttribute("src");
+      }
 
       document.querySelectorAll("[data-video-index]").forEach((link) => {
         const item = curated[Number(link.dataset.videoIndex)];
-        link.href = item.src || `https://youtu.be/${item.id}`;
+        link.hidden = !item;
+        if (!item) {
+          link.removeAttribute("href");
+          link.querySelector("img").removeAttribute("src");
+          return;
+        }
+        link.href = `https://youtu.be/${item.id}`;
         link.setAttribute("aria-label", item.shortTitle);
-        link.querySelector("img").src = item.poster || thumbnailUrl(item.id);
+        link.querySelector("img").src = thumbnailUrl(item.id);
         link.querySelector(".video-kicker").textContent = item.moduleLabel;
         link.querySelector("strong").textContent = item.shortTitle;
         link.querySelector(".video-description").textContent = item.description;
-        link.querySelector(".video-meta").textContent = item.sourceKind === "local"
-          ? strings["videos.openGuide"]
-          : strings["videos.open"];
+        link.querySelector(".video-meta").textContent = strings["videos.open"];
       });
+      const installVideo = installVideos[lang];
+      document.getElementById("vera-install-video-link").href = `https://youtu.be/${installVideo.id}`;
+      document.getElementById("vera-install-video-thumbnail").src = thumbnailUrl(installVideo.id);
+      document.getElementById("vera-install-video-duration").textContent = installVideo.duration;
       window.MparanzaVideos.mount({
         product: "vera",
         lang,

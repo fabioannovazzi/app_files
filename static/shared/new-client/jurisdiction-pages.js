@@ -1369,7 +1369,14 @@
 
   function setMetadata(page, pageCopy, language) {
     const canonicalUrl = `https://mparanza.com/static/shared/new-client/${page.slug}`;
-    const corePosterUrl = `https://mparanza.com/static/shared/video-production/rendered/new-client/core/${language}/poster.jpg`;
+    const coreVideoIds = {
+      it: "UwLsy2FuP8o",
+      en: "nV7uBOlvFQE",
+      fr: "4tzHoUGKfj0",
+      de: "ZHyjGPDxcUc",
+      es: "xaWouXRwO8c"
+    };
+    const corePosterUrl = `https://i.ytimg.com/vi/${coreVideoIds[language]}/maxresdefault.jpg`;
     document.title = pageCopy.metaTitle;
     document.documentElement.lang = language;
     document.body.dataset.presentationLanguage = language;
