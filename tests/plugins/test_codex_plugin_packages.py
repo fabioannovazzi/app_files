@@ -3854,14 +3854,14 @@ def test_companion_install_flow_routes_login_to_same_listing(
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "Install Clara in ChatGPT and start with the materials in front of you.",
-        "Installa Clara in ChatGPT e inizia dai materiali che hai davanti.",
-        "Installez Clara dans ChatGPT et commencez par les éléments dont vous disposez.",
-        "Installieren Sie Clara in ChatGPT und beginnen Sie mit den vorhandenen Materialien.",
-        "Instala Clara en ChatGPT y empieza con los materiales que tienes delante.",
+        "Clara may appear in the public Plugins Directory, but workflows stop on ChatGPT web and mobile and require Codex Desktop.",
+        "Clara può comparire nella directory pubblica dei plugin, ma i workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop.",
+        "Clara peut apparaître dans le répertoire public des plugins, mais les workflows s’arrêtent sur ChatGPT web ou mobile et nécessitent Codex Desktop.",
+        "Clara kann im öffentlichen Plugin-Verzeichnis erscheinen, aber in ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und erfordern Codex Desktop.",
+        "Clara puede aparecer en el directorio público de plugins, pero los flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop.",
     ),
 )
-def test_clara_install_flow_localizes_concise_guidance(
+def test_clara_install_flow_localizes_desktop_requirement(
     localized_guidance: str,
 ) -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
