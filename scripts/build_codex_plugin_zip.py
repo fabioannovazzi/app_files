@@ -106,6 +106,7 @@ SEVERE_INTERACTION_AUDIT_SEVERITIES = {"blocker", "high", "medium"}
 SEVERE_WORKBENCH_DEMO_AUDIT_SEVERITIES = {"blocker", "high", "medium"}
 SEVERE_CONTRACT_COVERAGE_AUDIT_SEVERITIES = {"blocker", "high", "medium"}
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS = 3
+CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH = 128
 CHATGPT_UPLOAD_MAX_SUBTITLE_LENGTH = 30
 CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
@@ -844,6 +845,20 @@ def project_chatgpt_manifest(content: bytes) -> bytes:
                 "ChatGPT upload interface.defaultPrompt must contain at most "
                 f"{CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS} prompts; found {len(prompts)}"
             )
+        if isinstance(prompts, list):
+            for index, prompt in enumerate(prompts):
+                if not isinstance(prompt, str):
+                    raise ValueError(
+                        "ChatGPT upload interface.defaultPrompt"
+                        f"[{index}] must be a string"
+                    )
+                if len(prompt) > CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH:
+                    raise ValueError(
+                        "ChatGPT upload interface.defaultPrompt"
+                        f"[{index}] must contain at most "
+                        f"{CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH} characters; "
+                        f"found {len(prompt)}"
+                    )
 
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
 
