@@ -392,10 +392,57 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
-    assert manifest["interface"]["shortDescription"] == ("AI companion for accountants")
+    assert manifest["interface"]["shortDescription"] == "Gmail per cliente"
     assert len(prompts) == 3
+    assert all(len(prompt) <= 128 for prompt in prompts)
+    assert prompts[0] == (
+        "Cerca in Gmail le email di un cliente usando solo indirizzi confermati "
+        "e senza mescolare altri clienti."
+    )
     assert any("OCR locale" in prompt and "INPS" in prompt for prompt in prompts)
     assert any("SARI" in prompt and "Registro Imprese" in prompt for prompt in prompts)
+    assert (
+        "plugin Gmail ufficiale installato e collegato separatamente"
+        in manifest["interface"]["longDescription"]
+    )
+    assert (
+        "non conserva un'anagrafica tra chat"
+        in manifest["interface"]["longDescription"]
+    )
+
+    wrapper_path = "skills/studio-archive/SKILL.md"
+    reference_path = "skills/studio-archive/references/marketplace-gmail.md"
+    module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
+    assert wrapper_path in entries
+    assert reference_path in entries
+    assert module_skill_path in entries
+    wrapper = entries[wrapper_path].decode("utf-8")
+    compact_wrapper = " ".join(wrapper.split())
+    reference = entries[reference_path].decode("utf-8")
+    module_skill = entries[module_skill_path].decode("utf-8")
+    assert "references/marketplace-gmail.md" in wrapper
+    assert "Do not resolve the local module" in wrapper
+    assert "does not require a local ZIP" in compact_wrapper
+    assert reference.index("get_profile") < reference.index("search_emails")
+    assert reference.index("search_emails") < reference.index("batch_read_email")
+    assert "current conversation" in reference
+    assert "max_results: 10" in reference
+    assert "at most 20 results per page" in reference
+    assert "absent optional Cc or Bcc field" in reference
+    assert "cannot prove the absence of an undisclosed Bcc recipient" in reference
+    assert "## Marketplace Gmail workflow" in module_skill
+    marketplace_section = module_skill.split(
+        "## Marketplace Gmail workflow",
+        maxsplit=1,
+    )[1].split("## Optional local Gmail enhancement", maxsplit=1)[0]
+    for local_dependency in (
+        "plan_studio_archive_gmail_search",
+        "match_studio_archive_email",
+        "configure_studio_archive_client",
+        "python scripts/studio_archive.py",
+    ):
+        assert local_dependency not in reference
+        assert local_dependency not in marketplace_section
     assert not any(
         name.rsplit("/", maxsplit=1)[-1] in {".app.json", ".mcp.json"}
         for name in entries

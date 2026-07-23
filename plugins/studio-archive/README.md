@@ -1,30 +1,40 @@
 # Vera · Archivio dello Studio
 
-This Vera component makes one shared studio folder searchable without requiring
-a shared ChatGPT account or a central database. It can also search one selected
-client's Gmail correspondence on demand through the user's connected Codex
-Gmail connector.
+This Vera component has two independent routes. Its Marketplace route searches
+one selected client's Gmail correspondence on demand through the installed and
+connected OpenAI Gmail plugin. It needs no local MCP server, local ZIP, or
+filesystem access. Its optional Codex route makes one shared studio folder
+searchable without requiring a shared ChatGPT account or a central database.
 
 Fabio and Paolo each configure the same shared or synced source folder from
 their own Vera installation in local Codex. Each computer builds its own
 derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive`; the database,
 configuration, and ChatGPT history are not shared. Source documents remain in
-the studio folder and are never modified. ChatGPT web alone cannot index a
-local folder or run this local MCP server.
+the studio folder and are never modified. ChatGPT web cannot index an arbitrary
+local folder or run this local MCP server, but that does not block Gmail search.
 
 Gmail messages remain in Gmail. Vera stores no Gmail credentials, tokens,
-message bodies, attachments, or local mailbox copy. A private
-`client-identities.json` maps exact archive scopes to confirmed full email or
-PEC addresses, legal names, and tax identifiers. Each professional keeps their
-own registry and connects their own Gmail account.
+message bodies, attachments, or local mailbox copy. In the Marketplace,
+confirmed addresses remain in the current conversation and may need
+confirmation again in a new chat. Local Codex can optionally persist a private
+`client-identities.json` that maps exact archive scopes to confirmed full email
+or PEC addresses, legal names, and tax identifiers.
 
-For a Gmail question, Vera first selects one exact client scope, builds bounded
-Gmail-native queries, searches with the Codex Gmail connector, and checks every
-shortlisted message against confirmed full addresses. One unique address match
-with complete From, To, Cc, and Bcc coverage may route automatically.
-Legal-name matches, incomplete headers, third-party correspondence, and
-messages involving multiple clients remain candidates for model review or are
-left unassigned. Vera never labels, moves, sends, deletes, or bulk-copies mail.
+For a Gmail question, Vera first verifies the connected account, selects one
+client, and either uses an address supplied by the user or runs a bounded
+candidate search and asks for one address confirmation. It then searches again
+using only the confirmed address and checks the full shortlisted messages. One
+unique address match with a parseable sender and returned recipient fields may
+route automatically. Vera inspects Cc and Bcc when Gmail exposes them; absence
+of an optional Bcc field alone is not treated as an error, and Vera states that
+it cannot detect an undisclosed Bcc recipient. Legal-name matches, malformed
+headers, third-party correspondence, and messages involving multiple clients
+remain candidates for model review or are left unassigned. Vera never labels,
+moves, sends, deletes, or bulk-copies mail.
+
+The Marketplace Gmail route uses only `get_profile`, `search_emails`,
+`batch_read_email`, `read_email_thread`, and `read_attachment` from the Gmail
+plugin. It never calls Studio Archive MCP tools or local scripts.
 
 If two professionals use the same operating-system account on one computer,
 they must start Codex with different absolute

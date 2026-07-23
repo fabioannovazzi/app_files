@@ -34,12 +34,19 @@ voice-interview submissions plus later automatic status polling for their
 stored receipts, including the Mparanza/OpenAI boundary and retention posture.
 These service records do not add per-case paperwork or automatic anonymization.
 
-The Studio Archive workflow lets several professionals use the same shared or
-synced document folder without sharing a ChatGPT account or a database. Each
-professional builds a separate private local SQLite full-text index. Vera
-searches one explicit folder scope at a time, opens candidate passages, and
-rechecks the current source hash before citation. Source files are never
-modified, and optional OCR stays local with model downloads disabled.
+The Studio Archive workflow has an independent Marketplace Gmail route. With
+the official Gmail plugin installed and connected separately, Vera searches the
+correspondence of one selected client using addresses confirmed in the current
+conversation, bounded read actions, and per-message routing checks. It does not
+need a local ZIP, folder, index, registry, MCP server, or script; it does not
+persist client identities between chats or modify the mailbox.
+
+In local Codex, Studio Archive can additionally let several professionals use
+the same shared or synced document folder without sharing a ChatGPT account or
+a database. Each professional builds a separate private local SQLite full-text
+index. Vera searches one explicit folder scope at a time, opens candidate
+passages, and rechecks the current source hash before citation. Source files are
+never modified, and optional OCR stays local with model downloads disabled.
 
 The New Client workflow verifies a final-ready document-preparation phase—or an
 explicit standalone-evidence posture—and turns studio instructions into an

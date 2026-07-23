@@ -1,7 +1,7 @@
 {
   "name": "vera",
-  "version": "0.1.23",
-  "description": "Vera cerca nell'archivio locale dello studio e prepara istruttorie e carte di lavoro rivedibili, incluso il percorso New Client.",
+  "version": "0.1.24",
+  "description": "Vera cerca Gmail per cliente con il plugin Gmail collegato e prepara istruttorie e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -15,6 +15,8 @@
     "commercialisti",
     "archivio-studio",
     "ricerca-documenti",
+    "gmail",
+    "email",
     "accounting",
     "audit",
     "new-client",
@@ -40,11 +42,12 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Cerca nell'archivio condiviso dello studio tramite un indice locale separato per ogni professionista e cita solo passaggi aperti e verificati. Prepara inoltre il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
+    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Nel Marketplace, con il plugin Gmail ufficiale installato e collegato separatamente, cerca la corrispondenza di un solo cliente usando indirizzi confermati nella conversazione, query circoscritte e controlli che escludono i messaggi ambigui; non conserva un'anagrafica tra chat. In Codex locale può anche indicizzare una cartella condivisa dello studio con un indice separato per professionista e citare passaggi verificati. Prepara inoltre New Client, controlli contabili, campionamenti, riconciliazioni, report, concordato, casi INPS e pratiche Registro Imprese/DIRE da fonti tracciate.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
+      "Read",
       "Write",
       "Analysis"
     ],
@@ -52,7 +55,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Chiedi a Vera di configurare l'archivio dello studio con un indice locale per professionista e cercare fonti verificate.",
+      "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti.",
       "Chiedi a Vera di usare OCR locale ed export ufficiali per il caso previdenziale INPS, con fonti e bozza rivedibile.",
       "Chiedi a Vera di usare Camera competente e fonti SARI per una bozza Registro Imprese/DIRE, senza accedere o inviare."
     ],
