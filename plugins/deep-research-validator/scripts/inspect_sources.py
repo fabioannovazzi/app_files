@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import re
+import socket
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -24,6 +27,70 @@ ACCESS_BARRIER_SNIPPETS = (
     "sign in",
     "login",
 )
+_STANDARD_PORTS = {"http": 80, "https": 443}
+
+
+class UnsafePublicUrlError(ValueError):
+    """Raised when a cited URL can reach a non-public network destination."""
+
+
+def _validate_public_url(url: str) -> None:
+    """Enforce public HTTP/S destinations for auditable SSRF prevention."""
+
+    parsed = urllib.parse.urlparse(url)
+    if (
+        parsed.scheme.lower() not in _STANDARD_PORTS
+        or not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+    ):
+        raise UnsafePublicUrlError("only public HTTP/S URLs without credentials")
+    try:
+        port = parsed.port
+    except ValueError as exc:
+        raise UnsafePublicUrlError("URL port is invalid") from exc
+    expected_port = _STANDARD_PORTS[parsed.scheme.lower()]
+    if port not in {None, expected_port}:
+        raise UnsafePublicUrlError("only standard HTTP/S ports are allowed")
+    hostname = parsed.hostname.rstrip(".").casefold()
+    if hostname == "localhost" or hostname.endswith(".localhost"):
+        raise UnsafePublicUrlError("localhost destinations are not allowed")
+    try:
+        literal = ipaddress.ip_address(hostname)
+    except ValueError:
+        literal = None
+    if literal is not None:
+        addresses = [literal]
+    else:
+        try:
+            addresses = [
+                ipaddress.ip_address(record[4][0])
+                for record in socket.getaddrinfo(
+                    hostname,
+                    expected_port,
+                    type=socket.SOCK_STREAM,
+                )
+            ]
+        except socket.gaierror:
+            raise
+    if not addresses or any(not address.is_global for address in addresses):
+        raise UnsafePublicUrlError("URL resolves to a non-public network address")
+
+
+class _PublicRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Reapply the public-network rule to every redirect target."""
+
+    def redirect_request(
+        self,
+        req: urllib.request.Request,
+        fp: Any,
+        code: int,
+        msg: str,
+        headers: Any,
+        newurl: str,
+    ) -> urllib.request.Request | None:
+        _validate_public_url(newurl)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
 def _ordered_unique(items: list[str]) -> list[str]:
@@ -73,15 +140,48 @@ def _looks_blocked(text: str) -> bool:
 
 
 def _fetch_url_record(url: str, timeout: float) -> dict[str, Any]:
+    try:
+        _validate_public_url(url)
+    except UnsafePublicUrlError as exc:
+        return {
+            "kind": "url",
+            "url": url,
+            "status": "blocked_non_public_destination",
+            "http_status": 0,
+            "character_count": 0,
+            "excerpt": "",
+            "error": str(exc),
+        }
+    except socket.gaierror as exc:
+        return {
+            "kind": "url",
+            "url": url,
+            "status": "unreachable",
+            "http_status": 0,
+            "character_count": 0,
+            "excerpt": "",
+            "error": str(exc),
+        }
     request = urllib.request.Request(
         url,
         headers={"User-Agent": "MparanzaDeepResearchValidator/0.1"},
     )
+    opener = urllib.request.build_opener(_PublicRedirectHandler())
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with opener.open(request, timeout=timeout) as response:
             raw = response.read(1_000_000)
             text = raw.decode("utf-8", errors="ignore")
             status = int(getattr(response, "status", 0) or 0)
+    except UnsafePublicUrlError as exc:
+        return {
+            "kind": "url",
+            "url": url,
+            "status": "blocked_non_public_destination",
+            "http_status": 0,
+            "character_count": 0,
+            "excerpt": "",
+            "error": str(exc),
+        }
     except urllib.error.HTTPError as exc:
         return {
             "kind": "url",

@@ -14,7 +14,7 @@ __all__ = [
 
 CONTACT_EMAIL = "fabio@mparanza.com"
 SUPPORT_EMAIL = "fabio@mparanza.com"
-LEGAL_EFFECTIVE_DATE = "July 22, 2026"
+LEGAL_EFFECTIVE_DATE = "July 23, 2026"
 
 LEGAL_PAGES: dict[str, dict[str, Any]] = {
     "zero-retention": {
@@ -128,6 +128,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "is focused on ordinary plugin functions and reducing these "
                         "hosted retention exceptions."
                     ),
+                    (
+                        "Vera's WhatsApp Business connector is a hosted exception. "
+                        "After an allowlisted operator links an official Meta "
+                        "business number, Meta may continue delivering new inbound "
+                        "events automatically. The first version stores only "
+                        "normalized supported inbound text, captions, participant "
+                        "and source metadata; it does not import earlier history, "
+                        "retain raw webhook payloads, download media, expose location "
+                        "events, or send messages."
+                    ),
                 ],
             },
             {
@@ -144,6 +154,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "Customer Content and feature state that you explicitly "
                         "submit to or create with a Mparanza-hosted service;"
+                    ),
+                    (
+                        "for a linked WhatsApp Business number, new supported inbound "
+                        "message text or captions, sender phone and optional profile "
+                        "name, business phone-number ID, timestamp, message type, "
+                        "reply reference, and opaque source identifier;"
                     ),
                     (
                         "limited download, transactional-message, and delivery "
@@ -231,6 +247,17 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "logs may occur."
                     ),
                     (
+                        "Vera WhatsApp Business: a daily cleanup deletes normalized "
+                        "supported new inbound messages from the live connector store "
+                        "after their message timestamp passes 90 days. Deleting the "
+                        "linked account removes that owner's live messages and "
+                        "connector bearer tokens immediately. The connector does not "
+                        "retain raw webhook bodies, pre-connection history, media "
+                        "bytes, or location events. Infrastructure backups and "
+                        "ordinary technical logs follow the separate technical-record "
+                        "posture below and do not yet share this 90-day schedule."
+                    ),
+                    (
                         "Check Entries: server working files are ordinarily removed "
                         "through periodic cleanup after about seven days; some job "
                         "metadata uses a shorter, event-triggered cleanup. Cleanup "
@@ -301,6 +328,15 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "content described for that hosted service may be transmitted "
                         "to it. External systems are not Mparanza-controlled systems, "
                         "and their terms apply separately."
+                    ),
+                    (
+                        "The WhatsApp Business connector receives signed events from "
+                        "Meta's WhatsApp Business Platform and returns user-selected "
+                        "retained messages to the user's ChatGPT/Codex account through "
+                        "an authenticated read-only MCP service. Meta and OpenAI are "
+                        "separate recipients under their own terms and controls. "
+                        "Mparanza does not request Meta credentials, passwords, QR "
+                        "codes, or one-time codes through Vera chat."
                     ),
                 ],
             },

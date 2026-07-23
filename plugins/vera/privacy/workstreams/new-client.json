@@ -72,18 +72,14 @@
       "control": "Save and Apply use an opaque, bounded-lifetime server-held binding tied to the run and review hashes; unknown, expired, or mismatched tokens are rejected."
     },
     {
-      "id": "no-external-case-action",
-      "control": "The workflow does not screen externally, send client communications, sign, file, or activate the relationship."
-    },
-    {
       "id": "no-session-secrets",
-      "control": "Credentials, authentication codes, cookies, and provider tokens are excluded from artifacts and Codex review payloads."
+      "control": "Validators reject credentials, authentication codes, cookies, tokenized session URLs, and provider tokens from artifacts and Codex review payloads."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e7f1d4026e5885bb07606657dc881d5c329cd848ca595a99ae0113b37b8b2748"
+    "source_fingerprint": "822598d5f4032a43ac6298aaa97761964d56f757c022eb73cdc22cf4113a8ff1"
   }
 }

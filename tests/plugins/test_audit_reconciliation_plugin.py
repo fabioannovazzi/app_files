@@ -755,6 +755,19 @@ def test_review_server_saves_local_browser_decisions(tmp_path: Path) -> None:
     assert saved["decisions"][0]["status"] == "accepted"
 
 
+def test_review_server_rejects_non_loopback_host(tmp_path: Path) -> None:
+    review_server = load_review_server()
+    output_dir = tmp_path / "out"
+    _write_review_server_fixture(output_dir)
+
+    with pytest.raises(ValueError, match="loopback"):
+        review_server.serve_review(
+            output_dir,
+            host="0.0.0.0",
+            open_browser=False,
+        )
+
+
 def test_review_server_renders_local_browser_bridge(tmp_path: Path) -> None:
     review_server = load_review_server()
     output_dir = tmp_path / "out"

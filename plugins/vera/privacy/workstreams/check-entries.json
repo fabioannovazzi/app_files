@@ -56,10 +56,6 @@
   ],
   "security_controls": [
     {
-      "id": "local-export-handoff",
-      "control": "Helper scripts receive a local connector export and do not authenticate to or call accounting-provider APIs."
-    },
-    {
       "id": "private-output-root",
       "control": "Run artifacts are written outside published repository paths."
     }
@@ -68,6 +64,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d5f5eb1626260f468f837cffa60b3f3da416dff4c9ca0267ae49b7634affabdd"
+    "source_fingerprint": "105c083fc6136ac3fd03a8947ecd9f92d86cd9cc3e56a27a9bc25b7a2d48a4bb"
   }
 }

@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[3]
 def _reset_auth_config(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "dummy-client-id")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "dummy-secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     get_auth_config.cache_clear()
     yield
     get_auth_config.cache_clear()

@@ -396,31 +396,39 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
     assert prompts[0] == (
-        "Cerca in Gmail le email di un cliente usando solo indirizzi confermati "
-        "e senza mescolare altri clienti."
+        "Cerca i messaggi WhatsApp Business già acquisiti per un cliente, "
+        "senza rispondere né mescolare altri clienti."
     )
     assert any("OCR locale" in prompt and "INPS" in prompt for prompt in prompts)
     assert any("SARI" in prompt and "Registro Imprese" in prompt for prompt in prompts)
     assert (
-        "plugin Gmail ufficiale installato e collegato separatamente"
+        "plugin Gmail ufficiale installato separatamente"
         in manifest["interface"]["longDescription"]
     )
     assert (
-        "non conserva un'anagrafica tra chat"
+        "connettore ospitato WhatsApp Business di Vera"
         in manifest["interface"]["longDescription"]
     )
 
     wrapper_path = "skills/studio-archive/SKILL.md"
     reference_path = "skills/studio-archive/references/marketplace-gmail.md"
+    whatsapp_reference_path = (
+        "skills/studio-archive/references/marketplace-whatsapp-business.md"
+    )
+    whatsapp_evals_path = "evals/marketplace_whatsapp_cases.json"
     module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
     assert wrapper_path in entries
     assert reference_path in entries
+    assert whatsapp_reference_path in entries
+    assert whatsapp_evals_path in entries
     assert module_skill_path in entries
     wrapper = entries[wrapper_path].decode("utf-8")
     compact_wrapper = " ".join(wrapper.split())
     reference = entries[reference_path].decode("utf-8")
+    whatsapp_reference = entries[whatsapp_reference_path].decode("utf-8")
     module_skill = entries[module_skill_path].decode("utf-8")
     assert "references/marketplace-gmail.md" in wrapper
+    assert "references/marketplace-whatsapp-business.md" in wrapper
     assert "Do not resolve the local module" in wrapper
     assert "does not require a local ZIP" in compact_wrapper
     assert reference.index("get_profile") < reference.index("search_emails")
@@ -430,6 +438,10 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "at most 20 results per page" in reference
     assert "absent optional Cc or Bcc field" in reference
     assert "cannot prove the absence of an undisclosed Bcc recipient" in reference
+    assert "configured **With MCP**" in whatsapp_reference
+    assert "does not import the earlier chat history" in whatsapp_reference
+    assert "does not download media" in whatsapp_reference
+    assert "This connector has no write tool" in whatsapp_reference
     assert "## Marketplace Gmail workflow" in module_skill
     marketplace_section = module_skill.split(
         "## Marketplace Gmail workflow",
@@ -2112,7 +2124,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
     )
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "dummy-client-id")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "dummy-secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     monkeypatch.setattr(auth_dependencies, "_SITE_PERMISSIONS_FILE", permissions_file)
     monkeypatch.setattr(auth_dependencies, "_PERMISSION_STRUCTURE_FILE", structure_file)
     auth_dependencies._get_site_permissions.cache_clear()

@@ -19,7 +19,7 @@ from modules.pdp.api import app
 def _reset_auth_config(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "dummy-client-id")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "dummy-secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     get_auth_config.cache_clear()
     yield
     get_auth_config.cache_clear()
@@ -70,7 +70,9 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert "startup checks request the public plugin-version manifest" in str(page)
     assert "mapping worksets after 7 days" in str(page)
     assert "Token access expires after eight hours" in str(page)
-    assert "OpenAI" not in str(page)
+    assert "WhatsApp Business connector is a hosted exception" in str(page)
+    assert "after their message timestamp passes 90 days" in str(page)
+    assert "Meta and OpenAI are separate recipients" in str(page)
     assert context["active_legal_page"] == "zero-retention"
 
 

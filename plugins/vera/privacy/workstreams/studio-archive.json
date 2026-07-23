@@ -26,6 +26,11 @@
         "id": "gmail-client-evidence",
         "purpose": "Find and interpret Gmail correspondence for one explicitly selected studio client",
         "content": "Client name or identifier and full email or PEC addresses supplied or confirmed in the current conversation; an optional private local archive scope and identity profile when local Codex is used; bounded discovery and exact-address Gmail queries; connected account profile; candidate and matching message or thread identifiers; returned sender and recipient fields; subjects, timestamps, snippets and labels; selected message or thread bodies; selected attachment metadata or content; exact-address routing evidence; ambiguity findings; search coverage; and Vera's source-backed synthesis"
+      },
+      {
+        "id": "whatsapp-client-evidence",
+        "purpose": "Find and interpret retained inbound WhatsApp Business messages for one explicitly selected studio client",
+        "content": "The selected client name or identifier and complete E.164 phone supplied or confirmed in the current conversation; connected business-account status; bounded one-client query terms and date limits; metadata-only candidate titles and opaque source IDs; selected normalized inbound message text or captions; sender phone and optional profile name; timestamp, message type and direction; retention, history, media and coverage limitations; and Vera's source-backed synthesis"
       }
     ]
   },
@@ -97,6 +102,6 @@
     "reviewed_at": "2026-07-23",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "006d65b14832df17fcf661f6412be93a3210c2658d8883cc2e6641125fcaf462"
+    "source_fingerprint": "8f644a5535e07e462d39c2c8b9b3490e8c4c6dc93d55554d087ef550b09f8c7d"
   }
 }

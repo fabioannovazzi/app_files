@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import replace
 import time
+from dataclasses import replace
 
 import pytest
 from fastapi import FastAPI, HTTPException
@@ -9,10 +9,12 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from modules.auth.api import (
+    MagicLinkRateLimiter,
+    MagicLinkRateLimitError,
     auth_page,
-    router as auth_router,
-    site_router as auth_site_router,
 )
+from modules.auth.api import router as auth_router
+from modules.auth.api import site_router as auth_site_router
 from modules.auth.config import AuthConfig
 from modules.auth.google_identity import GoogleUserInfo
 from modules.auth.magic_links import MagicLinkRecord
@@ -146,6 +148,57 @@ def test_magic_link_request_sends_email(monkeypatch: pytest.MonkeyPatch) -> None
     assert "magictoken" in (sent["html_body"] or "")
 
 
+def test_magic_link_request_uses_canonical_origin_not_request_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _config(public_base_url="https://mparanza.com")
+    sent: dict[str, str] = {}
+    monkeypatch.setattr("modules.auth.api.get_auth_config", lambda: config)
+    monkeypatch.setattr("modules.auth.api.is_resend_configured", lambda: True)
+    monkeypatch.setattr(
+        "modules.auth.api.issue_magic_link",
+        lambda *_args, **_kwargs: "magictoken",
+    )
+
+    def fake_send(
+        _email: str,
+        _subject: str,
+        text_body: str,
+        *,
+        html_body: str | None = None,
+    ) -> bool:
+        del html_body
+        sent["text"] = text_body
+        return True
+
+    monkeypatch.setattr("modules.auth.api.send_email", fake_send)
+    client = TestClient(_build_app())
+
+    response = client.post(
+        "/auth/magic/request",
+        headers={"Host": "attacker.example"},
+        json={"email": "user@example.com"},
+    )
+
+    assert response.status_code == 200
+    assert "https://mparanza.com/auth/magic/consume" in sent["text"]
+    assert "attacker.example" not in sent["text"]
+
+
+def test_magic_link_rate_limiter_bounds_ip_and_email() -> None:
+    now = [100.0]
+    limiter = MagicLinkRateLimiter(
+        window_seconds=60,
+        per_source_limit=1,
+        global_limit=10,
+        clock=lambda: now[0],
+    )
+    limiter.check(network_source="192.0.2.10", email="user@example.com")
+
+    with pytest.raises(MagicLinkRateLimitError):
+        limiter.check(network_source="192.0.2.10", email="other@example.com")
+
+
 def test_magic_link_verify_sets_cookie(monkeypatch: pytest.MonkeyPatch) -> None:
     config = _config()
     record = MagicLinkRecord(
@@ -182,6 +235,34 @@ def test_magic_link_consume_redirects(monkeypatch: pytest.MonkeyPatch) -> None:
     assert response.status_code == 307
     assert response.headers["location"] == "/workspace"
     assert config.session_cookie_name in response.cookies
+
+
+@pytest.mark.parametrize(
+    "unsafe_redirect",
+    [
+        "//attacker.example/phish",
+        r"/\attacker.example/phish",
+        "/%2Fattacker.example/phish",
+    ],
+)
+def test_magic_link_consume_rejects_external_redirect_forms(
+    monkeypatch: pytest.MonkeyPatch,
+    unsafe_redirect: str,
+) -> None:
+    config = _config()
+    record = MagicLinkRecord(
+        email="user@example.com",
+        expires_at=time.time() + 100,
+        redirect_path=unsafe_redirect,
+    )
+    monkeypatch.setattr("modules.auth.api.get_auth_config", lambda: config)
+    monkeypatch.setattr("modules.auth.api._consume_magic_token", lambda _token: record)
+    client = TestClient(_build_app(), follow_redirects=False)
+
+    response = client.get("/auth/magic/consume", params={"token": "abc"})
+
+    assert response.status_code == 307
+    assert response.headers["location"] == "/app"
 
 
 def test_magic_link_consume_invalid_token_renders_page(

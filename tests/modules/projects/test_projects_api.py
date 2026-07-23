@@ -429,7 +429,7 @@ def _capture_pdp_template_context(monkeypatch: pytest.MonkeyPatch) -> dict[str, 
 def _enable_auth_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "dummy-client-id")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "dummy-secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
 
 
 def _make_authenticated_client(

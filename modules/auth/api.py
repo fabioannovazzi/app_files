@@ -2,19 +2,23 @@
 
 from __future__ import annotations
 
+import html
 import logging
 import re
-from urllib.parse import urlencode
-
-import html
+import threading
+import time
+from collections import OrderedDict, deque
+from collections.abc import Callable
+from functools import lru_cache
+from urllib.parse import unquote, urlencode, urlsplit
 
 from fastapi import APIRouter, HTTPException, Request, Response, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
-from modules.auth.dependencies import get_allowed_page_keys_for_email
 from modules.auth.config import AuthConfig, get_auth_config
+from modules.auth.dependencies import get_allowed_page_keys_for_email
 from modules.auth.google_identity import (
     GoogleUserInfo,
     InvalidGoogleTokenError,
@@ -46,7 +50,74 @@ site_router = APIRouter(prefix="/auth")
 LOGGER = logging.getLogger(__name__)
 _EMAIL_REGEX = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _LOCAL_GOOGLE_ORIGIN_HOSTS = {"localhost", "127.0.0.1", "::1"}
+_MAGIC_LINK_RATE_WINDOW_SECONDS = 15 * 60.0
+_MAGIC_LINK_PER_SOURCE_LIMIT = 5
+_MAGIC_LINK_GLOBAL_LIMIT = 100
+_MAGIC_LINK_MAX_SOURCES = 4_096
 templates = Jinja2Templates(directory="templates")
+
+
+class MagicLinkRateLimitError(RuntimeError):
+    """Raised when a magic-link source exceeds the fixed request quota."""
+
+
+class MagicLinkRateLimiter:
+    """Bound magic-link requests by both network source and email address."""
+
+    def __init__(
+        self,
+        *,
+        window_seconds: float = _MAGIC_LINK_RATE_WINDOW_SECONDS,
+        per_source_limit: int = _MAGIC_LINK_PER_SOURCE_LIMIT,
+        global_limit: int = _MAGIC_LINK_GLOBAL_LIMIT,
+        max_sources: int = _MAGIC_LINK_MAX_SOURCES,
+        clock: Callable[[], float] = time.monotonic,
+    ) -> None:
+        self._window_seconds = max(float(window_seconds), 1.0)
+        self._per_source_limit = max(int(per_source_limit), 1)
+        self._global_limit = max(int(global_limit), 1)
+        self._max_sources = max(int(max_sources), 1)
+        self._clock = clock
+        self._events: OrderedDict[str, deque[float]] = OrderedDict()
+        self._global_events: deque[float] = deque()
+        self._lock = threading.Lock()
+
+    def check(self, *, network_source: str, email: str) -> None:
+        """Admit one request or raise without issuing an email token."""
+
+        now = self._clock()
+        cutoff = now - self._window_seconds
+        keys = (f"ip:{network_source or 'unknown'}", f"email:{email.casefold()}")
+        with self._lock:
+            while self._global_events and self._global_events[0] <= cutoff:
+                self._global_events.popleft()
+            source_events: list[deque[float]] = []
+            for key in keys:
+                events = self._events.get(key)
+                if events is None:
+                    if len(self._events) >= self._max_sources:
+                        self._events.popitem(last=False)
+                    events = deque()
+                    self._events[key] = events
+                else:
+                    self._events.move_to_end(key)
+                while events and events[0] <= cutoff:
+                    events.popleft()
+                source_events.append(events)
+            if len(self._global_events) >= self._global_limit or any(
+                len(events) >= self._per_source_limit for events in source_events
+            ):
+                raise MagicLinkRateLimitError("Magic-link request limit exceeded.")
+            for events in source_events:
+                events.append(now)
+            self._global_events.append(now)
+
+
+@lru_cache(maxsize=1)
+def get_magic_link_rate_limiter() -> MagicLinkRateLimiter:
+    """Return the process-wide magic-link request limiter."""
+
+    return MagicLinkRateLimiter()
 
 
 class LoginRequest(BaseModel):
@@ -174,8 +245,18 @@ def _normalise_redirect_path(value: str | None, default_path: str) -> str:
     candidate = (value or "").strip()
     if not candidate:
         return default_path
-    if not candidate.startswith("/"):
-        candidate = "/" + candidate.lstrip("/")
+    decoded = unquote(candidate)
+    parsed = urlsplit(decoded)
+    if (
+        not candidate.startswith("/")
+        or candidate.startswith("//")
+        or decoded.startswith("//")
+        or parsed.scheme
+        or parsed.netloc
+        or "\\" in decoded
+        or any(ord(character) < 32 for character in decoded)
+    ):
+        return default_path
     return candidate
 
 
@@ -379,6 +460,18 @@ def request_magic_link(payload: MagicLinkRequest, request: Request) -> dict[str,
 
     email = _validate_email_address(payload.email)
     _enforce_email_policy(email, config.allowed_domains, config.allowed_emails)
+    source = request.client.host if request.client is not None else "unknown"
+    try:
+        get_magic_link_rate_limiter().check(
+            network_source=source,
+            email=email,
+        )
+    except MagicLinkRateLimitError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many sign-in email requests. Try again later.",
+            headers={"Retry-After": str(int(_MAGIC_LINK_RATE_WINDOW_SECONDS))},
+        ) from exc
     redirect_path = _normalise_redirect_path(
         payload.redirect_path, config.magic_link_default_redirect
     )
@@ -388,8 +481,9 @@ def request_magic_link(payload: MagicLinkRequest, request: Request) -> dict[str,
         ttl_seconds=config.magic_link_ttl_seconds,
         redirect_path=redirect_path,
     )
-    base_url = request.url_for("consume_magic_link")
-    link = f"{base_url}?{urlencode({'token': token})}"
+    link = (
+        f"{config.public_base_url}/auth/magic/consume?" f"{urlencode({'token': token})}"
+    )
     subject = _magic_link_subject()
     text_message = _magic_link_text_message(link, config.magic_link_ttl_seconds)
     html_message = _magic_link_html_message(link, config.magic_link_ttl_seconds)

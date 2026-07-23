@@ -20,6 +20,8 @@ def clear_env(monkeypatch: pytest.MonkeyPatch) -> None:
         "AUTH_SESSION_SECRET",
         "AUTH_SESSION_TTL_SECONDS",
         "AUTH_COOKIE_SECURE",
+        "AUTH_PUBLIC_BASE_URL",
+        "AUTH_TRUSTED_HOSTS",
     ):
         monkeypatch.delenv(key, raising=False)
     _reset_cache()
@@ -50,9 +52,12 @@ def test_get_auth_config_reads_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(
         "GOOGLE_ALLOWED_EMAILS", "user@example.com, reviewer@example.com"
     )
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "super-secret")
+    monkeypatch.setenv(
+        "AUTH_SESSION_SECRET",
+        "super-secret-with-at-least-thirty-two-bytes",
+    )
     monkeypatch.setenv("AUTH_SESSION_TTL_SECONDS", "7200")
-    monkeypatch.setenv("AUTH_COOKIE_SECURE", "0")
+    monkeypatch.setenv("AUTH_COOKIE_SECURE", "1")
     _reset_cache()
 
     config = get_auth_config()
@@ -65,16 +70,18 @@ def test_get_auth_config_reads_env(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     assert config.allowed_domains == ("example.com", "finance.corp")
     assert config.allowed_emails == ("user@example.com", "reviewer@example.com")
-    assert config.session_secret == "super-secret"
+    assert config.session_secret == "super-secret-with-at-least-thirty-two-bytes"
     assert config.session_ttl_seconds == 7200
-    assert config.cookie_secure is False
+    assert config.cookie_secure is True
+    assert config.public_base_url == "https://mparanza.com"
+    assert "mparanza.com" in config.trusted_hosts
 
 
 def test_get_auth_config_raises_on_missing_client(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("AUTH_ENABLED", "1")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     _reset_cache()
 
     with pytest.raises(ValueError):
@@ -84,9 +91,44 @@ def test_get_auth_config_raises_on_missing_client(
 def test_get_auth_config_raises_on_invalid_ttl(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "client")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     monkeypatch.setenv("AUTH_SESSION_TTL_SECONDS", "not-a-number")
     _reset_cache()
 
     with pytest.raises(ValueError):
+        get_auth_config()
+
+
+def test_get_auth_config_rejects_weak_session_secret(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("AUTH_ENABLED", "1")
+    monkeypatch.setenv("GOOGLE_CLIENT_ID", "client")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "weak")
+    _reset_cache()
+
+    with pytest.raises(ValueError, match="at least 32 bytes"):
+        get_auth_config()
+
+
+def test_get_auth_config_rejects_insecure_production_cookie(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("AUTH_ENABLED", "1")
+    monkeypatch.setenv("GOOGLE_CLIENT_ID", "client")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
+    monkeypatch.setenv("AUTH_COOKIE_SECURE", "0")
+    _reset_cache()
+
+    with pytest.raises(ValueError, match="AUTH_COOKIE_SECURE"):
+        get_auth_config()
+
+
+def test_get_auth_config_rejects_wildcard_trusted_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("AUTH_TRUSTED_HOSTS", "*")
+    _reset_cache()
+
+    with pytest.raises(ValueError, match="explicit host names"):
         get_auth_config()
