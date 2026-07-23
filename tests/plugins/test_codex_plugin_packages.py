@@ -3514,6 +3514,43 @@ def test_companion_navigation_uses_one_scoped_responsive_system() -> None:
     assert 'querySelector("summary")?.focus()' in script
 
 
+@pytest.mark.parametrize(
+    ("page_name", "section_marker"),
+    (
+        ("vera", '<section class="section-block" id="data-boundary">'),
+        ("clara", '<section id="data-handling">'),
+    ),
+)
+def test_companion_data_sections_explain_consent_based_improvement_loop(
+    page_name: str,
+    section_marker: str,
+) -> None:
+    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+        encoding="utf-8"
+    )
+    section = page.split(section_marker, maxsplit=1)[1].split(
+        "</section>", maxsplit=1
+    )[0]
+
+    assert page.count('class="improvement-note"') == 1
+    for copy_key in (
+        "improvement.kicker",
+        "improvement.title",
+        "improvement.problem.copy",
+        "improvement.idea.copy",
+    ):
+        assert section.count(f'data-i18n="{copy_key}"') == 1
+        assert page.count(f'"{copy_key}":') == 5
+    for exact_claim in (
+        "ti mostra il testo esatto",
+        "solo se sei d’accordo",
+        "La pulizia non è automatica.",
+        "massimo un minuto",
+        "servizio hosted da Mparanza",
+    ):
+        assert exact_claim in section
+
+
 @pytest.mark.parametrize("page_name", ("vera", "clara"))
 def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> None:
     page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(

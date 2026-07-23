@@ -335,6 +335,20 @@
     .data-route h4 { margin-bottom: 12px; font-size: 1rem; }
     .data-route p { color: var(--blue); font-size: 0.94rem; }
 
+    .improvement-note {
+      margin-top: clamp(44px, 7vw, 72px);
+      padding-block: 28px;
+      display: grid;
+      grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+      gap: 30px;
+      border-block: 1px solid var(--cyan);
+    }
+
+    .improvement-note__heading { display: grid; align-content: start; gap: 8px; }
+    .improvement-note__heading .section-index { margin: 0; }
+    .improvement-note__heading h3 { font-size: clamp(1.2rem, 2vw, 1.55rem); }
+    .improvement-note__copy { display: grid; gap: 12px; color: var(--blue); }
+
     .data-position__closing {
       max-width: 900px;
       margin-top: clamp(44px, 7vw, 72px);
@@ -568,6 +582,7 @@
       .country-pack-note { grid-template-columns: 1fr; gap: 8px; }
       .data-position__facts { grid-template-columns: 1fr; }
       .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
+      .improvement-note { grid-template-columns: 1fr; gap: 14px; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
       .module-row p { grid-column: 1; }
       .module-row__arrow { grid-column: 2; grid-row: 1 / span 2; }
@@ -879,6 +894,17 @@
         </div>
       </div>
 
+      <div class="improvement-note">
+        <div class="improvement-note__heading">
+          <span class="section-index" data-i18n="improvement.kicker">Miglioramento continuo</span>
+          <h3 data-i18n="improvement.title">Problemi tecnici e nuove idee vengono condivisi solo con il tuo consenso.</h3>
+        </div>
+        <div class="improvement-note__copy">
+          <p data-i18n="improvement.problem.copy">Quando emerge un problema tecnico, Vera o Clara prepara una segnalazione ripulita da materiali del cliente e dettagli identificativi, ti mostra il testo esatto e la invia a Mparanza solo se sei d’accordo. La pulizia non è automatica.</p>
+          <p data-i18n="improvement.idea.copy">Per proporre una nuova funzione o un miglioramento, puoi scrivere in chat oppure scegliere un’intervista vocale facoltativa di massimo un minuto. La voce e la trascrizione usano il servizio hosted da Mparanza e i servizi OpenAI necessari.</p>
+        </div>
+      </div>
+
       <div class="data-position__closing">
         <p data-i18n="privacy.closing">La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.</p>
         <a class="text-link" href="/data-handling?lang=it#data-handling-video" data-compliance-video-link>
@@ -1061,6 +1087,10 @@
         "privacy.routes.local.copy": "Ogni workflow viene mappato quando viene aggiunto o quando cambia: che cosa resta normalmente locale e che cosa può leggere Codex. Non si crea una registrazione per ogni prompt.",
         "privacy.routes.hosted.title": "Servizi hosted da Mparanza",
         "privacy.routes.hosted.copy": "Un servizio hosted è un confine separato e viene documentato una volta a livello di servizio. Ricerche, connector, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno; non sono una terza categoria Mparanza.",
+        "improvement.kicker": "Miglioramento continuo",
+        "improvement.title": "Problemi tecnici e nuove idee vengono condivisi solo con il tuo consenso.",
+        "improvement.problem.copy": "Quando emerge un problema tecnico, Vera o Clara prepara una segnalazione ripulita da materiali del cliente e dettagli identificativi, ti mostra il testo esatto e la invia a Mparanza solo se sei d’accordo. La pulizia non è automatica.",
+        "improvement.idea.copy": "Per proporre una nuova funzione o un miglioramento, puoi scrivere in chat oppure scegliere un’intervista vocale facoltativa di massimo un minuto. La voce e la trascrizione usano il servizio hosted da Mparanza e i servizi OpenAI necessari.",
         "privacy.closing": "La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.",
         "privacy.dataLink": "Guarda il video sulla gestione dei dati",
         "videos.index": "Cinque storie dal Core",
@@ -1179,6 +1209,10 @@
         "privacy.routes.local.copy": "Each workflow is mapped when it is added or changed: what normally stays local and what Codex may read. No record is created for each prompt.",
         "privacy.routes.hosted.title": "Mparanza-hosted services",
         "privacy.routes.hosted.copy": "A hosted service is a separate boundary and is documented once at service level. Searches, connectors, portals, or sends chosen by the user instead follow the external service’s terms; they are not a third Mparanza category.",
+        "improvement.kicker": "Continuous improvement",
+        "improvement.title": "Technical problems and new ideas are shared only with your approval.",
+        "improvement.problem.copy": "When a technical problem appears, Vera or Clara prepares a report cleaned of client materials and identifying details, shows you the exact text, and sends it to Mparanza only if you agree. This cleaning is not automatic.",
+        "improvement.idea.copy": "To propose a new capability or improvement, you can write in the chat or choose an optional voice interview lasting no more than one minute. Audio and transcription use the Mparanza-hosted service and the necessary OpenAI services.",
         "privacy.closing": "The same rule applies to Vera and Clara: one map per workflow, one description per hosted service, and no prompt-by-prompt documentation.",
         "privacy.dataLink": "Watch the data-handling video",
         "videos.index": "Five stories from the Core",
@@ -1297,6 +1331,10 @@
         "privacy.routes.local.copy": "Chaque workflow est cartographié lorsqu’il est ajouté ou modifié : ce qui reste normalement local et ce que Codex peut lire. Aucun enregistrement n’est créé pour chaque prompt.",
         "privacy.routes.hosted.title": "Services hébergés par Mparanza",
         "privacy.routes.hosted.copy": "Un service hébergé a un périmètre distinct et est documenté une fois au niveau du service. Les recherches, connecteurs, portails ou envois choisis par l’utilisateur relèvent des conditions du service externe ; ils ne constituent pas une troisième catégorie Mparanza.",
+        "improvement.kicker": "Amélioration continue",
+        "improvement.title": "Les problèmes techniques et les nouvelles idées ne sont partagés qu’avec votre accord.",
+        "improvement.problem.copy": "Lorsqu’un problème technique survient, Vera ou Clara prépare un signalement débarrassé des documents du client et des éléments d’identification, vous montre le texte exact et ne l’envoie à Mparanza qu’avec votre accord. Ce nettoyage n’est pas automatique.",
+        "improvement.idea.copy": "Pour proposer une nouvelle fonctionnalité ou une amélioration, vous pouvez l’écrire dans le chat ou choisir un entretien vocal facultatif d’une minute maximum. L’audio et la transcription utilisent le service hébergé par Mparanza et les services OpenAI nécessaires.",
         "privacy.closing": "La même règle s’applique à Vera et Clara : une cartographie par workflow, une description par service hébergé et aucune documentation prompt par prompt.",
         "privacy.dataLink": "Voir la vidéo sur le traitement des données",
         "videos.index": "Cinq histoires du socle",
@@ -1415,6 +1453,10 @@
         "privacy.routes.local.copy": "Jeder Workflow wird beim Hinzufügen oder Ändern zugeordnet: was normalerweise lokal bleibt und was Codex lesen kann. Für einzelne Prompts wird kein Nachweis erstellt.",
         "privacy.routes.hosted.title": "Mparanza-gehostete Dienste",
         "privacy.routes.hosted.copy": "Ein gehosteter Dienst hat eine separate Grenze und wird einmal auf Dienstebene dokumentiert. Vom Nutzer gewählte Suchen, Connectoren, Portale oder Versandwege unterliegen den Bedingungen des externen Dienstes; sie sind keine dritte Mparanza-Kategorie.",
+        "improvement.kicker": "Kontinuierliche Verbesserung",
+        "improvement.title": "Technische Probleme und neue Ideen werden nur mit Ihrer Zustimmung geteilt.",
+        "improvement.problem.copy": "Wenn ein technisches Problem auftritt, erstellt Vera oder Clara einen Bericht ohne Mandantenunterlagen und identifizierende Angaben, zeigt Ihnen den genauen Text und sendet ihn nur mit Ihrer Zustimmung an Mparanza. Diese Bereinigung erfolgt nicht automatisch.",
+        "improvement.idea.copy": "Für eine neue Funktion oder Verbesserung können Sie im Chat schreiben oder ein optionales Sprachinterview von höchstens einer Minute wählen. Audio und Transkription nutzen den von Mparanza gehosteten Dienst und die dafür erforderlichen OpenAI-Dienste.",
         "privacy.closing": "Für Vera und Clara gilt dieselbe Regel: eine Zuordnung pro Workflow, eine Beschreibung pro gehostetem Dienst und keine Dokumentation für jeden Prompt.",
         "privacy.dataLink": "Video zur Datenverarbeitung ansehen",
         "videos.index": "Fünf Geschichten aus dem Kern",
@@ -1533,6 +1575,10 @@
         "privacy.routes.local.copy": "Cada flujo de trabajo se mapea cuando se añade o cambia: qué suele permanecer en local y qué puede leer Codex. No se crea un registro para cada prompt.",
         "privacy.routes.hosted.title": "Servicios alojados por Mparanza",
         "privacy.routes.hosted.copy": "Un servicio alojado constituye un límite separado y se documenta una sola vez a nivel de servicio. Las búsquedas, conectores, portales o envíos elegidos por el usuario se rigen por las condiciones del servicio externo; no forman una tercera categoría de Mparanza.",
+        "improvement.kicker": "Mejora continua",
+        "improvement.title": "Los problemas técnicos y las nuevas ideas solo se comparten con tu consentimiento.",
+        "improvement.problem.copy": "Cuando surge un problema técnico, Vera o Clara prepara un informe sin materiales del cliente ni datos identificativos, te muestra el texto exacto y solo lo envía a Mparanza si estás de acuerdo. Esta depuración no es automática.",
+        "improvement.idea.copy": "Para proponer una nueva función o mejora, puedes escribirla en el chat o elegir una entrevista de voz opcional de un minuto como máximo. El audio y la transcripción utilizan el servicio alojado por Mparanza y los servicios de OpenAI necesarios.",
         "privacy.closing": "La misma regla se aplica a Vera y Clara: un mapa por flujo de trabajo, una descripción por servicio alojado y ninguna documentación prompt por prompt.",
         "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
         "videos.index": "Cinco historias del núcleo",
