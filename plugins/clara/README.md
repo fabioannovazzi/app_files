@@ -73,6 +73,29 @@ Codex handles the semantic work through the user's existing ChatGPT plan:
 interpreting advisor judgement, challenging assumptions after import, asking
 follow-up questions, and drafting client-facing narrative.
 
+## Due-Diligence Preparation Benchmark
+
+Clara's first upstream due-diligence preparation benchmark is packaged under
+`evals/public_truth/fastenal_q1_2025`. It pins three issuer monthly-sales
+releases and the related quarterly SEC filing, reconciles their disclosed
+precision with exact Decimal arithmetic, verifies quarterly P&L identities, and
+requires abstention from undisclosed monthly expense facts.
+
+Run the offline benchmark from the Clara root:
+
+```bash
+python scripts/validate_public_truth_benchmark.py \
+  evals/public_truth/fastenal_q1_2025/benchmark.json \
+  evals/public_truth/fastenal_q1_2025/expected_prepared_observations.csv \
+  --output /tmp/fastenal-q1-public-truth-validation.json
+```
+
+This proves the prepared candidate matches the reviewed frozen fixture. It does
+not independently refetch the source documents or prove account-level,
+trial-balance, consolidation, or monthly full-P&L semantics. A benchmark pass
+does not claim downstream report readiness; render compatibility and evidence
+sealing are evaluated in later milestones.
+
 ## Privacy Surface Governance
 
 Every new or materially changed Clara workflow or hosted integration must use

@@ -1,0 +1,14 @@
+observation_id,metric_id,period_start,period_end,period_grain,value,unit,reported_increment,source_id,source_locator
+fastenal_2025_01_net_sales,net_sales,2025-01-01,2025-01-31,month,652.243,USD_million,0.001,fastenal_2025_01_release,Page 1: Net sales
+fastenal_2025_02_net_sales,net_sales,2025-02-01,2025-02-28,month,627.119,USD_million,0.001,fastenal_2025_02_release,Page 1: Net sales
+fastenal_2025_03_net_sales,net_sales,2025-03-01,2025-03-31,month,680.067,USD_million,0.001,fastenal_2025_03_release,Page 1: Net sales
+fastenal_2025_q1_net_sales,net_sales,2025-01-01,2025-03-31,quarter,1959.4,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-104: us-gaap:RevenueFromContractWithCustomerExcludingAssessedTax
+fastenal_2025_q1_cost_of_sales,cost_of_sales,2025-01-01,2025-03-31,quarter,1075.5,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-106: us-gaap:CostOfGoodsAndServicesSold
+fastenal_2025_q1_gross_profit,gross_profit,2025-01-01,2025-03-31,quarter,883.9,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-108: us-gaap:GrossProfit
+fastenal_2025_q1_sga,selling_general_administrative,2025-01-01,2025-03-31,quarter,490.0,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-110: us-gaap:SellingGeneralAndAdministrativeExpense
+fastenal_2025_q1_operating_income,operating_income,2025-01-01,2025-03-31,quarter,393.9,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-112: us-gaap:OperatingIncomeLoss
+fastenal_2025_q1_interest_income,interest_income,2025-01-01,2025-03-31,quarter,0.9,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-114: us-gaap:InterestAndOtherIncome
+fastenal_2025_q1_interest_expense,interest_expense,2025-01-01,2025-03-31,quarter,1.7,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-116: us-gaap:InterestExpenseNonoperating
+fastenal_2025_q1_pretax_income,pretax_income,2025-01-01,2025-03-31,quarter,393.1,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-118: us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+fastenal_2025_q1_income_tax,income_tax,2025-01-01,2025-03-31,quarter,94.4,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-120: us-gaap:IncomeTaxExpenseBenefit
+fastenal_2025_q1_net_income,net_income,2025-01-01,2025-03-31,quarter,298.7,USD_million,0.1,fastenal_q1_2025_10q,XBRL f-122: us-gaap:NetIncomeLoss

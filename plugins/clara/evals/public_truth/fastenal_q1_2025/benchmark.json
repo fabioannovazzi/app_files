@@ -1,0 +1,186 @@
+{
+  "schema_version": "clara.public_truth_benchmark.v1",
+  "case_id": "fastenal_q1_2025",
+  "purpose": "Prove exact public-fact transport, precision-aware monthly-to-quarter reconciliation, quarterly P&L identities, and abstention from undisclosed monthly expense facts.",
+  "reviewed_boundary": {
+    "status": "reviewed",
+    "reviewed_on": "2026-07-23",
+    "judgement_owner": "human_or_model_review",
+    "statement": "Fastenal published monthly net sales for January through March 2025 and a complete Q1 P&L. It did not publish monthly cost of sales, gross profit, SG&A, operating income, interest, tax, or net income in these documents.",
+    "monthly_reported_metric_ids": [
+      "net_sales"
+    ],
+    "monthly_not_disclosed_metric_ids": [
+      "cost_of_sales",
+      "gross_profit",
+      "selling_general_administrative",
+      "operating_income",
+      "interest_income",
+      "interest_expense",
+      "pretax_income",
+      "income_tax",
+      "net_income"
+    ]
+  },
+  "candidate_contract": {
+    "required_columns": [
+      "observation_id",
+      "metric_id",
+      "period_start",
+      "period_end",
+      "period_grain",
+      "value",
+      "unit",
+      "reported_increment",
+      "source_id",
+      "source_locator"
+    ],
+    "key_fields": [
+      "observation_id"
+    ],
+    "exact_expected_set": true,
+    "truth_to_expected": "exact_identity",
+    "numeric_contract": "canonical Decimal strings; binary floating point is not permitted"
+  },
+  "files": {
+    "truth": {
+      "path": "truth_observations.csv",
+      "sha256": "bf27e23960f1050394584f865a8fd59a7f7db1f9cabfa3345be923094fbc6eac"
+    },
+    "expected": {
+      "path": "expected_prepared_observations.csv",
+      "sha256": "bf27e23960f1050394584f865a8fd59a7f7db1f9cabfa3345be923094fbc6eac"
+    }
+  },
+  "sources": [
+    {
+      "source_id": "fastenal_2025_01_release",
+      "publisher": "Fastenal Company",
+      "title": "January 2025 Information Web Release",
+      "document_type": "issuer_monthly_information_release_pdf",
+      "published_date": "2025-02-06",
+      "url": "https://investor.fastenal.com/files/doc_financials/2024/Q4/01-2025-sales-numbers-F.pdf",
+      "byte_count": 107064,
+      "sha256": "4dd19bdbeee7c19ce55d25c272733be3d2a0ab5a696dbfe778e89d111e21b6a9"
+    },
+    {
+      "source_id": "fastenal_2025_02_release",
+      "publisher": "Fastenal Company",
+      "title": "February 2025 Information Web Release",
+      "document_type": "issuer_monthly_information_release_pdf",
+      "published_date": "2025-03-06",
+      "url": "https://investor.fastenal.com/files/doc_financials/2025/Q1/02-2025-sales-numbers-F.pdf",
+      "byte_count": 106912,
+      "sha256": "1216811df3cca4812e91bd354f28ac1a58a291bf9956a5969d39fc5f8bc38586"
+    },
+    {
+      "source_id": "fastenal_2025_03_release",
+      "publisher": "Fastenal Company",
+      "title": "March 2025 Information Web Release",
+      "document_type": "issuer_monthly_information_release_pdf",
+      "published_date": "2025-04-11",
+      "url": "https://investor.fastenal.com/files/doc_financials/2025/Q1/03-2025-sales-numbers-F.pdf",
+      "byte_count": 107274,
+      "sha256": "8d5d1ebb43fde75325fc3cad1332b3d513b8a0221e2878c8e2e6d4c89e01531c"
+    },
+    {
+      "source_id": "fastenal_q1_2025_10q",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "title": "Fastenal Company Form 10-Q for the quarter ended March 31, 2025",
+      "document_type": "sec_form_10_q_inline_xbrl",
+      "published_date": "2025-04-16",
+      "url": "https://www.sec.gov/Archives/edgar/data/815556/000081555625000083/fast-20250331.htm",
+      "accession": "0000815556-25-000083",
+      "xbrl_context": "c-1",
+      "byte_count": 909854,
+      "sha256": "9b80b8b0bde33c6b5ff3f0491fa1331c3308eb6096f5db395778715814d812aa"
+    }
+  ],
+  "assertions": [
+    {
+      "assertion_id": "monthly_net_sales_to_q1",
+      "kind": "rounded_sum",
+      "source_observation_ids": [
+        "fastenal_2025_01_net_sales",
+        "fastenal_2025_02_net_sales",
+        "fastenal_2025_03_net_sales"
+      ],
+      "target_observation_id": "fastenal_2025_q1_net_sales",
+      "reason": "The three monthly releases disclose USD thousands, normalized here to USD millions with increment 0.001, while the 10-Q presents USD millions to 0.1; their disclosed rounding intervals must overlap."
+    },
+    {
+      "assertion_id": "gross_profit_identity",
+      "kind": "linear_identity",
+      "target_observation_id": "fastenal_2025_q1_gross_profit",
+      "terms": [
+        {
+          "observation_id": "fastenal_2025_q1_net_sales",
+          "factor": "1"
+        },
+        {
+          "observation_id": "fastenal_2025_q1_cost_of_sales",
+          "factor": "-1"
+        }
+      ],
+      "tolerance": "0"
+    },
+    {
+      "assertion_id": "operating_income_identity",
+      "kind": "linear_identity",
+      "target_observation_id": "fastenal_2025_q1_operating_income",
+      "terms": [
+        {
+          "observation_id": "fastenal_2025_q1_gross_profit",
+          "factor": "1"
+        },
+        {
+          "observation_id": "fastenal_2025_q1_sga",
+          "factor": "-1"
+        }
+      ],
+      "tolerance": "0"
+    },
+    {
+      "assertion_id": "pretax_income_identity",
+      "kind": "linear_identity",
+      "target_observation_id": "fastenal_2025_q1_pretax_income",
+      "terms": [
+        {
+          "observation_id": "fastenal_2025_q1_operating_income",
+          "factor": "1"
+        },
+        {
+          "observation_id": "fastenal_2025_q1_interest_income",
+          "factor": "1"
+        },
+        {
+          "observation_id": "fastenal_2025_q1_interest_expense",
+          "factor": "-1"
+        }
+      ],
+      "tolerance": "0"
+    },
+    {
+      "assertion_id": "net_income_identity",
+      "kind": "linear_identity",
+      "target_observation_id": "fastenal_2025_q1_net_income",
+      "terms": [
+        {
+          "observation_id": "fastenal_2025_q1_pretax_income",
+          "factor": "1"
+        },
+        {
+          "observation_id": "fastenal_2025_q1_income_tax",
+          "factor": "-1"
+        }
+      ],
+      "tolerance": "0"
+    }
+  ],
+  "limitations": [
+    "The benchmark validates a reviewed offline extraction; automated tests do not independently fetch or parse the remote documents.",
+    "The monthly source documents disclose net sales but not a full monthly P&L.",
+    "The benchmark contains no trial balance, account mapping, journal, consolidation, or management adjustment evidence.",
+    "Passing this benchmark is not audit assurance and does not establish semantic truth beyond the reviewed boundary."
+  ]
+}
