@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must configure, refresh, or search a shared studio archive through one private local index per professional and answer from opened, hash-verified passages with precise citations.
+description: Use when Vera must configure, refresh, or search a shared studio archive or client-scoped Gmail through one private local index and identity registry per professional, without mixing clients.
 ---
 
 # Archivio dello Studio

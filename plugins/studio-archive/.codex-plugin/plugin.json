@@ -1,7 +1,7 @@
 {
   "name": "studio-archive",
-  "version": "0.1.0",
-  "description": "Archivio locale ricercabile per Vera, con indici privati per utente, ambiti espliciti e fonti verificabili.",
+  "version": "0.1.1",
+  "description": "Archivio locale e Gmail ricercabili per cliente, con stato privato per utente, ambiti espliciti e fonti verificabili.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -16,6 +16,9 @@
     "studio",
     "archivio",
     "ricerca",
+    "gmail",
+    "email",
+    "pec",
     "fonti",
     "sqlite",
     "fts5",
@@ -27,7 +30,7 @@
   "interface": {
     "displayName": "Vera · Archivio dello Studio",
     "shortDescription": "Cerca nell'archivio locale dello studio con fonti verificabili.",
-    "longDescription": "Vera indicizza in locale una cartella condivisa o sincronizzata dello studio e risponde usando passaggi citabili. Ogni professionista conserva una configurazione e un indice SQLite privati sul proprio computer: Fabio e Paolo possono leggere gli stessi file senza condividere account ChatGPT, database o cronologia. La prima versione usa ricerca full-text locale, ambiti espliciti per cartella e verifica dell'hash prima di citare una fonte.",
+    "longDescription": "Vera indicizza in locale una cartella condivisa o sincronizzata dello studio e risponde usando passaggi citabili. Per Gmail mantiene un'anagrafica privata di indirizzi confermati per cliente, prepara ricerche circoscritte e usa il connector Gmail di Codex senza conservare credenziali o copiare la casella. Ogni professionista conserva configurazione, indice SQLite e anagrafica sul proprio computer. La ricerca locale usa ambiti espliciti e verifica l'hash prima di citare un file; le email ambigue restano da verificare.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -40,8 +43,8 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
       "Chiedi a Vera di configurare e aggiornare l'archivio locale dello studio.",
-      "Chiedi a Vera di cercare una pratica o un precedente nell'ambito corretto e citare solo fonti aperte e verificate.",
-      "Se due professionisti usano lo stesso archivio condiviso, configura per ciascuno un indice locale separato."
+      "Chiedi a Vera di cercare una pratica nell'ambito corretto e citare solo fonti aperte e verificate.",
+      "Chiedi a Vera di collegare Rossi alle sue email confermate e cercare Gmail senza mescolare altri clienti."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

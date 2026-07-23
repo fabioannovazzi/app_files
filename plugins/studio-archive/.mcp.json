@@ -2,7 +2,7 @@
   "mcpServers": {
     "veraStudioArchive": {
       "title": "Vera · Archivio dello Studio",
-      "description": "Configure, refresh, search, and verify a private local index of the shared studio archive.",
+      "description": "Configure, refresh, search, and verify a private local archive index, plus plan and validate client-scoped Gmail retrieval without storing mailbox credentials or content.",
       "icons": [
         {
           "src": "./assets/icon.svg",

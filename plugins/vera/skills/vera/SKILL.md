@@ -55,11 +55,14 @@ deployment's actual OpenAI account settings.
 ## Module routing
 
 - `studio-archive`: local full-text search over a shared or synced studio
-  document folder. Each professional keeps a separate private SQLite index and
-  ChatGPT/Codex context while reading the same source archive. Searches use an
-  exact folder scope; every cited passage is opened and checked against the
-  current file hash. The workflow never modifies source documents, shares an
-  index, or downloads OCR weights;
+  document folder plus on-demand, client-scoped Gmail retrieval through the
+  user's connected Codex Gmail connector. Each professional keeps a separate
+  private SQLite index, confirmed client identity registry, and ChatGPT/Codex
+  context. Local searches use an exact folder scope and hash-verified passages;
+  Gmail uses bounded searches, exact-address routing, and model review for
+  indirect or ambiguous correspondence. The workflow never stores Gmail
+  credentials or messages, modifies source documents or mail, shares an index,
+  or downloads OCR weights;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `new-client`: one path from incoming customer files to the reviewed
   professional setup. Its subordinate `client-file-preparation` engine handles
@@ -145,8 +148,10 @@ data permit them.
 - Keep source files and generated artifacts in the local workspace by default;
   content Codex reads may enter the model context.
 - For Studio Archive, keep each user's derived index outside the shared source
-  folder and never copy it between professionals. Use `scope_id: "all"` only
-  after explicit studio-wide intent, and open each result before citing it.
+  folder and never copy it or the client identity registry between
+  professionals. Use `scope_id: "all"` only after explicit studio-wide intent
+  for local documents; studio-wide Gmail search is unsupported. Open each local
+  result before citing it and use only read actions in the Gmail connector.
 - Never request, store, or replay SPID/CIE/CNS credentials, cookies, tokens, or
   one-time codes. An INPS browser capture requires a user-authenticated tab and
   remains read-only. Separately verify access/delegation authority and portal
