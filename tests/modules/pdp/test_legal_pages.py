@@ -138,8 +138,26 @@ def test_support_page_is_public_when_auth_enabled(
     page = context["page"]
     assert isinstance(page, dict)
     assert page["title"] == "Customer Support"
+    assert "eyebrow" not in page
+    assert page["summary"] == (
+        "Get help with installing, configuring, and using Vera or Clara."
+    )
+    assert "Support is handled by Mparanza support." not in str(page)
     assert page["contact_email"] == "fabio@mparanza.com"
+    assert str(page).count("fabio@mparanza.com") == 1
+    assert "Codex surface" not in str(page)
+    assert "Vera and Clara support professional work" in str(page)
+    assert "Vera and other Mparanza plugins" not in str(page)
     assert "no automatic access" in str(page)
     assert "existing ChatGPT plan and Codex workspace" in str(page)
     assert "Mparanza-hosted service" in str(page)
     assert context["active_legal_page"] == "support"
+
+
+def test_support_page_omits_the_legal_eyebrow() -> None:
+    client = TestClient(app)
+
+    response = client.get("/support")
+
+    assert response.status_code == 200
+    assert '<p class="legal-eyebrow">' not in response.text

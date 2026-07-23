@@ -879,21 +879,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
     },
     "support": {
         "title": "Customer Support",
-        "eyebrow": "Mparanza plugins",
         "effective_date": LEGAL_EFFECTIVE_DATE,
         "contact_email": SUPPORT_EMAIL,
-        "summary": (
-            "Get help with installing, configuring, and using Mparanza Codex "
-            "plugins. Support is handled by Mparanza support."
-        ),
+        "summary": "Get help with installing, configuring, and using Vera or Clara.",
         "sections": [
             {
                 "id": "request-help",
                 "title": "Request Help",
                 "paragraphs": [
                     (
-                        f"Email {SUPPORT_EMAIL} with the plugin name and version, "
-                        "your operating system, the Codex surface you are using, "
+                        "Include the plugin name and version, your operating system, "
                         "the steps that led to the problem, and the exact error "
                         "message when available."
                     ),
@@ -933,9 +928,9 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Professional Use",
                 "paragraphs": [
                     (
-                        "Vera and other Mparanza plugins support professional work; "
-                        "they do not replace the professional's review, judgment, or "
-                        "responsibility for client advice and filed work."
+                        "Vera and Clara support professional work; they do not replace "
+                        "the professional's review, judgment, or responsibility for "
+                        "client advice and filed work."
                     ),
                 ],
             },

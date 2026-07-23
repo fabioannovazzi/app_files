@@ -24,7 +24,9 @@
 
 <main class="legal-page">
   <section class="legal-hero" aria-labelledby="legal-page-title">
-    <p class="legal-eyebrow">{{ page.eyebrow }}</p>
+    {% if page.eyebrow %}
+      <p class="legal-eyebrow">{{ page.eyebrow }}</p>
+    {% endif %}
     <h1 id="legal-page-title">{{ page.title }}</h1>
     <p class="legal-summary">{{ page.summary }}</p>
     {% if page.contact_email %}
