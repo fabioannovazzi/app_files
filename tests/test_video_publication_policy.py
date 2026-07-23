@@ -163,6 +163,8 @@ def test_vera_hero_surfaces_the_localized_setup_guide() -> None:
         'document.getElementById("vera-hero-install-video-link").href = '
         "`https://youtu.be/${installVideo.id}`;"
     ) in vera_page
+    for language, youtube_id in SETUP_IDS.items():
+        assert f'{language}: {{ id: "{youtube_id}",' in vera_page
     assert '"hero.guide": "Non hai ancora Codex? Guarda come installarlo"' in vera_page
     assert '"hero.guide": "Don’t have Codex yet? See how to install it"' in vera_page
     assert (
