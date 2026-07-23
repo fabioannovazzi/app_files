@@ -204,6 +204,62 @@ def test_vera_hero_consolidates_installation_and_localized_setup_video() -> None
     )
 
 
+def test_clara_hero_consolidates_installation_and_localized_setup_video() -> None:
+    clara_page = (STATIC_ROOT / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    hero_start = clara_page.index('<section class="hero">')
+    hero_end = clara_page.index("</section>", hero_start)
+    hero = clara_page[hero_start:hero_end]
+    video_start = hero.index('id="clara-install-video-link"')
+    video_end = hero.index("</a>", video_start)
+    install_video = hero[video_start:video_end]
+
+    assert 'id="download"' in hero
+    assert 'data-i18n="install.title"' in hero
+    assert 'data-i18n="install.copy"' in hero
+    assert 'data-i18n="install.button"' in hero
+    assert hero.count('id="clara-install-video-link"') == 1
+    assert f'href="https://youtu.be/{SETUP_IDS["en"]}"' in install_video
+    assert 'data-i18n-aria-label="install.video.title"' in install_video
+    assert "video-story__body" not in install_video
+    assert clara_page.count('id="download"') == 1
+    assert clara_page.count("data-clara-install-link") == 1
+    assert "download-panel" not in clara_page
+    assert 'data-i18n="download.step1"' not in clara_page
+    assert 'data-i18n="download.help.title"' not in clara_page
+    assert 'data-i18n="install.signed_out"' not in clara_page
+    assert clara_page.index('id="download"') < clara_page.index(
+        '<section id="presentations">'
+    )
+    assert (
+        'document.getElementById("clara-install-video-link").href = '
+        "`https://youtu.be/${activeInstallVideo.id}`;"
+    ) in clara_page
+    for language, youtube_id in SETUP_IDS.items():
+        assert f'{language}: {{ id: "{youtube_id}",' in clara_page
+    assert (
+        '"install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex"'
+        in clara_page
+    )
+    assert (
+        '"install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex"'
+        in clara_page
+    )
+    assert (
+        '"install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex"'
+        in clara_page
+    )
+    assert (
+        '"install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex"'
+        in clara_page
+    )
+    assert (
+        '"install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex"'
+        in clara_page
+    )
+
+
 def test_spanish_catalog_uses_all_native_outward_videos_without_english_fallback() -> (
     None
 ):

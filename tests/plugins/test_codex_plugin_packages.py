@@ -2890,10 +2890,10 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "I dati retail e le mappature riviste usano un servizio hosted di Mparanza",
         "No separate API key is required; model work uses your existing ChatGPT plan.",
         "Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
-        "Install Clara and open your first project",
-        "Installa Clara e apri il primo progetto",
-        "You can find Clara in the OpenAI Marketplace.",
-        "La trovi nel Marketplace di OpenAI.",
+        "Bring Clara into your projects.",
+        "Porta Clara nei tuoi progetti.",
+        "Install Clara in ChatGPT and start with the materials in front of you.",
+        "Installa Clara in ChatGPT e inizia dai materiali che hai davanti.",
         "Install Clara",
         "Installa Clara",
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
@@ -2947,7 +2947,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         '<a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2F'
         'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
         'rel="noopener noreferrer" data-clara-install-link '
-        'data-i18n="install.open">Install Clara</a>'
+        'data-i18n="install.button">Install Clara</a>'
     ) in page
     assert "font-size: clamp(58px, 8vw, 92px)" in styles
     assert "font-size: clamp(30px, 4vw, 43px)" in styles
@@ -3412,8 +3412,18 @@ def test_companion_overview_video_follows_the_intended_product_story(
     hero_start = page.index('<section class="hero">')
     hero_end = page.index("</section>", hero_start)
     hero = page[hero_start:hero_end]
-    assert hero.index(install_attribute) < hero.index('class="video-story"')
+    presentations_start = page.index('<section id="presentations">')
+    presentations_end = page.index("</section>", presentations_start)
+    presentations = page[presentations_start:presentations_end]
+    assert 'id="download"' in hero
+    assert install_attribute in hero
+    assert 'id="clara-install-video-link"' in hero
+    assert 'data-i18n-aria-label="install.video.title"' in hero
+    assert 'class="video-story"' not in hero
+    assert 'id="presentation-video-link"' in presentations
+    assert page.index('id="download"') < presentations_start
     assert page.count('class="video-story"') == 1
+    assert "download-panel" not in page
 
 
 def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
@@ -3664,30 +3674,27 @@ def test_companion_install_flow_routes_login_to_same_listing(
     listing_url = f"https://chatgpt.com/plugins/{plugin_id}"
     login_url = f"https://chatgpt.com/auth/login?next=%2Fplugins%2F{plugin_id}"
 
-    expected_count = 1 if page_name == "vera" else 2
+    expected_count = 1
     assert page.count(login_url) == expected_count
     assert listing_url not in page
     assert page.count(install_marker) == expected_count
-    if page_name == "vera":
-        assert 'data-i18n="hero.install"' not in page
-        assert 'data-i18n="install.button"' in page
-        assert 'data-i18n="install.signed_out"' not in page
-    else:
-        assert 'data-i18n="install.open"' in page
-        assert 'data-i18n="install.signed_out"' in page
+    assert 'data-i18n="hero.install"' not in page
+    assert 'data-i18n="install.button"' in page
+    assert 'data-i18n="install.open"' not in page
+    assert 'data-i18n="install.signed_out"' not in page
 
 
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "Not signed in? ChatGPT asks you to sign in, then opens Clara's listing.",
-        "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Clara.",
-        "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Clara.",
-        "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Claras Eintrag.",
-        "¿No has iniciado sesión? ChatGPT te pedirá que la inicies y después abrirá la ficha de Clara.",
+        "Install Clara in ChatGPT and start with the materials in front of you.",
+        "Installa Clara in ChatGPT e inizia dai materiali che hai davanti.",
+        "Installez Clara dans ChatGPT et commencez par les éléments dont vous disposez.",
+        "Installieren Sie Clara in ChatGPT und beginnen Sie mit den vorhandenen Materialien.",
+        "Instala Clara en ChatGPT y empieza con los materiales que tienes delante.",
     ),
 )
-def test_clara_install_flow_localizes_logged_out_guidance(
+def test_clara_install_flow_localizes_concise_guidance(
     localized_guidance: str,
 ) -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
