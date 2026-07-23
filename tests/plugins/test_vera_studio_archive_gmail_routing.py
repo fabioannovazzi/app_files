@@ -522,6 +522,9 @@ def test_marketplace_gmail_reviewer_cases_cover_success_and_failure_paths() -> N
 
     assert len(cases["positive_cases"]) == 5
     assert len(cases["negative_cases"]) == 3
+    assert len(cases["synthetic_fixture"]["messages"]) == 5
+    assert all("expected_result" in case for case in cases["positive_cases"])
+    assert all("why" in case for case in cases["negative_cases"])
     serialized = json.dumps(cases)
     for required in (
         "confirmed-address",
