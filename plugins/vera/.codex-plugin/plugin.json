@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -59,7 +59,7 @@
     "defaultPrompt": [
       "Cerca i messaggi WhatsApp Business già acquisiti per un cliente, senza rispondere né mescolare altri clienti.",
       "Chiedi a Vera di usare OCR locale ed export ufficiali per il caso previdenziale INPS, con fonti e bozza rivedibile.",
-      "Chiedi a Vera di usare Camera competente e fonti SARI per una bozza Registro Imprese/DIRE, senza accedere o inviare."
+      "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

@@ -109,6 +109,7 @@ CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS = 3
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH = 128
 CHATGPT_UPLOAD_MAX_SUBTITLE_LENGTH = 30
 CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
+CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CHATGPT_UPLOAD_SUBTITLE_OVERRIDES = {
@@ -820,6 +821,8 @@ def project_chatgpt_manifest(content: bytes) -> bytes:
     if interface is not None and not isinstance(interface, dict):
         raise ValueError("ChatGPT upload manifest interface must be a JSON object")
     if isinstance(interface, dict):
+        for field in CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS:
+            interface.pop(field, None)
         subtitle_override = CHATGPT_UPLOAD_SUBTITLE_OVERRIDES.get(
             str(manifest.get("name", ""))
         )

@@ -389,18 +389,23 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "modules/registro-imprese-sari/.codex-plugin/plugin.json" in entries
     assert "apps" not in manifest
     assert "mcpServers" not in manifest
+    assert "screenshots" not in manifest["interface"]
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
+    assert manifest["version"] == "0.1.28"
     assert prompts[0] == (
         "Cerca i messaggi WhatsApp Business già acquisiti per un cliente, "
         "senza rispondere né mescolare altri clienti."
     )
     assert any("OCR locale" in prompt and "INPS" in prompt for prompt in prompts)
-    assert any("SARI" in prompt and "Registro Imprese" in prompt for prompt in prompts)
+    assert prompts[2] == (
+        "Cerca in Gmail le email di un cliente usando solo indirizzi "
+        "confermati e senza mescolare altri clienti."
+    )
     assert (
         "plugin Gmail ufficiale installato separatamente"
         in manifest["interface"]["longDescription"]
@@ -415,11 +420,13 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     whatsapp_reference_path = (
         "skills/studio-archive/references/marketplace-whatsapp-business.md"
     )
+    gmail_evals_path = "evals/marketplace_gmail_cases.json"
     whatsapp_evals_path = "evals/marketplace_whatsapp_cases.json"
     module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
     assert wrapper_path in entries
     assert reference_path in entries
     assert whatsapp_reference_path in entries
+    assert gmail_evals_path in entries
     assert whatsapp_evals_path in entries
     assert module_skill_path in entries
     wrapper = entries[wrapper_path].decode("utf-8")

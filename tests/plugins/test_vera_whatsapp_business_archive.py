@@ -90,7 +90,7 @@ def test_vera_remains_broad_ai_companion_with_bounded_whatsapp_prompt() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     interface = manifest["interface"]
 
-    assert manifest["version"] == "0.1.27"
+    assert manifest["version"] == "0.1.28"
     assert manifest["description"].startswith("Vera affianca il commercialista")
     assert "WhatsApp Business" in interface["longDescription"]
     assert "controlla evidenze contabili" in interface["longDescription"]
