@@ -498,34 +498,11 @@
 
     footer { padding-block: 38px max(38px, env(safe-area-inset-bottom)); }
 
-    .footer-shell {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 28px 48px;
-      align-items: start;
-    }
-
     .footer-identity { display: grid; gap: 12px; }
     .footer-identity strong { font-size: 1rem; }
     .footer-links { display: flex; flex-wrap: wrap; gap: 12px 24px; }
     .footer-links a { min-height: 44px; display: inline-flex; align-items: center; color: var(--blue); text-decoration: none; }
     .footer-links a:hover { color: var(--navy); }
-
-    .footer-languages { display: grid; gap: 8px; justify-items: end; }
-    .footer-languages > span { color: var(--blue); font-size: 0.75rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; }
-    .footer-language-buttons { display: flex; gap: 10px; }
-    .footer-languages button {
-      min-width: 44px;
-      min-height: 44px;
-      border: 0;
-      border-bottom: 1px solid transparent;
-      background: transparent;
-      color: var(--blue);
-      cursor: pointer;
-      font-size: 0.75rem;
-      font-weight: 650;
-    }
-    .footer-languages button.is-active { border-color: var(--blue); color: var(--navy); }
 
     a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
 
@@ -575,8 +552,6 @@
       .overview-video__thumb { border-right: 0; border-bottom: 1px solid var(--cyan); }
       .video-library { grid-template-columns: 1fr; }
       .all-videos__head, .all-video-library { grid-template-columns: 1fr; }
-      .footer-shell { grid-template-columns: 1fr; }
-      .footer-languages { justify-items: start; }
     }
 
     @media (max-width: 440px) {
@@ -585,7 +560,6 @@
       h1 { font-size: 4rem; }
       .journey-step { padding-block: 24px; }
       .module-row { padding-block: 22px; }
-      .footer-language-buttons { flex-wrap: wrap; }
     }
 
     @media (pointer: coarse) {
@@ -951,16 +925,6 @@
           <a href="/data-handling?lang=it" data-data-handling-link data-i18n="footer.data">Gestione dei dati</a>
         </nav>
       </div>
-      <div class="footer-languages">
-        <span data-i18n="footer.languages">Lingue</span>
-        <div class="footer-language-buttons" aria-label="Lingua" data-i18n-aria-label="language.label">
-          <button type="button" data-lang="it">IT</button>
-          <button type="button" data-lang="en">EN</button>
-          <button type="button" data-lang="fr">FR</button>
-          <button type="button" data-lang="de">DE</button>
-          <button type="button" data-lang="es">ES</button>
-        </div>
-      </div>
     </div>
   </footer>
 
@@ -1082,8 +1046,7 @@
         "footer.product": "Vera · Codex per commercialisti",
         "footer.linksLabel": "Informazioni",
         "footer.source": "Codice sorgente",
-        "footer.data": "Gestione dei dati",
-        "footer.languages": "Lingue"
+        "footer.data": "Gestione dei dati"
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
@@ -1200,8 +1163,7 @@
         "footer.product": "Vera · Codex for accountants",
         "footer.linksLabel": "Information",
         "footer.source": "Source code",
-        "footer.data": "Data handling",
-        "footer.languages": "Languages"
+        "footer.data": "Data handling"
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
@@ -1318,8 +1280,7 @@
         "footer.product": "Vera · Codex pour les experts-comptables",
         "footer.linksLabel": "Informations",
         "footer.source": "Code source",
-        "footer.data": "Gestion des données",
-        "footer.languages": "Langues"
+        "footer.data": "Gestion des données"
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
@@ -1436,8 +1397,7 @@
         "footer.product": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "footer.linksLabel": "Informationen",
         "footer.source": "Quellcode",
-        "footer.data": "Datenverarbeitung",
-        "footer.languages": "Sprachen"
+        "footer.data": "Datenverarbeitung"
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
@@ -1554,8 +1514,7 @@
         "footer.product": "Vera · Codex para asesores fiscales y contables",
         "footer.linksLabel": "Información",
         "footer.source": "Código fuente",
-        "footer.data": "Tratamiento de datos",
-        "footer.languages": "Idiomas"
+        "footer.data": "Tratamiento de datos"
       }
     };
 
