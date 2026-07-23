@@ -3,7 +3,7 @@
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Vera is a bounded AI colleague and reviewer for professional accounting
-practices. She prepares, checks, and documents work across eleven specialist
+practices. She prepares, checks, and documents work across twelve specialist
 workflows while keeping evidence and review steps visible. Vera does not replace
 professional judgement: decisions and responsibility remain with the
 commercialista.
@@ -33,6 +33,13 @@ The `plugin-feedback` record covers user-chosen problem, suggestion, and short
 voice-interview submissions plus later automatic status polling for their
 stored receipts, including the Mparanza/OpenAI boundary and retention posture.
 These service records do not add per-case paperwork or automatic anonymization.
+
+The Studio Archive workflow lets several professionals use the same shared or
+synced document folder without sharing a ChatGPT account or a database. Each
+professional builds a separate private local SQLite full-text index. Vera
+searches one explicit folder scope at a time, opens candidate passages, and
+rechecks the current source hash before citation. Source files are never
+modified, and optional OCR stays local with model downloads disabled.
 
 The New Client workflow verifies a final-ready document-preparation phase—or an
 explicit standalone-evidence posture—and turns studio instructions into an

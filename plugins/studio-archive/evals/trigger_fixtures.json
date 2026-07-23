@@ -1,0 +1,43 @@
+{
+  "plugin": "studio-archive",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "search-studio-archive",
+      "prompt": "Vera, cerca nell'archivio dello studio i precedenti sulla cessione di quote e indicami i documenti da verificare.",
+      "required_signals": [
+        "Vera",
+        "archivio dello studio",
+        "documenti"
+      ]
+    },
+    {
+      "id": "configure-two-private-indexes",
+      "prompt": "Fabio e Paolo usano la stessa cartella condivisa ma account ChatGPT diversi: configura per entrambi un indice locale separato.",
+      "required_signals": [
+        "cartella condivisa",
+        "account ChatGPT diversi",
+        "indice locale separato"
+      ]
+    },
+    {
+      "id": "refresh-and-cite",
+      "prompt": "Aggiorna l'indice locale dello studio e rispondi alla mia domanda citando solo i passaggi verificati dei fascicoli Rossi.",
+      "required_signals": [
+        "indice locale",
+        "passaggi verificati",
+        "fascicoli Rossi"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "single-folder-intake",
+      "prompt": "Prepara l'inventario e la richiesta documenti mancanti per questo nuovo cliente."
+    },
+    {
+      "id": "internet-research",
+      "prompt": "Cerca online le ultime circolari dell'Agenzia delle Entrate."
+    }
+  ]
+}
