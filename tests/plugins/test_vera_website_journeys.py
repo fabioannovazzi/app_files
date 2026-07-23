@@ -1079,7 +1079,8 @@ def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
         '"journal-bank-reconciliation", "report-builder", "prompt-optimizer"]'
     ) in page
     assert page.count("data-video-index=") == 4
-    assert page.count('<a class="overview-video') == 2
+    assert page.count('<a class="overview-video') == 1
+    assert "install-panel__video" not in page
     assert "https://youtu.be/UwLsy2FuP8o" in page
     assert "https://i.ytimg.com/vi/UwLsy2FuP8o/maxresdefault.jpg" in page
     assert "link.href = `https://youtu.be/${item.id}`" in page
