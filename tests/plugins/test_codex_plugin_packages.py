@@ -3326,10 +3326,11 @@ def test_companion_overview_video_follows_the_intended_product_story(
         encoding="utf-8"
     )
     if companion == "vera":
+        assert page.index('id="installa"') < page.index('id="modello"')
         assert page.index('id="core"') < page.index('id="italia"')
         assert page.index('id="italia"') < page.index('id="video"')
-        assert page.index('id="video"') < page.index('id="installa"')
         assert page.count('class="overview-video"') == 1
+        assert "install-panel__video" not in page
         return
 
     hero_start = page.index('<section class="hero">')
@@ -3587,11 +3588,12 @@ def test_companion_install_flow_routes_login_to_same_listing(
     listing_url = f"https://chatgpt.com/plugins/{plugin_id}"
     login_url = f"https://chatgpt.com/auth/login?next=%2Fplugins%2F{plugin_id}"
 
-    assert page.count(login_url) == 2
+    expected_count = 1 if page_name == "vera" else 2
+    assert page.count(login_url) == expected_count
     assert listing_url not in page
-    assert page.count(install_marker) == 2
+    assert page.count(install_marker) == expected_count
     if page_name == "vera":
-        assert 'data-i18n="hero.install"' in page
+        assert 'data-i18n="hero.install"' not in page
         assert 'data-i18n="install.button"' in page
         assert 'data-i18n="install.signed_out"' not in page
     else:

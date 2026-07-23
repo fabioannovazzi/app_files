@@ -152,27 +152,56 @@ def test_setup_guides_use_only_verified_localized_youtube_ids() -> None:
     assert BAD_SETUP_IDS.isdisjoint(set(re.findall(r"[\w-]{11}", combined)))
 
 
-def test_vera_hero_surfaces_the_localized_setup_guide() -> None:
+def test_vera_hero_consolidates_installation_and_localized_setup_video() -> None:
     vera_page = (STATIC_ROOT / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
+    hero_start = vera_page.index('<section class="hero">')
+    hero_end = vera_page.index("</section>", hero_start)
+    hero = vera_page[hero_start:hero_end]
+    video_start = hero.index('id="vera-install-video-link"')
+    video_end = hero.index("</a>", video_start)
+    install_video = hero[video_start:video_end]
 
-    assert 'id="vera-hero-install-video-link"' in vera_page
-    assert f'href="https://youtu.be/{SETUP_IDS["it"]}"' in vera_page
+    assert 'id="installa"' in hero
+    assert 'data-i18n="install.title"' in hero
+    assert 'data-i18n="install.copy"' in hero
+    assert 'data-i18n="install.button"' in hero
+    assert hero.count('id="vera-install-video-link"') == 1
+    assert f'href="https://youtu.be/{SETUP_IDS["it"]}"' in install_video
+    assert 'data-i18n-aria-label="install.video.title"' in install_video
+    assert "overview-video__body" not in install_video
+    assert vera_page.count('id="installa"') == 1
+    assert 'id="vera-hero-install-video-link"' not in vera_page
+    assert "install-panel__video" not in vera_page
+    assert vera_page.index('id="installa"') < vera_page.index('id="modello"')
     assert (
-        'document.getElementById("vera-hero-install-video-link").href = '
+        'document.getElementById("vera-install-video-link").href = '
         "`https://youtu.be/${installVideo.id}`;"
     ) in vera_page
+    assert 'document.getElementById("vera-hero-install-video-link")' not in vera_page
     for language, youtube_id in SETUP_IDS.items():
         assert f'{language}: {{ id: "{youtube_id}",' in vera_page
-    assert '"hero.guide": "Non hai ancora Codex? Guarda come installarlo"' in vera_page
-    assert '"hero.guide": "Don’t have Codex yet? See how to install it"' in vera_page
     assert (
-        '"hero.guide": "Vous n’avez pas encore Codex ? Voir comment l’installer"'
+        '"install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex"'
         in vera_page
     )
-    assert '"hero.guide": "Noch kein Codex? Installationsvideo ansehen"' in vera_page
-    assert '"hero.guide": "¿Aún no tienes Codex? Mira cómo instalarlo"' in vera_page
+    assert (
+        '"install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex"'
+        in vera_page
+    )
+    assert (
+        '"install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex"'
+        in vera_page
+    )
+    assert (
+        '"install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex"'
+        in vera_page
+    )
+    assert (
+        '"install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex"'
+        in vera_page
+    )
 
 
 def test_spanish_catalog_uses_all_native_outward_videos_without_english_fallback() -> (

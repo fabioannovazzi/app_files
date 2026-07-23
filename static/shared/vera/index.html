@@ -148,7 +148,7 @@
 
     .hero {
       min-height: min(760px, calc(100vh - 76px));
-      padding-block: clamp(72px, 11vw, 132px);
+      padding-block: clamp(64px, 9vw, 108px);
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
       align-items: center;
@@ -185,14 +185,6 @@
       font-size: 1.075rem;
     }
 
-    .actions {
-      margin-top: 34px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 24px;
-    }
-
     .button {
       min-height: 48px;
       display: inline-flex;
@@ -224,12 +216,6 @@
     .text-link span[aria-hidden="true"] { color: var(--cyan); transition: transform 160ms ease-out; }
     .text-link:hover span[aria-hidden="true"] { transform: translateX(4px); }
 
-    .hero-guide-link {
-      width: fit-content;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
     .vera-mark {
       margin: 0;
       padding-left: clamp(32px, 5vw, 64px);
@@ -237,6 +223,46 @@
     }
 
     .vera-mark img { display: block; width: 100%; height: auto; }
+
+    .hero-install {
+      margin-top: 34px;
+      padding-top: clamp(24px, 3vw, 32px);
+      display: grid;
+      grid-template-areas:
+        "copy action"
+        "video video";
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px clamp(32px, 7vw, 80px);
+      align-items: end;
+      border-top: 1px solid var(--cyan);
+    }
+
+    .hero-install__copy { grid-area: copy; display: grid; gap: 8px; }
+    .hero-install__copy h2 {
+      font-size: clamp(1.65rem, 2.8vw, 2.5rem);
+      letter-spacing: -0.035em;
+    }
+    .hero-install__copy p { max-width: 650px; color: var(--blue); }
+    .hero-install__actions {
+      grid-area: action;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px 24px;
+    }
+    .hero-install__video {
+      grid-area: video;
+      width: min(100%, 520px);
+      color: inherit;
+      text-decoration: none;
+    }
+    .hero-install__video .overview-video__thumb {
+      border: 1px solid var(--cyan);
+    }
+    .hero-install__video:hover img {
+      transform: scale(1.015);
+    }
 
     .section-block {
       padding-block: var(--space-section);
@@ -552,20 +578,6 @@
       transform: translate(-50%, -50%);
     }
 
-    .install-panel {
-      padding-block: clamp(52px, 8vw, 88px);
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
-      gap: clamp(32px, 8vw, 96px);
-      align-items: end;
-      border-block: 2px solid var(--navy);
-    }
-
-    .install-copy { display: grid; gap: 18px; }
-    .install-copy p { max-width: 650px; color: var(--blue); font-size: 1.075rem; }
-    .install-action { justify-self: end; }
-    .install-panel__video { grid-column: 1 / -1; margin: 0; }
-
     footer { padding-block: 38px max(38px, env(safe-area-inset-bottom)); }
 
     .footer-shell {
@@ -594,6 +606,15 @@
       .nav-right { gap: 16px; }
       .nav-links { gap: 16px; }
       .hero { grid-template-columns: minmax(0, 1fr) 170px; column-gap: 44px; }
+      .hero-install {
+        grid-template-areas:
+          "copy"
+          "action"
+          "video";
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+      .hero-install__actions { justify-content: flex-start; }
       .journey-layout { grid-template-columns: 1fr; }
       .journey-aside { position: static; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
       .journey-aside p { max-width: 52ch; }
@@ -625,7 +646,11 @@
       }
       .nav-links a { flex: 1; justify-content: center; }
       section { scroll-margin-top: 126px; }
-      .hero { min-height: 0; grid-template-columns: 1fr; padding-block: 64px 72px; }
+      .hero {
+        min-height: 0;
+        grid-template-columns: 1fr;
+        padding-block: 64px 72px;
+      }
       .vera-mark { width: 132px; grid-row: 1; padding: 0 0 28px; border-left: 0; border-bottom: 1px solid var(--cyan); }
       .section-head { grid-template-columns: 1fr; gap: 20px; }
       .journey-aside { grid-template-columns: 1fr; }
@@ -643,8 +668,6 @@
       .overview-video__thumb { border-right: 0; border-bottom: 1px solid var(--cyan); }
       .video-library { grid-template-columns: 1fr; }
       .all-videos__head, .all-video-library { grid-template-columns: 1fr; }
-      .install-panel { grid-template-columns: 1fr; align-items: start; }
-      .install-action { justify-self: start; }
       .footer-shell { grid-template-columns: 1fr; }
       .footer-languages { justify-items: start; }
     }
@@ -703,20 +726,25 @@
 
   <main id="main-content">
     <section class="hero">
-      <div>
+      <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Codex per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
         <p class="lead" data-i18n="hero.lead">Un core professionale per controlli, riconciliazioni, report e ricerca. Un pacchetto dedicato al lavoro italiano.</p>
         <p class="hero-support" data-i18n="hero.support">La lingua indica come lavori con Vera. Il pacchetto paese indica quali regole, enti e formati entrano nel lavoro.</p>
-        <div class="actions">
-          <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="hero.install">Installa Vera</a>
-          <a class="text-link" href="#core">
-            <span data-i18n="hero.explore">Esplora il core</span>
-            <span aria-hidden="true">↓</span>
-          </a>
-          <a class="text-link hero-guide-link" id="vera-hero-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer">
-            <span data-i18n="hero.guide">Non hai ancora Codex? Guarda come installarlo</span>
-            <span aria-hidden="true">↗</span>
+        <div class="hero-install" id="installa">
+          <div class="hero-install__copy">
+            <h2 data-i18n="install.title">Porta Vera nel tuo studio.</h2>
+            <p data-i18n="install.copy">Installa Vera in ChatGPT e inizia dal lavoro che hai davanti.</p>
+          </div>
+          <div class="hero-install__actions">
+            <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa Vera</a>
+          </div>
+          <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Da ChatGPT sul telefono a Vera o Clara in Codex" data-i18n-aria-label="install.video.title">
+            <span class="overview-video__thumb" aria-hidden="true">
+              <img id="vera-install-video-thumbnail" src="https://i.ytimg.com/vi/yAnkIabnQ1M/maxresdefault.jpg" alt="" width="1280" height="720" loading="eager">
+              <span class="video-play">▶</span>
+              <span class="video-duration" id="vera-install-video-duration">1:16</span>
+            </span>
           </a>
         </div>
       </div>
@@ -991,27 +1019,6 @@
       </div>
     </section>
 
-    <section class="section-block" id="installa">
-      <div class="install-panel">
-        <div class="install-copy">
-          <h2 data-i18n="install.title">Porta Vera nel tuo studio.</h2>
-          <p data-i18n="install.copy">Installa Vera in ChatGPT e inizia dal lavoro che hai davanti.</p>
-        </div>
-        <a class="button install-action" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa Vera</a>
-        <a class="overview-video install-panel__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer">
-          <span class="overview-video__thumb" aria-hidden="true">
-            <img id="vera-install-video-thumbnail" src="https://i.ytimg.com/vi/yAnkIabnQ1M/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
-            <span class="video-play">▶</span>
-            <span class="video-duration" id="vera-install-video-duration">1:16</span>
-          </span>
-          <span class="overview-video__body">
-            <span class="video-kicker" data-i18n="install.video.kicker">Guida all’installazione</span>
-            <strong data-i18n="install.video.title">Da ChatGPT sul telefono a Vera o Clara in Codex</strong>
-            <span class="video-meta" data-i18n="install.video.meta">Narrazione in italiano · Si apre su YouTube</span>
-          </span>
-        </a>
-      </div>
-    </section>
   </main>
 
   <footer>
@@ -1055,9 +1062,6 @@
         "hero.title": "Vera",
         "hero.lead": "Un core professionale per controlli, riconciliazioni, report e ricerca. Un pacchetto dedicato al lavoro italiano.",
         "hero.support": "La lingua indica come lavori con Vera. Il pacchetto paese indica quali regole, enti e formati entrano nel lavoro.",
-        "hero.install": "Installa Vera",
-        "hero.explore": "Esplora il core",
-        "hero.guide": "Non hai ancora Codex? Guarda come installarlo",
         "model.index": "Come è organizzata Vera",
         "model.title": "Una lingua per lavorare. Un perimetro per applicare le regole.",
         "model.copy": "Sono due scelte indipendenti. Il workflow resta leggibile nella tua lingua; il pacchetto paese entra solo dove il lavoro dipende dal contesto nazionale.",
@@ -1152,9 +1156,7 @@
         "install.title": "Porta Vera nel tuo studio.",
         "install.copy": "Installa Vera in ChatGPT e inizia dal lavoro che hai davanti.",
         "install.button": "Installa Vera",
-        "install.video.kicker": "Guida all’installazione",
         "install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex",
-        "install.video.meta": "Narrazione in italiano · Si apre su YouTube",
         "footer.product": "Vera · Codex per commercialisti",
         "footer.linksLabel": "Informazioni",
         "footer.source": "Codice sorgente",
@@ -1177,9 +1179,6 @@
         "hero.title": "Vera",
         "hero.lead": "A professional core for checks, reconciliations, reports and research. A dedicated pack for work in Italy.",
         "hero.support": "Language defines how you work with Vera. The country pack defines which rules, institutions and formats enter the work.",
-        "hero.install": "Install Vera",
-        "hero.explore": "Explore the core",
-        "hero.guide": "Don’t have Codex yet? See how to install it",
         "model.index": "How Vera is organized",
         "model.title": "One language for the work. One scope for the rules.",
         "model.copy": "They are independent choices. The workflow stays readable in your language; the country pack enters only where the work depends on national context.",
@@ -1274,9 +1273,7 @@
         "install.title": "Bring Vera into your firm.",
         "install.copy": "Install Vera in ChatGPT and start with the work in front of you.",
         "install.button": "Install Vera",
-        "install.video.kicker": "Setup guide",
         "install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex",
-        "install.video.meta": "English narration · Opens on YouTube",
         "footer.product": "Vera · Codex for accountants",
         "footer.linksLabel": "Information",
         "footer.source": "Source code",
@@ -1299,9 +1296,6 @@
         "hero.title": "Vera",
         "hero.lead": "Un socle professionnel pour les contrôles, rapprochements, rapports et recherches. Un pack dédié au travail en Italie.",
         "hero.support": "La langue définit la façon de travailler avec Vera. Le pack pays définit les règles, organismes et formats qui s’appliquent.",
-        "hero.install": "Installer Vera",
-        "hero.explore": "Explorer le socle",
-        "hero.guide": "Vous n’avez pas encore Codex ? Voir comment l’installer",
         "model.index": "Organisation de Vera",
         "model.title": "Une langue pour travailler. Un périmètre pour appliquer les règles.",
         "model.copy": "Ce sont deux choix indépendants. Le workflow reste lisible dans votre langue ; le pack pays intervient seulement lorsque le travail dépend du contexte national.",
@@ -1396,9 +1390,7 @@
         "install.title": "Accueillez Vera dans votre cabinet.",
         "install.copy": "Installez Vera dans ChatGPT et commencez par le travail qui vous attend.",
         "install.button": "Installer Vera",
-        "install.video.kicker": "Guide d’installation",
         "install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex",
-        "install.video.meta": "Narration en français · S’ouvre sur YouTube",
         "footer.product": "Vera · Codex pour les experts-comptables",
         "footer.linksLabel": "Informations",
         "footer.source": "Code source",
@@ -1421,9 +1413,6 @@
         "hero.title": "Vera",
         "hero.lead": "Ein professioneller Kern für Prüfungen, Abstimmungen, Berichte und Recherche. Ein eigenes Paket für die Arbeit in Italien.",
         "hero.support": "Die Sprache bestimmt, wie Sie mit Vera arbeiten. Das Länderpaket bestimmt, welche Regeln, Institutionen und Formate gelten.",
-        "hero.install": "Vera installieren",
-        "hero.explore": "Kern entdecken",
-        "hero.guide": "Noch kein Codex? Installationsvideo ansehen",
         "model.index": "So ist Vera organisiert",
         "model.title": "Eine Sprache für die Arbeit. Ein Rahmen für die Regeln.",
         "model.copy": "Beides sind unabhängige Entscheidungen. Der Workflow bleibt in Ihrer Sprache lesbar; das Länderpaket kommt nur hinzu, wenn die Arbeit vom nationalen Kontext abhängt.",
@@ -1518,9 +1507,7 @@
         "install.title": "Holen Sie Vera in Ihre Kanzlei.",
         "install.copy": "Installieren Sie Vera in ChatGPT und beginnen Sie mit der anstehenden Aufgabe.",
         "install.button": "Vera installieren",
-        "install.video.kicker": "Installationsanleitung",
         "install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex",
-        "install.video.meta": "Deutsche Sprachausgabe · Öffnet YouTube",
         "footer.product": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "footer.linksLabel": "Informationen",
         "footer.source": "Quellcode",
@@ -1543,9 +1530,6 @@
         "hero.title": "Vera",
         "hero.lead": "Un núcleo profesional para controles, conciliaciones, informes e investigación. Un paquete específico para trabajar en Italia.",
         "hero.support": "El idioma define cómo trabajas con Vera. El paquete de país define qué normas, organismos y formatos intervienen en el trabajo.",
-        "hero.install": "Instalar Vera",
-        "hero.explore": "Explorar el núcleo",
-        "hero.guide": "¿Aún no tienes Codex? Mira cómo instalarlo",
         "model.index": "Cómo se organiza Vera",
         "model.title": "Un idioma para trabajar. Un ámbito para aplicar las normas.",
         "model.copy": "Son dos decisiones independientes. El flujo de trabajo sigue siendo legible en tu idioma; el paquete de país solo interviene cuando el trabajo depende del contexto nacional.",
@@ -1640,9 +1624,7 @@
         "install.title": "Lleva Vera a tu despacho.",
         "install.copy": "Instala Vera en ChatGPT y empieza por el trabajo que tienes delante.",
         "install.button": "Instalar Vera",
-        "install.video.kicker": "Guía de instalación",
         "install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex",
-        "install.video.meta": "Narración en español · Se abre en YouTube",
         "footer.product": "Vera · Codex para asesores fiscales y contables",
         "footer.linksLabel": "Información",
         "footer.source": "Código fuente",
@@ -1713,7 +1695,6 @@
         link.querySelector(".video-meta").textContent = strings["videos.open"];
       });
       const installVideo = installVideos[lang];
-      document.getElementById("vera-hero-install-video-link").href = `https://youtu.be/${installVideo.id}`;
       document.getElementById("vera-install-video-link").href = `https://youtu.be/${installVideo.id}`;
       document.getElementById("vera-install-video-thumbnail").src = thumbnailUrl(installVideo.id);
       document.getElementById("vera-install-video-duration").textContent = installVideo.duration;
