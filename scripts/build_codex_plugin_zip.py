@@ -480,6 +480,11 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
         for field in REQUIRED_INTERFACE_FIELDS:
             if not interface.get(field):
                 errors.append(f"{plugin_name}: missing interface.{field}")
+        if (
+            plugin_name in CODEX_DESKTOP_ONLY_PLUGINS
+            and not interface.get("supportURL")
+        ):
+            errors.append(f"{plugin_name}: missing interface.supportURL")
         composer_icon = interface.get("composerIcon")
         logo = interface.get("logo")
         if composer_icon != logo:

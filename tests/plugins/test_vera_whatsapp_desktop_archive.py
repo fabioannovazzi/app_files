@@ -89,7 +89,7 @@ def test_vera_manifest_remains_broad_and_requires_codex_desktop() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     interface = manifest["interface"]
 
-    assert manifest["version"] == "0.1.29"
+    assert manifest["version"] == "0.1.30"
     assert manifest["description"].startswith("Vera affianca il commercialista")
     assert "Codex Desktop" in interface["longDescription"]
     assert "ChatGPT web o mobile si ferma" in interface["longDescription"]
