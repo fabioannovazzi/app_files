@@ -100,6 +100,23 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "arrangements. If a plugin clearly invokes a Mparanza-hosted "
                         "service, that category is covered by the next section."
                     ),
+                    (
+                        "A public Plugins Directory listing is only a distribution and "
+                        "discovery surface. Vera and Clara workflows stop on ChatGPT web "
+                        "and mobile and require Codex Desktop. The user's existing "
+                        "ChatGPT plan may still govern the model context inside Codex."
+                    ),
+                    (
+                        "Vera's Studio Archive uses two non-hosted message routes. "
+                        "Gmail is searched only from Codex Desktop through OpenAI's "
+                        "separately connected Gmail connector. WhatsApp is inspected "
+                        "only from Codex Desktop with Computer Use in the WhatsApp "
+                        "Desktop app already opened and authenticated by the "
+                        "professional. Neither route creates a Gmail or WhatsApp "
+                        "message store on Mparanza-controlled systems. Screen text and "
+                        "images read by Codex may still enter the model context under "
+                        "the user's ChatGPT/Codex account."
+                    ),
                 ],
             },
             {
@@ -128,16 +145,6 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "is focused on ordinary plugin functions and reducing these "
                         "hosted retention exceptions."
                     ),
-                    (
-                        "Vera's WhatsApp Business connector is a hosted exception. "
-                        "After an allowlisted operator links an official Meta "
-                        "business number, Meta may continue delivering new inbound "
-                        "events automatically. The first version stores only "
-                        "normalized supported inbound text, captions, participant "
-                        "and source metadata; it does not import earlier history, "
-                        "retain raw webhook payloads, download media, expose location "
-                        "events, or send messages."
-                    ),
                 ],
             },
             {
@@ -154,12 +161,6 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "Customer Content and feature state that you explicitly "
                         "submit to or create with a Mparanza-hosted service;"
-                    ),
-                    (
-                        "for a linked WhatsApp Business number, new supported inbound "
-                        "message text or captions, sender phone and optional profile "
-                        "name, business phone-number ID, timestamp, message type, "
-                        "reply reference, and opaque source identifier;"
                     ),
                     (
                         "limited download, transactional-message, and delivery "
@@ -247,17 +248,6 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "logs may occur."
                     ),
                     (
-                        "Vera WhatsApp Business: a daily cleanup deletes normalized "
-                        "supported new inbound messages from the live connector store "
-                        "after their message timestamp passes 90 days. Deleting the "
-                        "linked account removes that owner's live messages and "
-                        "connector bearer tokens immediately. The connector does not "
-                        "retain raw webhook bodies, pre-connection history, media "
-                        "bytes, or location events. Infrastructure backups and "
-                        "ordinary technical logs follow the separate technical-record "
-                        "posture below and do not yet share this 90-day schedule."
-                    ),
-                    (
                         "Check Entries: server working files are ordinarily removed "
                         "through periodic cleanup after about seven days; some job "
                         "metadata uses a shorter, event-triggered cleanup. Cleanup "
@@ -330,13 +320,15 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "and their terms apply separately."
                     ),
                     (
-                        "The WhatsApp Business connector receives signed events from "
-                        "Meta's WhatsApp Business Platform and returns user-selected "
-                        "retained messages to the user's ChatGPT/Codex account through "
-                        "an authenticated read-only MCP service. Meta and OpenAI are "
-                        "separate recipients under their own terms and controls. "
-                        "Mparanza does not request Meta credentials, passwords, QR "
-                        "codes, or one-time codes through Vera chat."
+                        "For Studio Archive, OpenAI's Gmail connector accesses the "
+                        "mailbox selected by the user inside Codex Desktop, while Codex "
+                        "Desktop Computer Use can inspect the WhatsApp Desktop interface "
+                        "on the user's own computer. Both routes execute only in Codex "
+                        "Desktop. Gmail, WhatsApp, and OpenAI are external systems under "
+                        "their own terms and controls. The professional signs in to "
+                        "those services directly; Vera must not request passwords, QR "
+                        "codes, authentication cookies, tokens, or one-time codes "
+                        "through chat."
                     ),
                 ],
             },

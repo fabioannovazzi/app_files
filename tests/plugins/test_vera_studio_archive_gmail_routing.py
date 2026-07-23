@@ -442,7 +442,7 @@ def test_component_has_independent_marketplace_and_optional_local_gmail_routes()
 ):
     skill = SKILL_PATH.read_text(encoding="utf-8")
     compact_skill = " ".join(skill.split())
-    marketplace = compact_skill.split("## Marketplace Gmail workflow", maxsplit=1)[
+    marketplace = compact_skill.split("## Codex Desktop Gmail workflow", maxsplit=1)[
         1
     ].split("## Optional local Gmail enhancement", maxsplit=1)[0]
     local_enhancement = compact_skill.split(
@@ -486,8 +486,8 @@ def test_vera_marketplace_wrapper_routes_gmail_without_local_dependencies() -> N
     assert "references/marketplace-gmail.md" in wrapper
     assert wrapper.index("get_profile") < wrapper.index("resolve `../../modules")
     assert "Do not resolve the local module" in wrapper
-    assert "separately distributed OpenAI Gmail plugin" in wrapper
-    assert "does not require a local ZIP" in wrapper
+    assert "separately distributed OpenAI Gmail connector" in wrapper
+    assert "inside Codex Desktop" in wrapper
     assert reference.index("get_profile") < reference.index("search_emails")
     assert reference.index("search_emails") < reference.index("batch_read_email")
     for local_dependency in (
@@ -624,19 +624,19 @@ def test_privacy_manifest_records_marketplace_gmail_and_optional_local_registry(
     assert boundary["optional"] is True
     assert boundary["requires_confirmation"] is True
     assert (
-        "separately installed and connected OpenAI Gmail plugin"
+        "separately installed and connected OpenAI Gmail connector"
         in boundary["destination"]
     )
     joined_controls = " ".join(boundary["controls"])
     assert "Call get_profile before every search" in joined_controls
     assert "at most ten results for address discovery" in joined_controls
-    assert "current conversation" in joined_controls
+    assert "current Codex Desktop task" in joined_controls
     assert "absence of an optional Cc or Bcc field alone is not incomplete" in (
         joined_controls
     )
     assert "private-client-identity-registry" in controls
     assert (
-        "no plugin-managed cross-chat registry"
+        "no plugin-managed cross-task registry"
         in controls["private-client-identity-registry"]
     )
     assert "fail-closed-gmail-client-routing" in controls

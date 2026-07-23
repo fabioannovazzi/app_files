@@ -4,7 +4,7 @@
   "prerequisites": [
     "Upload and scan the final Vera ZIP, then record its manifest version and SHA-256.",
     "Install, enable, and connect the official OpenAI Gmail plugin separately.",
-    "Run the acceptance prompts in fresh ChatGPT Work chats on web or desktop.",
+    "Run the acceptance prompts in fresh Codex Desktop tasks with a local workspace.",
     "Use a controlled Gmail test mailbox whose owner has authorized the five synthetic self-addressed messages below."
   ],
   "synthetic_fixture": {
@@ -158,7 +158,7 @@
       "id": "separate-professional-account",
       "prompt": "Paolo, nel tuo account Gmail collegato cerca il test <RUN_ID> per Bianchi usando <BIANCHI_PRIMARY>.",
       "fixture_messages": ["B1"],
-      "additional_prerequisite": "Run only in Paolo's independently authenticated ChatGPT Work session with a separately controlled connected mailbox and its own synthetic Bianchi message; the one-mailbox primary fixture does not prove Fabio/Paolo isolation.",
+      "additional_prerequisite": "Run only in Paolo's independently authenticated Codex Desktop task with a separately controlled connected mailbox and its own synthetic Bianchi message; the one-mailbox primary fixture does not prove Fabio/Paolo isolation.",
       "expected_result": {
         "tool_sequence": ["get_profile", "search_emails", "batch_read_email"],
         "required_output": ["Paolo's connected mailbox", "Bianchi address", "chat-scoped identity posture"],

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections.abc import Awaitable, Callable
-from types import SimpleNamespace
 
+import pytest
 from fastapi.testclient import TestClient
 
 from modules.pdp import api as pdp_api
@@ -59,36 +60,9 @@ def test_create_app_shutdown_stops_voice_retention_cleanup(monkeypatch) -> None:
     assert calls == ["voice-retention", "sessions"]
 
 
-def test_daily_session_cleanup_purges_whatsapp_retention_rows(monkeypatch) -> None:
-    calls: list[tuple[str, int | None]] = []
-
-    class ConnectorStore:
-        def purge_expired_messages(self, retention_days: int) -> int:
-            calls.append(("messages", retention_days))
-            return 2
-
-        def purge_expired_oauth_records(self) -> int:
-            calls.append(("oauth", None))
-            return 3
-
-    monkeypatch.setattr(pdp_api, "cleanup_sessions", lambda *_args, **_kwargs: (0, 0))
-    monkeypatch.setattr(
-        pdp_api,
-        "get_whatsapp_business_config",
-        lambda: SimpleNamespace(retention_days=90),
-    )
-    monkeypatch.setattr(
-        pdp_api,
-        "get_whatsapp_business_store",
-        lambda: ConnectorStore(),
-    )
-
-    pdp_api._run_session_cleanup()
-
-    assert calls == [("messages", 90), ("oauth", None)]
-
-
-def test_create_app_unhandled_exception_returns_error_id() -> None:
+def test_create_app_unhandled_exception_returns_error_id_without_logging_query(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     test_app = pdp_api.create_app()
 
     @test_app.get("/__boom")
@@ -96,12 +70,15 @@ def test_create_app_unhandled_exception_returns_error_id() -> None:
         raise RuntimeError("boom")
 
     client = TestClient(test_app, raise_server_exceptions=False)
-    response = client.get("/__boom?x=1")
+    with caplog.at_level(logging.ERROR):
+        response = client.get("/__boom?sensitive-token=do-not-log")
 
     assert response.status_code == 500
     payload = response.json()
     assert "Internal server error" in str(payload.get("detail") or "")
     assert str(payload.get("error_id") or "").strip()
+    assert "has_query=True" in caplog.text
+    assert "do-not-log" not in caplog.text
 
 
 def test_create_app_rejects_untrusted_host_header() -> None:
@@ -110,3 +87,11 @@ def test_create_app_rejects_untrusted_host_header() -> None:
     response = client.get("/", headers={"Host": "attacker.example"})
 
     assert response.status_code == 400
+
+
+def test_create_app_does_not_mount_hosted_whatsapp_routes() -> None:
+    route_paths = {getattr(route, "path", "") for route in pdp_api.create_app().routes}
+
+    assert not any(path.startswith("/whatsapp") for path in route_paths)
+    assert "/.well-known/oauth-protected-resource" not in route_paths
+    assert "/.well-known/oauth-authorization-server" not in route_paths

@@ -3,6 +3,15 @@ name: clara
 description: Use when a user wants Clara to organize advisory work or route a request for presentations, interviews, recordings, Retailer Signals, Brand Fit, or business-data charts to the correct Clara workflow.
 ---
 
+## Codex Desktop Runtime Gate
+
+Clara runs only in Codex Desktop with a local Codex workspace.
+Do not run this plugin in ChatGPT on the web. If the current surface is ChatGPT
+web, ChatGPT mobile, or any environment without local Codex workspace access,
+stop before reading client material, calling tools, or starting a workflow.
+Tell the user to open Codex Desktop, enable Clara, open the working folder, and
+start a new task.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.

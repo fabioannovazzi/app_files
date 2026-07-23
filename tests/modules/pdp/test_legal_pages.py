@@ -70,9 +70,20 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert "startup checks request the public plugin-version manifest" in str(page)
     assert "mapping worksets after 7 days" in str(page)
     assert "Token access expires after eight hours" in str(page)
-    assert "WhatsApp Business connector is a hosted exception" in str(page)
-    assert "after their message timestamp passes 90 days" in str(page)
-    assert "Meta and OpenAI are separate recipients" in str(page)
+    assert "WhatsApp Business connector is a hosted exception" not in str(page)
+    assert "after their message timestamp passes 90 days" not in str(page)
+    assert (
+        "A public Plugins Directory listing is only a distribution and discovery surface"
+        in str(page)
+    )
+    assert "workflows stop on ChatGPT web and mobile and require Codex Desktop" in str(
+        page
+    )
+    assert "Gmail is searched only from Codex Desktop" in str(page)
+    assert "Codex Desktop with Computer Use" in str(page)
+    assert "Neither route creates a Gmail or WhatsApp message store" in str(page)
+    assert "Screen text and images read by Codex may still enter" in str(page)
+    assert "Gmail, WhatsApp, and OpenAI are external systems" in str(page)
     assert context["active_legal_page"] == "zero-retention"
 
 

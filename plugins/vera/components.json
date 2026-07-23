@@ -17,8 +17,7 @@
   ],
   "shared_services": [
     "plugin-update-check",
-    "plugin-feedback",
-    "whatsapp-business-archive"
+    "plugin-feedback"
   ],
   "workflow_roles": {
     "new-client": {

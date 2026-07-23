@@ -49,6 +49,10 @@ VERA_SCOPE_BY_MODULE = {
 }
 VERA_RENDERED_VIDEO_IDENTITIES = {
     *(
+        ("studio-archive", "core", language)
+        for language in ("it", "en", "fr", "de", "es")
+    ),
+    *(
         ("new-client", edition, language)
         for edition in ("core", "italy")
         for language in ("it", "en", "fr", "de", "es")
@@ -670,10 +674,11 @@ def test_vera_hub_separates_core_workflows_from_the_italy_pack() -> None:
     core = _section_markup(page, "core")
     italy = _section_markup(page, "italia")
 
-    assert core.count('class="module-row"') == 8
+    assert core.count('class="module-row"') == 9
     assert italy.count('class="module-row"') == 5
     for expected_href in (
         "../new-client/index.html#journey",
+        "../studio-archive/index.html",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
@@ -767,6 +772,72 @@ def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
         assert page.count(f'"{key}":') == len(copy_languages), key
     for language in copy_languages:
         assert f'hreflang="{language}"' in page
+
+
+def test_studio_archive_page_requires_codex_desktop_for_both_message_routes() -> None:
+    page = (SHARED_ROOT / "studio-archive" / "index.html").read_text(encoding="utf-8")
+    visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
+    language_buttons = set(re.findall(r'data-lang="([a-z]{2})"', page))
+    copy_languages = set(re.findall(r"^      ([a-z]{2}): \{$", page, re.MULTILINE))
+
+    assert page.count("<h1") == 1
+    assert language_buttons == copy_languages == {"it", "en", "fr", "de", "es"}
+    for key in visible_keys:
+        assert page.count(f'"{key}":') == len(copy_languages), key
+    for phrase in (
+        "Codex Desktop · OpenAI Gmail",
+        "Codex Desktop · local",
+        "public Plugins Directory",
+        "workflows stop on ChatGPT web and mobile and require Codex Desktop",
+        "existing ChatGPT plan",
+        "OpenAI’s Gmail connector is installed and connected separately, then used inside Codex Desktop.",
+        "Computer Use",
+        "No Mparanza server receives or stores a copy of WhatsApp messages.",
+        "Both routes work only in Codex Desktop.",
+        "This is not a continuous index or a complete-history guarantee.",
+        "does not write, reply, forward, edit, or delete messages",
+    ):
+        assert phrase in page
+    assert "ChatGPT · Marketplace" not in page
+    assert "90 days" not in page
+    assert "90 giorni" not in page
+    assert "https://youtu.be/" not in page
+    assert "<video" not in page
+
+
+@pytest.mark.parametrize(
+    ("page_path", "product"),
+    (
+        (SHARED_ROOT / "vera" / "index.html", "Vera"),
+        (SHARED_ROOT / "clara" / "index.html", "Clara"),
+    ),
+)
+def test_public_plugin_listing_copy_requires_codex_desktop(
+    page_path: Path,
+    product: str,
+) -> None:
+    page = page_path.read_text(encoding="utf-8")
+    normalized_page = page.casefold()
+
+    for phrase in (
+        f"{product} may appear in the public Plugins Directory",
+        f"{product} può comparire nella directory pubblica dei plugin",
+        f"{product} peut apparaître dans le répertoire public des plugins",
+        f"{product} kann im öffentlichen Plugin-Verzeichnis erscheinen",
+        f"{product} puede aparecer en el directorio público de plugins",
+        "workflows stop on ChatGPT web and mobile and require Codex Desktop",
+        "workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop",
+        "workflows s’arrêtent sur ChatGPT web ou mobile et nécessitent Codex Desktop",
+        "in ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und "
+        "erfordern Codex Desktop",
+        "flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop",
+        "existing ChatGPT plan",
+        "piano ChatGPT esistente",
+        "offre ChatGPT existante",
+        "bestehender ChatGPT-Tarif",
+        "plan actual de ChatGPT",
+    ):
+        assert phrase.casefold() in normalized_page
 
 
 def _vera_data_boundary_section(page: str) -> str:
@@ -971,7 +1042,7 @@ def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
         page,
     )
 
-    assert len(module_hrefs) == 13
+    assert len(module_hrefs) == 14
     for href in module_hrefs:
         target = urlsplit(href)
         target_path = (hub_path.parent / target.path).resolve()
@@ -1101,12 +1172,13 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     assert {(concept["module"], concept["edition"]) for concept in concepts} == {
         ("new-client", "core"),
         ("new-client", "italy"),
+        ("studio-archive", "core"),
         ("journal-sampling", "core"),
         ("check-entries", "core"),
         ("check-entries", "italy-fatturapa"),
         ("data-handling", "core"),
     }
-    assert sum(len(concept["localizations"]) for concept in concepts) == 29
+    assert sum(len(concept["localizations"]) for concept in concepts) == 34
     for concept in concepts:
         assert len(concept["scenes"]) == 6
         assert concept["pageTargets"]
@@ -1241,6 +1313,59 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
         ),
     }.items():
         narration = data_handling["localizations"][language]["narration"]
+        for phrase in required_phrases:
+            assert phrase in narration
+
+    studio_archive = next(
+        concept for concept in concepts if concept["module"] == "studio-archive"
+    )
+    assert studio_archive["conceptId"] == "one-client-two-message-sources"
+    assert studio_archive["edition"] == "core"
+    assert set(studio_archive["localizations"]) == {"it", "en", "fr", "de", "es"}
+    assert "/static/shared/studio-archive/index.html" in studio_archive["pageTargets"]
+    for language, required_phrases in {
+        "it": (
+            "directory pubblica dei plugin",
+            "si ferma su ChatGPT web o mobile",
+            "Dentro Codex Desktop",
+            "connector Gmail di OpenAI",
+            "Computer Use",
+            "non crea archivi di messaggi Gmail o WhatsApp su Mparanza",
+        ),
+        "en": (
+            "public Plugins Directory",
+            "stops on ChatGPT web and mobile",
+            "Inside Codex Desktop",
+            "OpenAI’s separately connected Gmail connector",
+            "Computer Use",
+            "creates no Gmail or WhatsApp message store on Mparanza",
+        ),
+        "fr": (
+            "répertoire public des plugins",
+            "s’arrêtent sur ChatGPT web ou mobile",
+            "Dans Codex Desktop",
+            "connecteur Gmail d’OpenAI",
+            "Computer Use",
+            "aucune archive de messages Gmail ou WhatsApp chez Mparanza",
+        ),
+        "de": (
+            "öffentlichen Plugin-Verzeichnis",
+            "in ChatGPT im Web oder auf Mobilgeräten gestoppt",
+            "In Codex Desktop",
+            "Gmail-Connector von OpenAI",
+            "Computer Use",
+            "kein Gmail- oder WhatsApp-Nachrichtenarchiv",
+        ),
+        "es": (
+            "directorio público de plugins",
+            "se detiene en ChatGPT web o móvil",
+            "Dentro de Codex Desktop",
+            "conector de Gmail de OpenAI",
+            "Computer Use",
+            "no crea un archivo de mensajes de Gmail o WhatsApp en Mparanza",
+        ),
+    }.items():
+        narration = studio_archive["localizations"][language]["narration"]
         for phrase in required_phrases:
             assert phrase in narration
 

@@ -44,8 +44,8 @@
     },
     {
       "id": "vera-studio-archive-whatsapp",
-      "prompt": "Vera, cerca nei WhatsApp Business già acquisiti di Rossi sul modello F24 senza includere Bianchi.",
-      "required_signals": ["Vera", "WhatsApp Business", "Rossi", "F24"]
+      "prompt": "Vera, in WhatsApp Desktop controlla per Rossi i messaggi sul modello F24 senza inviare nulla.",
+      "required_signals": ["Vera", "WhatsApp Desktop", "Rossi", "F24"]
     }
   ],
   "should_not_trigger": [

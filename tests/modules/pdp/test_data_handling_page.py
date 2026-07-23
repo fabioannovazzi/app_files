@@ -373,6 +373,93 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
 @pytest.mark.parametrize(
     (
         "lang",
+        "directory_phrase",
+        "desktop_stop_phrase",
+        "gmail_phrase",
+        "whatsapp_phrase",
+        "mparanza_phrase",
+        "codex_phrase",
+    ),
+    (
+        (
+            "en",
+            "public Plugins Directory",
+            "workflows stop on ChatGPT web and mobile and require Codex Desktop",
+            "Inside Codex Desktop, Vera searches Gmail through OpenAI's separately "
+            "installed and connected Gmail connector",
+            "Codex Desktop with Computer Use",
+            "No Mparanza server receives or stores a copy",
+            "may still enter the model context",
+        ),
+        (
+            "it",
+            "directory pubblica dei plugin",
+            "I workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop",
+            "Dentro Codex Desktop, Vera cerca in Gmail attraverso il connector Gmail "
+            "di OpenAI",
+            "Codex Desktop con Computer Use",
+            "Nessun server Mparanza riceve o conserva una copia",
+            "possono comunque entrare nel contesto del modello",
+        ),
+        (
+            "fr",
+            "répertoire public des plugins",
+            "Les workflows s'arrêtent sur ChatGPT web ou mobile et nécessitent Codex "
+            "Desktop",
+            "Dans Codex Desktop, Vera recherche dans Gmail au moyen du connecteur Gmail "
+            "d'OpenAI",
+            "Codex Desktop avec Computer Use",
+            "Aucun serveur Mparanza ne reçoit ni ne conserve de copie",
+            "peuvent toutefois entrer dans le contexte du modèle",
+        ),
+        (
+            "de",
+            "öffentlichen Plugin-Verzeichnis",
+            "In ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und "
+            "erfordern Codex Desktop",
+            "In Codex Desktop durchsucht Vera Gmail über den separat installierten und "
+            "verbundenen Gmail-Connector von OpenAI",
+            "Codex Desktop mit Computer Use",
+            "Kein Mparanza-Server empfängt oder speichert eine Kopie",
+            "können dennoch in den Modellkontext",
+        ),
+        (
+            "es",
+            "directorio público de plugins",
+            "Los flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop",
+            "Dentro de Codex Desktop, Vera busca en Gmail mediante el conector de Gmail "
+            "de OpenAI",
+            "Codex Desktop con Computer Use",
+            "Ningún servidor de Mparanza recibe ni conserva una copia",
+            "pueden entrar en el contexto del modelo",
+        ),
+    ),
+)
+def test_data_handling_page_distinguishes_gmail_and_whatsapp_desktop(
+    lang: str,
+    directory_phrase: str,
+    desktop_stop_phrase: str,
+    gmail_phrase: str,
+    whatsapp_phrase: str,
+    mparanza_phrase: str,
+    codex_phrase: str,
+) -> None:
+    page = get_data_handling_content(lang)
+    sections = {section["id"]: section for section in page["sections"]}
+    connected = " ".join(sections["connected-sources"]["paragraphs"])
+
+    assert directory_phrase in connected
+    assert desktop_stop_phrase in connected
+    assert gmail_phrase in connected
+    assert whatsapp_phrase in connected
+    assert mparanza_phrase in connected
+    assert codex_phrase in connected
+    assert "90 days" not in connected
+
+
+@pytest.mark.parametrize(
+    (
+        "lang",
         "automatic_anonymisation",
         "local_python",
         "chatgpt_plan",

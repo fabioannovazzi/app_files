@@ -7,6 +7,11 @@ Vera è la collega AI per il lavoro dello studio: prepara fascicoli, controlla
 evidenze e documenta i risultati in carte di lavoro rivedibili. Il giudizio
 professionale resta al commercialista.
 
+Vera può comparire nella directory pubblica dei plugin, ma quella pagina serve
+soltanto per trovarla e installarla. I workflow si fermano su ChatGPT web o
+mobile e richiedono Codex Desktop. Lo studio può comunque usare il proprio piano
+ChatGPT esistente come account per Codex.
+
 Installazione
 
 1. Estrai lo ZIP.
@@ -17,7 +22,8 @@ Installazione
 
 Moduli inclusi
 
-- Archivio dello Studio con indice locale separato per professionista
+- Archivio dello Studio: Gmail con il connector OpenAI collegato separatamente,
+  WhatsApp Desktop e indice documentale locale, tutti usati da Codex Desktop
 - Riconciliazione partite
 - Nuovo cliente: fascicolo, incarico, privacy, AML e monitoraggio
 - Campionamento del giornale
@@ -54,6 +60,28 @@ cita solo passaggi riaperti e verificati rispetto al file corrente.
 L'indice derivato contiene testo estratto e non è cifrato dall'applicazione:
 va conservato sotto un account del sistema operativo privato, con cifratura del
 disco e backup adeguati ai dati dello studio.
+
+Le email e i messaggi WhatsApp usano due percorsi diversi e non confluiscono
+nell'indice documentale:
+
+- Gmail funziona soltanto dentro Codex Desktop con il connector Gmail di OpenAI
+  installato e collegato separatamente. Vera verifica la casella, cerca un solo
+  cliente usando indirizzi completi confermati nella chat corrente e usa soltanto
+  azioni di ricerca e lettura. Vera non crea una copia della casella, non conserva
+  credenziali o messaggi e non mantiene le identità dei clienti tra chat diverse.
+- WhatsApp funziona soltanto da Codex Desktop sul Mac. Il professionista apre e
+  autentica WhatsApp Desktop; Codex usa Computer Use sullo stesso computer per
+  consultare, su richiesta, i messaggi che l'app rende visibili o ricercabili.
+  Non esistono webhook, sincronizzazione o archivio WhatsApp su Mparanza, e
+  Mparanza non riceve né conserva una copia dei messaggi.
+
+Il percorso WhatsApp Desktop non è un indice continuo, non acquisisce messaggi in
+background e non garantisce uno storico completo oltre ciò che l'app mostra.
+Vera non scrive, risponde, inoltra, modifica o elimina messaggi. "Nessuna copia
+su Mparanza" non significa che i contenuti restino fuori da Codex: testo e
+immagini dello schermo necessari al lavoro possono entrare nel contesto del
+modello secondo il piano ChatGPT/Codex e i controlli dell'account dello studio.
+Restano inoltre applicabili le condizioni di Gmail, OpenAI e WhatsApp.
 
 Ogni modulo conserva script, requisiti, istruzioni e controlli di dipendenza
 specifici. Vera attiva il modulo adatto alla richiesta e mantiene visibili fonti,
@@ -92,7 +120,21 @@ credenziali, non contatta l'assistenza, non firma, non paga e non invia pratiche
 
 English quick start
 
+Vera may appear in the public Plugins Directory, but that listing is only for
+discovery and installation. Workflows stop on ChatGPT web and mobile and require
+Codex Desktop. The firm may still use its existing ChatGPT plan as the account
+behind Codex.
+
 1. Unzip the package.
 2. Add the extracted folder containing `.agents/plugins/marketplace.json` as a
    local marketplace in Codex.
 3. Enable `Vera`, then start a new Codex chat in the same workspace.
+
+Studio Archive uses separate routes inside Codex Desktop. Gmail uses OpenAI's
+separately connected Gmail connector there. For WhatsApp, the professional
+opens an authenticated WhatsApp Desktop app and Codex uses Computer Use on that
+same computer to inspect visible or searchable messages on request. No Mparanza
+server receives or stores a WhatsApp message copy. Content read by Codex may
+still enter the model context under the firm's ChatGPT/Codex account. The
+WhatsApp route does not run in the background, guarantee complete history, or
+send, edit, or delete messages.

@@ -97,13 +97,12 @@ def test_vera_shared_service_manifests_match_the_published_schema() -> None:
     assert all(not manifest_errors for manifest_errors in errors.values()), errors
 
 
-def test_vera_shared_services_separate_update_feedback_and_whatsapp() -> None:
+def test_vera_shared_services_separate_update_and_feedback() -> None:
     manifests = {manifest["service_id"]: manifest for manifest in _service_manifests()}
 
     assert set(manifests) == {
         "plugin-update-check",
         "plugin-feedback",
-        "whatsapp-business-archive",
     }
     update_boundaries = manifests["plugin-update-check"]["boundaries_beyond_codex"]
     assert [boundary["id"] for boundary in update_boundaries] == [
@@ -123,17 +122,6 @@ def test_vera_shared_services_separate_update_feedback_and_whatsapp() -> None:
         and boundary["requires_confirmation"] is True
         for boundary in feedback_boundaries[1:]
     )
-    whatsapp_boundaries = manifests["whatsapp-business-archive"][
-        "boundaries_beyond_codex"
-    ]
-    assert [boundary["activation"] for boundary in whatsapp_boundaries] == [
-        "automatic_after_prior_connection",
-        "explicit_user_choice",
-    ]
-    assert whatsapp_boundaries[0]["optional"] is False
-    assert whatsapp_boundaries[0]["requires_confirmation"] is False
-    assert whatsapp_boundaries[1]["optional"] is True
-    assert whatsapp_boundaries[1]["requires_confirmation"] is True
 
 
 def test_vera_security_controls_exclude_architecture_and_policy_labels() -> None:
@@ -330,73 +318,6 @@ def test_vera_privacy_validator_detects_changed_shared_service_source(
     assert (
         "plugin-feedback: privacy review is stale; run the review skill, then --refresh-service"
         in errors
-    )
-
-
-def test_whatsapp_service_fingerprint_governs_hosted_repository_source(
-    tmp_path: Path,
-) -> None:
-    validator = _validator_module()
-    repository_root = tmp_path / "repository"
-    vera_root = repository_root / "plugins" / "vera"
-    shutil.copytree(VERA_ROOT, vera_root)
-    shutil.copytree(
-        ROOT / "modules" / "whatsapp_business",
-        repository_root / "modules" / "whatsapp_business",
-    )
-    shutil.copy2(
-        ROOT / "chatgpt-app-submission.json",
-        repository_root / "chatgpt-app-submission.json",
-    )
-    shutil.copytree(
-        ROOT / "modules" / "auth",
-        repository_root / "modules" / "auth",
-    )
-    (repository_root / "modules" / "pdp").mkdir(parents=True)
-    shutil.copy2(
-        ROOT / "modules" / "pdp" / "api.py",
-        repository_root / "modules" / "pdp" / "api.py",
-    )
-    shutil.copy2(
-        ROOT / "modules" / "pdp" / "legal_content.py",
-        repository_root / "modules" / "pdp" / "legal_content.py",
-    )
-    (repository_root / "config").mkdir()
-    shutil.copy2(
-        ROOT / "config" / "secrets.example.toml",
-        repository_root / "config" / "secrets.example.toml",
-    )
-    (repository_root / "docs" / "deployment").mkdir(parents=True)
-    shutil.copy2(
-        ROOT / "docs" / "deployment" / "vera_whatsapp_business.md",
-        repository_root / "docs" / "deployment" / "vera_whatsapp_business.md",
-    )
-    components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
-    components["plugins"] = []
-    components["workflow_roles"] = {}
-    components["shared_services"] = ["whatsapp-business-archive"]
-    (vera_root / "components.json").write_text(
-        json.dumps(components, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
-        manifest.unlink()
-    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
-        if manifest.stem != "whatsapp-business-archive":
-            manifest.unlink()
-    validator._refresh_service("whatsapp-business-archive", vera_root)
-
-    assert validator.validate_privacy_surfaces(vera_root) == []
-
-    security = repository_root / "modules" / "whatsapp_business" / "security.py"
-    security.write_text(
-        security.read_text(encoding="utf-8") + "\n# material hosted-boundary change\n",
-        encoding="utf-8",
-    )
-
-    assert (
-        "whatsapp-business-archive: privacy review is stale; run the review skill, "
-        "then --refresh-service" in validator.validate_privacy_surfaces(vera_root)
     )
 
 

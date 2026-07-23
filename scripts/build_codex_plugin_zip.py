@@ -115,6 +115,20 @@ CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CHATGPT_UPLOAD_SUBTITLE_OVERRIDES = {
     "vera": "AI companion for accountants",
 }
+CODEX_DESKTOP_ONLY_PLUGINS = frozenset({"clara", "vera"})
+REQUIRED_CODEX_DESKTOP_HEADING = "## Codex Desktop Runtime Gate"
+REQUIRED_CODEX_DESKTOP_REFUSAL = "Do not run this plugin in ChatGPT on the web."
+REQUIRED_CODEX_DESKTOP_ONLY = "runs only in Codex Desktop"
+CODEX_DESKTOP_RUNTIME_GATE = f"""
+{REQUIRED_CODEX_DESKTOP_HEADING}
+
+This plugin runs only in Codex Desktop with a local Codex workspace.
+{REQUIRED_CODEX_DESKTOP_REFUSAL} If the current surface is ChatGPT web,
+ChatGPT mobile, or any environment without local Codex workspace access, stop
+before reading user material, calling tools, or starting the workflow. Tell the
+user to open Codex Desktop, enable the plugin, open the working folder, and
+start a new task.
+""".strip()
 
 
 @dataclass(frozen=True)
@@ -545,6 +559,15 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
             errors.append(
                 f"{plugin_name}: skill instructions must include the run output location policy"
             )
+        if plugin_name in CODEX_DESKTOP_ONLY_PLUGINS:
+            main_skill = plugin_dir / "skills" / plugin_name / "SKILL.md"
+            main_skill_text = (
+                main_skill.read_text(encoding="utf-8") if main_skill.exists() else ""
+            )
+            if not has_codex_desktop_runtime_gate(main_skill_text):
+                errors.append(
+                    f"{plugin_name}: main skill must enforce the Codex Desktop runtime gate"
+                )
         errors.extend(validate_plugin_interaction_patterns(plugin_dir))
 
     errors.extend(validate_plugin_workbench_demo(plugin_dir))
@@ -862,8 +885,83 @@ def project_chatgpt_manifest(content: bytes) -> bytes:
                         f"{CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH} characters; "
                         f"found {len(prompt)}"
                     )
+        if str(manifest.get("name", "")) in CODEX_DESKTOP_ONLY_PLUGINS:
+            long_description = interface.get("longDescription")
+            if (
+                not isinstance(long_description, str)
+                or "Codex Desktop" not in long_description
+            ):
+                raise ValueError(
+                    "Codex Desktop-only upload manifest must disclose the "
+                    "Desktop requirement in interface.longDescription"
+                )
 
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
+
+
+def project_chatgpt_component_manifest(content: bytes) -> bytes:
+    """Remove runtime declarations whose files are absent from public uploads."""
+
+    manifest = json.loads(content.decode("utf-8"))
+    if not isinstance(manifest, dict):
+        raise ValueError("ChatGPT component manifest must be a JSON object")
+    for field in CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS:
+        manifest.pop(field, None)
+    return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
+
+
+def skill_body_start(text: str) -> int:
+    """Return the first byte after valid YAML frontmatter."""
+
+    if not text.startswith("---\n"):
+        raise ValueError("Skill Markdown must start with YAML frontmatter")
+    closing_index = text.find("\n---\n", 4)
+    if closing_index < 0:
+        raise ValueError("Skill Markdown has unterminated YAML frontmatter")
+    return closing_index + len("\n---\n")
+
+
+def has_codex_desktop_runtime_gate(text: str) -> bool:
+    """Return whether the first skill body section is a complete Desktop gate."""
+
+    try:
+        body_index = skill_body_start(text)
+    except ValueError:
+        return False
+    body = text[body_index:].lstrip("\n")
+    if not body.startswith(REQUIRED_CODEX_DESKTOP_HEADING):
+        return False
+    next_section = body.find("\n## ", len(REQUIRED_CODEX_DESKTOP_HEADING))
+    gate_section = body if next_section < 0 else body[:next_section]
+    return (
+        REQUIRED_CODEX_DESKTOP_REFUSAL in gate_section
+        and REQUIRED_CODEX_DESKTOP_ONLY in gate_section
+    )
+
+
+def project_codex_desktop_skill(content: bytes) -> bytes:
+    """Add a fail-closed surface gate to a public skill projection."""
+
+    text = content.decode("utf-8")
+    body_index = skill_body_start(text)
+    if has_codex_desktop_runtime_gate(text):
+        return content
+    if (
+        REQUIRED_CODEX_DESKTOP_HEADING in text
+        or REQUIRED_CODEX_DESKTOP_REFUSAL in text
+        or REQUIRED_CODEX_DESKTOP_ONLY in text
+    ):
+        raise ValueError(
+            "Skill Markdown has an incomplete or misplaced Codex Desktop runtime gate"
+        )
+    projected = (
+        text[:body_index]
+        + "\n"
+        + CODEX_DESKTOP_RUNTIME_GATE
+        + "\n\n"
+        + text[body_index:].lstrip("\n")
+    )
+    return projected.encode("utf-8")
 
 
 def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
@@ -895,6 +993,10 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             continue
         if name == ".codex-plugin/plugin.json":
             content = project_chatgpt_manifest(content)
+        elif name.endswith("/.codex-plugin/plugin.json"):
+            content = project_chatgpt_component_manifest(content)
+        if plugin_name in CODEX_DESKTOP_ONLY_PLUGINS and name.endswith("/SKILL.md"):
+            content = project_codex_desktop_skill(content)
         entries[name] = content
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")

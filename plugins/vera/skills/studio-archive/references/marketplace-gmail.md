@@ -1,14 +1,15 @@
-# Marketplace Gmail workflow
+# Codex Desktop Gmail workflow
 
 Use this route only when the user explicitly asks Vera to search Gmail or email
-for one client and the Gmail read tools are callable.
+for one client, the Gmail read tools are callable, and the current surface is
+Codex Desktop.
 
 ## Runtime contract
 
-- This is a live, read-only Gmail workflow for ChatGPT Work on the web or
-  desktop.
-- It requires the separately distributed OpenAI Gmail plugin to be installed,
-  enabled, and connected for the current professional.
+- This is a live, read-only Gmail workflow inside Codex Desktop. If the current
+  surface is ChatGPT web or mobile, stop before calling Gmail.
+- It requires the separately distributed OpenAI Gmail connector to be
+  installed, enabled, and connected for the current professional.
 - It requires no local archive, local ZIP, MCP tool, script, or saved registry.
 - Confirmed client and studio addresses are scoped to the current conversation.
   Never claim that Vera remembers them in a later chat.
@@ -31,8 +32,8 @@ user intended.
 ## Establish the client address set
 
 Build the selected-client address set only from complete email or PEC addresses
-that the user supplied or explicitly confirmed in this conversation. Compare
-addresses case-insensitively.
+that the user supplied or explicitly confirmed in this Codex Desktop task.
+Compare addresses case-insensitively.
 
 Never infer exact client membership from:
 

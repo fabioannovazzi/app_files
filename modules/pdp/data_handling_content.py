@@ -97,6 +97,34 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "connected-sources",
+                "title": "Gmail and WhatsApp Desktop use different boundaries.",
+                "paragraphs": [
+                    (
+                        "Vera and Clara may appear in the public Plugins Directory, but "
+                        "that listing is only for discovery and installation. Their "
+                        "workflows stop on ChatGPT web and mobile and require Codex "
+                        "Desktop. The user's existing ChatGPT plan may still govern the "
+                        "model context inside Codex."
+                    ),
+                    (
+                        "Inside Codex Desktop, Vera searches Gmail through OpenAI's "
+                        "separately installed and connected Gmail connector. Mail stays "
+                        "in Gmail; Vera does not create a mailbox copy or store "
+                        "credentials or messages."
+                    ),
+                    (
+                        "WhatsApp is inspected only from Codex Desktop with Computer Use "
+                        "in the WhatsApp Desktop app already opened and authenticated by "
+                        "the professional. No Mparanza server receives or stores a copy "
+                        "of those messages. Screen text and images read by Codex may "
+                        "still enter the model context under the user's ChatGPT/Codex "
+                        "account, and the terms of OpenAI, Gmail, and WhatsApp apply "
+                        "separately."
+                    ),
+                ],
+            },
+            {
                 "id": "hosted-features",
                 "title": "Mparanza-hosted services are a separate boundary.",
                 "paragraphs": [
@@ -248,6 +276,34 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Non inserire mai password, chiavi API, cookie di autenticazione, "
                         "token di accesso o dati di sessione nei prompt o nei file che "
                         "Codex può leggere."
+                    ),
+                ],
+            },
+            {
+                "id": "connected-sources",
+                "title": "Gmail e WhatsApp Desktop hanno confini diversi.",
+                "paragraphs": [
+                    (
+                        "Vera e Clara possono comparire nella directory pubblica dei "
+                        "plugin, ma quella pagina serve soltanto per trovarle e "
+                        "installarle. I workflow si fermano su ChatGPT web o mobile e "
+                        "richiedono Codex Desktop. Il piano ChatGPT già usato dall'utente "
+                        "può comunque regolare il contesto del modello dentro Codex."
+                    ),
+                    (
+                        "Dentro Codex Desktop, Vera cerca in Gmail attraverso il "
+                        "connector Gmail di OpenAI, installato e collegato separatamente. "
+                        "La posta resta in Gmail; Vera non crea una copia della casella e "
+                        "non conserva credenziali o messaggi."
+                    ),
+                    (
+                        "WhatsApp viene consultato soltanto da Codex Desktop con Computer "
+                        "Use, nell'app WhatsApp Desktop già aperta e autenticata dal "
+                        "professionista. Nessun server Mparanza riceve o conserva una "
+                        "copia di quei messaggi. Testo e immagini dello schermo letti da "
+                        "Codex possono comunque entrare nel contesto del modello "
+                        "dell'account ChatGPT/Codex dell'utente; si applicano separatamente "
+                        "anche le condizioni di OpenAI, Gmail e WhatsApp."
                     ),
                 ],
             },
@@ -407,6 +463,35 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Ne placez jamais de mots de passe, clés API, cookies "
                         "d'authentification, jetons d'accès ou données de session dans "
                         "des prompts ou fichiers que Codex peut lire."
+                    ),
+                ],
+            },
+            {
+                "id": "connected-sources",
+                "title": "Gmail et WhatsApp Desktop ont des périmètres différents.",
+                "paragraphs": [
+                    (
+                        "Vera et Clara peuvent apparaître dans le répertoire public des "
+                        "plugins, mais cette fiche sert uniquement à les découvrir et à "
+                        "les installer. Les workflows s'arrêtent sur ChatGPT web ou "
+                        "mobile et nécessitent Codex Desktop. L'offre ChatGPT existante "
+                        "de l'utilisateur peut continuer à régir le contexte du modèle "
+                        "dans Codex."
+                    ),
+                    (
+                        "Dans Codex Desktop, Vera recherche dans Gmail au moyen du "
+                        "connecteur Gmail d'OpenAI, installé et lié séparément. Les "
+                        "e-mails restent dans Gmail ; Vera ne crée aucune copie de la "
+                        "boîte et ne conserve ni identifiants ni messages."
+                    ),
+                    (
+                        "WhatsApp est consulté uniquement depuis Codex Desktop avec "
+                        "Computer Use, dans l'application WhatsApp Desktop déjà ouverte et "
+                        "authentifiée par le professionnel. Aucun serveur Mparanza ne reçoit "
+                        "ni ne conserve de copie de ces messages. Le texte et les images "
+                        "d'écran lus par Codex peuvent toutefois entrer dans le contexte du "
+                        "modèle du compte ChatGPT/Codex de l'utilisateur ; les conditions "
+                        "d'OpenAI, Gmail et WhatsApp s'appliquent séparément."
                     ),
                 ],
             },
@@ -571,6 +656,35 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "connected-sources",
+                "title": "Gmail und WhatsApp Desktop haben unterschiedliche Grenzen.",
+                "paragraphs": [
+                    (
+                        "Vera und Clara können im öffentlichen Plugin-Verzeichnis "
+                        "erscheinen, doch dieser Eintrag dient nur zum Auffinden und "
+                        "Installieren. In ChatGPT im Web oder auf Mobilgeräten werden "
+                        "die Workflows gestoppt und erfordern Codex Desktop. Der "
+                        "bestehende ChatGPT-Tarif des Nutzers kann weiterhin für den "
+                        "Modellkontext in Codex gelten."
+                    ),
+                    (
+                        "In Codex Desktop durchsucht Vera Gmail über den separat "
+                        "installierten und verbundenen Gmail-Connector von OpenAI. "
+                        "E-Mails bleiben in Gmail; Vera erstellt keine Postfachkopie und "
+                        "speichert weder Zugangsdaten noch Nachrichten."
+                    ),
+                    (
+                        "WhatsApp wird nur aus Codex Desktop mit Computer Use in der vom "
+                        "Berufsträger bereits geöffneten und authentifizierten WhatsApp-"
+                        "Desktop-App geprüft. Kein Mparanza-Server empfängt oder speichert "
+                        "eine Kopie dieser Nachrichten. Von Codex gelesene Bildschirmtexte "
+                        "und -bilder können dennoch in den Modellkontext des ChatGPT-/Codex-"
+                        "Kontos gelangen; die Bedingungen von OpenAI, Gmail und WhatsApp "
+                        "gelten jeweils separat."
+                    ),
+                ],
+            },
+            {
                 "id": "hosted-features",
                 "title": "Mparanza-gehostete Dienste haben eine separate Grenze.",
                 "paragraphs": [
@@ -728,6 +842,34 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Nunca incluyas contraseñas, claves de API, cookies de autenticación, "
                         "tokens de acceso ni datos de sesión en prompts o archivos que Codex "
                         "pueda leer."
+                    ),
+                ],
+            },
+            {
+                "id": "connected-sources",
+                "title": "Gmail y WhatsApp Desktop tienen límites distintos.",
+                "paragraphs": [
+                    (
+                        "Vera y Clara pueden aparecer en el directorio público de "
+                        "plugins, pero esa ficha solo sirve para encontrarlas e "
+                        "instalarlas. Los flujos se detienen en ChatGPT web o móvil y "
+                        "requieren Codex Desktop. El plan de ChatGPT que ya usa el "
+                        "usuario puede seguir rigiendo el contexto del modelo en Codex."
+                    ),
+                    (
+                        "Dentro de Codex Desktop, Vera busca en Gmail mediante el "
+                        "conector de Gmail de OpenAI, instalado y vinculado por "
+                        "separado. El correo permanece en Gmail; Vera no crea una copia "
+                        "del buzón ni conserva credenciales o mensajes."
+                    ),
+                    (
+                        "WhatsApp se consulta únicamente desde Codex Desktop con Computer "
+                        "Use, en la aplicación WhatsApp Desktop ya abierta y autenticada por "
+                        "el profesional. Ningún servidor de Mparanza recibe ni conserva una "
+                        "copia de esos mensajes. El texto y las imágenes de pantalla que lee "
+                        "Codex pueden entrar en el contexto del modelo de la cuenta de "
+                        "ChatGPT/Codex del usuario; las condiciones de OpenAI, Gmail y "
+                        "WhatsApp se aplican por separado."
                     ),
                 ],
             },

@@ -223,15 +223,6 @@ from modules.utilities.session_context import (
     use_session_context,
 )
 from modules.utilities.utils import get_row_count, get_schema_and_column_names
-from modules.whatsapp_business import router as whatsapp_business_router
-from modules.whatsapp_business import (
-    well_known_router as whatsapp_business_well_known_router,
-)
-from modules.whatsapp_business.config import get_whatsapp_business_config
-from modules.whatsapp_business.store import (
-    WhatsAppBusinessStoreUnavailableError,
-    get_whatsapp_business_store,
-)
 from src.slides.loader import find_index_file
 from src.slides.notebooklm_style import (
     get_prompt_style_chart_palette,
@@ -844,22 +835,6 @@ def _run_session_cleanup() -> None:
         )
     except Exception:
         LOGGER.exception("Session cleanup failed")
-    try:
-        whatsapp_config = get_whatsapp_business_config()
-        removed_messages = get_whatsapp_business_store().purge_expired_messages(
-            whatsapp_config.retention_days
-        )
-        removed_oauth_records = (
-            get_whatsapp_business_store().purge_expired_oauth_records()
-        )
-        LOGGER.info(
-            "WhatsApp retention cleanup removed %s expired messages and "
-            "%s expired OAuth records",
-            removed_messages,
-            removed_oauth_records,
-        )
-    except (ValueError, WhatsAppBusinessStoreUnavailableError):
-        LOGGER.exception("WhatsApp retention cleanup failed")
 
 
 def _session_cleanup_loop() -> None:
@@ -8868,8 +8843,6 @@ def create_app() -> FastAPI:
     app.include_router(hosted_interviews_site_router)
     app.include_router(hosted_interviews_public_router)
     app.include_router(change_requests_router)
-    app.include_router(whatsapp_business_well_known_router)
-    app.include_router(whatsapp_business_router)
     protected_site_routers = [
         (check_site_router, AUDIT_SITE_DEPENDENCIES),
         (hierarchy_site_router, SITE_AUTH_DEPENDENCIES),
@@ -8968,13 +8941,12 @@ def create_app() -> FastAPI:
     @app.exception_handler(Exception)
     async def _unhandled_exception_handler(request: Request, exc: Exception):
         error_id = uuid.uuid4().hex[:12]
-        query_text = str(request.url.query or "")
         LOGGER.exception(
-            "Unhandled API exception error_id=%s method=%s path=%s query=%s",
+            "Unhandled API exception error_id=%s method=%s path=%s has_query=%s",
             error_id,
             request.method,
             request.url.path,
-            query_text,
+            bool(request.url.query),
             exc_info=exc,
         )
         return JSONResponse(
