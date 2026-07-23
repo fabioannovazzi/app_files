@@ -35,6 +35,8 @@ Use this component to answer mechanical questions:
 - which `reporting-engine.*` adapter owns the chart contract;
 - which legacy plugin source is only provenance for that adapter;
 - how to render a chosen capability through the adapter boundary;
+- how to prove the exact input, effective request/recipe, and output bytes for
+  that render;
 - what dataset columns are candidate periods, metrics, dimensions, or
   identifiers;
 - whether a dataset is mechanically compatible with a chart;
@@ -106,6 +108,11 @@ Current boundary:
 - every manifest capability resolves to a Clara-owned reporting-engine adapter;
 - `scripts/render_capability.py` is the stable render entrypoint for a chosen
   capability;
+- each `render_manifest.json` uses schema `0.2` and records SHA-256 plus byte
+  counts for the input and every current-run output, a canonical request
+  digest, effective-recipe evidence, and an output-set digest; every invocation
+  renders inside a fresh isolated directory so a pre-existing artifact never
+  counts as current-run by mere presence;
 - old chart-family plugin names are provenance, not the caller-facing boundary;
 - the chart-family components are embedded in Clara and called through the
   unified render entrypoint;
@@ -144,6 +151,14 @@ Current boundary:
 - Clara may use the evidence to narrow chart choices;
 - automatic chart selection and full report orchestration are intentionally not
   implemented here.
+
+When a rendered data artifact feeds an HTML deck, seal that CSV or JSON into
+the HTML Deck `clara.evidence_bundle.v1` contract and bind the prepared series
+or cell. Never copy values from the render manifest into prose or a plot spec.
+The current renderer still accepts one input file (except the attribute-package
+boundary). Multi-source due-diligence work must first use reviewed semantic and
+relationship decisions to materialize deterministic evidence tables; the
+renderer must not infer cross-source joins.
 
 ## Codex-Native Run UX
 

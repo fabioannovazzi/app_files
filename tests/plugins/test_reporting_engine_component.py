@@ -4,6 +4,7 @@ import csv
 import hashlib
 import importlib.util
 import json
+import os
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -794,9 +795,11 @@ def test_render_capability_dispatches_embedded_component_runner(
         return SimpleNamespace(returncode=0, stdout="ok", stderr="")
 
     monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    input_path = tmp_path / "sales.csv"
+    input_path.write_text("Month,Sales\n2026-01,10\n", encoding="utf-8")
     request = renderer.RenderRequest(
         capability_id="period_comparison.trend",
-        input_file=tmp_path / "sales.csv",
+        input_file=input_path,
         output_dir=tmp_path / "render",
         role_bindings={
             "period_axis": {
@@ -816,6 +819,23 @@ def test_render_capability_dispatches_embedded_component_runner(
     assert manifest["runner"]["status"] == "ok"
     assert "render_manifest.json" in manifest["artifacts"]
     assert "year_over_year_line_chart_data.csv" in manifest["artifacts"]
+    assert (
+        manifest["evidence"]["input"]["sha256"]
+        == hashlib.sha256(input_path.read_bytes()).hexdigest()
+    )
+    assert manifest["evidence"]["outputs"] == [
+        {
+            "path": "year_over_year_line_chart_data.csv",
+            "sha256": hashlib.sha256(
+                (request.output_dir / "year_over_year_line_chart_data.csv").read_bytes()
+            ).hexdigest(),
+            "size_bytes": (request.output_dir / "year_over_year_line_chart_data.csv")
+            .stat()
+            .st_size,
+        }
+    ]
+    assert len(manifest["evidence"]["request"]["sha256"]) == 64
+    assert len(manifest["evidence"]["output_set_sha256"]) == 64
     assert calls
     command, cwd, capture_output = calls[0]
     assert cwd == ROOT / "plugins" / "period-comparison"
@@ -883,9 +903,14 @@ def test_render_capability_fails_when_expected_render_is_missing(
         return SimpleNamespace(returncode=0, stdout="ok", stderr="")
 
     monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    input_path = tmp_path / "memberships.csv"
+    input_path.write_text(
+        "Month,Product,Retailer\n2026-06,Product A,Retailer A\n",
+        encoding="utf-8",
+    )
     request = renderer.RenderRequest(
         capability_id="set_overlap.upset",
-        input_file=tmp_path / "memberships.csv",
+        input_file=input_path,
         output_dir=tmp_path / "render",
         role_bindings={
             "set_membership_fields": {
@@ -928,9 +953,14 @@ def test_render_capability_does_not_accept_stale_expected_render(
             stderr="",
         ),
     )
+    input_path = tmp_path / "memberships.csv"
+    input_path.write_text(
+        "Month,Product,Retailer\n2026-06,Product A,Retailer A\n",
+        encoding="utf-8",
+    )
     request = renderer.RenderRequest(
         capability_id="set_overlap.upset",
-        input_file=tmp_path / "memberships.csv",
+        input_file=input_path,
         output_dir=output_dir,
         role_bindings={
             "set_membership_fields": {
@@ -953,6 +983,109 @@ def test_render_capability_does_not_accept_stale_expected_render(
     )
     assert render_manifest["render_proof"]["status"] == "missing_expected_render"
     assert render_manifest["render_proof"]["rendered_artifacts"] == []
+
+
+def test_render_capability_does_not_accept_touched_stale_expected_render(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    renderer = _load_module(
+        "reporting_engine_renderer_touched_stale_proof_test",
+        PLUGIN_ROOT / "scripts" / "render_capability.py",
+    )
+    output_dir = tmp_path / "render"
+    output_dir.mkdir()
+    stale_path = output_dir / "upset.html"
+    stale_path.write_text("stale", encoding="utf-8")
+    original_stat = stale_path.stat()
+
+    def fake_run(*_args: Any, **_kwargs: Any) -> SimpleNamespace:
+        os.utime(
+            stale_path,
+            ns=(
+                original_stat.st_atime_ns,
+                original_stat.st_mtime_ns + 1_000_000_000,
+            ),
+        )
+        return SimpleNamespace(returncode=0, stdout="ok", stderr="")
+
+    monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    input_path = tmp_path / "memberships.csv"
+    input_path.write_text(
+        "Month,Product,Retailer\n2026-06,Product A,Retailer A\n",
+        encoding="utf-8",
+    )
+    request = renderer.RenderRequest(
+        capability_id="set_overlap.upset",
+        input_file=input_path,
+        output_dir=output_dir,
+        role_bindings={
+            "set_membership_fields": {
+                "item_column": "Product",
+                "set_column": "Retailer",
+            },
+            "period_filter": {
+                "period_column": "Month",
+                "selected_period": "2026-06",
+            },
+        },
+        artifact_mode="data_and_render",
+    )
+
+    with pytest.raises(RuntimeError, match="missing_expected_render"):
+        renderer.render_capability(request, root=PLUGIN_ROOT)
+
+    render_manifest = json.loads(
+        (output_dir / "render_manifest.json").read_text(encoding="utf-8")
+    )
+    assert render_manifest["render_proof"]["rendered_artifacts"] == []
+    assert render_manifest["evidence"]["outputs"] == []
+
+
+def test_render_capability_accepts_identical_bytes_from_isolated_current_run(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    renderer = _load_module(
+        "reporting_engine_renderer_isolated_same_bytes_test",
+        PLUGIN_ROOT / "scripts" / "render_capability.py",
+    )
+    output_dir = tmp_path / "render"
+    output_dir.mkdir()
+    expected_bytes = b"<html>deterministic output</html>"
+    (output_dir / "upset.html").write_bytes(expected_bytes)
+
+    def fake_run(command: list[str], **_kwargs: Any) -> SimpleNamespace:
+        run_dir = Path(command[command.index("--output-dir") + 1])
+        (run_dir / "upset.html").write_bytes(expected_bytes)
+        return SimpleNamespace(returncode=0, stdout="ok", stderr="")
+
+    monkeypatch.setattr(renderer.subprocess, "run", fake_run)
+    input_path = tmp_path / "memberships.csv"
+    input_path.write_text(
+        "Month,Product,Retailer\n2026-06,Product A,Retailer A\n",
+        encoding="utf-8",
+    )
+    request = renderer.RenderRequest(
+        capability_id="set_overlap.upset",
+        input_file=input_path,
+        output_dir=output_dir,
+        role_bindings={
+            "set_membership_fields": {
+                "item_column": "Product",
+                "set_column": "Retailer",
+            },
+            "period_filter": {
+                "period_column": "Month",
+                "selected_period": "2026-06",
+            },
+        },
+        artifact_mode="data_and_render",
+    )
+
+    manifest = renderer.render_capability(request, root=PLUGIN_ROOT)
+
+    assert manifest["render_proof"]["status"] == "rendered"
+    assert manifest["evidence"]["outputs"][0]["path"] == "upset.html"
+    assert (output_dir / "upset.html").read_bytes() == expected_bytes
 
 
 def test_render_capability_maps_all_chart_family_capabilities() -> None:

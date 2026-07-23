@@ -890,6 +890,7 @@ def build_layout_gallery(
             str(package_path),
             "--report",
             str(build_report_path),
+            "--allow-unverified-quantitative-content",
         ]
     )
     build_output = build_report.get("output")

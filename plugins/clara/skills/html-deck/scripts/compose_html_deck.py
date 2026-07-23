@@ -31,6 +31,7 @@ __all__ = [
 
 
 PLAN_SCHEMA_VERSION = "clara.html_deck_plan.v1"
+SOURCE_BOUND_PLAN_SCHEMA_VERSION = "clara.html_deck_plan.v2"
 REGISTRY_SCHEMA_VERSION = "clara.html_deck_layout_registry.v1"
 GENERATED_CSS_START = "/* BEGIN CLARA GENERATED LAYOUT CSS — DO NOT EDIT */"
 GENERATED_CSS_END = "/* END CLARA GENERATED LAYOUT CSS */"
@@ -965,6 +966,22 @@ def _load_renderer_modules(paths: Sequence[Path]) -> dict[str, ExtensionRenderer
     return dispatch
 
 
+def _load_evidence_bindings_module() -> Any:
+    """Load the sibling source-bound resolver without changing import paths."""
+
+    path = Path(__file__).with_name("evidence_bindings.py")
+    spec = importlib.util.spec_from_file_location(
+        "clara_html_deck_evidence_bindings",
+        path,
+    )
+    if not spec or not spec.loader:
+        raise ValueError(f"Unable to load evidence resolver: {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def _atomic_write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(
@@ -990,6 +1007,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--registry", type=Path, default=default_registry_path())
     parser.add_argument("--renderer-module", action="append", type=Path, default=[])
+    parser.add_argument(
+        "--content-ledger",
+        type=Path,
+        help=(
+            "Source-bound content ledger. Defaults to content-ledger.json beside "
+            "the deck plan."
+        ),
+    )
     parser.add_argument("--force", action="store_true")
     return parser.parse_args()
 
@@ -998,7 +1023,10 @@ def main() -> int:
     args = parse_args()
     try:
         plan_path = args.deck_plan.expanduser().resolve()
-        plan = _mapping(json.loads(plan_path.read_text(encoding="utf-8")), "deck plan")
+        raw_plan = _mapping(
+            json.loads(plan_path.read_text(encoding="utf-8")),
+            "deck plan",
+        )
         output_dir = args.output_dir.expanduser().resolve()
         slides_path = output_dir / "slides.html"
         css_path = output_dir / "custom.css"
@@ -1013,6 +1041,26 @@ def main() -> int:
         renderers = _load_renderer_modules(
             [Path(__file__).with_name("data_visuals.py"), *args.renderer_module]
         )
+        evidence_resolution = None
+        if raw_plan.get("schema_version") == SOURCE_BOUND_PLAN_SCHEMA_VERSION:
+            ledger_path = (
+                args.content_ledger.expanduser().resolve()
+                if args.content_ledger
+                else plan_path.with_name("content-ledger.json")
+            )
+            raw_ledger = _mapping(
+                json.loads(ledger_path.read_text(encoding="utf-8")),
+                "content ledger",
+            )
+            evidence_module = _load_evidence_bindings_module()
+            evidence_resolution = evidence_module.resolve_source_bound_documents(
+                plan=raw_plan,
+                ledger=raw_ledger,
+                base_dir=plan_path.parent,
+            )
+            plan = evidence_resolution.resolved_plan
+        else:
+            plan = raw_plan
         result = compose_deck(
             plan,
             registry_path=args.registry,
@@ -1021,13 +1069,41 @@ def main() -> int:
         )
         _atomic_write_text(slides_path, result.slides_html)
         _atomic_write_text(css_path, result.custom_css)
+        evidence_outputs: dict[str, str] = {}
+        if evidence_resolution is not None:
+            for filename, payload in (
+                ("resolved-deck-plan.json", evidence_resolution.resolved_plan),
+                (
+                    "resolved-content-ledger.json",
+                    evidence_resolution.resolved_ledger,
+                ),
+                ("evidence-ledger.json", evidence_resolution.evidence_ledger),
+            ):
+                target = output_dir / filename
+                _atomic_write_text(
+                    target,
+                    json.dumps(
+                        payload,
+                        ensure_ascii=False,
+                        indent=2,
+                        sort_keys=True,
+                    )
+                    + "\n",
+                )
+                evidence_outputs[filename.removesuffix(".json").replace("-", "_")] = (
+                    str(target)
+                )
         payload = {
-            "schema_version": PLAN_SCHEMA_VERSION,
+            "schema_version": str(raw_plan.get("schema_version")),
             "deck_plan": str(plan_path),
             "slides": str(slides_path),
             "custom_css": str(css_path),
             "slide_count": result.slide_count,
             "layout_ids": list(result.layout_ids),
+            "evidence_status": (
+                "verified" if evidence_resolution is not None else "not_verified"
+            ),
+            **evidence_outputs,
         }
         sys.stdout.write(
             json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"

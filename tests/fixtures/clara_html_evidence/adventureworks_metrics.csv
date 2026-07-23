@@ -1,0 +1,9 @@
+metric_id,display_order,label,value,unit
+actual-sales,001,Actual gross sales,31391145.076904,source-currency
+plan-sales,002,Plan gross sales,28356967.5907,source-currency
+sales-uplift,003,Gross sales uplift,3034177.486204,source-currency
+gross-margin-uplift,004,Gross-margin uplift,1144866.398401,source-currency
+actual-margin-rate,005,Actual margin rate,0.39096576327341515,ratio
+plan-margin-rate,006,Plan margin rate,0.39139026374732555,ratio
+unit-variance,007,Unit variance,0,count
+scenario-units,008,Scenario units,15912,count
