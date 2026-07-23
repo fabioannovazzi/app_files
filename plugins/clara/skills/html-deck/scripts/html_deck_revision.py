@@ -43,7 +43,11 @@ GLOBAL_EDIT_SCOPES = frozenset(
         "content-ledger",
         "custom-css",
         "deck-plan",
+        "evidence-bundle",
+        "evidence-ledger",
         "metadata",
+        "resolved-content-ledger",
+        "resolved-deck-plan",
         "runtime",
         "shell",
         "styles",
@@ -525,6 +529,15 @@ def read_deck_source(
             deck_plan_path = input_path / "deck-plan.json"
             if deck_plan_path.is_file():
                 global_fingerprints["deck-plan"] = json_file_fingerprint(deck_plan_path)
+            for filename, scope in (
+                ("evidence-bundle.json", "evidence-bundle"),
+                ("evidence-ledger.json", "evidence-ledger"),
+                ("resolved-deck-plan.json", "resolved-deck-plan"),
+                ("resolved-content-ledger.json", "resolved-content-ledger"),
+            ):
+                fingerprint_path = input_path / filename
+                if fingerprint_path.is_file():
+                    global_fingerprints[scope] = json_file_fingerprint(fingerprint_path)
             return (
                 slides_path,
                 "work_folder",
@@ -628,13 +641,13 @@ def standalone_global_fingerprints(
     style_nodes = [node for node in nodes if node.tag == "style"]
     script_nodes = [node for node in nodes if node.tag == "script"]
     ledger_nodes = [
-        node
-        for node in script_nodes
-        if node.attrs.get("id") == "claraContentLedger"
-        or node.attrs.get("type", "").lower() == "application/json"
+        node for node in script_nodes if node.attrs.get("id") == "claraContentLedger"
     ]
-    ledger_node_ids = {id(node) for node in ledger_nodes}
-    runtime_nodes = [node for node in script_nodes if id(node) not in ledger_node_ids]
+    evidence_nodes = [
+        node for node in script_nodes if node.attrs.get("id") == "claraEvidenceLedger"
+    ]
+    data_node_ids = {id(node) for node in [*ledger_nodes, *evidence_nodes]}
+    runtime_nodes = [node for node in script_nodes if id(node) not in data_node_ids]
     head_nodes = [node for node in nodes if node.tag == "head"]
     body_nodes = [node for node in nodes if node.tag == "body"]
     slide_ledger_fingerprints: dict[str, str] = {}
@@ -649,6 +662,11 @@ def standalone_global_fingerprints(
             )
     else:
         ledger_global = sha256_text("__missing__")
+    evidence_global = (
+        nodes_fingerprint(evidence_nodes)
+        if evidence_nodes
+        else sha256_text("__missing__")
+    )
     return {
         "metadata": sha256_text(
             "".join(canonical_shell_dom(node) for node in head_nodes)
@@ -656,6 +674,7 @@ def standalone_global_fingerprints(
         "styles": nodes_fingerprint(style_nodes),
         "runtime": nodes_fingerprint(runtime_nodes),
         "content-ledger": ledger_global,
+        "evidence-ledger": evidence_global,
         "shell": sha256_text("".join(canonical_shell_dom(node) for node in body_nodes)),
     }, slide_ledger_fingerprints
 

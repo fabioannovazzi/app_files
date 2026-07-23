@@ -58,6 +58,13 @@ Use `scripts/render_capability.py` as the stable Clara-owned rendering
 entrypoint. It accepts a manifest capability id, dataset path, optional recipe,
 role bindings, and output directory; it writes a generated recipe when needed,
 calls the embedded family component, and records `render_manifest.json`.
+The render manifest schema is `0.2`: it binds the run to exact input bytes (or
+a directory inventory), a canonical request digest, the effective recipe, and
+SHA-256 plus byte counts for every current-run output. Filename proof still
+checks that the requested capability rendered, while byte evidence makes the
+result suitable for sealing into the HTML Deck evidence contract. A pre-existing
+artifact never counts as current-run by mere presence: each invocation renders
+inside a fresh isolated directory and publishes only that directory's files.
 
 To start a semantic layer for a profiled dataset:
 

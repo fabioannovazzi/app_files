@@ -26,6 +26,18 @@ def load_module(name: str, path: Path) -> Any:
     return module
 
 
+def load_build_module() -> Any:
+    scripts_dir = SKILL_ROOT / "scripts"
+    sys.path.insert(0, str(scripts_dir))
+    try:
+        return load_module(
+            "clara_html_deck_build_test",
+            scripts_dir / "build_html_deck.py",
+        )
+    finally:
+        sys.path.remove(str(scripts_dir))
+
+
 def run_script(path: Path, *args: str) -> subprocess.CompletedProcess[str]:
     env = os.environ.copy()
     env["PYTHONPYCACHEPREFIX"] = "/tmp/html-deck-test-pycache"
@@ -226,6 +238,150 @@ def test_unedited_scaffold_is_rejected(tmp_path: Path) -> None:
     failed = {item["code"] for item in payload["checks"] if item["status"] == "fail"}
     assert "content.template_examples" in failed
     assert "content.placeholders" in failed
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("title", "FY2026 decision brief"),
+        ("author", "Advisory team 7"),
+        ("eyebrow", "Q4 leadership discussion"),
+    ],
+)
+def test_source_bound_build_rejects_numeric_visible_deck_metadata(
+    tmp_path: Path,
+    field: str,
+    value: str,
+) -> None:
+    work = initialize_work(tmp_path)
+    plan_path = work / "deck-plan.json"
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    plan["schema_version"] = "clara.html_deck_plan.v2"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    metadata_path = work / "deck.json"
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    metadata[field] = value
+    metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+
+    result = run_script(
+        SKILL_ROOT / "scripts" / "build_html_deck.py",
+        str(work),
+        "--output-root",
+        str(tmp_path / "dist"),
+    )
+
+    assert result.returncode == 2
+    assert "deck.json has no evidence-binding route" in result.stderr
+    assert f"deck.json.{field}" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "declaration",
+    [
+        'content: "FY2026";',
+        'c\\6f ntent: "FY2026";',
+    ],
+)
+def test_source_bound_build_rejects_custom_css_generated_content(
+    tmp_path: Path,
+    declaration: str,
+) -> None:
+    work = initialize_work(tmp_path)
+    plan_path = work / "deck-plan.json"
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    plan["schema_version"] = "clara.html_deck_plan.v2"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    (work / "custom.css").write_text(
+        f".slide::after {{ {declaration} }}\n",
+        encoding="utf-8",
+    )
+
+    result = run_script(
+        SKILL_ROOT / "scripts" / "build_html_deck.py",
+        str(work),
+        "--output-root",
+        str(tmp_path / "dist"),
+    )
+
+    assert result.returncode == 2
+    assert "custom.css cannot declare the CSS content property" in result.stderr
+
+
+def test_source_bound_css_gate_allows_ordinary_content_named_styling() -> None:
+    builder = load_build_module()
+    custom_css = """
+    /* content: "comment text"; */
+    [data-content="FY2026"] {
+      align-content: center;
+      --content: "FY2026";
+      background-image: linear-gradient(white, transparent);
+    }
+    """
+
+    assert not builder._css_declares_generated_content(custom_css)
+    assert not builder._css_calls_url_function(custom_css)
+
+
+@pytest.mark.parametrize(
+    "declaration",
+    [
+        'background-image: url("data:image/svg+xml;base64,PHN2Zz4=");',
+        'background-image: u\\72 l("data:image/svg+xml;base64,PHN2Zz4=");',
+    ],
+)
+def test_source_bound_build_rejects_custom_css_url_resources(
+    tmp_path: Path,
+    declaration: str,
+) -> None:
+    work = initialize_work(tmp_path)
+    plan_path = work / "deck-plan.json"
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    plan["schema_version"] = "clara.html_deck_plan.v2"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    (work / "custom.css").write_text(
+        f".slide {{ {declaration} }}\n",
+        encoding="utf-8",
+    )
+
+    result = run_script(
+        SKILL_ROOT / "scripts" / "build_html_deck.py",
+        str(work),
+        "--output-root",
+        str(tmp_path / "dist"),
+    )
+
+    assert result.returncode == 2
+    assert "custom.css cannot call url()" in result.stderr
+
+
+def test_legacy_unverified_escape_allows_metadata_and_css_generated_numbers(
+    tmp_path: Path,
+) -> None:
+    work = initialize_work(tmp_path)
+    (work / "slides.html").write_text(minimal_slides(), encoding="utf-8")
+    write_minimal_ledger(work)
+    metadata_path = work / "deck.json"
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    metadata["title"] = "FY2026 decision brief"
+    metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+    (work / "custom.css").write_text(
+        '.slide::after { content: "FY2026"; color: currentColor; }\n',
+        encoding="utf-8",
+    )
+
+    result = run_script(
+        SKILL_ROOT / "scripts" / "build_html_deck.py",
+        str(work),
+        "--output-root",
+        str(tmp_path / "dist"),
+        "--allow-unverified-quantitative-content",
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    report = json.loads(result.stdout)
+    assert report["evidence"]["status"] == "not_verified"
+    index_path = Path(report["output"]["index_path"])
+    assert 'content: "FY2026"' in index_path.read_text(encoding="utf-8")
 
 
 def test_validator_rejects_remote_resources_and_duplicate_ids(tmp_path: Path) -> None:

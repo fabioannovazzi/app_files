@@ -48,9 +48,11 @@ renamed. Every edit target needs a reason.
 ```
 
 Global edit scopes are source-kind specific: `metadata`, `custom-css`,
-`content-ledger`, `deck-plan`, `styles`, `runtime`, and `shell`. Declare only
-the resources the request actually changes. Slide-local ledger entries are
-checked independently, so changing provenance for an untouched slide fails.
+`content-ledger`, `deck-plan`, `evidence-bundle`, `evidence-ledger`,
+`resolved-content-ledger`, `resolved-deck-plan`, `styles`, `runtime`, and
+`shell`. Declare only the resources the request actually changes. Slide-local
+ledger entries are checked independently, so changing provenance for an
+untouched slide fails.
 
 Mark inline protected elements with a stable `id` or `data-component-id` plus
 `data-revision-protected="true"`. Optionally add

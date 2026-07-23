@@ -19,7 +19,7 @@
       {
         "id": "semantic-and-reporting-artifacts",
         "purpose": "Author reusable dataset semantics and choose a source-backed analysis",
-        "content": "Dataset profiles, semantic layers, evidence, role bindings, analysis policies, chart plans, rendered charts, validation results, and interpretations"
+        "content": "Dataset profiles, semantic layers, evidence, role bindings, analysis policies, chart plans, exact input and output byte hashes, effective recipe records, rendered charts, validation results, and interpretations"
       }
     ]
   },
@@ -49,6 +49,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8dc9fc40999c10ad8c4ca94d48f036d671f339450deed9854f15ce8e5d926f9d"
+    "source_fingerprint": "8f5d597dbedfc43d395b43434e1185f1e741de2016c39e3fd0b2f5bccebd0ff8"
   }
 }
