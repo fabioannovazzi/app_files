@@ -435,6 +435,23 @@ def test_chatgpt_manifest_rejects_more_than_three_default_prompts() -> None:
         builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
 
 
+def test_chatgpt_manifest_rejects_default_prompt_over_character_limit() -> None:
+    builder = load_builder()
+    source_path = ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json"
+    manifest = json.loads(source_path.read_text(encoding="utf-8"))
+    max_prompt_characters = 128
+    manifest["interface"]["defaultPrompt"] = ["x" * (max_prompt_characters + 1)]
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            r"interface\.defaultPrompt\[0\] must contain at most "
+            r"128 characters; found 129"
+        ),
+    ):
+        builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
+
+
 def test_chatgpt_upload_zip_matches_source_without_replacing_install_zip(
     tmp_path: Path,
 ) -> None:
