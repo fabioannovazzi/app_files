@@ -1,7 +1,7 @@
 {
   "name": "vera",
-  "version": "0.1.25",
-  "description": "Vera cerca Gmail per cliente con il plugin Gmail collegato e prepara istruttorie e carte di lavoro rivedibili.",
+  "version": "0.1.26",
+  "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -42,7 +42,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Nel Marketplace, con il plugin Gmail ufficiale installato e collegato separatamente, cerca la corrispondenza di un solo cliente usando indirizzi confermati nella conversazione, query circoscritte e controlli che escludono i messaggi ambigui; non conserva un'anagrafica tra chat. In Codex locale può anche indicizzare una cartella condivisa dello studio con un indice separato per professionista e citare passaggi verificati. Prepara inoltre New Client, controlli contabili, campionamenti, riconciliazioni, report, concordato, casi INPS e pratiche Registro Imprese/DIRE da fonti tracciate.",
+    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Prepara il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Quando serve, nel Marketplace usa il plugin Gmail ufficiale installato e collegato separatamente per cercare la corrispondenza di un solo cliente tramite indirizzi confermati, query circoscritte e controlli contro i messaggi ambigui; non conserva un'anagrafica tra chat. In Codex locale può anche indicizzare una cartella condivisa dello studio con un indice separato per professionista e citare passaggi verificati. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
