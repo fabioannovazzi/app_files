@@ -1,24 +1,31 @@
 # Vera · Archivio dello Studio
 
-This Vera component has two independent routes. Its Marketplace route searches
-one selected client's Gmail correspondence on demand through the installed and
-connected OpenAI Gmail plugin. It needs no local MCP server, local ZIP, or
-filesystem access. Its optional Codex route makes one shared studio folder
-searchable without requiring a shared ChatGPT account or a central database.
+This Vera component has three independent Codex Desktop routes. It searches one
+selected client's Gmail correspondence on demand through the separately
+connected OpenAI Gmail connector, inspects one verified one-to-one chat in the
+local WhatsApp Desktop application through Computer Use, or makes one shared
+studio folder searchable without requiring a shared ChatGPT account or a
+central database. It stops on ChatGPT web or mobile.
 
 Fabio and Paolo each configure the same shared or synced source folder from
-their own Vera installation in local Codex. Each computer builds its own
+their own Vera installation in Codex Desktop. Each computer builds its own
 derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive`; the database,
 configuration, and ChatGPT history are not shared. Source documents remain in
-the studio folder and are never modified. ChatGPT web cannot index an arbitrary
-local folder or run this local MCP server, but that does not block Gmail search.
+the studio folder and are never modified.
 
 Gmail messages remain in Gmail. Vera stores no Gmail credentials, tokens,
-message bodies, attachments, or local mailbox copy. In the Marketplace,
-confirmed addresses remain in the current conversation and may need
-confirmation again in a new chat. Local Codex can optionally persist a private
+message bodies, attachments, or local mailbox copy. Confirmed addresses remain
+in the current task and may need confirmation again in a new task. Local Codex
+can optionally persist a private
 `client-identities.json` that maps exact archive scopes to confirmed full email
 or PEC addresses, legal names, and tax identifiers.
+
+WhatsApp remains in the user's already-authenticated local application and
+WhatsApp account. Computer Use verifies one exact client phone and inspects only
+the visible messages needed for the task. Vera never types in the composer,
+sends, replies, forwards, downloads, exports, or changes settings. There is no
+Mparanza WhatsApp webhook, connector, database, background synchronization, or
+retention period. Opening a chat may mark messages as read.
 
 For a Gmail question, Vera first verifies the connected account, selects one
 client, and either uses an address supplied by the user or runs a bounded
@@ -32,7 +39,7 @@ headers, third-party correspondence, and messages involving multiple clients
 remain candidates for model review or are left unassigned. Vera never labels,
 moves, sends, deletes, or bulk-copies mail.
 
-The Marketplace Gmail route uses only `get_profile`, `search_emails`,
+The Codex Desktop Gmail route uses only `get_profile`, `search_emails`,
 `batch_read_email`, `read_email_thread`, and `read_attachment` from the Gmail
 plugin. It never calls Studio Archive MCP tools or local scripts.
 

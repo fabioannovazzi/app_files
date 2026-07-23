@@ -1,7 +1,7 @@
 {
   "name": "studio-archive",
-  "version": "0.1.2",
-  "description": "Gmail ricercabile per cliente nel Marketplace e archivio documentale locale opzionale in Codex.",
+  "version": "0.1.3",
+  "description": "Gmail, WhatsApp Desktop e archivio documentale per un cliente alla volta in Codex Desktop.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -19,6 +19,9 @@
     "gmail",
     "email",
     "pec",
+    "whatsapp-desktop",
+    "computer-use",
+    "codex-desktop",
     "fonti",
     "sqlite",
     "fts5",
@@ -29,8 +32,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Vera · Archivio dello Studio",
-    "shortDescription": "Cerca Gmail per cliente senza mescolare la corrispondenza.",
-    "longDescription": "Nel Marketplace Vera usa il plugin Gmail ufficiale, installato e collegato separatamente, per cercare la corrispondenza di un solo cliente con indirizzi confermati nella conversazione, query circoscritte e controlli sui messaggi ambigui. Non conserva un'anagrafica tra chat e non modifica la casella. In Codex locale può inoltre indicizzare una cartella condivisa o sincronizzata dello studio con un indice SQLite privato per professionista, ambiti espliciti e citazioni verificate tramite hash.",
+    "shortDescription": "Cerca un cliente in Gmail, WhatsApp Desktop o nell'archivio locale.",
+    "longDescription": "Questo componente richiede Codex Desktop e si ferma su ChatGPT web o mobile. Dentro Codex Desktop, Vera usa il connector Gmail di OpenAI installato e collegato separatamente per cercare la corrispondenza di un solo cliente con indirizzi confermati nel task, query circoscritte e controlli sui messaggi ambigui. Può anche consultare una chat uno-a-uno verificata nell'app WhatsApp Desktop locale tramite Computer Use, senza webhook, connector o archivio Mparanza e senza inviare o modificare messaggi. Inoltre può indicizzare una cartella condivisa o sincronizzata dello studio con un indice SQLite privato per professionista, ambiti espliciti e citazioni verificate tramite hash.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -44,7 +47,7 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
       "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti.",
-      "Chiedi a Vera di configurare e aggiornare l'archivio locale dello studio in Codex.",
+      "Consulta WhatsApp Desktop per un solo cliente confermato, in sola lettura e senza inviare nulla.",
       "Chiedi a Vera di cercare una pratica locale e citare solo fonti aperte e verificate."
     ],
     "brandColor": "#002060",

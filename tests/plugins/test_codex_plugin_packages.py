@@ -387,39 +387,53 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert ".codex-plugin/plugin.json" in entries
     assert "modules/previdenza-inps/.codex-plugin/plugin.json" in entries
     assert "modules/registro-imprese-sari/.codex-plugin/plugin.json" in entries
+    projected_manifests = {
+        name: json.loads(content)
+        for name, content in entries.items()
+        if name.endswith(".codex-plugin/plugin.json")
+    }
+    assert projected_manifests
+    assert all(
+        "apps" not in component_manifest and "mcpServers" not in component_manifest
+        for component_manifest in projected_manifests.values()
+    )
     assert "apps" not in manifest
     assert "mcpServers" not in manifest
+    assert "screenshots" not in manifest["interface"]
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
+    assert manifest["version"] == "0.1.29"
     assert prompts[0] == (
-        "Cerca i messaggi WhatsApp Business già acquisiti per un cliente, "
-        "senza rispondere né mescolare altri clienti."
+        "Consulta WhatsApp Desktop per un solo cliente confermato, in sola "
+        "lettura e senza inviare nulla."
     )
     assert any("OCR locale" in prompt and "INPS" in prompt for prompt in prompts)
-    assert any("SARI" in prompt and "Registro Imprese" in prompt for prompt in prompts)
-    assert (
-        "plugin Gmail ufficiale installato separatamente"
-        in manifest["interface"]["longDescription"]
+    assert prompts[2] == (
+        "Cerca in Gmail le email di un cliente usando solo indirizzi "
+        "confermati e senza mescolare altri clienti."
     )
     assert (
-        "connettore ospitato WhatsApp Business di Vera"
+        "connector Gmail di OpenAI collegato separatamente"
         in manifest["interface"]["longDescription"]
     )
+    assert "Computer Use" in manifest["interface"]["longDescription"]
+    assert "connettore ospitato" not in manifest["interface"]["longDescription"]
+    assert "ChatGPT web o mobile si ferma" in manifest["interface"]["longDescription"]
 
     wrapper_path = "skills/studio-archive/SKILL.md"
     reference_path = "skills/studio-archive/references/marketplace-gmail.md"
-    whatsapp_reference_path = (
-        "skills/studio-archive/references/marketplace-whatsapp-business.md"
-    )
-    whatsapp_evals_path = "evals/marketplace_whatsapp_cases.json"
+    whatsapp_reference_path = "skills/studio-archive/references/whatsapp-desktop.md"
+    gmail_evals_path = "evals/marketplace_gmail_cases.json"
+    whatsapp_evals_path = "evals/whatsapp_desktop_cases.json"
     module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
     assert wrapper_path in entries
     assert reference_path in entries
     assert whatsapp_reference_path in entries
+    assert gmail_evals_path in entries
     assert whatsapp_evals_path in entries
     assert module_skill_path in entries
     wrapper = entries[wrapper_path].decode("utf-8")
@@ -428,9 +442,9 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     whatsapp_reference = entries[whatsapp_reference_path].decode("utf-8")
     module_skill = entries[module_skill_path].decode("utf-8")
     assert "references/marketplace-gmail.md" in wrapper
-    assert "references/marketplace-whatsapp-business.md" in wrapper
-    assert "Do not resolve the local module" in wrapper
-    assert "does not require a local ZIP" in compact_wrapper
+    assert "references/whatsapp-desktop.md" in wrapper
+    assert "Do not resolve the local document module" in wrapper
+    assert "Codex Desktop" in compact_wrapper
     assert reference.index("get_profile") < reference.index("search_emails")
     assert reference.index("search_emails") < reference.index("batch_read_email")
     assert "current conversation" in reference
@@ -438,15 +452,18 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "at most 20 results per page" in reference
     assert "absent optional Cc or Bcc field" in reference
     assert "cannot prove the absence of an undisclosed Bcc recipient" in reference
-    assert "configured **With MCP**" in whatsapp_reference
-    assert "does not import the earlier chat history" in whatsapp_reference
-    assert "does not download media" in whatsapp_reference
-    assert "This connector has no write tool" in whatsapp_reference
-    assert "## Marketplace Gmail workflow" in module_skill
-    marketplace_section = module_skill.split(
-        "## Marketplace Gmail workflow",
+    assert "whatsapp-desktop-computer-use-v1" in whatsapp_reference
+    assert "net.whatsapp.WhatsApp" in whatsapp_reference
+    assert "Never type into the message composer" in whatsapp_reference
+    assert "without pressing Return" in whatsapp_reference
+    assert "no WhatsApp connector" in whatsapp_reference
+    assert "## Codex Desktop Gmail workflow" in module_skill
+    gmail_section = module_skill.split(
+        "## Codex Desktop Gmail workflow",
         maxsplit=1,
-    )[1].split("## Optional local Gmail enhancement", maxsplit=1)[0]
+    )[
+        1
+    ].split("## Optional local Gmail enhancement", maxsplit=1)[0]
     for local_dependency in (
         "plan_studio_archive_gmail_search",
         "match_studio_archive_email",
@@ -454,7 +471,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "python scripts/studio_archive.py",
     ):
         assert local_dependency not in reference
-        assert local_dependency not in marketplace_section
+        assert local_dependency not in gmail_section
     assert not any(
         name.rsplit("/", maxsplit=1)[-1] in {".app.json", ".mcp.json"}
         for name in entries
@@ -479,6 +496,72 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     assert manifest["name"] == plugin_name
     assert ".codex-plugin/plugin.json" in entries
     assert not any(name.startswith(f"{plugin_name}-codex-plugin/") for name in entries)
+    projected_manifests = {
+        name: json.loads(content)
+        for name, content in entries.items()
+        if name.endswith(".codex-plugin/plugin.json")
+    }
+    assert projected_manifests
+    assert all(
+        "apps" not in component_manifest and "mcpServers" not in component_manifest
+        for component_manifest in projected_manifests.values()
+    )
+    projected_skills = {
+        name: content.decode("utf-8")
+        for name, content in entries.items()
+        if name.endswith("/SKILL.md")
+    }
+    assert projected_skills
+    for content in projected_skills.values():
+        assert builder.has_codex_desktop_runtime_gate(content)
+
+
+@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+def test_desktop_only_plugins_enforce_runtime_gate_in_main_skill(
+    plugin_name: str,
+) -> None:
+    builder = load_builder()
+    skill_path = ROOT / "plugins" / plugin_name / "skills" / plugin_name / "SKILL.md"
+    content = skill_path.read_text(encoding="utf-8")
+
+    assert builder.has_codex_desktop_runtime_gate(content)
+
+
+def test_desktop_skill_projection_rejects_an_incomplete_runtime_gate() -> None:
+    builder = load_builder()
+    content = (
+        "---\n"
+        "name: incomplete-gate\n"
+        "description: Test fixture.\n"
+        "---\n\n"
+        f"{builder.REQUIRED_CODEX_DESKTOP_HEADING}\n"
+    ).encode("utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="incomplete or misplaced Codex Desktop runtime gate",
+    ):
+        builder.project_codex_desktop_skill(content)
+
+
+def test_desktop_skill_projection_rejects_gate_markers_in_frontmatter() -> None:
+    builder = load_builder()
+    content = (
+        "---\n"
+        "name: misplaced-gate\n"
+        f"description: {builder.REQUIRED_CODEX_DESKTOP_HEADING} "
+        f"{builder.REQUIRED_CODEX_DESKTOP_REFUSAL} "
+        f"{builder.REQUIRED_CODEX_DESKTOP_ONLY}\n"
+        "---\n\n"
+        "# Workflow\n\n"
+        "Run on every surface.\n"
+    ).encode("utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="incomplete or misplaced Codex Desktop runtime gate",
+    ):
+        builder.project_codex_desktop_skill(content)
 
 
 def test_chatgpt_manifest_rejects_more_than_three_default_prompts() -> None:
@@ -507,6 +590,19 @@ def test_chatgpt_manifest_rejects_default_prompt_over_character_limit() -> None:
             r"interface\.defaultPrompt\[0\] must contain at most "
             r"128 characters; found 129"
         ),
+    ):
+        builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
+
+
+def test_public_plugin_manifest_requires_codex_desktop_disclosure() -> None:
+    builder = load_builder()
+    source_path = ROOT / "plugins" / "clara" / ".codex-plugin" / "plugin.json"
+    manifest = json.loads(source_path.read_text(encoding="utf-8"))
+    manifest["interface"]["longDescription"] = "Generic cross-surface workflow."
+
+    with pytest.raises(
+        ValueError,
+        match="must disclose the Desktop requirement",
     ):
         builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
 
@@ -2509,6 +2605,7 @@ def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
+        "../studio-archive/index.html",
     ):
         assert f'href="{module_link}"' in core
     for module_link in (
@@ -2519,8 +2616,8 @@ def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 8
-    assert core.count('class="module-row"') == 8
+    assert core.count(" data-module-link") == 9
+    assert core.count('class="module-row"') == 9
     assert italy.count(" data-module-link") == 5
     assert italy.count('class="module-row"') == 5
     assert core.count('<article class="workstream">') == 3
@@ -2894,8 +2991,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
         "Bring Clara into your projects.",
         "Porta Clara nei tuoi progetti.",
-        "Install Clara in ChatGPT and start with the materials in front of you.",
-        "Installa Clara in ChatGPT e inizia dai materiali che hai davanti.",
+        "Clara may appear in the public Plugins Directory, but workflows stop on ChatGPT web and mobile and require Codex Desktop.",
+        "Clara può comparire nella directory pubblica dei plugin, ma i workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop.",
         "Install Clara",
         "Installa Clara",
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
@@ -3757,14 +3854,14 @@ def test_companion_install_flow_routes_login_to_same_listing(
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "Install Clara in ChatGPT and start with the materials in front of you.",
-        "Installa Clara in ChatGPT e inizia dai materiali che hai davanti.",
-        "Installez Clara dans ChatGPT et commencez par les éléments dont vous disposez.",
-        "Installieren Sie Clara in ChatGPT und beginnen Sie mit den vorhandenen Materialien.",
-        "Instala Clara en ChatGPT y empieza con los materiales que tienes delante.",
+        "Clara may appear in the public Plugins Directory, but workflows stop on ChatGPT web and mobile and require Codex Desktop.",
+        "Clara può comparire nella directory pubblica dei plugin, ma i workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop.",
+        "Clara peut apparaître dans le répertoire public des plugins, mais les workflows s’arrêtent sur ChatGPT web ou mobile et nécessitent Codex Desktop.",
+        "Clara kann im öffentlichen Plugin-Verzeichnis erscheinen, aber in ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und erfordern Codex Desktop.",
+        "Clara puede aparecer en el directorio público de plugins, pero los flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop.",
     ),
 )
-def test_clara_install_flow_localizes_concise_guidance(
+def test_clara_install_flow_localizes_desktop_requirement(
     localized_guidance: str,
 ) -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(

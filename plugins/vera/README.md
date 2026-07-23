@@ -32,27 +32,28 @@ Shared Vera services are registered once under `privacy/services/`. The
 The `plugin-feedback` record covers user-chosen problem, suggestion, and short
 voice-interview submissions plus later automatic status polling for their
 stored receipts, including the Mparanza/OpenAI boundary and retention posture.
-The `whatsapp-business-archive` record covers hosted ingestion after an
-operator links an official business number and later explicit read-only
-retrieval. These service records do not add per-case paperwork or automatic
-anonymization.
+These service records do not add per-case paperwork or automatic anonymization.
+WhatsApp Desktop is not a shared hosted service: its boundary is recorded in
+Studio Archive and no Mparanza webhook, connector, database, or retention
+period exists for WhatsApp messages.
 
-The Studio Archive workflow has an independent Marketplace Gmail route. With
-the official Gmail plugin installed and connected separately, Vera searches the
-correspondence of one selected client using addresses confirmed in the current
-conversation, bounded read actions, and per-message routing checks. It does not
-need a local ZIP, folder, index, registry, MCP server, or script; it does not
-persist client identities between chats or modify the mailbox.
+Vera may remain visible in the public Plugins Directory, but every workflow
+stops on ChatGPT web or mobile and requires Codex Desktop with a local
+workspace. The user's existing ChatGPT plan may still govern the selected
+Codex account.
 
-The same wrapper can use Vera's separately hosted WhatsApp Business connector
-when the Marketplace submission is configured **With MCP**. It searches one
-user-confirmed client phone at a time and opens only the useful results. The
-first version receives new inbound Cloud API messages after connection, keeps
-normalized text available for 90 days, and has no history import, media
-download, personal-WhatsApp automation, send, or reply capability. Expired
-messages are excluded from reads and their live rows are removed by a daily
-cleanup. Technical operation does not itself establish Meta or OpenAI approval
-for public distribution.
+Inside Codex Desktop, Studio Archive can use the official OpenAI Gmail
+connector installed and connected separately. Vera searches the correspondence
+of one selected client using addresses confirmed in the current task, bounded
+read actions, and per-message routing checks. It does not persist client
+identities between separate tasks or modify the mailbox.
+
+The same wrapper can inspect one verified one-to-one chat in the local WhatsApp
+Desktop application through Computer Use on the same computer. The user opens
+and authenticates WhatsApp; Vera searches only one complete user-confirmed
+phone, never types in the composer, and does not send, reply, forward, download,
+export, or change settings. There is no background acquisition, history
+completeness promise, hosted WhatsApp connector, or Mparanza message copy.
 
 In local Codex, Studio Archive can additionally let several professionals use
 the same shared or synced document folder without sharing a ChatGPT account or

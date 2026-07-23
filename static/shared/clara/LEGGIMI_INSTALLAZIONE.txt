@@ -3,6 +3,11 @@ Clara - installazione ufficiale
 Codice sorgente: https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara
 Licenza GNU AGPLv3: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
 
+Clara puo' comparire anche nella directory plugin di ChatGPT, ma esegue i
+workflow soltanto in Codex Desktop con una cartella di lavoro locale. Se viene
+aperta sul web o su mobile, si ferma prima di leggere materiali o avviare
+attivita' e chiede di continuare in Codex Desktop.
+
 1. Apri la pagina ufficiale di Clara nel marketplace OpenAI:
    https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a
 2. Usa il comando di installazione mostrato nella pagina.
