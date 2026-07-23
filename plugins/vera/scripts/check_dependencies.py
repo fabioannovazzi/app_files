@@ -26,6 +26,7 @@ COMPONENTS = (
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari",
+    "studio-archive",
 )
 
 

@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "workstream": "studio-archive",
+  "display_name": "Vera · Archivio dello Studio",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    ".mcp.json",
+    "requirements.txt",
+    "requirements-ocr.txt"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_ocr"
+  ],
+  "codex_context": {
+    "policy": "real_case_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "studio-archive-evidence",
+        "purpose": "Find and interpret prior studio documents within an explicit archive scope",
+        "content": "User questions; the configured absolute archive-root path; scope names; relative document paths; search snippets; opened source passages; file, page, paragraph, sheet-row, message-line, or text-line locators; source hashes; extraction limitations; and Vera's source-backed synthesis"
+      }
+    ]
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "ordinary_processing": {
+    "scope": "ordinary_codex_model_processing",
+    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
+    "separate_vera_recipient": false,
+    "automatic_anonymization": false,
+    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+  },
+  "boundaries_beyond_codex": [],
+  "security_controls": [
+    {
+      "id": "private-per-user-index",
+      "control": "Each professional keeps configuration and the derived SQLite index in an owner-only local state directory outside the source archive; the workflow does not provide index sharing."
+    },
+    {
+      "id": "scope-and-path-containment",
+      "control": "Search requires an exact configured top-level scope, symbolic links are skipped or rejected, relative paths are normalized, source and state roots cannot contain one another, and bounded discovery rejects unsafe scale."
+    },
+    {
+      "id": "source-citation-integrity",
+      "control": "Each searchable chunk is bound to the source SHA-256, relative path, and locator; opening a citation re-hashes the current source and fails closed after byte changes."
+    },
+    {
+      "id": "local-only-ocr",
+      "control": "OCR is optional, uses Vera's local adapter with model downloads disabled, and reports unavailable weights or partial extraction rather than using an external OCR route."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-23",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "fd57d174ba4b8a7be400938bb3e407d2890527e654d4cc7790d073c159fb80bc"
+  }
+}

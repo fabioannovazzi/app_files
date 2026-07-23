@@ -31,6 +31,11 @@
       "id": "vera-registro-imprese-sari",
       "prompt": "Vera, usa la Camera competente e SARI per preparare una bozza della pratica DIRE di apertura posizione, separando RI/REA, INPS e RUI.",
       "required_signals": ["Vera", "SARI", "pratica DIRE"]
+    },
+    {
+      "id": "vera-studio-archive",
+      "prompt": "Vera, cerca nell'archivio condiviso dello studio i precedenti sulla cessione di quote e cita solo i passaggi verificati.",
+      "required_signals": ["Vera", "archivio condiviso", "passaggi verificati"]
     }
   ],
   "should_not_trigger": [

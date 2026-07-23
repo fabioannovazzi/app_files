@@ -17,6 +17,7 @@ Installazione
 
 Moduli inclusi
 
+- Archivio dello Studio con indice locale separato per professionista
 - Riconciliazione partite
 - Nuovo cliente: fascicolo, incarico, privacy, AML e monitoraggio
 - Campionamento del giornale
@@ -41,6 +42,19 @@ Oppure:
 
 Vera, controlla queste scritture con i PDF di supporto.
 
+Per l'Archivio dello Studio, Fabio e Paolo installano Vera nel proprio Codex
+locale e indicano ciascuno il percorso assoluto alla stessa cartella condivisa
+o sincronizzata. Ogni computer o account del sistema operativo conserva un
+indice SQLite privato in `~/.mparanza/vera-studio-archive`; non si condividono
+account ChatGPT, database o cronologia. Se usano lo stesso account del sistema
+operativo, devono impostare cartelle di stato diverse con
+`VERA_STUDIO_ARCHIVE_STATE_DIR`. ChatGPT web da solo non può indicizzare una
+cartella locale. Vera aggiorna l'indice, cerca nell'ambito cliente richiesto e
+cita solo passaggi riaperti e verificati rispetto al file corrente.
+L'indice derivato contiene testo estratto e non è cifrato dall'applicazione:
+va conservato sotto un account del sistema operativo privato, con cifratura del
+disco e backup adeguati ai dati dello studio.
+
 Ogni modulo conserva script, requisiti, istruzioni e controlli di dipendenza
 specifici. Vera attiva il modulo adatto alla richiesta e mantiene visibili fonti,
 controlli ed eccezioni per la revisione del professionista.
@@ -50,6 +64,11 @@ locale e mantiene il riferimento alla singola pagina. I pesi dei modelli OCR non
 sono inclusi nello ZIP: Vera usa quelli già presenti in cache e chiede
 un'autorizzazione esplicita prima di scaricarli. Il testo OCR resta da verificare
 visivamente prima di confermare un fatto.
+
+Anche l'Archivio dello Studio può usare la stessa OCR locale per scansioni e
+PDF senza testo. In questo percorso il download dei pesi resta sempre
+disabilitato: se i modelli non sono già presenti, Vera continua con i documenti
+leggibili e segnala il limite.
 
 Per Previdenza INPS il percorso ordinario usa documenti o esportazioni ufficiali
 scaricati dal titolare o dall'intermediario/delegato e registrati con provenienza

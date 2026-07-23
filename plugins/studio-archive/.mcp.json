@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "veraStudioArchive": {
+      "title": "Vera · Archivio dello Studio",
+      "description": "Configure, refresh, search, and verify a private local index of the shared studio archive.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": ["24x24"]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}
