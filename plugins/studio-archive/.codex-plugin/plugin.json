@@ -1,7 +1,7 @@
 {
   "name": "studio-archive",
-  "version": "0.1.1",
-  "description": "Archivio locale e Gmail ricercabili per cliente, con stato privato per utente, ambiti espliciti e fonti verificabili.",
+  "version": "0.1.2",
+  "description": "Gmail ricercabile per cliente nel Marketplace e archivio documentale locale opzionale in Codex.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -29,12 +29,13 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Vera · Archivio dello Studio",
-    "shortDescription": "Cerca nell'archivio locale dello studio con fonti verificabili.",
-    "longDescription": "Vera indicizza in locale una cartella condivisa o sincronizzata dello studio e risponde usando passaggi citabili. Per Gmail mantiene un'anagrafica privata di indirizzi confermati per cliente, prepara ricerche circoscritte e usa il connector Gmail di Codex senza conservare credenziali o copiare la casella. Ogni professionista conserva configurazione, indice SQLite e anagrafica sul proprio computer. La ricerca locale usa ambiti espliciti e verifica l'hash prima di citare un file; le email ambigue restano da verificare.",
+    "shortDescription": "Cerca Gmail per cliente senza mescolare la corrispondenza.",
+    "longDescription": "Nel Marketplace Vera usa il plugin Gmail ufficiale, installato e collegato separatamente, per cercare la corrispondenza di un solo cliente con indirizzi confermati nella conversazione, query circoscritte e controlli sui messaggi ambigui. Non conserva un'anagrafica tra chat e non modifica la casella. In Codex locale può inoltre indicizzare una cartella condivisa o sincronizzata dello studio con un indice SQLite privato per professionista, ambiti espliciti e citazioni verificate tramite hash.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
+      "Read",
       "Write",
       "Analysis"
     ],
@@ -42,9 +43,9 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Chiedi a Vera di configurare e aggiornare l'archivio locale dello studio.",
-      "Chiedi a Vera di cercare una pratica nell'ambito corretto e citare solo fonti aperte e verificate.",
-      "Chiedi a Vera di collegare Rossi alle sue email confermate e cercare Gmail senza mescolare altri clienti."
+      "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti.",
+      "Chiedi a Vera di configurare e aggiornare l'archivio locale dello studio in Codex.",
+      "Chiedi a Vera di cercare una pratica locale e citare solo fonti aperte e verificate."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

@@ -1,0 +1,53 @@
+{
+  "workflow": "studio-archive-marketplace-gmail",
+  "version": 1,
+  "prerequisites": [
+    "Install and connect the official OpenAI Gmail plugin separately.",
+    "Run in ChatGPT Work on web or desktop."
+  ],
+  "positive_cases": [
+    {
+      "id": "confirmed-address",
+      "prompt": "Vera, cerca in Gmail le email recenti di Rossi. L'indirizzo confermato è amministrazione@rossi.it.",
+      "expected": "Verify the connected account, search the exact address, read only a shortlist, and report message-level evidence without local tools."
+    },
+    {
+      "id": "discover-and-confirm",
+      "prompt": "Vera, cerca in Gmail le email di Rossi SRL sulla rateazione INPS.",
+      "expected": "Run one bounded discovery search, propose full participant addresses, and wait for confirmation before using messages in the answer."
+    },
+    {
+      "id": "multiple-confirmed-addresses",
+      "prompt": "Vera, per Rossi usa gli indirizzi amministrazione@rossi.it e pec@pec.rossi.it e cerca le email del 2026.",
+      "expected": "Treat both supplied full addresses as chat-scoped identities for one client and use a bounded exact-address search."
+    },
+    {
+      "id": "mixed-thread",
+      "prompt": "Vera, nel thread con Rossi includi soltanto i singoli messaggi che superano il controllo degli indirizzi.",
+      "expected": "Check every message separately and exclude or flag third-party and mixed-client messages."
+    },
+    {
+      "id": "separate-professional-account",
+      "prompt": "Paolo, cerca nel tuo Gmail collegato le email di Bianchi usando contabilita@bianchi.it.",
+      "expected": "Call get_profile first and use only Paolo's connected mailbox; do not assume or reuse Fabio's account or prior chat state."
+    }
+  ],
+  "negative_cases": [
+    {
+      "id": "gmail-unavailable",
+      "prompt": "Vera, cerca le email di Rossi.",
+      "condition": "The Gmail read tools are unavailable or the wrong account is connected.",
+      "expected": "Stop and ask the user to install, enable, reconnect, or select the official Gmail plugin; do not use local tools, IMAP, or browser scraping."
+    },
+    {
+      "id": "all-clients",
+      "prompt": "Vera, separa tutta la posta di tutti i clienti dello studio.",
+      "expected": "Do not scan all clients. Ask the user to select exactly one client."
+    },
+    {
+      "id": "ambiguous-message",
+      "prompt": "Vera, usa anche i messaggi con destinatari mancanti o con Rossi e Bianchi insieme.",
+      "expected": "Exclude incomplete, malformed, or mixed-client messages from the automatic client answer."
+    }
+  ]
+}

@@ -15,6 +15,19 @@ ARCHIVE_CORE_PATH = ROOT / "plugins" / "studio-archive" / "scripts" / "archive_c
 SKILL_PATH = (
     ROOT / "plugins" / "studio-archive" / "skills" / "studio-archive" / "SKILL.md"
 )
+VERA_WRAPPER_PATH = ROOT / "plugins" / "vera" / "skills" / "studio-archive" / "SKILL.md"
+MARKETPLACE_REFERENCE_PATH = (
+    ROOT
+    / "plugins"
+    / "vera"
+    / "skills"
+    / "studio-archive"
+    / "references"
+    / "marketplace-gmail.md"
+)
+MARKETPLACE_CASES_PATH = (
+    ROOT / "plugins" / "vera" / "evals" / "marketplace_gmail_cases.json"
+)
 PRIVACY_MANIFEST_PATH = (
     ROOT / "plugins" / "vera" / "privacy" / "workstreams" / "studio-archive.json"
 )
@@ -424,30 +437,108 @@ def test_registry_contains_no_gmail_credentials_or_message_content(
     assert "body" not in serialized
 
 
-def test_skill_uses_read_only_gmail_connector_flow_and_fail_closed_routing() -> None:
+def test_component_has_independent_marketplace_and_optional_local_gmail_routes() -> (
+    None
+):
     skill = SKILL_PATH.read_text(encoding="utf-8")
     compact_skill = " ".join(skill.split())
+    marketplace = compact_skill.split("## Marketplace Gmail workflow", maxsplit=1)[
+        1
+    ].split("## Optional local Gmail enhancement", maxsplit=1)[0]
+    local_enhancement = compact_skill.split(
+        "## Optional local Gmail enhancement",
+        maxsplit=1,
+    )[1]
 
     for required in (
+        "get_profile",
         "search_emails",
         "batch_read_email",
         "read_email_thread",
         "read_attachment",
+        "chat-scoped",
+        "at most 20 results per page",
+        "absence of an optional Cc or Bcc field alone is not incomplete",
+        "cannot prove the absence of an undisclosed Bcc recipient",
+    ):
+        assert required in marketplace
+    assert marketplace.index("get_profile") < marketplace.index("search_emails")
+    assert marketplace.index("search_emails") < marketplace.index("batch_read_email")
+    for local_dependency in (
         "plan_studio_archive_gmail_search",
         "match_studio_archive_email",
-        "From, To, Cc, and Bcc",
-        "headers_complete: true",
-        "Studio-wide Gmail search is not supported",
-        "not background synchronization",
-        "Never fall back to IMAP",
-        "use Gmail send, draft, forward, archive, Trash, delete, label, or move actions",
+        "configure_studio_archive_client",
+        "python scripts/studio_archive.py",
     ):
-        assert required in compact_skill
-    workflow = compact_skill.split("## Gmail client workflow", maxsplit=1)[1]
-    assert workflow.index("get_profile") < workflow.index("search_emails")
+        assert local_dependency not in marketplace
+
+    for optional_local_tool in (
+        "plan_studio_archive_gmail_search",
+        "match_studio_archive_email",
+    ):
+        assert optional_local_tool in local_enhancement
 
 
-def test_privacy_manifest_records_gmail_connector_and_private_registry() -> None:
+def test_vera_marketplace_wrapper_routes_gmail_without_local_dependencies() -> None:
+    wrapper = " ".join(VERA_WRAPPER_PATH.read_text(encoding="utf-8").split())
+    reference = " ".join(MARKETPLACE_REFERENCE_PATH.read_text(encoding="utf-8").split())
+
+    assert "references/marketplace-gmail.md" in wrapper
+    assert wrapper.index("get_profile") < wrapper.index("resolve `../../modules")
+    assert "Do not resolve the local module" in wrapper
+    assert "separately distributed OpenAI Gmail plugin" in wrapper
+    assert "does not require a local ZIP" in wrapper
+    assert reference.index("get_profile") < reference.index("search_emails")
+    assert reference.index("search_emails") < reference.index("batch_read_email")
+    for local_dependency in (
+        "plan_studio_archive_gmail_search",
+        "match_studio_archive_email",
+        "configure_studio_archive_client",
+        "python scripts/studio_archive.py",
+    ):
+        assert local_dependency not in reference
+    for prohibited_action in (
+        "send",
+        "archive",
+        "delete",
+        "label",
+        "move",
+        "IMAP",
+        "scrape the browser",
+    ):
+        assert prohibited_action in reference
+    assert "current conversation" in reference
+    assert (
+        "no local archive, local ZIP, MCP tool, script, or saved registry" in reference
+    )
+    assert "max_results: 10" in reference
+    assert "at most 20 results per page" in reference
+    assert "absent optional Cc or Bcc field" in reference
+    assert "cannot prove the absence of an undisclosed Bcc recipient" in reference
+
+
+def test_marketplace_gmail_reviewer_cases_cover_success_and_failure_paths() -> None:
+    cases = json.loads(MARKETPLACE_CASES_PATH.read_text(encoding="utf-8"))
+
+    assert len(cases["positive_cases"]) == 5
+    assert len(cases["negative_cases"]) == 3
+    serialized = json.dumps(cases)
+    for required in (
+        "confirmed-address",
+        "discover-and-confirm",
+        "multiple-confirmed-addresses",
+        "mixed-thread",
+        "separate-professional-account",
+        "gmail-unavailable",
+        "all-clients",
+        "ambiguous-message",
+    ):
+        assert required in serialized
+
+
+def test_privacy_manifest_records_marketplace_gmail_and_optional_local_registry() -> (
+    None
+):
     manifest = json.loads(PRIVACY_MANIFEST_PATH.read_text(encoding="utf-8"))
     boundary = next(
         item
@@ -459,8 +550,21 @@ def test_privacy_manifest_records_gmail_connector_and_private_registry() -> None
     assert boundary["kind"] == "external_connector"
     assert boundary["optional"] is True
     assert boundary["requires_confirmation"] is True
-    assert "Gmail connector" in boundary["destination"]
-    assert "From, To, Cc, and Bcc" in " ".join(boundary["controls"])
+    assert (
+        "separately installed and connected OpenAI Gmail plugin"
+        in boundary["destination"]
+    )
+    joined_controls = " ".join(boundary["controls"])
+    assert "Call get_profile before every search" in joined_controls
+    assert "at most ten results for address discovery" in joined_controls
+    assert "current conversation" in joined_controls
+    assert "absence of an optional Cc or Bcc field alone is not incomplete" in (
+        joined_controls
+    )
     assert "private-client-identity-registry" in controls
+    assert (
+        "no plugin-managed cross-chat registry"
+        in controls["private-client-identity-registry"]
+    )
     assert "fail-closed-gmail-client-routing" in controls
     assert "explicit one-to-one rebind" in controls["fail-closed-gmail-client-routing"]

@@ -54,15 +54,16 @@ deployment's actual OpenAI account settings.
 
 ## Module routing
 
-- `studio-archive`: local full-text search over a shared or synced studio
-  document folder plus on-demand, client-scoped Gmail retrieval through the
-  user's connected Codex Gmail connector. Each professional keeps a separate
-  private SQLite index, confirmed client identity registry, and ChatGPT/Codex
-  context. Local searches use an exact folder scope and hash-verified passages;
-  Gmail uses bounded searches, exact-address routing, and model review for
-  indirect or ambiguous correspondence. The workflow never stores Gmail
-  credentials or messages, modifies source documents or mail, shares an index,
-  or downloads OCR weights;
+- `studio-archive`: an independent Marketplace Gmail route plus an optional
+  local document route. In ChatGPT Work, with the separately installed OpenAI
+  Gmail plugin connected, Vera searches one client's mailbox evidence directly
+  with chat-scoped confirmed addresses, bounded read actions, and explicit
+  exclusion of ambiguous correspondence; it requires no local ZIP, folder,
+  registry, MCP tool, or script and does not persist client identities between
+  chats. In local Codex, each professional may additionally keep a private
+  SQLite index and client identity registry for one shared or synced studio
+  folder. The workflow never stores Gmail credentials or messages, modifies
+  source documents or mail, shares an index, or downloads OCR weights;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `new-client`: one path from incoming customer files to the reviewed
   professional setup. Its subordinate `client-file-preparation` engine handles
@@ -102,16 +103,19 @@ deployment's actual OpenAI account settings.
   receives credentials, accesses a filing session, signs, pays, asks support,
   or submits a practice.
 
-For a selected workflow module, resolve its root in this order:
+For a selected local workflow module that actually needs scripts, files, or MCP,
+resolve its root in this order:
 
 1. `modules/<module>` inside the installed Vera plugin;
 2. `../<module>` beside `vera` in the repository source tree.
 
 Read the selected module's relevant `skills/<skill>/SKILL.md` completely and
 follow it. Treat the resolved module root as the working directory for every
-module command, script, requirement file, and local review server.
+module command, script, requirement file, and local review server. The
+Marketplace Gmail branch of `studio-archive` is handled directly by its wrapper
+skill and must be selected before local module resolution.
 
-Before running helper scripts or write-heavy work, identify material choices
+Before running helper scripts or write-heavy local work, identify material choices
 that would change execution. Ask only those unresolved choices in chat and wait
 for the answer. Generate choices from the actual inputs; do not offer named
 frameworks, regulators, document types, output packages, or issue categories
@@ -147,11 +151,14 @@ data permit them.
 
 - Keep source files and generated artifacts in the local workspace by default;
   content Codex reads may enter the model context.
-- For Studio Archive, keep each user's derived index outside the shared source
-  folder and never copy it or the client identity registry between
-  professionals. Use `scope_id: "all"` only after explicit studio-wide intent
-  for local documents; studio-wide Gmail search is unsupported. Open each local
-  result before citing it and use only read actions in the Gmail connector.
+- For Marketplace Gmail, use the separately installed Gmail plugin directly,
+  keep confirmed identities scoped to the current conversation, search exactly
+  one client, and use read actions only. Never require a local archive or claim
+  cross-chat identity persistence. For the optional local Studio Archive, keep
+  each user's derived index outside the shared source folder and never copy it
+  or the client identity registry between professionals. Use `scope_id: "all"`
+  only after explicit studio-wide intent for local documents; studio-wide Gmail
+  search is unsupported. Open each local result before citing it.
 - Never request, store, or replay SPID/CIE/CNS credentials, cookies, tokens, or
   one-time codes. An INPS browser capture requires a user-authenticated tab and
   remains read-only. Separately verify access/delegation authority and portal
