@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="clara-page.css?v=2026072301">
+  <link rel="stylesheet" href="clara-page.css?v=2026072302">
   <link rel="stylesheet" href="../video-library.css?v=2026072001">
 </head>
 <body>
@@ -59,25 +59,26 @@
         <p class="eyebrow" data-i18n="hero.eyebrow">Clara AI companion for consultants</p>
         <h1 data-i18n="hero.title">Clara prepares the work. The judgment remains yours.</h1>
         <p class="lead" data-i18n="hero.lead">Clara organizes sources, surfaces gaps and contradictions, and turns materials, conversations, and data into presentations, documents, and analyses for review. Clara works with you inside Codex.</p>
-        <div class="actions">
-          <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer" data-clara-install-link data-i18n="install.button">Install Clara</a>
+        <div class="hero-install" id="download">
+          <div class="hero-install__copy">
+            <h2 data-i18n="install.title">Bring Clara into your projects.</h2>
+            <p data-i18n="install.copy">Install Clara in ChatGPT and start with the materials in front of you.</p>
+          </div>
+          <div class="hero-install__actions">
+            <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer" data-clara-install-link data-i18n="install.button">Install Clara</a>
+          </div>
+          <a class="hero-install__video" id="clara-install-video-link" href="https://youtu.be/vU4eow_MMDA" target="_blank" rel="noopener noreferrer" aria-label="From ChatGPT on your phone to Vera or Clara in Codex" data-i18n-aria-label="install.video.title">
+            <span class="video-story__thumb" aria-hidden="true">
+              <img id="clara-install-video-thumbnail" src="https://i.ytimg.com/vi/vU4eow_MMDA/maxresdefault.jpg" alt="" width="1280" height="720" loading="eager">
+              <span class="video-story__play">▶</span>
+              <span class="video-story__duration" id="clara-install-video-duration">1:16</span>
+            </span>
+          </a>
         </div>
       </div>
       <figure class="clara-mark" aria-label="Clara">
         <img src="icon.svg" alt="">
       </figure>
-      <a class="video-story" id="presentation-video-link" href="https://youtu.be/3zvFm3fGdQ8" target="_blank" rel="noopener noreferrer">
-        <span class="video-story__thumb" aria-hidden="true">
-          <img id="presentation-video-thumbnail" src="https://i.ytimg.com/vi/3zvFm3fGdQ8/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
-          <span class="video-story__play">▶</span>
-          <span class="video-story__duration" id="presentation-video-duration">0:37</span>
-        </span>
-        <span class="video-story__body">
-          <span class="video-story__kicker" data-i18n="presentations.video.kicker">36-second overview</span>
-          <strong data-i18n="presentations.video.title">Watch: from project materials to a decision-ready presentation</strong>
-          <span class="video-story__meta" data-i18n="presentations.video.meta">English narration · Opens on YouTube</span>
-        </span>
-      </a>
     </section>
 
     <div class="promise-strip" aria-label="What you can do with Clara" data-i18n-aria-label="aria.promise_strip">
@@ -100,6 +101,18 @@
         <h2 data-i18n="presentations.title">Create or correct a presentation in your corporate style</h2>
         <p data-i18n="presentations.copy">Describe the result you want. You can start from the project materials or an existing presentation.</p>
       </div>
+      <a class="video-story" id="presentation-video-link" href="https://youtu.be/3zvFm3fGdQ8" target="_blank" rel="noopener noreferrer">
+        <span class="video-story__thumb" aria-hidden="true">
+          <img id="presentation-video-thumbnail" src="https://i.ytimg.com/vi/3zvFm3fGdQ8/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+          <span class="video-story__play">▶</span>
+          <span class="video-story__duration" id="presentation-video-duration">0:37</span>
+        </span>
+        <span class="video-story__body">
+          <span class="video-story__kicker" data-i18n="presentations.video.kicker">36-second overview</span>
+          <strong data-i18n="presentations.video.title">Watch: from project materials to a decision-ready presentation</strong>
+          <span class="video-story__meta" data-i18n="presentations.video.meta">English narration · Opens on YouTube</span>
+        </span>
+      </a>
       <div class="grid">
         <article class="card">
           <p class="kicker" data-i18n="presentations.create.kicker">New presentation</p>
@@ -285,48 +298,6 @@
       <div class="video-library" data-video-library="clara"></div>
     </section>
 
-    <section id="download">
-      <div class="download-panel">
-        <h2 data-i18n="download.title">Install Clara and open your first project</h2>
-        <p data-i18n="download.copy">You can find Clara in the OpenAI Marketplace. After installation, open the project folder in Codex and describe the result you want to achieve.</p>
-        <a class="video-story install-video" id="clara-install-video-link" href="https://youtu.be/vU4eow_MMDA" target="_blank" rel="noopener noreferrer">
-          <span class="video-story__thumb" aria-hidden="true">
-            <img id="clara-install-video-thumbnail" src="https://i.ytimg.com/vi/vU4eow_MMDA/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
-            <span class="video-story__play">▶</span>
-            <span class="video-story__duration" id="clara-install-video-duration">1:16</span>
-          </span>
-          <span class="video-story__body">
-            <span class="video-story__kicker" data-i18n="download.video.kicker">Setup guide</span>
-            <strong data-i18n="download.video.title">From ChatGPT on your phone to Vera or Clara in Codex</strong>
-            <span class="video-story__meta" data-i18n="download.video.meta">English narration · Opens on YouTube</span>
-          </span>
-        </a>
-        <ul class="output-list">
-          <li data-i18n="download.step1">Open Clara's official OpenAI Marketplace page.</li>
-          <li data-i18n="download.step2">Start the installation from the page.</li>
-          <li data-i18n="download.step3">Open Codex, go to Plugins, and confirm that Clara is installed and enabled.</li>
-          <li data-i18n="download.step4">Open the project folder and describe what you want to achieve.</li>
-        </ul>
-        <details class="details">
-          <summary data-i18n="download.help.title">If installation does not work</summary>
-          <div class="plain-list">
-            <div class="plain-row">
-              <strong data-i18n="download.help.marketplace.title">Installation is not available</strong>
-              <span data-i18n="download.help.marketplace.copy">Confirm that you are signed into OpenAI, then reopen Clara's official page.</span>
-            </div>
-            <div class="plain-row">
-              <strong data-i18n="download.help.plugin.title">Clara does not appear</strong>
-              <span data-i18n="download.help.plugin.copy">Confirm that Clara is installed and enabled, then open a new Codex chat in the project folder.</span>
-            </div>
-          </div>
-        </details>
-        <p class="quote" data-i18n="download.prompt">"Use Clara in this folder."</p>
-        <p data-i18n="install.signed_out">Not signed in? ChatGPT asks you to sign in, then opens Clara's listing.</p>
-        <div class="download-actions">
-          <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer" data-clara-install-link data-i18n="install.open">Install Clara</a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer data-i18n="hero.eyebrow">Clara AI companion for consultants</footer>
@@ -452,24 +423,10 @@
         "capabilities.charts.copy.link": "result",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analyze this spreadsheet, choose the most useful chart, and explain the result.\"",
-        "download.title": "Install Clara and open your first project",
-        "download.copy": "You can find Clara in the OpenAI Marketplace. After installation, open the project folder in Codex and describe the result you want to achieve.",
-        "download.video.kicker": "Setup guide",
-        "download.video.title": "From ChatGPT on your phone to Vera or Clara in Codex",
-        "download.video.meta": "English narration · Opens on YouTube",
-        "download.step1": "Open Clara's official OpenAI Marketplace page.",
-        "download.step2": "Start the installation from the page.",
-        "download.step3": "Open Codex, go to Plugins, and confirm that Clara is installed and enabled.",
-        "download.step4": "Open the project folder and describe what you want to achieve.",
-        "download.help.title": "If installation does not work",
-        "download.help.marketplace.title": "Installation is not available",
-        "download.help.marketplace.copy": "Confirm that you are signed into OpenAI, then reopen Clara's official page.",
-        "download.help.plugin.title": "Clara does not appear",
-        "download.help.plugin.copy": "Confirm that Clara is installed and enabled, then open a new Codex chat in the project folder.",
-        "download.prompt": "\"Use Clara in this folder.\"",
+        "install.title": "Bring Clara into your projects.",
+        "install.copy": "Install Clara in ChatGPT and start with the materials in front of you.",
+        "install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex",
         "install.button": "Install Clara",
-        "install.open": "Install Clara",
-        "install.signed_out": "Not signed in? ChatGPT asks you to sign in, then opens Clara's listing.",
       },
       it: {
         title: "Clara",
@@ -589,24 +546,10 @@
         "capabilities.charts.copy.link": "risultato",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analizza questo file, scegli il grafico più utile e spiegami il risultato.\"",
-        "download.title": "Installa Clara e apri il primo progetto",
-        "download.copy": "La trovi nel Marketplace di OpenAI. Dopo l'installazione, apri in Codex la cartella del progetto e descrivi il risultato che vuoi ottenere.",
-        "download.video.kicker": "Guida all’installazione",
-        "download.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex",
-        "download.video.meta": "Narrazione in italiano · Si apre su YouTube",
-        "download.step1": "Apri la pagina ufficiale di Clara nel Marketplace di OpenAI.",
-        "download.step2": "Avvia l'installazione dalla pagina.",
-        "download.step3": "Apri Codex, vai in Plugins e verifica che Clara sia installata e attiva.",
-        "download.step4": "Apri la cartella del progetto e descrivi ciò che vuoi ottenere.",
-        "download.help.title": "Se l'installazione non funziona",
-        "download.help.marketplace.title": "L'installazione non è disponibile",
-        "download.help.marketplace.copy": "Verifica di aver effettuato l'accesso a OpenAI, poi riapri la pagina ufficiale di Clara.",
-        "download.help.plugin.title": "Clara non compare",
-        "download.help.plugin.copy": "Controlla che Clara sia installata e attiva, poi apri una nuova chat Codex nella cartella del progetto.",
-        "download.prompt": "\"Usa Clara in questa cartella.\"",
+        "install.title": "Porta Clara nei tuoi progetti.",
+        "install.copy": "Installa Clara in ChatGPT e inizia dai materiali che hai davanti.",
+        "install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex",
         "install.button": "Installa Clara",
-        "install.open": "Installa Clara",
-        "install.signed_out": "Non hai effettuato l'accesso? ChatGPT ti chiede di accedere e poi apre la pagina di Clara.",
       },
       fr: {
         title: "Clara",
@@ -726,24 +669,10 @@
         "capabilities.charts.copy.link": "résultat",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analyse ce fichier, choisis le graphique le plus utile et explique le résultat.\"",
-        "download.title": "Installez Clara et ouvrez votre premier projet",
-        "download.copy": "Retrouvez Clara sur la Marketplace d'OpenAI. Après l'installation, ouvrez le dossier du projet dans Codex et décrivez le résultat que vous voulez obtenir.",
-        "download.video.kicker": "Guide d’installation",
-        "download.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex",
-        "download.video.meta": "Narration en français · S’ouvre sur YouTube",
-        "download.step1": "Ouvrez la page officielle de Clara sur la marketplace OpenAI.",
-        "download.step2": "Lancez l'installation depuis la page.",
-        "download.step3": "Ouvrez Codex, accédez à Plugins et vérifiez que Clara est installée et activée.",
-        "download.step4": "Ouvrez le dossier du projet et décrivez ce que vous voulez obtenir.",
-        "download.help.title": "Si l'installation ne fonctionne pas",
-        "download.help.marketplace.title": "L'installation n'est pas disponible",
-        "download.help.marketplace.copy": "Vérifiez que vous êtes connecté à OpenAI, puis rouvrez la page officielle de Clara.",
-        "download.help.plugin.title": "Clara n'apparaît pas",
-        "download.help.plugin.copy": "Vérifiez que Clara est installée et activée, puis ouvrez une nouvelle conversation Codex dans le dossier du projet.",
-        "download.prompt": "\"Utilise Clara dans ce dossier.\"",
+        "install.title": "Faites entrer Clara dans vos projets.",
+        "install.copy": "Installez Clara dans ChatGPT et commencez par les éléments dont vous disposez.",
+        "install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex",
         "install.button": "Installer Clara",
-        "install.open": "Installer Clara",
-        "install.signed_out": "Vous n'êtes pas connecté ? ChatGPT vous demande de vous connecter, puis ouvre la fiche de Clara.",
       },
       de: {
         title: "Clara",
@@ -863,24 +792,10 @@
         "capabilities.charts.copy.link": "Ergebnis",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analysiere diese Datei, wähle den nützlichsten Chart und erkläre das Ergebnis.\"",
-        "download.title": "Installieren Sie Clara und öffnen Sie Ihr erstes Projekt",
-        "download.copy": "Sie finden Clara im OpenAI Marketplace. Öffnen Sie nach der Installation den Projektordner in Codex und beschreiben Sie das gewünschte Ergebnis.",
-        "download.video.kicker": "Einrichtungsanleitung",
-        "download.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex",
-        "download.video.meta": "Deutsche Sprachausgabe · Öffnet YouTube",
-        "download.step1": "Öffnen Sie Claras offizielle Seite im OpenAI Marketplace.",
-        "download.step2": "Starten Sie die Installation auf der Seite.",
-        "download.step3": "Öffnen Sie Codex, gehen Sie zu Plugins und prüfen Sie, ob Clara installiert und aktiviert ist.",
-        "download.step4": "Öffnen Sie den Projektordner und beschreiben Sie, was Sie erreichen möchten.",
-        "download.help.title": "Wenn die Installation nicht funktioniert",
-        "download.help.marketplace.title": "Installation nicht verfügbar",
-        "download.help.marketplace.copy": "Prüfen Sie, ob Sie bei OpenAI angemeldet sind, und öffnen Sie dann Claras offizielle Seite erneut.",
-        "download.help.plugin.title": "Clara wird nicht angezeigt",
-        "download.help.plugin.copy": "Prüfen Sie, ob Clara installiert und aktiviert ist, und öffnen Sie dann einen neuen Codex-Chat im Projektordner.",
-        "download.prompt": "\"Nutze Clara in diesem Ordner.\"",
+        "install.title": "Holen Sie Clara in Ihre Projekte.",
+        "install.copy": "Installieren Sie Clara in ChatGPT und beginnen Sie mit den vorhandenen Materialien.",
+        "install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex",
         "install.button": "Clara installieren",
-        "install.open": "Clara installieren",
-        "install.signed_out": "Noch nicht angemeldet? ChatGPT fordert Sie zur Anmeldung auf und öffnet danach Claras Eintrag.",
       },
       es: {
         title: "Clara",
@@ -1000,24 +915,10 @@
         "capabilities.charts.copy.link": "resultado",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analiza esta hoja de cálculo, elige el gráfico más útil y explica el resultado.\"",
-        "download.title": "Instala Clara y abre tu primer proyecto",
-        "download.copy": "Puedes encontrar Clara en el Marketplace de OpenAI. Tras instalarla, abre la carpeta del proyecto en Codex y describe el resultado que quieres conseguir.",
-        "download.video.kicker": "Guía de instalación",
-        "download.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex",
-        "download.video.meta": "Narración en español · Se abre en YouTube",
-        "download.step1": "Abre la página oficial de Clara en el Marketplace de OpenAI.",
-        "download.step2": "Inicia la instalación desde la página.",
-        "download.step3": "Abre Codex, ve a Plugins y confirma que Clara está instalada y activada.",
-        "download.step4": "Abre la carpeta del proyecto y describe lo que quieres conseguir.",
-        "download.help.title": "Si la instalación no funciona",
-        "download.help.marketplace.title": "La instalación no está disponible",
-        "download.help.marketplace.copy": "Comprueba que has iniciado sesión en OpenAI y vuelve a abrir la página oficial de Clara.",
-        "download.help.plugin.title": "Clara no aparece",
-        "download.help.plugin.copy": "Comprueba que Clara está instalada y activada y abre un nuevo chat de Codex en la carpeta del proyecto.",
-        "download.prompt": "\"Usa Clara en esta carpeta.\"",
+        "install.title": "Lleva Clara a tus proyectos.",
+        "install.copy": "Instala Clara en ChatGPT y empieza con los materiales que tienes delante.",
+        "install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex",
         "install.button": "Instalar Clara",
-        "install.open": "Instalar Clara",
-        "install.signed_out": "¿No has iniciado sesión? ChatGPT te pedirá que la inicies y después abrirá la ficha de Clara.",
       },
     };
     const params = new URLSearchParams(window.location.search);

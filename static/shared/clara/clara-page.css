@@ -122,7 +122,67 @@ p { margin: 0; }
 }
 
 .hero-note { max-width: 690px; margin-top: 17px; color: var(--blue); }
-.actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+.hero-install {
+  margin-top: 32px;
+  padding-top: 28px;
+  display: grid;
+  grid-template-areas:
+    "copy action"
+    "video video";
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 20px 32px;
+  border-top: 1px solid var(--cyan);
+  scroll-margin-top: 92px;
+}
+
+.hero-install__copy {
+  grid-area: copy;
+  display: grid;
+  gap: 8px;
+}
+
+.hero-install__copy h2 {
+  font-size: clamp(26px, 3vw, 36px);
+}
+
+.hero-install__copy p {
+  max-width: 650px;
+  color: var(--blue);
+}
+
+.hero-install__actions {
+  grid-area: action;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hero-install__video {
+  grid-area: video;
+  width: min(100%, 520px);
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-install__video .video-story__thumb {
+  min-height: 0;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--cyan);
+  border-radius: 12px;
+}
+
+.hero-install__video img {
+  transition: transform 160ms ease;
+}
+
+.hero-install__video:hover img {
+  transform: scale(1.015);
+}
 
 .button {
   min-height: 46px;
@@ -203,8 +263,6 @@ section[id], .card[id] { scroll-margin-top: 92px; }
   text-decoration: none;
   transition: border-color 160ms ease, transform 160ms ease;
 }
-
-.hero > .video-story { grid-column: 1 / -1; margin: 0; }
 
 .video-story:hover { border-color: var(--blue); transform: translateY(-1px); }
 
@@ -353,57 +411,6 @@ section[id], .card[id] { scroll-margin-top: 92px; }
   box-shadow: inset 8px 0 0 var(--cyan);
 }
 
-.download-panel {
-  padding: 38px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px 32px;
-  border: 1px solid var(--blue);
-  border-radius: 14px;
-  background: var(--white);
-  box-shadow: inset 8px 0 0 var(--cyan);
-}
-
-.download-panel h2, .download-panel p, .download-panel ul { grid-column: 1; }
-.download-panel h2 { font-size: 30px; }
-.download-panel p { margin-top: 2px; color: var(--blue); }
-.download-panel .install-video {
-  max-width: none;
-  grid-column: 1;
-  margin: 16px 0 4px;
-}
-.download-panel .output-list { margin-top: 12px; }
-.download-panel .quote { margin-top: 10px; color: var(--navy); }
-.download-actions {
-  grid-column: 2;
-  grid-row: 1 / span 4;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-}
-
-.download-actions .button { justify-content: center; text-align: center; }
-
-.details {
-  grid-column: 1;
-  margin-top: 16px;
-  border: 1px solid var(--cyan);
-  border-radius: 8px;
-  background: var(--white);
-}
-
-.details summary {
-  padding: 14px 16px;
-  color: var(--navy);
-  cursor: pointer;
-  font-weight: 650;
-}
-
-.details[open] summary { border-bottom: 1px solid var(--cyan); }
-.details .plain-list { margin: 0; padding: 2px 16px 10px; }
-
 footer {
   width: min(var(--content), calc(100% - 40px));
   margin: 0 auto;
@@ -446,18 +453,26 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
   .card + .card { border-top: 1px solid var(--cyan); border-left: 0; }
   .plain-row { grid-template-columns: 1fr; gap: 8px; }
   .quiet-table { min-width: 720px; }
-  .download-panel { grid-template-columns: 1fr; align-items: flex-start; }
-  .download-panel h2, .download-panel p, .download-panel ul, .download-actions { grid-column: 1; grid-row: auto; }
+  .hero-install {
+    grid-template-areas:
+      "copy"
+      "action"
+      "video";
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .hero-install__actions { justify-content: flex-start; }
 }
 
 @media (max-width: 480px) {
   .nav, main, footer { width: calc(100% - 32px); }
+  .nav { gap: 10px; }
   .nav-right { gap: 10px; }
-  .brand img { height: 30px; }
-  .lang-switch button { min-width: 36px; padding: 0 7px; }
+  .brand img { height: 28px; }
+  .lang-switch button { min-width: 32px; padding: 0 5px; }
   h1 { font-size: 42px; }
   section { padding: 58px 0; }
-  .approval-section .section-head, .download-panel { padding: 28px 24px; }
+  .approval-section .section-head { padding: 28px 24px; }
 }
 
 @media (max-width: 360px) {
