@@ -1,7 +1,7 @@
 {
   "name": "vera",
-  "version": "0.1.20",
-  "description": "Vera prepara istruttorie e carte di lavoro rivedibili, incluso il percorso New Client con documenti, incarico, privacy e AML.",
+  "version": "0.1.21",
+  "description": "Vera cerca nell'archivio locale dello studio e prepara istruttorie e carte di lavoro rivedibili, incluso il percorso New Client.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -13,6 +13,8 @@
   "keywords": [
     "vera",
     "commercialisti",
+    "archivio-studio",
+    "ricerca-documenti",
     "accounting",
     "audit",
     "new-client",
@@ -38,7 +40,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Prepara il percorso New Client dai documenti in ingresso fino a identità, incarico, privacy, AI, AML e monitoraggio; controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
+    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Cerca nell'archivio condiviso dello studio tramite un indice locale separato per ogni professionista e cita solo passaggi aperti e verificati. Prepara inoltre il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -50,7 +52,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Chiedi a Vera di preparare il nuovo cliente, dai documenti in ingresso a incarico, privacy e AML rivedibili.",
+      "Chiedi a Vera di configurare l'archivio condiviso dello studio con un indice locale separato per ogni professionista e di cercare con fonti verificate.",
       "Chiedi a Vera di usare OCR locale ed export ufficiali per istruire il caso previdenziale INPS con fonti e bozza rivedibile.",
       "Chiedi a Vera di usare Camera competente e fonti SARI ufficiali per una bozza Registro Imprese/DIRE, senza accedere o inviare."
     ],

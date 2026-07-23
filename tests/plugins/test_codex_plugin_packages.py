@@ -27,6 +27,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "previdenza-inps",
     "registro-imprese-sari",
     "report-builder",
+    "studio-archive",
 }
 STANDALONE_PLUGIN_NAMES = {"attribute-reporting", "clara"}
 PRIVATE_STANDALONE_PLUGIN_NAMES = {"attribute-reporting"}
@@ -3218,6 +3219,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "report-builder": (
             "https://mparanza.com/static/shared/report-builder/index.html"
         ),
+        "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html"),
         "clara": ("https://mparanza.com/static/shared/clara/index.html"),
     }

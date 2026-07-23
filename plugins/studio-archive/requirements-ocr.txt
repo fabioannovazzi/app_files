@@ -1,0 +1,8 @@
+# Optional local-only OCR. Model downloads remain disabled by Studio Archive.
+PyMuPDF>=1.24
+Pillow>=10.0
+numpy>=1.24,<2.3
+paddleocr>=3.0
+paddlepaddle>=3.0
+paddlex[ocr]>=3.0
+huggingface-hub>=0.28

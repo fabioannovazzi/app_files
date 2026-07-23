@@ -1,0 +1,4 @@
+interface:
+  display_name: "Studio Archive"
+  short_description: "Search the studio archive with cited evidence"
+  default_prompt: "Use $studio-archive to update and search my local studio archive with source citations."
