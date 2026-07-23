@@ -42,6 +42,13 @@ SPECS = (
         "folder",
     ),
     IconSpec(
+        "studio-archive",
+        "Vera · Archivio dello Studio",
+        "#002060",
+        "#00B0F0",
+        "archive",
+    ),
+    IconSpec(
         "new-client",
         "New Client",
         "#36586F",
@@ -244,6 +251,13 @@ def _body(spec: IconSpec) -> str:
   <circle cx="28" cy="35" r="5" fill="{color}"/>
   <path d="M18 47c2-7 18-7 20 0" fill="none" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
   <path d="M40 34h7M40 41h5" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>""",
+        "archive": f"""
+  <path d="M14 17h31v34H14z" fill="{paper}"/>
+  <path d="M20 24h19M20 32h19M20 40h12" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <path d="M17 13h31v8H17z" fill="{paper}" stroke="{color}" stroke-width="2"/>
+  <circle cx="43" cy="43" r="9" fill="{accent}"/>
+  <circle cx="43" cy="43" r="4" fill="#171816"/>
+  <path d="m49 49 6 6" stroke="{accent}" stroke-width="4" stroke-linecap="round"/>""",
         "onboard": f"""
   <path d="M16 15h29l7 8v28H16z" fill="{paper}"/>
   <path d="M45 15v9h7" fill="#DCE5E8"/>

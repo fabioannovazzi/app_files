@@ -42,6 +42,11 @@
       "module_roots": [
         "vera_ocr"
       ]
+    },
+    "studio-archive": {
+      "module_roots": [
+        "vera_ocr"
+      ]
     }
   }
 }

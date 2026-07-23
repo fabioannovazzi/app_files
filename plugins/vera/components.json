@@ -12,7 +12,8 @@
     "prompt-optimizer",
     "deep-research-validator",
     "previdenza-inps",
-    "registro-imprese-sari"
+    "registro-imprese-sari",
+    "studio-archive"
   ],
   "shared_services": [
     "plugin-update-check",

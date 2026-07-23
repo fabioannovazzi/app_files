@@ -18,6 +18,7 @@ const COMPONENTS = new Set([
   "deep-research-validator",
   "previdenza-inps",
   "registro-imprese-sari",
+  "studio-archive",
 ]);
 
 const component = process.argv[2];
