@@ -21,6 +21,11 @@
         "id": "studio-archive-evidence",
         "purpose": "Find and interpret prior studio documents within an explicit archive scope",
         "content": "User questions; the configured absolute archive-root path; scope names; relative document paths; search snippets; opened source passages; file, page, paragraph, sheet-row, message-line, or text-line locators; source hashes; extraction limitations; and Vera's source-backed synthesis"
+      },
+      {
+        "id": "gmail-client-evidence",
+        "purpose": "Find and interpret Gmail correspondence for one explicitly selected studio client",
+        "content": "Confirmed client email or PEC addresses, legal names and tax identifiers; the exact archive scope; bounded Gmail queries; connector account profile; matching message and thread identifiers; sender and recipient headers; subjects, timestamps, snippets and labels; selected message or thread bodies; selected attachment metadata or content; exact-address routing evidence; ambiguity findings; search coverage; and Vera's source-backed synthesis"
       }
     ]
   },
@@ -42,7 +47,25 @@
     "automatic_anonymization": false,
     "local_filtering_or_aggregation": "only_when_useful_for_the_work"
   },
-  "boundaries_beyond_codex": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "codex-gmail-client-search",
+      "kind": "external_connector",
+      "destination": "User-selected Gmail account through the Codex Gmail connector",
+      "purpose": "Search and read correspondence for one explicitly selected client scope when the user chooses Gmail evidence",
+      "content": "Bounded Gmail-native queries derived from the selected scope's confirmed identities and the user's topic or date bounds; Gmail returns message metadata and snippets first, followed only by shortlisted bodies, thread context, or supported attachment content that may enter Codex context",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Use Gmail only after the user explicitly requests or chooses mailbox search for the selected client; that route choice is the confirmation.",
+        "Call the connector profile action before search because the local Studio Archive cannot inspect or enforce which Gmail account the connector selected.",
+        "Use only Gmail search and read actions; never send, draft, forward, archive, delete, label, move, or otherwise mutate mailbox state.",
+        "Plan one exact client scope, shortlist before reading bodies or threads, and read an attachment only after its parent message is routed and the connector marks that attachment as supported.",
+        "Route automatically only after a full message read exposes all available From, To, Cc, and Bcc fields and every non-empty value parses; incomplete or unparseable header coverage fails closed.",
+        "The Gmail connector owns authentication and account selection; Vera does not request or store credentials, tokens, cookies, message bodies, attachments, or a mailbox copy."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "private-per-user-index",
@@ -59,12 +82,20 @@
     {
       "id": "local-only-ocr",
       "control": "OCR is optional, uses Vera's local adapter with model downloads disabled, and reports unavailable weights or partial extraction rather than using an external OCR route."
+    },
+    {
+      "id": "private-client-identity-registry",
+      "control": "Confirmed full email or PEC addresses, legal names, and tax identifiers are stored in an owner-only local registry outside the shared archive; the registry schema has no fields for Gmail credentials, tokens, cookies, message identifiers, bodies, or attachments."
+    },
+    {
+      "id": "fail-closed-gmail-client-routing",
+      "control": "Only one unique confirmed full-address match with complete, parseable From, To, Cc, and Bcc coverage can route a Gmail message automatically; zero-client, multi-client, incomplete, and unparseable results fail closed, legal names and message meaning require model review, studio-wide Gmail planning is rejected, and orphaned profiles can move only through an explicit one-to-one rebind."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-23",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fd57d174ba4b8a7be400938bb3e407d2890527e654d4cc7790d073c159fb80bc"
+    "source_fingerprint": "0849a0d80cb4c9848cd9847e838151acba24f8f75097f2657206775f7eb014b2"
   }
 }

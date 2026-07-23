@@ -28,6 +28,16 @@
         "passaggi verificati",
         "fascicoli Rossi"
       ]
+    },
+    {
+      "id": "gmail-client-scope",
+      "prompt": "Vera, cerca nella Gmail collegata le email sulla rateazione INPS di Rossi senza includere la corrispondenza di Bianchi.",
+      "required_signals": [
+        "Gmail collegata",
+        "Rossi",
+        "senza includere",
+        "Bianchi"
+      ]
     }
   ],
   "should_not_trigger": [
@@ -38,6 +48,10 @@
     {
       "id": "internet-research",
       "prompt": "Cerca online le ultime circolari dell'Agenzia delle Entrate."
+    },
+    {
+      "id": "generic-inbox-triage",
+      "prompt": "Raggruppa tutte le email non lette della mia inbox per urgenza."
     }
   ]
 }
