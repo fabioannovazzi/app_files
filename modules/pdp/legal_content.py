@@ -899,6 +899,26 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "problems-and-ideas",
+                "title": "Problems and New Ideas",
+                "paragraphs": [
+                    (
+                        "If Vera or Clara encounters a technical problem, it can "
+                        "prepare a concise report with client material and identifying "
+                        "details removed. You see the exact text before anything is "
+                        "sent, and it goes to Mparanza only with your approval. This "
+                        "cleaning is part of the review workflow; it is not automatic "
+                        "anonymization."
+                    ),
+                    (
+                        "To suggest a new feature or improvement, write it in chat or "
+                        "choose an optional voice interview of up to one minute. The "
+                        "interview is hosted by Mparanza and uses OpenAI voice and "
+                        "transcription services."
+                    ),
+                ],
+            },
+            {
                 "id": "local-first",
                 "title": "Ordinary Functions Support Boundary",
                 "paragraphs": [

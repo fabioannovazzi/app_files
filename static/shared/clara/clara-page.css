@@ -339,19 +339,6 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 }
 
 .rule strong { color: var(--navy); }
-.improvement-note {
-  margin-top: 34px;
-  padding: 28px 4px;
-  display: grid;
-  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
-  gap: 30px;
-  border-block: 1px solid var(--cyan);
-}
-
-.improvement-note__heading { display: grid; align-content: start; gap: 8px; }
-.improvement-note__heading .kicker { margin: 0; }
-.improvement-note__heading h3 { font-size: clamp(1.2rem, 2vw, 1.55rem); }
-.improvement-note__copy { display: grid; gap: 12px; color: var(--blue); }
 .output-list { display: grid; gap: 0; margin: 18px 0 0; padding: 0; list-style: none; color: var(--blue); }
 .output-list li { padding: 11px 0; border-bottom: 1px solid var(--cyan); }
 
@@ -412,7 +399,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
   .card { min-height: 0; padding: 25px 0; }
   .card + .card { border-top: 1px solid var(--cyan); border-left: 0; }
   .plain-row { grid-template-columns: 1fr; gap: 8px; }
-  .improvement-note { grid-template-columns: 1fr; gap: 14px; }
   .quiet-table { min-width: 720px; }
   .hero-install {
     grid-template-areas:

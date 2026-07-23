@@ -151,6 +151,25 @@ def test_support_page_is_public_when_auth_enabled(
     assert "no automatic access" in str(page)
     assert "existing ChatGPT plan and Codex workspace" in str(page)
     assert "Mparanza-hosted service" in str(page)
+    support_sections = page["sections"]
+    assert isinstance(support_sections, list)
+    support_section_ids = [section["id"] for section in support_sections]
+    assert support_section_ids.index("problems-and-ideas") == (
+        support_section_ids.index("request-help") + 1
+    )
+    improvement_section = next(
+        section
+        for section in support_sections
+        if section["id"] == "problems-and-ideas"
+    )
+    improvement_copy = " ".join(improvement_section["paragraphs"])
+    assert improvement_section["title"] == "Problems and New Ideas"
+    assert "You see the exact text before anything is sent" in improvement_copy
+    assert "only with your approval" in improvement_copy
+    assert "not automatic anonymization" in improvement_copy
+    assert "optional voice interview of up to one minute" in improvement_copy
+    assert "hosted by Mparanza" in improvement_copy
+    assert "OpenAI voice and transcription services" in improvement_copy
     assert context["active_legal_page"] == "support"
 
 
