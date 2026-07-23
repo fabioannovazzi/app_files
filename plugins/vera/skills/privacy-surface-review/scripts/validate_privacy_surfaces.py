@@ -186,10 +186,18 @@ def _fingerprint(
         digest.update(len(content).to_bytes(8, "big"))
         digest.update(content)
     if wrapper is not None:
-        digest.update(b"vera-wrapper/SKILL.md")
-        content = wrapper.read_bytes()
-        digest.update(len(content).to_bytes(8, "big"))
-        digest.update(content)
+        wrapper_root = wrapper.parent
+        wrapper_files = _governed_files(wrapper_root, (".",))
+        if wrapper not in wrapper_files:
+            raise FileNotFoundError(f"workflow wrapper not found: {wrapper}")
+        for path in wrapper_files:
+            logical_path = (
+                Path("vera-wrapper") / path.relative_to(wrapper_root)
+            ).as_posix()
+            digest.update(logical_path.encode("utf-8"))
+            content = path.read_bytes()
+            digest.update(len(content).to_bytes(8, "big"))
+            digest.update(content)
     return digest.hexdigest()
 
 

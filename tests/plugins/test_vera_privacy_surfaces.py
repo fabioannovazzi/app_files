@@ -414,6 +414,51 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     )
 
 
+def test_privacy_fingerprint_governs_workflow_wrapper_references(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    plugins_root = tmp_path / "repository" / "plugins"
+    vera_root = plugins_root / "vera"
+    component_root = plugins_root / "studio-archive"
+    shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
+    shutil.copytree(VERA_ROOT, vera_root)
+    shutil.copytree(ROOT / "plugins" / "studio-archive", component_root)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_ocr",
+        shared_ocr,
+    )
+    components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    components["plugins"] = ["studio-archive"]
+    components["workflow_roles"] = {}
+    components["shared_services"] = []
+    (vera_root / "components.json").write_text(
+        json.dumps(components, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
+        if manifest.stem != "studio-archive":
+            manifest.unlink()
+    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
+        manifest.unlink()
+    validator._refresh("studio-archive", vera_root)
+
+    assert validator.validate_privacy_surfaces(vera_root) == []
+
+    reference = (
+        vera_root / "skills" / "studio-archive" / "references" / "marketplace-gmail.md"
+    )
+    reference.write_text(
+        reference.read_text(encoding="utf-8") + "\nMaterial Gmail boundary change.\n",
+        encoding="utf-8",
+    )
+
+    assert (
+        "studio-archive: privacy review is stale; run the review skill, then --refresh"
+        in validator.validate_privacy_surfaces(vera_root)
+    )
+
+
 def test_privacy_fingerprint_governs_shared_ocr_source(
     tmp_path: Path,
 ) -> None:

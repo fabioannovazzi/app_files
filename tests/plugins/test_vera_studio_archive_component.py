@@ -1189,7 +1189,7 @@ def test_vera_registers_archive_as_embedded_workflow() -> None:
     assert "studio-archive" in components["plugins"]
     assert "studio-archive" not in components["workflow_roles"]
     assert vera_mcp["mcpServers"]["veraStudioArchive"]["args"][-1] == "studio-archive"
-    assert manifest["version"] == "0.1.24"
+    assert manifest["version"] == "0.1.25"
     assert (
         ROOT / "plugins" / "vera" / "skills" / "studio-archive" / "SKILL.md"
     ).is_file()
