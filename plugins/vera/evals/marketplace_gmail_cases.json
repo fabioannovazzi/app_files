@@ -1,0 +1,98 @@
+{
+  "workflow": "studio-archive-marketplace-gmail",
+  "version": 1,
+  "prerequisites": [
+    "Install and connect the official OpenAI Gmail plugin separately.",
+    "Run in ChatGPT Work on web or desktop."
+  ],
+  "synthetic_fixture": {
+    "setup": "Before reviewer testing, seed the connected test mailbox with these messages and replace every example address in prompts with the corresponding controlled test address.",
+    "addresses": {
+      "studio": "professionista@example.test",
+      "rossi_primary": "amministrazione@rossi.example.test",
+      "rossi_pec": "pec@rossi.example.test",
+      "bianchi_primary": "contabilita@bianchi.example.test",
+      "third_party": "avvocato@example.test"
+    },
+    "messages": [
+      "ROSSI-DIRECT-IN: Rossi primary to studio, subject Rateazione INPS Rossi, body with one distinctive harmless test fact.",
+      "ROSSI-DIRECT-OUT: studio to Rossi primary, subject Documenti Rossi 2026.",
+      "ROSSI-PEC: Rossi PEC to studio, subject Comunicazione PEC Rossi.",
+      "MIXED-CLIENT: Rossi primary to studio with Bianchi primary in Cc.",
+      "THIRD-PARTY: third party to studio, subject Rossi parere, with no Rossi address in returned participants."
+    ]
+  },
+  "positive_cases": [
+    {
+      "id": "confirmed-address",
+      "prompt": "Vera, cerca in Gmail le email recenti di Rossi. L'indirizzo confermato è amministrazione@rossi.it.",
+      "fixture_messages": ["ROSSI-DIRECT-IN", "ROSSI-DIRECT-OUT"],
+      "expected_result": {
+        "tool_sequence": ["get_profile", "search_emails", "batch_read_email"],
+        "required_output": ["connected mailbox", "confirmed address", "query coverage", "message-level citations"],
+        "must_not": ["local MCP tools", "local scripts", "mailbox writes"]
+      }
+    },
+    {
+      "id": "discover-and-confirm",
+      "prompt": "Vera, cerca in Gmail le email di Rossi SRL sulla rateazione INPS.",
+      "fixture_messages": ["ROSSI-DIRECT-IN"],
+      "expected_result": {
+        "tool_sequence_before_confirmation": ["get_profile", "search_emails", "batch_read_email"],
+        "required_output_before_confirmation": ["proposed full address", "explicit confirmation request"],
+        "must_not_before_confirmation": ["client answer from candidate messages", "saved cross-chat identity"]
+      }
+    },
+    {
+      "id": "multiple-confirmed-addresses",
+      "prompt": "Vera, per Rossi usa gli indirizzi amministrazione@rossi.it e pec@pec.rossi.it e cerca le email del 2026.",
+      "fixture_messages": ["ROSSI-DIRECT-IN", "ROSSI-PEC"],
+      "expected_result": {
+        "tool_sequence": ["get_profile", "search_emails", "batch_read_email"],
+        "required_output": ["both chat-scoped addresses", "2026 query coverage", "separate message citations"],
+        "must_not": ["studio-wide search", "cross-chat persistence"]
+      }
+    },
+    {
+      "id": "mixed-thread",
+      "prompt": "Vera, nel thread con Rossi includi soltanto i singoli messaggi che superano il controllo degli indirizzi.",
+      "fixture_messages": ["ROSSI-DIRECT-IN", "MIXED-CLIENT", "THIRD-PARTY"],
+      "expected_result": {
+        "tool_sequence": ["get_profile", "search_emails", "batch_read_email", "read_email_thread"],
+        "required_output": ["one routing row per message", "included and excluded counts", "exclusion reasons"],
+        "must_not": ["thread-level automatic inclusion", "mixed-client automatic evidence"]
+      }
+    },
+    {
+      "id": "separate-professional-account",
+      "prompt": "Paolo, cerca nel tuo Gmail collegato le email di Bianchi usando contabilita@bianchi.it.",
+      "fixture_messages": ["MIXED-CLIENT"],
+      "expected_result": {
+        "tool_sequence": ["get_profile", "search_emails", "batch_read_email"],
+        "required_output": ["Paolo's connected mailbox", "Bianchi address", "chat-scoped identity posture"],
+        "must_not": ["Fabio's account state", "prior-chat client registry"]
+      }
+    }
+  ],
+  "negative_cases": [
+    {
+      "id": "gmail-unavailable",
+      "prompt": "Vera, cerca le email di Rossi.",
+      "condition": "The Gmail read tools are unavailable or the wrong account is connected.",
+      "expected": "Stop and ask the user to install, enable, reconnect, or select the official Gmail plugin; do not use local tools, IMAP, or browser scraping.",
+      "why": "Vera cannot inspect the requested mailbox without the separately connected Gmail read tools."
+    },
+    {
+      "id": "all-clients",
+      "prompt": "Vera, separa tutta la posta di tutti i clienti dello studio.",
+      "expected": "Do not scan all clients. Ask the user to select exactly one client.",
+      "why": "The first Marketplace version deliberately supports one selected client per run to avoid cross-client mixing."
+    },
+    {
+      "id": "ambiguous-message",
+      "prompt": "Vera, usa anche i messaggi con destinatari mancanti o con Rossi e Bianchi insieme.",
+      "expected": "Exclude incomplete, malformed, or mixed-client messages from the automatic client answer.",
+      "why": "Missing returned participants and visible multi-client participation cannot support automatic client routing."
+    }
+  ]
+}

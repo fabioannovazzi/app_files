@@ -21,6 +21,16 @@
         "id": "studio-archive-evidence",
         "purpose": "Find and interpret prior studio documents within an explicit archive scope",
         "content": "User questions; the configured absolute archive-root path; scope names; relative document paths; search snippets; opened source passages; file, page, paragraph, sheet-row, message-line, or text-line locators; source hashes; extraction limitations; and Vera's source-backed synthesis"
+      },
+      {
+        "id": "gmail-client-evidence",
+        "purpose": "Find and interpret Gmail correspondence for one explicitly selected studio client",
+        "content": "Client name or identifier and full email or PEC addresses supplied or confirmed in the current conversation; an optional private local archive scope and identity profile when local Codex is used; bounded discovery and exact-address Gmail queries; connected account profile; candidate and matching message or thread identifiers; returned sender and recipient fields; subjects, timestamps, snippets and labels; selected message or thread bodies; selected attachment metadata or content; exact-address routing evidence; ambiguity findings; search coverage; and Vera's source-backed synthesis"
+      },
+      {
+        "id": "whatsapp-client-evidence",
+        "purpose": "Find and interpret retained inbound WhatsApp Business messages for one explicitly selected studio client",
+        "content": "The selected client name or identifier and complete E.164 phone supplied or confirmed in the current conversation; connected business-account status; bounded one-client query terms and date limits; metadata-only candidate titles and opaque source IDs; selected normalized inbound message text or captions; sender phone and optional profile name; timestamp, message type and direction; retention, history, media and coverage limitations; and Vera's source-backed synthesis"
       }
     ]
   },
@@ -42,7 +52,26 @@
     "automatic_anonymization": false,
     "local_filtering_or_aggregation": "only_when_useful_for_the_work"
   },
-  "boundaries_beyond_codex": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "codex-gmail-client-search",
+      "kind": "external_connector",
+      "destination": "User-selected Gmail account through the separately installed and connected OpenAI Gmail plugin",
+      "purpose": "Search and read correspondence for one explicitly selected client when the user chooses Gmail evidence",
+      "content": "A discovery query derived from the selected client's supplied name or identifier may return at most ten candidate messages before address confirmation; after confirmation, bounded Gmail-native queries use full client email or PEC addresses plus the user's topic or date bounds. Gmail returns message metadata and snippets first, followed only by shortlisted bodies, necessary thread context, or supported attachment content that may enter Codex context",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Use Gmail only after the user explicitly requests or chooses mailbox search for the selected client; that route choice is the confirmation.",
+        "Call get_profile before every search, show the selected account, and stop when it is not the mailbox the user intended.",
+        "Use only Gmail search and read actions; never send, draft, forward, archive, delete, label, move, or otherwise mutate mailbox state.",
+        "Process exactly one client, use at most ten results for address discovery and about twenty results per exact-address page, shortlist before reading bodies or threads, and read an attachment only after its parent message is routed and the connector marks it as supported.",
+        "Build the Marketplace client address set only from full addresses supplied or explicitly confirmed in the current conversation; do not infer it from names, domains, subjects, snippets, bodies, labels, or model confidence, and do not claim cross-chat persistence.",
+        "Route automatically only after a full message read returns a parseable From value and parseable recipient values; inspect Cc and Bcc whenever exposed, but absence of an optional Cc or Bcc field alone is not incomplete. Missing or malformed required returned fields, another visible external participant, or a visible address of another client fails closed, and Vera states that returned fields cannot prove the absence of an undisclosed Bcc recipient.",
+        "The Gmail plugin owns authentication and account selection; Vera does not request or store credentials, tokens, cookies, message bodies, attachments, or a mailbox copy."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "private-per-user-index",
@@ -59,12 +88,20 @@
     {
       "id": "local-only-ocr",
       "control": "OCR is optional, uses Vera's local adapter with model downloads disabled, and reports unavailable weights or partial extraction rather than using an external OCR route."
+    },
+    {
+      "id": "private-client-identity-registry",
+      "control": "The Marketplace route keeps confirmed identities only in the current conversation and has no plugin-managed cross-chat registry. Optional local Codex use may store confirmed full email or PEC addresses, legal names, and tax identifiers in an owner-only local registry outside the shared archive; its schema has no fields for Gmail credentials, tokens, cookies, message identifiers, bodies, or attachments."
+    },
+    {
+      "id": "fail-closed-gmail-client-routing",
+      "control": "Only an exact match to one selected client's chat-confirmed full address, with a parseable From value, parseable returned recipient values, and no visible unknown or other-client external participant, can route a Gmail message automatically. Cc and Bcc are checked whenever exposed; an absent optional field alone is not incomplete, and routing cannot prove the absence of an undisclosed Bcc recipient. Zero-client, multi-client, missing-required-field, malformed, third-party, and mixed-client results fail closed or require model review; studio-wide Gmail search is rejected, while optional orphaned local profiles can move only through an explicit one-to-one rebind."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-23",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fd57d174ba4b8a7be400938bb3e407d2890527e654d4cc7790d073c159fb80bc"
+    "source_fingerprint": "8f644a5535e07e462d39c2c8b9b3490e8c4c6dc93d55554d087ef550b09f8c7d"
   }
 }

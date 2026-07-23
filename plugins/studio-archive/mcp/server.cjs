@@ -16,10 +16,14 @@ const CLI_PATH = path.join(PLUGIN_ROOT, "scripts", "studio_archive.py");
 const MAX_OUTPUT_BYTES = 8_000_000;
 const TOOL_NAMES = {
   status: "studio_archive_status",
+  clients: "list_studio_archive_clients",
   configure: "configure_studio_archive",
   refresh: "refresh_studio_archive",
   search: "search_studio_archive",
   open: "open_studio_archive_source",
+  configureClient: "configure_studio_archive_client",
+  planGmail: "plan_studio_archive_gmail_search",
+  matchEmail: "match_studio_archive_email",
 };
 
 function objectSchema(properties, required = []) {
@@ -31,11 +35,11 @@ function objectSchema(properties, required = []) {
   };
 }
 
-function annotations(readOnly) {
+function annotations(readOnly, idempotent = true) {
   return {
     readOnlyHint: readOnly,
     destructiveHint: false,
-    idempotentHint: true,
+    idempotentHint: idempotent,
     openWorldHint: false,
   };
 }
@@ -47,6 +51,14 @@ function toolDefinitions() {
       title: "Check Vera Studio Archive status",
       description:
         "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching.",
+      inputSchema: objectSchema({}),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.clients,
+      title: "List Studio Archive client identities",
+      description:
+        "Read the private client identity profiles for current scopes and report orphaned profiles after folder changes. Call this before an explicit profile rebind.",
       inputSchema: objectSchema({}),
       annotations: annotations(true),
     },
@@ -140,6 +152,116 @@ function toolDefinitions() {
       ),
       annotations: annotations(true),
     },
+    {
+      name: TOOL_NAMES.configureClient,
+      title: "Configure one Studio Archive client for Gmail",
+      description:
+        "Bind confirmed full email addresses, legal names, and tax identifiers to one exact archive scope in the private local registry. Vera stores no Gmail credentials, messages, or attachments.",
+      inputSchema: objectSchema(
+        {
+          scope_id: {
+            type: "string",
+            pattern: "^scope_[0-9a-f]{24}$",
+            description:
+              "Exact client scope_id returned by studio_archive_status.",
+          },
+          email_addresses: {
+            type: "array",
+            maxItems: 20,
+            items: { type: "string", minLength: 3, maxLength: 254 },
+            description:
+              "Confirmed full email or PEC addresses unique to this client.",
+          },
+          legal_names: {
+            type: "array",
+            maxItems: 20,
+            items: { type: "string", minLength: 1, maxLength: 160 },
+            description:
+              "Confirmed legal names used only to find candidates, never for automatic routing.",
+          },
+          tax_identifiers: {
+            type: "array",
+            maxItems: 20,
+            items: { type: "string", minLength: 5, maxLength: 32 },
+            description:
+              "Confirmed codice fiscale or partita IVA values used to find candidates.",
+          },
+          replace_orphaned_scope_id: {
+            type: "string",
+            pattern: "^scope_[0-9a-f]{24}$",
+            description:
+              "Explicitly move one listed orphaned profile to this target scope. Supply no identity arrays in the same call.",
+          },
+        },
+        ["scope_id"],
+      ),
+      annotations: annotations(false, false),
+    },
+    {
+      name: TOOL_NAMES.planGmail,
+      title: "Plan a client-scoped Gmail search",
+      description:
+        "Return bounded Gmail-native queries for one exact client scope. This local tool does not call Gmail; Codex must use the connected Gmail search/read tools and review every shortlisted message.",
+      inputSchema: objectSchema(
+        {
+          scope_id: {
+            type: "string",
+            pattern: "^scope_[0-9a-f]{24}$",
+            description:
+              "Exact client scope_id; studio-wide Gmail search is not supported.",
+          },
+          topic: {
+            type: "string",
+            minLength: 1,
+            maxLength: 200,
+            description: "Optional compact topic phrase from the user's question.",
+          },
+          after: {
+            type: "string",
+            pattern: "^\\d{4}-\\d{2}-\\d{2}$",
+            description: "Optional inclusive lower date bound in YYYY-MM-DD.",
+          },
+          before: {
+            type: "string",
+            pattern: "^\\d{4}-\\d{2}-\\d{2}$",
+            description: "Optional exclusive upper date bound in YYYY-MM-DD.",
+          },
+        },
+        ["scope_id"],
+      ),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.matchEmail,
+      title: "Match Gmail headers to a Studio Archive client",
+      description:
+        "Match all available Gmail From, To, Cc, and Bcc header values only against unique confirmed full addresses. Missing, incomplete, or unparseable headers fail closed.",
+      inputSchema: objectSchema(
+        {
+          header_addresses: {
+            type: "array",
+            minItems: 1,
+            maxItems: 100,
+            items: { type: "string", minLength: 1, maxLength: 2000 },
+            description:
+              "Raw address values copied from Gmail message headers.",
+          },
+          headers_complete: {
+            type: "boolean",
+            description:
+              "True only after the full message read exposed all available From, To, Cc, and Bcc fields and every non-empty value was supplied.",
+          },
+          expected_scope_id: {
+            type: "string",
+            pattern: "^scope_[0-9a-f]{24}$",
+            description:
+              "Optional selected client scope used for the fail-closed answer check.",
+          },
+        },
+        ["header_addresses", "headers_complete"],
+      ),
+      annotations: annotations(true),
+    },
   ];
 }
 
@@ -196,11 +318,51 @@ function optionalBoolean(value, name) {
   return value;
 }
 
+function requireBoolean(value, name) {
+  if (typeof value !== "boolean") throw new Error(`${name} must be a boolean.`);
+  return value;
+}
+
+function optionalString(value, name, maximum) {
+  if (value === undefined) return null;
+  if (
+    typeof value !== "string" ||
+    value.trim() === "" ||
+    value.length > maximum
+  ) {
+    throw new Error(`${name} must be a non-empty string of at most ${maximum} characters.`);
+  }
+  return value;
+}
+
+function optionalStringArray(value, name, maximumItems, maximumLength) {
+  if (value === undefined) return [];
+  if (
+    !Array.isArray(value) ||
+    value.length > maximumItems ||
+    value.some(
+      (item) =>
+        typeof item !== "string" ||
+        item.trim() === "" ||
+        item.length > maximumLength,
+    )
+  ) {
+    throw new Error(
+      `${name} must contain at most ${maximumItems} bounded strings.`,
+    );
+  }
+  return value;
+}
+
 function commandForTool(name, rawArgs) {
   const args = requirePlainObject(rawArgs);
   if (name === TOOL_NAMES.status) {
     assertOnlyKeys(args, new Set());
     return ["status"];
+  }
+  if (name === TOOL_NAMES.clients) {
+    assertOnlyKeys(args, new Set());
+    return ["clients"];
   }
   if (name === TOOL_NAMES.configure) {
     assertOnlyKeys(args, new Set(["archive_root"]));
@@ -256,6 +418,119 @@ function commandForTool(name, rawArgs) {
       "--context-chunks",
       String(context),
     ];
+  }
+  if (name === TOOL_NAMES.configureClient) {
+    assertOnlyKeys(
+      args,
+      new Set([
+        "scope_id",
+        "email_addresses",
+        "legal_names",
+        "tax_identifiers",
+        "replace_orphaned_scope_id",
+      ]),
+    );
+    const scopeId = requireString(args.scope_id, "scope_id");
+    if (!/^scope_[0-9a-f]{24}$/.test(scopeId)) {
+      throw new Error("scope_id must be an exact configured client scope.");
+    }
+    const command = ["configure-client", "--scope-id", scopeId];
+    const emails = optionalStringArray(
+      args.email_addresses,
+      "email_addresses",
+      20,
+      254,
+    );
+    const legalNames = optionalStringArray(
+      args.legal_names,
+      "legal_names",
+      20,
+      160,
+    );
+    const taxIdentifiers = optionalStringArray(
+      args.tax_identifiers,
+      "tax_identifiers",
+      20,
+      32,
+    );
+    for (const value of emails) command.push("--email-address", value);
+    for (const value of legalNames) command.push("--legal-name", value);
+    for (const value of taxIdentifiers) {
+      command.push("--tax-identifier", value);
+    }
+    const replaceOrphanedScopeId = optionalString(
+      args.replace_orphaned_scope_id,
+      "replace_orphaned_scope_id",
+      30,
+    );
+    if (
+      replaceOrphanedScopeId !== null &&
+      !/^scope_[0-9a-f]{24}$/.test(replaceOrphanedScopeId)
+    ) {
+      throw new Error(
+        "replace_orphaned_scope_id must be an exact listed orphaned scope.",
+      );
+    }
+    if (replaceOrphanedScopeId !== null) {
+      command.push("--replace-orphaned-scope-id", replaceOrphanedScopeId);
+    }
+    return command;
+  }
+  if (name === TOOL_NAMES.planGmail) {
+    assertOnlyKeys(args, new Set(["scope_id", "topic", "after", "before"]));
+    const scopeId = requireString(args.scope_id, "scope_id");
+    if (!/^scope_[0-9a-f]{24}$/.test(scopeId)) {
+      throw new Error("scope_id must be an exact configured client scope.");
+    }
+    const command = ["plan-gmail", "--scope-id", scopeId];
+    const topic = optionalString(args.topic, "topic", 200);
+    const after = optionalString(args.after, "after", 10);
+    const before = optionalString(args.before, "before", 10);
+    if (topic !== null) command.push("--topic", topic);
+    if (after !== null) command.push("--after", after);
+    if (before !== null) command.push("--before", before);
+    return command;
+  }
+  if (name === TOOL_NAMES.matchEmail) {
+    assertOnlyKeys(
+      args,
+      new Set([
+        "header_addresses",
+        "headers_complete",
+        "expected_scope_id",
+      ]),
+    );
+    const headers = optionalStringArray(
+      args.header_addresses,
+      "header_addresses",
+      100,
+      2000,
+    );
+    if (!headers.length) {
+      throw new Error("header_addresses must contain at least one value.");
+    }
+    const headersComplete = requireBoolean(
+      args.headers_complete,
+      "headers_complete",
+    );
+    const expectedScopeId = optionalString(
+      args.expected_scope_id,
+      "expected_scope_id",
+      30,
+    );
+    if (
+      expectedScopeId !== null &&
+      !/^scope_[0-9a-f]{24}$/.test(expectedScopeId)
+    ) {
+      throw new Error("expected_scope_id must be an exact configured scope.");
+    }
+    const command = ["match-email"];
+    for (const value of headers) command.push("--header-address", value);
+    if (headersComplete) command.push("--headers-complete");
+    if (expectedScopeId !== null) {
+      command.push("--expected-scope-id", expectedScopeId);
+    }
+    return command;
   }
   throw new Error("Unknown Studio Archive tool.");
 }
@@ -346,7 +621,7 @@ function handleRpc(message) {
       serverInfo: { name: SERVER_NAME, version: SERVER_VERSION },
       capabilities: { tools: {} },
       instructions:
-        "Call studio_archive_status first. Search one exact scope, open every result used as evidence, and refresh when a source changed.",
+        "Call studio_archive_status first. Search one exact archive scope and open every file result used as evidence. For Gmail, configure one client identity, plan one exact-scope search, use the connected Gmail read tools, and fail closed on ambiguous routing.",
     });
   }
   if (message.method === "notifications/initialized") return null;

@@ -7,7 +7,8 @@
     "skills",
     "scripts",
     "mcp",
-    "schemas"
+    "schemas",
+    "assets/previdenza-inps-review-widget.html"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_ocr"
@@ -101,6 +102,6 @@
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "aeecae843a07838af791a7b3256620dcc317f426caa0adb8d3fd0679b01f50d8"
+    "source_fingerprint": "4f5913e2308b43b81dfee8095e5566a54788b117bb98f2537f3ab3a04b6cfa85"
   }
 }

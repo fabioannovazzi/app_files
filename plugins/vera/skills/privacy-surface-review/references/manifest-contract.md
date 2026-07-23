@@ -43,8 +43,16 @@ Shared-service manifests record `service_id`, `display_name`,
 `security_controls`, and the freshness `review`. Each boundary also records its
 retention posture and one activation mode:
 
+- `governed_repository_paths`: optional repository-root-relative runtime files
+  outside the Vera plugin tree. Use this for a hosted shared service whose
+  executable API, persistence, or deployment wiring lives elsewhere in the
+  same repository. Paths must remain inside the repository and are fingerprinted
+  with a `repository:` logical prefix. Security controls implemented there use
+  the same prefix in `implemented_by`.
+
 - `automatic_session_start`;
 - `automatic_after_prior_submission`;
+- `automatic_after_prior_connection`;
 - `explicit_user_choice`.
 
 An explicit route must be optional and confirmed. An automatic route cannot

@@ -132,6 +132,54 @@ def _shared_governed_files(
     return logical_files
 
 
+def _repository_governed_files(
+    vera_root: Path,
+    paths: Iterable[str],
+) -> dict[str, Path]:
+    """Resolve repository-root-relative hosted service source without escapes."""
+
+    logical_files: dict[str, Path] = {}
+    repository_root = vera_root.parents[1]
+    resolved_repository_root = repository_root.resolve()
+    for value in paths:
+        relative = Path(value)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(
+                f"governed repository path must be repository-relative: {value}"
+            )
+        target = repository_root / relative
+        if target.is_symlink():
+            raise ValueError(
+                f"governed repository path must not be a symlink: {target}"
+            )
+        try:
+            target.resolve(strict=True).relative_to(resolved_repository_root)
+        except (FileNotFoundError, ValueError) as exc:
+            raise FileNotFoundError(
+                "governed repository path not found or outside repository: " f"{target}"
+            ) from exc
+        if target.is_file():
+            logical_files[f"repository:{relative.as_posix()}"] = target
+            continue
+        if not target.is_dir():
+            raise FileNotFoundError(f"governed repository path not found: {target}")
+        for path in target.rglob("*"):
+            if path.is_symlink():
+                raise ValueError(
+                    f"governed repository source must not use symlinks: {path}"
+                )
+            if not path.is_file():
+                continue
+            rel_parts = path.relative_to(target).parts
+            if any(part in SKIP_DIRS for part in rel_parts):
+                continue
+            if path.suffix in SKIP_SUFFIXES:
+                continue
+            logical_path = relative / path.relative_to(target)
+            logical_files[f"repository:{logical_path.as_posix()}"] = path
+    return logical_files
+
+
 def _fingerprint(
     component_root: Path,
     paths: Iterable[str],
@@ -139,6 +187,7 @@ def _fingerprint(
     wrapper: Path | None = None,
     vera_root: Path | None = None,
     shared_paths: Iterable[str] = (),
+    repository_paths: Iterable[str] = (),
 ) -> str:
     governed_paths = tuple(paths)
     logical_files = {
@@ -156,6 +205,13 @@ def _fingerprint(
             packaged = False
         logical_files.update(
             _shared_governed_files(vera_root, shared_governed_paths, packaged=packaged)
+        )
+    repository_governed_paths = tuple(repository_paths)
+    if repository_governed_paths:
+        if vera_root is None:
+            raise ValueError("vera_root is required for governed repository paths")
+        logical_files.update(
+            _repository_governed_files(vera_root, repository_governed_paths)
         )
     projected_review_server = "scripts/review_server.py"
     adapter = component_root / "assets" / "review-workbench-adapter.json"
@@ -186,10 +242,18 @@ def _fingerprint(
         digest.update(len(content).to_bytes(8, "big"))
         digest.update(content)
     if wrapper is not None:
-        digest.update(b"vera-wrapper/SKILL.md")
-        content = wrapper.read_bytes()
-        digest.update(len(content).to_bytes(8, "big"))
-        digest.update(content)
+        wrapper_root = wrapper.parent
+        wrapper_files = _governed_files(wrapper_root, (".",))
+        if wrapper not in wrapper_files:
+            raise FileNotFoundError(f"workflow wrapper not found: {wrapper}")
+        for path in wrapper_files:
+            logical_path = (
+                Path("vera-wrapper") / path.relative_to(wrapper_root)
+            ).as_posix()
+            digest.update(logical_path.encode("utf-8"))
+            content = path.read_bytes()
+            digest.update(len(content).to_bytes(8, "big"))
+            digest.update(content)
     return digest.hexdigest()
 
 
@@ -249,6 +313,7 @@ def _boundary_errors(
             automatic = {
                 "automatic_session_start",
                 "automatic_after_prior_submission",
+                "automatic_after_prior_connection",
             }
             if activation not in automatic | {"explicit_user_choice"}:
                 errors.append(f"{scope}: boundary[{index}] has invalid activation")
@@ -488,6 +553,11 @@ def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> lis
         or not all(isinstance(item, str) and item for item in governed)
     ):
         errors.append(f"{service_id}: governed_paths must be non-empty strings")
+    repository_governed = payload.get("governed_repository_paths", [])
+    if not isinstance(repository_governed, list) or not all(
+        isinstance(item, str) and item for item in repository_governed
+    ):
+        errors.append(f"{service_id}: governed_repository_paths must be strings")
     errors.extend(
         _boundary_errors(
             payload["boundaries_beyond_codex"],
@@ -501,7 +571,13 @@ def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> lis
         _security_control_errors(
             payload["security_controls"],
             scope=service_id,
-            governed_paths=payload["governed_paths"],
+            governed_paths=[
+                *payload["governed_paths"],
+                *(
+                    f"repository:{path}"
+                    for path in payload.get("governed_repository_paths", [])
+                ),
+            ],
             require_implementation=True,
         )
     )
@@ -588,7 +664,12 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
         if manifest_errors:
             continue
         try:
-            actual = _fingerprint(root, payload["governed_paths"])
+            actual = _fingerprint(
+                root,
+                payload["governed_paths"],
+                vera_root=root,
+                repository_paths=payload.get("governed_repository_paths", []),
+            )
         except (OSError, ValueError) as exc:
             errors.append(
                 f"{service_id}: cannot fingerprint governed service source: {exc}"
@@ -640,7 +721,10 @@ def _refresh_service(service_id: str, vera_root: Path) -> None:
         manifest_path = vera_root / "privacy" / "services" / f"{name}.json"
         payload = json.loads(manifest_path.read_text(encoding="utf-8"))
         payload["review"]["source_fingerprint"] = _fingerprint(
-            vera_root, payload["governed_paths"]
+            vera_root,
+            payload["governed_paths"],
+            vera_root=vera_root,
+            repository_paths=payload.get("governed_repository_paths", []),
         )
         manifest_path.write_text(
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n",

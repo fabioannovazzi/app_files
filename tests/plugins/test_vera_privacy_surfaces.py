@@ -97,10 +97,14 @@ def test_vera_shared_service_manifests_match_the_published_schema() -> None:
     assert all(not manifest_errors for manifest_errors in errors.values()), errors
 
 
-def test_vera_shared_services_separate_update_from_feedback() -> None:
+def test_vera_shared_services_separate_update_feedback_and_whatsapp() -> None:
     manifests = {manifest["service_id"]: manifest for manifest in _service_manifests()}
 
-    assert set(manifests) == {"plugin-update-check", "plugin-feedback"}
+    assert set(manifests) == {
+        "plugin-update-check",
+        "plugin-feedback",
+        "whatsapp-business-archive",
+    }
     update_boundaries = manifests["plugin-update-check"]["boundaries_beyond_codex"]
     assert [boundary["id"] for boundary in update_boundaries] == [
         "automatic-version-check"
@@ -119,6 +123,17 @@ def test_vera_shared_services_separate_update_from_feedback() -> None:
         and boundary["requires_confirmation"] is True
         for boundary in feedback_boundaries[1:]
     )
+    whatsapp_boundaries = manifests["whatsapp-business-archive"][
+        "boundaries_beyond_codex"
+    ]
+    assert [boundary["activation"] for boundary in whatsapp_boundaries] == [
+        "automatic_after_prior_connection",
+        "explicit_user_choice",
+    ]
+    assert whatsapp_boundaries[0]["optional"] is False
+    assert whatsapp_boundaries[0]["requires_confirmation"] is False
+    assert whatsapp_boundaries[1]["optional"] is True
+    assert whatsapp_boundaries[1]["requires_confirmation"] is True
 
 
 def test_vera_security_controls_exclude_architecture_and_policy_labels() -> None:
@@ -289,6 +304,10 @@ def test_vera_privacy_validator_detects_changed_shared_service_source(
     components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
     components["plugins"] = []
     components["workflow_roles"] = {}
+    components["shared_services"] = [
+        "plugin-update-check",
+        "plugin-feedback",
+    ]
     (vera_root / "components.json").write_text(
         json.dumps(components, indent=2) + "\n", encoding="utf-8"
     )
@@ -314,6 +333,73 @@ def test_vera_privacy_validator_detects_changed_shared_service_source(
     )
 
 
+def test_whatsapp_service_fingerprint_governs_hosted_repository_source(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    repository_root = tmp_path / "repository"
+    vera_root = repository_root / "plugins" / "vera"
+    shutil.copytree(VERA_ROOT, vera_root)
+    shutil.copytree(
+        ROOT / "modules" / "whatsapp_business",
+        repository_root / "modules" / "whatsapp_business",
+    )
+    shutil.copy2(
+        ROOT / "chatgpt-app-submission.json",
+        repository_root / "chatgpt-app-submission.json",
+    )
+    shutil.copytree(
+        ROOT / "modules" / "auth",
+        repository_root / "modules" / "auth",
+    )
+    (repository_root / "modules" / "pdp").mkdir(parents=True)
+    shutil.copy2(
+        ROOT / "modules" / "pdp" / "api.py",
+        repository_root / "modules" / "pdp" / "api.py",
+    )
+    shutil.copy2(
+        ROOT / "modules" / "pdp" / "legal_content.py",
+        repository_root / "modules" / "pdp" / "legal_content.py",
+    )
+    (repository_root / "config").mkdir()
+    shutil.copy2(
+        ROOT / "config" / "secrets.example.toml",
+        repository_root / "config" / "secrets.example.toml",
+    )
+    (repository_root / "docs" / "deployment").mkdir(parents=True)
+    shutil.copy2(
+        ROOT / "docs" / "deployment" / "vera_whatsapp_business.md",
+        repository_root / "docs" / "deployment" / "vera_whatsapp_business.md",
+    )
+    components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    components["plugins"] = []
+    components["workflow_roles"] = {}
+    components["shared_services"] = ["whatsapp-business-archive"]
+    (vera_root / "components.json").write_text(
+        json.dumps(components, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
+        manifest.unlink()
+    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
+        if manifest.stem != "whatsapp-business-archive":
+            manifest.unlink()
+    validator._refresh_service("whatsapp-business-archive", vera_root)
+
+    assert validator.validate_privacy_surfaces(vera_root) == []
+
+    security = repository_root / "modules" / "whatsapp_business" / "security.py"
+    security.write_text(
+        security.read_text(encoding="utf-8") + "\n# material hosted-boundary change\n",
+        encoding="utf-8",
+    )
+
+    assert (
+        "whatsapp-business-archive: privacy review is stale; run the review skill, "
+        "then --refresh-service" in validator.validate_privacy_surfaces(vera_root)
+    )
+
+
 def test_vera_privacy_validator_detects_changed_governed_source(
     tmp_path: Path,
 ) -> None:
@@ -328,6 +414,7 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
     components["plugins"] = ["prompt-optimizer"]
     components["workflow_roles"] = {}
+    components["shared_services"] = []
     (vera_root / "components.json").write_text(
         json.dumps(components, indent=2) + "\n", encoding="utf-8"
     )
@@ -335,6 +422,8 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     for manifest in manifest_dir.glob("*.json"):
         if manifest.stem != "prompt-optimizer":
             manifest.unlink()
+    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
+        manifest.unlink()
     validator_path = (
         vera_root
         / "skills"
@@ -386,6 +475,7 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     components["workflow_roles"] = {
         "client-file-preparation": {"kind": "internal_engine"}
     }
+    components["shared_services"] = []
     (vera_root / "components.json").write_text(
         json.dumps(components, indent=2) + "\n",
         encoding="utf-8",
@@ -394,6 +484,8 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     for manifest in manifest_dir.glob("*.json"):
         if manifest.stem != "client-file-preparation":
             manifest.unlink()
+    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
+        manifest.unlink()
     validator._refresh("client-file-preparation", vera_root)
 
     assert validator.validate_privacy_surfaces(vera_root) == []
@@ -410,6 +502,51 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     shutil.rmtree(packaged_component)
     assert (
         "client-file-preparation: privacy review is stale; run the review skill, then --refresh"
+        in validator.validate_privacy_surfaces(vera_root)
+    )
+
+
+def test_privacy_fingerprint_governs_workflow_wrapper_references(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    plugins_root = tmp_path / "repository" / "plugins"
+    vera_root = plugins_root / "vera"
+    component_root = plugins_root / "studio-archive"
+    shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
+    shutil.copytree(VERA_ROOT, vera_root)
+    shutil.copytree(ROOT / "plugins" / "studio-archive", component_root)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_ocr",
+        shared_ocr,
+    )
+    components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    components["plugins"] = ["studio-archive"]
+    components["workflow_roles"] = {}
+    components["shared_services"] = []
+    (vera_root / "components.json").write_text(
+        json.dumps(components, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
+        if manifest.stem != "studio-archive":
+            manifest.unlink()
+    for manifest in (vera_root / "privacy" / "services").glob("*.json"):
+        manifest.unlink()
+    validator._refresh("studio-archive", vera_root)
+
+    assert validator.validate_privacy_surfaces(vera_root) == []
+
+    reference = (
+        vera_root / "skills" / "studio-archive" / "references" / "marketplace-gmail.md"
+    )
+    reference.write_text(
+        reference.read_text(encoding="utf-8") + "\nMaterial Gmail boundary change.\n",
+        encoding="utf-8",
+    )
+
+    assert (
+        "studio-archive: privacy review is stale; run the review skill, then --refresh"
         in validator.validate_privacy_surfaces(vera_root)
     )
 

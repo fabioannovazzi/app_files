@@ -225,7 +225,7 @@ def test_full_app_keeps_change_request_intake_public_when_login_is_enabled(
 
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "test-client-id")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "test-session-secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     get_auth_config.cache_clear()
     store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
     app = create_app()

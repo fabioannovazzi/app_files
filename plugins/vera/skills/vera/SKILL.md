@@ -30,8 +30,10 @@ Shared Vera routes are registered once in `../../privacy/services/`.
 `plugin-update-check` records only the automatic public version check.
 `plugin-feedback` records the separately chosen text-feedback and hosted
 improvement-interview routes plus later automatic status polling for their
-stored receipts. Do not duplicate those shared routes in every workstream or
-turn them into per-case notices.
+stored receipts. `whatsapp-business-archive` records automatic hosted ingestion
+that begins only after an operator links an official business number, plus
+explicit read-only retrieval. Do not duplicate those shared routes in every
+workstream or turn them into per-case notices.
 
 Ask for confirmation only when a genuinely optional boundary beyond Codex has
 not already been chosen by the user. The user's explicit choice of a connector,
@@ -54,12 +56,20 @@ deployment's actual OpenAI account settings.
 
 ## Module routing
 
-- `studio-archive`: local full-text search over a shared or synced studio
-  document folder. Each professional keeps a separate private SQLite index and
-  ChatGPT/Codex context while reading the same source archive. Searches use an
-  exact folder scope; every cited passage is opened and checked against the
-  current file hash. The workflow never modifies source documents, shares an
-  index, or downloads OCR weights;
+- `studio-archive`: independent Marketplace routes for one client's Gmail or
+  linked WhatsApp Business messages, plus an optional local document route.
+  Gmail uses the separately installed OpenAI plugin, chat-scoped confirmed
+  addresses, bounded read actions, and explicit exclusion of ambiguous
+  correspondence. WhatsApp uses Vera's separately hosted read-only MCP,
+  requires one chat-confirmed E.164 client phone, and covers only new inbound
+  messages received after connection. Messages become unavailable after 90
+  days and expired live rows are removed by a daily cleanup; it imports no
+  history, downloads no media, and exposes no send or reply action.
+  Neither route needs the local archive. In local Codex, each professional may
+  additionally keep a private SQLite index and client identity registry for one
+  shared or synced studio folder. The workflow never stores Gmail credentials
+  or messages, modifies source documents or mail, shares a local index, uses
+  personal WhatsApp or WhatsApp Web automation, or downloads OCR weights;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `new-client`: one path from incoming customer files to the reviewed
   professional setup. Its subordinate `client-file-preparation` engine handles
@@ -99,16 +109,20 @@ deployment's actual OpenAI account settings.
   receives credentials, accesses a filing session, signs, pays, asks support,
   or submits a practice.
 
-For a selected workflow module, resolve its root in this order:
+For a selected local workflow module that actually needs scripts, files, or MCP,
+resolve its root in this order:
 
 1. `modules/<module>` inside the installed Vera plugin;
 2. `../<module>` beside `vera` in the repository source tree.
 
 Read the selected module's relevant `skills/<skill>/SKILL.md` completely and
 follow it. Treat the resolved module root as the working directory for every
-module command, script, requirement file, and local review server.
+module command, script, requirement file, and local review server. The
+Marketplace Gmail and WhatsApp Business branches of `studio-archive` are
+handled directly by its wrapper skill and must be selected before local module
+resolution.
 
-Before running helper scripts or write-heavy work, identify material choices
+Before running helper scripts or write-heavy local work, identify material choices
 that would change execution. Ask only those unresolved choices in chat and wait
 for the answer. Generate choices from the actual inputs; do not offer named
 frameworks, regulators, document types, output packages, or issue categories
@@ -144,9 +158,19 @@ data permit them.
 
 - Keep source files and generated artifacts in the local workspace by default;
   content Codex reads may enter the model context.
-- For Studio Archive, keep each user's derived index outside the shared source
-  folder and never copy it between professionals. Use `scope_id: "all"` only
-  after explicit studio-wide intent, and open each result before citing it.
+- For Marketplace Gmail, use the separately installed Gmail plugin directly,
+  keep confirmed identities scoped to the current conversation, search exactly
+  one client, and use read actions only. Never require a local archive or claim
+  cross-chat identity persistence. For the optional local Studio Archive, keep
+  each user's derived index outside the shared source folder and never copy it
+  or the client identity registry between professionals. Use `scope_id: "all"`
+  only after explicit studio-wide intent for local documents; studio-wide Gmail
+  search is unsupported. Open each local result before citing it.
+- For Marketplace WhatsApp Business, call the account-status tool first, use
+  exactly one user-confirmed E.164 client phone, search only bounded retained
+  inbound messages, and fetch only the useful shortlist. Never ask for Meta
+  credentials in chat, import history, download media, search all clients, use
+  WhatsApp Web or a personal account, or send and modify messages.
 - Never request, store, or replay SPID/CIE/CNS credentials, cookies, tokens, or
   one-time codes. An INPS browser capture requires a user-authenticated tab and
   remains read-only. Separately verify access/delegation authority and portal

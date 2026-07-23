@@ -392,10 +392,69 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
-    assert manifest["interface"]["shortDescription"] == ("AI companion for accountants")
+    assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
+    assert all(len(prompt) <= 128 for prompt in prompts)
+    assert prompts[0] == (
+        "Cerca i messaggi WhatsApp Business già acquisiti per un cliente, "
+        "senza rispondere né mescolare altri clienti."
+    )
     assert any("OCR locale" in prompt and "INPS" in prompt for prompt in prompts)
     assert any("SARI" in prompt and "Registro Imprese" in prompt for prompt in prompts)
+    assert (
+        "plugin Gmail ufficiale installato separatamente"
+        in manifest["interface"]["longDescription"]
+    )
+    assert (
+        "connettore ospitato WhatsApp Business di Vera"
+        in manifest["interface"]["longDescription"]
+    )
+
+    wrapper_path = "skills/studio-archive/SKILL.md"
+    reference_path = "skills/studio-archive/references/marketplace-gmail.md"
+    whatsapp_reference_path = (
+        "skills/studio-archive/references/marketplace-whatsapp-business.md"
+    )
+    whatsapp_evals_path = "evals/marketplace_whatsapp_cases.json"
+    module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
+    assert wrapper_path in entries
+    assert reference_path in entries
+    assert whatsapp_reference_path in entries
+    assert whatsapp_evals_path in entries
+    assert module_skill_path in entries
+    wrapper = entries[wrapper_path].decode("utf-8")
+    compact_wrapper = " ".join(wrapper.split())
+    reference = entries[reference_path].decode("utf-8")
+    whatsapp_reference = entries[whatsapp_reference_path].decode("utf-8")
+    module_skill = entries[module_skill_path].decode("utf-8")
+    assert "references/marketplace-gmail.md" in wrapper
+    assert "references/marketplace-whatsapp-business.md" in wrapper
+    assert "Do not resolve the local module" in wrapper
+    assert "does not require a local ZIP" in compact_wrapper
+    assert reference.index("get_profile") < reference.index("search_emails")
+    assert reference.index("search_emails") < reference.index("batch_read_email")
+    assert "current conversation" in reference
+    assert "max_results: 10" in reference
+    assert "at most 20 results per page" in reference
+    assert "absent optional Cc or Bcc field" in reference
+    assert "cannot prove the absence of an undisclosed Bcc recipient" in reference
+    assert "configured **With MCP**" in whatsapp_reference
+    assert "does not import the earlier chat history" in whatsapp_reference
+    assert "does not download media" in whatsapp_reference
+    assert "This connector has no write tool" in whatsapp_reference
+    assert "## Marketplace Gmail workflow" in module_skill
+    marketplace_section = module_skill.split(
+        "## Marketplace Gmail workflow",
+        maxsplit=1,
+    )[1].split("## Optional local Gmail enhancement", maxsplit=1)[0]
+    for local_dependency in (
+        "plan_studio_archive_gmail_search",
+        "match_studio_archive_email",
+        "configure_studio_archive_client",
+        "python scripts/studio_archive.py",
+    ):
+        assert local_dependency not in reference
+        assert local_dependency not in marketplace_section
     assert not any(
         name.rsplit("/", maxsplit=1)[-1] in {".app.json", ".mcp.json"}
         for name in entries
@@ -431,6 +490,23 @@ def test_chatgpt_manifest_rejects_more_than_three_default_prompts() -> None:
     with pytest.raises(
         ValueError,
         match=r"interface\.defaultPrompt must contain at most 3 prompts; found 4",
+    ):
+        builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
+
+
+def test_chatgpt_manifest_rejects_default_prompt_over_character_limit() -> None:
+    builder = load_builder()
+    source_path = ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json"
+    manifest = json.loads(source_path.read_text(encoding="utf-8"))
+    max_prompt_characters = 128
+    manifest["interface"]["defaultPrompt"] = ["x" * (max_prompt_characters + 1)]
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            r"interface\.defaultPrompt\[0\] must contain at most "
+            r"128 characters; found 129"
+        ),
     ):
         builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
 
@@ -2048,7 +2124,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
     )
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "dummy-client-id")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "dummy-secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     monkeypatch.setattr(auth_dependencies, "_SITE_PERMISSIONS_FILE", permissions_file)
     monkeypatch.setattr(auth_dependencies, "_PERMISSION_STRUCTURE_FILE", structure_file)
     auth_dependencies._get_site_permissions.cache_clear()

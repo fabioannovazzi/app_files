@@ -947,7 +947,7 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_five_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_lists_nine_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -961,13 +961,22 @@ def test_mcp_lists_five_strict_local_tools(tmp_path: Path) -> None:
     tools = response["result"]["tools"]
     assert {tool["name"] for tool in tools} == {
         "studio_archive_status",
+        "list_studio_archive_clients",
         "configure_studio_archive",
         "refresh_studio_archive",
         "search_studio_archive",
         "open_studio_archive_source",
+        "configure_studio_archive_client",
+        "plan_studio_archive_gmail_search",
+        "match_studio_archive_email",
     }
     assert all(tool["inputSchema"]["additionalProperties"] is False for tool in tools)
     assert all(tool["annotations"]["openWorldHint"] is False for tool in tools)
+    tool_by_name = {tool["name"]: tool for tool in tools}
+    assert (
+        tool_by_name["configure_studio_archive_client"]["annotations"]["idempotentHint"]
+        is False
+    )
 
 
 def test_mcp_rejects_non_object_json_request(tmp_path: Path) -> None:
@@ -1035,6 +1044,135 @@ def test_mcp_configure_refresh_search_and_open(tmp_path: Path) -> None:
     assert result["structuredContent"]["citation"] == "Rossi/memo.txt, lines 1"
 
 
+def test_mcp_configures_plans_and_matches_client_scoped_gmail(tmp_path: Path) -> None:
+    archive_root = tmp_path / "Shared Studio"
+    (archive_root / "Rossi").mkdir(parents=True)
+    state_dir = tmp_path / "Fabio private"
+    configured = _mcp_tool(
+        "configure_studio_archive",
+        {"archive_root": str(archive_root)},
+        state_dir=state_dir,
+    )
+    scope_id = configured["structuredContent"]["scopes"][0]["scope_id"]
+    client = _mcp_tool(
+        "configure_studio_archive_client",
+        {
+            "scope_id": scope_id,
+            "email_addresses": ["amministrazione@rossi.it"],
+            "legal_names": ["Rossi SRL"],
+            "tax_identifiers": ["01234567890"],
+        },
+        state_dir=state_dir,
+    )
+    plan = _mcp_tool(
+        "plan_studio_archive_gmail_search",
+        {"scope_id": scope_id, "topic": "rateazione INPS"},
+        state_dir=state_dir,
+    )
+
+    result = _mcp_tool(
+        "match_studio_archive_email",
+        {
+            "header_addresses": ["Rossi <amministrazione@rossi.it>"],
+            "headers_complete": True,
+            "expected_scope_id": scope_id,
+        },
+        state_dir=state_dir,
+    )
+
+    assert client["isError"] is False
+    assert client["structuredContent"]["gmail_credentials_stored"] is False
+    assert plan["structuredContent"]["connector"] == "gmail"
+    assert plan["structuredContent"]["gmail_connector_called"] is False
+    assert result["isError"] is False
+    assert result["structuredContent"]["routing_status"] == "exact"
+    assert result["structuredContent"]["may_use_in_scoped_answer"] is True
+
+
+def test_mcp_lists_and_rebinds_orphaned_client_profile(tmp_path: Path) -> None:
+    archive_root = tmp_path / "Shared Studio"
+    original_folder = archive_root / "Rossi"
+    original_folder.mkdir(parents=True)
+    state_dir = tmp_path / "Fabio private"
+    configured = _mcp_tool(
+        "configure_studio_archive",
+        {"archive_root": str(archive_root)},
+        state_dir=state_dir,
+    )
+    original_scope_id = configured["structuredContent"]["scopes"][0]["scope_id"]
+    _mcp_tool(
+        "configure_studio_archive_client",
+        {
+            "scope_id": original_scope_id,
+            "email_addresses": ["amministrazione@rossi.it"],
+        },
+        state_dir=state_dir,
+    )
+    original_folder.rename(archive_root / "Rossi Nuovo")
+    refreshed = _mcp_tool(
+        "refresh_studio_archive",
+        {},
+        state_dir=state_dir,
+    )
+    renamed_scope_id = refreshed["structuredContent"]["scopes"][0]["scope_id"]
+
+    profiles = _mcp_tool(
+        "list_studio_archive_clients",
+        {},
+        state_dir=state_dir,
+    )
+    rebound = _mcp_tool(
+        "configure_studio_archive_client",
+        {
+            "scope_id": renamed_scope_id,
+            "replace_orphaned_scope_id": original_scope_id,
+        },
+        state_dir=state_dir,
+    )
+    plan = _mcp_tool(
+        "plan_studio_archive_gmail_search",
+        {"scope_id": renamed_scope_id},
+        state_dir=state_dir,
+    )
+
+    assert profiles["structuredContent"]["orphaned_profile_count"] == 1
+    assert (
+        profiles["structuredContent"]["orphaned_profiles"][0]["scope_id"]
+        == original_scope_id
+    )
+    assert rebound["structuredContent"]["status"] == "rebound"
+    assert plan["structuredContent"]["profile_status"] == "configured"
+
+
+def test_mcp_rejects_gmail_credentials_without_writing_them(tmp_path: Path) -> None:
+    archive_root = tmp_path / "Shared Studio"
+    (archive_root / "Rossi").mkdir(parents=True)
+    state_dir = tmp_path / "Fabio private"
+    configured = _mcp_tool(
+        "configure_studio_archive",
+        {"archive_root": str(archive_root)},
+        state_dir=state_dir,
+    )
+    scope_id = configured["structuredContent"]["scopes"][0]["scope_id"]
+
+    result = _mcp_tool(
+        "configure_studio_archive_client",
+        {
+            "scope_id": scope_id,
+            "email_addresses": ["amministrazione@rossi.it"],
+            "password": "must-not-be-stored",
+        },
+        state_dir=state_dir,
+    )
+
+    assert result["isError"] is True
+    assert (
+        "Unknown tool argument: password"
+        in result["structuredContent"]["error"]["message"]
+    )
+    assert not (state_dir / "client-identities.json").exists()
+
+
 def test_vera_registers_archive_as_embedded_workflow() -> None:
     components = json.loads(
         (ROOT / "plugins" / "vera" / "components.json").read_text(encoding="utf-8")
@@ -1051,7 +1189,7 @@ def test_vera_registers_archive_as_embedded_workflow() -> None:
     assert "studio-archive" in components["plugins"]
     assert "studio-archive" not in components["workflow_roles"]
     assert vera_mcp["mcpServers"]["veraStudioArchive"]["args"][-1] == "studio-archive"
-    assert manifest["version"] == "0.1.21"
+    assert manifest["version"] == "0.1.27"
     assert (
         ROOT / "plugins" / "vera" / "skills" / "studio-archive" / "SKILL.md"
     ).is_file()

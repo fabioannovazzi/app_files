@@ -53,16 +53,11 @@
       ]
     }
   ],
-  "security_controls": [
-    {
-      "id": "manual-deep-research-handoff",
-      "control": "The workflow produces a prompt package; it does not automatically submit the prompt to Deep Research."
-    }
-  ],
+  "security_controls": [],
   "review": {
     "reviewed_at": "2026-07-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2794d3e2ee7822d0ece9b43f92c8584e356ace5469fb4edb4ac6c1a134ca521c"
+    "source_fingerprint": "0d17464779da2f284f3573466106762c3949b45de7ec0f6d5c807e46924f326a"
   }
 }

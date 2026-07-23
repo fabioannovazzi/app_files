@@ -1,4 +1,4 @@
 interface:
-  display_name: "Studio Archive"
-  short_description: "Search the studio archive with cited evidence"
-  default_prompt: "Use $studio-archive to update and search my local studio archive with source citations."
+  display_name: "Vera · Archivio dello Studio"
+  short_description: "Search one client's Gmail or a local studio archive"
+  default_prompt: "Use $studio-archive to search one client's Gmail without mixing clients."

@@ -337,12 +337,16 @@ and the file to `0600`, and populate it locally. Never commit live credentials.
   authorised to sign in (for example `example.com,sub.example.org`).
 - `GOOGLE_ALLOWED_EMAILS`: Optional comma-separated allow-list of individual
   email addresses when you want finer control than domain matching.
-- `AUTH_SESSION_SECRET`: Required when `AUTH_ENABLED=1`. Used to sign the
-  session cookies issued after Google verification.
+- `AUTH_SESSION_SECRET`: Required when `AUTH_ENABLED=1`. Must contain at least
+  32 bytes and signs the session cookies issued after Google verification.
 - `AUTH_SESSION_TTL_SECONDS`: Optional cookie lifetime (seconds). Defaults to
   43 200 s (12 h).
-- `AUTH_COOKIE_SECURE`: Defaults to `1`. Set to `0` only for local HTTP
-  development; production deployments must keep secure cookies enabled.
+- `AUTH_COOKIE_SECURE`: Defaults to `1` and must remain enabled for a production
+  HTTPS origin.
+- `AUTH_PUBLIC_BASE_URL`: Canonical HTTPS origin used for security-sensitive
+  email links; defaults to `https://mparanza.com`.
+- `AUTH_TRUSTED_HOSTS`: Optional comma-separated additional Host values. The
+  canonical host is always trusted and unlisted hosts are rejected.
 - `AUTH_MAGIC_LINK_TTL_SECONDS`: Optional magic-link lifetime (seconds). Defaults to
   900 s (15 min).
 - `AUTH_MAGIC_LINK_DEFAULT_REDIRECT`: Optional path to redirect users to after they click
@@ -417,6 +421,8 @@ processes share the configuration:
 - `AUTH_SESSION_SECRET`
 - `AUTH_SESSION_TTL_SECONDS` (optional)
 - `AUTH_COOKIE_SECURE`
+- `AUTH_PUBLIC_BASE_URL`
+- `AUTH_TRUSTED_HOSTS` (optional)
 - `AUTH_MAGIC_LINK_TTL_SECONDS` (optional)
 - `AUTH_MAGIC_LINK_DEFAULT_REDIRECT` (optional)
 - `AUTH_MAGIC_LINK_STORE_PATH` (optional)

@@ -120,6 +120,160 @@ def test_inspect_sources_can_skip_network_fetch(tmp_path: Path) -> None:
     assert payload["sources"][0]["status"] == "listed_not_fetched"
 
 
+def test_inspect_sources_blocks_loopback_without_opening_it(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inspect_mod = load_script(
+        "deep_research_validator_inspect_sources_loopback",
+        "inspect_sources.py",
+    )
+    inventory = tmp_path / "document_inventory.json"
+    inventory.write_text(
+        json.dumps(
+            {
+                "urls": ["http://127.0.0.1/private"],
+                "footnotes": [],
+                "markdown_links": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def fail_if_opened(*_args, **_kwargs):
+        raise AssertionError("A loopback URL must not reach the HTTP opener.")
+
+    monkeypatch.setattr(inspect_mod.urllib.request, "build_opener", fail_if_opened)
+
+    payload = inspect_mod.inspect_sources(inventory)
+
+    assert payload["sources"][0]["status"] == "blocked_non_public_destination"
+
+
+def test_inspect_sources_revalidates_redirect_destination(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inspect_mod = load_script(
+        "deep_research_validator_inspect_sources_redirect",
+        "inspect_sources.py",
+    )
+    inventory = tmp_path / "document_inventory.json"
+    inventory.write_text(
+        json.dumps(
+            {
+                "urls": ["https://public.example/source"],
+                "footnotes": [],
+                "markdown_links": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        inspect_mod.socket,
+        "getaddrinfo",
+        lambda *_args, **_kwargs: [
+            (
+                inspect_mod.socket.AF_INET,
+                inspect_mod.socket.SOCK_STREAM,
+                6,
+                "",
+                ("93.184.216.34", 443),
+            )
+        ],
+    )
+
+    class RedirectingOpener:
+        def __init__(self, handler) -> None:
+            self.handler = handler
+
+        def open(self, request, *, timeout: float):
+            del timeout
+            return self.handler.redirect_request(
+                request,
+                None,
+                302,
+                "Found",
+                {},
+                "http://127.0.0.1/admin",
+            )
+
+    monkeypatch.setattr(
+        inspect_mod.urllib.request,
+        "build_opener",
+        lambda handler: RedirectingOpener(handler),
+    )
+
+    payload = inspect_mod.inspect_sources(inventory)
+
+    assert payload["sources"][0]["status"] == "blocked_non_public_destination"
+
+
+def test_inspect_sources_allows_public_https_destination(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inspect_mod = load_script(
+        "deep_research_validator_inspect_sources_public",
+        "inspect_sources.py",
+    )
+    inventory = tmp_path / "document_inventory.json"
+    inventory.write_text(
+        json.dumps(
+            {
+                "urls": ["https://public.example/source"],
+                "footnotes": [],
+                "markdown_links": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        inspect_mod.socket,
+        "getaddrinfo",
+        lambda *_args, **_kwargs: [
+            (
+                inspect_mod.socket.AF_INET,
+                inspect_mod.socket.SOCK_STREAM,
+                6,
+                "",
+                ("93.184.216.34", 443),
+            )
+        ],
+    )
+
+    class PublicResponse:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args) -> None:
+            return None
+
+        def read(self, _limit: int) -> bytes:
+            return (
+                b"<html><body>"
+                + b"Official public source content. " * 12
+                + b"</body></html>"
+            )
+
+    class PublicOpener:
+        def open(self, _request, *, timeout: float) -> PublicResponse:
+            del timeout
+            return PublicResponse()
+
+    monkeypatch.setattr(
+        inspect_mod.urllib.request,
+        "build_opener",
+        lambda _handler: PublicOpener(),
+    )
+
+    payload = inspect_mod.inspect_sources(inventory)
+
+    assert payload["sources"][0]["status"] == "available"
+
+
 def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
     package_mod = load_script(
         "deep_research_validator_package_validation",

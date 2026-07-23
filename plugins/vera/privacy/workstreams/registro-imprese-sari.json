@@ -7,7 +7,8 @@
     "skills",
     "scripts",
     "mcp",
-    "schemas"
+    "schemas",
+    "assets/registro-imprese-sari-review-widget.html"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_ocr"
@@ -90,14 +91,14 @@
       "control": "Evidence and generated artifacts remain in an owner-only directory outside the repository."
     },
     {
-      "id": "no-authentication-or-filing",
-      "control": "The workflow never receives authentication material, operates a filing session, signs, pays, contacts support, or submits a practice."
+      "id": "reject-secret-and-session-material",
+      "control": "Case and review validators reject credential, authentication-token, cookie, signature, and session-material fields before persistence."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "226f4939780d4e82e6f1cce33cce9eb36ffd3120735c5fa027a954179fe46c5a"
+    "source_fingerprint": "41ddb2c562b52ac3898d7386ae4372a542336a0053f93213146818c28448fdfc"
   }
 }

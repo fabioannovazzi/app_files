@@ -36,6 +36,16 @@
       "id": "vera-studio-archive",
       "prompt": "Vera, cerca nell'archivio condiviso dello studio i precedenti sulla cessione di quote e cita solo i passaggi verificati.",
       "required_signals": ["Vera", "archivio condiviso", "passaggi verificati"]
+    },
+    {
+      "id": "vera-studio-archive-gmail",
+      "prompt": "Vera, cerca in Gmail le email sulla rateazione INPS di Rossi senza includere la corrispondenza di Bianchi.",
+      "required_signals": ["Vera", "Gmail", "Rossi", "Bianchi"]
+    },
+    {
+      "id": "vera-studio-archive-whatsapp",
+      "prompt": "Vera, cerca nei WhatsApp Business già acquisiti di Rossi sul modello F24 senza includere Bianchi.",
+      "required_signals": ["Vera", "WhatsApp Business", "Rossi", "F24"]
     }
   ],
   "should_not_trigger": [

@@ -530,7 +530,7 @@ def test_clara_users_administer_interviews_while_participant_links_are_public(
     monkeypatch.setenv("HOSTED_INTERVIEWS_ROOT", str(tmp_path / "interviews"))
     monkeypatch.setenv("AUTH_ENABLED", "1")
     monkeypatch.setenv("GOOGLE_CLIENT_ID", "dummy-client-id")
-    monkeypatch.setenv("AUTH_SESSION_SECRET", "dummy-secret")
+    monkeypatch.setenv("AUTH_SESSION_SECRET", "s" * 32)
     auth_dependencies._get_site_permissions.cache_clear()
     auth_dependencies._get_permission_structure.cache_clear()
     get_auth_config.cache_clear()

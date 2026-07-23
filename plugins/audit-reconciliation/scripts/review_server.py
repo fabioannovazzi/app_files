@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import logging
 import re
@@ -49,6 +50,25 @@ ACTION_STATUSES = {
 }
 BLOCKING_ACTIONS = {"reject", "mark_unclear", "request_more_documents"}
 LOGGER = logging.getLogger(__name__)
+
+
+def _validate_loopback_host(host: str) -> str:
+    """Enforce the fixed local-only security boundary before socket binding."""
+
+    normalized = host.strip()
+    if normalized.lower() == "localhost":
+        return "127.0.0.1"
+    try:
+        address = ipaddress.ip_address(normalized)
+    except ValueError as exc:
+        raise ValueError(
+            "review server host must be localhost or an IPv4 loopback address"
+        ) from exc
+    if not address.is_loopback or address.version != 4:
+        raise ValueError(
+            "review server host must be localhost or an IPv4 loopback address"
+        )
+    return normalized
 
 
 def _utc_now() -> str:
@@ -1003,9 +1023,10 @@ def serve_review(
 
     directory = _output_dir(output_dir)
     build_session_payload(directory)
-    httpd = ThreadingHTTPServer((host, port), _handler(directory))
+    safe_host = _validate_loopback_host(host)
+    httpd = ThreadingHTTPServer((safe_host, port), _handler(directory))
     actual_port = httpd.server_address[1]
-    url = f"http://{host}:{actual_port}/review"
+    url = f"http://{safe_host}:{actual_port}/review"
     LOGGER.info("Audit Reconciliation review server: %s", url)
     LOGGER.info("Output folder: %s", directory)
     if open_browser:

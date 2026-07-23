@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from email import policy
 from email.parser import BytesParser
+from email.utils import getaddresses
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterator, Sequence
@@ -26,17 +27,23 @@ __all__ = [
     "ArchiveNotConfiguredError",
     "SourceChangedError",
     "configure_archive",
+    "list_studio_client_identities",
+    "match_studio_email_client",
     "open_archive_source",
+    "plan_gmail_client_search",
     "refresh_archive",
     "search_archive",
+    "set_studio_client_identity",
     "studio_archive_status",
 ]
 
 SCHEMA_VERSION = "2"
 CONFIG_SCHEMA_VERSION = 1
+CLIENT_IDENTITIES_SCHEMA_VERSION = 1
 STATE_ENV = "VERA_STUDIO_ARCHIVE_STATE_DIR"
 DEFAULT_STATE_SUBDIR = Path(".mparanza") / "vera-studio-archive"
 CONFIG_FILENAME = "config.json"
+CLIENT_IDENTITIES_FILENAME = "client-identities.json"
 DATABASE_FILENAME = "archive.sqlite3"
 
 TEXT_SUFFIXES = {".txt", ".md", ".csv", ".json", ".xml"}
@@ -77,6 +84,12 @@ MAX_SEARCH_TOKENS = 24
 MAX_OPEN_CHARS = 24_000
 MAX_STATUS_SCAN_ISSUES = 200
 MAX_STATUS_DOCUMENT_ISSUES = 200
+MAX_CLIENT_IDENTITIES = 5_000
+MAX_CLIENT_EMAIL_ADDRESSES = 20
+MAX_CLIENT_LEGAL_NAMES = 20
+MAX_CLIENT_TAX_IDENTIFIERS = 20
+MAX_GMAIL_QUERY_IDENTITIES = 10
+MAX_GMAIL_TOPIC_CHARS = 200
 IGNORED_NAMES = {
     ".DS_Store",
     ".git",
@@ -140,6 +153,28 @@ class ArchiveConfig:
             "archive_root": str(self.archive_root),
             "configured_at": self.configured_at,
             "scopes": [scope.as_json() for scope in self.scopes],
+        }
+
+
+@dataclass(frozen=True)
+class ClientIdentity:
+    """One private client identity record bound to an exact archive scope."""
+
+    scope_id: str
+    email_addresses: tuple[str, ...]
+    legal_names: tuple[str, ...]
+    tax_identifiers: tuple[str, ...]
+    updated_at: str
+
+    def as_json(self) -> dict[str, Any]:
+        """Return the persisted private-registry shape."""
+
+        return {
+            "scope_id": self.scope_id,
+            "email_addresses": list(self.email_addresses),
+            "legal_names": list(self.legal_names),
+            "tax_identifiers": list(self.tax_identifiers),
+            "updated_at": self.updated_at,
         }
 
 
@@ -275,6 +310,10 @@ def _state_dir(
 
 def _config_path(state_dir: Path) -> Path:
     return state_dir / CONFIG_FILENAME
+
+
+def _client_identities_path(state_dir: Path) -> Path:
+    return state_dir / CLIENT_IDENTITIES_FILENAME
 
 
 def _database_path(state_dir: Path) -> Path:
@@ -503,6 +542,623 @@ def _load_config(
         raise ArchiveError("Studio Archive scopes must be non-empty and unique.")
     configured_at = str(payload.get("configured_at") or "")
     return ArchiveConfig(root, tuple(scopes), configured_at)
+
+
+def _normalize_email_address(value: str) -> str:
+    if not isinstance(value, str):
+        raise ArchiveError("Client email addresses must be strings.")
+    raw = value.strip()
+    parsed = getaddresses([raw])
+    if len(parsed) != 1:
+        raise ArchiveError(f"Client email address is invalid: {value!r}.")
+    address = parsed[0][1].strip().casefold()
+    if (
+        len(address) > 254
+        or address.count("@") != 1
+        or re.fullmatch(
+            r"[A-Za-z0-9.!#$%&'*+/=?^_`|~-]+@[A-Za-z0-9.-]+",
+            address,
+        )
+        is None
+    ):
+        raise ArchiveError(f"Client email address is invalid: {value!r}.")
+    local_part, domain = address.rsplit("@", maxsplit=1)
+    if (
+        not local_part
+        or not domain
+        or domain.startswith((".", "-"))
+        or domain.endswith((".", "-"))
+        or ".." in domain
+    ):
+        raise ArchiveError(f"Client email address is invalid: {value!r}.")
+    return address
+
+
+def _normalize_email_addresses(values: Sequence[str]) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes)) or len(values) > MAX_CLIENT_EMAIL_ADDRESSES:
+        raise ArchiveError(
+            "A client may have at most "
+            f"{MAX_CLIENT_EMAIL_ADDRESSES} confirmed email addresses."
+        )
+    normalized = {_normalize_email_address(value) for value in values}
+    return tuple(sorted(normalized))
+
+
+def _normalize_legal_names(values: Sequence[str]) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes)) or len(values) > MAX_CLIENT_LEGAL_NAMES:
+        raise ArchiveError(
+            f"A client may have at most {MAX_CLIENT_LEGAL_NAMES} legal names."
+        )
+    normalized: dict[str, str] = {}
+    for value in values:
+        if not isinstance(value, str):
+            raise ArchiveError("Client legal names must be strings.")
+        name = re.sub(r"\s+", " ", value).strip()
+        if (
+            not name
+            or len(name) > 160
+            or re.search(r"[\x00-\x1f\x7f]", name) is not None
+        ):
+            raise ArchiveError("Client legal names must contain 1 to 160 characters.")
+        normalized.setdefault(name.casefold(), name)
+    return tuple(normalized[key] for key in sorted(normalized))
+
+
+def _normalize_tax_identifiers(values: Sequence[str]) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes)) or len(values) > MAX_CLIENT_TAX_IDENTIFIERS:
+        raise ArchiveError(
+            "A client may have at most "
+            f"{MAX_CLIENT_TAX_IDENTIFIERS} tax identifiers."
+        )
+    normalized: set[str] = set()
+    for value in values:
+        if not isinstance(value, str):
+            raise ArchiveError("Client tax identifiers must be strings.")
+        identifier = re.sub(r"\s+", "", value).upper()
+        if re.fullmatch(r"[A-Z0-9]{5,32}", identifier) is None:
+            raise ArchiveError(
+                "Client tax identifiers must contain 5 to 32 letters or digits."
+            )
+        normalized.add(identifier)
+    return tuple(sorted(normalized))
+
+
+def _validate_identity_uniqueness(records: Sequence[ClientIdentity]) -> None:
+    email_owners: dict[str, str] = {}
+    tax_owners: dict[str, str] = {}
+    for record in records:
+        for email_address in record.email_addresses:
+            previous_scope = email_owners.setdefault(email_address, record.scope_id)
+            if previous_scope != record.scope_id:
+                raise ArchiveError(
+                    "Client email address is assigned to more than one scope: "
+                    f"{email_address}."
+                )
+        for tax_identifier in record.tax_identifiers:
+            previous_scope = tax_owners.setdefault(tax_identifier, record.scope_id)
+            if previous_scope != record.scope_id:
+                raise ArchiveError(
+                    "Client tax identifier is assigned to more than one scope: "
+                    f"{tax_identifier}."
+                )
+
+
+def _load_client_identities(state_dir: Path) -> tuple[ClientIdentity, ...]:
+    path = _client_identities_path(state_dir)
+    if not path.is_file():
+        return ()
+    _assert_private_file(path, "client identity registry")
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ArchiveError(
+            f"Studio Archive client identity registry is unreadable: {exc}"
+        ) from exc
+    if (
+        not isinstance(payload, dict)
+        or payload.get("schema_version") != CLIENT_IDENTITIES_SCHEMA_VERSION
+        or not isinstance(payload.get("clients"), list)
+    ):
+        raise ArchiveError("Studio Archive client identity registry is malformed.")
+    raw_clients = payload["clients"]
+    if len(raw_clients) > MAX_CLIENT_IDENTITIES:
+        raise ArchiveError("Studio Archive client identity registry is too large.")
+    records: list[ClientIdentity] = []
+    seen_scope_ids: set[str] = set()
+    required_keys = {
+        "scope_id",
+        "email_addresses",
+        "legal_names",
+        "tax_identifiers",
+        "updated_at",
+    }
+    for item in raw_clients:
+        if not isinstance(item, dict) or set(item) != required_keys:
+            raise ArchiveError("Studio Archive client identity record is malformed.")
+        scope_id = item["scope_id"]
+        updated_at = item["updated_at"]
+        if (
+            not isinstance(scope_id, str)
+            or re.fullmatch(r"scope_[0-9a-f]{24}", scope_id) is None
+            or scope_id in seen_scope_ids
+            or not isinstance(updated_at, str)
+            or not updated_at
+        ):
+            raise ArchiveError("Studio Archive client identity record is invalid.")
+        raw_emails = item["email_addresses"]
+        raw_names = item["legal_names"]
+        raw_tax_ids = item["tax_identifiers"]
+        if not all(
+            isinstance(values, list) for values in (raw_emails, raw_names, raw_tax_ids)
+        ):
+            raise ArchiveError("Studio Archive client identity values are malformed.")
+        records.append(
+            ClientIdentity(
+                scope_id=scope_id,
+                email_addresses=_normalize_email_addresses(raw_emails),
+                legal_names=_normalize_legal_names(raw_names),
+                tax_identifiers=_normalize_tax_identifiers(raw_tax_ids),
+                updated_at=updated_at,
+            )
+        )
+        seen_scope_ids.add(scope_id)
+    _validate_identity_uniqueness(records)
+    return tuple(sorted(records, key=lambda record: record.scope_id))
+
+
+def _write_client_identities(
+    state_dir: Path,
+    records: Sequence[ClientIdentity],
+) -> None:
+    _validate_identity_uniqueness(records)
+    _write_private_json(
+        _client_identities_path(state_dir),
+        {
+            "schema_version": CLIENT_IDENTITIES_SCHEMA_VERSION,
+            "clients": [
+                record.as_json()
+                for record in sorted(records, key=lambda item: item.scope_id)
+            ],
+        },
+    )
+
+
+def _client_record(
+    record: ClientIdentity | None,
+    *,
+    scope: Scope,
+) -> dict[str, Any]:
+    if record is None:
+        return {
+            **scope.as_json(),
+            "profile_status": "alias_only",
+            "email_addresses": [],
+            "legal_names": [],
+            "tax_identifiers": [],
+            "updated_at": None,
+        }
+    profile_status = "configured" if record.email_addresses else "candidate_only"
+    return {
+        **scope.as_json(),
+        "profile_status": profile_status,
+        "email_addresses": list(record.email_addresses),
+        "legal_names": list(record.legal_names),
+        "tax_identifiers": list(record.tax_identifiers),
+        "updated_at": record.updated_at,
+    }
+
+
+def list_studio_client_identities(
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """List exact archive scopes and their private Gmail identity profiles."""
+
+    private_state = _state_dir(state_dir)
+    stored_config = _load_config(private_state, validate_scope_roots=False)
+    config, scopes_changed = _current_scope_view(stored_config)
+    records = _load_client_identities(private_state)
+    records_by_scope = {record.scope_id: record for record in records}
+    active_scope_ids = {scope.scope_id for scope in config.scopes}
+    clients = [
+        _client_record(records_by_scope.get(scope.scope_id), scope=scope)
+        for scope in config.scopes
+    ]
+    orphaned = [
+        {
+            **record.as_json(),
+            "profile_status": "orphaned",
+        }
+        for record in records
+        if record.scope_id not in active_scope_ids
+    ]
+    return {
+        "scope_configuration_changed": scopes_changed,
+        "configured_profile_count": sum(
+            client["profile_status"] == "configured" for client in clients
+        ),
+        "candidate_only_profile_count": sum(
+            client["profile_status"] == "candidate_only" for client in clients
+        ),
+        "alias_only_profile_count": sum(
+            client["profile_status"] == "alias_only" for client in clients
+        ),
+        "orphaned_profile_count": len(orphaned),
+        "clients": clients,
+        "orphaned_profiles": orphaned,
+        "gmail_connector_called": False,
+    }
+
+
+def set_studio_client_identity(
+    scope_id: str,
+    *,
+    email_addresses: Sequence[str] = (),
+    legal_names: Sequence[str] = (),
+    tax_identifiers: Sequence[str] = (),
+    replace_orphaned_scope_id: str | None = None,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Replace one scope's confirmed private Gmail identity profile."""
+
+    private_state = _state_dir(state_dir)
+    config = _load_config(private_state, validate_scope_roots=False)
+    _, scopes_changed = _current_scope_view(config)
+    if scopes_changed:
+        raise ArchiveError(
+            "Top-level archive scopes changed; refresh before configuring clients."
+        )
+    scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
+    scope = scopes_by_id.get(scope_id)
+    if scope is None:
+        raise ArchiveError("Client identity scope is not configured.")
+    records = list(_load_client_identities(private_state))
+    existing = next(
+        (record for record in records if record.scope_id == scope_id),
+        None,
+    )
+    if replace_orphaned_scope_id is not None:
+        if (
+            not isinstance(replace_orphaned_scope_id, str)
+            or re.fullmatch(
+                r"scope_[0-9a-f]{24}",
+                replace_orphaned_scope_id,
+            )
+            is None
+        ):
+            raise ArchiveError("Replacement client scope identifier is invalid.")
+        if replace_orphaned_scope_id in scopes_by_id:
+            raise ArchiveError(
+                "Only an orphaned client profile can be explicitly rebound."
+            )
+        orphaned = next(
+            (
+                record
+                for record in records
+                if record.scope_id == replace_orphaned_scope_id
+            ),
+            None,
+        )
+        if orphaned is None:
+            raise ArchiveError("Orphaned client profile was not found.")
+        if existing is not None:
+            raise ArchiveError(
+                "The target client scope already has an identity profile."
+            )
+        if email_addresses or legal_names or tax_identifiers:
+            raise ArchiveError(
+                "Do not supply identity values while rebinding an orphaned profile."
+            )
+        replacement = ClientIdentity(
+            scope_id=scope_id,
+            email_addresses=orphaned.email_addresses,
+            legal_names=orphaned.legal_names,
+            tax_identifiers=orphaned.tax_identifiers,
+            updated_at=_now_iso(),
+        )
+        updated_records = [
+            record for record in records if record.scope_id != replace_orphaned_scope_id
+        ] + [replacement]
+        _write_client_identities(private_state, updated_records)
+        return {
+            "status": "rebound",
+            "client": _client_record(replacement, scope=scope),
+            "replaced_orphaned_scope_id": replace_orphaned_scope_id,
+            "gmail_connector_called": False,
+            "gmail_credentials_stored": False,
+        }
+    normalized_emails = _normalize_email_addresses(email_addresses)
+    normalized_names = _normalize_legal_names(legal_names)
+    normalized_tax_ids = _normalize_tax_identifiers(tax_identifiers)
+    if not (normalized_emails or normalized_names or normalized_tax_ids):
+        raise ArchiveError(
+            "Configure at least one confirmed email address, legal name, "
+            "or tax identifier."
+        )
+    unchanged = existing is not None and (
+        existing.email_addresses == normalized_emails
+        and existing.legal_names == normalized_names
+        and existing.tax_identifiers == normalized_tax_ids
+    )
+    replacement = ClientIdentity(
+        scope_id=scope_id,
+        email_addresses=normalized_emails,
+        legal_names=normalized_names,
+        tax_identifiers=normalized_tax_ids,
+        updated_at=existing.updated_at if unchanged else _now_iso(),
+    )
+    updated_records = [record for record in records if record.scope_id != scope_id] + [
+        replacement
+    ]
+    _validate_identity_uniqueness(updated_records)
+    if not unchanged:
+        _write_client_identities(private_state, updated_records)
+    return {
+        "status": "unchanged" if unchanged else "configured",
+        "client": _client_record(replacement, scope=scope),
+        "gmail_connector_called": False,
+        "gmail_credentials_stored": False,
+    }
+
+
+def _gmail_safe_phrase(value: str) -> str:
+    normalized = re.sub(r'["{}\\():\[\]]', " ", value)
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    if not normalized:
+        raise ArchiveError("Gmail search phrase contains no safe characters.")
+    return f'"{normalized}"'
+
+
+def _gmail_date(value: str | None, label: str) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or re.fullmatch(r"\d{4}-\d{2}-\d{2}", value) is None:
+        raise ArchiveError(f"{label} must use YYYY-MM-DD.")
+    try:
+        datetime.strptime(value, "%Y-%m-%d")
+    except ValueError as exc:
+        raise ArchiveError(f"{label} is not a valid calendar date.") from exc
+    return value.replace("-", "/")
+
+
+def _gmail_query_prefix(
+    *,
+    after: str | None,
+    before: str | None,
+) -> str:
+    parts = ["in:anywhere", "-in:spam", "-in:trash"]
+    normalized_after = _gmail_date(after, "after")
+    normalized_before = _gmail_date(before, "before")
+    if (
+        normalized_after is not None
+        and normalized_before is not None
+        and normalized_after >= normalized_before
+    ):
+        raise ArchiveError("after must be earlier than before.")
+    if normalized_after is not None:
+        parts.append(f"after:{normalized_after}")
+    if normalized_before is not None:
+        parts.append(f"before:{normalized_before}")
+    return " ".join(parts)
+
+
+def _chunked(values: Sequence[str], size: int) -> Iterator[tuple[str, ...]]:
+    for offset in range(0, len(values), size):
+        yield tuple(values[offset : offset + size])
+
+
+def plan_gmail_client_search(
+    scope_id: str,
+    *,
+    topic: str | None = None,
+    after: str | None = None,
+    before: str | None = None,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Build bounded Gmail-native searches without calling the connector."""
+
+    private_state = _state_dir(state_dir)
+    config = _load_config(private_state, validate_scope_roots=False)
+    _, scopes_changed = _current_scope_view(config)
+    if scopes_changed:
+        raise ArchiveError(
+            "Top-level archive scopes changed; refresh before planning Gmail search."
+        )
+    if scope_id == "all":
+        raise ArchiveError("Studio-wide Gmail search is not supported.")
+    scope = next((item for item in config.scopes if item.scope_id == scope_id), None)
+    if scope is None:
+        raise ArchiveError("Gmail search scope is not configured.")
+    records = _load_client_identities(private_state)
+    record = next((item for item in records if item.scope_id == scope_id), None)
+    if topic is not None:
+        if not isinstance(topic, str) or not topic.strip():
+            raise ArchiveError("Gmail search topic must be non-empty when supplied.")
+        if len(topic) > MAX_GMAIL_TOPIC_CHARS:
+            raise ArchiveError(
+                "Gmail search topic must contain at most "
+                f"{MAX_GMAIL_TOPIC_CHARS} characters."
+            )
+        topic_phrase = _gmail_safe_phrase(topic)
+    else:
+        topic_phrase = None
+    prefix = _gmail_query_prefix(after=after, before=before)
+    topic_suffix = "" if topic_phrase is None else f" {topic_phrase}"
+    queries: list[dict[str, Any]] = []
+    if record is not None:
+        for query_index, addresses in enumerate(
+            _chunked(record.email_addresses, MAX_GMAIL_QUERY_IDENTITIES),
+            start=1,
+        ):
+            participant_terms = " ".join(
+                term
+                for address in addresses
+                for term in (
+                    f"from:{address}",
+                    f"to:{address}",
+                    f"cc:{address}",
+                )
+            )
+            queries.append(
+                {
+                    "query_id": f"direct-{query_index}",
+                    "kind": "confirmed_participant",
+                    "query": f"{prefix} {{{participant_terms}}}{topic_suffix}",
+                    "max_results": 20,
+                    "routing_rule": "exact_unique_address_match_required",
+                }
+            )
+        candidate_values = tuple(
+            dict.fromkeys(
+                (
+                    scope.display_name,
+                    *record.legal_names,
+                    *record.tax_identifiers,
+                )
+            )
+        )
+    else:
+        candidate_values = (scope.display_name,)
+    for query_index, identities in enumerate(
+        _chunked(candidate_values, MAX_GMAIL_QUERY_IDENTITIES),
+        start=1,
+    ):
+        identity_terms = " ".join(_gmail_safe_phrase(value) for value in identities)
+        queries.append(
+            {
+                "query_id": f"candidate-{query_index}",
+                "kind": "identity_candidate",
+                "query": f"{prefix} {{{identity_terms}}}{topic_suffix}",
+                "max_results": 20,
+                "routing_rule": "message_read_and_semantic_review_required",
+            }
+        )
+    if record is None:
+        profile_status = "alias_only"
+    elif record.email_addresses:
+        profile_status = "configured"
+    else:
+        profile_status = "candidate_only"
+    return {
+        "connector": "gmail",
+        "scope_id": scope.scope_id,
+        "display_name": scope.display_name,
+        "profile_status": profile_status,
+        "queries": queries,
+        "requires_connector_profile_check": True,
+        "requires_message_read_before_use": True,
+        "gmail_connector_called": False,
+        "warnings": (
+            []
+            if record is not None and record.email_addresses
+            else [
+                "No confirmed participant address is configured. Candidate "
+                "results must be reviewed and an address confirmed before "
+                "automatic client routing."
+            ]
+        ),
+    }
+
+
+def match_studio_email_client(
+    header_addresses: Sequence[str],
+    *,
+    headers_complete: bool = False,
+    expected_scope_id: str | None = None,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Match Gmail headers only by unique, confirmed full email addresses."""
+
+    if (
+        isinstance(header_addresses, (str, bytes))
+        or not header_addresses
+        or len(header_addresses) > 100
+    ):
+        raise ArchiveError("Provide between 1 and 100 Gmail header address values.")
+    if not isinstance(headers_complete, bool):
+        raise ArchiveError("headers_complete must be a boolean.")
+    private_state = _state_dir(state_dir)
+    config = _load_config(private_state, validate_scope_roots=False)
+    _, scopes_changed = _current_scope_view(config)
+    if scopes_changed:
+        raise ArchiveError(
+            "Top-level archive scopes changed; refresh before matching Gmail."
+        )
+    scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
+    if expected_scope_id is not None and expected_scope_id not in scopes_by_id:
+        raise ArchiveError("Expected Gmail client scope is not configured.")
+    parsed_addresses: set[str] = set()
+    unparsed_headers: list[str] = []
+    for raw_header in header_addresses:
+        if not isinstance(raw_header, str) or len(raw_header) > 2_000:
+            raise ArchiveError("Gmail header address values must be bounded strings.")
+        parsed = getaddresses([raw_header])
+        accepted = False
+        parsed_completely = bool(parsed)
+        for _, address in parsed:
+            if not address:
+                parsed_completely = False
+                continue
+            try:
+                parsed_addresses.add(_normalize_email_address(address))
+            except ArchiveError:
+                parsed_completely = False
+                continue
+            accepted = True
+        if not accepted or not parsed_completely:
+            unparsed_headers.append(raw_header)
+    records = _load_client_identities(private_state)
+    owners = {
+        email_address: record.scope_id
+        for record in records
+        for email_address in record.email_addresses
+    }
+    matched: dict[str, list[str]] = {}
+    for address in sorted(parsed_addresses):
+        owner = owners.get(address)
+        if owner is not None:
+            matched.setdefault(owner, []).append(address)
+    candidate_scope_ids = sorted(matched)
+    header_coverage_complete = headers_complete and not unparsed_headers
+    if len(candidate_scope_ids) > 1:
+        routing_status = "ambiguous"
+        matched_scope_id = None
+    elif not header_coverage_complete:
+        routing_status = "incomplete"
+        matched_scope_id = None
+    elif len(candidate_scope_ids) == 1:
+        routing_status = "exact"
+        matched_scope_id: str | None = candidate_scope_ids[0]
+    else:
+        routing_status = "unassigned"
+        matched_scope_id = None
+    belongs_to_expected_scope: bool | None
+    if expected_scope_id is None or matched_scope_id is None:
+        belongs_to_expected_scope = None
+    else:
+        belongs_to_expected_scope = matched_scope_id == expected_scope_id
+    return {
+        "routing_status": routing_status,
+        "matched_scope_id": matched_scope_id,
+        "candidate_scope_ids": candidate_scope_ids,
+        "matches": [
+            {
+                "scope_id": scope_id,
+                "display_name": scopes_by_id[scope_id].display_name,
+                "email_addresses": matched[scope_id],
+                "match_method": "exact_email_address",
+            }
+            for scope_id in candidate_scope_ids
+        ],
+        "belongs_to_expected_scope": belongs_to_expected_scope,
+        "may_use_in_scoped_answer": belongs_to_expected_scope is True,
+        "requires_semantic_review": routing_status != "exact",
+        "parsed_email_addresses": sorted(parsed_addresses),
+        "unparsed_header_count": len(unparsed_headers),
+        "header_coverage_complete": header_coverage_complete,
+        "gmail_connector_called": False,
+        "gmail_data_persisted": False,
+    }
 
 
 def _config_fingerprint(config: ArchiveConfig) -> str:

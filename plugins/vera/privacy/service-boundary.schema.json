@@ -23,6 +23,11 @@
       "uniqueItems": true,
       "items": {"type": "string", "minLength": 1}
     },
+    "governed_repository_paths": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
     "boundaries_beyond_codex": {
       "type": "array",
       "minItems": 1,
@@ -55,7 +60,8 @@
                 "activation": {
                   "enum": [
                     "automatic_session_start",
-                    "automatic_after_prior_submission"
+                    "automatic_after_prior_submission",
+                    "automatic_after_prior_connection"
                   ]
                 }
               },
@@ -92,6 +98,7 @@
             "enum": [
               "automatic_session_start",
               "automatic_after_prior_submission",
+              "automatic_after_prior_connection",
               "explicit_user_choice"
             ]
           },

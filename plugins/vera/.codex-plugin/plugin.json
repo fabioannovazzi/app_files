@@ -1,7 +1,7 @@
 {
   "name": "vera",
-  "version": "0.1.21",
-  "description": "Vera cerca nell'archivio locale dello studio e prepara istruttorie e carte di lavoro rivedibili, incluso il percorso New Client.",
+  "version": "0.1.27",
+  "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -15,6 +15,10 @@
     "commercialisti",
     "archivio-studio",
     "ricerca-documenti",
+    "gmail",
+    "email",
+    "whatsapp-business",
+    "whatsapp-cloud-api",
     "accounting",
     "audit",
     "new-client",
@@ -40,11 +44,12 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Cerca nell'archivio condiviso dello studio tramite un indice locale separato per ogni professionista e cita solo passaggi aperti e verificati. Prepara inoltre il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
+    "longDescription": "Vera affianca il commercialista come collega AI e revisore operativo. Prepara il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Quando serve, nel Marketplace usa il plugin Gmail ufficiale installato separatamente o il connettore ospitato WhatsApp Business di Vera per cercare la corrispondenza di un solo cliente tramite identità confermate e query circoscritte. WhatsApp copre soltanto nuovi messaggi in entrata consultabili per 90 giorni, senza storico, media o risposte. In Codex locale può anche indicizzare una cartella condivisa dello studio con un indice separato per professionista e citare passaggi verificati. Rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
+      "Read",
       "Write",
       "Analysis"
     ],
@@ -52,9 +57,9 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Chiedi a Vera di configurare l'archivio condiviso dello studio con un indice locale separato per ogni professionista e di cercare con fonti verificate.",
-      "Chiedi a Vera di usare OCR locale ed export ufficiali per istruire il caso previdenziale INPS con fonti e bozza rivedibile.",
-      "Chiedi a Vera di usare Camera competente e fonti SARI ufficiali per una bozza Registro Imprese/DIRE, senza accedere o inviare."
+      "Cerca i messaggi WhatsApp Business già acquisiti per un cliente, senza rispondere né mescolare altri clienti.",
+      "Chiedi a Vera di usare OCR locale ed export ufficiali per il caso previdenziale INPS, con fonti e bozza rivedibile.",
+      "Chiedi a Vera di usare Camera competente e fonti SARI per una bozza Registro Imprese/DIRE, senza accedere o inviare."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",
