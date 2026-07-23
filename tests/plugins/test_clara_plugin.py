@@ -782,7 +782,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.101"
+    assert manifest["version"] == "0.1.102"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -4220,6 +4220,57 @@ def test_upload_hosted_audio_can_reuse_session_cookie(
     assert "ClientCo" in captured["upload"]["case_context"]
     assert captured["upload"]["launch_token"] == "launch-from-cookie"
     assert captured["poll"]["job_id"] == "job-cookie"
+
+
+def test_upload_hosted_audio_accepts_ordinary_folder_without_case_features(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    uploader = load_hosted_audio_uploader()
+    target_folder = tmp_path / "transcript-folder"
+    target_folder.mkdir()
+    audio_path = tmp_path / "meeting.mp4"
+    audio_path.write_bytes(b"audio bytes")
+    captured: dict[str, Any] = {}
+
+    monkeypatch.setattr(uploader, "_new_opener", lambda: object())
+    monkeypatch.setattr(
+        uploader,
+        "authenticate_with_session_cookie",
+        lambda *_args, **_kwargs: "launch-from-cookie",
+    )
+
+    def fake_upload_audio_file(*_args, **kwargs):
+        captured.update(kwargs)
+        return {"status": "queued", "job_id": "job-folder"}
+
+    monkeypatch.setattr(uploader, "upload_audio_file", fake_upload_audio_file)
+    monkeypatch.setattr(
+        uploader,
+        "poll_upload_job",
+        lambda *_args, **_kwargs: {
+            "status": "done",
+            "bundle": {
+                "schema_version": 1,
+                "source": "case_notes_hosted_voice",
+                "user_transcript": "Ordinary folder transcript.",
+            },
+        },
+    )
+
+    result = uploader.upload_hosted_audio(
+        case_dir=target_folder,
+        audio_path=audio_path,
+        cookie_header="auth_session=test-cookie",
+        include_case_context=False,
+        import_bundle=False,
+    )
+
+    assert result.run_dir.parent == target_folder / "hosted_voice_uploads"
+    assert result.import_result is None
+    assert captured["case_context"] == ""
+    assert captured["language"] == "it"
+    assert not (target_folder / "case_manifest.json").exists()
 
 
 def test_hosted_audio_cookie_header_strips_optional_cookie_prefix() -> None:
