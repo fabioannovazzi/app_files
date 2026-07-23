@@ -94,6 +94,11 @@ content and reconcile the plan and ledger before building.
 
 Read [references/quality-bar.md](references/quality-bar.md) and
 [references/structured-authoring.md](references/structured-authoring.md).
+For any production number, date, percentage, count, currency amount, table
+cell, or chart mark, also read
+[references/evidence-bindings.md](references/evidence-bindings.md) and use the
+source-bound v2 plan/ledger contract. Do not copy business values into a v1
+plan.
 Inspect `assets/layout-library/registry.json`; choose layouts from their
 narrative roles, not by keyword matching.
 
@@ -123,6 +128,12 @@ supports bar, line, scatter, bubble, waterfall, timeline, and table components.
 Supply already-selected and correctly filtered data. The renderer deliberately
 does not filter time, combine years, or make analytical choices.
 
+For a v2 plan, first seal `evidence-bundle.json` with
+`scripts/evidence_bindings.py seal`. Composition also writes
+`resolved-deck-plan.json`, `resolved-content-ledger.json`, and
+`evidence-ledger.json`. The same central binding can feed prose, claims, metric
+cards, tables, and prepared visual data without numeric transcription.
+
 Prefer registered layouts. Set `allow_bespoke_html: true` only when the required
 mechanism genuinely cannot fit the library. Bespoke markup remains body-only
 and is still subject to escaping, executable-attribute, and resource checks.
@@ -142,11 +153,19 @@ python skills/html-deck/scripts/build_html_deck.py \
   --report <project-output-folder>/<descriptive-name>-validation.json
 ```
 
-The builder compiles a standalone file, applies the runtime idempotently,
-embeds the publication-safe ledger, computes SHA-256, writes
+The builder recompiles a source-bound v2 deck and requires byte equality with
+its editable HTML, generated/shared CSS, resolved documents, and evidence
+ledger. It then compiles a standalone file, applies the runtime idempotently,
+embeds the publication-safe content and evidence ledgers, computes SHA-256, writes
 `<output-root>/<64-hex-sha256>/index.html`, validates those exact bytes, and
 creates a canonical ZIP. Errors block delivery. Rebuild ZIPs from work sources;
 never edit generated packages.
+
+Legacy v1 quantitative content fails by default. The
+`--allow-unverified-quantitative-content` flag exists only for explicit
+illustrative galleries or legacy material; it leaves
+`evidence.status: not_verified` and is never acceptable for a source-backed
+report.
 
 Run static validation alone while iterating:
 
@@ -235,6 +254,8 @@ Return an Artifact Card with:
 
 - clickable `index.html` and ZIP package;
 - editable work folder, `deck-plan.json`, and `content-ledger.json`;
+- for quantitative work, the sealed evidence bundle, resolved plan/ledger, and
+  `evidence-ledger.json`;
 - static validation and browser-QA reports;
 - screenshot index and print preview;
 - revision inventory/map/comparison when revision mode was used;
