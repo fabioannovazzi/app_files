@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import shutil
 import subprocess
 import sys
+import tempfile
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -123,6 +126,99 @@ def _load_json(path: Path) -> dict[str, Any]:
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+
+
+def _canonical_json_sha256(payload: Any) -> str:
+    rendered = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(rendered).hexdigest()
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _portable_input_evidence(path: Path) -> dict[str, Any]:
+    """Return exact file or directory evidence without changing source bytes."""
+
+    resolved = path.expanduser().resolve()
+    if resolved.is_file():
+        return {
+            "kind": "file",
+            "path": str(resolved),
+            "sha256": _sha256_file(resolved),
+            "size_bytes": resolved.stat().st_size,
+        }
+    if resolved.is_dir():
+        files = [
+            {
+                "path": item.relative_to(resolved).as_posix(),
+                "sha256": _sha256_file(item),
+                "size_bytes": item.stat().st_size,
+            }
+            for item in sorted(resolved.rglob("*"))
+            if item.is_file()
+        ]
+        return {
+            "kind": "directory",
+            "path": str(resolved),
+            "files": files,
+            "inventory_sha256": _canonical_json_sha256(files),
+        }
+    raise ValueError(f"Reporting input does not exist: {resolved}")
+
+
+def _output_evidence(
+    output_dir: Path,
+    artifacts: list[str],
+) -> list[dict[str, Any]]:
+    """Return byte-level evidence for current-run outputs."""
+
+    records: list[dict[str, Any]] = []
+    resolved_root = output_dir.resolve()
+    for relative in sorted(set(artifacts)):
+        path = (resolved_root / relative).resolve()
+        try:
+            path.relative_to(resolved_root)
+        except ValueError as exc:
+            raise ValueError(
+                f"Rendered artifact escapes output_dir: {relative}"
+            ) from exc
+        if not path.is_file():
+            raise ValueError(f"Rendered artifact is missing: {relative}")
+        records.append(
+            {
+                "path": relative,
+                "sha256": _sha256_file(path),
+                "size_bytes": path.stat().st_size,
+            }
+        )
+    return records
+
+
+def _render_request_evidence(request: RenderRequest) -> dict[str, Any]:
+    payload = {
+        "capability_id": request.capability_id,
+        "role_bindings": request.role_bindings or {},
+        "options": request.options or {},
+        "language": request.language,
+        "currency": request.currency,
+        "artifact_mode": request.artifact_mode,
+        "include_variants": request.include_variants,
+    }
+    return {
+        "contract": payload,
+        "sha256": _canonical_json_sha256(payload),
+    }
 
 
 def _deep_set(payload: dict[str, Any], dotted_path: str, value: Any) -> None:
@@ -869,18 +965,55 @@ def artifact_files(output_dir: Path) -> list[str]:
     )
 
 
-def _artifact_file_states(output_dir: Path) -> dict[str, tuple[int, int]]:
-    """Return artifact modification state for current-run change detection."""
+def _publish_run_artifacts(
+    run_dir: Path,
+    output_dir: Path,
+    artifacts: list[str],
+) -> None:
+    """Copy only files created in an isolated run directory into output_dir."""
 
-    if not output_dir.exists():
-        return {}
-    states: dict[str, tuple[int, int]] = {}
-    for path in output_dir.rglob("*"):
-        if not path.is_file():
-            continue
-        stat = path.stat()
-        states[str(path.relative_to(output_dir))] = (stat.st_mtime_ns, stat.st_size)
-    return states
+    resolved_run_dir = run_dir.resolve()
+    resolved_output_dir = output_dir.resolve()
+    for relative in artifacts:
+        source = (resolved_run_dir / relative).resolve()
+        target = (resolved_output_dir / relative).resolve()
+        try:
+            source.relative_to(resolved_run_dir)
+            target.relative_to(resolved_output_dir)
+        except ValueError as exc:
+            raise ValueError(
+                f"Rendered artifact escapes its run directory: {relative}"
+            ) from exc
+        if source.is_symlink() or not source.is_file():
+            raise ValueError(f"Rendered artifact is not a regular file: {relative}")
+        if target.is_symlink():
+            raise ValueError(
+                f"Rendered artifact target may not be a symlink: {relative}"
+            )
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+
+
+def _published_recipe_audit(
+    recipe_audit: dict[str, Any],
+    *,
+    run_dir: Path,
+    output_dir: Path,
+) -> tuple[dict[str, Any], Path | None]:
+    """Rebase a generated recipe audit from the isolated run to final output."""
+
+    result = deepcopy(recipe_audit)
+    raw_path = result.get("path")
+    if not raw_path:
+        return result, None
+    recipe_path = Path(str(raw_path)).resolve()
+    try:
+        relative = recipe_path.relative_to(run_dir.resolve())
+    except ValueError as exc:
+        raise ValueError("Generated render recipe escaped its isolated run") from exc
+    published = output_dir.resolve() / relative
+    result["path"] = str(published)
+    return result, published
 
 
 def capability_render_proof(
@@ -994,68 +1127,87 @@ def render_capability(
         dataset_profile=request.dataset_profile,
         root=resolved_root,
     )
-    recipe_path, recipe_audit = build_render_recipe(request, root=resolved_root)
-    _enforce_render_preflight(recipe_audit)
-    artifacts_before = _artifact_file_states(request.output_dir)
-    if adapter["component_name"] == "attribute-reporting":
-        runner_result = _render_attribute_table(request, adapter)
-        command: list[str] = []
-    else:
-        component_root = Path(str(adapter["component_root"]))
-        command = _runner_command(
-            request,
-            component_root=component_root,
-            recipe_path=recipe_path or request.recipe_path,
+    with tempfile.TemporaryDirectory(
+        prefix=".clara-reporting-run-",
+        dir=request.output_dir.parent,
+    ) as temporary_dir:
+        run_dir = Path(temporary_dir)
+        run_request = replace(request, output_dir=run_dir)
+        recipe_path, run_recipe_audit = build_render_recipe(
+            run_request,
+            root=resolved_root,
         )
-        completed = subprocess.run(
-            command,
-            cwd=component_root,
-            text=True,
-            capture_output=True,
-            check=False,
-        )
-        runner_result = {
-            "status": "ok" if completed.returncode == 0 else "failed",
-            "runner_type": "component_cli",
-            "returncode": completed.returncode,
-            "stdout": completed.stdout,
-            "stderr": completed.stderr,
-        }
-        if completed.returncode != 0:
-            manifest = {
-                "schema_version": "0.1",
-                "capability_id": request.capability_id,
-                "adapter": adapter,
-                "invocation_plan": plan,
-                "recipe": recipe_audit,
-                "command": command,
-                "runner": runner_result,
-                "artifacts": artifact_files(request.output_dir),
-            }
-            _write_json(request.output_dir / "render_manifest.json", manifest)
-            manifest["artifacts"] = artifact_files(request.output_dir)
-            _write_json(request.output_dir / "render_manifest.json", manifest)
-            raise RuntimeError(
-                "Reporting render failed for "
-                f"{request.capability_id}: {completed.stderr.strip()}"
+        _enforce_render_preflight(run_recipe_audit)
+        input_evidence = _portable_input_evidence(request.input_file)
+        request_evidence = _render_request_evidence(request)
+        if adapter["component_name"] == "attribute-reporting":
+            runner_result = _render_attribute_table(run_request, adapter)
+            command: list[str] = []
+        else:
+            component_root = Path(str(adapter["component_root"]))
+            command = _runner_command(
+                run_request,
+                component_root=component_root,
+                recipe_path=recipe_path or run_request.recipe_path,
             )
-    artifact_states = _artifact_file_states(request.output_dir)
-    artifacts = sorted(artifact_states)
-    current_run_artifacts = sorted(
-        artifact
-        for artifact, state in artifact_states.items()
-        if artifacts_before.get(artifact) != state
-    )
-    render_proof = capability_render_proof(
-        request.capability_id,
-        current_run_artifacts,
-        artifact_mode=request.artifact_mode,
-        include_variants=request.include_variants,
-        role_bindings=request.role_bindings,
-        root=resolved_root,
-    )
+            completed = subprocess.run(
+                command,
+                cwd=component_root,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            runner_result = {
+                "status": "ok" if completed.returncode == 0 else "failed",
+                "runner_type": "component_cli",
+                "returncode": completed.returncode,
+                "stdout": completed.stdout,
+                "stderr": completed.stderr,
+            }
+
+        run_artifacts = artifact_files(run_dir)
+        if "render_manifest.json" in run_artifacts:
+            raise ValueError(
+                "Reporting component may not write reserved render_manifest.json"
+            )
+        _publish_run_artifacts(run_dir, request.output_dir, run_artifacts)
+        recipe_audit, published_recipe_path = _published_recipe_audit(
+            run_recipe_audit,
+            run_dir=run_dir,
+            output_dir=request.output_dir,
+        )
+        recipe_evidence = (
+            _portable_input_evidence(published_recipe_path)
+            if published_recipe_path is not None
+            else {
+                "kind": "none",
+                "reason": "No external or generated recipe was required.",
+            }
+        )
+        recipe_relative = (
+            recipe_path.resolve().relative_to(run_dir.resolve()).as_posix()
+            if recipe_path is not None
+            else None
+        )
+        current_run_artifacts = sorted(
+            artifact for artifact in run_artifacts if artifact != recipe_relative
+        )
+        render_proof = capability_render_proof(
+            request.capability_id,
+            current_run_artifacts,
+            artifact_mode=request.artifact_mode,
+            include_variants=request.include_variants,
+            role_bindings=request.role_bindings,
+            root=resolved_root,
+        )
+        output_records = _output_evidence(
+            request.output_dir,
+            current_run_artifacts,
+        )
+
+    artifacts = artifact_files(request.output_dir)
     manifest = {
-        "schema_version": "0.1",
+        "schema_version": "0.2",
         "capability_id": request.capability_id,
         "owner": "clara.reporting-engine",
         "adapter_id": adapter["adapter_id"],
@@ -1071,14 +1223,27 @@ def render_capability(
         "runner": runner_result,
         "artifacts": artifacts,
         "render_proof": render_proof,
+        "evidence": {
+            "input": input_evidence,
+            "request": request_evidence,
+            "recipe": recipe_evidence,
+            "outputs": output_records,
+            "output_set_sha256": _canonical_json_sha256(output_records),
+        },
         "boundary": (
-            "Unified Clara reporting-engine render call. Semantic chart selection "
-            "is outside this layer."
+            "Unified Clara reporting-engine render call with exact input, request, "
+            "recipe, and current-run output byte evidence. Semantic chart selection "
+            "and interpretation are outside this layer."
         ),
     }
     _write_json(request.output_dir / "render_manifest.json", manifest)
     manifest["artifacts"] = artifact_files(request.output_dir)
     _write_json(request.output_dir / "render_manifest.json", manifest)
+    if runner_result.get("returncode") != 0:
+        raise RuntimeError(
+            "Reporting render failed for "
+            f"{request.capability_id}: {str(runner_result.get('stderr', '')).strip()}"
+        )
     if render_proof.get("status") in {
         "missing_expected_render",
         "unexpected_rendered_artifacts",

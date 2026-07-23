@@ -17,7 +17,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlsplit
 
-from content_ledger import extract_embedded_ledger, validate_content_ledger
+from content_ledger import (
+    extract_embedded_ledger,
+    publication_ledger,
+    validate_content_ledger,
+)
+from evidence_bindings import canonical_json_bytes, extract_embedded_evidence_ledger
 
 SCHEMA_VERSION = "clara.html_deck_validation.v1"
 VALIDATION_PROFILES = {"stage", "static"}
@@ -1024,6 +1029,50 @@ def validate_html_text(
             "Claim references cannot be checked without a valid ledger.",
         )
 
+    evidence_ledger: dict[str, Any] | None = None
+    evidence_ledger_error = ""
+    try:
+        evidence_ledger = extract_embedded_evidence_ledger(html_text)
+        if evidence_ledger is None:
+            evidence_ledger_error = (
+                "Standalone deck has no embedded Clara evidence ledger."
+            )
+    except (json.JSONDecodeError, ValueError) as exc:
+        evidence_ledger_error = str(exc)
+    add(
+        "provenance.evidence_ledger",
+        evidence_ledger is not None,
+        (
+            "Embedded evidence ledger declares verified or explicitly "
+            "not-verified status."
+        ),
+        f"Invalid or missing evidence ledger: {evidence_ledger_error}",
+    )
+    evidence_content_ledger_sha256: str | None = None
+    if evidence_ledger is not None and evidence_ledger["status"] == "verified":
+        if ledger is not None:
+            evidence_content_ledger_sha256 = hashlib.sha256(
+                canonical_json_bytes(publication_ledger(ledger))
+            ).hexdigest()
+        declared_content_ledger_sha256 = evidence_ledger["resolved"][
+            "content_ledger_sha256"
+        ]
+        add(
+            "provenance.evidence_content_ledger",
+            (
+                evidence_content_ledger_sha256 is not None
+                and declared_content_ledger_sha256 == evidence_content_ledger_sha256
+            ),
+            (
+                "Evidence ledger content-ledger digest matches the exact embedded "
+                "publication ledger."
+            ),
+            (
+                "Evidence ledger content-ledger digest does not match the embedded "
+                "publication ledger."
+            ),
+        )
+
     runtime_ok = False
     runtime_message = ""
     try:
@@ -1040,12 +1089,17 @@ def validate_html_text(
         f"Invalid or missing Clara stage runtime: {runtime_message}",
     )
 
+    document_sha256 = hashlib.sha256(html_text.encode("utf-8")).hexdigest()
     if publication_id is not None:
         add(
             "publication.id",
-            bool(PUBLICATION_ID_RE.fullmatch(publication_id)),
-            "Publication ID is a 64-character lowercase hexadecimal value.",
-            f"Invalid publication ID: {publication_id!r}.",
+            bool(PUBLICATION_ID_RE.fullmatch(publication_id))
+            and publication_id == document_sha256,
+            "Publication ID exactly matches the standalone HTML SHA-256.",
+            (
+                f"Publication ID {publication_id!r} does not match the standalone "
+                f"HTML SHA-256 {document_sha256!r}."
+            ),
         )
 
     byte_count = len(html_text.encode("utf-8"))
@@ -1078,6 +1132,7 @@ def validate_html_text(
             "provenance.ledger",
             "provenance.source_refs",
             "provenance.claim_refs",
+            "provenance.evidence_ledger",
             "runtime.stage",
             "publication.id",
         }
@@ -1123,7 +1178,7 @@ def validate_html_text(
         "input": {
             "label": label,
             "bytes": byte_count,
-            "sha256": hashlib.sha256(html_text.encode("utf-8")).hexdigest(),
+            "sha256": document_sha256,
         },
         "deck": {
             "title": parser.title,
@@ -1172,6 +1227,22 @@ def validate_html_text(
         },
         "provenance": {
             "ledger_present": ledger is not None,
+            "evidence_status": (
+                evidence_ledger["status"] if evidence_ledger is not None else "missing"
+            ),
+            "content_ledger_digest_verified": (
+                evidence_content_ledger_sha256 is not None
+                and evidence_ledger is not None
+                and evidence_ledger["status"] == "verified"
+                and evidence_ledger["resolved"]["content_ledger_sha256"]
+                == evidence_content_ledger_sha256
+            ),
+            "deck_plan_digest_verification": (
+                "declared_at_build_time_not_reconstructable_from_publication"
+                if evidence_ledger is not None
+                and evidence_ledger["status"] == "verified"
+                else "not_applicable"
+            ),
             "source_count": len(ledger["sources"]) if ledger is not None else 0,
             "claim_count": (
                 sum(len(slide["claims"]) for slide in ledger["slides"])

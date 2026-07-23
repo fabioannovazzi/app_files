@@ -5,9 +5,17 @@ Use `deck-plan.json` as the editable narrative/layout contract and
 storyline, layout, claim classification, and visual type. The composer only
 checks and renders the supplied choices.
 
+For every production deck with quantitative content, also read and follow
+[evidence-bindings.md](evidence-bindings.md). Use
+`clara.html_deck_plan.v2` plus `clara.html_deck_ledger.v2`; values and prepared
+visual series must resolve from a sealed evidence bundle. The v1 examples below
+describe layout structure only. A v1 deck is always `not_verified`, and the
+builder rejects its visible quantitative content unless the explicit
+illustrative legacy escape hatch is used.
+
 ## Deck plan
 
-The top-level schema is `clara.html_deck_plan.v1`:
+The base layout schema is `clara.html_deck_plan.v1`:
 
 ```json
 {
@@ -33,12 +41,13 @@ The top-level schema is `clara.html_deck_plan.v1`:
           "claim_refs": ["claim-gap"],
           "spec": {
             "schema_version": "clara.html_deck_visual.v1",
-            "type": "bar",
+            "type": "table",
             "id": "decision-gap-chart",
-            "title": "Observed value by option",
-            "data": [
-              {"label": "Option A", "value": 72},
-              {"label": "Option B", "value": 48}
+            "title": "Observed posture by option",
+            "columns": ["Option", "Observation"],
+            "rows": [
+              ["Option A", "Higher"],
+              ["Option B", "Lower"]
             ],
             "source_ids": ["source-workpaper"],
             "source_note": "Same period and basis."
@@ -62,6 +71,8 @@ The bundled data renderer supports `bar`, `line`, `scatter`, `bubble`,
 `waterfall`, `timeline`, and `table`. Supply the already-selected period,
 filters, records, labels, and visual type. The renderer deliberately does not
 filter data or combine/split periods. Analytical preparation remains upstream.
+In source-bound v2 work, `spec.data` or `spec.rows` must be a `raw` evidence
+binding to a prepared view; do not copy values into the visual spec.
 
 Every visual needs a safe stable `id`, at least one safe `source_ids` entry,
 an audience-facing title, and an accessible label. Scatter and bubble specs
@@ -84,8 +95,10 @@ handlers, remote/local resources, and executable URLs are rejected.
 
 ## Content ledger
 
-The top-level schema is `clara.html_deck_ledger.v1`. Every deck slide appears
-exactly once. Every claim has an explicit classification and basis.
+The base schema is `clara.html_deck_ledger.v1`. Source-bound plans use the v2
+ledger so numeric claim text can contain the same binding objects and templates
+as the plan. Every deck slide appears exactly once. Every claim has an explicit
+classification and basis.
 
 ```json
 {
@@ -108,7 +121,7 @@ exactly once. Every claim has an explicit classification and basis.
       "claims": [
         {
           "id": "claim-gap",
-          "statement": "The observed difference is 24 on the agreed basis.",
+          "statement": "The observed difference changes the decision on the agreed basis.",
           "classification": "fact",
           "basis_status": "source-backed",
           "basis_note": "",
@@ -139,6 +152,8 @@ python skills/html-deck/scripts/compose_html_deck.py \
   --force
 ```
 
-The bundled `data_visual` renderer is registered automatically. The command
-replaces only `slides.html` and `custom.css`; it does not invent or rewrite the
-content ledger. Reconcile slide/source/claim IDs before building.
+The bundled `data_visual` renderer is registered automatically. For v1, the
+command replaces `slides.html` and `custom.css`. For source-bound v2, it also
+writes `resolved-deck-plan.json`, `resolved-content-ledger.json`, and
+`evidence-ledger.json`. It never invents evidence or rewrites the authored
+ledger. Reconcile slide/source/claim IDs before building.
