@@ -827,9 +827,14 @@ def upload_hosted_audio(
     """Upload through an authenticated hosted session and optionally import."""
 
     errors = validate_case_workspace(case_dir)
-    if errors:
+    ordinary_folder_upload = (
+        not include_case_context
+        and not import_bundle
+        and not (case_dir / "case_manifest.json").exists()
+    )
+    if errors and not ordinary_folder_upload:
         raise CaseWorkspaceError("; ".join(errors))
-    manifest = load_case_file(case_dir, "manifest")
+    manifest = {} if ordinary_folder_upload else load_case_file(case_dir, "manifest")
     resolved_language = (
         str(language or manifest.get("output_language") or DEFAULT_LANGUAGE)
         .strip()
