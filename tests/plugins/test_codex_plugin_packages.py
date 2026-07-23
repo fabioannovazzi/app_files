@@ -406,7 +406,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.29"
+    assert manifest["version"] == "0.1.30"
+    assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Consulta WhatsApp Desktop per un solo cliente confermato, in sola "
         "lettura e senza inviare nulla."
@@ -494,6 +495,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     manifest = json.loads(entries[".codex-plugin/plugin.json"])
 
     assert manifest["name"] == plugin_name
+    assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert ".codex-plugin/plugin.json" in entries
     assert not any(name.startswith(f"{plugin_name}-codex-plugin/") for name in entries)
     projected_manifests = {
@@ -1677,6 +1679,7 @@ def test_repo_plugins_declare_public_metadata() -> None:
         "websiteURL",
         "privacyPolicyURL",
         "termsOfServiceURL",
+        "supportURL",
         "defaultPrompt",
         "brandColor",
         "composerIcon",

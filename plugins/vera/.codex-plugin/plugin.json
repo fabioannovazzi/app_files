@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -57,6 +57,7 @@
     "websiteURL": "https://mparanza.com",
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
+    "supportURL": "https://mparanza.com/support",
     "defaultPrompt": [
       "Consulta WhatsApp Desktop per un solo cliente confermato, in sola lettura e senza inviare nulla.",
       "Chiedi a Vera di usare OCR locale ed export ufficiali per il caso previdenziale INPS, con fonti e bozza rivedibile.",
