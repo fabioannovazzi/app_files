@@ -14,10 +14,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 SHARED_ROOT = ROOT / "static" / "shared"
 VERA_PLUGIN_ROOT = ROOT / "plugins" / "vera"
-VERA_INSTALL_URL = (
-    "https://chatgpt.com/auth/login?next="
-    "%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
-)
 VERA_SITE_MODULES = {
     "new-client",
     "journal-sampling",
@@ -527,7 +523,7 @@ def test_vera_module_pages_present_an_outcome_led_connected_journey(
     assert 'id="proof"' in page or 'id="result"' in page
     assert len(prompt_nodes) == 1
     assert "../vera/index.html?lang=it" in page
-    assert VERA_INSTALL_URL in page
+    assert 'href="../vera/index.html"' in page
 
 
 @pytest.mark.parametrize(
@@ -774,7 +770,7 @@ def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
         assert f'hreflang="{language}"' in page
 
 
-def test_studio_archive_page_requires_codex_desktop_for_both_message_routes() -> None:
+def test_studio_archive_page_explains_gmail_and_whatsapp_in_plain_language() -> None:
     page = (SHARED_ROOT / "studio-archive" / "index.html").read_text(encoding="utf-8")
     visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
     language_buttons = set(re.findall(r'data-lang="([a-z]{2})"', page))
@@ -785,19 +781,21 @@ def test_studio_archive_page_requires_codex_desktop_for_both_message_routes() ->
     for key in visible_keys:
         assert page.count(f'"{key}":') == len(copy_languages), key
     for phrase in (
-        "Codex Desktop · OpenAI Gmail",
-        "Codex Desktop · local",
-        "public Plugins Directory",
-        "workflows stop on ChatGPT web and mobile and require Codex Desktop",
-        "existing ChatGPT plan",
-        "OpenAI’s Gmail connector is installed and connected separately, then used inside Codex Desktop.",
+        "Find a client’s messages without sorting everything by hand.",
+        "This works only in Codex Desktop and handles one client at a time.",
+        "You do not need to move emails into folders or export chats.",
+        "Connect Gmail first",
+        "Open WhatsApp Desktop first",
         "Computer Use",
-        "No Mparanza server receives or stores a copy of WhatsApp messages.",
-        "Both routes work only in Codex Desktop.",
-        "This is not a continuous index or a complete-history guarantee.",
-        "does not write, reply, forward, edit, or delete messages",
+        "Opening the chat may mark messages as read.",
+        "Vera does not create a complete copy of your emails or chats.",
+        "Vera does not synchronize the mailbox or chats",
+        "that content may be sent to Codex/ChatGPT",
+        "This function does not start in ChatGPT on the web or mobile.",
     ):
         assert phrase in page
+    assert "plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" not in page
+    assert 'href="../vera/index.html"' in page
     assert "ChatGPT · Marketplace" not in page
     assert "90 days" not in page
     assert "90 giorni" not in page
@@ -812,32 +810,24 @@ def test_studio_archive_page_requires_codex_desktop_for_both_message_routes() ->
         (SHARED_ROOT / "clara" / "index.html", "Clara"),
     ),
 )
-def test_public_plugin_listing_copy_requires_codex_desktop(
+def test_product_install_copy_explains_marketplace_and_desktop_handoff(
     page_path: Path,
     product: str,
 ) -> None:
     page = page_path.read_text(encoding="utf-8")
-    normalized_page = page.casefold()
-
     for phrase in (
-        f"{product} may appear in the public Plugins Directory",
-        f"{product} può comparire nella directory pubblica dei plugin",
-        f"{product} peut apparaître dans le répertoire public des plugins",
-        f"{product} kann im öffentlichen Plugin-Verzeichnis erscheinen",
-        f"{product} puede aparecer en el directorio público de plugins",
-        "workflows stop on ChatGPT web and mobile and require Codex Desktop",
-        "workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop",
-        "workflows s’arrêtent sur ChatGPT web ou mobile et nécessitent Codex Desktop",
-        "in ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und "
-        "erfordern Codex Desktop",
-        "flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop",
-        "existing ChatGPT plan",
-        "piano ChatGPT esistente",
-        "offre ChatGPT existante",
-        "bestehender ChatGPT-Tarif",
-        "plan actual de ChatGPT",
+        f"The button opens {product} in the Marketplace.",
+        f"Il pulsante apre {product} nel Marketplace.",
+        f"Le bouton ouvre {product} dans le Marketplace.",
+        f"Die Schaltfläche öffnet {product} im Marketplace.",
+        f"El botón abre {product} en el Marketplace.",
+        "Workflows do not start in ChatGPT on the web or mobile.",
+        "I workflow non partono in ChatGPT web o mobile.",
+        "Les workflows ne démarrent pas dans ChatGPT sur le web ou mobile.",
+        "Workflows starten nicht in ChatGPT im Web oder auf Mobilgeräten.",
+        "Los flujos no se inician en ChatGPT web o móvil.",
     ):
-        assert phrase.casefold() in normalized_page
+        assert phrase in page
 
 
 def _vera_data_boundary_section(page: str) -> str:

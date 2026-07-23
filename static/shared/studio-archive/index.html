@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Archivio dello Studio cerca un solo cliente in Gmail o WhatsApp Desktop dentro Codex Desktop, senza conservare copie dei messaggi su Mparanza.">
+  <meta name="description" content="Con Vera in Codex Desktop puoi cercare le email o leggere la chat WhatsApp di un cliente, una conversazione alla volta.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/studio-archive/index.html">
-  <meta property="og:title" content="Vera · Archivio dello Studio">
-  <meta property="og:description" content="Due percorsi distinti per cercare la corrispondenza di un solo cliente.">
+  <meta property="og:title" content="Vera · Gmail e WhatsApp">
+  <meta property="og:description" content="Trova i messaggi di un cliente in Gmail o WhatsApp Desktop con Vera in Codex Desktop.">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/studio-archive/index.html">
   <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/studio-archive/index.html?lang=it">
@@ -18,7 +18,7 @@
   <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/studio-archive/index.html?lang=de">
   <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/studio-archive/index.html?lang=es">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/studio-archive/index.html">
-  <title>Vera · Archivio dello Studio</title>
+  <title>Vera · Gmail e WhatsApp</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
@@ -194,15 +194,6 @@
     }
     .boundary-grid article { padding-top: 16px; border-top: 1px solid var(--cyan); }
     .boundary-grid h3 { margin-bottom: 10px; color: var(--paper); }
-    .limits { display: grid; gap: 0; border-top: 1px solid var(--blue); }
-    .limit {
-      display: grid;
-      grid-template-columns: minmax(190px, 0.35fr) minmax(0, 1fr);
-      gap: 36px;
-      padding-block: 26px;
-      border-bottom: 1px solid var(--line);
-    }
-    .limit strong { color: var(--blue); }
     .setup {
       display: grid;
       grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
@@ -211,19 +202,6 @@
     }
     .setup-actions { display: grid; gap: 22px; }
     .setup-actions p { padding-top: 16px; border-top: 1px solid var(--line); }
-    .button {
-      width: fit-content;
-      min-height: 48px;
-      display: inline-flex;
-      align-items: center;
-      padding: 12px 20px;
-      border: 1px solid var(--navy);
-      border-radius: 7px;
-      color: var(--paper);
-      background: var(--navy);
-      text-decoration: none;
-      font-weight: 650;
-    }
     footer { padding-block: 34px; }
     .footer-shell { display: flex; justify-content: space-between; gap: 24px; }
     .footer-shell a { color: var(--blue); }
@@ -233,7 +211,6 @@
       .hero { min-height: auto; }
       .steps, .source-facts, .boundary-grid { grid-template-columns: 1fr; }
       .step + .step { border-left: 0; border-top: 1px solid var(--line); }
-      .limit { grid-template-columns: 1fr; gap: 8px; }
     }
     @media (max-width: 560px) {
       .nav-shell, main, .footer-shell { width: min(100% - 28px, var(--content)); }
@@ -254,9 +231,10 @@
       </a>
       <div class="nav-right">
         <nav class="nav-links" aria-label="Sezioni" data-i18n-aria-label="nav.label">
-          <a href="#sources" data-i18n="nav.sources">Due percorsi</a>
-          <a href="#boundary" data-i18n="nav.boundary">Dati</a>
-          <a href="#setup" data-i18n="nav.setup">Come iniziare</a>
+          <a href="#routing" data-i18n="nav.routing">Come funziona</a>
+          <a href="#sources" data-i18n="nav.sources">Gmail e WhatsApp</a>
+          <a href="#boundary" data-i18n="nav.boundary">I tuoi dati</a>
+          <a href="#setup" data-i18n="nav.setup">Per iniziare</a>
         </nav>
         <div class="lang-switch" aria-label="Lingua" data-i18n-aria-label="language.label">
           <button type="button" data-lang="it" aria-label="Italiano">It</button>
@@ -272,135 +250,120 @@
   <main id="main-content">
     <section class="hero">
       <div>
-        <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Archivio dello Studio</p>
-        <h1 data-i18n="hero.title">Un cliente. Due percorsi distinti.</h1>
-        <p class="lead" data-i18n="hero.lead">Dentro Codex Desktop, Gmail usa il connector Gmail di OpenAI collegato separatamente; WhatsApp usa Computer Use nell’app già aperta sul tuo computer.</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Gmail e WhatsApp</p>
+        <h1 data-i18n="hero.title">Trova i messaggi di un cliente, senza riordinare tutto a mano.</h1>
+        <p class="lead" data-i18n="hero.lead">Scrivi a Vera cosa cerchi e per quale cliente. Vera consulta Gmail oppure la chat del cliente in WhatsApp Desktop e ti mostra da quali messaggi deriva la risposta.</p>
       </div>
-      <p class="hero-note" data-i18n="hero.note">Vera può comparire nella directory pubblica dei plugin, ma i workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop. Puoi continuare a usare il tuo piano ChatGPT esistente. Nessun server Mparanza riceve o conserva una copia dei messaggi WhatsApp.</p>
-    </section>
-
-    <section class="section-block" id="sources">
-      <div class="section-head">
-        <div>
-          <span class="section-index" data-i18n="sources.index">Le fonti</span>
-          <h2 data-i18n="sources.title">Non è un unico archivio centrale.</h2>
-        </div>
-        <p data-i18n="sources.intro">Vera usa il percorso disponibile nel contesto in cui stai lavorando e mantiene la ricerca limitata a un cliente.</p>
-      </div>
-      <article class="source">
-        <div>
-          <span class="route-context" data-i18n="sources.gmail.availability">Codex Desktop · OpenAI Gmail</span>
-          <h3 data-i18n="sources.gmail.title">Gmail</h3>
-        </div>
-        <div class="source-copy">
-          <p data-i18n="sources.gmail.copy">Il connector Gmail di OpenAI viene installato e collegato separatamente, poi usato dentro Codex Desktop. Vera verifica la casella, cerca indirizzi confermati nella chat corrente e apre soltanto i messaggi necessari.</p>
-          <div class="source-facts">
-            <div class="source-fact">
-              <strong data-i18n="sources.boundary.label">Confine</strong>
-              <span data-i18n="sources.gmail.boundary">La posta resta in Gmail. Vera non crea una copia della casella né conserva credenziali o messaggi.</span>
-            </div>
-            <div class="source-fact">
-              <strong data-i18n="sources.limits.label">Limiti</strong>
-              <span data-i18n="sources.gmail.limits">Un cliente per volta, identità confermate nella conversazione e sole azioni di ricerca e lettura.</span>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="source">
-        <div>
-          <span class="route-context" data-i18n="sources.whatsapp.availability">Codex Desktop · locale</span>
-          <h3 data-i18n="sources.whatsapp.title">WhatsApp Desktop</h3>
-        </div>
-        <div class="source-copy">
-          <p data-i18n="sources.whatsapp.copy">Apri WhatsApp Desktop e accedi tu. Codex Desktop usa Computer Use sullo stesso computer per consultare, su richiesta, i messaggi che l’app rende visibili o ricercabili.</p>
-          <div class="source-facts">
-            <div class="source-fact">
-              <strong data-i18n="sources.boundary.label">Confine</strong>
-              <span data-i18n="sources.whatsapp.boundary">Non esistono webhook, sincronizzazione o archivio WhatsApp su Mparanza. Il contenuto letto da Codex resta soggetto al tuo account Codex/ChatGPT.</span>
-            </div>
-            <div class="source-fact">
-              <strong data-i18n="sources.limits.label">Limiti</strong>
-              <span data-i18n="sources.whatsapp.limits">Non è un indice continuo né una garanzia di storico completo. Vera non invia, modifica o elimina messaggi.</span>
-            </div>
-          </div>
-        </div>
-      </article>
+      <p class="hero-note" data-i18n="hero.note">Funziona solo in Codex Desktop e lavora su un cliente alla volta. Vera legge i messaggi necessari, ma non scrive, non risponde e non modifica nulla.</p>
     </section>
 
     <section class="section-block" id="routing">
       <div class="section-head">
         <div>
-          <span class="section-index" data-i18n="routing.index">Separazione clienti</span>
-          <h2 data-i18n="routing.title">Prima l’identità. Poi la ricerca.</h2>
+          <span class="section-index" data-i18n="routing.index">Come funziona</span>
+          <h2 data-i18n="routing.title">Tu indichi il cliente. Vera cerca.</h2>
         </div>
-        <p data-i18n="routing.copy">Vera non divide automaticamente tutta la corrispondenza dello studio. Lavora su un cliente esplicitamente scelto.</p>
+        <p data-i18n="routing.copy">Non devi spostare le email in cartelle né esportare le chat.</p>
       </div>
       <div class="steps">
         <article class="step">
           <span class="step-number">01</span>
-          <h3 data-i18n="routing.step1.title">Scegli il cliente</h3>
-          <p data-i18n="routing.step1.copy">Indica un solo cliente e lo scopo della ricerca.</p>
+          <h3 data-i18n="routing.step1.title">Fai una domanda</h3>
+          <p data-i18n="routing.step1.copy">Per esempio: “Per Rossi Srl, trova cosa manca per chiudere l’IVA di giugno.”</p>
         </article>
         <article class="step">
           <span class="step-number">02</span>
-          <h3 data-i18n="routing.step2.title">Conferma l’identità</h3>
-          <p data-i18n="routing.step2.copy">Conferma nella chat l’indirizzo Gmail o il numero WhatsApp esatto.</p>
+          <h3 data-i18n="routing.step2.title">Conferma il contatto</h3>
+          <p data-i18n="routing.step2.copy">Vera ti chiede di confermare l’indirizzo email o il numero WhatsApp corretto, così non mescola clienti diversi.</p>
         </article>
         <article class="step">
           <span class="step-number">03</span>
-          <h3 data-i18n="routing.step3.title">Rivedi le fonti</h3>
-          <p data-i18n="routing.step3.copy">Vera esclude risultati misti o ambigui e mostra da quali messaggi deriva la risposta.</p>
+          <h3 data-i18n="routing.step3.title">Controlla il risultato</h3>
+          <p data-i18n="routing.step3.copy">Vera cita i messaggi utilizzati ed esclude quelli ambigui.</p>
         </article>
       </div>
+    </section>
+
+    <section class="section-block" id="sources">
+      <div class="section-head">
+        <div>
+          <span class="section-index" data-i18n="sources.index">Gmail e WhatsApp</span>
+          <h2 data-i18n="sources.title">Cerca dove il cliente ti ha scritto.</h2>
+        </div>
+        <p data-i18n="sources.intro">Le due funzioni sono separate. Per ogni richiesta scegli Gmail oppure WhatsApp.</p>
+      </div>
+      <article class="source">
+        <div>
+          <span class="route-context" data-i18n="sources.gmail.availability">Prima collega Gmail</span>
+          <h3 data-i18n="sources.gmail.title">Gmail</h3>
+        </div>
+        <div class="source-copy">
+          <p data-i18n="sources.gmail.copy">Collega il connector Gmail di OpenAI a Codex Desktop. Vera controlla che sia la casella giusta, cerca i messaggi dell’indirizzo confermato e legge soltanto quelli necessari.</p>
+          <div class="source-facts">
+            <div class="source-fact">
+              <strong data-i18n="sources.example.label">Esempio</strong>
+              <span data-i18n="sources.gmail.example">“Cerca nelle email di amministrazione@rossi.it cosa abbiamo concordato sulla rateizzazione.”</span>
+            </div>
+            <div class="source-fact">
+              <strong data-i18n="sources.note.label">Da sapere</strong>
+              <span data-i18n="sources.gmail.note">La posta resta in Gmail. Vera non sposta, etichetta, invia o cancella email.</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="source">
+        <div>
+          <span class="route-context" data-i18n="sources.whatsapp.availability">Prima apri WhatsApp Desktop</span>
+          <h3 data-i18n="sources.whatsapp.title">WhatsApp Desktop</h3>
+        </div>
+        <div class="source-copy">
+          <p data-i18n="sources.whatsapp.copy">Apri WhatsApp Desktop sullo stesso Mac e accedi normalmente. Codex usa Computer Use, la funzione che gli permette di controllare l’app sul tuo computer, per aprire la chat del numero confermato e leggere i messaggi utili. Vera non invia nulla.</p>
+          <div class="source-facts">
+            <div class="source-fact">
+              <strong data-i18n="sources.example.label">Esempio</strong>
+              <span data-i18n="sources.whatsapp.example">“Apri la chat del +39… e trova quando Rossi ha promesso di inviare gli estratti conto.”</span>
+            </div>
+            <div class="source-fact">
+              <strong data-i18n="sources.note.label">Da sapere</strong>
+              <span data-i18n="sources.whatsapp.note">Aprire la chat può segnare i messaggi come letti. Vera può leggere soltanto ciò che WhatsApp Desktop rende visibile e non può garantire uno storico completo.</span>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section class="section-block boundary" id="boundary">
-      <span class="section-index" data-i18n="privacy.index">Confini reali</span>
-      <h2 data-i18n="privacy.title">Nessuna copia WhatsApp su Mparanza non significa nessun trattamento esterno.</h2>
+      <span class="section-index" data-i18n="privacy.index">I tuoi dati</span>
+      <h2 data-i18n="privacy.title">Vera non crea una copia completa delle tue email o chat.</h2>
       <div class="boundary-grid">
         <article>
-          <h3 data-i18n="privacy.mparanza.title">Mparanza</h3>
-          <p data-i18n="privacy.mparanza.copy">Il percorso WhatsApp Desktop non invia messaggi a un server Mparanza e non crea un archivio Mparanza.</p>
-        </article>
-        <article>
-          <h3 data-i18n="privacy.codex.title">Codex e ChatGPT</h3>
-          <p data-i18n="privacy.codex.copy">Entrambi i percorsi funzionano soltanto in Codex Desktop. Testo e immagini necessari al lavoro possono entrare nel contesto del modello secondo il piano e i controlli del tuo account.</p>
-        </article>
-        <article>
           <h3 data-i18n="privacy.gmail.title">Gmail</h3>
-          <p data-i18n="privacy.gmail.copy">Il connector OpenAI accede alla casella che hai collegato; valgono le condizioni e i controlli di Gmail e OpenAI.</p>
+          <p data-i18n="privacy.gmail.copy">Le email restano nella casella Gmail che hai collegato.</p>
         </article>
         <article>
           <h3 data-i18n="privacy.whatsapp.title">WhatsApp</h3>
-          <p data-i18n="privacy.whatsapp.copy">I messaggi restano nell’app e nei sistemi WhatsApp secondo le condizioni del servizio. Vera non cambia quelle regole.</p>
+          <p data-i18n="privacy.whatsapp.copy">Le chat restano in WhatsApp Desktop.</p>
         </article>
-      </div>
-    </section>
-
-    <section class="section-block" id="limits">
-      <div class="section-head">
-        <div>
-          <span class="section-index" data-i18n="limits.index">Cosa non promette</span>
-          <h2 data-i18n="limits.title">Una ricerca controllata, non una nuova piattaforma di messaggistica.</h2>
-        </div>
-        <p data-i18n="limits.intro">Il professionista resta davanti al risultato e verifica i messaggi citati.</p>
-      </div>
-      <div class="limits">
-        <div class="limit"><strong data-i18n="limits.gmail.title">Gmail</strong><span data-i18n="limits.gmail.copy">Nessuna ricerca di tutto lo studio e nessuna identità cliente conservata da Vera tra chat diverse.</span></div>
-        <div class="limit"><strong data-i18n="limits.whatsapp.title">WhatsApp Desktop</strong><span data-i18n="limits.whatsapp.copy">Nessuna acquisizione in background, nessun webhook, nessuna garanzia di completezza oltre ciò che l’app mostra.</span></div>
-        <div class="limit"><strong data-i18n="limits.writes.title">Azioni</strong><span data-i18n="limits.writes.copy">Il workflow consulta soltanto: non scrive, risponde, inoltra, modifica o elimina messaggi.</span></div>
+        <article>
+          <h3 data-i18n="privacy.vera.title">Vera</h3>
+          <p data-i18n="privacy.vera.copy">Vera non sincronizza la casella o le chat e non costruisce un nuovo archivio dei messaggi.</p>
+        </article>
+        <article>
+          <h3 data-i18n="privacy.codex.title">Codex e ChatGPT</h3>
+          <p data-i18n="privacy.codex.copy">Quando Vera legge un messaggio per rispondere, quel contenuto può essere inviato a Codex/ChatGPT ed elaborato secondo le impostazioni del tuo account.</p>
+        </article>
       </div>
     </section>
 
     <section class="section-block setup" id="setup">
       <div>
-        <span class="section-index" data-i18n="setup.index">Come iniziare</span>
-        <h2 data-i18n="setup.title">Scegli il percorso adatto.</h2>
+        <span class="section-index" data-i18n="setup.index">Per iniziare</span>
+        <h2 data-i18n="setup.title">Apri Codex Desktop e chiedi a Vera di cercare.</h2>
       </div>
       <div class="setup-actions">
-        <p data-i18n="setup.gmail">Per Gmail, collega separatamente il connector Gmail di OpenAI, poi usalo con Vera dentro Codex Desktop.</p>
-        <p data-i18n="setup.whatsapp">Per WhatsApp, usa Codex Desktop sul Mac con Computer Use disponibile e apri personalmente WhatsApp Desktop già autenticato.</p>
-        <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-i18n="setup.install">Installa Vera</a>
+        <p data-i18n="setup.gmail">Per Gmail: collega il connector Gmail di OpenAI a Codex Desktop.</p>
+        <p data-i18n="setup.whatsapp">Per WhatsApp: apri WhatsApp Desktop già autenticato sullo stesso Mac e assicurati che Computer Use sia disponibile.</p>
+        <p data-i18n="setup.desktop">Questa funzione non parte in ChatGPT web o mobile.</p>
       </div>
     </section>
   </main>
@@ -415,65 +378,284 @@
   <script>
     const copy = {
       it: {
-        "meta.title": "Vera · Archivio dello Studio",
-        "meta.description": "Archivio dello Studio cerca un solo cliente in Gmail o WhatsApp Desktop dentro Codex Desktop, senza conservare copie dei messaggi su Mparanza.",
-        "skip": "Vai al contenuto", "nav.label": "Sezioni", "nav.sources": "Due percorsi", "nav.boundary": "Dati", "nav.setup": "Come iniziare", "language.label": "Lingua",
-        "hero.eyebrow": "Vera · Archivio dello Studio", "hero.title": "Un cliente. Due percorsi distinti.", "hero.lead": "Dentro Codex Desktop, Gmail usa il connector Gmail di OpenAI collegato separatamente; WhatsApp usa Computer Use nell’app già aperta sul tuo computer.", "hero.note": "Vera può comparire nella directory pubblica dei plugin, ma i workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop. Puoi continuare a usare il tuo piano ChatGPT esistente. Nessun server Mparanza riceve o conserva una copia dei messaggi WhatsApp.",
-        "sources.index": "Le fonti", "sources.title": "Non è un unico archivio centrale.", "sources.intro": "Vera usa il percorso disponibile nel contesto in cui stai lavorando e mantiene la ricerca limitata a un cliente.", "sources.boundary.label": "Confine", "sources.limits.label": "Limiti",
-        "sources.gmail.availability": "Codex Desktop · OpenAI Gmail", "sources.gmail.title": "Gmail", "sources.gmail.copy": "Il connector Gmail di OpenAI viene installato e collegato separatamente, poi usato dentro Codex Desktop. Vera verifica la casella, cerca indirizzi confermati nella chat corrente e apre soltanto i messaggi necessari.", "sources.gmail.boundary": "La posta resta in Gmail. Vera non crea una copia della casella né conserva credenziali o messaggi.", "sources.gmail.limits": "Un cliente per volta, identità confermate nella conversazione e sole azioni di ricerca e lettura.",
-        "sources.whatsapp.availability": "Codex Desktop · locale", "sources.whatsapp.title": "WhatsApp Desktop", "sources.whatsapp.copy": "Apri WhatsApp Desktop e accedi tu. Codex Desktop usa Computer Use sullo stesso computer per consultare, su richiesta, i messaggi che l’app rende visibili o ricercabili.", "sources.whatsapp.boundary": "Non esistono webhook, sincronizzazione o archivio WhatsApp su Mparanza. Il contenuto letto da Codex resta soggetto al tuo account Codex/ChatGPT.", "sources.whatsapp.limits": "Non è un indice continuo né una garanzia di storico completo. Vera non invia, modifica o elimina messaggi.",
-        "routing.index": "Separazione clienti", "routing.title": "Prima l’identità. Poi la ricerca.", "routing.copy": "Vera non divide automaticamente tutta la corrispondenza dello studio. Lavora su un cliente esplicitamente scelto.", "routing.step1.title": "Scegli il cliente", "routing.step1.copy": "Indica un solo cliente e lo scopo della ricerca.", "routing.step2.title": "Conferma l’identità", "routing.step2.copy": "Conferma nella chat l’indirizzo Gmail o il numero WhatsApp esatto.", "routing.step3.title": "Rivedi le fonti", "routing.step3.copy": "Vera esclude risultati misti o ambigui e mostra da quali messaggi deriva la risposta.",
-        "privacy.index": "Confini reali", "privacy.title": "Nessuna copia WhatsApp su Mparanza non significa nessun trattamento esterno.", "privacy.mparanza.title": "Mparanza", "privacy.mparanza.copy": "Il percorso WhatsApp Desktop non invia messaggi a un server Mparanza e non crea un archivio Mparanza.", "privacy.codex.title": "Codex e ChatGPT", "privacy.codex.copy": "Entrambi i percorsi funzionano soltanto in Codex Desktop. Testo e immagini necessari al lavoro possono entrare nel contesto del modello secondo il piano e i controlli del tuo account.", "privacy.gmail.title": "Gmail", "privacy.gmail.copy": "Il connector OpenAI accede alla casella che hai collegato; valgono le condizioni e i controlli di Gmail e OpenAI.", "privacy.whatsapp.title": "WhatsApp", "privacy.whatsapp.copy": "I messaggi restano nell’app e nei sistemi WhatsApp secondo le condizioni del servizio. Vera non cambia quelle regole.",
-        "limits.index": "Cosa non promette", "limits.title": "Una ricerca controllata, non una nuova piattaforma di messaggistica.", "limits.intro": "Il professionista resta davanti al risultato e verifica i messaggi citati.", "limits.gmail.title": "Gmail", "limits.gmail.copy": "Nessuna ricerca di tutto lo studio e nessuna identità cliente conservata da Vera tra chat diverse.", "limits.whatsapp.title": "WhatsApp Desktop", "limits.whatsapp.copy": "Nessuna acquisizione in background, nessun webhook, nessuna garanzia di completezza oltre ciò che l’app mostra.", "limits.writes.title": "Azioni", "limits.writes.copy": "Il workflow consulta soltanto: non scrive, risponde, inoltra, modifica o elimina messaggi.",
-        "setup.index": "Come iniziare", "setup.title": "Scegli il percorso adatto.", "setup.gmail": "Per Gmail, collega separatamente il connector Gmail di OpenAI, poi usalo con Vera dentro Codex Desktop.", "setup.whatsapp": "Per WhatsApp, usa Codex Desktop sul Mac con Computer Use disponibile e apri personalmente WhatsApp Desktop già autenticato.", "setup.install": "Installa Vera", "footer.product": "Vera · Codex per commercialisti", "footer.back": "Torna a Vera"
+        "meta.title": "Vera · Gmail e WhatsApp",
+        "meta.description": "Con Vera in Codex Desktop puoi cercare le email o leggere la chat WhatsApp di un cliente, una conversazione alla volta.",
+        "skip": "Vai al contenuto",
+        "nav.label": "Sezioni",
+        "nav.routing": "Come funziona",
+        "nav.sources": "Gmail e WhatsApp",
+        "nav.boundary": "I tuoi dati",
+        "nav.setup": "Per iniziare",
+        "language.label": "Lingua",
+        "hero.eyebrow": "Vera · Gmail e WhatsApp",
+        "hero.title": "Trova i messaggi di un cliente, senza riordinare tutto a mano.",
+        "hero.lead": "Scrivi a Vera cosa cerchi e per quale cliente. Vera consulta Gmail oppure la chat del cliente in WhatsApp Desktop e ti mostra da quali messaggi deriva la risposta.",
+        "hero.note": "Funziona solo in Codex Desktop e lavora su un cliente alla volta. Vera legge i messaggi necessari, ma non scrive, non risponde e non modifica nulla.",
+        "routing.index": "Come funziona",
+        "routing.title": "Tu indichi il cliente. Vera cerca.",
+        "routing.copy": "Non devi spostare le email in cartelle né esportare le chat.",
+        "routing.step1.title": "Fai una domanda",
+        "routing.step1.copy": "Per esempio: “Per Rossi Srl, trova cosa manca per chiudere l’IVA di giugno.”",
+        "routing.step2.title": "Conferma il contatto",
+        "routing.step2.copy": "Vera ti chiede di confermare l’indirizzo email o il numero WhatsApp corretto, così non mescola clienti diversi.",
+        "routing.step3.title": "Controlla il risultato",
+        "routing.step3.copy": "Vera cita i messaggi utilizzati ed esclude quelli ambigui.",
+        "sources.index": "Gmail e WhatsApp",
+        "sources.title": "Cerca dove il cliente ti ha scritto.",
+        "sources.intro": "Le due funzioni sono separate. Per ogni richiesta scegli Gmail oppure WhatsApp.",
+        "sources.example.label": "Esempio",
+        "sources.note.label": "Da sapere",
+        "sources.gmail.availability": "Prima collega Gmail",
+        "sources.gmail.title": "Gmail",
+        "sources.gmail.copy": "Collega il connector Gmail di OpenAI a Codex Desktop. Vera controlla che sia la casella giusta, cerca i messaggi dell’indirizzo confermato e legge soltanto quelli necessari.",
+        "sources.gmail.example": "“Cerca nelle email di amministrazione@rossi.it cosa abbiamo concordato sulla rateizzazione.”",
+        "sources.gmail.note": "La posta resta in Gmail. Vera non sposta, etichetta, invia o cancella email.",
+        "sources.whatsapp.availability": "Prima apri WhatsApp Desktop",
+        "sources.whatsapp.title": "WhatsApp Desktop",
+        "sources.whatsapp.copy": "Apri WhatsApp Desktop sullo stesso Mac e accedi normalmente. Codex usa Computer Use, la funzione che gli permette di controllare l’app sul tuo computer, per aprire la chat del numero confermato e leggere i messaggi utili. Vera non invia nulla.",
+        "sources.whatsapp.example": "“Apri la chat del +39… e trova quando Rossi ha promesso di inviare gli estratti conto.”",
+        "sources.whatsapp.note": "Aprire la chat può segnare i messaggi come letti. Vera può leggere soltanto ciò che WhatsApp Desktop rende visibile e non può garantire uno storico completo.",
+        "privacy.index": "I tuoi dati",
+        "privacy.title": "Vera non crea una copia completa delle tue email o chat.",
+        "privacy.gmail.title": "Gmail",
+        "privacy.gmail.copy": "Le email restano nella casella Gmail che hai collegato.",
+        "privacy.whatsapp.title": "WhatsApp",
+        "privacy.whatsapp.copy": "Le chat restano in WhatsApp Desktop.",
+        "privacy.vera.title": "Vera",
+        "privacy.vera.copy": "Vera non sincronizza la casella o le chat e non costruisce un nuovo archivio dei messaggi.",
+        "privacy.codex.title": "Codex e ChatGPT",
+        "privacy.codex.copy": "Quando Vera legge un messaggio per rispondere, quel contenuto può essere inviato a Codex/ChatGPT ed elaborato secondo le impostazioni del tuo account.",
+        "setup.index": "Per iniziare",
+        "setup.title": "Apri Codex Desktop e chiedi a Vera di cercare.",
+        "setup.gmail": "Per Gmail: collega il connector Gmail di OpenAI a Codex Desktop.",
+        "setup.whatsapp": "Per WhatsApp: apri WhatsApp Desktop già autenticato sullo stesso Mac e assicurati che Computer Use sia disponibile.",
+        "setup.desktop": "Questa funzione non parte in ChatGPT web o mobile.",
+        "footer.product": "Vera · Codex per commercialisti",
+        "footer.back": "Torna a Vera"
       },
       en: {
-        "meta.title": "Vera · Studio Archive", "meta.description": "Studio Archive searches one client in Gmail or WhatsApp Desktop inside Codex Desktop, without storing message copies on Mparanza.",
-        "skip": "Skip to content", "nav.label": "Sections", "nav.sources": "Two routes", "nav.boundary": "Data", "nav.setup": "Get started", "language.label": "Language",
-        "hero.eyebrow": "Vera · Studio Archive", "hero.title": "One client. Two separate routes.", "hero.lead": "Inside Codex Desktop, Gmail uses OpenAI’s separately connected Gmail connector; WhatsApp uses Computer Use in the app already open on your computer.", "hero.note": "Vera may appear in the public Plugins Directory, but workflows stop on ChatGPT web and mobile and require Codex Desktop. You may still use your existing ChatGPT plan. No Mparanza server receives or stores a copy of WhatsApp messages.",
-        "sources.index": "Sources", "sources.title": "This is not one central archive.", "sources.intro": "Vera uses the route available where you are working and keeps the search limited to one client.", "sources.boundary.label": "Boundary", "sources.limits.label": "Limits",
-        "sources.gmail.availability": "Codex Desktop · OpenAI Gmail", "sources.gmail.title": "Gmail", "sources.gmail.copy": "OpenAI’s Gmail connector is installed and connected separately, then used inside Codex Desktop. Vera checks the mailbox, searches addresses confirmed in the current chat, and opens only the messages needed.", "sources.gmail.boundary": "Mail stays in Gmail. Vera creates no mailbox copy and stores no credentials or messages.", "sources.gmail.limits": "One client at a time, identities confirmed in the conversation, and search and read actions only.",
-        "sources.whatsapp.availability": "Codex Desktop · local", "sources.whatsapp.title": "WhatsApp Desktop", "sources.whatsapp.copy": "Open WhatsApp Desktop and sign in yourself. Codex Desktop uses Computer Use on the same computer to inspect, on request, messages the app makes visible or searchable.", "sources.whatsapp.boundary": "There is no Mparanza webhook, synchronization, or WhatsApp archive. Content Codex reads remains subject to your Codex/ChatGPT account.", "sources.whatsapp.limits": "This is not a continuous index or a complete-history guarantee. Vera does not send, edit, or delete messages.",
-        "routing.index": "Client separation", "routing.title": "Identity first. Search second.", "routing.copy": "Vera does not automatically divide all firm correspondence. It works on one explicitly selected client.", "routing.step1.title": "Choose the client", "routing.step1.copy": "Name one client and the purpose of the search.", "routing.step2.title": "Confirm identity", "routing.step2.copy": "Confirm the exact Gmail address or WhatsApp number in the chat.", "routing.step3.title": "Review sources", "routing.step3.copy": "Vera excludes mixed or ambiguous results and shows which messages support the answer.",
-        "privacy.index": "Real boundaries", "privacy.title": "No WhatsApp copy on Mparanza does not mean no external processing.", "privacy.mparanza.title": "Mparanza", "privacy.mparanza.copy": "The WhatsApp Desktop route sends no messages to a Mparanza server and creates no Mparanza archive.", "privacy.codex.title": "Codex and ChatGPT", "privacy.codex.copy": "Both routes work only in Codex Desktop. Text and images needed for the work may enter the model context under your account’s plan and controls.", "privacy.gmail.title": "Gmail", "privacy.gmail.copy": "OpenAI’s connector accesses the mailbox you connected; Gmail and OpenAI terms and controls apply.", "privacy.whatsapp.title": "WhatsApp", "privacy.whatsapp.copy": "Messages remain in the app and WhatsApp systems under that service’s terms. Vera does not change those rules.",
-        "limits.index": "What it does not promise", "limits.title": "A controlled search, not a new messaging platform.", "limits.intro": "The professional stays in front of the result and reviews cited messages.", "limits.gmail.title": "Gmail", "limits.gmail.copy": "No firm-wide search and no client identity retained by Vera across separate chats.", "limits.whatsapp.title": "WhatsApp Desktop", "limits.whatsapp.copy": "No background acquisition, no webhook, and no completeness guarantee beyond what the app displays.", "limits.writes.title": "Actions", "limits.writes.copy": "The workflow only inspects: it does not write, reply, forward, edit, or delete messages.",
-        "setup.index": "Get started", "setup.title": "Choose the route that fits.", "setup.gmail": "For Gmail, connect OpenAI’s Gmail connector separately, then use it with Vera inside Codex Desktop.", "setup.whatsapp": "For WhatsApp, use Codex Desktop on the Mac with Computer Use available and personally open an already authenticated WhatsApp Desktop app.", "setup.install": "Install Vera", "footer.product": "Vera · Codex for accountants", "footer.back": "Back to Vera"
+        "meta.title": "Vera · Gmail and WhatsApp",
+        "meta.description": "With Vera in Codex Desktop, you can search a client’s emails or read their WhatsApp chat, one conversation at a time.",
+        "skip": "Skip to content",
+        "nav.label": "Sections",
+        "nav.routing": "How it works",
+        "nav.sources": "Gmail and WhatsApp",
+        "nav.boundary": "Your data",
+        "nav.setup": "Get started",
+        "language.label": "Language",
+        "hero.eyebrow": "Vera · Gmail and WhatsApp",
+        "hero.title": "Find a client’s messages without sorting everything by hand.",
+        "hero.lead": "Tell Vera what you need and which client to check. Vera searches Gmail or reads the client’s chat in WhatsApp Desktop, then shows which messages support the answer.",
+        "hero.note": "This works only in Codex Desktop and handles one client at a time. Vera reads the messages needed, but never writes, replies, or changes anything.",
+        "routing.index": "How it works",
+        "routing.title": "You name the client. Vera searches.",
+        "routing.copy": "You do not need to move emails into folders or export chats.",
+        "routing.step1.title": "Ask a question",
+        "routing.step1.copy": "For example: “For Rossi Ltd, find what is missing to close the June VAT return.”",
+        "routing.step2.title": "Confirm the contact",
+        "routing.step2.copy": "Vera asks you to confirm the correct email address or WhatsApp number so different clients are not mixed.",
+        "routing.step3.title": "Check the result",
+        "routing.step3.copy": "Vera cites the messages it used and excludes ambiguous ones.",
+        "sources.index": "Gmail and WhatsApp",
+        "sources.title": "Search where the client wrote to you.",
+        "sources.intro": "The two functions are separate. Choose Gmail or WhatsApp for each request.",
+        "sources.example.label": "Example",
+        "sources.note.label": "Good to know",
+        "sources.gmail.availability": "Connect Gmail first",
+        "sources.gmail.title": "Gmail",
+        "sources.gmail.copy": "Connect OpenAI’s Gmail connector to Codex Desktop. Vera checks that it is the right mailbox, searches messages from the confirmed address, and reads only what is needed.",
+        "sources.gmail.example": "“Search emails from accounts@rossi.example and find what we agreed about the payment plan.”",
+        "sources.gmail.note": "Mail stays in Gmail. Vera does not move, label, send, or delete email.",
+        "sources.whatsapp.availability": "Open WhatsApp Desktop first",
+        "sources.whatsapp.title": "WhatsApp Desktop",
+        "sources.whatsapp.copy": "Open WhatsApp Desktop on the same Mac and sign in normally. Codex uses Computer Use, the function that lets it control an app on your computer, to open the confirmed number’s chat and read the useful messages. Vera sends nothing.",
+        "sources.whatsapp.example": "“Open the chat with +39… and find when Rossi promised to send the bank statements.”",
+        "sources.whatsapp.note": "Opening the chat may mark messages as read. Vera can read only what WhatsApp Desktop makes visible and cannot guarantee a complete history.",
+        "privacy.index": "Your data",
+        "privacy.title": "Vera does not create a complete copy of your emails or chats.",
+        "privacy.gmail.title": "Gmail",
+        "privacy.gmail.copy": "Emails stay in the Gmail mailbox you connected.",
+        "privacy.whatsapp.title": "WhatsApp",
+        "privacy.whatsapp.copy": "Chats stay in WhatsApp Desktop.",
+        "privacy.vera.title": "Vera",
+        "privacy.vera.copy": "Vera does not synchronize the mailbox or chats and does not build a new message archive.",
+        "privacy.codex.title": "Codex and ChatGPT",
+        "privacy.codex.copy": "When Vera reads a message to answer you, that content may be sent to Codex/ChatGPT and processed under your account settings.",
+        "setup.index": "Get started",
+        "setup.title": "Open Codex Desktop and ask Vera to search.",
+        "setup.gmail": "For Gmail: connect OpenAI’s Gmail connector to Codex Desktop.",
+        "setup.whatsapp": "For WhatsApp: open an already signed-in WhatsApp Desktop on the same Mac and make sure Computer Use is available.",
+        "setup.desktop": "This function does not start in ChatGPT on the web or mobile.",
+        "footer.product": "Vera · Codex for accountants",
+        "footer.back": "Back to Vera"
       },
       fr: {
-        "meta.title": "Vera · Archives du cabinet", "meta.description": "Les Archives du cabinet recherchent un seul client dans Gmail ou WhatsApp Desktop depuis Codex Desktop, sans stocker de copie des messages chez Mparanza.",
-        "skip": "Aller au contenu", "nav.label": "Sections", "nav.sources": "Deux parcours", "nav.boundary": "Données", "nav.setup": "Commencer", "language.label": "Langue",
-        "hero.eyebrow": "Vera · Archives du cabinet", "hero.title": "Un client. Deux parcours distincts.", "hero.lead": "Dans Codex Desktop, Gmail utilise le connecteur Gmail d’OpenAI lié séparément ; WhatsApp utilise Computer Use dans l’application déjà ouverte sur votre ordinateur.", "hero.note": "Vera peut apparaître dans le répertoire public des plugins, mais les workflows s’arrêtent sur ChatGPT web ou mobile et nécessitent Codex Desktop. Vous pouvez conserver votre offre ChatGPT existante. Aucun serveur Mparanza ne reçoit ni ne conserve de copie des messages WhatsApp.",
-        "sources.index": "Les sources", "sources.title": "Ce n’est pas une archive centrale unique.", "sources.intro": "Vera utilise le parcours disponible dans votre environnement de travail et limite la recherche à un seul client.", "sources.boundary.label": "Périmètre", "sources.limits.label": "Limites",
-        "sources.gmail.availability": "Codex Desktop · Gmail OpenAI", "sources.gmail.title": "Gmail", "sources.gmail.copy": "Le connecteur Gmail d’OpenAI est installé et lié séparément, puis utilisé dans Codex Desktop. Vera vérifie la boîte, recherche les adresses confirmées dans le chat courant et n’ouvre que les messages nécessaires.", "sources.gmail.boundary": "Les e-mails restent dans Gmail. Vera ne crée aucune copie de la boîte et ne conserve ni identifiants ni messages.", "sources.gmail.limits": "Un client à la fois, identités confirmées dans la conversation et actions de recherche et de lecture uniquement.",
-        "sources.whatsapp.availability": "Codex Desktop · local", "sources.whatsapp.title": "WhatsApp Desktop", "sources.whatsapp.copy": "Ouvrez WhatsApp Desktop et connectez-vous vous-même. Codex Desktop utilise Computer Use sur le même ordinateur pour consulter, à la demande, les messages visibles ou recherchables dans l’application.", "sources.whatsapp.boundary": "Il n’existe ni webhook, ni synchronisation, ni archive WhatsApp chez Mparanza. Le contenu lu par Codex reste soumis à votre compte Codex/ChatGPT.", "sources.whatsapp.limits": "Il ne s’agit ni d’un index continu ni d’une garantie d’historique complet. Vera n’envoie, ne modifie et ne supprime aucun message.",
-        "routing.index": "Séparation des clients", "routing.title": "D’abord l’identité. Ensuite la recherche.", "routing.copy": "Vera ne répartit pas automatiquement toute la correspondance du cabinet. Elle travaille sur un client explicitement choisi.", "routing.step1.title": "Choisir le client", "routing.step1.copy": "Indiquez un seul client et l’objet de la recherche.", "routing.step2.title": "Confirmer l’identité", "routing.step2.copy": "Confirmez dans le chat l’adresse Gmail ou le numéro WhatsApp exact.", "routing.step3.title": "Revoir les sources", "routing.step3.copy": "Vera exclut les résultats mixtes ou ambigus et montre les messages qui étayent la réponse.",
-        "privacy.index": "Périmètres réels", "privacy.title": "Aucune copie WhatsApp chez Mparanza ne signifie pas absence de tout traitement externe.", "privacy.mparanza.title": "Mparanza", "privacy.mparanza.copy": "Le parcours WhatsApp Desktop n’envoie aucun message à un serveur Mparanza et ne crée aucune archive Mparanza.", "privacy.codex.title": "Codex et ChatGPT", "privacy.codex.copy": "Les deux parcours fonctionnent uniquement dans Codex Desktop. Le texte et les images nécessaires au travail peuvent entrer dans le contexte du modèle selon l’offre et les contrôles de votre compte.", "privacy.gmail.title": "Gmail", "privacy.gmail.copy": "Le connecteur OpenAI accède à la boîte que vous avez liée ; les conditions et contrôles de Gmail et d’OpenAI s’appliquent.", "privacy.whatsapp.title": "WhatsApp", "privacy.whatsapp.copy": "Les messages restent dans l’application et les systèmes WhatsApp selon les conditions du service. Vera ne modifie pas ces règles.",
-        "limits.index": "Ce qui n’est pas promis", "limits.title": "Une recherche contrôlée, pas une nouvelle messagerie.", "limits.intro": "Le professionnel garde le résultat sous les yeux et vérifie les messages cités.", "limits.gmail.title": "Gmail", "limits.gmail.copy": "Aucune recherche dans tout le cabinet et aucune identité client conservée par Vera entre des chats distincts.", "limits.whatsapp.title": "WhatsApp Desktop", "limits.whatsapp.copy": "Aucune acquisition en arrière-plan, aucun webhook et aucune garantie d’exhaustivité au-delà de ce que l’application affiche.", "limits.writes.title": "Actions", "limits.writes.copy": "Le workflow consulte uniquement : il n’écrit, ne répond, ne transfère, ne modifie ni ne supprime aucun message.",
-        "setup.index": "Commencer", "setup.title": "Choisissez le parcours adapté.", "setup.gmail": "Pour Gmail, liez séparément le connecteur Gmail d’OpenAI, puis utilisez-le avec Vera dans Codex Desktop.", "setup.whatsapp": "Pour WhatsApp, utilisez Codex Desktop sur le Mac avec Computer Use disponible et ouvrez vous-même WhatsApp Desktop déjà authentifié.", "setup.install": "Installer Vera", "footer.product": "Vera · Codex pour experts-comptables", "footer.back": "Retour à Vera"
+        "meta.title": "Vera · Gmail et WhatsApp",
+        "meta.description": "Avec Vera dans Codex Desktop, recherchez les e-mails ou consultez la conversation WhatsApp d’un client, une conversation à la fois.",
+        "skip": "Aller au contenu",
+        "nav.label": "Sections",
+        "nav.routing": "Fonctionnement",
+        "nav.sources": "Gmail et WhatsApp",
+        "nav.boundary": "Vos données",
+        "nav.setup": "Commencer",
+        "language.label": "Langue",
+        "hero.eyebrow": "Vera · Gmail et WhatsApp",
+        "hero.title": "Retrouvez les messages d’un client sans tout classer à la main.",
+        "hero.lead": "Dites à Vera ce que vous cherchez et pour quel client. Vera recherche dans Gmail ou consulte la conversation du client dans WhatsApp Desktop, puis indique les messages qui étayent la réponse.",
+        "hero.note": "Cette fonction marche uniquement dans Codex Desktop et traite un client à la fois. Vera lit les messages nécessaires, mais n’écrit, ne répond et ne modifie rien.",
+        "routing.index": "Fonctionnement",
+        "routing.title": "Vous indiquez le client. Vera recherche.",
+        "routing.copy": "Inutile de déplacer les e-mails dans des dossiers ou d’exporter les conversations.",
+        "routing.step1.title": "Posez une question",
+        "routing.step1.copy": "Par exemple : « Pour Rossi SARL, trouve ce qui manque pour clôturer la TVA de juin. »",
+        "routing.step2.title": "Confirmez le contact",
+        "routing.step2.copy": "Vera vous demande de confirmer l’adresse e-mail ou le numéro WhatsApp exact afin de ne pas mélanger plusieurs clients.",
+        "routing.step3.title": "Vérifiez le résultat",
+        "routing.step3.copy": "Vera cite les messages utilisés et écarte ceux qui sont ambigus.",
+        "sources.index": "Gmail et WhatsApp",
+        "sources.title": "Recherchez là où le client vous a écrit.",
+        "sources.intro": "Les deux fonctions sont séparées. Choisissez Gmail ou WhatsApp pour chaque demande.",
+        "sources.example.label": "Exemple",
+        "sources.note.label": "À savoir",
+        "sources.gmail.availability": "Connectez d’abord Gmail",
+        "sources.gmail.title": "Gmail",
+        "sources.gmail.copy": "Connectez le connecteur Gmail d’OpenAI à Codex Desktop. Vera vérifie qu’il s’agit de la bonne boîte, recherche les messages de l’adresse confirmée et lit uniquement ceux qui sont nécessaires.",
+        "sources.gmail.example": "« Recherche dans les e-mails de comptabilite@rossi.example ce que nous avons convenu pour l’échéancier. »",
+        "sources.gmail.note": "Les e-mails restent dans Gmail. Vera ne déplace, n’étiquette, n’envoie et ne supprime aucun e-mail.",
+        "sources.whatsapp.availability": "Ouvrez d’abord WhatsApp Desktop",
+        "sources.whatsapp.title": "WhatsApp Desktop",
+        "sources.whatsapp.copy": "Ouvrez WhatsApp Desktop sur le même Mac et connectez-vous normalement. Codex utilise Computer Use, la fonction qui lui permet de contrôler une application sur votre ordinateur, pour ouvrir la conversation du numéro confirmé et lire les messages utiles. Vera n’envoie rien.",
+        "sources.whatsapp.example": "« Ouvre la conversation du +39… et trouve quand Rossi a promis d’envoyer les relevés bancaires. »",
+        "sources.whatsapp.note": "Ouvrir la conversation peut marquer des messages comme lus. Vera ne peut lire que ce que WhatsApp Desktop affiche et ne peut pas garantir un historique complet.",
+        "privacy.index": "Vos données",
+        "privacy.title": "Vera ne crée pas de copie complète de vos e-mails ou conversations.",
+        "privacy.gmail.title": "Gmail",
+        "privacy.gmail.copy": "Les e-mails restent dans la boîte Gmail que vous avez connectée.",
+        "privacy.whatsapp.title": "WhatsApp",
+        "privacy.whatsapp.copy": "Les conversations restent dans WhatsApp Desktop.",
+        "privacy.vera.title": "Vera",
+        "privacy.vera.copy": "Vera ne synchronise ni la boîte ni les conversations et ne crée pas de nouvelle archive de messages.",
+        "privacy.codex.title": "Codex et ChatGPT",
+        "privacy.codex.copy": "Lorsque Vera lit un message pour vous répondre, ce contenu peut être envoyé à Codex/ChatGPT et traité selon les paramètres de votre compte.",
+        "setup.index": "Commencer",
+        "setup.title": "Ouvrez Codex Desktop et demandez à Vera de rechercher.",
+        "setup.gmail": "Pour Gmail : connectez le connecteur Gmail d’OpenAI à Codex Desktop.",
+        "setup.whatsapp": "Pour WhatsApp : ouvrez WhatsApp Desktop déjà connecté sur le même Mac et vérifiez que Computer Use est disponible.",
+        "setup.desktop": "Cette fonction ne démarre pas dans ChatGPT sur le web ou mobile.",
+        "footer.product": "Vera · Codex pour experts-comptables",
+        "footer.back": "Retour à Vera"
       },
       de: {
-        "meta.title": "Vera · Kanzleiarchiv", "meta.description": "Das Kanzleiarchiv sucht einen Mandanten in Gmail oder WhatsApp Desktop innerhalb von Codex Desktop, ohne Nachrichtenkopien bei Mparanza zu speichern.",
-        "skip": "Zum Inhalt springen", "nav.label": "Abschnitte", "nav.sources": "Zwei Wege", "nav.boundary": "Daten", "nav.setup": "Erste Schritte", "language.label": "Sprache",
-        "hero.eyebrow": "Vera · Kanzleiarchiv", "hero.title": "Ein Mandant. Zwei getrennte Wege.", "hero.lead": "In Codex Desktop nutzt Gmail den separat verbundenen Gmail-Connector von OpenAI; WhatsApp nutzt Computer Use in der bereits auf Ihrem Computer geöffneten App.", "hero.note": "Vera kann im öffentlichen Plugin-Verzeichnis erscheinen, aber in ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und erfordern Codex Desktop. Ihr bestehender ChatGPT-Tarif kann weiter genutzt werden. Kein Mparanza-Server empfängt oder speichert eine Kopie der WhatsApp-Nachrichten.",
-        "sources.index": "Quellen", "sources.title": "Dies ist kein zentrales Gesamtarchiv.", "sources.intro": "Vera nutzt den in Ihrer Arbeitsumgebung verfügbaren Weg und begrenzt die Suche auf einen Mandanten.", "sources.boundary.label": "Grenze", "sources.limits.label": "Grenzen",
-        "sources.gmail.availability": "Codex Desktop · OpenAI Gmail", "sources.gmail.title": "Gmail", "sources.gmail.copy": "Der Gmail-Connector von OpenAI wird separat installiert und verbunden und dann in Codex Desktop verwendet. Vera prüft das Postfach, sucht im aktuellen Chat bestätigte Adressen und öffnet nur benötigte Nachrichten.", "sources.gmail.boundary": "E-Mails bleiben in Gmail. Vera erstellt keine Postfachkopie und speichert weder Zugangsdaten noch Nachrichten.", "sources.gmail.limits": "Ein Mandant je Suche, in der Unterhaltung bestätigte Identitäten und ausschließlich Such- und Leseaktionen.",
-        "sources.whatsapp.availability": "Codex Desktop · lokal", "sources.whatsapp.title": "WhatsApp Desktop", "sources.whatsapp.copy": "Öffnen Sie WhatsApp Desktop und melden Sie sich selbst an. Codex Desktop nutzt Computer Use auf demselben Computer, um auf Anfrage sichtbare oder durchsuchbare Nachrichten zu prüfen.", "sources.whatsapp.boundary": "Es gibt keinen Mparanza-Webhook, keine Synchronisierung und kein WhatsApp-Archiv bei Mparanza. Von Codex gelesene Inhalte unterliegen weiterhin Ihrem Codex-/ChatGPT-Konto.", "sources.whatsapp.limits": "Dies ist weder ein laufender Index noch eine Garantie für einen vollständigen Verlauf. Vera sendet, bearbeitet oder löscht keine Nachrichten.",
-        "routing.index": "Mandantentrennung", "routing.title": "Zuerst die Identität. Dann die Suche.", "routing.copy": "Vera teilt nicht automatisch die gesamte Kanzleikorrespondenz auf. Sie arbeitet für einen ausdrücklich ausgewählten Mandanten.", "routing.step1.title": "Mandanten wählen", "routing.step1.copy": "Nennen Sie einen Mandanten und den Zweck der Suche.", "routing.step2.title": "Identität bestätigen", "routing.step2.copy": "Bestätigen Sie im Chat die genaue Gmail-Adresse oder WhatsApp-Nummer.", "routing.step3.title": "Quellen prüfen", "routing.step3.copy": "Vera schließt gemischte oder mehrdeutige Ergebnisse aus und zeigt die Nachrichten, auf denen die Antwort beruht.",
-        "privacy.index": "Tatsächliche Grenzen", "privacy.title": "Keine WhatsApp-Kopie bei Mparanza bedeutet nicht, dass keine externe Verarbeitung stattfindet.", "privacy.mparanza.title": "Mparanza", "privacy.mparanza.copy": "Der WhatsApp-Desktop-Weg sendet keine Nachrichten an einen Mparanza-Server und erstellt kein Mparanza-Archiv.", "privacy.codex.title": "Codex und ChatGPT", "privacy.codex.copy": "Beide Wege funktionieren nur in Codex Desktop. Für die Arbeit benötigte Texte und Bilder können gemäß Tarif und Kontrollen Ihres Kontos in den Modellkontext gelangen.", "privacy.gmail.title": "Gmail", "privacy.gmail.copy": "Der OpenAI-Connector greift auf das von Ihnen verbundene Postfach zu; die Bedingungen und Kontrollen von Gmail und OpenAI gelten.", "privacy.whatsapp.title": "WhatsApp", "privacy.whatsapp.copy": "Nachrichten bleiben gemäß den Bedingungen des Dienstes in der App und den WhatsApp-Systemen. Vera ändert diese Regeln nicht.",
-        "limits.index": "Was nicht versprochen wird", "limits.title": "Eine kontrollierte Suche, keine neue Nachrichtenplattform.", "limits.intro": "Die Fachkraft behält das Ergebnis im Blick und prüft zitierte Nachrichten.", "limits.gmail.title": "Gmail", "limits.gmail.copy": "Keine kanzleiweite Suche und keine von Vera über getrennte Chats hinweg gespeicherte Mandantenidentität.", "limits.whatsapp.title": "WhatsApp Desktop", "limits.whatsapp.copy": "Keine Hintergrundübernahme, kein Webhook und keine Vollständigkeitsgarantie über die Anzeige der App hinaus.", "limits.writes.title": "Aktionen", "limits.writes.copy": "Der Workflow prüft nur: Er schreibt, beantwortet, leitet, bearbeitet oder löscht keine Nachrichten.",
-        "setup.index": "Erste Schritte", "setup.title": "Wählen Sie den passenden Weg.", "setup.gmail": "Verbinden Sie für Gmail den Gmail-Connector von OpenAI separat und verwenden Sie ihn dann mit Vera in Codex Desktop.", "setup.whatsapp": "Verwenden Sie für WhatsApp Codex Desktop auf dem Mac mit verfügbarem Computer Use und öffnen Sie persönlich die bereits authentifizierte WhatsApp-Desktop-App.", "setup.install": "Vera installieren", "footer.product": "Vera · Codex für Steuerberater", "footer.back": "Zurück zu Vera"
+        "meta.title": "Vera · Gmail und WhatsApp",
+        "meta.description": "Mit Vera in Codex Desktop können Sie E-Mails oder den WhatsApp-Chat eines Mandanten durchsuchen – jeweils eine Unterhaltung.",
+        "skip": "Zum Inhalt springen",
+        "nav.label": "Abschnitte",
+        "nav.routing": "So funktioniert es",
+        "nav.sources": "Gmail und WhatsApp",
+        "nav.boundary": "Ihre Daten",
+        "nav.setup": "Erste Schritte",
+        "language.label": "Sprache",
+        "hero.eyebrow": "Vera · Gmail und WhatsApp",
+        "hero.title": "Finden Sie Nachrichten eines Mandanten, ohne alles von Hand zu sortieren.",
+        "hero.lead": "Sagen Sie Vera, was Sie suchen und für welchen Mandanten. Vera durchsucht Gmail oder liest den Chat des Mandanten in WhatsApp Desktop und zeigt, welche Nachrichten die Antwort belegen.",
+        "hero.note": "Diese Funktion läuft nur in Codex Desktop und bearbeitet jeweils einen Mandanten. Vera liest die nötigen Nachrichten, schreibt, antwortet oder ändert aber nichts.",
+        "routing.index": "So funktioniert es",
+        "routing.title": "Sie nennen den Mandanten. Vera sucht.",
+        "routing.copy": "Sie müssen keine E-Mails in Ordner verschieben und keine Chats exportieren.",
+        "routing.step1.title": "Stellen Sie eine Frage",
+        "routing.step1.copy": "Zum Beispiel: „Finde für Rossi GmbH, was für den Abschluss der Juni-Umsatzsteuer noch fehlt.“",
+        "routing.step2.title": "Bestätigen Sie den Kontakt",
+        "routing.step2.copy": "Vera bittet Sie, die richtige E-Mail-Adresse oder WhatsApp-Nummer zu bestätigen, damit Mandanten nicht vermischt werden.",
+        "routing.step3.title": "Prüfen Sie das Ergebnis",
+        "routing.step3.copy": "Vera nennt die verwendeten Nachrichten und schließt mehrdeutige aus.",
+        "sources.index": "Gmail und WhatsApp",
+        "sources.title": "Suchen Sie dort, wo der Mandant Ihnen geschrieben hat.",
+        "sources.intro": "Die beiden Funktionen sind getrennt. Wählen Sie für jede Anfrage Gmail oder WhatsApp.",
+        "sources.example.label": "Beispiel",
+        "sources.note.label": "Gut zu wissen",
+        "sources.gmail.availability": "Verbinden Sie zuerst Gmail",
+        "sources.gmail.title": "Gmail",
+        "sources.gmail.copy": "Verbinden Sie den Gmail-Connector von OpenAI mit Codex Desktop. Vera prüft, ob es das richtige Postfach ist, sucht Nachrichten der bestätigten Adresse und liest nur die benötigten.",
+        "sources.gmail.example": "„Suche in den E-Mails von buchhaltung@rossi.example, was wir zum Ratenplan vereinbart haben.“",
+        "sources.gmail.note": "E-Mails bleiben in Gmail. Vera verschiebt, kennzeichnet, sendet oder löscht keine E-Mails.",
+        "sources.whatsapp.availability": "Öffnen Sie zuerst WhatsApp Desktop",
+        "sources.whatsapp.title": "WhatsApp Desktop",
+        "sources.whatsapp.copy": "Öffnen Sie WhatsApp Desktop auf demselben Mac und melden Sie sich normal an. Codex verwendet Computer Use, die Funktion zur Steuerung einer App auf Ihrem Computer, um den Chat der bestätigten Nummer zu öffnen und die relevanten Nachrichten zu lesen. Vera sendet nichts.",
+        "sources.whatsapp.example": "„Öffne den Chat mit +39… und finde, wann Rossi die Kontoauszüge zugesagt hat.“",
+        "sources.whatsapp.note": "Beim Öffnen des Chats können Nachrichten als gelesen markiert werden. Vera kann nur lesen, was WhatsApp Desktop anzeigt, und keinen vollständigen Verlauf garantieren.",
+        "privacy.index": "Ihre Daten",
+        "privacy.title": "Vera erstellt keine vollständige Kopie Ihrer E-Mails oder Chats.",
+        "privacy.gmail.title": "Gmail",
+        "privacy.gmail.copy": "E-Mails bleiben im verbundenen Gmail-Postfach.",
+        "privacy.whatsapp.title": "WhatsApp",
+        "privacy.whatsapp.copy": "Chats bleiben in WhatsApp Desktop.",
+        "privacy.vera.title": "Vera",
+        "privacy.vera.copy": "Vera synchronisiert weder Postfach noch Chats und baut kein neues Nachrichtenarchiv auf.",
+        "privacy.codex.title": "Codex und ChatGPT",
+        "privacy.codex.copy": "Wenn Vera eine Nachricht liest, um Ihnen zu antworten, kann dieser Inhalt an Codex/ChatGPT gesendet und gemäß Ihren Kontoeinstellungen verarbeitet werden.",
+        "setup.index": "Erste Schritte",
+        "setup.title": "Öffnen Sie Codex Desktop und bitten Sie Vera zu suchen.",
+        "setup.gmail": "Für Gmail: Verbinden Sie den Gmail-Connector von OpenAI mit Codex Desktop.",
+        "setup.whatsapp": "Für WhatsApp: Öffnen Sie das bereits angemeldete WhatsApp Desktop auf demselben Mac und stellen Sie sicher, dass Computer Use verfügbar ist.",
+        "setup.desktop": "Diese Funktion startet nicht in ChatGPT im Web oder auf Mobilgeräten.",
+        "footer.product": "Vera · Codex für Steuerberater",
+        "footer.back": "Zurück zu Vera"
       },
       es: {
-        "meta.title": "Vera · Archivo del despacho", "meta.description": "El Archivo del despacho busca un cliente en Gmail o WhatsApp Desktop dentro de Codex Desktop, sin almacenar copias de mensajes en Mparanza.",
-        "skip": "Ir al contenido", "nav.label": "Secciones", "nav.sources": "Dos rutas", "nav.boundary": "Datos", "nav.setup": "Cómo empezar", "language.label": "Idioma",
-        "hero.eyebrow": "Vera · Archivo del despacho", "hero.title": "Un cliente. Dos rutas distintas.", "hero.lead": "Dentro de Codex Desktop, Gmail usa el conector de Gmail de OpenAI vinculado por separado; WhatsApp usa Computer Use en la aplicación ya abierta en tu ordenador.", "hero.note": "Vera puede aparecer en el directorio público de plugins, pero los flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop. Puedes seguir usando tu plan actual de ChatGPT. Ningún servidor de Mparanza recibe ni conserva una copia de los mensajes de WhatsApp.",
-        "sources.index": "Las fuentes", "sources.title": "No es un único archivo central.", "sources.intro": "Vera utiliza la ruta disponible en tu entorno de trabajo y limita la búsqueda a un cliente.", "sources.boundary.label": "Límite", "sources.limits.label": "Límites",
-        "sources.gmail.availability": "Codex Desktop · Gmail de OpenAI", "sources.gmail.title": "Gmail", "sources.gmail.copy": "El conector de Gmail de OpenAI se instala y vincula por separado, y después se usa dentro de Codex Desktop. Vera comprueba el buzón, busca direcciones confirmadas en el chat actual y abre solo los mensajes necesarios.", "sources.gmail.boundary": "El correo permanece en Gmail. Vera no crea una copia del buzón ni conserva credenciales o mensajes.", "sources.gmail.limits": "Un cliente cada vez, identidades confirmadas en la conversación y solo acciones de búsqueda y lectura.",
-        "sources.whatsapp.availability": "Codex Desktop · local", "sources.whatsapp.title": "WhatsApp Desktop", "sources.whatsapp.copy": "Abre WhatsApp Desktop e inicia sesión tú mismo. Codex Desktop usa Computer Use en el mismo ordenador para consultar, cuando lo pidas, los mensajes que la aplicación muestra o permite buscar.", "sources.whatsapp.boundary": "No hay webhook, sincronización ni archivo de WhatsApp en Mparanza. El contenido que lee Codex sigue sujeto a tu cuenta de Codex/ChatGPT.", "sources.whatsapp.limits": "No es un índice continuo ni garantiza un historial completo. Vera no envía, modifica ni elimina mensajes.",
-        "routing.index": "Separación de clientes", "routing.title": "Primero la identidad. Después la búsqueda.", "routing.copy": "Vera no separa automáticamente toda la correspondencia del despacho. Trabaja con un cliente elegido expresamente.", "routing.step1.title": "Elige el cliente", "routing.step1.copy": "Indica un solo cliente y el objetivo de la búsqueda.", "routing.step2.title": "Confirma la identidad", "routing.step2.copy": "Confirma en el chat la dirección de Gmail o el número de WhatsApp exactos.", "routing.step3.title": "Revisa las fuentes", "routing.step3.copy": "Vera excluye resultados mixtos o ambiguos y muestra qué mensajes respaldan la respuesta.",
-        "privacy.index": "Límites reales", "privacy.title": "Que Mparanza no tenga una copia de WhatsApp no significa que no haya tratamiento externo.", "privacy.mparanza.title": "Mparanza", "privacy.mparanza.copy": "La ruta de WhatsApp Desktop no envía mensajes a un servidor de Mparanza ni crea un archivo en Mparanza.", "privacy.codex.title": "Codex y ChatGPT", "privacy.codex.copy": "Ambas rutas funcionan únicamente dentro de Codex Desktop. El texto y las imágenes necesarios para el trabajo pueden entrar en el contexto del modelo según el plan y los controles de tu cuenta.", "privacy.gmail.title": "Gmail", "privacy.gmail.copy": "El conector de OpenAI accede al buzón que has vinculado; se aplican las condiciones y los controles de Gmail y OpenAI.", "privacy.whatsapp.title": "WhatsApp", "privacy.whatsapp.copy": "Los mensajes permanecen en la aplicación y los sistemas de WhatsApp según sus condiciones. Vera no cambia esas reglas.",
-        "limits.index": "Lo que no promete", "limits.title": "Una búsqueda controlada, no una nueva plataforma de mensajería.", "limits.intro": "El profesional mantiene el resultado a la vista y revisa los mensajes citados.", "limits.gmail.title": "Gmail", "limits.gmail.copy": "No hay búsqueda de todo el despacho ni identidad de cliente conservada por Vera entre chats distintos.", "limits.whatsapp.title": "WhatsApp Desktop", "limits.whatsapp.copy": "No hay captura en segundo plano, webhook ni garantía de exhaustividad más allá de lo que muestra la aplicación.", "limits.writes.title": "Acciones", "limits.writes.copy": "El flujo solo consulta: no escribe, responde, reenvía, modifica ni elimina mensajes.",
-        "setup.index": "Cómo empezar", "setup.title": "Elige la ruta adecuada.", "setup.gmail": "Para Gmail, vincula por separado el conector de Gmail de OpenAI y después úsalo con Vera dentro de Codex Desktop.", "setup.whatsapp": "Para WhatsApp, usa Codex Desktop en el Mac con Computer Use disponible y abre personalmente WhatsApp Desktop ya autenticado.", "setup.install": "Instalar Vera", "footer.product": "Vera · Codex para asesores fiscales y contables", "footer.back": "Volver a Vera"
+        "meta.title": "Vera · Gmail y WhatsApp",
+        "meta.description": "Con Vera en Codex Desktop puedes buscar los correos o leer el chat de WhatsApp de un cliente, una conversación cada vez.",
+        "skip": "Ir al contenido",
+        "nav.label": "Secciones",
+        "nav.routing": "Cómo funciona",
+        "nav.sources": "Gmail y WhatsApp",
+        "nav.boundary": "Tus datos",
+        "nav.setup": "Cómo empezar",
+        "language.label": "Idioma",
+        "hero.eyebrow": "Vera · Gmail y WhatsApp",
+        "hero.title": "Encuentra los mensajes de un cliente sin ordenarlo todo a mano.",
+        "hero.lead": "Dile a Vera qué buscas y para qué cliente. Vera busca en Gmail o lee el chat del cliente en WhatsApp Desktop y muestra qué mensajes respaldan la respuesta.",
+        "hero.note": "Esta función solo funciona en Codex Desktop y trata un cliente cada vez. Vera lee los mensajes necesarios, pero no escribe, responde ni modifica nada.",
+        "routing.index": "Cómo funciona",
+        "routing.title": "Tú indicas el cliente. Vera busca.",
+        "routing.copy": "No tienes que mover correos a carpetas ni exportar chats.",
+        "routing.step1.title": "Haz una pregunta",
+        "routing.step1.copy": "Por ejemplo: «Para Rossi SL, encuentra qué falta para cerrar el IVA de junio».",
+        "routing.step2.title": "Confirma el contacto",
+        "routing.step2.copy": "Vera te pide que confirmes la dirección de correo o el número de WhatsApp correcto para no mezclar clientes.",
+        "routing.step3.title": "Comprueba el resultado",
+        "routing.step3.copy": "Vera cita los mensajes utilizados y excluye los ambiguos.",
+        "sources.index": "Gmail y WhatsApp",
+        "sources.title": "Busca donde el cliente te escribió.",
+        "sources.intro": "Las dos funciones son independientes. Elige Gmail o WhatsApp para cada solicitud.",
+        "sources.example.label": "Ejemplo",
+        "sources.note.label": "Conviene saber",
+        "sources.gmail.availability": "Primero conecta Gmail",
+        "sources.gmail.title": "Gmail",
+        "sources.gmail.copy": "Conecta el conector de Gmail de OpenAI a Codex Desktop. Vera comprueba que sea el buzón correcto, busca los mensajes de la dirección confirmada y lee solo los necesarios.",
+        "sources.gmail.example": "«Busca en los correos de contabilidad@rossi.example qué acordamos sobre el plan de pagos».",
+        "sources.gmail.note": "Los correos permanecen en Gmail. Vera no mueve, etiqueta, envía ni elimina correos.",
+        "sources.whatsapp.availability": "Primero abre WhatsApp Desktop",
+        "sources.whatsapp.title": "WhatsApp Desktop",
+        "sources.whatsapp.copy": "Abre WhatsApp Desktop en el mismo Mac e inicia sesión normalmente. Codex usa Computer Use, la función que le permite controlar una aplicación en tu ordenador, para abrir el chat del número confirmado y leer los mensajes útiles. Vera no envía nada.",
+        "sources.whatsapp.example": "«Abre el chat del +39… y encuentra cuándo Rossi prometió enviar los extractos bancarios».",
+        "sources.whatsapp.note": "Abrir el chat puede marcar mensajes como leídos. Vera solo puede leer lo que muestra WhatsApp Desktop y no puede garantizar un historial completo.",
+        "privacy.index": "Tus datos",
+        "privacy.title": "Vera no crea una copia completa de tus correos o chats.",
+        "privacy.gmail.title": "Gmail",
+        "privacy.gmail.copy": "Los correos permanecen en el buzón de Gmail que conectaste.",
+        "privacy.whatsapp.title": "WhatsApp",
+        "privacy.whatsapp.copy": "Los chats permanecen en WhatsApp Desktop.",
+        "privacy.vera.title": "Vera",
+        "privacy.vera.copy": "Vera no sincroniza el buzón ni los chats y no crea un nuevo archivo de mensajes.",
+        "privacy.codex.title": "Codex y ChatGPT",
+        "privacy.codex.copy": "Cuando Vera lee un mensaje para responderte, ese contenido puede enviarse a Codex/ChatGPT y procesarse según la configuración de tu cuenta.",
+        "setup.index": "Cómo empezar",
+        "setup.title": "Abre Codex Desktop y pide a Vera que busque.",
+        "setup.gmail": "Para Gmail: conecta el conector de Gmail de OpenAI a Codex Desktop.",
+        "setup.whatsapp": "Para WhatsApp: abre WhatsApp Desktop ya autenticado en el mismo Mac y asegúrate de que Computer Use esté disponible.",
+        "setup.desktop": "Esta función no se inicia en ChatGPT web o móvil.",
+        "footer.product": "Vera · Codex para asesores fiscales y contables",
+        "footer.back": "Volver a Vera"
       }
     };
 

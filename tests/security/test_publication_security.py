@@ -60,7 +60,7 @@ def test_public_pages_have_no_clara_or_vera_download_links() -> None:
     assert "vera-plugin.zip" not in html
 
 
-def test_only_product_and_new_client_gateway_pages_have_install_buttons() -> None:
+def test_only_product_pages_have_marketplace_install_actions() -> None:
     install_button_pages = {
         path.relative_to(ROOT).as_posix()
         for path in (ROOT / "static" / "shared").rglob("*.html")
@@ -70,9 +70,25 @@ def test_only_product_and_new_client_gateway_pages_have_install_buttons() -> Non
 
     assert install_button_pages == {
         "static/shared/clara/index.html",
-        "static/shared/new-client/index.html",
         "static/shared/vera/index.html",
     }
+
+    public_sources = tuple(
+        path
+        for path in (ROOT / "static" / "shared").rglob("*")
+        if path.suffix in {".html", ".js"}
+    )
+    expected_pages_by_plugin_id = {
+        "plugins_6a57ac5ce65c8191ae7bd0a51160eb7d": "static/shared/vera/index.html",
+        "plugins_6a57b17fb5848191be710192d93fe03a": "static/shared/clara/index.html",
+    }
+    for plugin_id, expected_page in expected_pages_by_plugin_id.items():
+        pages = {
+            path.relative_to(ROOT).as_posix()
+            for path in public_sources
+            if plugin_id in path.read_text(encoding="utf-8")
+        }
+        assert pages == {expected_page}
 
 
 def test_retired_duplicate_client_pages_are_absent() -> None:
