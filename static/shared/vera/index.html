@@ -224,6 +224,12 @@
     .text-link span[aria-hidden="true"] { color: var(--cyan); transition: transform 160ms ease-out; }
     .text-link:hover span[aria-hidden="true"] { transform: translateX(4px); }
 
+    .hero-guide-link {
+      width: fit-content;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
     .vera-mark {
       margin: 0;
       padding-left: clamp(32px, 5vw, 64px);
@@ -708,6 +714,10 @@
             <span data-i18n="hero.explore">Esplora il core</span>
             <span aria-hidden="true">↓</span>
           </a>
+          <a class="text-link hero-guide-link" id="vera-hero-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer">
+            <span data-i18n="hero.guide">Non hai ancora Codex? Guarda come installarlo</span>
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
       <figure class="vera-mark" aria-hidden="true">
@@ -1047,6 +1057,7 @@
         "hero.support": "La lingua indica come lavori con Vera. Il pacchetto paese indica quali regole, enti e formati entrano nel lavoro.",
         "hero.install": "Installa Vera",
         "hero.explore": "Esplora il core",
+        "hero.guide": "Non hai ancora Codex? Guarda come installarlo",
         "model.index": "Come è organizzata Vera",
         "model.title": "Una lingua per lavorare. Un perimetro per applicare le regole.",
         "model.copy": "Sono due scelte indipendenti. Il workflow resta leggibile nella tua lingua; il pacchetto paese entra solo dove il lavoro dipende dal contesto nazionale.",
@@ -1168,6 +1179,7 @@
         "hero.support": "Language defines how you work with Vera. The country pack defines which rules, institutions and formats enter the work.",
         "hero.install": "Install Vera",
         "hero.explore": "Explore the core",
+        "hero.guide": "Don’t have Codex yet? See how to install it",
         "model.index": "How Vera is organized",
         "model.title": "One language for the work. One scope for the rules.",
         "model.copy": "They are independent choices. The workflow stays readable in your language; the country pack enters only where the work depends on national context.",
@@ -1289,6 +1301,7 @@
         "hero.support": "La langue définit la façon de travailler avec Vera. Le pack pays définit les règles, organismes et formats qui s’appliquent.",
         "hero.install": "Installer Vera",
         "hero.explore": "Explorer le socle",
+        "hero.guide": "Vous n’avez pas encore Codex ? Voir comment l’installer",
         "model.index": "Organisation de Vera",
         "model.title": "Une langue pour travailler. Un périmètre pour appliquer les règles.",
         "model.copy": "Ce sont deux choix indépendants. Le workflow reste lisible dans votre langue ; le pack pays intervient seulement lorsque le travail dépend du contexte national.",
@@ -1410,6 +1423,7 @@
         "hero.support": "Die Sprache bestimmt, wie Sie mit Vera arbeiten. Das Länderpaket bestimmt, welche Regeln, Institutionen und Formate gelten.",
         "hero.install": "Vera installieren",
         "hero.explore": "Kern entdecken",
+        "hero.guide": "Noch kein Codex? Installationsvideo ansehen",
         "model.index": "So ist Vera organisiert",
         "model.title": "Eine Sprache für die Arbeit. Ein Rahmen für die Regeln.",
         "model.copy": "Beides sind unabhängige Entscheidungen. Der Workflow bleibt in Ihrer Sprache lesbar; das Länderpaket kommt nur hinzu, wenn die Arbeit vom nationalen Kontext abhängt.",
@@ -1531,6 +1545,7 @@
         "hero.support": "El idioma define cómo trabajas con Vera. El paquete de país define qué normas, organismos y formatos intervienen en el trabajo.",
         "hero.install": "Instalar Vera",
         "hero.explore": "Explorar el núcleo",
+        "hero.guide": "¿Aún no tienes Codex? Mira cómo instalarlo",
         "model.index": "Cómo se organiza Vera",
         "model.title": "Un idioma para trabajar. Un ámbito para aplicar las normas.",
         "model.copy": "Son dos decisiones independientes. El flujo de trabajo sigue siendo legible en tu idioma; el paquete de país solo interviene cuando el trabajo depende del contexto nacional.",
@@ -1698,6 +1713,7 @@
         link.querySelector(".video-meta").textContent = strings["videos.open"];
       });
       const installVideo = installVideos[lang];
+      document.getElementById("vera-hero-install-video-link").href = `https://youtu.be/${installVideo.id}`;
       document.getElementById("vera-install-video-link").href = `https://youtu.be/${installVideo.id}`;
       document.getElementById("vera-install-video-thumbnail").src = thumbnailUrl(installVideo.id);
       document.getElementById("vera-install-video-duration").textContent = installVideo.duration;

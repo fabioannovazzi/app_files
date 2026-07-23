@@ -152,6 +152,29 @@ def test_setup_guides_use_only_verified_localized_youtube_ids() -> None:
     assert BAD_SETUP_IDS.isdisjoint(set(re.findall(r"[\w-]{11}", combined)))
 
 
+def test_vera_hero_surfaces_the_localized_setup_guide() -> None:
+    vera_page = (STATIC_ROOT / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'id="vera-hero-install-video-link"' in vera_page
+    assert f'href="https://youtu.be/{SETUP_IDS["it"]}"' in vera_page
+    assert (
+        'document.getElementById("vera-hero-install-video-link").href = '
+        "`https://youtu.be/${installVideo.id}`;"
+    ) in vera_page
+    for language, youtube_id in SETUP_IDS.items():
+        assert f'{language}: {{ id: "{youtube_id}",' in vera_page
+    assert '"hero.guide": "Non hai ancora Codex? Guarda come installarlo"' in vera_page
+    assert '"hero.guide": "Don’t have Codex yet? See how to install it"' in vera_page
+    assert (
+        '"hero.guide": "Vous n’avez pas encore Codex ? Voir comment l’installer"'
+        in vera_page
+    )
+    assert '"hero.guide": "Noch kein Codex? Installationsvideo ansehen"' in vera_page
+    assert '"hero.guide": "¿Aún no tienes Codex? Mira cómo instalarlo"' in vera_page
+
+
 def test_spanish_catalog_uses_all_native_outward_videos_without_english_fallback() -> (
     None
 ):
