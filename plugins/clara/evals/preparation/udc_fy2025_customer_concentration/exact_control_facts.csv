@@ -1,0 +1,6 @@
+control_id,fiscal_year,metric_id,value,unit,reported_increment,source_id,source_locator
+udc_2025_total_revenue,2025,total_revenue,650611,USD_thousands,1,udc_fy2025_10k,Note 19 geographic revenue table lines 5963-6040
+udc_2024_total_revenue,2024,total_revenue,647684,USD_thousands,1,udc_fy2025_10k,Note 19 geographic revenue table lines 5963-6040
+udc_2023_total_revenue,2023,total_revenue,576429,USD_thousands,1,udc_fy2025_10k,Note 19 geographic revenue table lines 5963-6040
+udc_2025_total_accounts_receivable,2025,total_accounts_receivable,119953,USD_thousands,1,udc_fy2025_10k,Consolidated Balance Sheets lines 2281-2313
+udc_2024_total_accounts_receivable,2024,total_accounts_receivable,113648,USD_thousands,1,udc_fy2025_10k,Consolidated Balance Sheets lines 2281-2313

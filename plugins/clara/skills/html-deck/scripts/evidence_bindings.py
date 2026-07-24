@@ -48,6 +48,7 @@ __all__ = [
     "seal_evidence_bundle",
     "sha256_bytes",
     "sha256_file",
+    "validate_evidence_bundle",
     "validate_evidence_ledger",
 ]
 
@@ -286,10 +287,20 @@ def _reject_nonstandard_json_constant(value: str) -> None:
     raise ValueError(f"non-standard JSON constant {value!r} is not permitted")
 
 
+def _unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON field {key!r} is not permitted")
+        result[key] = value
+    return result
+
+
 def _load_json(path: Path, label: str) -> Any:
     try:
         return json.loads(
             path.read_text(encoding="utf-8"),
+            object_pairs_hook=_unique_json_object,
             parse_float=Decimal,
             parse_constant=_reject_nonstandard_json_constant,
         )
@@ -1567,7 +1578,15 @@ def extract_embedded_evidence_ledger(html_text: str) -> dict[str, Any] | None:
     match = EVIDENCE_LEDGER_RE.search(html_text)
     if not match:
         return None
-    payload = json.loads(match.group("payload"))
+    try:
+        payload = json.loads(
+            match.group("payload"),
+            object_pairs_hook=_unique_json_object,
+            parse_float=Decimal,
+            parse_constant=_reject_nonstandard_json_constant,
+        )
+    except (json.JSONDecodeError, ValueError) as exc:
+        raise ValueError(f"embedded evidence ledger is not valid JSON: {exc}") from exc
     return validate_evidence_ledger(_mapping(payload, "embedded evidence ledger"))
 
 
@@ -1631,6 +1650,52 @@ def seal_evidence_bundle(path: Path) -> dict[str, Any]:
         "bundle": str(resolved_path),
         "sha256": sha256_file(resolved_path),
         "artifact_count": len(sealed_artifacts),
+    }
+
+
+def validate_evidence_bundle(path: Path) -> dict[str, Any]:
+    """Validate one sealed bundle and return portable artifact receipts."""
+
+    bundle_path = path.expanduser()
+    if not bundle_path.is_absolute():
+        bundle_path = Path.cwd() / bundle_path
+    bundle_path = bundle_path.absolute()
+    bundle_sha256 = sha256_file(bundle_path)
+    bundle, _, actual_sha256, artifacts = _load_bundle(
+        base_dir=bundle_path.parent,
+        bundle_ref={
+            "path": bundle_path.name,
+            "sha256": bundle_sha256,
+        },
+    )
+
+    payload_cache: dict[str, Any] = {}
+    for artifact in artifacts.values():
+        if artifact.table is not None:
+            _table_rows(artifact, payload_cache)
+
+    receipts = [
+        {
+            "id": artifact.artifact_id,
+            "source_id": artifact.source_id,
+            "path": artifact.path,
+            "media_type": artifact.media_type,
+            "sha256": artifact.sha256,
+            "size_bytes": artifact.size_bytes,
+            "snapshot_id": artifact.snapshot_id,
+            "table": dict(artifact.table) if artifact.table is not None else None,
+        }
+        for artifact in sorted(
+            artifacts.values(),
+            key=lambda item: item.artifact_id,
+        )
+    ]
+    return {
+        "schema_version": EVIDENCE_BUNDLE_SCHEMA_VERSION,
+        "bundle_id": str(bundle["bundle_id"]),
+        "sha256": actual_sha256,
+        "artifact_count": len(receipts),
+        "artifacts": receipts,
     }
 
 

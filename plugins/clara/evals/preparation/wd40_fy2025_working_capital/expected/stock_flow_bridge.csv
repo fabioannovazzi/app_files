@@ -1,0 +1,6 @@
+bridge_row_id,row_kind,period_start,period_end,cumulative_cash_flow_change,prior_cumulative_cash_flow_change,period_cash_flow_change,delta_operating_nwc,expected_cash_impact,stock_flow_residual,residual_status,unit,policy_id
+FY2025-Q1,quarter,2024-09-01,2024-11-30,-10805,0,-10805,10507,-10507,-298,unexplained,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025-Q2,quarter,2024-12-01,2025-02-28,-24482,-10805,-13677,11850,-11850,-1827,unexplained,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025-Q3,quarter,2025-03-01,2025-05-31,-14725,-24482,9757,-5891,5891,3866,unexplained,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025-Q4,quarter,2025-06-01,2025-08-31,-10605,-14725,4120,-5695,5695,-1575,unexplained,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025,fiscal_year,2024-09-01,2025-08-31,-10605,,-10605,10771,-10771,166,unexplained,USD_thousands,wd40_fy2025_operating_working_capital

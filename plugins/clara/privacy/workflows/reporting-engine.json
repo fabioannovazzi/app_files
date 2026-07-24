@@ -4,6 +4,8 @@
   "display_name": "Reporting Engine",
   "governed_paths": [
     "skills/reporting-engine/SKILL.md",
+    "contracts/reporting_evidence_handoff_receipt.v1.schema.json",
+    "scripts/build_monthly_pnl_reporting_handoff.py",
     "modules/reporting-engine/README.md",
     "modules/reporting-engine/references",
     "modules/reporting-engine/scripts"
@@ -49,6 +51,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8f5d597dbedfc43d395b43434e1185f1e741de2016c39e3fd0b2f5bccebd0ff8"
+    "source_fingerprint": "8f0e52057fcab4c80ef3a2a20186be4a5529197209c9d8313fb8e2de0ed08989"
   }
 }

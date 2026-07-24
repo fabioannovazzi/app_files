@@ -7,6 +7,14 @@
     ".codex-plugin/plugin.json",
     "hooks/hooks.json",
     "skills/clara/SKILL.md",
+    "contracts/real_data_pilot_intake.v1.schema.json",
+    "contracts/real_data_pilot_intake_receipt.v1.schema.json",
+    "contracts/real_data_pilot_mechanical_error_register.v1.schema.json",
+    "contracts/real_data_pilot_retention_approval.v1.schema.json",
+    "contracts/real_data_pilot_sanitized_error_class_summary_candidate.v1.schema.json",
+    "contracts/real_data_pilot_sanitized_error_class_summary.v1.schema.json",
+    "contracts/real_data_pilot_semantic_review.v1.schema.json",
+    "contracts/real_data_pilot_semantic_review_receipt.v1.schema.json",
     "scripts"
   ],
   "codex_context": {
@@ -20,7 +28,7 @@
       {
         "id": "advisory-judgement-and-evidence",
         "purpose": "Weigh evidence and prepare decision-ready advice",
-        "content": "Material summaries, evidence maps, source limitations, consultant and advisor judgement, Codex inferences, contradictions, hypotheses, options, recommendations, implementation conditions, pending inclusion decisions, and case issues"
+        "content": "Material summaries, evidence maps, source limitations, consultant and advisor judgement, Codex inferences, contradictions, hypotheses, options, recommendations, implementation conditions, pending inclusion decisions, case issues, and pseudonymous but linkable audit metadata such as exact source digests, byte counts, stable IDs, dates, counts, and cross-receipt hashes"
       },
       {
         "id": "human-visible-outputs",
@@ -111,11 +119,16 @@
       ]
     }
   ],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "m6-linkable-receipt-boundary",
+      "control": "M6 receipts and sanitized summaries are treated as confidential, pseudonymous, linkable metadata; they remain outside the plugin and source repository by default, and any retention exception requires review of the exact metadata, access, and retention boundary."
+    }
+  ],
   "review": {
     "reviewed_at": "2026-07-23",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6495ed5d8b8d6aef3ebb6d1abcf214d0030034910c119ca2aa4e8ba6e860400f"
+    "source_fingerprint": "d84784fea7506b539b02d9764c88d7fc7735aa1645efa10e74ccbbdfd2205ed6"
   }
 }

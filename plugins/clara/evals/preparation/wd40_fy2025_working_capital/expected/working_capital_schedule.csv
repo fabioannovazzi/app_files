@@ -1,0 +1,6 @@
+period_label,period_end,ar_net,inventory,other_current_assets,accounts_payable,accrued_liabilities,accrued_payroll,operating_nwc,prior_period_end,delta_operating_nwc,expected_cash_impact,unit,policy_id
+FY2024,2024-08-31,117493,79088,12161,35960,31272,26055,115455,,,,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025-Q1,2024-11-30,111433,74887,21567,32212,29132,20581,125962,2024-08-31,10507,-10507,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025-Q2,2025-02-28,110784,80512,28146,33965,30595,17070,137812,2024-11-30,11850,-11850,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025-Q3,2025-05-31,112409,77249,25117,27801,29091,25962,131921,2025-02-28,-5891,5891,USD_thousands,wd40_fy2025_operating_working_capital
+FY2025,2025-08-31,120589,79871,26366,37955,34230,28415,126226,2025-05-31,-5695,5695,USD_thousands,wd40_fy2025_operating_working_capital

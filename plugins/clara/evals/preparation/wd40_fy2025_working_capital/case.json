@@ -1,0 +1,198 @@
+{
+  "case_id": "wd40-fy2025-public-working-capital",
+  "disclosure_boundary": {
+    "publication_status": "withheld",
+    "report_ready": false,
+    "residual_allocation_emitted": false,
+    "row_lineage_declared": false,
+    "semantic_authority": "unproven",
+    "source_authority": "unproven",
+    "statement": "This fixture proves exact public-fact preservation and reviewed arithmetic only. It does not prove source authority, semantic suitability, causal allocation of stock-flow residuals, row lineage, or report readiness."
+  },
+  "files": {
+    "public_working_capital_facts": {
+      "path": "public_working_capital_facts.csv",
+      "sha256": "dd925bd158142eb3a8b27cecc307c522629edcc8b2514b04416e68ddf31daf65"
+    },
+    "reviewed_working_capital_policy": {
+      "path": "reviewed_working_capital_policy.json",
+      "sha256": "232661ccf01aff9c6852b8d02de81af708b7f9ab7f70384021cab90c1afa1e80"
+    }
+  },
+  "fixture_controls": {
+    "fiscal_year_bridge": {
+      "cumulative_cash_flow_change": "-10605",
+      "delta_operating_nwc": "10771",
+      "expected_cash_impact": "-10771",
+      "stock_flow_residual": "166"
+    },
+    "operating_nwc": [
+      {
+        "period_end": "2024-08-31",
+        "value": "115455"
+      },
+      {
+        "period_end": "2024-11-30",
+        "value": "125962"
+      },
+      {
+        "period_end": "2025-02-28",
+        "value": "137812"
+      },
+      {
+        "period_end": "2025-05-31",
+        "value": "131921"
+      },
+      {
+        "period_end": "2025-08-31",
+        "value": "126226"
+      }
+    ],
+    "quarter_bridge": [
+      {
+        "delta_operating_nwc": "10507",
+        "discrete_cash_flow_change": "-10805",
+        "expected_cash_impact": "-10507",
+        "quarter": "FY2025-Q1",
+        "stock_flow_residual": "-298"
+      },
+      {
+        "delta_operating_nwc": "11850",
+        "discrete_cash_flow_change": "-13677",
+        "expected_cash_impact": "-11850",
+        "quarter": "FY2025-Q2",
+        "stock_flow_residual": "-1827"
+      },
+      {
+        "delta_operating_nwc": "-5891",
+        "discrete_cash_flow_change": "9757",
+        "expected_cash_impact": "5891",
+        "quarter": "FY2025-Q3",
+        "stock_flow_residual": "3866"
+      },
+      {
+        "delta_operating_nwc": "-5695",
+        "discrete_cash_flow_change": "4120",
+        "expected_cash_impact": "5695",
+        "quarter": "FY2025-Q4",
+        "stock_flow_residual": "-1575"
+      }
+    ],
+    "tolerance": "0"
+  },
+  "preparation_recipe": {
+    "arithmetic": "decimal_exact",
+    "balance_sheet_periods": [
+      {
+        "period_end": "2024-08-31",
+        "period_label": "FY2024",
+        "source_id": "wd40_fy2025_10k"
+      },
+      {
+        "period_end": "2024-11-30",
+        "period_label": "FY2025-Q1",
+        "source_id": "wd40_q1_fy2025_10q"
+      },
+      {
+        "period_end": "2025-02-28",
+        "period_label": "FY2025-Q2",
+        "source_id": "wd40_q2_fy2025_10q"
+      },
+      {
+        "period_end": "2025-05-31",
+        "period_label": "FY2025-Q3",
+        "source_id": "wd40_q3_fy2025_10q"
+      },
+      {
+        "period_end": "2025-08-31",
+        "period_label": "FY2025",
+        "source_id": "wd40_fy2025_10k"
+      }
+    ],
+    "cash_flow_cumulative_periods": [
+      {
+        "period_end": "2024-11-30",
+        "period_label": "FY2025-Q1",
+        "period_start": "2024-09-01",
+        "quarter": "FY2025-Q1",
+        "source_id": "wd40_q1_fy2025_10q"
+      },
+      {
+        "period_end": "2025-02-28",
+        "period_label": "FY2025-H1",
+        "period_start": "2024-09-01",
+        "quarter": "FY2025-Q2",
+        "source_id": "wd40_q2_fy2025_10q"
+      },
+      {
+        "period_end": "2025-05-31",
+        "period_label": "FY2025-9M",
+        "period_start": "2024-09-01",
+        "quarter": "FY2025-Q3",
+        "source_id": "wd40_q3_fy2025_10q"
+      },
+      {
+        "period_end": "2025-08-31",
+        "period_label": "FY2025",
+        "period_start": "2024-09-01",
+        "quarter": "FY2025-Q4",
+        "source_id": "wd40_fy2025_10k"
+      }
+    ],
+    "currency": "USD",
+    "engine_version": "1.0.0",
+    "policy_id": "wd40_fy2025_operating_working_capital",
+    "policy_version": "1.0.0",
+    "recipe_id": "public_working_capital_from_reviewed_policy.v1",
+    "reported_increment": "1",
+    "unit": "USD_thousands"
+  },
+  "purpose": "Exercise exact public-fact preservation, operating working-capital scheduling, cumulative cash-flow de-cumulation, and an unallocated stock-flow residual.",
+  "schema_version": "clara.working_capital_preparation_case.v1",
+  "sources": [
+    {
+      "accession": "0000105132-25-000009",
+      "byte_count": 1030161,
+      "filed_date": "2025-01-10",
+      "form": "10-Q",
+      "role": "quarterly_control",
+      "sha256": "b7a1534f188f6e30b4d24cae3e173d3cda7d68b6c40f5aa24af19c3654daa70f",
+      "source_id": "wd40_q1_fy2025_10q",
+      "title": "WD-40 Company Q1 FY2025 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000009/wdfc-20241130.htm"
+    },
+    {
+      "accession": "0000105132-25-000015",
+      "byte_count": 1405347,
+      "filed_date": "2025-04-09",
+      "form": "10-Q",
+      "role": "quarterly_control",
+      "sha256": "e013e12e87e4a0ad38f12194823eff81d17f9cb880a0b3a09146e0359fda3707",
+      "source_id": "wd40_q2_fy2025_10q",
+      "title": "WD-40 Company Q2 FY2025 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000015/wdfc-20250228.htm"
+    },
+    {
+      "accession": "0000105132-25-000025",
+      "byte_count": 1435323,
+      "filed_date": "2025-07-10",
+      "form": "10-Q",
+      "role": "quarterly_control",
+      "sha256": "cafdc1640c715179b956f05e502333229b129d5a4e0a0c4c0beed18844cb253d",
+      "source_id": "wd40_q3_fy2025_10q",
+      "title": "WD-40 Company Q3 FY2025 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000025/wdfc-20250531.htm"
+    },
+    {
+      "accession": "0000105132-25-000067",
+      "byte_count": 1793208,
+      "filed_date": "2025-10-27",
+      "form": "10-K",
+      "role": "annual_control",
+      "sha256": "d03a7ef37c6796c1a01d6b9bdb438afb6b276abfa5baa112b9b0465b4fe83209",
+      "source_id": "wd40_fy2025_10k",
+      "title": "WD-40 Company FY2025 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000067/wdfc-20250831.htm"
+    }
+  ]
+}

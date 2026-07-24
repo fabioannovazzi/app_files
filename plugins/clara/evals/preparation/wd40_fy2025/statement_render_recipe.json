@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "title": "WD-40 Company — synthetic monthly preparation fixture",
+  "statement_label": "Prepared monthly profit and loss statement",
+  "unit": "USD thousands",
+  "scope_label": "Synthetic monthly phasing; public quarter and fiscal-year tie-outs",
+  "mappings": {
+    "row_key_column": "row_key",
+    "period_column": "period",
+    "scenario_column": "scenario",
+    "value_column": "value"
+  },
+  "periods": [
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08"
+  ],
+  "scenarios_by_period": {
+    "2024-09": ["SYN"],
+    "2024-10": ["SYN"],
+    "2024-11": ["SYN"],
+    "2024-12": ["SYN"],
+    "2025-01": ["SYN"],
+    "2025-02": ["SYN"],
+    "2025-03": ["SYN"],
+    "2025-04": ["SYN"],
+    "2025-05": ["SYN"],
+    "2025-06": ["SYN"],
+    "2025-07": ["SYN"],
+    "2025-08": ["SYN"]
+  },
+  "statement_rows": [
+    {"key": "net_sales", "label": "Net sales", "line_type": "detail", "prefix": "+", "source_key": "net_sales"},
+    {"key": "cost_of_products_sold", "label": "Cost of products sold", "line_type": "detail", "prefix": "-", "source_key": "cost_of_products_sold"},
+    {"key": "gross_profit", "label": "Gross profit", "line_type": "subtotal", "prefix": "=", "source_key": "gross_profit"},
+    {"key": "selling_general_and_administrative", "label": "Selling general and administrative", "level": 1, "line_type": "detail", "prefix": "-", "source_key": "selling_general_and_administrative"},
+    {"key": "advertising_and_sales_promotion", "label": "Advertising and sales promotion", "level": 1, "line_type": "detail", "prefix": "-", "source_key": "advertising_and_sales_promotion"},
+    {"key": "amortization_of_definite_lived_intangible_assets", "label": "Amortization of definite-lived intangible assets", "level": 1, "line_type": "detail", "prefix": "-", "source_key": "amortization_of_definite_lived_intangible_assets"},
+    {"key": "total_operating_expenses", "label": "Total operating expenses", "line_type": "subtotal", "prefix": "=", "source_key": "total_operating_expenses"},
+    {"key": "income_from_operations", "label": "Income from operations", "line_type": "subtotal", "prefix": "=", "source_key": "income_from_operations"},
+    {"key": "interest_income", "label": "Interest income", "level": 1, "line_type": "detail", "prefix": "+", "source_key": "interest_income"},
+    {"key": "interest_expense", "label": "Interest expense", "level": 1, "line_type": "detail", "prefix": "-", "source_key": "interest_expense"},
+    {"key": "other_income_expense_net", "label": "Other income (expense) net", "level": 1, "line_type": "detail", "prefix": "+", "source_key": "other_income_expense_net"},
+    {"key": "income_before_income_taxes", "label": "Income before income taxes", "line_type": "subtotal", "prefix": "=", "source_key": "income_before_income_taxes"},
+    {"key": "provision_for_income_taxes", "label": "Provision for (benefit from) income taxes", "level": 1, "line_type": "detail", "prefix": "-", "source_key": "provision_for_income_taxes"},
+    {"key": "net_income", "label": "Net income", "line_type": "total", "prefix": "=", "source_key": "net_income"}
+  ]
+}

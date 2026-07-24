@@ -1,0 +1,2329 @@
+{
+  "case_id": "wd40-fy2025-synthetic-monthly-pnl",
+  "checks": [
+    {
+      "check_id": "input_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "duplicate_control",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "period_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "unit_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "scope_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "mapping_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "source_row_conservation",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "trial_balance_identity",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "sign_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "leaf_aggregation_conservation",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "monthly_statement_identities",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "public_tie_outs",
+      "failure_count": 0,
+      "status": "passed"
+    }
+  ],
+  "counts": {
+    "errors": 0,
+    "leaf_conservation_results": 108,
+    "mapped_included_rows": 132,
+    "mapping_fanout_rows": 0,
+    "mapping_row_ids": 12,
+    "mapping_rows": 12,
+    "mapping_rows_used": 12,
+    "monthly_identity_results": 60,
+    "monthly_periods": 12,
+    "monthly_pnl_rows": 168,
+    "public_tie_out_results": 70,
+    "reviewed_excluded_rows": 12,
+    "source_rows": 144,
+    "statement_lines": 14,
+    "trial_balance_accounts": 12,
+    "unique_source_row_ids": 144,
+    "unmapped_rows": 0,
+    "unresolved_rows": 0
+  },
+  "downstream_readiness": {
+    "evidence_sealing": "not_assessed",
+    "render_compatibility": "not_assessed",
+    "report_ready": false,
+    "semantic_compatibility": "not_assessed",
+    "status": "not_assessed"
+  },
+  "errors": [],
+  "leaf_aggregation_conservation": [
+    {
+      "difference": "0",
+      "mapped_source_value": "51000",
+      "period": "2024-09",
+      "prepared_leaf_value": "51000",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "d07e15802824105b18e69835cc752e412393e05d695a7472340c334b069ecaa0",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "23100",
+      "period": "2024-09",
+      "prepared_leaf_value": "23100",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "5eea5aa8a64d143019f2b51267c3b62852b812d29edabcad505fca699bc7d8c2",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16800",
+      "period": "2024-09",
+      "prepared_leaf_value": "16800",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "0a2266fa978cc4464209b0947064d4fba4ae9f8e17e2fa313faded13e1d28d02",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2700",
+      "period": "2024-09",
+      "prepared_leaf_value": "2700",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "10db439b7fa90baedee6498fae05be686e76c7c56c17328dc6f98abc23850f80",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16",
+      "period": "2024-09",
+      "prepared_leaf_value": "16",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "eb2e6607cba7537a058c861e7b28548b53dcee333ff47f0b08604a0d6ad15e40",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "50",
+      "period": "2024-09",
+      "prepared_leaf_value": "50",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "5703593ea133a385106b720e9b2d45b656095abf507fd2bf5bd97e2e9bf157fc",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "290",
+      "period": "2024-09",
+      "prepared_leaf_value": "290",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "7cfc62489d9c7faccf2708f015b8435c9487635d5ab148eb90e56126ed92afbc",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-50",
+      "period": "2024-09",
+      "prepared_leaf_value": "-50",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "ca99b12b4597bd0d7f5faf9246623ecb108f8bc0fc8646e92639ae9fc4eb4e34",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "1800",
+      "period": "2024-09",
+      "prepared_leaf_value": "1800",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "e576e1c7f74c2fa3004390a0b887c7b3e563cf0184a9b0b6c90ad92e1fa5f0ac",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "51200",
+      "period": "2024-10",
+      "prepared_leaf_value": "51200",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "56a9eb233e2c8f43120f8329a268d374fe01b84c53d0870283fbb84c28b2b7c7",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "23050",
+      "period": "2024-10",
+      "prepared_leaf_value": "23050",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "cae1aea5deb845b9036ff0637e3aadc42e2777c597570d3e87c0feca11eb31b5",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16850",
+      "period": "2024-10",
+      "prepared_leaf_value": "16850",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "4b3d753145eab1c7810defbd6b10ff06e23b3b787cddfa4afaa7ca9dfe9bd38b",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2800",
+      "period": "2024-10",
+      "prepared_leaf_value": "2800",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "00e3924f20bbd5ea4c539aa82cde4857c9ed3a6a553fb207845f3b75ef0c6101",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "15",
+      "period": "2024-10",
+      "prepared_leaf_value": "15",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "81d1c1cb4f00935d7d742d1fa828df32ac47fc34376fddee863570cbe7a97480",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "49",
+      "period": "2024-10",
+      "prepared_leaf_value": "49",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "ab77e9ce9f5eb060d1c0add3840a39922a1020256305c33d6564a8db55f0c7c5",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "291",
+      "period": "2024-10",
+      "prepared_leaf_value": "291",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "72e0353b82b7cfd2d3b2731a1116269bb3a6b3de6a0c457fe33f60b78a8f2887",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-40",
+      "period": "2024-10",
+      "prepared_leaf_value": "-40",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "0399b9b360d5493a586b7810908a1eddc6b6aad784da6c22b2206f1831174ec2",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "1750",
+      "period": "2024-10",
+      "prepared_leaf_value": "1750",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "3ac3153686d933b7a311ca909bd78f35e2e0d0f579f52e5938b7540de284f6e2",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "51295",
+      "period": "2024-11",
+      "prepared_leaf_value": "51295",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "57875b26ff95118bbf365a74d0b045c25f91b65e0fc10e77c2df4b8aaa1d9549",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "23258",
+      "period": "2024-11",
+      "prepared_leaf_value": "23258",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "17dbf5ff35459c7d9bf7e338ec760f4582fd32c737432ef276d4daf3fdc739c3",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16875",
+      "period": "2024-11",
+      "prepared_leaf_value": "16875",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "5da419961feed21544fb9c9a18cc4779e6f1798208941663386c9f8a22b9f0d2",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2893",
+      "period": "2024-11",
+      "prepared_leaf_value": "2893",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "d8babac08c8830b3e9e5d1fa5650ee1c4505e527a0f7410c9364ca20070e6bdb",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16",
+      "period": "2024-11",
+      "prepared_leaf_value": "16",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "75111d5a5bd9abb1ec0760e0d474f648cc77cb0348ec9b8e3af4b0f8eed0529c",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "49",
+      "period": "2024-11",
+      "prepared_leaf_value": "49",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "17c944389a49a740e212fc453b1b06b0ec0404eae1146bbc16bdcd95c69035a6",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "292",
+      "period": "2024-11",
+      "prepared_leaf_value": "292",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "68c6b634f84cba739d5d3b488aaf24766fc9fb1113e3f4365b61706fb2f38ea9",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-51",
+      "period": "2024-11",
+      "prepared_leaf_value": "-51",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "52c5193deb27120d539c59f2385930c3a82d743cfc44355d490846b4ed287763",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "1781",
+      "period": "2024-11",
+      "prepared_leaf_value": "1781",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "379c4fd263a4865e564027b425b1cfb4734431b13e7414000c7f3b6c0c0dd93a",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "48200",
+      "period": "2024-12",
+      "prepared_leaf_value": "48200",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "d5563c360edc664ebe97ffc302aff88b5bb53e11269f98af16b983c4a4ac05d7",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "22000",
+      "period": "2024-12",
+      "prepared_leaf_value": "22000",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "153aa5330d44fc37f7521772956938f25bab96a7f9cc66ad6d44427bd2fc1c9a",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16200",
+      "period": "2024-12",
+      "prepared_leaf_value": "16200",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "6b500914385967e0955adf658f56c88012dd312704fbd16e7982af6007e00d7f",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2400",
+      "period": "2024-12",
+      "prepared_leaf_value": "2400",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "1b3947775fdb53dc95793b65f3fff53e6235680206e27bfdd4f1914296e70a88",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "15",
+      "period": "2024-12",
+      "prepared_leaf_value": "15",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "e8f9f988ebe665c26bad050edd0815ff0573e6343cd33a8fa75278ff4f39db2d",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "35",
+      "period": "2024-12",
+      "prepared_leaf_value": "35",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "e45bb9da44ef0decf304a45019f78be622ffd0f6f6da5f0ca382cb685abe9020",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "340",
+      "period": "2024-12",
+      "prepared_leaf_value": "340",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "217dea81d4056403b7fb4ad8ba21c0d09cfb00b7d82770496b0fadec121f0981",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "20",
+      "period": "2024-12",
+      "prepared_leaf_value": "20",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "beb2fc6c22fb44c7772f788e5b72b13f1d308fbe43f4549c505656ba64f362b5",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-2500",
+      "period": "2024-12",
+      "prepared_leaf_value": "-2500",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "9a8663087334ec53344479699de66ae45f3123b0b36ade8364ebeb016b8ff319",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "48900",
+      "period": "2025-01",
+      "prepared_leaf_value": "48900",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "f41584fa0a39b75a137ec0de8bc0f22d8e1be4581254375beb84500ac72bd72c",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "22200",
+      "period": "2025-01",
+      "prepared_leaf_value": "22200",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "ccf3697a206fe14e99f338b64312a421f9a2e70e0d59989d5598946a872f0aaa",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16300",
+      "period": "2025-01",
+      "prepared_leaf_value": "16300",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "b163544470d2b91515c107c15f46e53d8c81018303acbbe6c5fda201836c40a9",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2450",
+      "period": "2025-01",
+      "prepared_leaf_value": "2450",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "e91a4519378b53322823b575dfcd61c9b5a33ed32a5655a7f6af1c1dcce6a792",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "14",
+      "period": "2025-01",
+      "prepared_leaf_value": "14",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "4dd1367d4a550ce618a0567734885aec861a19dcd4e4c58d82f329d4c9c8f89b",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "35",
+      "period": "2025-01",
+      "prepared_leaf_value": "35",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "8aec9aeac74fa0cb16a7fb04ee728ed83c10e0147bb0e484b480b40ac1942236",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "340",
+      "period": "2025-01",
+      "prepared_leaf_value": "340",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "92358bda54cd39f32fe867ec5eb4f344652de0ee187e00edcc7d2637f40ff82e",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "25",
+      "period": "2025-01",
+      "prepared_leaf_value": "25",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "10883d09a94574f7b3062f7ca931b2ee0c51da2452393721fa2d0b737fd7ebfe",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-2450",
+      "period": "2025-01",
+      "prepared_leaf_value": "-2450",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "7b5bfdf9852164e39b8ad6ebe52e263f1629d01daf0e802e8d43691301a03fe3",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "49004",
+      "period": "2025-02",
+      "prepared_leaf_value": "49004",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "ac38e0d8b1604fe8caec902deb63a853fe044c4296a1e09cf2a6263ada6664ed",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "22188",
+      "period": "2025-02",
+      "prepared_leaf_value": "22188",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "f4fc357659f21c7115d2c027e9a74e29d1275dc911c4c79d30ac8066b494d0e7",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16488",
+      "period": "2025-02",
+      "prepared_leaf_value": "16488",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "ca44418c4e72a77966b0c8cdd35c15d8bbda38845f3a4198ca79df170bf76062",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2554",
+      "period": "2025-02",
+      "prepared_leaf_value": "2554",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "a132fbf202a31d3668aa18556526995efa3c67e1c60ef8dae626d6fb537788a8",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "15",
+      "period": "2025-02",
+      "prepared_leaf_value": "15",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "80625549e245860837dc25f121df41aa4b6f7c80cd778608644fc2d424dc8b6b",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "36",
+      "period": "2025-02",
+      "prepared_leaf_value": "36",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "f6921326fe7611eecbb28498b7c922eca97dd71b768a6c62bed41aea56d3343a",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "341",
+      "period": "2025-02",
+      "prepared_leaf_value": "341",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "1d293712290f5fabce03b837ff1817460e02891b15e504881252c2950689ffdf",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "29",
+      "period": "2025-02",
+      "prepared_leaf_value": "29",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "28736cbb723f1decb9394280e7e1d9204a9f21d0454e5b5ad7e243798ded4d9e",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-2462",
+      "period": "2025-02",
+      "prepared_leaf_value": "-2462",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "acb97cf892747fa4a958b10f0f64932f1be1166b9a039ad74676330330977a2a",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "52000",
+      "period": "2025-03",
+      "prepared_leaf_value": "52000",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "26ae9d926bd1f0bd87b5f7685b7342b0cc0188671491e0330026289c8ea500a1",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "22800",
+      "period": "2025-03",
+      "prepared_leaf_value": "22800",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "96966ece019b020c75afce3deeaeb5739f7a6c057e79a857761d98c9785801fb",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "17000",
+      "period": "2025-03",
+      "prepared_leaf_value": "17000",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "1304ed4afae6e6ce5c30b2381b6a146ba27179652a2c408a6e265fab4745e90e",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "3000",
+      "period": "2025-03",
+      "prepared_leaf_value": "3000",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "f03c59392a400fbec5796c99823c75de5fd4d8d65ddda3475604f5117728705a",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "15",
+      "period": "2025-03",
+      "prepared_leaf_value": "15",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "f36020b6708970ca8ff1dc26567b6eb2c1578c778cc34845c44da78171bd84bd",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "35",
+      "period": "2025-03",
+      "prepared_leaf_value": "35",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "daaaa90cbaa8571bc87e3aee108380319bfc626973b52638507d9ec436002246",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "295",
+      "period": "2025-03",
+      "prepared_leaf_value": "295",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "a8ced9728e40416c3ecd9cea1b9e7a68d2700cccdc52bcfd2daf4cd930190673",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "300",
+      "period": "2025-03",
+      "prepared_leaf_value": "300",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "82da8b7b1a275ce188bbb7e47ecb17ad354066d98172cf7295aff4e07a5212aa",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2100",
+      "period": "2025-03",
+      "prepared_leaf_value": "2100",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "44e8a5a860c2cd46c5db468caef464757b8151847a19850c58babf32d7d71c5f",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "52200",
+      "period": "2025-04",
+      "prepared_leaf_value": "52200",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "98380418ad42ce97f02da97da0e3aba7f00e9c6995b0d63dfbf9b4204e56ea59",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "22900",
+      "period": "2025-04",
+      "prepared_leaf_value": "22900",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "035b2a8cbc505c1bc66a54524024352a1b1baa8401d23001de315794060ed288",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "17100",
+      "period": "2025-04",
+      "prepared_leaf_value": "17100",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "3a21f143e6bc10000ae6e011fd9252aa70a303ccb6e1961b071c449def7a3966",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "3050",
+      "period": "2025-04",
+      "prepared_leaf_value": "3050",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "5f9f27782499b8d724b11d2ddec29f59fece9961c201fa59e9616611c759f7ed",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "15",
+      "period": "2025-04",
+      "prepared_leaf_value": "15",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "92c58d8cf0777498304beaf948946e2e2ccc5e4bac99681f455f334386a9435b",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "34",
+      "period": "2025-04",
+      "prepared_leaf_value": "34",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "f42b778b5bac41b636408123917e244161be6608fd50868aa2672e3409f637b8",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "296",
+      "period": "2025-04",
+      "prepared_leaf_value": "296",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "e8e73355a09c4aa461ba47dd522eaeb504e62ffb2726fb31839be93fc4a2fac4",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "300",
+      "period": "2025-04",
+      "prepared_leaf_value": "300",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "ce6a40ac8b3e5488e5f72e9f018ef03a51d083246f5f919d6b98635f71bd786e",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2150",
+      "period": "2025-04",
+      "prepared_leaf_value": "2150",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "a30b85cfcd6757a4b5f10217d50a31ad582d0911d1f5f3dce3bd8c4f88a8ba10",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "52715",
+      "period": "2025-05",
+      "prepared_leaf_value": "52715",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "98f81ecb1bfe4adf9531c072bb5b1671e01080ac0733c005c1fb2f3b09b08e5e",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "23104",
+      "period": "2025-05",
+      "prepared_leaf_value": "23104",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "ff3d3e1aba0dbd95f3bcefa5de1b09c08a68046d2b923a3e9e064a055f00cb16",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "17441",
+      "period": "2025-05",
+      "prepared_leaf_value": "17441",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "d0ef8926106a8dde30a8727b2e2c5774ab2ae2770e5c3fe973bc4009ef3a1c73",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "3110",
+      "period": "2025-05",
+      "prepared_leaf_value": "3110",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "77db3610585ff8d4611efdffdcbf3f10bfb1fe0488413d3616a6c42302c1757c",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "15",
+      "period": "2025-05",
+      "prepared_leaf_value": "15",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "a41fdf5fccdad2a27c6b69b011bbe55be9108874eafe86544ae01dbf3a3308d9",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "35",
+      "period": "2025-05",
+      "prepared_leaf_value": "35",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "600afbebd9062ef9ad4661a5597572d3558ad1780bf4ff9a2f15cf16f32e2908",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "296",
+      "period": "2025-05",
+      "prepared_leaf_value": "296",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "ca0bf1f52e87a4166b0283bdbb294ed6c183dd2a48b67892f4ca00e54feb3e91",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "280",
+      "period": "2025-05",
+      "prepared_leaf_value": "280",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "beff027fc020fff1951d47a000ec96ec6b03082d3ee5ef37c07ef32b53da088d",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2235",
+      "period": "2025-05",
+      "prepared_leaf_value": "2235",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "b56b0ee3e998680d99fa9e5d98568bb04a948fa0b0419fd1d2631504758fb9ed",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "54000",
+      "period": "2025-06",
+      "prepared_leaf_value": "54000",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "1313eedf1c71764112f4a4d45c0f29d97bd22e0c8b4a915c44f6346e937e7939",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "24300",
+      "period": "2025-06",
+      "prepared_leaf_value": "24300",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "8c23ccc2954a68a5122eb770a8d28a7b9f5e238432ae8079429ac8ae8974a9cb",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16000",
+      "period": "2025-06",
+      "prepared_leaf_value": "16000",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "134a4dd4f98a97eedab6240ab25558b72c2f9e54c1ba8a3b5feccdc9b2f204d8",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "4000",
+      "period": "2025-06",
+      "prepared_leaf_value": "4000",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "af7250404f295a2e57f3bbe70aa70da890db80c339c700edc9a85fd04a5ed266",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16",
+      "period": "2025-06",
+      "prepared_leaf_value": "16",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "df3d64298ce968d65aba6b6db6e6e4c19db3649e93fbd78e803bd4e48be2e024",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "53",
+      "period": "2025-06",
+      "prepared_leaf_value": "53",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "71ad051095e034f1b418c072d5f563e6fd2ccd06065e7d325964e554db5c73bc",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "220",
+      "period": "2025-06",
+      "prepared_leaf_value": "220",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "2d763aee5572eeea565713bafe88767eb84fd55cbdcd9a6cb6bb011356c090f0",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-20",
+      "period": "2025-06",
+      "prepared_leaf_value": "-20",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "1dfac708981d5b35b6a79b75e2cb1539c68c2e4e9f3af3bd114bfa45de924b30",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2000",
+      "period": "2025-06",
+      "prepared_leaf_value": "2000",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "5a77575a9cb1e55fbf222bbd7a2a7ee6893d29e4639f20eb736b26bd3733e592",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "54500",
+      "period": "2025-07",
+      "prepared_leaf_value": "54500",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "e145a14f33c4c9a3a7ac97db3cad2825bf81e8f8a902a3835771ff339656620e",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "24700",
+      "period": "2025-07",
+      "prepared_leaf_value": "24700",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "9bd5e53d4ca8e6209614344dcae3be822af78624c48dfab22a2d5d83ea5c6f25",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16200",
+      "period": "2025-07",
+      "prepared_leaf_value": "16200",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "5251eb58c64952d7fc03fbb7119553972d00e8165fe9eac365b2e228e4928afb",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "4100",
+      "period": "2025-07",
+      "prepared_leaf_value": "4100",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "3ad4ba18eb774c74cfbbd7422b7bd285dc2c41700742ce984e4cbba831301b34",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "15",
+      "period": "2025-07",
+      "prepared_leaf_value": "15",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "6db86de398fff8e6465783548c94211d4cb9841dbf21a253aae921d40c2eb810",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "53",
+      "period": "2025-07",
+      "prepared_leaf_value": "53",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "57b6dec8d827917fba071e7b9a887eed8cebbbdfb97e00fe12b8a0bf36a693d6",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "220",
+      "period": "2025-07",
+      "prepared_leaf_value": "220",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "d83e751319c718434c505b19fb277f3f29ac3f10e098f87f3d5fc247fb57f8ac",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-20",
+      "period": "2025-07",
+      "prepared_leaf_value": "-20",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "ff158f30c0d59b27a27f9c125fc7058f3ce6cfcbc9c7d3a730072dd6be7bffa6",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2050",
+      "period": "2025-07",
+      "prepared_leaf_value": "2050",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "511a612daa38cee6f432afd6f323ad703428d1de1cbfdb741a8f4b11d603ea62",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "54971",
+      "period": "2025-08",
+      "prepared_leaf_value": "54971",
+      "row_key": "net_sales",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "9ec402b4bad7d172077699709ab7ce35b49de08b1c4db228b3085fd4c0ecd330",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "25042",
+      "period": "2025-08",
+      "prepared_leaf_value": "25042",
+      "row_key": "cost_of_products_sold",
+      "source_row_count": 2,
+      "source_row_ids_sha256": "c0cca18155c10fcc178a0956b3f79708b1d50714f98a43bd1f934a20dcd6a5b2",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16682",
+      "period": "2025-08",
+      "prepared_leaf_value": "16682",
+      "row_key": "selling_general_and_administrative",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "2dc8af19e38d3d1ed8562b2efadc81b778870ce42b557c7e5b55fce78cce4271",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "4374",
+      "period": "2025-08",
+      "prepared_leaf_value": "4374",
+      "row_key": "advertising_and_sales_promotion",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "b484024a85d8cd870ecc83fd27045ad296620b3e05a6cbfe5873a10a42c46367",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "16",
+      "period": "2025-08",
+      "prepared_leaf_value": "16",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "d419d4584b3deaf5a68966805a566e623955120767d6e98ca146f313b24ee4ce",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "53",
+      "period": "2025-08",
+      "prepared_leaf_value": "53",
+      "row_key": "interest_income",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "667fe7b8c872488a06732403255712e217486bf8a51f24a1e7284a8eb1afd8ea",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "220",
+      "period": "2025-08",
+      "prepared_leaf_value": "220",
+      "row_key": "interest_expense",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "dd4dac05a2eb748fbf5ad9ec2da493e8dd54a67b2e15c1cf5e7f43162d7c3ccb",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "-16",
+      "period": "2025-08",
+      "prepared_leaf_value": "-16",
+      "row_key": "other_income_expense_net",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "bcc853931b000d201ea5fcfa026b653113f38013bf63ca1ad3cf07e55decac80",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "mapped_source_value": "2178",
+      "period": "2025-08",
+      "prepared_leaf_value": "2178",
+      "row_key": "provision_for_income_taxes",
+      "source_row_count": 1,
+      "source_row_ids_sha256": "51560f6f8de6a57e0a53d61170696aa21d870c677f8c915da415f2675885636f",
+      "status": "passed"
+    }
+  ],
+  "monthly_statement_identities": [
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2024-09",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2024-09",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2024-09",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2024-09",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2024-09",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2024-10",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2024-10",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2024-10",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2024-10",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2024-10",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2024-11",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2024-11",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2024-11",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2024-11",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2024-11",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2024-12",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2024-12",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2024-12",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2024-12",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2024-12",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-01",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-01",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-01",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-01",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-01",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-02",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-02",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-02",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-02",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-02",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-03",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-03",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-03",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-03",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-03",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-04",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-04",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-04",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-04",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-04",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-05",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-05",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-05",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-05",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-05",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-06",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-06",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-06",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-06",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-06",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-07",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-07",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-07",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-07",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-07",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "gross_profit",
+      "period": "2025-08",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "total_operating_expenses",
+      "period": "2025-08",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_from_operations",
+      "period": "2025-08",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "income_before_income_taxes",
+      "period": "2025-08",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "identity_id": "net_income",
+      "period": "2025-08",
+      "status": "passed"
+    }
+  ],
+  "monthly_trial_balance": [
+    {
+      "difference": "0",
+      "period": "2024-09",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2024-10",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2024-11",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2024-12",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-01",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-02",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-03",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-04",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-05",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-06",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-07",
+      "status": "passed"
+    },
+    {
+      "difference": "0",
+      "period": "2025-08",
+      "status": "passed"
+    }
+  ],
+  "public_tie_outs": [
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "153495",
+      "public_value": "153495",
+      "row_key": "net_sales",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "69408",
+      "public_value": "69408",
+      "row_key": "cost_of_products_sold",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "84087",
+      "public_value": "84087",
+      "row_key": "gross_profit",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "50525",
+      "public_value": "50525",
+      "row_key": "selling_general_and_administrative",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "8393",
+      "public_value": "8393",
+      "row_key": "advertising_and_sales_promotion",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "47",
+      "public_value": "47",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "58965",
+      "public_value": "58965",
+      "row_key": "total_operating_expenses",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "25122",
+      "public_value": "25122",
+      "row_key": "income_from_operations",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "148",
+      "public_value": "148",
+      "row_key": "interest_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "873",
+      "public_value": "873",
+      "row_key": "interest_expense",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "-141",
+      "public_value": "-141",
+      "row_key": "other_income_expense_net",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "24256",
+      "public_value": "24256",
+      "row_key": "income_before_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "5331",
+      "public_value": "5331",
+      "row_key": "provision_for_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q1",
+      "period_grain": "quarter",
+      "prepared_value": "18925",
+      "public_value": "18925",
+      "row_key": "net_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "146104",
+      "public_value": "146104",
+      "row_key": "net_sales",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "66388",
+      "public_value": "66388",
+      "row_key": "cost_of_products_sold",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "79716",
+      "public_value": "79716",
+      "row_key": "gross_profit",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "48988",
+      "public_value": "48988",
+      "row_key": "selling_general_and_administrative",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "7404",
+      "public_value": "7404",
+      "row_key": "advertising_and_sales_promotion",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "44",
+      "public_value": "44",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "56436",
+      "public_value": "56436",
+      "row_key": "total_operating_expenses",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "23280",
+      "public_value": "23280",
+      "row_key": "income_from_operations",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "106",
+      "public_value": "106",
+      "row_key": "interest_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "1021",
+      "public_value": "1021",
+      "row_key": "interest_expense",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "74",
+      "public_value": "74",
+      "row_key": "other_income_expense_net",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "22439",
+      "public_value": "22439",
+      "row_key": "income_before_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "-7412",
+      "public_value": "-7412",
+      "row_key": "provision_for_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q2",
+      "period_grain": "quarter",
+      "prepared_value": "29851",
+      "public_value": "29851",
+      "row_key": "net_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "156915",
+      "public_value": "156915",
+      "row_key": "net_sales",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "68804",
+      "public_value": "68804",
+      "row_key": "cost_of_products_sold",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "88111",
+      "public_value": "88111",
+      "row_key": "gross_profit",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "51541",
+      "public_value": "51541",
+      "row_key": "selling_general_and_administrative",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "9160",
+      "public_value": "9160",
+      "row_key": "advertising_and_sales_promotion",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "45",
+      "public_value": "45",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "60746",
+      "public_value": "60746",
+      "row_key": "total_operating_expenses",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "27365",
+      "public_value": "27365",
+      "row_key": "income_from_operations",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "104",
+      "public_value": "104",
+      "row_key": "interest_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "887",
+      "public_value": "887",
+      "row_key": "interest_expense",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "880",
+      "public_value": "880",
+      "row_key": "other_income_expense_net",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "27462",
+      "public_value": "27462",
+      "row_key": "income_before_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "6485",
+      "public_value": "6485",
+      "row_key": "provision_for_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q3",
+      "period_grain": "quarter",
+      "prepared_value": "20977",
+      "public_value": "20977",
+      "row_key": "net_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "163471",
+      "public_value": "163471",
+      "row_key": "net_sales",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "74042",
+      "public_value": "74042",
+      "row_key": "cost_of_products_sold",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "89429",
+      "public_value": "89429",
+      "row_key": "gross_profit",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "48882",
+      "public_value": "48882",
+      "row_key": "selling_general_and_administrative",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "12474",
+      "public_value": "12474",
+      "row_key": "advertising_and_sales_promotion",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "47",
+      "public_value": "47",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "61403",
+      "public_value": "61403",
+      "row_key": "total_operating_expenses",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "28026",
+      "public_value": "28026",
+      "row_key": "income_from_operations",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "159",
+      "public_value": "159",
+      "row_key": "interest_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "660",
+      "public_value": "660",
+      "row_key": "interest_expense",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "-56",
+      "public_value": "-56",
+      "row_key": "other_income_expense_net",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "27469",
+      "public_value": "27469",
+      "row_key": "income_before_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "6228",
+      "public_value": "6228",
+      "row_key": "provision_for_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025-Q4",
+      "period_grain": "quarter",
+      "prepared_value": "21241",
+      "public_value": "21241",
+      "row_key": "net_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "619985",
+      "public_value": "619985",
+      "row_key": "net_sales",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "278642",
+      "public_value": "278642",
+      "row_key": "cost_of_products_sold",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "341343",
+      "public_value": "341343",
+      "row_key": "gross_profit",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "199936",
+      "public_value": "199936",
+      "row_key": "selling_general_and_administrative",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "37431",
+      "public_value": "37431",
+      "row_key": "advertising_and_sales_promotion",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "183",
+      "public_value": "183",
+      "row_key": "amortization_of_definite_lived_intangible_assets",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "237550",
+      "public_value": "237550",
+      "row_key": "total_operating_expenses",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "103793",
+      "public_value": "103793",
+      "row_key": "income_from_operations",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "517",
+      "public_value": "517",
+      "row_key": "interest_income",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "3441",
+      "public_value": "3441",
+      "row_key": "interest_expense",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "757",
+      "public_value": "757",
+      "row_key": "other_income_expense_net",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "101626",
+      "public_value": "101626",
+      "row_key": "income_before_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "10632",
+      "public_value": "10632",
+      "row_key": "provision_for_income_taxes",
+      "status": "passed",
+      "tolerance": "0"
+    },
+    {
+      "difference": "0",
+      "period": "FY2025",
+      "period_grain": "year",
+      "prepared_value": "90994",
+      "public_value": "90994",
+      "row_key": "net_income",
+      "status": "passed",
+      "tolerance": "0"
+    }
+  ],
+  "publication_status": "synthetic_benchmark_only",
+  "recipe": {
+    "arithmetic": "decimal_exact",
+    "engine_version": "1.0.0",
+    "recipe_id": "monthly_pnl_from_reviewed_mapping.v1"
+  },
+  "schema_version": "clara.reconciliation_result.v1",
+  "scope": {
+    "currency": "USD",
+    "entity_id": "wd40_company_synthetic_entity",
+    "prepared_scope_id": "wd40_fy2025_synthetic_consolidated",
+    "scenario": "SYN",
+    "unit": "USD_thousands"
+  },
+  "source_row_conservation": {
+    "classified_rows": 144,
+    "input_rows": 144,
+    "mapping_fanout_rows": 0,
+    "status": "passed",
+    "unresolved_rows": 0
+  },
+  "status": "passed",
+  "warnings": [
+    {
+      "code": "synthetic_monthly_values",
+      "message": "All monthly values, account codes, account splits, and mappings are synthetic; only quarter and fiscal-year controls are published."
+    }
+  ]
+}

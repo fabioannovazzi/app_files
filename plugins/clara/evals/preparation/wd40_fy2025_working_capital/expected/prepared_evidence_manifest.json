@@ -1,0 +1,136 @@
+{
+  "boundaries": {
+    "cash_flow_ap_and_accrued_split": false,
+    "cash_flow_other_assets_is_balance_sheet_other_current_assets": false,
+    "prohibited_analytics_emitted": [],
+    "residual_allocation_emitted": false,
+    "residual_status": "unexplained",
+    "semantic_authority": "unproven",
+    "source_authority": "unproven"
+  },
+  "canonical_output_set_sha256": "03a8f4b6b3f32bf76aa04e73e14ecab53a755f910be684d426acc7b857bd42d6",
+  "case_id": "wd40-fy2025-public-working-capital",
+  "inputs": {
+    "public_working_capital_facts": {
+      "byte_count": 22852,
+      "path": "public_working_capital_facts.csv",
+      "sha256": "dd925bd158142eb3a8b27cecc307c522629edcc8b2514b04416e68ddf31daf65"
+    },
+    "reviewed_working_capital_policy": {
+      "byte_count": 3306,
+      "path": "reviewed_working_capital_policy.json",
+      "policy_id": "wd40_fy2025_operating_working_capital",
+      "policy_version": "1.0.0",
+      "review_status": "reviewed",
+      "reviewed_on": "2026-07-23",
+      "reviewer": "fixture_owner",
+      "sha256": "232661ccf01aff9c6852b8d02de81af708b7f9ab7f70384021cab90c1afa1e80"
+    }
+  },
+  "lineage": {
+    "artifact_lineage_declared": true,
+    "limitation": "Artifacts and aggregate formulas are pinned, but no output row claims source-row lineage authority.",
+    "row_lineage_declared": false,
+    "row_lineage_records": []
+  },
+  "outputs": [
+    {
+      "artifact_id": "discrete_cash_flow_schedule",
+      "path": "discrete_cash_flow_schedule.csv",
+      "sha256": "37712a663e5020fb9044666596e189e0f102824de18a630a5326b653c469e679",
+      "size_bytes": 1232
+    },
+    {
+      "artifact_id": "exceptions",
+      "path": "exceptions.csv",
+      "sha256": "aae96c35ad9098a8580bbc08b841dfb2ae41a374efeb9ce97ad69a7f8eb0b1a3",
+      "size_bytes": 39
+    },
+    {
+      "artifact_id": "raw_fact_preservation",
+      "path": "raw_fact_preservation.csv",
+      "sha256": "dd925bd158142eb3a8b27cecc307c522629edcc8b2514b04416e68ddf31daf65",
+      "size_bytes": 22852
+    },
+    {
+      "artifact_id": "reconciliation",
+      "path": "reconciliation.json",
+      "sha256": "6611a4d4e54c42fe2438cc49cee57db9d04b9d8a5e7cebf9d6b70e4af2442806",
+      "size_bytes": 3356
+    },
+    {
+      "artifact_id": "stock_flow_bridge",
+      "path": "stock_flow_bridge.csv",
+      "sha256": "fbc674450b2eee6db991e59969f4dd08b05982933502dbed02a511f38c2fd210",
+      "size_bytes": 923
+    },
+    {
+      "artifact_id": "working_capital_schedule",
+      "path": "working_capital_schedule.csv",
+      "sha256": "08859ba960029c9452242a57ebcfc81ef52b39cba52368b61c3eb16171814127",
+      "size_bytes": 876
+    }
+  ],
+  "preparation_status": "passed",
+  "publication_status": "withheld",
+  "raw_fact_preservation": {
+    "byte_identical_to_input": true,
+    "output_sha256": "dd925bd158142eb3a8b27cecc307c522629edcc8b2514b04416e68ddf31daf65",
+    "source_sha256": "dd925bd158142eb3a8b27cecc307c522629edcc8b2514b04416e68ddf31daf65"
+  },
+  "recipe": {
+    "arithmetic": "decimal_exact",
+    "engine_sha256": "d950bd1f81f4442c8385fb3c372a720bb9602d125d61181618332318a4859522",
+    "engine_version": "1.0.0",
+    "recipe_id": "public_working_capital_from_reviewed_policy.v1",
+    "unit": "USD_thousands"
+  },
+  "report_ready": false,
+  "schema_version": "clara.working_capital_evidence_manifest.v1",
+  "source_receipts": [
+    {
+      "accession": "0000105132-25-000067",
+      "byte_count": 1793208,
+      "filed_date": "2025-10-27",
+      "form": "10-K",
+      "receipt_scope": "declared_remote_receipt",
+      "sha256": "d03a7ef37c6796c1a01d6b9bdb438afb6b276abfa5baa112b9b0465b4fe83209",
+      "source_id": "wd40_fy2025_10k",
+      "title": "WD-40 Company FY2025 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000067/wdfc-20250831.htm"
+    },
+    {
+      "accession": "0000105132-25-000009",
+      "byte_count": 1030161,
+      "filed_date": "2025-01-10",
+      "form": "10-Q",
+      "receipt_scope": "declared_remote_receipt",
+      "sha256": "b7a1534f188f6e30b4d24cae3e173d3cda7d68b6c40f5aa24af19c3654daa70f",
+      "source_id": "wd40_q1_fy2025_10q",
+      "title": "WD-40 Company Q1 FY2025 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000009/wdfc-20241130.htm"
+    },
+    {
+      "accession": "0000105132-25-000015",
+      "byte_count": 1405347,
+      "filed_date": "2025-04-09",
+      "form": "10-Q",
+      "receipt_scope": "declared_remote_receipt",
+      "sha256": "e013e12e87e4a0ad38f12194823eff81d17f9cb880a0b3a09146e0359fda3707",
+      "source_id": "wd40_q2_fy2025_10q",
+      "title": "WD-40 Company Q2 FY2025 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000015/wdfc-20250228.htm"
+    },
+    {
+      "accession": "0000105132-25-000025",
+      "byte_count": 1435323,
+      "filed_date": "2025-07-10",
+      "form": "10-Q",
+      "receipt_scope": "declared_remote_receipt",
+      "sha256": "cafdc1640c715179b956f05e502333229b129d5a4e0a0c4c0beed18844cb253d",
+      "source_id": "wd40_q3_fy2025_10q",
+      "title": "WD-40 Company Q3 FY2025 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000025/wdfc-20250531.htm"
+    }
+  ]
+}

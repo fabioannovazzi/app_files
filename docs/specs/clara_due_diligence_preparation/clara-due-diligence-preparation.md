@@ -145,6 +145,8 @@ not use the network.
 
 ### M2 — Monthly P&L fixture from a synthetic trial balance
 
+Status: complete on 2026-07-23.
+
 Create a 12-month trial balance and reviewed chart-of-accounts mapping anchored
 to a compact public-company P&L, initially WD-40 FY2025. Public totals remain
 real; account codes, monthly phasing, and ledger detail are explicitly
@@ -162,31 +164,152 @@ pass; duplicate, unmapped, sign, period, unit, and scope mutations fail.
 
 ### M3 — Preparation contract kernel
 
-Promote only the common contracts proven by M1 and M2: source inventory,
-reviewed crosswalks, exact arithmetic, reconciliation records, and lineage.
-Avoid a universal formula language.
+Status: complete on 2026-07-23.
+
+Promote only the mechanically common boundary proven by M1 and M2. M3 adds
+`clara.preparation_audit_envelope.v1`, exact Decimal and canonical JSON helpers,
+strict local artifact receipts, declared remote-source receipts, reviewed
+decision receipts, reconciliation checks, explicit lineage levels, and
+independent gate statuses.
+
+The two audit-only adapters preserve the case-owned M1 and M2 schemas and
+outputs. Each adapter deterministically replays its registered producer and
+requires the complete supplied report or producer-owned output set to match;
+M2 failure envelopes preserve the failure-only output set rather than requiring
+success artifacts. The adapters bind those artifacts into one reproducible
+envelope without promoting either fixture's crosswalk, formula, relationship,
+tolerance, scale, precision, or business meaning into a universal model.
+Source authority, decision quality, reviewer authorization, semantic
+compatibility, row lineage, downstream readiness, and publication remain
+unproven or withheld.
+
+Exit criterion: both frozen cases produce schema-valid, byte-deterministic
+envelopes; stale and internally resealed results, decision-status promotion,
+role-only lineage, and isolated contract, digest, path, numeric, reference,
+reconciliation, and publication mutations fail closed; genuine failed runs
+remain representable; tests remain offline.
 
 ### M4 — Reporting and evidence handoff
 
+Status: complete on 2026-07-23.
+
 Attach prepared evidence to a reviewed dataset semantic layer, render through
-the existing capability boundary, and seal every published number into
+the existing capability boundary, and seal the complete numeric transport into
 `clara.evidence_bundle.v1`.
+
+The frozen WD-40 case now:
+
+- replays the M3 preparation envelope and requires the exact prepared
+  `monthly_pnl.csv` bytes;
+- binds an exact model-reviewed semantic layer, its hashed review notes, the
+  explicit statement analysis request, and the source-key-only render recipe;
+- invokes `statement.pnl_table` without automatic analysis or chart selection;
+- compares all 168 addresses and values across the prepared CSV, rendered
+  chart-data CSV, chart-context JSON, serialized HTML table, and cell ledger;
+- validates the renderer's title, scope, source note, row/column grid, control
+  manifests, context metadata, and implementation receipts;
+- seals prepared values, rendered values, serialized HTML cells, and a portable
+  publication-boundary receipt in one evidence bundle;
+- emits the final ready-for-review receipt only after an independent fresh
+  render reproduces every portable output.
+
+The M4 result is a deterministic reporting-transport handoff, not a report.
+`report_ready` remains `false` and publication remains `withheld`. Serialized
+HTML checking does not prove browser-computed visibility, and the standalone
+statement HTML is not an HTML-deck evidence ledger. The 168 cells therefore do
+not yet satisfy the report-ready requirement for downstream source bindings.
+Source authority, semantic correctness, row lineage, interpretation, visual
+approval, and publication authorization remain outside this milestone.
+
+Exit criterion: two fresh output directories produce byte-identical canonical
+receipts and evidence bundles; every prepared, rendered, context, serialized
+HTML, and ledger address closes exactly; semantic, recipe, evidence,
+implementation, display-copy, control-manifest, and publication mutations fail
+closed; no complete-looking receipt survives a failed fresh-render gate; tests
+remain offline.
 
 ### M5 — Additional due-diligence slices
 
-Add customer concentration and working capital, followed by headcount and
-retention. Each slice must introduce a genuinely different relationship or
-reconciliation pressure.
+Status: complete on 2026-07-23.
+
+Freeze two public-source preparation sub-slices that introduce different
+judgement and reconciliation pressures without extending M4 into report
+production:
+
+1. **Universal Display Corporation FY2025 customer concentration.** Preserve
+   the anonymous customer aliases, annual whole-percentage revenue shares, and
+   disclosed accounts-receivable amounts from the reviewed Form 10-K
+   extraction. Deterministic preparation may reproduce disclosed subtotals,
+   calculate accounts-receivable coverage where a reviewed denominator exists,
+   and calculate the contribution from squared *reported* shares. It must not
+   identify an alias, turn a rounded percentage into precise customer revenue
+   dollars, describe the incomplete squared-share contribution as a full HHI
+   or guaranteed HHI lower bound, or invent monthly, quarterly, churn, or
+   retention facts.
+2. **WD-40 FY2025 working capital.** Apply a reviewed operating-net-working-
+   capital perimeter to exact public balance-sheet stocks, de-cumulate
+   year-to-date cash-flow disclosures into discrete fiscal quarters, and bridge
+   each stock movement to its expected cash impact. Any difference between the
+   discrete cash-flow movement and the stock-based expectation remains an
+   explicit unexplained stock/flow residual; deterministic code may neither
+   allocate it nor force it to zero.
+
+The reviewed alias boundary, metric meaning, working-capital perimeter, sign
+conventions, caption relationships, and validity of each analysis remain
+judgement. Exact input validation, reviewed-formula execution, de-cumulation,
+aggregation, ratio arithmetic, residual calculation, reconciliation, hashing,
+and abstention enforcement are deterministic.
+
+Exit criterion: both frozen cases have registered offline producers, exact
+expected outputs, audit envelopes, and targeted adversarial tests; identical
+inputs produce identical canonical evidence; forbidden inferences remain
+absent; `report_ready` remains `false` and publication remains `withheld`.
+Neither sub-slice selects a visualization, invokes an orchestrator, interprets
+commercial implications, or authorizes a report. Headcount and retention are
+deferred until these two pressures are proven.
 
 ### M6 — Real-data pilot
+
+Status: in progress; the source-bound intake-declaration, semantic-review, and
+source-independent local-output/error-retention gates are implemented and
+tested on synthetic bytes. No eligible commercial source has been authorized,
+inspected, or executed.
 
 Run an anonymized or consented commercial trial balance through the same
 contracts. Record semantic errors separately from mechanical errors.
 
+The implementation checklist is
+[M6 real-data pilot checklist](./m6-real-data-pilot-checklist.md). File presence
+or previous processing is not reuse consent. M6 keeps raw and row-level
+material in an ignored local run root and permits only separately reviewed
+sanitized summaries and receipts to move into a case-approved confidential
+evidence store. Those receipts remain pseudonymous and linkable, and stay
+outside the plugin and source repository by default. M6 does not relax or
+relabel M2's synthetic producer. The generic scaffolding does not freeze a
+private-source parser, account mapping, concrete producer check catalog,
+row-level error-evidence shape, or M3 adapter; those decisions wait for the
+exact authorized export.
+
 ### M7 — Orchestrator decision
 
-Resume orchestrator design only after several independent preparation slices
-produce reconciled, source-bound evidence reliably.
+Status: deferred; the entry gate is not met.
+
+M1–M5 prove several bounded preparation slices and one deterministic reporting-
+transport handoff using public or synthetic fixtures, while preserving
+`report_ready: false` and publication `withheld`. M6 currently proves the
+intake-declaration, reviewer-owned semantic-review, exact local-output receipt,
+mechanical-register, and two-phase sanitized-retention boundaries only on
+synthetic bytes. No eligible commercial trial balance has passed intake or
+completed the real-data pilot. Do not begin orchestrator design or
+implementation.
+
+Reopen this decision only after M6 satisfies its definition of done, retained
+M1–M5 regressions, privacy validation, release checks, and Marketplace package
+verification pass, and the open decisions relevant to the first orchestration
+scope are resolved or explicitly excluded. Passing this gate permits only a
+scoped design decision. It does not authorize implementation, report readiness,
+publication, automatic semantic mapping, or authoritative calculation by an
+orchestrator.
 
 ## Acceptance gates
 
@@ -213,4 +336,6 @@ A prepared artifact is report-ready only when:
 - handling of qualified reconciliation failures;
 - storage and access governance for competitively sensitive deal data.
 
-These decisions affect later scope but do not block M1.
+These decisions do not block the completed M1–M4 benchmarks. They do block
+promotion from an audit envelope to semantically approved, report-ready
+evidence where the relevant decision is unresolved.

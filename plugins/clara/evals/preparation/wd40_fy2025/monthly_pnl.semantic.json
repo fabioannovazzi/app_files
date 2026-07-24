@@ -1,0 +1,531 @@
+{
+  "schema_version": "0.2",
+  "semantic_layer_id": "wd40_fy2025_synthetic_monthly_pnl.reporting_semantics",
+  "semantic_version": 1,
+  "dataset_contract": {
+    "dataset_contract_id": "wd40_fy2025_synthetic_monthly_pnl",
+    "contract_version": 1,
+    "identity": {
+      "method": "project_configuration",
+      "value": "clara.dd.wd40_fy2025_synthetic_monthly_pnl"
+    },
+    "origin_snapshot": {
+      "profile_schema_version": "0.4",
+      "snapshot_fingerprint": "b47d7bb2a801b1e88500a6752a3a993870393ab856e393eb7321c5a8da209c4a"
+    },
+    "unknown_column_policy": "allow_as_unclassified_extension"
+  },
+  "scope": {
+    "title": "WD-40 FY2025 synthetic monthly P&L reporting semantics",
+    "business_area": "financial due diligence preparation",
+    "purpose": "Define the reviewed business meaning and one conditionally valid Reporting Engine use for the frozen prepared monthly P&L fixture.",
+    "coverage_level": "limited",
+    "included_subjects": [
+      "prepared statement values at statement-line, fiscal-month, and scenario grain",
+      "the synthetic scenario marker",
+      "the reviewed statement row and period structure"
+    ],
+    "excluded_subjects": [
+      "issuer-reported monthly actuals",
+      "new calculations or formula derivation",
+      "cross-line aggregation",
+      "chart selection",
+      "due-diligence interpretation",
+      "publication approval"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "source.fixture_notes",
+      "source_type": "reviewed_fixture_notes",
+      "locator": "SOURCE_NOTES.md#reviewed-reporting-semantics",
+      "authority": "canonical",
+      "supports": [
+        "synthetic evidence boundary",
+        "dataset grain and column meaning",
+        "allowed reporting use",
+        "excluded reporting uses"
+      ],
+      "caveats": [
+        "The notes govern this frozen synthetic fixture only."
+      ],
+      "last_checked": "2026-07-23"
+    },
+    {
+      "source_id": "source.dataset_profile",
+      "source_type": "reporting_engine_dataset_profile",
+      "locator": "expected/monthly_pnl.csv profiled as wd40_fy2025_synthetic_monthly_pnl",
+      "authority": "mechanical",
+      "supports": [
+        "physical columns and types",
+        "row count and distinct counts",
+        "origin snapshot fingerprint"
+      ],
+      "caveats": [
+        "The profile does not prove business meaning.",
+        "The snapshot fingerprint must not replace the exact prepared-file digest."
+      ],
+      "last_checked": "2026-07-23"
+    },
+    {
+      "source_id": "source.statement_render_recipe",
+      "source_type": "reviewed_statement_render_recipe",
+      "locator": "statement_render_recipe.json",
+      "authority": "canonical",
+      "supports": [
+        "statement row ordering and labels",
+        "period ordering",
+        "scenario availability",
+        "render column mappings"
+      ],
+      "caveats": [
+        "The recipe transports source-key values and does not authorize renderer-side arithmetic."
+      ],
+      "last_checked": "2026-07-23"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence.fixture_scope",
+      "source_id": "source.fixture_notes",
+      "locator": "Reviewed reporting semantics",
+      "claim": "The prepared table is a synthetic monthly statement fixture at one row_key by period by scenario grain and is not an issuer actual monthly disclosure.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": [
+        "The public controls support quarter and fiscal-year tie-outs, not the synthetic monthly phasing."
+      ]
+    },
+    {
+      "evidence_id": "evidence.profile_columns",
+      "source_id": "source.dataset_profile",
+      "locator": "columns",
+      "claim": "The origin profile contains 168 rows across the nine expected columns, including 14 row keys, 12 monthly periods, and one SYN scenario.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": [
+        "These are mechanical observations."
+      ]
+    },
+    {
+      "evidence_id": "evidence.statement_structure",
+      "source_id": "source.statement_render_recipe",
+      "locator": "mappings, periods, scenarios_by_period, statement_rows",
+      "claim": "The reviewed recipe maps period, value, row key, and scenario columns and defines 14 source-key statement rows over 12 SYN periods without renderer formulas.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": [
+        "Statement structure is package-owned rather than inferred from column names."
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "metric_id": "metric.value",
+      "label": "Prepared statement value",
+      "binding": {
+        "binding_type": "column",
+        "column": "value",
+        "expression": null,
+        "input_metric_ids": []
+      },
+      "definition": "The signed prepared P&L amount in USD thousands for exactly one statement row, fiscal month, and scenario.",
+      "metric_class": "additive_value",
+      "aggregation": {
+        "default": "identity",
+        "allowed": [
+          "identity",
+          "sum_across_periods_for_the_same_statement_line_and_scenario"
+        ],
+        "forbidden": [
+          "sum_across_statement_lines",
+          "mean",
+          "ratio"
+        ],
+        "weight_metric_id": null
+      },
+      "unit": {
+        "kind": "currency_thousands",
+        "currency": "USD",
+        "symbol": "USD 000"
+      },
+      "directionality": "signed_statement_amount",
+      "valid_period_grains": [
+        "month"
+      ],
+      "compatible_dimension_ids": [
+        "dimension.row_key",
+        "dimension.scenario"
+      ],
+      "forbidden_dimension_ids": [
+        "dimension.line_type",
+        "dimension.unit"
+      ],
+      "status": "conditional",
+      "confidence": "high",
+      "rationale": "The fixture notes and reviewed mapping establish a signed statement amount, while additive use is safe only across periods for the same statement line and scenario; subtotals and detail lines must never be summed together.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "Monthly values are synthetic.",
+        "Rows include both detail lines and calculated statement subtotals, so cross-line aggregation double counts."
+      ],
+      "origin_profile_observation": {
+        "source_role": "metric",
+        "metric_class": "additive_value",
+        "aggregation": "sum",
+        "confidence": "high",
+        "inference_reasons": [
+          "name suggests additive value"
+        ]
+      }
+    },
+    {
+      "metric_id": "metric.display_order",
+      "label": "Display order",
+      "binding": {
+        "binding_type": "column",
+        "column": "display_order",
+        "expression": null,
+        "input_metric_ids": []
+      },
+      "definition": "An ordinal row-layout field copied from the reviewed statement structure; it is not a business measure.",
+      "metric_class": "ordinal_layout_field",
+      "aggregation": {
+        "default": "not_applicable",
+        "allowed": [],
+        "forbidden": [
+          "sum",
+          "mean",
+          "ratio"
+        ],
+        "weight_metric_id": null
+      },
+      "unit": {
+        "kind": "ordinal_index",
+        "currency": null,
+        "symbol": null
+      },
+      "directionality": "not_a_business_measure",
+      "valid_period_grains": [],
+      "compatible_dimension_ids": [],
+      "forbidden_dimension_ids": [
+        "dimension.row_key",
+        "dimension.scenario",
+        "dimension.line_type",
+        "dimension.unit"
+      ],
+      "status": "excluded",
+      "confidence": "high",
+      "rationale": "The recipe owns statement ordering; treating display_order as an analyzable metric would create meaningless calculations.",
+      "evidence_ids": [
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "May be used mechanically for layout validation only."
+      ],
+      "origin_profile_observation": {
+        "source_role": "metric",
+        "metric_class": "numeric_observation",
+        "aggregation": "semantic_layer_defined",
+        "confidence": "medium",
+        "inference_reasons": [
+          "numeric column without a strong metric-class hint"
+        ]
+      }
+    }
+  ],
+  "dimensions": [
+    {
+      "dimension_id": "dimension.line_type",
+      "label": "Line type",
+      "column": "line_type",
+      "definition": "A layout annotation identifying detail, subtotal, or total rows.",
+      "semantic_type": "statement_layout_annotation",
+      "valid_uses": [],
+      "hierarchy_parent_id": null,
+      "status": "excluded",
+      "confidence": "high",
+      "rationale": "The selected analysis uses the reviewed recipe for statement structure; grouping values by line_type would aggregate non-independent statement rows.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "May be used mechanically for layout checks, but not as an analytical grouping."
+      ],
+      "origin_profile_observation": {
+        "source_role": "dimension",
+        "confidence": "high",
+        "inference_reasons": [
+          "categorical-compatible physical type"
+        ]
+      }
+    },
+    {
+      "dimension_id": "dimension.row_key",
+      "label": "Statement line item",
+      "column": "row_key",
+      "definition": "The stable key for one prepared P&L statement row defined by the reviewed statement recipe.",
+      "semantic_type": "statement_line_item",
+      "valid_uses": [
+        "statement_line_item_role",
+        "native_grain_grouping",
+        "evidence_cell_address"
+      ],
+      "hierarchy_parent_id": null,
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The fixture and recipe use each row_key as the source-key identity for exactly one ordered statement row.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "The keys include detail, subtotal, and total rows and do not form additive peers."
+      ],
+      "origin_profile_observation": {
+        "source_role": "dimension",
+        "confidence": "high",
+        "inference_reasons": [
+          "categorical-compatible physical type"
+        ]
+      }
+    },
+    {
+      "dimension_id": "dimension.scenario",
+      "label": "Statement scenario",
+      "column": "scenario",
+      "definition": "The explicit statement scenario; the only reviewed value in this snapshot is SYN, meaning synthetic monthly phasing.",
+      "semantic_type": "statement_scenario",
+      "valid_uses": [
+        "statement_scenario_role",
+        "scope_filter",
+        "evidence_cell_address"
+      ],
+      "hierarchy_parent_id": null,
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The fixture notes define the monthly values as synthetic and every origin-snapshot row carries the explicit SYN marker.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns"
+      ],
+      "caveats": [
+        "SYN must not be relabeled as actual, plan, forecast, or issuer disclosure."
+      ],
+      "origin_profile_observation": {
+        "source_role": "dimension",
+        "confidence": "high",
+        "inference_reasons": [
+          "categorical-compatible physical type"
+        ]
+      }
+    },
+    {
+      "dimension_id": "dimension.unit",
+      "label": "Unit column",
+      "column": "unit",
+      "definition": "A constant row-level repetition of the dataset-wide USD-thousands unit.",
+      "semantic_type": "unit_annotation",
+      "valid_uses": [],
+      "hierarchy_parent_id": null,
+      "status": "excluded",
+      "confidence": "high",
+      "rationale": "Unit is constant in the reviewed snapshot and belongs to metric metadata, not to analytical grouping.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns"
+      ],
+      "caveats": [
+        "A snapshot with mixed units would require a semantic-layer revision."
+      ],
+      "origin_profile_observation": {
+        "source_role": "dimension",
+        "confidence": "high",
+        "inference_reasons": [
+          "categorical-compatible physical type"
+        ]
+      }
+    }
+  ],
+  "periods": [
+    {
+      "period_id": "period.period",
+      "label": "Fiscal month",
+      "column": "period",
+      "definition": "The YYYY-MM label for one synthetic fiscal month in WD-40 FY2025, from September 2024 through August 2025.",
+      "grain": "month",
+      "calendar": "fiscal_year_ending_august",
+      "timezone": null,
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The prepared table and reviewed recipe contain the same complete ordered set of 12 fiscal-month labels.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "The month labels are real calendar periods, but the monthly phasing is synthetic."
+      ],
+      "origin_profile_observation": {
+        "confidence": "high",
+        "grain": "month"
+      }
+    },
+    {
+      "period_id": "period.period_start",
+      "label": "Period start",
+      "column": "period_start",
+      "definition": "A mechanical first-calendar-day boundary redundant with period.period.",
+      "grain": "month",
+      "calendar": "fiscal_year_ending_august",
+      "timezone": null,
+      "status": "excluded",
+      "confidence": "high",
+      "rationale": "The selected statement capability requires one period axis; period.period is the reviewed display and key field, so this redundant boundary is excluded.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "May be used for mechanical reconciliation, not as a second reporting period role."
+      ],
+      "origin_profile_observation": {
+        "confidence": "high",
+        "grain": "month"
+      }
+    },
+    {
+      "period_id": "period.period_end",
+      "label": "Period end",
+      "column": "period_end",
+      "definition": "A mechanical last-calendar-day boundary redundant with period.period.",
+      "grain": "month",
+      "calendar": "fiscal_year_ending_august",
+      "timezone": null,
+      "status": "excluded",
+      "confidence": "high",
+      "rationale": "The selected statement capability requires one period axis; period.period is the reviewed display and key field, so this redundant boundary is excluded.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "May be used for mechanical reconciliation, not as a second reporting period role."
+      ],
+      "origin_profile_observation": {
+        "confidence": "high",
+        "grain": "month"
+      }
+    }
+  ],
+  "period_rules": [
+    {
+      "period_rule_id": "period_rule.all_available",
+      "label": "All twelve prepared FY2025 months",
+      "period_id": "period.period",
+      "rule_type": "all_available",
+      "scope_type": "all_available",
+      "parameters": {
+        "window_length": null,
+        "fiscal_year_start_month": 9,
+        "comparison_offset_years": 1,
+        "requires_runtime_bounds": false
+      },
+      "status": "defined",
+      "confidence": "high",
+      "rationale": "The reviewed reporting use is the complete 12-month statement table and the recipe explicitly orders every available month.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "caveats": [
+        "A bounded subset requires an explicit reviewed handoff revision."
+      ]
+    }
+  ],
+  "analysis_policies": [
+    {
+      "analysis_id": "analysis.prepared_monthly_pnl_statement",
+      "label": "Prepared monthly P&L statement table",
+      "question_family": "Show the exact prepared synthetic monthly P&L values in their reviewed statement structure.",
+      "analysis_task_ids": [
+        "evidence_and_reporting_tables"
+      ],
+      "selection_emphases": [
+        "structured_statement_values"
+      ],
+      "validity": "conditional",
+      "business_purpose": "Transport the reviewed prepared values into a deterministic statement table with complete sealed cell closure.",
+      "role_bindings": {
+        "period_axis": {
+          "binding_type": "concept",
+          "concept_id": "period.period"
+        },
+        "statement_value": {
+          "binding_type": "concept",
+          "concept_id": "metric.value"
+        },
+        "statement_line_item": {
+          "binding_type": "concept",
+          "concept_id": "dimension.row_key"
+        },
+        "statement_scenario": {
+          "binding_type": "concept",
+          "concept_id": "dimension.scenario"
+        },
+        "statement_structure": {
+          "binding_type": "package",
+          "source_id": "source.statement_render_recipe"
+        }
+      },
+      "period_rule_id": "period_rule.all_available",
+      "conditions": [
+        "Use only the exact prepared snapshot independently bound by file SHA-256 in the reporting handoff request.",
+        "Require all 12 recipe periods in order and scenario SYN only.",
+        "Render the source values at row_key by period by scenario grain without renderer-side formulas or cross-line aggregation.",
+        "Use capability statement.pnl_table for the already selected structured_statement_values analysis; this policy does not perform chart selection.",
+        "Preserve the synthetic-fixture label and withhold issuer-actual or publication claims."
+      ],
+      "rationale": "The reviewed semantic roles exactly satisfy the statement.pnl_table contract, while the conditions prevent the mechanically additive value profile from authorizing unsafe cross-line arithmetic or misrepresenting synthetic data.",
+      "evidence_ids": [
+        "evidence.fixture_scope",
+        "evidence.profile_columns",
+        "evidence.statement_structure"
+      ],
+      "confidence": "high",
+      "caveats": [
+        "This is a bounded reporting transport policy, not due-diligence interpretation.",
+        "The semantic layer is model-reviewed and has not received human accounting review."
+      ]
+    }
+  ],
+  "open_questions": [],
+  "review": {
+    "status": "model_reviewed",
+    "reviewed_by": "Codex semantic fixture review",
+    "reviewed_at": "2026-07-23",
+    "notes": [
+      "Review applies only to this frozen synthetic preparation fixture and the one conditional analysis policy.",
+      "This semantic layer is explicitly not human-reviewed.",
+      "Deterministic validation proves contract wiring and snapshot compatibility, not the truth of semantic judgment."
+    ]
+  },
+  "boundaries": {
+    "semantic_judgment_owner": "model_reviewed_fixture_asset_pending_human_review",
+    "deterministic_validation_scope": "Schema, identifiers, evidence references, profile bindings, exact manifest intent joins, required role coverage, and snapshot compatibility only.",
+    "chart_selection_included": false,
+    "rendering_included": false
+  }
+}

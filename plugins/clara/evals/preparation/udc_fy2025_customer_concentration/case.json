@@ -1,0 +1,173 @@
+{
+  "schema_version": "clara.customer_concentration_preparation_case.v1",
+  "case_id": "udc-fy2025-customer-concentration",
+  "purpose": "Prepare an exact customer-concentration summary from a frozen reviewed extraction of Universal Display Corporation's FY2025 Form 10-K.",
+  "declared_input_claim_ids": [],
+  "preparation_recipe": {
+    "recipe_id": "customer_concentration_from_reviewed_public_disclosure.v1",
+    "engine_version": "1.0.0",
+    "arithmetic": "integer_exact_with_declared_ratio_scale",
+    "customer_aliases": [
+      "A",
+      "B",
+      "C"
+    ],
+    "fiscal_years": [
+      "2025",
+      "2024",
+      "2023"
+    ],
+    "metric_ids": [
+      "revenue_share",
+      "accounts_receivable"
+    ],
+    "coverage_ratio_unit": "percent",
+    "coverage_ratio_scale": 6,
+    "coverage_ratio_rounding": "half_up_exact_integer",
+    "source_locator": "Note 19 CONCENTRATION OF RISK lines 5890-5962"
+  },
+  "facts_contract": {
+    "required_columns": [
+      "fact_id",
+      "customer_alias",
+      "fiscal_year",
+      "metric_id",
+      "value",
+      "unit",
+      "reported_increment",
+      "source_id",
+      "source_locator"
+    ],
+    "natural_key": [
+      "customer_alias",
+      "fiscal_year",
+      "metric_id"
+    ],
+    "exact_row_count": 18,
+    "exact_expected_set": true,
+    "numeric_contract": "Non-negative canonical integer strings on the issuer-reported increment."
+  },
+  "control_facts_contract": {
+    "required_columns": [
+      "control_id",
+      "fiscal_year",
+      "metric_id",
+      "value",
+      "unit",
+      "reported_increment",
+      "source_id",
+      "source_locator"
+    ],
+    "natural_key": [
+      "fiscal_year",
+      "metric_id"
+    ],
+    "exact_row_count": 5,
+    "exact_expected_set": true,
+    "numeric_contract": "Non-negative canonical integer strings on the issuer-reported increment.",
+    "source_locators": {
+      "total_revenue": "Note 19 geographic revenue table lines 5963-6040",
+      "total_accounts_receivable": "Consolidated Balance Sheets lines 2281-2313"
+    }
+  },
+  "controls": {
+    "total_revenue": {
+      "2025": "650611",
+      "2024": "647684",
+      "2023": "576429"
+    },
+    "total_accounts_receivable": {
+      "2025": "119953",
+      "2024": "113648"
+    },
+    "disclosed_top_three_revenue_share": {
+      "2025": "79",
+      "2024": "82",
+      "2023": "76"
+    },
+    "disclosed_accounts_receivable_subtotal": {
+      "2025": "103481",
+      "2024": "76908"
+    },
+    "accounts_receivable_coverage_percent": {
+      "2025": "86.267955",
+      "2024": "67.672110"
+    },
+    "reported_share_hhi_contribution": {
+      "2025": "2515",
+      "2024": "2634",
+      "2023": "2114"
+    }
+  },
+  "source_extraction_review": {
+    "status": "reviewed",
+    "reviewed_on": "2026-07-23",
+    "reviewer": "fixture_owner",
+    "basis": "The frozen extraction and control tables were reviewed against the declared filing receipt and source locators.",
+    "authority": "receipt_and_review_only"
+  },
+  "reviewed_boundary": {
+    "status": "reviewed",
+    "reviewed_on": "2026-07-23",
+    "judgement_owner": "human_or_model_review",
+    "source_authority": "receipt_and_review_only",
+    "semantic_authority": "reviewed_boundary_only",
+    "publication_status": "withheld",
+    "report_ready": false,
+    "statement": "The filing table supports annual reported revenue shares and year-end accounts-receivable amounts for anonymous aliases A, B, and C. It does not support identifying an alias, exact customer revenue dollars, a full HHI, an HHI lower bound, or monthly, quarterly, churn, or retention claims.",
+    "allowed_output_metric_ids": [
+      "total_revenue_control",
+      "total_accounts_receivable_control",
+      "disclosed_top_three_revenue_share",
+      "disclosed_accounts_receivable_subtotal",
+      "accounts_receivable_coverage_percent",
+      "reported_share_hhi_contribution"
+    ],
+    "forbidden_claim_ids": [
+      "alias_to_customer_name_mapping",
+      "precise_customer_revenue_dollars",
+      "full_hhi",
+      "hhi_lower_bound",
+      "monthly_customer_concentration",
+      "quarterly_customer_concentration",
+      "customer_churn",
+      "customer_retention"
+    ],
+    "accounts_receivable_coverage_unavailable_years": [
+      "2023"
+    ]
+  },
+  "files": {
+    "exact_extracted_facts": {
+      "path": "exact_extracted_facts.csv",
+      "sha256": "784a2785e5f3a17f4c3382ca61a669a9f0680139865a202328eb0339b4806be7"
+    },
+    "exact_control_facts": {
+      "path": "exact_control_facts.csv",
+      "sha256": "57a84b89c7172e7f8d1497cf1974ae13860289dd44902d83302deb66812f25f8"
+    }
+  },
+  "sources": [
+    {
+      "source_id": "udc_fy2025_10k",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "title": "Universal Display Corporation FY2025 Form 10-K",
+      "form": "10-K",
+      "cik": "0001005284",
+      "accession": "0001193125-26-059371",
+      "filed_date": "2026-02-19",
+      "period_end": "2025-12-31",
+      "url": "https://www.sec.gov/Archives/edgar/data/1005284/000119312526059371/oled-20251231.htm",
+      "byte_count": 4060769,
+      "sha256": "1dd7a2297816c53f4f90b68736c1317b5aa1c28f0360672e351a603e66909a29",
+      "role": "reviewed_public_disclosure"
+    }
+  ],
+  "limitations": [
+    "The remote filing bytes are represented by a declared receipt and are not fetched by the deterministic test suite.",
+    "The extraction is reviewed benchmark evidence, not an automated assertion of source authority.",
+    "Reported revenue shares are whole percentages and do not support exact customer revenue dollars.",
+    "The squared reported shares are an incomplete contribution only; they are neither full HHI nor a guaranteed HHI lower bound.",
+    "Passing preparation does not establish semantic compatibility, report readiness, or publication eligibility."
+  ]
+}

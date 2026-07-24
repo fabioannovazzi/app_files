@@ -394,6 +394,138 @@ def test_bundle_sealer_rejects_nonstandard_json_constants(
         module.seal_evidence_bundle(bundle_path)
 
 
+def test_validate_evidence_bundle_returns_portable_receipts(tmp_path: Path) -> None:
+    module = load_module()
+    evidence = write_due_diligence_evidence(tmp_path, module)
+    bundle_path = evidence["bundle_path"]
+
+    result = module.validate_evidence_bundle(bundle_path)
+
+    assert result == {
+        "schema_version": "clara.evidence_bundle.v1",
+        "bundle_id": "diligence-case",
+        "sha256": file_sha256(bundle_path),
+        "artifact_count": 2,
+        "artifacts": [
+            {
+                "id": "customer-concentration",
+                "source_id": "source-customer-concentration",
+                "path": "customer-concentration.csv",
+                "media_type": "text/csv",
+                "sha256": file_sha256(evidence["concentration"]),
+                "size_bytes": evidence["concentration"].stat().st_size,
+                "snapshot_id": "closing-snapshot",
+                "table": {
+                    "key_fields": ["row_id"],
+                    "order_by": ["display_order"],
+                    "records_pointer": "",
+                },
+            },
+            {
+                "id": "financial-facts",
+                "source_id": "source-financial-facts",
+                "path": "financial-facts.csv",
+                "media_type": "text/csv",
+                "sha256": file_sha256(evidence["financials"]),
+                "size_bytes": evidence["financials"].stat().st_size,
+                "snapshot_id": "closing-snapshot",
+                "table": {
+                    "key_fields": ["fact_id"],
+                    "order_by": ["display_order"],
+                    "records_pointer": "",
+                },
+            },
+        ],
+    }
+    assert all(
+        not Path(receipt["path"]).is_absolute() for receipt in result["artifacts"]
+    )
+
+
+def test_validate_evidence_bundle_rejects_artifact_tamper(tmp_path: Path) -> None:
+    module = load_module()
+    evidence = write_due_diligence_evidence(tmp_path, module)
+    evidence["financials"].write_text(
+        evidence["financials"].read_text(encoding="utf-8") + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="hash mismatch"):
+        module.validate_evidence_bundle(evidence["bundle_path"])
+
+
+def test_validate_evidence_bundle_rejects_malformed_artifact(tmp_path: Path) -> None:
+    module = load_module()
+    evidence = write_due_diligence_evidence(tmp_path, module)
+    bundle_path = evidence["bundle_path"]
+    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+    del bundle["artifacts"][0]["source_id"]
+    write_json(bundle_path, bundle)
+
+    with pytest.raises(ValueError, match="is missing fields"):
+        module.validate_evidence_bundle(bundle_path)
+
+
+def test_validate_evidence_bundle_rejects_duplicate_artifact(tmp_path: Path) -> None:
+    module = load_module()
+    evidence = write_due_diligence_evidence(tmp_path, module)
+    bundle_path = evidence["bundle_path"]
+    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+    bundle["artifacts"].append(dict(bundle["artifacts"][0]))
+    write_json(bundle_path, bundle)
+
+    with pytest.raises(ValueError, match="duplicate evidence artifact ID"):
+        module.validate_evidence_bundle(bundle_path)
+
+
+def test_validate_evidence_bundle_rejects_duplicate_json_field(tmp_path: Path) -> None:
+    module = load_module()
+    evidence = write_due_diligence_evidence(tmp_path, module)
+    bundle_path = evidence["bundle_path"]
+    bundle_text = bundle_path.read_text(encoding="utf-8")
+    bundle_path.write_text(
+        bundle_text.replace(
+            '"source_id": "source-financial-facts",',
+            (
+                '"source_id": "source-financial-facts",\n'
+                '      "source_id": "source-ambiguous",'
+            ),
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="duplicate JSON field 'source_id'"):
+        module.validate_evidence_bundle(bundle_path)
+
+
+def test_extract_embedded_evidence_ledger_rejects_duplicate_json_field() -> None:
+    module = load_module()
+    html_text = (
+        '<script id="claraEvidenceLedger" type="application/json">'
+        '{"schema_version":"first","schema_version":"second"}'
+        "</script>"
+    )
+
+    with pytest.raises(ValueError, match="duplicate JSON field 'schema_version'"):
+        module.extract_embedded_evidence_ledger(html_text)
+
+
+def test_validate_evidence_bundle_rejects_invalid_table_rows(tmp_path: Path) -> None:
+    module = load_module()
+    evidence = write_due_diligence_evidence(tmp_path, module)
+    evidence["financials"].write_text(
+        "fact_id,display_order,label,value\n"
+        "revenue,001,Revenue,25356432.55\n"
+        "revenue,002,Revenue duplicate,25356432.55\n",
+        encoding="utf-8",
+    )
+    module.seal_evidence_bundle(evidence["bundle_path"])
+
+    with pytest.raises(ValueError, match="duplicate table key"):
+        module.validate_evidence_bundle(evidence["bundle_path"])
+
+
 @pytest.mark.parametrize(
     ("field", "affix"),
     [
