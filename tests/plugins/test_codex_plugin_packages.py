@@ -1976,7 +1976,7 @@ def test_static_plugin_pages_link_back_to_the_vera_product_page() -> None:
         assert "Plugin Pack" not in page, page_path.as_posix()
         assert "Download ZIP" not in page, page_path.as_posix()
         assert "Scarica ZIP" not in page, page_path.as_posix()
-        assert re.search(r'href="#(?:install|scarica|download)"', page)
+        assert "Apri " "Vera" not in page, page_path.as_posix()
         for snippet in stale_download_snippets:
             assert snippet not in page, page_path.as_posix()
 
@@ -2355,7 +2355,6 @@ def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
     assert "Supporti post cut-off" in page
     assert "Usa il default factoring" in page
     assert "pagamento in estratto conto bancario" in page
-    assert '<a href="#scarica" data-journey="nav.open">Apri Vera</a>' in page
 
 
 def test_new_client_page_describes_one_connected_client_journey() -> None:
@@ -3317,7 +3316,6 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
         "run_audit.json",
         "codex_run_review.md",
         VERA_PRODUCT_PAGE_HREF,
-        'data-journey="cta.open"',
         "/?lang=${safeLang}",
     ):
         assert snippet in page
