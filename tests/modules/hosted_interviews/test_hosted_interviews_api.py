@@ -469,10 +469,10 @@ def test_plugin_improvement_instructions_enforce_short_two_turn_contract() -> No
     assert "prepared question as the fallback opening" in instructions
     assert "ask one short adaptive follow-up and no other question" in instructions
     assert "After any follow-up answer, close immediately" in instructions
-    assert "hard one-minute limit" in instructions
+    assert "one-minute duration is a target, not a cutoff" in instructions
     assert "private coverage tracker" not in instructions
     assert "anything important you did not ask" not in instructions
-    assert "hard 15-minute browser limit" not in instructions
+    assert "target duration of 15 minutes" not in instructions
 
 
 def test_plugin_improvement_instructions_use_spanish_closing_handoff() -> None:
@@ -793,7 +793,8 @@ def test_public_session_uses_prepared_context(tmp_path: Path, monkeypatch) -> No
     instructions = str(session_config["instructions"])
     assert "Production lead" in instructions
     assert "Do not ask family-political questions." in instructions
-    assert "hard 15-minute browser limit" in instructions
+    assert "target duration of 15 minutes, not a hard cutoff" in instructions
+    assert "Never truncate an active question or answer" in instructions
     assert "build a faithful understanding" in instructions
     assert "Do not collect them as a proof checklist" in instructions
     assert "Interview mode changes the objective, not the posture" in instructions
@@ -1033,13 +1034,13 @@ def test_public_session_rejects_duplicate_active_started_attempt(
 @pytest.mark.parametrize(
     ("max_duration_seconds", "age_seconds", "expected"),
     [
-        (60, 119, False),
-        (60, 120, True),
-        (api.DEFAULT_INTERVIEW_DURATION_SECONDS, 959, False),
-        (api.DEFAULT_INTERVIEW_DURATION_SECONDS, 960, True),
+        (60, 419, False),
+        (60, 420, True),
+        (api.DEFAULT_INTERVIEW_DURATION_SECONDS, 1259, False),
+        (api.DEFAULT_INTERVIEW_DURATION_SECONDS, 1260, True),
     ],
 )
-def test_started_attempt_staleness_uses_configured_duration_plus_grace(
+def test_started_attempt_staleness_uses_target_plus_safety_overrun_and_grace(
     max_duration_seconds: int,
     age_seconds: int,
     expected: bool,
@@ -2490,11 +2491,16 @@ def test_failed_quality_review_marks_interview_unusable(
     assert (session_dir / "review.json").exists()
 
 
-def test_browser_script_enforces_time_limit() -> None:
+def test_browser_script_uses_soft_target_with_emergency_safety_limit() -> None:
     script = Path("static/js/hosted-interview.js").read_text(encoding="utf-8")
 
     assert "maxInterviewSeconds" in script
-    assert "time_limit_reached" in script
+    assert "SAFETY_OVERRUN_SECONDS = 5 * 60" in script
+    assert "safetyEndSeconds = maxInterviewSeconds + SAFETY_OVERRUN_SECONDS" in script
+    assert 'endInterview({ reason: "safety_limit" })' in script
+    assert "safety_limit_reached" in script
+    assert 'endInterview({ reason: "time_limit" })' not in script
+    assert "time_limit_reached" not in script
     assert "completion_reason: reason" in script
 
 
@@ -2553,7 +2559,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert 'postJson("/complete"' in script
-    assert "20260724-audio-continuity-v1" in template
+    assert "20260724-soft-duration-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2563,7 +2569,7 @@ def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
     assert 'normalizedLanguage.startsWith("es")' in script
     assert '"Interview active": "Entrevista en curso"' in script
     assert '"Microphone access failed.": "No se pudo acceder al micrófono."' in script
-    assert "Se alcanzó el límite de" in script
+    assert "La entrevista alcanzó el límite de seguridad" in script
 
 
 def test_browser_script_uses_attempt_id_for_attempt_writes() -> None:
@@ -2622,15 +2628,11 @@ def test_browser_script_manages_silence_and_near_end_without_semantic_gates() ->
     assert "SILENCE_SIMPLIFY_SECONDS = 75" in script
     assert "NEAR_END_MAX_SECONDS = 120" in script
     assert "FINAL_CLOSE_MAX_SECONDS = 60" in script
-    assert "MIN_RESPONSE_WINDOW_SECONDS = 8" in script
+    assert "MIN_RESPONSE_WINDOW_SECONDS" not in script
     assert "Math.floor(maxInterviewSeconds * 0.2)" in script
     assert "Math.floor(maxInterviewSeconds * 0.4)" in script
-    assert "remainingSeconds <= MIN_RESPONSE_WINDOW_SECONDS" in script
     assert "remainingSeconds <= finalCloseSeconds" in script
     assert "remainingSeconds <= nearEndSeconds" in script
-    assert script.index(
-        "remainingSeconds <= MIN_RESPONSE_WINDOW_SECONDS"
-    ) < script.index("remainingSeconds <= finalCloseSeconds")
     assert "manageSessionFlow()" in script
     assert "session_management_prompt" in script
     assert "silence_nudge" in script
@@ -2714,7 +2716,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260724-audio-continuity-v1" in script
+    assert "20260724-soft-duration-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
