@@ -8,13 +8,13 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260722-spanish-v1";
+  const SCRIPT_VERSION = "20260724-short-retry-v1";
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
   const IMPROVEMENT_ANSWER_SETTLE_MS = 1200;
   const SILENCE_NUDGE_SECONDS = 35;
   const SILENCE_SIMPLIFY_SECONDS = 75;
-  const NEAR_END_SECONDS = 120;
-  const FINAL_CLOSE_SECONDS = 60;
+  const NEAR_END_MAX_SECONDS = 120;
+  const FINAL_CLOSE_MAX_SECONDS = 60;
   const RESPONSE_CREATE_COOLDOWN_MS = 2500;
   const RECENT_INPUT_SETTLE_MS = 3000;
   const SILENT_REALTIME_STALL_MS = 90000;
@@ -23,6 +23,16 @@
   const maxInterviewSeconds = Math.max(
     60,
     Number.parseInt(body.dataset.maxSeconds || "900", 10) || 900
+  );
+  // Closing thresholds are mechanical fractions of the configured hard limit.
+  // The caps preserve the established timing for standard 15-minute sessions.
+  const finalCloseSeconds = Math.min(
+    FINAL_CLOSE_MAX_SECONDS,
+    Math.max(10, Math.floor(maxInterviewSeconds * 0.2))
+  );
+  const nearEndSeconds = Math.min(
+    NEAR_END_MAX_SECONDS,
+    Math.max(finalCloseSeconds + 10, Math.floor(maxInterviewSeconds * 0.4))
   );
   const maxInterviewMinutes = Math.max(
     1,
@@ -259,7 +269,7 @@
   }
 
   function shouldWrapUp() {
-    return secondsRemaining() <= NEAR_END_SECONDS;
+    return secondsRemaining() <= nearEndSeconds;
   }
 
   function countWords(value) {
@@ -698,27 +708,27 @@
     dc.send(JSON.stringify(event));
   }
 
-  function handleConnectionIssue(source, detail) {
+  async function handleConnectionIssue(source, detail) {
     if (ending || connectionIssueHandled) return;
     connectionIssueHandled = true;
-    postEvent("connection_issue", {
+    await postEvent("connection_issue", {
       source,
       detail,
       elapsed_seconds: secondsElapsed(),
       response_count: responseCount,
       turn_count: turnCount,
     });
-    Promise.allSettled([stopAudioRecorder(), stopScreenRecorder()])
-      .catch(() => undefined)
-      .finally(() => {
-        cleanupConnection();
-        endButton.classList.add("hidden");
-        endButton.disabled = true;
-        startButton.disabled = !sessionReady;
-        setError(
-          "The live interview connection stopped responding. Reload the page or press Start interview to retry this link."
-        );
-      });
+    try {
+      await endInterview({ reason: "connection_issue" });
+    } catch (error) {
+      cleanupConnection();
+      endButton.classList.add("hidden");
+      endButton.disabled = true;
+      startButton.disabled = !sessionReady;
+      setError(
+        "The live interview connection stopped responding. Reload the page or press Start interview to retry this link."
+      );
+    }
   }
 
   function cleanTranscriptText(value) {
@@ -1036,7 +1046,7 @@
       : 0;
     const waitingForAnswer = awaitingIntervieweeAnswer;
 
-    if (!closingPromptSent && remainingSeconds <= FINAL_CLOSE_SECONDS) {
+    if (!closingPromptSent && remainingSeconds <= finalCloseSeconds) {
       closingPromptSent = sendSessionManagementPrompt(
         "final_close",
         [
@@ -1052,7 +1062,7 @@
 
     if (
       !closingPromptSent &&
-      remainingSeconds <= NEAR_END_SECONDS &&
+      remainingSeconds <= nearEndSeconds &&
       (!waitingForAnswer || silenceSeconds >= 20)
     ) {
       closingPromptSent = sendSessionManagementPrompt(

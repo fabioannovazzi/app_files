@@ -6,6 +6,7 @@ import sys
 import time
 import types
 from collections.abc import Callable
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -1026,6 +1027,32 @@ def test_public_session_rejects_duplicate_active_started_attempt(
     assert unchanged_record["status"] == api.INTERVIEW_STATUS_STARTED
     assert unchanged_record["active_attempt_id"] == attempt_id
     assert not (session_dir / "attempts").exists()
+
+
+@pytest.mark.parametrize(
+    ("max_duration_seconds", "age_seconds", "expected"),
+    [
+        (60, 119, False),
+        (60, 120, True),
+        (api.DEFAULT_INTERVIEW_DURATION_SECONDS, 959, False),
+        (api.DEFAULT_INTERVIEW_DURATION_SECONDS, 960, True),
+    ],
+)
+def test_started_attempt_staleness_uses_configured_duration_plus_grace(
+    max_duration_seconds: int,
+    age_seconds: int,
+    expected: bool,
+) -> None:
+    now = datetime(2026, 7, 24, 15, 0, tzinfo=timezone.utc)
+    record = {
+        "status": api.INTERVIEW_STATUS_STARTED,
+        "started_at": api._iso(now - timedelta(seconds=age_seconds)),
+        "max_duration_seconds": max_duration_seconds,
+    }
+
+    actual = api._started_attempt_is_stale(record, now=now)
+
+    assert actual is expected
 
 
 def test_research_interview_mode_uses_shared_dimensions_without_checklist(
@@ -2525,7 +2552,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert 'postJson("/complete"' in script
-    assert "20260722-spanish-v1" in template
+    assert "20260724-short-retry-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2592,8 +2619,12 @@ def test_browser_script_manages_silence_and_near_end_without_semantic_gates() ->
 
     assert "SILENCE_NUDGE_SECONDS = 35" in script
     assert "SILENCE_SIMPLIFY_SECONDS = 75" in script
-    assert "NEAR_END_SECONDS = 120" in script
-    assert "FINAL_CLOSE_SECONDS = 60" in script
+    assert "NEAR_END_MAX_SECONDS = 120" in script
+    assert "FINAL_CLOSE_MAX_SECONDS = 60" in script
+    assert "Math.floor(maxInterviewSeconds * 0.2)" in script
+    assert "Math.floor(maxInterviewSeconds * 0.4)" in script
+    assert "remainingSeconds <= finalCloseSeconds" in script
+    assert "remainingSeconds <= nearEndSeconds" in script
     assert "manageSessionFlow()" in script
     assert "session_management_prompt" in script
     assert "silence_nudge" in script
@@ -2637,6 +2668,8 @@ def test_browser_script_flushes_partial_speech_and_surfaces_connection_issues() 
     assert "connection_issue" in script
     assert "connectionIssueHandled" in script
     assert "The live interview connection stopped responding" in script
+    assert "async function handleConnectionIssue" in script
+    assert 'await endInterview({ reason: "connection_issue" });' in script
     assert "failed_technical" in script
     assert "Please retry this link" in script
 
@@ -2675,7 +2708,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260722-spanish-v1" in script
+    assert "20260724-short-retry-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
