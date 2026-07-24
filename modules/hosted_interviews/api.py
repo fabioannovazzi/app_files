@@ -1255,7 +1255,6 @@ def _build_realtime_session_config(
     language: str,
     model: str,
 ) -> dict[str, Any]:
-    interview_mode = _clean_interview_mode(str(record.get("interview_mode", "")))
     return {
         "type": "realtime",
         "model": model or DEFAULT_MODEL,
@@ -1266,9 +1265,10 @@ def _build_realtime_session_config(
                 "turn_detection": {
                     "type": "semantic_vad",
                     "eagerness": "low",
-                    "create_response": (
-                        interview_mode != INTERVIEW_MODE_PLUGIN_IMPROVEMENT
-                    ),
+                    # The browser serializes response.create calls after each
+                    # completed transcript so rapid phone turns cannot make
+                    # semantic VAD launch overlapping interviewer responses.
+                    "create_response": False,
                     # Interviewer turns must remain audible. Phone VAD noise is
                     # not a reliable signal that a question should be truncated.
                     "interrupt_response": False,

@@ -8,7 +8,7 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260724-completion-reliability-v1";
+  const SCRIPT_VERSION = "20260724-response-serialization-v1";
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
   const UPLOAD_REQUEST_TIMEOUT_MS = 8000;
   const FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 10000;
@@ -17,6 +17,7 @@
   const SILENCE_SIMPLIFY_SECONDS = 75;
   const NEAR_END_MAX_SECONDS = 120;
   const FINAL_CLOSE_MAX_SECONDS = 60;
+  const FINAL_CLOSE_ANSWER_WAIT_SECONDS = 20;
   const SAFETY_OVERRUN_SECONDS = 5 * 60;
   const RESPONSE_CREATE_COOLDOWN_MS = 2500;
   const RECENT_INPUT_SETTLE_MS = 3000;
@@ -102,6 +103,7 @@
   let improvementAnswerSettleTimer = null;
   let improvementResponsePending = false;
   let improvementCloseRequested = false;
+  let genericResponsePending = false;
   const pendingUploads = new Set();
   let uploadErrors = [];
   let uploadSettleTimedOut = false;
@@ -361,6 +363,7 @@
     improvementAnswerSettleTimer = null;
     improvementResponsePending = false;
     improvementCloseRequested = false;
+    genericResponsePending = false;
     uploadErrors = [];
     uploadSettleTimedOut = false;
   }
@@ -960,6 +963,56 @@
     maybeCreateImprovementResponse();
   }
 
+  function maybeCreateGenericResponse() {
+    if (
+      isPluginImprovementInterview ||
+      !genericResponsePending ||
+      ending ||
+      interviewClosing ||
+      assistantResponseActive ||
+      !dc ||
+      dc.readyState !== "open"
+    ) {
+      return false;
+    }
+    genericResponsePending = false;
+    responseCount += 1;
+    markResponseCreateAttempt();
+    try {
+      sendEvent({
+        type: "response.create",
+        response: {
+          output_modalities: ["audio"],
+          input: responseInput(
+            [
+              "Continue the hosted interview from the latest interviewee answer.",
+              "Ask at most one concise question, or close if the prepared purpose is satisfied.",
+              "Do not repeat a question that is still awaiting an answer.",
+            ].join("\n"),
+            "Respond naturally to the interviewee's latest completed turn."
+          ),
+          metadata: {
+            response_index: String(responseCount),
+            context_strategy: "realtime_conversation",
+            trigger: "interviewee_turn_completed",
+          },
+        },
+      });
+    } catch (error) {
+      assistantResponseActive = false;
+      genericResponsePending = true;
+      console.warn("Could not continue hosted interview", error);
+      return false;
+    }
+    return true;
+  }
+
+  function queueGenericResponse() {
+    if (isPluginImprovementInterview || ending || interviewClosing) return;
+    genericResponsePending = true;
+    maybeCreateGenericResponse();
+  }
+
   function createInitialResponse() {
     responseCount += 1;
     markResponseCreateAttempt();
@@ -998,7 +1051,13 @@
   }
 
   function sendSessionManagementPrompt(action, systemText, userText) {
-    if (ending || !dc || dc.readyState !== "open" || assistantResponseActive) {
+    if (
+      ending ||
+      !dc ||
+      dc.readyState !== "open" ||
+      assistantResponseActive ||
+      genericResponsePending
+    ) {
       return false;
     }
     if (
@@ -1085,6 +1144,7 @@
       !dc ||
       dc.readyState !== "open" ||
       assistantResponseActive ||
+      genericResponsePending ||
       transcriptionDeltaActive ||
       inputSpeechPending ||
       Date.now() - lastResponseCreateAtMs < RESPONSE_CREATE_COOLDOWN_MS ||
@@ -1098,7 +1158,11 @@
       : 0;
     const waitingForAnswer = awaitingIntervieweeAnswer;
 
-    if (!closingPromptSent && remainingSeconds <= finalCloseSeconds) {
+    if (
+      !closingPromptSent &&
+      remainingSeconds <= finalCloseSeconds &&
+      (!waitingForAnswer || silenceSeconds >= FINAL_CLOSE_ANSWER_WAIT_SECONDS)
+    ) {
       closingPromptSent = sendSessionManagementPrompt(
         "final_close",
         [
@@ -1116,7 +1180,7 @@
     if (
       !closingPromptSent &&
       remainingSeconds <= nearEndSeconds &&
-      (!waitingForAnswer || silenceSeconds >= 20)
+      (!waitingForAnswer || silenceSeconds >= FINAL_CLOSE_ANSWER_WAIT_SECONDS)
     ) {
       closingPromptSent = sendSessionManagementPrompt(
         "near_end_wrap_up",
@@ -1256,6 +1320,8 @@
       });
       if (isPluginImprovementInterview) {
         recordImprovementAnswerPart();
+      } else {
+        queueGenericResponse();
       }
     }
     if (event.type === "response.output_audio_transcript.done") {
@@ -1319,6 +1385,7 @@
       }
       responseCount += 1;
       maybeCreateImprovementResponse();
+      maybeCreateGenericResponse();
       const response = event.response || {};
       const usage = response.usage || event.usage || null;
       if (usage) {

@@ -853,7 +853,9 @@ def test_public_session_uses_prepared_context(tmp_path: Path, monkeypatch) -> No
     assert "Do not reveal hidden reasoning" in instructions
     assert session_config["reasoning"] == {"effort": "high"}
     assert session_config["audio"]["input"]["turn_detection"]["eagerness"] == "low"
-    assert session_config["audio"]["input"]["turn_detection"]["create_response"] is True
+    assert (
+        session_config["audio"]["input"]["turn_detection"]["create_response"] is False
+    )
     assert (
         session_config["audio"]["input"]["turn_detection"]["interrupt_response"]
         is False
@@ -2563,7 +2565,7 @@ def test_browser_script_uses_realtime_led_conversation() -> None:
     assert "text_memory_out_of_band" not in script
 
 
-def test_browser_script_records_turns_without_driving_followups() -> None:
+def test_browser_script_serializes_generic_followups_after_completed_turns() -> None:
     script = Path("static/js/hosted-interview.js").read_text(encoding="utf-8")
 
     assert "input_audio_buffer.speech_started" in script
@@ -2571,6 +2573,11 @@ def test_browser_script_records_turns_without_driving_followups() -> None:
     assert "conversation.item.input_audio_transcription.completed" in script
     assert 'postEvent("interviewee_turn"' in script
     assert 'postEvent("interviewer_turn"' in script
+    assert "genericResponsePending" in script
+    assert "queueGenericResponse();" in script
+    assert "maybeCreateGenericResponse();" in script
+    assert 'trigger: "interviewee_turn_completed"' in script
+    assert "Respond naturally to the interviewee's latest completed turn." in script
     assert "pendingAnswerParts" not in script
 
 
@@ -2604,7 +2611,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert '"/complete",' in script
-    assert "20260724-completion-reliability-v1" in template
+    assert "20260724-response-serialization-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2673,11 +2680,14 @@ def test_browser_script_manages_silence_and_near_end_without_semantic_gates() ->
     assert "SILENCE_SIMPLIFY_SECONDS = 75" in script
     assert "NEAR_END_MAX_SECONDS = 120" in script
     assert "FINAL_CLOSE_MAX_SECONDS = 60" in script
+    assert "FINAL_CLOSE_ANSWER_WAIT_SECONDS = 20" in script
     assert "MIN_RESPONSE_WINDOW_SECONDS" not in script
     assert "Math.floor(maxInterviewSeconds * 0.2)" in script
     assert "Math.floor(maxInterviewSeconds * 0.4)" in script
     assert "remainingSeconds <= finalCloseSeconds" in script
     assert "remainingSeconds <= nearEndSeconds" in script
+    assert "silenceSeconds >= FINAL_CLOSE_ANSWER_WAIT_SECONDS" in script
+    assert script.count("silenceSeconds >= FINAL_CLOSE_ANSWER_WAIT_SECONDS") == 2
     assert "manageSessionFlow()" in script
     assert "session_management_prompt" in script
     assert "silence_nudge" in script
@@ -2768,7 +2778,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260724-completion-reliability-v1" in script
+    assert "20260724-response-serialization-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
