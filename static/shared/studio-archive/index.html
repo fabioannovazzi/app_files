@@ -3,13 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Con Vera in Codex Desktop puoi cercare le email o leggere la chat WhatsApp di un cliente, una conversazione alla volta.">
+  <meta name="description" content="Scopri come Vera indicizza i documenti sul Mac e consulta Gmail e WhatsApp Desktop quando serve.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/studio-archive/index.html">
-  <meta property="og:title" content="Vera · Gmail e WhatsApp">
-  <meta property="og:description" content="Trova i messaggi di un cliente in Gmail o WhatsApp Desktop con Vera in Codex Desktop.">
+  <meta property="og:title" content="Vera · Archivio dello studio">
+  <meta property="og:description" content="Scopri come Vera indicizza i documenti sul Mac e consulta Gmail e WhatsApp Desktop quando serve.">
+  <meta property="og:image" content="https://i.ytimg.com/vi/bsEbR9XegrU/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/studio-archive/index.html">
   <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/studio-archive/index.html?lang=it">
@@ -18,7 +19,7 @@
   <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/studio-archive/index.html?lang=de">
   <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/studio-archive/index.html?lang=es">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/studio-archive/index.html">
-  <title>Vera · Gmail e WhatsApp</title>
+  <title>Vera · Archivio dello studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
@@ -30,7 +31,8 @@
       --paper: #ffffff;
       --mist: #f3fbff;
       --line: #b8dff2;
-      --content: 1120px;
+      --muted: #48658e;
+      --content: 1160px;
     }
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -44,11 +46,11 @@
       -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; }
-    p, h1, h2, h3 { margin: 0; }
+    p, h1, h2, h3, pre, blockquote { margin: 0; }
     h1, h2, h3 { line-height: 1.08; }
-    h1 { font-size: clamp(3.4rem, 8vw, 7.25rem); letter-spacing: -0.06em; }
-    h2 { font-size: clamp(2rem, 4.6vw, 4.25rem); letter-spacing: -0.045em; }
-    h3 { font-size: clamp(1.25rem, 2vw, 1.7rem); letter-spacing: -0.02em; }
+    h1 { font-size: clamp(3.25rem, 7.4vw, 6.8rem); letter-spacing: -0.058em; }
+    h2 { font-size: clamp(2rem, 4.4vw, 4rem); letter-spacing: -0.045em; }
+    h3 { font-size: clamp(1.28rem, 2vw, 1.72rem); letter-spacing: -0.025em; }
     .skip-link {
       position: fixed;
       top: 12px;
@@ -87,7 +89,7 @@
     .brand img { width: auto; height: 32px; display: block; }
     .nav-right, .nav-links, .lang-switch { display: flex; align-items: center; }
     .nav-right { gap: 24px; }
-    .nav-links { gap: 22px; color: var(--blue); font-size: 0.875rem; }
+    .nav-links { gap: 20px; color: var(--blue); font-size: 0.83rem; }
     .lang-switch {
       gap: 2px;
       padding: 2px;
@@ -95,29 +97,27 @@
       border-radius: 8px;
     }
     .lang-switch button {
-      min-width: 42px;
+      min-width: 39px;
       min-height: 38px;
       border: 0;
       border-radius: 5px;
       color: var(--blue);
       background: transparent;
-      font-family: inherit;
-      font-size: 0.75rem;
-      font-weight: 650;
+      font: 650 0.75rem/1 "Instrument Sans", sans-serif;
       cursor: pointer;
     }
     .lang-switch button.is-active { color: var(--paper); background: var(--blue); }
     section { scroll-margin-top: 76px; }
     .hero {
       min-height: min(720px, calc(100vh - 72px));
-      padding-block: clamp(72px, 11vw, 132px);
+      padding-block: clamp(76px, 11vw, 136px);
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(220px, 0.45fr);
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.4fr);
       align-items: end;
       gap: clamp(48px, 9vw, 120px);
       border-bottom: 1px solid var(--cyan);
     }
-    .eyebrow, .section-index, .route-context {
+    .eyebrow, .section-index, .label {
       color: var(--blue);
       font-size: 0.75rem;
       font-weight: 650;
@@ -126,99 +126,257 @@
     }
     .eyebrow { margin-bottom: 18px; }
     .lead {
-      max-width: 790px;
-      margin-top: 26px;
-      font-size: clamp(1.4rem, 2.8vw, 2.25rem);
-      line-height: 1.27;
+      max-width: 820px;
+      margin-top: 28px;
+      font-size: clamp(1.35rem, 2.7vw, 2.2rem);
+      line-height: 1.28;
       letter-spacing: -0.025em;
     }
     .hero-note {
       padding-top: 22px;
       border-top: 1px solid var(--blue);
       color: var(--blue);
-      font-size: 1.05rem;
+      font-size: 1.04rem;
+    }
+    .principle {
+      padding: 34px clamp(24px, 5vw, 60px);
+      color: var(--paper);
+      background: var(--navy);
+      font-size: clamp(1.35rem, 2.6vw, 2.25rem);
+      line-height: 1.25;
+      letter-spacing: -0.025em;
     }
     .section-block {
-      padding-block: clamp(72px, 10vw, 118px);
+      padding-block: clamp(72px, 10vw, 116px);
       border-bottom: 1px solid var(--line);
     }
     .section-head {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.52fr);
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.48fr);
       gap: clamp(36px, 8vw, 100px);
       align-items: end;
-      margin-bottom: clamp(42px, 7vw, 76px);
+      margin-bottom: clamp(44px, 7vw, 76px);
     }
     .section-index { display: block; margin-bottom: 16px; }
     .section-head > p { color: var(--blue); font-size: 1.08rem; }
+    .folder-layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1fr);
+      gap: clamp(38px, 8vw, 96px);
+      align-items: stretch;
+    }
+    .folder-tree {
+      min-height: 360px;
+      padding: clamp(30px, 5vw, 52px);
+      border: 1px solid var(--blue);
+      color: var(--navy);
+      background: var(--mist);
+      font: 500 clamp(0.98rem, 1.5vw, 1.15rem)/1.8 ui-monospace, "SFMono-Regular", Consolas, monospace;
+      white-space: pre-wrap;
+    }
+    .folder-copy {
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      border-block: 1px solid var(--blue);
+    }
+    .folder-copy article { padding: 26px 0; }
+    .folder-copy article + article { border-top: 1px solid var(--line); }
+    .folder-copy h3 { margin: 8px 0 10px; }
+    .folder-copy p { max-width: 650px; color: var(--muted); }
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border: 1px solid var(--blue);
+    }
+    .method-card { padding: clamp(34px, 5.5vw, 62px); }
+    .method-card + .method-card { border-left: 1px solid var(--blue); }
+    .method-card.model { color: var(--paper); background: var(--navy); }
+    .method-card .label { display: block; margin-bottom: 16px; }
+    .method-card.model .label { color: var(--cyan); }
+    .method-card h3 { margin-bottom: 24px; }
+    .method-card ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0;
+    }
+    .method-card li { padding: 13px 0; border-top: 1px solid var(--line); }
+    .method-card.model li { border-color: rgb(255 255 255 / 28%); }
+    .method-note {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--cyan);
+      font-weight: 600;
+    }
+    .ocr-note {
+      margin-top: 26px;
+      padding: 22px 26px;
+      border-left: 4px solid var(--cyan);
+      background: var(--mist);
+      color: var(--muted);
+    }
+    .sources { border-top: 1px solid var(--blue); }
     .source {
       display: grid;
-      grid-template-columns: minmax(170px, 0.3fr) minmax(0, 1fr);
-      gap: clamp(32px, 7vw, 94px);
+      grid-template-columns: minmax(170px, 0.28fr) minmax(0, 1fr);
+      gap: clamp(32px, 7vw, 88px);
       padding-block: 38px;
-      border-top: 1px solid var(--blue);
+      border-bottom: 1px solid var(--blue);
     }
-    .source:last-child { border-bottom: 1px solid var(--blue); }
     .source-copy { display: grid; gap: 22px; }
-    .source-copy > p { max-width: 790px; font-size: 1.13rem; }
+    .source-copy > p { max-width: 790px; font-size: 1.12rem; }
     .source-facts {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px;
+      gap: 26px;
     }
-    .source-fact {
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-    }
+    .source-fact { padding-top: 14px; border-top: 1px solid var(--line); }
     .source-fact strong { display: block; margin-bottom: 7px; color: var(--blue); }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0;
-      border-block: 1px solid var(--blue);
-    }
-    .step { min-height: 180px; padding: 28px; }
-    .step + .step { border-left: 1px solid var(--line); }
-    .step h3 { margin: 0 0 12px; }
-    .boundary {
-      padding: clamp(48px, 7vw, 82px);
+    .example-band { color: var(--paper); background: var(--navy); }
+    .example-band .section-index { color: var(--cyan); }
+    .example-band .section-head > p { color: var(--paper); }
+    .prompt {
+      padding: clamp(28px, 4vw, 44px);
+      border: 1px solid var(--cyan);
       color: var(--paper);
-      background: var(--navy);
+      font-size: clamp(1.28rem, 2.4vw, 2rem);
+      line-height: 1.3;
     }
-    .boundary h2 { color: var(--paper); }
-    .boundary-grid {
-      margin-top: 42px;
+    .example-flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 34px;
+      border-block: 1px solid var(--cyan);
+    }
+    .example-step { min-height: 180px; padding: 26px; }
+    .example-step + .example-step { border-left: 1px solid rgb(255 255 255 / 25%); }
+    .example-step .label { color: var(--cyan); }
+    .example-step h3 { margin: 12px 0; }
+    .example-step p { color: rgb(255 255 255 / 78%); }
+    .example-result {
+      margin-top: 28px;
+      color: var(--cyan);
+      font-size: 1.12rem;
+      font-weight: 600;
+    }
+    .people-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 32px 72px;
+      border-block: 1px solid var(--blue);
     }
-    .boundary-grid article { padding-top: 16px; border-top: 1px solid var(--cyan); }
-    .boundary-grid h3 { margin-bottom: 10px; color: var(--paper); }
-    .setup {
+    .people-grid article { padding: clamp(30px, 5vw, 50px); }
+    .people-grid article + article { border-left: 1px solid var(--line); }
+    .people-grid h3 { margin-bottom: 16px; }
+    .people-grid p + p { margin-top: 16px; color: var(--blue); }
+    .video-layout {
       display: grid;
-      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
-      gap: clamp(42px, 8vw, 110px);
-      align-items: start;
+      grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.72fr);
+      gap: clamp(38px, 8vw, 92px);
+      align-items: center;
     }
-    .setup-actions { display: grid; gap: 22px; }
-    .setup-actions p { padding-top: 16px; border-top: 1px solid var(--line); }
+    .video-card {
+      display: block;
+      text-decoration: none;
+      border: 1px solid var(--blue);
+    }
+    .video-image {
+      position: relative;
+      display: block;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-bottom: 1px solid var(--blue);
+      background: var(--mist);
+    }
+    .video-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 180ms ease;
+    }
+    .video-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--paper);
+      background: var(--navy);
+      transform: translate(-50%, -50%);
+      font-size: 1.15rem;
+    }
+    .video-card:hover img { transform: scale(1.015); }
+    .video-meta { display: block; padding: 16px 20px; color: var(--blue); }
+    .video-copy h2 { margin: 14px 0 20px; }
+    .video-copy p { color: var(--blue); font-size: 1.08rem; }
+    .data-table { border-top: 1px solid var(--blue); }
+    .data-row {
+      display: grid;
+      grid-template-columns: 0.7fr 0.85fr 1.45fr;
+      border-bottom: 1px solid var(--line);
+    }
+    .data-row > * { padding: 18px 20px; }
+    .data-row > * + * { border-left: 1px solid var(--line); }
+    .data-row.header {
+      color: var(--blue);
+      font-size: 0.75rem;
+      font-weight: 650;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom-color: var(--blue);
+    }
+    .data-notes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 28px;
+    }
+    .data-notes p { padding-top: 16px; border-top: 1px solid var(--cyan); color: var(--muted); }
+    .setup-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+      gap: clamp(42px, 8vw, 110px);
+    }
+    .setup-steps { border-block: 1px solid var(--blue); }
+    .setup-step {
+      padding-block: 21px;
+    }
+    .setup-step + .setup-step { border-top: 1px solid var(--line); }
+    .desktop-note { margin-top: 28px; color: var(--blue); font-weight: 600; }
     footer { padding-block: 34px; }
     .footer-shell { display: flex; justify-content: space-between; gap: 24px; }
+    .footer-links { display: flex; gap: 22px; }
     .footer-shell a { color: var(--blue); }
-    @media (max-width: 820px) {
+    @media (max-width: 920px) {
       .nav-links { display: none; }
-      .hero, .section-head, .source, .setup { grid-template-columns: 1fr; }
+      .hero, .section-head, .folder-layout, .source, .video-layout, .setup-layout { grid-template-columns: 1fr; }
       .hero { min-height: auto; }
-      .steps, .source-facts, .boundary-grid { grid-template-columns: 1fr; }
-      .step + .step { border-left: 0; border-top: 1px solid var(--line); }
+      .method-grid, .people-grid, .data-notes { grid-template-columns: 1fr; }
+      .method-card + .method-card, .people-grid article + article { border-left: 0; border-top: 1px solid var(--line); }
+      .example-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .example-step:nth-child(3) { border-left: 0; border-top: 1px solid rgb(255 255 255 / 25%); }
+      .example-step:nth-child(4) { border-top: 1px solid rgb(255 255 255 / 25%); }
     }
-    @media (max-width: 560px) {
+    @media (max-width: 620px) {
       .nav-shell, main, .footer-shell { width: min(100% - 28px, var(--content)); }
       .nav-right { gap: 10px; }
       .brand img { height: 28px; }
-      .lang-switch button { min-width: 36px; }
-      .boundary { padding-inline: 24px; }
+      .lang-switch button { min-width: 34px; }
+      .source-facts, .example-flow { grid-template-columns: 1fr; }
+      .example-step + .example-step { border-left: 0; border-top: 1px solid rgb(255 255 255 / 25%); }
+      .data-row { grid-template-columns: 1fr; padding-block: 14px; }
+      .data-row.header { display: none; }
+      .data-row > * { padding: 4px 0; }
+      .data-row > * + * { border-left: 0; }
       .footer-shell { flex-direction: column; }
+      .footer-links { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .video-image img { transition: none; }
     }
   </style>
 </head>
@@ -231,10 +389,12 @@
       </a>
       <div class="nav-right">
         <nav class="nav-links" aria-label="Sezioni" data-i18n-aria-label="nav.label">
-          <a href="#routing" data-i18n="nav.routing">Come funziona</a>
-          <a href="#sources" data-i18n="nav.sources">Gmail e WhatsApp</a>
-          <a href="#boundary" data-i18n="nav.boundary">I tuoi dati</a>
-          <a href="#setup" data-i18n="nav.setup">Per iniziare</a>
+          <a href="#archive" data-i18n="nav.archive">La cartella</a>
+          <a href="#method" data-i18n="nav.method">Regole e modello</a>
+          <a href="#sources" data-i18n="nav.sources">Le tre fonti</a>
+          <a href="#example" data-i18n="nav.example">Esempio</a>
+          <a href="#video" data-i18n="nav.video">Video</a>
+          <a href="#data" data-i18n="nav.data">I dati</a>
         </nav>
         <div class="lang-switch" aria-label="Lingua" data-i18n-aria-label="language.label">
           <button type="button" data-lang="it" aria-label="Italiano">It</button>
@@ -250,117 +410,279 @@
   <main id="main-content">
     <section class="hero">
       <div>
-        <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Gmail e WhatsApp</p>
-        <h1 data-i18n="hero.title">Trova i messaggi di un cliente, senza riordinare tutto a mano.</h1>
-        <p class="lead" data-i18n="hero.lead">Scrivi a Vera cosa cerchi e per quale cliente. Vera consulta Gmail oppure la chat del cliente in WhatsApp Desktop e ti mostra da quali messaggi deriva la risposta.</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Archivio dello studio</p>
+        <h1 data-i18n="hero.title">Cerca nei documenti, nelle email e in WhatsApp con una sola domanda.</h1>
+        <p class="lead" data-i18n="hero.lead">Vera mantiene sul tuo Mac un indice dei documenti dello studio. Quando fai una domanda, cerca in quell’indice e, solo se glielo chiedi, consulta anche Gmail o una chat WhatsApp.</p>
       </div>
-      <p class="hero-note" data-i18n="hero.note">Funziona solo in Codex Desktop e lavora su un cliente alla volta. Vera legge i messaggi necessari, ma non scrive, non risponde e non modifica nulla.</p>
+      <p class="hero-note" data-i18n="hero.note">Funziona in Codex Desktop. I documenti formano l’archivio permanente; Gmail e WhatsApp vengono consultati in diretta, solo quando lo chiedi.</p>
     </section>
 
-    <section class="section-block" id="routing">
+    <p class="principle" data-i18n="principle">La cartella è l’archivio. L’indice è il catalogo che rende i documenti ricercabili.</p>
+
+    <section class="section-block" id="archive">
       <div class="section-head">
         <div>
-          <span class="section-index" data-i18n="routing.index">Come funziona</span>
-          <h2 data-i18n="routing.title">Tu indichi il cliente. Vera cerca.</h2>
+          <span class="section-index" data-i18n="archive.index">Da dove si parte</span>
+          <h2 data-i18n="archive.title">1. Scegli la cartella dello studio.</h2>
         </div>
-        <p data-i18n="routing.copy">Non devi spostare le email in cartelle né esportare le chat.</p>
+        <p data-i18n="archive.copy">Può essere locale oppure condivisa e già sincronizzata sul Mac. Ogni cartella cliente diventa un perimetro di ricerca preciso.</p>
       </div>
-      <div class="steps">
-        <article class="step">
-          <h3 data-i18n="routing.step1.title">Fai una domanda</h3>
-          <p data-i18n="routing.step1.copy">Per esempio: “Per Rossi Srl, trova cosa manca per chiudere l’IVA di giugno.”</p>
+      <div class="folder-layout">
+        <pre class="folder-tree" role="img" aria-label="Esempio di cartella dello studio con un sottocartella per cliente" data-i18n-aria-label="archive.folder.aria">Studio/
+├── Rossi SRL/
+│   ├── Contratto.pdf
+│   ├── Contabilità/
+│   └── Dichiarazioni/
+├── Bianchi SNC/
+└── Verdi SRL/</pre>
+        <div class="folder-copy">
+          <article>
+            <span class="label" data-i18n="archive.originals.label">Gli originali</span>
+            <h3 data-i18n="archive.originals.title">Restano dove sono.</h3>
+            <p data-i18n="archive.originals.copy">Vera legge la cartella senza spostare o rinominare i documenti.</p>
+          </article>
+          <article>
+            <span class="label" data-i18n="archive.index.label">Il catalogo locale</span>
+            <h3 data-i18n="archive.index.title">Un indice privato sul Mac.</h3>
+            <p data-i18n="archive.index.copy">Contiene il testo ricercabile e il percorso del file originale, non una seconda copia della cartella.</p>
+          </article>
+          <article>
+            <span class="label" data-i18n="archive.refresh.label">Gli aggiornamenti</span>
+            <h3 data-i18n="archive.refresh.title">Nuovi, modificati, rimossi.</h3>
+            <p data-i18n="archive.refresh.copy">Vera riconosce ciò che è cambiato e aggiorna soltanto la parte necessaria.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="method">
+      <div class="section-head">
+        <div>
+          <span class="section-index" data-i18n="method.index">Il punto importante</span>
+          <h2 data-i18n="method.title">La ricerca è meccanica. L’interpretazione usa Codex.</h2>
+        </div>
+        <p data-i18n="method.copy">Sono due lavori distinti. Il primo costruisce e interroga il catalogo; il secondo capisce la domanda e prepara la risposta.</p>
+      </div>
+      <div class="method-grid">
+        <article class="method-card">
+          <span class="label" data-i18n="method.fixed.label">Regole fisse e ripetibili</span>
+          <h3 data-i18n="method.fixed.title">Che cosa fa il codice</h3>
+          <ul>
+            <li data-i18n="method.fixed.1">Trova tutti i file supportati.</li>
+            <li data-i18n="method.fixed.2">Estrae e divide il testo in passaggi ricercabili.</li>
+            <li data-i18n="method.fixed.3">Calcola un’impronta del file per riconoscere le modifiche.</li>
+            <li data-i18n="method.fixed.4">Aggiunge, aggiorna o rimuove i file dall’indice.</li>
+            <li data-i18n="method.fixed.5">Mantiene separata la cartella di ogni cliente.</li>
+            <li data-i18n="method.fixed.6">Cerca parole e frasi nell’intero testo.</li>
+          </ul>
+          <p class="method-note" data-i18n="method.fixed.note">Nessun modello decide quali documenti indicizzare o ignorare. Non viene creato un database di embeddings.</p>
         </article>
-        <article class="step">
-          <h3 data-i18n="routing.step2.title">Conferma il contatto</h3>
-          <p data-i18n="routing.step2.copy">Vera ti chiede di confermare l’indirizzo email o il numero WhatsApp corretto, così non mescola clienti diversi.</p>
-        </article>
-        <article class="step">
-          <h3 data-i18n="routing.step3.title">Controlla il risultato</h3>
-          <p data-i18n="routing.step3.copy">Vera cita i messaggi utilizzati ed esclude quelli ambigui.</p>
+        <article class="method-card model">
+          <span class="label" data-i18n="method.codex.label">Giudizio del modello</span>
+          <h3 data-i18n="method.codex.title">Che cosa fa Codex</h3>
+          <ul>
+            <li data-i18n="method.codex.1">Interpreta la domanda e prepara le ricerche.</li>
+            <li data-i18n="method.codex.2">Valuta quali passaggi trovati sono davvero pertinenti.</li>
+            <li data-i18n="method.codex.3">Riapre il documento utile e controlla che non sia cambiato.</li>
+            <li data-i18n="method.codex.4">Costruisce una risposta con i riferimenti alle fonti originali.</li>
+          </ul>
+          <p class="method-note" data-i18n="method.codex.note">I risultati della ricerca sono candidati: non diventano automaticamente fatti corretti solo perché sono stati trovati.</p>
         </article>
       </div>
+      <p class="ocr-note" data-i18n="method.ocr">Eccezione: per i documenti scansionati puoi attivare separatamente l’OCR. In quel caso un modello prova a trascrivere il testo presente nelle immagini e il risultato va verificato visivamente.</p>
     </section>
 
     <section class="section-block" id="sources">
       <div class="section-head">
         <div>
-          <span class="section-index" data-i18n="sources.index">Gmail e WhatsApp</span>
-          <h2 data-i18n="sources.title">Cerca dove il cliente ti ha scritto.</h2>
+          <span class="section-index" data-i18n="sources.index">Le tre fonti</span>
+          <h2 data-i18n="sources.title">Documenti sempre disponibili. Gmail e WhatsApp solo su richiesta.</h2>
         </div>
-        <p data-i18n="sources.intro">Le due funzioni sono separate. Per ogni richiesta scegli Gmail oppure WhatsApp.</p>
+        <p data-i18n="sources.copy">Le tre ricerche restano separate. Puoi usare solo i documenti oppure chiedere esplicitamente di controllare anche i messaggi.</p>
       </div>
-      <article class="source">
-        <div>
-          <span class="route-context" data-i18n="sources.gmail.availability">Prima collega Gmail</span>
-          <h3 data-i18n="sources.gmail.title">Gmail</h3>
-        </div>
-        <div class="source-copy">
-          <p data-i18n="sources.gmail.copy">Collega il connector Gmail di OpenAI a Codex Desktop. Vera controlla che sia la casella giusta, cerca i messaggi dell’indirizzo confermato e legge soltanto quelli necessari.</p>
-          <div class="source-facts">
-            <div class="source-fact">
-              <strong data-i18n="sources.example.label">Esempio</strong>
-              <span data-i18n="sources.gmail.example">“Cerca nelle email di amministrazione@rossi.it cosa abbiamo concordato sulla rateizzazione.”</span>
-            </div>
-            <div class="source-fact">
-              <strong data-i18n="sources.note.label">Da sapere</strong>
-              <span data-i18n="sources.gmail.note">La posta resta in Gmail. Vera non sposta, etichetta, invia o cancella email.</span>
+      <div class="sources">
+        <article class="source">
+          <div>
+            <span class="label" data-i18n="sources.documents.label">Fonte 1 · locale</span>
+            <h3 data-i18n="sources.documents.title">Documenti</h3>
+          </div>
+          <div class="source-copy">
+            <p data-i18n="sources.documents.copy">Vera cerca nell’indice del cliente scelto e apre i file originali utili per verificare e citare i passaggi.</p>
+            <div class="source-facts">
+              <div class="source-fact">
+                <strong data-i18n="sources.example.label">Esempio</strong>
+                <span data-i18n="sources.documents.example">“Che cosa prevede il contratto di Rossi sulla disdetta?”</span>
+              </div>
+              <div class="source-fact">
+                <strong data-i18n="sources.stays.label">Dove rimane</strong>
+                <span data-i18n="sources.documents.stays">Il documento resta nella cartella dello studio; l’indice resta sul Mac.</span>
+              </div>
             </div>
           </div>
-        </div>
-      </article>
-      <article class="source">
-        <div>
-          <span class="route-context" data-i18n="sources.whatsapp.availability">Prima apri WhatsApp Desktop</span>
-          <h3 data-i18n="sources.whatsapp.title">WhatsApp Desktop</h3>
-        </div>
-        <div class="source-copy">
-          <p data-i18n="sources.whatsapp.copy">Apri WhatsApp Desktop sullo stesso Mac e accedi normalmente. Codex usa Computer Use, la funzione che gli permette di controllare l’app sul tuo computer, per aprire la chat del numero confermato e leggere i messaggi utili. Vera non invia nulla.</p>
-          <div class="source-facts">
-            <div class="source-fact">
-              <strong data-i18n="sources.example.label">Esempio</strong>
-              <span data-i18n="sources.whatsapp.example">“Apri la chat del +39… e trova quando Rossi ha promesso di inviare gli estratti conto.”</span>
-            </div>
-            <div class="source-fact">
-              <strong data-i18n="sources.note.label">Da sapere</strong>
-              <span data-i18n="sources.whatsapp.note">Aprire la chat può segnare i messaggi come letti. Vera può leggere soltanto ciò che WhatsApp Desktop rende visibile e non può garantire uno storico completo.</span>
+        </article>
+        <article class="source">
+          <div>
+            <span class="label" data-i18n="sources.gmail.label">Fonte 2 · in diretta</span>
+            <h3 data-i18n="sources.gmail.title">Gmail</h3>
+          </div>
+          <div class="source-copy">
+            <p data-i18n="sources.gmail.copy">Colleghi separatamente il connector Gmail di OpenAI. Confermi l’indirizzo completo del cliente e Vera cerca in quel momento i messaggi necessari, in sola lettura.</p>
+            <div class="source-facts">
+              <div class="source-fact">
+                <strong data-i18n="sources.example.label">Esempio</strong>
+                <span data-i18n="sources.gmail.example">“Controlla anche Gmail: Rossi ha scritto quando invierà l’estratto conto?”</span>
+              </div>
+              <div class="source-fact">
+                <strong data-i18n="sources.stays.label">Dove rimane</strong>
+                <span data-i18n="sources.gmail.stays">Le email restano in Gmail e non entrano nell’indice dei documenti.</span>
+              </div>
             </div>
           </div>
+        </article>
+        <article class="source">
+          <div>
+            <span class="label" data-i18n="sources.whatsapp.label">Fonte 3 · sullo schermo</span>
+            <h3 data-i18n="sources.whatsapp.title">WhatsApp Desktop</h3>
+          </div>
+          <div class="source-copy">
+            <p data-i18n="sources.whatsapp.copy">Confermi il numero esatto. Codex usa Computer Use per aprire una chat individuale nell’app già autenticata e leggere soltanto i messaggi visibili che servono.</p>
+            <div class="source-facts">
+              <div class="source-fact">
+                <strong data-i18n="sources.example.label">Esempio</strong>
+                <span data-i18n="sources.whatsapp.example">“Controlla nella chat di Rossi se ha confermato la data.”</span>
+              </div>
+              <div class="source-fact">
+                <strong data-i18n="sources.stays.label">Dove rimane</strong>
+                <span data-i18n="sources.whatsapp.stays">La chat resta in WhatsApp. Aprirla può segnare messaggi come letti e lo storico visibile può essere incompleto.</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block example-band" id="example">
+      <div class="section-head">
+        <div>
+          <span class="section-index" data-i18n="example.index">Esempio concreto</span>
+          <h2 data-i18n="example.title">Una domanda, tre controlli, una risposta con le fonti.</h2>
         </div>
-      </article>
+        <p data-i18n="example.copy">Non devi salvare le email nella cartella Rossi o esportare la chat.</p>
+      </div>
+      <blockquote class="prompt" data-i18n="example.prompt">“Per Rossi, cosa manca e quando ha promesso di inviarlo? Controlla documenti, Gmail e WhatsApp.”</blockquote>
+      <div class="example-flow">
+        <article class="example-step">
+          <h3 data-i18n="example.step1.title">Documenti</h3>
+          <p data-i18n="example.step1.copy">Vera controlla nella cartella Rossi quali file sono presenti e quali mancano.</p>
+        </article>
+        <article class="example-step">
+          <h3 data-i18n="example.step2.title">Gmail</h3>
+          <p data-i18n="example.step2.copy">Cerca l’email in cui Rossi ha promesso una data di invio.</p>
+        </article>
+        <article class="example-step">
+          <h3 data-i18n="example.step3.title">WhatsApp</h3>
+          <p data-i18n="example.step3.copy">Controlla se nella chat individuale Rossi ha poi confermato quella data.</p>
+        </article>
+        <article class="example-step">
+          <h3 data-i18n="example.step4.title">Risposta</h3>
+          <p data-i18n="example.step4.copy">Riunisce ciò che ha trovato e indica da quale documento o messaggio deriva ogni punto.</p>
+        </article>
+      </div>
+      <p class="example-result" data-i18n="example.result">Il documento dice che manca l’estratto conto; l’email promette venerdì; WhatsApp conferma la stessa data.</p>
     </section>
 
-    <section class="section-block boundary" id="boundary">
-      <span class="section-index" data-i18n="privacy.index">I tuoi dati</span>
-      <h2 data-i18n="privacy.title">Vera non crea una copia completa delle tue email o chat.</h2>
-      <div class="boundary-grid">
+    <section class="section-block" id="people">
+      <div class="section-head">
+        <div>
+          <span class="section-index" data-i18n="people.index">Uno studio piccolo</span>
+          <h2 data-i18n="people.title">È utile da soli e funziona anche in due.</h2>
+        </div>
+        <p data-i18n="people.copy">La configurazione rimane semplice: una cartella esistente, un indice locale per persona, i propri account.</p>
+      </div>
+      <div class="people-grid">
         <article>
-          <h3 data-i18n="privacy.gmail.title">Gmail</h3>
-          <p data-i18n="privacy.gmail.copy">Le email restano nella casella Gmail che hai collegato.</p>
+          <h3 data-i18n="people.solo.title">Se lavori da solo</h3>
+          <p data-i18n="people.solo.copy">Configuri la cartella una volta. Poi puoi chiedere, per esempio, che cosa manca per Rossi o che cosa prevede il suo contratto senza aprire ogni file a mano.</p>
         </article>
         <article>
-          <h3 data-i18n="privacy.whatsapp.title">WhatsApp</h3>
-          <p data-i18n="privacy.whatsapp.copy">Le chat restano in WhatsApp Desktop.</p>
-        </article>
-        <article>
-          <h3 data-i18n="privacy.vera.title">Vera</h3>
-          <p data-i18n="privacy.vera.copy">Vera non sincronizza la casella o le chat e non costruisce un nuovo archivio dei messaggi.</p>
-        </article>
-        <article>
-          <h3 data-i18n="privacy.codex.title">Codex e ChatGPT</h3>
-          <p data-i18n="privacy.codex.copy">Quando Vera legge un messaggio per rispondere, quel contenuto può essere inviato a Codex/ChatGPT ed elaborato secondo le impostazioni del tuo account.</p>
+          <h3 data-i18n="people.two.title">Se lavorate in due</h3>
+          <p data-i18n="people.two.copy">Fabio e Paolo possono sincronizzare la stessa cartella dello studio sui loro Mac. Ognuno crea il proprio indice locale e collega i propri Gmail e WhatsApp.</p>
+          <p data-i18n="people.two.note">I documenti possono essere gli stessi; indice, email, chat e sessioni Codex restano separati per ciascun professionista.</p>
         </article>
       </div>
     </section>
 
-    <section class="section-block setup" id="setup">
-      <div>
-        <span class="section-index" data-i18n="setup.index">Per iniziare</span>
-        <h2 data-i18n="setup.title">Apri Codex Desktop e chiedi a Vera di cercare.</h2>
+    <section class="section-block" id="video">
+      <div class="video-layout">
+        <a class="video-card" href="https://youtu.be/bsEbR9XegrU" target="_blank" rel="noopener noreferrer" aria-label="Guarda il video sull'Archivio dello Studio su YouTube" data-i18n-aria-label="video.aria">
+          <span class="video-image" aria-hidden="true">
+            <img src="https://i.ytimg.com/vi/bsEbR9XegrU/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+            <span class="video-play">▶</span>
+          </span>
+          <span class="video-meta" data-i18n="video.meta">Italiano · 1:22 · Si apre su YouTube</span>
+        </a>
+        <div class="video-copy">
+          <span class="section-index" data-i18n="video.index">Video</span>
+          <h2 data-i18n="video.title">Guarda il flusso completo.</h2>
+          <p data-i18n="video.copy">Dalla cartella dello studio alla ricerca con regole fisse, poi Gmail e WhatsApp solo quando servono.</p>
+        </div>
       </div>
-      <div class="setup-actions">
-        <p data-i18n="setup.gmail">Per Gmail: collega il connector Gmail di OpenAI a Codex Desktop.</p>
-        <p data-i18n="setup.whatsapp">Per WhatsApp: apri WhatsApp Desktop già autenticato sullo stesso Mac e assicurati che Computer Use sia disponibile.</p>
-        <p data-i18n="setup.desktop">Questa funzione non parte in ChatGPT web o mobile.</p>
+    </section>
+
+    <section class="section-block" id="data">
+      <div class="section-head">
+        <div>
+          <span class="section-index" data-i18n="data.index">Dove rimangono i dati</span>
+          <h2 data-i18n="data.title">Ogni fonte resta nel suo posto.</h2>
+        </div>
+        <p data-i18n="data.copy">Vera non carica l’intero studio in un nuovo archivio online.</p>
+      </div>
+      <div class="data-table" role="table" aria-label="Dove rimangono i dati" data-i18n-aria-label="data.aria">
+        <div class="data-row header" role="row">
+          <span role="columnheader" data-i18n="data.header.source">Fonte</span>
+          <span role="columnheader" data-i18n="data.header.stays">Dove rimane</span>
+          <span role="columnheader" data-i18n="data.header.use">Come viene usata</span>
+        </div>
+        <div class="data-row" role="row">
+          <strong role="cell" data-i18n="data.docs.source">Documenti</strong>
+          <span role="cell" data-i18n="data.docs.stays">Cartella dello studio e indice locale sul Mac</span>
+          <span role="cell" data-i18n="data.docs.use">Ricerca testuale; il file originale viene riaperto prima di citarlo</span>
+        </div>
+        <div class="data-row" role="row">
+          <strong role="cell" data-i18n="data.gmail.source">Gmail</strong>
+          <span role="cell" data-i18n="data.gmail.stays">Nella casella Gmail collegata</span>
+          <span role="cell" data-i18n="data.gmail.use">Ricerca in diretta, in sola lettura, solo quando richiesta</span>
+        </div>
+        <div class="data-row" role="row">
+          <strong role="cell" data-i18n="data.whatsapp.source">WhatsApp</strong>
+          <span role="cell" data-i18n="data.whatsapp.stays">Nell’app WhatsApp Desktop</span>
+          <span role="cell" data-i18n="data.whatsapp.use">Consultazione sullo schermo, solo quando richiesta</span>
+        </div>
+        <div class="data-row" role="row">
+          <strong role="cell" data-i18n="data.answer.source">Risposta</strong>
+          <span role="cell" data-i18n="data.answer.stays">Nella tua sessione Codex</span>
+          <span role="cell" data-i18n="data.answer.use">Combina soltanto i contenuti pertinenti trovati</span>
+        </div>
+      </div>
+      <div class="data-notes">
+        <p data-i18n="data.boundary">Gmail e WhatsApp vengono consultati solo quando lo chiedi e non vengono copiati nell’indice dei documenti.</p>
+        <p data-i18n="data.context">I contenuti selezionati per rispondere possono essere elaborati nel contesto di Codex/ChatGPT secondo le impostazioni del tuo account.</p>
+      </div>
+    </section>
+
+    <section class="section-block" id="setup">
+      <div class="setup-layout">
+        <div>
+          <span class="section-index" data-i18n="setup.index">Per iniziare</span>
+          <h2 data-i18n="setup.title">Apri Vera in Codex Desktop.</h2>
+          <p class="desktop-note" data-i18n="setup.desktop">Questo flusso si ferma in ChatGPT web o mobile perché deve accedere alla cartella locale e, per WhatsApp, a Computer Use.</p>
+        </div>
+        <div class="setup-steps">
+          <div class="setup-step"><p data-i18n="setup.1">Indica la cartella dello studio che usi già.</p></div>
+          <div class="setup-step"><p data-i18n="setup.2">Chiedi a Vera di configurare e aggiornare l’indice.</p></div>
+          <div class="setup-step"><p data-i18n="setup.3">Fai una domanda indicando il cliente preciso.</p></div>
+          <div class="setup-step"><p data-i18n="setup.4">Se serve, chiedi esplicitamente di controllare anche Gmail o WhatsApp.</p></div>
+        </div>
       </div>
     </section>
   </main>
@@ -368,294 +690,658 @@
   <footer>
     <div class="footer-shell">
       <span data-i18n="footer.product">Vera · Codex per commercialisti</span>
-      <a href="../vera/index.html" data-i18n="footer.back">Torna a Vera</a>
+      <div class="footer-links">
+        <a href="https://mparanza.com/support" data-i18n="footer.support">Supporto</a>
+        <a href="../vera/index.html" data-i18n="footer.back">Torna a Vera</a>
+      </div>
     </div>
   </footer>
 
   <script>
     const copy = {
       it: {
-        "meta.title": "Vera · Gmail e WhatsApp",
-        "meta.description": "Con Vera in Codex Desktop puoi cercare le email o leggere la chat WhatsApp di un cliente, una conversazione alla volta.",
+        "meta.title": "Vera · Archivio dello studio",
+        "meta.description": "Scopri come Vera indicizza i documenti sul Mac e consulta Gmail e WhatsApp Desktop quando serve.",
         "skip": "Vai al contenuto",
         "nav.label": "Sezioni",
-        "nav.routing": "Come funziona",
-        "nav.sources": "Gmail e WhatsApp",
-        "nav.boundary": "I tuoi dati",
-        "nav.setup": "Per iniziare",
+        "nav.archive": "La cartella",
+        "nav.method": "Regole e modello",
+        "nav.sources": "Le tre fonti",
+        "nav.example": "Esempio",
+        "nav.video": "Video",
+        "nav.data": "I dati",
         "language.label": "Lingua",
-        "hero.eyebrow": "Vera · Gmail e WhatsApp",
-        "hero.title": "Trova i messaggi di un cliente, senza riordinare tutto a mano.",
-        "hero.lead": "Scrivi a Vera cosa cerchi e per quale cliente. Vera consulta Gmail oppure la chat del cliente in WhatsApp Desktop e ti mostra da quali messaggi deriva la risposta.",
-        "hero.note": "Funziona solo in Codex Desktop e lavora su un cliente alla volta. Vera legge i messaggi necessari, ma non scrive, non risponde e non modifica nulla.",
-        "routing.index": "Come funziona",
-        "routing.title": "Tu indichi il cliente. Vera cerca.",
-        "routing.copy": "Non devi spostare le email in cartelle né esportare le chat.",
-        "routing.step1.title": "Fai una domanda",
-        "routing.step1.copy": "Per esempio: “Per Rossi Srl, trova cosa manca per chiudere l’IVA di giugno.”",
-        "routing.step2.title": "Conferma il contatto",
-        "routing.step2.copy": "Vera ti chiede di confermare l’indirizzo email o il numero WhatsApp corretto, così non mescola clienti diversi.",
-        "routing.step3.title": "Controlla il risultato",
-        "routing.step3.copy": "Vera cita i messaggi utilizzati ed esclude quelli ambigui.",
-        "sources.index": "Gmail e WhatsApp",
-        "sources.title": "Cerca dove il cliente ti ha scritto.",
-        "sources.intro": "Le due funzioni sono separate. Per ogni richiesta scegli Gmail oppure WhatsApp.",
+        "hero.eyebrow": "Vera · Archivio dello studio",
+        "hero.title": "Cerca nei documenti, nelle email e in WhatsApp con una sola domanda.",
+        "hero.lead": "Vera mantiene sul tuo Mac un indice dei documenti dello studio. Quando fai una domanda, cerca in quell’indice e, solo se glielo chiedi, consulta anche Gmail o una chat WhatsApp.",
+        "hero.note": "Funziona in Codex Desktop. I documenti formano l’archivio permanente; Gmail e WhatsApp vengono consultati in diretta, solo quando lo chiedi.",
+        "principle": "La cartella è l’archivio. L’indice è il catalogo che rende i documenti ricercabili.",
+        "archive.index": "Da dove si parte",
+        "archive.title": "1. Scegli la cartella dello studio.",
+        "archive.copy": "Può essere locale oppure condivisa e già sincronizzata sul Mac. Ogni cartella cliente diventa un perimetro di ricerca preciso.",
+        "archive.folder.aria": "Esempio di cartella dello studio con una sottocartella per cliente",
+        "archive.originals.label": "Gli originali",
+        "archive.originals.title": "Restano dove sono.",
+        "archive.originals.copy": "Vera legge la cartella senza spostare o rinominare i documenti.",
+        "archive.index.label": "Il catalogo locale",
+        "archive.index.title": "Un indice privato sul Mac.",
+        "archive.index.copy": "Contiene il testo ricercabile e il percorso del file originale, non una seconda copia della cartella.",
+        "archive.refresh.label": "Gli aggiornamenti",
+        "archive.refresh.title": "Nuovi, modificati, rimossi.",
+        "archive.refresh.copy": "Vera riconosce ciò che è cambiato e aggiorna soltanto la parte necessaria.",
+        "method.index": "Il punto importante",
+        "method.title": "La ricerca è meccanica. L’interpretazione usa Codex.",
+        "method.copy": "Sono due lavori distinti. Il primo costruisce e interroga il catalogo; il secondo capisce la domanda e prepara la risposta.",
+        "method.fixed.label": "Regole fisse e ripetibili",
+        "method.fixed.title": "Che cosa fa il codice",
+        "method.fixed.1": "Trova tutti i file supportati.",
+        "method.fixed.2": "Estrae e divide il testo in passaggi ricercabili.",
+        "method.fixed.3": "Calcola un’impronta del file per riconoscere le modifiche.",
+        "method.fixed.4": "Aggiunge, aggiorna o rimuove i file dall’indice.",
+        "method.fixed.5": "Mantiene separata la cartella di ogni cliente.",
+        "method.fixed.6": "Cerca parole e frasi nell’intero testo.",
+        "method.fixed.note": "Nessun modello decide quali documenti indicizzare o ignorare. Non viene creato un database di embeddings.",
+        "method.codex.label": "Giudizio del modello",
+        "method.codex.title": "Che cosa fa Codex",
+        "method.codex.1": "Interpreta la domanda e prepara le ricerche.",
+        "method.codex.2": "Valuta quali passaggi trovati sono davvero pertinenti.",
+        "method.codex.3": "Riapre il documento utile e controlla che non sia cambiato.",
+        "method.codex.4": "Costruisce una risposta con i riferimenti alle fonti originali.",
+        "method.codex.note": "I risultati della ricerca sono candidati: non diventano automaticamente fatti corretti solo perché sono stati trovati.",
+        "method.ocr": "Eccezione: per i documenti scansionati puoi attivare separatamente l’OCR. In quel caso un modello prova a trascrivere il testo presente nelle immagini e il risultato va verificato visivamente.",
+        "sources.index": "Le tre fonti",
+        "sources.title": "Documenti sempre disponibili. Gmail e WhatsApp solo su richiesta.",
+        "sources.copy": "Le tre ricerche restano separate. Puoi usare solo i documenti oppure chiedere esplicitamente di controllare anche i messaggi.",
         "sources.example.label": "Esempio",
-        "sources.note.label": "Da sapere",
-        "sources.gmail.availability": "Prima collega Gmail",
+        "sources.stays.label": "Dove rimane",
+        "sources.documents.label": "Fonte 1 · locale",
+        "sources.documents.title": "Documenti",
+        "sources.documents.copy": "Vera cerca nell’indice del cliente scelto e apre i file originali utili per verificare e citare i passaggi.",
+        "sources.documents.example": "“Che cosa prevede il contratto di Rossi sulla disdetta?”",
+        "sources.documents.stays": "Il documento resta nella cartella dello studio; l’indice resta sul Mac.",
+        "sources.gmail.label": "Fonte 2 · in diretta",
         "sources.gmail.title": "Gmail",
-        "sources.gmail.copy": "Collega il connector Gmail di OpenAI a Codex Desktop. Vera controlla che sia la casella giusta, cerca i messaggi dell’indirizzo confermato e legge soltanto quelli necessari.",
-        "sources.gmail.example": "“Cerca nelle email di amministrazione@rossi.it cosa abbiamo concordato sulla rateizzazione.”",
-        "sources.gmail.note": "La posta resta in Gmail. Vera non sposta, etichetta, invia o cancella email.",
-        "sources.whatsapp.availability": "Prima apri WhatsApp Desktop",
+        "sources.gmail.copy": "Colleghi separatamente il connector Gmail di OpenAI. Confermi l’indirizzo completo del cliente e Vera cerca in quel momento i messaggi necessari, in sola lettura.",
+        "sources.gmail.example": "“Controlla anche Gmail: Rossi ha scritto quando invierà l’estratto conto?”",
+        "sources.gmail.stays": "Le email restano in Gmail e non entrano nell’indice dei documenti.",
+        "sources.whatsapp.label": "Fonte 3 · sullo schermo",
         "sources.whatsapp.title": "WhatsApp Desktop",
-        "sources.whatsapp.copy": "Apri WhatsApp Desktop sullo stesso Mac e accedi normalmente. Codex usa Computer Use, la funzione che gli permette di controllare l’app sul tuo computer, per aprire la chat del numero confermato e leggere i messaggi utili. Vera non invia nulla.",
-        "sources.whatsapp.example": "“Apri la chat del +39… e trova quando Rossi ha promesso di inviare gli estratti conto.”",
-        "sources.whatsapp.note": "Aprire la chat può segnare i messaggi come letti. Vera può leggere soltanto ciò che WhatsApp Desktop rende visibile e non può garantire uno storico completo.",
-        "privacy.index": "I tuoi dati",
-        "privacy.title": "Vera non crea una copia completa delle tue email o chat.",
-        "privacy.gmail.title": "Gmail",
-        "privacy.gmail.copy": "Le email restano nella casella Gmail che hai collegato.",
-        "privacy.whatsapp.title": "WhatsApp",
-        "privacy.whatsapp.copy": "Le chat restano in WhatsApp Desktop.",
-        "privacy.vera.title": "Vera",
-        "privacy.vera.copy": "Vera non sincronizza la casella o le chat e non costruisce un nuovo archivio dei messaggi.",
-        "privacy.codex.title": "Codex e ChatGPT",
-        "privacy.codex.copy": "Quando Vera legge un messaggio per rispondere, quel contenuto può essere inviato a Codex/ChatGPT ed elaborato secondo le impostazioni del tuo account.",
+        "sources.whatsapp.copy": "Confermi il numero esatto. Codex usa Computer Use per aprire una chat individuale nell’app già autenticata e leggere soltanto i messaggi visibili che servono.",
+        "sources.whatsapp.example": "“Controlla nella chat di Rossi se ha confermato la data.”",
+        "sources.whatsapp.stays": "La chat resta in WhatsApp. Aprirla può segnare messaggi come letti e lo storico visibile può essere incompleto.",
+        "example.index": "Esempio concreto",
+        "example.title": "Una domanda, tre controlli, una risposta con le fonti.",
+        "example.copy": "Non devi salvare le email nella cartella Rossi o esportare la chat.",
+        "example.prompt": "“Per Rossi, cosa manca e quando ha promesso di inviarlo? Controlla documenti, Gmail e WhatsApp.”",
+        "example.step1.title": "Documenti",
+        "example.step1.copy": "Vera controlla nella cartella Rossi quali file sono presenti e quali mancano.",
+        "example.step2.title": "Gmail",
+        "example.step2.copy": "Cerca l’email in cui Rossi ha promesso una data di invio.",
+        "example.step3.title": "WhatsApp",
+        "example.step3.copy": "Controlla se nella chat individuale Rossi ha poi confermato quella data.",
+        "example.step4.title": "Risposta",
+        "example.step4.copy": "Riunisce ciò che ha trovato e indica da quale documento o messaggio deriva ogni punto.",
+        "example.result": "Il documento dice che manca l’estratto conto; l’email promette venerdì; WhatsApp conferma la stessa data.",
+        "people.index": "Uno studio piccolo",
+        "people.title": "È utile da soli e funziona anche in due.",
+        "people.copy": "La configurazione rimane semplice: una cartella esistente, un indice locale per persona, i propri account.",
+        "people.solo.title": "Se lavori da solo",
+        "people.solo.copy": "Configuri la cartella una volta. Poi puoi chiedere, per esempio, che cosa manca per Rossi o che cosa prevede il suo contratto senza aprire ogni file a mano.",
+        "people.two.title": "Se lavorate in due",
+        "people.two.copy": "Fabio e Paolo possono sincronizzare la stessa cartella dello studio sui loro Mac. Ognuno crea il proprio indice locale e collega i propri Gmail e WhatsApp.",
+        "people.two.note": "I documenti possono essere gli stessi; indice, email, chat e sessioni Codex restano separati per ciascun professionista.",
+        "video.aria": "Guarda il video sull’Archivio dello Studio su YouTube",
+        "video.meta": "Italiano · 1:22 · Si apre su YouTube",
+        "video.index": "Video",
+        "video.title": "Guarda il flusso completo.",
+        "video.copy": "Dalla cartella dello studio alla ricerca con regole fisse, poi Gmail e WhatsApp solo quando servono.",
+        "data.index": "Dove rimangono i dati",
+        "data.title": "Ogni fonte resta nel suo posto.",
+        "data.copy": "Vera non carica l’intero studio in un nuovo archivio online.",
+        "data.aria": "Dove rimangono i dati",
+        "data.header.source": "Fonte",
+        "data.header.stays": "Dove rimane",
+        "data.header.use": "Come viene usata",
+        "data.docs.source": "Documenti",
+        "data.docs.stays": "Cartella dello studio e indice locale sul Mac",
+        "data.docs.use": "Ricerca testuale; il file originale viene riaperto prima di citarlo",
+        "data.gmail.source": "Gmail",
+        "data.gmail.stays": "Nella casella Gmail collegata",
+        "data.gmail.use": "Ricerca in diretta, in sola lettura, solo quando richiesta",
+        "data.whatsapp.source": "WhatsApp",
+        "data.whatsapp.stays": "Nell’app WhatsApp Desktop",
+        "data.whatsapp.use": "Consultazione sullo schermo, solo quando richiesta",
+        "data.answer.source": "Risposta",
+        "data.answer.stays": "Nella tua sessione Codex",
+        "data.answer.use": "Combina soltanto i contenuti pertinenti trovati",
+        "data.boundary": "Gmail e WhatsApp vengono consultati solo quando lo chiedi e non vengono copiati nell’indice dei documenti.",
+        "data.context": "I contenuti selezionati per rispondere possono essere elaborati nel contesto di Codex/ChatGPT secondo le impostazioni del tuo account.",
         "setup.index": "Per iniziare",
-        "setup.title": "Apri Codex Desktop e chiedi a Vera di cercare.",
-        "setup.gmail": "Per Gmail: collega il connector Gmail di OpenAI a Codex Desktop.",
-        "setup.whatsapp": "Per WhatsApp: apri WhatsApp Desktop già autenticato sullo stesso Mac e assicurati che Computer Use sia disponibile.",
-        "setup.desktop": "Questa funzione non parte in ChatGPT web o mobile.",
+        "setup.title": "Apri Vera in Codex Desktop.",
+        "setup.desktop": "Questo flusso si ferma in ChatGPT web o mobile perché deve accedere alla cartella locale e, per WhatsApp, a Computer Use.",
+        "setup.1": "Indica la cartella dello studio che usi già.",
+        "setup.2": "Chiedi a Vera di configurare e aggiornare l’indice.",
+        "setup.3": "Fai una domanda indicando il cliente preciso.",
+        "setup.4": "Se serve, chiedi esplicitamente di controllare anche Gmail o WhatsApp.",
         "footer.product": "Vera · Codex per commercialisti",
+        "footer.support": "Supporto",
         "footer.back": "Torna a Vera"
       },
       en: {
-        "meta.title": "Vera · Gmail and WhatsApp",
-        "meta.description": "With Vera in Codex Desktop, you can search a client’s emails or read their WhatsApp chat, one conversation at a time.",
+        "meta.title": "Vera · Studio archive",
+        "meta.description": "See how Vera indexes documents on the Mac and checks Gmail and WhatsApp Desktop when needed.",
         "skip": "Skip to content",
         "nav.label": "Sections",
-        "nav.routing": "How it works",
-        "nav.sources": "Gmail and WhatsApp",
-        "nav.boundary": "Your data",
-        "nav.setup": "Get started",
+        "nav.archive": "The folder",
+        "nav.method": "Rules and model",
+        "nav.sources": "Three sources",
+        "nav.example": "Example",
+        "nav.video": "Video",
+        "nav.data": "The data",
         "language.label": "Language",
-        "hero.eyebrow": "Vera · Gmail and WhatsApp",
-        "hero.title": "Find a client’s messages without sorting everything by hand.",
-        "hero.lead": "Tell Vera what you need and which client to check. Vera searches Gmail or reads the client’s chat in WhatsApp Desktop, then shows which messages support the answer.",
-        "hero.note": "This works only in Codex Desktop and handles one client at a time. Vera reads the messages needed, but never writes, replies, or changes anything.",
-        "routing.index": "How it works",
-        "routing.title": "You name the client. Vera searches.",
-        "routing.copy": "You do not need to move emails into folders or export chats.",
-        "routing.step1.title": "Ask a question",
-        "routing.step1.copy": "For example: “For Rossi Ltd, find what is missing to close the June VAT return.”",
-        "routing.step2.title": "Confirm the contact",
-        "routing.step2.copy": "Vera asks you to confirm the correct email address or WhatsApp number so different clients are not mixed.",
-        "routing.step3.title": "Check the result",
-        "routing.step3.copy": "Vera cites the messages it used and excludes ambiguous ones.",
-        "sources.index": "Gmail and WhatsApp",
-        "sources.title": "Search where the client wrote to you.",
-        "sources.intro": "The two functions are separate. Choose Gmail or WhatsApp for each request.",
+        "hero.eyebrow": "Vera · Studio archive",
+        "hero.title": "Search documents, email, and WhatsApp with one question.",
+        "hero.lead": "Vera maintains an index of the studio’s documents on your Mac. When you ask a question, it searches that index and, only when requested, also checks Gmail or a WhatsApp chat.",
+        "hero.note": "Works in Codex Desktop. Documents form the permanent archive; Gmail and WhatsApp are checked live only when you ask.",
+        "principle": "The folder is the archive. The index is the catalog that makes the documents searchable.",
+        "archive.index": "Where it starts",
+        "archive.title": "1. Choose the studio folder.",
+        "archive.copy": "It can be local or shared and already synced to the Mac. Each client folder becomes an exact search scope.",
+        "archive.folder.aria": "Example studio folder with one subfolder for each client",
+        "archive.originals.label": "Original files",
+        "archive.originals.title": "They stay where they are.",
+        "archive.originals.copy": "Vera reads the folder without moving or renaming documents.",
+        "archive.index.label": "The local catalog",
+        "archive.index.title": "A private index on the Mac.",
+        "archive.index.copy": "It contains searchable text and the original file path, not a second copy of the folder.",
+        "archive.refresh.label": "Updates",
+        "archive.refresh.title": "New, changed, removed.",
+        "archive.refresh.copy": "Vera recognises what changed and updates only the necessary part.",
+        "method.index": "The important distinction",
+        "method.title": "Retrieval is mechanical. Interpretation uses Codex.",
+        "method.copy": "These are two separate jobs. The first builds and searches the catalog; the second understands the question and prepares the answer.",
+        "method.fixed.label": "Fixed, repeatable rules",
+        "method.fixed.title": "What the code does",
+        "method.fixed.1": "Finds every supported file.",
+        "method.fixed.2": "Extracts and splits text into searchable passages.",
+        "method.fixed.3": "Calculates a file fingerprint to recognise changes.",
+        "method.fixed.4": "Adds, updates, or removes files from the index.",
+        "method.fixed.5": "Keeps each client folder separate.",
+        "method.fixed.6": "Searches words and phrases across the full text.",
+        "method.fixed.note": "No model decides which documents to index or ignore. No embedding database is created.",
+        "method.codex.label": "Model judgment",
+        "method.codex.title": "What Codex does",
+        "method.codex.1": "Interprets the question and prepares searches.",
+        "method.codex.2": "Judges which retrieved passages are actually relevant.",
+        "method.codex.3": "Reopens a useful document and checks that it has not changed.",
+        "method.codex.4": "Builds an answer with references to the original sources.",
+        "method.codex.note": "Search results are candidates: being found does not automatically make them correct facts.",
+        "method.ocr": "Exception: you can separately enable OCR for scanned documents. A model then attempts to transcribe text from images, and the result needs visual confirmation.",
+        "sources.index": "The three sources",
+        "sources.title": "Documents are always available. Gmail and WhatsApp only on request.",
+        "sources.copy": "The three searches remain separate. Use only the documents or explicitly ask Vera to check messages too.",
         "sources.example.label": "Example",
-        "sources.note.label": "Good to know",
-        "sources.gmail.availability": "Connect Gmail first",
+        "sources.stays.label": "Where it stays",
+        "sources.documents.label": "Source 1 · local",
+        "sources.documents.title": "Documents",
+        "sources.documents.copy": "Vera searches the selected client’s index and opens useful original files to verify and cite passages.",
+        "sources.documents.example": "“What does Rossi’s contract say about termination?”",
+        "sources.documents.stays": "The document stays in the studio folder; the index stays on the Mac.",
+        "sources.gmail.label": "Source 2 · live",
         "sources.gmail.title": "Gmail",
-        "sources.gmail.copy": "Connect OpenAI’s Gmail connector to Codex Desktop. Vera checks that it is the right mailbox, searches messages from the confirmed address, and reads only what is needed.",
-        "sources.gmail.example": "“Search emails from accounts@rossi.example and find what we agreed about the payment plan.”",
-        "sources.gmail.note": "Mail stays in Gmail. Vera does not move, label, send, or delete email.",
-        "sources.whatsapp.availability": "Open WhatsApp Desktop first",
+        "sources.gmail.copy": "Connect OpenAI’s Gmail connector separately. Confirm the client’s full address, and Vera searches the required messages at that moment in read-only mode.",
+        "sources.gmail.example": "“Also check Gmail: did Rossi say when the bank statement will arrive?”",
+        "sources.gmail.stays": "Email stays in Gmail and does not enter the document index.",
+        "sources.whatsapp.label": "Source 3 · on screen",
         "sources.whatsapp.title": "WhatsApp Desktop",
-        "sources.whatsapp.copy": "Open WhatsApp Desktop on the same Mac and sign in normally. Codex uses Computer Use, the function that lets it control an app on your computer, to open the confirmed number’s chat and read the useful messages. Vera sends nothing.",
-        "sources.whatsapp.example": "“Open the chat with +39… and find when Rossi promised to send the bank statements.”",
-        "sources.whatsapp.note": "Opening the chat may mark messages as read. Vera can read only what WhatsApp Desktop makes visible and cannot guarantee a complete history.",
-        "privacy.index": "Your data",
-        "privacy.title": "Vera does not create a complete copy of your emails or chats.",
-        "privacy.gmail.title": "Gmail",
-        "privacy.gmail.copy": "Emails stay in the Gmail mailbox you connected.",
-        "privacy.whatsapp.title": "WhatsApp",
-        "privacy.whatsapp.copy": "Chats stay in WhatsApp Desktop.",
-        "privacy.vera.title": "Vera",
-        "privacy.vera.copy": "Vera does not synchronize the mailbox or chats and does not build a new message archive.",
-        "privacy.codex.title": "Codex and ChatGPT",
-        "privacy.codex.copy": "When Vera reads a message to answer you, that content may be sent to Codex/ChatGPT and processed under your account settings.",
-        "setup.index": "Get started",
-        "setup.title": "Open Codex Desktop and ask Vera to search.",
-        "setup.gmail": "For Gmail: connect OpenAI’s Gmail connector to Codex Desktop.",
-        "setup.whatsapp": "For WhatsApp: open an already signed-in WhatsApp Desktop on the same Mac and make sure Computer Use is available.",
-        "setup.desktop": "This function does not start in ChatGPT on the web or mobile.",
+        "sources.whatsapp.copy": "Confirm the exact number. Codex uses Computer Use to open one-to-one chat in the signed-in app and read only the visible messages needed.",
+        "sources.whatsapp.example": "“Check Rossi’s chat to see whether the date was confirmed.”",
+        "sources.whatsapp.stays": "The chat stays in WhatsApp. Opening it may mark messages as read, and visible history may be incomplete.",
+        "example.index": "A concrete example",
+        "example.title": "One question, three checks, one sourced answer.",
+        "example.copy": "You do not need to save email in the Rossi folder or export the chat.",
+        "example.prompt": "“For Rossi, what is missing and when did he promise to send it? Check documents, Gmail, and WhatsApp.”",
+        "example.step1.title": "Documents",
+        "example.step1.copy": "Vera checks which files are present and missing in the Rossi folder.",
+        "example.step2.title": "Gmail",
+        "example.step2.copy": "It finds the email where Rossi promised a delivery date.",
+        "example.step3.title": "WhatsApp",
+        "example.step3.copy": "It checks whether Rossi later confirmed that date in the one-to-one chat.",
+        "example.step4.title": "Answer",
+        "example.step4.copy": "It brings the findings together and shows which document or message supports each point.",
+        "example.result": "The documents show the statement is missing; the email promises Friday; WhatsApp confirms the same date.",
+        "people.index": "A small studio",
+        "people.title": "Useful for one person and workable for two.",
+        "people.copy": "Setup stays simple: one existing folder, one local index per person, and each person’s own accounts.",
+        "people.solo.title": "If you work alone",
+        "people.solo.copy": "Configure the folder once. Then ask what is missing for Rossi or what his contract says without opening every file manually.",
+        "people.two.title": "If two people work together",
+        "people.two.copy": "Fabio and Paolo can sync the same studio folder to their Macs. Each creates a local index and connects their own Gmail and WhatsApp.",
+        "people.two.note": "The documents may be the same; the index, email, chats, and Codex sessions remain separate for each professional.",
+        "video.aria": "Watch the Studio Archive video on YouTube",
+        "video.meta": "Italian audio · 1:22 · Opens on YouTube",
+        "video.index": "Video",
+        "video.title": "See the complete workflow.",
+        "video.copy": "From the studio folder to fixed-rule retrieval, then Gmail and WhatsApp only when needed.",
+        "data.index": "Where the data stays",
+        "data.title": "Each source stays in its place.",
+        "data.copy": "Vera does not upload the whole studio into a new online archive.",
+        "data.aria": "Where the data stays",
+        "data.header.source": "Source",
+        "data.header.stays": "Where it stays",
+        "data.header.use": "How it is used",
+        "data.docs.source": "Documents",
+        "data.docs.stays": "Studio folder and local index on the Mac",
+        "data.docs.use": "Text search; the original file is reopened before citation",
+        "data.gmail.source": "Gmail",
+        "data.gmail.stays": "In the connected Gmail mailbox",
+        "data.gmail.use": "Live, read-only search only when requested",
+        "data.whatsapp.source": "WhatsApp",
+        "data.whatsapp.stays": "In the WhatsApp Desktop app",
+        "data.whatsapp.use": "On-screen inspection only when requested",
+        "data.answer.source": "Answer",
+        "data.answer.stays": "In your Codex session",
+        "data.answer.use": "Combines only the relevant content found",
+        "data.boundary": "Gmail and WhatsApp are checked only when you ask and are not copied into the document index.",
+        "data.context": "Content selected for an answer may be processed in the Codex/ChatGPT context according to your account settings.",
+        "setup.index": "Getting started",
+        "setup.title": "Open Vera in Codex Desktop.",
+        "setup.desktop": "This workflow stops in ChatGPT on the web or mobile because it needs access to the local folder and, for WhatsApp, Computer Use.",
+        "setup.1": "Point Vera to the studio folder you already use.",
+        "setup.2": "Ask Vera to configure and refresh the index.",
+        "setup.3": "Ask a question and name the exact client.",
+        "setup.4": "When needed, explicitly ask to check Gmail or WhatsApp too.",
         "footer.product": "Vera · Codex for accountants",
+        "footer.support": "Support",
         "footer.back": "Back to Vera"
       },
       fr: {
-        "meta.title": "Vera · Gmail et WhatsApp",
-        "meta.description": "Avec Vera dans Codex Desktop, recherchez les e-mails ou consultez la conversation WhatsApp d’un client, une conversation à la fois.",
+        "meta.title": "Vera · Archives du cabinet",
+        "meta.description": "Découvrez comment Vera indexe les documents sur le Mac et consulte Gmail et WhatsApp Desktop si nécessaire.",
         "skip": "Aller au contenu",
         "nav.label": "Sections",
-        "nav.routing": "Fonctionnement",
-        "nav.sources": "Gmail et WhatsApp",
-        "nav.boundary": "Vos données",
-        "nav.setup": "Commencer",
+        "nav.archive": "Le dossier",
+        "nav.method": "Règles et modèle",
+        "nav.sources": "Trois sources",
+        "nav.example": "Exemple",
+        "nav.video": "Vidéo",
+        "nav.data": "Les données",
         "language.label": "Langue",
-        "hero.eyebrow": "Vera · Gmail et WhatsApp",
-        "hero.title": "Retrouvez les messages d’un client sans tout classer à la main.",
-        "hero.lead": "Dites à Vera ce que vous cherchez et pour quel client. Vera recherche dans Gmail ou consulte la conversation du client dans WhatsApp Desktop, puis indique les messages qui étayent la réponse.",
-        "hero.note": "Cette fonction marche uniquement dans Codex Desktop et traite un client à la fois. Vera lit les messages nécessaires, mais n’écrit, ne répond et ne modifie rien.",
-        "routing.index": "Fonctionnement",
-        "routing.title": "Vous indiquez le client. Vera recherche.",
-        "routing.copy": "Inutile de déplacer les e-mails dans des dossiers ou d’exporter les conversations.",
-        "routing.step1.title": "Posez une question",
-        "routing.step1.copy": "Par exemple : « Pour Rossi SARL, trouve ce qui manque pour clôturer la TVA de juin. »",
-        "routing.step2.title": "Confirmez le contact",
-        "routing.step2.copy": "Vera vous demande de confirmer l’adresse e-mail ou le numéro WhatsApp exact afin de ne pas mélanger plusieurs clients.",
-        "routing.step3.title": "Vérifiez le résultat",
-        "routing.step3.copy": "Vera cite les messages utilisés et écarte ceux qui sont ambigus.",
-        "sources.index": "Gmail et WhatsApp",
-        "sources.title": "Recherchez là où le client vous a écrit.",
-        "sources.intro": "Les deux fonctions sont séparées. Choisissez Gmail ou WhatsApp pour chaque demande.",
+        "hero.eyebrow": "Vera · Archives du cabinet",
+        "hero.title": "Recherchez dans les documents, les e-mails et WhatsApp avec une seule question.",
+        "hero.lead": "Vera conserve sur votre Mac un index des documents du cabinet. Lorsque vous posez une question, elle recherche dans cet index et, uniquement si vous le demandez, consulte aussi Gmail ou une conversation WhatsApp.",
+        "hero.note": "Fonctionne dans Codex Desktop. Les documents forment l’archive permanente ; Gmail et WhatsApp sont consultés en direct uniquement sur demande.",
+        "principle": "Le dossier est l’archive. L’index est le catalogue qui rend les documents consultables.",
+        "archive.index": "Le point de départ",
+        "archive.title": "1. Choisissez le dossier du cabinet.",
+        "archive.copy": "Il peut être local ou partagé et déjà synchronisé sur le Mac. Chaque dossier client devient un périmètre de recherche précis.",
+        "archive.folder.aria": "Exemple de dossier du cabinet avec un sous-dossier par client",
+        "archive.originals.label": "Les originaux",
+        "archive.originals.title": "Ils restent à leur place.",
+        "archive.originals.copy": "Vera lit le dossier sans déplacer ni renommer les documents.",
+        "archive.index.label": "Le catalogue local",
+        "archive.index.title": "Un index privé sur le Mac.",
+        "archive.index.copy": "Il contient le texte consultable et le chemin du fichier original, pas une seconde copie du dossier.",
+        "archive.refresh.label": "Les mises à jour",
+        "archive.refresh.title": "Nouveaux, modifiés, supprimés.",
+        "archive.refresh.copy": "Vera reconnaît ce qui a changé et n’actualise que la partie nécessaire.",
+        "method.index": "La distinction importante",
+        "method.title": "La recherche est mécanique. L’interprétation utilise Codex.",
+        "method.copy": "Ce sont deux tâches distinctes. La première construit et interroge le catalogue ; la seconde comprend la question et prépare la réponse.",
+        "method.fixed.label": "Règles fixes et reproductibles",
+        "method.fixed.title": "Ce que fait le code",
+        "method.fixed.1": "Repère tous les fichiers pris en charge.",
+        "method.fixed.2": "Extrait et découpe le texte en passages consultables.",
+        "method.fixed.3": "Calcule une empreinte du fichier pour détecter les changements.",
+        "method.fixed.4": "Ajoute, actualise ou retire les fichiers de l’index.",
+        "method.fixed.5": "Maintient le dossier de chaque client séparé.",
+        "method.fixed.6": "Recherche des mots et expressions dans tout le texte.",
+        "method.fixed.note": "Aucun modèle ne décide quels documents indexer ou ignorer. Aucune base d’embeddings n’est créée.",
+        "method.codex.label": "Jugement du modèle",
+        "method.codex.title": "Ce que fait Codex",
+        "method.codex.1": "Interprète la question et prépare les recherches.",
+        "method.codex.2": "Détermine quels passages trouvés sont réellement pertinents.",
+        "method.codex.3": "Rouvre le document utile et vérifie qu’il n’a pas changé.",
+        "method.codex.4": "Prépare une réponse avec des références aux sources originales.",
+        "method.codex.note": "Les résultats sont des candidats : être trouvé ne transforme pas automatiquement un passage en fait correct.",
+        "method.ocr": "Exception : vous pouvez activer séparément l’OCR pour les documents numérisés. Un modèle tente alors de transcrire le texte des images et le résultat doit être vérifié visuellement.",
+        "sources.index": "Les trois sources",
+        "sources.title": "Documents toujours disponibles. Gmail et WhatsApp uniquement sur demande.",
+        "sources.copy": "Les trois recherches restent séparées. Utilisez uniquement les documents ou demandez explicitement à Vera de vérifier aussi les messages.",
         "sources.example.label": "Exemple",
-        "sources.note.label": "À savoir",
-        "sources.gmail.availability": "Connectez d’abord Gmail",
+        "sources.stays.label": "Où cela reste",
+        "sources.documents.label": "Source 1 · locale",
+        "sources.documents.title": "Documents",
+        "sources.documents.copy": "Vera recherche dans l’index du client choisi et ouvre les fichiers originaux utiles pour vérifier et citer les passages.",
+        "sources.documents.example": "« Que prévoit le contrat de Rossi concernant la résiliation ? »",
+        "sources.documents.stays": "Le document reste dans le dossier du cabinet ; l’index reste sur le Mac.",
+        "sources.gmail.label": "Source 2 · en direct",
         "sources.gmail.title": "Gmail",
-        "sources.gmail.copy": "Connectez le connecteur Gmail d’OpenAI à Codex Desktop. Vera vérifie qu’il s’agit de la bonne boîte, recherche les messages de l’adresse confirmée et lit uniquement ceux qui sont nécessaires.",
-        "sources.gmail.example": "« Recherche dans les e-mails de comptabilite@rossi.example ce que nous avons convenu pour l’échéancier. »",
-        "sources.gmail.note": "Les e-mails restent dans Gmail. Vera ne déplace, n’étiquette, n’envoie et ne supprime aucun e-mail.",
-        "sources.whatsapp.availability": "Ouvrez d’abord WhatsApp Desktop",
+        "sources.gmail.copy": "Connectez séparément le connecteur Gmail d’OpenAI. Confirmez l’adresse complète du client et Vera recherche à cet instant les messages nécessaires en lecture seule.",
+        "sources.gmail.example": "« Vérifie aussi Gmail : Rossi a-t-il indiqué quand il enverrait le relevé ? »",
+        "sources.gmail.stays": "Les e-mails restent dans Gmail et n’entrent pas dans l’index documentaire.",
+        "sources.whatsapp.label": "Source 3 · à l’écran",
         "sources.whatsapp.title": "WhatsApp Desktop",
-        "sources.whatsapp.copy": "Ouvrez WhatsApp Desktop sur le même Mac et connectez-vous normalement. Codex utilise Computer Use, la fonction qui lui permet de contrôler une application sur votre ordinateur, pour ouvrir la conversation du numéro confirmé et lire les messages utiles. Vera n’envoie rien.",
-        "sources.whatsapp.example": "« Ouvre la conversation du +39… et trouve quand Rossi a promis d’envoyer les relevés bancaires. »",
-        "sources.whatsapp.note": "Ouvrir la conversation peut marquer des messages comme lus. Vera ne peut lire que ce que WhatsApp Desktop affiche et ne peut pas garantir un historique complet.",
-        "privacy.index": "Vos données",
-        "privacy.title": "Vera ne crée pas de copie complète de vos e-mails ou conversations.",
-        "privacy.gmail.title": "Gmail",
-        "privacy.gmail.copy": "Les e-mails restent dans la boîte Gmail que vous avez connectée.",
-        "privacy.whatsapp.title": "WhatsApp",
-        "privacy.whatsapp.copy": "Les conversations restent dans WhatsApp Desktop.",
-        "privacy.vera.title": "Vera",
-        "privacy.vera.copy": "Vera ne synchronise ni la boîte ni les conversations et ne crée pas de nouvelle archive de messages.",
-        "privacy.codex.title": "Codex et ChatGPT",
-        "privacy.codex.copy": "Lorsque Vera lit un message pour vous répondre, ce contenu peut être envoyé à Codex/ChatGPT et traité selon les paramètres de votre compte.",
-        "setup.index": "Commencer",
-        "setup.title": "Ouvrez Codex Desktop et demandez à Vera de rechercher.",
-        "setup.gmail": "Pour Gmail : connectez le connecteur Gmail d’OpenAI à Codex Desktop.",
-        "setup.whatsapp": "Pour WhatsApp : ouvrez WhatsApp Desktop déjà connecté sur le même Mac et vérifiez que Computer Use est disponible.",
-        "setup.desktop": "Cette fonction ne démarre pas dans ChatGPT sur le web ou mobile.",
+        "sources.whatsapp.copy": "Confirmez le numéro exact. Codex utilise Computer Use pour ouvrir une conversation individuelle dans l’application connectée et lire uniquement les messages visibles nécessaires.",
+        "sources.whatsapp.example": "« Vérifie dans la conversation de Rossi si la date est confirmée. »",
+        "sources.whatsapp.stays": "La conversation reste dans WhatsApp. Son ouverture peut marquer des messages comme lus et l’historique visible peut être incomplet.",
+        "example.index": "Un exemple concret",
+        "example.title": "Une question, trois contrôles, une réponse avec ses sources.",
+        "example.copy": "Vous n’avez pas à enregistrer les e-mails dans le dossier Rossi ni à exporter la conversation.",
+        "example.prompt": "« Pour Rossi, que manque-t-il et quand a-t-il promis de l’envoyer ? Vérifie les documents, Gmail et WhatsApp. »",
+        "example.step1.title": "Documents",
+        "example.step1.copy": "Vera vérifie les fichiers présents et manquants dans le dossier Rossi.",
+        "example.step2.title": "Gmail",
+        "example.step2.copy": "Elle trouve l’e-mail dans lequel Rossi a promis une date d’envoi.",
+        "example.step3.title": "WhatsApp",
+        "example.step3.copy": "Elle vérifie si Rossi a ensuite confirmé cette date dans la conversation individuelle.",
+        "example.step4.title": "Réponse",
+        "example.step4.copy": "Elle réunit les résultats et indique quel document ou message étaye chaque point.",
+        "example.result": "Les documents montrent que le relevé manque ; l’e-mail promet vendredi ; WhatsApp confirme la même date.",
+        "people.index": "Un petit cabinet",
+        "people.title": "Utile seul et adapté au travail à deux.",
+        "people.copy": "La configuration reste simple : un dossier existant, un index local par personne et les comptes de chacun.",
+        "people.solo.title": "Si vous travaillez seul",
+        "people.solo.copy": "Configurez le dossier une fois. Demandez ensuite ce qui manque pour Rossi ou ce que prévoit son contrat sans ouvrir chaque fichier.",
+        "people.two.title": "Si vous travaillez à deux",
+        "people.two.copy": "Fabio et Paolo peuvent synchroniser le même dossier du cabinet sur leurs Mac. Chacun crée son index local et connecte ses propres Gmail et WhatsApp.",
+        "people.two.note": "Les documents peuvent être identiques ; l’index, les e-mails, les conversations et les sessions Codex restent séparés pour chaque professionnel.",
+        "video.aria": "Regarder la vidéo sur les Archives du cabinet sur YouTube",
+        "video.meta": "Audio italien · 1:22 · S’ouvre sur YouTube",
+        "video.index": "Vidéo",
+        "video.title": "Découvrez le parcours complet.",
+        "video.copy": "Du dossier du cabinet à la recherche selon des règles fixes, puis Gmail et WhatsApp uniquement si nécessaire.",
+        "data.index": "Où restent les données",
+        "data.title": "Chaque source reste à sa place.",
+        "data.copy": "Vera ne téléverse pas tout le cabinet dans une nouvelle archive en ligne.",
+        "data.aria": "Où restent les données",
+        "data.header.source": "Source",
+        "data.header.stays": "Où elle reste",
+        "data.header.use": "Comment elle est utilisée",
+        "data.docs.source": "Documents",
+        "data.docs.stays": "Dossier du cabinet et index local sur le Mac",
+        "data.docs.use": "Recherche textuelle ; le fichier original est rouvert avant citation",
+        "data.gmail.source": "Gmail",
+        "data.gmail.stays": "Dans la boîte Gmail connectée",
+        "data.gmail.use": "Recherche en direct et en lecture seule, uniquement sur demande",
+        "data.whatsapp.source": "WhatsApp",
+        "data.whatsapp.stays": "Dans l’application WhatsApp Desktop",
+        "data.whatsapp.use": "Consultation à l’écran, uniquement sur demande",
+        "data.answer.source": "Réponse",
+        "data.answer.stays": "Dans votre session Codex",
+        "data.answer.use": "Réunit uniquement les contenus pertinents trouvés",
+        "data.boundary": "Gmail et WhatsApp sont consultés uniquement à votre demande et ne sont pas copiés dans l’index documentaire.",
+        "data.context": "Les contenus sélectionnés pour répondre peuvent être traités dans le contexte Codex/ChatGPT selon les paramètres de votre compte.",
+        "setup.index": "Pour commencer",
+        "setup.title": "Ouvrez Vera dans Codex Desktop.",
+        "setup.desktop": "Ce parcours s’arrête dans ChatGPT web ou mobile, car il doit accéder au dossier local et, pour WhatsApp, à Computer Use.",
+        "setup.1": "Indiquez le dossier du cabinet que vous utilisez déjà.",
+        "setup.2": "Demandez à Vera de configurer et d’actualiser l’index.",
+        "setup.3": "Posez une question en indiquant le client exact.",
+        "setup.4": "Si nécessaire, demandez explicitement de vérifier aussi Gmail ou WhatsApp.",
         "footer.product": "Vera · Codex pour experts-comptables",
+        "footer.support": "Assistance",
         "footer.back": "Retour à Vera"
       },
       de: {
-        "meta.title": "Vera · Gmail und WhatsApp",
-        "meta.description": "Mit Vera in Codex Desktop können Sie E-Mails oder den WhatsApp-Chat eines Mandanten durchsuchen – jeweils eine Unterhaltung.",
-        "skip": "Zum Inhalt springen",
+        "meta.title": "Vera · Kanzleiarchiv",
+        "meta.description": "Erfahren Sie, wie Vera Dokumente auf dem Mac indexiert und bei Bedarf Gmail und WhatsApp Desktop prüft.",
+        "skip": "Zum Inhalt",
         "nav.label": "Abschnitte",
-        "nav.routing": "So funktioniert es",
-        "nav.sources": "Gmail und WhatsApp",
-        "nav.boundary": "Ihre Daten",
-        "nav.setup": "Erste Schritte",
+        "nav.archive": "Der Ordner",
+        "nav.method": "Regeln und Modell",
+        "nav.sources": "Drei Quellen",
+        "nav.example": "Beispiel",
+        "nav.video": "Video",
+        "nav.data": "Die Daten",
         "language.label": "Sprache",
-        "hero.eyebrow": "Vera · Gmail und WhatsApp",
-        "hero.title": "Finden Sie Nachrichten eines Mandanten, ohne alles von Hand zu sortieren.",
-        "hero.lead": "Sagen Sie Vera, was Sie suchen und für welchen Mandanten. Vera durchsucht Gmail oder liest den Chat des Mandanten in WhatsApp Desktop und zeigt, welche Nachrichten die Antwort belegen.",
-        "hero.note": "Diese Funktion läuft nur in Codex Desktop und bearbeitet jeweils einen Mandanten. Vera liest die nötigen Nachrichten, schreibt, antwortet oder ändert aber nichts.",
-        "routing.index": "So funktioniert es",
-        "routing.title": "Sie nennen den Mandanten. Vera sucht.",
-        "routing.copy": "Sie müssen keine E-Mails in Ordner verschieben und keine Chats exportieren.",
-        "routing.step1.title": "Stellen Sie eine Frage",
-        "routing.step1.copy": "Zum Beispiel: „Finde für Rossi GmbH, was für den Abschluss der Juni-Umsatzsteuer noch fehlt.“",
-        "routing.step2.title": "Bestätigen Sie den Kontakt",
-        "routing.step2.copy": "Vera bittet Sie, die richtige E-Mail-Adresse oder WhatsApp-Nummer zu bestätigen, damit Mandanten nicht vermischt werden.",
-        "routing.step3.title": "Prüfen Sie das Ergebnis",
-        "routing.step3.copy": "Vera nennt die verwendeten Nachrichten und schließt mehrdeutige aus.",
-        "sources.index": "Gmail und WhatsApp",
-        "sources.title": "Suchen Sie dort, wo der Mandant Ihnen geschrieben hat.",
-        "sources.intro": "Die beiden Funktionen sind getrennt. Wählen Sie für jede Anfrage Gmail oder WhatsApp.",
+        "hero.eyebrow": "Vera · Kanzleiarchiv",
+        "hero.title": "Dokumente, E-Mails und WhatsApp mit einer einzigen Frage durchsuchen.",
+        "hero.lead": "Vera verwaltet auf Ihrem Mac einen Index der Kanzleidokumente. Wenn Sie eine Frage stellen, durchsucht Vera diesen Index und prüft nur auf Ihre ausdrückliche Bitte auch Gmail oder einen WhatsApp-Chat.",
+        "hero.note": "Funktioniert in Codex Desktop. Dokumente bilden das dauerhafte Archiv; Gmail und WhatsApp werden nur auf Anfrage live geprüft.",
+        "principle": "Der Ordner ist das Archiv. Der Index ist der Katalog, der die Dokumente durchsuchbar macht.",
+        "archive.index": "Der Ausgangspunkt",
+        "archive.title": "1. Kanzleiordner auswählen.",
+        "archive.copy": "Er kann lokal oder freigegeben und bereits mit dem Mac synchronisiert sein. Jeder Mandantenordner wird zu einem genauen Suchbereich.",
+        "archive.folder.aria": "Beispiel für einen Kanzleiordner mit einem Unterordner je Mandant",
+        "archive.originals.label": "Originaldateien",
+        "archive.originals.title": "Sie bleiben an ihrem Platz.",
+        "archive.originals.copy": "Vera liest den Ordner, ohne Dokumente zu verschieben oder umzubenennen.",
+        "archive.index.label": "Der lokale Katalog",
+        "archive.index.title": "Ein privater Index auf dem Mac.",
+        "archive.index.copy": "Er enthält durchsuchbaren Text und den ursprünglichen Dateipfad, keine zweite Kopie des Ordners.",
+        "archive.refresh.label": "Aktualisierungen",
+        "archive.refresh.title": "Neu, geändert, entfernt.",
+        "archive.refresh.copy": "Vera erkennt Änderungen und aktualisiert nur den notwendigen Teil.",
+        "method.index": "Die wichtige Trennung",
+        "method.title": "Die Suche ist mechanisch. Die Interpretation nutzt Codex.",
+        "method.copy": "Das sind zwei getrennte Aufgaben. Die erste erstellt und durchsucht den Katalog; die zweite versteht die Frage und bereitet die Antwort vor.",
+        "method.fixed.label": "Feste, wiederholbare Regeln",
+        "method.fixed.title": "Was der Code macht",
+        "method.fixed.1": "Findet alle unterstützten Dateien.",
+        "method.fixed.2": "Extrahiert Text und teilt ihn in durchsuchbare Abschnitte.",
+        "method.fixed.3": "Berechnet einen Dateifingerabdruck, um Änderungen zu erkennen.",
+        "method.fixed.4": "Fügt Dateien hinzu, aktualisiert oder entfernt sie aus dem Index.",
+        "method.fixed.5": "Hält jeden Mandantenordner getrennt.",
+        "method.fixed.6": "Sucht im gesamten Text nach Wörtern und Ausdrücken.",
+        "method.fixed.note": "Kein Modell entscheidet, welche Dokumente indexiert oder ignoriert werden. Es wird keine Embedding-Datenbank erstellt.",
+        "method.codex.label": "Modellurteil",
+        "method.codex.title": "Was Codex macht",
+        "method.codex.1": "Interpretiert die Frage und bereitet Suchanfragen vor.",
+        "method.codex.2": "Beurteilt, welche gefundenen Passagen wirklich relevant sind.",
+        "method.codex.3": "Öffnet das nützliche Dokument erneut und prüft, ob es unverändert ist.",
+        "method.codex.4": "Erstellt eine Antwort mit Verweisen auf die Originalquellen.",
+        "method.codex.note": "Suchergebnisse sind Kandidaten: Ein Treffer wird nicht automatisch zu einer korrekten Tatsache.",
+        "method.ocr": "Ausnahme: Für gescannte Dokumente können Sie OCR separat aktivieren. Ein Modell versucht dann, Text aus Bildern zu übertragen; das Ergebnis muss visuell geprüft werden.",
+        "sources.index": "Die drei Quellen",
+        "sources.title": "Dokumente jederzeit. Gmail und WhatsApp nur auf Anfrage.",
+        "sources.copy": "Die drei Suchen bleiben getrennt. Nutzen Sie nur die Dokumente oder bitten Sie Vera ausdrücklich, auch Nachrichten zu prüfen.",
         "sources.example.label": "Beispiel",
-        "sources.note.label": "Gut zu wissen",
-        "sources.gmail.availability": "Verbinden Sie zuerst Gmail",
+        "sources.stays.label": "Wo es bleibt",
+        "sources.documents.label": "Quelle 1 · lokal",
+        "sources.documents.title": "Dokumente",
+        "sources.documents.copy": "Vera durchsucht den Index des gewählten Mandanten und öffnet nützliche Originaldateien, um Passagen zu prüfen und zu zitieren.",
+        "sources.documents.example": "„Was steht in Rossis Vertrag zur Kündigung?“",
+        "sources.documents.stays": "Das Dokument bleibt im Kanzleiordner; der Index bleibt auf dem Mac.",
+        "sources.gmail.label": "Quelle 2 · live",
         "sources.gmail.title": "Gmail",
-        "sources.gmail.copy": "Verbinden Sie den Gmail-Connector von OpenAI mit Codex Desktop. Vera prüft, ob es das richtige Postfach ist, sucht Nachrichten der bestätigten Adresse und liest nur die benötigten.",
-        "sources.gmail.example": "„Suche in den E-Mails von buchhaltung@rossi.example, was wir zum Ratenplan vereinbart haben.“",
-        "sources.gmail.note": "E-Mails bleiben in Gmail. Vera verschiebt, kennzeichnet, sendet oder löscht keine E-Mails.",
-        "sources.whatsapp.availability": "Öffnen Sie zuerst WhatsApp Desktop",
+        "sources.gmail.copy": "Verbinden Sie den Gmail-Connector von OpenAI separat. Bestätigen Sie die vollständige Adresse; Vera sucht dann die benötigten Nachrichten live und nur lesend.",
+        "sources.gmail.example": "„Prüfe auch Gmail: Hat Rossi geschrieben, wann der Kontoauszug kommt?“",
+        "sources.gmail.stays": "E-Mails bleiben in Gmail und gelangen nicht in den Dokumentenindex.",
+        "sources.whatsapp.label": "Quelle 3 · auf dem Bildschirm",
         "sources.whatsapp.title": "WhatsApp Desktop",
-        "sources.whatsapp.copy": "Öffnen Sie WhatsApp Desktop auf demselben Mac und melden Sie sich normal an. Codex verwendet Computer Use, die Funktion zur Steuerung einer App auf Ihrem Computer, um den Chat der bestätigten Nummer zu öffnen und die relevanten Nachrichten zu lesen. Vera sendet nichts.",
-        "sources.whatsapp.example": "„Öffne den Chat mit +39… und finde, wann Rossi die Kontoauszüge zugesagt hat.“",
-        "sources.whatsapp.note": "Beim Öffnen des Chats können Nachrichten als gelesen markiert werden. Vera kann nur lesen, was WhatsApp Desktop anzeigt, und keinen vollständigen Verlauf garantieren.",
-        "privacy.index": "Ihre Daten",
-        "privacy.title": "Vera erstellt keine vollständige Kopie Ihrer E-Mails oder Chats.",
-        "privacy.gmail.title": "Gmail",
-        "privacy.gmail.copy": "E-Mails bleiben im verbundenen Gmail-Postfach.",
-        "privacy.whatsapp.title": "WhatsApp",
-        "privacy.whatsapp.copy": "Chats bleiben in WhatsApp Desktop.",
-        "privacy.vera.title": "Vera",
-        "privacy.vera.copy": "Vera synchronisiert weder Postfach noch Chats und baut kein neues Nachrichtenarchiv auf.",
-        "privacy.codex.title": "Codex und ChatGPT",
-        "privacy.codex.copy": "Wenn Vera eine Nachricht liest, um Ihnen zu antworten, kann dieser Inhalt an Codex/ChatGPT gesendet und gemäß Ihren Kontoeinstellungen verarbeitet werden.",
+        "sources.whatsapp.copy": "Bestätigen Sie die genaue Nummer. Codex öffnet mit Computer Use einen Einzelchat in der angemeldeten App und liest nur die benötigten sichtbaren Nachrichten.",
+        "sources.whatsapp.example": "„Prüfe im Chat mit Rossi, ob der Termin bestätigt wurde.“",
+        "sources.whatsapp.stays": "Der Chat bleibt in WhatsApp. Das Öffnen kann Nachrichten als gelesen markieren; der sichtbare Verlauf kann unvollständig sein.",
+        "example.index": "Ein konkretes Beispiel",
+        "example.title": "Eine Frage, drei Prüfungen, eine Antwort mit Quellen.",
+        "example.copy": "Sie müssen E-Mails nicht im Rossi-Ordner speichern und den Chat nicht exportieren.",
+        "example.prompt": "„Was fehlt bei Rossi und wann hat er die Zusendung versprochen? Prüfe Dokumente, Gmail und WhatsApp.“",
+        "example.step1.title": "Dokumente",
+        "example.step1.copy": "Vera prüft, welche Dateien im Rossi-Ordner vorhanden sind und fehlen.",
+        "example.step2.title": "Gmail",
+        "example.step2.copy": "Vera findet die E-Mail, in der Rossi einen Liefertermin zugesagt hat.",
+        "example.step3.title": "WhatsApp",
+        "example.step3.copy": "Vera prüft, ob Rossi diesen Termin später im Einzelchat bestätigt hat.",
+        "example.step4.title": "Antwort",
+        "example.step4.copy": "Vera führt die Funde zusammen und zeigt, welches Dokument oder welche Nachricht jeden Punkt stützt.",
+        "example.result": "Die Dokumente zeigen, dass der Auszug fehlt; die E-Mail verspricht Freitag; WhatsApp bestätigt dasselbe Datum.",
+        "people.index": "Eine kleine Kanzlei",
+        "people.title": "Allein nützlich und zu zweit einsetzbar.",
+        "people.copy": "Die Einrichtung bleibt einfach: ein vorhandener Ordner, ein lokaler Index pro Person und die eigenen Konten.",
+        "people.solo.title": "Wenn Sie allein arbeiten",
+        "people.solo.copy": "Konfigurieren Sie den Ordner einmal. Fragen Sie danach, was bei Rossi fehlt oder was im Vertrag steht, ohne jede Datei einzeln zu öffnen.",
+        "people.two.title": "Wenn zwei Personen zusammenarbeiten",
+        "people.two.copy": "Fabio und Paolo können denselben Kanzleiordner mit ihren Macs synchronisieren. Jeder erstellt einen lokalen Index und verbindet eigenes Gmail und WhatsApp.",
+        "people.two.note": "Die Dokumente können gleich sein; Index, E-Mails, Chats und Codex-Sitzungen bleiben für jeden Berufsträger getrennt.",
+        "video.aria": "Video zum Kanzleiarchiv auf YouTube ansehen",
+        "video.meta": "Italienischer Ton · 1:22 · Öffnet YouTube",
+        "video.index": "Video",
+        "video.title": "Den gesamten Ablauf ansehen.",
+        "video.copy": "Vom Kanzleiordner zur Suche nach festen Regeln, dann Gmail und WhatsApp nur bei Bedarf.",
+        "data.index": "Wo die Daten bleiben",
+        "data.title": "Jede Quelle bleibt an ihrem Platz.",
+        "data.copy": "Vera lädt nicht die gesamte Kanzlei in ein neues Online-Archiv.",
+        "data.aria": "Wo die Daten bleiben",
+        "data.header.source": "Quelle",
+        "data.header.stays": "Wo sie bleibt",
+        "data.header.use": "Wie sie verwendet wird",
+        "data.docs.source": "Dokumente",
+        "data.docs.stays": "Kanzleiordner und lokaler Index auf dem Mac",
+        "data.docs.use": "Textsuche; vor dem Zitieren wird die Originaldatei erneut geöffnet",
+        "data.gmail.source": "Gmail",
+        "data.gmail.stays": "Im verbundenen Gmail-Postfach",
+        "data.gmail.use": "Live-Suche, nur lesend und nur auf Anfrage",
+        "data.whatsapp.source": "WhatsApp",
+        "data.whatsapp.stays": "In der WhatsApp-Desktop-App",
+        "data.whatsapp.use": "Prüfung auf dem Bildschirm, nur auf Anfrage",
+        "data.answer.source": "Antwort",
+        "data.answer.stays": "In Ihrer Codex-Sitzung",
+        "data.answer.use": "Verbindet nur die gefundenen relevanten Inhalte",
+        "data.boundary": "Gmail und WhatsApp werden nur auf Ihre Bitte geprüft und nicht in den Dokumentenindex kopiert.",
+        "data.context": "Für die Antwort ausgewählte Inhalte können gemäß Ihren Kontoeinstellungen im Codex/ChatGPT-Kontext verarbeitet werden.",
         "setup.index": "Erste Schritte",
-        "setup.title": "Öffnen Sie Codex Desktop und bitten Sie Vera zu suchen.",
-        "setup.gmail": "Für Gmail: Verbinden Sie den Gmail-Connector von OpenAI mit Codex Desktop.",
-        "setup.whatsapp": "Für WhatsApp: Öffnen Sie das bereits angemeldete WhatsApp Desktop auf demselben Mac und stellen Sie sicher, dass Computer Use verfügbar ist.",
-        "setup.desktop": "Diese Funktion startet nicht in ChatGPT im Web oder auf Mobilgeräten.",
-        "footer.product": "Vera · Codex für Steuerberater",
+        "setup.title": "Vera in Codex Desktop öffnen.",
+        "setup.desktop": "Dieser Ablauf stoppt in ChatGPT im Web oder auf Mobilgeräten, da er auf den lokalen Ordner und für WhatsApp auf Computer Use zugreifen muss.",
+        "setup.1": "Nennen Sie Vera den bereits verwendeten Kanzleiordner.",
+        "setup.2": "Bitten Sie Vera, den Index einzurichten und zu aktualisieren.",
+        "setup.3": "Stellen Sie eine Frage und nennen Sie den genauen Mandanten.",
+        "setup.4": "Bitten Sie bei Bedarf ausdrücklich auch um eine Prüfung in Gmail oder WhatsApp.",
+        "footer.product": "Vera · Codex für Steuerberater und Buchhalter",
+        "footer.support": "Support",
         "footer.back": "Zurück zu Vera"
       },
       es: {
-        "meta.title": "Vera · Gmail y WhatsApp",
-        "meta.description": "Con Vera en Codex Desktop puedes buscar los correos o leer el chat de WhatsApp de un cliente, una conversación cada vez.",
+        "meta.title": "Vera · Archivo del despacho",
+        "meta.description": "Descubre cómo Vera indexa documentos en el Mac y consulta Gmail y WhatsApp Desktop cuando hace falta.",
         "skip": "Ir al contenido",
         "nav.label": "Secciones",
-        "nav.routing": "Cómo funciona",
-        "nav.sources": "Gmail y WhatsApp",
-        "nav.boundary": "Tus datos",
-        "nav.setup": "Cómo empezar",
+        "nav.archive": "La carpeta",
+        "nav.method": "Reglas y modelo",
+        "nav.sources": "Tres fuentes",
+        "nav.example": "Ejemplo",
+        "nav.video": "Vídeo",
+        "nav.data": "Los datos",
         "language.label": "Idioma",
-        "hero.eyebrow": "Vera · Gmail y WhatsApp",
-        "hero.title": "Encuentra los mensajes de un cliente sin ordenarlo todo a mano.",
-        "hero.lead": "Dile a Vera qué buscas y para qué cliente. Vera busca en Gmail o lee el chat del cliente en WhatsApp Desktop y muestra qué mensajes respaldan la respuesta.",
-        "hero.note": "Esta función solo funciona en Codex Desktop y trata un cliente cada vez. Vera lee los mensajes necesarios, pero no escribe, responde ni modifica nada.",
-        "routing.index": "Cómo funciona",
-        "routing.title": "Tú indicas el cliente. Vera busca.",
-        "routing.copy": "No tienes que mover correos a carpetas ni exportar chats.",
-        "routing.step1.title": "Haz una pregunta",
-        "routing.step1.copy": "Por ejemplo: «Para Rossi SL, encuentra qué falta para cerrar el IVA de junio».",
-        "routing.step2.title": "Confirma el contacto",
-        "routing.step2.copy": "Vera te pide que confirmes la dirección de correo o el número de WhatsApp correcto para no mezclar clientes.",
-        "routing.step3.title": "Comprueba el resultado",
-        "routing.step3.copy": "Vera cita los mensajes utilizados y excluye los ambiguos.",
-        "sources.index": "Gmail y WhatsApp",
-        "sources.title": "Busca donde el cliente te escribió.",
-        "sources.intro": "Las dos funciones son independientes. Elige Gmail o WhatsApp para cada solicitud.",
+        "hero.eyebrow": "Vera · Archivo del despacho",
+        "hero.title": "Busca en documentos, correos y WhatsApp con una sola pregunta.",
+        "hero.lead": "Vera mantiene en tu Mac un índice de los documentos del despacho. Cuando haces una pregunta, busca en ese índice y, solo si se lo pides, consulta también Gmail o un chat de WhatsApp.",
+        "hero.note": "Funciona en Codex Desktop. Los documentos forman el archivo permanente; Gmail y WhatsApp se consultan en directo solo cuando lo pides.",
+        "principle": "La carpeta es el archivo. El índice es el catálogo que permite buscar en los documentos.",
+        "archive.index": "El punto de partida",
+        "archive.title": "1. Elige la carpeta del despacho.",
+        "archive.copy": "Puede ser local o compartida y estar ya sincronizada con el Mac. Cada carpeta de cliente se convierte en un ámbito de búsqueda exacto.",
+        "archive.folder.aria": "Ejemplo de carpeta del despacho con una subcarpeta por cliente",
+        "archive.originals.label": "Los originales",
+        "archive.originals.title": "Permanecen donde están.",
+        "archive.originals.copy": "Vera lee la carpeta sin mover ni renombrar documentos.",
+        "archive.index.label": "El catálogo local",
+        "archive.index.title": "Un índice privado en el Mac.",
+        "archive.index.copy": "Contiene el texto en el que se puede buscar y la ruta del archivo original, no una segunda copia de la carpeta.",
+        "archive.refresh.label": "Las actualizaciones",
+        "archive.refresh.title": "Nuevos, modificados, eliminados.",
+        "archive.refresh.copy": "Vera reconoce qué ha cambiado y actualiza solo la parte necesaria.",
+        "method.index": "La distinción importante",
+        "method.title": "La búsqueda es mecánica. La interpretación usa Codex.",
+        "method.copy": "Son dos tareas distintas. La primera crea y consulta el catálogo; la segunda entiende la pregunta y prepara la respuesta.",
+        "method.fixed.label": "Reglas fijas y repetibles",
+        "method.fixed.title": "Lo que hace el código",
+        "method.fixed.1": "Encuentra todos los archivos compatibles.",
+        "method.fixed.2": "Extrae y divide el texto en fragmentos en los que se puede buscar.",
+        "method.fixed.3": "Calcula una huella del archivo para detectar cambios.",
+        "method.fixed.4": "Añade, actualiza o elimina archivos del índice.",
+        "method.fixed.5": "Mantiene separada la carpeta de cada cliente.",
+        "method.fixed.6": "Busca palabras y frases en todo el texto.",
+        "method.fixed.note": "Ningún modelo decide qué documentos indexar o ignorar. No se crea una base de datos de embeddings.",
+        "method.codex.label": "Criterio del modelo",
+        "method.codex.title": "Lo que hace Codex",
+        "method.codex.1": "Interpreta la pregunta y prepara las búsquedas.",
+        "method.codex.2": "Determina qué fragmentos encontrados son realmente pertinentes.",
+        "method.codex.3": "Vuelve a abrir el documento útil y comprueba que no haya cambiado.",
+        "method.codex.4": "Prepara una respuesta con referencias a las fuentes originales.",
+        "method.codex.note": "Los resultados son candidatos: que algo aparezca no lo convierte automáticamente en un hecho correcto.",
+        "method.ocr": "Excepción: puedes activar el OCR por separado para documentos escaneados. Un modelo intenta transcribir el texto de las imágenes y el resultado debe comprobarse visualmente.",
+        "sources.index": "Las tres fuentes",
+        "sources.title": "Documentos siempre disponibles. Gmail y WhatsApp solo cuando lo pides.",
+        "sources.copy": "Las tres búsquedas permanecen separadas. Usa solo los documentos o pide expresamente a Vera que consulte también los mensajes.",
         "sources.example.label": "Ejemplo",
-        "sources.note.label": "Conviene saber",
-        "sources.gmail.availability": "Primero conecta Gmail",
+        "sources.stays.label": "Dónde permanece",
+        "sources.documents.label": "Fuente 1 · local",
+        "sources.documents.title": "Documentos",
+        "sources.documents.copy": "Vera busca en el índice del cliente elegido y abre los archivos originales útiles para verificar y citar fragmentos.",
+        "sources.documents.example": "«¿Qué dice el contrato de Rossi sobre la rescisión?»",
+        "sources.documents.stays": "El documento permanece en la carpeta del despacho; el índice permanece en el Mac.",
+        "sources.gmail.label": "Fuente 2 · en directo",
         "sources.gmail.title": "Gmail",
-        "sources.gmail.copy": "Conecta el conector de Gmail de OpenAI a Codex Desktop. Vera comprueba que sea el buzón correcto, busca los mensajes de la dirección confirmada y lee solo los necesarios.",
-        "sources.gmail.example": "«Busca en los correos de contabilidad@rossi.example qué acordamos sobre el plan de pagos».",
-        "sources.gmail.note": "Los correos permanecen en Gmail. Vera no mueve, etiqueta, envía ni elimina correos.",
-        "sources.whatsapp.availability": "Primero abre WhatsApp Desktop",
+        "sources.gmail.copy": "Conecta por separado el conector de Gmail de OpenAI. Confirma la dirección completa del cliente y Vera busca en ese momento los mensajes necesarios en modo de solo lectura.",
+        "sources.gmail.example": "«Consulta también Gmail: ¿Rossi escribió cuándo enviará el extracto?»",
+        "sources.gmail.stays": "Los correos permanecen en Gmail y no entran en el índice de documentos.",
+        "sources.whatsapp.label": "Fuente 3 · en pantalla",
         "sources.whatsapp.title": "WhatsApp Desktop",
-        "sources.whatsapp.copy": "Abre WhatsApp Desktop en el mismo Mac e inicia sesión normalmente. Codex usa Computer Use, la función que le permite controlar una aplicación en tu ordenador, para abrir el chat del número confirmado y leer los mensajes útiles. Vera no envía nada.",
-        "sources.whatsapp.example": "«Abre el chat del +39… y encuentra cuándo Rossi prometió enviar los extractos bancarios».",
-        "sources.whatsapp.note": "Abrir el chat puede marcar mensajes como leídos. Vera solo puede leer lo que muestra WhatsApp Desktop y no puede garantizar un historial completo.",
-        "privacy.index": "Tus datos",
-        "privacy.title": "Vera no crea una copia completa de tus correos o chats.",
-        "privacy.gmail.title": "Gmail",
-        "privacy.gmail.copy": "Los correos permanecen en el buzón de Gmail que conectaste.",
-        "privacy.whatsapp.title": "WhatsApp",
-        "privacy.whatsapp.copy": "Los chats permanecen en WhatsApp Desktop.",
-        "privacy.vera.title": "Vera",
-        "privacy.vera.copy": "Vera no sincroniza el buzón ni los chats y no crea un nuevo archivo de mensajes.",
-        "privacy.codex.title": "Codex y ChatGPT",
-        "privacy.codex.copy": "Cuando Vera lee un mensaje para responderte, ese contenido puede enviarse a Codex/ChatGPT y procesarse según la configuración de tu cuenta.",
+        "sources.whatsapp.copy": "Confirma el número exacto. Codex usa Computer Use para abrir un chat individual en la aplicación autenticada y leer solo los mensajes visibles necesarios.",
+        "sources.whatsapp.example": "«Consulta el chat de Rossi para comprobar si confirmó la fecha.»",
+        "sources.whatsapp.stays": "El chat permanece en WhatsApp. Abrirlo puede marcar mensajes como leídos y el historial visible puede estar incompleto.",
+        "example.index": "Un ejemplo concreto",
+        "example.title": "Una pregunta, tres comprobaciones, una respuesta con fuentes.",
+        "example.copy": "No tienes que guardar los correos en la carpeta Rossi ni exportar el chat.",
+        "example.prompt": "«Para Rossi, ¿qué falta y cuándo prometió enviarlo? Consulta documentos, Gmail y WhatsApp.»",
+        "example.step1.title": "Documentos",
+        "example.step1.copy": "Vera comprueba qué archivos están disponibles y cuáles faltan en la carpeta Rossi.",
+        "example.step2.title": "Gmail",
+        "example.step2.copy": "Encuentra el correo en el que Rossi prometió una fecha de envío.",
+        "example.step3.title": "WhatsApp",
+        "example.step3.copy": "Comprueba si Rossi confirmó después esa fecha en el chat individual.",
+        "example.step4.title": "Respuesta",
+        "example.step4.copy": "Reúne los hallazgos e indica qué documento o mensaje respalda cada punto.",
+        "example.result": "Los documentos muestran que falta el extracto; el correo promete el viernes; WhatsApp confirma la misma fecha.",
+        "people.index": "Un despacho pequeño",
+        "people.title": "Útil para una persona y válido para dos.",
+        "people.copy": "La configuración sigue siendo sencilla: una carpeta existente, un índice local por persona y las cuentas de cada uno.",
+        "people.solo.title": "Si trabajas solo",
+        "people.solo.copy": "Configura la carpeta una vez. Después pregunta qué falta para Rossi o qué dice su contrato sin abrir manualmente cada archivo.",
+        "people.two.title": "Si trabajáis dos personas",
+        "people.two.copy": "Fabio y Paolo pueden sincronizar la misma carpeta del despacho con sus Macs. Cada uno crea su índice local y conecta su propio Gmail y WhatsApp.",
+        "people.two.note": "Los documentos pueden ser los mismos; el índice, los correos, los chats y las sesiones de Codex permanecen separados para cada profesional.",
+        "video.aria": "Ver el vídeo sobre el Archivo del despacho en YouTube",
+        "video.meta": "Audio en italiano · 1:22 · Se abre en YouTube",
+        "video.index": "Vídeo",
+        "video.title": "Mira el flujo completo.",
+        "video.copy": "De la carpeta del despacho a la búsqueda con reglas fijas y después Gmail y WhatsApp solo cuando hacen falta.",
+        "data.index": "Dónde permanecen los datos",
+        "data.title": "Cada fuente permanece en su sitio.",
+        "data.copy": "Vera no sube todo el despacho a un nuevo archivo en línea.",
+        "data.aria": "Dónde permanecen los datos",
+        "data.header.source": "Fuente",
+        "data.header.stays": "Dónde permanece",
+        "data.header.use": "Cómo se utiliza",
+        "data.docs.source": "Documentos",
+        "data.docs.stays": "Carpeta del despacho e índice local en el Mac",
+        "data.docs.use": "Búsqueda de texto; el archivo original se vuelve a abrir antes de citarlo",
+        "data.gmail.source": "Gmail",
+        "data.gmail.stays": "En el buzón de Gmail conectado",
+        "data.gmail.use": "Búsqueda en directo y de solo lectura, únicamente cuando se solicita",
+        "data.whatsapp.source": "WhatsApp",
+        "data.whatsapp.stays": "En la aplicación WhatsApp Desktop",
+        "data.whatsapp.use": "Consulta en pantalla, únicamente cuando se solicita",
+        "data.answer.source": "Respuesta",
+        "data.answer.stays": "En tu sesión de Codex",
+        "data.answer.use": "Combina únicamente el contenido pertinente encontrado",
+        "data.boundary": "Gmail y WhatsApp se consultan solo cuando lo pides y no se copian en el índice de documentos.",
+        "data.context": "El contenido seleccionado para responder puede procesarse en el contexto de Codex/ChatGPT según la configuración de tu cuenta.",
         "setup.index": "Cómo empezar",
-        "setup.title": "Abre Codex Desktop y pide a Vera que busque.",
-        "setup.gmail": "Para Gmail: conecta el conector de Gmail de OpenAI a Codex Desktop.",
-        "setup.whatsapp": "Para WhatsApp: abre WhatsApp Desktop ya autenticado en el mismo Mac y asegúrate de que Computer Use esté disponible.",
-        "setup.desktop": "Esta función no se inicia en ChatGPT web o móvil.",
+        "setup.title": "Abre Vera en Codex Desktop.",
+        "setup.desktop": "Este flujo se detiene en ChatGPT web o móvil porque necesita acceder a la carpeta local y, para WhatsApp, a Computer Use.",
+        "setup.1": "Indica a Vera la carpeta del despacho que ya utilizas.",
+        "setup.2": "Pide a Vera que configure y actualice el índice.",
+        "setup.3": "Haz una pregunta e indica el cliente exacto.",
+        "setup.4": "Cuando haga falta, pide expresamente que consulte también Gmail o WhatsApp.",
         "footer.product": "Vera · Codex para asesores fiscales y contables",
+        "footer.support": "Soporte",
         "footer.back": "Volver a Vera"
       }
     };
 
+    const locales = { it: "it_IT", en: "en_GB", fr: "fr_FR", de: "de_DE", es: "es_ES" };
     const supported = new Set(Object.keys(copy));
     const params = new URLSearchParams(window.location.search);
     let lang = params.get("lang") || localStorage.getItem("mparanza-language") || "it";
@@ -667,6 +1353,9 @@
       document.documentElement.lang = lang;
       document.title = selected["meta.title"];
       document.querySelector('meta[name="description"]').content = selected["meta.description"];
+      document.querySelector('meta[property="og:title"]').content = selected["meta.title"];
+      document.querySelector('meta[property="og:description"]').content = selected["meta.description"];
+      document.getElementById("og-locale").content = locales[lang];
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const value = selected[node.dataset.i18n];
         if (value) node.textContent = value;

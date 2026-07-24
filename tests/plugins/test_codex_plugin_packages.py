@@ -2615,7 +2615,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
     assert "FatturaPA" not in core
     assert "FatturaPA" in italy
-    assert 'src="../video-library.js?v=2026072401"' in page
+    assert 'src="../video-library.js?v=2026072402"' in page
     assert (
         'const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", '
         'de: "CH-ZH", es: null };'

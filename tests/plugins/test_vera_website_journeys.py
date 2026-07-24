@@ -784,7 +784,7 @@ def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
         assert f'hreflang="{language}"' in page
 
 
-def test_studio_archive_page_explains_gmail_and_whatsapp_in_plain_language() -> None:
+def test_studio_archive_page_explains_documents_and_live_sources() -> None:
     page = (SHARED_ROOT / "studio-archive" / "index.html").read_text(encoding="utf-8")
     visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
     language_buttons = set(re.findall(r'data-lang="([a-z]{2})"', page))
@@ -795,26 +795,46 @@ def test_studio_archive_page_explains_gmail_and_whatsapp_in_plain_language() -> 
     for key in visible_keys:
         assert page.count(f'"{key}":') == len(copy_languages), key
     for phrase in (
-        "Find a client’s messages without sorting everything by hand.",
-        "This works only in Codex Desktop and handles one client at a time.",
-        "You do not need to move emails into folders or export chats.",
-        "Connect Gmail first",
-        "Open WhatsApp Desktop first",
+        "The folder is the archive. The index is the catalog that makes the documents searchable.",
+        "A private index on the Mac.",
+        "No model decides which documents to index or ignore.",
+        "No embedding database is created.",
+        "Retrieval is mechanical. Interpretation uses Codex.",
+        "A model then attempts to transcribe text from images",
+        "the result needs visual confirmation.",
+        "Email stays in Gmail and does not enter the document index.",
+        "OpenAI’s Gmail connector",
+        "searches the required messages at that moment in read-only mode.",
         "Computer Use",
-        "Opening the chat may mark messages as read.",
-        "Vera does not create a complete copy of your emails or chats.",
-        "Vera does not synchronize the mailbox or chats",
-        "that content may be sent to Codex/ChatGPT",
-        "This function does not start in ChatGPT on the web or mobile.",
+        "Documents are always available. Gmail and WhatsApp only on request.",
+        "On-screen inspection only when requested",
+        "Opening it may mark messages as read",
+        "The chat stays in WhatsApp.",
+        "If you work alone",
+        "Fabio and Paolo can sync the same studio folder to their Macs.",
+        "one local index per person",
+        "https://mparanza.com/support",
+        "https://youtu.be/bsEbR9XegrU",
     ):
         assert phrase in page
-    assert "plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" not in page
+
+    for install_copy in (
+        "Installa Vera",
+        "Install Vera",
+        "Installer Vera",
+        "Vera installieren",
+        "Instalar Vera",
+    ):
+        assert install_copy not in page
+    assert "marketplace" not in page.casefold()
+    assert "plugins_" not in page
     assert 'href="../vera/index.html"' in page
-    assert "ChatGPT · Marketplace" not in page
     assert "90 days" not in page
     assert "90 giorni" not in page
-    assert "https://youtu.be/" not in page
+    assert page.count("https://youtu.be/") == 1
     assert "<video" not in page
+    assert "video-production/rendered" not in page
+    assert "transcript.txt" not in page
 
 
 @pytest.mark.parametrize(
@@ -1292,50 +1312,60 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     studio_archive = next(
         concept for concept in concepts if concept["module"] == "studio-archive"
     )
-    assert studio_archive["conceptId"] == "one-client-two-message-sources"
+    assert studio_archive["conceptId"] == "document-index-and-live-sources"
     assert studio_archive["edition"] == "core"
     assert set(studio_archive["localizations"]) == {"it", "en", "fr", "de", "es"}
     assert "/static/shared/studio-archive/index.html" in studio_archive["pageTargets"]
     for language, required_phrases in {
         "it": (
-            "directory pubblica dei plugin",
-            "si ferma su ChatGPT web o mobile",
-            "Dentro Codex Desktop",
+            "indice privato",
+            "regole fisse e ripetibili",
+            "Codex interpreta la richiesta",
             "connector Gmail di OpenAI",
+            "senza copiarle nell’indice locale",
             "Computer Use",
-            "non crea archivi di messaggi Gmail o WhatsApp su Mparanza",
+            "i messaggi non entrano nell’indice",
+            "ciascun professionista mantiene il proprio indice locale",
         ),
         "en": (
-            "public Plugins Directory",
-            "stops on ChatGPT web and mobile",
-            "Inside Codex Desktop",
-            "OpenAI’s separately connected Gmail connector",
+            "private index",
+            "fixed, repeatable rules",
+            "Codex interprets the request",
+            "OpenAI’s Gmail connector",
+            "without copying messages into the local index",
             "Computer Use",
-            "creates no Gmail or WhatsApp message store on Mparanza",
+            "messages do not enter the index",
+            "each professional keeps a separate local index",
         ),
         "fr": (
-            "répertoire public des plugins",
-            "s’arrêtent sur ChatGPT web ou mobile",
-            "Dans Codex Desktop",
+            "index privé",
+            "règles fixes et reproductibles",
+            "Codex interprète la demande",
             "connecteur Gmail d’OpenAI",
+            "sans les copier dans l’index local",
             "Computer Use",
-            "aucune archive de messages Gmail ou WhatsApp chez Mparanza",
+            "les messages n’entrent pas dans l’index",
+            "chaque professionnel conserve son propre index local",
         ),
         "de": (
-            "öffentlichen Plugin-Verzeichnis",
-            "in ChatGPT im Web oder auf Mobilgeräten gestoppt",
-            "In Codex Desktop",
+            "privaten Index",
+            "festen, wiederholbaren Regeln",
+            "Codex die Anfrage",
             "Gmail-Connector von OpenAI",
+            "ohne sie in den lokalen Index zu kopieren",
             "Computer Use",
-            "kein Gmail- oder WhatsApp-Nachrichtenarchiv",
+            "Nachrichten gelangen nicht in den Index",
+            "jeder Berufsträger einen eigenen lokalen Index",
         ),
         "es": (
-            "directorio público de plugins",
-            "se detiene en ChatGPT web o móvil",
-            "Dentro de Codex Desktop",
+            "índice privado",
+            "reglas fijas y repetibles",
+            "Codex interpreta la petición",
             "conector de Gmail de OpenAI",
+            "sin copiarlos en el índice local",
             "Computer Use",
-            "no crea un archivo de mensajes de Gmail o WhatsApp en Mparanza",
+            "los mensajes no entran en el índice",
+            "cada profesional mantiene su propio índice local",
         ),
     }.items():
         narration = studio_archive["localizations"][language]["narration"]
@@ -1343,7 +1373,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
             assert phrase in narration
 
 
-def test_vera_video_catalog_v4_is_youtube_only_and_jurisdiction_native() -> None:
+def test_vera_video_catalog_v4_2_is_youtube_only_and_jurisdiction_native() -> None:
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is required to execute the browser video catalog")
@@ -1364,7 +1394,28 @@ process.stdout.write(JSON.stringify(catalogs));
     )
     catalogs = {catalog["language"]: catalog for catalog in json.loads(result.stdout)}
 
-    assert all(catalog["version"] == "4.1.0" for catalog in catalogs.values())
+    assert all(catalog["version"] == "4.2.0" for catalog in catalogs.values())
+    studio_archive = next(
+        video
+        for video in catalogs["it"]["videos"]
+        if video["module"] == "studio-archive"
+    )
+    assert studio_archive["id"] == "bsEbR9XegrU"
+    assert studio_archive["conceptId"] == "document-index-and-live-sources"
+    assert studio_archive["edition"] == "core"
+    assert studio_archive["scope"] == "core"
+    assert studio_archive["jurisdiction"] is None
+    assert studio_archive["duration"] == "1:22"
+    assert studio_archive["workstream"] == "client"
+    assert studio_archive["pageTargets"] == [
+        "/static/shared/vera/index.html",
+        "/static/shared/studio-archive/index.html",
+    ]
+    for language in ("en", "fr", "de", "es"):
+        assert all(
+            video["module"] != "studio-archive"
+            for video in catalogs[language]["videos"]
+        )
     assert catalogs["es"]["featured"]["id"] == "BEiFYgK5Wew"
     assert catalogs["es"]["featured"]["audioLanguage"] == "es"
     assert len(catalogs["es"]["videos"]) == 8
@@ -1409,16 +1460,21 @@ def test_replaced_vera_guides_are_linked_from_module_pages_on_youtube() -> None:
     new_client = VERA_MODULE_PAGES["new-client"].read_text(encoding="utf-8")
     sampling = VERA_MODULE_PAGES["journal-sampling"].read_text(encoding="utf-8")
     entries = VERA_MODULE_PAGES["check-entries"].read_text(encoding="utf-8")
+    studio_archive = (SHARED_ROOT / "studio-archive" / "index.html").read_text(
+        encoding="utf-8"
+    )
 
     assert "<video" not in new_client
     assert "<video" not in sampling
     assert "<video" not in entries
+    assert "<video" not in studio_archive
     assert "FWjVBeJYLF8" in new_client
     assert "UwLsy2FuP8o" not in new_client
     assert "HW8amlcU0Lk" in sampling
     for youtube_id in ("xakA0V5-3-8", "I1dp3FYVy2w"):
         assert youtube_id in entries
-    for page in (new_client, sampling, entries):
+    assert "bsEbR9XegrU" in studio_archive
+    for page in (new_client, sampling, entries, studio_archive):
         assert "https://youtu.be/" in page
         assert "video-production/rendered" not in page
         assert "transcript.txt" not in page
