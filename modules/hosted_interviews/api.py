@@ -314,8 +314,9 @@ POST_COMPLETION_EVENT_TYPES = {
     "post_call_interviewee_transcription_failed",
     "post_call_completion_reclassified",
 }
-MIN_COMPLETED_INTERVIEWEE_WORDS = 25
+MIN_COMPLETED_INTERVIEWEE_WORDS = 2
 MIN_PLUGIN_IMPROVEMENT_INTERVIEWEE_WORDS = 3
+MIN_FULL_PLUGIN_IMPROVEMENT_WORDS = 25
 NON_SUBSTANTIVE_INTERVIEWER_TURN_NORMALIZED = {
     "de acuerdo",
     "de acuerdo entiendo",
@@ -1958,7 +1959,7 @@ def _classify_completion_status(
                 "connection_or_transcription_failed_before_usable_interview",
             )
         return INTERVIEW_STATUS_INCOMPLETE, "too_little_interviewee_substance"
-    if is_plugin_improvement and interviewee_words < MIN_COMPLETED_INTERVIEWEE_WORDS:
+    if is_plugin_improvement and interviewee_words < MIN_FULL_PLUGIN_IMPROVEMENT_WORDS:
         return INTERVIEW_STATUS_COMPLETED, "completed_short_plugin_improvement"
     return INTERVIEW_STATUS_COMPLETED, "completed_with_minimum_substance"
 

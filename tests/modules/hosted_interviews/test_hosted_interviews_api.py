@@ -2259,6 +2259,51 @@ def test_short_manual_completion_is_marked_incomplete_without_review(
     assert sent
 
 
+def test_meaningful_short_completion_is_sent_to_quality_review(
+    tmp_path: Path, monkeypatch
+) -> None:
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    answer = (
+        "My dog sleeps with his stomach up because he feels safe, relaxed, "
+        "happy, and completely at home with our family today."
+    )
+    monkeypatch.setattr(api, "send_plain_text_email", lambda *_args, **_kwargs: True)
+    monkeypatch.setattr(api, "_resolve_openai_api_key", lambda: "test-key")
+    monkeypatch.setattr(
+        api,
+        "_generate_interview_quality_review",
+        lambda **_kwargs: _sample_review(),
+    )
+
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/complete",
+        json={
+            "attempt_id": attempt_id,
+            "user_transcript": answer,
+            "assistant_transcript": "What moment best captures your experience?",
+            "elapsed_seconds": 77,
+            "transcript_words": 21,
+            "audio_chunks": 0,
+            "telemetry": {"turns": 4, "completion_reason": "manual"},
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["status"] == api.INTERVIEW_STATUS_COMPLETED
+    assert (
+        response.json()["completion_status_reason"]
+        == "completed_with_minimum_substance"
+    )
+    session_dir = tmp_path / "sessions" / record["token_hash"]
+    completion = json.loads(
+        (session_dir / "completed.json").read_text(encoding="utf-8")
+    )
+    assert completion["transcript_words"] == 21
+    assert completion["completion_status"] == api.INTERVIEW_STATUS_COMPLETED
+    assert _wait_until(lambda: (session_dir / "review.json").exists())
+
+
 def test_completion_ignores_client_word_count_for_status(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -2558,8 +2603,8 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "MIN_MANUAL_COMPLETION_TURNS" not in script
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
-    assert 'postJson("/complete"' in script
-    assert "20260724-soft-duration-v1" in template
+    assert '"/complete",' in script
+    assert "20260724-completion-reliability-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2614,7 +2659,7 @@ def test_browser_script_keeps_screen_recording_out_of_interview_start() -> None:
     assert "screenStream = await openScreenCapture()" not in start_function
     assert "startScreenRecorder(screenStream)" not in start_function
     assert "navigator.mediaDevices.getDisplayMedia({ video: true })" in script
-    assert 'fetch(endpoint("/video-chunk")' in script
+    assert 'fetchUpload("/video-chunk"' in script
     assert "video_chunks: videoChunksUploaded" in script
     assert "screen_capture_metadata: screenCaptureMetadata" in script
     assert 'data-mode="{{ interview_mode | default(' in template
@@ -2687,10 +2732,17 @@ def test_browser_script_waits_for_final_audio_chunk_before_completion() -> None:
     stop_function = script.split("function stopAudioRecorder()", 1)[1].split(
         "function screenTrackMetadata", 1
     )[0]
+    end_function = script.split("async function endInterview", 1)[1]
 
     assert "activeRecorder.requestData()" in stop_function
-    assert "Promise.allSettled([...pendingUploads])" in stop_function
+    assert "Promise.allSettled([...pendingUploads])" not in stop_function
     assert "window.setTimeout(finish, 8000)" in stop_function
+    assert "UPLOAD_REQUEST_TIMEOUT_MS = 8000" in script
+    assert "FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 10000" in script
+    assert "new AbortController()" in script
+    assert "await settlePendingUploads()" in end_function
+    assert "upload_settle_timed_out: uploadSettleTimedOut" in end_function
+    assert "{ keepalive: true }" in end_function
 
 
 def test_browser_script_treats_queued_post_call_transcription_as_processing() -> None:
@@ -2716,7 +2768,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260724-soft-duration-v1" in script
+    assert "20260724-completion-reliability-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
