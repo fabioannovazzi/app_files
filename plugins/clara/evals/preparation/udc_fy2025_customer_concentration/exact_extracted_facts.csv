@@ -1,0 +1,19 @@
+fact_id,customer_alias,fiscal_year,metric_id,value,unit,reported_increment,source_id,source_locator
+udc_2025_a_revenue_share,A,2025,revenue_share,43,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2025_a_accounts_receivable,A,2025,accounts_receivable,69564,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2025_b_revenue_share,B,2025,revenue_share,21,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2025_b_accounts_receivable,B,2025,accounts_receivable,30378,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2025_c_revenue_share,C,2025,revenue_share,15,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2025_c_accounts_receivable,C,2025,accounts_receivable,3539,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2024_a_revenue_share,A,2024,revenue_share,43,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2024_a_accounts_receivable,A,2024,accounts_receivable,37899,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2024_b_revenue_share,B,2024,revenue_share,23,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2024_b_accounts_receivable,B,2024,accounts_receivable,25751,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2024_c_revenue_share,C,2024,revenue_share,16,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2024_c_accounts_receivable,C,2024,accounts_receivable,13258,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2023_a_revenue_share,A,2023,revenue_share,36,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2023_a_accounts_receivable,A,2023,accounts_receivable,38105,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2023_b_revenue_share,B,2023,revenue_share,23,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2023_b_accounts_receivable,B,2023,accounts_receivable,30142,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2023_c_revenue_share,C,2023,revenue_share,17,percent,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962
+udc_2023_c_accounts_receivable,C,2023,accounts_receivable,38529,USD_thousands,1,udc_fy2025_10k,Note 19 CONCENTRATION OF RISK lines 5890-5962

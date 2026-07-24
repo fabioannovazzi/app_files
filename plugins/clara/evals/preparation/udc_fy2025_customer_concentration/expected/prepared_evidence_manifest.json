@@ -1,0 +1,266 @@
+{
+  "canonical_output_set_sha256": "013baff62edc1f91b1973ce5ee1a7d1da0a9a99ec8d848d23e9c1678554c0805",
+  "case_contract": {
+    "path": "case.json",
+    "sha256": "4051affdaf72127968dd0a377eec41be2a403c3ea4201e2c03376be871e680e9"
+  },
+  "case_id": "udc-fy2025-customer-concentration",
+  "downstream_readiness": {
+    "evidence_sealing": "not_assessed",
+    "render_compatibility": "not_assessed",
+    "report_ready": false,
+    "semantic_compatibility": "not_assessed",
+    "status": "not_assessed"
+  },
+  "inputs": [
+    {
+      "artifact_id": "exact_control_facts",
+      "path": "exact_control_facts.csv",
+      "sha256": "57a84b89c7172e7f8d1497cf1974ae13860289dd44902d83302deb66812f25f8",
+      "size_bytes": 771
+    },
+    {
+      "artifact_id": "exact_extracted_facts",
+      "path": "exact_extracted_facts.csv",
+      "sha256": "784a2785e5f3a17f4c3382ca61a669a9f0680139865a202328eb0339b4806be7",
+      "size_bytes": 2448
+    }
+  ],
+  "lineage": {
+    "grain": "summary_metric_and_fiscal_year",
+    "summary_metric_sources": [
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2023_a_accounts_receivable",
+          "udc_2023_b_accounts_receivable",
+          "udc_2023_c_accounts_receivable"
+        ],
+        "summary_id": "udc_2023_accounts_receivable_coverage_percent"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2023_a_revenue_share",
+          "udc_2023_b_revenue_share",
+          "udc_2023_c_revenue_share"
+        ],
+        "summary_id": "udc_2023_disclosed_top_three_revenue_share"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2023_a_revenue_share",
+          "udc_2023_b_revenue_share",
+          "udc_2023_c_revenue_share"
+        ],
+        "summary_id": "udc_2023_reported_share_hhi_contribution"
+      },
+      {
+        "control_refs": [
+          "udc_2023_total_revenue"
+        ],
+        "input_fact_ids": [],
+        "summary_id": "udc_2023_total_revenue_control"
+      },
+      {
+        "control_refs": [
+          "udc_2024_total_accounts_receivable"
+        ],
+        "input_fact_ids": [
+          "udc_2024_a_accounts_receivable",
+          "udc_2024_b_accounts_receivable",
+          "udc_2024_c_accounts_receivable"
+        ],
+        "summary_id": "udc_2024_accounts_receivable_coverage_percent"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2024_a_accounts_receivable",
+          "udc_2024_b_accounts_receivable",
+          "udc_2024_c_accounts_receivable"
+        ],
+        "summary_id": "udc_2024_disclosed_accounts_receivable_subtotal"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2024_a_revenue_share",
+          "udc_2024_b_revenue_share",
+          "udc_2024_c_revenue_share"
+        ],
+        "summary_id": "udc_2024_disclosed_top_three_revenue_share"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2024_a_revenue_share",
+          "udc_2024_b_revenue_share",
+          "udc_2024_c_revenue_share"
+        ],
+        "summary_id": "udc_2024_reported_share_hhi_contribution"
+      },
+      {
+        "control_refs": [
+          "udc_2024_total_accounts_receivable"
+        ],
+        "input_fact_ids": [],
+        "summary_id": "udc_2024_total_accounts_receivable_control"
+      },
+      {
+        "control_refs": [
+          "udc_2024_total_revenue"
+        ],
+        "input_fact_ids": [],
+        "summary_id": "udc_2024_total_revenue_control"
+      },
+      {
+        "control_refs": [
+          "udc_2025_total_accounts_receivable"
+        ],
+        "input_fact_ids": [
+          "udc_2025_a_accounts_receivable",
+          "udc_2025_b_accounts_receivable",
+          "udc_2025_c_accounts_receivable"
+        ],
+        "summary_id": "udc_2025_accounts_receivable_coverage_percent"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2025_a_accounts_receivable",
+          "udc_2025_b_accounts_receivable",
+          "udc_2025_c_accounts_receivable"
+        ],
+        "summary_id": "udc_2025_disclosed_accounts_receivable_subtotal"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2025_a_revenue_share",
+          "udc_2025_b_revenue_share",
+          "udc_2025_c_revenue_share"
+        ],
+        "summary_id": "udc_2025_disclosed_top_three_revenue_share"
+      },
+      {
+        "control_refs": [],
+        "input_fact_ids": [
+          "udc_2025_a_revenue_share",
+          "udc_2025_b_revenue_share",
+          "udc_2025_c_revenue_share"
+        ],
+        "summary_id": "udc_2025_reported_share_hhi_contribution"
+      },
+      {
+        "control_refs": [
+          "udc_2025_total_accounts_receivable"
+        ],
+        "input_fact_ids": [],
+        "summary_id": "udc_2025_total_accounts_receivable_control"
+      },
+      {
+        "control_refs": [
+          "udc_2025_total_revenue"
+        ],
+        "input_fact_ids": [],
+        "summary_id": "udc_2025_total_revenue_control"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "artifact_id": "customer_concentration_summary",
+      "media_type": "text/csv",
+      "path": "customer_concentration_summary.csv",
+      "sha256": "48c75363a10a4e5339fee4f3f57b9e27d4005430a7faa099d38ca4e4f94a00f2",
+      "size_bytes": 2595
+    },
+    {
+      "artifact_id": "exceptions",
+      "media_type": "text/csv",
+      "path": "exceptions.csv",
+      "sha256": "aae96c35ad9098a8580bbc08b841dfb2ae41a374efeb9ce97ad69a7f8eb0b1a3",
+      "size_bytes": 39
+    },
+    {
+      "artifact_id": "reconciliation",
+      "media_type": "application/json",
+      "path": "reconciliation.json",
+      "sha256": "27446774176f313a8a1a7f8d72c615e5bf4267c0770dfa1d063843cb5d6135fa",
+      "size_bytes": 9628
+    }
+  ],
+  "preparation_status": "passed",
+  "publication_status": "withheld",
+  "recipe": {
+    "arithmetic": "integer_exact_with_declared_ratio_scale",
+    "coverage_ratio_rounding": "half_up_exact_integer",
+    "coverage_ratio_scale": 6,
+    "engine_path": "scripts/prepare_customer_concentration_case.py",
+    "engine_sha256": "035abdd9cc3193137648c740cf84c82e06fb7d7336f606577e4f83718ebd0e43",
+    "engine_version": "1.0.0",
+    "recipe_id": "customer_concentration_from_reviewed_public_disclosure.v1"
+  },
+  "reconciliation": {
+    "sha256": "27446774176f313a8a1a7f8d72c615e5bf4267c0770dfa1d063843cb5d6135fa",
+    "status": "passed"
+  },
+  "report_ready": false,
+  "reviewed_boundary": {
+    "accounts_receivable_coverage_unavailable_years": [
+      "2023"
+    ],
+    "allowed_output_metric_ids": [
+      "total_revenue_control",
+      "total_accounts_receivable_control",
+      "disclosed_top_three_revenue_share",
+      "disclosed_accounts_receivable_subtotal",
+      "accounts_receivable_coverage_percent",
+      "reported_share_hhi_contribution"
+    ],
+    "forbidden_claim_ids": [
+      "alias_to_customer_name_mapping",
+      "precise_customer_revenue_dollars",
+      "full_hhi",
+      "hhi_lower_bound",
+      "monthly_customer_concentration",
+      "quarterly_customer_concentration",
+      "customer_churn",
+      "customer_retention"
+    ],
+    "judgement_owner": "human_or_model_review",
+    "publication_status": "withheld",
+    "report_ready": false,
+    "reviewed_on": "2026-07-23",
+    "semantic_authority": "reviewed_boundary_only",
+    "source_authority": "receipt_and_review_only",
+    "statement": "The filing table supports annual reported revenue shares and year-end accounts-receivable amounts for anonymous aliases A, B, and C. It does not support identifying an alias, exact customer revenue dollars, a full HHI, an HHI lower bound, or monthly, quarterly, churn, or retention claims.",
+    "status": "reviewed"
+  },
+  "schema_version": "clara.prepared_evidence_manifest.v1",
+  "source_extraction_review": {
+    "authority": "receipt_and_review_only",
+    "basis": "The frozen extraction and control tables were reviewed against the declared filing receipt and source locators.",
+    "reviewed_on": "2026-07-23",
+    "reviewer": "fixture_owner",
+    "status": "reviewed"
+  },
+  "source_receipts": [
+    {
+      "accession": "0001193125-26-059371",
+      "byte_count": 4060769,
+      "cik": "0001005284",
+      "filed_date": "2026-02-19",
+      "form": "10-K",
+      "period_end": "2025-12-31",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "role": "reviewed_public_disclosure",
+      "sha256": "1dd7a2297816c53f4f90b68736c1317b5aa1c28f0360672e351a603e66909a29",
+      "source_id": "udc_fy2025_10k",
+      "title": "Universal Display Corporation FY2025 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1005284/000119312526059371/oled-20251231.htm"
+    }
+  ]
+}

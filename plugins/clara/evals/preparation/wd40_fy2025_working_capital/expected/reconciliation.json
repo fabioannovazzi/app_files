@@ -1,0 +1,132 @@
+{
+  "caption_boundaries": {
+    "cash_flow_ap_and_accrued_split": false,
+    "cash_flow_other_assets_is_balance_sheet_other_current_assets": false
+  },
+  "case_id": "wd40-fy2025-public-working-capital",
+  "checks": [
+    {
+      "check_id": "balance_sheet_footing",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "caption_boundary_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "cash_flow_de_cumulation",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "duplicate_control",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "fixture_control_tie_out",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "input_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "operating_nwc_schedule",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "period_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "policy_review_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "raw_fact_preservation",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "source_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "stock_flow_bridge",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "stock_roll_forward",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "unit_contract",
+      "failure_count": 0,
+      "status": "passed"
+    }
+  ],
+  "counts": {
+    "balance_sheet_fact_rows": 55,
+    "balance_sheet_periods": 5,
+    "bridge_rows": 5,
+    "cash_flow_cumulative_periods": 4,
+    "cash_flow_fact_rows": 20,
+    "discrete_cash_flow_rows": 4,
+    "errors": 0,
+    "exception_rows": 0,
+    "raw_fact_rows": 75,
+    "schedule_rows": 5
+  },
+  "engine": {
+    "arithmetic": "decimal_exact",
+    "engine_sha256": "d950bd1f81f4442c8385fb3c372a720bb9602d125d61181618332318a4859522",
+    "engine_version": "1.0.0",
+    "producer": "prepare_working_capital_case.py",
+    "recipe_id": "public_working_capital_from_reviewed_policy.v1"
+  },
+  "errors": [],
+  "inputs": {
+    "public_working_capital_facts": {
+      "byte_count": 22852,
+      "path": "public_working_capital_facts.csv",
+      "sha256": "dd925bd158142eb3a8b27cecc307c522629edcc8b2514b04416e68ddf31daf65"
+    },
+    "reviewed_working_capital_policy": {
+      "byte_count": 3306,
+      "path": "reviewed_working_capital_policy.json",
+      "sha256": "232661ccf01aff9c6852b8d02de81af708b7f9ab7f70384021cab90c1afa1e80"
+    }
+  },
+  "outputs_emitted": [
+    "discrete_cash_flow_schedule.csv",
+    "exceptions.csv",
+    "prepared_evidence_manifest.json",
+    "raw_fact_preservation.csv",
+    "reconciliation.json",
+    "stock_flow_bridge.csv",
+    "working_capital_schedule.csv"
+  ],
+  "publication_status": "withheld",
+  "report_ready": false,
+  "residual_treatment": {
+    "allocation_emitted": false,
+    "force_to_zero": false,
+    "status": "unexplained"
+  },
+  "row_lineage_declared": false,
+  "schema_version": "clara.working_capital_reconciliation.v1",
+  "semantic_authority": "unproven",
+  "source_authority": "unproven",
+  "status": "passed"
+}

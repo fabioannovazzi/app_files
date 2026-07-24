@@ -1,0 +1,228 @@
+{
+  "abstention_result": {
+    "metric_ids": [
+      "cost_of_sales",
+      "gross_profit",
+      "selling_general_administrative",
+      "operating_income",
+      "interest_income",
+      "interest_expense",
+      "pretax_income",
+      "income_tax",
+      "net_income"
+    ],
+    "offending_observation_ids": [],
+    "status": "passed"
+  },
+  "assertion_results": [
+    {
+      "assertion_id": "monthly_net_sales_to_q1",
+      "difference": "0.029",
+      "kind": "rounded_sum",
+      "source_total": "1959.429",
+      "status": "passed",
+      "target_value": "1959.4",
+      "tolerance": "0.0515",
+      "unit": "USD_million"
+    },
+    {
+      "assertion_id": "gross_profit_identity",
+      "computed_value": "883.9",
+      "difference": "0",
+      "kind": "linear_identity",
+      "status": "passed",
+      "target_value": "883.9",
+      "tolerance": "0",
+      "unit": "USD_million"
+    },
+    {
+      "assertion_id": "operating_income_identity",
+      "computed_value": "393.9",
+      "difference": "0",
+      "kind": "linear_identity",
+      "status": "passed",
+      "target_value": "393.9",
+      "tolerance": "0",
+      "unit": "USD_million"
+    },
+    {
+      "assertion_id": "pretax_income_identity",
+      "computed_value": "393.1",
+      "difference": "0",
+      "kind": "linear_identity",
+      "status": "passed",
+      "target_value": "393.1",
+      "tolerance": "0",
+      "unit": "USD_million"
+    },
+    {
+      "assertion_id": "net_income_identity",
+      "computed_value": "298.7",
+      "difference": "0",
+      "kind": "linear_identity",
+      "status": "passed",
+      "target_value": "298.7",
+      "tolerance": "0",
+      "unit": "USD_million"
+    }
+  ],
+  "benchmark_passed": true,
+  "boundary": {
+    "judgement_owner": "human_or_model_review",
+    "monthly_not_disclosed_metric_ids": [
+      "cost_of_sales",
+      "gross_profit",
+      "selling_general_administrative",
+      "operating_income",
+      "interest_income",
+      "interest_expense",
+      "pretax_income",
+      "income_tax",
+      "net_income"
+    ],
+    "monthly_reported_metric_ids": [
+      "net_sales"
+    ],
+    "reviewed_on": "2026-07-23",
+    "statement": "Fastenal published monthly net sales for January through March 2025 and a complete Q1 P&L. It did not publish monthly cost of sales, gross profit, SG&A, operating income, interest, tax, or net income in these documents.",
+    "status": "reviewed"
+  },
+  "case_id": "fastenal_q1_2025",
+  "counts": {
+    "abstention_failures": 0,
+    "assertions_failed": 0,
+    "assertions_passed": 5,
+    "candidate": 13,
+    "duplicates": 0,
+    "errors": 0,
+    "expected": 13,
+    "matched": 13,
+    "mismatched": 0,
+    "missing": 0,
+    "unexpected": 0,
+    "warnings": 0
+  },
+  "downstream_readiness": {
+    "reason": "Render compatibility and evidence sealing are outside this public-truth benchmark.",
+    "status": "not_assessed"
+  },
+  "errors": [],
+  "fact_results": [
+    {
+      "observation_id": "fastenal_2025_01_net_sales",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_02_net_sales",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_03_net_sales",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_net_sales",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_cost_of_sales",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_gross_profit",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_sga",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_operating_income",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_interest_income",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_interest_expense",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_pretax_income",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_income_tax",
+      "status": "matched"
+    },
+    {
+      "observation_id": "fastenal_2025_q1_net_income",
+      "status": "matched"
+    }
+  ],
+  "inputs": {
+    "benchmark": {
+      "path": "benchmark.json",
+      "sha256": "88b859f1e43a2ee6883bb9c6c7b9e61bcae26108de9db7c8deabf77d97dd22fc"
+    },
+    "candidate": {
+      "sha256": "bf27e23960f1050394584f865a8fd59a7f7db1f9cabfa3345be923094fbc6eac"
+    },
+    "expected": {
+      "path": "expected_prepared_observations.csv",
+      "sha256": "bf27e23960f1050394584f865a8fd59a7f7db1f9cabfa3345be923094fbc6eac"
+    },
+    "sources": [
+      {
+        "byte_count": 107064,
+        "document_type": "issuer_monthly_information_release_pdf",
+        "published_date": "2025-02-06",
+        "publisher": "Fastenal Company",
+        "sha256": "4dd19bdbeee7c19ce55d25c272733be3d2a0ab5a696dbfe778e89d111e21b6a9",
+        "source_id": "fastenal_2025_01_release",
+        "title": "January 2025 Information Web Release",
+        "url": "https://investor.fastenal.com/files/doc_financials/2024/Q4/01-2025-sales-numbers-F.pdf"
+      },
+      {
+        "byte_count": 106912,
+        "document_type": "issuer_monthly_information_release_pdf",
+        "published_date": "2025-03-06",
+        "publisher": "Fastenal Company",
+        "sha256": "1216811df3cca4812e91bd354f28ac1a58a291bf9956a5969d39fc5f8bc38586",
+        "source_id": "fastenal_2025_02_release",
+        "title": "February 2025 Information Web Release",
+        "url": "https://investor.fastenal.com/files/doc_financials/2025/Q1/02-2025-sales-numbers-F.pdf"
+      },
+      {
+        "byte_count": 107274,
+        "document_type": "issuer_monthly_information_release_pdf",
+        "published_date": "2025-04-11",
+        "publisher": "Fastenal Company",
+        "sha256": "8d5d1ebb43fde75325fc3cad1332b3d513b8a0221e2878c8e2e6d4c89e01531c",
+        "source_id": "fastenal_2025_03_release",
+        "title": "March 2025 Information Web Release",
+        "url": "https://investor.fastenal.com/files/doc_financials/2025/Q1/03-2025-sales-numbers-F.pdf"
+      },
+      {
+        "accession": "0000815556-25-000083",
+        "byte_count": 909854,
+        "document_type": "sec_form_10_q_inline_xbrl",
+        "published_date": "2025-04-16",
+        "publisher": "U.S. Securities and Exchange Commission",
+        "sha256": "9b80b8b0bde33c6b5ff3f0491fa1331c3308eb6096f5db395778715814d812aa",
+        "source_id": "fastenal_q1_2025_10q",
+        "title": "Fastenal Company Form 10-Q for the quarter ended March 31, 2025",
+        "url": "https://www.sec.gov/Archives/edgar/data/815556/000081555625000083/fast-20250331.htm",
+        "xbrl_context": "c-1"
+      }
+    ],
+    "truth": {
+      "path": "truth_observations.csv",
+      "sha256": "bf27e23960f1050394584f865a8fd59a7f7db1f9cabfa3345be923094fbc6eac"
+    }
+  },
+  "schema_version": "clara.public_truth_validation.v1",
+  "status": "passed",
+  "warnings": []
+}

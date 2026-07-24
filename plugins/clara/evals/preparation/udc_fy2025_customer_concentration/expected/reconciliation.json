@@ -1,0 +1,307 @@
+{
+  "authority_boundary": {
+    "semantic": "reviewed_boundary_only",
+    "source": "receipt_and_review_only"
+  },
+  "availability_results": [
+    {
+      "fiscal_year": "2023",
+      "metric_id": "accounts_receivable_coverage_percent",
+      "reason": "The frozen source-control set contains no 2023 total accounts-receivable denominator.",
+      "status": "unavailable",
+      "summary_id": "udc_2023_accounts_receivable_coverage_percent"
+    }
+  ],
+  "case_id": "udc-fy2025-customer-concentration",
+  "checks": [
+    {
+      "check_id": "input_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "exact_fact_set",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "duplicate_control",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "alias_period_metric_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "unit_increment_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "source_contract",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "control_values",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "revenue_share_subtotals",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "accounts_receivable_subtotals",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "accounts_receivable_coverage",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "reported_share_hhi_contribution",
+      "failure_count": 0,
+      "status": "passed"
+    },
+    {
+      "check_id": "claim_abstention",
+      "failure_count": 0,
+      "status": "passed"
+    }
+  ],
+  "claim_abstention": {
+    "emitted_forbidden_claim_ids": [],
+    "forbidden_claim_ids": [
+      "alias_to_customer_name_mapping",
+      "precise_customer_revenue_dollars",
+      "full_hhi",
+      "hhi_lower_bound",
+      "monthly_customer_concentration",
+      "quarterly_customer_concentration",
+      "customer_churn",
+      "customer_retention"
+    ],
+    "offending_input_claim_ids": [],
+    "status": "passed"
+  },
+  "counts": {
+    "control_fact_rows": 5,
+    "errors": 0,
+    "exception_rows": 0,
+    "fact_rows": 18,
+    "summary_results": 16,
+    "unique_control_ids": 5,
+    "unique_control_natural_keys": 5,
+    "unique_fact_ids": 18,
+    "unique_natural_keys": 18
+  },
+  "downstream_readiness": {
+    "evidence_sealing": "not_assessed",
+    "render_compatibility": "not_assessed",
+    "report_ready": false,
+    "semantic_compatibility": "not_assessed",
+    "status": "not_assessed"
+  },
+  "errors": [],
+  "publication_status": "withheld",
+  "recipe": {
+    "arithmetic": "integer_exact_with_declared_ratio_scale",
+    "coverage_ratio_rounding": "half_up_exact_integer",
+    "coverage_ratio_scale": 6,
+    "engine_version": "1.0.0",
+    "recipe_id": "customer_concentration_from_reviewed_public_disclosure.v1"
+  },
+  "report_ready": false,
+  "schema_version": "clara.customer_concentration_reconciliation.v1",
+  "status": "passed",
+  "summary_results": [
+    {
+      "availability_status": "available",
+      "characterization": "issuer_reported_total_control",
+      "declared_scale": "0",
+      "fiscal_year": "2025",
+      "metric_id": "total_revenue_control",
+      "reported_increment": "1",
+      "summary_id": "udc_2025_total_revenue_control",
+      "unit": "USD_thousands",
+      "value": "650611"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "issuer_reported_total_control",
+      "declared_scale": "0",
+      "fiscal_year": "2024",
+      "metric_id": "total_revenue_control",
+      "reported_increment": "1",
+      "summary_id": "udc_2024_total_revenue_control",
+      "unit": "USD_thousands",
+      "value": "647684"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "issuer_reported_total_control",
+      "declared_scale": "0",
+      "fiscal_year": "2023",
+      "metric_id": "total_revenue_control",
+      "reported_increment": "1",
+      "summary_id": "udc_2023_total_revenue_control",
+      "unit": "USD_thousands",
+      "value": "576429"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "issuer_reported_total_control",
+      "declared_scale": "0",
+      "fiscal_year": "2025",
+      "metric_id": "total_accounts_receivable_control",
+      "reported_increment": "1",
+      "summary_id": "udc_2025_total_accounts_receivable_control",
+      "unit": "USD_thousands",
+      "value": "119953"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "issuer_reported_total_control",
+      "declared_scale": "0",
+      "fiscal_year": "2024",
+      "metric_id": "total_accounts_receivable_control",
+      "reported_increment": "1",
+      "summary_id": "udc_2024_total_accounts_receivable_control",
+      "unit": "USD_thousands",
+      "value": "113648"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "sum_of_reported_whole_percentage_shares",
+      "declared_scale": "0",
+      "fiscal_year": "2025",
+      "metric_id": "disclosed_top_three_revenue_share",
+      "reported_increment": "1",
+      "summary_id": "udc_2025_disclosed_top_three_revenue_share",
+      "unit": "percent",
+      "value": "79"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "sum_of_reported_whole_percentage_shares",
+      "declared_scale": "0",
+      "fiscal_year": "2024",
+      "metric_id": "disclosed_top_three_revenue_share",
+      "reported_increment": "1",
+      "summary_id": "udc_2024_disclosed_top_three_revenue_share",
+      "unit": "percent",
+      "value": "82"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "sum_of_reported_whole_percentage_shares",
+      "declared_scale": "0",
+      "fiscal_year": "2023",
+      "metric_id": "disclosed_top_three_revenue_share",
+      "reported_increment": "1",
+      "summary_id": "udc_2023_disclosed_top_three_revenue_share",
+      "unit": "percent",
+      "value": "76"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "sum_of_disclosed_customer_ar_for_year_with_total_ar_control",
+      "declared_scale": "0",
+      "fiscal_year": "2025",
+      "metric_id": "disclosed_accounts_receivable_subtotal",
+      "reported_increment": "1",
+      "summary_id": "udc_2025_disclosed_accounts_receivable_subtotal",
+      "unit": "USD_thousands",
+      "value": "103481"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "sum_of_disclosed_customer_ar_for_year_with_total_ar_control",
+      "declared_scale": "0",
+      "fiscal_year": "2024",
+      "metric_id": "disclosed_accounts_receivable_subtotal",
+      "reported_increment": "1",
+      "summary_id": "udc_2024_disclosed_accounts_receivable_subtotal",
+      "unit": "USD_thousands",
+      "value": "76908"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "derived_reported_customer_ar_coverage_at_declared_scale",
+      "declared_scale": "6",
+      "fiscal_year": "2025",
+      "metric_id": "accounts_receivable_coverage_percent",
+      "reported_increment": "0.000001",
+      "summary_id": "udc_2025_accounts_receivable_coverage_percent",
+      "unit": "percent",
+      "value": "86.267955"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "derived_reported_customer_ar_coverage_at_declared_scale",
+      "declared_scale": "6",
+      "fiscal_year": "2024",
+      "metric_id": "accounts_receivable_coverage_percent",
+      "reported_increment": "0.000001",
+      "summary_id": "udc_2024_accounts_receivable_coverage_percent",
+      "unit": "percent",
+      "value": "67.672110"
+    },
+    {
+      "availability_status": "unavailable",
+      "characterization": "unavailable_without_frozen_total_accounts_receivable_control",
+      "declared_scale": "6",
+      "fiscal_year": "2023",
+      "metric_id": "accounts_receivable_coverage_percent",
+      "reported_increment": "0.000001",
+      "summary_id": "udc_2023_accounts_receivable_coverage_percent",
+      "unit": "percent",
+      "value": ""
+    },
+    {
+      "availability_status": "available",
+      "characterization": "incomplete_reported_share_contribution_only",
+      "declared_scale": "0",
+      "fiscal_year": "2025",
+      "metric_id": "reported_share_hhi_contribution",
+      "reported_increment": "1",
+      "summary_id": "udc_2025_reported_share_hhi_contribution",
+      "unit": "hhi_points",
+      "value": "2515"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "incomplete_reported_share_contribution_only",
+      "declared_scale": "0",
+      "fiscal_year": "2024",
+      "metric_id": "reported_share_hhi_contribution",
+      "reported_increment": "1",
+      "summary_id": "udc_2024_reported_share_hhi_contribution",
+      "unit": "hhi_points",
+      "value": "2634"
+    },
+    {
+      "availability_status": "available",
+      "characterization": "incomplete_reported_share_contribution_only",
+      "declared_scale": "0",
+      "fiscal_year": "2023",
+      "metric_id": "reported_share_hhi_contribution",
+      "reported_increment": "1",
+      "summary_id": "udc_2023_reported_share_hhi_contribution",
+      "unit": "hhi_points",
+      "value": "2114"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "reported_share_hhi_is_incomplete",
+      "message": "Squared whole-percentage shares are a reported-share contribution only, not full HHI or an HHI lower bound."
+    }
+  ]
+}

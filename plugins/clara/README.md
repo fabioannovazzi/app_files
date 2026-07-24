@@ -101,6 +101,164 @@ trial-balance, consolidation, or monthly full-P&L semantics. A benchmark pass
 does not claim downstream report readiness; render compatibility and evidence
 sealing are evaluated in later milestones.
 
+The second preparation benchmark is packaged under
+`evals/preparation/wd40_fy2025`. It starts from a balanced 12-month synthetic
+trial balance and a reviewed, effective-dated synthetic chart-of-accounts
+mapping. Exact Decimal preparation produces a 14-line monthly P&L and ties all
+lines to published WD-40 Q1–Q4 and FY2025 controls. The issuer facts are real;
+the monthly phasing, ledger rows, accounts, splits, mapping, and clearing
+account are explicitly synthetic.
+
+Run the offline preparation from the Clara root:
+
+```bash
+python scripts/prepare_monthly_pnl_case.py \
+  evals/preparation/wd40_fy2025/case.json \
+  --output-dir /tmp/wd40-fy2025-monthly-pnl
+```
+
+A passing run writes `monthly_pnl.csv`, `unmapped_accounts.csv`,
+`reconciliation.json`, and `prepared_evidence_manifest.json`. Frozen expected
+copies are packaged with the fixture. The reconciliation includes source-row
+and leaf-contribution conservation, 12 balanced trial-balance checks, 60
+monthly statement identities, and 70 exact public tie-outs.
+
+The tests also prove that all 168 prepared values survive the existing
+`statement.pnl_table` transport and that exact synthetic cells can be sealed
+and resolved through `clara.evidence_bundle.v1`. The renderer does no
+authoritative arithmetic. These are preparation and transport proofs, not a
+claim that an arbitrary company trial balance has correct semantics or that a
+report is ready. Account classification and scope remain reviewed judgement;
+the bounded reporting/evidence handoff is the next benchmark. No orchestrator
+participates in this benchmark.
+
+The third preparation milestone packages the shared mechanical boundary as
+`contracts/preparation_audit_envelope.v1.schema.json`. Its audit-only adapters
+bind each frozen benchmark, local artifacts, declared source receipts, reviewed
+decision receipts, exact numeric policy, reconciliation, and available lineage
+into a canonical envelope.
+
+Each adapter replays its registered deterministic producer before emitting the
+envelope. The M1 report must match the complete replayed report. The M2
+producer-owned filename set and every output byte must match a fresh replay;
+failed runs are represented by `reconciliation.json` and
+`unmapped_accounts.csv` without invented success artifacts.
+
+Run the adapters from the Clara root:
+
+```bash
+python scripts/build_public_truth_audit_envelope.py \
+  evals/public_truth/fastenal_q1_2025/benchmark.json \
+  evals/public_truth/fastenal_q1_2025/expected_prepared_observations.csv \
+  evals/public_truth/fastenal_q1_2025/expected_validation_report.json \
+  --output /tmp/fastenal-q1-preparation-audit.json
+
+python scripts/build_monthly_pnl_audit_envelope.py \
+  evals/preparation/wd40_fy2025/case.json \
+  evals/preparation/wd40_fy2025/expected \
+  --output /tmp/wd40-fy2025-preparation-audit.json
+```
+
+These envelopes are reproducible audit records, not report approvals. Remote
+sources remain declared receipts rather than authenticated bytes; reviewed
+decision records preserve an explicit source review status and prove presence
+and identity rather than correctness or reviewer authority. M1 claims artifact
+lineage; successful M2 binds content-bound aggregate dependency metadata and
+the exact prepared-output digest; row lineage is unavailable in v1. Semantic
+and downstream gates remain
+`not_assessed`, publication remains `withheld`, and `report_ready` is always
+`false`. Shared numeric validation enforces canonical Decimal syntax without
+promoting M2's scale or precision limits. The kernel adds no universal
+crosswalk, formula language, semantic layer, automatic analysis selection, or
+orchestrator.
+
+The fourth preparation milestone adds a frozen reporting-transport handoff for
+the same WD-40 fixture. It replays M3, validates the exact model-reviewed
+semantic layer and review notes, invokes the explicitly requested
+`statement.pnl_table`, and closes all 168 numeric addresses across the prepared
+CSV, rendered chart-data CSV, chart-context JSON, serialized HTML table, and
+cell ledger. It also validates renderer control manifests and pins the
+executed implementation files.
+
+Build and independently validate the handoff from the Clara root:
+
+```bash
+python scripts/build_monthly_pnl_reporting_handoff.py build \
+  evals/preparation/wd40_fy2025/case.json \
+  evals/preparation/wd40_fy2025/expected \
+  /tmp/wd40-fy2025-reporting-handoff \
+  --semantic-layer evals/preparation/wd40_fy2025/monthly_pnl.semantic.json \
+  --statement-recipe evals/preparation/wd40_fy2025/statement_render_recipe.json \
+  --reporting-request evals/preparation/wd40_fy2025/reporting_handoff_request.json
+
+python scripts/build_monthly_pnl_reporting_handoff.py validate \
+  evals/preparation/wd40_fy2025/case.json \
+  evals/preparation/wd40_fy2025/expected \
+  /tmp/wd40-fy2025-reporting-handoff \
+  --semantic-layer evals/preparation/wd40_fy2025/monthly_pnl.semantic.json \
+  --statement-recipe evals/preparation/wd40_fy2025/statement_render_recipe.json \
+  --reporting-request evals/preparation/wd40_fy2025/reporting_handoff_request.json
+```
+
+The final receipt is written only after a fresh render reproduces every
+portable output. It is ready for review, not report-ready:
+`report_ready=false` and publication remains withheld. Serialized HTML parsing
+does not prove browser-computed visibility, and the standalone statement HTML
+is not an HTML-deck evidence ledger. The handoff therefore does not claim that
+its cells are source-bound report numbers. It adds no automatic analysis
+selection, chart selection, interpretation, report composition, or
+orchestrator.
+
+The fifth preparation milestone adds two public-source due-diligence slices
+without extending the reporting handoff or introducing an orchestrator.
+
+The Universal Display Corporation case preserves anonymous customer aliases,
+reported whole-percentage revenue shares, and disclosed receivable balances.
+It calculates only reviewed annual subtotals, receivables coverage where a
+source denominator exists, and the explicitly labelled contribution from
+squared reported shares:
+
+```bash
+python scripts/prepare_customer_concentration_case.py \
+  evals/preparation/udc_fy2025_customer_concentration/case.json \
+  --output-dir /tmp/udc-fy2025-customer-concentration
+
+python scripts/build_customer_concentration_audit_envelope.py \
+  evals/preparation/udc_fy2025_customer_concentration/case.json \
+  evals/preparation/udc_fy2025_customer_concentration/expected \
+  --output /tmp/udc-fy2025-customer-concentration-audit.json
+```
+
+The WD-40 case applies a reviewed operating-working-capital perimeter to exact
+public balance-sheet facts, de-cumulates reported year-to-date cash-flow lines
+into discrete quarters, and retains every stock/flow difference as an
+unallocated `unexplained` residual:
+
+```bash
+python scripts/prepare_working_capital_case.py \
+  evals/preparation/wd40_fy2025_working_capital/case.json \
+  --output-dir /tmp/wd40-fy2025-working-capital
+
+python scripts/build_working_capital_audit_envelope.py \
+  evals/preparation/wd40_fy2025_working_capital/case.json \
+  evals/preparation/wd40_fy2025_working_capital/expected \
+  --output /tmp/wd40-fy2025-working-capital-audit.json
+```
+
+These fixtures do not identify anonymous customers, infer precise customer
+revenue from rounded shares, calculate full HHI, equate unlike statement
+captions, split combined cash-flow lines, explain residuals, calculate days
+metrics, normalize working capital, or set targets. The audit adapters replay
+the packaged expected outputs inside Clara's bounded artifact root. Producer
+output roots are dedicated: a run removes registered stale outputs and fails
+closed if any unregistered entry remains; the audit adapters independently
+require the exact complete root entry set. They prove exact mechanics and
+receipts only: source authority remains `receipt_only`, semantics and downstream
+compatibility remain `not_assessed`, publication is `withheld`, and
+`report_ready` remains `false`. Neither case selects a chart, interprets an
+implication, composes a report, invokes the Reporting Engine, or uses an
+orchestrator.
+
 ## Privacy Surface Governance
 
 Every new or materially changed Clara workflow or hosted integration must use

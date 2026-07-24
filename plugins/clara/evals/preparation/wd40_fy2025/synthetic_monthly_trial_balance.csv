@@ -1,0 +1,145 @@
+source_row_id,scope_id,entity_id,account_code,account_name,period,period_start,period_end,value,currency,unit,source_classification
+tb-2024-09-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2024-09,2024-09-01,2024-09-30,-30600,USD,USD_thousands,synthetic
+tb-2024-09-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2024-09,2024-09-01,2024-09-30,-20400,USD,USD_thousands,synthetic
+tb-2024-09-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2024-09,2024-09-01,2024-09-30,19635,USD,USD_thousands,synthetic
+tb-2024-09-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2024-09,2024-09-01,2024-09-30,3465,USD,USD_thousands,synthetic
+tb-2024-09-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2024-09,2024-09-01,2024-09-30,16800,USD,USD_thousands,synthetic
+tb-2024-09-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2024-09,2024-09-01,2024-09-30,2700,USD,USD_thousands,synthetic
+tb-2024-09-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2024-09,2024-09-01,2024-09-30,16,USD,USD_thousands,synthetic
+tb-2024-09-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2024-09,2024-09-01,2024-09-30,-50,USD,USD_thousands,synthetic
+tb-2024-09-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2024-09,2024-09-01,2024-09-30,290,USD,USD_thousands,synthetic
+tb-2024-09-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2024-09,2024-09-01,2024-09-30,50,USD,USD_thousands,synthetic
+tb-2024-09-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2024-09,2024-09-01,2024-09-30,1800,USD,USD_thousands,synthetic
+tb-2024-09-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2024-09,2024-09-01,2024-09-30,6294,USD,USD_thousands,synthetic
+tb-2024-10-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2024-10,2024-10-01,2024-10-31,-30720,USD,USD_thousands,synthetic
+tb-2024-10-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2024-10,2024-10-01,2024-10-31,-20480,USD,USD_thousands,synthetic
+tb-2024-10-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2024-10,2024-10-01,2024-10-31,19592,USD,USD_thousands,synthetic
+tb-2024-10-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2024-10,2024-10-01,2024-10-31,3458,USD,USD_thousands,synthetic
+tb-2024-10-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2024-10,2024-10-01,2024-10-31,16850,USD,USD_thousands,synthetic
+tb-2024-10-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2024-10,2024-10-01,2024-10-31,2800,USD,USD_thousands,synthetic
+tb-2024-10-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2024-10,2024-10-01,2024-10-31,15,USD,USD_thousands,synthetic
+tb-2024-10-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2024-10,2024-10-01,2024-10-31,-49,USD,USD_thousands,synthetic
+tb-2024-10-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2024-10,2024-10-01,2024-10-31,291,USD,USD_thousands,synthetic
+tb-2024-10-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2024-10,2024-10-01,2024-10-31,40,USD,USD_thousands,synthetic
+tb-2024-10-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2024-10,2024-10-01,2024-10-31,1750,USD,USD_thousands,synthetic
+tb-2024-10-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2024-10,2024-10-01,2024-10-31,6453,USD,USD_thousands,synthetic
+tb-2024-11-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2024-11,2024-11-01,2024-11-30,-30777,USD,USD_thousands,synthetic
+tb-2024-11-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2024-11,2024-11-01,2024-11-30,-20518,USD,USD_thousands,synthetic
+tb-2024-11-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2024-11,2024-11-01,2024-11-30,19769,USD,USD_thousands,synthetic
+tb-2024-11-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2024-11,2024-11-01,2024-11-30,3489,USD,USD_thousands,synthetic
+tb-2024-11-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2024-11,2024-11-01,2024-11-30,16875,USD,USD_thousands,synthetic
+tb-2024-11-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2024-11,2024-11-01,2024-11-30,2893,USD,USD_thousands,synthetic
+tb-2024-11-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2024-11,2024-11-01,2024-11-30,16,USD,USD_thousands,synthetic
+tb-2024-11-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2024-11,2024-11-01,2024-11-30,-49,USD,USD_thousands,synthetic
+tb-2024-11-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2024-11,2024-11-01,2024-11-30,292,USD,USD_thousands,synthetic
+tb-2024-11-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2024-11,2024-11-01,2024-11-30,51,USD,USD_thousands,synthetic
+tb-2024-11-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2024-11,2024-11-01,2024-11-30,1781,USD,USD_thousands,synthetic
+tb-2024-11-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2024-11,2024-11-01,2024-11-30,6178,USD,USD_thousands,synthetic
+tb-2024-12-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2024-12,2024-12-01,2024-12-31,-28920,USD,USD_thousands,synthetic
+tb-2024-12-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2024-12,2024-12-01,2024-12-31,-19280,USD,USD_thousands,synthetic
+tb-2024-12-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2024-12,2024-12-01,2024-12-31,18700,USD,USD_thousands,synthetic
+tb-2024-12-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2024-12,2024-12-01,2024-12-31,3300,USD,USD_thousands,synthetic
+tb-2024-12-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2024-12,2024-12-01,2024-12-31,16200,USD,USD_thousands,synthetic
+tb-2024-12-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2024-12,2024-12-01,2024-12-31,2400,USD,USD_thousands,synthetic
+tb-2024-12-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2024-12,2024-12-01,2024-12-31,15,USD,USD_thousands,synthetic
+tb-2024-12-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2024-12,2024-12-01,2024-12-31,-35,USD,USD_thousands,synthetic
+tb-2024-12-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2024-12,2024-12-01,2024-12-31,340,USD,USD_thousands,synthetic
+tb-2024-12-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2024-12,2024-12-01,2024-12-31,-20,USD,USD_thousands,synthetic
+tb-2024-12-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2024-12,2024-12-01,2024-12-31,-2500,USD,USD_thousands,synthetic
+tb-2024-12-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2024-12,2024-12-01,2024-12-31,9800,USD,USD_thousands,synthetic
+tb-2025-01-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-01,2025-01-01,2025-01-31,-29340,USD,USD_thousands,synthetic
+tb-2025-01-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-01,2025-01-01,2025-01-31,-19560,USD,USD_thousands,synthetic
+tb-2025-01-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-01,2025-01-01,2025-01-31,18870,USD,USD_thousands,synthetic
+tb-2025-01-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-01,2025-01-01,2025-01-31,3330,USD,USD_thousands,synthetic
+tb-2025-01-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-01,2025-01-01,2025-01-31,16300,USD,USD_thousands,synthetic
+tb-2025-01-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-01,2025-01-01,2025-01-31,2450,USD,USD_thousands,synthetic
+tb-2025-01-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-01,2025-01-01,2025-01-31,14,USD,USD_thousands,synthetic
+tb-2025-01-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-01,2025-01-01,2025-01-31,-35,USD,USD_thousands,synthetic
+tb-2025-01-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-01,2025-01-01,2025-01-31,340,USD,USD_thousands,synthetic
+tb-2025-01-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-01,2025-01-01,2025-01-31,-25,USD,USD_thousands,synthetic
+tb-2025-01-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-01,2025-01-01,2025-01-31,-2450,USD,USD_thousands,synthetic
+tb-2025-01-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-01,2025-01-01,2025-01-31,10106,USD,USD_thousands,synthetic
+tb-2025-02-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-02,2025-02-01,2025-02-28,-29402,USD,USD_thousands,synthetic
+tb-2025-02-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-02,2025-02-01,2025-02-28,-19602,USD,USD_thousands,synthetic
+tb-2025-02-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-02,2025-02-01,2025-02-28,18859,USD,USD_thousands,synthetic
+tb-2025-02-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-02,2025-02-01,2025-02-28,3329,USD,USD_thousands,synthetic
+tb-2025-02-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-02,2025-02-01,2025-02-28,16488,USD,USD_thousands,synthetic
+tb-2025-02-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-02,2025-02-01,2025-02-28,2554,USD,USD_thousands,synthetic
+tb-2025-02-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-02,2025-02-01,2025-02-28,15,USD,USD_thousands,synthetic
+tb-2025-02-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-02,2025-02-01,2025-02-28,-36,USD,USD_thousands,synthetic
+tb-2025-02-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-02,2025-02-01,2025-02-28,341,USD,USD_thousands,synthetic
+tb-2025-02-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-02,2025-02-01,2025-02-28,-29,USD,USD_thousands,synthetic
+tb-2025-02-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-02,2025-02-01,2025-02-28,-2462,USD,USD_thousands,synthetic
+tb-2025-02-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-02,2025-02-01,2025-02-28,9945,USD,USD_thousands,synthetic
+tb-2025-03-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-03,2025-03-01,2025-03-31,-31200,USD,USD_thousands,synthetic
+tb-2025-03-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-03,2025-03-01,2025-03-31,-20800,USD,USD_thousands,synthetic
+tb-2025-03-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-03,2025-03-01,2025-03-31,19380,USD,USD_thousands,synthetic
+tb-2025-03-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-03,2025-03-01,2025-03-31,3420,USD,USD_thousands,synthetic
+tb-2025-03-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-03,2025-03-01,2025-03-31,17000,USD,USD_thousands,synthetic
+tb-2025-03-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-03,2025-03-01,2025-03-31,3000,USD,USD_thousands,synthetic
+tb-2025-03-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-03,2025-03-01,2025-03-31,15,USD,USD_thousands,synthetic
+tb-2025-03-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-03,2025-03-01,2025-03-31,-35,USD,USD_thousands,synthetic
+tb-2025-03-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-03,2025-03-01,2025-03-31,295,USD,USD_thousands,synthetic
+tb-2025-03-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-03,2025-03-01,2025-03-31,-300,USD,USD_thousands,synthetic
+tb-2025-03-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-03,2025-03-01,2025-03-31,2100,USD,USD_thousands,synthetic
+tb-2025-03-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-03,2025-03-01,2025-03-31,7125,USD,USD_thousands,synthetic
+tb-2025-04-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-04,2025-04-01,2025-04-30,-31320,USD,USD_thousands,synthetic
+tb-2025-04-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-04,2025-04-01,2025-04-30,-20880,USD,USD_thousands,synthetic
+tb-2025-04-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-04,2025-04-01,2025-04-30,19465,USD,USD_thousands,synthetic
+tb-2025-04-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-04,2025-04-01,2025-04-30,3435,USD,USD_thousands,synthetic
+tb-2025-04-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-04,2025-04-01,2025-04-30,17100,USD,USD_thousands,synthetic
+tb-2025-04-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-04,2025-04-01,2025-04-30,3050,USD,USD_thousands,synthetic
+tb-2025-04-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-04,2025-04-01,2025-04-30,15,USD,USD_thousands,synthetic
+tb-2025-04-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-04,2025-04-01,2025-04-30,-34,USD,USD_thousands,synthetic
+tb-2025-04-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-04,2025-04-01,2025-04-30,296,USD,USD_thousands,synthetic
+tb-2025-04-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-04,2025-04-01,2025-04-30,-300,USD,USD_thousands,synthetic
+tb-2025-04-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-04,2025-04-01,2025-04-30,2150,USD,USD_thousands,synthetic
+tb-2025-04-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-04,2025-04-01,2025-04-30,7023,USD,USD_thousands,synthetic
+tb-2025-05-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-05,2025-05-01,2025-05-31,-31629,USD,USD_thousands,synthetic
+tb-2025-05-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-05,2025-05-01,2025-05-31,-21086,USD,USD_thousands,synthetic
+tb-2025-05-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-05,2025-05-01,2025-05-31,19638,USD,USD_thousands,synthetic
+tb-2025-05-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-05,2025-05-01,2025-05-31,3466,USD,USD_thousands,synthetic
+tb-2025-05-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-05,2025-05-01,2025-05-31,17441,USD,USD_thousands,synthetic
+tb-2025-05-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-05,2025-05-01,2025-05-31,3110,USD,USD_thousands,synthetic
+tb-2025-05-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-05,2025-05-01,2025-05-31,15,USD,USD_thousands,synthetic
+tb-2025-05-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-05,2025-05-01,2025-05-31,-35,USD,USD_thousands,synthetic
+tb-2025-05-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-05,2025-05-01,2025-05-31,296,USD,USD_thousands,synthetic
+tb-2025-05-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-05,2025-05-01,2025-05-31,-280,USD,USD_thousands,synthetic
+tb-2025-05-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-05,2025-05-01,2025-05-31,2235,USD,USD_thousands,synthetic
+tb-2025-05-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-05,2025-05-01,2025-05-31,6829,USD,USD_thousands,synthetic
+tb-2025-06-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-06,2025-06-01,2025-06-30,-32400,USD,USD_thousands,synthetic
+tb-2025-06-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-06,2025-06-01,2025-06-30,-21600,USD,USD_thousands,synthetic
+tb-2025-06-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-06,2025-06-01,2025-06-30,20655,USD,USD_thousands,synthetic
+tb-2025-06-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-06,2025-06-01,2025-06-30,3645,USD,USD_thousands,synthetic
+tb-2025-06-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-06,2025-06-01,2025-06-30,16000,USD,USD_thousands,synthetic
+tb-2025-06-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-06,2025-06-01,2025-06-30,4000,USD,USD_thousands,synthetic
+tb-2025-06-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-06,2025-06-01,2025-06-30,16,USD,USD_thousands,synthetic
+tb-2025-06-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-06,2025-06-01,2025-06-30,-53,USD,USD_thousands,synthetic
+tb-2025-06-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-06,2025-06-01,2025-06-30,220,USD,USD_thousands,synthetic
+tb-2025-06-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-06,2025-06-01,2025-06-30,20,USD,USD_thousands,synthetic
+tb-2025-06-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-06,2025-06-01,2025-06-30,2000,USD,USD_thousands,synthetic
+tb-2025-06-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-06,2025-06-01,2025-06-30,7497,USD,USD_thousands,synthetic
+tb-2025-07-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-07,2025-07-01,2025-07-31,-32700,USD,USD_thousands,synthetic
+tb-2025-07-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-07,2025-07-01,2025-07-31,-21800,USD,USD_thousands,synthetic
+tb-2025-07-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-07,2025-07-01,2025-07-31,20995,USD,USD_thousands,synthetic
+tb-2025-07-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-07,2025-07-01,2025-07-31,3705,USD,USD_thousands,synthetic
+tb-2025-07-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-07,2025-07-01,2025-07-31,16200,USD,USD_thousands,synthetic
+tb-2025-07-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-07,2025-07-01,2025-07-31,4100,USD,USD_thousands,synthetic
+tb-2025-07-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-07,2025-07-01,2025-07-31,15,USD,USD_thousands,synthetic
+tb-2025-07-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-07,2025-07-01,2025-07-31,-53,USD,USD_thousands,synthetic
+tb-2025-07-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-07,2025-07-01,2025-07-31,220,USD,USD_thousands,synthetic
+tb-2025-07-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-07,2025-07-01,2025-07-31,20,USD,USD_thousands,synthetic
+tb-2025-07-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-07,2025-07-01,2025-07-31,2050,USD,USD_thousands,synthetic
+tb-2025-07-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-07,2025-07-01,2025-07-31,7248,USD,USD_thousands,synthetic
+tb-2025-08-4000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4000,Domestic product sales,2025-08,2025-08-01,2025-08-31,-32982,USD,USD_thousands,synthetic
+tb-2025-08-4010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,4010,International product sales,2025-08,2025-08-01,2025-08-31,-21989,USD,USD_thousands,synthetic
+tb-2025-08-5000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5000,Materials and production cost,2025-08,2025-08-01,2025-08-31,21285,USD,USD_thousands,synthetic
+tb-2025-08-5010,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,5010,Freight and other product cost,2025-08,2025-08-01,2025-08-31,3757,USD,USD_thousands,synthetic
+tb-2025-08-6000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6000,Selling general and administrative,2025-08,2025-08-01,2025-08-31,16682,USD,USD_thousands,synthetic
+tb-2025-08-6100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6100,Advertising and sales promotion,2025-08,2025-08-01,2025-08-31,4374,USD,USD_thousands,synthetic
+tb-2025-08-6200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,6200,Definite lived intangible amortization,2025-08,2025-08-01,2025-08-31,16,USD,USD_thousands,synthetic
+tb-2025-08-7000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7000,Interest income,2025-08,2025-08-01,2025-08-31,-53,USD,USD_thousands,synthetic
+tb-2025-08-7100,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7100,Interest expense,2025-08,2025-08-01,2025-08-31,220,USD,USD_thousands,synthetic
+tb-2025-08-7200,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,7200,Other income or expense net,2025-08,2025-08-01,2025-08-31,16,USD,USD_thousands,synthetic
+tb-2025-08-8000,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,8000,Income tax provision or benefit,2025-08,2025-08-01,2025-08-31,2178,USD,USD_thousands,synthetic
+tb-2025-08-9999,wd40_fy2025_synthetic_consolidated,wd40_company_synthetic_entity,9999,Monthly P and L clearing,2025-08,2025-08-01,2025-08-31,6496,USD,USD_thousands,synthetic

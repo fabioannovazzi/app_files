@@ -1,0 +1,235 @@
+{
+  "schema_version": "clara.monthly_pnl_preparation_case.v1",
+  "case_id": "wd40-fy2025-synthetic-monthly-pnl",
+  "purpose": "Exercise exact monthly P&L preparation from a synthetic trial balance against published WD-40 quarter and fiscal-year controls.",
+  "preparation_recipe": {
+    "recipe_id": "monthly_pnl_from_reviewed_mapping.v1",
+    "engine_version": "1.0.0",
+    "arithmetic": "decimal_exact",
+    "scenario": "SYN",
+    "currency": "USD",
+    "unit": "USD_thousands",
+    "scope_id": "wd40_fy2025_synthetic_consolidated",
+    "entity_id": "wd40_company_synthetic_entity",
+    "trial_balance_sign_convention": "debit_positive_credit_negative",
+    "statement_sign_convention": {
+      "expense_lines": "positive_magnitude",
+      "income_lines": "positive_magnitude",
+      "interest_expense": "positive_magnitude",
+      "other_income_expense_net": "signed_income_positive",
+      "provision_for_income_taxes": "signed_expense_positive"
+    },
+    "periods": [
+      {
+        "period": "2024-09",
+        "period_start": "2024-09-01",
+        "period_end": "2024-09-30"
+      },
+      {
+        "period": "2024-10",
+        "period_start": "2024-10-01",
+        "period_end": "2024-10-31"
+      },
+      {
+        "period": "2024-11",
+        "period_start": "2024-11-01",
+        "period_end": "2024-11-30"
+      },
+      {
+        "period": "2024-12",
+        "period_start": "2024-12-01",
+        "period_end": "2024-12-31"
+      },
+      {
+        "period": "2025-01",
+        "period_start": "2025-01-01",
+        "period_end": "2025-01-31"
+      },
+      {
+        "period": "2025-02",
+        "period_start": "2025-02-01",
+        "period_end": "2025-02-28"
+      },
+      {
+        "period": "2025-03",
+        "period_start": "2025-03-01",
+        "period_end": "2025-03-31"
+      },
+      {
+        "period": "2025-04",
+        "period_start": "2025-04-01",
+        "period_end": "2025-04-30"
+      },
+      {
+        "period": "2025-05",
+        "period_start": "2025-05-01",
+        "period_end": "2025-05-31"
+      },
+      {
+        "period": "2025-06",
+        "period_start": "2025-06-01",
+        "period_end": "2025-06-30"
+      },
+      {
+        "period": "2025-07",
+        "period_start": "2025-07-01",
+        "period_end": "2025-07-31"
+      },
+      {
+        "period": "2025-08",
+        "period_start": "2025-08-01",
+        "period_end": "2025-08-31"
+      }
+    ],
+    "public_periods": [
+      {
+        "period": "FY2025-Q1",
+        "period_grain": "quarter",
+        "period_start": "2024-09-01",
+        "period_end": "2024-11-30",
+        "member_periods": ["2024-09", "2024-10", "2024-11"],
+        "source_id": "wd40_q1_fy2025_10q"
+      },
+      {
+        "period": "FY2025-Q2",
+        "period_grain": "quarter",
+        "period_start": "2024-12-01",
+        "period_end": "2025-02-28",
+        "member_periods": ["2024-12", "2025-01", "2025-02"],
+        "source_id": "wd40_q2_fy2025_10q"
+      },
+      {
+        "period": "FY2025-Q3",
+        "period_grain": "quarter",
+        "period_start": "2025-03-01",
+        "period_end": "2025-05-31",
+        "member_periods": ["2025-03", "2025-04", "2025-05"],
+        "source_id": "wd40_q3_fy2025_10q"
+      },
+      {
+        "period": "FY2025-Q4",
+        "period_grain": "quarter",
+        "period_start": "2025-06-01",
+        "period_end": "2025-08-31",
+        "member_periods": ["2025-06", "2025-07", "2025-08"],
+        "source_id": "wd40_q4_fy2025_exhibit_99_1"
+      },
+      {
+        "period": "FY2025",
+        "period_grain": "year",
+        "period_start": "2024-09-01",
+        "period_end": "2025-08-31",
+        "member_periods": [
+          "2024-09",
+          "2024-10",
+          "2024-11",
+          "2024-12",
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08"
+        ],
+        "source_id": "wd40_fy2025_10k"
+      }
+    ]
+  },
+  "reviewed_mapping": {
+    "mapping_id": "wd40-synthetic-coa",
+    "mapping_version": "wd40-synthetic-coa.v1",
+    "required_status": "reviewed",
+    "review_basis": "Human-reviewed synthetic fixture design; this is not WD-40 Company's chart of accounts."
+  },
+  "reviewed_scope_relationship": {
+    "prepared_scope_id": "wd40_fy2025_synthetic_consolidated",
+    "public_scope_id": "wd40_company_consolidated",
+    "status": "reviewed",
+    "statement": "The synthetic prepared scope was deliberately engineered to equal the published WD-40 consolidated quarter and fiscal-year P&L controls."
+  },
+  "disclosure_boundary": {
+    "monthly_values_are_company_actuals": false,
+    "public_fact_grains": ["quarter", "year"],
+    "synthetic_elements": [
+      "monthly_phasing",
+      "account_codes",
+      "account_names",
+      "account_splits",
+      "coa_mapping",
+      "clearing_account"
+    ]
+  },
+  "files": {
+    "synthetic_monthly_trial_balance": {
+      "path": "synthetic_monthly_trial_balance.csv",
+      "sha256": "25f6ddc79de3d03aa58d3e606bbe933768f4584c768e15d9d384d3392618f8a3"
+    },
+    "reviewed_coa_mapping": {
+      "path": "reviewed_coa_mapping.csv",
+      "sha256": "32a754b6d57a6dd08abaf0f932e8c92399e9ffbdf38ea66bcd4579c4e89025ef"
+    },
+    "public_statement_facts": {
+      "path": "public_statement_facts.csv",
+      "sha256": "91a650591f155dfa5a6722747d95832eb5cbc453353cfa94b00ce374da2c5c42"
+    }
+  },
+  "sources": [
+    {
+      "source_id": "wd40_q1_fy2025_10q",
+      "title": "WD-40 Company Q1 FY2025 Form 10-Q",
+      "form": "10-Q",
+      "accession": "0000105132-25-000009",
+      "filed_date": "2025-01-10",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000009/wdfc-20241130.htm",
+      "byte_count": 1030161,
+      "sha256": "b7a1534f188f6e30b4d24cae3e173d3cda7d68b6c40f5aa24af19c3654daa70f",
+      "role": "quarterly_control"
+    },
+    {
+      "source_id": "wd40_q2_fy2025_10q",
+      "title": "WD-40 Company Q2 FY2025 Form 10-Q",
+      "form": "10-Q",
+      "accession": "0000105132-25-000015",
+      "filed_date": "2025-04-09",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000015/wdfc-20250228.htm",
+      "byte_count": 1405347,
+      "sha256": "e013e12e87e4a0ad38f12194823eff81d17f9cb880a0b3a09146e0359fda3707",
+      "role": "quarterly_control"
+    },
+    {
+      "source_id": "wd40_q3_fy2025_10q",
+      "title": "WD-40 Company Q3 FY2025 Form 10-Q",
+      "form": "10-Q",
+      "accession": "0000105132-25-000025",
+      "filed_date": "2025-07-10",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000025/wdfc-20250531.htm",
+      "byte_count": 1435323,
+      "sha256": "cafdc1640c715179b956f05e502333229b129d5a4e0a0c4c0beed18844cb253d",
+      "role": "quarterly_control"
+    },
+    {
+      "source_id": "wd40_q4_fy2025_exhibit_99_1",
+      "title": "WD-40 Company FY2025 earnings Exhibit 99.1",
+      "form": "8-K Exhibit 99.1",
+      "accession": "0000105132-25-000061",
+      "filed_date": "2025-10-22",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000061/wdfc-20251022xexx991.htm",
+      "byte_count": 238878,
+      "sha256": "df9040b54e65e635d114c0414468f6779fb440b32de7ead30b35f6c49b600710",
+      "role": "quarterly_control"
+    },
+    {
+      "source_id": "wd40_fy2025_10k",
+      "title": "WD-40 Company FY2025 Form 10-K",
+      "form": "10-K",
+      "accession": "0000105132-25-000067",
+      "filed_date": "2025-10-27",
+      "url": "https://www.sec.gov/Archives/edgar/data/105132/000010513225000067/wdfc-20250831.htm",
+      "byte_count": 1793208,
+      "sha256": "d03a7ef37c6796c1a01d6b9bdb438afb6b276abfa5baa112b9b0465b4fe83209",
+      "role": "annual_control"
+    }
+  ]
+}

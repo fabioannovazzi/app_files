@@ -1,0 +1,422 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-data-pilot-sanitized-error-class-summary-v1.json",
+  "title": "Clara real-data pilot sanitized error-class summary receipt",
+  "description": "A retained receipt embedding the exact path-free, prose-free candidate declared approved for retention. It remains pseudonymous and linkable, and is not a semantic review, report-readiness decision, publication authorization, proof of review authenticity, or proof of reviewer identity or authority.",
+  "$comment": "This schema validates portable structure. validate_real_data_pilot_sanitized_error_summary is authoritative for exact JSON integer representation, exact candidate replay equality, candidate and approval digests, expected bindings, count reconciliation, and current implementation/dependency hashes. Draft 2020-12 treats a mathematically integral JSON number such as 1.0 as an integer, while the runtime deliberately rejects that lexical form.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "validation_date",
+    "candidate",
+    "candidate_summary_sha256",
+    "retention_approval_sha256",
+    "retention",
+    "validator"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_data_pilot_sanitized_error_class_summary.v1"
+    },
+    "validation_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "candidate": {
+      "$ref": "#/$defs/candidate"
+    },
+    "candidate_summary_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "retention_approval_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "scope",
+        "content_policy",
+        "assurance"
+      ],
+      "properties": {
+        "status": {
+          "const": "declared_reviewed_for_exact_candidate"
+        },
+        "scope": {
+          "const": "sanitized_error_class_summary_only"
+        },
+        "content_policy": {
+          "const": {
+            "free_text_in_summary": false,
+            "paths_in_summary": false,
+            "row_level_values_in_summary": false,
+            "semantic_findings_in_summary": false
+          }
+        },
+        "assurance": {
+          "const": "declaration_presence_only_not_review_authenticity_or_authority"
+        }
+      }
+    },
+    "validator": {
+      "$ref": "#/$defs/validator"
+    }
+  },
+  "$defs": {
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "execution_id": {
+      "type": "string",
+      "pattern": "^execution-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "nonnegative_integer": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_contract_sha256",
+        "intake_receipt_sha256",
+        "output_receipt_closure_sha256",
+        "producer_contract_sha256",
+        "producer_implementation_sha256",
+        "semantic_review_receipt_sha256"
+      ],
+      "properties": {
+        "case_contract_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "intake_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "output_receipt_closure_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "producer_contract_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "producer_implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "semantic_review_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "check_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passed",
+        "failed",
+        "not_run"
+      ],
+      "properties": {
+        "passed": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "failed": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "not_run": {
+          "$ref": "#/$defs/nonnegative_integer"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "passed": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "failed": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "not_run": {
+              "minimum": 1
+            }
+          }
+        }
+      ]
+    },
+    "class_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "mapping_execution",
+        "numeric",
+        "output_integrity",
+        "period",
+        "reconciliation",
+        "replay",
+        "source_structure",
+        "storage"
+      ],
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "mapping_execution": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "numeric": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "output_integrity": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "period": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "reconciliation": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "replay": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "source_structure": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "storage": {
+          "$ref": "#/$defs/nonnegative_integer"
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "pilot_id",
+        "execution_id",
+        "mechanical_register_sha256",
+        "bindings",
+        "mechanical_status",
+        "check_counts",
+        "error_count",
+        "class_counts",
+        "content_policy",
+        "publication_status",
+        "report_ready",
+        "does_not_establish"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "clara.real_data_pilot_sanitized_error_class_summary_candidate.v1"
+        },
+        "pilot_id": {
+          "$ref": "#/$defs/pilot_id"
+        },
+        "execution_id": {
+          "$ref": "#/$defs/execution_id"
+        },
+        "mechanical_register_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "bindings": {
+          "$ref": "#/$defs/bindings"
+        },
+        "mechanical_status": {
+          "enum": [
+            "failed",
+            "incomplete",
+            "passed"
+          ]
+        },
+        "check_counts": {
+          "$ref": "#/$defs/check_counts"
+        },
+        "error_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "class_counts": {
+          "$ref": "#/$defs/class_counts"
+        },
+        "content_policy": {
+          "const": {
+            "free_text_in_candidate": false,
+            "paths_in_candidate": false,
+            "row_level_values_in_candidate": false,
+            "semantic_findings_in_candidate": false
+          }
+        },
+        "publication_status": {
+          "const": "withheld"
+        },
+        "report_ready": {
+          "const": false
+        },
+        "does_not_establish": {
+          "const": [
+            "accounting_semantic_correctness",
+            "approval_or_review_authenticity",
+            "error_completeness",
+            "future_storage_or_copy_behavior",
+            "identifier_nonidentifiability_or_anonymization",
+            "mechanical_classification_correctness",
+            "publication_authorization",
+            "report_readiness",
+            "reviewer_identity_or_authority",
+            "unlinkability"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "check_counts": {
+                "properties": {
+                  "failed": {
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "failed"
+                ]
+              }
+            },
+            "required": [
+              "check_counts"
+            ]
+          },
+          "then": {
+            "properties": {
+              "mechanical_status": {
+                "const": "failed"
+              },
+              "error_count": {
+                "minimum": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "error_count": {
+                "const": 0
+              }
+            },
+            "if": {
+              "properties": {
+                "check_counts": {
+                  "properties": {
+                    "not_run": {
+                      "minimum": 1
+                    }
+                  },
+                  "required": [
+                    "not_run"
+                  ]
+                }
+              },
+              "required": [
+                "check_counts"
+              ]
+            },
+            "then": {
+              "properties": {
+                "mechanical_status": {
+                  "const": "incomplete"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "mechanical_status": {
+                  "const": "passed"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validator_id",
+        "validator_version",
+        "implementation_sha256",
+        "dependency_sha256",
+        "mode"
+      ],
+      "properties": {
+        "validator_id": {
+          "const": "real_data_pilot_sanitized_error_summary_validator.v1"
+        },
+        "validator_version": {
+          "const": "1.0.0"
+        },
+        "implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "dependency_sha256": {
+          "$ref": "#/$defs/dependency_sha256"
+        },
+        "mode": {
+          "const": "deterministic_mechanical_replay"
+        }
+      }
+    },
+    "dependency_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intake_validator",
+        "mechanical_error_register_schema",
+        "mechanical_error_validator",
+        "output_boundary",
+        "preparation_contract_kernel",
+        "retention_approval_schema",
+        "sanitized_candidate_schema",
+        "sanitized_summary_schema"
+      ],
+      "properties": {
+        "intake_validator": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mechanical_error_register_schema": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mechanical_error_validator": {
+          "$ref": "#/$defs/sha256"
+        },
+        "output_boundary": {
+          "$ref": "#/$defs/sha256"
+        },
+        "preparation_contract_kernel": {
+          "$ref": "#/$defs/sha256"
+        },
+        "retention_approval_schema": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sanitized_candidate_schema": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sanitized_summary_schema": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}

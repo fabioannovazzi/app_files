@@ -1,0 +1,104 @@
+{
+  "balance_sheet_policy": {
+    "control_only_fact_keys": [
+      "total_current_assets",
+      "total_current_liabilities"
+    ],
+    "excluded_fact_keys": [
+      {
+        "fact_key": "cash_and_cash_equivalents",
+        "reason": "Cash is excluded from operating net working capital."
+      },
+      {
+        "fact_key": "income_taxes_payable",
+        "reason": "Income taxes are excluded from this operating net working capital definition."
+      },
+      {
+        "fact_key": "short_term_borrowings",
+        "reason": "Borrowings are financing items and are excluded from operating net working capital."
+      }
+    ],
+    "formula_terms": [
+      {
+        "fact_key": "trade_and_other_accounts_receivable_net",
+        "multiplier": "1"
+      },
+      {
+        "fact_key": "inventories",
+        "multiplier": "1"
+      },
+      {
+        "fact_key": "other_current_assets",
+        "multiplier": "1"
+      },
+      {
+        "fact_key": "accounts_payable",
+        "multiplier": "-1"
+      },
+      {
+        "fact_key": "accrued_liabilities",
+        "multiplier": "-1"
+      },
+      {
+        "fact_key": "accrued_payroll_and_related_expenses",
+        "multiplier": "-1"
+      }
+    ],
+    "metric_id": "operating_nwc"
+  },
+  "basis": "Reviewed fixture policy for a mechanically reproducible public-company working-capital schedule. The policy selection is judgment; the declared arithmetic is deterministic.",
+  "caption_boundaries": {
+    "cash_flow_accounts_payable_and_accrued_liabilities_must_remain_combined": true,
+    "cash_flow_other_assets_equals_balance_sheet_other_current_assets": false,
+    "statement": "Cash-flow Other assets is not the same source caption as balance-sheet Other current assets. Cash-flow Accounts payable and accrued liabilities remains one combined source line and is not split deterministically."
+  },
+  "cash_flow_policy": {
+    "cumulative_component_terms": [
+      {
+        "fact_key": "trade_and_other_accounts_receivable",
+        "multiplier": "1"
+      },
+      {
+        "fact_key": "inventories",
+        "multiplier": "1"
+      },
+      {
+        "fact_key": "other_assets",
+        "multiplier": "1"
+      },
+      {
+        "fact_key": "accounts_payable_and_accrued_liabilities",
+        "multiplier": "1"
+      },
+      {
+        "fact_key": "accrued_payroll_and_related_expenses",
+        "multiplier": "1"
+      }
+    ],
+    "de_cumulation": "current_cumulative_minus_prior_cumulative_first_prior_zero",
+    "source_sign_convention": "cash_impact_native_positive_source_negative_use"
+  },
+  "policy_id": "wd40_fy2025_operating_working_capital",
+  "policy_version": "1.0.0",
+  "prohibited_analytics": [
+    "days_inventory_outstanding",
+    "days_payables_outstanding",
+    "days_sales_outstanding",
+    "normalization",
+    "targets"
+  ],
+  "review": {
+    "reviewed_on": "2026-07-23",
+    "reviewer": "fixture_owner",
+    "status": "reviewed"
+  },
+  "schema_version": "clara.reviewed_working_capital_policy.v1",
+  "stock_flow_bridge_policy": {
+    "allocate_residual": false,
+    "expected_cash_impact_formula": "negative_change_in_operating_nwc",
+    "force_residual_to_zero": false,
+    "residual_formula": "period_cash_flow_change_minus_expected_cash_impact",
+    "residual_status": "unexplained"
+  },
+  "unit": "USD_thousands"
+}

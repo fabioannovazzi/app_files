@@ -1,0 +1,90 @@
+{
+  "schema_version": "clara.monthly_pnl_reporting_handoff_request.v1",
+  "request_id": "wd40_fy2025_synthetic_monthly_pnl.statement_table",
+  "case_id": "wd40-fy2025-synthetic-monthly-pnl",
+  "dataset": {
+    "dataset_contract_id": "wd40_fy2025_synthetic_monthly_pnl",
+    "prepared_artifact": {
+      "relative_path": "expected/monthly_pnl.csv",
+      "sha256": "ad7b2f1b2267ece697d7ec1cce9e0155da68ae10d5a8eeb7100823fda28bf1a0"
+    },
+    "classification": "synthetic_benchmark_only",
+    "disclosure_boundary": "synthetic_monthly_phasing_not_issuer_actual_monthly_disclosure"
+  },
+  "semantic_layer": {
+    "relative_path": "monthly_pnl.semantic.json",
+    "sha256": "a0759a793eef04596ae9305cce4df40fb3f4611cedc70a44aa315d21abd32afe",
+    "semantic_layer_id": "wd40_fy2025_synthetic_monthly_pnl.reporting_semantics",
+    "semantic_version": 1,
+    "origin_profile_fingerprint": "b47d7bb2a801b1e88500a6752a3a993870393ab856e393eb7321c5a8da209c4a",
+    "review_basis": {
+      "relative_path": "SOURCE_NOTES.md",
+      "sha256": "7ea069095ffff82bfed4d1643ce3fb53fd8afa0b38f28d570ad91b1f59b23d3a"
+    },
+    "review": {
+      "status": "model_reviewed",
+      "reviewed_at": "2026-07-23",
+      "human_reviewed": false
+    }
+  },
+  "selected_analysis": {
+    "analysis_id": "analysis.prepared_monthly_pnl_statement",
+    "analysis_task_id": "evidence_and_reporting_tables",
+    "selection_emphasis": "structured_statement_values",
+    "selection_owner": "reviewed_case_request",
+    "automatic_chart_selection": false
+  },
+  "render": {
+    "capability_id": "statement.pnl_table",
+    "artifact_mode": "data_and_render",
+    "render_columns": {
+      "period": "period",
+      "value": "value",
+      "row_key": "row_key",
+      "scenario": "scenario"
+    },
+    "role_bindings": {
+      "period_axis": "period",
+      "statement_value": "value",
+      "statement_line_item": "row_key",
+      "statement_scenario": "scenario"
+    },
+    "statement_structure": {
+      "relative_path": "statement_render_recipe.json",
+      "sha256": "493727b2874f005d1d338725fd5c461953397f079c133413b3eab9a4653cd5e8"
+    },
+    "periods": [
+      "2024-09",
+      "2024-10",
+      "2024-11",
+      "2024-12",
+      "2025-01",
+      "2025-02",
+      "2025-03",
+      "2025-04",
+      "2025-05",
+      "2025-06",
+      "2025-07",
+      "2025-08"
+    ],
+    "scenarios": [
+      "SYN"
+    ]
+  },
+  "evidence_boundary": {
+    "serialized_html_numeric_domain": "Every serialized tbody td.num statement value cell, addressed by row_key, period, and scenario.",
+    "expected_numeric_cell_count": 168,
+    "require_exact_prepared_render_serialized_html_closure": true,
+    "require_complete_render_and_evidence_coverage": true
+  },
+  "publication_boundary": {
+    "handoff_purpose": "deterministic_reporting_transport",
+    "report_ready": false,
+    "publication_status": "withheld",
+    "limitations": [
+      "The monthly phasing is synthetic and must not be presented as issuer actual monthly disclosure.",
+      "Model review is not human accounting review.",
+      "The request does not authorize chart selection, interpretation, or publication."
+    ]
+  }
+}
