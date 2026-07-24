@@ -8,8 +8,10 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260724-soft-duration-v1";
+  const SCRIPT_VERSION = "20260724-completion-reliability-v1";
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
+  const UPLOAD_REQUEST_TIMEOUT_MS = 8000;
+  const FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 10000;
   const IMPROVEMENT_ANSWER_SETTLE_MS = 1200;
   const SILENCE_NUDGE_SECONDS = 35;
   const SILENCE_SIMPLIFY_SECONDS = 75;
@@ -102,6 +104,7 @@
   let improvementCloseRequested = false;
   const pendingUploads = new Set();
   let uploadErrors = [];
+  let uploadSettleTimedOut = false;
 
   const italianCopy = {
     "Something went wrong": "Si è verificato un problema",
@@ -359,6 +362,7 @@
     improvementResponsePending = false;
     improvementCloseRequested = false;
     uploadErrors = [];
+    uploadSettleTimedOut = false;
   }
 
   function endpoint(path) {
@@ -378,6 +382,41 @@
     pendingUploads.add(promise);
     promise.finally(() => pendingUploads.delete(promise));
     return promise;
+  }
+
+  function fetchUpload(path, options) {
+    if (typeof AbortController !== "function") {
+      return fetch(endpoint(path), options);
+    }
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(
+      () => controller.abort(),
+      UPLOAD_REQUEST_TIMEOUT_MS
+    );
+    return fetch(endpoint(path), { ...options, signal: controller.signal }).finally(
+      () => window.clearTimeout(timeoutId)
+    );
+  }
+
+  async function settlePendingUploads() {
+    const uploads = [...pendingUploads];
+    if (!uploads.length) return true;
+    let timeoutId = null;
+    const settled = await Promise.race([
+      Promise.allSettled(uploads).then(() => true),
+      new Promise((resolve) => {
+        timeoutId = window.setTimeout(
+          () => resolve(false),
+          FINAL_UPLOAD_SETTLE_TIMEOUT_MS
+        );
+      }),
+    ]);
+    window.clearTimeout(timeoutId);
+    if (!settled) {
+      uploadSettleTimedOut = true;
+      console.warn("Final media upload settlement timed out; saving completion.");
+    }
+    return settled;
   }
 
   function postEvent(eventType, payload) {
@@ -459,7 +498,7 @@
     form.append("attempt_id", activeAttemptId);
     form.append("chunk_index", String(chunkIndex));
     form.append("file", blob, `chunk-${String(chunkIndex).padStart(6, "0")}.${extension}`);
-    const upload = fetch(endpoint("/audio-chunk"), {
+    const upload = fetchUpload("/audio-chunk", {
       method: "POST",
       body: form,
     })
@@ -468,6 +507,14 @@
         audioChunksUploaded += 1;
       })
       .catch((error) => {
+        if (error?.name === "AbortError") {
+          uploadSettleTimedOut = true;
+          console.warn("Audio chunk upload timed out", error);
+          postEvent("audio_chunk_upload_timeout", {
+            chunk_index: chunkIndex,
+          });
+          return;
+        }
         console.warn("Could not upload audio chunk", error);
         uploadErrors.push({
           type: "audio",
@@ -491,7 +538,7 @@
     form.append("attempt_id", activeAttemptId);
     form.append("chunk_index", String(chunkIndex));
     form.append("file", blob, `chunk-${String(chunkIndex).padStart(6, "0")}.${extension}`);
-    const upload = fetch(endpoint("/video-chunk"), {
+    const upload = fetchUpload("/video-chunk", {
       method: "POST",
       body: form,
     })
@@ -500,6 +547,14 @@
         videoChunksUploaded += 1;
       })
       .catch((error) => {
+        if (error?.name === "AbortError") {
+          uploadSettleTimedOut = true;
+          console.warn("Video chunk upload timed out", error);
+          postEvent("video_chunk_upload_timeout", {
+            chunk_index: chunkIndex,
+          });
+          return;
+        }
         console.warn("Could not upload video chunk", error);
         uploadErrors.push({
           type: "video",
@@ -548,14 +603,10 @@
       const finish = () => {
         if (finished) return;
         finished = true;
-        Promise.resolve()
-          .then(() => Promise.allSettled([...pendingUploads]))
-          .finally(() => {
-            if (recorder === activeRecorder) {
-              recorder = null;
-            }
-            resolve();
-          });
+        if (recorder === activeRecorder) {
+          recorder = null;
+        }
+        resolve();
       };
       activeRecorder.addEventListener("stop", () => window.setTimeout(finish, 0), {
         once: true,
@@ -1423,33 +1474,38 @@
       const transcriptWords = transcriptWordCount();
       await stopAudioRecorder();
       await stopScreenRecorder();
-      await Promise.allSettled([...pendingUploads]);
+      await settlePendingUploads();
       cleanupConnection();
 
-      const response = await postJson("/complete", {
-        attempt_id: activeAttemptId,
-        user_transcript: userTranscript,
-        assistant_transcript: assistantTranscript,
-        elapsed_seconds: elapsedSeconds,
-        transcript_words: transcriptWords,
-        audio_chunks: audioChunksUploaded,
-        video_chunks: videoChunksUploaded,
-        screen_capture_metadata: screenCaptureMetadata,
-        telemetry: {
-          turns: turnCount,
-          completed_from: "public_browser",
-          completion_reason: reason,
-          interview_mode: interviewMode,
-          max_seconds: maxInterviewSeconds,
+      const response = await postJson(
+        "/complete",
+        {
+          attempt_id: activeAttemptId,
+          user_transcript: userTranscript,
+          assistant_transcript: assistantTranscript,
+          elapsed_seconds: elapsedSeconds,
+          transcript_words: transcriptWords,
+          audio_chunks: audioChunksUploaded,
           video_chunks: videoChunksUploaded,
-          response_count: responseCount,
-          context_strategy: "realtime_conversation",
-          script_version: SCRIPT_VERSION,
-          peer_connection_state: lastPeerConnectionState,
-          data_channel_state: lastDataChannelState,
-          upload_errors: uploadErrors,
+          screen_capture_metadata: screenCaptureMetadata,
+          telemetry: {
+            turns: turnCount,
+            completed_from: "public_browser",
+            completion_reason: reason,
+            interview_mode: interviewMode,
+            max_seconds: maxInterviewSeconds,
+            video_chunks: videoChunksUploaded,
+            response_count: responseCount,
+            context_strategy: "realtime_conversation",
+            script_version: SCRIPT_VERSION,
+            peer_connection_state: lastPeerConnectionState,
+            data_channel_state: lastDataChannelState,
+            upload_errors: uploadErrors,
+            upload_settle_timed_out: uploadSettleTimedOut,
+          },
         },
-      });
+        { keepalive: true }
+      );
       const responseText = await response.text();
       let responsePayload = {};
       if (responseText) {
