@@ -260,8 +260,8 @@ def test_pnl_statement_table_localizes_spanish_generated_copy(
         "2012..2015 PL y AC (FC)",
     ]
     assert context["row_grain"] == (
-        "Una fila por partida ordenada del estado de resultados; las filas de "
-        "fórmula se calculan a partir de filas anteriores de la receta."
+        "Una fila por partida ordenada del estado de resultados; los valores se "
+        "transportan desde claves fuente sin fórmulas del renderizador."
     )
     assert (
         manifest["artifacts"][0]["resolved_parameters"]["statement_rows"][0]["label"]

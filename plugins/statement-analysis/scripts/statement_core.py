@@ -506,6 +506,10 @@ def _localize_spanish_defaults(
 
 
 def _visible_copy(recipe: dict[str, Any]) -> dict[str, str]:
+    statement_rows = recipe.get("statement_rows")
+    has_formula_rows = isinstance(statement_rows, list) and any(
+        isinstance(row, dict) and "formula" in row for row in statement_rows
+    )
     if _language_code(recipe) == "es":
         return {
             "html_lang": "es",
@@ -514,6 +518,12 @@ def _visible_copy(recipe: dict[str, Any]) -> dict[str, str]:
             "row_grain": (
                 "Una fila por partida ordenada del estado de resultados; las filas "
                 "de fórmula se calculan a partir de filas anteriores de la receta."
+                if has_formula_rows
+                else (
+                    "Una fila por partida ordenada del estado de resultados; los "
+                    "valores se transportan desde claves fuente sin fórmulas del "
+                    "renderizador."
+                )
             ),
         }
     return {
@@ -523,6 +533,11 @@ def _visible_copy(recipe: dict[str, Any]) -> dict[str, str]:
         "row_grain": (
             "One row per ordered P&L statement line; formula rows are computed "
             "from prior rows in the recipe."
+            if has_formula_rows
+            else (
+                "One row per ordered P&L statement line; values are transported "
+                "from source keys without renderer formulas."
+            )
         ),
     }
 
