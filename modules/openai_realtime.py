@@ -16,7 +16,7 @@ __all__ = [
     "create_realtime_call_with_metadata",
 ]
 
-DEFAULT_REALTIME_MODEL = "gpt-realtime-2"
+DEFAULT_REALTIME_MODEL = "gpt-realtime-2.1"
 DEFAULT_REALTIME_TRANSCRIPTION_MODEL = "gpt-realtime-whisper"
 DEFAULT_REALTIME_ENDPOINT = "https://api.openai.com/v1/realtime/calls"
 

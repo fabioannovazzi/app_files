@@ -787,6 +787,7 @@ def test_public_session_uses_prepared_context(tmp_path: Path, monkeypatch) -> No
     assert response.json()["attempt_id"]
     session_config = captured["session_config"]
     assert isinstance(session_config, dict)
+    assert api.DEFAULT_MODEL == "gpt-realtime-2.1"
     assert session_config["model"] == api.DEFAULT_MODEL
     instructions = str(session_config["instructions"])
     assert "Production lead" in instructions
