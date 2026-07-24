@@ -4,7 +4,7 @@
   "prerequisites": [
     "Upload and scan the final Vera ZIP, then record its manifest version and SHA-256.",
     "Install, enable, and connect the official OpenAI Gmail plugin separately.",
-    "Run the acceptance prompts in fresh Codex Desktop tasks with a local workspace.",
+    "Run the acceptance prompts in fresh ChatGPT or Codex conversations with the Gmail connector available.",
     "Use a controlled Gmail test mailbox whose owner has authorized the five synthetic self-addressed messages below."
   ],
   "synthetic_fixture": {

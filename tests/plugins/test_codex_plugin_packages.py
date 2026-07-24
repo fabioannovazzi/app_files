@@ -406,24 +406,24 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.30"
+    assert manifest["version"] == "0.1.31"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
-        "Consulta WhatsApp Desktop per un solo cliente confermato, in sola "
-        "lettura e senza inviare nulla."
+        "Esamina questi documenti del cliente, separa fatti e valutazioni e "
+        "prepara una bozza rivedibile."
     )
-    assert any("OCR locale" in prompt and "INPS" in prompt for prompt in prompts)
+    assert any("ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts)
     assert prompts[2] == (
         "Cerca in Gmail le email di un cliente usando solo indirizzi "
         "confermati e senza mescolare altri clienti."
     )
     assert (
-        "connector Gmail di OpenAI collegato separatamente"
+        "connector Gmail di OpenAI è collegato"
         in manifest["interface"]["longDescription"]
     )
     assert "Computer Use" in manifest["interface"]["longDescription"]
     assert "connettore ospitato" not in manifest["interface"]["longDescription"]
-    assert "ChatGPT web o mobile si ferma" in manifest["interface"]["longDescription"]
+    assert "può continuare in ChatGPT" in manifest["interface"]["longDescription"]
 
     wrapper_path = "skills/studio-archive/SKILL.md"
     reference_path = "skills/studio-archive/references/marketplace-gmail.md"
@@ -458,9 +458,9 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "Never type into the message composer" in whatsapp_reference
     assert "without pressing Return" in whatsapp_reference
     assert "no WhatsApp connector" in whatsapp_reference
-    assert "## Codex Desktop Gmail workflow" in module_skill
+    assert "## Connected Gmail workflow" in module_skill
     gmail_section = module_skill.split(
-        "## Codex Desktop Gmail workflow",
+        "## Connected Gmail workflow",
         maxsplit=1,
     )[
         1
@@ -515,45 +515,49 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     }
     assert projected_skills
     for content in projected_skills.values():
-        assert builder.has_codex_desktop_runtime_gate(content)
+        assert builder.has_chatgpt_runtime_contract(content)
+        assert "We can continue here in ChatGPT now." in content
+    if plugin_name == "vera":
+        vera_main = projected_skills["skills/vera/SKILL.md"]
+        assert "Possiamo continuare qui in ChatGPT." in vera_main
 
 
 @pytest.mark.parametrize("plugin_name", ["clara", "vera"])
-def test_desktop_only_plugins_enforce_runtime_gate_in_main_skill(
+def test_cross_surface_plugins_define_chatgpt_runtime_in_main_skill(
     plugin_name: str,
 ) -> None:
     builder = load_builder()
     skill_path = ROOT / "plugins" / plugin_name / "skills" / plugin_name / "SKILL.md"
     content = skill_path.read_text(encoding="utf-8")
 
-    assert builder.has_codex_desktop_runtime_gate(content)
+    assert builder.has_chatgpt_runtime_contract(content)
 
 
-def test_desktop_skill_projection_rejects_an_incomplete_runtime_gate() -> None:
+def test_chatgpt_skill_projection_rejects_an_incomplete_runtime_contract() -> None:
     builder = load_builder()
     content = (
         "---\n"
         "name: incomplete-gate\n"
         "description: Test fixture.\n"
         "---\n\n"
-        f"{builder.REQUIRED_CODEX_DESKTOP_HEADING}\n"
+        f"{builder.REQUIRED_CHATGPT_HEADING}\n"
     ).encode("utf-8")
 
     with pytest.raises(
         ValueError,
-        match="incomplete or misplaced Codex Desktop runtime gate",
+        match="incomplete or misplaced ChatGPT runtime contract",
     ):
-        builder.project_codex_desktop_skill(content)
+        builder.project_chatgpt_runtime_skill(content, plugin_name="clara")
 
 
-def test_desktop_skill_projection_rejects_gate_markers_in_frontmatter() -> None:
+def test_chatgpt_skill_projection_rejects_contract_markers_in_frontmatter() -> None:
     builder = load_builder()
     content = (
         "---\n"
         "name: misplaced-gate\n"
-        f"description: {builder.REQUIRED_CODEX_DESKTOP_HEADING} "
-        f"{builder.REQUIRED_CODEX_DESKTOP_REFUSAL} "
-        f"{builder.REQUIRED_CODEX_DESKTOP_ONLY}\n"
+        f"description: {builder.REQUIRED_CHATGPT_HEADING} "
+        f"{builder.REQUIRED_CHATGPT_CONTINUATION} "
+        f"{builder.REQUIRED_CODEX_RECOMMENDATION}\n"
         "---\n\n"
         "# Workflow\n\n"
         "Run on every surface.\n"
@@ -561,9 +565,9 @@ def test_desktop_skill_projection_rejects_gate_markers_in_frontmatter() -> None:
 
     with pytest.raises(
         ValueError,
-        match="incomplete or misplaced Codex Desktop runtime gate",
+        match="incomplete or misplaced ChatGPT runtime contract",
     ):
-        builder.project_codex_desktop_skill(content)
+        builder.project_chatgpt_runtime_skill(content, plugin_name="clara")
 
 
 def test_chatgpt_manifest_rejects_more_than_three_default_prompts() -> None:
@@ -604,7 +608,7 @@ def test_public_plugin_manifest_requires_codex_desktop_disclosure() -> None:
 
     with pytest.raises(
         ValueError,
-        match="must disclose the Desktop requirement",
+        match="must describe both ChatGPT and Codex Desktop",
     ):
         builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
 
@@ -3029,10 +3033,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "I dati retail e le mappature riviste usano un servizio hosted di Mparanza",
         "No separate API key is required; model work uses your existing ChatGPT plan.",
         "Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
-        "Install Clara, then open it in Codex Desktop.",
-        "Installa Clara, poi aprila in Codex Desktop.",
-        "The button opens Clara in the Marketplace.",
-        "Il pulsante apre Clara nel Marketplace.",
+        "Clara can analyze, draft, and review with you in ChatGPT.",
+        "Clara può analizzare, preparare bozze e revisionare il lavoro con te in ChatGPT.",
         "Install Clara",
         "Installa Clara",
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
@@ -3913,14 +3915,14 @@ def test_companion_install_flow_routes_login_to_same_listing(
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "The button opens Clara in the Marketplace. After installation, open Codex Desktop, enable Clara, and choose the folder you want to work in. Workflows do not start in ChatGPT on the web or mobile.",
-        "Il pulsante apre Clara nel Marketplace. Dopo l’installazione, apri Codex Desktop, attiva Clara e scegli la cartella su cui lavorare. I workflow non partono in ChatGPT web o mobile.",
-        "Le bouton ouvre Clara dans le Marketplace. Après l’installation, ouvrez Codex Desktop, activez Clara et choisissez le dossier sur lequel travailler. Les workflows ne démarrent pas dans ChatGPT sur le web ou mobile.",
-        "Die Schaltfläche öffnet Clara im Marketplace. Öffnen Sie nach der Installation Codex Desktop, aktivieren Sie Clara und wählen Sie den Arbeitsordner. Workflows starten nicht in ChatGPT im Web oder auf Mobilgeräten.",
-        "El botón abre Clara en el Marketplace. Después de instalarla, abre Codex Desktop, activa Clara y elige la carpeta en la que quieres trabajar. Los flujos no se inician en ChatGPT web o móvil.",
+        "Installing Codex is optional: you can continue in ChatGPT.",
+        "Installare Codex è facoltativo: puoi continuare in ChatGPT.",
+        "L’installation de Codex reste facultative : vous pouvez continuer dans ChatGPT.",
+        "Die Installation von Codex ist optional: Sie können in ChatGPT fortfahren.",
+        "Instalar Codex es opcional: puedes continuar en ChatGPT.",
     ),
 )
-def test_clara_install_flow_localizes_marketplace_and_desktop_handoff(
+def test_clara_install_flow_localizes_optional_codex_handoff(
     localized_guidance: str,
 ) -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(

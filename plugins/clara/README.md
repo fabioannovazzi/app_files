@@ -2,10 +2,11 @@
 
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
-Clara is distributed through the OpenAI Plugins Directory but runs only in
-Codex Desktop with a local workspace. If selected in ChatGPT web or mobile, it
-stops before reading project material or starting a workflow and directs the
-user to Codex Desktop.
+Clara works in ChatGPT with material supplied in the conversation. She analyzes,
+asks focused questions, drafts, and reviews before recommending Codex Desktop
+for direct folder access, persistent project files, local tools and checks, and
+durable deliverables. The recommendation never blocks the conversation: Clara
+can continue working in ChatGPT.
 
 Clara is a Codex plugin for advisory and succession projects where the
 core asset is consultant judgement. It keeps a durable case map, indexes source

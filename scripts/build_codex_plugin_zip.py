@@ -115,20 +115,54 @@ CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CHATGPT_UPLOAD_SUBTITLE_OVERRIDES = {
     "vera": "AI companion for accountants",
 }
-CODEX_DESKTOP_ONLY_PLUGINS = frozenset({"clara", "vera"})
-REQUIRED_CODEX_DESKTOP_HEADING = "## Codex Desktop Runtime Gate"
-REQUIRED_CODEX_DESKTOP_REFUSAL = "Do not run this plugin in ChatGPT on the web."
-REQUIRED_CODEX_DESKTOP_ONLY = "runs only in Codex Desktop"
-CODEX_DESKTOP_RUNTIME_GATE = f"""
-{REQUIRED_CODEX_DESKTOP_HEADING}
+CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
+REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
+REQUIRED_CHATGPT_CONTINUATION = (
+    "Do not stop merely because the current surface is ChatGPT."
+)
+REQUIRED_CODEX_RECOMMENDATION = "I work better with Codex because"
+CODEX_DOWNLOAD_URL = "https://developers.openai.com/codex/app#getting-started"
+CHATGPT_RUNTIME_CONTRACT = f"""
+{REQUIRED_CHATGPT_HEADING}
 
-This plugin runs only in Codex Desktop with a local Codex workspace.
-{REQUIRED_CODEX_DESKTOP_REFUSAL} If the current surface is ChatGPT web,
-ChatGPT mobile, or any environment without local Codex workspace access, stop
-before reading user material, calling tools, or starting the workflow. Tell the
-user to open Codex Desktop, enable the plugin, open the working folder, and
-start a new task.
+{REQUIRED_CHATGPT_CONTINUATION} Use material supplied in the conversation and
+any callable connected-app tools to complete a useful lightweight version of
+the workflow. Analyze evidence, ask focused questions, draft or review the
+requested output, and clearly distinguish completed work from operations that
+require unavailable local tools. Do not claim that local scripts ran or that
+durable local artifacts were created when there is no local workspace.
+
+After the first substantive result, recommend Codex once, naturally and without
+interrupting the work:
+
+> {REQUIRED_CODEX_RECOMMENDATION} it lets me work directly with your folders,
+> preserve project files, run tools and checks, and create durable deliverables.
+> [Download the ChatGPT desktop app with Codex]({CODEX_DOWNLOAD_URL}).
+> We can continue here in ChatGPT now.
+
+Do not show this recommendation on startup, after a trivial response, or more
+than once in the same conversation. Installation is never a prerequisite for
+continuing the useful in-chat work.
 """.strip()
+VERA_ITALIAN_CODEX_RECOMMENDATION = f"""
+
+For Vera, match the conversation language. When the user writes in Italian,
+use this Italian version instead of the English recommendation:
+
+> Lavoro meglio con Codex perché mi permette di lavorare direttamente nelle tue
+> cartelle, conservare i file del progetto, eseguire strumenti e controlli e
+> creare documenti e risultati che restano nel tuo spazio di lavoro.
+> [Scarica l'app desktop di ChatGPT con Codex]({CODEX_DOWNLOAD_URL}).
+> Possiamo continuare qui in ChatGPT.
+""".rstrip()
+
+
+def chatgpt_runtime_contract(plugin_name: str) -> str:
+    """Return the public ChatGPT runtime contract for one plugin."""
+
+    if plugin_name == "vera":
+        return CHATGPT_RUNTIME_CONTRACT + VERA_ITALIAN_CODEX_RECOMMENDATION
+    return CHATGPT_RUNTIME_CONTRACT
 
 
 @dataclass(frozen=True)
@@ -480,10 +514,7 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
         for field in REQUIRED_INTERFACE_FIELDS:
             if not interface.get(field):
                 errors.append(f"{plugin_name}: missing interface.{field}")
-        if (
-            plugin_name in CODEX_DESKTOP_ONLY_PLUGINS
-            and not interface.get("supportURL")
-        ):
+        if plugin_name in CROSS_SURFACE_PLUGINS and not interface.get("supportURL"):
             errors.append(f"{plugin_name}: missing interface.supportURL")
         composer_icon = interface.get("composerIcon")
         logo = interface.get("logo")
@@ -564,14 +595,14 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
             errors.append(
                 f"{plugin_name}: skill instructions must include the run output location policy"
             )
-        if plugin_name in CODEX_DESKTOP_ONLY_PLUGINS:
+        if plugin_name in CROSS_SURFACE_PLUGINS:
             main_skill = plugin_dir / "skills" / plugin_name / "SKILL.md"
             main_skill_text = (
                 main_skill.read_text(encoding="utf-8") if main_skill.exists() else ""
             )
-            if not has_codex_desktop_runtime_gate(main_skill_text):
+            if not has_chatgpt_runtime_contract(main_skill_text):
                 errors.append(
-                    f"{plugin_name}: main skill must enforce the Codex Desktop runtime gate"
+                    f"{plugin_name}: main skill must define the ChatGPT and Codex runtime contract"
                 )
         errors.extend(validate_plugin_interaction_patterns(plugin_dir))
 
@@ -890,15 +921,16 @@ def project_chatgpt_manifest(content: bytes) -> bytes:
                         f"{CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH} characters; "
                         f"found {len(prompt)}"
                     )
-        if str(manifest.get("name", "")) in CODEX_DESKTOP_ONLY_PLUGINS:
+        if str(manifest.get("name", "")) in CROSS_SURFACE_PLUGINS:
             long_description = interface.get("longDescription")
             if (
                 not isinstance(long_description, str)
+                or "ChatGPT" not in long_description
                 or "Codex Desktop" not in long_description
             ):
                 raise ValueError(
-                    "Codex Desktop-only upload manifest must disclose the "
-                    "Desktop requirement in interface.longDescription"
+                    "Cross-surface upload manifest must describe both ChatGPT "
+                    "and Codex Desktop in interface.longDescription"
                 )
 
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
@@ -926,43 +958,44 @@ def skill_body_start(text: str) -> int:
     return closing_index + len("\n---\n")
 
 
-def has_codex_desktop_runtime_gate(text: str) -> bool:
-    """Return whether the first skill body section is a complete Desktop gate."""
+def has_chatgpt_runtime_contract(text: str) -> bool:
+    """Return whether the first skill body section defines ChatGPT continuation."""
 
     try:
         body_index = skill_body_start(text)
     except ValueError:
         return False
     body = text[body_index:].lstrip("\n")
-    if not body.startswith(REQUIRED_CODEX_DESKTOP_HEADING):
+    if not body.startswith(REQUIRED_CHATGPT_HEADING):
         return False
-    next_section = body.find("\n## ", len(REQUIRED_CODEX_DESKTOP_HEADING))
-    gate_section = body if next_section < 0 else body[:next_section]
+    next_section = body.find("\n## ", len(REQUIRED_CHATGPT_HEADING))
+    runtime_section = body if next_section < 0 else body[:next_section]
     return (
-        REQUIRED_CODEX_DESKTOP_REFUSAL in gate_section
-        and REQUIRED_CODEX_DESKTOP_ONLY in gate_section
+        REQUIRED_CHATGPT_CONTINUATION in runtime_section
+        and REQUIRED_CODEX_RECOMMENDATION in runtime_section
+        and CODEX_DOWNLOAD_URL in runtime_section
     )
 
 
-def project_codex_desktop_skill(content: bytes) -> bytes:
-    """Add a fail-closed surface gate to a public skill projection."""
+def project_chatgpt_runtime_skill(content: bytes, *, plugin_name: str) -> bytes:
+    """Add the lightweight ChatGPT runtime contract to a public skill."""
 
     text = content.decode("utf-8")
     body_index = skill_body_start(text)
-    if has_codex_desktop_runtime_gate(text):
+    if has_chatgpt_runtime_contract(text):
         return content
     if (
-        REQUIRED_CODEX_DESKTOP_HEADING in text
-        or REQUIRED_CODEX_DESKTOP_REFUSAL in text
-        or REQUIRED_CODEX_DESKTOP_ONLY in text
+        REQUIRED_CHATGPT_HEADING in text
+        or REQUIRED_CHATGPT_CONTINUATION in text
+        or REQUIRED_CODEX_RECOMMENDATION in text
     ):
         raise ValueError(
-            "Skill Markdown has an incomplete or misplaced Codex Desktop runtime gate"
+            "Skill Markdown has an incomplete or misplaced ChatGPT runtime contract"
         )
     projected = (
         text[:body_index]
         + "\n"
-        + CODEX_DESKTOP_RUNTIME_GATE
+        + chatgpt_runtime_contract(plugin_name)
         + "\n\n"
         + text[body_index:].lstrip("\n")
     )
@@ -1000,8 +1033,11 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             content = project_chatgpt_manifest(content)
         elif name.endswith("/.codex-plugin/plugin.json"):
             content = project_chatgpt_component_manifest(content)
-        if plugin_name in CODEX_DESKTOP_ONLY_PLUGINS and name.endswith("/SKILL.md"):
-            content = project_codex_desktop_skill(content)
+        if plugin_name in CROSS_SURFACE_PLUGINS and name.endswith("/SKILL.md"):
+            content = project_chatgpt_runtime_skill(
+                content,
+                plugin_name=plugin_name,
+            )
         entries[name] = content
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")

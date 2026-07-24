@@ -101,14 +101,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "service, that category is covered by the next section."
                     ),
                     (
-                        "A public Plugins Directory listing is only a distribution and "
-                        "discovery surface. Vera and Clara workflows stop on ChatGPT web "
-                        "and mobile and require Codex Desktop. The user's existing "
-                        "ChatGPT plan may still govern the model context inside Codex."
+                        "Vera and Clara work in ChatGPT with material supplied in the "
+                        "conversation and with callable connected apps. They may recommend "
+                        "Codex Desktop for direct folder access, persistent project files, "
+                        "local tools, and durable deliverables after providing useful work. "
+                        "Installation is optional and the conversation can continue in "
+                        "ChatGPT."
                     ),
                     (
                         "Vera's Studio Archive uses two non-hosted message routes. "
-                        "Gmail is searched only from Codex Desktop through OpenAI's "
+                        "Gmail is searched from ChatGPT or Codex through OpenAI's "
                         "separately connected Gmail connector. WhatsApp is inspected "
                         "only from Codex Desktop with Computer Use in the WhatsApp "
                         "Desktop app already opened and authenticated by the "
@@ -321,14 +323,15 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     ),
                     (
                         "For Studio Archive, OpenAI's Gmail connector accesses the "
-                        "mailbox selected by the user inside Codex Desktop, while Codex "
+                        "mailbox selected by the user in ChatGPT or Codex, while Codex "
                         "Desktop Computer Use can inspect the WhatsApp Desktop interface "
-                        "on the user's own computer. Both routes execute only in Codex "
-                        "Desktop. Gmail, WhatsApp, and OpenAI are external systems under "
-                        "their own terms and controls. The professional signs in to "
-                        "those services directly; Vera must not request passwords, QR "
-                        "codes, authentication cookies, tokens, or one-time codes "
-                        "through chat."
+                        "on the user's own computer. The Gmail connector route can run "
+                        "in ChatGPT or Codex when connected; the WhatsApp route runs only "
+                        "in Codex Desktop. Gmail, WhatsApp, and OpenAI are external "
+                        "systems under their own terms and controls. The professional "
+                        "signs in to those services directly; Vera must not request "
+                        "passwords, QR codes, authentication cookies, tokens, or one-time "
+                        "codes through chat."
                     ),
                 ],
             },

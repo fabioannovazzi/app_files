@@ -97,9 +97,9 @@
   ],
   "negative_cases": [
     {
-      "id": "not-codex-desktop",
+      "id": "chatgpt-lightweight-handoff",
       "prompt": "Vera, sono su ChatGPT web: cerca i WhatsApp di Rossi.",
-      "expected": "Stop before reading material or calling a tool and tell the user to open Codex Desktop."
+      "expected": "Do not claim to inspect WhatsApp. Prepare the one-client scope that can be established in chat, explain in Italian why Vera works better with Codex for local WhatsApp Desktop control, provide the official download link, and say that the conversation can continue in ChatGPT."
     },
     {
       "id": "computer-use-or-app-unavailable",

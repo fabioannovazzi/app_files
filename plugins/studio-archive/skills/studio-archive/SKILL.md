@@ -1,22 +1,21 @@
 ---
 name: studio-archive
-description: Use when Vera must search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or configure and search a shared local studio document archive in Codex Desktop without mixing clients.
+description: Use when Vera must search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or configure and search a shared local studio document archive without mixing clients.
 ---
 
-## Codex Desktop Runtime Gate
+## Surface routing
 
-This plugin runs only in Codex Desktop with a local Codex workspace.
-Do not run this plugin in ChatGPT on the web. If the current surface is ChatGPT
-web, ChatGPT mobile, or any environment without local Codex workspace access,
-stop before reading user material, calling tools, or starting the workflow.
-Tell the user to open Codex Desktop, enable Vera, open the working folder, and
-start a new task.
+Connected Gmail may run in ChatGPT or Codex whenever its read tools are
+callable. WhatsApp Desktop control and local archive indexing require Codex
+Desktop. Without those local capabilities, continue with user-supplied material
+and any useful preparation available in chat; do not reduce the whole workflow
+to a redirect.
 
 ## Runtime split
 
 This component has three independent routes:
 
-- **Gmail:** works only in Codex Desktop with the separately installed and
+- **Gmail:** works in ChatGPT or Codex with the separately installed and
   connected OpenAI Gmail connector. It uses Gmail read tools
   directly and does not require Studio Archive MCP tools, a local ZIP, a local
   folder, or local scripts. Confirmed client addresses are scoped to the
@@ -51,8 +50,9 @@ identity registry, configuration, Codex context, and ChatGPT history. Do not
 create a shared database, shared account, vector service, or permissions layer
 in this first version.
 
-ChatGPT web and mobile must not run this workflow. Public directory visibility
-does not change the Codex Desktop requirement.
+ChatGPT web and mobile may run the connected Gmail route and may review material
+supplied in the conversation. They must not claim to control WhatsApp Desktop,
+index local folders, run local scripts, or create a persistent local archive.
 
 The source folder is read-only to this workflow. Immediate child directories
 become exact search scopes; supported root-level files receive their own root
@@ -191,9 +191,9 @@ correct account.
    bytes since indexing; it does not prove completeness, correctness, or legal
    authority.
 
-## Codex Desktop Gmail workflow
+## Connected Gmail workflow
 
-This is the complete base Gmail workflow for Codex Desktop. Do not call a
+This is the complete base Gmail workflow for ChatGPT or Codex. Do not call a
 Studio Archive MCP tool or local script in this section.
 
 1. Establish one client only from the user's wording: a legal name, tax
@@ -265,7 +265,7 @@ same Gmail workflow:
 - `match_studio_archive_email`
 
 Use this enhancement only after local archive setup. Its absence must never
-block or downgrade the Codex Desktop Gmail workflow.
+block or downgrade the connected Gmail workflow.
 
 This is on-demand connector retrieval, not background synchronization. Never
 use Gmail send, draft, forward, archive, Trash, delete, label, or move actions
@@ -401,7 +401,7 @@ ZIPs during an archive run.
   establish the answer.
 - OCR unavailable: keep the text-readable pass and identify likely scan gaps.
 - Gmail plugin unavailable or disconnected: tell the user to install or enable
-  the OpenAI Gmail connector in Codex Desktop and connect the intended account;
+  the OpenAI Gmail connector on the current surface and connect the intended account;
   do not use IMAP or browser fallback.
 - No confirmed address in the current task: bootstrap one bounded candidate
   search, propose exact addresses, and wait for confirmation before using any

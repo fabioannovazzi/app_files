@@ -37,13 +37,15 @@ WhatsApp Desktop is not a shared hosted service: its boundary is recorded in
 Studio Archive and no Mparanza webhook, connector, database, or retention
 period exists for WhatsApp messages.
 
-Vera may remain visible in the public Plugins Directory, but every workflow
-stops on ChatGPT web or mobile and requires Codex Desktop with a local
-workspace. The user's existing ChatGPT plan may still govern the selected
-Codex account.
+Vera works in ChatGPT with material supplied in the conversation and with
+callable connected apps such as Gmail. After a substantive result, she
+recommends Codex Desktop for direct folder access, persistent project files,
+local tools and checks, and durable deliverables. The recommendation follows
+the conversation language and never blocks the work: Vera can continue in
+ChatGPT. The user's existing ChatGPT plan governs the selected account.
 
-Inside Codex Desktop, Studio Archive can use the official OpenAI Gmail
-connector installed and connected separately. Vera searches the correspondence
+In ChatGPT or Codex, Studio Archive can use the official OpenAI Gmail connector
+installed and connected separately. Vera searches the correspondence
 of one selected client using addresses confirmed in the current task, bounded
 read actions, and per-message routing checks. It does not persist client
 identities between separate tasks or modify the mailbox.
