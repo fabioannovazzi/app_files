@@ -533,7 +533,6 @@ def test_vera_module_pages_present_an_outcome_led_connected_journey(
     assert 'id="proof"' in page or 'id="result"' in page
     assert len(prompt_nodes) == 1
     assert "../vera/index.html?lang=it" in page
-    assert 'href="../vera/index.html"' in page
 
 
 @pytest.mark.parametrize(

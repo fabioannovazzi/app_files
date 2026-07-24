@@ -11,37 +11,43 @@ are correct. Those remain reviewed human judgements.
 from __future__ import annotations
 
 import argparse
+import json
 import logging
+import os
 import re
 import shutil
+import stat
 
 # The only subprocess is a fixed, shell-free git check-ignore invocation.
 import subprocess  # nosec B404
 from collections.abc import Mapping, Sequence
+from contextlib import contextmanager
 from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 from preparation_contract_kernel import (
     ContractValidationError,
     canonical_json_sha256,
     file_sha256,
     file_snapshot_beneath,
-    strict_json_snapshot,
     strict_json_snapshot_beneath,
-    write_json,
 )
 
 __all__ = [
     "INTAKE_RECEIPT_SCHEMA",
+    "INTAKE_RECEIPT_SCHEMA_V2",
     "INTAKE_SCHEMA",
+    "INTAKE_SCHEMA_V2",
     "PILOT_ID_PATTERN",
-    "clear_owned_pilot_receipt_output",
+    "pinned_pilot_receipt_output",
     "resolve_pilot_storage_roots",
     "validate_pilot_receipt_output_path",
     "validate_pilot_local_run_path",
     "validate_real_data_pilot_intake_receipt",
+    "validate_real_data_pilot_intake_receipt_v2",
     "validate_real_data_pilot_intake",
+    "validate_real_data_pilot_intake_v2",
     "main",
 ]
 
@@ -49,10 +55,20 @@ LOGGER = logging.getLogger(__name__)
 
 INTAKE_SCHEMA = "clara.real_data_pilot_intake.v1"
 INTAKE_RECEIPT_SCHEMA = "clara.real_data_pilot_intake_receipt.v1"
+INTAKE_SCHEMA_V2 = "clara.real_data_pilot_intake.v2"
+INTAKE_RECEIPT_SCHEMA_V2 = "clara.real_data_pilot_intake_receipt.v2"
 VALIDATOR_VERSION = "1.0.0"
 VALIDATOR_ID = "real_data_pilot_intake_validator.v1"
+VALIDATOR_VERSION_V2 = "2.0.0"
+VALIDATOR_ID_V2 = "real_data_pilot_intake_validator.v2"
 PURPOSE = "local_due_diligence_preparation_evaluation"
 SOURCE_KIND = "commercial_trial_balance"
+SOURCE_KINDS_V2 = frozenset(
+    {
+        "commercial_general_ledger",
+        "commercial_trial_balance",
+    }
+)
 DATA_CLASSIFICATIONS = frozenset({"anonymized_real", "consented_real"})
 AUTHORIZATION_BASES = frozenset(
     {
@@ -85,6 +101,21 @@ DOES_NOT_ESTABLISH = (
     "authorizer_identity_or_authority",
     "commercial_origin_or_authenticity",
     "current_authorization_at_later_execution",
+    "downstream_compatibility",
+    "future_storage_or_copy_behavior",
+    "legal_permission",
+    "publication_authorization",
+    "receipt_authenticity_or_signer_identity",
+    "retention_or_deletion",
+    "report_readiness",
+)
+DOES_NOT_ESTABLISH_V2 = (
+    "accounting_semantic_correctness",
+    "anonymization_sufficiency",
+    "authorizer_identity_or_authority",
+    "commercial_origin_or_authenticity",
+    "current_authorization_at_later_execution",
+    "declared_data_kind_correctness",
     "downstream_compatibility",
     "future_storage_or_copy_behavior",
     "legal_permission",
@@ -132,6 +163,17 @@ INTAKE_VALIDATOR_DEPENDENCY_PATHS = {
     ),
     "intake_schema": (
         CLARA_ROOT / "contracts" / "real_data_pilot_intake.v1.schema.json"
+    ),
+    "preparation_contract_kernel": (
+        Path(__file__).resolve().with_name("preparation_contract_kernel.py")
+    ),
+}
+INTAKE_VALIDATOR_DEPENDENCY_PATHS_V2 = {
+    "intake_receipt_schema": (
+        CLARA_ROOT / "contracts" / "real_data_pilot_intake_receipt.v2.schema.json"
+    ),
+    "intake_schema": (
+        CLARA_ROOT / "contracts" / "real_data_pilot_intake.v2.schema.json"
     ),
     "preparation_contract_kernel": (
         Path(__file__).resolve().with_name("preparation_contract_kernel.py")
@@ -217,23 +259,30 @@ def _require_constant(value: Any, *, expected: Any, label: str) -> None:
         raise ContractValidationError(f"{label} must equal {expected!r}")
 
 
-def _current_dependency_sha256() -> dict[str, str]:
+def _current_dependency_sha256(
+    dependency_paths: Mapping[str, Path] = INTAKE_VALIDATOR_DEPENDENCY_PATHS,
+) -> dict[str, str]:
     """Return hashes for every file that can change intake validation behavior."""
 
     return {
         dependency_id: file_sha256(path)
-        for dependency_id, path in sorted(INTAKE_VALIDATOR_DEPENDENCY_PATHS.items())
+        for dependency_id, path in sorted(dependency_paths.items())
     }
 
 
-def _validate_dependency_sha256(value: Any, *, label: str) -> dict[str, str]:
+def _validate_dependency_sha256(
+    value: Any,
+    *,
+    label: str,
+    dependency_paths: Mapping[str, Path] = INTAKE_VALIDATOR_DEPENDENCY_PATHS,
+) -> dict[str, str]:
     dependencies = _mapping(value, label=label)
     _exact_fields(
         dependencies,
-        required=frozenset(INTAKE_VALIDATOR_DEPENDENCY_PATHS),
+        required=frozenset(dependency_paths),
         label=label,
     )
-    expected = _current_dependency_sha256()
+    expected = _current_dependency_sha256(dependency_paths)
     validated: dict[str, str] = {}
     for dependency_id, expected_digest in expected.items():
         digest = _receipt_sha256(
@@ -376,41 +425,298 @@ def validate_pilot_receipt_output_path(
     )
 
 
-def clear_owned_pilot_receipt_output(
+def _descriptor_identity(value: os.stat_result) -> tuple[int, int, int]:
+    """Return the stable identity needed to detect directory-entry swaps."""
+
+    return value.st_dev, value.st_ino, stat.S_IFMT(value.st_mode)
+
+
+def _file_snapshot_identity(
+    value: os.stat_result,
+) -> tuple[int, int, int, int, int, int, int]:
+    """Return file identity plus mutation-sensitive metadata."""
+
+    return (
+        value.st_dev,
+        value.st_ino,
+        stat.S_IFMT(value.st_mode),
+        value.st_nlink,
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
+
+
+def _read_descriptor_bytes(descriptor: int) -> bytes:
+    chunks: list[bytes] = []
+    while True:
+        chunk = os.read(descriptor, 1024 * 1024)
+        if not chunk:
+            return b"".join(chunks)
+        chunks.append(chunk)
+
+
+class _PinnedPilotReceiptOutput:
+    """Write one receipt through a no-follow directory descriptor chain."""
+
+    def __init__(
+        self,
+        *,
+        output_path: Path,
+        root_path: Path,
+        relative_parts: tuple[str, ...],
+        directory_descriptors: tuple[int, ...],
+    ) -> None:
+        self.output_path = output_path
+        self.root_path = root_path
+        self.relative_parts = relative_parts
+        self.directory_descriptors = directory_descriptors
+
+    @property
+    def _parent_descriptor(self) -> int:
+        return self.directory_descriptors[-1]
+
+    @property
+    def _filename(self) -> str:
+        return self.relative_parts[-1]
+
+    def _verify_directory_chain(self) -> None:
+        """Fail if any lexical directory entry no longer names its pinned inode."""
+
+        try:
+            root_entry = self.root_path.lstat()
+        except OSError as exc:
+            raise ContractValidationError(
+                "local_run_root changed during receipt write"
+            ) from exc
+        if _descriptor_identity(root_entry) != _descriptor_identity(
+            os.fstat(self.directory_descriptors[0])
+        ):
+            raise ContractValidationError("local_run_root changed during receipt write")
+
+        for position, part in enumerate(self.relative_parts[:-1]):
+            try:
+                current_entry = os.stat(
+                    part,
+                    dir_fd=self.directory_descriptors[position],
+                    follow_symlinks=False,
+                )
+            except OSError as exc:
+                raise ContractValidationError(
+                    "output directory path changed during receipt write"
+                ) from exc
+            pinned_entry = os.fstat(self.directory_descriptors[position + 1])
+            if _descriptor_identity(current_entry) != _descriptor_identity(
+                pinned_entry
+            ):
+                raise ContractValidationError(
+                    "output directory path changed during receipt write"
+                )
+
+    def require_absent(self) -> None:
+        """Require a fresh output leaf; never replace or delete existing data."""
+
+        try:
+            os.stat(
+                self._filename,
+                dir_fd=self._parent_descriptor,
+                follow_symlinks=False,
+            )
+        except FileNotFoundError:
+            return
+        except OSError as exc:
+            raise ContractValidationError(
+                "output path could not be checked before receipt write"
+            ) from exc
+        raise ContractValidationError(
+            "output path must be absent; choose a fresh receipt path"
+        )
+
+    def write_json(self, value: Mapping[str, Any]) -> None:
+        """Write exact JSON through one new no-follow output descriptor.
+
+        A failure never deletes or replaces the output name. A partial or
+        concurrently changed leaf is left in place for explicit review.
+        """
+
+        # The structured-value check is deterministic because JSON safety and
+        # exact output bytes are mechanically verifiable contract properties.
+        canonical_json_sha256(value)
+        output_bytes = (
+            json.dumps(
+                value,
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode("utf-8")
+        self._verify_directory_chain()
+        self.require_absent()
+
+        output_flags = os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+        if hasattr(os, "O_CLOEXEC"):
+            output_flags |= os.O_CLOEXEC
+        try:
+            output_descriptor = os.open(
+                self._filename,
+                output_flags,
+                0o600,
+                dir_fd=self._parent_descriptor,
+            )
+        except FileExistsError as exc:
+            raise ContractValidationError(
+                "output path became occupied before receipt write"
+            ) from exc
+        except OSError as exc:
+            raise ContractValidationError(
+                "receipt output could not be safely created"
+            ) from exc
+        try:
+            remaining = memoryview(output_bytes)
+            while remaining:
+                written = os.write(output_descriptor, remaining)
+                if written <= 0:
+                    raise ContractValidationError(
+                        "receipt output could not be written completely"
+                    )
+                remaining = remaining[written:]
+            os.fsync(output_descriptor)
+            descriptor_before = os.fstat(output_descriptor)
+            if (
+                not stat.S_ISREG(descriptor_before.st_mode)
+                or descriptor_before.st_nlink != 1
+                or descriptor_before.st_size != len(output_bytes)
+            ):
+                raise ContractValidationError(
+                    "receipt output failed its integrity check"
+                )
+            os.lseek(output_descriptor, 0, os.SEEK_SET)
+            observed_bytes = _read_descriptor_bytes(output_descriptor)
+            descriptor_after = os.fstat(output_descriptor)
+            if observed_bytes != output_bytes or _file_snapshot_identity(
+                descriptor_before
+            ) != _file_snapshot_identity(descriptor_after):
+                raise ContractValidationError(
+                    "receipt output bytes changed during the write"
+                )
+            self._verify_directory_chain()
+            try:
+                current_output = os.stat(
+                    self._filename,
+                    follow_symlinks=False,
+                    dir_fd=self._parent_descriptor,
+                )
+            except OSError as exc:
+                raise ContractValidationError(
+                    "receipt output path changed during the write"
+                ) from exc
+            if (
+                _descriptor_identity(current_output)
+                != _descriptor_identity(descriptor_after)
+                or current_output.st_nlink != 1
+                or current_output.st_size != len(output_bytes)
+            ):
+                raise ContractValidationError(
+                    "published receipt failed its integrity check"
+                )
+            os.fsync(self._parent_descriptor)
+            self._verify_directory_chain()
+            final_output = os.stat(
+                self._filename,
+                dir_fd=self._parent_descriptor,
+                follow_symlinks=False,
+            )
+            final_descriptor_before = os.fstat(output_descriptor)
+            os.lseek(output_descriptor, 0, os.SEEK_SET)
+            final_bytes = _read_descriptor_bytes(output_descriptor)
+            final_descriptor_after = os.fstat(output_descriptor)
+            if (
+                final_bytes != output_bytes
+                or _file_snapshot_identity(final_output)
+                != _file_snapshot_identity(final_descriptor_before)
+                or _file_snapshot_identity(final_descriptor_before)
+                != _file_snapshot_identity(final_descriptor_after)
+            ):
+                raise ContractValidationError(
+                    "receipt output changed before write completion"
+                )
+            self._verify_directory_chain()
+        finally:
+            os.close(output_descriptor)
+
+
+@contextmanager
+def pinned_pilot_receipt_output(
     output_path: Path,
     *,
-    schema_version: str,
-    validator_id: str,
-    required_fields: frozenset[str],
-) -> None:
-    """Remove only a positively identified prior receipt owned by this CLI."""
+    local_run_root: Path,
+) -> Iterator[_PinnedPilotReceiptOutput]:
+    """Pin a root-relative no-follow parent directory for one receipt write."""
 
-    output_path = Path(output_path)
-    if not output_path.exists():
-        return
-    if not output_path.is_file() or output_path.stat().st_nlink != 1:
-        raise ContractValidationError(
-            "existing output must be one non-linked regular receipt file"
-        )
+    root_path = Path(local_run_root).absolute()
+    lexical_output = Path(output_path).absolute()
     try:
-        payload, _, _ = strict_json_snapshot(output_path)
-        validator = _mapping(
-            payload.get("validator"), label="existing output validator"
-        )
-    except (ContractValidationError, OSError, TypeError, ValueError) as exc:
+        relative_path = lexical_output.relative_to(root_path)
+    except ValueError as exc:
         raise ContractValidationError(
-            "existing output is not an owned prior receipt"
+            "output path must stay inside the declared local run root"
         ) from exc
-    if (
-        set(payload) != set(required_fields)
-        or payload.get("schema_version") != schema_version
-        or validator.get("validator_id") != validator_id
-    ):
-        raise ContractValidationError("existing output is not an owned prior receipt")
-    output_path.unlink()
+    relative_parts = relative_path.parts
+    if not relative_parts or any(part in {"", ".", ".."} for part in relative_parts):
+        raise ContractValidationError(
+            "output path must be one root-relative receipt file"
+        )
+
+    directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        directory_flags |= os.O_CLOEXEC
+    descriptors: list[int] = []
+    try:
+        current_descriptor = os.open(root_path, directory_flags)
+        descriptors.append(current_descriptor)
+        for part in relative_parts[:-1]:
+            current_descriptor = os.open(
+                part,
+                directory_flags,
+                dir_fd=current_descriptor,
+            )
+            descriptors.append(current_descriptor)
+        pinned_output = _PinnedPilotReceiptOutput(
+            output_path=lexical_output,
+            root_path=root_path,
+            relative_parts=relative_parts,
+            directory_descriptors=tuple(descriptors),
+        )
+        pinned_output._verify_directory_chain()
+        yield pinned_output
+    except OSError as exc:
+        raise ContractValidationError(
+            "output path parent could not be pinned below local_run_root"
+        ) from exc
+    finally:
+        for descriptor in reversed(descriptors):
+            os.close(descriptor)
 
 
-def _validate_source_declaration(value: Any) -> dict[str, Any]:
+def _validate_source_kind(
+    value: Any,
+    *,
+    allowed: frozenset[str],
+    label: str,
+) -> str:
+    source_kind = _text(value, label=label)
+    if source_kind not in allowed:
+        raise ContractValidationError(f"{label} is not registered")
+    return source_kind
+
+
+def _validate_source_declaration(
+    value: Any,
+    *,
+    source_kinds: frozenset[str],
+) -> dict[str, Any]:
     source = _mapping(value, label="source")
     _exact_fields(
         source,
@@ -431,9 +737,9 @@ def _validate_source_declaration(value: Any) -> dict[str, Any]:
         pattern=SOURCE_ID_PATTERN,
         label="source.source_id",
     )
-    _require_constant(
+    source_kind = _validate_source_kind(
         source["data_kind"],
-        expected=SOURCE_KIND,
+        allowed=source_kinds,
         label="source.data_kind",
     )
     data_classification = _text(
@@ -462,7 +768,7 @@ def _validate_source_declaration(value: Any) -> dict[str, Any]:
 
     return {
         "source_id": source_id,
-        "data_kind": SOURCE_KIND,
+        "data_kind": source_kind,
         "data_classification": data_classification,
         "media_type": media_type,
         "byte_count": byte_count,
@@ -752,8 +1058,17 @@ def _receipt_sha256(value: Any, *, label: str) -> str:
     return digest
 
 
-def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
-    """Validate every field in one sanitized intake receipt."""
+def _validate_real_data_pilot_intake_receipt(
+    value: Any,
+    *,
+    receipt_schema: str,
+    source_kinds: frozenset[str],
+    does_not_establish: tuple[str, ...],
+    validator_id: str,
+    validator_version: str,
+    dependency_paths: Mapping[str, Path],
+) -> dict[str, Any]:
+    """Validate every field in one versioned sanitized intake receipt."""
 
     receipt = _mapping(value, label="intake receipt")
     _exact_fields(
@@ -763,7 +1078,7 @@ def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
     )
     _require_constant(
         receipt["schema_version"],
-        expected=INTAKE_RECEIPT_SCHEMA,
+        expected=receipt_schema,
         label="intake receipt.schema_version",
     )
     _opaque_identifier(
@@ -800,9 +1115,9 @@ def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
         pattern=SOURCE_ID_PATTERN,
         label="intake receipt.source_receipt.source_id",
     )
-    _require_constant(
+    _validate_source_kind(
         source["declared_data_kind"],
-        expected=SOURCE_KIND,
+        allowed=source_kinds,
         label="intake receipt.source_receipt.declared_data_kind",
     )
     data_classification = _text(
@@ -1115,7 +1430,7 @@ def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
         )
     _exact_text_list(
         eligibility["does_not_establish"],
-        expected=DOES_NOT_ESTABLISH,
+        expected=does_not_establish,
         label="intake receipt.eligibility.does_not_establish",
     )
 
@@ -1138,12 +1453,12 @@ def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
     )
     _require_constant(
         validator["validator_id"],
-        expected=VALIDATOR_ID,
+        expected=validator_id,
         label="intake receipt.validator.validator_id",
     )
     _require_constant(
         validator["validator_version"],
-        expected=VALIDATOR_VERSION,
+        expected=validator_version,
         label="intake receipt.validator.validator_version",
     )
     implementation_sha256 = _receipt_sha256(
@@ -1157,6 +1472,7 @@ def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
     _validate_dependency_sha256(
         validator["dependency_sha256"],
         label="intake receipt.validator.dependency_sha256",
+        dependency_paths=dependency_paths,
     )
     _require_constant(
         validator["mode"],
@@ -1166,15 +1482,50 @@ def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
     return dict(receipt)
 
 
-def validate_real_data_pilot_intake(
+def validate_real_data_pilot_intake_receipt(value: Any) -> dict[str, Any]:
+    """Validate one frozen v1 trial-balance intake receipt."""
+
+    return _validate_real_data_pilot_intake_receipt(
+        value,
+        receipt_schema=INTAKE_RECEIPT_SCHEMA,
+        source_kinds=frozenset({SOURCE_KIND}),
+        does_not_establish=DOES_NOT_ESTABLISH,
+        validator_id=VALIDATOR_ID,
+        validator_version=VALIDATOR_VERSION,
+        dependency_paths=INTAKE_VALIDATOR_DEPENDENCY_PATHS,
+    )
+
+
+def validate_real_data_pilot_intake_receipt_v2(value: Any) -> dict[str, Any]:
+    """Validate one v2 trial-balance or general-ledger intake receipt."""
+
+    return _validate_real_data_pilot_intake_receipt(
+        value,
+        receipt_schema=INTAKE_RECEIPT_SCHEMA_V2,
+        source_kinds=SOURCE_KINDS_V2,
+        does_not_establish=DOES_NOT_ESTABLISH_V2,
+        validator_id=VALIDATOR_ID_V2,
+        validator_version=VALIDATOR_VERSION_V2,
+        dependency_paths=INTAKE_VALIDATOR_DEPENDENCY_PATHS_V2,
+    )
+
+
+def _validate_real_data_pilot_intake(
     intake_path: Path,
     source_path: Path,
     *,
     as_of_date: str,
     local_run_root: Path,
     repository_root: Path,
+    intake_schema: str,
+    receipt_schema: str,
+    source_kinds: frozenset[str],
+    does_not_establish: tuple[str, ...],
+    validator_id: str,
+    validator_version: str,
+    dependency_paths: Mapping[str, Path],
 ) -> dict[str, Any]:
-    """Return a source-bound intake receipt without reading accounting meaning."""
+    """Return a versioned source-bound receipt without reading accounting meaning."""
 
     run_root, repo_root = resolve_pilot_storage_roots(
         local_run_root=local_run_root,
@@ -1218,7 +1569,7 @@ def validate_real_data_pilot_intake(
     )
     _require_constant(
         intake["schema_version"],
-        expected=INTAKE_SCHEMA,
+        expected=intake_schema,
         label="intake.schema_version",
     )
     pilot_id = _opaque_identifier(
@@ -1227,7 +1578,10 @@ def validate_real_data_pilot_intake(
         label="intake.pilot_id",
     )
     _require_constant(intake["purpose"], expected=PURPOSE, label="intake.purpose")
-    source = _validate_source_declaration(intake["source"])
+    source = _validate_source_declaration(
+        intake["source"],
+        source_kinds=source_kinds,
+    )
     as_of = _iso_date(as_of_date, label="as_of_date")
     authorization = _validate_authorization(
         intake["authorization"],
@@ -1267,7 +1621,7 @@ def validate_real_data_pilot_intake(
     }
 
     receipt = {
-        "schema_version": INTAKE_RECEIPT_SCHEMA,
+        "schema_version": receipt_schema,
         "pilot_id": pilot_id,
         "validation_date": as_of.isoformat(),
         "intake_contract_sha256": intake_contract_sha256,
@@ -1282,17 +1636,77 @@ def validate_real_data_pilot_intake(
             "publication_status": "withheld",
             "report_ready": False,
             "execution_revalidation_required": True,
-            "does_not_establish": list(DOES_NOT_ESTABLISH),
+            "does_not_establish": list(does_not_establish),
         },
         "validator": {
-            "dependency_sha256": _current_dependency_sha256(),
-            "validator_id": VALIDATOR_ID,
-            "validator_version": VALIDATOR_VERSION,
+            "dependency_sha256": _current_dependency_sha256(dependency_paths),
+            "validator_id": validator_id,
+            "validator_version": validator_version,
             "implementation_sha256": file_sha256(Path(__file__).resolve()),
             "mode": "deterministic_mechanical",
         },
     }
-    return validate_real_data_pilot_intake_receipt(receipt)
+    return _validate_real_data_pilot_intake_receipt(
+        receipt,
+        receipt_schema=receipt_schema,
+        source_kinds=source_kinds,
+        does_not_establish=does_not_establish,
+        validator_id=validator_id,
+        validator_version=validator_version,
+        dependency_paths=dependency_paths,
+    )
+
+
+def validate_real_data_pilot_intake(
+    intake_path: Path,
+    source_path: Path,
+    *,
+    as_of_date: str,
+    local_run_root: Path,
+    repository_root: Path,
+) -> dict[str, Any]:
+    """Return one frozen v1 trial-balance intake receipt."""
+
+    return _validate_real_data_pilot_intake(
+        intake_path,
+        source_path,
+        as_of_date=as_of_date,
+        local_run_root=local_run_root,
+        repository_root=repository_root,
+        intake_schema=INTAKE_SCHEMA,
+        receipt_schema=INTAKE_RECEIPT_SCHEMA,
+        source_kinds=frozenset({SOURCE_KIND}),
+        does_not_establish=DOES_NOT_ESTABLISH,
+        validator_id=VALIDATOR_ID,
+        validator_version=VALIDATOR_VERSION,
+        dependency_paths=INTAKE_VALIDATOR_DEPENDENCY_PATHS,
+    )
+
+
+def validate_real_data_pilot_intake_v2(
+    intake_path: Path,
+    source_path: Path,
+    *,
+    as_of_date: str,
+    local_run_root: Path,
+    repository_root: Path,
+) -> dict[str, Any]:
+    """Return one v2 trial-balance or general-ledger intake receipt."""
+
+    return _validate_real_data_pilot_intake(
+        intake_path,
+        source_path,
+        as_of_date=as_of_date,
+        local_run_root=local_run_root,
+        repository_root=repository_root,
+        intake_schema=INTAKE_SCHEMA_V2,
+        receipt_schema=INTAKE_RECEIPT_SCHEMA_V2,
+        source_kinds=SOURCE_KINDS_V2,
+        does_not_establish=DOES_NOT_ESTABLISH_V2,
+        validator_id=VALIDATOR_ID_V2,
+        validator_version=VALIDATOR_VERSION_V2,
+        dependency_paths=INTAKE_VALIDATOR_DEPENDENCY_PATHS_V2,
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -1306,7 +1720,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--local-run-root", required=True, type=Path)
     parser.add_argument("--repository-root", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--contract-version",
+        choices=("v1", "v2"),
+        default="v1",
+        help="Intake contract version; v1 is trial-balance-only.",
+    )
     args = parser.parse_args(argv)
+
+    if args.contract_version == "v2":
+        validate_intake = validate_real_data_pilot_intake_v2
+    else:
+        validate_intake = validate_real_data_pilot_intake
 
     run_root, repo_root = resolve_pilot_storage_roots(
         local_run_root=args.local_run_root,
@@ -1329,21 +1754,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise ContractValidationError(
             "output path parent must be an existing directory"
         )
-    clear_owned_pilot_receipt_output(
+    with pinned_pilot_receipt_output(
         output_path,
-        schema_version=INTAKE_RECEIPT_SCHEMA,
-        validator_id=VALIDATOR_ID,
-        required_fields=INTAKE_RECEIPT_FIELDS,
-    )
-
-    receipt = validate_real_data_pilot_intake(
-        intake_path,
-        source_path,
-        as_of_date=_current_date().isoformat(),
         local_run_root=run_root,
-        repository_root=repo_root,
-    )
-    write_json(output_path, receipt)
+    ) as pinned_output:
+        pinned_output.require_absent()
+        receipt = validate_intake(
+            intake_path,
+            source_path,
+            as_of_date=_current_date().isoformat(),
+            local_run_root=run_root,
+            repository_root=repo_root,
+        )
+        pinned_output.write_json(receipt)
     LOGGER.info(
         "Real-data pilot intake %s: %s",
         receipt["pilot_id"],

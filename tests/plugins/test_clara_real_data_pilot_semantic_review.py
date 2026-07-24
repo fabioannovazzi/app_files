@@ -6,6 +6,7 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Any, Callable
 
 import jsonschema
@@ -68,14 +69,20 @@ def _write_json(path: Path, payload: object) -> None:
     )
 
 
-def _intake_contract(source_sha256: str, byte_count: int) -> dict[str, Any]:
+def _intake_contract(
+    source_sha256: str,
+    byte_count: int,
+    *,
+    schema_version: str = "clara.real_data_pilot_intake.v1",
+    data_kind: str = "commercial_trial_balance",
+) -> dict[str, Any]:
     return {
-        "schema_version": "clara.real_data_pilot_intake.v1",
+        "schema_version": schema_version,
         "pilot_id": "pilot-0123456789abcdef",
         "purpose": "local_due_diligence_preparation_evaluation",
         "source": {
             "source_id": "source-0123456789abcdef",
-            "data_kind": "commercial_trial_balance",
+            "data_kind": data_kind,
             "data_classification": "consented_real",
             "media_type": "text/csv",
             "byte_count": byte_count,
@@ -187,14 +194,26 @@ def _semantic_review(
 
 def _case(
     tmp_path: Path,
+    *,
+    intake_contract_version: str = "v1",
 ) -> tuple[Path, Path, dict[str, Any], dict[str, Any]]:
     source_path = tmp_path / "source.csv"
     source_path.write_bytes(SOURCE_BYTES)
     source_sha256 = hashlib.sha256(SOURCE_BYTES).hexdigest()
     intake_path = tmp_path / "intake.json"
-    intake = _intake_contract(source_sha256, len(SOURCE_BYTES))
+    if intake_contract_version == "v2":
+        intake = _intake_contract(
+            source_sha256,
+            len(SOURCE_BYTES),
+            schema_version="clara.real_data_pilot_intake.v2",
+            data_kind="commercial_general_ledger",
+        )
+        validate_intake = INTAKE_VALIDATOR.validate_real_data_pilot_intake_v2
+    else:
+        intake = _intake_contract(source_sha256, len(SOURCE_BYTES))
+        validate_intake = INTAKE_VALIDATOR.validate_real_data_pilot_intake
     _write_json(intake_path, intake)
-    intake_receipt = INTAKE_VALIDATOR.validate_real_data_pilot_intake(
+    intake_receipt = validate_intake(
         intake_path,
         source_path,
         as_of_date=VALIDATION_DATE,
@@ -235,12 +254,13 @@ def _run_review(
 
 def _issue(
     *,
+    topic: str = "account_mapping",
     status: str = "open",
     blocking: bool = True,
     resolution: str | None = None,
 ) -> dict[str, Any]:
     return {
-        "topic": "account_mapping",
+        "topic": topic,
         "status": status,
         "blocking": blocking,
         "description": "Unit-test semantic issue description.",
@@ -389,6 +409,48 @@ def test_open_blocking_semantic_issue_blocks_mechanical_preparation(
     assert receipt["readiness"]["status"] == "blocked_by_reviewed_semantic_issues"
     assert receipt["readiness"]["mechanical_preparation_allowed"] is False
     assert receipt["review_summary"]["issue_counts"]["open_blocking"] == 1
+
+
+def test_v2_general_ledger_dataset_identity_issue_blocks_preparation(
+    tmp_path: Path,
+) -> None:
+    review_path, intake_receipt_path, review, intake_receipt = _case(
+        tmp_path,
+        intake_contract_version="v2",
+    )
+    review["issues"] = {"semantic-issue-01": _issue(topic="dataset_identity_and_grain")}
+    _write_json(review_path, review)
+
+    receipt = _run_review(review_path, intake_receipt_path)
+
+    assert intake_receipt["schema_version"] == (
+        "clara.real_data_pilot_intake_receipt.v2"
+    )
+    assert (
+        intake_receipt["source_receipt"]["declared_data_kind"]
+        == "commercial_general_ledger"
+    )
+    assert receipt["readiness"]["status"] == "blocked_by_reviewed_semantic_issues"
+    assert receipt["readiness"]["mechanical_preparation_allowed"] is False
+    assert receipt["review_summary"]["issue_counts"]["open_blocking"] == 1
+
+
+def test_semantic_review_rejects_unregistered_intake_receipt_version(
+    tmp_path: Path,
+) -> None:
+    review_path, intake_receipt_path, review, intake_receipt = _case(tmp_path)
+    intake_receipt["schema_version"] = "clara.real_data_pilot_intake_receipt.v3"
+    _write_json(intake_receipt_path, intake_receipt)
+    review["intake_receipt_sha256"] = hashlib.sha256(
+        intake_receipt_path.read_bytes()
+    ).hexdigest()
+    _write_json(review_path, review)
+
+    with pytest.raises(
+        SEMANTIC_VALIDATOR.ContractValidationError,
+        match="schema_version is not a supported exact version",
+    ):
+        _run_review(review_path, intake_receipt_path)
 
 
 def test_open_nonblocking_semantic_issue_preserves_reviewer_decision(
@@ -830,7 +892,7 @@ def test_semantic_review_cli_writes_sanitized_receipt(
     assert receipt["readiness"]["report_ready"] is False
 
 
-def test_semantic_review_cli_removes_stale_receipt_before_failure(
+def test_semantic_review_cli_requires_fresh_output_and_preserves_prior_receipt(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -854,16 +916,17 @@ def test_semantic_review_cli_removes_stale_receipt_before_failure(
         str(output_path),
     ]
     assert SEMANTIC_VALIDATOR.main(arguments) == 0
+    prior_receipt = output_path.read_bytes()
     review["review_status"] = "draft"
     _write_json(review_path, review)
 
     with pytest.raises(
         SEMANTIC_VALIDATOR.ContractValidationError,
-        match="review_status must equal",
+        match="output path must be absent",
     ):
         SEMANTIC_VALIDATOR.main(arguments)
 
-    assert not output_path.exists()
+    assert output_path.read_bytes() == prior_receipt
 
 
 def test_semantic_review_cli_refuses_unowned_existing_output(
@@ -882,7 +945,7 @@ def test_semantic_review_cli_refuses_unowned_existing_output(
 
     with pytest.raises(
         SEMANTIC_VALIDATOR.ContractValidationError,
-        match="not an owned prior receipt",
+        match="output path must be absent",
     ):
         SEMANTIC_VALIDATOR.main(
             [
@@ -1003,3 +1066,81 @@ def test_semantic_review_cli_rejects_output_collision(
         )
 
     assert target_path.read_bytes() == original_bytes
+
+
+def test_semantic_review_cli_parent_symlink_swap_cannot_escape_run_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    review_path, intake_receipt_path, _, _ = _case(
+        tmp_path,
+        intake_contract_version="v2",
+    )
+    receipt_directory = tmp_path / "receipts"
+    receipt_directory.mkdir()
+    pinned_directory = tmp_path / "receipts-pinned"
+    output_path = receipt_directory / "semantic-review-receipt.json"
+    monkeypatch.setattr(
+        SEMANTIC_VALIDATOR,
+        "_current_date",
+        lambda: SEMANTIC_VALIDATOR.date.fromisoformat(VALIDATION_DATE),
+    )
+
+    with TemporaryDirectory(
+        prefix="clara-m6-semantic-output-race-",
+        dir=tmp_path.parent,
+    ) as raw_outside_directory:
+        outside_directory = Path(raw_outside_directory)
+        outside_output = outside_directory / output_path.name
+        original_open = INTAKE_VALIDATOR.os.open
+        swapped = False
+
+        def _swap_parent_then_open(
+            path: str | Path,
+            flags: int,
+            mode: int = 0o777,
+            *,
+            dir_fd: int | None = None,
+        ) -> int:
+            nonlocal swapped
+            if (
+                not swapped
+                and path == output_path.name
+                and flags & INTAKE_VALIDATOR.os.O_CREAT
+            ):
+                receipt_directory.rename(pinned_directory)
+                receipt_directory.symlink_to(
+                    outside_directory,
+                    target_is_directory=True,
+                )
+                swapped = True
+            return original_open(path, flags, mode, dir_fd=dir_fd)
+
+        monkeypatch.setattr(
+            INTAKE_VALIDATOR.os,
+            "open",
+            _swap_parent_then_open,
+        )
+
+        with pytest.raises(
+            SEMANTIC_VALIDATOR.ContractValidationError,
+            match="output directory path changed during receipt write",
+        ):
+            SEMANTIC_VALIDATOR.main(
+                [
+                    "--review",
+                    str(review_path),
+                    "--intake-receipt",
+                    str(intake_receipt_path),
+                    "--local-run-root",
+                    str(tmp_path),
+                    "--repository-root",
+                    str(ROOT),
+                    "--output",
+                    str(output_path),
+                ]
+            )
+
+        assert swapped is True
+        assert not outside_output.exists()
+        assert (pinned_directory / output_path.name).is_file()

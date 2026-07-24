@@ -1,0 +1,443 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-data-pilot-intake-receipt-v2.json",
+  "title": "Clara real-data pilot intake receipt v2",
+  "description": "A sanitized mechanical receipt showing that one exact trial-balance or general-ledger file matched a reviewed pilot declaration under its declared source kind. It is not proof that the declared kind is correct, legal authority, anonymization, semantic correctness, report readiness, or publication approval.",
+  "$comment": "This schema validates portable structure and every expressible constant. validate_real_data_pilot_intake_receipt_v2 is authoritative for cross-field digest equality, date ordering, current implementation/dependency hashes, and other runtime invariants.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_id",
+    "validation_date",
+    "intake_contract_sha256",
+    "source_receipt",
+    "authorization_receipt",
+    "privacy_boundary",
+    "deidentification_review",
+    "semantic_review",
+    "eligibility",
+    "validator"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_data_pilot_intake_receipt.v2"
+    },
+    "pilot_id": {
+      "$ref": "#/$defs/pilot_id"
+    },
+    "validation_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "intake_contract_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_receipt": {
+      "$ref": "#/$defs/source_receipt"
+    },
+    "authorization_receipt": {
+      "$ref": "#/$defs/authorization_receipt"
+    },
+    "privacy_boundary": {
+      "$ref": "#/$defs/privacy_boundary"
+    },
+    "deidentification_review": {
+      "$ref": "#/$defs/deidentification_review"
+    },
+    "semantic_review": {
+      "$ref": "#/$defs/semantic_review"
+    },
+    "eligibility": {
+      "$ref": "#/$defs/eligibility"
+    },
+    "validator": {
+      "$ref": "#/$defs/validator"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "source_receipt"
+        ],
+        "properties": {
+          "source_receipt": {
+            "required": [
+              "declared_data_classification"
+            ],
+            "properties": {
+              "declared_data_classification": {
+                "const": "anonymized_real"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "deidentification_review": {
+            "required": [
+              "status",
+              "reidentification_risk_review_status"
+            ],
+            "properties": {
+              "status": {
+                "const": "reviewed"
+              },
+              "reidentification_risk_review_status": {
+                "const": "reviewed"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^source-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "source_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "declared_data_kind",
+        "declared_data_classification",
+        "media_type",
+        "byte_count",
+        "sha256"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "declared_data_kind": {
+          "enum": [
+            "commercial_general_ledger",
+            "commercial_trial_balance"
+          ]
+        },
+        "declared_data_classification": {
+          "enum": [
+            "anonymized_real",
+            "consented_real"
+          ]
+        },
+        "media_type": {
+          "enum": [
+            "application/vnd.ms-excel",
+            "application/vnd.oasis.opendocument.spreadsheet",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "text/csv"
+          ]
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "authorization_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "authorized_on",
+        "valid_from",
+        "valid_until",
+        "purpose",
+        "authorized_source_sha256",
+        "permitted_actions",
+        "prohibited_actions",
+        "authorization_content_sha256",
+        "assurance"
+      ],
+      "properties": {
+        "status": {
+          "const": "declared_reviewed"
+        },
+        "basis": {
+          "enum": [
+            "explicit_authorized_user_instruction",
+            "public_owner_license",
+            "written_data_owner_permission"
+          ]
+        },
+        "authorized_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date"
+        },
+        "valid_until": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purpose": {
+          "const": "local_due_diligence_preparation_evaluation"
+        },
+        "authorized_source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "permitted_actions": {
+          "const": [
+            "codex_model_processing",
+            "local_deterministic_processing"
+          ]
+        },
+        "prohibited_actions": {
+          "const": [
+            "commit_raw_or_row_level_data",
+            "package_raw_or_row_level_data",
+            "publish_raw_or_row_level_data"
+          ]
+        },
+        "authorization_content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "assurance": {
+          "const": "declaration_bound_to_exact_source_not_independently_verified"
+        }
+      }
+    },
+    "privacy_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codex_context_acknowledged",
+        "automatic_anonymization_claimed",
+        "clara_external_recipient_added",
+        "declared_raw_and_row_level_storage",
+        "repository_recording_policy",
+        "storage_location_check"
+      ],
+      "properties": {
+        "codex_context_acknowledged": {
+          "const": true
+        },
+        "automatic_anonymization_claimed": {
+          "const": false
+        },
+        "clara_external_recipient_added": {
+          "const": false
+        },
+        "declared_raw_and_row_level_storage": {
+          "const": "local_run_root_only"
+        },
+        "repository_recording_policy": {
+          "const": "sanitized_summary_and_receipts_only"
+        },
+        "storage_location_check": {
+          "$ref": "#/$defs/storage_location_check"
+        }
+      }
+    },
+    "storage_location_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "source_relation",
+        "intake_relation",
+        "resolved_path_containment_enforced",
+        "git_ignore_required_inside_repository"
+      ],
+      "properties": {
+        "status": {
+          "const": "passed_at_validation"
+        },
+        "source_relation": {
+          "enum": [
+            "inside_repository_git_ignored",
+            "outside_repository_within_run_root"
+          ]
+        },
+        "intake_relation": {
+          "enum": [
+            "inside_repository_git_ignored",
+            "outside_repository_within_run_root"
+          ]
+        },
+        "resolved_path_containment_enforced": {
+          "const": true
+        },
+        "git_ignore_required_inside_repository": {
+          "const": true
+        }
+      }
+    },
+    "deidentification_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reidentification_risk_review_status",
+        "review_content_sha256",
+        "assurance",
+        "basis_recorded"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_applicable",
+            "reviewed"
+          ]
+        },
+        "reidentification_risk_review_status": {
+          "enum": [
+            "not_applicable",
+            "reviewed"
+          ]
+        },
+        "review_content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "assurance": {
+          "const": "review_presence_only_not_anonymization_certification"
+        },
+        "basis_recorded": {
+          "const": true
+        }
+      }
+    },
+    "semantic_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "required_review_count",
+        "automatic_mapping_allowed",
+        "unresolved_blocking_issues_block_preparation"
+      ],
+      "properties": {
+        "status": {
+          "const": "not_assessed"
+        },
+        "required_review_count": {
+          "const": 7
+        },
+        "automatic_mapping_allowed": {
+          "const": false
+        },
+        "unresolved_blocking_issues_block_preparation": {
+          "const": true
+        }
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "purpose",
+        "publication_status",
+        "report_ready",
+        "execution_revalidation_required",
+        "does_not_establish"
+      ],
+      "properties": {
+        "status": {
+          "const": "declared_boundary_passed_for_local_pilot_intake"
+        },
+        "purpose": {
+          "const": "local_due_diligence_preparation_evaluation"
+        },
+        "publication_status": {
+          "const": "withheld"
+        },
+        "report_ready": {
+          "const": false
+        },
+        "execution_revalidation_required": {
+          "const": true
+        },
+        "does_not_establish": {
+          "const": [
+            "accounting_semantic_correctness",
+            "anonymization_sufficiency",
+            "authorizer_identity_or_authority",
+            "commercial_origin_or_authenticity",
+            "current_authorization_at_later_execution",
+            "declared_data_kind_correctness",
+            "downstream_compatibility",
+            "future_storage_or_copy_behavior",
+            "legal_permission",
+            "publication_authorization",
+            "receipt_authenticity_or_signer_identity",
+            "retention_or_deletion",
+            "report_readiness"
+          ]
+        }
+      }
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependency_sha256",
+        "validator_id",
+        "validator_version",
+        "implementation_sha256",
+        "mode"
+      ],
+      "properties": {
+        "dependency_sha256": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "intake_receipt_schema",
+            "intake_schema",
+            "preparation_contract_kernel"
+          ],
+          "properties": {
+            "intake_receipt_schema": {
+              "$ref": "#/$defs/sha256"
+            },
+            "intake_schema": {
+              "$ref": "#/$defs/sha256"
+            },
+            "preparation_contract_kernel": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        },
+        "validator_id": {
+          "const": "real_data_pilot_intake_validator.v2"
+        },
+        "validator_version": {
+          "const": "2.0.0"
+        },
+        "implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mode": {
+          "const": "deterministic_mechanical"
+        }
+      }
+    }
+  }
+}

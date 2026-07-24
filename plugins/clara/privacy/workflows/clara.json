@@ -7,14 +7,19 @@
     ".codex-plugin/plugin.json",
     "hooks/hooks.json",
     "skills/clara/SKILL.md",
+    "contracts/preparation_audit_envelope.v2.schema.json",
     "contracts/real_data_pilot_intake.v1.schema.json",
+    "contracts/real_data_pilot_intake.v2.schema.json",
     "contracts/real_data_pilot_intake_receipt.v1.schema.json",
+    "contracts/real_data_pilot_intake_receipt.v2.schema.json",
     "contracts/real_data_pilot_mechanical_error_register.v1.schema.json",
     "contracts/real_data_pilot_retention_approval.v1.schema.json",
     "contracts/real_data_pilot_sanitized_error_class_summary_candidate.v1.schema.json",
     "contracts/real_data_pilot_sanitized_error_class_summary.v1.schema.json",
     "contracts/real_data_pilot_semantic_review.v1.schema.json",
     "contracts/real_data_pilot_semantic_review_receipt.v1.schema.json",
+    "contracts/real_general_ledger_preparation_case.v1.schema.json",
+    "contracts/real_general_ledger_semantic_decisions.v1.schema.json",
     "scripts"
   ],
   "codex_context": {
@@ -123,10 +128,14 @@
     {
       "id": "m6-linkable-receipt-boundary",
       "control": "M6 receipts and sanitized summaries are treated as confidential, pseudonymous, linkable metadata; they remain outside the plugin and source repository by default, and any retention exception requires review of the exact metadata, access, and retention boundary."
+    },
+    {
+      "id": "m6-exact-local-source-boundary",
+      "control": "M6 raw workbooks and row- or account-level prepared outputs remain in an owner-only private pilot root at a fixed opaque source locator; group/other permission bits and macOS extended ACLs are rejected at audit validation. They are not committed, packaged, or published. Ordinary model processing remains within the user-selected Codex account and this workflow adds no separate external recipient."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-23",
+    "reviewed_at": "2026-07-24",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
     "source_fingerprint": "d84784fea7506b539b02d9764c88d7fc7735aa1645efa10e74ccbbdfd2205ed6"

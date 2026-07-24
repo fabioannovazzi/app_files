@@ -19,6 +19,12 @@ INTAKE_SCHEMA_PATH = CLARA_ROOT / "contracts" / "real_data_pilot_intake.v1.schem
 RECEIPT_SCHEMA_PATH = (
     CLARA_ROOT / "contracts" / "real_data_pilot_intake_receipt.v1.schema.json"
 )
+INTAKE_SCHEMA_V2_PATH = (
+    CLARA_ROOT / "contracts" / "real_data_pilot_intake.v2.schema.json"
+)
+RECEIPT_SCHEMA_V2_PATH = (
+    CLARA_ROOT / "contracts" / "real_data_pilot_intake_receipt.v2.schema.json"
+)
 VALIDATION_DATE = "2026-07-23"
 SOURCE_BYTES = b"synthetic unit-test bytes; not a commercial trial balance\n"
 
@@ -53,6 +59,12 @@ def _schema_validator(path: Path) -> jsonschema.Draft202012Validator:
         schema,
         format_checker=jsonschema.FormatChecker(),
     )
+
+
+def test_v2_receipt_schema_names_the_v2_authoritative_validator() -> None:
+    schema = json.loads(RECEIPT_SCHEMA_V2_PATH.read_text(encoding="utf-8"))
+
+    assert "validate_real_data_pilot_intake_receipt_v2" in schema["$comment"]
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -158,6 +170,29 @@ def _run_intake(
     )
 
 
+def _general_ledger_case(tmp_path: Path) -> tuple[Path, Path, dict[str, Any]]:
+    intake_path, source_path, intake = _case(tmp_path)
+    intake["schema_version"] = "clara.real_data_pilot_intake.v2"
+    intake["source"]["data_kind"] = "commercial_general_ledger"
+    _write_json(intake_path, intake)
+    return intake_path, source_path, intake
+
+
+def _run_intake_v2(
+    intake_path: Path,
+    source_path: Path,
+    *,
+    as_of_date: str = VALIDATION_DATE,
+) -> dict[str, Any]:
+    return VALIDATOR.validate_real_data_pilot_intake_v2(
+        intake_path,
+        source_path,
+        as_of_date=as_of_date,
+        local_run_root=intake_path.parent,
+        repository_root=ROOT,
+    )
+
+
 def test_real_data_pilot_intake_emits_valid_sanitized_receipt(
     tmp_path: Path,
 ) -> None:
@@ -190,6 +225,59 @@ def test_real_data_pilot_intake_emits_valid_sanitized_receipt(
     }
     assert str(tmp_path) not in json.dumps(receipt)
     assert SOURCE_BYTES.decode("utf-8").strip() not in json.dumps(receipt)
+
+
+def test_frozen_v1_schema_and_runtime_reject_general_ledger(
+    tmp_path: Path,
+) -> None:
+    intake_path, source_path, intake = _case(tmp_path)
+    intake["source"]["data_kind"] = "commercial_general_ledger"
+    _write_json(intake_path, intake)
+
+    with pytest.raises(jsonschema.ValidationError):
+        _schema_validator(INTAKE_SCHEMA_PATH).validate(intake)
+    with pytest.raises(
+        VALIDATOR.ContractValidationError,
+        match="source.data_kind is not registered",
+    ):
+        _run_intake(intake_path, source_path)
+
+
+def test_v2_schema_and_runtime_preserve_general_ledger_declaration(
+    tmp_path: Path,
+) -> None:
+    intake_path, source_path, intake = _general_ledger_case(tmp_path)
+
+    _schema_validator(INTAKE_SCHEMA_V2_PATH).validate(intake)
+    receipt = _run_intake_v2(intake_path, source_path)
+    _schema_validator(RECEIPT_SCHEMA_V2_PATH).validate(receipt)
+
+    assert receipt["schema_version"] == VALIDATOR.INTAKE_RECEIPT_SCHEMA_V2
+    assert (
+        receipt["source_receipt"]["declared_data_kind"] == "commercial_general_ledger"
+    )
+    assert receipt["semantic_review"]["status"] == "not_assessed"
+    assert receipt["eligibility"]["publication_status"] == "withheld"
+    assert receipt["eligibility"]["report_ready"] is False
+    assert receipt["eligibility"]["does_not_establish"] == list(
+        VALIDATOR.DOES_NOT_ESTABLISH_V2
+    )
+
+
+def test_v2_schema_and_runtime_reject_unregistered_generic_source_kind(
+    tmp_path: Path,
+) -> None:
+    intake_path, source_path, intake = _general_ledger_case(tmp_path)
+    intake["source"]["data_kind"] = "general_ledger"
+    _write_json(intake_path, intake)
+
+    with pytest.raises(jsonschema.ValidationError):
+        _schema_validator(INTAKE_SCHEMA_V2_PATH).validate(intake)
+    with pytest.raises(
+        VALIDATOR.ContractValidationError,
+        match="source.data_kind is not registered",
+    ):
+        _run_intake_v2(intake_path, source_path)
 
 
 def test_real_data_pilot_intake_schema_accepts_registered_contract(
@@ -796,7 +884,7 @@ def test_real_data_pilot_intake_cli_rejects_output_collision(
     assert target_path.read_bytes() == original_bytes
 
 
-def test_real_data_pilot_intake_cli_removes_stale_receipt_before_failure(
+def test_real_data_pilot_intake_cli_requires_fresh_output_and_preserves_prior_receipt(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -820,16 +908,17 @@ def test_real_data_pilot_intake_cli_removes_stale_receipt_before_failure(
         str(output_path),
     ]
     assert VALIDATOR.main(arguments) == 0
+    prior_receipt = output_path.read_bytes()
     intake["authorization"]["status"] = "draft"
     _write_json(intake_path, intake)
 
     with pytest.raises(
         VALIDATOR.ContractValidationError,
-        match="authorization.status must equal",
+        match="output path must be absent",
     ):
         VALIDATOR.main(arguments)
 
-    assert not output_path.exists()
+    assert output_path.read_bytes() == prior_receipt
 
 
 def test_real_data_pilot_intake_cli_refuses_unowned_existing_output(
@@ -848,7 +937,7 @@ def test_real_data_pilot_intake_cli_refuses_unowned_existing_output(
 
     with pytest.raises(
         VALIDATOR.ContractValidationError,
-        match="not an owned prior receipt",
+        match="output path must be absent",
     ):
         VALIDATOR.main(
             [
@@ -963,3 +1052,249 @@ def test_real_data_pilot_intake_cli_writes_only_sanitized_receipt(
     receipt = json.loads(output_path.read_text(encoding="utf-8"))
     _schema_validator(RECEIPT_SCHEMA_PATH).validate(receipt)
     assert receipt["eligibility"]["report_ready"] is False
+
+
+def test_real_data_pilot_intake_cli_v2_writes_general_ledger_receipt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    intake_path, source_path, _ = _general_ledger_case(tmp_path)
+    output_path = tmp_path / "receipt-v2.json"
+    monkeypatch.setattr(
+        VALIDATOR,
+        "_current_date",
+        lambda: VALIDATOR.date.fromisoformat(VALIDATION_DATE),
+    )
+
+    result = VALIDATOR.main(
+        [
+            "--contract-version",
+            "v2",
+            "--intake",
+            str(intake_path),
+            "--source",
+            str(source_path),
+            "--local-run-root",
+            str(tmp_path),
+            "--repository-root",
+            str(ROOT),
+            "--output",
+            str(output_path),
+        ]
+    )
+
+    assert result == 0
+    receipt = json.loads(output_path.read_text(encoding="utf-8"))
+    _schema_validator(RECEIPT_SCHEMA_V2_PATH).validate(receipt)
+    assert (
+        receipt["source_receipt"]["declared_data_kind"] == "commercial_general_ledger"
+    )
+    assert receipt["eligibility"]["report_ready"] is False
+
+
+def test_pinned_receipt_writer_rejects_same_length_in_place_mutation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output_path = tmp_path / "mutated-receipt.json"
+    original_read = VALIDATOR._read_descriptor_bytes
+    tampered = False
+
+    def mutate_before_read(descriptor: int) -> bytes:
+        nonlocal tampered
+        current = VALIDATOR.os.pread(descriptor, 4096, 0)
+        replacement = current.replace(b"123456", b"654321")
+        assert replacement != current
+        VALIDATOR.os.pwrite(descriptor, replacement, 0)
+        VALIDATOR.os.fsync(descriptor)
+        tampered = True
+        return original_read(descriptor)
+
+    monkeypatch.setattr(
+        VALIDATOR,
+        "_read_descriptor_bytes",
+        mutate_before_read,
+    )
+
+    with VALIDATOR.pinned_pilot_receipt_output(
+        output_path,
+        local_run_root=tmp_path,
+    ) as pinned_output:
+        with pytest.raises(
+            VALIDATOR.ContractValidationError,
+            match="output bytes changed during the write",
+        ):
+            pinned_output.write_json({"marker": 123456})
+
+    assert tampered is True
+    assert json.loads(output_path.read_text(encoding="utf-8")) == {"marker": 654321}
+
+
+def test_pinned_receipt_writer_rereads_bytes_after_parent_fsync(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output_path = tmp_path / "late-mutated-receipt.json"
+    original_fsync = VALIDATOR.os.fsync
+    tampered = False
+
+    with VALIDATOR.pinned_pilot_receipt_output(
+        output_path,
+        local_run_root=tmp_path,
+    ) as pinned_output:
+
+        def mutate_on_parent_fsync(descriptor: int) -> None:
+            nonlocal tampered
+            original_fsync(descriptor)
+            if descriptor != pinned_output._parent_descriptor or tampered:
+                return
+            output_descriptor = VALIDATOR.os.open(
+                output_path.name,
+                VALIDATOR.os.O_RDWR | VALIDATOR.os.O_NOFOLLOW,
+                dir_fd=descriptor,
+            )
+            try:
+                current = VALIDATOR.os.pread(output_descriptor, 4096, 0)
+                replacement = current.replace(b"123456", b"654321")
+                assert replacement != current
+                VALIDATOR.os.pwrite(output_descriptor, replacement, 0)
+                original_fsync(output_descriptor)
+            finally:
+                VALIDATOR.os.close(output_descriptor)
+            tampered = True
+
+        monkeypatch.setattr(VALIDATOR.os, "fsync", mutate_on_parent_fsync)
+
+        with pytest.raises(
+            VALIDATOR.ContractValidationError,
+            match="output changed before write completion",
+        ):
+            pinned_output.write_json({"marker": 123456})
+
+    assert tampered is True
+
+
+def test_pinned_receipt_writer_rechecks_parent_after_final_read(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    receipt_directory = tmp_path / "receipts"
+    receipt_directory.mkdir()
+    pinned_directory = tmp_path / "receipts-pinned"
+    output_path = receipt_directory / "late-parent-swap.json"
+    original_read = VALIDATOR._read_descriptor_bytes
+    read_count = 0
+
+    with TemporaryDirectory(
+        prefix="clara-m6-late-output-race-",
+        dir=tmp_path.parent,
+    ) as raw_outside_directory:
+        outside_directory = Path(raw_outside_directory)
+
+        def swap_parent_on_final_read(descriptor: int) -> bytes:
+            nonlocal read_count
+            read_count += 1
+            if read_count == 2:
+                receipt_directory.rename(pinned_directory)
+                receipt_directory.symlink_to(
+                    outside_directory,
+                    target_is_directory=True,
+                )
+            return original_read(descriptor)
+
+        monkeypatch.setattr(
+            VALIDATOR,
+            "_read_descriptor_bytes",
+            swap_parent_on_final_read,
+        )
+
+        with VALIDATOR.pinned_pilot_receipt_output(
+            output_path,
+            local_run_root=tmp_path,
+        ) as pinned_output:
+            with pytest.raises(
+                VALIDATOR.ContractValidationError,
+                match="output directory path changed during receipt write",
+            ):
+                pinned_output.write_json({"marker": 123456})
+
+        assert read_count == 2
+        assert not (outside_directory / output_path.name).exists()
+        assert (pinned_directory / output_path.name).is_file()
+
+
+@pytest.mark.parametrize("contract_version", ["v1", "v2"])
+def test_real_data_pilot_intake_cli_parent_symlink_swap_cannot_escape_run_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    contract_version: str,
+) -> None:
+    if contract_version == "v2":
+        intake_path, source_path, _ = _general_ledger_case(tmp_path)
+    else:
+        intake_path, source_path, _ = _case(tmp_path)
+    receipt_directory = tmp_path / "receipts"
+    receipt_directory.mkdir()
+    pinned_directory = tmp_path / "receipts-pinned"
+    output_path = receipt_directory / "intake-receipt.json"
+    monkeypatch.setattr(
+        VALIDATOR,
+        "_current_date",
+        lambda: VALIDATOR.date.fromisoformat(VALIDATION_DATE),
+    )
+
+    with TemporaryDirectory(
+        prefix="clara-m6-intake-output-race-",
+        dir=tmp_path.parent,
+    ) as raw_outside_directory:
+        outside_directory = Path(raw_outside_directory)
+        outside_output = outside_directory / output_path.name
+        original_open = VALIDATOR.os.open
+        swapped = False
+
+        def _swap_parent_then_open(
+            path: str | Path,
+            flags: int,
+            mode: int = 0o777,
+            *,
+            dir_fd: int | None = None,
+        ) -> int:
+            nonlocal swapped
+            if (
+                not swapped
+                and path == output_path.name
+                and flags & VALIDATOR.os.O_CREAT
+            ):
+                receipt_directory.rename(pinned_directory)
+                receipt_directory.symlink_to(
+                    outside_directory,
+                    target_is_directory=True,
+                )
+                swapped = True
+            return original_open(path, flags, mode, dir_fd=dir_fd)
+
+        monkeypatch.setattr(VALIDATOR.os, "open", _swap_parent_then_open)
+        arguments = [
+            "--contract-version",
+            contract_version,
+            "--intake",
+            str(intake_path),
+            "--source",
+            str(source_path),
+            "--local-run-root",
+            str(tmp_path),
+            "--repository-root",
+            str(ROOT),
+            "--output",
+            str(output_path),
+        ]
+
+        with pytest.raises(
+            VALIDATOR.ContractValidationError,
+            match="output directory path changed during receipt write",
+        ):
+            VALIDATOR.main(arguments)
+
+        assert swapped is True
+        assert not outside_output.exists()
+        assert (pinned_directory / output_path.name).is_file()

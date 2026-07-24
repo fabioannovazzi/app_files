@@ -1976,7 +1976,7 @@ def test_static_plugin_pages_link_back_to_the_vera_product_page() -> None:
         assert "Plugin Pack" not in page, page_path.as_posix()
         assert "Download ZIP" not in page, page_path.as_posix()
         assert "Scarica ZIP" not in page, page_path.as_posix()
-        assert re.search(r'href="#(?:install|scarica|download)"', page)
+        assert "Apri " "Vera" not in page, page_path.as_posix()
         for snippet in stale_download_snippets:
             assert snippet not in page, page_path.as_posix()
 
@@ -2355,7 +2355,6 @@ def test_reconciliation_page_describes_actual_reconciliation_problem() -> None:
     assert "Supporti post cut-off" in page
     assert "Usa il default factoring" in page
     assert "pagamento in estratto conto bancario" in page
-    assert '<a href="#scarica" data-journey="nav.open">Apri Vera</a>' in page
 
 
 def test_new_client_page_describes_one_connected_client_journey() -> None:
@@ -2374,17 +2373,12 @@ def test_new_client_page_describes_one_connected_client_journey() -> None:
         "Le mancanze diventano richieste precise.",
         "Memo studio",
         "Richiesta cliente",
-        "Scegli la giurisdizione",
-        "Svizzera · Ginevra",
-        "Svizzera · Zurigo",
-        "United Kingdom",
+        "Nuovo cliente · Italia",
+        "Documenti, incarico, privacy e antiriciclaggio nello stesso fascicolo.",
         'id="prompt-example"',
         'id="file-preparation"',
         'id="relationship"',
         'id="italy"',
-        'href="geneva.html?lang=it"',
-        'href="zurich.html?lang=it"',
-        'href="uk.html?lang=it"',
     ):
         assert snippet in page
     for stale_snippet in (
@@ -2433,20 +2427,16 @@ def test_new_client_jurisdiction_pages_define_local_scope() -> None:
         assert 'src="jurisdiction-pages.js?v=' in page
         assert f'slug: "{filename}"' in jurisdiction_source
         assert f'defaultLanguage: "{default_language}"' in jurisdiction_source
-        for language in ("it", "en", "fr", "de", "es"):
-            assert f'hreflang="{language}"' in page
+        assert f'hreflang="{default_language}"' in page
+        assert 'hreflang="x-default"' in page
 
-    assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"]' in (
-        jurisdiction_source
-    )
     assert "const page = jurisdictions[document.body.dataset.jurisdiction]" in (
         jurisdiction_source
     )
+    assert "const language = page.defaultLanguage;" in jurisdiction_source
     assert "document.body.dataset.presentationLanguage = language" in (
         jurisdiction_source
     )
-    assert 'url.searchParams.set("lang", language)' in jurisdiction_source
-    assert 'href="index.html?lang=${language}#core-model"' in jurisdiction_source
     assert "Report Builder" not in jurisdiction_source
     assert "dataset.jurisdiction =" not in jurisdiction_source
     for localized_scope in (
@@ -2463,18 +2453,18 @@ def test_new_client_jurisdiction_pages_define_local_scope() -> None:
         assert localized_scope in jurisdiction_source
 
 
-def test_new_client_page_scopes_the_professional_country_pack_to_italy() -> None:
+def test_new_client_page_is_the_native_italy_journey() -> None:
     page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    for localized_scope in (
-        "Il country pack professionale oggi disponibile è quello italiano.",
-        "The professional country pack currently available is Italy.",
-        "Le pack professionnel actuellement disponible est celui de l’Italie.",
-        "Das derzeit verfügbare professionelle Länderpaket ist Italien.",
+    for italy_journey_copy in (
+        "Nuovo cliente · Italia",
+        "Documenti, incarico, privacy e antiriciclaggio nello stesso fascicolo.",
+        "Vera applica al rapporto professionale le fonti, i documenti e gli "
+        "adempimenti previsti per lo studio italiano.",
     ):
-        assert localized_scope in page
+        assert italy_journey_copy in page
 
 
 def test_journal_sampling_page_matches_plugin_site_pattern() -> None:
@@ -2561,30 +2551,20 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
-def test_new_client_keeps_language_and_market_selection_separate() -> None:
+def test_new_client_pages_use_fixed_native_presentations() -> None:
     page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
         encoding="utf-8"
     )
-    market_links = {
-        "italy": (
-            "index.html?lang=it#italy",
-            'localizedHref("index.html", lang, "#italy")',
-        ),
-        "geneva": ("geneva.html?lang=it", 'localizedHref("geneva.html", lang)'),
-        "zurich": ("zurich.html?lang=it", 'localizedHref("zurich.html", lang)'),
-        "uk": ("uk.html?lang=it", 'localizedHref("uk.html", lang)'),
-    }
+    jurisdiction_source = (
+        ROOT / "static" / "shared" / "new-client" / "jurisdiction-pages.js"
+    ).read_text(encoding="utf-8")
 
-    for language in ("it", "en", "fr", "de", "es"):
-        assert f'data-lang="{language}"' in page
-    assert "return `${path}?lang=${lang}${fragment}`;" in page
-    for market, (initial_href, localized_call) in market_links.items():
-        assert f'id="market-{market}-link" href="{initial_href}"' in page
-        assert (
-            f'document.getElementById("market-{market}-link").href = '
-            f"{localized_call};"
-        ) in page
-    assert 'setLanguage(params.get("lang") || "it", false)' in page
+    assert '<html lang="it">' in page
+    assert 'const lang = "it";' in page
+    assert 'data-lang="' not in page
+    assert 'id="market-' not in page
+    assert "const language = page.defaultLanguage;" in jurisdiction_source
+    assert "URLSearchParams" not in jurisdiction_source
     assert "window.location.replace" not in page
 
 
@@ -2640,7 +2620,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         'const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", '
         'de: "CH-ZH", es: null };'
     ) in page
-    assert 'item.hidden = item.dataset.jurisdictionItem !== lang' in page
+    assert "item.hidden = item.dataset.jurisdictionItem !== lang" in page
     assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
     assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
     assert (
@@ -2832,8 +2812,57 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
         "Deterministic Python scripts",
         "Gli script Python deterministici",
         "How it runs in Codex",
+        'class="source-step"',
+        "source-step__number",
+        "0${index + 1}",
     ):
         assert stale_snippet not in page
+
+
+def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
+    page_paths = (
+        "check-entries",
+        "concordato-plan-review",
+        "deep-research-validator",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "previdenza-inps",
+        "prompt-optimizer",
+        "registro-imprese-sari",
+        "report-builder",
+        "riconciliazione-partite",
+        "studio-archive",
+        "clara",
+    )
+    rejected_numbered_component_tokens = (
+        "source-step__number",
+        "workflow-step__number",
+        "journey-step__number",
+        "journey-stage__number",
+        "due-diligence-step__number",
+        'class="journey-number"',
+        'class="step-number"',
+        'class="card-number"',
+        "counter-reset: workflow",
+        "counter-increment: workflow",
+    )
+
+    for page_path in page_paths:
+        page = (ROOT / "static" / "shared" / page_path / "index.html").read_text(
+            encoding="utf-8"
+        )
+
+        assert re.search(r"<span(?: [^>]*)?>0?[1-9]</span>", page) is None
+        for rejected_token in rejected_numbered_component_tokens:
+            assert rejected_token not in page
+
+    for stylesheet_path in (
+        ROOT / "static" / "shared" / "clara" / "clara-page.css",
+        ROOT / "static" / "shared" / "vera-journey.css",
+    ):
+        stylesheet = stylesheet_path.read_text(encoding="utf-8")
+        for rejected_token in rejected_numbered_component_tokens:
+            assert rejected_token not in stylesheet
 
 
 def test_homepage_routes_check_entries_through_vera() -> None:
@@ -3317,7 +3346,6 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
         "run_audit.json",
         "codex_run_review.md",
         VERA_PRODUCT_PAGE_HREF,
-        'data-journey="cta.open"',
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -3437,12 +3465,12 @@ def test_clara_public_icon_matches_plugin_source() -> None:
 
 @pytest.mark.parametrize(
     ("page_name", "expected_home_href", "expected_product", "expected_links"),
+    (
         (
-            (
-                "vera",
-                "/?lang=it",
-                "Vera",
-                ("#core", "#jurisdiction", "#data-boundary", "#video"),
+            "vera",
+            "/?lang=it",
+            "Vera",
+            ("#core", "#jurisdiction", "#data-boundary", "#video"),
         ),
         (
             "clara",
@@ -3505,17 +3533,15 @@ def test_companion_headers_share_product_navigation(
 
 
 def test_companion_navigation_uses_one_scoped_responsive_system() -> None:
-    stylesheet = (
-        ROOT / "static" / "shared" / "product-navigation.css"
-    ).read_text(encoding="utf-8")
+    stylesheet = (ROOT / "static" / "shared" / "product-navigation.css").read_text(
+        encoding="utf-8"
+    )
     script = (ROOT / "static" / "shared" / "product-navigation.js").read_text(
         encoding="utf-8"
     )
 
     assert ".product-nav__inner" in stylesheet
-    assert (
-        ".product-nav__menu[data-menu-open] > .product-nav__links" in stylesheet
-    )
+    assert ".product-nav__menu[data-menu-open] > .product-nav__links" in stylesheet
     assert ".product-nav__language-list button" in stylesheet
     assert "min-height: 44px;" in stylesheet
     assert "@media (max-width: 840px)" in stylesheet
@@ -3553,7 +3579,9 @@ def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> No
     assert '<a class="skip-link" href="#main-content"' in page
     assert '<main id="main-content">' in page
     assert "github.com/fabioannovazzi/app_files/tree/main/plugins/" not in header
-    assert f"github.com/fabioannovazzi/app_files/tree/main/plugins/{page_name}" in footer
+    assert (
+        f"github.com/fabioannovazzi/app_files/tree/main/plugins/{page_name}" in footer
+    )
 
 
 def test_clara_public_page_uses_vera_visual_system() -> None:
@@ -3844,7 +3872,7 @@ def test_vera_module_links_preserve_language_without_changing_market() -> None:
     assert 'url.searchParams.set("lang", lang)' in page
     assert "link.dataset.nativeLanguage" in page
     assert ": withLanguage(link.dataset.baseHref, lang)" in page
-    assert 'es: null' in page
+    assert "es: null" in page
     assert "window.location.replace" not in page
 
 
