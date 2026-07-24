@@ -18,8 +18,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../vera-scope.css?v=20260721">
-  <script src="../vera-scope.js?v=20260722" defer></script>
   <style>
     :root {
       --navy: #002060;
@@ -137,15 +135,13 @@
       border-top: 1px solid var(--navy);
       border-bottom: 1px solid var(--line);
     }
-    .journey article { min-height: 190px; padding: 24px 28px 28px 0; }
+    .journey article { min-height: 150px; padding: 24px 28px 28px 0; }
     .journey article + article { border-left: 1px solid var(--line); padding-left: 28px; }
-    .journey-number { display: block; margin-bottom: 28px; color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
     .journey h3 { margin-bottom: 10px; font-size: 22px; }
     .journey p { color: var(--muted); }
 
-    .workflow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; counter-reset: workflow; }
-    .workflow-step { border-top: 2px solid var(--line); padding-top: 18px; counter-increment: workflow; }
-    .workflow-step::before { content: "0" counter(workflow); display: block; margin-bottom: 24px; color: var(--blue); font-size: 13px; font-weight: 700; }
+    .workflow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+    .workflow-step { border-top: 2px solid var(--line); padding-top: 18px; }
     .workflow-step h3 { margin-bottom: 9px; }
     .workflow-step p { color: var(--muted); font-size: 15px; }
 
@@ -205,7 +201,6 @@
       .journey { grid-template-columns: 1fr; }
       .journey article { min-height: 0; padding: 24px 0; }
       .journey article + article { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
-      .journey-number { margin-bottom: 12px; }
       .workflow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .text-link { justify-self: start; }
     }
@@ -224,7 +219,7 @@
   </style>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
 </head>
-<body data-vera-module="registro-imprese-sari" data-vera-scope="italy">
+<body>
   <header class="topbar">
     <div class="nav-shell">
       <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza">
@@ -235,7 +230,6 @@
           <a href="#workflow" data-i18n="nav.workflow">Percorso</a>
           <a href="#result" data-i18n="nav.result">Risultato</a>
           <a href="#prompt" data-i18n="nav.prompt">Prompt</a>
-          <a href="#install" data-i18n="nav.install">Apri Vera</a>
         </nav>
       </div>
     </div>
@@ -268,17 +262,14 @@
       </div>
       <div class="journey">
         <article>
-          <span class="journey-number">01</span>
           <h3 data-i18n="journey.provide.title">Fornisci</h3>
           <p data-i18n="journey.provide.copy">Soggetto, attività, operazione, data, Camera o territorio e documenti già disponibili.</p>
         </article>
         <article>
-          <span class="journey-number">02</span>
           <h3 data-i18n="journey.prepare.title">Vera prepara</h3>
           <p data-i18n="journey.prepare.copy">Mappa delle posizioni RI/REA, registro delle fonti, piano della pratica, passaggi DIRE e lista degli allegati.</p>
         </article>
         <article>
-          <span class="journey-number">03</span>
           <h3 data-i18n="journey.receive.title">Ricevi</h3>
           <p data-i18n="journey.receive.copy">Una bozza rivedibile con proposte, citazioni, informazioni da completare e decisioni già ordinate.</p>
         </article>
@@ -374,13 +365,6 @@
       </div>
     </section>
 
-    <section class="install" id="install" aria-labelledby="install-title">
-      <div>
-        <h2 id="install-title" data-i18n="install.title">Vera include questo flusso.</h2>
-        <p data-i18n="install.copy">Apri Vera e descrivi la pratica camerale da preparare.</p>
-      </div>
-      <a class="button" href="../vera/index.html" data-i18n="install.button">Torna a Vera</a>
-    </section>
   </main>
 
   <script>
@@ -388,7 +372,7 @@
       it: {
         meta: { title: "Registro Imprese e SARI — Italia | Vera", description: "Nel perimetro camerale italiano, Vera trasforma fatti, Camera competente e fonti SARI/CCIAA in un piano Registro Imprese/DIRE con passaggi, campi, allegati e citazioni.", og: "Workflow Italia: da una richiesta camerale a un piano di pratica chiaro, citato e pronto da rivedere.", locale: "it_IT" },
         guide: { id: "-UGe1FoLu8U", title: "Vera | Una richiesta, più posizioni da tenere distinte" },
-        "nav.workflow": "Percorso", "nav.result": "Risultato", "nav.prompt": "Prompt", "nav.install": "Apri Vera",
+        "nav.workflow": "Percorso", "nav.result": "Risultato", "nav.prompt": "Prompt",
         "breadcrumb.current": "Pacchetto Italia · Registro Imprese e SARI",
         "hero.eyebrow": "Pacchetto Italia · Registro Imprese e SARI · Vera", "hero.title": "Porta una richiesta camerale a un piano di pratica chiaro e citato.", "hero.lead": "Nel perimetro camerale italiano, Vera collega fatti, Camera competente e fonti SARI/CCIAA in un percorso Registro Imprese/DIRE con passaggi, campi, allegati e decisioni ordinati per il professionista.",
         "hero.outcomeLabel": "Risultato", "hero.outcomeTitle": "Un piano di pratica leggibile e verificabile.", "hero.outcomeCopy": "Camera, operazione, posizioni RI/REA, passaggi DIRE, allegati, fonti e domande di revisione in un’unica cartella di lavoro.",
@@ -401,13 +385,12 @@
         "guide.label": "Guida al risultato", "guide.title": "Vera | Una richiesta, più posizioni da tenere distinte", "guide.meta": "Narrazione in italiano · Si apre su YouTube",
         "next.eyebrow": "Flusso collegato", "next.title": "Da un dubbio normativo a un quesito di ricerca controllabile.", "next.copy": "Quando il piano evidenzia una questione da approfondire, Prompt Optimizer organizza fatti, giurisdizione, data e fonti prioritarie in un brief di ricerca.", "next.link": "Scopri Prompt Optimizer →",
         "prompt.title": "Un prompt per iniziare", "prompt.copy": "Descrivi l’operazione e indica la Camera o il territorio. Vera organizza il primo passaggio e ti chiede le conferme che cambiano la pratica.", prompt: "Usa Registro Imprese e SARI per preparare [apertura/variazione] di [soggetto e attività] presso [Camera o territorio], con data [data]. Organizza posizioni RI/REA e altri enti, fonti SARI/CCIAA, passaggi DIRE, campi, allegati, informazioni da completare e domande per la revisione professionale.",
-        "technical.title": "Dettaglio tecnico", "technical.copy": "La cartella conserva fatti, fonti, piano operativo e decisioni in artefatti distinti e facili da consultare.", "technical.item1": "Soggetto, attività, operazione e data.", "technical.item2": "Fonti con Camera, territorio e riferimento.", "technical.item3": "Posizioni e proposte strutturate.", "technical.item4": "Passaggi, campi e allegati DIRE.", "technical.item5": "Attività e decisioni per lo studio.", "technical.item6": "Sintesi leggibile per il revisore.", "technical.item7": "Fonti locali e documenti disponibili.", "technical.item8": "Quesito SARI strutturato per la ricerca.", "technical.item9": "Allegati e documenti da completare.", "technical.item10": "Indice degli artefatti finali.",
-        "install.title": "Vera include questo flusso.", "install.copy": "Apri Vera e descrivi la pratica camerale da preparare.", "install.button": "Torna a Vera"
+        "technical.title": "Dettaglio tecnico", "technical.copy": "La cartella conserva fatti, fonti, piano operativo e decisioni in artefatti distinti e facili da consultare.", "technical.item1": "Soggetto, attività, operazione e data.", "technical.item2": "Fonti con Camera, territorio e riferimento.", "technical.item3": "Posizioni e proposte strutturate.", "technical.item4": "Passaggi, campi e allegati DIRE.", "technical.item5": "Attività e decisioni per lo studio.", "technical.item6": "Sintesi leggibile per il revisore.", "technical.item7": "Fonti locali e documenti disponibili.", "technical.item8": "Quesito SARI strutturato per la ricerca.", "technical.item9": "Allegati e documenti da completare.", "technical.item10": "Indice degli artefatti finali."
       },
       en: {
         meta: { title: "Business Register and SARI — Italy | Vera", description: "For Italian Business Register filings, Vera turns case facts, the competent Chamber and SARI/CCIAA sources into a DIRE plan with steps, fields, attachments and citations.", og: "Italy workflow: from a Chamber request to a clear, cited practice plan ready for review.", locale: "en_US" },
         guide: { id: "wbeoePNN4YA", title: "Vera | One request, several positions to keep distinct" },
-        "nav.workflow": "Journey", "nav.result": "Result", "nav.prompt": "Prompt", "nav.install": "Open Vera",
+        "nav.workflow": "Journey", "nav.result": "Result", "nav.prompt": "Prompt",
         "breadcrumb.current": "Italy pack · Business Register and SARI",
         "hero.eyebrow": "Italy pack · Business Register and SARI · Vera", "hero.title": "Turn a Chamber request into a clear, cited practice plan.", "hero.lead": "For Italian Business Register filings, Vera connects case facts, the competent Chamber and SARI/CCIAA sources in a DIRE journey with steps, fields, attachments and decisions organized for the professional.",
         "hero.outcomeLabel": "Outcome", "hero.outcomeTitle": "A readable, verifiable practice plan.", "hero.outcomeCopy": "Chamber, operation, RI/REA positions, DIRE steps, attachments, sources and review questions in one work folder.",
@@ -420,13 +403,12 @@
         "guide.label": "Outcome guide", "guide.title": "Vera | One request, several positions to keep distinct", "guide.meta": "English narration · Opens on YouTube",
         "next.eyebrow": "Connected workflow", "next.title": "From a regulatory question to a controlled research brief.", "next.copy": "When the plan surfaces a question to investigate, Prompt Optimizer organizes the facts, jurisdiction, date and priority sources into a research brief.", "next.link": "Explore Prompt Optimizer →",
         "prompt.title": "One prompt to begin", "prompt.copy": "Describe the operation and state the Chamber or territory. Vera organizes the first pass and asks for the confirmations that change the practice.", prompt: "Use Business Register and SARI to prepare the [opening/change] of [subject and activity] with [Chamber or territory], dated [date]. Organize RI/REA and other-authority positions, SARI/CCIAA sources, DIRE steps, fields, attachments, information to complete and questions for professional review.",
-        "technical.title": "Technical detail", "technical.copy": "The folder keeps facts, sources, operational plan and decisions in distinct, easy-to-review artifacts.", "technical.item1": "Subject, activity, operation and date.", "technical.item2": "Sources with Chamber, territory and reference.", "technical.item3": "Scope and structured proposals.", "technical.item4": "DIRE steps, fields and attachments.", "technical.item5": "Firm activities and decisions.", "technical.item6": "Readable reviewer handoff.", "technical.item7": "Available local sources and documents.", "technical.item8": "SARI question structured for research.", "technical.item9": "Attachments and documents to complete.", "technical.item10": "Index of final artifacts.",
-        "install.title": "Vera includes this workflow.", "install.copy": "Open Vera and describe the Chamber practice to prepare.", "install.button": "Back to Vera"
+        "technical.title": "Technical detail", "technical.copy": "The folder keeps facts, sources, operational plan and decisions in distinct, easy-to-review artifacts.", "technical.item1": "Subject, activity, operation and date.", "technical.item2": "Sources with Chamber, territory and reference.", "technical.item3": "Scope and structured proposals.", "technical.item4": "DIRE steps, fields and attachments.", "technical.item5": "Firm activities and decisions.", "technical.item6": "Readable reviewer handoff.", "technical.item7": "Available local sources and documents.", "technical.item8": "SARI question structured for research.", "technical.item9": "Attachments and documents to complete.", "technical.item10": "Index of final artifacts."
       },
       fr: {
         meta: { title: "Registre des entreprises et SARI — Italie | Vera", description: "Pour les formalités du Registre italien des entreprises, Vera transforme faits, Chambre compétente et sources SARI/CCIAA en plan DIRE avec étapes, champs, pièces et citations.", og: "Workflow Italie : d’une demande à la Chambre à un plan de formalité clair, cité et prêt à réviser.", locale: "fr_FR" },
         guide: { id: "v4vpOk_-J1M", title: "Vera | Une demande, plusieurs positions à distinguer" },
-        "nav.workflow": "Parcours", "nav.result": "Résultat", "nav.prompt": "Prompt", "nav.install": "Ouvrir Vera",
+        "nav.workflow": "Parcours", "nav.result": "Résultat", "nav.prompt": "Prompt",
         "breadcrumb.current": "Pack Italie · Registre des entreprises et SARI",
         "hero.eyebrow": "Pack Italie · Registre des entreprises et SARI · Vera", "hero.title": "Transformez une demande à la Chambre en plan de formalité clair et cité.", "hero.lead": "Pour les formalités du Registre italien des entreprises, Vera relie les faits, la Chambre compétente et les sources SARI/CCIAA dans un parcours DIRE dont les étapes, champs, pièces et décisions sont organisés pour le professionnel.",
         "hero.outcomeLabel": "Résultat", "hero.outcomeTitle": "Un plan de formalité lisible et vérifiable.", "hero.outcomeCopy": "Chambre, opération, positions RI/REA, étapes DIRE, pièces, sources et questions de revue dans un même dossier de travail.",
@@ -439,13 +421,12 @@
         "guide.label": "Guide du résultat", "guide.title": "Vera | Une demande, plusieurs positions à distinguer", "guide.meta": "Narration en français · S’ouvre sur YouTube",
         "next.eyebrow": "Flux associé", "next.title": "D’une question réglementaire à un brief de recherche contrôlable.", "next.copy": "Lorsque le plan fait apparaître une question à approfondir, Prompt Optimizer organise faits, juridiction, date et sources prioritaires dans un brief de recherche.", "next.link": "Découvrir Prompt Optimizer →",
         "prompt.title": "Un prompt pour commencer", "prompt.copy": "Décrivez l’opération et indiquez la Chambre ou le territoire. Vera organise le premier passage et demande les confirmations qui modifient la formalité.", prompt: "Utilise Registre des entreprises et SARI pour préparer [ouverture/modification] de [sujet et activité] auprès de [Chambre ou territoire], à la date du [date]. Organise positions RI/REA et autres administrations, sources SARI/CCIAA, étapes DIRE, champs, pièces, informations à compléter et questions pour la revue professionnelle.",
-        "technical.title": "Détail technique", "technical.copy": "Le dossier conserve faits, sources, plan opérationnel et décisions dans des artefacts distincts et faciles à consulter.", "technical.item1": "Sujet, activité, opération et date.", "technical.item2": "Sources avec Chambre, territoire et référence.", "technical.item3": "Périmètre et propositions structurées.", "technical.item4": "Étapes, champs et pièces DIRE.", "technical.item5": "Activités et décisions du cabinet.", "technical.item6": "Synthèse lisible pour le réviseur.", "technical.item7": "Sources locales et documents disponibles.", "technical.item8": "Question SARI structurée pour la recherche.", "technical.item9": "Pièces et documents à compléter.", "technical.item10": "Index des livrables finaux.",
-        "install.title": "Vera inclut ce flux.", "install.copy": "Ouvrez Vera et décrivez la formalité à préparer.", "install.button": "Retour à Vera"
+        "technical.title": "Détail technique", "technical.copy": "Le dossier conserve faits, sources, plan opérationnel et décisions dans des artefacts distincts et faciles à consulter.", "technical.item1": "Sujet, activité, opération et date.", "technical.item2": "Sources avec Chambre, territoire et référence.", "technical.item3": "Périmètre et propositions structurées.", "technical.item4": "Étapes, champs et pièces DIRE.", "technical.item5": "Activités et décisions du cabinet.", "technical.item6": "Synthèse lisible pour le réviseur.", "technical.item7": "Sources locales et documents disponibles.", "technical.item8": "Question SARI structurée pour la recherche.", "technical.item9": "Pièces et documents à compléter.", "technical.item10": "Index des livrables finaux."
       },
       es: {
         meta: { title: "Registro Mercantil y SARI — Italia | Vera", description: "Para los trámites del Registro Mercantil italiano, Vera convierte los hechos del caso, la Cámara competente y las fuentes SARI/CCIAA en un plan DIRE con pasos, campos, anexos y citas.", og: "Flujo de Italia: de una solicitud a la Cámara a un plan de trámite claro, citado y listo para revisar.", locale: "es_ES" },
         guide: { id: "wbeoePNN4YA", title: "Vera | Una solicitud, varias posiciones que mantener separadas" },
-        "nav.workflow": "Recorrido", "nav.result": "Resultado", "nav.prompt": "Prompt", "nav.install": "Abrir Vera",
+        "nav.workflow": "Recorrido", "nav.result": "Resultado", "nav.prompt": "Prompt",
         "breadcrumb.current": "Paquete Italia · Registro Mercantil y SARI",
         "hero.eyebrow": "Paquete Italia · Registro Mercantil y SARI · Vera", "hero.title": "Convierta una solicitud a la Cámara en un plan de trámite claro y citado.", "hero.lead": "Para los trámites del Registro Mercantil italiano, Vera conecta los hechos del caso, la Cámara competente y las fuentes SARI/CCIAA en un recorrido DIRE con pasos, campos, anexos y decisiones organizados para el profesional.",
         "hero.outcomeLabel": "Resultado", "hero.outcomeTitle": "Un plan de trámite legible y verificable.", "hero.outcomeCopy": "Cámara, operación, posiciones RI/REA, pasos DIRE, anexos, fuentes y preguntas de revisión en una sola carpeta de trabajo.",
@@ -458,13 +439,12 @@
         "guide.label": "Guía del resultado", "guide.title": "Vera | Una solicitud, varias posiciones que mantener separadas", "guide.meta": "Narración en inglés · Se abre en YouTube",
         "next.eyebrow": "Flujo relacionado", "next.title": "De una duda normativa a un encargo de investigación controlable.", "next.copy": "Cuando el plan plantea una cuestión que investigar, Prompt Optimizer organiza los hechos, la jurisdicción, la fecha y las fuentes prioritarias en un encargo de investigación.", "next.link": "Descubra Prompt Optimizer →",
         "prompt.title": "Un prompt para empezar", "prompt.copy": "Describa la operación e indique la Cámara o el territorio. Vera organiza la primera pasada y solicita las confirmaciones que cambian el trámite.", prompt: "Usa Registro Mercantil y SARI para preparar la [apertura/modificación] de [sujeto y actividad] ante [Cámara o territorio], con fecha [fecha]. Organiza las posiciones RI/REA y de otros organismos, las fuentes SARI/CCIAA, los pasos DIRE, los campos, anexos, información que completar y preguntas para revisión profesional.",
-        "technical.title": "Detalle técnico", "technical.copy": "La carpeta conserva hechos, fuentes, plan operativo y decisiones en artefactos separados y fáciles de consultar.", "technical.item1": "Sujeto, actividad, operación y fecha.", "technical.item2": "Fuentes con Cámara, territorio y referencia.", "technical.item3": "Ámbito y propuestas estructuradas.", "technical.item4": "Pasos, campos y anexos DIRE.", "technical.item5": "Actividades y decisiones del despacho.", "technical.item6": "Entrega legible para el revisor.", "technical.item7": "Fuentes locales y documentos disponibles.", "technical.item8": "Pregunta SARI estructurada para la investigación.", "technical.item9": "Anexos y documentos que completar.", "technical.item10": "Índice de artefactos finales.",
-        "install.title": "Vera incluye este flujo.", "install.copy": "Abra Vera y describa el trámite ante la Cámara que desea preparar.", "install.button": "Volver a Vera"
+        "technical.title": "Detalle técnico", "technical.copy": "La carpeta conserva hechos, fuentes, plan operativo y decisiones en artefactos separados y fáciles de consultar.", "technical.item1": "Sujeto, actividad, operación y fecha.", "technical.item2": "Fuentes con Cámara, territorio y referencia.", "technical.item3": "Ámbito y propuestas estructuradas.", "technical.item4": "Pasos, campos y anexos DIRE.", "technical.item5": "Actividades y decisiones del despacho.", "technical.item6": "Entrega legible para el revisor.", "technical.item7": "Fuentes locales y documentos disponibles.", "technical.item8": "Pregunta SARI estructurada para la investigación.", "technical.item9": "Anexos y documentos que completar.", "technical.item10": "Índice de artefactos finales."
       },
       de: {
         meta: { title: "Unternehmensregister und SARI — Italien | Vera", description: "Für Verfahren im italienischen Unternehmensregister überführt Vera Fallfakten, zuständige Kammer und SARI-/CCIAA-Quellen in einen DIRE-Plan mit Schritten, Feldern, Anlagen und Zitaten.", og: "Italien-Workflow: von einer Kammeranfrage zu einem klaren, zitierten und prüfbaren Verfahrensplan.", locale: "de_DE" },
         guide: { id: "Yj-smt4uEzc", title: "Vera | Ein Antrag, mehrere getrennte Positionen" },
-        "nav.workflow": "Ablauf", "nav.result": "Ergebnis", "nav.prompt": "Prompt", "nav.install": "Vera öffnen",
+        "nav.workflow": "Ablauf", "nav.result": "Ergebnis", "nav.prompt": "Prompt",
         "breadcrumb.current": "Italien-Paket · Unternehmensregister und SARI",
         "hero.eyebrow": "Italien-Paket · Unternehmensregister und SARI · Vera", "hero.title": "Machen Sie aus einer Kammeranfrage einen klaren, zitierten Verfahrensplan.", "hero.lead": "Für Verfahren im italienischen Unternehmensregister verbindet Vera Fallfakten, zuständige Kammer und SARI-/CCIAA-Quellen in einem DIRE-Ablauf und ordnet Schritte, Felder, Anlagen und Entscheidungen für die fachliche Prüfung.",
         "hero.outcomeLabel": "Ergebnis", "hero.outcomeTitle": "Ein lesbarer, nachvollziehbarer Verfahrensplan.", "hero.outcomeCopy": "Kammer, Vorgang, RI-/REA-Positionen, DIRE-Schritte, Anlagen, Quellen und Prüffragen in einem Arbeitsordner.",
@@ -477,8 +457,7 @@
         "guide.label": "Ergebnis-Anleitung", "guide.title": "Vera | Ein Antrag, mehrere getrennte Positionen", "guide.meta": "Deutsche Erzählung · Öffnet auf YouTube",
         "next.eyebrow": "Verbundener Ablauf", "next.title": "Von der Rechtsfrage zum kontrollierbaren Recherche-Briefing.", "next.copy": "Wenn der Plan eine zu vertiefende Frage zeigt, ordnet Prompt Optimizer Fakten, Rechtsraum, Datum und vorrangige Quellen in einem Recherche-Briefing.", "next.link": "Prompt Optimizer entdecken →",
         "prompt.title": "Ein Prompt zum Start", "prompt.copy": "Beschreiben Sie den Vorgang und nennen Sie Kammer oder Gebiet. Vera ordnet den ersten Durchlauf und fragt nach den Bestätigungen, die das Verfahren verändern.", prompt: "Verwende Unternehmensregister und SARI, um [Eröffnung/Änderung] von [Rechtsträger und Tätigkeit] bei [Kammer oder Gebiet] zum [Datum] vorzubereiten. Ordne RI-/REA- und weitere Behördenpositionen, SARI-/CCIAA-Quellen, DIRE-Schritte, Felder, Anlagen, zu ergänzende Angaben und Fragen zur fachlichen Prüfung.",
-        "technical.title": "Technische Details", "technical.copy": "Der Ordner hält Fakten, Quellen, operativen Plan und Entscheidungen in getrennten, leicht prüfbaren Artefakten fest.", "technical.item1": "Rechtsträger, Tätigkeit, Vorgang und Datum.", "technical.item2": "Quellen mit Kammer, Gebiet und Verweis.", "technical.item3": "Umfang und strukturierte Vorschläge.", "technical.item4": "DIRE-Schritte, Felder und Anlagen.", "technical.item5": "Kanzleiaufgaben und Entscheidungen.", "technical.item6": "Lesbare Übergabe für die Prüfung.", "technical.item7": "Verfügbare lokale Quellen und Unterlagen.", "technical.item8": "SARI-Frage für die Recherche strukturiert.", "technical.item9": "Zu ergänzende Anlagen und Unterlagen.", "technical.item10": "Verzeichnis der finalen Artefakte.",
-        "install.title": "Vera enthält diesen Ablauf.", "install.copy": "Öffnen Sie Vera und beschreiben Sie das vorzubereitende Kammerverfahren.", "install.button": "Zurück zu Vera"
+        "technical.title": "Technische Details", "technical.copy": "Der Ordner hält Fakten, Quellen, operativen Plan und Entscheidungen in getrennten, leicht prüfbaren Artefakten fest.", "technical.item1": "Rechtsträger, Tätigkeit, Vorgang und Datum.", "technical.item2": "Quellen mit Kammer, Gebiet und Verweis.", "technical.item3": "Umfang und strukturierte Vorschläge.", "technical.item4": "DIRE-Schritte, Felder und Anlagen.", "technical.item5": "Kanzleiaufgaben und Entscheidungen.", "technical.item6": "Lesbare Übergabe für die Prüfung.", "technical.item7": "Verfügbare lokale Quellen und Unterlagen.", "technical.item8": "SARI-Frage für die Recherche strukturiert.", "technical.item9": "Zu ergänzende Anlagen und Unterlagen.", "technical.item10": "Verzeichnis der finalen Artefakte."
       }
     };
 

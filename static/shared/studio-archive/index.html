@@ -117,7 +117,7 @@
       gap: clamp(48px, 9vw, 120px);
       border-bottom: 1px solid var(--cyan);
     }
-    .eyebrow, .section-index, .route-context, .step-number {
+    .eyebrow, .section-index, .route-context {
       color: var(--blue);
       font-size: 0.75rem;
       font-weight: 650;
@@ -177,9 +177,9 @@
       gap: 0;
       border-block: 1px solid var(--blue);
     }
-    .step { min-height: 220px; padding: 28px; }
+    .step { min-height: 180px; padding: 28px; }
     .step + .step { border-left: 1px solid var(--line); }
-    .step h3 { margin: 22px 0 12px; }
+    .step h3 { margin: 0 0 12px; }
     .boundary {
       padding: clamp(48px, 7vw, 82px);
       color: var(--paper);
@@ -267,17 +267,14 @@
       </div>
       <div class="steps">
         <article class="step">
-          <span class="step-number">01</span>
           <h3 data-i18n="routing.step1.title">Fai una domanda</h3>
           <p data-i18n="routing.step1.copy">Per esempio: “Per Rossi Srl, trova cosa manca per chiudere l’IVA di giugno.”</p>
         </article>
         <article class="step">
-          <span class="step-number">02</span>
           <h3 data-i18n="routing.step2.title">Conferma il contatto</h3>
           <p data-i18n="routing.step2.copy">Vera ti chiede di confermare l’indirizzo email o il numero WhatsApp corretto, così non mescola clienti diversi.</p>
         </article>
         <article class="step">
-          <span class="step-number">03</span>
           <h3 data-i18n="routing.step3.title">Controlla il risultato</h3>
           <p data-i18n="routing.step3.copy">Vera cita i messaggi utilizzati ed esclude quelli ambigui.</p>
         </article>

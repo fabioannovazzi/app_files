@@ -22,11 +22,12 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal, Inexact, InvalidOperation, Rounded, localcontext
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 __all__ = [
     "AUDIT_ENVELOPE_SCHEMA",
+    "AUDIT_ENVELOPE_SCHEMA_V2",
     "ContractValidationError",
     "ExactDecimalPolicy",
     "artifact_receipt",
@@ -40,6 +41,7 @@ __all__ = [
     "file_sha256",
     "is_on_increment",
     "parse_decimal",
+    "named_root_artifact_receipt",
     "read_exact_csv",
     "reference_set",
     "resolve_local_file",
@@ -49,11 +51,15 @@ __all__ = [
     "strict_json_snapshot",
     "strict_json_snapshot_beneath",
     "validate_audit_envelope",
+    "validate_audit_envelope_v2",
     "validate_declared_source_receipt",
     "write_json",
 ]
 
 AUDIT_ENVELOPE_SCHEMA = "clara.preparation_audit_envelope.v1"
+AUDIT_ENVELOPE_SCHEMA_V2 = "clara.preparation_audit_envelope.v2"
+AUDIT_ARTIFACT_ROOT_IDS = frozenset({"pilot", "plugin"})
+AUTHORIZED_LOCAL_SOURCE_ROLE = "authorized_local_source"
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 DECIMAL_PATTERN = re.compile(r"^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$")
 ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
@@ -138,10 +144,11 @@ def _sequence(value: Any, *, label: str) -> list[Any]:
 def _text(value: Any, *, label: str, allow_empty: bool = False) -> str:
     if not isinstance(value, str):
         raise ContractValidationError(f"{label} must be text")
-    result = value.strip()
-    if not result and not allow_empty:
+    if value != value.strip():
+        raise ContractValidationError(f"{label} must not contain edge whitespace")
+    if not value and not allow_empty:
         raise ContractValidationError(f"{label} must be non-empty text")
-    return result
+    return value
 
 
 def _identifier(value: Any, *, label: str) -> str:
@@ -332,6 +339,52 @@ def _open_regular_file_beneath(
         if descriptor_before.st_nlink != 1:
             raise ContractValidationError(f"file must not be hard linked: {path}")
         yield file_descriptor
+
+        def verify_directory_chain() -> None:
+            try:
+                root_current = root_path.lstat()
+            except OSError as exc:
+                raise ContractValidationError(
+                    f"declared root changed while file was read: {path}"
+                ) from exc
+            root_pinned = os.fstat(descriptors[0])
+            if (
+                root_current.st_dev,
+                root_current.st_ino,
+                stat.S_IFMT(root_current.st_mode),
+            ) != (
+                root_pinned.st_dev,
+                root_pinned.st_ino,
+                stat.S_IFMT(root_pinned.st_mode),
+            ):
+                raise ContractValidationError(
+                    f"declared root changed while file was read: {path}"
+                )
+            for position, part in enumerate(relative_path.parts[:-1]):
+                try:
+                    current = os.stat(
+                        part,
+                        dir_fd=descriptors[position],
+                        follow_symlinks=False,
+                    )
+                except OSError as exc:
+                    raise ContractValidationError(
+                        f"directory path changed while file was read: {path}"
+                    ) from exc
+                pinned = os.fstat(descriptors[position + 1])
+                if (
+                    current.st_dev,
+                    current.st_ino,
+                    stat.S_IFMT(current.st_mode),
+                ) != (
+                    pinned.st_dev,
+                    pinned.st_ino,
+                    stat.S_IFMT(pinned.st_mode),
+                ):
+                    raise ContractValidationError(
+                        f"directory path changed while file was read: {path}"
+                    )
+
         descriptor_after = os.fstat(file_descriptor)
         if _snapshot_identity(descriptor_before) != _snapshot_identity(
             descriptor_after
@@ -361,6 +414,7 @@ def _open_regular_file_beneath(
             raise ContractValidationError(
                 f"file path changed while it was read: {path}"
             )
+        verify_directory_chain()
     except OSError as exc:
         raise ContractValidationError(
             f"could not safely open file below the declared root: {path}"
@@ -718,6 +772,121 @@ def artifact_receipt(
     return receipt
 
 
+def _named_artifact_roots(
+    artifact_roots: Mapping[str, Path],
+) -> dict[str, Path]:
+    """Validate the two explicit roots used by local-source audit envelopes."""
+
+    roots = _mapping(artifact_roots, label="artifact_roots")
+    if set(roots) != set(AUDIT_ARTIFACT_ROOT_IDS):
+        raise ContractValidationError(
+            "artifact_roots must contain exactly the pilot and plugin roots"
+        )
+    normalized: dict[str, Path] = {}
+    identities: dict[str, tuple[int, int]] = {}
+    for root_id in sorted(AUDIT_ARTIFACT_ROOT_IDS):
+        raw_root = roots[root_id]
+        if not isinstance(raw_root, Path):
+            raise ContractValidationError(f"artifact_roots.{root_id} must be a Path")
+        lexical_root = raw_root.absolute()
+        try:
+            lexical_status = lexical_root.lstat()
+        except OSError as exc:
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify an existing directory"
+            ) from exc
+        if stat.S_ISLNK(lexical_status.st_mode):
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify a non-symlink directory"
+            )
+        root = lexical_root.resolve()
+        try:
+            root_status = root.stat()
+        except OSError as exc:
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify an existing directory"
+            ) from exc
+        if not stat.S_ISDIR(root_status.st_mode):
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify a non-symlink directory"
+            )
+        normalized[root_id] = root
+        identities[root_id] = (root_status.st_dev, root_status.st_ino)
+    pilot_root = normalized["pilot"]
+    plugin_root = normalized["plugin"]
+    if (
+        pilot_root == plugin_root
+        or identities["pilot"] == identities["plugin"]
+        or pilot_root.is_relative_to(plugin_root)
+        or plugin_root.is_relative_to(pilot_root)
+    ):
+        raise ContractValidationError(
+            "artifact_roots.pilot and artifact_roots.plugin must be "
+            "distinct and non-overlapping"
+        )
+    return normalized
+
+
+def _canonical_relative_artifact_path(value: Any, *, label: str) -> PurePosixPath:
+    text = _text(value, label=label)
+    if "\\" in text:
+        raise ContractValidationError(f"{label} must use POSIX separators")
+    relative = PurePosixPath(text)
+    if (
+        relative.is_absolute()
+        or relative.as_posix() != text
+        or any(part in {"", ".", ".."} for part in relative.parts)
+    ):
+        raise ContractValidationError(
+            f"{label} must be a canonical relative path below its named root"
+        )
+    return relative
+
+
+def named_root_artifact_receipt(
+    artifact_roots: Mapping[str, Path],
+    path: Path,
+    *,
+    root_id: str,
+    artifact_id: str,
+    role: str,
+    media_type: str | None = None,
+) -> dict[str, Any]:
+    """Build one no-follow receipt below a named ``plugin`` or ``pilot`` root."""
+
+    roots = _named_artifact_roots(artifact_roots)
+    selected_root_id = _identifier(root_id, label="root_id")
+    if selected_root_id not in roots:
+        raise ContractValidationError("root_id must be pilot or plugin")
+    root = roots[selected_root_id]
+    artifact_path = Path(path).absolute()
+    try:
+        relative_path = artifact_path.relative_to(root)
+    except ValueError as exc:
+        raise ContractValidationError(
+            "artifact path must stay below its named root"
+        ) from exc
+    relative = _canonical_relative_artifact_path(
+        relative_path.as_posix(),
+        label="artifact path",
+    )
+    byte_count, digest = file_snapshot_beneath(
+        root / Path(relative.as_posix()),
+        root=root,
+    )
+    receipt: dict[str, Any] = {
+        "artifact_id": _identifier(artifact_id, label="artifact_id"),
+        "root_id": selected_root_id,
+        "role": _text(role, label="artifact role"),
+        "path": relative.as_posix(),
+        "byte_count": byte_count,
+        "sha256": digest,
+    }
+    if media_type is not None:
+        receipt["media_type"] = _text(media_type, label="artifact media_type")
+    return receipt
+
+
 def read_exact_csv(
     path: Path,
     *,
@@ -964,7 +1133,107 @@ def _validate_artifacts(
     return rows, artifact_ids
 
 
-def _validate_sources(values: Any) -> tuple[list[dict[str, Any]], set[str]]:
+def _validate_named_root_artifacts(
+    values: Any,
+    *,
+    artifact_roots: Mapping[str, Path],
+) -> tuple[list[Mapping[str, Any]], set[str], dict[str, Path]]:
+    """Validate v2 artifacts through their named no-follow roots."""
+
+    roots = _named_artifact_roots(artifact_roots)
+    rows = [
+        _mapping(item, label=f"local_artifacts[{position}]")
+        for position, item in enumerate(_sequence(values, label="local_artifacts"))
+    ]
+    if not rows:
+        raise ContractValidationError("local_artifacts must not be empty")
+    artifact_ids = _require_unique_ids(
+        rows,
+        field="artifact_id",
+        label="local_artifacts",
+    )
+    artifact_paths: dict[str, Path] = {}
+    used_roots: set[str] = set()
+    for position, artifact in enumerate(rows):
+        label = f"local_artifacts[{position}]"
+        _exact_fields(
+            artifact,
+            required=frozenset(
+                {
+                    "artifact_id",
+                    "root_id",
+                    "role",
+                    "path",
+                    "byte_count",
+                    "sha256",
+                }
+            ),
+            optional=frozenset({"media_type"}),
+            label=label,
+        )
+        artifact_id = _identifier(
+            artifact["artifact_id"],
+            label=f"{label}.artifact_id",
+        )
+        root_id = _identifier(artifact["root_id"], label=f"{label}.root_id")
+        if root_id not in roots:
+            raise ContractValidationError(f"{label}.root_id must be pilot or plugin")
+        used_roots.add(root_id)
+        _text(artifact["role"], label=f"{label}.role")
+        relative = _canonical_relative_artifact_path(
+            artifact["path"],
+            label=f"{label}.path",
+        )
+        path = roots[root_id] / Path(relative.as_posix())
+        byte_count = artifact["byte_count"]
+        if type(byte_count) is not int or byte_count < 0:
+            raise ContractValidationError(f"{label}.byte_count must not be negative")
+        actual_byte_count, actual_digest = file_snapshot_beneath(
+            path,
+            root=roots[root_id],
+        )
+        if actual_byte_count != byte_count:
+            raise ContractValidationError(f"{label}.byte_count does not match file")
+        if actual_digest != _sha256(artifact["sha256"], label=f"{label}.sha256"):
+            raise ContractValidationError(f"{label}.sha256 does not match file")
+        if "media_type" in artifact:
+            _text(artifact["media_type"], label=f"{label}.media_type")
+        artifact_paths[artifact_id] = path
+    if used_roots != set(AUDIT_ARTIFACT_ROOT_IDS):
+        raise ContractValidationError(
+            "local_artifacts must bind at least one artifact under each named root"
+        )
+    return rows, artifact_ids, artifact_paths
+
+
+def _strict_json_artifact_snapshot(
+    artifact: Mapping[str, Any],
+    path: Path,
+    *,
+    root: Path | None,
+    label: str,
+) -> Any:
+    """Parse the same exact bytes bound by one local artifact receipt."""
+
+    if root is None:
+        payload, byte_count, digest = strict_json_snapshot(path)
+    else:
+        payload, byte_count, digest = strict_json_snapshot_beneath(
+            path,
+            root=root,
+        )
+    if byte_count != artifact["byte_count"] or digest != artifact["sha256"]:
+        raise ContractValidationError(
+            f"{label} bytes changed after artifact receipt validation"
+        )
+    return payload
+
+
+def _validate_sources(
+    values: Any,
+    *,
+    require_rows: bool = True,
+) -> tuple[list[dict[str, Any]], set[str]]:
     rows = [
         validate_declared_source_receipt(
             _mapping(item, label=f"remote_sources[{position}]"),
@@ -972,9 +1241,13 @@ def _validate_sources(values: Any) -> tuple[list[dict[str, Any]], set[str]]:
         )
         for position, item in enumerate(_sequence(values, label="remote_sources"))
     ]
-    if not rows:
+    if require_rows and not rows:
         raise ContractValidationError("remote_sources must not be empty")
-    source_ids = _require_unique_ids(rows, field="source_id", label="remote_sources")
+    source_ids = (
+        _require_unique_ids(rows, field="source_id", label="remote_sources")
+        if rows
+        else set()
+    )
     return rows, source_ids
 
 
@@ -1070,7 +1343,7 @@ def _lineage_rows(
             raise ContractValidationError("artifact lineage must be declared")
         if level == "row" and level_value["declared"]:
             raise ContractValidationError(
-                "row lineage is not supported by preparation audit envelope v1"
+                "row lineage is not supported by preparation audit envelopes"
             )
         if level_value["declared"] and not records:
             raise ContractValidationError(
@@ -1104,26 +1377,48 @@ def _lineage_rows(
     return collected, set(identifiers)
 
 
-def validate_audit_envelope(
+def _validate_audit_envelope_profile(
     envelope: Mapping[str, Any],
     *,
-    root: Path,
+    schema_version: str,
+    root: Path | None,
+    artifact_roots: Mapping[str, Path] | None,
 ) -> dict[str, Any]:
-    """Validate one audit envelope and all mechanically checkable references.
-
-    Successful validation proves only contract integrity. It does not prove
-    source authority, semantic correctness, reviewer authorization, report
-    readiness, or publication eligibility.
-    """
+    """Validate one audit-envelope profile and its mechanical references."""
 
     payload = _mapping(envelope, label="envelope")
     _exact_fields(payload, required=TOP_LEVEL_FIELDS, label="envelope")
-    if payload["schema_version"] != AUDIT_ENVELOPE_SCHEMA:
-        raise ContractValidationError(f"schema_version must be {AUDIT_ENVELOPE_SCHEMA}")
-
-    artifacts, artifact_ids = _validate_artifacts(
-        payload["local_artifacts"], root=Path(root)
-    )
+    if payload["schema_version"] != schema_version:
+        raise ContractValidationError(f"schema_version must be {schema_version}")
+    local_source_profile = schema_version == AUDIT_ENVELOPE_SCHEMA_V2
+    if local_source_profile:
+        if root is not None or artifact_roots is None:
+            raise ContractValidationError(
+                "v2 validation requires named artifact_roots and no v1 root"
+            )
+        artifacts, artifact_ids, artifact_paths = _validate_named_root_artifacts(
+            payload["local_artifacts"],
+            artifact_roots=artifact_roots,
+        )
+    else:
+        if schema_version != AUDIT_ENVELOPE_SCHEMA:
+            raise ContractValidationError("unsupported audit envelope schema")
+        if root is None or artifact_roots is not None:
+            raise ContractValidationError(
+                "v1 validation requires one root and no named artifact_roots"
+            )
+        artifacts, artifact_ids = _validate_artifacts(
+            payload["local_artifacts"],
+            root=Path(root),
+        )
+        artifact_paths = {
+            str(artifact["artifact_id"]): resolve_local_file(
+                Path(root),
+                artifact["path"],
+                label=f"local artifact {artifact['artifact_id']}",
+            )
+            for artifact in artifacts
+        }
     artifact_by_id = {str(artifact["artifact_id"]): artifact for artifact in artifacts}
     schema_artifacts = [
         artifact for artifact in artifacts if artifact["role"] == "audit_schema"
@@ -1132,24 +1427,47 @@ def validate_audit_envelope(
         raise ContractValidationError(
             "exactly one audit_schema artifact must bind the envelope contract"
         )
-    schema_document = strict_json_load(
-        resolve_local_file(
-            Path(root),
-            schema_artifacts[0]["path"],
+    schema_artifact_id = str(schema_artifacts[0]["artifact_id"])
+    schema_path = artifact_paths[schema_artifact_id]
+    if local_source_profile:
+        schema_root_id = str(schema_artifacts[0]["root_id"])
+        if schema_root_id != "plugin":
+            raise ContractValidationError(
+                "v2 audit_schema artifact must use the plugin root"
+            )
+        if artifact_roots is None:
+            raise ContractValidationError("v2 artifact roots are unavailable")
+        schema_document = _strict_json_artifact_snapshot(
+            schema_artifacts[0],
+            schema_path,
+            root=_named_artifact_roots(artifact_roots)["plugin"],
             label="audit schema artifact",
         )
-    )
+    else:
+        schema_document = _strict_json_artifact_snapshot(
+            schema_artifacts[0],
+            schema_path,
+            root=None,
+            label="audit schema artifact",
+        )
     try:
         schema_identifier = schema_document["properties"]["schema_version"]["const"]
     except (KeyError, TypeError) as exc:
         raise ContractValidationError(
             "audit_schema artifact does not declare the envelope schema version"
         ) from exc
-    if schema_identifier != AUDIT_ENVELOPE_SCHEMA:
+    if schema_identifier != schema_version:
         raise ContractValidationError(
             "audit_schema artifact does not match schema_version"
         )
-    _sources, source_ids = _validate_sources(payload["remote_sources"])
+    _sources, source_ids = _validate_sources(
+        payload["remote_sources"],
+        require_rows=not local_source_profile,
+    )
+    if local_source_profile and payload["remote_sources"] != []:
+        raise ContractValidationError(
+            "v2 remote_sources must be empty; do not fabricate a remote receipt"
+        )
     decisions, decision_ids = _validate_decisions(payload["reviewed_decisions"])
 
     case = _mapping(payload["case"], label="case")
@@ -1166,6 +1484,8 @@ def validate_audit_envelope(
     case_ref = _identifier(case["case_artifact_ref"], label="case.case_artifact_ref")
     if case_ref not in artifact_ids:
         raise ContractValidationError("case.case_artifact_ref is unknown")
+    if local_source_profile and artifact_by_id[case_ref]["root_id"] != "pilot":
+        raise ContractValidationError("v2 case artifact must use the pilot root")
 
     adapter = _mapping(payload["adapter"], label="adapter")
     _exact_fields(
@@ -1195,6 +1515,10 @@ def validate_audit_envelope(
     if len(matching_adapters) != 1:
         raise ContractValidationError(
             "adapter implementation must match exactly one audit_adapter artifact"
+        )
+    if local_source_profile and matching_adapters[0]["root_id"] != "plugin":
+        raise ContractValidationError(
+            "v2 audit_adapter artifact must use the plugin root"
         )
 
     execution = _mapping(payload["execution"], label="execution")
@@ -1231,6 +1555,9 @@ def validate_audit_envelope(
         raise ContractValidationError(
             "execution producer must match exactly one producer artifact"
         )
+    if local_source_profile and producer_matches[0]["root_id"] != "plugin":
+        raise ContractValidationError("v2 producer artifact must use the plugin root")
+    execution_input_refs: frozenset[str] = frozenset()
     execution_output_refs: frozenset[str] = frozenset()
     for field in ("input_artifact_refs", "output_artifact_refs"):
         refs = [
@@ -1246,8 +1573,15 @@ def validate_audit_envelope(
             raise ContractValidationError(
                 f"execution.{field} contains unknown artifacts: {unknown}"
             )
-        if field == "output_artifact_refs":
+        if field == "input_artifact_refs":
+            execution_input_refs = frozenset(refs)
+        else:
             execution_output_refs = frozenset(refs)
+    if local_source_profile and any(
+        artifact_by_id[artifact_id]["root_id"] != "pilot"
+        for artifact_id in execution_output_refs
+    ):
+        raise ContractValidationError("v2 execution outputs must use the pilot root")
 
     numeric_policy = _mapping(payload["numeric_policy"], label="numeric_policy")
     _exact_fields(
@@ -1362,12 +1696,24 @@ def validate_audit_envelope(
                     f"{label} evidence artifact must have role "
                     "aggregate_lineage_evidence"
                 )
-            evidence_path = resolve_local_file(
-                Path(root),
-                evidence_artifact["path"],
-                label=f"{label}.evidence_artifact",
-            )
-            evidence_payload = strict_json_load(evidence_path)
+            evidence_path = artifact_paths[evidence_ref]
+            if local_source_profile:
+                if artifact_roots is None:
+                    raise ContractValidationError("v2 artifact roots are unavailable")
+                evidence_root_id = str(evidence_artifact["root_id"])
+                evidence_payload = _strict_json_artifact_snapshot(
+                    evidence_artifact,
+                    evidence_path,
+                    root=_named_artifact_roots(artifact_roots)[evidence_root_id],
+                    label=f"{label}.evidence_artifact",
+                )
+            else:
+                evidence_payload = _strict_json_artifact_snapshot(
+                    evidence_artifact,
+                    evidence_path,
+                    root=None,
+                    label=f"{label}.evidence_artifact",
+                )
             evidence_value = _resolve_json_pointer(
                 evidence_payload,
                 record["evidence_json_pointer"],
@@ -1566,7 +1912,11 @@ def validate_audit_envelope(
         "preparation": {"not_assessed", "passed", "failed", "blocked"},
         "reconciliation": {"not_assessed", "passed", "failed", "blocked"},
         "semantic": {"not_assessed"},
-        "source": {"not_assessed", "receipt_only", "failed", "blocked"},
+        "source": (
+            {"local_receipt_only"}
+            if local_source_profile
+            else {"not_assessed", "receipt_only", "failed", "blocked"}
+        ),
         "downstream": {"not_assessed"},
         "publication": {
             "not_assessed",
@@ -1610,6 +1960,41 @@ def validate_audit_envelope(
         )
     if statuses["source"]["status"] == "receipt_only" and not source_ids:
         raise ContractValidationError("receipt_only source status requires receipts")
+    if local_source_profile:
+        local_source_artifacts = [
+            artifact
+            for artifact in artifacts
+            if artifact["role"] == AUTHORIZED_LOCAL_SOURCE_ROLE
+        ]
+        if not local_source_artifacts:
+            raise ContractValidationError(
+                "v2 requires at least one authorized_local_source artifact"
+            )
+        if any(artifact["root_id"] != "pilot" for artifact in local_source_artifacts):
+            raise ContractValidationError(
+                "authorized_local_source artifacts must use the pilot root"
+            )
+        local_source_ids = {
+            str(artifact["artifact_id"]) for artifact in local_source_artifacts
+        }
+        source_status_refs = set(
+            _sequence(
+                _mapping(
+                    statuses["source"]["evidence_refs"],
+                    label="statuses.source.evidence_refs",
+                )["artifact_refs"],
+                label="statuses.source.evidence_refs.artifact_refs",
+            )
+        )
+        if not local_source_ids.issubset(source_status_refs):
+            raise ContractValidationError(
+                "local_receipt_only source status must reference every "
+                "authorized_local_source artifact"
+            )
+        if not local_source_ids.issubset(execution_input_refs):
+            raise ContractValidationError(
+                "every authorized_local_source artifact must be an execution input"
+            )
     if type(payload["report_ready"]) is not bool or payload["report_ready"]:
         raise ContractValidationError(
             "preparation audit envelopes cannot claim report readiness"
@@ -1658,3 +2043,44 @@ def validate_audit_envelope(
             )
 
     return dict(payload)
+
+
+def validate_audit_envelope(
+    envelope: Mapping[str, Any],
+    *,
+    root: Path,
+) -> dict[str, Any]:
+    """Validate the frozen v1 remote-receipt audit-envelope profile.
+
+    Successful validation proves only contract integrity. It does not prove
+    source authority, semantic correctness, reviewer authorization, report
+    readiness, or publication eligibility.
+    """
+
+    return _validate_audit_envelope_profile(
+        envelope,
+        schema_version=AUDIT_ENVELOPE_SCHEMA,
+        root=Path(root),
+        artifact_roots=None,
+    )
+
+
+def validate_audit_envelope_v2(
+    envelope: Mapping[str, Any],
+    *,
+    artifact_roots: Mapping[str, Path],
+) -> dict[str, Any]:
+    """Validate the v2 exact-local-source profile through two named roots.
+
+    The ``plugin`` and ``pilot`` roots are caller-supplied capabilities, not
+    paths recorded in the envelope. Every artifact is opened with no-follow
+    descriptor traversal. This proves exact local bytes at validation time,
+    not source authority, semantic correctness, or later file immutability.
+    """
+
+    return _validate_audit_envelope_profile(
+        envelope,
+        schema_version=AUDIT_ENVELOPE_SCHEMA_V2,
+        root=None,
+        artifact_roots=artifact_roots,
+    )

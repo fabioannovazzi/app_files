@@ -416,12 +416,6 @@ body[data-vera-module="new-client"] .journey-step {
   grid-template-columns: minmax(210px, 0.42fr) minmax(0, 0.58fr);
 }
 
-.journey-step__number {
-  color: var(--vj-cyan);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
 .journey-step p {
   color: var(--vj-muted);
 }

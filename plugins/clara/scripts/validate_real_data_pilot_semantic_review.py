@@ -10,6 +10,7 @@ Mechanical errors remain a separate producer-owned artifact.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import logging
 import re
 from collections.abc import Mapping, Sequence
@@ -22,17 +23,19 @@ from preparation_contract_kernel import (
     file_sha256,
     file_snapshot_beneath,
     strict_json_snapshot_beneath,
-    write_json,
 )
 from validate_real_data_pilot_intake import (
+    INTAKE_RECEIPT_SCHEMA,
+    INTAKE_RECEIPT_SCHEMA_V2,
     PILOT_ID_PATTERN,
     REQUIRED_SEMANTIC_REVIEWS,
     STORAGE_RELATIONS,
-    clear_owned_pilot_receipt_output,
+    pinned_pilot_receipt_output,
     resolve_pilot_storage_roots,
     validate_pilot_local_run_path,
     validate_pilot_receipt_output_path,
     validate_real_data_pilot_intake_receipt,
+    validate_real_data_pilot_intake_receipt_v2,
 )
 
 __all__ = [
@@ -88,24 +91,26 @@ SEMANTIC_REVIEW_RECEIPT_FIELDS = frozenset(
 CLARA_ROOT = Path(__file__).resolve().parents[1]
 SEMANTIC_VALIDATOR_DEPENDENCY_PATHS = {
     "intake_receipt_schema": (
-        CLARA_ROOT / "contracts" / "real_data_pilot_intake_receipt.v1.schema.json"
+        CLARA_ROOT / "contracts" / "real_data_pilot_intake_receipt.v1.schema.json",
+        CLARA_ROOT / "contracts" / "real_data_pilot_intake_receipt.v2.schema.json",
     ),
     "intake_schema": (
-        CLARA_ROOT / "contracts" / "real_data_pilot_intake.v1.schema.json"
+        CLARA_ROOT / "contracts" / "real_data_pilot_intake.v1.schema.json",
+        CLARA_ROOT / "contracts" / "real_data_pilot_intake.v2.schema.json",
     ),
     "intake_validator": (
-        Path(__file__).resolve().with_name("validate_real_data_pilot_intake.py")
+        Path(__file__).resolve().with_name("validate_real_data_pilot_intake.py"),
     ),
     "preparation_contract_kernel": (
-        Path(__file__).resolve().with_name("preparation_contract_kernel.py")
+        Path(__file__).resolve().with_name("preparation_contract_kernel.py"),
     ),
     "semantic_review_receipt_schema": (
         CLARA_ROOT
         / "contracts"
-        / "real_data_pilot_semantic_review_receipt.v1.schema.json"
+        / "real_data_pilot_semantic_review_receipt.v1.schema.json",
     ),
     "semantic_review_schema": (
-        CLARA_ROOT / "contracts" / "real_data_pilot_semantic_review.v1.schema.json"
+        CLARA_ROOT / "contracts" / "real_data_pilot_semantic_review.v1.schema.json",
     ),
 }
 
@@ -166,9 +171,24 @@ def _current_dependency_sha256() -> dict[str, str]:
     """Return hashes for every file that can change semantic validation."""
 
     return {
-        dependency_id: file_sha256(path)
-        for dependency_id, path in sorted(SEMANTIC_VALIDATOR_DEPENDENCY_PATHS.items())
+        dependency_id: _dependency_group_sha256(paths)
+        for dependency_id, paths in sorted(SEMANTIC_VALIDATOR_DEPENDENCY_PATHS.items())
     }
+
+
+def _dependency_group_sha256(paths: Sequence[Path]) -> str:
+    """Bind one stable dependency field to one or more versioned files."""
+
+    if len(paths) == 1:
+        return file_sha256(paths[0])
+    digest = hashlib.sha256()
+    digest.update(b"clara.semantic-validator-dependency-group.v1\0")
+    for path in sorted(paths, key=lambda item: item.name):
+        digest.update(path.name.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(file_sha256(path).encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def _validate_dependency_sha256(value: Any, *, label: str) -> dict[str, str]:
@@ -251,7 +271,16 @@ def _validate_intake_receipt(
         raise ContractValidationError(
             "intake_receipt_sha256 does not match the supplied receipt"
         )
-    receipt = validate_real_data_pilot_intake_receipt(receipt)
+    receipt_mapping = _mapping(receipt, label="intake receipt")
+    receipt_schema = receipt_mapping.get("schema_version")
+    if receipt_schema == INTAKE_RECEIPT_SCHEMA:
+        receipt = validate_real_data_pilot_intake_receipt(receipt_mapping)
+    elif receipt_schema == INTAKE_RECEIPT_SCHEMA_V2:
+        receipt = validate_real_data_pilot_intake_receipt_v2(receipt_mapping)
+    else:
+        raise ContractValidationError(
+            "intake receipt.schema_version is not a supported exact version"
+        )
     if receipt.get("pilot_id") != expected_pilot_id:
         raise ContractValidationError(
             "semantic review pilot_id does not match the intake receipt"
@@ -1017,21 +1046,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise ContractValidationError(
             "output path parent must be an existing directory"
         )
-    clear_owned_pilot_receipt_output(
+    with pinned_pilot_receipt_output(
         output_path,
-        schema_version=SEMANTIC_REVIEW_RECEIPT_SCHEMA,
-        validator_id=VALIDATOR_ID,
-        required_fields=SEMANTIC_REVIEW_RECEIPT_FIELDS,
-    )
-
-    receipt = validate_real_data_pilot_semantic_review(
-        review_path,
-        intake_receipt_path,
-        as_of_date=_current_date().isoformat(),
         local_run_root=run_root,
-        repository_root=repo_root,
-    )
-    write_json(output_path, receipt)
+    ) as pinned_output:
+        pinned_output.require_absent()
+        receipt = validate_real_data_pilot_semantic_review(
+            review_path,
+            intake_receipt_path,
+            as_of_date=_current_date().isoformat(),
+            local_run_root=run_root,
+            repository_root=repo_root,
+        )
+        pinned_output.write_json(receipt)
     LOGGER.info(
         "Real-data pilot semantic review %s: %s",
         receipt["pilot_id"],

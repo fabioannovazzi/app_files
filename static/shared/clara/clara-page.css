@@ -170,7 +170,6 @@ p { margin: 0; }
 
 .promise { min-height: 166px; padding: 30px 22px 30px 0; }
 .promise + .promise { padding-left: 22px; border-left: 1px solid var(--cyan); }
-.promise__number { color: var(--cyan); font-size: 12px; font-weight: 650; letter-spacing: 0.08em; }
 .promise p { margin-top: 11px; color: var(--blue); }
 .promise[href] { text-decoration: none; transition: background-color 160ms ease; }
 .promise[href]:hover, .promise[href]:focus-visible { background: var(--pale-blue); }
@@ -327,18 +326,11 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 .due-diligence-step {
   min-height: 126px;
   display: grid;
-  grid-template-columns: 52px minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
   align-items: baseline;
   gap: 28px;
   padding: 26px 4px;
   border-bottom: 1px solid var(--cyan);
-}
-
-.due-diligence-step__number {
-  color: var(--cyan);
-  font-size: 13px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
 }
 
 .due-diligence-step p {
@@ -477,11 +469,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
     gap: 16px;
   }
   .due-diligence-step {
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 8px 16px;
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
   .due-diligence-step p {
-    grid-column: 2;
+    grid-column: 1;
   }
   .quiet-table { min-width: 720px; }
   .hero-install {

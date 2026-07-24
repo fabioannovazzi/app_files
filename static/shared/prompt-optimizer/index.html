@@ -22,8 +22,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../vera-scope.css?v=20260721">
-  <script src="../vera-scope.js?v=20260722" defer></script>
   <style>
     :root {
       --bg: #ffffff;
@@ -153,12 +151,11 @@
     .workflow-list { border-top: 1px solid var(--line-strong); }
     .workflow-step {
       display: grid;
-      grid-template-columns: 58px minmax(180px, 0.36fr) minmax(0, 0.64fr);
+      grid-template-columns: minmax(180px, 0.36fr) minmax(0, 0.64fr);
       gap: 24px;
       padding: 24px 0;
       border-bottom: 1px solid var(--line);
     }
-    .workflow-step__number { color: var(--cyan); font-weight: 700; font-variant-numeric: tabular-nums; }
     .workflow-step h3 { margin: 0; color: var(--ink); font-size: 1.1rem; }
     .workflow-step p { margin: 0; color: var(--muted); }
     .proof-panel {
@@ -198,7 +195,6 @@
     .journey-stage { min-height: 178px; padding: 24px 26px 26px 0; }
     .journey-stage + .journey-stage { padding-left: 26px; border-left: 1px solid var(--line); }
     .journey-stage.is-current { box-shadow: inset 0 4px 0 var(--blue); }
-    .journey-stage__number { display: block; margin-bottom: 28px; color: var(--cyan); font-size: 0.8rem; font-weight: 700; }
     .journey-stage h3 { margin: 0 0 9px; color: var(--ink); font-size: 1.06rem; }
     .journey-stage p { margin: 0; color: var(--muted); font-size: 0.94rem; }
     .journey-stage a { display: inline-flex; align-items: center; min-height: 44px; color: var(--blue); font-weight: 700; text-underline-offset: 4px; }
@@ -239,8 +235,7 @@
       .primary-nav { align-items: flex-start; }
       .hero, .section-head, .proof-panel, .technical-grid, .install-panel { grid-template-columns: 1fr; }
       .hero { padding-top: 48px; }
-      .workflow-step { grid-template-columns: 44px minmax(0, 1fr); }
-      .workflow-step p { grid-column: 2; }
+      .workflow-step { grid-template-columns: 1fr; gap: 8px; }
       .proof-copy h2 { max-width: 18ch; }
     }
     @media (max-width: 580px) {
@@ -250,7 +245,6 @@
       .journey-chain, .output-list { grid-template-columns: 1fr; }
       .journey-stage { min-height: 0; padding: 22px 0; }
       .journey-stage + .journey-stage { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
-      .journey-stage__number { margin-bottom: 12px; }
       .route-row { grid-template-columns: 82px minmax(0, 1fr); }
       .video-meta { display: block; }
       .video-meta span { display: block; margin-top: 4px; }
@@ -262,7 +256,7 @@
   </style>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
 </head>
-<body data-vera-module="prompt-optimizer" data-vera-scope="core">
+<body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
   <div class="page">
     <header>
@@ -272,7 +266,6 @@
         <a href="#result" data-i18n="nav.result">Risultato</a>
         <a href="#starter" data-i18n="nav.starter">Prompt iniziale</a>
         <a href="#details" data-i18n="nav.details">Dettagli</a>
-        <a href="#download" data-i18n="nav.download">Apri Vera</a>
         <span class="lang" id="language-switcher" aria-label="Lingua">
           <button type="button" data-lang="en">En</button>
           <button type="button" data-lang="it">It</button>
@@ -314,10 +307,10 @@
           <p data-i18n="workflow.copy">Obiettivo, diritto applicabile, ambito e assunzioni guidano il brief. Vera li rende espliciti, struttura le fonti e applica i controlli finali.</p>
         </div>
         <div class="workflow-list">
-          <article class="workflow-step"><span class="workflow-step__number">01</span><h3 data-i18n="workflow.item1.title">Porta la domanda</h3><p data-i18n="workflow.item1.copy">Incolla il quesito con date, importi, parti, luoghi, link e domande esplicite. Non serve ripulirlo prima.</p></article>
-          <article class="workflow-step"><span class="workflow-step__number">02</span><h3 data-i18n="workflow.item2.title">Conferma le scelte materiali</h3><p data-i18n="workflow.item2.copy">Vera separa lingua, diritto applicabile e lente di ricerca; ti chiede conferma solo quando una scelta cambia l'analisi.</p></article>
-          <article class="workflow-step"><span class="workflow-step__number">03</span><h3 data-i18n="workflow.item3.title">Rivedi il brief</h3><p data-i18n="workflow.item3.copy">Controlla fatti preservati, fonti prioritarie, formato atteso, limiti, assunzioni e regole di citazione.</p></article>
-          <article class="workflow-step"><span class="workflow-step__number">04</span><h3 data-i18n="workflow.item4.title">Avvia Deep Research</h3><p data-i18n="workflow.item4.copy">Usa optimized_prompt.md come istruzione e source_domains_comma.txt nel campo dei siti. Il brief è validato prima della consegna.</p></article>
+          <article class="workflow-step"><h3 data-i18n="workflow.item1.title">Porta la domanda</h3><p data-i18n="workflow.item1.copy">Incolla il quesito con date, importi, parti, luoghi, link e domande esplicite. Non serve ripulirlo prima.</p></article>
+          <article class="workflow-step"><h3 data-i18n="workflow.item2.title">Conferma le scelte materiali</h3><p data-i18n="workflow.item2.copy">Vera separa lingua, diritto applicabile e lente di ricerca; ti chiede conferma solo quando una scelta cambia l'analisi.</p></article>
+          <article class="workflow-step"><h3 data-i18n="workflow.item3.title">Rivedi il brief</h3><p data-i18n="workflow.item3.copy">Controlla fatti preservati, fonti prioritarie, formato atteso, limiti, assunzioni e regole di citazione.</p></article>
+          <article class="workflow-step"><h3 data-i18n="workflow.item4.title">Avvia Deep Research</h3><p data-i18n="workflow.item4.copy">Usa optimized_prompt.md come istruzione e source_domains_comma.txt nel campo dei siti. Il brief è validato prima della consegna.</p></article>
         </div>
       </section>
 
@@ -345,9 +338,9 @@
           <p data-i18n="next.copy">Ottimizza il quesito, esegui il brief in Deep Research, poi controlla se le fonti sostengono davvero le conclusioni.</p>
         </div>
         <div class="journey-chain" aria-label="Prompt Optimizer, Deep Research, Deep Research Validator">
-          <article class="journey-stage is-current"><span class="journey-stage__number">01</span><h3 data-i18n="next.step1.title">Prompt Optimizer</h3><p data-i18n="next.step1.copy">Prepara il brief e la lista dei siti.</p></article>
-          <article class="journey-stage"><span class="journey-stage__number">02</span><h3>Deep Research</h3><p data-i18n="next.step2.copy">Esegui la ricerca con il brief ottimizzato.</p></article>
-          <article class="journey-stage"><span class="journey-stage__number">03</span><h3 data-i18n="next.step3.title">Deep Research Validator</h3><p data-i18n="next.step3.copy">Rivedi affermazioni, fonti e ragionamento.</p><a id="validator-link" href="../deep-research-validator/index.html?lang=it" data-i18n="next.link">Vai alla validazione →</a></article>
+          <article class="journey-stage is-current"><h3 data-i18n="next.step1.title">Prompt Optimizer</h3><p data-i18n="next.step1.copy">Prepara il brief e la lista dei siti.</p></article>
+          <article class="journey-stage"><h3>Deep Research</h3><p data-i18n="next.step2.copy">Esegui la ricerca con il brief ottimizzato.</p></article>
+          <article class="journey-stage"><h3 data-i18n="next.step3.title">Deep Research Validator</h3><p data-i18n="next.step3.copy">Rivedi affermazioni, fonti e ragionamento.</p><a id="validator-link" href="../deep-research-validator/index.html?lang=it" data-i18n="next.link">Vai alla validazione →</a></article>
         </div>
       </section>
 
@@ -388,15 +381,6 @@
         </details>
       </section>
 
-      <section id="download">
-        <div class="install-panel">
-          <div>
-            <h2 data-i18n="download.title">Vera include questo workflow.</h2>
-            <p data-i18n="download.copy">Apri Vera e usa il prompt iniziale. Ottimizza prompt, gli artefatti di controllo e il passaggio al Validator fanno parte dello stesso percorso.</p>
-          </div>
-          <a class="button" href="../vera/index.html" data-i18n="download.button">Torna a Vera</a>
-        </div>
-      </section>
     </main>
 
     <footer data-i18n="footer">Vera · Dal quesito al brief di ricerca verificabile.</footer>
@@ -425,7 +409,6 @@
         "nav.result": "Risultato",
         "nav.starter": "Prompt iniziale",
         "nav.details": "Dettagli",
-        "nav.download": "Apri Vera",
         "module.name": "Ottimizza prompt",
         "hero.eyebrow": "Vera · Ricerca legale e fiscale",
         "hero.title": "Un brief che Deep Research può seguire e tu puoi controllare.",
@@ -473,9 +456,6 @@
         "details.outputs.title": "File prodotti",
         "details.scope.title": "Perimetro e passaggio alla ricerca",
         "details.scope.copy": "Lingua, diritto applicabile, fatti, quadro, fonti prioritarie e controlli restano espliciti nel brief consegnato a Deep Research.",
-        "download.title": "Vera include questo workflow.",
-        "download.copy": "Apri Vera e usa il prompt iniziale. Ottimizza prompt, gli artefatti di controllo e il passaggio al Validator fanno parte dello stesso percorso.",
-        "download.button": "Torna a Vera",
         footer: "Vera · Dal quesito al brief di ricerca verificabile.",
         prompt: "Usa Ottimizza prompt su questo quesito legale o fiscale. Lingua output: it. Preserva tutti i fatti e separa lingua, diritto applicabile e obiettivo. Se una scelta materiale è incerta, chiedimi conferma. Prepara e valida un brief per Deep Research con fonti prioritarie, citazioni, limiti, assunzioni e controlli finali."
       },
@@ -492,7 +472,6 @@
         "nav.result": "Result",
         "nav.starter": "Starter prompt",
         "nav.details": "Details",
-        "nav.download": "Open Vera",
         "module.name": "Optimize Prompt",
         "hero.eyebrow": "Vera · Legal and tax research",
         "hero.title": "A brief Deep Research can follow—and you can review.",
@@ -540,9 +519,6 @@
         "details.outputs.title": "Files produced",
         "details.scope.title": "Scope and research handoff",
         "details.scope.copy": "Language, governing law, facts, framework, priority sources and checks remain explicit in the brief handed to Deep Research.",
-        "download.title": "Vera includes this workflow.",
-        "download.copy": "Open Vera and use the starter prompt. Optimize Prompt, its control artifacts and the handoff to the Validator belong to the same journey.",
-        "download.button": "Back to Vera",
         footer: "Vera · From the question to a verifiable research brief.",
         prompt: "Use Optimize Prompt on this legal or tax question. Output language: en. Preserve every fact and keep output language, governing law and objective separate. If a material choice is uncertain, ask me to confirm it. Prepare and validate a Deep Research brief with priority sources, citations, limits, assumptions and final checks."
       },
@@ -559,7 +535,6 @@
         "nav.result": "Résultat",
         "nav.starter": "Prompt de départ",
         "nav.details": "Détails",
-        "nav.download": "Ouvrir Vera",
         "module.name": "Optimiser le prompt",
         "hero.eyebrow": "Vera · Recherche juridique et fiscale",
         "hero.title": "Un brief que Deep Research peut suivre—et que vous pouvez contrôler.",
@@ -607,9 +582,6 @@
         "details.outputs.title": "Fichiers produits",
         "details.scope.title": "Périmètre et passage à la recherche",
         "details.scope.copy": "Langue, droit applicable, faits, cadre, sources prioritaires et contrôles restent explicites dans le brief transmis à Deep Research.",
-        "download.title": "Vera inclut ce workflow.",
-        "download.copy": "Ouvrez Vera et utilisez le prompt de départ. Optimiser le prompt, ses artefacts de contrôle et le passage au Validator appartiennent au même parcours.",
-        "download.button": "Retour à Vera",
         footer: "Vera · De la question au brief de recherche vérifiable.",
         prompt: "Utilise Optimiser le prompt sur cette question juridique ou fiscale. Langue de sortie : fr. Préserve tous les faits et sépare langue, droit applicable et objectif. Si un choix matériel est incertain, demande-moi confirmation. Prépare et valide un brief Deep Research avec sources prioritaires, citations, limites, hypothèses et contrôles finaux."
       },
@@ -626,7 +598,6 @@
         "nav.result": "Resultado",
         "nav.starter": "Prompt inicial",
         "nav.details": "Detalles",
-        "nav.download": "Abrir Vera",
         "module.name": "Optimizar prompt",
         "hero.eyebrow": "Vera · Investigación jurídica y fiscal",
         "hero.title": "Un encargo que Deep Research puede seguir y usted puede revisar.",
@@ -674,9 +645,6 @@
         "details.outputs.title": "Archivos generados",
         "details.scope.title": "Alcance y entrega a la investigación",
         "details.scope.copy": "El idioma, el derecho aplicable, los hechos, el marco, las fuentes prioritarias y los controles permanecen explícitos en el encargo entregado a Deep Research.",
-        "download.title": "Vera incluye este flujo.",
-        "download.copy": "Abra Vera y use el prompt inicial. Optimizar prompt, sus artefactos de control y la entrega al Validator forman parte del mismo recorrido.",
-        "download.button": "Volver a Vera",
         footer: "Vera · De la pregunta al encargo de investigación verificable.",
         prompt: "Usa Optimizar prompt con esta pregunta jurídica o fiscal. Idioma de salida: es. Preserva todos los hechos y mantén separados el idioma de salida, el derecho aplicable y el objetivo. Si una decisión material es incierta, pídeme confirmación. Prepara y valida un encargo de Deep Research con fuentes prioritarias, citas, límites, hipótesis y controles finales."
       },
@@ -693,7 +661,6 @@
         "nav.result": "Ergebnis",
         "nav.starter": "Start-Prompt",
         "nav.details": "Details",
-        "nav.download": "Vera öffnen",
         "module.name": "Prompt optimieren",
         "hero.eyebrow": "Vera · Rechts- und Steuerrecherche",
         "hero.title": "Ein Briefing, dem Deep Research folgen kann—und das Sie prüfen können.",
@@ -741,9 +708,6 @@
         "details.outputs.title": "Dateien",
         "details.scope.title": "Rahmen und Rechercheübergabe",
         "details.scope.copy": "Sprache, anwendbares Recht, Fakten, Rahmen, priorisierte Quellen und Prüfschritte bleiben im Briefing für Deep Research ausdrücklich festgehalten.",
-        "download.title": "Vera enthält diesen Workflow.",
-        "download.copy": "Öffnen Sie Vera und nutzen Sie den Start-Prompt. Prompt optimieren, die Kontrollartefakte und die Übergabe an den Validator gehören zum selben Ablauf.",
-        "download.button": "Zurück zu Vera",
         footer: "Vera · Von der Frage zum prüfbaren Recherche-Briefing.",
         prompt: "Verwende Prompt optimieren für diese Rechts- oder Steuerfrage. Ausgabesprache: de. Bewahre alle Fakten und halte Ausgabesprache, anwendbares Recht und Ziel getrennt. Wenn eine wesentliche Entscheidung unklar ist, bitte mich um Bestätigung. Erstelle und validiere ein Deep-Research-Briefing mit priorisierten Quellen, Zitaten, Grenzen, Annahmen und abschließenden Prüfpunkten."
       }

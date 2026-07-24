@@ -54,18 +54,6 @@ VERA_NATIVE_JURISDICTION_PAGES = {
     SHARED_ROOT / "new-client" / "zurich.html": "de",
     SHARED_ROOT / "new-client" / "uk.html": "en",
 }
-VERA_SCOPE_BY_MODULE = {
-    "journal-sampling": "core",
-    "check-entries": "mixed",
-    "journal-bank-reconciliation": "core",
-    "riconciliazione-partite": "core",
-    "report-builder": "mixed",
-    "prompt-optimizer": "core",
-    "deep-research-validator": "core",
-    "concordato-plan-review": "italy",
-    "previdenza-inps": "italy",
-    "registro-imprese-sari": "italy",
-}
 VERA_RENDERED_VIDEO_IDENTITIES = {
     *(
         ("studio-archive", "core", language)
@@ -545,7 +533,6 @@ def test_vera_module_pages_present_an_outcome_led_connected_journey(
     assert 'id="proof"' in page or 'id="result"' in page
     assert len(prompt_nodes) == 1
     assert "../vera/index.html?lang=it" in page
-    assert 'href="../vera/index.html"' in page
 
 
 @pytest.mark.parametrize(
@@ -736,7 +723,6 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
         (
             hub,
             new_client,
-            (SHARED_ROOT / "vera-scope.js").read_text(encoding="utf-8"),
             (SHARED_ROOT / "video-library.js").read_text(encoding="utf-8"),
             (SHARED_ROOT / "video-production" / "vera-missing-guides.json").read_text(
                 encoding="utf-8"
@@ -1074,21 +1060,23 @@ def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
 
 
 @pytest.mark.parametrize(
-    ("module", "scope"),
-    VERA_SCOPE_BY_MODULE.items(),
+    "page_path",
+    tuple(VERA_MODULE_PAGES.values()),
+    ids=lambda path: path.parent.name,
 )
-def test_vera_module_pages_publish_the_shared_scope_taxonomy(
-    module: str,
-    scope: str,
+def test_vera_module_pages_do_not_repeat_the_hub_scope_taxonomy(
+    page_path: Path,
 ) -> None:
-    page = VERA_MODULE_PAGES[module].read_text(encoding="utf-8")
-    scope_script = (SHARED_ROOT / "vera-scope.js").read_text(encoding="utf-8")
+    page = page_path.read_text(encoding="utf-8")
 
-    assert f'data-vera-module="{module}"' in page
-    assert f'data-vera-scope="{scope}"' in page
-    assert re.search(r'href="\.\./vera-scope\.css\?v=[^"]+"', page)
-    assert re.search(r'src="\.\./vera-scope\.js\?v=[^"]+"', page)
-    assert f'"{module}": "{scope}"' in scope_script
+    assert "data-vera-scope" not in page
+    assert "vera-scope.css" not in page
+    assert "vera-scope.js" not in page
+
+
+def test_shared_vera_scope_assets_are_removed() -> None:
+    assert not (SHARED_ROOT / "vera-scope.css").exists()
+    assert not (SHARED_ROOT / "vera-scope.js").exists()
 
 
 @pytest.mark.parametrize(
@@ -1102,7 +1090,6 @@ def test_vera_module_pages_publish_the_shared_scope_taxonomy(
 def test_italy_scoped_pages_label_the_country_in_every_language(module: str) -> None:
     page = VERA_MODULE_PAGES[module].read_text(encoding="utf-8")
 
-    assert 'data-vera-scope="italy"' in page
     for country_label in (
         "Pacchetto Italia",
         "Italy pack",
