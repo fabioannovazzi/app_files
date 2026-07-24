@@ -472,7 +472,7 @@
   }
 };
 
-  const catalogVersion = "4.1.0";
+  const catalogVersion = "4.2.0";
   const lastVerifiedAt = "2026-07-24";
 
   const veraYoutubeDefinitions = Object.freeze([
@@ -584,6 +584,7 @@
 
   const veraWorkstream = {
     "new-client": "client",
+    "studio-archive": "client",
     "journal-sampling": "controls",
     "check-entries": "controls",
     "journal-bank-reconciliation": "controls",
@@ -618,6 +619,7 @@
     },
     it: {
       "new-client": ["Nuovo cliente", "Dai documenti a un fascicolo di lavoro con azioni e storico collegati."],
+      "studio-archive": ["Archivio dello studio", "Indicizza i documenti sul Mac e consulta Gmail o WhatsApp Desktop solo quando serve."],
       "journal-sampling": ["Campionamento del giornale", "Dal giornale completo a un campione di revisione riproducibile."],
       "check-entries": ["Controllo scritture", "Collega le scritture campionate alle evidenze che le supportano."],
       "journal-bank-reconciliation": ["Riconciliazione banca", "Porta movimenti bancari e contabili in una riconciliazione rivedibile."],
@@ -684,6 +686,7 @@
 
   const veraPageTargets = {
     "new-client": ["/static/shared/new-client/index.html"],
+    "studio-archive": ["/static/shared/studio-archive/index.html"],
     "journal-sampling": ["/static/shared/journal-sampling/index.html"],
     "check-entries": ["/static/shared/check-entries/index.html"],
     "journal-bank-reconciliation": ["/static/shared/journal-bank-reconciliation/index.html"],
@@ -716,6 +719,22 @@
       moduleLabels: { it: "Nuovo cliente · Italia" },
       descriptions: {
         it: "Illustra il percorso Italia per piani di incarico, privacy e informativa AI, bozza di valutazione AML e monitoraggio del fascicolo di lavoro."
+      }
+    },
+    {
+      module: "studio-archive",
+      conceptId: "document-index-and-live-sources",
+      edition: "core",
+      scope: "core",
+      jurisdiction: null,
+      duration: "1:22",
+      localizations: { it: "bsEbR9XegrU" },
+      pageTargets: [
+        "/static/shared/vera/index.html",
+        "/static/shared/studio-archive/index.html"
+      ],
+      titles: {
+        it: "Vera | Documenti, Gmail e WhatsApp nell’Archivio dello Studio"
       }
     },
     {

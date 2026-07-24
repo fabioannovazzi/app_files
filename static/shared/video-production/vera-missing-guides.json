@@ -167,83 +167,83 @@
       "localizations": {}
     },
     {
-      "conceptId": "one-client-two-message-sources",
+      "conceptId": "document-index-and-live-sources",
       "module": "studio-archive",
       "edition": "core",
       "scope": "core",
       "jurisdiction": null,
-      "targetDurationSeconds": 72,
+      "targetDurationSeconds": 84,
       "pageTargets": [
         "/static/shared/vera/index.html",
         "/static/shared/studio-archive/index.html"
       ],
       "scenes": [
-        "Public listing, with Codex Desktop required for execution",
-        "One explicitly selected client",
-        "Gmail in Codex Desktop through OpenAI's connector",
-        "WhatsApp Desktop in Codex Desktop with Computer Use",
-        "Exact identity, mixed-participant exclusion, and no Mparanza message store",
-        "On-demand visible evidence, no complete-history or write promise"
+        "Choose the existing studio folder and one exact client scope",
+        "Extract text and build a private local index with fixed rules",
+        "Refresh added, changed, and removed files without rebuilding everything",
+        "Separate deterministic retrieval from Codex interpretation and synthesis",
+        "Search Gmail live through OpenAI's separately connected connector",
+        "Read one verified WhatsApp Desktop chat on demand with Computer Use"
       ],
       "localizations": {
         "it": {
-          "title": "Vera | Un cliente tra Gmail e WhatsApp Desktop",
-          "narration": "Vera può comparire nella directory pubblica dei plugin, ma l’Archivio dello Studio si ferma su ChatGPT web o mobile e richiede Codex Desktop; può comunque valere il piano ChatGPT esistente. L’Archivio dello Studio parte da un solo cliente scelto esplicitamente e da uno scopo di ricerca chiaro. Dentro Codex Desktop, Vera usa il connector Gmail di OpenAI collegato separatamente, verifica la casella e cerca soltanto indirizzi completi confermati nella chat corrente. Sul Mac, Codex Desktop usa Computer Use nell’app WhatsApp Desktop già aperta e autenticata dal professionista. Vera conferma l’indirizzo o il numero esatto, esclude partecipanti misti o sconosciuti e non crea archivi di messaggi Gmail o WhatsApp su Mparanza. La consultazione è su richiesta e limitata alle evidenze visibili o ricercabili: non garantisce uno storico completo, non invia, modifica o elimina messaggi e ciò che Codex legge può entrare nel contesto del modello dell’account.",
+          "title": "Vera | Documenti, Gmail e WhatsApp nell’Archivio dello Studio",
+          "narration": "Scegli la cartella che lo studio usa già: ogni sottocartella immediata identifica un cliente e gli originali restano al loro posto. Vera trova i file supportati, estrae il testo, lo divide in passaggi, calcola un’impronta e costruisce sul Mac un indice privato seguendo regole fisse e ripetibili. Quando aggiorni l’archivio, aggiunge i file nuovi, sostituisce quelli modificati ed elimina dalla ricerca quelli rimossi, senza ricostruire tutto. Quando fai una domanda, Codex interpreta la richiesta e prepara le ricerche; l’indice trova i passaggi corrispondenti e Codex valuta quelli pertinenti per rispondere con le fonti. Se lo chiedi, Vera cerca separatamente le email in diretta tramite il connector Gmail di OpenAI, senza copiarle nell’indice locale. Per WhatsApp, Codex Desktop usa Computer Use per aprire su richiesta una chat verificata nell’app già autenticata; i messaggi non entrano nell’indice e Vera non invia nulla. Se lavorate in due, ciascun professionista mantiene il proprio indice locale e collega i propri account in Codex Desktop.",
           "onScreen": [
-            "Directory pubblica dei plugin · serve Codex Desktop",
-            "Un solo cliente · uno scopo",
-            "Codex Desktop · connector Gmail OpenAI · sola lettura",
-            "Codex Desktop · Computer Use · WhatsApp aperto",
-            "Identità esatta · risultati misti esclusi · nessun archivio Mparanza",
-            "Su richiesta · nessuno storico completo o scrittura · contesto ChatGPT"
+            "1. Scegli la cartella dello studio",
+            "File, testo e impronte · regole fisse",
+            "Indice locale · nuovi, modificati, rimossi",
+            "Ricerca: indice · interpretazione: Codex",
+            "Gmail · ricerca in diretta",
+            "WhatsApp · solo su richiesta"
           ]
         },
         "en": {
-          "title": "Vera | One client across Gmail and WhatsApp Desktop",
-          "narration": "Vera may appear in the public Plugins Directory, but Studio Archive stops on ChatGPT web and mobile and requires Codex Desktop; the existing ChatGPT plan may still govern model context. Studio Archive starts with one explicitly selected client and a clear search purpose. Inside Codex Desktop, Vera uses OpenAI’s separately connected Gmail connector, checks the mailbox, and searches only full addresses confirmed in the current chat. On a Mac, Codex Desktop uses Computer Use in the WhatsApp Desktop app already opened and authenticated by the professional. Vera confirms the exact address or number, excludes mixed or unknown participants, and creates no Gmail or WhatsApp message store on Mparanza. Inspection is on demand and limited to visible or searchable evidence: it does not guarantee complete history, send, edit, or delete messages, and content read by Codex may enter the account’s model context.",
+          "title": "Vera | Documents, Gmail, and WhatsApp in Studio Archive",
+          "narration": "Choose the folder the studio already uses: each immediate subfolder identifies one client and the original files stay where they are. Vera finds supported files, extracts their text, splits it into passages, calculates a fingerprint, and builds a private index on the Mac with fixed, repeatable rules. When you refresh the archive, it adds new files, replaces changed files, and removes deleted files from search without rebuilding everything. When you ask a question, Codex interprets the request and prepares searches; the index finds matching passages and Codex judges which are relevant before answering with sources. If asked, Vera separately searches email live through OpenAI’s Gmail connector without copying messages into the local index. For WhatsApp, Codex Desktop uses Computer Use to open one verified chat on demand in the signed-in app; messages do not enter the index and Vera sends nothing. If two people work together, each professional keeps a separate local index and connects their own accounts in Codex Desktop.",
           "onScreen": [
-            "Public Plugins Directory · Codex Desktop required",
-            "One client · one purpose",
-            "Codex Desktop · OpenAI Gmail connector · read only",
-            "Codex Desktop · Computer Use · open WhatsApp app",
-            "Exact identity · mixed results excluded · no Mparanza message store",
-            "On demand · no complete history or writes · ChatGPT plan context"
+            "1. Choose the studio folder",
+            "Files, text, fingerprints · fixed rules",
+            "Local index · new, changed, removed",
+            "Retrieval: index · interpretation: Codex",
+            "Gmail · live search",
+            "WhatsApp · only on demand"
           ]
         },
         "fr": {
-          "title": "Vera | Un client entre Gmail et WhatsApp Desktop",
-          "narration": "Vera peut apparaître dans le répertoire public des plugins, mais les Archives du cabinet s’arrêtent sur ChatGPT web ou mobile et nécessitent Codex Desktop ; l’offre ChatGPT existante peut continuer à régir le contexte du modèle. Les Archives du cabinet partent d’un seul client explicitement choisi et d’un objectif de recherche clair. Dans Codex Desktop, Vera utilise le connecteur Gmail d’OpenAI lié séparément, vérifie la boîte et recherche uniquement les adresses complètes confirmées dans le chat courant. Sur Mac, Codex Desktop utilise Computer Use dans l’application WhatsApp Desktop déjà ouverte et authentifiée par le professionnel. Vera confirme l’adresse ou le numéro exact, exclut les participants mixtes ou inconnus et ne crée aucune archive de messages Gmail ou WhatsApp chez Mparanza. La consultation se fait à la demande et se limite aux éléments visibles ou recherchables : elle ne garantit pas un historique complet, n’envoie, ne modifie ni ne supprime de messages, et ce que Codex lit peut entrer dans le contexte du modèle du compte.",
+          "title": "Vera | Documents, Gmail et WhatsApp dans les Archives du cabinet",
+          "narration": "Choisissez le dossier déjà utilisé par le cabinet : chaque sous-dossier immédiat correspond à un client et les fichiers originaux restent à leur place. Vera trouve les fichiers pris en charge, extrait le texte, le divise en passages, calcule une empreinte et crée sur le Mac un index privé selon des règles fixes et reproductibles. Lors de l’actualisation, elle ajoute les nouveaux fichiers, remplace ceux qui ont changé et retire de la recherche les fichiers supprimés sans tout reconstruire. Quand vous posez une question, Codex interprète la demande et prépare les recherches ; l’index trouve les passages correspondants et Codex détermine lesquels sont pertinents avant de répondre avec les sources. À votre demande, Vera recherche séparément les e-mails en direct via le connecteur Gmail d’OpenAI sans les copier dans l’index local. Pour WhatsApp, Codex Desktop utilise Computer Use afin d’ouvrir à la demande une conversation vérifiée dans l’application connectée ; les messages n’entrent pas dans l’index et Vera n’envoie rien. Si vous travaillez à deux, chaque professionnel conserve son propre index local et connecte ses propres comptes dans Codex Desktop.",
           "onScreen": [
-            "Répertoire public des plugins · Codex Desktop requis",
-            "Un client · un objectif",
-            "Codex Desktop · connecteur Gmail OpenAI · lecture seule",
-            "Codex Desktop · Computer Use · WhatsApp ouvert",
-            "Identité exacte · résultats mixtes exclus · aucune archive Mparanza",
-            "À la demande · aucun historique complet ni écriture · contexte ChatGPT"
+            "1. Choisissez le dossier du cabinet",
+            "Fichiers, texte, empreintes · règles fixes",
+            "Index local · nouveaux, modifiés, supprimés",
+            "Recherche : index · interprétation : Codex",
+            "Gmail · recherche en direct",
+            "WhatsApp · uniquement à la demande"
           ]
         },
         "de": {
-          "title": "Vera | Ein Mandant in Gmail und WhatsApp Desktop",
-          "narration": "Vera kann im öffentlichen Plugin-Verzeichnis erscheinen, aber das Kanzleiarchiv wird in ChatGPT im Web oder auf Mobilgeräten gestoppt und erfordert Codex Desktop; der bestehende ChatGPT-Tarif kann weiterhin für den Modellkontext gelten. Das Kanzleiarchiv beginnt mit einem ausdrücklich ausgewählten Mandanten und einem klaren Suchzweck. In Codex Desktop nutzt Vera den separat verbundenen Gmail-Connector von OpenAI, prüft das Postfach und sucht nur vollständige Adressen, die im aktuellen Chat bestätigt wurden. Auf dem Mac nutzt Codex Desktop Computer Use in der vom Berufsträger bereits geöffneten und authentifizierten WhatsApp-Desktop-App. Vera bestätigt die genaue Adresse oder Nummer, schließt gemischte oder unbekannte Beteiligte aus und erstellt bei Mparanza kein Gmail- oder WhatsApp-Nachrichtenarchiv. Die Prüfung erfolgt auf Anfrage und beschränkt sich auf sichtbare oder durchsuchbare Inhalte: Sie garantiert keinen vollständigen Verlauf, sendet, bearbeitet oder löscht keine Nachrichten, und von Codex gelesene Inhalte können in den Modellkontext des Kontos gelangen.",
+          "title": "Vera | Dokumente, Gmail und WhatsApp im Kanzleiarchiv",
+          "narration": "Wählen Sie den Ordner, den die Kanzlei bereits nutzt: Jeder direkte Unterordner steht für einen Mandanten, und die Originaldateien bleiben an ihrem Platz. Vera findet unterstützte Dateien, extrahiert den Text, teilt ihn in Passagen, berechnet einen Fingerabdruck und erstellt nach festen, wiederholbaren Regeln einen privaten Index auf dem Mac. Beim Aktualisieren fügt sie neue Dateien hinzu, ersetzt geänderte und entfernt gelöschte Dateien aus der Suche, ohne alles neu aufzubauen. Wenn Sie eine Frage stellen, interpretiert Codex die Anfrage und bereitet Suchläufe vor; der Index findet passende Passagen und Codex beurteilt ihre Relevanz, bevor es mit Quellen antwortet. Auf Wunsch durchsucht Vera E-Mails separat und live über den Gmail-Connector von OpenAI, ohne sie in den lokalen Index zu kopieren. Für WhatsApp nutzt Codex Desktop Computer Use, um bei Bedarf einen verifizierten Chat in der angemeldeten App zu öffnen; Nachrichten gelangen nicht in den Index und Vera sendet nichts. Arbeiten zwei Personen zusammen, führt jeder Berufsträger einen eigenen lokalen Index und verbindet die eigenen Konten in Codex Desktop.",
           "onScreen": [
-            "Öffentliches Plugin-Verzeichnis · Codex Desktop erforderlich",
-            "Ein Mandant · ein Zweck",
-            "Codex Desktop · OpenAI-Gmail-Connector · nur lesen",
-            "Codex Desktop · Computer Use · offene WhatsApp-App",
-            "Genaue Identität · gemischte Treffer ausgeschlossen · kein Mparanza-Archiv",
-            "Auf Anfrage · kein vollständiger Verlauf oder Schreiben · ChatGPT-Kontext"
+            "1. Kanzleiordner auswählen",
+            "Dateien, Text, Fingerabdrücke · feste Regeln",
+            "Lokaler Index · neu, geändert, entfernt",
+            "Suche: Index · Interpretation: Codex",
+            "Gmail · Live-Suche",
+            "WhatsApp · nur auf Anfrage"
           ]
         },
         "es": {
-          "title": "Vera | Un cliente entre Gmail y WhatsApp Desktop",
-          "narration": "Vera puede aparecer en el directorio público de plugins, pero el Archivo del despacho se detiene en ChatGPT web o móvil y requiere Codex Desktop; el plan actual de ChatGPT puede seguir rigiendo el contexto del modelo. El Archivo del despacho parte de un solo cliente elegido expresamente y de un objetivo de búsqueda claro. Dentro de Codex Desktop, Vera usa el conector de Gmail de OpenAI vinculado por separado, comprueba el buzón y busca solo direcciones completas confirmadas en el chat actual. En el Mac, Codex Desktop usa Computer Use en la aplicación WhatsApp Desktop ya abierta y autenticada por el profesional. Vera confirma la dirección o el número exactos, excluye participantes mixtos o desconocidos y no crea un archivo de mensajes de Gmail o WhatsApp en Mparanza. La consulta se realiza cuando se solicita y se limita a las pruebas visibles o que pueden buscarse: no garantiza un historial completo, no envía, modifica ni elimina mensajes, y lo que lee Codex puede entrar en el contexto del modelo de la cuenta.",
+          "title": "Vera | Documentos, Gmail y WhatsApp en el Archivo del despacho",
+          "narration": "Elige la carpeta que ya usa el despacho: cada subcarpeta inmediata identifica a un cliente y los archivos originales permanecen en su sitio. Vera encuentra los archivos compatibles, extrae el texto, lo divide en fragmentos, calcula una huella y crea en el Mac un índice privado con reglas fijas y repetibles. Al actualizar el archivo, añade los documentos nuevos, sustituye los modificados y retira de la búsqueda los eliminados sin reconstruirlo todo. Cuando haces una pregunta, Codex interpreta la petición y prepara las búsquedas; el índice encuentra los fragmentos coincidentes y Codex determina cuáles son pertinentes antes de responder con las fuentes. Si se lo pides, Vera busca por separado los correos en directo mediante el conector de Gmail de OpenAI sin copiarlos en el índice local. Para WhatsApp, Codex Desktop usa Computer Use para abrir bajo demanda un chat verificado en la aplicación ya autenticada; los mensajes no entran en el índice y Vera no envía nada. Si trabajáis dos personas, cada profesional mantiene su propio índice local y conecta sus propias cuentas en Codex Desktop.",
           "onScreen": [
-            "Directorio público de plugins · requiere Codex Desktop",
-            "Un cliente · un objetivo",
-            "Codex Desktop · conector Gmail de OpenAI · solo lectura",
-            "Codex Desktop · Computer Use · WhatsApp abierto",
-            "Identidad exacta · resultados mixtos excluidos · sin archivo Mparanza",
-            "Bajo demanda · sin historial completo ni escritura · contexto ChatGPT"
+            "1. Elige la carpeta del despacho",
+            "Archivos, texto y huellas · reglas fijas",
+            "Índice local · nuevos, modificados, eliminados",
+            "Búsqueda: índice · interpretación: Codex",
+            "Gmail · búsqueda en directo",
+            "WhatsApp · solo bajo demanda"
           ]
         }
       }
