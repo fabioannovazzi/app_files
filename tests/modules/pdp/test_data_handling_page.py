@@ -383,9 +383,9 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
     (
         (
             "en",
-            "public Plugins Directory",
-            "workflows stop on ChatGPT web and mobile and require Codex Desktop",
-            "Inside Codex Desktop, Vera searches Gmail through OpenAI's separately "
+            "work in ChatGPT with material supplied",
+            "Installation is optional and the conversation can continue in ChatGPT",
+            "In ChatGPT or Codex, Vera searches Gmail through OpenAI's separately "
             "installed and connected Gmail connector",
             "Codex Desktop with Computer Use",
             "No Mparanza server receives or stores a copy",
@@ -393,9 +393,9 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
         ),
         (
             "it",
-            "directory pubblica dei plugin",
-            "I workflow si fermano su ChatGPT web o mobile e richiedono Codex Desktop",
-            "Dentro Codex Desktop, Vera cerca in Gmail attraverso il connector Gmail "
+            "lavorano in ChatGPT sui materiali forniti",
+            "L'installazione è facoltativa e il lavoro può continuare in ChatGPT",
+            "In ChatGPT o Codex, Vera cerca in Gmail attraverso il connector Gmail "
             "di OpenAI",
             "Codex Desktop con Computer Use",
             "Nessun server Mparanza riceve o conserva una copia",
@@ -403,10 +403,9 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
         ),
         (
             "fr",
-            "répertoire public des plugins",
-            "Les workflows s'arrêtent sur ChatGPT web ou mobile et nécessitent Codex "
-            "Desktop",
-            "Dans Codex Desktop, Vera recherche dans Gmail au moyen du connecteur Gmail "
+            "travaillent dans ChatGPT à partir des contenus fournis",
+            "L'installation reste facultative et le travail peut continuer dans ChatGPT",
+            "Dans ChatGPT ou Codex, Vera recherche dans Gmail au moyen du connecteur Gmail "
             "d'OpenAI",
             "Codex Desktop avec Computer Use",
             "Aucun serveur Mparanza ne reçoit ni ne conserve de copie",
@@ -414,10 +413,9 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
         ),
         (
             "de",
-            "öffentlichen Plugin-Verzeichnis",
-            "In ChatGPT im Web oder auf Mobilgeräten werden die Workflows gestoppt und "
-            "erfordern Codex Desktop",
-            "In Codex Desktop durchsucht Vera Gmail über den separat installierten und "
+            "arbeiten in ChatGPT mit den in der Unterhaltung bereitgestellten Materialien",
+            "Die Installation ist optional und die Arbeit kann in ChatGPT fortgesetzt werden",
+            "In ChatGPT oder Codex durchsucht Vera Gmail über den separat installierten und "
             "verbundenen Gmail-Connector von OpenAI",
             "Codex Desktop mit Computer Use",
             "Kein Mparanza-Server empfängt oder speichert eine Kopie",
@@ -425,9 +423,9 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
         ),
         (
             "es",
-            "directorio público de plugins",
-            "Los flujos se detienen en ChatGPT web o móvil y requieren Codex Desktop",
-            "Dentro de Codex Desktop, Vera busca en Gmail mediante el conector de Gmail "
+            "trabajan en ChatGPT con los materiales aportados",
+            "La instalación es opcional y el trabajo puede continuar en ChatGPT",
+            "En ChatGPT o Codex, Vera busca en Gmail mediante el conector de Gmail "
             "de OpenAI",
             "Codex Desktop con Computer Use",
             "Ningún servidor de Mparanza recibe ni conserva una copia",

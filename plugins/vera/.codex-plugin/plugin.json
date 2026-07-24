@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -45,7 +45,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera richiede Codex Desktop e uno spazio di lavoro locale; su ChatGPT web o mobile si ferma e indirizza l'utente a Codex Desktop. Vera affianca il commercialista come collega AI e revisore operativo: prepara il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. Dentro Codex Desktop può cercare la corrispondenza Gmail di un solo cliente tramite il connector Gmail di OpenAI collegato separatamente, consultare su richiesta una chat verificata nell'app WhatsApp Desktop locale tramite Computer Use e indicizzare una cartella condivisa dello studio con un indice separato per professionista. Il percorso WhatsApp non usa webhook, connector o archivi Mparanza e non invia, risponde, scarica o modifica messaggi. Vera rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
+    "longDescription": "Vera lavora in ChatGPT sui materiali forniti nella conversazione: può analizzare evidenze, fare domande mirate, preparare bozze e revisioni e continuare il lavoro senza richiedere Codex. Dopo un primo risultato sostanziale, Vera consiglia Codex Desktop per lavorare direttamente nelle cartelle, conservare i file del progetto, eseguire strumenti e controlli locali e creare risultati durevoli, chiarendo che la conversazione può continuare in ChatGPT. Vera affianca il commercialista come collega AI e revisore operativo: prepara il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. In ChatGPT o Codex può cercare la corrispondenza Gmail di un solo cliente quando il connector Gmail di OpenAI è collegato. In Codex Desktop può inoltre consultare una chat verificata nell'app WhatsApp Desktop locale tramite Computer Use e indicizzare una cartella condivisa dello studio. Vera rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -59,8 +59,8 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "supportURL": "https://mparanza.com/support",
     "defaultPrompt": [
-      "Consulta WhatsApp Desktop per un solo cliente confermato, in sola lettura e senza inviare nulla.",
-      "Chiedi a Vera di usare OCR locale ed export ufficiali per il caso previdenziale INPS, con fonti e bozza rivedibile.",
+      "Esamina questi documenti del cliente, separa fatti e valutazioni e prepara una bozza rivedibile.",
+      "Controlla questa ricerca fiscale o normativa, verifica le fonti citate e segnala ciò che manca.",
       "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti."
     ],
     "brandColor": "#002060",

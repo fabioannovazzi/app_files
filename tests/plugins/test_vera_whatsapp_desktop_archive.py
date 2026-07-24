@@ -27,7 +27,8 @@ def test_vera_routes_local_whatsapp_desktop_before_other_archive_routes() -> Non
     )
     assert "references/whatsapp-desktop.md" in wrapper
     assert "Computer Use" in wrapper
-    assert "Mparanza server" in wrapper
+    assert "Mparanza" in wrapper
+    assert "server" in wrapper
     assert "WhatsApp Web" in wrapper
     assert "whatsapp_account_status" not in wrapper
     assert "configured **With MCP**" not in wrapper
@@ -76,7 +77,7 @@ def test_whatsapp_desktop_evals_cover_success_and_failure_paths() -> None:
     assert len({case["id"] for case in payload["negative_cases"]}) == 5
     serialized = json.dumps(payload, ensure_ascii=False)
     for required in (
-        "not-codex-desktop",
+        "chatgpt-lightweight-handoff",
         "studio-wide-or-group",
         "write-request",
         "focus-or-identity-uncertain",
@@ -85,20 +86,20 @@ def test_whatsapp_desktop_evals_cover_success_and_failure_paths() -> None:
         assert required in serialized
 
 
-def test_vera_manifest_remains_broad_and_requires_codex_desktop() -> None:
+def test_vera_manifest_remains_broad_and_supports_chatgpt_handoff() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     interface = manifest["interface"]
 
-    assert manifest["version"] == "0.1.30"
+    assert manifest["version"] == "0.1.31"
     assert manifest["description"].startswith("Vera affianca il commercialista")
     assert "Codex Desktop" in interface["longDescription"]
-    assert "ChatGPT web o mobile si ferma" in interface["longDescription"]
+    assert "può continuare in ChatGPT" in interface["longDescription"]
     assert "Computer Use" in interface["longDescription"]
     assert "controlla evidenze contabili" in interface["longDescription"]
     assert "connettore ospitato" not in interface["longDescription"]
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
-    assert any("WhatsApp Desktop" in prompt for prompt in interface["defaultPrompt"])
+    assert any("documenti del cliente" in prompt for prompt in interface["defaultPrompt"])
 
 
 def test_whatsapp_desktop_is_a_workstream_boundary_not_a_hosted_service() -> None:

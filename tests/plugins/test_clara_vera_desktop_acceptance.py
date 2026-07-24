@@ -14,7 +14,7 @@ import pytest
 __all__ = [
     "test_local_package_exposes_codex_desktop_runtime_contract",
     "test_extracted_local_package_dependency_checker_starts",
-    "test_public_chatgpt_skill_projection_fails_closed_outside_desktop",
+    "test_public_chatgpt_skill_projection_continues_with_codex_recommendation",
 ]
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -127,7 +127,7 @@ def test_extracted_local_package_dependency_checker_starts(
 
 
 @pytest.mark.parametrize("plugin_name", PLUGIN_NAMES)
-def test_public_chatgpt_skill_projection_fails_closed_outside_desktop(
+def test_public_chatgpt_skill_projection_continues_with_codex_recommendation(
     plugin_name: str,
 ) -> None:
     builder = load_builder()
@@ -142,6 +142,15 @@ def test_public_chatgpt_skill_projection_fails_closed_outside_desktop(
     }
     assert public_skills
     assert all(
-        builder.has_codex_desktop_runtime_gate(content)
+        builder.has_chatgpt_runtime_contract(content)
         for content in public_skills.values()
     )
+    assert all(
+        "We can continue here in ChatGPT now." in content
+        for content in public_skills.values()
+    )
+    if plugin_name == "vera":
+        assert all(
+            "Possiamo continuare qui in ChatGPT." in content
+            for content in public_skills.values()
+        )

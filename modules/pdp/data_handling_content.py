@@ -101,14 +101,15 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Gmail and WhatsApp Desktop use different boundaries.",
                 "paragraphs": [
                     (
-                        "Vera and Clara may appear in the public Plugins Directory, but "
-                        "that listing is only for discovery and installation. Their "
-                        "workflows stop on ChatGPT web and mobile and require Codex "
-                        "Desktop. The user's existing ChatGPT plan may still govern the "
-                        "model context inside Codex."
+                        "Vera and Clara work in ChatGPT with material supplied in the "
+                        "conversation and with callable connected apps. After providing "
+                        "useful work, they may recommend Codex Desktop for direct folder "
+                        "access, persistent project files, local tools, and durable "
+                        "deliverables. Installation is optional and the conversation can "
+                        "continue in ChatGPT."
                     ),
                     (
-                        "Inside Codex Desktop, Vera searches Gmail through OpenAI's "
+                        "In ChatGPT or Codex, Vera searches Gmail through OpenAI's "
                         "separately installed and connected Gmail connector. Mail stays "
                         "in Gmail; Vera does not create a mailbox copy or store "
                         "credentials or messages."
@@ -284,14 +285,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Gmail e WhatsApp Desktop hanno confini diversi.",
                 "paragraphs": [
                     (
-                        "Vera e Clara possono comparire nella directory pubblica dei "
-                        "plugin, ma quella pagina serve soltanto per trovarle e "
-                        "installarle. I workflow si fermano su ChatGPT web o mobile e "
-                        "richiedono Codex Desktop. Il piano ChatGPT già usato dall'utente "
-                        "può comunque regolare il contesto del modello dentro Codex."
+                        "Vera e Clara lavorano in ChatGPT sui materiali forniti nella "
+                        "conversazione e con le app collegate disponibili. Dopo avere "
+                        "prodotto un risultato utile, possono consigliare Codex Desktop "
+                        "per accedere direttamente alle cartelle, conservare i file del "
+                        "progetto, usare strumenti locali e creare risultati durevoli. "
+                        "L'installazione è facoltativa e il lavoro può continuare in "
+                        "ChatGPT."
                     ),
                     (
-                        "Dentro Codex Desktop, Vera cerca in Gmail attraverso il "
+                        "In ChatGPT o Codex, Vera cerca in Gmail attraverso il "
                         "connector Gmail di OpenAI, installato e collegato separatamente. "
                         "La posta resta in Gmail; Vera non crea una copia della casella e "
                         "non conserva credenziali o messaggi."
@@ -471,15 +474,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Gmail et WhatsApp Desktop ont des périmètres différents.",
                 "paragraphs": [
                     (
-                        "Vera et Clara peuvent apparaître dans le répertoire public des "
-                        "plugins, mais cette fiche sert uniquement à les découvrir et à "
-                        "les installer. Les workflows s'arrêtent sur ChatGPT web ou "
-                        "mobile et nécessitent Codex Desktop. L'offre ChatGPT existante "
-                        "de l'utilisateur peut continuer à régir le contexte du modèle "
-                        "dans Codex."
+                        "Vera et Clara travaillent dans ChatGPT à partir des contenus "
+                        "fournis dans la conversation et des applications connectées "
+                        "disponibles. Après avoir produit un résultat utile, elles peuvent "
+                        "recommander Codex Desktop pour accéder directement aux dossiers, "
+                        "conserver les fichiers du projet, utiliser des outils locaux et "
+                        "créer des livrables durables. L'installation reste facultative "
+                        "et le travail peut continuer dans ChatGPT."
                     ),
                     (
-                        "Dans Codex Desktop, Vera recherche dans Gmail au moyen du "
+                        "Dans ChatGPT ou Codex, Vera recherche dans Gmail au moyen du "
                         "connecteur Gmail d'OpenAI, installé et lié séparément. Les "
                         "e-mails restent dans Gmail ; Vera ne crée aucune copie de la "
                         "boîte et ne conserve ni identifiants ni messages."
@@ -660,15 +664,15 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Gmail und WhatsApp Desktop haben unterschiedliche Grenzen.",
                 "paragraphs": [
                     (
-                        "Vera und Clara können im öffentlichen Plugin-Verzeichnis "
-                        "erscheinen, doch dieser Eintrag dient nur zum Auffinden und "
-                        "Installieren. In ChatGPT im Web oder auf Mobilgeräten werden "
-                        "die Workflows gestoppt und erfordern Codex Desktop. Der "
-                        "bestehende ChatGPT-Tarif des Nutzers kann weiterhin für den "
-                        "Modellkontext in Codex gelten."
+                        "Vera und Clara arbeiten in ChatGPT mit den in der Unterhaltung "
+                        "bereitgestellten Materialien und verfügbaren verbundenen Apps. "
+                        "Nach einem nützlichen Ergebnis können sie Codex Desktop für "
+                        "direkten Ordnerzugriff, dauerhafte Projektdateien, lokale "
+                        "Werkzeuge und beständige Ergebnisse empfehlen. Die Installation "
+                        "ist optional und die Arbeit kann in ChatGPT fortgesetzt werden."
                     ),
                     (
-                        "In Codex Desktop durchsucht Vera Gmail über den separat "
+                        "In ChatGPT oder Codex durchsucht Vera Gmail über den separat "
                         "installierten und verbundenen Gmail-Connector von OpenAI. "
                         "E-Mails bleiben in Gmail; Vera erstellt keine Postfachkopie und "
                         "speichert weder Zugangsdaten noch Nachrichten."
@@ -850,14 +854,16 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Gmail y WhatsApp Desktop tienen límites distintos.",
                 "paragraphs": [
                     (
-                        "Vera y Clara pueden aparecer en el directorio público de "
-                        "plugins, pero esa ficha solo sirve para encontrarlas e "
-                        "instalarlas. Los flujos se detienen en ChatGPT web o móvil y "
-                        "requieren Codex Desktop. El plan de ChatGPT que ya usa el "
-                        "usuario puede seguir rigiendo el contexto del modelo en Codex."
+                        "Vera y Clara trabajan en ChatGPT con los materiales aportados en "
+                        "la conversación y con las aplicaciones conectadas disponibles. "
+                        "Después de producir un resultado útil, pueden recomendar Codex "
+                        "Desktop para acceder directamente a carpetas, conservar archivos "
+                        "del proyecto, usar herramientas locales y crear entregables "
+                        "duraderos. La instalación es opcional y el trabajo puede "
+                        "continuar en ChatGPT."
                     ),
                     (
-                        "Dentro de Codex Desktop, Vera busca en Gmail mediante el "
+                        "En ChatGPT o Codex, Vera busca en Gmail mediante el "
                         "conector de Gmail de OpenAI, instalado y vinculado por "
                         "separado. El correo permanece en Gmail; Vera no crea una copia "
                         "del buzón ni conserva credenciales o mensajes."

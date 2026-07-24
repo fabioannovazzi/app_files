@@ -182,67 +182,67 @@
         "Extract text and build a private local index with fixed rules",
         "Refresh added, changed, and removed files without rebuilding everything",
         "Separate deterministic retrieval from Codex interpretation and synthesis",
-        "Search Gmail live through OpenAI's separately connected connector",
+        "Search Gmail live in ChatGPT or Codex through OpenAI's separately connected connector",
         "Read one verified WhatsApp Desktop chat on demand with Computer Use"
       ],
       "localizations": {
         "it": {
           "title": "Vera | Documenti, Gmail e WhatsApp nell’Archivio dello Studio",
-          "narration": "Scegli la cartella che lo studio usa già: ogni sottocartella immediata identifica un cliente e gli originali restano al loro posto. Vera trova i file supportati, estrae il testo, lo divide in passaggi, calcola un’impronta e costruisce sul Mac un indice privato seguendo regole fisse e ripetibili. Quando aggiorni l’archivio, aggiunge i file nuovi, sostituisce quelli modificati ed elimina dalla ricerca quelli rimossi, senza ricostruire tutto. Quando fai una domanda, Codex interpreta la richiesta e prepara le ricerche; l’indice trova i passaggi corrispondenti e Codex valuta quelli pertinenti per rispondere con le fonti. Se lo chiedi, Vera cerca separatamente le email in diretta tramite il connector Gmail di OpenAI, senza copiarle nell’indice locale. Per WhatsApp, Codex Desktop usa Computer Use per aprire su richiesta una chat verificata nell’app già autenticata; i messaggi non entrano nell’indice e Vera non invia nulla. Se lavorate in due, ciascun professionista mantiene il proprio indice locale e collega i propri account in Codex Desktop.",
+          "narration": "Scegli la cartella che lo studio usa già: ogni sottocartella immediata identifica un cliente e gli originali restano al loro posto. Vera trova i file supportati, estrae il testo, lo divide in passaggi, calcola un’impronta e costruisce sul Mac un indice privato seguendo regole fisse e ripetibili. Quando aggiorni l’archivio, aggiunge i file nuovi, sostituisce quelli modificati ed elimina dalla ricerca quelli rimossi, senza ricostruire tutto. Quando fai una domanda, Codex interpreta la richiesta e prepara le ricerche; l’indice trova i passaggi corrispondenti e Codex valuta quelli pertinenti per rispondere con le fonti. Se lo chiedi, Vera cerca separatamente le email in diretta tramite il connector Gmail di OpenAI in ChatGPT o Codex, senza copiarle nell’indice locale. Per WhatsApp, Codex Desktop usa Computer Use per aprire su richiesta una chat verificata nell’app già autenticata; i messaggi non entrano nell’indice e Vera non invia nulla. Se lavorate in due, ciascun professionista mantiene il proprio indice locale e collega i propri account in Codex Desktop. Per il lavoro locale Vera lavora meglio con Codex, ma può preparare lo scopo e continuare la conversazione in ChatGPT.",
           "onScreen": [
             "1. Scegli la cartella dello studio",
             "File, testo e impronte · regole fisse",
             "Indice locale · nuovi, modificati, rimossi",
             "Ricerca: indice · interpretazione: Codex",
-            "Gmail · ricerca in diretta",
+            "Gmail · ChatGPT o Codex · ricerca in diretta",
             "WhatsApp · solo su richiesta"
           ]
         },
         "en": {
           "title": "Vera | Documents, Gmail, and WhatsApp in Studio Archive",
-          "narration": "Choose the folder the studio already uses: each immediate subfolder identifies one client and the original files stay where they are. Vera finds supported files, extracts their text, splits it into passages, calculates a fingerprint, and builds a private index on the Mac with fixed, repeatable rules. When you refresh the archive, it adds new files, replaces changed files, and removes deleted files from search without rebuilding everything. When you ask a question, Codex interprets the request and prepares searches; the index finds matching passages and Codex judges which are relevant before answering with sources. If asked, Vera separately searches email live through OpenAI’s Gmail connector without copying messages into the local index. For WhatsApp, Codex Desktop uses Computer Use to open one verified chat on demand in the signed-in app; messages do not enter the index and Vera sends nothing. If two people work together, each professional keeps a separate local index and connects their own accounts in Codex Desktop.",
+          "narration": "Choose the folder the studio already uses: each immediate subfolder identifies one client and the original files stay where they are. Vera finds supported files, extracts their text, splits it into passages, calculates a fingerprint, and builds a private index on the Mac with fixed, repeatable rules. When you refresh the archive, it adds new files, replaces changed files, and removes deleted files from search without rebuilding everything. When you ask a question, Codex interprets the request and prepares searches; the index finds matching passages and Codex judges which are relevant before answering with sources. If asked, Vera separately searches email live through OpenAI’s Gmail connector in ChatGPT or Codex without copying messages into the local index. For WhatsApp, Codex Desktop uses Computer Use to open one verified chat on demand in the signed-in app; messages do not enter the index and Vera sends nothing. If two people work together, each professional keeps a separate local index and connects their own accounts in Codex Desktop. Vera works better with Codex for local work, but can prepare the scope and continue the conversation in ChatGPT.",
           "onScreen": [
             "1. Choose the studio folder",
             "Files, text, fingerprints · fixed rules",
             "Local index · new, changed, removed",
             "Retrieval: index · interpretation: Codex",
-            "Gmail · live search",
+            "Gmail · ChatGPT or Codex · live search",
             "WhatsApp · only on demand"
           ]
         },
         "fr": {
           "title": "Vera | Documents, Gmail et WhatsApp dans les Archives du cabinet",
-          "narration": "Choisissez le dossier déjà utilisé par le cabinet : chaque sous-dossier immédiat correspond à un client et les fichiers originaux restent à leur place. Vera trouve les fichiers pris en charge, extrait le texte, le divise en passages, calcule une empreinte et crée sur le Mac un index privé selon des règles fixes et reproductibles. Lors de l’actualisation, elle ajoute les nouveaux fichiers, remplace ceux qui ont changé et retire de la recherche les fichiers supprimés sans tout reconstruire. Quand vous posez une question, Codex interprète la demande et prépare les recherches ; l’index trouve les passages correspondants et Codex détermine lesquels sont pertinents avant de répondre avec les sources. À votre demande, Vera recherche séparément les e-mails en direct via le connecteur Gmail d’OpenAI sans les copier dans l’index local. Pour WhatsApp, Codex Desktop utilise Computer Use afin d’ouvrir à la demande une conversation vérifiée dans l’application connectée ; les messages n’entrent pas dans l’index et Vera n’envoie rien. Si vous travaillez à deux, chaque professionnel conserve son propre index local et connecte ses propres comptes dans Codex Desktop.",
+          "narration": "Choisissez le dossier déjà utilisé par le cabinet : chaque sous-dossier immédiat correspond à un client et les fichiers originaux restent à leur place. Vera trouve les fichiers pris en charge, extrait le texte, le divise en passages, calcule une empreinte et crée sur le Mac un index privé selon des règles fixes et reproductibles. Lors de l’actualisation, elle ajoute les nouveaux fichiers, remplace ceux qui ont changé et retire de la recherche les fichiers supprimés sans tout reconstruire. Quand vous posez une question, Codex interprète la demande et prépare les recherches ; l’index trouve les passages correspondants et Codex détermine lesquels sont pertinents avant de répondre avec les sources. À votre demande, Vera recherche séparément les e-mails en direct via le connecteur Gmail d’OpenAI dans ChatGPT ou Codex sans les copier dans l’index local. Pour WhatsApp, Codex Desktop utilise Computer Use afin d’ouvrir à la demande une conversation vérifiée dans l’application connectée ; les messages n’entrent pas dans l’index et Vera n’envoie rien. Si vous travaillez à deux, chaque professionnel conserve son propre index local et connecte ses propres comptes dans Codex Desktop. Vera fonctionne mieux avec Codex pour le travail local, mais peut préparer le périmètre et poursuivre la conversation dans ChatGPT.",
           "onScreen": [
             "1. Choisissez le dossier du cabinet",
             "Fichiers, texte, empreintes · règles fixes",
             "Index local · nouveaux, modifiés, supprimés",
             "Recherche : index · interprétation : Codex",
-            "Gmail · recherche en direct",
+            "Gmail · ChatGPT ou Codex · recherche en direct",
             "WhatsApp · uniquement à la demande"
           ]
         },
         "de": {
           "title": "Vera | Dokumente, Gmail und WhatsApp im Kanzleiarchiv",
-          "narration": "Wählen Sie den Ordner, den die Kanzlei bereits nutzt: Jeder direkte Unterordner steht für einen Mandanten, und die Originaldateien bleiben an ihrem Platz. Vera findet unterstützte Dateien, extrahiert den Text, teilt ihn in Passagen, berechnet einen Fingerabdruck und erstellt nach festen, wiederholbaren Regeln einen privaten Index auf dem Mac. Beim Aktualisieren fügt sie neue Dateien hinzu, ersetzt geänderte und entfernt gelöschte Dateien aus der Suche, ohne alles neu aufzubauen. Wenn Sie eine Frage stellen, interpretiert Codex die Anfrage und bereitet Suchläufe vor; der Index findet passende Passagen und Codex beurteilt ihre Relevanz, bevor es mit Quellen antwortet. Auf Wunsch durchsucht Vera E-Mails separat und live über den Gmail-Connector von OpenAI, ohne sie in den lokalen Index zu kopieren. Für WhatsApp nutzt Codex Desktop Computer Use, um bei Bedarf einen verifizierten Chat in der angemeldeten App zu öffnen; Nachrichten gelangen nicht in den Index und Vera sendet nichts. Arbeiten zwei Personen zusammen, führt jeder Berufsträger einen eigenen lokalen Index und verbindet die eigenen Konten in Codex Desktop.",
+          "narration": "Wählen Sie den Ordner, den die Kanzlei bereits nutzt: Jeder direkte Unterordner steht für einen Mandanten, und die Originaldateien bleiben an ihrem Platz. Vera findet unterstützte Dateien, extrahiert den Text, teilt ihn in Passagen, berechnet einen Fingerabdruck und erstellt nach festen, wiederholbaren Regeln einen privaten Index auf dem Mac. Beim Aktualisieren fügt sie neue Dateien hinzu, ersetzt geänderte und entfernt gelöschte Dateien aus der Suche, ohne alles neu aufzubauen. Wenn Sie eine Frage stellen, interpretiert Codex die Anfrage und bereitet Suchläufe vor; der Index findet passende Passagen und Codex beurteilt ihre Relevanz, bevor es mit Quellen antwortet. Auf Wunsch durchsucht Vera E-Mails separat und live über den Gmail-Connector von OpenAI in ChatGPT oder Codex, ohne sie in den lokalen Index zu kopieren. Für WhatsApp nutzt Codex Desktop Computer Use, um bei Bedarf einen verifizierten Chat in der angemeldeten App zu öffnen; Nachrichten gelangen nicht in den Index und Vera sendet nichts. Arbeiten zwei Personen zusammen, führt jeder Berufsträger einen eigenen lokalen Index und verbindet die eigenen Konten in Codex Desktop. Für lokale Arbeit arbeitet Vera besser mit Codex, kann aber den Umfang vorbereiten und die Unterhaltung in ChatGPT fortsetzen.",
           "onScreen": [
             "1. Kanzleiordner auswählen",
             "Dateien, Text, Fingerabdrücke · feste Regeln",
             "Lokaler Index · neu, geändert, entfernt",
             "Suche: Index · Interpretation: Codex",
-            "Gmail · Live-Suche",
+            "Gmail · ChatGPT oder Codex · Live-Suche",
             "WhatsApp · nur auf Anfrage"
           ]
         },
         "es": {
           "title": "Vera | Documentos, Gmail y WhatsApp en el Archivo del despacho",
-          "narration": "Elige la carpeta que ya usa el despacho: cada subcarpeta inmediata identifica a un cliente y los archivos originales permanecen en su sitio. Vera encuentra los archivos compatibles, extrae el texto, lo divide en fragmentos, calcula una huella y crea en el Mac un índice privado con reglas fijas y repetibles. Al actualizar el archivo, añade los documentos nuevos, sustituye los modificados y retira de la búsqueda los eliminados sin reconstruirlo todo. Cuando haces una pregunta, Codex interpreta la petición y prepara las búsquedas; el índice encuentra los fragmentos coincidentes y Codex determina cuáles son pertinentes antes de responder con las fuentes. Si se lo pides, Vera busca por separado los correos en directo mediante el conector de Gmail de OpenAI sin copiarlos en el índice local. Para WhatsApp, Codex Desktop usa Computer Use para abrir bajo demanda un chat verificado en la aplicación ya autenticada; los mensajes no entran en el índice y Vera no envía nada. Si trabajáis dos personas, cada profesional mantiene su propio índice local y conecta sus propias cuentas en Codex Desktop.",
+          "narration": "Elige la carpeta que ya usa el despacho: cada subcarpeta inmediata identifica a un cliente y los archivos originales permanecen en su sitio. Vera encuentra los archivos compatibles, extrae el texto, lo divide en fragmentos, calcula una huella y crea en el Mac un índice privado con reglas fijas y repetibles. Al actualizar el archivo, añade los documentos nuevos, sustituye los modificados y retira de la búsqueda los eliminados sin reconstruirlo todo. Cuando haces una pregunta, Codex interpreta la petición y prepara las búsquedas; el índice encuentra los fragmentos coincidentes y Codex determina cuáles son pertinentes antes de responder con las fuentes. Si se lo pides, Vera busca por separado los correos en directo mediante el conector de Gmail de OpenAI en ChatGPT o Codex sin copiarlos en el índice local. Para WhatsApp, Codex Desktop usa Computer Use para abrir bajo demanda un chat verificado en la aplicación ya autenticada; los mensajes no entran en el índice y Vera no envía nada. Si trabajáis dos personas, cada profesional mantiene su propio índice local y conecta sus propias cuentas en Codex Desktop. Vera funciona mejor con Codex para el trabajo local, pero puede preparar el alcance y continuar la conversación en ChatGPT.",
           "onScreen": [
             "1. Elige la carpeta del despacho",
             "Archivos, texto y huellas · reglas fijas",
             "Índice local · nuevos, modificados, eliminados",
             "Búsqueda: índice · interpretación: Codex",
-            "Gmail · búsqueda en directo",
+            "Gmail · ChatGPT o Codex · búsqueda en directo",
             "WhatsApp · solo bajo demanda"
           ]
         }

@@ -72,14 +72,9 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert "Token access expires after eight hours" in str(page)
     assert "WhatsApp Business connector is a hosted exception" not in str(page)
     assert "after their message timestamp passes 90 days" not in str(page)
-    assert (
-        "A public Plugins Directory listing is only a distribution and discovery surface"
-        in str(page)
-    )
-    assert "workflows stop on ChatGPT web and mobile and require Codex Desktop" in str(
-        page
-    )
-    assert "Gmail is searched only from Codex Desktop" in str(page)
+    assert "Vera and Clara work in ChatGPT" in str(page)
+    assert "Installation is optional" in str(page)
+    assert "Gmail is searched from ChatGPT or Codex" in str(page)
     assert "Codex Desktop with Computer Use" in str(page)
     assert "Neither route creates a Gmail or WhatsApp message store" in str(page)
     assert "Screen text and images read by Codex may still enter" in str(page)

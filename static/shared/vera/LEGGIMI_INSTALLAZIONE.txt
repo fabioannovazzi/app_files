@@ -120,18 +120,19 @@ credenziali, non contatta l'assistenza, non firma, non paga e non invia pratiche
 
 English quick start
 
-Vera may appear in the public Plugins Directory, but that listing is only for
-discovery and installation. Workflows stop on ChatGPT web and mobile and require
-Codex Desktop. The firm may still use its existing ChatGPT plan as the account
-behind Codex.
+Vera works in ChatGPT with material supplied in the conversation and with
+available connected apps. After useful work, she recommends Codex Desktop for
+direct folder access, persistent project files, local tools and checks, and
+durable deliverables. Installation is optional and the conversation can
+continue in ChatGPT.
 
 1. Unzip the package.
 2. Add the extracted folder containing `.agents/plugins/marketplace.json` as a
    local marketplace in Codex.
 3. Enable `Vera`, then start a new Codex chat in the same workspace.
 
-Studio Archive uses separate routes inside Codex Desktop. Gmail uses OpenAI's
-separately connected Gmail connector there. For WhatsApp, the professional
+Studio Archive uses separate routes. Gmail uses OpenAI's separately connected
+Gmail connector in ChatGPT or Codex. For WhatsApp, the professional
 opens an authenticated WhatsApp Desktop app and Codex uses Computer Use on that
 same computer to inspect visible or searchable messages on request. No Mparanza
 server receives or stores a WhatsApp message copy. Content read by Codex may

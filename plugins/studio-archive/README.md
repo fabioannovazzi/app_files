@@ -1,11 +1,11 @@
 # Vera · Archivio dello Studio
 
-This Vera component has three independent Codex Desktop routes. It searches one
-selected client's Gmail correspondence on demand through the separately
-connected OpenAI Gmail connector, inspects one verified one-to-one chat in the
-local WhatsApp Desktop application through Computer Use, or makes one shared
-studio folder searchable without requiring a shared ChatGPT account or a
-central database. It stops on ChatGPT web or mobile.
+This Vera component has three independent routes. It searches one selected
+client's Gmail correspondence in ChatGPT or Codex through the separately
+connected OpenAI Gmail connector. Codex Desktop additionally inspects one
+verified one-to-one chat in the local WhatsApp application through Computer Use
+or makes one shared studio folder searchable without a shared ChatGPT account
+or central database.
 
 Fabio and Paolo each configure the same shared or synced source folder from
 their own Vera installation in Codex Desktop. Each computer builds its own
