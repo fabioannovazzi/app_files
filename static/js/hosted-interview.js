@@ -8,13 +8,14 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260724-short-retry-v1";
+  const SCRIPT_VERSION = "20260724-audio-continuity-v1";
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
   const IMPROVEMENT_ANSWER_SETTLE_MS = 1200;
   const SILENCE_NUDGE_SECONDS = 35;
   const SILENCE_SIMPLIFY_SECONDS = 75;
   const NEAR_END_MAX_SECONDS = 120;
   const FINAL_CLOSE_MAX_SECONDS = 60;
+  const MIN_RESPONSE_WINDOW_SECONDS = 8;
   const RESPONSE_CREATE_COOLDOWN_MS = 2500;
   const RECENT_INPUT_SETTLE_MS = 3000;
   const SILENT_REALTIME_STALL_MS = 90000;
@@ -1045,6 +1046,12 @@
       ? Math.round((Date.now() - lastInterviewerTurnAtMs) / 1000)
       : 0;
     const waitingForAnswer = awaitingIntervieweeAnswer;
+
+    // Never launch fresh interviewer audio when the hard limit would cut it off.
+    if (remainingSeconds <= MIN_RESPONSE_WINDOW_SECONDS) {
+      closingPromptSent = true;
+      return;
+    }
 
     if (!closingPromptSent && remainingSeconds <= finalCloseSeconds) {
       closingPromptSent = sendSessionManagementPrompt(

@@ -854,7 +854,8 @@ def test_public_session_uses_prepared_context(tmp_path: Path, monkeypatch) -> No
     assert session_config["audio"]["input"]["turn_detection"]["eagerness"] == "low"
     assert session_config["audio"]["input"]["turn_detection"]["create_response"] is True
     assert (
-        session_config["audio"]["input"]["turn_detection"]["interrupt_response"] is True
+        session_config["audio"]["input"]["turn_detection"]["interrupt_response"]
+        is False
     )
     assert started_sidebands
     assert started_sidebands[0]["call_id"] == "rtc_test123"
@@ -2552,7 +2553,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert 'postJson("/complete"' in script
-    assert "20260724-short-retry-v1" in template
+    assert "20260724-audio-continuity-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2621,10 +2622,15 @@ def test_browser_script_manages_silence_and_near_end_without_semantic_gates() ->
     assert "SILENCE_SIMPLIFY_SECONDS = 75" in script
     assert "NEAR_END_MAX_SECONDS = 120" in script
     assert "FINAL_CLOSE_MAX_SECONDS = 60" in script
+    assert "MIN_RESPONSE_WINDOW_SECONDS = 8" in script
     assert "Math.floor(maxInterviewSeconds * 0.2)" in script
     assert "Math.floor(maxInterviewSeconds * 0.4)" in script
+    assert "remainingSeconds <= MIN_RESPONSE_WINDOW_SECONDS" in script
     assert "remainingSeconds <= finalCloseSeconds" in script
     assert "remainingSeconds <= nearEndSeconds" in script
+    assert script.index(
+        "remainingSeconds <= MIN_RESPONSE_WINDOW_SECONDS"
+    ) < script.index("remainingSeconds <= finalCloseSeconds")
     assert "manageSessionFlow()" in script
     assert "session_management_prompt" in script
     assert "silence_nudge" in script
@@ -2708,7 +2714,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260724-short-retry-v1" in script
+    assert "20260724-audio-continuity-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
