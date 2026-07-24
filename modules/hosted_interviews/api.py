@@ -1261,9 +1261,9 @@ def _build_realtime_session_config(
                     "create_response": (
                         interview_mode != INTERVIEW_MODE_PLUGIN_IMPROVEMENT
                     ),
-                    "interrupt_response": (
-                        interview_mode != INTERVIEW_MODE_PLUGIN_IMPROVEMENT
-                    ),
+                    # Interviewer turns must remain audible. Phone VAD noise is
+                    # not a reliable signal that a question should be truncated.
+                    "interrupt_response": False,
                 },
                 "transcription": {
                     "model": DEFAULT_TRANSCRIPTION_MODEL,
