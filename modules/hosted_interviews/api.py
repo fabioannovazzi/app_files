@@ -93,7 +93,7 @@ MAX_VIDEO_CHUNK_BYTES = 75 * 1024 * 1024
 MAX_SIDEBAND_TURNS = 18
 MAX_TRANSCRIPT_TAIL_CHARS = 5_000
 MAX_PARTNER_WHISPER_CHARS = 240
-STARTED_ATTEMPT_STALE_SECONDS = DEFAULT_INTERVIEW_DURATION_SECONDS + 5 * 60
+STARTED_ATTEMPT_STALE_GRACE_SECONDS = 60
 SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
 HOSTED_INTERVIEW_OUTPUT_COPY = {
     "en": {
@@ -1029,7 +1029,20 @@ def _started_attempt_is_stale(
         parsed = _parse_iso_timestamp(started_at)
     except HostedInterviewError:
         return True
-    return parsed + timedelta(seconds=STARTED_ATTEMPT_STALE_SECONDS) <= (now or _now())
+    try:
+        configured_duration = int(
+            record.get("max_duration_seconds", DEFAULT_INTERVIEW_DURATION_SECONDS)
+        )
+    except (TypeError, ValueError):
+        configured_duration = DEFAULT_INTERVIEW_DURATION_SECONDS
+    bounded_duration = min(
+        DEFAULT_INTERVIEW_DURATION_SECONDS,
+        max(60, configured_duration),
+    )
+    # The browser enforces this hard duration mechanically. One extra minute
+    # lets a valid attempt upload its final media and completion payload.
+    stale_after_seconds = bounded_duration + STARTED_ATTEMPT_STALE_GRACE_SECONDS
+    return parsed + timedelta(seconds=stale_after_seconds) <= (now or _now())
 
 
 def _active_attempt_record(token: str, attempt_id: str) -> dict[str, Any]:
