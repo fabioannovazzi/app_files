@@ -297,6 +297,78 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 .plain-row > span { color: var(--blue); }
 .quote { display: block; margin-top: 7px; color: var(--navy); font-family: "Instrument Sans", "Aptos", sans-serif; font-size: 14px; font-weight: 600; }
 
+.due-diligence-principle {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
+  align-items: start;
+  gap: 48px;
+  padding: 28px 4px;
+  border-top: 2px solid var(--navy);
+  border-bottom: 1px solid var(--cyan);
+}
+
+.due-diligence-principle h3 {
+  max-width: 470px;
+  font-size: clamp(22px, 2.7vw, 30px);
+  line-height: 1.18;
+}
+
+.due-diligence-principle p {
+  max-width: 660px;
+  color: var(--blue);
+  font-size: 17px;
+}
+
+.due-diligence-flow {
+  margin-top: 40px;
+  border-top: 1px solid var(--cyan);
+}
+
+.due-diligence-step {
+  min-height: 126px;
+  display: grid;
+  grid-template-columns: 52px minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  align-items: baseline;
+  gap: 28px;
+  padding: 26px 4px;
+  border-bottom: 1px solid var(--cyan);
+}
+
+.due-diligence-step__number {
+  color: var(--cyan);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+}
+
+.due-diligence-step p {
+  color: var(--blue);
+}
+
+.due-diligence-result {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
+  align-items: start;
+  gap: 48px;
+  padding: 28px 4px 0;
+  border-top: 2px solid var(--navy);
+}
+
+.due-diligence-result .kicker {
+  margin-bottom: 10px;
+}
+
+.due-diligence-result h3 {
+  font-size: clamp(22px, 2.7vw, 30px);
+}
+
+.due-diligence-result > p {
+  max-width: 660px;
+  color: var(--blue);
+  font-size: 17px;
+}
+
 .table-scroll { width: 100%; overflow-x: auto; border-top: 2px solid var(--navy); }
 .quiet-table {
   width: 100%;
@@ -399,6 +471,18 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
   .card { min-height: 0; padding: 25px 0; }
   .card + .card { border-top: 1px solid var(--cyan); border-left: 0; }
   .plain-row { grid-template-columns: 1fr; gap: 8px; }
+  .due-diligence-principle,
+  .due-diligence-result {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .due-diligence-step {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 8px 16px;
+  }
+  .due-diligence-step p {
+    grid-column: 2;
+  }
   .quiet-table { min-width: 720px; }
   .hero-install {
     grid-template-areas:
