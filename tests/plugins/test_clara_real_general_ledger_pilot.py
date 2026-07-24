@@ -808,7 +808,7 @@ def test_first_class_adapter_integrates_with_actual_reviewed_parser(
     _write_json(
         layout_path,
         {
-            "contract_version": "clara.commercial_general_journal_layout.v2",
+            "contract_version": "clara.commercial_general_journal_layout.v4",
             "review_status": "reviewed",
             "sheet_name": "Reviewed journal",
             "date_header_label": "Data registrazione",
@@ -859,6 +859,7 @@ def test_first_class_adapter_integrates_with_actual_reviewed_parser(
             ],
             "physical_embedded_amount_patterns": [],
             "reviewed_amount_pairs": [],
+            "reviewed_amountless_exclusions": [],
             "reviewed_zero_amount_line_ids": [],
             "physical_amount_format": "canonical_dot",
             "amount_sign_policy": "nonnegative",
