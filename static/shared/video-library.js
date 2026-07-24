@@ -284,18 +284,6 @@
           "title": "Vera | From source tables to a reviewable Word report"
         },
         {
-          "id": "LYNGc7XVmsI",
-          "title": "Vera | From the plan to a review that shows what actually ties"
-        },
-        {
-          "id": "jbZ34kOeQRc",
-          "title": "Vera | From scattered documents to a reviewable INPS case file"
-        },
-        {
-          "id": "wbeoePNN4YA",
-          "title": "Vera | One request, several positions to keep distinct"
-        },
-        {
           "id": "FdZhrFCHwV4",
           "title": "Vera | From a tangled question to controllable research"
         },
@@ -388,18 +376,6 @@
           "title": "Vera | Des tableaux source à un rapport Word révisable"
         },
         {
-          "id": "Fmoaxshafhg",
-          "title": "Vera | Du plan à une revue qui montre ce qui concorde vraiment"
-        },
-        {
-          "id": "114s9E9NOac",
-          "title": "Vera | Des documents dispersés à un dossier INPS vérifiable"
-        },
-        {
-          "id": "v4vpOk_-J1M",
-          "title": "Vera | Une demande, plusieurs positions à distinguer"
-        },
-        {
           "id": "qWKkHNGBQIo",
           "title": "Vera | D’une question désordonnée à une recherche contrôlable"
         },
@@ -438,18 +414,6 @@
         {
           "id": "p-QbouI3kr8",
           "title": "Vera | Von Quelltabellen zu einem prüfbaren Word-Bericht"
-        },
-        {
-          "id": "l_PI6K8fyPw",
-          "title": "Vera | Vom Plan zur Prüfung, die zeigt, was wirklich stimmt"
-        },
-        {
-          "id": "SG59SaDJj2M",
-          "title": "Vera | Von verstreuten Dokumenten zur prüfbaren INPS-Akte"
-        },
-        {
-          "id": "Yj-smt4uEzc",
-          "title": "Vera | Ein Antrag, mehrere getrennte Positionen"
         },
         {
           "id": "YtmKX5Obcuk",
@@ -492,32 +456,12 @@
           "title": "Vera | De tablas de origen a un informe en Word listo para revisión"
         },
         {
-          "id": "bFhSQiilox8",
-          "title": "Vera | Del plan a una revisión que muestra qué cuadra de verdad"
-        },
-        {
-          "id": "1REbQ-wBNf8",
-          "title": "Vera | De documentos dispersos a un expediente del INPS listo para revisión"
-        },
-        {
-          "id": "BrCOAgSVyYg",
-          "title": "Vera | Una solicitud, varias posiciones distintas"
-        },
-        {
           "id": "DGrRH3MGRcg",
           "title": "Vera | De una pregunta confusa a una investigación verificable"
         },
         {
           "id": "ePe_bVrC-bs",
           "title": "Vera | Muchas citas no significan mucho respaldo"
-        },
-        {
-          "id": "bL-LXrQzCA4",
-          "title": "Vera | De formularios fiscales a campos revisables"
-        },
-        {
-          "id": "p0OOhlz7_Sc",
-          "title": "Vera | De un aviso fiscal a una primera revisión útil"
         },
         {
           "id": "-TnYwnglpqE",
@@ -528,27 +472,17 @@
   }
 };
 
-  const catalogVersion = "4.0.0";
-  const lastVerifiedAt = "2026-07-23";
+  const catalogVersion = "4.1.0";
+  const lastVerifiedAt = "2026-07-24";
 
   const veraYoutubeDefinitions = Object.freeze([
     {
       module: "check-entries", edition: "italy-fatturapa", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: {
-        it: "I1dp3FYVy2w",
-        en: "7o9knSMeN6E",
-        fr: "6ZRnAKV89JI",
-        de: "i5OyOPSI1Oc",
-        es: "GI6u74BPnN8"
-      },
+      localizations: { it: "I1dp3FYVy2w" },
       pageTargets: ["/static/shared/check-entries/index.html#italy-adapter"],
       descriptions: {
-        it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto.",
-        en: "Add FatturaPA XML and authorized exports to the entry-to-support check.",
-        fr: "Ajoute les XML FatturaPA et les exports autorisés au contrôle écriture-justificatif.",
-        de: "Ergänzt FatturaPA-XML und autorisierte Exporte in der Buchungs-Beleg-Prüfung.",
-        es: "Añade XML FatturaPA y exportaciones autorizadas a la comprobación entre asientos y justificantes."
+        it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto."
       }
     },
     {
@@ -569,17 +503,17 @@
     {
       module: "concordato-plan-review", edition: "italy", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: { en: "LYNGc7XVmsI", it: "ndZQoJjwOpY", fr: "Fmoaxshafhg", de: "l_PI6K8fyPw", es: "bFhSQiilox8" }
+      localizations: { it: "ndZQoJjwOpY" }
     },
     {
       module: "previdenza-inps", edition: "italy", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: { en: "jbZ34kOeQRc", it: "qsuHqT9KGBI", fr: "114s9E9NOac", de: "SG59SaDJj2M", es: "1REbQ-wBNf8" }
+      localizations: { it: "qsuHqT9KGBI" }
     },
     {
       module: "registro-imprese-sari", edition: "italy", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: { en: "wbeoePNN4YA", it: "-UGe1FoLu8U", fr: "v4vpOk_-J1M", de: "Yj-smt4uEzc", es: "BrCOAgSVyYg" }
+      localizations: { it: "-UGe1FoLu8U" }
     },
     {
       module: "prompt-optimizer", edition: "core", scope: "core",
@@ -592,14 +526,36 @@
       localizations: { en: "GRAPmp9D7ds", it: "vA2JO3cG7Cw", fr: "v0CI1-lm-Qg", de: "hL488KRscW0", es: "ePe_bVrC-bs" }
     },
     {
-      module: "dati-fiscali-strutturati", edition: "country-aware", scope: "country",
-      jurisdiction: null, jurisdictions: ["IT", "CH-GE", "CH-ZH", "UK"], kind: "subflow",
-      localizations: { en: "wvZ1xR7waRQ", it: "ukozitFI8XM", fr: "aVwg5G9iJ8Y", de: "2zA8rIlVxPk", es: "bL-LXrQzCA4" }
+      module: "dati-fiscali-strutturati", edition: "italy", scope: "country",
+      jurisdiction: "IT", kind: "subflow", localizations: { it: "ukozitFI8XM" }
     },
     {
-      module: "avviso-intake", edition: "country-aware", scope: "country",
-      jurisdiction: null, jurisdictions: ["IT", "CH-GE", "CH-ZH", "UK"], kind: "subflow",
-      localizations: { en: "9gJxX-dya70", it: "bvL9-ckfLyw", fr: "GVpuM-QkHt8", de: "K2Pv-ef4RRg", es: "p0OOhlz7_Sc" }
+      module: "dati-fiscali-strutturati", edition: "uk", scope: "country",
+      jurisdiction: "UK", kind: "subflow", localizations: { en: "wvZ1xR7waRQ" }
+    },
+    {
+      module: "dati-fiscali-strutturati", edition: "geneva", scope: "country",
+      jurisdiction: "CH-GE", kind: "subflow", localizations: { fr: "aVwg5G9iJ8Y" }
+    },
+    {
+      module: "dati-fiscali-strutturati", edition: "zurich", scope: "country",
+      jurisdiction: "CH-ZH", kind: "subflow", localizations: { de: "2zA8rIlVxPk" }
+    },
+    {
+      module: "avviso-intake", edition: "italy", scope: "country",
+      jurisdiction: "IT", kind: "subflow", localizations: { it: "bvL9-ckfLyw" }
+    },
+    {
+      module: "avviso-intake", edition: "uk", scope: "country",
+      jurisdiction: "UK", kind: "subflow", localizations: { en: "9gJxX-dya70" }
+    },
+    {
+      module: "avviso-intake", edition: "geneva", scope: "country",
+      jurisdiction: "CH-GE", kind: "subflow", localizations: { fr: "GVpuM-QkHt8" }
+    },
+    {
+      module: "avviso-intake", edition: "zurich", scope: "country",
+      jurisdiction: "CH-ZH", kind: "subflow", localizations: { de: "K2Pv-ef4RRg" }
     },
     {
       module: "email-cliente", edition: "core", scope: "core",
@@ -747,81 +703,19 @@
     {
       module: "new-client",
       conceptId: "from-client-folder-to-operational-file",
-      edition: "core",
-      scope: "core",
-      jurisdiction: null,
-      duration: "1:00",
-      localizations: {
-        it: "UwLsy2FuP8o",
-        en: "nV7uBOlvFQE",
-        fr: "4tzHoUGKfj0",
-        de: "ZHyjGPDxcUc",
-        es: "xaWouXRwO8c"
-      },
-      pageTargets: [
-        "/static/shared/vera/index.html",
-        "/static/shared/new-client/index.html#core-model"
-      ],
-      titles: {
-        it: "Vera | Dai documenti al fascicolo cliente",
-        en: "Vera | From source documents to a working client file",
-        fr: "Vera | Des documents sources au dossier client de travail",
-        de: "Vera | Von Quelldokumenten zur arbeitsfähigen Mandantenakte",
-        es: "Vera | De los documentos fuente al expediente de cliente operativo"
-      },
-      moduleLabels: {
-        it: "Nuovo cliente · Modello comune",
-        en: "New Client · Common model",
-        fr: "Nouveau client · Modèle commun",
-        de: "Neuer Mandant · Gemeinsames Modell",
-        es: "Nuevo cliente · Modelo común"
-      },
-      descriptions: {
-        it: "Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.",
-        en: "Explain the stable fields that country implementations map documents, rules and actions onto.",
-        fr: "Explique les champs stables auxquels les implémentations nationales rattachent documents, règles et actions.",
-        de: "Erklärt die stabilen Felder, denen Länderimplementierungen Dokumente, Regeln und Aktionen zuordnen.",
-        es: "Explica los campos estables a los que cada implementación jurisdiccional vincula documentos, reglas y acciones."
-      }
-    },
-    {
-      module: "new-client",
-      conceptId: "from-client-folder-to-operational-file",
       edition: "italy",
       scope: "country",
       jurisdiction: "IT",
       duration: "1:10",
-      localizations: {
-        it: "FWjVBeJYLF8",
-        en: "Krp7SPgBYkE",
-        fr: "EDUfMPnccsY",
-        de: "IwdyylSf-M4",
-        es: "41H8PKFFmKg"
-      },
+      localizations: { it: "FWjVBeJYLF8" },
       pageTargets: [
         "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#italy"
       ],
-      titles: {
-        it: "Vera | Incarico, privacy e AML per il nuovo cliente",
-        en: "Vera | Engagement, privacy and AML for a new client",
-        fr: "Vera | Mission, confidentialité et LCB-FT pour un nouveau client",
-        de: "Vera | Auftrag, Datenschutz und AML für einen neuen Mandanten",
-        es: "Vera | Encargo, privacidad y PBC para un nuevo cliente"
-      },
-      moduleLabels: {
-        it: "Nuovo cliente · Edizione Italia",
-        en: "New Client · Italy edition",
-        fr: "Nouveau client · Édition Italie",
-        de: "Neuer Mandant · Italien-Edition",
-        es: "Nuevo cliente · Edición Italia"
-      },
+      titles: { it: "Vera | Incarico, privacy e AML per il nuovo cliente" },
+      moduleLabels: { it: "Nuovo cliente · Italia" },
       descriptions: {
-        it: "Illustra il percorso Italia per piani di incarico, privacy e informativa AI, bozza di valutazione AML e monitoraggio del fascicolo di lavoro.",
-        en: "Explain the Italy workflow for engagement, privacy and AI-information plans, a draft AML assessment, and working-file monitoring.",
-        fr: "Explique le parcours Italie pour les plans de mission, de confidentialité et d’information IA, un projet d’évaluation LCB-FT et le suivi du dossier de travail.",
-        de: "Erläutert den Italien-Ablauf für Auftrags-, Datenschutz- und KI-Informationspläne, den Entwurf einer AML-Bewertung und die Pflege der Arbeitsakte.",
-        es: "Explica el proceso italiano para los planes de encargo, privacidad e información sobre inteligencia artificial, un borrador de evaluación de PBC y el seguimiento del expediente."
+        it: "Illustra il percorso Italia per piani di incarico, privacy e informativa AI, bozza di valutazione AML e monitoraggio del fascicolo di lavoro."
       }
     },
     {
@@ -884,30 +778,16 @@
       scope: "country",
       jurisdiction: "IT",
       duration: "0:50",
-      localizations: {
-        it: "I1dp3FYVy2w",
-        en: "7o9knSMeN6E",
-        fr: "6ZRnAKV89JI",
-        de: "i5OyOPSI1Oc",
-        es: "GI6u74BPnN8"
-      },
+      localizations: { it: "I1dp3FYVy2w" },
       pageTargets: [
         "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#italy-adapter"
       ],
       titles: {
-        it: "Vera | Dalla scrittura campionata al supporto verificato",
-        en: "Vera | Check Entries · Italy · FatturaPA",
-        fr: "Vera | Écritures · Italie · FatturaPA",
-        de: "Vera | Buchungen · Italien · FatturaPA",
-        es: "Vera | Asientos · Italia · FatturaPA"
+        it: "Vera | Dalla scrittura campionata al supporto verificato"
       },
       descriptions: {
-        it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto.",
-        en: "Add FatturaPA XML and authorized exports to the entry-to-support check.",
-        fr: "Ajoute les XML FatturaPA et les exports autorisés au contrôle écriture-justificatif.",
-        de: "Ergänzt FatturaPA-XML und autorisierte Exporte in der Buchungs-Beleg-Prüfung.",
-        es: "Añade XML FatturaPA y exportaciones autorizadas a la comprobación entre asientos y justificantes."
+        it: "Aggiunge XML FatturaPA ed esportazioni autorizzate al controllo scrittura-supporto."
       }
     }
   ]);
@@ -1050,7 +930,9 @@
         lastVerifiedAt
       } : null,
       videos: [
-        ...selection.videos.map((video) => normalizeVideo(product, lang, video)),
+        ...selection.videos
+          .filter((video) => product !== "vera" || veraYoutubeIdentityById.has(video.id))
+          .map((video) => normalizeVideo(product, lang, video)),
         ...(product === "vera" ? publishedGuidesForLanguage(lang) : [])
       ],
       pending: product === "vera" ? videoPending : []
@@ -1089,6 +971,7 @@
     if (video.edition) link.dataset.videoEdition = video.edition;
     if (video.scope) link.dataset.videoScope = video.scope;
     if (video.jurisdiction) link.dataset.videoJurisdiction = video.jurisdiction;
+    if (video.jurisdictions) link.dataset.videoJurisdictions = video.jurisdictions.join(",");
 
     const thumbnail = document.createElement("span");
     thumbnail.className = "video-guide__thumb";
@@ -1137,18 +1020,29 @@
   function selectVideos(catalog, container) {
     const module = container.dataset.videoModule;
     const edition = container.dataset.videoEdition;
+    const jurisdiction = container.dataset.videoJurisdiction || null;
+    const relevantToJurisdiction = (video) => {
+      if (video.scope !== "country") return true;
+      if (!jurisdiction) return false;
+      if (video.jurisdiction === jurisdiction) return true;
+      return Array.isArray(video.jurisdictions) && video.jurisdictions.includes(jurisdiction);
+    };
     if (module) {
       return catalog.videos.filter((video) => (
-        video.module === module && (!edition || video.edition === edition)
+        video.module === module
+        && (!edition || video.edition === edition)
+        && relevantToJurisdiction(video)
       ));
     }
 
     const mode = container.dataset.videoMode || (catalog.product === "vera" ? "curated" : "all");
-    if (mode !== "curated" || catalog.product !== "vera") return catalog.videos;
+    if (mode !== "curated" || catalog.product !== "vera") {
+      return catalog.videos.filter(relevantToJurisdiction);
+    }
 
     return curatedVeraModules
       .map((moduleId) => catalog.videos.find((video) => video.module === moduleId && video.kind === "guide"))
-      .filter(Boolean);
+      .filter((video) => video && relevantToJurisdiction(video));
   }
 
   function mount({ product, lang, openLabel }) {

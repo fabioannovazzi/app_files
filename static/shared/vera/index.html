@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera riunisce workflow professionali multilingue e un pacchetto Italia per regole, enti e formati nazionali.">
+  <meta name="description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca, con workflow specifici per il lavoro italiano.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Vera riunisce workflow professionali multilingue e un pacchetto Italia per regole, enti e formati nazionali.">
+  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca, con workflow specifici per il lavoro italiano.">
   <meta property="og:image" content="https://i.ytimg.com/vi/2q4o2djeSmg/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
@@ -37,6 +37,7 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     html { scroll-behavior: smooth; }
 
     body {
@@ -77,7 +78,6 @@
     .eyebrow,
     .section-index,
     .stream-number,
-    .journey-step__number,
     .video-kicker {
       color: var(--blue);
       font-size: 0.75rem;
@@ -198,42 +198,6 @@
     .section-head__title { display: grid; gap: 14px; }
     .section-head > p { max-width: 660px; color: var(--blue); font-size: 1.075rem; }
 
-    .journey-layout {
-      display: grid;
-      grid-template-columns: minmax(180px, 0.42fr) minmax(0, 1.58fr);
-      gap: clamp(40px, 8vw, 104px);
-      align-items: start;
-    }
-
-    .journey-aside {
-      position: sticky;
-      top: 112px;
-      display: grid;
-      gap: 22px;
-    }
-
-    .journey-aside p { max-width: 24ch; color: var(--blue); }
-    .journey-aside strong {
-      max-width: 16ch;
-      color: var(--navy);
-      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
-      line-height: 1.15;
-      letter-spacing: -0.025em;
-    }
-    .journey-steps { margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--navy); }
-
-    .journey-step {
-      min-height: 150px;
-      padding: 30px 0;
-      display: grid;
-      grid-template-columns: 64px minmax(180px, 0.65fr) minmax(0, 1.35fr);
-      gap: 28px;
-      align-items: start;
-      border-bottom: 1px solid var(--cyan);
-    }
-
-    .journey-step p { max-width: 620px; color: var(--blue); }
-
     .workstreams { display: grid; gap: clamp(64px, 9vw, 104px); }
     .workstream { display: grid; gap: 28px; }
 
@@ -275,17 +239,6 @@
 
     .country-pack-head__title { display: grid; gap: 14px; }
     .country-pack-head > p { max-width: 680px; color: var(--blue); font-size: 1.075rem; }
-    .country-pack-note {
-      margin-bottom: 28px;
-      padding-block: 18px;
-      display: grid;
-      grid-template-columns: minmax(150px, 0.34fr) minmax(0, 1fr);
-      gap: 24px;
-      border-block: 1px solid var(--cyan);
-    }
-    .country-pack-note strong { color: var(--navy); }
-    .country-pack-note p { max-width: 720px; color: var(--blue); }
-
     #data-boundary .section-head {
       grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
     }
@@ -518,9 +471,6 @@
         align-items: start;
       }
       .hero-install__actions { justify-content: flex-start; }
-      .journey-layout { grid-template-columns: 1fr; }
-      .journey-aside { position: static; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
-      .journey-aside p { max-width: 52ch; }
       .workstream-head { grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr); }
       .country-pack-head { grid-template-columns: 1fr; gap: 20px; }
       #data-boundary .section-head { grid-template-columns: 1fr; gap: 20px; }
@@ -537,12 +487,8 @@
       }
       .vera-mark { width: 132px; grid-row: 1; padding: 0 0 28px; border-left: 0; border-bottom: 1px solid var(--cyan); }
       .section-head { grid-template-columns: 1fr; gap: 20px; }
-      .journey-aside { grid-template-columns: 1fr; }
-      .journey-step { grid-template-columns: 48px 1fr; gap: 12px 18px; }
-      .journey-step p { grid-column: 2; }
       .workstream-head { grid-template-columns: 1fr; gap: 10px; }
       .workstream-head p { grid-column: 1; }
-      .country-pack-note { grid-template-columns: 1fr; gap: 8px; }
       .data-position__facts { grid-template-columns: 1fr; }
       .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
@@ -558,7 +504,6 @@
       main, .footer-shell { width: calc(100% - 32px); }
       .hero { padding-top: 52px; }
       h1 { font-size: 4rem; }
-      .journey-step { padding-block: 24px; }
       .module-row { padding-block: 22px; }
     }
 
@@ -593,7 +538,7 @@
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
           <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
-          <a href="#modello" data-i18n="nav.workflow">Come funziona</a>
+          <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Per il tuo mercato</a>
           <a href="#data-boundary" data-i18n="nav.data">Dati</a>
           <a href="#video" data-i18n="nav.videos">Video</a>
         </nav>
@@ -619,8 +564,8 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Codex per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Un core professionale per controlli, riconciliazioni, report e ricerca. Un pacchetto dedicato al lavoro italiano.</p>
-        <p class="hero-support" data-i18n="hero.support">La lingua indica come lavori con Vera. Il pacchetto paese indica quali regole, enti e formati entrano nel lavoro.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca professionale.</p>
+        <p class="hero-support" data-i18n="hero.support">Per il lavoro italiano include anche FatturaPA, enti, fonti e procedure nazionali.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Installa Vera, poi aprila in Codex Desktop.</h2>
@@ -643,50 +588,13 @@
       </figure>
     </section>
 
-    <section class="section-block" id="modello">
-      <div class="section-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="model.index">Come è organizzata Vera</span>
-          <h2 data-i18n="model.title">Vera lavora in cinque lingue. Aggiungi le regole italiane quando servono.</h2>
-        </div>
-        <p data-i18n="model.copy">Scegli il workflow e la lingua. Per FatturaPA, adempimenti, fonti e procedure italiane, usa il pacchetto Italia.</p>
-      </div>
-
-      <div class="journey-layout">
-        <aside class="journey-aside">
-          <strong data-i18n="model.available">Core multilingue + pacchetto Italia</strong>
-          <a class="text-link" href="#italia">
-            <span data-i18n="model.link">Vedi il pacchetto Italia</span>
-            <span aria-hidden="true">→</span>
-          </a>
-        </aside>
-        <ol class="journey-steps">
-          <li class="journey-step">
-            <span class="journey-step__number">01</span>
-            <h3 data-i18n="model.step1.title">Scegli il lavoro</h3>
-            <p data-i18n="model.step1.copy">Avvia istruttoria, campionamento, controlli, riconciliazioni, reporting o ricerca dal workflow più adatto.</p>
-          </li>
-          <li class="journey-step">
-            <span class="journey-step__number">02</span>
-            <h3 data-i18n="model.step2.title">Usa la tua lingua</h3>
-            <p data-i18n="model.step2.copy">Italiano, inglese, francese, tedesco e spagnolo attraversano lo stesso metodo e gli stessi risultati.</p>
-          </li>
-          <li class="journey-step">
-            <span class="journey-step__number">03</span>
-            <h3 data-i18n="model.step3.title">Aggiungi il paese quando serve</h3>
-            <p data-i18n="model.step3.copy">Il pacchetto Italia aggiunge FatturaPA, adempimenti, fonti e procedure italiane ai workflow che ne hanno bisogno.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
     <section class="section-block" id="core">
       <div class="section-head">
         <div class="section-head__title">
-          <span class="section-index" data-i18n="core.index">Core professionale · nove workflow</span>
-          <h2 data-i18n="core.title">Il metodo resta. La giurisdizione può cambiare.</h2>
+          <span class="section-index" data-i18n="core.index">Cosa può fare Vera</span>
+          <h2 data-i18n="core.title">Scegli il lavoro da fare.</h2>
         </div>
-        <p data-i18n="core.copy">Questi workflow lavorano su documenti, dati, evidenze e risultati senza assumere un paese specifico.</p>
+        <p data-i18n="core.copy">Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.</p>
       </div>
 
       <div class="workstreams">
@@ -767,42 +675,53 @@
       </div>
     </section>
 
-    <section class="section-block" id="italia">
+    <section class="section-block" id="jurisdiction" data-jurisdiction-section hidden>
       <div class="country-pack-head">
         <div class="country-pack-head__title">
-          <span class="section-index" data-i18n="italy.index">Pacchetto paese · Italia</span>
-          <h2 data-i18n="italy.title">Quando il lavoro entra nelle regole italiane.</h2>
+          <span class="section-index" data-i18n="jurisdiction.index">Lavoro specifico per l’Italia</span>
+          <h2 data-i18n="jurisdiction.title">Workflow costruiti sulle fonti e procedure italiane.</h2>
         </div>
-        <p data-i18n="italy.copy">Il core resta visibile; questo livello aggiunge dati, documenti, enti e procedure propri del lavoro italiano.</p>
-      </div>
-      <div class="country-pack-note">
-        <strong data-i18n="italy.language.title">Cinque lingue, un perimetro</strong>
-        <p data-i18n="italy.language.copy">Puoi usare ogni specializzazione in italiano, inglese, francese, tedesco o spagnolo. Cambia la lingua del lavoro, non la giurisdizione applicata.</p>
+        <p data-i18n="jurisdiction.copy">Quando il lavoro lo richiede, Vera usa formati, enti e riferimenti propri dell’Italia.</p>
       </div>
       <div class="module-directory">
-        <a class="module-row" href="../check-entries/index.html#italy-adapter" data-module-link>
-          <h3 data-i18n="module.entriesItaly.title">Controllo scritture · FatturaPA</h3>
-          <p data-i18n="module.entriesItaly">Aggiunge lo ZIP XML e gli export FatturaPA al controllo documentale delle scritture.</p>
+        <a class="module-row" href="../check-entries/index.html#italy-adapter" data-module-link data-jurisdiction-item="it" hidden>
+          <h3>Controllo scritture · FatturaPA</h3>
+          <p>Collega le scritture allo ZIP XML o agli export FatturaPA e concentra la revisione sulle eccezioni.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="module-row" href="../report-builder/index.html#italy-preset" data-module-link>
-          <h3 data-i18n="module.reportItaly.title">Report enti locali · Italia</h3>
-          <p data-i18n="module.reportItaly">Applica il profilo FPV, FCDE e PNRR al motore di reporting generale.</p>
+        <a class="module-row" href="../report-builder/index.html#italy-preset" data-module-link data-jurisdiction-item="it" hidden>
+          <h3>Report enti locali</h3>
+          <p>Prepara report con la struttura e il lessico di FPV, FCDE e PNRR.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="module-row" href="../concordato-plan-review/index.html" data-module-link>
-          <h3 data-i18n="module.concordato.title">Revisione Piano Concordato</h3>
-          <p data-i18n="module.concordato">Verifica i numeri del piano rispetto a bilancio, mastrini e prospetti di supporto.</p>
+        <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
+          <h3>Revisione Piano Concordato</h3>
+          <p>Verifica i numeri del piano rispetto a bilancio, mastrini e prospetti di supporto.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="module-row" id="previdenza-inps" href="../previdenza-inps/index.html" data-module-link>
-          <h3 data-i18n="module.previdenza.title">Previdenza INPS</h3>
-          <p data-i18n="module.previdenza">Organizza documenti ed esportazioni INPS in un fascicolo previdenziale con fonti e bozza di lavoro.</p>
+        <a class="module-row" id="previdenza-inps" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
+          <h3>Previdenza INPS</h3>
+          <p>Organizza documenti ed esportazioni INPS in un fascicolo previdenziale con fonti e bozza di lavoro.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="module-row" id="registro-imprese-sari" href="../registro-imprese-sari/index.html" data-module-link>
-          <h3 data-i18n="module.registro.title">Registro Imprese e SARI</h3>
-          <p data-i18n="module.registro">Prepara la pratica Registro Imprese/DIRE da fonti SARI e CCIAA, mantenendo distinti RI/REA, INPS, INAIL, SUAP e RUI.</p>
+        <a class="module-row" id="registro-imprese-sari" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
+          <h3>Registro Imprese e SARI</h3>
+          <p>Prepara la pratica Registro Imprese/DIRE da fonti SARI e CCIAA.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../new-client/uk.html" data-module-link data-native-language="en" data-jurisdiction-item="en" hidden>
+          <h3>New Client file preparation · United Kingdom</h3>
+          <p>Organizes an incoming UK tax folder, identifies missing material, and prepares a firm memo and client request.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../new-client/geneva.html" data-module-link data-native-language="fr" data-jurisdiction-item="fr" hidden>
+          <h3>Préparation du dossier nouveau client · Genève</h3>
+          <p>Organise un dossier fiscal genevois, relève les pièces manquantes et prépare le mémo du cabinet et la demande au client.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="../new-client/zurich.html" data-module-link data-native-language="de" data-jurisdiction-item="de" hidden>
+          <h3>Mandantenakte vorbereiten · Zürich</h3>
+          <p>Ordnet eine Zürcher Steuerakte, erkennt fehlende Unterlagen und erstellt Kanzleivermerk und Mandantenanfrage.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
       </div>
@@ -866,7 +785,7 @@
           <span class="section-index" data-i18n="videos.index">Cinque storie dal Core</span>
           <h2 data-i18n="videos.title">Vera al lavoro.</h2>
         </div>
-        <p data-i18n="videos.copy">Una panoramica e quattro esempi del metodo comune. Le edizioni Italia restano accanto ai workflow che estendono.</p>
+        <p data-i18n="videos.copy">Una panoramica e quattro esempi del lavoro che Vera prepara.</p>
       </div>
 
       <a class="overview-video" href="https://youtu.be/2q4o2djeSmg" target="_blank" rel="noopener noreferrer" data-featured-video>
@@ -883,8 +802,8 @@
       </a>
 
       <div class="video-library" data-curated-videos>
-        <a class="video-guide" href="https://youtu.be/UwLsy2FuP8o" target="_blank" rel="noopener noreferrer" data-video-index="0">
-          <span class="video-guide__thumb" aria-hidden="true"><img src="https://i.ytimg.com/vi/UwLsy2FuP8o/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
+        <a class="video-guide" target="_blank" rel="noopener noreferrer" data-video-index="0" hidden>
+          <span class="video-guide__thumb" aria-hidden="true"><img alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
           <span class="video-guide__body"><span class="video-kicker">Nuovo cliente · Modello comune</span><strong>Dai documenti al fascicolo cliente</strong><span class="video-description">Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.</span><span class="video-meta">Apri la guida</span></span>
         </a>
         <a class="video-guide" href="https://youtu.be/x2u-AAAuxfc" target="_blank" rel="noopener noreferrer" data-video-index="1">
@@ -905,9 +824,9 @@
         <div class="all-videos__head">
           <div class="all-videos__title">
             <span class="section-index" data-i18n="videos.all.index">Catalogo video completo</span>
-            <h3 data-i18n="videos.all.title">Tutte le guide, nella lingua che usi.</h3>
+            <h3 data-i18n="videos.all.title">Tutte le guide rilevanti.</h3>
           </div>
-          <p data-i18n="videos.all.copy">Core, edizioni paese e percorsi specialistici riuniti in un unico indice. La lingua cambia insieme alla pagina.</p>
+          <p data-i18n="videos.all.copy">Workflow generali e lavoro specifico per l’Italia, riuniti in un unico indice.</p>
         </div>
         <div class="all-video-library" role="region" data-video-library="vera" data-video-mode="all" aria-label="Tutte le guide video di Vera" data-i18n-aria-label="videos.all.label"></div>
       </div>
@@ -927,38 +846,27 @@
     </div>
   </footer>
 
-  <script src="../video-library.js?v=2026072002"></script>
+  <script src="../video-library.js?v=2026072401"></script>
   <script>
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Vera riunisce workflow professionali multilingue e un pacchetto Italia per regole, enti e formati nazionali.",
+        "meta.description": "Vera prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca, con workflow specifici per il lavoro italiano.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
         "nav.capabilities": "Cosa fa",
-        "nav.workflow": "Come funziona",
+        "nav.jurisdiction": "Per l’Italia",
         "nav.data": "Dati",
         "nav.videos": "Video",
         "language.label": "Lingua",
         "hero.eyebrow": "Vera · Codex per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Un core professionale per controlli, riconciliazioni, report e ricerca. Un pacchetto dedicato al lavoro italiano.",
-        "hero.support": "La lingua indica come lavori con Vera. Il pacchetto paese indica quali regole, enti e formati entrano nel lavoro.",
-        "model.index": "Come è organizzata Vera",
-        "model.title": "Vera lavora in cinque lingue. Aggiungi le regole italiane quando servono.",
-        "model.copy": "Scegli il workflow e la lingua. Per FatturaPA, adempimenti, fonti e procedure italiane, usa il pacchetto Italia.",
-        "model.available": "Core multilingue + pacchetto Italia",
-        "model.link": "Vedi il pacchetto Italia",
-        "model.step1.title": "Scegli il lavoro",
-        "model.step1.copy": "Avvia il percorso nuovo cliente, campionamento, controlli, riconciliazioni, reporting o ricerca dal workflow più adatto.",
-        "model.step2.title": "Usa la tua lingua",
-        "model.step2.copy": "Italiano, inglese, francese, tedesco e spagnolo attraversano lo stesso metodo e gli stessi risultati.",
-        "model.step3.title": "Aggiungi il paese quando serve",
-        "model.step3.copy": "Il pacchetto Italia aggiunge FatturaPA, adempimenti, fonti e procedure italiane ai workflow che ne hanno bisogno.",
-        "core.index": "Core professionale · nove workflow",
-        "core.title": "Il metodo resta. La giurisdizione può cambiare.",
-        "core.copy": "Questi workflow lavorano su documenti, dati, evidenze e risultati senza assumere un paese specifico.",
+        "hero.lead": "Prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca professionale.",
+        "hero.support": "Per il lavoro italiano include anche FatturaPA, enti, fonti e procedure nazionali.",
+        "core.index": "Cosa può fare Vera",
+        "core.title": "Scegli il lavoro da fare.",
+        "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
         "work.index": "Dodici funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
@@ -981,25 +889,13 @@
         "module.sampling": "Estrae e normalizza il giornale contabile e costruisce un campione riproducibile.",
         "module.entries.title": "Controllo scritture",
         "module.entries": "Collega le scritture ai supporti disponibili e concentra il controllo sulle eccezioni.",
-        "italy.index": "Pacchetto paese · Italia",
-        "italy.title": "Quando il lavoro entra nelle regole italiane.",
-        "italy.copy": "Il core resta visibile; questo livello aggiunge dati, documenti, enti e procedure propri del lavoro italiano.",
-        "italy.language.title": "Cinque lingue, un perimetro",
-        "italy.language.copy": "Puoi usare ogni specializzazione in italiano, inglese, francese, tedesco o spagnolo. Cambia la lingua del lavoro, non la giurisdizione applicata.",
-        "module.entriesItaly.title": "Controllo scritture · FatturaPA",
-        "module.entriesItaly": "Aggiunge lo ZIP XML e gli export FatturaPA al controllo documentale delle scritture.",
-        "module.reportItaly.title": "Report enti locali · Italia",
-        "module.reportItaly": "Applica il profilo FPV, FCDE e PNRR al motore di reporting generale.",
+        "jurisdiction.index": "Lavoro specifico per l’Italia",
+        "jurisdiction.title": "Workflow costruiti sulle fonti e procedure italiane.",
+        "jurisdiction.copy": "Quando il lavoro lo richiede, Vera usa formati, enti e riferimenti propri dell’Italia.",
         "module.bank.title": "Riconciliazione banca-contabilità",
         "module.bank": "Abbina estratti conto e giornale o mastrino in una riconciliazione verificabile.",
         "module.reconciliation.title": "Riconciliazione partite",
         "module.reconciliation": "Riunisce partite aperte, mastrini, banche e supporti in carte di lavoro Excel e Word.",
-        "module.concordato.title": "Revisione Piano Concordato",
-        "module.concordato": "Verifica i numeri del piano rispetto a bilancio, mastrini e prospetti di supporto.",
-        "module.previdenza.title": "Previdenza INPS",
-        "module.previdenza": "Organizza documenti ed esportazioni INPS in un fascicolo previdenziale con fonti e bozza di lavoro.",
-        "module.registro.title": "Registro Imprese e SARI",
-        "module.registro": "Prepara la pratica Registro Imprese/DIRE da fonti SARI e CCIAA, mantenendo distinti RI/REA, INPS, INAIL, SUAP e RUI.",
         "module.report.title": "Genera report",
         "module.report": "Trasforma Excel, CSV e PDF in un report Word con tabelle, fonti e controlli di lettura.",
         "module.prompt.title": "Ottimizza prompt",
@@ -1027,14 +923,14 @@
         "privacy.dataLink": "Guarda il video sulla gestione dei dati",
         "videos.index": "Cinque storie dal Core",
         "videos.title": "Vera al lavoro.",
-        "videos.copy": "Una panoramica e quattro esempi del metodo comune. Le edizioni Italia restano accanto ai workflow che estendono.",
+        "videos.copy": "Una panoramica e quattro esempi del lavoro che Vera prepara.",
         "videos.overview.kicker": "Panoramica",
         "videos.overview.title": "Dal lavoro dello studio al prossimo passo preparato",
         "videos.open": "Si apre su YouTube",
         "videos.openGuide": "Apri la guida",
         "videos.all.index": "Catalogo video completo",
-        "videos.all.title": "Tutte le guide, nella lingua che usi.",
-        "videos.all.copy": "Core, edizioni paese e percorsi specialistici riuniti in un unico indice. La lingua cambia insieme alla pagina.",
+        "videos.all.title": "Tutte le guide rilevanti.",
+        "videos.all.copy": "Workflow generali e lavoro specifico per l’Italia, riuniti in un unico indice.",
         "videos.all.label": "Tutte le guide video di Vera",
         "videos.all.open": "Apri la guida",
         "install.title": "Installa Vera, poi aprila in Codex Desktop.",
@@ -1048,33 +944,22 @@
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
-        "meta.description": "Vera combines multilingual professional workflows with an Italy pack for national rules, institutions and formats.",
+        "meta.description": "Vera prepares checks, reconciliations, client files, reports and research, with document preparation for UK client work.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
         "nav.capabilities": "What it does",
-        "nav.workflow": "How it works",
+        "nav.jurisdiction": "For the UK",
         "nav.data": "Data",
         "nav.videos": "Videos",
         "language.label": "Language",
         "hero.eyebrow": "Vera · Codex for accountants",
         "hero.title": "Vera",
-        "hero.lead": "A professional core for checks, reconciliations, reports and research. A dedicated pack for work in Italy.",
-        "hero.support": "Language defines how you work with Vera. The country pack defines which rules, institutions and formats enter the work.",
-        "model.index": "How Vera is organized",
-        "model.title": "Vera works in five languages. Add Italian rules when you need them.",
-        "model.copy": "Choose the workflow and language. For FatturaPA, compliance requirements, sources, and Italian procedures, use the Italy pack.",
-        "model.available": "Multilingual core + Italy pack",
-        "model.link": "View the Italy pack",
-        "model.step1.title": "Choose the work",
-        "model.step1.copy": "Start work for a new client, sampling, checks, reconciliations, reporting or research with the workflow suited to the task.",
-        "model.step2.title": "Use your language",
-        "model.step2.copy": "Italian, English, French, German and Spanish carry the same method and the same outputs.",
-        "model.step3.title": "Add the country when needed",
-        "model.step3.copy": "The Italy pack adds FatturaPA, national requirements, sources and procedures to the workflows that need them.",
-        "core.index": "Professional core · nine workflows",
-        "core.title": "The method stays. The jurisdiction can change.",
-        "core.copy": "These workflows work with documents, data, evidence and outputs without assuming a specific country.",
+        "hero.lead": "Prepare checks, reconciliations, client files, reports and professional research.",
+        "hero.support": "For UK client work, Vera can also organize incoming tax documents into a reviewable first file.",
+        "core.index": "What Vera can do",
+        "core.title": "Choose the work in front of you.",
+        "core.copy": "Each workflow starts from the available material and prepares a result you can review.",
         "work.index": "Twelve capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
@@ -1090,32 +975,20 @@
         "stream.research.title": "Frame and verify research",
         "stream.research.copy": "From the initial question to a controllable research base.",
         "module.newClient.title": "New Client",
-        "module.newClient": "From the incoming folder to an operational client file: documents, identity, engagement, privacy, AML and monitoring in one workflow.",
+        "module.newClient": "Organize an incoming UK tax folder, identify missing material, and prepare a firm memo and client request.",
         "module.archive.title": "Gmail and WhatsApp",
         "module.archive": "Ask Vera to find what a client wrote to you. It searches their Gmail messages or reads their chat in WhatsApp Desktop. This works only in Codex Desktop.",
         "module.sampling.title": "Journal Sampling",
         "module.sampling": "Extracts and normalizes the accounting journal and builds a reproducible sample.",
         "module.entries.title": "Check Entries",
         "module.entries": "Connects entries to available support and focuses the check on exceptions.",
-        "italy.index": "Country pack · Italy",
-        "italy.title": "When the work enters Italian rules.",
-        "italy.copy": "The core remains visible; this layer adds data, documents, institutions and procedures specific to work in Italy.",
-        "italy.language.title": "Five languages, one scope",
-        "italy.language.copy": "Use every specialization in Italian, English, French, German or Spanish. The working language changes; the applied jurisdiction does not.",
-        "module.entriesItaly.title": "Check Entries · FatturaPA",
-        "module.entriesItaly": "Adds FatturaPA XML ZIPs and exports to the entry-support check.",
-        "module.reportItaly.title": "Local-government report · Italy",
-        "module.reportItaly": "Applies the FPV, FCDE and PNRR profile to the general reporting engine.",
+        "jurisdiction.index": "Work available for the United Kingdom",
+        "jurisdiction.title": "Prepare the first review of a UK client file.",
+        "jurisdiction.copy": "Vera organizes the incoming tax folder, missing material, firm memo and client request.",
         "module.bank.title": "Journal-Bank Reconciliation",
         "module.bank": "Matches bank statements with journal or ledger rows in a verifiable reconciliation.",
         "module.reconciliation.title": "Open-item Reconciliation",
         "module.reconciliation": "Brings open items, ledgers, banks and supporting records into Excel and Word workpapers.",
-        "module.concordato.title": "Concordato Plan Review",
-        "module.concordato": "Checks plan figures against balances, ledgers and supporting schedules.",
-        "module.previdenza.title": "INPS Social Security Review",
-        "module.previdenza": "Organizes documents and INPS exports into a sourced social-security case file and working draft.",
-        "module.registro.title": "Business Register and SARI",
-        "module.registro": "Prepares the Business Register/DIRE filing from SARI and Chamber of Commerce sources while keeping RI/REA, INPS, INAIL, SUAP and RUI distinct.",
         "module.report.title": "Build Report",
         "module.report": "Turns Excel, CSV and PDF sources into a Word report with tables, sources and reading checks.",
         "module.prompt.title": "Optimize Prompt",
@@ -1143,14 +1016,14 @@
         "privacy.dataLink": "Watch the data-handling video",
         "videos.index": "Five stories from the Core",
         "videos.title": "Vera at work.",
-        "videos.copy": "One overview and four examples of the common method. Italy editions stay beside the workflows they extend.",
+        "videos.copy": "One overview and four examples of the work Vera prepares.",
         "videos.overview.kicker": "Overview",
         "videos.overview.title": "From the firm’s work to the next prepared step",
         "videos.open": "Opens on YouTube",
         "videos.openGuide": "Open guide",
         "videos.all.index": "Complete video catalog",
-        "videos.all.title": "Every guide, in the language you use.",
-        "videos.all.copy": "Core workflows, country editions and specialist paths brought together in one index. Its language changes with the page.",
+        "videos.all.title": "Every relevant guide.",
+        "videos.all.copy": "General workflows and the UK client-file preparation available from this page.",
         "videos.all.label": "All Vera video guides",
         "videos.all.open": "Open guide",
         "install.title": "Install Vera, then open it in Codex Desktop.",
@@ -1164,33 +1037,22 @@
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
-        "meta.description": "Vera réunit des workflows professionnels multilingues et un pack Italie pour les règles, organismes et formats nationaux.",
+        "meta.description": "Vera prépare contrôles, rapprochements, dossiers clients, rapports et recherches, avec la préparation documentaire des dossiers genevois.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
         "nav.capabilities": "Ce qu’elle fait",
-        "nav.workflow": "Fonctionnement",
+        "nav.jurisdiction": "Pour Genève",
         "nav.data": "Données",
         "nav.videos": "Vidéos",
         "language.label": "Langue",
         "hero.eyebrow": "Vera · Codex pour les experts-comptables",
         "hero.title": "Vera",
-        "hero.lead": "Un socle professionnel pour les contrôles, rapprochements, rapports et recherches. Un pack dédié au travail en Italie.",
-        "hero.support": "La langue définit la façon de travailler avec Vera. Le pack pays définit les règles, organismes et formats qui s’appliquent.",
-        "model.index": "Organisation de Vera",
-        "model.title": "Vera travaille en cinq langues. Ajoutez les règles italiennes lorsque vous en avez besoin.",
-        "model.copy": "Choisissez le workflow et la langue. Pour FatturaPA, les obligations, les sources et les procédures italiennes, utilisez le pack Italie.",
-        "model.available": "Socle multilingue + pack Italie",
-        "model.link": "Voir le pack Italie",
-        "model.step1.title": "Choisir le travail",
-        "model.step1.copy": "Démarrez le parcours nouveau client, l’échantillonnage, les contrôles, les rapprochements, le reporting ou la recherche avec le workflow adapté.",
-        "model.step2.title": "Utiliser votre langue",
-        "model.step2.copy": "L’italien, l’anglais, le français, l’allemand et l’espagnol suivent la même méthode et produisent les mêmes résultats.",
-        "model.step3.title": "Ajouter le pays quand nécessaire",
-        "model.step3.copy": "Le pack Italie ajoute FatturaPA, les obligations, sources et procédures italiennes aux workflows concernés.",
-        "core.index": "Socle professionnel · neuf workflows",
-        "core.title": "La méthode reste. La juridiction peut changer.",
-        "core.copy": "Ces workflows travaillent sur les documents, données, preuves et résultats sans supposer un pays particulier.",
+        "hero.lead": "Préparez contrôles, rapprochements, dossiers clients, rapports et recherches professionnelles.",
+        "hero.support": "Pour les dossiers genevois, Vera organise aussi les documents fiscaux reçus en un premier dossier révisable.",
+        "core.index": "Ce que Vera peut faire",
+        "core.title": "Choisissez le travail à accomplir.",
+        "core.copy": "Chaque workflow part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
         "work.index": "Douze fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
@@ -1206,32 +1068,20 @@
         "stream.research.title": "Cadrer et vérifier la recherche",
         "stream.research.copy": "De la question initiale à une base de recherche contrôlable.",
         "module.newClient.title": "Nouveau client",
-        "module.newClient": "Du dossier reçu au dossier opérationnel : documents, identité, mission, confidentialité, LCB-FT et suivi dans un seul parcours.",
+        "module.newClient": "Organise un dossier fiscal genevois, relève les pièces manquantes et prépare le mémo du cabinet et la demande au client.",
         "module.archive.title": "Gmail et WhatsApp",
         "module.archive": "Demandez à Vera de retrouver ce qu’un client vous a écrit. Elle recherche ses e-mails dans Gmail ou consulte sa conversation dans WhatsApp Desktop. Cette fonction marche uniquement dans Codex Desktop.",
         "module.sampling.title": "Échantillonnage du journal",
         "module.sampling": "Extrait et normalise le journal comptable et construit un échantillon reproductible.",
         "module.entries.title": "Contrôle des écritures",
         "module.entries": "Relie les écritures aux justificatifs disponibles et concentre le contrôle sur les exceptions.",
-        "italy.index": "Pack pays · Italie",
-        "italy.title": "Quand le travail entre dans les règles italiennes.",
-        "italy.copy": "Le socle reste visible ; ce niveau ajoute les données, documents, organismes et procédures propres au travail en Italie.",
-        "italy.language.title": "Cinq langues, un périmètre",
-        "italy.language.copy": "Utilisez chaque spécialisation en italien, anglais, français, allemand ou espagnol. La langue de travail change ; la juridiction appliquée reste la même.",
-        "module.entriesItaly.title": "Contrôle des écritures · FatturaPA",
-        "module.entriesItaly": "Ajoute les ZIP XML et exports FatturaPA au contrôle écriture-justificatif.",
-        "module.reportItaly.title": "Rapport collectivités · Italie",
-        "module.reportItaly": "Applique le profil FPV, FCDE et PNRR au moteur de reporting général.",
+        "jurisdiction.index": "Travail disponible pour Genève",
+        "jurisdiction.title": "Préparez la première revue d’un dossier fiscal genevois.",
+        "jurisdiction.copy": "Vera organise les documents reçus, les pièces manquantes, le mémo du cabinet et la demande au client.",
         "module.bank.title": "Rapprochement banque-comptabilité",
         "module.bank": "Rapproche les relevés bancaires avec le journal ou le grand livre dans un résultat vérifiable.",
         "module.reconciliation.title": "Rapprochement des postes ouverts",
         "module.reconciliation": "Réunit postes ouverts, grands livres, banques et justificatifs dans des feuilles de travail Excel et Word.",
-        "module.concordato.title": "Revue du plan de concordat",
-        "module.concordato": "Contrôle les chiffres du plan par rapport aux bilans, grands livres et tableaux justificatifs.",
-        "module.previdenza.title": "Revue de prévoyance INPS",
-        "module.previdenza": "Organise les documents et exports INPS dans un dossier de prévoyance sourcé et une base de travail.",
-        "module.registro.title": "Registre des entreprises et SARI",
-        "module.registro": "Prépare la formalité Registre/DIRE à partir des sources SARI et des chambres de commerce, en distinguant RI/REA, INPS, INAIL, SUAP et RUI.",
         "module.report.title": "Générer un rapport",
         "module.report": "Transforme les sources Excel, CSV et PDF en rapport Word avec tableaux, sources et contrôles de lecture.",
         "module.prompt.title": "Optimiser le prompt",
@@ -1259,14 +1109,14 @@
         "privacy.dataLink": "Voir la vidéo sur le traitement des données",
         "videos.index": "Cinq histoires du socle",
         "videos.title": "Vera à l’œuvre.",
-        "videos.copy": "Une vue d’ensemble et quatre exemples de la méthode commune. Les éditions Italie restent auprès des workflows qu’elles prolongent.",
+        "videos.copy": "Une vue d’ensemble et quatre exemples du travail préparé par Vera.",
         "videos.overview.kicker": "Vue d’ensemble",
         "videos.overview.title": "Du travail du cabinet à la prochaine étape préparée",
         "videos.open": "S’ouvre sur YouTube",
         "videos.openGuide": "Ouvrir le guide",
         "videos.all.index": "Catalogue vidéo complet",
-        "videos.all.title": "Tous les guides, dans votre langue.",
-        "videos.all.copy": "Socle, éditions pays et parcours spécialisés réunis dans un même index. Sa langue suit celle de la page.",
+        "videos.all.title": "Tous les guides pertinents.",
+        "videos.all.copy": "Les workflows généraux et la préparation des dossiers genevois disponibles depuis cette page.",
         "videos.all.label": "Tous les guides vidéo de Vera",
         "videos.all.open": "Ouvrir le guide",
         "install.title": "Installez Vera, puis ouvrez-la dans Codex Desktop.",
@@ -1280,33 +1130,22 @@
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
-        "meta.description": "Vera verbindet mehrsprachige professionelle Workflows mit einem Italien-Paket für nationale Regeln, Institutionen und Formate.",
+        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Mandantenakten, Berichte und Recherchen vor, einschließlich der Dokumentvorbereitung für Zürcher Steuerakten.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
         "nav.capabilities": "Was sie kann",
-        "nav.workflow": "So funktioniert es",
+        "nav.jurisdiction": "Für Zürich",
         "nav.data": "Daten",
         "nav.videos": "Videos",
         "language.label": "Sprache",
         "hero.eyebrow": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
-        "hero.lead": "Ein professioneller Kern für Prüfungen, Abstimmungen, Berichte und Recherche. Ein eigenes Paket für die Arbeit in Italien.",
-        "hero.support": "Die Sprache bestimmt, wie Sie mit Vera arbeiten. Das Länderpaket bestimmt, welche Regeln, Institutionen und Formate gelten.",
-        "model.index": "So ist Vera organisiert",
-        "model.title": "Vera arbeitet in fünf Sprachen. Fügen Sie italienische Regeln hinzu, wenn Sie sie brauchen.",
-        "model.copy": "Wählen Sie Workflow und Sprache. Für FatturaPA, Meldepflichten, Quellen und italienische Verfahren nutzen Sie das Italien-Paket.",
-        "model.available": "Mehrsprachiger Kern + Italien-Paket",
-        "model.link": "Italien-Paket ansehen",
-        "model.step1.title": "Arbeit auswählen",
-        "model.step1.copy": "Starten Sie den Ablauf für neue Mandanten, Stichprobe, Prüfung, Abstimmung, Reporting oder Recherche mit dem passenden Workflow.",
-        "model.step2.title": "Ihre Sprache verwenden",
-        "model.step2.copy": "Italienisch, Englisch, Französisch, Deutsch und Spanisch folgen derselben Methode und führen zu denselben Ergebnissen.",
-        "model.step3.title": "Land bei Bedarf ergänzen",
-        "model.step3.copy": "Das Italien-Paket ergänzt FatturaPA, nationale Anforderungen, Quellen und Verfahren in den betroffenen Workflows.",
-        "core.index": "Professioneller Kern · neun Workflows",
-        "core.title": "Die Methode bleibt. Die Jurisdiktion kann wechseln.",
-        "core.copy": "Diese Workflows arbeiten mit Dokumenten, Daten, Nachweisen und Ergebnissen, ohne ein bestimmtes Land vorauszusetzen.",
+        "hero.lead": "Bereiten Sie Prüfungen, Abstimmungen, Mandantenakten, Berichte und professionelle Recherchen vor.",
+        "hero.support": "Für Zürcher Steuerakten ordnet Vera auch eingegangene Steuerunterlagen zu einer ersten prüfbaren Akte.",
+        "core.index": "Was Vera kann",
+        "core.title": "Wählen Sie die anstehende Aufgabe.",
+        "core.copy": "Jeder Workflow beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
         "work.index": "Zwölf Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
@@ -1322,32 +1161,20 @@
         "stream.research.title": "Recherche eingrenzen und prüfen",
         "stream.research.copy": "Von der Ausgangsfrage zu einer kontrollierbaren Recherchegrundlage.",
         "module.newClient.title": "Neuer Mandant",
-        "module.newClient": "Vom eingegangenen Ordner zur operativen Mandantenakte: Dokumente, Identität, Auftrag, Datenschutz, AML und Monitoring in einem Ablauf.",
+        "module.newClient": "Ordnet eine Zürcher Steuerakte, erkennt fehlende Unterlagen und erstellt Kanzleivermerk und Mandantenanfrage.",
         "module.archive.title": "Gmail und WhatsApp",
         "module.archive": "Bitten Sie Vera herauszufinden, was ein Mandant Ihnen geschrieben hat. Vera durchsucht seine Gmail-Nachrichten oder liest seinen Chat in WhatsApp Desktop. Diese Funktion läuft nur in Codex Desktop.",
         "module.sampling.title": "Journalstichprobe",
         "module.sampling": "Extrahiert und normalisiert das Buchungsjournal und erstellt eine reproduzierbare Stichprobe.",
         "module.entries.title": "Buchungen prüfen",
         "module.entries": "Verknüpft Buchungen mit verfügbaren Belegen und konzentriert die Prüfung auf Ausnahmen.",
-        "italy.index": "Länderpaket · Italien",
-        "italy.title": "Wenn die Arbeit italienischen Regeln folgt.",
-        "italy.copy": "Der Kern bleibt sichtbar; diese Ebene ergänzt Daten, Dokumente, Institutionen und Verfahren für die Arbeit in Italien.",
-        "italy.language.title": "Fünf Sprachen, ein Rahmen",
-        "italy.language.copy": "Nutzen Sie jede Spezialisierung auf Italienisch, Englisch, Französisch, Deutsch oder Spanisch. Die Arbeitssprache wechselt; die angewandte Jurisdiktion bleibt gleich.",
-        "module.entriesItaly.title": "Buchungen prüfen · FatturaPA",
-        "module.entriesItaly": "Ergänzt FatturaPA-XML-ZIPs und Exporte in der Buchungs-Beleg-Prüfung.",
-        "module.reportItaly.title": "Kommunalbericht · Italien",
-        "module.reportItaly": "Wendet das Profil für FPV, FCDE und PNRR auf die allgemeine Reporting-Engine an.",
+        "jurisdiction.index": "Arbeit für Zürich",
+        "jurisdiction.title": "Bereiten Sie die erste Prüfung einer Zürcher Steuerakte vor.",
+        "jurisdiction.copy": "Vera ordnet eingegangene Unterlagen, fehlende Nachweise, Kanzleivermerk und Mandantenanfrage.",
         "module.bank.title": "Bank und Buchhaltung abstimmen",
         "module.bank": "Gleicht Kontoauszüge mit Journal- oder Hauptbuchzeilen in einer nachvollziehbaren Abstimmung ab.",
         "module.reconciliation.title": "Offene-Posten-Abstimmung",
         "module.reconciliation": "Führt offene Posten, Hauptbücher, Banken und Nachweise in Excel- und Word-Arbeitspapieren zusammen.",
-        "module.concordato.title": "Concordato-Plan prüfen",
-        "module.concordato": "Prüft Planzahlen gegen Bilanz, Hauptbücher und unterstützende Aufstellungen.",
-        "module.previdenza.title": "INPS-Sozialversicherung prüfen",
-        "module.previdenza": "Ordnet Dokumente und INPS-Exporte in einer quellengebundenen Sozialversicherungsakte mit Arbeitsentwurf.",
-        "module.registro.title": "Unternehmensregister und SARI",
-        "module.registro": "Bereitet das Register-/DIRE-Verfahren aus SARI- und Kammerquellen vor und hält RI/REA, INPS, INAIL, SUAP sowie RUI getrennt.",
         "module.report.title": "Bericht erstellen",
         "module.report": "Überführt Excel-, CSV- und PDF-Quellen in einen Word-Bericht mit Tabellen, Quellen und Lesekontrollen.",
         "module.prompt.title": "Prompt optimieren",
@@ -1375,14 +1202,14 @@
         "privacy.dataLink": "Video zur Datenverarbeitung ansehen",
         "videos.index": "Fünf Geschichten aus dem Kern",
         "videos.title": "Vera bei der Arbeit.",
-        "videos.copy": "Ein Überblick und vier Beispiele der gemeinsamen Methode. Italien-Editionen bleiben bei den Workflows, die sie erweitern.",
+        "videos.copy": "Ein Überblick und vier Beispiele der Arbeit, die Vera vorbereitet.",
         "videos.overview.kicker": "Überblick",
         "videos.overview.title": "Von der Kanzleiarbeit zum vorbereiteten nächsten Schritt",
         "videos.open": "Öffnet YouTube",
         "videos.openGuide": "Anleitung öffnen",
         "videos.all.index": "Vollständiger Videokatalog",
-        "videos.all.title": "Alle Anleitungen in Ihrer Sprache.",
-        "videos.all.copy": "Kern-Workflows, Ländereditionen und Fachwege in einem gemeinsamen Verzeichnis. Die Sprache folgt der Seite.",
+        "videos.all.title": "Alle relevanten Anleitungen.",
+        "videos.all.copy": "Allgemeine Workflows und die Vorbereitung von Zürcher Steuerakten auf dieser Seite.",
         "videos.all.label": "Alle Vera-Videoanleitungen",
         "videos.all.open": "Anleitung öffnen",
         "install.title": "Installieren Sie Vera und öffnen Sie sie anschließend in Codex Desktop.",
@@ -1396,33 +1223,22 @@
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
-        "meta.description": "Vera reúne flujos de trabajo profesionales multilingües y un paquete para Italia con sus normas, organismos y formatos nacionales.",
+        "meta.description": "Vera prepara controles, conciliaciones, expedientes de clientes, informes e investigación profesional.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
         "nav.capabilities": "Qué hace",
-        "nav.workflow": "Cómo funciona",
+        "nav.jurisdiction": "Trabajo local",
         "nav.data": "Datos",
         "nav.videos": "Vídeos",
         "language.label": "Idioma",
         "hero.eyebrow": "Vera · Codex para asesores fiscales y contables",
         "hero.title": "Vera",
-        "hero.lead": "Un núcleo profesional para controles, conciliaciones, informes e investigación. Un paquete específico para trabajar en Italia.",
-        "hero.support": "El idioma define cómo trabajas con Vera. El paquete de país define qué normas, organismos y formatos intervienen en el trabajo.",
-        "model.index": "Cómo se organiza Vera",
-        "model.title": "Vera trabaja en cinco idiomas. Añade las normas italianas cuando las necesites.",
-        "model.copy": "Elige el flujo de trabajo y el idioma. Para FatturaPA, obligaciones, fuentes y procedimientos italianos, usa el paquete de Italia.",
-        "model.available": "Núcleo multilingüe + paquete para Italia",
-        "model.link": "Ver el paquete para Italia",
-        "model.step1.title": "Elige el trabajo",
-        "model.step1.copy": "Empieza por el flujo más adecuado para un nuevo cliente, un muestreo, controles, conciliaciones, informes o investigación.",
-        "model.step2.title": "Usa tu idioma",
-        "model.step2.copy": "Italiano, inglés, francés, alemán y español siguen el mismo método y producen los mismos resultados.",
-        "model.step3.title": "Añade el país cuando sea necesario",
-        "model.step3.copy": "El paquete para Italia incorpora FatturaPA, requisitos, fuentes y procedimientos nacionales a los flujos que los necesitan.",
-        "core.index": "Núcleo profesional · nueve flujos de trabajo",
-        "core.title": "El método se mantiene. La jurisdicción puede cambiar.",
-        "core.copy": "Estos flujos trabajan con documentos, datos, evidencias y resultados sin dar por supuesto un país concreto.",
+        "hero.lead": "Prepara controles, conciliaciones, expedientes de clientes, informes e investigación profesional.",
+        "hero.support": "Elige el trabajo que necesitas y parte de los documentos y datos disponibles.",
+        "core.index": "Qué puede hacer Vera",
+        "core.title": "Elige el trabajo que tienes delante.",
+        "core.copy": "Cada flujo parte del material disponible y prepara un resultado que puedes revisar.",
         "work.index": "Doce funciones",
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
@@ -1438,32 +1254,20 @@
         "stream.research.title": "Delimitar y verificar la investigación",
         "stream.research.copy": "De la pregunta inicial a una base de investigación controlable.",
         "module.newClient.title": "Nuevo cliente",
-        "module.newClient": "De la carpeta recibida al expediente operativo del cliente: documentos, identidad, encargo, privacidad, prevención del blanqueo y seguimiento en un solo flujo.",
+        "module.newClient": "Organiza la carpeta recibida, identifica lo que falta y prepara un primer expediente de trabajo.",
         "module.archive.title": "Gmail y WhatsApp",
         "module.archive": "Pide a Vera que encuentre lo que te escribió un cliente. Busca sus correos en Gmail o lee su chat en WhatsApp Desktop. Esta función solo funciona en Codex Desktop.",
         "module.sampling.title": "Muestreo del diario",
         "module.sampling": "Extrae y normaliza el diario contable y construye una muestra reproducible.",
         "module.entries.title": "Comprobar asientos",
         "module.entries": "Relaciona los asientos con los justificantes disponibles y centra el control en las excepciones.",
-        "italy.index": "Paquete de país · Italia",
-        "italy.title": "Cuando el trabajo entra en las normas italianas.",
-        "italy.copy": "El núcleo sigue visible; esta capa añade datos, documentos, organismos y procedimientos propios del trabajo en Italia.",
-        "italy.language.title": "Cinco idiomas, un ámbito",
-        "italy.language.copy": "Utiliza cada especialización en italiano, inglés, francés, alemán o español. Cambia el idioma de trabajo, no la jurisdicción aplicable.",
-        "module.entriesItaly.title": "Comprobar asientos · FatturaPA",
-        "module.entriesItaly": "Añade los ZIP XML y las exportaciones de FatturaPA al control entre asientos y justificantes.",
-        "module.reportItaly.title": "Informe para entidades locales · Italia",
-        "module.reportItaly": "Aplica el perfil FPV, FCDE y PNRR al motor general de informes.",
+        "jurisdiction.index": "Trabajo específico",
+        "jurisdiction.title": "Capacidades adaptadas a una jurisdicción concreta.",
+        "jurisdiction.copy": "Esta sección aparece cuando hay un flujo específico disponible para el mercado de esta página.",
         "module.bank.title": "Conciliación entre diario y banco",
         "module.bank": "Concilia extractos bancarios con líneas del diario o del mayor en un resultado verificable.",
         "module.reconciliation.title": "Conciliación de partidas abiertas",
         "module.reconciliation": "Reúne partidas abiertas, mayores, bancos y justificantes en papeles de trabajo de Excel y Word.",
-        "module.concordato.title": "Revisión del plan de concordato",
-        "module.concordato": "Comprueba las cifras del plan frente a balances, mayores y cuadros justificativos.",
-        "module.previdenza.title": "Revisión de previsión social INPS",
-        "module.previdenza": "Organiza documentos y exportaciones del INPS en un expediente de previsión social con fuentes y un borrador de trabajo.",
-        "module.registro.title": "Registro Mercantil y SARI",
-        "module.registro": "Prepara el trámite del Registro/DIRE a partir de fuentes SARI y de las cámaras de comercio, manteniendo separados RI/REA, INPS, INAIL, SUAP y RUI.",
         "module.report.title": "Crear informe",
         "module.report": "Convierte fuentes de Excel, CSV y PDF en un informe de Word con tablas, fuentes y controles de lectura.",
         "module.prompt.title": "Optimizar prompt",
@@ -1491,7 +1295,7 @@
         "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
         "videos.index": "Cinco historias del núcleo",
         "videos.title": "Vera en acción.",
-        "videos.copy": "Una visión general y cuatro ejemplos del método común. Las ediciones de Italia permanecen junto a los flujos que amplían.",
+        "videos.copy": "Una visión general y cuatro ejemplos del trabajo que prepara Vera.",
         "videos.overview.kicker": "Visión general",
         "videos.overview.title": "Del trabajo del despacho al siguiente paso preparado",
         "videos.open": "Se abre en YouTube",
@@ -1526,6 +1330,14 @@
     const openGraphDescription = document.querySelector('meta[property="og:description"]');
     const openGraphLocale = document.getElementById("og-locale");
     const openGraphLocales = { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES" };
+    const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", de: "CH-ZH", es: null };
+    const newClientPages = {
+      it: "../new-client/index.html#journey",
+      en: "../new-client/uk.html",
+      fr: "../new-client/geneva.html",
+      de: "../new-client/zurich.html",
+      es: null
+    };
     const curatedVideoModules = ["new-client", "journal-bank-reconciliation", "report-builder", "prompt-optimizer"];
     const installVideos = {
       it: { id: "yAnkIabnQ1M", duration: "1:16" },
@@ -1584,6 +1396,8 @@
       document.getElementById("vera-install-video-link").href = `https://youtu.be/${installVideo.id}`;
       document.getElementById("vera-install-video-thumbnail").src = thumbnailUrl(installVideo.id);
       document.getElementById("vera-install-video-duration").textContent = installVideo.duration;
+      const videoLibrary = document.querySelector('[data-video-library="vera"]');
+      videoLibrary.dataset.videoJurisdiction = jurisdictionsByPage[lang] || "";
       window.MparanzaVideos.mount({
         product: "vera",
         lang,
@@ -1621,9 +1435,30 @@
         button.classList.toggle("is-active", isActive);
         button.setAttribute("aria-pressed", String(isActive));
       });
+      const jurisdiction = jurisdictionsByPage[lang];
+      document.querySelector("[data-jurisdiction-section]").hidden = !jurisdiction;
+      document.querySelector("[data-jurisdiction-nav]").hidden = !jurisdiction;
+      document.querySelectorAll("[data-jurisdiction-item]").forEach((item) => {
+        item.hidden = item.dataset.jurisdictionItem !== lang;
+      });
+      const newClientLink = document.getElementById("new-client");
+      const newClientPage = newClientPages[lang];
+      newClientLink.hidden = !newClientPage;
+      if (newClientPage) {
+        newClientLink.dataset.baseHref = newClientPage;
+        newClientLink.dataset.nativeLanguage = lang;
+      } else {
+        newClientLink.removeAttribute("href");
+        delete newClientLink.dataset.baseHref;
+        delete newClientLink.dataset.nativeLanguage;
+      }
       document.querySelectorAll("[data-module-link]").forEach((link) => {
+        if (link.hidden) return;
         if (!link.dataset.baseHref) link.dataset.baseHref = link.getAttribute("href");
-        link.setAttribute("href", withLanguage(link.dataset.baseHref, lang));
+        const href = link.dataset.nativeLanguage
+          ? link.dataset.baseHref
+          : withLanguage(link.dataset.baseHref, lang);
+        link.setAttribute("href", href);
       });
       document.querySelector("[data-home-link]").setAttribute("href", `/?lang=${lang}`);
       document.querySelectorAll("[data-data-handling-link]").forEach((link) => {

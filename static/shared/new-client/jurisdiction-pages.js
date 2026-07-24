@@ -1,7 +1,6 @@
 (() => {
   "use strict";
 
-  const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"];
   const VERA_PAGE_URL = "../vera/index.html";
   const OG_LOCALES = {
     it: "it_IT",
@@ -1299,23 +1298,6 @@
         })[character],
     );
 
-  function languageUrl(language) {
-    const url = new URL(window.location.href);
-    url.search = "";
-    url.hash = "";
-    url.searchParams.set("lang", language);
-    return `${url.pathname}${url.search}`;
-  }
-
-  function renderLanguageSwitch(activeLanguage) {
-    return SUPPORTED_LANGUAGES.map((language) => {
-      const current = language === activeLanguage;
-      return `<a href="${escapeHtml(languageUrl(language))}" lang="${language}" hreflang="${language}"${
-        current ? ' aria-current="page"' : ""
-      }>${language.toUpperCase()}</a>`;
-    }).join("");
-  }
-
   function renderCards(cards) {
     return cards
       .map(
@@ -1368,14 +1350,6 @@
 
   function setMetadata(page, pageCopy, language) {
     const canonicalUrl = `https://mparanza.com/static/shared/new-client/${page.slug}`;
-    const coreVideoIds = {
-      it: "UwLsy2FuP8o",
-      en: "nV7uBOlvFQE",
-      fr: "4tzHoUGKfj0",
-      de: "ZHyjGPDxcUc",
-      es: "xaWouXRwO8c"
-    };
-    const corePosterUrl = `https://i.ytimg.com/vi/${coreVideoIds[language]}/maxresdefault.jpg`;
     document.title = pageCopy.metaTitle;
     document.documentElement.lang = language;
     document.body.dataset.presentationLanguage = language;
@@ -1393,10 +1367,7 @@
       .setAttribute("content", pageCopy.ogDescription);
     document
       .querySelector('meta[property="og:url"]')
-      .setAttribute("content", `${canonicalUrl}?lang=${language}`);
-    document
-      .querySelector('meta[property="og:image"]')
-      .setAttribute("content", corePosterUrl);
+      .setAttribute("content", canonicalUrl);
   }
 
   function renderPage(page, language) {
@@ -1420,9 +1391,6 @@
         )}</a>
         <a href="#download">${escapeHtml(ui.nav.download)}</a>
       </nav>
-      <nav class="language-switch" aria-label="${escapeHtml(
-        ui.languageAria,
-      )}">${renderLanguageSwitch(language)}</nav>
     </div>`;
 
     main.innerHTML = `
@@ -1430,9 +1398,6 @@
         ui.breadcrumbAria,
       )}">
         <a href="../vera/index.html?lang=${language}">Vera</a><span aria-hidden="true">/</span>
-        <a href="index.html?lang=${language}">${escapeHtml(
-          ui.breadcrumbHub,
-        )}</a><span aria-hidden="true">/</span>
         <strong>${escapeHtml(copy.name)}</strong>
       </nav>
 
@@ -1470,10 +1435,6 @@
         <div class="jurisdiction-meta__field">
           <strong>${escapeHtml(ui.jurisdictionLabel)}</strong>
           <span>${escapeHtml(copy.jurisdiction)}</span>
-        </div>
-        <div class="jurisdiction-meta__field">
-          <strong>${escapeHtml(ui.languageLabel)}</strong>
-          <span>${escapeHtml(ui.languageName)}</span>
         </div>
       </section>
 
@@ -1513,19 +1474,6 @@
         ${renderOutputTable(ui.outputs)}
       </section>
 
-      <section class="section-block" aria-labelledby="next-title">
-        <div class="connected-panel">
-          <div><p class="eyebrow">${escapeHtml(
-            ui.next.eyebrow,
-          )}</p><h2 id="next-title">${escapeHtml(
-            ui.next.title,
-          )}</h2><p>${escapeHtml(ui.next.copy)}</p></div>
-          <a class="button" href="index.html?lang=${language}#core-model">${escapeHtml(
-            ui.next.button,
-          )}</a>
-        </div>
-      </section>
-
       <section class="section-block" id="download">
         <div class="section-head">
           <div><p class="eyebrow">${escapeHtml(
@@ -1544,12 +1492,7 @@
   const page = jurisdictions[document.body.dataset.jurisdiction];
   if (!page) return;
 
-  const requestedLanguage = new URLSearchParams(window.location.search).get(
-    "lang",
-  );
-  const language = SUPPORTED_LANGUAGES.includes(requestedLanguage)
-    ? requestedLanguage
-    : page.defaultLanguage;
+  const language = page.defaultLanguage;
 
   setMetadata(page, page.copy[language], language);
   renderPage(page, language);

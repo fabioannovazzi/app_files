@@ -448,9 +448,9 @@
     </div></details>
 
     <section id="proof"><div class="journey-proof"><div><p class="eyebrow" data-journey="proof.eyebrow">Vera al lavoro</p><h2 data-journey="proof.title">Guarda le tabelle diventare un report Word.</h2><p data-journey="proof.copy">La guida segue fonti, struttura e bozza fino a un documento che vale la pena aprire.</p></div><a class="journey-video" href="https://youtu.be/-2gcDE8iz4A" target="_blank" rel="noopener noreferrer" data-proof-link><span class="journey-video__thumb"><img src="https://i.ytimg.com/vi/-2gcDE8iz4A/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" data-proof-thumb><span class="journey-video__play" aria-hidden="true">▶</span></span><span class="journey-video__body"><span data-journey="proof.kicker">Guida breve</span><strong data-journey="proof.videoTitle">Dalle tabelle sorgente a un report Word rivedibile</strong></span></a></div></section>
-    <section id="related"><div class="journey-related"><p class="eyebrow" data-journey="related.eyebrow">Un'uscita per più lavori</p><p data-journey="related.copy">Report Builder può raccogliere il risultato di diversi percorsi Vera in un documento professionale.</p><div class="journey-related__links"><a href="../riconciliazione-partite/index.html?lang=it" data-related-link="reconciliation" data-journey="related.reconciliation">Dalla riconciliazione →</a><a href="../concordato-plan-review/index.html?lang=it" data-related-link="concordato" data-journey="related.concordato">Dalla revisione del piano · Italia →</a><a href="../deep-research-validator/index.html?lang=it" data-related-link="research" data-journey="related.research">Dalla ricerca validata →</a></div></div></section>
+    <section id="related"><div class="journey-related"><p class="eyebrow" data-journey="related.eyebrow">Un'uscita per più lavori</p><p data-journey="related.copy">Report Builder può raccogliere il risultato di diversi percorsi Vera in un documento professionale.</p><div class="journey-related__links"><a href="../riconciliazione-partite/index.html?lang=it" data-related-link="reconciliation" data-journey="related.reconciliation">Dalla riconciliazione →</a><a href="../concordato-plan-review/index.html" data-related-link="concordato" data-journey="related.concordato" data-jurisdiction-only="it">Dalla revisione del piano · Italia →</a><a href="../deep-research-validator/index.html?lang=it" data-related-link="research" data-journey="related.research">Dalla ricerca validata →</a></div></div></section>
 
-    <section id="italy-preset">
+    <section id="italy-preset" data-jurisdiction-only="it">
       <div class="section-head">
         <div><p class="eyebrow" data-i18n="preset.kicker">Preset Italia</p><h2 data-i18n="preset.title">Report enti locali con FPV, FCDE e PNRR.</h2></div>
         <p data-i18n="preset.copy">Il motore resta generale. Questo profilo aggiunge la struttura e il lessico del reporting per enti locali italiani.</p>
@@ -680,6 +680,9 @@
       });
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.classList.toggle("is-active", button.dataset.lang === safeLang);
+      });
+      document.querySelectorAll("[data-jurisdiction-only]").forEach((node) => {
+        node.hidden = node.dataset.jurisdictionOnly !== safeLang;
       });
       const home = document.querySelector("[data-home-link]");
       if (home) {

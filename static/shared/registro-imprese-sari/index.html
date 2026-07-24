@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta id="meta-description" name="description" content="Nel perimetro camerale italiano, Vera trasforma fatti, Camera competente e fonti SARI/CCIAA in un piano Registro Imprese/DIRE con passaggi, campi, allegati e citazioni.">
   <link rel="canonical" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html">
-  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=it">
-  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=en">
-  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=fr">
-  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=de">
-  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html?lang=es">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html">
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/registro-imprese-sari/index.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
@@ -241,13 +237,6 @@
           <a href="#prompt" data-i18n="nav.prompt">Prompt</a>
           <a href="#install" data-i18n="nav.install">Apri Vera</a>
         </nav>
-        <div class="lang-switch" aria-label="Lingua" data-accessibility-label="language">
-          <button type="button" data-lang="en" aria-pressed="false">En</button>
-          <button type="button" data-lang="it" aria-pressed="true">It</button>
-          <button type="button" data-lang="fr" aria-pressed="false">Fr</button>
-          <button type="button" data-lang="de" aria-pressed="false">De</button>
-          <button type="button" data-lang="es" aria-pressed="false">Es</button>
-        </div>
       </div>
     </div>
   </header>
@@ -494,8 +483,7 @@
     };
 
     function getLang() {
-      const requested = new URLSearchParams(window.location.search).get("lang");
-      return translations[requested] ? requested : "it";
+      return "it";
     }
 
     const accessibilityLabels = {
@@ -506,8 +494,8 @@
       es: { sections: "Secciones de la página", language: "Idioma", breadcrumb: "Ruta de la página" }
     };
 
-    function applyLanguage(lang) {
-      const safeLang = translations[lang] ? lang : "it";
+    function applyLanguage() {
+      const safeLang = "it";
       const data = translations[safeLang];
       document.documentElement.lang = safeLang;
       document.title = data.meta.title;
