@@ -41,6 +41,26 @@ PARSER = _load_module(
 )
 
 
+def _reviewed_row_sha256(cells: dict[int, str]) -> str:
+    return PARSER.canonical_general_journal_row_sha256(cells)
+
+
+def _bind_amountless_exclusions(
+    rows: dict[int, dict[int, str]],
+    contract: Any,
+) -> Any:
+    return replace(
+        contract,
+        reviewed_amountless_exclusions=tuple(
+            replace(
+                exclusion,
+                canonical_row_sha256=_reviewed_row_sha256(rows[exclusion.row_number]),
+            )
+            for exclusion in contract.reviewed_amountless_exclusions
+        ),
+    )
+
+
 def _column_name(column: int) -> str:
     result = ""
     value = column
@@ -181,7 +201,7 @@ def _rows() -> dict[int, dict[int, str]]:
 
 def _contract() -> Any:
     return PARSER.GeneralJournalLayoutContract(
-        contract_version="clara.commercial_general_journal_layout.v4",
+        contract_version="clara.commercial_general_journal_layout.v5",
         review_status="reviewed",
         sheet_name="Reviewed journal",
         date_header_label="Data registrazione",
@@ -251,7 +271,6 @@ def _contract() -> Any:
         physical_embedded_amount_patterns=(),
         reviewed_amount_pairs=(),
         reviewed_amountless_exclusions=(),
-        reviewed_zero_amount_line_ids=(),
         physical_amount_format="canonical_dot",
         amount_sign_policy="nonnegative",
         control_pattern=(
@@ -341,6 +360,7 @@ def _reviewed_amountless_exclusion_fixture() -> tuple[
         line_id=7,
         nonempty_columns=(2, 5),
         residual_columns=(),
+        canonical_row_sha256=_reviewed_row_sha256(rows[13]),
     )
     contract = replace(
         _contract(),
@@ -438,64 +458,201 @@ def test_parser_sums_many_high_digit_movements_independent_of_ambient_precision(
     assert len(result.movements) == 64
 
 
-def test_parser_accepts_exactly_reviewed_physical_zero_amount_line(
+@pytest.mark.parametrize(
+    "amount_column",
+    [
+        pytest.param(9, id="debit"),
+        pytest.param(13, id="credit"),
+    ],
+)
+def test_parser_rejects_zero_physical_movement_without_side_provenance(
     tmp_path: Path,
+    amount_column: int,
 ) -> None:
     rows = _rows()
     rows[13] = {
         2: "7",
         5: "70 / 1 / 1",
+        amount_column: "0",
     }
     rows[14] = {1: "Totale generale 210,25 210,25"}
-    contract = replace(
-        _contract(),
-        reviewed_zero_amount_line_ids=(7,),
-    )
-
-    result = _parse(tmp_path, rows=rows, contract=contract)
-
-    assert result.movements[-1].debit == Decimal(0)
-    assert result.movements[-1].credit == Decimal(0)
-    assert result.movements[-1].source_form == "physical_row"
-    assert result.physical_movement_count == 5
-    assert result.logical_movement_count == 2
-
-
-def test_parser_rejects_missing_reviewed_zero_amount_line(
-    tmp_path: Path,
-) -> None:
-    contract = replace(
-        _contract(),
-        reviewed_zero_amount_line_ids=(7,),
-    )
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
-        match="zero-amount line IDs were not encountered exactly once",
+        match="exactly one nonzero debit or credit amount",
     ):
-        _parse(tmp_path, contract=contract)
+        _parse(tmp_path, rows=rows)
 
 
-def test_parser_rejects_amount_on_reviewed_zero_amount_line(
+@pytest.mark.parametrize(
+    "logical_line",
+    [
+        pytest.param("3 30 / 1 / 1 0,00 D", id="debit"),
+        pytest.param("3 30 / 1 / 1 0,00 C", id="credit"),
+    ],
+)
+def test_parser_rejects_zero_logical_movement_without_side_provenance(
     tmp_path: Path,
+    logical_line: str,
 ) -> None:
     rows = _rows()
-    rows[13] = {
-        2: "7",
-        5: "70 / 1 / 1",
-        9: "0",
-    }
-    rows[14] = {1: "Totale generale 210,25 210,25"}
+    rows[7][1] = f"28/02/2023\n{logical_line}"
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="exactly one nonzero debit or credit amount",
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+@pytest.mark.parametrize(
+    "embedded_pattern",
+    [
+        pytest.param(
+            (
+                r"^description "
+                r"(?P<debit>(?:0|[1-9][0-9]{0,2}"
+                r"(?:\.[0-9]{3})*),[0-9]{2})"
+                r"(?P<credit>(?!))?$"
+            ),
+            id="debit",
+        ),
+        pytest.param(
+            (
+                r"^description "
+                r"(?P<debit>(?!))?"
+                r"(?P<credit>(?:0|[1-9][0-9]{0,2}"
+                r"(?:\.[0-9]{3})*),[0-9]{2})$"
+            ),
+            id="credit",
+        ),
+    ],
+)
+def test_parser_rejects_zero_embedded_movement_without_side_provenance(
+    tmp_path: Path,
+    embedded_pattern: str,
+) -> None:
+    rows = _rows()
+    del rows[5][10]
+    rows[5][8] = "description 0,00"
     contract = replace(
         _contract(),
-        reviewed_zero_amount_line_ids=(7,),
+        physical_embedded_amount_patterns=(
+            PARSER.PhysicalEmbeddedAmountPattern(
+                layout_ids=("layout-a",),
+                column=8,
+                pattern=embedded_pattern,
+                amount_format="italian_grouped_2",
+            ),
+        ),
     )
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
-        match="zero-amount line ID contains an amount",
+        match="exactly one nonzero debit or credit amount",
     ):
         _parse(tmp_path, rows=rows, contract=contract)
+
+
+def test_parser_rejects_wrong_format_amount_only_row(tmp_path: Path) -> None:
+    rows = _rows()
+    rows[13] = {9: "1,00"}
+    rows[14] = {1: "Totale generale 210,25 210,25"}
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="not an exact canonical-dot Decimal",
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+def test_parser_rejects_extra_wrong_format_amount_on_valid_movement(
+    tmp_path: Path,
+) -> None:
+    rows = _rows()
+    rows[5][11] = "1,00"
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="not an exact canonical-dot Decimal",
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+def test_parser_rejects_wrong_format_amount_beside_final_control(
+    tmp_path: Path,
+) -> None:
+    rows = _rows()
+    rows[13][9] = "1,00"
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="control row also contains a movement signal",
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+def test_parser_rejects_registered_amount_beside_multiline_final_control(
+    tmp_path: Path,
+) -> None:
+    rows = _rows()
+    rows[13] = {
+        2: "7",
+        5: "70 / 1 / 1\nTotale generale 210,25 210,25",
+        9: "1.00",
+    }
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="control row also contains a movement signal",
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+def test_parser_rejects_multiline_registered_amount_cell_before_partition(
+    tmp_path: Path,
+) -> None:
+    rows = _rows()
+    rows[13] = {9: "1.00\nnarrative continuation"}
+    rows[14] = {1: "Totale generale 210,25 210,25"}
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="not an exact canonical-dot Decimal",
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+def test_parser_rejects_control_row_with_additional_physical_movement(
+    tmp_path: Path,
+) -> None:
+    rows = _rows()
+    rows[13].update(
+        {
+            2: "7",
+            5: "70 / 1 / 1",
+            9: "1.00",
+        }
+    )
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="control row also contains a movement signal",
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+def test_parser_rejects_multiple_control_lines_in_one_physical_row(
+    tmp_path: Path,
+) -> None:
+    rows = _rows()
+    rows[13][2] = rows[13][1]
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="multiple reviewed control lines",
+    ):
+        _parse(tmp_path, rows=rows)
 
 
 def test_parser_rejects_unlisted_physical_blank_amount_line(
@@ -554,6 +711,7 @@ def test_parser_counts_interleaved_excluded_line_id_in_gap_reconciliation(
                 line_id=6,
                 nonempty_columns=(2, 5),
                 residual_columns=(),
+                canonical_row_sha256=_reviewed_row_sha256(rows[12]),
             ),
         ),
     )
@@ -566,6 +724,120 @@ def test_parser_counts_interleaved_excluded_line_id_in_gap_reconciliation(
     )
     assert result.line_id_gap_count == 0
     assert result.excluded_amountless_count == 1
+
+
+@pytest.mark.parametrize(
+    "cells",
+    (
+        {2: "7", 5: "Cafe\u0301\ncontinuation"},
+        {5: "Cafe\u0301\ncontinuation", 2: "7"},
+    ),
+)
+def test_canonical_reviewed_row_sha256_has_stable_domain_separated_vector(
+    cells: dict[int, str],
+) -> None:
+    digest = PARSER.canonical_general_journal_row_sha256(cells)
+
+    assert digest == "84dedfb7e989dff1f27355c1674fec3a4365cc2ffa0aff73628b7a38bee764b9"
+
+
+@pytest.mark.parametrize(
+    "replacement",
+    (
+        "résidual",
+        " residual",
+        "residual ",
+        "re\u0301sidual",
+        "residual\ncontinuation",
+    ),
+)
+def test_parser_rejects_amountless_exclusion_exact_text_mutation_before_use(
+    tmp_path: Path,
+    replacement: str,
+) -> None:
+    rows, contract = _reviewed_amountless_exclusion_fixture()
+    rows[13][7] = "residual"
+    exclusion = replace(
+        contract.reviewed_amountless_exclusions[0],
+        nonempty_columns=(2, 5, 7),
+        residual_columns=(7,),
+    )
+    contract = _bind_amountless_exclusions(
+        rows,
+        replace(contract, reviewed_amountless_exclusions=(exclusion,)),
+    )
+    rows[13][7] = replacement
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="canonical row fingerprint changed",
+    ):
+        _parse(tmp_path, rows=rows, contract=contract)
+
+
+def test_parser_rejects_amountless_exclusion_column_swap_before_use(
+    tmp_path: Path,
+) -> None:
+    rows, contract = _reviewed_amountless_exclusion_fixture()
+    rows[13][7] = "residual"
+    exclusion = replace(
+        contract.reviewed_amountless_exclusions[0],
+        nonempty_columns=(2, 5, 7),
+        residual_columns=(7,),
+    )
+    contract = _bind_amountless_exclusions(
+        rows,
+        replace(contract, reviewed_amountless_exclusions=(exclusion,)),
+    )
+    rows[13][5], rows[13][7] = rows[13][7], rows[13][5]
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="canonical row fingerprint changed",
+    ):
+        _parse(tmp_path, rows=rows, contract=contract)
+
+
+@pytest.mark.parametrize(
+    "replacement_row",
+    (
+        {2: "7"},
+        {2: "7", 5: "70 / 1 / 1", 7: "added"},
+        {2: "7", 6: "70 / 1 / 1"},
+    ),
+)
+def test_parser_rejects_amountless_exclusion_column_shape_mutation_before_use(
+    tmp_path: Path,
+    replacement_row: dict[int, str],
+) -> None:
+    rows, contract = _reviewed_amountless_exclusion_fixture()
+    rows[13] = replacement_row
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="nonempty columns changed",
+    ):
+        _parse(tmp_path, rows=rows, contract=contract)
+
+
+def test_parser_rejects_amountless_exclusion_contract_hash_tamper(
+    tmp_path: Path,
+) -> None:
+    rows, contract = _reviewed_amountless_exclusion_fixture()
+    exclusion = replace(
+        contract.reviewed_amountless_exclusions[0],
+        canonical_row_sha256="0" * 64,
+    )
+    contract = replace(
+        contract,
+        reviewed_amountless_exclusions=(exclusion,),
+    )
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="canonical row fingerprint changed",
+    ):
+        _parse(tmp_path, rows=rows, contract=contract)
 
 
 def test_parser_rejects_missing_reviewed_amountless_exclusion_row(
@@ -586,6 +858,7 @@ def test_parser_rejects_changed_reviewed_amountless_exclusion_line_id(
 ) -> None:
     rows, contract = _reviewed_amountless_exclusion_fixture()
     rows[13][2] = "8"
+    contract = _bind_amountless_exclusions(rows, contract)
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -610,6 +883,7 @@ def test_parser_rejects_ambiguous_reviewed_amountless_exclusion_line_id(
             ),
         ),
     )
+    contract = _bind_amountless_exclusions(rows, contract)
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -625,9 +899,7 @@ def test_parser_rejects_reviewed_amountless_exclusion_layout_change(
     exclusion = contract.reviewed_amountless_exclusions[0]
     contract = replace(
         contract,
-        reviewed_amountless_exclusions=(
-            replace(exclusion, layout_id="layout-a"),
-        ),
+        reviewed_amountless_exclusions=(replace(exclusion, layout_id="layout-a"),),
     )
 
     with pytest.raises(
@@ -676,6 +948,7 @@ def test_parser_rejects_standalone_amount_on_amountless_exclusion(
             ),
         ),
     )
+    contract = _bind_amountless_exclusions(rows, contract)
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -712,6 +985,7 @@ def test_parser_rejects_embedded_amount_on_amountless_exclusion(
             ),
         ),
     )
+    contract = _bind_amountless_exclusions(rows, contract)
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -736,6 +1010,7 @@ def test_parser_accepts_exact_residual_columns_on_amountless_exclusion(
             ),
         ),
     )
+    contract = _bind_amountless_exclusions(rows, contract)
 
     result = _parse(tmp_path, rows=rows, contract=contract)
 
@@ -759,6 +1034,7 @@ def test_parser_reconciles_multiple_exact_amountless_exclusions(
                 line_id=7,
                 nonempty_columns=(2, 5, 7),
                 residual_columns=(7,),
+                canonical_row_sha256=_reviewed_row_sha256(rows[13]),
             ),
             PARSER.ReviewedAmountlessExclusion(
                 layout_id="layout-b",
@@ -766,6 +1042,7 @@ def test_parser_reconciles_multiple_exact_amountless_exclusions(
                 line_id=8,
                 nonempty_columns=(2, 5, 7),
                 residual_columns=(7,),
+                canonical_row_sha256=_reviewed_row_sha256(rows[14]),
             ),
         ),
     )
@@ -793,6 +1070,7 @@ def test_parser_rejects_changed_residual_column_ownership(
             ),
         ),
     )
+    contract = _bind_amountless_exclusions(rows, contract)
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -817,6 +1095,7 @@ def test_parser_rejects_logical_amount_signal_in_residual_column(
             ),
         ),
     )
+    contract = _bind_amountless_exclusions(rows, contract)
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -832,9 +1111,7 @@ def test_contract_rejects_residual_column_outside_nonempty_shape(
     exclusion = contract.reviewed_amountless_exclusions[0]
     contract = replace(
         contract,
-        reviewed_amountless_exclusions=(
-            replace(exclusion, residual_columns=(7,)),
-        ),
+        reviewed_amountless_exclusions=(replace(exclusion, residual_columns=(7,)),),
     )
 
     with pytest.raises(
@@ -849,6 +1126,7 @@ def test_parser_rejects_multiline_text_on_amountless_exclusion(
 ) -> None:
     rows, contract = _reviewed_amountless_exclusion_fixture()
     rows[13][5] = "70 / 1 / 1\ncontinuation"
+    contract = _bind_amountless_exclusions(rows, contract)
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -898,22 +1176,6 @@ def test_contract_rejects_duplicate_amountless_exclusion_line_id(
         _parse(tmp_path, rows=rows, contract=contract)
 
 
-def test_contract_rejects_amountless_exclusion_zero_line_id_overlap(
-    tmp_path: Path,
-) -> None:
-    rows, contract = _reviewed_amountless_exclusion_fixture()
-    contract = replace(
-        contract,
-        reviewed_zero_amount_line_ids=(7,),
-    )
-
-    with pytest.raises(
-        PARSER.GeneralJournalParseError,
-        match="must not overlap reviewed zero-amount line IDs",
-    ):
-        _parse(tmp_path, rows=rows, contract=contract)
-
-
 def test_contract_rejects_amountless_exclusion_pair_row_overlap(
     tmp_path: Path,
 ) -> None:
@@ -927,6 +1189,7 @@ def test_contract_rejects_amountless_exclusion_pair_row_overlap(
                 line_id=9,
                 nonempty_columns=(2, 5),
                 residual_columns=(),
+                canonical_row_sha256=_reviewed_row_sha256(rows[13]),
             ),
         ),
     )
@@ -951,6 +1214,7 @@ def test_contract_rejects_amountless_exclusion_pair_line_id_overlap(
                 line_id=7,
                 nonempty_columns=(1,),
                 residual_columns=(),
+                canonical_row_sha256=_reviewed_row_sha256(rows[16]),
             ),
         ),
     )
@@ -975,6 +1239,7 @@ def test_contract_rejects_amountless_exclusion_pair_locator_row_overlap(
                 line_id=9,
                 nonempty_columns=(1,),
                 residual_columns=(),
+                canonical_row_sha256=_reviewed_row_sha256(rows[15]),
             ),
         ),
     )
@@ -982,26 +1247,6 @@ def test_contract_rejects_amountless_exclusion_pair_locator_row_overlap(
     with pytest.raises(
         PARSER.GeneralJournalParseError,
         match="must not overlap reviewed amount locator rows",
-    ):
-        _parse(tmp_path, rows=rows, contract=contract)
-
-
-def test_parser_rejects_unconsumed_reviewed_amountless_exclusion(
-    tmp_path: Path,
-) -> None:
-    rows, contract = _reviewed_amountless_exclusion_fixture()
-    del rows[14]
-    rows[13][5] = "70 / 1 / 1 70,00 1,00"
-    contract = replace(
-        contract,
-        control_pattern=(
-            r"^70 / 1 / 1 (?P<debit>70,00) (?P<credit>1,00)$"
-        ),
-    )
-
-    with pytest.raises(
-        PARSER.GeneralJournalParseError,
-        match="amountless exclusion rows were not consumed exactly once",
     ):
         _parse(tmp_path, rows=rows, contract=contract)
 
@@ -1248,8 +1493,7 @@ def test_parser_rejects_unconsumed_reviewed_amount_locator(
     tmp_path: Path,
 ) -> None:
     rows, contract = _reviewed_pair_contract_fixture()
-    del rows[16]
-    rows[14][1] = "Totale generale 235,25 235,25"
+    rows[14] = {1: "Narrative continuation\nwithout registered signals"}
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
@@ -1483,6 +1727,129 @@ def test_parser_rejects_unparsed_physical_movement_candidate(
         _parse(tmp_path, rows=rows)
 
 
+@pytest.mark.parametrize(
+    ("candidate_row", "expected_message"),
+    [
+        pytest.param({2: "7"}, "ambiguous or missing account", id="line-only"),
+        pytest.param(
+            {5: "70 / 1 / 1"},
+            "ambiguous or missing line ID",
+            id="account-only",
+        ),
+        pytest.param({9: "1.00"}, "ambiguous or missing line ID", id="debit-only"),
+        pytest.param({13: "1.00"}, "ambiguous or missing line ID", id="credit-only"),
+        pytest.param(
+            {2: "7", 5: "70 / 1 / 1"},
+            "ambiguous or missing amount",
+            id="line-account",
+        ),
+        pytest.param(
+            {2: "7", 9: "1.00"},
+            "ambiguous or missing account",
+            id="line-debit",
+        ),
+        pytest.param(
+            {5: "70 / 1 / 1", 9: "1.00"},
+            "ambiguous or missing line ID",
+            id="account-debit",
+        ),
+        pytest.param(
+            {2: "7", 13: "1.00"},
+            "ambiguous or missing account",
+            id="line-credit",
+        ),
+        pytest.param(
+            {5: "70 / 1 / 1", 13: "1.00"},
+            "ambiguous or missing line ID",
+            id="account-credit",
+        ),
+    ],
+)
+def test_parser_rejects_each_incomplete_standalone_physical_signal_combination(
+    tmp_path: Path,
+    candidate_row: dict[int, str],
+    expected_message: str,
+) -> None:
+    rows = _rows()
+    rows[13] = candidate_row
+    rows[14] = {1: "Totale generale 210,25 210,25"}
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match=expected_message,
+    ):
+        _parse(tmp_path, rows=rows)
+
+
+@pytest.mark.parametrize(
+    ("candidate_row", "expected_message"),
+    [
+        pytest.param(
+            {7: "embedded 1,00"},
+            "ambiguous or missing line ID",
+            id="embedded-only",
+        ),
+        pytest.param(
+            {2: "7", 7: "embedded 1,00"},
+            "ambiguous or missing account",
+            id="line-embedded",
+        ),
+        pytest.param(
+            {5: "70 / 1 / 1", 7: "embedded 1,00"},
+            "ambiguous or missing line ID",
+            id="account-embedded",
+        ),
+    ],
+)
+def test_parser_rejects_each_incomplete_embedded_physical_signal_combination(
+    tmp_path: Path,
+    candidate_row: dict[int, str],
+    expected_message: str,
+) -> None:
+    rows = _rows()
+    rows[13] = candidate_row
+    rows[14] = {1: "Totale generale 210,25 210,25"}
+    contract = replace(
+        _contract(),
+        physical_embedded_amount_patterns=(
+            PARSER.PhysicalEmbeddedAmountPattern(
+                layout_ids=("layout-b",),
+                column=7,
+                pattern=(
+                    r"^embedded "
+                    r"(?P<debit>(?:0|[1-9][0-9]{0,2}"
+                    r"(?:\.[0-9]{3})*),[0-9]{2})"
+                    r"(?P<credit>(?!))?$"
+                ),
+                amount_format="italian_grouped_2",
+            ),
+        ),
+    )
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match=expected_message,
+    ):
+        _parse(tmp_path, rows=rows, contract=contract)
+
+
+def test_parser_ignores_physical_row_without_any_registered_signal(
+    tmp_path: Path,
+) -> None:
+    rows = _rows()
+    rows[13] = {
+        7: "Narrative continuation without a registered signal.",
+        16: "Reviewer note.",
+    }
+    rows[14] = {1: "Totale generale 210,25 210,25"}
+
+    result = _parse(tmp_path, rows=rows)
+
+    assert len(result.movements) == 6
+    assert result.debit_total == Decimal("210.25")
+    assert result.credit_total == Decimal("210.25")
+
+
 def test_parser_rejects_unparsed_logical_movement_candidate(
     tmp_path: Path,
 ) -> None:
@@ -1699,6 +2066,17 @@ def test_contract_mapping_constructor_rejects_unexpected_field() -> None:
         PARSER.general_journal_layout_contract_from_mapping(value)
 
 
+def test_contract_mapping_constructor_rejects_removed_reviewed_zero_field() -> None:
+    value = asdict(_contract())
+    value["reviewed_zero_amount_line_ids"] = []
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="unexpected fields",
+    ):
+        PARSER.general_journal_layout_contract_from_mapping(value)
+
+
 def test_contract_mapping_constructor_rejects_boolean_column() -> None:
     value = json.loads(json.dumps(asdict(_contract())))
     value["page_layouts"][0]["date_header_column"] = True
@@ -1719,6 +2097,7 @@ def test_contract_mapping_constructor_rejects_unexpected_exclusion_field() -> No
             "line_id": 7,
             "nonempty_columns": [2, 5],
             "residual_columns": [],
+            "canonical_row_sha256": "0" * 64,
             "reason": "not part of the strict schema",
         }
     ]
@@ -1739,6 +2118,7 @@ def test_contract_mapping_constructor_rejects_boolean_exclusion_line_id() -> Non
             "line_id": True,
             "nonempty_columns": [2, 5],
             "residual_columns": [],
+            "canonical_row_sha256": "0" * 64,
         }
     ]
 
@@ -1757,12 +2137,55 @@ def test_contract_mapping_constructor_requires_residual_columns() -> None:
             "row_number": 13,
             "line_id": 7,
             "nonempty_columns": [2, 5],
+            "canonical_row_sha256": "0" * 64,
         }
     ]
 
     with pytest.raises(
         PARSER.GeneralJournalParseError,
         match="is missing fields",
+    ):
+        PARSER.general_journal_layout_contract_from_mapping(value)
+
+
+def test_contract_mapping_constructor_requires_exclusion_row_sha256() -> None:
+    value = json.loads(json.dumps(asdict(_contract())))
+    value["reviewed_amountless_exclusions"] = [
+        {
+            "layout_id": "layout-b",
+            "row_number": 13,
+            "line_id": 7,
+            "nonempty_columns": [2, 5],
+            "residual_columns": [],
+        }
+    ]
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="is missing fields",
+    ):
+        PARSER.general_journal_layout_contract_from_mapping(value)
+
+
+@pytest.mark.parametrize("invalid_sha256", ("A" * 64, "g" * 64))
+def test_contract_mapping_constructor_rejects_invalid_exclusion_row_sha256(
+    invalid_sha256: str,
+) -> None:
+    value = json.loads(json.dumps(asdict(_contract())))
+    value["reviewed_amountless_exclusions"] = [
+        {
+            "layout_id": "layout-b",
+            "row_number": 13,
+            "line_id": 7,
+            "nonempty_columns": [2, 5],
+            "residual_columns": [],
+            "canonical_row_sha256": invalid_sha256,
+        }
+    ]
+
+    with pytest.raises(
+        PARSER.GeneralJournalParseError,
+        match="canonical row SHA-256 must be lowercase hexadecimal",
     ):
         PARSER.general_journal_layout_contract_from_mapping(value)
 
@@ -1789,7 +2212,7 @@ def test_contract_loader_rejects_duplicate_json_field(tmp_path: Path) -> None:
     path = tmp_path / "layout-contract.json"
     payload = json.dumps(asdict(_contract()), sort_keys=True)
     duplicate = (
-        '{"contract_version":"clara.commercial_general_journal_layout.v4",'
+        '{"contract_version":"clara.commercial_general_journal_layout.v5",'
         + payload[1:]
     ).encode("utf-8")
     path.write_bytes(duplicate)

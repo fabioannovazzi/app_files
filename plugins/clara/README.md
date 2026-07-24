@@ -259,6 +259,34 @@ compatibility remain `not_assessed`, publication is `withheld`, and
 implication, composes a report, invokes the Reporting Engine, or uses an
 orchestrator.
 
+The sixth preparation milestone tested the boundary on one explicitly
+authorized commercial general journal. The workbook was a paginated
+presentation export rather than a native row-wise movement export: posting
+amounts and debit/credit roles were not all uniquely bound to one source row.
+Exact controls could reveal disagreement but could not safely choose an owner
+or posting side. A private reviewed qualification classified the source as
+`unsupported_source_layout`; the official producer recorded
+`semantic_review_blocked` and stopped before invoking the parser or reading
+source rows. It emitted no prepared facts, reconciliation success artifact,
+plot, or report.
+
+For general-ledger preparation, request a native structured export with one
+posting per row, a stable posting ID, posting date, source account, and explicit
+debit and credit fields (or a source-owned side plus amount). Every canonical
+fact must have one exact source locator and every monetary field must be
+consumed once as a posting, declared control, or typed nonmovement. For the next
+pilot, postings recovered from narrative text, detached amount batches,
+balancing residuals, or equation-selected roles are ineligible. Source controls
+validate a complete population; they do not create or classify it. This is the
+required source policy for the next pilot, not a capability claim about the
+current parser. The private source-specific evidence and unresolved exception
+or equation machinery are not packaged as a reusable adapter. The bundled v5
+parser is a bounded experimental scaffold whose synthetic tests still cover
+explicitly reviewed multiline, embedded, and cross-row locator paths; it was
+not invoked for the negative pilot and is not a general source-eligibility
+gate. Successful real-data preparation remains unproven, and orchestrator work
+remains deferred.
+
 ## Privacy Surface Governance
 
 Every new or materially changed Clara workflow or hosted integration must use

@@ -1,34 +1,70 @@
 # M6 real-data pilot checklist
 
-Status: intake-declaration, semantic-review, and source-independent
-output/error-retention gates implemented; eligible data and execution pending
+Status: source-qualification pilot completed with a fail-closed negative
+result; successful real-data preparation remains unmet
 
 This milestone tests whether Clara's preparation boundary survives genuine
 commercial accounting messiness. It does not authorize an orchestrator,
 automatic account mapping, interpretation, report readiness, publication, or
 reuse of a file merely because it is present in the workspace.
 
-## Observed eligibility position
+## Observed pilot result
 
-- The repository contains no commercial trial balance with a matching
-  anonymization or reuse-authorization record.
-- Several ignored, commercial-looking ledger workbooks exist in the local
-  workspace. Their filenames and prior presence are not consent evidence, and
-  their contents have not been inspected for M6.
-- The only tracked Clara monthly trial balance is explicitly synthetic and
-  cannot satisfy this milestone.
-- A bounded public-source search found no dataset that simultaneously proves
-  real commercial origin, trial-balance or general-ledger granularity, stable
-  reproducible access, and owner-backed commercial reuse permission.
-- BookSQL is based on anonymized business accounting databases, but its
-  CC-BY-NC-SA terms prohibit commercial use. It is not an eligible Clara
-  Marketplace fixture.
-- BPI Challenge 2019 is a licensed, real, anonymized commercial process log,
-  but it is purchase-to-pay event data rather than a complete general ledger or
-  trial balance.
-- The frozen intake contract accepts `commercial_trial_balance` only. A general-
-  ledger pilot would require a separately reviewed contract-version and scope
-  change; it must not be relabeled as a trial balance.
+- One exact commercial general-journal source was inspected only after explicit
+  authorization and binding to the private M6 intake.
+- The source was a paginated presentation export rather than an eligible
+  row-wise movement export. Some monetary components were embedded in text or
+  detached from their posting rows, and source geometry did not uniquely bind
+  every amount and debit/credit role to one posting.
+- Exact controls could detect disagreement but could not select a posting owner
+  or debit/credit role. Balancing is therefore retained as validation, never as
+  a classifier.
+- A private reviewed qualification classified the source as
+  `unsupported_source_layout`. The official producer recorded
+  `semantic_review_blocked` and stopped before invoking the parser or reading
+  source rows. It emitted no prepared movement table, account-month artifact,
+  reconciliation success artifact, plot, or report.
+- The unresolved source-specific reconstruction evidence and exception or
+  equation machinery remain outside the repository and Marketplace package.
+  The bundled fail-closed parser seam does not qualify this source or turn that
+  research into a reusable adapter.
+- A future attempt requires a native structured journal-detail export or a
+  separately justified adapter backed by representative cases and independent
+  line-level truth.
+
+This is a valid boundary result, not a successful real-data preparation. It
+shows that Clara abstains instead of manufacturing a plausible ledger when
+ownership is not source-provable.
+
+## Required source shape for the next pilot
+
+The next real-data preparation attempt must start from a source-owned movement
+export with:
+
+- one posting per source row and an explicit stable row or posting identifier;
+- an explicit posting date and source account on every posting row;
+- explicit debit and credit fields, or one amount plus an explicit
+  source-owned posting-side convention;
+- one exact source locator for every canonical fact;
+- every monetary field consumed exactly once as a posting, a declared control,
+  or a structurally typed nonmovement;
+- no posting component embedded in narrative text, split across logical lines,
+  detached into a parallel batch, or assigned by a balancing equation; and
+- exact reconciliation to reviewed source controls when those controls are
+  claimed.
+
+Controls validate a complete candidate population. They may not fill missing
+amounts, choose between multiple owners, infer a debit/credit side, or turn a
+residual into a posting.
+
+This is the reviewed eligibility policy for the next pilot, not a claim that
+the current workbook parser proves arbitrary source eligibility. The bundled
+v5 parser remains a bounded experimental pilot scaffold. Its synthetic tests
+include explicitly reviewed multiline, embedded, and cross-row locator paths;
+therefore it is not itself the row-wise eligibility gate and was not invoked
+for this negative pilot. A reusable automated qualification contract remains
+deferred until representative export families establish stable, mechanically
+testable predicates.
 
 ## Deterministic-versus-judgement boundary
 
@@ -169,39 +205,54 @@ presence does not prove that a human review occurred.
 
 ## Pilot execution acceptance
 
-- [ ] Obtain explicit authorization for one exact commercial trial-balance
-  source or receive a separately anonymized source with documented reuse
-  authority.
-- [ ] Inspect only the authorized source and record its actual export shape.
-- [ ] Confirm whether the source is a monthly movement trial balance. Do not
-  reinterpret a closing or year-to-date export deterministically.
-- [ ] Freeze case-owned reviewed contracts for scope, entity, calendar,
-  currency, unit, sign, account mapping, controls, and tolerances.
-- [ ] Freeze a semantic issue register with reviewer, version, evidence,
+- [x] Obtain explicit authorization for one exact commercial source and bind
+  that source to the private intake.
+- [x] Inspect only the authorized source and record its actual export shape.
+- [x] Preserve its declared general-journal identity rather than relabeling it
+  as a trial balance.
+- [x] Apply a private reviewed source-layout qualification before treating the
+  source as mechanically preparable.
+- [x] Reject the source when amount ownership and posting-side ownership are
+  not unique and source-bound.
+- [x] Freeze case-owned reviewed contracts for scope, entity, calendar,
+  currency, unit, sign, account identity, controls, and tolerances without
+  inferring account meaning.
+- [x] Freeze a semantic issue register with reviewer, version, evidence,
   status, and blocking flag.
-- [ ] Run a separate real-data producer; do not relax or relabel M2's synthetic
+- [x] Run a separate real-data producer; do not relax or relabel M2's synthetic
   producer.
-- [ ] Reuse the M3 mechanical kernel and audit-envelope boundary. Revise the
-  kernel explicitly if the private case has no genuine remote-source receipt;
-  do not fabricate one.
-- [ ] Emit separate mechanical and semantic error artifacts.
-- [ ] Keep all raw and row-level inputs and outputs in an ignored local run
+- [x] Reuse the M3 mechanical receipt and output-boundary kernel. Do not promote
+  a failure-only run to a preparation audit envelope or fabricate a success
+  artifact.
+- [x] Preserve the semantic qualification evidence separately from the fixed
+  producer-owned mechanical error register.
+- [x] Keep all raw and row-level inputs and outputs in an ignored local run
   root.
-- [ ] Retain only a separately reviewed, sanitized error-class summary and
+- [x] Retain only a separately reviewed, sanitized error-class summary and
   necessary cryptographic receipts in a case-approved confidential evidence
   store. Keep them outside the plugin and source repository by default; any
   exception requires an explicit review of the exact metadata, access, and
   retention boundary.
-- [ ] Add one-error-at-a-time mutations for both mechanical failures and
+- [x] Add one-error-at-a-time mutations for both mechanical failures and
   reviewer-owned semantic blocking.
-- [ ] Obtain an independent evidence/code review.
-- [ ] Run retained M1–M5 regressions, privacy validation, release checks, and
+- [x] Obtain an independent evidence/code review.
+- [x] Run retained M1–M5 regressions, privacy validation, release checks, and
   Marketplace package verification.
 
 ## Definition of done
 
-M6 is complete only when an eligible exact source has passed intake, its
-semantics have been reviewed rather than inferred, the deterministic
-preparation has run, mechanical and semantic errors are separately recorded,
-the raw data has remained outside the repository and package, and independent
-review confirms the resulting evidence does not overstate what was proved.
+The M6 boundary test may close through either non-overlapping branch:
+
+1. an eligible exact source passes intake and source-layout qualification, its
+   semantics are reviewed rather than inferred, deterministic preparation and
+   reconciliation pass, and independent review confirms the evidence; or
+2. an authorized source fails a reviewed qualification, the semantic gate
+   stops preparation before the parser or source-row processing, no prepared
+   facts or downstream output are emitted, the fixed failure evidence is
+   deterministic and privately retained under review, and independent review
+   confirms that the result does not overstate what was proved.
+
+The second branch completes the boundary test but does not establish successful
+real-data preparation. M7 remains blocked until an eligible source completes
+the first branch, retained regressions pass, and the open product decisions are
+resolved or explicitly excluded.

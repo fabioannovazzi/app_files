@@ -132,12 +132,16 @@
     {
       "id": "m6-exact-local-source-boundary",
       "control": "M6 raw workbooks and row- or account-level prepared outputs remain in an owner-only private pilot root at a fixed opaque source locator; group/other permission bits and macOS extended ACLs are rejected at audit validation. They are not committed, packaged, or published. Ordinary model processing remains within the user-selected Codex account and this workflow adds no separate external recipient."
+    },
+    {
+      "id": "m6-unsupported-source-boundary",
+      "control": "When a reviewed real-data qualification cannot bind every posting amount and side uniquely, the semantic gate stops preparation without invoking the parser or reading source rows and emits no prepared facts or downstream artifacts. Source-specific row diagnostics, reconstruction research, and qualification evidence remain in the owner-only private pilot boundary; Clara packages only the generic next-pilot source policy and the generic product conclusion that unsupported layouts require a native row-wise export or a separately justified adapter. The current experimental parser is not represented as a generic source-eligibility classifier."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-24",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d84784fea7506b539b02d9764c88d7fc7735aa1645efa10e74ccbbdfd2205ed6"
+    "source_fingerprint": "307697c6e593b0c1671a50a56773a0cc081e02ffe641cb6c8892e03d28beb37b"
   }
 }

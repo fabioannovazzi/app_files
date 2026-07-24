@@ -270,13 +270,27 @@ deferred until these two pressures are proven.
 
 ### M6 — Real-data pilot
 
-Status: in progress; the source-bound intake-declaration, semantic-review, and
-source-independent local-output/error-retention gates are implemented and
-tested on synthetic bytes. No eligible commercial source has been authorized,
-inspected, or executed.
+Status: source-qualification pilot completed with a fail-closed negative result;
+successful real-data preparation remains unmet.
 
-Run an anonymized or consented commercial trial balance through the same
-contracts. Record semantic errors separately from mechanical errors.
+One exact commercial general journal was inspected after explicit authorization
+and private intake binding. It was a paginated presentation export whose
+posting amounts and debit/credit roles were not all uniquely row-bound in the
+source. Exact controls detected disagreements but could not safely classify
+postings. A private reviewed qualification therefore classified the source as
+`unsupported_source_layout`; the official producer recorded
+`semantic_review_blocked` and stopped before invoking the parser or reading
+source rows. It emitted no prepared facts, reconciliation success artifact,
+plot, or report.
+
+The next pilot now requires a native row-wise journal-detail export: one posting
+per row, stable posting identity, explicit date and source account, explicit
+debit/credit fields or a source-owned side convention, exact one-to-one fact
+locators, and complete monetary-field disposition. Embedded, detached,
+cross-row, residual-derived, or equation-selected postings are ineligible for
+that pilot. Controls validate a complete candidate population; they never fill
+or classify it. This is a reviewed eligibility policy, not a claim that the
+current experimental parser mechanically qualifies arbitrary exports.
 
 The implementation checklist is
 [M6 real-data pilot checklist](./m6-real-data-pilot-checklist.md). File presence
@@ -285,10 +299,15 @@ material in an ignored local run root and permits only separately reviewed
 sanitized summaries and receipts to move into a case-approved confidential
 evidence store. Those receipts remain pseudonymous and linkable, and stay
 outside the plugin and source repository by default. M6 does not relax or
-relabel M2's synthetic producer. The generic scaffolding does not freeze a
-private-source parser, account mapping, concrete producer check catalog,
-row-level error-evidence shape, or M3 adapter; those decisions wait for the
-exact authorized export.
+relabel M2's synthetic producer. The unresolved private reconstruction
+evidence and exception or equation machinery are not a reusable parser or
+Marketplace contract. The bundled v5 parser is a bounded experimental pilot
+scaffold whose synthetic tests still exercise reviewed multiline, embedded,
+and cross-row locator paths; it is not the row-wise eligibility gate and was
+not invoked for this negative pilot. A dedicated adapter should be reopened
+only when representative independent cases establish the same export family,
+every movement and amount closes uniquely, and an independent line-level
+oracle shows a quality advantage over requesting a normalized export.
 
 ### M7 — Orchestrator decision
 
@@ -296,20 +315,21 @@ Status: deferred; the entry gate is not met.
 
 M1–M5 prove several bounded preparation slices and one deterministic reporting-
 transport handoff using public or synthetic fixtures, while preserving
-`report_ready: false` and publication `withheld`. M6 currently proves the
-intake-declaration, reviewer-owned semantic-review, exact local-output receipt,
-mechanical-register, and two-phase sanitized-retention boundaries only on
-synthetic bytes. No eligible commercial trial balance has passed intake or
-completed the real-data pilot. Do not begin orchestrator design or
-implementation.
+`report_ready: false` and publication `withheld`. M6 now also proves on one
+authorized commercial source that a reviewed semantic gate can stop an
+unsupported layout before parser or source-row processing and without
+producing plausible numbers. It does not prove a generic source-layout
+classifier or successful real-data preparation: no eligible native row-wise
+export has completed preparation and reconciliation. Do not begin orchestrator
+design or implementation.
 
-Reopen this decision only after M6 satisfies its definition of done, retained
-M1–M5 regressions, privacy validation, release checks, and Marketplace package
-verification pass, and the open decisions relevant to the first orchestration
-scope are resolved or explicitly excluded. Passing this gate permits only a
-scoped design decision. It does not authorize implementation, report readiness,
-publication, automatic semantic mapping, or authoritative calculation by an
-orchestrator.
+Reopen this decision only after an eligible source satisfies M6's successful-
+preparation branch, retained M1–M5 regressions, privacy validation, release
+checks, and Marketplace package verification pass, and the open decisions
+relevant to the first orchestration scope are resolved or explicitly excluded.
+Passing this gate permits only a scoped design decision. It does not authorize
+implementation, report readiness, publication, automatic semantic mapping, or
+authoritative calculation by an orchestrator.
 
 ## Acceptance gates
 

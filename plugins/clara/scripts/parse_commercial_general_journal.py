@@ -52,13 +52,15 @@ __all__ = [
     "ReviewedAmountlessExclusion",
     "ReviewedAmountPair",
     "ReviewedAmountPairMember",
+    "canonical_general_journal_row_sha256",
     "general_journal_layout_contract_from_mapping",
     "load_general_journal_layout_contract",
     "parse_commercial_general_journal",
 ]
 
-CONTRACT_VERSION = "clara.commercial_general_journal_layout.v4"
+CONTRACT_VERSION = "clara.commercial_general_journal_layout.v5"
 REVIEW_STATUS = "reviewed"
+REVIEWED_ROW_SHA256_DOMAIN = "clara.general_journal_reviewed_row.v1"
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 ACCOUNTING_AMOUNT_FORMATS = frozenset(
     {
@@ -118,7 +120,6 @@ _CONTRACT_FIELDS = frozenset(
         "physical_embedded_amount_patterns",
         "reviewed_amount_pairs",
         "reviewed_amountless_exclusions",
-        "reviewed_zero_amount_line_ids",
         "physical_amount_format",
         "amount_sign_policy",
         "control_pattern",
@@ -174,6 +175,7 @@ _REVIEWED_AMOUNTLESS_EXCLUSION_FIELDS = frozenset(
         "line_id",
         "nonempty_columns",
         "residual_columns",
+        "canonical_row_sha256",
     }
 )
 
@@ -248,6 +250,7 @@ class ReviewedAmountlessExclusion:
     line_id: int
     nonempty_columns: tuple[int, ...]
     residual_columns: tuple[int, ...]
+    canonical_row_sha256: str
 
 
 @dataclass(frozen=True)
@@ -294,7 +297,6 @@ class GeneralJournalLayoutContract:
         ReviewedAmountlessExclusion,
         ...,
     ]
-    reviewed_zero_amount_line_ids: tuple[int, ...]
     physical_amount_format: str
     amount_sign_policy: str
     control_pattern: str
@@ -411,7 +413,6 @@ class _CompiledContract:
         ReviewedAmountlessExclusion,
         ...,
     ]
-    reviewed_zero_amount_line_ids: frozenset[int]
     date_patterns: tuple[_CompiledDatePattern, ...]
     control_pattern: Pattern[str]
     reviewed_debit_total: Decimal
@@ -448,6 +449,30 @@ class _ResolvedReviewedAmountlessExclusions:
 
 def _fail(message: str) -> NoReturn:
     raise GeneralJournalParseError(message)
+
+
+def canonical_general_journal_row_sha256(cells: Mapping[int, str]) -> str:
+    """Hash one exact row with a domain-separated canonical payload."""
+
+    if not isinstance(cells, Mapping) or not cells:
+        _fail("canonical reviewed row cells must be a non-empty mapping")
+    if any(
+        type(column) is not int or column <= 0 or column > MAX_XLSX_COLUMN
+        for column in cells
+    ):
+        _fail("canonical reviewed row columns must be positive XLSX integers")
+    ordered_cells: list[list[int | str]] = []
+    for column in sorted(cells):
+        text = cells[column]
+        if not isinstance(text, str) or not text:
+            _fail("canonical reviewed row cell text must be exact non-empty text")
+        ordered_cells.append([column, text])
+    payload = json.dumps(
+        [REVIEWED_ROW_SHA256_DOMAIN, ordered_cells],
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def _canonical_text(value: object, *, label: str) -> str:
@@ -568,6 +593,83 @@ def _decimal_pattern(decimal_format: str) -> Pattern[str]:
     if decimal_format == "italian_grouped_2":
         return _ITALIAN_GROUPED_2_DECIMAL
     _fail("declared decimal format is unsupported")
+
+
+def _validate_registered_amount_cell_occupancy(
+    row: _SheetRow,
+    *,
+    layout: PageLayout,
+    contract: _CompiledContract,
+) -> None:
+    """Fail unless every occupied registered amount cell is contract-valid."""
+
+    occupied = [
+        ("debit", column, row.cells[column])
+        for column in layout.debit_amount_columns
+        if column in row.cells
+    ] + [
+        ("credit", column, row.cells[column])
+        for column in layout.credit_amount_columns
+        if column in row.cells
+    ]
+    if not occupied:
+        return
+    exact_control_columns = {
+        column
+        for column, text in row.cells.items()
+        if contract.control_pattern.fullmatch(text) is not None
+    }
+    contains_control_line = any(
+        contract.control_pattern.fullmatch(line) is not None
+        for text in row.cells.values()
+        for line in text.splitlines()
+    )
+    if contains_control_line:
+        if any(column not in exact_control_columns for _, column, _ in occupied):
+            _fail("physical control row also contains a movement signal")
+        return
+    # Exact source-format validation is mechanically verifiable and prevents
+    # occupied amount cells from disappearing before movement extraction.
+    for role, _, text in occupied:
+        _decimal(
+            text,
+            decimal_format=contract.value.physical_amount_format,
+            sign_policy=contract.value.amount_sign_policy,
+            label=f"physical registered {role} amount at row {row.row_number}",
+        )
+
+
+def _line_has_registered_movement_signal(
+    text: str,
+    *,
+    column: int,
+    layout: PageLayout,
+    contract: _CompiledContract,
+) -> bool:
+    """Return whether one exact cell line reaches a movement-candidate path."""
+
+    if contract.logical_candidate_pattern.search(text) is not None:
+        return True
+    if (
+        column in layout.line_id_columns
+        and re.fullmatch(r"[1-9][0-9]*", text) is not None
+    ):
+        return True
+    if (
+        column in layout.account_columns
+        and contract.account_code_pattern.search(text) is not None
+    ):
+        return True
+    if column in (
+        *layout.debit_amount_columns,
+        *layout.credit_amount_columns,
+    ):
+        return True
+    return any(
+        item.pattern.fullmatch(text) is not None
+        for item in contract.physical_embedded_amount_patterns
+        if layout.layout_id in item.layout_ids and item.column == column
+    )
 
 
 def _exact_decimal_sum(
@@ -704,13 +806,14 @@ def _reviewed_amount_pair_order_key(
 
 def _reviewed_amountless_exclusion_order_key(
     exclusion: ReviewedAmountlessExclusion,
-) -> tuple[int, int, str, tuple[int, ...], tuple[int, ...]]:
+) -> tuple[int, int, str, tuple[int, ...], tuple[int, ...], str]:
     return (
         exclusion.row_number,
         exclusion.line_id,
         exclusion.layout_id,
         exclusion.nonempty_columns,
         exclusion.residual_columns,
+        exclusion.canonical_row_sha256,
     )
 
 
@@ -970,9 +1073,7 @@ def _compile_contract(
         not isinstance(exclusion, ReviewedAmountlessExclusion)
         for exclusion in contract.reviewed_amountless_exclusions
     ):
-        _fail(
-            "reviewed amountless exclusion must use the reviewed exclusion type"
-        )
+        _fail("reviewed amountless exclusion must use the reviewed exclusion type")
     if (
         tuple(
             sorted(
@@ -982,9 +1083,7 @@ def _compile_contract(
         )
         != contract.reviewed_amountless_exclusions
     ):
-        _fail(
-            "reviewed amountless exclusions must be in canonical row order"
-        )
+        _fail("reviewed amountless exclusions must be in canonical row order")
     reviewed_exclusion_rows: set[int] = set()
     reviewed_exclusion_line_ids: set[int] = set()
     for exclusion in contract.reviewed_amountless_exclusions:
@@ -1024,30 +1123,20 @@ def _compile_contract(
                 "reviewed amount pair line IDs"
             )
         if not isinstance(exclusion.nonempty_columns, tuple):
-            _fail(
-                "reviewed amountless exclusion nonempty columns must be a tuple"
-            )
+            _fail("reviewed amountless exclusion nonempty columns must be a tuple")
         _positive_columns(
             exclusion.nonempty_columns,
             label="reviewed amountless exclusion nonempty columns",
         )
-        if any(
-            column > MAX_XLSX_COLUMN
-            for column in exclusion.nonempty_columns
-        ):
+        if any(column > MAX_XLSX_COLUMN for column in exclusion.nonempty_columns):
             _fail(
-                "reviewed amountless exclusion nonempty columns exceed XLSX "
-                "limits"
+                "reviewed amountless exclusion nonempty columns exceed XLSX " "limits"
             )
         if not isinstance(exclusion.residual_columns, tuple):
-            _fail(
-                "reviewed amountless exclusion residual columns must be a tuple"
-            )
+            _fail("reviewed amountless exclusion residual columns must be a tuple")
         if (
             any(
-                type(column) is not int
-                or column <= 0
-                or column > MAX_XLSX_COLUMN
+                type(column) is not int or column <= 0 or column > MAX_XLSX_COLUMN
                 for column in exclusion.residual_columns
             )
             or tuple(sorted(set(exclusion.residual_columns)))
@@ -1057,51 +1146,28 @@ def _compile_contract(
                 "reviewed amountless exclusion residual columns must be "
                 "sorted unique positive XLSX columns"
             )
-        if not set(exclusion.residual_columns).issubset(
-            exclusion.nonempty_columns
-        ):
+        if not set(exclusion.residual_columns).issubset(exclusion.nonempty_columns):
             _fail(
                 "reviewed amountless exclusion residual columns must be a "
                 "subset of nonempty columns"
             )
-        if (
-            len(
-                set(exclusion.nonempty_columns)
-                - set(exclusion.residual_columns)
-            )
-            != 2
-        ):
+        if len(set(exclusion.nonempty_columns) - set(exclusion.residual_columns)) != 2:
             _fail(
                 "reviewed amountless exclusion must reserve exactly two "
                 "line/account signal columns"
+            )
+        if (
+            not isinstance(exclusion.canonical_row_sha256, str)
+            or SHA256_PATTERN.fullmatch(exclusion.canonical_row_sha256) is None
+        ):
+            _fail(
+                "reviewed amountless exclusion canonical row SHA-256 must be "
+                "lowercase hexadecimal"
             )
         reviewed_exclusion_rows.add(exclusion.row_number)
         reviewed_exclusion_line_ids.add(exclusion.line_id)
     if contract.physical_amount_format not in ACCOUNTING_AMOUNT_FORMATS:
         _fail("physical_amount_format is unsupported")
-    if (
-        any(
-            type(line_id) is not int or line_id <= 0
-            for line_id in contract.reviewed_zero_amount_line_ids
-        )
-        or tuple(sorted(set(contract.reviewed_zero_amount_line_ids)))
-        != contract.reviewed_zero_amount_line_ids
-    ):
-        _fail(
-            "reviewed zero-amount line IDs must be sorted unique positive " "integers"
-        )
-    if reviewed_movement_line_ids & set(contract.reviewed_zero_amount_line_ids):
-        _fail(
-            "reviewed amount pair line IDs must not overlap reviewed "
-            "zero-amount line IDs"
-        )
-    if reviewed_exclusion_line_ids & set(
-        contract.reviewed_zero_amount_line_ids
-    ):
-        _fail(
-            "reviewed amountless exclusion line IDs must not overlap reviewed "
-            "zero-amount line IDs"
-        )
     if contract.control_amount_format not in ACCOUNTING_AMOUNT_FORMATS:
         _fail("control_amount_format is unsupported")
     if contract.amount_sign_policy not in AMOUNT_SIGN_POLICIES:
@@ -1132,10 +1198,7 @@ def _compile_contract(
         logical_movement_patterns=tuple(logical_patterns),
         physical_embedded_amount_patterns=tuple(physical_embedded_patterns),
         reviewed_amount_pairs=tuple(reviewed_amount_pairs),
-        reviewed_amountless_exclusions=(
-            contract.reviewed_amountless_exclusions
-        ),
-        reviewed_zero_amount_line_ids=frozenset(contract.reviewed_zero_amount_line_ids),
+        reviewed_amountless_exclusions=(contract.reviewed_amountless_exclusions),
         date_patterns=tuple(date_patterns),
         control_pattern=control_pattern,
         reviewed_debit_total=reviewed_debit,
@@ -1398,9 +1461,7 @@ def general_journal_layout_contract_from_mapping(
             label="reviewed_amountless_exclusions",
         )
     ):
-        exclusion_label = (
-            f"reviewed_amountless_exclusions[{exclusion_index}]"
-        )
+        exclusion_label = f"reviewed_amountless_exclusions[{exclusion_index}]"
         exclusion = _mapping(raw_exclusion, label=exclusion_label)
         _exact_fields(
             exclusion,
@@ -1428,6 +1489,10 @@ def general_journal_layout_contract_from_mapping(
                 residual_columns=_json_integer_tuple(
                     exclusion["residual_columns"],
                     label=f"{exclusion_label}.residual_columns",
+                ),
+                canonical_row_sha256=_canonical_text(
+                    exclusion["canonical_row_sha256"],
+                    label=f"{exclusion_label}.canonical_row_sha256",
                 ),
             )
         )
@@ -1475,13 +1540,7 @@ def general_journal_layout_contract_from_mapping(
         logical_movement_patterns=tuple(logical_patterns),
         physical_embedded_amount_patterns=tuple(physical_embedded_patterns),
         reviewed_amount_pairs=tuple(reviewed_amount_pairs),
-        reviewed_amountless_exclusions=tuple(
-            reviewed_amountless_exclusions
-        ),
-        reviewed_zero_amount_line_ids=_json_integer_tuple(
-            source["reviewed_zero_amount_line_ids"],
-            label="reviewed_zero_amount_line_ids",
-        ),
+        reviewed_amountless_exclusions=tuple(reviewed_amountless_exclusions),
         physical_amount_format=_canonical_text(
             source["physical_amount_format"],
             label="physical_amount_format",
@@ -2145,16 +2204,16 @@ def _resolve_reviewed_amountless_exclusions(
             _fail("reviewed amountless exclusion row has no active layout")
         if layout_id != exclusion.layout_id:
             _fail("reviewed amountless exclusion layout does not match")
+        if tuple(sorted(row.cells)) != exclusion.nonempty_columns or any(
+            not value.strip() for value in row.cells.values()
+        ):
+            _fail("reviewed amountless exclusion nonempty columns changed")
         if (
-            tuple(sorted(row.cells)) != exclusion.nonempty_columns
-            or any(not value.strip() for value in row.cells.values())
+            canonical_general_journal_row_sha256(row.cells)
+            != exclusion.canonical_row_sha256
         ):
-            _fail(
-                "reviewed amountless exclusion nonempty columns changed"
-            )
-        if any(
-            "\n" in value or "\r" in value for value in row.cells.values()
-        ):
+            _fail("reviewed amountless exclusion canonical row fingerprint changed")
+        if any("\n" in value or "\r" in value for value in row.cells.values()):
             _fail("reviewed amountless exclusion contains multiline text")
         by_row[exclusion.row_number] = exclusion
         rows_by_line_id[exclusion.line_id] = exclusion.row_number
@@ -2169,15 +2228,11 @@ class _ParserState:
         self,
         contract: _CompiledContract,
         reviewed_amount_pairs: _ResolvedReviewedAmountPairs,
-        reviewed_amountless_exclusions: (
-            _ResolvedReviewedAmountlessExclusions
-        ),
+        reviewed_amountless_exclusions: _ResolvedReviewedAmountlessExclusions,
     ) -> None:
         self.contract = contract
         self.reviewed_amount_pairs = reviewed_amount_pairs
-        self.reviewed_amountless_exclusions = (
-            reviewed_amountless_exclusions
-        )
+        self.reviewed_amountless_exclusions = reviewed_amountless_exclusions
         self.current_layout: PageLayout | None = None
         self.current_date: date | None = None
         self.movements: list[JournalMovement] = []
@@ -2188,7 +2243,6 @@ class _ParserState:
         self.physical_movement_count = 0
         self.logical_movement_count = 0
         self.reviewed_amountless_exclusion_rows_seen: set[int] = set()
-        self.reviewed_zero_amount_line_ids_seen: set[int] = set()
         self.reviewed_amount_pair_rows_seen: set[int] = set()
         self.reviewed_amount_locator_keys_consumed: set[tuple[int, int, int]] = set()
         self.layout_page_counts: dict[str, int] = {}
@@ -2209,6 +2263,9 @@ class _ParserState:
         credit: Decimal,
         source_form: str,
     ) -> None:
+        # A journal movement has mechanically verifiable one-sided provenance.
+        if debit.is_zero() == credit.is_zero():
+            _fail("movement must contain exactly one nonzero debit or credit amount")
         if self.current_date is None:
             _fail("movement appears before a parseable carried posting date")
         self.observe_line_id(line_id)
@@ -2259,25 +2316,6 @@ class _ParserState:
             _fail("reviewed final control line must occur exactly once")
         self.control_totals = (debit, credit)
         self.control_seen = True
-
-    def add_reviewed_zero_amount_movement(
-        self,
-        *,
-        line_id: int,
-        account_code: str,
-    ) -> None:
-        if line_id not in self.contract.reviewed_zero_amount_line_ids:
-            _fail("zero-amount movement is not explicitly reviewed")
-        if line_id in self.reviewed_zero_amount_line_ids_seen:
-            _fail("reviewed zero-amount line ID was encountered more than once")
-        self.reviewed_zero_amount_line_ids_seen.add(line_id)
-        self.add_movement(
-            line_id=line_id,
-            account_code=account_code,
-            debit=Decimal(0),
-            credit=Decimal(0),
-            source_form="physical_row",
-        )
 
 
 def _record_control_line(
@@ -2341,15 +2379,8 @@ def _parse_logical_line(line: _LogicalLine, *, state: _ParserState) -> None:
     )
     if line_id in state.reviewed_amount_pairs.movement_rows_by_line_id:
         _fail("reviewed amount pair line ID appeared in a logical line")
-    if (
-        line_id
-        in state.reviewed_amountless_exclusions.rows_by_line_id
-    ):
-        _fail(
-            "reviewed amountless exclusion line ID appeared in a logical line"
-        )
-    if line_id in state.contract.reviewed_zero_amount_line_ids:
-        _fail("reviewed zero-amount line ID contains a logical amount")
+    if line_id in state.reviewed_amountless_exclusions.rows_by_line_id:
+        _fail("reviewed amountless exclusion line ID appeared in a logical line")
     account = _account_code(
         match.group("account"),
         pattern=state.contract.account_code_pattern,
@@ -2494,18 +2525,15 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
         if column in row.cells
         and re.fullmatch(r"[1-9][0-9]*", row.cells[column]) is not None
     ]
-    amount_pattern = _decimal_pattern(state.contract.value.physical_amount_format)
     debit_signals = [
         (column, row.cells[column])
         for column in layout.debit_amount_columns
         if column in row.cells
-        and amount_pattern.fullmatch(row.cells[column]) is not None
     ]
     credit_signals = [
         (column, row.cells[column])
         for column in layout.credit_amount_columns
         if column in row.cells
-        and amount_pattern.fullmatch(row.cells[column]) is not None
     ]
     embedded_matches = []
     for item in state.contract.physical_embedded_amount_patterns:
@@ -2521,9 +2549,7 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
         (row.row_number, column, 0) for column, _ in (*debit_signals, *credit_signals)
     ] + [(row.row_number, item.column, 0) for item, _ in embedded_matches]
     reviewed_member = state.reviewed_amount_pairs.members_by_row.get(row.row_number)
-    reviewed_exclusion = state.reviewed_amountless_exclusions.by_row.get(
-        row.row_number
-    )
+    reviewed_exclusion = state.reviewed_amountless_exclusions.by_row.get(row.row_number)
     for _, line_id_text in line_id_signals:
         signaled_line_id = int(line_id_text)
         expected_row = state.reviewed_amount_pairs.movement_rows_by_line_id.get(
@@ -2532,18 +2558,13 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
         if expected_row is not None and expected_row != row.row_number:
             _fail("reviewed amount pair line ID appeared on the wrong row")
         expected_exclusion_row = (
-            state.reviewed_amountless_exclusions.rows_by_line_id.get(
-                signaled_line_id
-            )
+            state.reviewed_amountless_exclusions.rows_by_line_id.get(signaled_line_id)
         )
         if (
             expected_exclusion_row is not None
             and expected_exclusion_row != row.row_number
         ):
-            _fail(
-                "reviewed amountless exclusion line ID appeared on the "
-                "wrong row"
-            )
+            _fail("reviewed amountless exclusion line ID appeared on the " "wrong row")
     if reviewed_member is not None:
         if layout.layout_id != reviewed_member.value.movement_layout_id:
             _fail("reviewed amount pair movement layout does not match")
@@ -2590,17 +2611,11 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
         if layout.layout_id != reviewed_exclusion.layout_id:
             _fail("reviewed amountless exclusion layout does not match")
         if tuple(sorted(row.cells)) != reviewed_exclusion.nonempty_columns:
-            _fail(
-                "reviewed amountless exclusion nonempty columns changed"
-            )
-        if any(
-            "\n" in value or "\r" in value for value in row.cells.values()
-        ):
+            _fail("reviewed amountless exclusion nonempty columns changed")
+        if any("\n" in value or "\r" in value for value in row.cells.values()):
             _fail("reviewed amountless exclusion contains multiline text")
         if len(line_id_signals) != 1:
-            _fail(
-                "reviewed amountless exclusion line ID is ambiguous or missing"
-            )
+            _fail("reviewed amountless exclusion line ID is ambiguous or missing")
         line_id = _line_id(
             line_id_signals[0][1],
             label="reviewed amountless exclusion line ID",
@@ -2608,9 +2623,7 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
         if line_id != reviewed_exclusion.line_id:
             _fail("reviewed amountless exclusion line ID changed")
         if len(account_signals) != 1:
-            _fail(
-                "reviewed amountless exclusion account is ambiguous or missing"
-            )
+            _fail("reviewed amountless exclusion account is ambiguous or missing")
         if amount_signal_count != 0:
             _fail("reviewed amountless exclusion contains an amount")
         if any(
@@ -2626,9 +2639,7 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
             reviewed_exclusion.residual_columns
         )
         if signal_columns != expected_signal_columns:
-            _fail(
-                "reviewed amountless exclusion residual columns changed"
-            )
+            _fail("reviewed amountless exclusion residual columns changed")
         _account_code(
             account_signals[0][1],
             pattern=state.contract.account_code_pattern,
@@ -2644,15 +2655,12 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
         for key in ordinary_amount_locator_keys
     ):
         _fail("reviewed amount locator reached ordinary physical extraction")
-    reviewed_zero_line_signals = [
-        signal
-        for signal in line_id_signals
-        if int(signal[1]) in state.contract.reviewed_zero_amount_line_ids
-    ]
-    is_candidate = (
-        bool(account_signals)
-        or bool(line_id_signals and amount_signal_count)
-        or bool(reviewed_zero_line_signals)
+    is_candidate = bool(
+        line_id_signals
+        or account_signals
+        or debit_signals
+        or credit_signals
+        or embedded_matches
     )
     if not is_candidate:
         return
@@ -2678,14 +2686,6 @@ def _physical_movement(row: _SheetRow, *, state: _ParserState) -> None:
         pattern=state.contract.account_code_pattern,
         label=f"physical movement account code at row {row.row_number}",
     )
-    if line_id in state.contract.reviewed_zero_amount_line_ids:
-        if amount_signal_count != 0:
-            _fail("reviewed zero-amount line ID contains an amount")
-        state.add_reviewed_zero_amount_movement(
-            line_id=line_id,
-            account_code=account,
-        )
-        return
     if amount_signal_count != 1:
         _fail(
             "physical movement candidate has an ambiguous or missing amount "
@@ -2749,11 +2749,9 @@ def _parse_rows(
         rows,
         contract=contract,
     )
-    reviewed_amountless_exclusions = (
-        _resolve_reviewed_amountless_exclusions(
-            rows,
-            contract=contract,
-        )
+    reviewed_amountless_exclusions = _resolve_reviewed_amountless_exclusions(
+        rows,
+        contract=contract,
     )
     state = _ParserState(
         contract,
@@ -2781,15 +2779,42 @@ def _parse_rows(
                 _fail("page header is missing its second header row")
             skip_row_number = next_row.row_number
             continue
+        if state.current_layout is not None:
+            _validate_registered_amount_cell_occupancy(
+                row,
+                layout=state.current_layout,
+                contract=state.contract,
+            )
         physical_row, before_physical, after_physical = _partition_multiline_cells(
             row, state=state
         )
         for line in before_physical:
             _parse_logical_line(line, state=state)
         if physical_row is not None:
-            for line in physical_row.cells.values():
-                if _record_control_line(line, state=state):
-                    break
+            control_items = [
+                (column, line)
+                for column, line in physical_row.cells.items()
+                if state.contract.control_pattern.fullmatch(line) is not None
+            ]
+            if len(control_items) > 1:
+                _fail("physical row contains multiple reviewed control lines")
+            if control_items:
+                if state.current_layout is None:
+                    _fail("reviewed control appears before a reviewed page layout")
+                control_column, control_line = control_items[0]
+                if any(
+                    _line_has_registered_movement_signal(
+                        line,
+                        column=column,
+                        layout=state.current_layout,
+                        contract=state.contract,
+                    )
+                    for column, line in physical_row.cells.items()
+                    if column != control_column
+                ):
+                    _fail("physical control row also contains a movement signal")
+                if not _record_control_line(control_line, state=state):
+                    _fail("reviewed control-line detection is inconsistent")
             else:
                 parsed_date = _physical_date(physical_row, state=state)
                 if parsed_date is not None:
@@ -2825,14 +2850,7 @@ def _finish(
     if state.reviewed_amountless_exclusion_rows_seen != set(
         state.reviewed_amountless_exclusions.by_row
     ):
-        _fail(
-            "reviewed amountless exclusion rows were not consumed exactly once"
-        )
-    if (
-        state.reviewed_zero_amount_line_ids_seen
-        != state.contract.reviewed_zero_amount_line_ids
-    ):
-        _fail("reviewed zero-amount line IDs were not encountered exactly once")
+        _fail("reviewed amountless exclusion rows were not consumed exactly once")
     source_debit, source_credit = state.control_totals
     if (
         source_debit != state.contract.reviewed_debit_total
@@ -2865,9 +2883,7 @@ def _finish(
         page_header_count=state.page_header_count,
         physical_movement_count=state.physical_movement_count,
         logical_movement_count=state.logical_movement_count,
-        excluded_amountless_count=len(
-            state.reviewed_amountless_exclusion_rows_seen
-        ),
+        excluded_amountless_count=len(state.reviewed_amountless_exclusion_rows_seen),
         line_id_gap_count=state.line_id_gap_count,
         layout_page_counts=MappingProxyType(dict(state.layout_page_counts)),
     )
