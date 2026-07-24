@@ -94,6 +94,7 @@ MAX_SIDEBAND_TURNS = 18
 MAX_TRANSCRIPT_TAIL_CHARS = 5_000
 MAX_PARTNER_WHISPER_CHARS = 240
 STARTED_ATTEMPT_STALE_GRACE_SECONDS = 60
+INTERVIEW_SAFETY_OVERRUN_SECONDS = 5 * 60
 SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
 HOSTED_INTERVIEW_OUTPUT_COPY = {
     "en": {
@@ -1039,9 +1040,14 @@ def _started_attempt_is_stale(
         DEFAULT_INTERVIEW_DURATION_SECONDS,
         max(60, configured_duration),
     )
-    # The browser enforces this hard duration mechanically. One extra minute
-    # lets a valid attempt upload its final media and completion payload.
-    stale_after_seconds = bounded_duration + STARTED_ATTEMPT_STALE_GRACE_SECONDS
+    # The configured duration is a conversational target, not a cutoff. Keep
+    # the attempt active through the browser's emergency safety overrun and
+    # allow one extra minute for final uploads and completion.
+    stale_after_seconds = (
+        bounded_duration
+        + INTERVIEW_SAFETY_OVERRUN_SECONDS
+        + STARTED_ATTEMPT_STALE_GRACE_SECONDS
+    )
     return parsed + timedelta(seconds=stale_after_seconds) <= (now or _now())
 
 
@@ -1165,7 +1171,7 @@ def _plugin_improvement_instructions(record: Mapping[str, Any], language: str) -
             "A clarification or rephrasing uses the optional follow-up. After any follow-up answer, close immediately without another question.",
             "Do not ask a generic final question, ask whether anything was missed, summarize as a question, or cover the priority topics as a checklist.",
             f"Every closing must contain no question and end with exactly: {closing_handoff}",
-            "The browser has a hard one-minute limit. Finish earlier as soon as the answer is usable.",
+            "The one-minute duration is a target, not a cutoff. Finish the current exchange naturally, then close as soon as the answer is usable.",
             "Respect every prepared boundary. Never request client material, identifying details, files, credentials, or secrets.",
             f"Use this configured language for the whole interview: {language}.",
             "Prepared interview brief:",
@@ -1222,10 +1228,11 @@ def _interview_instructions(record: Mapping[str, Any], language: str) -> str:
             "If you propose a framing and the interviewee merely agrees, do not treat the agreement as evidence. Ask one follow-up that has them apply, revise, or challenge the framing in their own words or against a real case.",
             "Before closing, make sure the conversation contains enough concrete detail to satisfy the prepared purpose. Ask for a mechanism, artifact, episode, decision rule, or uncertainty only when it is relevant to this brief and the participant's answers; do not force every interview to contain each one.",
             "Do not run a fixed questionnaire. Cover the priority topics naturally and stop when the purpose is satisfied.",
-            f"The interview has a hard {duration_minutes}-minute browser limit. "
+            f"The interview has a target duration of {duration_minutes} minutes, not a hard cutoff. "
             f"Manage time actively: by minute {synthesis_minute} move to synthesis "
-            f"or final priority gaps and ask the closing question no later than "
-            f"minute {closing_minute}.",
+            f"or final priority gaps and aim to ask the closing question by "
+            f"minute {closing_minute}. Never truncate an active question or answer "
+            "to meet the target; finish the exchange naturally, then close.",
             "If the browser sends a private session-management message about sustained silence or the final time window, treat it as a timing fact. Recover naturally: reassure, simplify the current question, prioritize, or close. Do not scold the interviewee or expose the browser message.",
             "Respect the boundaries. If the interviewee moves into an out-of-scope or sensitive area, acknowledge briefly and redirect to the prepared scope.",
             "Do not approve conclusions. Do not say an answer is client-ready. Evidence will be reviewed later.",
