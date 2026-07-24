@@ -30,7 +30,30 @@ VERA_SITE_MODULES = {
 VERA_MODULE_PAGES = {
     module: SHARED_ROOT / module / "index.html" for module in VERA_SITE_MODULES
 }
-VERA_CORE_PAGES = (SHARED_ROOT / "vera" / "index.html", *VERA_MODULE_PAGES.values())
+VERA_CORE_PAGES = (
+    SHARED_ROOT / "vera" / "index.html",
+    *(
+        VERA_MODULE_PAGES[module]
+        for module in (
+            "journal-sampling",
+            "check-entries",
+            "journal-bank-reconciliation",
+            "riconciliazione-partite",
+            "report-builder",
+            "prompt-optimizer",
+            "deep-research-validator",
+        )
+    ),
+)
+VERA_NATIVE_JURISDICTION_PAGES = {
+    SHARED_ROOT / "new-client" / "index.html": "it",
+    SHARED_ROOT / "concordato-plan-review" / "index.html": "it",
+    SHARED_ROOT / "previdenza-inps" / "index.html": "it",
+    SHARED_ROOT / "registro-imprese-sari" / "index.html": "it",
+    SHARED_ROOT / "new-client" / "geneva.html": "fr",
+    SHARED_ROOT / "new-client" / "zurich.html": "de",
+    SHARED_ROOT / "new-client" / "uk.html": "en",
+}
 VERA_SCOPE_BY_MODULE = {
     "journal-sampling": "core",
     "check-entries": "mixed",
@@ -87,9 +110,7 @@ VERA_CORE_VIDEO_FORBIDDEN_PHRASES = (
 )
 VERA_PUBLIC_PAGES = (
     *VERA_CORE_PAGES,
-    SHARED_ROOT / "new-client" / "geneva.html",
-    SHARED_ROOT / "new-client" / "zurich.html",
-    SHARED_ROOT / "new-client" / "uk.html",
+    *VERA_NATIVE_JURISDICTION_PAGES,
 )
 VERA_CONNECTED_JOURNEYS = (
     ("journal-sampling", "../check-entries/index.html?lang=it"),
@@ -110,7 +131,7 @@ VERA_CONNECTED_JOURNEYS = (
     ("deep-research-validator", "../prompt-optimizer/index.html?lang=it"),
     ("deep-research-validator", "../report-builder/index.html?lang=it"),
     ("report-builder", "../riconciliazione-partite/index.html?lang=it"),
-    ("report-builder", "../concordato-plan-review/index.html?lang=it"),
+    ("report-builder", "../concordato-plan-review/index.html"),
     ("report-builder", "../deep-research-validator/index.html?lang=it"),
 )
 
@@ -351,6 +372,31 @@ def test_vera_core_pages_publish_consistent_multilingual_metadata(
     assert f'<link rel="alternate" hreflang="x-default" href="{canonical_url}">' in page
 
 
+@pytest.mark.parametrize(
+    ("page_path", "native_language"),
+    VERA_NATIVE_JURISDICTION_PAGES.items(),
+    ids=[path.parent.name for path in VERA_NATIVE_JURISDICTION_PAGES],
+)
+def test_vera_jurisdiction_pages_publish_only_the_native_language(
+    page_path: Path,
+    native_language: str,
+) -> None:
+    page = page_path.read_text(encoding="utf-8")
+    canonical_url = f"https://mparanza.com/{page_path.relative_to(ROOT).as_posix()}"
+
+    assert f'<html lang="{native_language}">' in page
+    assert (
+        f'<link rel="alternate" hreflang="{native_language}" '
+        f'href="{canonical_url}">'
+    ) in page
+    assert f'<link rel="alternate" hreflang="x-default" href="{canonical_url}">' in page
+    assert set(re.findall(r'hreflang="([a-z-]+)"', page)) == {
+        native_language,
+        "x-default",
+    }
+    assert not re.search(r'data-lang="(?:it|en|fr|de|es)"', page)
+
+
 def test_static_pages_with_spanish_selector_have_complete_locale_objects() -> None:
     expected_languages = {"it", "en", "fr", "de", "es"}
     localized_pages = 0
@@ -439,14 +485,6 @@ def test_static_pages_with_spanish_selector_have_complete_locale_objects() -> No
             },
         ),
         (
-            "concordato-plan-review",
-            {
-                "sections": "Secciones de la página",
-                "language": "Idioma",
-                "problem": "Problema resuelto",
-            },
-        ),
-        (
             "report-builder",
             {
                 "sections": "Secciones de la página",
@@ -459,22 +497,6 @@ def test_static_pages_with_spanish_selector_have_complete_locale_objects() -> No
                 "sections": "Secciones de la página",
                 "language": "Idioma",
                 "problem": "Problema resuelto",
-            },
-        ),
-        (
-            "previdenza-inps",
-            {
-                "sections": "Secciones de la página",
-                "language": "Idioma",
-                "breadcrumb": "Ruta de la página",
-            },
-        ),
-        (
-            "registro-imprese-sari",
-            {
-                "sections": "Secciones de la página",
-                "language": "Idioma",
-                "breadcrumb": "Ruta de la página",
             },
         ),
     ),
@@ -665,13 +687,16 @@ def _section_markup(page: str, section_id: str) -> str:
     return page[section_start:section_end]
 
 
-def test_vera_hub_separates_core_workflows_from_the_italy_pack() -> None:
+def test_vera_hub_separates_general_workflows_from_market_specific_work() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    italy = _section_markup(page, "italia")
+    jurisdiction = _section_markup(page, "jurisdiction")
 
     assert core.count('class="module-row"') == 9
-    assert italy.count('class="module-row"') == 5
+    assert jurisdiction.count('data-jurisdiction-item="it"') == 5
+    assert jurisdiction.count('data-jurisdiction-item="en"') == 1
+    assert jurisdiction.count('data-jurisdiction-item="fr"') == 1
+    assert jurisdiction.count('data-jurisdiction-item="de"') == 1
     for expected_href in (
         "../new-client/index.html#journey",
         "../studio-archive/index.html",
@@ -690,15 +715,18 @@ def test_vera_hub_separates_core_workflows_from_the_italy_pack() -> None:
         "../concordato-plan-review/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
+        "../new-client/uk.html",
+        "../new-client/geneva.html",
+        "../new-client/zurich.html",
     ):
-        assert f'href="{expected_href}"' in italy
+        assert f'href="{expected_href}"' in jurisdiction
 
     assert "FatturaPA" not in core
-    assert "FatturaPA" in italy
+    assert "FatturaPA" in jurisdiction
     assert 'href="#core"' in page
-    assert 'href="#italia"' in page
-    assert page.index('id="core"') < page.index('id="italia"')
-    assert page.index('id="italia"') < page.index('id="video"')
+    assert 'href="#jurisdiction"' in page
+    assert page.index('id="core"') < page.index('id="jurisdiction"')
+    assert page.index('id="jurisdiction"') < page.index('id="video"')
 
 
 def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> None:
@@ -743,8 +771,8 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     assert "hLhP6x00ghQ" not in new_client
     assert "d9S4SA63sVw" not in new_client
     assert "Mjfz1e98oIw" not in new_client
-    assert "https://youtu.be/UwLsy2FuP8o" in new_client
     assert "https://youtu.be/FWjVBeJYLF8" in new_client
+    assert "UwLsy2FuP8o" not in new_client
     assert "video-production/rendered" not in new_client
     assert '"documents.privacy.title": "Protection des données"' in new_client
 
@@ -1032,7 +1060,7 @@ def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
         page,
     )
 
-    assert len(module_hrefs) == 14
+    assert len(module_hrefs) == 17
     for href in module_hrefs:
         target = urlsplit(href)
         target_path = (hub_path.parent / target.path).resolve()
@@ -1084,7 +1112,7 @@ def test_italy_scoped_pages_label_the_country_in_every_language(module: str) -> 
         assert country_label in page
 
 
-def test_new_client_jurisdiction_and_presentation_language_are_independent() -> None:
+def test_new_client_jurisdiction_pages_use_one_native_language() -> None:
     jurisdiction_root = SHARED_ROOT / "new-client"
     jurisdiction_script = (jurisdiction_root / "jurisdiction-pages.js").read_text(
         encoding="utf-8"
@@ -1100,29 +1128,25 @@ def test_new_client_jurisdiction_and_presentation_language_are_independent() -> 
         assert f'data-jurisdiction="{jurisdiction}"' in page
         assert f'data-presentation-language="{default_language}"' in page
         assert 'src="jurisdiction-pages.js?v=' in page
-        for language in ("it", "en", "fr", "de", "es"):
-            assert f'hreflang="{language}"' in page
+        assert set(re.findall(r'hreflang="([a-z-]+)"', page)) == {
+            default_language,
+            "x-default",
+        }
         assert 'hreflang="x-default"' in page
         assert f'slug: "{filename}"' in jurisdiction_script
         assert f'defaultLanguage: "{default_language}"' in jurisdiction_script
-        assert "i.ytimg.com/vi/" in page
 
-    assert 'const SUPPORTED_LANGUAGES = ["it", "en", "fr", "de", "es"]' in (
-        jurisdiction_script
-    )
+    assert "const SUPPORTED_LANGUAGES" not in jurisdiction_script
     assert "const page = jurisdictions[document.body.dataset.jurisdiction]" in (
         jurisdiction_script
     )
-    assert 'url.searchParams.set("lang", language)' in jurisdiction_script
     assert "document.body.dataset.presentationLanguage = language" in (
         jurisdiction_script
     )
     assert "const copy = page.copy[language]" in jurisdiction_script
-    assert 'href="index.html?lang=${language}#core-model"' in jurisdiction_script
-    assert "const coreVideoIds =" in jurisdiction_script
-    assert "https://i.ytimg.com/vi/${coreVideoIds[language]}/maxresdefault.jpg" in (
-        jurisdiction_script
-    )
+    assert "const language = page.defaultLanguage" in jurisdiction_script
+    assert "renderLanguageSwitch(language)" not in jurisdiction_script
+    assert "coreVideoIds" not in jurisdiction_script
     assert "Report Builder" not in jurisdiction_script
     assert not re.search(r'title: "[123]\. ', jurisdiction_script)
     assert "dataset.jurisdiction =" not in jurisdiction_script
@@ -1142,8 +1166,7 @@ def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
     assert page.count("data-video-index=") == 4
     assert page.count('<a class="overview-video') == 1
     assert "install-panel__video" not in page
-    assert "https://youtu.be/UwLsy2FuP8o" in page
-    assert "https://i.ytimg.com/vi/UwLsy2FuP8o/maxresdefault.jpg" in page
+    assert "UwLsy2FuP8o" not in page
     assert "link.href = `https://youtu.be/${item.id}`" in page
     assert 'link.querySelector("img").src = thumbnailUrl(item.id)' in page
     assert 'es: { id: "RKcy1G79RAs", duration: "1:20" }' in page
@@ -1155,12 +1178,11 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     concepts = spec["concepts"]
 
     assert spec["schemaVersion"] == "3.0.0"
-    assert spec["identityModel"] == "module + edition + language"
+    assert spec["identityModel"] == "module + edition + jurisdiction + language"
     assert spec["publicationStatus"] == "youtube_source"
     assert spec["remotePublish"] is True
     assert "renderedManifest" not in spec
     assert {(concept["module"], concept["edition"]) for concept in concepts} == {
-        ("new-client", "core"),
         ("new-client", "italy"),
         ("studio-archive", "core"),
         ("journal-sampling", "core"),
@@ -1168,7 +1190,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
         ("check-entries", "italy-fatturapa"),
         ("data-handling", "core"),
     }
-    assert sum(len(concept["localizations"]) for concept in concepts) == 34
+    assert sum(len(concept["localizations"]) for concept in concepts) == 21
     for concept in concepts:
         assert len(concept["scenes"]) == 6
         assert concept["pageTargets"]
@@ -1178,6 +1200,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
         else:
             assert concept["scope"] == "country"
             assert concept["jurisdiction"] == "IT"
+            assert set(concept["localizations"]) <= {"it"}
         for localization in concept["localizations"].values():
             assert localization["title"]
             assert localization["narration"]
@@ -1217,35 +1240,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
             "resta aperto",
             "richiede riesame",
             "fascicolo cliente di lavoro",
-        ),
-        "en": (
-            "draft aml assessment",
-            "documented",
-            "remains open",
-            "needs professional review",
-            "working client file",
-        ),
-        "fr": (
-            "projet d’évaluation lcb-ft",
-            "documenté",
-            "reste ouvert",
-            "nécessite une revue",
-            "dossier client de travail",
-        ),
-        "de": (
-            "entwurf einer aml-bewertung",
-            "dokumentiert",
-            "offen bleibt",
-            "fachlich geprüft",
-            "mandanten-arbeitsakte",
-        ),
-        "es": (
-            "borrador de evaluación de pbc",
-            "documentado",
-            "sigue abierto",
-            "requiere revisión profesional",
-            "expediente de cliente operativo",
-        ),
+        )
     }
     for language, required_phrases in required_italy_phrases.items():
         localization = italy["localizations"][language]
@@ -1268,6 +1263,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     assert existing["scope"] == "country"
     assert existing["jurisdiction"] == "IT"
     assert existing["youtubeId"] == "I1dp3FYVy2w"
+    assert check_entries["localizations"] == {}
 
     data_handling = next(
         concept for concept in concepts if concept["module"] == "data-handling"
@@ -1360,7 +1356,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
             assert phrase in narration
 
 
-def test_vera_video_catalog_v4_is_youtube_only_and_spanish_native() -> None:
+def test_vera_video_catalog_v4_is_youtube_only_and_jurisdiction_native() -> None:
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is required to execute the browser video catalog")
@@ -1381,31 +1377,36 @@ process.stdout.write(JSON.stringify(catalogs));
     )
     catalogs = {catalog["language"]: catalog for catalog in json.loads(result.stdout)}
 
-    assert all(catalog["version"] == "4.0.0" for catalog in catalogs.values())
+    assert all(catalog["version"] == "4.1.0" for catalog in catalogs.values())
     assert catalogs["es"]["featured"]["id"] == "BEiFYgK5Wew"
     assert catalogs["es"]["featured"]["audioLanguage"] == "es"
-    assert len(catalogs["es"]["videos"]) == 16
+    assert len(catalogs["es"]["videos"]) == 8
     assert {video["audioLanguage"] for video in catalogs["es"]["videos"]} == {"es"}
     assert {video["id"] for video in catalogs["es"]["videos"]} == {
         "X3BOp9ZxiAQ",
         "5wEggdDYrm0",
         "PD0vpXBY7GU",
-        "bFhSQiilox8",
-        "1REbQ-wBNf8",
-        "BrCOAgSVyYg",
         "DGrRH3MGRcg",
         "ePe_bVrC-bs",
-        "bL-LXrQzCA4",
-        "p0OOhlz7_Sc",
         "-TnYwnglpqE",
-        "xaWouXRwO8c",
-        "41H8PKFFmKg",
         "Q351IGPEPxg",
         "lHOahBSRknQ",
-        "GI6u74BPnN8",
     }
 
+    expected_jurisdictions = {
+        "it": {"IT"},
+        "en": {"UK"},
+        "fr": {"CH-GE"},
+        "de": {"CH-ZH"},
+        "es": set(),
+    }
     for language, catalog in catalogs.items():
+        country_videos = [
+            video for video in catalog["videos"] if video["scope"] == "country"
+        ]
+        assert {video["jurisdiction"] for video in country_videos} == (
+            expected_jurisdictions[language]
+        )
         for video in catalog["videos"]:
             assert video["sourceKind"] == "youtube"
             assert video["status"] == "published"
@@ -1425,8 +1426,8 @@ def test_replaced_vera_guides_are_linked_from_module_pages_on_youtube() -> None:
     assert "<video" not in new_client
     assert "<video" not in sampling
     assert "<video" not in entries
-    for youtube_id in ("UwLsy2FuP8o", "FWjVBeJYLF8"):
-        assert youtube_id in new_client
+    assert "FWjVBeJYLF8" in new_client
+    assert "UwLsy2FuP8o" not in new_client
     assert "HW8amlcU0Lk" in sampling
     for youtube_id in ("xakA0V5-3-8", "I1dp3FYVy2w"):
         assert youtube_id in entries

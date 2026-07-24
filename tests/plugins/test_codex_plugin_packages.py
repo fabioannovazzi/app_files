@@ -2588,13 +2588,13 @@ def test_new_client_keeps_language_and_market_selection_separate() -> None:
     assert "window.location.replace" not in page
 
 
-def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
+def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
     core_start = page.index('id="core"')
     core_end = page.index("</section>", core_start)
-    italy_start = page.index('id="italia"')
+    italy_start = page.index('id="jurisdiction"')
     italy_end = page.index("</section>", italy_start)
     core = page[core_start:core_end]
     italy = page[italy_start:italy_end]
@@ -2621,19 +2621,26 @@ def test_vera_page_groups_core_workflows_and_italy_specializations() -> None:
         assert f'href="{module_link}"' in italy
     assert core.count(" data-module-link") == 9
     assert core.count('class="module-row"') == 9
-    assert italy.count(" data-module-link") == 5
-    assert italy.count('class="module-row"') == 5
+    assert italy.count('data-jurisdiction-item="it"') == 5
+    assert italy.count('data-jurisdiction-item="en"') == 1
+    assert italy.count('data-jurisdiction-item="fr"') == 1
+    assert italy.count('data-jurisdiction-item="de"') == 1
     assert core.count('<article class="workstream">') == 3
-    assert 'id="modello"' in page
+    assert 'id="modello"' not in page
     assert 'id="core"' in page
-    assert 'id="italia"' in page
+    assert 'id="jurisdiction"' in page
     assert 'id="video"' in page
     assert 'id="installa"' in page
-    assert "Core multilingue + pacchetto Italia" in page
-    assert "Cambia la lingua del lavoro, non la giurisdizione applicata" in page
+    assert "Core multilingue + pacchetto Italia" not in page
+    assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
     assert "FatturaPA" not in core
     assert "FatturaPA" in italy
-    assert 'src="../video-library.js?v=2026072002"' in page
+    assert 'src="../video-library.js?v=2026072401"' in page
+    assert (
+        'const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", '
+        'de: "CH-ZH", es: null };'
+    ) in page
+    assert 'item.hidden = item.dataset.jurisdictionItem !== lang' in page
     assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
     assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
     assert (
@@ -2667,11 +2674,6 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.report.title",
         "module.prompt.title",
         "module.research.title",
-        "module.entriesItaly.title",
-        "module.reportItaly.title",
-        "module.concordato.title",
-        "module.previdenza.title",
-        "module.registro.title",
     )
     for title_key in title_keys:
         assert page.count(f'data-i18n="{title_key}"') == 1
@@ -3435,12 +3437,12 @@ def test_clara_public_icon_matches_plugin_source() -> None:
 
 @pytest.mark.parametrize(
     ("page_name", "expected_home_href", "expected_product", "expected_links"),
-    (
         (
-            "vera",
-            "/?lang=it",
-            "Vera",
-            ("#core", "#modello", "#data-boundary", "#video"),
+            (
+                "vera",
+                "/?lang=it",
+                "Vera",
+                ("#core", "#jurisdiction", "#data-boundary", "#video"),
         ),
         (
             "clara",
@@ -3470,7 +3472,7 @@ def test_companion_headers_share_product_navigation(
     )[0]
     link_hrefs = tuple(
         re.findall(
-            r'<a href="([^"]+)" data-i18n="nav\.[^"]+">[^<]+</a>',
+            r'<a\b(?=[^>]*\bdata-i18n="nav\.[^"]+")[^>]*\bhref="([^"]+)"',
             header,
         )
     )
@@ -3596,9 +3598,9 @@ def test_companion_overview_video_follows_the_intended_product_story(
         encoding="utf-8"
     )
     if companion == "vera":
-        assert page.index('id="installa"') < page.index('id="modello"')
-        assert page.index('id="core"') < page.index('id="italia"')
-        assert page.index('id="italia"') < page.index('id="video"')
+        assert page.index('id="installa"') < page.index('id="core"')
+        assert page.index('id="core"') < page.index('id="jurisdiction"')
+        assert page.index('id="jurisdiction"') < page.index('id="video"')
         assert page.count('class="overview-video"') == 1
         assert "install-panel__video" not in page
         return
@@ -3840,7 +3842,9 @@ def test_vera_module_links_preserve_language_without_changing_market() -> None:
 
     assert 'href="../new-client/index.html#journey" data-module-link' in page
     assert 'url.searchParams.set("lang", lang)' in page
-    assert 'link.setAttribute("href", withLanguage' in page
+    assert "link.dataset.nativeLanguage" in page
+    assert ": withLanguage(link.dataset.baseHref, lang)" in page
+    assert 'es: null' in page
     assert "window.location.replace" not in page
 
 

@@ -58,24 +58,16 @@ CLARA_SPANISH_OUTWARD_IDS = {
 }
 VERA_SPANISH_OUTWARD_IDS = {
     "BEiFYgK5Wew",
-    "p0OOhlz7_Sc",
-    "bFhSQiilox8",
-    "bL-LXrQzCA4",
     "ePe_bVrC-bs",
     "-TnYwnglpqE",
     "X3BOp9ZxiAQ",
     "5wEggdDYrm0",
-    "1REbQ-wBNf8",
     "DGrRH3MGRcg",
-    "BrCOAgSVyYg",
     "PD0vpXBY7GU",
 }
 SPANISH_MODULE_IDS = {
-    "xaWouXRwO8c",
-    "41H8PKFFmKg",
     "Q351IGPEPxg",
     "lHOahBSRknQ",
-    "GI6u74BPnN8",
 }
 
 
@@ -174,7 +166,7 @@ def test_vera_hero_consolidates_installation_and_localized_setup_video() -> None
     assert vera_page.count('id="installa"') == 1
     assert 'id="vera-hero-install-video-link"' not in vera_page
     assert "install-panel__video" not in vera_page
-    assert vera_page.index('id="installa"') < vera_page.index('id="modello"')
+    assert vera_page.index('id="installa"') < vera_page.index('id="core"')
     assert (
         'document.getElementById("vera-install-video-link").href = '
         "`https://youtu.be/${installVideo.id}`;"
@@ -278,7 +270,7 @@ def test_spanish_catalog_uses_all_native_outward_videos_without_english_fallback
 
     assert clara_ids == CLARA_SPANISH_OUTWARD_IDS
     assert vera_ids == VERA_SPANISH_OUTWARD_IDS
-    assert len(spanish_catalog_ids) == 24
+    assert len(spanish_catalog_ids) == 19
     assert spanish_catalog_ids.isdisjoint(ENGLISH_OUTWARD_IDS)
     assert SPANISH_MODULE_IDS <= localized_module_ids
 

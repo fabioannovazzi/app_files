@@ -505,7 +505,7 @@
 
     <section class="section-block" id="journey-workflow"><div class="section-head"><div><p class="eyebrow" data-journey="workflow.eyebrow">Percorso</p><h2 data-journey="workflow.title">Dal campione alle sole eccezioni utili.</h2></div><p data-journey="workflow.copy">La ricerca dei supporti segue una sequenza chiara e progressiva.</p></div><div class="journey-steps"><article class="journey-step"><span>01</span><h3 data-journey="workflow.one.title">Prende il campione</h3><p data-journey="workflow.one.copy">Legge le righe selezionate e i campi che permettono il confronto.</p></article><article class="journey-step"><span>02</span><h3 data-journey="workflow.two.title">Cerca nelle fonti</h3><p data-journey="workflow.two.copy">Esamina archivi, export e documenti di supporto già disponibili.</p></article><article class="journey-step"><span>03</span><h3 data-journey="workflow.three.title">Collega e confronta</h3><p data-journey="workflow.three.copy">Abbina importi, date e riferimenti e separa i casi ambigui.</p></article><article class="journey-step"><span>04</span><h3 data-journey="workflow.four.title">Prepara le richieste</h3><p data-journey="workflow.four.copy">Indica i documenti da recuperare soltanto per le righe ancora aperte.</p></article></div></section>
 
-    <section class="section-block" id="italy-adapter">
+    <section class="section-block" id="italy-adapter" data-jurisdiction-only="it">
       <div class="section-head">
         <div>
           <p class="eyebrow" data-i18n="what.eyebrow">Pacchetto Italia</p>
@@ -587,7 +587,7 @@
           <p data-journey="proof.copy">Due edizioni tengono distinto il metodo comune dall'adattatore italiano.</p>
         </div>
         <div class="journey-proof-media">
-          <article class="proof-edition">
+          <article class="proof-edition" data-jurisdiction-only="it">
             <p class="proof-edition__label" data-media-copy="core.label">Flusso Core</p>
             <a class="journey-video" id="proof-core-youtube" href="https://youtu.be/xakA0V5-3-8" target="_blank" rel="noopener noreferrer">
               <span class="journey-video__thumb"><img id="proof-core-image" src="https://i.ytimg.com/vi/xakA0V5-3-8/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="journey-video__play" aria-hidden="true">▶</span></span>
@@ -1056,6 +1056,22 @@
         }
       }
     };
+    translations.en.prompts.items[0] = [
+      "With structured support",
+      "Use Check Entries on /path/entries.xlsx with the available structured export or support archive. Match the evidence and request PDFs only for unresolved entries.",
+    ];
+    translations.fr.prompts.items[0] = [
+      "Avec des justificatifs structurés",
+      "Utilise Check Entries sur /chemin/entries.xlsx avec l’export structuré ou l’archive de justificatifs disponible. Rapproche les preuves et demande les PDF uniquement pour les écritures encore ouvertes.",
+    ];
+    translations.de.prompts.items[0] = [
+      "Mit strukturierten Belegen",
+      "Verwende Check Entries für /pfad/entries.xlsx mit dem verfügbaren strukturierten Export oder Belegarchiv. Ordne die Nachweise zu und fordere PDFs nur für offene Buchungen an.",
+    ];
+    translations.es.prompts.items[0] = [
+      "Con justificantes estructurados",
+      "Usa Check Entries en /ruta/asientos.xlsx con la exportación estructurada o el archivo de justificantes disponible. Vincula las evidencias y solicita PDF solo para los asientos sin resolver.",
+    ];
 
     function valueAt(obj, path) {
       return path.split(".").reduce((acc, part) => acc && acc[part], obj);
@@ -1121,6 +1137,9 @@
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.classList.toggle("is-active", button.dataset.lang === safeLang);
       });
+      document.querySelectorAll("[data-jurisdiction-only]").forEach((node) => {
+        node.hidden = node.dataset.jurisdictionOnly !== safeLang;
+      });
       const url = new URL(window.location.href);
       url.searchParams.set("lang", safeLang);
       window.history.replaceState({}, "", url.toString());
@@ -1141,6 +1160,26 @@
       es: {metaTitle:"Comprobar asientos | Vera",metaDescription:"Vera vincula los asientos muestreados con los justificantes disponibles y pone en primer plano las excepciones que deben revisarse.",breadcrumbAria:"Ruta de la página",text:{"nav.overview":"Resumen","nav.workflow":"Recorrido","nav.proof":"Ver","nav.next":"Punto de partida","nav.prompt":"Prompt","nav.open":"Abrir Vera","breadcrumb.vera":"Vera","breadcrumb.area":"Controles contables","breadcrumb.module":"Comprobar asientos","overview.eyebrow":"El trabajo de un vistazo","overview.title":"Del asiento muestreado al documento que lo explica.","overview.copy":"Vera parte de los archivos estructurados, vincula las evidencias disponibles y pone en primer plano únicamente las líneas que requieren atención.","flow.provide.title":"Proporcione","flow.provide.copy":"Los asientos muestreados y el archivo FatturaPA u otros justificantes disponibles.","flow.prepare.title":"Vera prepara","flow.prepare.copy":"Las coincidencias documentales, las diferencias y una cola de excepciones específica.","flow.receive.title":"Reciba","flow.receive.copy":"Una comprobación línea por línea con evidencias vinculadas y solicitudes específicas.","workflow.eyebrow":"Recorrido","workflow.title":"De la muestra a las excepciones relevantes.","workflow.copy":"La búsqueda de justificantes sigue una secuencia clara y progresiva.","workflow.one.title":"Tomar la muestra","workflow.one.copy":"Leer las líneas seleccionadas y los campos que permiten la comparación.","workflow.two.title":"Buscar en el archivo","workflow.two.copy":"Empezar por los datos FatturaPA y los justificantes estructurados ya disponibles.","workflow.three.title":"Vincular y comparar","workflow.three.copy":"Comparar importes, fechas y referencias y separar los casos ambiguos.","workflow.four.title":"Preparar solicitudes","workflow.four.copy":"Identificar los documentos que deben recuperarse solo para las líneas que sigan abiertas.","spec.summary":"Especificaciones técnicas, fuentes y archivos generados","proof.eyebrow":"Vera en acción","proof.title":"Vea cómo un asiento llega a su justificante.","proof.copy":"Una guía breve sigue la muestra a través de la vinculación de evidencias y las excepciones que quedan por revisar.","proof.kicker":"Guía breve · Narración en español","proof.videoTitle":"Del asiento muestreado al justificante verificado","proof.videoMeta":"Español · 0:50 · Reproducción en esta página","related.eyebrow":"Punto de partida","related.copy":"La comprobación es más directa cuando las líneas proceden de una muestra ya organizada.","related.link":"Volver a Muestreo del diario ←","prompt.eyebrow":"Para empezar","prompt.title":"Un prompt y después la comprobación.","prompt.copy":"Indique la muestra y el archivo de justificantes. Vera prepara el recorrido.","prompt.text":"Usa Check Entries en /ruta/muestra.xlsx y /ruta/fatture_xml.zip. Vincula los justificantes disponibles y prepara únicamente las excepciones que deben revisarse.","cta.title":"Lleve la muestra a Vera.","cta.copy":"Abra Vera y vincule los asientos con los justificantes disponibles.","cta.open":"Abrir Vera"}},
       de: {metaTitle:"Buchungen prüfen | Vera",metaDescription:"Vera verbindet ausgewählte Buchungen mit verfügbaren Belegen und stellt die zu prüfenden Ausnahmen in den Vordergrund.",breadcrumbAria:"Seitenpfad",text:{"nav.overview":"Überblick","nav.workflow":"Ablauf","nav.proof":"Ansehen","nav.next":"Ausgangspunkt","nav.prompt":"Prompt","nav.open":"Vera öffnen","breadcrumb.vera":"Vera","breadcrumb.area":"Buchhaltungskontrollen","breadcrumb.module":"Buchungen prüfen","overview.eyebrow":"Die Arbeit im Überblick","overview.title":"Von der ausgewählten Buchung zum erklärenden Beleg.","overview.copy":"Vera beginnt bei strukturierten Archiven, verbindet vorhandene Nachweise und hebt nur prüfbedürftige Zeilen hervor.","flow.provide.title":"Sie liefern","flow.provide.copy":"Die ausgewählten Buchungen und das FatturaPA-Archiv oder andere verfügbare Belege.","flow.prepare.title":"Vera bereitet vor","flow.prepare.copy":"Belegzuordnungen, Abweichungen und eine fokussierte Ausnahmeliste.","flow.receive.title":"Sie erhalten","flow.receive.copy":"Eine zeilenweise Prüfung mit verknüpften Nachweisen und gezielten Anfragen.","workflow.eyebrow":"Ablauf","workflow.title":"Von der Stichprobe zu den relevanten Ausnahmen.","workflow.copy":"Die Belegsuche folgt einer klaren, schrittweisen Reihenfolge.","workflow.one.title":"Stichprobe übernehmen","workflow.one.copy":"Ausgewählte Zeilen und Vergleichsfelder lesen.","workflow.two.title":"Archiv durchsuchen","workflow.two.copy":"Mit FatturaPA-Daten und vorhandenen strukturierten Belegen beginnen.","workflow.three.title":"Verbinden und vergleichen","workflow.three.copy":"Beträge, Daten und Referenzen abgleichen und mehrdeutige Fälle trennen.","workflow.four.title":"Anfragen vorbereiten","workflow.four.copy":"Nur für weiterhin offene Zeilen die benötigten Dokumente benennen.","spec.summary":"Technische Spezifikation, Quellen und erzeugte Dateien","proof.eyebrow":"Vera bei der Arbeit","proof.title":"Sehen Sie, wie eine Buchung ihren Beleg findet.","proof.copy":"Eine kurze Anleitung zeigt den Weg von der Stichprobe zu Nachweisen und Prüfausnahmen.","proof.kicker":"Kurzanleitung · Deutsche Sprecherstimme","proof.videoTitle":"Von der ausgewählten Buchung zum geprüften Beleg","proof.videoMeta":"Deutsch · 0:50 · Wiedergabe auf dieser Seite","related.eyebrow":"Ausgangspunkt","related.copy":"Die Prüfung wird direkter, wenn die Zeilen aus einer bereits geordneten Stichprobe stammen.","related.link":"Zurück zur Journalstichprobe ←","prompt.eyebrow":"Start","prompt.title":"Ein Prompt, dann die Prüfung.","prompt.copy":"Stichprobe und Belegarchiv angeben. Vera bereitet den Ablauf vor.","prompt.text":"Verwende Check Entries für /pfad/stichprobe.xlsx und /pfad/fatture_xml.zip. Verknüpfe verfügbare Belege und bereite nur die zu prüfenden Ausnahmen vor.","cta.title":"Stichprobe in Vera öffnen.","cta.copy":"Vera öffnen und Buchungen mit verfügbaren Belegen verbinden.","cta.open":"Vera öffnen"}}
     };
+    Object.assign(journeyCopy.en.text, {
+      "flow.provide.copy": "The sampled entries and the supporting records available for the check.",
+      "workflow.two.copy": "Search the structured exports and supporting documents available for the engagement.",
+      "prompt.text": "Use Check Entries on /path/sample.xlsx with the available supporting records. Connect the evidence and prepare only the exceptions that need review.",
+    });
+    Object.assign(journeyCopy.fr.text, {
+      "flow.provide.copy": "Les écritures échantillonnées et les justificatifs disponibles pour le contrôle.",
+      "workflow.two.copy": "Rechercher dans les exports structurés et les justificatifs disponibles pour la mission.",
+      "prompt.text": "Utilise Check Entries sur /chemin/echantillon.xlsx avec les justificatifs disponibles. Relie les preuves et prépare uniquement les exceptions à revoir.",
+    });
+    Object.assign(journeyCopy.de.text, {
+      "flow.provide.copy": "Die ausgewählten Buchungen und die für die Prüfung verfügbaren Belege.",
+      "workflow.two.copy": "Die verfügbaren strukturierten Exporte und Belegdokumente durchsuchen.",
+      "prompt.text": "Verwende Check Entries für /pfad/stichprobe.xlsx mit den verfügbaren Belegen. Verknüpfe die Nachweise und bereite nur die zu prüfenden Ausnahmen vor.",
+    });
+    Object.assign(journeyCopy.es.text, {
+      "flow.provide.copy": "Los asientos muestreados y los justificantes disponibles para la comprobación.",
+      "workflow.two.copy": "Buscar en las exportaciones estructuradas y los justificantes disponibles para el encargo.",
+      "prompt.text": "Usa Check Entries en /ruta/muestra.xlsx con los justificantes disponibles. Vincula las evidencias y prepara únicamente las excepciones que deben revisarse.",
+    });
     const coreJourneyOverrides = {
       it: {"overview.copy":"Vera parte dalle fonti disponibili, collega le evidenze e porta in primo piano soltanto le righe da approfondire.","flow.provide.copy":"Le scritture campionate, i supporti disponibili e i criteri del controllo.","workflow.two.title":"Cerca nelle fonti","workflow.two.copy":"Esamina archivi, export e documenti di supporto già disponibili.","proof.copy":"Due edizioni tengono distinto il metodo comune dall'adattatore italiano.","prompt.text":"Usa Check Entries sul campione in /percorso/campione.xlsx e sui supporti in /percorso/documenti. Collega le evidenze disponibili e prepara le sole eccezioni da rivedere."},
       en: {"overview.copy":"Vera starts with the available sources, connects the evidence and brings forward only the rows that need attention.","flow.provide.copy":"The sampled entries, available support and the check criteria.","workflow.two.title":"Search the sources","workflow.two.copy":"Review available archives, exports and supporting documents.","proof.copy":"Two editions keep the common method separate from the Italian adapter.","prompt.text":"Use Check Entries on /path/sample.xlsx and the support in /path/documents. Connect the available evidence and prepare only the exceptions that need review."},
@@ -1184,17 +1223,16 @@
           it: "xakA0V5-3-8", en: "0_3a2KTJTqY", fr: "piPbok7ZW0g",
           de: "MJnN8VDu-UM", es: "lHOahBSRknQ"
         },
-        italy: {
-          it: "I1dp3FYVy2w", en: "7o9knSMeN6E", fr: "6ZRnAKV89JI",
-          de: "i5OyOPSI1Oc", es: "GI6u74BPnN8"
-        }
+        italy: { it: "I1dp3FYVy2w" }
       };
       const coreId = videoIds.core[lang];
       const italyId = videoIds.italy[lang];
       document.getElementById("proof-core-youtube").href = `https://youtu.be/${coreId}`;
       document.getElementById("proof-core-image").src = `https://i.ytimg.com/vi/${coreId}/maxresdefault.jpg`;
-      document.getElementById("proof-italy-youtube").href = `https://youtu.be/${italyId}`;
-      document.getElementById("proof-italy-image").src = `https://i.ytimg.com/vi/${italyId}/maxresdefault.jpg`;
+      if (italyId) {
+        document.getElementById("proof-italy-youtube").href = `https://youtu.be/${italyId}`;
+        document.getElementById("proof-italy-image").src = `https://i.ytimg.com/vi/${italyId}/maxresdefault.jpg`;
+      }
       document.querySelector('meta[property="og:image"]').content = `https://i.ytimg.com/vi/${coreId}/maxresdefault.jpg`;
     }
     document.querySelectorAll("[data-lang]").forEach(button=>button.addEventListener("click",()=>applyJourneyCopy(button.dataset.lang)));applyJourneyCopy(document.documentElement.lang.slice(0,2));
