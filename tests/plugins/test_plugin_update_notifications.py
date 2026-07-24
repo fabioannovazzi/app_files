@@ -13,6 +13,9 @@ CLARA_ROOT = ROOT / "plugins" / "clara"
 VERA_ROOT = ROOT / "plugins" / "vera"
 PUBLISHED_VERSIONS_PATH = ROOT / "static" / "shared" / "codex-plugin-versions.json"
 UPDATE_SCRIPT_PATH = CLARA_ROOT / "scripts" / "check_for_update.py"
+CURATED_MARKETPLACE_CACHE_ROOT = (
+    Path.home() / ".codex" / "plugins" / "cache" / "openai-curated-remote"
+)
 
 
 def load_update_checker() -> Any:
@@ -268,3 +271,42 @@ def test_published_manifest_never_advertises_unreleased_source_version(
     result = checker.is_newer_version(published_version, source_manifest["version"])
 
     assert result is False
+
+
+@pytest.mark.parametrize("plugin_root", [CLARA_ROOT, VERA_ROOT])
+def test_published_manifest_is_not_behind_installed_marketplace(
+    plugin_root: Path,
+) -> None:
+    checker = load_update_checker()
+    plugin_cache = CURATED_MARKETPLACE_CACHE_ROOT / plugin_root.name
+    if not plugin_cache.is_dir():
+        pytest.skip("The locally installed curated marketplace plugin is unavailable.")
+
+    installed_versions: list[str] = []
+    for candidate in plugin_cache.iterdir():
+        manifest_path = candidate / ".codex-plugin" / "plugin.json"
+        if not manifest_path.is_file():
+            continue
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if (
+            manifest.get("name") == plugin_root.name
+            and isinstance(manifest.get("version"), str)
+        ):
+            installed_versions.append(manifest["version"])
+    if not installed_versions:
+        pytest.skip("No curated marketplace plugin version is installed locally.")
+
+    published_manifest = json.loads(PUBLISHED_VERSIONS_PATH.read_text(encoding="utf-8"))
+    published_version = published_manifest["plugins"][plugin_root.name][
+        "published_version"
+    ]
+    newer_installed_versions = [
+        version
+        for version in installed_versions
+        if checker.is_newer_version(version, published_version)
+    ]
+
+    assert not newer_installed_versions, (
+        f"{plugin_root.name}: public update manifest {published_version} is behind "
+        f"installed marketplace release(s) {sorted(newer_installed_versions)}"
+    )

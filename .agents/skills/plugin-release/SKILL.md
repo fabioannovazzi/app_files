@@ -52,7 +52,14 @@ Use `all` or omit the plugin name to rebuild every configured plugin package.
 
 ```bash
 .venv/bin/python -m pytest tests/plugins/test_codex_plugin_packages.py
+.venv/bin/python -m pytest tests/plugins/test_plugin_update_notifications.py
 ```
+
+The update-notification suite compares the public manifest with locally
+installed `openai-curated-remote` marketplace versions when that cache is
+available. If it reports that the manifest is behind, verify the marketplace
+listing is Published, update the manifest to that exact version, and deploy it
+before completing the release.
 
 8. In the final response, report:
 
