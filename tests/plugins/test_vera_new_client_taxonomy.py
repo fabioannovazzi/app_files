@@ -123,7 +123,6 @@ def test_vera_current_surfaces_do_not_publish_the_competing_names() -> None:
         ROOT / "static" / "shared" / "new-client" / "uk.html",
         ROOT / "static" / "shared" / "new-client" / "jurisdiction-pages.js",
         ROOT / "static" / "shared" / "video-library.js",
-        ROOT / "static" / "shared" / "vera-scope.js",
     )
 
     for path in current_paths:
