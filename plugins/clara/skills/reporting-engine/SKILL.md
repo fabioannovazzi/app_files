@@ -156,7 +156,7 @@ When a rendered data artifact feeds an HTML deck, seal that CSV or JSON into
 the HTML Deck `clara.evidence_bundle.v1` contract and bind the prepared series
 or cell. Never copy values from the render manifest into prose or a plot spec.
 The current renderer still accepts one input file (except the attribute-package
-boundary). Multi-source due-diligence work must first use reviewed semantic and
+boundary). Multi-source analytical work must first use reviewed semantic and
 relationship decisions to materialize deterministic evidence tables; the
 renderer must not infer cross-source joins.
 

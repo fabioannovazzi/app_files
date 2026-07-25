@@ -79,9 +79,9 @@ Codex handles the semantic work through the user's existing ChatGPT plan:
 interpreting advisor judgement, challenging assumptions after import, asking
 follow-up questions, and drafting client-facing narrative.
 
-## Due-Diligence Preparation Benchmark
+## Evidence-Preparation Engineering Benchmarks
 
-Clara's first upstream due-diligence preparation benchmark is packaged under
+Clara's first upstream evidence-preparation benchmark is packaged under
 `evals/public_truth/fastenal_q1_2025`. It pins three issuer monthly-sales
 releases and the related quarterly SEC filing, reconciles their disclosed
 precision with exact Decimal arithmetic, verifies quarterly P&L identities, and
@@ -210,7 +210,7 @@ its cells are source-bound report numbers. It adds no automatic analysis
 selection, chart selection, interpretation, report composition, or
 orchestrator.
 
-The fifth preparation milestone adds two public-source due-diligence slices
+The fifth preparation milestone adds two public-source analytical slices
 without extending the reporting handoff or introducing an orchestrator.
 
 The Universal Display Corporation case preserves anonymous customer aliases,

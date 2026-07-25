@@ -761,7 +761,7 @@ def test_manifest_and_skill_are_generic() -> None:
     default_prompts = manifest["interface"]["defaultPrompt"]
     default_prompt = "\n".join(default_prompts)
     assert all(len(prompt) <= 128 for prompt in default_prompts)
-    assert "update the evidence map" in default_prompt
+    assert "organize the evidence" in default_prompt
     assert "decisions that cannot wait" in default_prompt
     assert "render the right business chart" in default_prompt
     forbidden_terms = ("Al" + "fredo", "Car" + "lo", "Gal" + "loni")
@@ -780,7 +780,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.110"
+    assert manifest["version"] == "0.1.113"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -789,6 +789,16 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     assert "brand-fit" in manifest["keywords"]
     assert "reporting-engine" in manifest["keywords"]
     assert "dataset-semantic-layer" in manifest["keywords"]
+    marketplace_copy = " ".join(
+        (
+            manifest["description"],
+            manifest["interface"]["longDescription"],
+            *manifest["keywords"],
+            *manifest["interface"]["defaultPrompt"],
+        )
+    ).lower()
+    assert "due diligence" not in marketplace_copy
+    assert "due-diligence" not in marketplace_copy
     assert "Conversation Workflow Router" in main_skill
     assert "Hosted-interview bundles and Hosted Voice bundles" in main_skill
     fixture_ids = {item["id"] for item in fixture["should_trigger"]}

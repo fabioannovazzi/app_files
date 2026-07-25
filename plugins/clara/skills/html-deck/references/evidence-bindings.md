@@ -28,7 +28,7 @@ Deterministic code owns:
 Do not put a filter, join, aggregation, formula, row position, or semantic
 selector in a deck binding. Materialize the required fact or plot view upstream
 as a separate evidence artifact. This keeps the deck compiler generic across
-sales, financial, customer, operational, contract, and other due-diligence
+sales, financial, customer, operational, contract, and other project
 evidence.
 
 ## Prepare and seal evidence
@@ -38,7 +38,7 @@ An evidence bundle may contain any number of JSON or CSV artifacts:
 ```json
 {
   "schema_version": "clara.evidence_bundle.v1",
-  "bundle_id": "target-company-diligence",
+  "bundle_id": "project-evidence",
   "description": "Prepared financial and customer evidence.",
   "artifacts": [
     {
@@ -238,7 +238,7 @@ a prepared chart-data CSV can be sealed into this bundle without copying its
 values into the deck plan.
 
 The Reporting Engine remains a one-input render boundary today. A future
-due-diligence orchestrator should create multiple source assets, reviewed
+multi-source orchestrator should create multiple source assets, reviewed
 relationship contracts, and deterministic prepared tables before this deck
 contract. It must not infer that similarly named fields across financial,
 customer, operational, and contract sources identify the same concept.
