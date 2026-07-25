@@ -3011,12 +3011,6 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Apri la cartella del progetto e descrivi ciò che ti serve",
         "The project is not just a presentation",
         "Il progetto non è solo una presentazione",
-        "From the data room to a connected due-diligence evidence base",
-        "Dalla data room a una base di evidenze connessa per la due diligence",
-        "Reasoning defines the analytical treatment. Deterministic processing executes it.",
-        "Il ragionamento definisce il trattamento analitico. L’elaborazione deterministica lo esegue.",
-        'href="#due-diligence"',
-        'id="due-diligence"',
         "Interviews, documents, and data analysis",
         "Interviste, documenti e analisi dati",
         "Conduct an interview with a dedicated link",
@@ -3082,8 +3076,13 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Altri flussi di Clara",
         "Install the published Clara release",
         "Installa la versione pubblicata di Clara",
+        "due diligence",
+        "due-diligence",
     ):
         assert stale_snippet not in page
+    assert "due diligence" not in page.lower()
+    assert "due-diligence" not in page.lower()
+    assert '"dd.' not in page
     assert (
         '<a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2F'
         'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
@@ -3480,7 +3479,6 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "Clara",
             (
                 "#presentations",
-                "#due-diligence",
                 "#workflow",
                 "#data-handling",
                 "#videos",
