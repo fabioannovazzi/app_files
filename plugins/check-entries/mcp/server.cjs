@@ -1,12 +1,171 @@
 "use strict";
 
 const fs = require("node:fs");
+const crypto = require("node:crypto");
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 
 const SERVER_NAME = "check-entries-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
+const CHECK_ENTRIES_PLUGIN_IMPLEMENTATION_PATHS = [
+  ".app.json",
+  ".codex-plugin/plugin.json",
+  ".mcp.json",
+  "assets/check-entries-review-widget.html",
+  "assets/icon.svg",
+  "assets/review-workbench-adapter.json",
+  "mcp/server.cjs",
+  "scripts/apply_review_edits.py",
+  "scripts/check_dependencies.py",
+  "scripts/check_entries_core.py",
+  "scripts/implementation_bootstrap.py",
+  "scripts/implementation_contract.py",
+  "scripts/inspect_entries.py",
+  "scripts/invoice_support.py",
+  "scripts/physical_output_set.py",
+  "scripts/review_session.py",
+  "scripts/run_checks.py",
+  "scripts/stable_ooxml.py",
+];
+const CHECK_ENTRIES_SHARED_IMPLEMENTATION_PATHS = [
+  "__init__.py",
+  "contracts.py",
+  "decisions.py",
+  "envelope.py",
+  "money.py",
+  "relationships.py",
+  "review_output_transaction.cjs",
+  "serialization.py",
+];
+const REVIEW_TRANSACTION_RUNTIME = (() => {
+  const vendored = path.join(
+    PLUGIN_ROOT,
+    "vendor",
+    "modules",
+    "vera_assurance",
+    "review_output_transaction.cjs",
+  );
+  return fs.existsSync(vendored)
+    ? vendored
+    : path.resolve(
+        PLUGIN_ROOT,
+        "..",
+        "_shared",
+        "vendor",
+        "modules",
+        "vera_assurance",
+        "review_output_transaction.cjs",
+      );
+})();
+const ASSURANCE_IMPLEMENTATION_ROOT = path.dirname(
+  REVIEW_TRANSACTION_RUNTIME,
+);
+
+function exactPreImportImplementationTree() {
+  const roots = {
+    implementation: PLUGIN_ROOT,
+    assurance_implementation: ASSURANCE_IMPLEMENTATION_ROOT,
+  };
+  const expectedFiles = new Set([
+    ...CHECK_ENTRIES_PLUGIN_IMPLEMENTATION_PATHS.map(
+      (relativePath) => `implementation:${relativePath}`,
+    ),
+    ...CHECK_ENTRIES_SHARED_IMPLEMENTATION_PATHS.map(
+      (relativePath) => `assurance_implementation:${relativePath}`,
+    ),
+  ]);
+  const expectedDirectories = new Set();
+  for (const entry of expectedFiles) {
+    const separator = entry.indexOf(":");
+    const rootId = entry.slice(0, separator);
+    let parent = path.posix.dirname(entry.slice(separator + 1));
+    while (parent && parent !== ".") {
+      expectedDirectories.add(`${rootId}:${parent}`);
+      parent = path.posix.dirname(parent);
+    }
+  }
+  const observedFiles = new Set();
+  const observedDirectories = new Set();
+  const scan = (rootId, scanRoot) => {
+    const root = roots[rootId];
+    const rootEntry = fs.lstatSync(scanRoot);
+    if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+      throw new Error("Check Entries implementation root is unsafe");
+    }
+    const scanRelative = path.relative(root, scanRoot).split(path.sep).join("/");
+    if (scanRelative && scanRelative !== ".") {
+      observedDirectories.add(`${rootId}:${scanRelative}`);
+    }
+    const pending = [scanRoot];
+    while (pending.length) {
+      const current = pending.pop();
+      for (const name of fs.readdirSync(current).sort()) {
+        const candidate = path.join(current, name);
+        const observed = fs.lstatSync(candidate);
+        const relative = path.relative(root, candidate).split(path.sep).join("/");
+        if (observed.isSymbolicLink()) {
+          throw new Error("Check Entries implementation cannot contain symlinks");
+        }
+        if (observed.isDirectory()) {
+          observedDirectories.add(`${rootId}:${relative}`);
+          pending.push(candidate);
+          continue;
+        }
+        if (!observed.isFile() || observed.nlink !== 1) {
+          throw new Error(
+            "Check Entries implementation files must be ordinary single-link files",
+          );
+        }
+        observedFiles.add(`${rootId}:${relative}`);
+      }
+    }
+  };
+  for (const [rootId, scanRoot] of [
+    ["implementation", path.join(PLUGIN_ROOT, "assets")],
+    ["implementation", path.join(PLUGIN_ROOT, "mcp")],
+    ["implementation", path.join(PLUGIN_ROOT, "scripts")],
+    ["implementation", path.join(PLUGIN_ROOT, ".codex-plugin")],
+    ["assurance_implementation", ASSURANCE_IMPLEMENTATION_ROOT],
+  ]) {
+    scan(rootId, scanRoot);
+  }
+  for (const relativePath of [".app.json", ".mcp.json"]) {
+    const candidate = path.join(PLUGIN_ROOT, relativePath);
+    const observed = fs.lstatSync(candidate);
+    if (
+      observed.isSymbolicLink() ||
+      !observed.isFile() ||
+      observed.nlink !== 1
+    ) {
+      throw new Error(
+        "Check Entries launcher configuration must be an ordinary single-link file",
+      );
+    }
+    observedFiles.add(`implementation:${relativePath}`);
+  }
+  const exactSet = (left, right) =>
+    left.size === right.size && [...left].every((entry) => right.has(entry));
+  if (
+    !exactSet(observedFiles, expectedFiles) ||
+    !exactSet(observedDirectories, expectedDirectories)
+  ) {
+    throw new Error(
+      "Check Entries implementation filesystem does not match the exact contract",
+    );
+  }
+}
+
+exactPreImportImplementationTree();
+
+const {
+  generatedReviewAtomicWriteFileSync,
+  generatedReviewCaptureDirectoryImage,
+  generatedReviewCollectApplicationWritePaths,
+  generatedReviewPathEntryStat,
+  generatedReviewTransactionEnvelope,
+  withGeneratedReviewOutputTransaction,
+} = require(REVIEW_TRANSACTION_RUNTIME);
 const PLUGIN_MANIFEST = JSON.parse(
   fs.readFileSync(path.join(PLUGIN_ROOT, ".codex-plugin", "plugin.json"), "utf8"),
 );
@@ -51,6 +210,194 @@ const ITEM_TYPES = new Set([
 
 function isPlainObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
+}
+
+function canonicalJsonValue(value) {
+  if (Array.isArray(value)) return value.map((item) => canonicalJsonValue(item));
+  if (isPlainObject(value)) {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonicalJsonValue(value[key])]),
+    );
+  }
+  if (value == null || ["string", "boolean", "number"].includes(typeof value)) {
+    return value;
+  }
+  throw new Error("review_payload contains a non-JSON value");
+}
+
+function reviewPayloadContentSha256(reviewPayload) {
+  const content = { ...reviewPayload };
+  delete content.content_sha256;
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify(canonicalJsonValue(content)), "utf8")
+    .digest("hex");
+}
+
+function immutableRunIntakeProjection(value) {
+  if (!isPlainObject(value)) return null;
+  const projection = { ...value };
+  // execution_trace is append-only local execution metadata. Every authority-
+  // bearing intake field remains in the exact canonical comparison.
+  delete projection.execution_trace;
+  return canonicalJsonValue(projection);
+}
+
+function validatePersistedRunIntake(inputArgs) {
+  const caller = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir) return;
+  if (!caller) throw new Error("run_intake is required for persisted writes");
+  const persisted = readJsonFileIfPresent(path.join(outputDir, "run_intake.json"));
+  if (!persisted) {
+    // Direct, explicitly targeted review applications may start without a
+    // workflow-created intake. An existing assured workflow may not bypass
+    // intake replay by deleting run_intake.json.
+    const workflowMarkers = [
+      "assurance_envelope.json",
+      "check_audit.json",
+      "review_payload.json",
+      "normalized_entries.csv",
+    ];
+    if (workflowMarkers.some((name) => fs.existsSync(path.join(outputDir, name)))) {
+      throw new Error("persisted run_intake.json is required before any write");
+    }
+    return;
+  }
+  if (
+    typeof persisted.output_dir !== "string" ||
+    path.resolve(persisted.output_dir) !== outputDir ||
+    JSON.stringify(immutableRunIntakeProjection(caller)) !==
+      JSON.stringify(immutableRunIntakeProjection(persisted))
+  ) {
+    throw new Error("run_intake does not match the persisted immutable intake");
+  }
+}
+
+function cloneCanonicalJson(value) {
+  return JSON.parse(JSON.stringify(canonicalJsonValue(value)));
+}
+
+function assertedPersistedMatch(callerValue, persistedValue, label) {
+  if (callerValue == null) return;
+  if (!isPlainObject(callerValue) || !canonicalJsonEqual(callerValue, persistedValue)) {
+    if (label === "review_payload") {
+      throw new Error("review_payload does not match the persisted assured review");
+    }
+    throw new Error(CHECK_ENTRIES_AUTHORIZATION_FAILURE);
+  }
+}
+
+const CHECK_ENTRIES_ASSURANCE_MARKERS = [
+    "assurance_envelope.json",
+    "check_audit.json",
+    "normalized_entries.csv",
+    "numeric_evidence_ledger.json",
+    "support_manifest.json",
+];
+
+function hasAssuredCheckEntriesMarker(outputDir) {
+  return CHECK_ENTRIES_ASSURANCE_MARKERS.some((name) =>
+    fs.existsSync(path.join(outputDir, name)),
+  );
+}
+
+function trustedImageJsonObject(trustedImage, relativePath) {
+  if (!trustedImage) return null;
+  const entry = trustedImage.files.find((file) => file.path === relativePath);
+  if (!entry) return null;
+  try {
+    const parsed = JSON.parse(entry.payload.toString("utf8"));
+    return isPlainObject(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function parentBoundCheckEntriesArgs(
+  inputArgs,
+  {
+    outputDir = resolveRunOutputDir(inputArgs),
+    trustedImage = null,
+    trustedImageCaptured = false,
+  } = {},
+) {
+  if (!outputDir) return { args: inputArgs, outputDir: null, assured: false };
+  const imageJson = (name) =>
+    trustedImageCaptured
+      ? trustedImageJsonObject(trustedImage, name)
+      : readJsonFileIfPresent(path.join(outputDir, name));
+  const persistedRunIntake = imageJson("run_intake.json");
+  const persistedReviewPayload = imageJson("review_payload.json");
+  const persistedUiDecisions = imageJson("ui_decisions.json");
+  const persistedFinalArtifacts = imageJson("final_artifacts.json");
+  const assured = trustedImageCaptured
+    ? CHECK_ENTRIES_ASSURANCE_MARKERS.some((name) =>
+        (trustedImage?.files || []).some((file) => file.path === name),
+      )
+    : hasAssuredCheckEntriesMarker(outputDir);
+  if (
+    assured &&
+    [
+      persistedRunIntake,
+      persistedReviewPayload,
+      persistedUiDecisions,
+      persistedFinalArtifacts,
+    ].some((value) => !isPlainObject(value))
+  ) {
+    throw new Error(CHECK_ENTRIES_AUTHORIZATION_FAILURE);
+  }
+  if (persistedRunIntake) {
+    assertedPersistedMatch(inputArgs.run_intake, persistedRunIntake, "run_intake");
+  } else if (!trustedImageCaptured) {
+    validatePersistedRunIntake(inputArgs);
+  }
+  if (persistedReviewPayload) {
+    assertedPersistedMatch(
+      inputArgs.review_payload,
+      persistedReviewPayload,
+      "review_payload",
+    );
+  }
+  if (persistedUiDecisions) {
+    assertedPersistedMatch(
+      inputArgs.ui_decisions,
+      persistedUiDecisions,
+      "ui_decisions",
+    );
+  }
+  if (persistedFinalArtifacts) {
+    assertedPersistedMatch(
+      inputArgs.final_artifacts,
+      persistedFinalArtifacts,
+      "final_artifacts",
+    );
+  }
+  const trustedArgs = {
+    ...inputArgs,
+    ...(persistedRunIntake
+      ? { run_intake: cloneCanonicalJson(persistedRunIntake) }
+      : {}),
+    ...(persistedReviewPayload
+      ? { review_payload: cloneCanonicalJson(persistedReviewPayload) }
+      : {}),
+    ...(persistedUiDecisions
+      ? { ui_decisions: cloneCanonicalJson(persistedUiDecisions) }
+      : {}),
+    ...(persistedFinalArtifacts
+      ? { final_artifacts: cloneCanonicalJson(persistedFinalArtifacts) }
+      : {}),
+  };
+  if (
+    persistedRunIntake &&
+    (typeof persistedRunIntake.output_dir !== "string" ||
+      path.resolve(persistedRunIntake.output_dir) !== path.resolve(outputDir))
+  ) {
+    throw new Error(CHECK_ENTRIES_AUTHORIZATION_FAILURE);
+  }
+  return { args: trustedArgs, outputDir, assured };
 }
 
 function normalizeLanguage(value) {
@@ -109,6 +456,11 @@ function localizeRuntimeError(message, language) {
   if ((match = text.match(/^(.+) payload exceeds (\d+) bytes$/i))) return `Los datos de ${match[1]} superan los ${match[2]} bytes`;
   if (text.startsWith("decisions contains duplicate item_id:")) return text.replace("decisions contains duplicate item_id:", "decisions contiene un item_id duplicado:");
   if (text === "run_intake.run_id must match review_payload.run_id") return "run_intake.run_id debe coincidir con review_payload.run_id";
+  if (text === "persisted run_intake.json is required before any write") return "Se requiere run_intake.json persistido antes de cualquier escritura";
+  if (text === "run_intake does not match the persisted immutable intake") return "run_intake no coincide con la entrada inmutable persistida";
+  if (text === "review_payload.content_sha256 is stale") return "El resumen criptográfico de review_payload está obsoleto";
+  if (text === "ui_decisions is bound to a different review_payload") return "ui_decisions está vinculado a otro review_payload";
+  if (text === "review_payload.content_sha256 must be a lowercase SHA-256 digest") return "review_payload.content_sha256 debe ser un resumen SHA-256 en minúsculas";
   if (text === "CSV parse failed: unclosed quoted field") return "No se pudo interpretar el CSV: hay un campo entrecomillado sin cerrar";
   if (text === "structured artifact records must be an array") return "Los registros del artefacto estructurado deben ser una matriz";
   if (text === "CSV structured edit requires a header row") return "La edición estructurada del CSV requiere una fila de encabezado";
@@ -334,11 +686,21 @@ function validateReviewPayload(inputArgs) {
   const reviewPayload = inputArgs.review_payload;
   if (!isPlainObject(reviewPayload)) throw new Error("review_payload must be an object");
   requireString(reviewPayload.schema_version, "review_payload.schema_version");
+  if (reviewPayload.schema_version !== "2.0") {
+    throw new Error('review_payload.schema_version must be "2.0"');
+  }
   if (reviewPayload.plugin !== "check-entries") {
     throw new Error('review_payload.plugin must be "check-entries"');
   }
   requireString(reviewPayload.workflow, "review_payload.workflow");
   requireString(reviewPayload.run_id, "review_payload.run_id");
+  requireString(reviewPayload.content_sha256, "review_payload.content_sha256");
+  if (!/^[0-9a-f]{64}$/.test(reviewPayload.content_sha256)) {
+    throw new Error("review_payload.content_sha256 must be a lowercase SHA-256 digest");
+  }
+  if (reviewPayload.content_sha256 !== reviewPayloadContentSha256(reviewPayload)) {
+    throw new Error("review_payload.content_sha256 is stale");
+  }
   if (!Array.isArray(reviewPayload.items)) {
     throw new Error("review_payload.items must be an array");
   }
@@ -349,6 +711,19 @@ function validateReviewPayload(inputArgs) {
     throw new Error("review_payload.item_count must equal review_payload.items.length");
   }
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
+  const itemIds = reviewPayload.items.map((item) => item.id);
+  if (new Set(itemIds).size !== itemIds.length) {
+    throw new Error("review_payload.items must have unique ids");
+  }
+  const currentUiDecisions = isPlainObject(inputArgs.ui_decisions)
+    ? inputArgs.ui_decisions
+    : null;
+  if (
+    currentUiDecisions &&
+    currentUiDecisions.review_payload_content_sha256 !== reviewPayload.content_sha256
+  ) {
+    throw new Error("ui_decisions is bound to a different review_payload");
+  }
   const payload = {
     widget_type: "check_entries_review",
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
@@ -480,6 +855,7 @@ function buildUiDecisions(inputArgs) {
     decided_at: decisions.length ? decidedAt : null,
     decision_source: decisionSource,
     review_payload_path: reviewPayloadPath,
+    review_payload_content_sha256: reviewPayload.content_sha256,
     decisions,
     decision_count: decisions.length,
     item_count: reviewPayload.items.length,
@@ -493,38 +869,330 @@ function buildUiDecisions(inputArgs) {
 }
 
 function saveDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
-  const language = languageFromArgs(inputArgs);
-  let persisted = false;
-  if (decisionOutputPath) {
-    fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
-    persisted = true;
-  }
-  return {
-    ok: true,
-    validation_type: "check_entries_decisions",
-    run_id: uiDecisions.run_id,
-    decision_count: uiDecisions.decision_count,
-    item_count: uiDecisions.item_count,
-    status: uiDecisions.status,
-    persisted,
-    ui_decisions_path: persisted ? decisionOutputPath : null,
-    message: persisted
-      ? isSpanish(language)
-        ? `Se guardaron ${uiDecisions.decision_count} decisiones de Comprobación de asientos.`
-        : `Saved ${uiDecisions.decision_count} Check Entries decisions.`
-      : isSpanish(language)
-        ? "Las decisiones son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
-        : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
-    ui_decisions: uiDecisions,
+  const outputDir = resolveRunOutputDir(inputArgs);
+  const persist = (trustedArgs, workingOutputDir) => {
+    const { uiDecisions, decisionOutputPath } =
+      buildUiDecisions(trustedArgs);
+    const language = languageFromArgs(trustedArgs);
+    const workingPath = workingOutputDir
+      ? path.join(workingOutputDir, "ui_decisions.json")
+      : decisionOutputPath;
+    const persisted = Boolean(workingPath);
+    if (workingPath) {
+      fs.mkdirSync(path.dirname(workingPath), { recursive: true });
+      atomicWriteFileSync(
+        workingPath,
+        `${JSON.stringify(uiDecisions, null, 2)}\n`,
+        "utf8",
+      );
+    }
+    const result = {
+      ok: true,
+      validation_type: "check_entries_decisions",
+      run_id: uiDecisions.run_id,
+      decision_count: uiDecisions.decision_count,
+      item_count: uiDecisions.item_count,
+      status: uiDecisions.status,
+      persisted,
+      ui_decisions_path: persisted ? decisionOutputPath : null,
+      message: persisted
+        ? isSpanish(language)
+          ? `Se guardaron ${uiDecisions.decision_count} decisiones de Comprobación de asientos.`
+          : `Saved ${uiDecisions.decision_count} Check Entries decisions.`
+        : isSpanish(language)
+          ? "Las decisiones son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
+          : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ui_decisions: uiDecisions,
+    };
+    return generatedReviewTransactionEnvelope(
+      result,
+      persisted ? ["ui_decisions.json"] : [],
+    );
   };
+  if (!outputDir) return persist(inputArgs, null).result;
+  validateCheckEntriesTransactionInput(outputDir);
+  let assuredWorkflow = false;
+  return withGeneratedReviewOutputTransaction(
+    outputDir,
+    ({ workingOutputDir, trustedImage }) => {
+      const authority = parentBoundCheckEntriesArgs(inputArgs, {
+        outputDir,
+        trustedImage,
+        trustedImageCaptured: true,
+      });
+      assuredWorkflow = authority.assured;
+      const persistedAuthority = validateCheckEntriesAssuranceAuthority(
+        workingOutputDir,
+        {
+        required: authority.assured,
+        canonicalOutputDir: outputDir,
+        failureMessage: CHECK_ENTRIES_AUTHORIZATION_FAILURE,
+        },
+      );
+      if (authority.assured) {
+        const childPreflight =
+          preflightWorkflowSpecificReviewApplication(workingOutputDir);
+        validatePreflightAcknowledgement(childPreflight, persistedAuthority);
+      }
+      return persist(authority.args, workingOutputDir);
+    },
+    {
+      ...checkEntriesTransactionOptions("save"),
+      validateWholeTree: ({ workingOutputDir }) => {
+        const persistedAuthority = validateCheckEntriesAssuranceAuthority(
+          workingOutputDir,
+          {
+          required: assuredWorkflow,
+          canonicalOutputDir: outputDir,
+          failureMessage: CHECK_ENTRIES_AUTHORIZATION_FAILURE,
+          },
+        );
+        if (assuredWorkflow) {
+          const childPreflight =
+            preflightWorkflowSpecificReviewApplication(workingOutputDir);
+          validatePreflightAcknowledgement(childPreflight, persistedAuthority);
+        }
+      },
+    },
+  );
 }
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
   const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
   return outputDir ? path.resolve(outputDir) : null;
+}
+
+function pathEntryStat(targetPath) {
+  return generatedReviewPathEntryStat(targetPath);
+}
+
+function atomicWriteFileSync(targetPath, payload, encoding = null) {
+  return generatedReviewAtomicWriteFileSync(targetPath, payload, encoding);
+}
+
+function validateOutputDirectoryTree(outputDir) {
+  const rootStat = pathEntryStat(outputDir);
+  if (!rootStat) return;
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) {
+    throw new Error("run_intake.output_dir must be a real directory");
+  }
+  const pending = [outputDir];
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current)) {
+      const candidate = path.join(current, name);
+      const candidateStat = fs.lstatSync(candidate);
+      if (candidateStat.isSymbolicLink()) {
+        throw new Error("run_intake.output_dir cannot contain symbolic links");
+      }
+      if (candidateStat.isDirectory()) {
+        pending.push(candidate);
+        continue;
+      }
+      if (!candidateStat.isFile()) {
+        throw new Error("run_intake.output_dir cannot contain special filesystem entries");
+      }
+      if (candidateStat.nlink !== 1) {
+        throw new Error("run_intake.output_dir cannot contain hardlink aliases");
+      }
+    }
+  }
+}
+
+const CHECK_ENTRIES_BASE_PHYSICAL_PATHS = new Set([
+  "assurance_envelope.json",
+  "check_audit.json",
+  "check_results.csv",
+  "check_results.xlsx",
+  "execution_recipe.json",
+  "final_artifacts.json",
+  "invoice_inventory.json",
+  "normalized_entries.csv",
+  "numeric_evidence_ledger.json",
+  "pdf_inventory.json",
+  "prepared_support_facts.csv",
+  "review_handoff.md",
+  "review_notes.md",
+  "review_payload.json",
+  "run_intake.json",
+  "support_manifest.json",
+  "ui_decisions.json",
+]);
+function checkEntriesExpectedPhysicalDirectories(expectedFiles) {
+  const directories = new Set();
+  for (const relativePath of expectedFiles) {
+    let parent = path.posix.dirname(relativePath);
+    while (parent && parent !== ".") {
+      directories.add(parent);
+      parent = path.posix.dirname(parent);
+    }
+  }
+  return directories;
+}
+
+function checkEntriesPhysicalTree(outputDir) {
+  const files = new Set();
+  const directories = new Set();
+  const pending = [outputDir];
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current)) {
+      const candidate = path.join(current, name);
+      const observed = fs.lstatSync(candidate);
+      const relativePath = path
+        .relative(outputDir, candidate)
+        .split(path.sep)
+        .join("/");
+      if (observed.isSymbolicLink()) {
+        throw new Error("Check Entries physical output set contains a symlink");
+      }
+      if (observed.isDirectory()) {
+        directories.add(relativePath);
+        pending.push(candidate);
+        continue;
+      }
+      if (!observed.isFile() || observed.nlink !== 1) {
+        throw new Error("Check Entries physical output set contains an unsafe file");
+      }
+      files.add(relativePath);
+    }
+  }
+  return { files, directories };
+}
+
+function checkEntriesPhysicalReviewPaths(envelope) {
+  const successors = envelope.reviewed_decisions.filter(
+    (decision) =>
+      isPlainObject(decision) &&
+      decision.decision_type === "check_entries_review_actions" &&
+      ["draft", "reviewed"].includes(decision.status),
+  );
+  if (successors.length > 1) {
+    throw new Error("Check Entries has multiple physical review successors");
+  }
+  if (!successors.length) return new Set();
+  const content = successors[0].content;
+  if (!isPlainObject(content) || !Array.isArray(content.effects)) {
+    throw new Error("Check Entries physical review successor is malformed");
+  }
+  const paths = new Set(["applied_decisions.json"]);
+  const edits = [];
+  for (const effect of content.effects) {
+    if (!isPlainObject(effect) || effect.action !== "edit") continue;
+    if (effect.target_artifact !== "check_results.csv") {
+      throw new Error("Check Entries physical review edit is unsupported");
+    }
+    const itemId = safePathSegment(effect.item_id, "item");
+    const expectedRevision = `revisions/check_results__${itemId}.txt`;
+    const expectedBackup =
+      `revisions/originals/check_results__${itemId}.csv`;
+    if (effect.revision_artifact != null) {
+      if (effect.revision_artifact !== expectedRevision) {
+        throw new Error("Check Entries physical revision path is stale");
+      }
+      paths.add(expectedRevision);
+    }
+    if (effect.original_artifact_backup !== expectedBackup) {
+      throw new Error("Check Entries physical backup path is stale");
+    }
+    paths.add(expectedBackup);
+    edits.push(effect);
+  }
+  if (edits.length) {
+    const firstItemId = safePathSegment(edits[0].item_id, "item");
+    paths.add(
+      `revisions/originals/check_results__${firstItemId}.xlsx`,
+    );
+  }
+  return paths;
+}
+
+function validateCheckEntriesPhysicalOutputSet(outputDir, envelope) {
+  const expectedFiles = new Set([
+    ...CHECK_ENTRIES_BASE_PHYSICAL_PATHS,
+    ...checkEntriesPhysicalReviewPaths(envelope),
+  ]);
+  const expectedDirectories =
+    checkEntriesExpectedPhysicalDirectories(expectedFiles);
+  const actual = checkEntriesPhysicalTree(outputDir);
+  const sameSet = (left, right) =>
+    left.size === right.size && [...left].every((value) => right.has(value));
+  if (
+    !sameSet(actual.files, expectedFiles) ||
+    !sameSet(actual.directories, expectedDirectories)
+  ) {
+    throw new Error("Check Entries physical output set is not exact");
+  }
+}
+
+const CHECK_ENTRIES_TRANSACTION_FAILURE =
+  "Check Entries review transaction failed safely.";
+const CHECK_ENTRIES_ROLLBACK_FAILURE =
+  "Check Entries review transaction could not be restored safely.";
+const CHECK_ENTRIES_AUTHORIZATION_FAILURE =
+  "Check Entries persisted review authorization failed.";
+
+function checkEntriesMappedTransactionError(error) {
+  const message = error instanceof Error ? error.message : "";
+  if (
+    message.length > 240 ||
+    /[\\/\u0000-\u001f\u007f]/.test(message) ||
+    /Traceback|\bFile\s+["']|file:|~[\\/]/i.test(message)
+  ) {
+    return null;
+  }
+  if (
+    message.startsWith("Check Entries assurance preflight ") ||
+    message.startsWith("Check Entries review application ")
+  ) {
+    return message;
+  }
+  const fixedMessages = new Set([
+    "run_intake.output_dir must be a real directory",
+    "run_intake.output_dir cannot contain symbolic links",
+    "run_intake.output_dir cannot contain special filesystem entries",
+    "run_intake.output_dir cannot contain hardlink aliases",
+    "review_payload does not match the persisted assured review",
+    CHECK_ENTRIES_AUTHORIZATION_FAILURE,
+  ]);
+  return fixedMessages.has(message) ? message : null;
+}
+
+function checkEntriesTransactionOptions(_kind) {
+  return {
+    failureMessage: CHECK_ENTRIES_TRANSACTION_FAILURE,
+    rollbackFailureMessage: CHECK_ENTRIES_ROLLBACK_FAILURE,
+    mapOperationError: checkEntriesMappedTransactionError,
+  };
+}
+
+function validateCheckEntriesTransactionInput(outputDir) {
+  try {
+    validateOutputDirectoryTree(outputDir);
+  } catch (error) {
+    throw new Error(
+      checkEntriesMappedTransactionError(error) ||
+        CHECK_ENTRIES_TRANSACTION_FAILURE,
+    );
+  }
+}
+
+function readOnlyAssuredReviewArgs(inputArgs) {
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir || !hasAssuredCheckEntriesMarker(outputDir)) {
+    return inputArgs;
+  }
+  validateCheckEntriesTransactionInput(outputDir);
+  const authority = parentBoundCheckEntriesArgs(inputArgs, { outputDir });
+  const persistedAuthority = validateCheckEntriesAssuranceAuthority(outputDir, {
+    required: true,
+    canonicalOutputDir: outputDir,
+    failureMessage: CHECK_ENTRIES_AUTHORIZATION_FAILURE,
+  });
+  const childPreflight = preflightWorkflowSpecificReviewApplication(outputDir);
+  validatePreflightAcknowledgement(childPreflight, persistedAuthority);
+  return authority.args;
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -642,8 +1310,8 @@ function needsNativeRegeneration(targetArtifact) {
 
 function currentFinalArtifactsForApplication(inputArgs, finalArtifactsPath) {
   return (
-    (isPlainObject(inputArgs.final_artifacts) ? inputArgs.final_artifacts : null) ||
     readJsonFileIfPresent(finalArtifactsPath) ||
+    (isPlainObject(inputArgs.final_artifacts) ? inputArgs.final_artifacts : null) ||
     {}
   );
 }
@@ -778,7 +1446,7 @@ function updateCsvArtifact(filePath, effect, spec) {
       `CSV structured edit expected exactly one row for ${spec.idField}=${spec.recordId}, found ${updated}`,
     );
   }
-  fs.writeFileSync(filePath, serializeCsv(rows), "utf8");
+  atomicWriteFileSync(filePath, serializeCsv(rows), "utf8");
   return { updatedRows: updated, rowCount: Math.max(rows.length - 1, 0) };
 }
 
@@ -786,18 +1454,18 @@ function updateJsonArtifact(filePath, effect, spec) {
   const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
   if (Array.isArray(parsed)) {
     const updatedRows = updateMatchingRecord(parsed, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    atomicWriteFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
     return { updatedRows, rowCount: parsed.length };
   }
   if (isPlainObject(parsed) && spec.recordsKey && Array.isArray(parsed[spec.recordsKey])) {
     const records = parsed[spec.recordsKey];
     const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    atomicWriteFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
     return { updatedRows, rowCount: records.length };
   }
   if (isPlainObject(parsed) && String(parsed[spec.idField] ?? "") === spec.recordId) {
     parsed[spec.targetField] = effect.edit_value;
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    atomicWriteFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
     return { updatedRows: 1, rowCount: 1 };
   }
   throw new Error("JSON structured edit requires an object, array, or explicit records_key array");
@@ -810,7 +1478,11 @@ function updateJsonlArtifact(filePath, effect, spec) {
     .filter((line) => line.trim())
     .map((line) => JSON.parse(line));
   const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-  fs.writeFileSync(filePath, `${records.map((record) => JSON.stringify(record)).join("\n")}\n`, "utf8");
+  atomicWriteFileSync(
+    filePath,
+    `${records.map((record) => JSON.stringify(record)).join("\n")}\n`,
+    "utf8",
+  );
   return { updatedRows, rowCount: records.length };
 }
 
@@ -842,34 +1514,1284 @@ function uniqueStrings(values) {
   );
 }
 
+function canonicalRunRelativePath(value) {
+  if (
+    typeof value !== "string" ||
+    value !== value.trim() ||
+    /[\u0000-\u001f\u007f]/.test(value)
+  ) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+  const text = value;
+  if (
+    !text ||
+    path.isAbsolute(text) ||
+    /^[A-Za-z]:\//.test(text) ||
+    text.includes("\\") ||
+    text === "." ||
+    text.startsWith("./") ||
+    text.startsWith("../") ||
+    path.posix.normalize(text) !== text
+  ) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+  return text;
+}
+
+const REVIEW_APPLICATION_PATH_FIELDS = [
+  "applied_decisions_path",
+  "revision_paths",
+  "target_update_paths",
+  "structured_update_paths",
+  "native_regeneration_paths",
+  "native_regenerated_paths",
+  "downstream_regenerated_paths",
+  "original_backup_paths",
+];
+
+function declaredCanonicalPaths(record) {
+  if (!isPlainObject(record)) return [];
+  const paths = [];
+  for (const fieldName of REVIEW_APPLICATION_PATH_FIELDS) {
+    const value = record[fieldName];
+    if (value == null) continue;
+    if (Array.isArray(value)) {
+      if (!canonicalRunRelativeStringArray(value)) {
+        throw new Error("Check Entries review application returned an invalid result.");
+      }
+      paths.push(...value);
+    } else if (typeof value === "string") {
+      paths.push(canonicalRunRelativePath(value));
+    } else {
+      throw new Error("Check Entries review application returned an invalid result.");
+    }
+  }
+  return paths;
+}
+
 function collectReviewApplicationPaths(appliedDecisions, finalArtifacts) {
   const paths = ["ui_decisions.json", "applied_decisions.json", "final_artifacts.json"];
   const finalOutputs = Array.isArray(finalArtifacts?.outputs) ? finalArtifacts.outputs : [];
-  if (
-    finalOutputs.some(
-      (output) => isPlainObject(output) && output.path === "review_handoff.md",
-    )
-  ) {
-    paths.push("review_handoff.md");
+  for (const output of finalOutputs) {
+    if (!isPlainObject(output) || typeof output.path !== "string") {
+      throw new Error("Check Entries review application returned an invalid result.");
+    }
+    paths.push(output.path);
   }
   const reviewApplication = isPlainObject(finalArtifacts?.review_application)
     ? finalArtifacts.review_application
     : {};
-  for (const fieldName of [
-    "applied_decisions_path",
-    "revision_paths",
-    "target_update_paths",
-    "structured_update_paths",
-    "native_regeneration_paths",
-    "native_regenerated_paths",
-    "downstream_regenerated_paths",
-    "original_backup_paths",
-  ]) {
-    const value = reviewApplication[fieldName] ?? appliedDecisions?.[fieldName];
-    if (Array.isArray(value)) paths.push(...value);
-    else paths.push(value);
+  paths.push(...declaredCanonicalPaths(appliedDecisions));
+  paths.push(...declaredCanonicalPaths(reviewApplication));
+  return Array.from(new Set(paths)).map(canonicalRunRelativePath);
+}
+
+function canonicalJsonSha256(value) {
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify(canonicalJsonValue(value)), "utf8")
+    .digest("hex");
+}
+
+function contentSha256IsCurrent(payload) {
+  if (!isPlainObject(payload) || !/^[0-9a-f]{64}$/.test(payload.content_sha256 || "")) {
+    return false;
   }
-  return uniqueStrings(paths);
+  const content = { ...payload };
+  delete content.content_sha256;
+  return canonicalJsonSha256(content) === payload.content_sha256;
+}
+
+function exactObjectFields(value, required, optional = []) {
+  if (!isPlainObject(value)) return false;
+  const allowed = new Set([...required, ...optional]);
+  const keys = Object.keys(value);
+  return required.every((field) => Object.hasOwn(value, field)) &&
+    keys.every((field) => allowed.has(field));
+}
+
+function canonicalIdentifier(value) {
+  return (
+    typeof value === "string" &&
+    value === value.trim() &&
+    /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(value)
+  );
+}
+
+function nonEmptyTrimmedString(value) {
+  return typeof value === "string" && Boolean(value) && value === value.trim();
+}
+
+function stableArtifactBytes(absolutePath) {
+  const beforeEntry = fs.lstatSync(absolutePath);
+  if (
+    !beforeEntry.isFile() ||
+    beforeEntry.isSymbolicLink() ||
+    beforeEntry.nlink !== 1
+  ) {
+    throw new Error("invalid artifact entry");
+  }
+  const noFollow = fs.constants.O_NOFOLLOW || 0;
+  const descriptor = fs.openSync(
+    absolutePath,
+    fs.constants.O_RDONLY | noFollow,
+  );
+  try {
+    const before = fs.fstatSync(descriptor);
+    if (!before.isFile() || before.nlink !== 1) {
+      throw new Error("invalid artifact entry");
+    }
+    const payload = fs.readFileSync(descriptor);
+    const after = fs.fstatSync(descriptor);
+    if (
+      before.dev !== after.dev ||
+      before.ino !== after.ino ||
+      before.size !== after.size ||
+      before.mtimeMs !== after.mtimeMs ||
+      payload.length !== after.size
+    ) {
+      throw new Error("artifact changed while read");
+    }
+    return payload;
+  } finally {
+    fs.closeSync(descriptor);
+  }
+}
+
+function checkEntriesArtifactRoots(outputDir, audit) {
+  if (
+    !nonEmptyTrimmedString(audit.journal) ||
+    !nonEmptyTrimmedString(audit.pdf_path)
+  ) {
+    throw new Error("missing assurance roots");
+  }
+  const journalPath = path.resolve(audit.journal);
+  const supportPath = path.resolve(audit.pdf_path);
+  const supportEntry = fs.lstatSync(supportPath);
+  return {
+    normalization: path.dirname(journalPath),
+    support: supportEntry.isDirectory() ? supportPath : path.dirname(supportPath),
+    run: path.resolve(outputDir),
+    implementation: PLUGIN_ROOT,
+    assurance_implementation: ASSURANCE_IMPLEMENTATION_ROOT,
+  };
+}
+
+function checkEntriesImplementationMediaType(relativePath) {
+  const extension = path.posix.extname(relativePath).toLowerCase();
+  return {
+    ".cjs": "text/javascript",
+    ".html": "text/html",
+    ".json": "application/json",
+    ".py": "text/x-python",
+    ".svg": "image/svg+xml",
+  }[extension];
+}
+
+function checkEntriesImplementationSpecifications() {
+  const specification = (namespace, rootId, relativePath) => ({
+    artifact_id:
+      `implementation.${namespace}.${relativePath.replaceAll("/", ".")}`,
+    root_id: rootId,
+    role: "implementation",
+    path: relativePath,
+    media_type: checkEntriesImplementationMediaType(relativePath),
+  });
+  return [
+    ...CHECK_ENTRIES_PLUGIN_IMPLEMENTATION_PATHS.map((relativePath) =>
+      specification("check_entries", "implementation", relativePath),
+    ),
+    ...CHECK_ENTRIES_SHARED_IMPLEMENTATION_PATHS.map((relativePath) =>
+      specification(
+        "vera_assurance",
+        "assurance_implementation",
+        relativePath,
+      ),
+    ),
+  ];
+}
+
+function validateCheckEntriesOrdinaryImplementationPath(
+  rootPath,
+  relativePath,
+) {
+  const rootEntry = fs.lstatSync(rootPath);
+  if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("Check Entries implementation root is unsafe");
+  }
+  let current = rootPath;
+  const parts = relativePath.split("/");
+  for (const [index, part] of parts.entries()) {
+    current = path.join(current, part);
+    const observed = fs.lstatSync(current);
+    if (observed.isSymbolicLink()) {
+      throw new Error("Check Entries implementation path is unsafe");
+    }
+    if (index < parts.length - 1) {
+      if (!observed.isDirectory()) {
+        throw new Error("Check Entries implementation parent is unsafe");
+      }
+      continue;
+    }
+    if (!observed.isFile() || observed.nlink !== 1) {
+      throw new Error("Check Entries implementation file is unsafe");
+    }
+  }
+}
+
+function validateCheckEntriesImplementationContract(
+  envelope,
+  roots,
+  artifactById,
+) {
+  const specifications = checkEntriesImplementationSpecifications();
+  const expectedIds = specifications.map(
+    (specification) => specification.artifact_id,
+  );
+  if (
+    !Array.isArray(envelope.implementation_artifact_refs) ||
+    !canonicalJsonEqual(envelope.implementation_artifact_refs, expectedIds)
+  ) {
+    throw new Error("Check Entries implementation reference set is not exact");
+  }
+  const implementationReceipts = envelope.artifact_receipts.filter(
+    (receipt) => isPlainObject(receipt) && receipt.role === "implementation",
+  );
+  if (implementationReceipts.length !== specifications.length) {
+    throw new Error("Check Entries implementation receipt set is not exact");
+  }
+  if (
+    !canonicalJsonEqual(
+      implementationReceipts.map((receipt) => receipt.artifact_id),
+      expectedIds,
+    )
+  ) {
+    throw new Error("Check Entries implementation receipt order is not canonical");
+  }
+  for (const specification of specifications) {
+    const receipt = artifactById.get(specification.artifact_id);
+    if (
+      !isPlainObject(receipt) ||
+      !canonicalFieldEqual(receipt, specification, "artifact_id") ||
+      !canonicalFieldEqual(receipt, specification, "root_id") ||
+      !canonicalFieldEqual(receipt, specification, "role") ||
+      !canonicalFieldEqual(receipt, specification, "path") ||
+      !canonicalFieldEqual(receipt, specification, "media_type")
+    ) {
+      throw new Error("Check Entries implementation receipt is malformed");
+    }
+    validateCheckEntriesOrdinaryImplementationPath(
+      roots[specification.root_id],
+      specification.path,
+    );
+  }
+}
+
+function validateArtifactReceiptAgainstRoots(roots, receipt) {
+  const required = [
+    "schema_version",
+    "artifact_id",
+    "root_id",
+    "role",
+    "path",
+    "byte_count",
+    "sha256",
+  ];
+  if (
+    !exactObjectFields(receipt, required, ["media_type"]) ||
+    receipt.schema_version !== "vera.artifact_receipt.v1" ||
+    !canonicalIdentifier(receipt.artifact_id) ||
+    !canonicalIdentifier(receipt.root_id) ||
+    !nonEmptyTrimmedString(receipt.role) ||
+    !Object.hasOwn(roots, receipt.root_id) ||
+    !Number.isInteger(receipt.byte_count) ||
+    receipt.byte_count < 0 ||
+    !/^[0-9a-f]{64}$/.test(receipt.sha256)
+  ) {
+    throw new Error("invalid artifact receipt");
+  }
+  if (
+    receipt.media_type != null &&
+    !nonEmptyTrimmedString(receipt.media_type)
+  ) {
+    throw new Error("invalid artifact receipt");
+  }
+  const relativePath = canonicalRunRelativePath(receipt.path);
+  const rootPath = path.resolve(roots[receipt.root_id]);
+  const rootEntry = fs.lstatSync(rootPath);
+  if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("invalid artifact root");
+  }
+  const resolvedRoot = fs.realpathSync.native(rootPath);
+  const unresolvedPath = path.join(resolvedRoot, relativePath);
+  const resolvedPath = fs.realpathSync.native(unresolvedPath);
+  const relativeToRoot = path.relative(resolvedRoot, resolvedPath);
+  if (
+    relativeToRoot.startsWith("..") ||
+    path.isAbsolute(relativeToRoot) ||
+    relativeToRoot === ""
+  ) {
+    throw new Error("artifact receipt escapes root");
+  }
+  const payload = stableArtifactBytes(resolvedPath);
+  const digest = crypto.createHash("sha256").update(payload).digest("hex");
+  if (payload.length !== receipt.byte_count || digest !== receipt.sha256) {
+    throw new Error("artifact receipt is stale");
+  }
+  return receipt;
+}
+
+const CHECK_ENTRIES_GATE_NAMES = [
+  "source",
+  "preparation",
+  "reconciliation",
+  "semantic_review",
+  "reporting",
+  "publication",
+];
+const CHECK_ENTRIES_GATE_STATUSES = new Set([
+  "passed",
+  "failed",
+  "blocked",
+  "not_assessed",
+  "not_applicable",
+  "withheld",
+]);
+const CHECK_ENTRIES_GATE_DEPENDENCIES = {
+  preparation: ["source"],
+  reconciliation: ["preparation"],
+  semantic_review: ["preparation"],
+  reporting: ["reconciliation", "semantic_review"],
+  publication: ["reporting"],
+};
+
+function validateCheckEntriesGateRegister(value) {
+  if (
+    !exactObjectFields(value, ["schema_version", "gates", "report_ready"]) ||
+    value.schema_version !== "vera.assurance_gates.v1" ||
+    typeof value.report_ready !== "boolean" ||
+    !isPlainObject(value.gates) ||
+    !canonicalJsonEqual(Object.keys(value.gates).sort(), [...CHECK_ENTRIES_GATE_NAMES].sort())
+  ) {
+    throw new Error("invalid assurance gate register");
+  }
+  for (const gateName of CHECK_ENTRIES_GATE_NAMES) {
+    const gate = value.gates[gateName];
+    if (
+      !exactObjectFields(gate, ["status", "evidence_refs", "limitations"]) ||
+      !CHECK_ENTRIES_GATE_STATUSES.has(gate.status) ||
+      !Array.isArray(gate.evidence_refs) ||
+      !Array.isArray(gate.limitations) ||
+      !gate.evidence_refs.every(canonicalIdentifier) ||
+      new Set(gate.evidence_refs).size !== gate.evidence_refs.length ||
+      !gate.limitations.every(nonEmptyTrimmedString) ||
+      (gate.status === "passed" && gate.evidence_refs.length === 0)
+    ) {
+      throw new Error("invalid assurance gate");
+    }
+    if (gate.status === "passed") {
+      for (const dependency of CHECK_ENTRIES_GATE_DEPENDENCIES[gateName] || []) {
+        if (!["passed", "not_applicable"].includes(value.gates[dependency].status)) {
+          throw new Error("invalid assurance gate dependency");
+        }
+      }
+    }
+  }
+  const ready = [
+    "source",
+    "preparation",
+    "reconciliation",
+    "semantic_review",
+    "reporting",
+  ].every((name) =>
+    ["passed", "not_applicable"].includes(value.gates[name].status),
+  );
+  if (value.report_ready !== ready) {
+    throw new Error("invalid assurance readiness");
+  }
+  return value;
+}
+
+function validateCheckEntriesEnvelopeStructure(envelope, roots) {
+  const required = [
+    "schema_version",
+    "run_id",
+    "workflow_id",
+    "workflow_version",
+    "artifact_receipts",
+    "implementation_artifact_refs",
+    "reviewed_decisions",
+    "source_qualifications",
+    "allocation_ledgers",
+    "numeric_evidence_ledgers",
+    "gate_register",
+    "limitations",
+    "content_sha256",
+  ];
+  if (
+    !exactObjectFields(envelope, required) ||
+    envelope.schema_version !== "vera.assurance_envelope.v1" ||
+    !canonicalIdentifier(envelope.run_id) ||
+    !canonicalIdentifier(envelope.workflow_id) ||
+    !canonicalIdentifier(envelope.workflow_version) ||
+    !contentSha256IsCurrent(envelope) ||
+    !Array.isArray(envelope.artifact_receipts) ||
+    !Array.isArray(envelope.implementation_artifact_refs) ||
+    !Array.isArray(envelope.reviewed_decisions) ||
+    !Array.isArray(envelope.source_qualifications) ||
+    !Array.isArray(envelope.allocation_ledgers) ||
+    !Array.isArray(envelope.numeric_evidence_ledgers) ||
+    !Array.isArray(envelope.limitations) ||
+    !envelope.limitations.every(nonEmptyTrimmedString)
+  ) {
+    throw new Error("invalid assurance envelope");
+  }
+  const artifactById = new Map();
+  const artifactPaths = new Set();
+  for (const receipt of envelope.artifact_receipts) {
+    validateArtifactReceiptAgainstRoots(roots, receipt);
+    const pathKey = `${receipt.root_id}\u0000${receipt.path}`;
+    if (artifactById.has(receipt.artifact_id) || artifactPaths.has(pathKey)) {
+      throw new Error("duplicate assurance artifact");
+    }
+    artifactById.set(receipt.artifact_id, receipt);
+    artifactPaths.add(pathKey);
+  }
+  if (
+    envelope.implementation_artifact_refs.length === 0 ||
+    !envelope.implementation_artifact_refs.every(canonicalIdentifier) ||
+    new Set(envelope.implementation_artifact_refs).size !==
+      envelope.implementation_artifact_refs.length ||
+    envelope.implementation_artifact_refs.some(
+      (reference) => artifactById.get(reference)?.role !== "implementation",
+    )
+  ) {
+    throw new Error("invalid implementation receipt references");
+  }
+  const decisionById = new Map();
+  for (const decision of envelope.reviewed_decisions) {
+    const fields = [
+      "schema_version",
+      "decision_id",
+      "decision_type",
+      "status",
+      "reviewer_ref",
+      "reviewed_on",
+      "adapter_id",
+      "adapter_version",
+      "source_artifact_refs",
+      "content",
+      "content_sha256",
+    ];
+    if (
+      !exactObjectFields(decision, fields) ||
+      decision.schema_version !== "vera.reviewed_decision_receipt.v1" ||
+      !canonicalIdentifier(decision.decision_id) ||
+      !canonicalIdentifier(decision.decision_type) ||
+      !["draft", "reviewed", "rejected", "superseded"].includes(decision.status) ||
+      !canonicalIdentifier(decision.reviewer_ref) ||
+      !canonicalIdentifier(decision.adapter_id) ||
+      !canonicalIdentifier(decision.adapter_version) ||
+      !Array.isArray(decision.source_artifact_refs) ||
+      decision.source_artifact_refs.length === 0 ||
+      !decision.source_artifact_refs.every(
+        (reference) => artifactById.get(reference)?.role === "source",
+      ) ||
+      !isPlainObject(decision.content) ||
+      canonicalJsonSha256(decision.content) !== decision.content_sha256 ||
+      decisionById.has(decision.decision_id)
+    ) {
+      throw new Error("invalid reviewed decision receipt");
+    }
+    decisionById.set(decision.decision_id, decision);
+  }
+  const qualificationById = new Map();
+  for (const qualification of envelope.source_qualifications) {
+    if (
+      !isPlainObject(qualification) ||
+      qualification.schema_version !== "vera.source_qualification.v1" ||
+      !canonicalIdentifier(qualification.qualification_id) ||
+      !["qualified", "needs_review", "unsupported_source_layout"].includes(
+        qualification.status,
+      ) ||
+      !Array.isArray(qualification.source_artifact_refs) ||
+      qualification.source_artifact_refs.length === 0 ||
+      !qualification.source_artifact_refs.every(
+        (reference) => artifactById.get(reference)?.role === "source",
+      ) ||
+      qualificationById.has(qualification.qualification_id)
+    ) {
+      throw new Error("invalid source qualification");
+    }
+    qualificationById.set(qualification.qualification_id, qualification);
+  }
+  const allocationById = new Map();
+  for (const ledger of envelope.allocation_ledgers) {
+    if (
+      !isPlainObject(ledger) ||
+      !canonicalIdentifier(ledger.ledger_id) ||
+      allocationById.has(ledger.ledger_id)
+    ) {
+      throw new Error("invalid allocation ledger");
+    }
+    allocationById.set(ledger.ledger_id, ledger);
+  }
+  const numericById = new Map();
+  for (const ledger of envelope.numeric_evidence_ledgers) {
+    const content = isPlainObject(ledger) ? { ...ledger } : null;
+    const digest = content?.content_sha256;
+    if (content) delete content.content_sha256;
+    if (
+      !isPlainObject(ledger) ||
+      ledger.schema_version !== "vera.numeric_evidence_ledger.v1" ||
+      !canonicalIdentifier(ledger.ledger_id) ||
+      !Array.isArray(ledger.entries) ||
+      ledger.entries.length === 0 ||
+      canonicalJsonSha256(content) !== digest ||
+      numericById.has(ledger.ledger_id)
+    ) {
+      throw new Error("invalid numeric evidence ledger");
+    }
+    numericById.set(ledger.ledger_id, ledger);
+  }
+  const gates = validateCheckEntriesGateRegister(envelope.gate_register);
+  const knownReferences = new Set([
+    ...artifactById.keys(),
+    ...decisionById.keys(),
+    ...qualificationById.keys(),
+    ...allocationById.keys(),
+    ...numericById.keys(),
+  ]);
+  for (const gate of Object.values(gates.gates)) {
+    if (gate.evidence_refs.some((reference) => !knownReferences.has(reference))) {
+      throw new Error("assurance gate references unknown evidence");
+    }
+  }
+  const sourceGate = gates.gates.source;
+  if (
+    sourceGate.status === "passed" &&
+    (qualificationById.size === 0 ||
+      [...qualificationById.values()].some(
+        (qualification) => qualification.status !== "qualified",
+      ) ||
+      [...qualificationById.keys()].some(
+        (reference) => !sourceGate.evidence_refs.includes(reference),
+      ))
+  ) {
+    throw new Error("source gate lacks qualified evidence");
+  }
+  const semanticGate = gates.gates.semantic_review;
+  const semanticDecisionTypes = new Set([
+    "accounting_conclusion",
+    "audit_conclusion",
+    "check_entries_review_actions",
+    "evidence_sufficiency_review",
+    "journal_bank_review_application",
+    "professional_review",
+    "semantic_review",
+  ]);
+  if (
+    semanticGate.status === "passed" &&
+    !semanticGate.evidence_refs.some((reference) => {
+      const decision = decisionById.get(reference);
+      return (
+        decision?.status === "reviewed" &&
+        semanticDecisionTypes.has(decision.decision_type)
+      );
+    })
+  ) {
+    throw new Error("semantic gate lacks a reviewed decision");
+  }
+  const hasArtifactRole = (gateName, allowedRoles) =>
+    gates.gates[gateName].evidence_refs.some((reference) =>
+      allowedRoles.has(artifactById.get(reference)?.role),
+    );
+  if (
+    gates.gates.preparation.status === "passed" &&
+    !hasArtifactRole("preparation", new Set(["prepared", "output", "workpaper"]))
+  ) {
+    throw new Error("preparation gate lacks work-product evidence");
+  }
+  if (
+    gates.gates.reconciliation.status === "passed" &&
+    !gates.gates.reconciliation.evidence_refs.some(
+      (reference) =>
+        allocationById.has(reference) ||
+        numericById.has(reference) ||
+        ["output", "workpaper"].includes(artifactById.get(reference)?.role),
+    )
+  ) {
+    throw new Error("reconciliation gate lacks evidence");
+  }
+  if (
+    gates.gates.reporting.status === "passed" &&
+    !gates.gates.reporting.evidence_refs.some(
+      (reference) =>
+        numericById.has(reference) ||
+        ["output", "report", "rendered", "workpaper"].includes(
+          artifactById.get(reference)?.role,
+        ),
+    )
+  ) {
+    throw new Error("reporting gate lacks evidence");
+  }
+  return { artifactById, gates };
+}
+
+function validateCheckEntriesAssuranceAuthority(
+  outputDir,
+  {
+    required = false,
+    canonicalOutputDir = outputDir,
+    failureMessage = CHECK_ENTRIES_AUTHORIZATION_FAILURE,
+  } = {},
+) {
+  try {
+    const marker = hasAssuredCheckEntriesMarker(outputDir);
+    if (!marker && !required) return noAssurancePreflight();
+    const runIntake = readJsonFileIfPresent(path.join(outputDir, "run_intake.json"));
+    const reviewPayload = readJsonFileIfPresent(
+      path.join(outputDir, "review_payload.json"),
+    );
+    const uiDecisions = readJsonFileIfPresent(
+      path.join(outputDir, "ui_decisions.json"),
+    );
+    const finalArtifacts = readJsonFileIfPresent(
+      path.join(outputDir, "final_artifacts.json"),
+    );
+    const envelope = readJsonFileIfPresent(
+      path.join(outputDir, "assurance_envelope.json"),
+    );
+    const audit = readJsonFileIfPresent(path.join(outputDir, "check_audit.json"));
+    if (
+      [runIntake, reviewPayload, uiDecisions, finalArtifacts, envelope, audit].some(
+        (value) => !isPlainObject(value),
+      ) ||
+      !contentSha256IsCurrent(reviewPayload) ||
+      !contentSha256IsCurrent(audit)
+    ) {
+      throw new Error("missing or stale assurance state");
+    }
+    const runId = runIntake.run_id;
+    if (
+      !canonicalIdentifier(runId) ||
+      [reviewPayload, uiDecisions, finalArtifacts, envelope, audit].some(
+        (value) => value.run_id !== runId,
+      ) ||
+      path.resolve(runIntake.output_dir) !== path.resolve(canonicalOutputDir)
+    ) {
+      throw new Error("assurance run identity mismatch");
+    }
+    const roots = checkEntriesArtifactRoots(outputDir, audit);
+    const validatedEnvelope = validateCheckEntriesEnvelopeStructure(
+      envelope,
+      roots,
+    );
+    validateCheckEntriesImplementationContract(
+      envelope,
+      roots,
+      validatedEnvelope.artifactById,
+    );
+    const gateRegister = validatedEnvelope.gates;
+    const reviewSummary = reviewPayload.summary;
+    if (
+      !isPlainObject(reviewSummary) ||
+      !canonicalJsonEqual(reviewSummary.assurance_gates, gateRegister) ||
+      !canonicalJsonEqual(audit.assurance_gates, gateRegister) ||
+      !canonicalJsonEqual(finalArtifacts.assurance_gates, gateRegister)
+    ) {
+      throw new Error("assurance gate binding mismatch");
+    }
+    const professionalStatus = audit.professional_conclusion_status;
+    if (
+      !["pending_review", "reviewed", "withheld"].includes(professionalStatus) ||
+      reviewSummary.professional_conclusion_status !== professionalStatus ||
+      finalArtifacts.professional_conclusion_status !== professionalStatus ||
+      (gateRegister.report_ready && professionalStatus !== "reviewed") ||
+      (finalArtifacts.status === "final_ready" &&
+        (!gateRegister.report_ready || professionalStatus !== "reviewed"))
+    ) {
+      throw new Error("professional status binding mismatch");
+    }
+    if (
+      uiDecisions.review_payload_content_sha256 !== reviewPayload.content_sha256 ||
+      finalArtifacts.review_payload_content_sha256 !==
+        reviewPayload.content_sha256
+    ) {
+      throw new Error("review payload binding mismatch");
+    }
+    const canonicalEnvelopePath = path.join(
+      path.resolve(canonicalOutputDir),
+      "assurance_envelope.json",
+    );
+    for (const binding of [
+      audit.assurance_envelope,
+      finalArtifacts.assurance_envelope,
+    ]) {
+      if (
+        !isPlainObject(binding) ||
+        path.resolve(binding.path) !== canonicalEnvelopePath ||
+        binding.content_sha256 !== envelope.content_sha256 ||
+        !canonicalJsonEqual(
+          binding.artifact_receipt,
+          audit.assurance_envelope.artifact_receipt,
+        )
+      ) {
+        throw new Error("assurance envelope binding mismatch");
+      }
+    }
+    validateArtifactReceiptAgainstRoots(
+      roots,
+      audit.assurance_envelope.artifact_receipt,
+    );
+    for (const fieldName of [
+      "input_artifact_receipts",
+      "output_artifact_receipts",
+    ]) {
+      if (!Array.isArray(audit[fieldName])) {
+        throw new Error("audit receipts are missing");
+      }
+      for (const receipt of audit[fieldName]) {
+        validateArtifactReceiptAgainstRoots(roots, receipt);
+      }
+    }
+    const reviewBinding = audit.review_payload_binding;
+    if (reviewBinding != null) {
+      if (
+        !isPlainObject(reviewBinding) ||
+        reviewBinding.content_sha256 !== reviewPayload.content_sha256 ||
+        !isPlainObject(reviewBinding.artifact_receipt) ||
+        reviewBinding.artifact_receipt.root_id !== "run" ||
+        reviewBinding.artifact_receipt.path !== "review_payload.json"
+      ) {
+        throw new Error("audit review binding mismatch");
+      }
+      validateArtifactReceiptAgainstRoots(roots, reviewBinding.artifact_receipt);
+      const envelopeReceipt = validatedEnvelope.artifactById.get(
+        reviewBinding.artifact_receipt.artifact_id,
+      );
+      if (!canonicalJsonEqual(envelopeReceipt, reviewBinding.artifact_receipt)) {
+        throw new Error("envelope review binding mismatch");
+      }
+    }
+    for (const output of Array.isArray(finalArtifacts.outputs)
+      ? finalArtifacts.outputs
+      : []) {
+      if (isPlainObject(output?.artifact_receipt)) {
+        validateArtifactReceiptAgainstRoots(roots, output.artifact_receipt);
+      }
+    }
+    validateCheckEntriesPhysicalOutputSet(outputDir, envelope);
+    return {
+      ok: true,
+      assurance_replayed: true,
+      report_ready: gateRegister.report_ready,
+      professional_conclusion_status: professionalStatus,
+      envelope_content_sha256: envelope.content_sha256,
+    };
+  } catch {
+    throw new Error(failureMessage);
+  }
+}
+
+function validateRunArtifactReceipt(outputDir, receipt) {
+  if (
+    !isPlainObject(receipt) ||
+    receipt.root_id !== "run" ||
+    !/^[0-9a-f]{64}$/.test(receipt.sha256 || "") ||
+    !Number.isInteger(receipt.byte_count) ||
+    receipt.byte_count < 0
+  ) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+  const relativePath = canonicalRunRelativePath(receipt.path);
+  const absolutePath = path.join(outputDir, relativePath);
+  const entryStat = pathEntryStat(absolutePath);
+  if (!entryStat || !entryStat.isFile() || entryStat.isSymbolicLink() || entryStat.nlink !== 1) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+  const payload = fs.readFileSync(absolutePath);
+  const digest = crypto.createHash("sha256").update(payload).digest("hex");
+  if (payload.length !== receipt.byte_count || digest !== receipt.sha256) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+}
+
+function validatePersistedAssurancePostcondition(
+  outputDir,
+  persistedApplied,
+  persistedFinalArtifacts,
+  canonicalOutputDir,
+) {
+  if (persistedApplied.assurance_replayed !== true) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+  const envelope = readJsonFileIfPresent(
+    path.join(outputDir, "assurance_envelope.json"),
+  );
+  const audit = readJsonFileIfPresent(path.join(outputDir, "check_audit.json"));
+  if (
+    persistedApplied.assurance_envelope_content_sha256 !== envelope.content_sha256 ||
+    persistedFinalArtifacts?.assurance_envelope?.content_sha256 !== envelope.content_sha256 ||
+    audit?.assurance_envelope?.content_sha256 !== envelope.content_sha256
+  ) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+  const persistedAuthority = validateCheckEntriesAssuranceAuthority(outputDir, {
+    required: true,
+    canonicalOutputDir,
+    failureMessage: "Check Entries review application returned an invalid result.",
+  });
+  const childPreflight = preflightWorkflowSpecificReviewApplication(outputDir);
+  validatePreflightAcknowledgement(childPreflight, persistedAuthority);
+}
+
+function canonicalJsonEqual(left, right) {
+  return JSON.stringify(canonicalJsonValue(left)) === JSON.stringify(canonicalJsonValue(right));
+}
+
+function canonicalFieldEqual(left, right, fieldName) {
+  const leftHasField = Object.prototype.hasOwnProperty.call(left, fieldName);
+  const rightHasField = Object.prototype.hasOwnProperty.call(right, fieldName);
+  return (
+    leftHasField === rightHasField &&
+    (!leftHasField || canonicalJsonEqual(left[fieldName], right[fieldName]))
+  );
+}
+
+function immutableWorkflowEffect(effect) {
+  if (!isPlainObject(effect)) return null;
+  const immutable = { ...effect };
+  delete immutable.requires_native_regeneration;
+  delete immutable.native_regeneration_status;
+  delete immutable.native_regenerated_paths;
+  return immutable;
+}
+
+function expectedWorkflowNativeBackupPaths(expectedEffects, expectedFinalOutputPaths) {
+  const candidate = expectedEffects.find(
+    (effect) =>
+      isPlainObject(effect) &&
+      effect.requires_native_regeneration === true &&
+      nativeRegenerationPathsForEffect(effect).includes("check_results.xlsx"),
+  );
+  if (!candidate || !expectedFinalOutputPaths.includes("check_results.xlsx")) {
+    return [];
+  }
+  const itemId = safePathSegment(candidate.item_id, "item");
+  return [`revisions/originals/check_results__${itemId}.xlsx`];
+}
+
+function validateFinalOutputPostcondition(outputDir, finalOutputs, allowedPaths) {
+  if (!Array.isArray(finalOutputs)) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+  const actualPaths = [];
+  for (const output of finalOutputs) {
+    if (!isPlainObject(output)) {
+      throw new Error("Check Entries review application returned an invalid result.");
+    }
+    const outputPath = canonicalRunRelativePath(output.path);
+    if (outputPath !== output.path) {
+      throw new Error("Check Entries review application returned an invalid result.");
+    }
+    actualPaths.push(outputPath);
+    for (const fieldName of ["source_artifact", "revision_artifact"]) {
+      const value = output[fieldName];
+      if (value != null && canonicalRunRelativePath(value) !== value) {
+        throw new Error("Check Entries review application returned an invalid result.");
+      }
+    }
+    const absolutePath = path.join(outputDir, outputPath);
+    const outputStat = pathEntryStat(absolutePath);
+    if (
+      !outputStat ||
+      !outputStat.isFile() ||
+      outputStat.isSymbolicLink() ||
+      outputStat.nlink !== 1 ||
+      (output.size_bytes != null &&
+        (!Number.isInteger(output.size_bytes) ||
+          output.size_bytes < 0 ||
+          output.size_bytes !== outputStat.size))
+    ) {
+      throw new Error("Check Entries review application returned an invalid result.");
+    }
+    if (output.artifact_receipt != null) {
+      if (
+        !isPlainObject(output.artifact_receipt) ||
+        output.artifact_receipt.root_id !== "run" ||
+        output.artifact_receipt.path !== outputPath
+      ) {
+        throw new Error("Check Entries review application returned an invalid result.");
+      }
+      validateRunArtifactReceipt(outputDir, output.artifact_receipt);
+    }
+  }
+  const uniqueActualPaths = Array.from(new Set(actualPaths));
+  const uniqueAllowedPaths = Array.from(new Set(allowedPaths));
+  if (
+    uniqueActualPaths.length !== actualPaths.length ||
+    !canonicalJsonEqual(uniqueActualPaths.sort(), uniqueAllowedPaths.sort())
+  ) {
+    throw new Error("Check Entries review application returned an invalid result.");
+  }
+}
+
+function validatePersistedWorkflowApplication({
+  appliedOutputPath,
+  finalArtifactsPath,
+  outputDir,
+  expectedRunId,
+  expectedDecisionCount,
+  expectedItemCount,
+  expectedPlugin,
+  expectedWorkflow,
+  expectedDecisions,
+  expectedReviewPayloadPath,
+  expectedReviewPayloadSha256,
+  expectedReviewType,
+  expectedNativePaths,
+  expectedAppliedDecisions,
+  expectedFinalArtifacts,
+  assurancePreflight,
+  canonicalOutputDir,
+}) {
+  const invalid = () => {
+    throw new Error("Check Entries review application returned an invalid result.");
+  };
+  const persistedApplied = readJsonFileIfPresent(appliedOutputPath);
+  const persistedFinalArtifacts = readJsonFileIfPresent(finalArtifactsPath);
+  if (!persistedApplied || !persistedFinalArtifacts) invalid();
+  if (
+    persistedApplied.run_id !== expectedRunId ||
+    persistedApplied.plugin !== expectedPlugin ||
+    persistedApplied.workflow !== expectedWorkflow ||
+    persistedApplied.decision_count !== expectedDecisionCount ||
+    persistedApplied.item_count !== expectedItemCount ||
+    !canonicalJsonEqual(persistedApplied.decisions, expectedDecisions) ||
+    !isPlainObject(persistedApplied.review_payload) ||
+    persistedApplied.review_payload.path !== expectedReviewPayloadPath ||
+    canonicalRunRelativePath(persistedApplied.review_payload.path) !==
+      persistedApplied.review_payload.path ||
+    persistedApplied.review_payload.content_sha256 !== expectedReviewPayloadSha256 ||
+    persistedApplied.review_payload.item_count !== expectedItemCount ||
+    persistedApplied.review_payload.review_type !== expectedReviewType ||
+    !Array.isArray(persistedApplied.effects) ||
+    persistedApplied.effects.length !== expectedDecisionCount ||
+    persistedFinalArtifacts.status !== persistedApplied.application_status ||
+    persistedFinalArtifacts.review_status !== persistedApplied.application_status
+  ) {
+    invalid();
+  }
+  if (!isPlainObject(expectedAppliedDecisions) || !isPlainObject(expectedFinalArtifacts)) {
+    invalid();
+  }
+  for (const fieldName of [
+    "schema_version",
+    "applied_at",
+    "decision_source",
+    "blocker_count",
+    "revision_count",
+    "revision_paths",
+    "target_update_count",
+    "target_update_paths",
+    "structured_update_count",
+    "structured_update_paths",
+    "assurance_preflight",
+    "reviewer",
+  ]) {
+    if (!canonicalFieldEqual(persistedApplied, expectedAppliedDecisions, fieldName)) {
+      invalid();
+    }
+  }
+  const expectedEffects = Array.isArray(expectedAppliedDecisions.effects)
+    ? expectedAppliedDecisions.effects
+    : null;
+  if (
+    expectedEffects == null ||
+    expectedEffects.length !== persistedApplied.effects.length
+  ) {
+    invalid();
+  }
+  for (let index = 0; index < expectedEffects.length; index += 1) {
+    const expectedEffect = expectedEffects[index];
+    const persistedEffect = persistedApplied.effects[index];
+    if (
+      !isPlainObject(expectedEffect) ||
+      !isPlainObject(persistedEffect) ||
+      !canonicalJsonEqual(
+        immutableWorkflowEffect(persistedEffect),
+        immutableWorkflowEffect(expectedEffect),
+      )
+    ) {
+      invalid();
+    }
+    const expectedRegeneration =
+      expectedEffect.requires_native_regeneration === true &&
+      nativeRegenerationPathsForEffect(expectedEffect).includes("check_results.xlsx");
+    if (expectedRegeneration) {
+      if (
+        persistedEffect.requires_native_regeneration !== false ||
+        persistedEffect.native_regeneration_status !== "regenerated" ||
+        !canonicalJsonEqual(
+          persistedEffect.native_regenerated_paths,
+          ["check_results.xlsx"],
+        )
+      ) {
+        invalid();
+      }
+    } else {
+      for (const fieldName of [
+        "requires_native_regeneration",
+        "native_regeneration_status",
+        "native_regenerated_paths",
+      ]) {
+        if (!canonicalFieldEqual(persistedEffect, expectedEffect, fieldName)) {
+          invalid();
+        }
+      }
+    }
+  }
+  for (const fieldName of [
+    "schema_version",
+    "plugin",
+    "workflow",
+    "run_id",
+    "completed_at",
+    "caveats",
+    "blockers",
+    "professional_conclusion_status",
+  ]) {
+    if (!canonicalFieldEqual(persistedFinalArtifacts, expectedFinalArtifacts, fieldName)) {
+      invalid();
+    }
+  }
+  const expectedApplicationStatus = statusFromEffects(
+    persistedApplied.effects,
+    expectedItemCount,
+    assurancePreflight,
+  );
+  if (
+    persistedApplied.application_status !== expectedApplicationStatus
+  ) {
+    invalid();
+  }
+  const pendingNativePaths = Array.isArray(persistedApplied.native_regeneration_paths)
+    ? persistedApplied.native_regeneration_paths
+    : null;
+  const regeneratedNativePaths = Array.isArray(persistedApplied.native_regenerated_paths)
+    ? persistedApplied.native_regenerated_paths
+    : null;
+  const expectedCanonicalNativePaths = expectedNativePaths.map(canonicalRunRelativePath);
+  const expectedRegeneratedNativePaths = expectedCanonicalNativePaths.filter(
+    (nativePath) => nativePath === "check_results.xlsx",
+  );
+  const expectedPendingNativePaths = expectedCanonicalNativePaths.filter(
+    (nativePath) => nativePath !== "check_results.xlsx",
+  );
+  if (
+    pendingNativePaths == null ||
+    regeneratedNativePaths == null ||
+    !canonicalRunRelativeStringArray(pendingNativePaths) ||
+    !canonicalRunRelativeStringArray(regeneratedNativePaths) ||
+    !canonicalJsonEqual(pendingNativePaths, expectedPendingNativePaths) ||
+    !canonicalJsonEqual(regeneratedNativePaths, expectedRegeneratedNativePaths) ||
+    persistedApplied.native_regeneration_count !== pendingNativePaths.length ||
+    persistedApplied.native_regenerated_count !==
+      expectedRegeneratedNativePaths.length
+  ) {
+    invalid();
+  }
+  const persistedBackupPaths = Array.isArray(persistedApplied.original_backup_paths)
+    ? persistedApplied.original_backup_paths
+    : null;
+  const expectedFinalOutputs = Array.isArray(expectedFinalArtifacts.outputs)
+    ? expectedFinalArtifacts.outputs
+    : null;
+  if (expectedFinalOutputs == null) invalid();
+  const expectedFinalOutputPaths = expectedFinalOutputs.map((output) => {
+    if (!isPlainObject(output)) invalid();
+    return canonicalRunRelativePath(output.path);
+  });
+  const expectedNativeBackupPaths = expectedWorkflowNativeBackupPaths(
+    expectedEffects,
+    expectedFinalOutputPaths,
+  );
+  const expectedOriginalBackupPaths = [
+    ...(Array.isArray(expectedAppliedDecisions.original_backup_paths)
+      ? expectedAppliedDecisions.original_backup_paths
+      : []),
+    ...expectedNativeBackupPaths,
+  ];
+  if (
+    persistedBackupPaths == null ||
+    !canonicalRunRelativeStringArray(persistedBackupPaths) ||
+    !canonicalJsonEqual(persistedBackupPaths, expectedOriginalBackupPaths)
+  ) {
+    invalid();
+  }
+  let regeneratedEffectCount = 0;
+  let blockerCount = 0;
+  const effectRegeneratedPaths = [];
+  const effectPendingPaths = [];
+  const effectRevisionPaths = [];
+  const effectTargetUpdatePaths = [];
+  const effectStructuredUpdatePaths = [];
+  for (const effect of persistedApplied.effects) {
+    if (!isPlainObject(effect)) invalid();
+    const effectPaths =
+      effect.native_regenerated_paths == null ? [] : effect.native_regenerated_paths;
+    const pendingEffectPaths =
+      effect.native_regeneration_paths == null ? [] : effect.native_regeneration_paths;
+    const derivedEffectPaths =
+      effect.derived_native_regeneration_paths == null
+        ? []
+        : effect.derived_native_regeneration_paths;
+    if (
+      !canonicalRunRelativeStringArray(effectPaths) ||
+      !canonicalRunRelativeStringArray(pendingEffectPaths) ||
+      !canonicalRunRelativeStringArray(derivedEffectPaths) ||
+      effect.native_regeneration_status === "regenerated" &&
+      (effect.requires_native_regeneration !== false ||
+        effectPaths.length === 0)
+    ) {
+      invalid();
+    }
+    if (effect.native_regeneration_status === "regenerated") {
+      regeneratedEffectCount += 1;
+      effectRegeneratedPaths.push(...effectPaths);
+    }
+    if (effect.requires_native_regeneration === true) {
+      effectPendingPaths.push(...pendingEffectPaths);
+    }
+    if (effect.requires_followup === true) blockerCount += 1;
+    if (effect.revision_artifact != null) {
+      effectRevisionPaths.push(effect.revision_artifact);
+    }
+    if (
+      ["target_artifact_updated", "structured_artifact_updated"].includes(
+        effect.artifact_update,
+      )
+    ) {
+      effectTargetUpdatePaths.push(effect.target_artifact);
+    }
+    if (effect.artifact_update === "structured_artifact_updated") {
+      effectStructuredUpdatePaths.push(effect.target_artifact);
+    }
+    for (const fieldName of [
+      "target_artifact",
+      "revision_artifact",
+      "original_artifact_backup",
+    ]) {
+      const value = effect[fieldName];
+      if (value != null && canonicalRunRelativePath(value) !== value) {
+        invalid();
+      }
+    }
+  }
+  const finalReviewApplication = persistedFinalArtifacts.review_application;
+  const uniqueSorted = (values) => Array.from(new Set(values)).sort();
+  if (
+    persistedApplied.blocker_count !== blockerCount ||
+    persistedApplied.revision_count !== effectRevisionPaths.length ||
+    !canonicalJsonEqual(persistedApplied.revision_paths, effectRevisionPaths) ||
+    persistedApplied.target_update_count !== effectTargetUpdatePaths.length ||
+    !canonicalJsonEqual(
+      persistedApplied.target_update_paths,
+      effectTargetUpdatePaths,
+    ) ||
+    persistedApplied.structured_update_count !== effectStructuredUpdatePaths.length ||
+    !canonicalJsonEqual(
+      persistedApplied.structured_update_paths,
+      effectStructuredUpdatePaths,
+    ) ||
+    persistedApplied.native_regenerated_count !== regeneratedEffectCount ||
+    !canonicalJsonEqual(
+      uniqueSorted(effectRegeneratedPaths),
+      uniqueSorted(regeneratedNativePaths),
+    ) ||
+    !canonicalJsonEqual(
+      uniqueSorted(effectPendingPaths),
+      uniqueSorted(pendingNativePaths),
+    ) ||
+    !isPlainObject(finalReviewApplication) ||
+    finalReviewApplication.application_status !== expectedApplicationStatus ||
+    finalReviewApplication.decision_count !== expectedDecisionCount ||
+    finalReviewApplication.item_count !== expectedItemCount ||
+    finalReviewApplication.blocker_count !== blockerCount ||
+    finalReviewApplication.revision_count !== effectRevisionPaths.length ||
+    !canonicalJsonEqual(
+      finalReviewApplication.revision_paths,
+      effectRevisionPaths,
+    ) ||
+    finalReviewApplication.target_update_count !== effectTargetUpdatePaths.length ||
+    !canonicalJsonEqual(
+      finalReviewApplication.target_update_paths,
+      effectTargetUpdatePaths,
+    ) ||
+    finalReviewApplication.structured_update_count !==
+      effectStructuredUpdatePaths.length ||
+    !canonicalJsonEqual(
+      finalReviewApplication.structured_update_paths,
+      effectStructuredUpdatePaths,
+    ) ||
+    finalReviewApplication.native_regenerated_count !== regeneratedEffectCount ||
+    !canonicalJsonEqual(
+      finalReviewApplication.native_regenerated_paths,
+      regeneratedNativePaths,
+    ) ||
+    finalReviewApplication.native_regeneration_count !== pendingNativePaths.length ||
+    !canonicalJsonEqual(
+      finalReviewApplication.native_regeneration_paths,
+      pendingNativePaths,
+    ) ||
+    !canonicalJsonEqual(
+      finalReviewApplication.original_backup_paths,
+      persistedBackupPaths,
+    ) ||
+    finalReviewApplication.applied_decisions_path !== "applied_decisions.json"
+  ) {
+    invalid();
+  }
+  const finalOutputs = Array.isArray(persistedFinalArtifacts.outputs)
+    ? persistedFinalArtifacts.outputs
+    : null;
+  if (finalOutputs == null) invalid();
+  validateFinalOutputPostcondition(
+    outputDir,
+    finalOutputs,
+    [...expectedFinalOutputPaths, ...expectedNativeBackupPaths],
+  );
+  for (const nativePath of regeneratedNativePaths) {
+    const output = finalOutputs.find(
+      (candidate) => isPlainObject(candidate) && candidate.path === nativePath,
+    );
+    const absolutePath = path.join(outputDir, canonicalRunRelativePath(nativePath));
+    const outputStat = pathEntryStat(absolutePath);
+    if (
+      !output ||
+      output.native_regenerated !== true ||
+      !outputStat ||
+      !outputStat.isFile() ||
+      outputStat.isSymbolicLink() ||
+      outputStat.nlink !== 1
+    ) {
+      invalid();
+    }
+  }
+  collectReviewApplicationPaths(persistedApplied, persistedFinalArtifacts);
+  if (assurancePreflight?.assurance_replayed === true) {
+    if (persistedApplied.assurance_replayed !== true) {
+      invalid();
+    }
+    validatePersistedAssurancePostcondition(
+      outputDir,
+      persistedApplied,
+      persistedFinalArtifacts,
+      canonicalOutputDir,
+    );
+  }
+  return { persistedApplied, persistedFinalArtifacts };
 }
 
 function appendReviewApplicationExecutionTrace(
@@ -886,22 +2808,29 @@ function appendReviewApplicationExecutionTrace(
   const trace = Array.isArray(current.execution_trace) ? [...current.execution_trace] : [];
   const appliedAt = shortString(appliedDecisions?.applied_at) || new Date().toISOString();
   const stepIdSuffix = appliedAt.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+  const traceInputs = Array.from(
+    new Set([
+      appliedDecisions?.review_payload?.path || "review_payload.json",
+      "ui_decisions.json",
+      "final_artifacts.json",
+    ]),
+  ).map(canonicalRunRelativePath);
   trace.push({
     step_id: `${shortString(appliedDecisions?.workflow) || "check_entries"}_review_apply_${stepIdSuffix || Date.now()}`,
     kind: "deterministic_review_apply",
     status: "passed",
     execution_location: "local_codex_workspace",
     command: [SERVER_NAME, TOOL_NAMES.applyDecisions],
-    inputs: uniqueStrings([
-      appliedDecisions?.review_payload?.path || "review_payload.json",
-      "ui_decisions.json",
-      "final_artifacts.json",
-    ]),
+    inputs: traceInputs,
     outputs: collectReviewApplicationPaths(appliedDecisions, finalArtifacts),
   });
   const updated = { ...current, execution_trace: trace };
   fs.mkdirSync(path.dirname(runIntakePath), { recursive: true });
-  fs.writeFileSync(runIntakePath, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
+  atomicWriteFileSync(
+    runIntakePath,
+    `${JSON.stringify(updated, null, 2)}\n`,
+    "utf8",
+  );
   return runIntakePath;
 }
 
@@ -1064,7 +2993,7 @@ function writeRevisionArtifacts(outputDir, effects) {
     const relativePath = revisionRelativePath(effect);
     const absolutePath = path.join(outputDir, relativePath);
     fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
-    fs.writeFileSync(absolutePath, effect.edit_value, "utf8");
+    atomicWriteFileSync(absolutePath, effect.edit_value, "utf8");
     effect.revision_artifact = relativePath;
     effect.artifact_update = "revision_artifact_written";
     revisionOutputs.push({
@@ -1093,9 +3022,13 @@ function writeDirectTextArtifactUpdates(outputDir, effects) {
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.writeFileSync(backupAbsolutePath, fs.readFileSync(target.absolutePath, "utf8"), "utf8");
+      atomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath, "utf8"),
+        "utf8",
+      );
     }
-    fs.writeFileSync(target.absolutePath, effect.edit_value, "utf8");
+    atomicWriteFileSync(target.absolutePath, effect.edit_value, "utf8");
     effect.target_artifact = target.relativePath;
     effect.original_artifact_backup = backupRelativePath;
     effect.artifact_update = "target_artifact_updated";
@@ -1133,7 +3066,10 @@ function writeStructuredArtifactUpdates(outputDir, effects) {
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.copyFileSync(target.absolutePath, backupAbsolutePath);
+      atomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath),
+      );
     }
     const extension = path.extname(target.relativePath).toLowerCase();
     const result =
@@ -1230,12 +3166,54 @@ function nativeRegenerationPathsForEffect(effect) {
   return Array.from(new Set(paths.map(artifactPathKey).filter(Boolean)));
 }
 
-function statusFromEffects(effects, itemCount) {
+function assuranceAllowsFinal(assurancePreflight) {
+  // Final readiness is authority-bearing, so only locally replayed persisted
+  // assurance may grant it. Caller-provided summaries are display data.
+  return (
+    assurancePreflight?.assurance_replayed === true &&
+    assurancePreflight?.report_ready === true &&
+    assurancePreflight?.professional_conclusion_status === "reviewed"
+  );
+}
+
+function statusFromEffects(effects, itemCount, assurancePreflight) {
   if (!effects.length) return "pending_review";
   if (effects.some((effect) => effect.requires_followup)) return "blocked";
   if (effects.some((effect) => effect.requires_native_regeneration)) return "partial_review_applied";
   if (effects.length < itemCount) return "partial_review_applied";
+  if (!assuranceAllowsFinal(assurancePreflight)) return "blocked";
   return "final_ready";
+}
+
+function validateAssuredReviewWrite(
+  outputDir,
+  reviewPayload,
+  effects,
+  assurancePreflight,
+) {
+  if (assurancePreflight?.assurance_replayed !== true) return;
+  const localPayloadPath = path.join(outputDir, "review_payload.json");
+  const localPayload = readJsonFileIfPresent(localPayloadPath);
+  if (
+    !localPayload ||
+    localPayload.content_sha256 !== reviewPayload.content_sha256 ||
+    reviewPayloadContentSha256(localPayload) !== localPayload.content_sha256
+  ) {
+    throw new Error("review_payload does not match the persisted assured review");
+  }
+  for (const effect of effects) {
+    if (effect.action !== "edit") continue;
+    if (
+      effect.target_artifact !== "check_results.csv" ||
+      effect.target_id_field !== "prepared_entry_id" ||
+      !effect.target_record_id ||
+      effect.target_field !== "review_notes"
+    ) {
+      throw new Error(
+        `assured review item does not authorize a Check Entries note edit: ${effect.item_id}`,
+      );
+    }
+  }
 }
 
 const REVIEW_HANDOFF_PLUGINS = new Set([
@@ -1322,7 +3300,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
           `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
           `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
         ].join("\n");
-    fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
+    atomicWriteFileSync(handoffPath, `${text}\n`, "utf8");
   }
   return reviewHandoffOutputRecord(language);
 }
@@ -1374,6 +3352,11 @@ function finalArtifactsWithApplication(
     ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
+    assurance_gates: current.assurance_gates || null,
+    assurance_envelope: current.assurance_envelope || null,
+    review_payload_content_sha256:
+      reviewPayload.content_sha256 || current.review_payload_content_sha256 || null,
+    professional_conclusion_status: current.professional_conclusion_status || null,
     review_application: {
       applied_at: appliedDecisions.applied_at,
       application_status: appliedDecisions.application_status,
@@ -1447,22 +3430,195 @@ function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, 
 }
 
 function applyDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
-  const validationPayload = validateReviewPayload(inputArgs);
-  const reviewPayload = validationPayload.review_payload;
-  const language = languageFromArgs(inputArgs);
-  const itemById = new Map(reviewPayload.items.map((item) => [item.id, item]));
-  const appliedAt = new Date().toISOString();
-  const effects = uiDecisions.decisions.map((decision) =>
-    buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
-  );
   const outputDir = resolveRunOutputDir(inputArgs);
-  const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
-  const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
-  const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
+  const prepareApplication = (trustedArgs) => {
+    const { uiDecisions } = buildUiDecisions(trustedArgs);
+    const validationPayload = validateReviewPayload(trustedArgs);
+    const reviewPayload = validationPayload.review_payload;
+    const itemById = new Map(
+      reviewPayload.items.map((item) => [item.id, item]),
+    );
+    const appliedAt = new Date().toISOString();
+    return {
+      trustedArgs,
+      uiDecisions,
+      reviewPayload,
+      language: languageFromArgs(trustedArgs),
+      appliedAt,
+      effects: uiDecisions.decisions.map((decision) =>
+        buildApplicationEffect(
+          decision,
+          itemById.get(decision.item_id),
+          appliedAt,
+        ),
+      ),
+    };
+  };
+  const applyPrepared = (
+    prepared,
+    workingOutputDir,
+    capturedAssurancePreflight,
+    assured,
+  ) => {
+    const {
+      trustedArgs,
+      uiDecisions,
+      reviewPayload,
+      language,
+      appliedAt,
+      effects,
+    } = prepared;
+    const workingArgs = workingOutputDir
+      ? {
+          ...trustedArgs,
+          run_intake: {
+            ...trustedArgs.run_intake,
+            output_dir: workingOutputDir,
+          },
+        }
+      : trustedArgs;
+    const assurancePreflight = capturedAssurancePreflight;
+    if (workingOutputDir) {
+      const childPreflight =
+        preflightWorkflowSpecificReviewApplication(workingOutputDir);
+      validatePreflightAcknowledgement(
+        childPreflight,
+        capturedAssurancePreflight,
+      );
+      validateOutputDirectoryTree(workingOutputDir);
+      const postChildPreflight = validateCheckEntriesAssuranceAuthority(
+        workingOutputDir,
+        {
+          required: assured,
+          canonicalOutputDir: outputDir,
+          failureMessage: CHECK_ENTRIES_AUTHORIZATION_FAILURE,
+        },
+      );
+      if (!canonicalJsonEqual(postChildPreflight, capturedAssurancePreflight)) {
+        throw new Error(CHECK_ENTRIES_AUTHORIZATION_FAILURE);
+      }
+    }
+    validateAssuredReviewWrite(
+      workingOutputDir,
+      reviewPayload,
+      effects,
+      assurancePreflight,
+    );
+    const result = applyDecisionPayloadWrites({
+      inputArgs: workingArgs,
+      uiDecisions,
+      decisionOutputPath: resolveDecisionOutputPath(workingArgs),
+      reviewPayload,
+      language,
+      effects,
+      appliedAt,
+      outputDir: workingOutputDir,
+      canonicalOutputDir: outputDir,
+      assurancePreflight,
+    });
+    if (outputDir && workingOutputDir) {
+      for (const field of [
+        "ui_decisions_path",
+        "applied_decisions_path",
+        "final_artifacts_path",
+        "run_intake_path",
+      ]) {
+        const value = result[field];
+        if (typeof value !== "string") continue;
+        const relative = path.relative(workingOutputDir, value);
+        if (!relative.startsWith("..") && !path.isAbsolute(relative)) {
+          result[field] = path.join(outputDir, relative);
+        }
+      }
+    }
+    return result;
+  };
+  if (!outputDir) {
+    return applyPrepared(
+      prepareApplication(inputArgs),
+      null,
+      noAssurancePreflight(),
+      false,
+    );
+  }
+  validateCheckEntriesTransactionInput(outputDir);
+  let assuredWorkflow = false;
+  return withGeneratedReviewOutputTransaction(
+    outputDir,
+    ({ workingOutputDir, trustedImage }) => {
+      const authority = parentBoundCheckEntriesArgs(inputArgs, {
+        outputDir,
+        trustedImage,
+        trustedImageCaptured: true,
+      });
+      assuredWorkflow = authority.assured;
+      const capturedAssurancePreflight =
+        validateCheckEntriesAssuranceAuthority(workingOutputDir, {
+          required: authority.assured,
+          canonicalOutputDir: outputDir,
+          failureMessage: CHECK_ENTRIES_AUTHORIZATION_FAILURE,
+        });
+      const result = applyPrepared(
+        prepareApplication(authority.args),
+        workingOutputDir,
+        capturedAssurancePreflight,
+        authority.assured,
+      );
+      validateOutputDirectoryTree(workingOutputDir);
+      const authorizedWritePaths =
+        generatedReviewCollectApplicationWritePaths(result);
+      if (result.applied_decisions?.assurance_replayed === true) {
+        authorizedWritePaths.push(
+          "assurance_envelope.json",
+          "check_audit.json",
+        );
+      }
+      return generatedReviewTransactionEnvelope(
+        result,
+        authorizedWritePaths,
+      );
+    },
+    {
+      ...checkEntriesTransactionOptions("apply"),
+      validateWholeTree: ({ workingOutputDir }) => {
+        validateOutputDirectoryTree(workingOutputDir);
+        if (assuredWorkflow) {
+          const persistedAuthority = validateCheckEntriesAssuranceAuthority(
+            workingOutputDir,
+            {
+              required: true,
+              canonicalOutputDir: outputDir,
+              failureMessage:
+                "Check Entries review application returned an invalid result.",
+            },
+          );
+          const childPreflight =
+            preflightWorkflowSpecificReviewApplication(workingOutputDir);
+          validatePreflightAcknowledgement(childPreflight, persistedAuthority);
+        }
+      },
+    },
+  );
+}
+
+function applyDecisionPayloadWrites({
+  inputArgs,
+  uiDecisions,
+  decisionOutputPath,
+  reviewPayload,
+  language,
+  effects,
+  appliedAt,
+  outputDir,
+  canonicalOutputDir,
+  assurancePreflight,
+}) {
   const appliedOutputPath = resolveAppliedDecisionOutputPath(inputArgs);
   const finalArtifactsPath = resolveFinalArtifactsOutputPath(inputArgs);
   const currentFinalArtifacts = currentFinalArtifactsForApplication(inputArgs, finalArtifactsPath);
+  const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
+  const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
+  const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
   const nativeRegenerationOutputs = [
     ...markNativeRegenerationPending(effects),
     ...markDerivedNativeRegenerationPending(outputDir, effects, currentFinalArtifacts),
@@ -1476,7 +3632,11 @@ function applyDecisionPayload(inputArgs) {
     new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
   );
   const blockerCount = effects.filter((effect) => effect.requires_followup).length;
-  const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
+  const applicationStatus = statusFromEffects(
+    effects,
+    reviewPayload.items.length,
+    assurancePreflight,
+  );
   const appliedDecisions = {
     schema_version: reviewPayload.schema_version,
     plugin: reviewPayload.plugin,
@@ -1486,6 +3646,7 @@ function applyDecisionPayload(inputArgs) {
     decision_source: uiDecisions.decision_source || "mcp_widget",
     review_payload: {
       path: uiDecisions.review_payload_path || "review_payload.json",
+      content_sha256: reviewPayload.content_sha256,
       item_count: reviewPayload.items.length,
       review_type: reviewPayload.review_type || null,
     },
@@ -1504,6 +3665,7 @@ function applyDecisionPayload(inputArgs) {
     native_regeneration_paths: nativeRegenerationPaths,
     original_backup_paths: backupOutputs.map((output) => output.path),
     application_status: applicationStatus,
+    assurance_preflight: assurancePreflight,
   };
   if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
 
@@ -1519,34 +3681,65 @@ function applyDecisionPayload(inputArgs) {
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    atomicWriteFileSync(
+      decisionOutputPath,
+      `${JSON.stringify(uiDecisions, null, 2)}\n`,
+      "utf8",
+    );
   }
   if (appliedOutputPath) {
     fs.mkdirSync(path.dirname(appliedOutputPath), { recursive: true });
-    fs.writeFileSync(appliedOutputPath, `${JSON.stringify(appliedDecisions, null, 2)}\n`, "utf8");
+    atomicWriteFileSync(
+      appliedOutputPath,
+      `${JSON.stringify(appliedDecisions, null, 2)}\n`,
+      "utf8",
+    );
     persisted = true;
   }
   if (finalArtifactsPath) {
     fs.mkdirSync(path.dirname(finalArtifactsPath), { recursive: true });
-    fs.writeFileSync(finalArtifactsPath, `${JSON.stringify(finalArtifacts, null, 2)}\n`, "utf8");
+    atomicWriteFileSync(
+      finalArtifactsPath,
+      `${JSON.stringify(finalArtifacts, null, 2)}\n`,
+      "utf8",
+    );
   }
   const workflowSpecificResult = applyWorkflowSpecificReviewApplication(
     outputDir,
     appliedOutputPath,
     finalArtifactsPath,
+    canonicalOutputDir,
   );
-  const responseAppliedDecisions =
-    (isPlainObject(workflowSpecificResult?.applied_decisions)
-      ? workflowSpecificResult.applied_decisions
-      : null) ||
-    readJsonFileIfPresent(appliedOutputPath) ||
-    appliedDecisions;
-  const responseFinalArtifacts =
-    (isPlainObject(workflowSpecificResult?.final_artifacts)
-      ? workflowSpecificResult.final_artifacts
-      : null) ||
-    readJsonFileIfPresent(finalArtifactsPath) ||
-    finalArtifacts;
+  let responseAppliedDecisions = appliedDecisions;
+  let responseFinalArtifacts = finalArtifacts;
+  if (workflowSpecificResult) {
+    const persisted = validatePersistedWorkflowApplication({
+      appliedOutputPath,
+      finalArtifactsPath,
+      outputDir,
+      expectedRunId: reviewPayload.run_id,
+      expectedDecisionCount: uiDecisions.decision_count,
+      expectedItemCount: reviewPayload.items.length,
+      expectedPlugin: reviewPayload.plugin,
+      expectedWorkflow: reviewPayload.workflow,
+      expectedDecisions: uiDecisions.decisions,
+      expectedReviewPayloadPath: uiDecisions.review_payload_path || "review_payload.json",
+      expectedReviewPayloadSha256: reviewPayload.content_sha256,
+      expectedReviewType: reviewPayload.review_type || null,
+      expectedNativePaths: nativeRegenerationPaths,
+      expectedAppliedDecisions: appliedDecisions,
+      expectedFinalArtifacts: finalArtifacts,
+      assurancePreflight,
+      canonicalOutputDir,
+    });
+    responseAppliedDecisions = persisted.persistedApplied;
+    responseFinalArtifacts = persisted.persistedFinalArtifacts;
+  } else {
+    responseAppliedDecisions =
+      readJsonFileIfPresent(appliedOutputPath) || appliedDecisions;
+    responseFinalArtifacts =
+      readJsonFileIfPresent(finalArtifactsPath) || finalArtifacts;
+  }
   const runIntakePath = appendReviewApplicationExecutionTrace(
     inputArgs,
     outputDir,
@@ -1598,37 +3791,213 @@ function pythonExecutable() {
   return "python3";
 }
 
-function applyWorkflowSpecificReviewApplication(outputDir, appliedOutputPath, finalArtifactsPath) {
-  if (!outputDir || !appliedOutputPath || !finalArtifactsPath) return null;
-  const currentApplied = readJsonFileIfPresent(appliedOutputPath);
-  if (!currentApplied || !currentApplied.native_regeneration_count) return null;
-  if (!hasWorkflowNativeRegenerationTarget(currentApplied)) return null;
-  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
-  const completed = spawnSync(
-    pythonExecutable(),
-    [
-      scriptPath,
-      "--output-dir",
-      outputDir,
-      "--applied-decisions",
-      appliedOutputPath,
-      "--final-artifacts",
-      finalArtifactsPath,
-    ],
-    { cwd: PLUGIN_ROOT, encoding: "utf8" },
+function noAssurancePreflight() {
+  return {
+    ok: true,
+    assurance_replayed: false,
+    report_ready: false,
+    professional_conclusion_status: null,
+    envelope_content_sha256: null,
+  };
+}
+
+const CHILD_OUTPUT_MAX_BYTES = 1024 * 1024;
+const CHILD_FAILURE_MAX_CHARS = 240;
+const CHILD_RESULT_MAX_CHARS = 512 * 1024;
+const SAFE_CHILD_EXCEPTION_CLASSES = new Set([
+  "FileNotFoundError",
+  "OSError",
+  "PermissionError",
+  "RuntimeError",
+  "TypeError",
+  "ValueError",
+]);
+const SAFE_CHILD_FAILURE_DETAILS = [
+  /^output directory must be a real directory$/,
+  /^output directory changed during validation$/,
+  /^output directory cannot contain (?:symbolic links|special filesystem entries|hardlink aliases)$/,
+  /^canonical output parent must be a real directory$/,
+  /^canonical output path changed during the transaction$/,
+  /^(?:applied decisions|final artifacts) must stay inside the run output$/,
+  /^(?:applied decisions|final artifacts) cannot (?:be a symbolic link|have hardlink aliases)$/,
+  /^(?:applied decisions|final artifacts) must be a regular file$/,
+  /^artifact receipt does not match current bytes$/,
+];
+
+function sanitizedChildFailure(completed, fallback) {
+  const output = [completed.stdout, completed.stderr]
+    .filter((value) => typeof value === "string" && value.trim())
+    .join("\n");
+  const terminalLine = output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .pop();
+  if (!terminalLine || terminalLine.length > CHILD_FAILURE_MAX_CHARS) {
+    return fallback;
+  }
+  const exception = terminalLine.match(
+    /^([A-Za-z_][A-Za-z0-9_]{0,63}(?:Error|Exception)):\s*(.{1,160})$/,
   );
-  if (completed.error) throw completed.error;
+  if (!exception || !SAFE_CHILD_EXCEPTION_CLASSES.has(exception[1])) {
+    return fallback;
+  }
+  const detail = exception[2].trim();
+  if (
+    !detail ||
+    /Traceback|\bFile\s+["']|[A-Za-z]:[\\/]|[\\/]|file:|~[\\/]|[\u0000-\u001f\u007f]/i.test(
+      detail,
+    ) ||
+    !SAFE_CHILD_FAILURE_DETAILS.some((pattern) => pattern.test(detail))
+  ) {
+    return fallback;
+  }
+  const sanitized = `${fallback} ${exception[1]}: ${detail}`;
+  return sanitized.length <= CHILD_FAILURE_MAX_CHARS ? sanitized : fallback;
+}
+
+function workflowChildMessages(phase) {
+  return phase === "preflight"
+    ? {
+        start: "Check Entries assurance preflight could not start.",
+        failure: "Check Entries assurance preflight failed.",
+        invalid: "Check Entries assurance preflight returned an invalid result.",
+      }
+    : {
+        start: "Check Entries review application could not start.",
+        failure: "Check Entries review application failed.",
+        invalid: "Check Entries review application returned an invalid result.",
+      };
+}
+
+function canonicalRunRelativeStringArray(value) {
+  if (!Array.isArray(value)) return false;
+  try {
+    return value.every(
+      (entry) =>
+        typeof entry === "string" &&
+        canonicalRunRelativePath(entry) === entry.trim(),
+    );
+  } catch {
+    return false;
+  }
+}
+
+function validateWorkflowScriptResult(parsed, phase) {
+  void phase;
+  return isPlainObject(parsed) && parsed.ok === true;
+}
+
+function parseWorkflowScriptOutput(completed, phase) {
+  const messages = workflowChildMessages(phase);
+  if (completed.error) throw new Error(messages.start);
   if (completed.status !== 0) {
+    throw new Error(sanitizedChildFailure(completed, messages.failure));
+  }
+  const stdout = typeof completed.stdout === "string" ? completed.stdout : "";
+  const output = stdout.trim().split(/\r?\n/).filter(Boolean).pop();
+  if (!output) throw new Error(messages.invalid);
+  if (output.length > CHILD_RESULT_MAX_CHARS) {
+    throw new Error(messages.invalid);
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(output);
+  } catch {
+    throw new Error(messages.invalid);
+  }
+  if (!validateWorkflowScriptResult(parsed, phase)) {
+    throw new Error(messages.invalid);
+  }
+  return parsed;
+}
+
+function runWorkflowPython(args, phase) {
+  let completed;
+  try {
+    completed = spawnSync(
+      pythonExecutable(),
+      ["-I", "-B", ...args],
+      {
+        cwd: PLUGIN_ROOT,
+        encoding: "utf8",
+        maxBuffer: CHILD_OUTPUT_MAX_BYTES,
+      },
+    );
+  } catch {
+    throw new Error(workflowChildMessages(phase).start);
+  }
+  return parseWorkflowScriptOutput(completed, phase);
+}
+
+function preflightWorkflowSpecificReviewApplication(outputDir) {
+  if (!outputDir) return { ok: true };
+  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  return runWorkflowPython(
+    [scriptPath, "--output-dir", outputDir, "--preflight-only"],
+    "preflight",
+  );
+}
+
+function validatePreflightAcknowledgement(acknowledgement, authority) {
+  if (
+    authority.assurance_replayed === true &&
+    acknowledgement.material_rederived !== true
+  ) {
     throw new Error(
-      completed.stderr ||
-        completed.stdout ||
-        "Check Entries native regeneration failed.",
+      "Check Entries assurance preflight returned an invalid result.",
     );
   }
-  const output = completed.stdout.trim().split(/\r?\n/).filter(Boolean).pop();
-  if (!output) return null;
-  const parsed = JSON.parse(output);
-  return isPlainObject(parsed) ? parsed : null;
+  const authorityFields = [
+    "assurance_replayed",
+    "report_ready",
+    "professional_conclusion_status",
+    "envelope_content_sha256",
+  ];
+  for (const fieldName of authorityFields) {
+    if (
+      Object.hasOwn(acknowledgement, fieldName) &&
+      !canonicalJsonEqual(acknowledgement[fieldName], authority[fieldName])
+    ) {
+      throw new Error(
+        "Check Entries assurance preflight returned an invalid result.",
+      );
+    }
+  }
+}
+
+function applyWorkflowSpecificReviewApplication(
+  outputDir,
+  appliedOutputPath,
+  finalArtifactsPath,
+  canonicalOutputDir,
+) {
+  if (!outputDir || !appliedOutputPath || !finalArtifactsPath) return null;
+  const currentApplied = readJsonFileIfPresent(appliedOutputPath);
+  if (!currentApplied) return null;
+  const hasAssuranceState =
+    fs.existsSync(path.join(outputDir, "assurance_envelope.json")) ||
+    fs.existsSync(path.join(outputDir, "check_audit.json"));
+  if (!hasAssuranceState && !hasWorkflowNativeRegenerationTarget(currentApplied)) {
+    return null;
+  }
+  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  const args = [
+    scriptPath,
+    "--output-dir",
+    outputDir,
+    "--applied-decisions",
+    appliedOutputPath,
+    "--final-artifacts",
+    finalArtifactsPath,
+  ];
+  if (canonicalOutputDir) {
+    args.push("--canonical-output-dir", canonicalOutputDir);
+  }
+  return runWorkflowPython(
+    args,
+    "apply",
+  );
 }
 
 function hasWorkflowNativeRegenerationTarget(appliedDecisions) {
@@ -1644,7 +4013,8 @@ function hasWorkflowNativeRegenerationTarget(appliedDecisions) {
 
 function callTool(name, args = {}) {
   if (name === TOOL_NAMES.validateReview) {
-    const payload = validateReviewPayload(args);
+    const trustedArgs = readOnlyAssuredReviewArgs(args);
+    const payload = validateReviewPayload(trustedArgs);
     return {
       ok: true,
       validation_type: "check_entries_review",
@@ -1658,7 +4028,7 @@ function callTool(name, args = {}) {
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    return validateReviewPayload(args);
+    return validateReviewPayload(readOnlyAssuredReviewArgs(args));
   }
   if (name === TOOL_NAMES.saveDecisions) {
     return saveDecisionPayload(args);

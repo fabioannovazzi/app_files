@@ -50,11 +50,17 @@ TARGETS: list[dict[str, Any]] = [
                 "title": "Journal Entry",
                 "variant": "ledger",
                 "fields": [
+                    "prepared_entry_id",
+                    "source_qualification_id",
                     "movement_number",
                     "entry_date",
-                    "beneficiary",
+                    "account",
+                    "beneficiary_expected",
                     "amount_abs",
                     "source_file",
+                    "source_sheet",
+                    "source_page",
+                    "source_row",
                     "status",
                 ],
                 "empty": "No journal entry fields.",
@@ -65,6 +71,11 @@ TARGETS: list[dict[str, Any]] = [
                 "fields": [
                     "requested_document",
                     "matched_pdf",
+                    "matched_support",
+                    "support_type",
+                    "support_artifact_id",
+                    "support_match_status",
+                    "support_match_signals",
                     "filename",
                     "extractable_text",
                     "text_chars",
@@ -82,6 +93,11 @@ TARGETS: list[dict[str, Any]] = [
                     "checks_run",
                     "mismatches",
                     "review_notes",
+                    "evidence_facts",
+                    "professional_conclusion",
+                    "assurance_gate_status",
+                    "artifact_receipt",
+                    "receipt_status",
                     "error",
                     "exists",
                     "size_bytes",
@@ -96,7 +112,7 @@ TARGETS: list[dict[str, Any]] = [
             "review_type": "journal_entry_support_review",
             "items": [
                 {
-                    "id": "entry-1",
+                    "id": "check.entry.demo-1001",
                     "item_type": "supported_entry",
                     "title": "1001 | 123.45 | 2025-01-02",
                     "source_path": "entries.xlsx",
@@ -105,18 +121,24 @@ TARGETS: list[dict[str, Any]] = [
                     "recommended_action": "accept",
                     "data": {
                         "status": "ok",
+                        "prepared_entry_id": "entry.demo-1001",
+                        "source_qualification_id": "qualification.demo-journal",
                         "movement_number": "1001",
                         "entry_date": "2025-01-02",
-                        "beneficiary": "ACME Spa",
-                        "amount_abs": 123.45,
+                        "beneficiary_expected": "ACME Spa",
+                        "amount_abs": "123.45",
                         "matched_pdf": "support_1001.pdf",
                         "checks_run": "amount,date,beneficiary",
-                        "source_row": 1,
+                        "source_row": "1",
+                        "professional_conclusion": "pending_review",
+                        "assurance_gate_status": (
+                            "reconciliation_passed;semantic_review_withheld"
+                        ),
                         "target_artifact": "check_results.csv",
-                        "target_id_field": "source_row",
-                        "target_record_id": "1",
+                        "target_id_field": "prepared_entry_id",
+                        "target_record_id": "entry.demo-1001",
                         "target_field": "review_notes",
-                        "edit_hint": "Editing this row updates review_notes in check_results.csv for source_row 1.",
+                        "edit_hint": "Editing this row updates review_notes for the stable prepared identity.",
                     },
                     "evidence": [
                         {
@@ -124,17 +146,17 @@ TARGETS: list[dict[str, Any]] = [
                             "checks_run": "amount,date,beneficiary",
                             "review_notes": "All checks passed against support_1001.pdf.",
                             "matched_pdf": "support_1001.pdf",
+                            "professional_conclusion": "pending_review",
                         }
                     ],
                 },
                 {
-                    "id": "entry-2",
+                    "id": "check.entry.demo-1002",
                     "item_type": "missing_support",
                     "title": "1002 | 88.00 | 2025-01-03",
                     "source_path": "entries.xlsx",
                     "output_path": "check_results.csv",
                     "allowed_actions": [
-                        "accept",
                         "edit",
                         "mark_unclear",
                         "request_more_documents",
@@ -143,30 +165,37 @@ TARGETS: list[dict[str, Any]] = [
                     "recommended_action": "request_more_documents",
                     "data": {
                         "status": "missing_support",
+                        "prepared_entry_id": "entry.demo-1002",
+                        "source_qualification_id": "qualification.demo-journal",
                         "movement_number": "1002",
                         "entry_date": "2025-01-03",
-                        "amount_abs": 88,
+                        "amount_abs": "88",
                         "mismatches": "support_pdf",
-                        "source_row": 2,
+                        "source_row": "2",
+                        "professional_conclusion": "pending_review",
+                        "assurance_gate_status": (
+                            "reconciliation_failed;semantic_review_withheld"
+                        ),
                         "target_artifact": "check_results.csv",
-                        "target_id_field": "source_row",
-                        "target_record_id": "2",
+                        "target_id_field": "prepared_entry_id",
+                        "target_record_id": "entry.demo-1002",
                         "target_field": "review_notes",
-                        "edit_hint": "Editing this row updates review_notes in check_results.csv for source_row 2.",
+                        "edit_hint": "Editing this row updates review_notes for the stable prepared identity.",
                         "requested_document": "Supporting PDF for movement 1002",
-                        "reason": "No supporting PDF matched the movement number.",
+                        "reason": "No supporting PDF contains the explicit movement identifier.",
                     },
                     "evidence": [
                         {
                             "kind": "deterministic_checks",
-                            "checks_run": "movement_number",
+                            "checks_run": "",
                             "mismatches": "support_pdf",
-                            "review_notes": "No matching PDF filename or extracted text reference was found.",
+                            "review_notes": "No explicit unique PDF movement reference was found.",
+                            "professional_conclusion": "pending_review",
                         },
                         {
                             "kind": "missing_document_request",
                             "requested_document": "Supporting PDF for movement 1002",
-                            "reason": "No supporting PDF matched the movement number.",
+                            "reason": "No supporting PDF contains the explicit movement identifier.",
                             "status": "needs_evidence",
                         },
                     ],
@@ -3807,7 +3836,7 @@ TEMPLATE = """<!doctype html>
             kind: \"deterministic_review_session\",
             status: \"passed\",
             execution_location: \"local_codex_workspace\",
-            command: [\"python\", \"plugins/\" + CONFIG.plugin + \"/scripts/review_session.py\"],
+            command: {demo_command_js},
             inputs: [\"input.xlsx\", \"evidence/\"],
             outputs: [\"review_payload.json\", \"review_summary.md\", \"evidence_workbook.xlsx\", \"final_artifacts.json\"],
           }},
@@ -4679,9 +4708,9 @@ TEMPLATE = """<!doctype html>
       }}
       setSaveStatus(uiText(\"savingApplying\", \"Saving and applying...\"));
       try {{
-        await saveCurrentDecisions();
+{apply_preflight_js}{apply_save_js}
         const applyTool = state.payload.decision_policy?.apply_tool || CONFIG.applyTool;
-        const result = parseToolResult(await window.openai.callTool(applyTool, applyToolArgs()));
+        const result = parseToolResult(await window.openai.callTool(applyTool, {apply_tool_args_js}));
         if (!result?.ok) throw new Error(result?.error || uiText(\"applyFailed\", \"Decision apply failed.\"));
 {apply_ui_decisions_js}        if (result.final_artifacts) state.payload.final_artifacts = result.final_artifacts;
         if (result.applied_decisions) state.payload.applied_decisions = result.applied_decisions;
@@ -4774,6 +4803,12 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     legacy = {
         "reviewer_alias_css": "",
         "reviewer_alias_html": "",
+        "demo_command_js": (
+            '["python", "plugins/" + CONFIG.plugin + "/scripts/review_session.py"]'
+        ),
+        "apply_preflight_js": "",
+        "apply_save_js": "        await saveCurrentDecisions();",
+        "apply_tool_args_js": "applyToolArgs()",
         "state_extra": "",
         "fallback_extra_fields_js": "",
         "load_initial_extra_js": "",
@@ -4843,6 +4878,111 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "saved_decision_load_js": '          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };',
         "widget_state_load_js": "          current[itemId] = decision;",
     }
+    if target["plugin"] == "audit-reconciliation":
+        return {
+            **legacy,
+            "demo_command_js": (
+                '["python", "plugins/" + CONFIG.plugin + '
+                '"/scripts/raw_input_runner.py"]'
+            ),
+            "apply_preflight_js": (
+                "        const applicationArgs = applyToolArgs();\n"
+            ),
+            "apply_save_js": "",
+            "apply_tool_args_js": "applicationArgs",
+            "tool_args_js": """    function saveToolArgs() {
+      return {
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }
+    function applyToolArgs() {
+      let expectedPredecessorCheckpoint = String(state.expectedPredecessorCheckpoint || "").trim();
+      if (!/^[0-9a-f]{64}$/.test(expectedPredecessorCheckpoint)) {
+        expectedPredecessorCheckpoint = String(window.prompt(
+          "Enter the predecessor SHA-256 checkpoint retained through the separate review channel.",
+          "",
+        ) || "").trim();
+      }
+      if (!/^[0-9a-f]{64}$/.test(expectedPredecessorCheckpoint)) {
+        throw new Error("A valid external predecessor checkpoint is required before apply.");
+      }
+      state.expectedPredecessorCheckpoint = expectedPredecessorCheckpoint;
+      return {
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        final_artifacts: state.payload.final_artifacts || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        expected_predecessor_checkpoint: expectedPredecessorCheckpoint,
+      };
+    }""",
+        }
+    if target["plugin"] == "report-builder":
+        return {
+            **legacy,
+            "tool_args_js": """    function retainedPredecessorCheckpoint() {
+      const hasPriorApplication = Boolean(
+        state.payload.final_artifacts?.review_application,
+      );
+      if (!hasPriorApplication) return null;
+      let checkpoint = String(
+        state.expectedPredecessorCheckpoint ||
+        state.payload.expected_predecessor_checkpoint ||
+        "",
+      ).trim();
+      if (!/^[0-9a-f]{64}$/.test(checkpoint)) {
+        checkpoint = String(window.prompt(
+          "Enter the predecessor SHA-256 checkpoint retained through the separate review channel.",
+          "",
+        ) || "").trim();
+      }
+      if (!/^[0-9a-f]{64}$/.test(checkpoint)) {
+        throw new Error("A valid external predecessor checkpoint is required for this later review round.");
+      }
+      state.expectedPredecessorCheckpoint = checkpoint;
+      return checkpoint;
+    }
+    function saveToolArgs() {
+      const expectedPredecessorCheckpoint = retainedPredecessorCheckpoint();
+      return {
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        ...(expectedPredecessorCheckpoint ? {
+          expected_predecessor_checkpoint: expectedPredecessorCheckpoint,
+        } : {}),
+      };
+    }
+    function applyToolArgs() {
+      const expectedPredecessorCheckpoint = retainedPredecessorCheckpoint();
+      return {
+        run_intake: state.payload.run_intake || null,
+        review_payload: reviewPayload(),
+        ui_decisions: state.payload.ui_decisions || null,
+        final_artifacts: state.payload.final_artifacts || null,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        ...(expectedPredecessorCheckpoint ? {
+          expected_predecessor_checkpoint: expectedPredecessorCheckpoint,
+        } : {}),
+      };
+    }""",
+        }
+    if target["plugin"] == "check-entries":
+        return {
+            **legacy,
+            "fallback_extra_fields_js": (
+                "...(payload.content_sha256 ? "
+                "{ review_payload_content_sha256: payload.content_sha256 } : {}), "
+            ),
+        }
     if target["plugin"] == "client-file-preparation":
         return {
             **legacy,
@@ -4967,6 +5107,7 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         return legacy
 
     return {
+        **legacy,
         "reviewer_alias_css": """    .review-actions > .progress-meter { grid-column: 1; grid-row: 1; }
     .review-actions > .action-buttons { grid-column: 2; grid-row: 1; }
     .reviewer-alias-field {

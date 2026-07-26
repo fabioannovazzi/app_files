@@ -7,17 +7,110 @@ items and evidence rows.
 
 from __future__ import annotations
 
+import sys as _bootstrap_sys
+
+_bootstrap_sys.dont_write_bytecode = True
+_bootstrap_sys.pycache_prefix = (
+    r"Z:\__audit_reconciliation_no_bytecode__"
+    if _bootstrap_sys.platform == "win32"
+    else "/dev/null/audit-reconciliation"
+)
+
+import os as _bootstrap_os
+
+_BOOTSTRAP_PATH = _bootstrap_os.path.join(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__)),
+    "implementation_bootstrap.py",
+)
+_BOOTSTRAP_NAMESPACE = {
+    "__file__": _BOOTSTRAP_PATH,
+    "__name__": "_audit_reconciliation_implementation_bootstrap",
+}
+_bootstrap_stat = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
+if _bootstrap_stat.st_mode & 0o170000 != 0o100000 or _bootstrap_stat.st_nlink != 1:
+    raise RuntimeError(
+        "implementation bootstrap must be an ordinary single-link regular file"
+    )
+_bootstrap_descriptor = _bootstrap_os.open(
+    _BOOTSTRAP_PATH,
+    _bootstrap_os.O_RDONLY | getattr(_bootstrap_os, "O_NOFOLLOW", 0),
+)
+try:
+    _bootstrap_open_stat = _bootstrap_os.fstat(_bootstrap_descriptor)
+    _bootstrap_identity = (
+        _bootstrap_stat.st_dev,
+        _bootstrap_stat.st_ino,
+        _bootstrap_stat.st_size,
+        _bootstrap_stat.st_mtime_ns,
+        _bootstrap_stat.st_nlink,
+    )
+    if _bootstrap_identity != (
+        _bootstrap_open_stat.st_dev,
+        _bootstrap_open_stat.st_ino,
+        _bootstrap_open_stat.st_size,
+        _bootstrap_open_stat.st_mtime_ns,
+        _bootstrap_open_stat.st_nlink,
+    ):
+        raise RuntimeError("implementation bootstrap changed before it was read")
+    with _bootstrap_os.fdopen(
+        _bootstrap_descriptor,
+        "rb",
+        closefd=False,
+    ) as _bootstrap_handle:
+        _bootstrap_source = _bootstrap_handle.read()
+    _bootstrap_after_stat = _bootstrap_os.fstat(_bootstrap_descriptor)
+    if (
+        _bootstrap_identity
+        != (
+            _bootstrap_after_stat.st_dev,
+            _bootstrap_after_stat.st_ino,
+            _bootstrap_after_stat.st_size,
+            _bootstrap_after_stat.st_mtime_ns,
+            _bootstrap_after_stat.st_nlink,
+        )
+        or len(_bootstrap_source) != _bootstrap_after_stat.st_size
+    ):
+        raise RuntimeError("implementation bootstrap changed while it was read")
+finally:
+    _bootstrap_os.close(_bootstrap_descriptor)
+# Execute only the pre-opened single-link bootstrap source.
+exec(  # nosec B102
+    compile(_bootstrap_source, _BOOTSTRAP_PATH, "exec"),
+    _BOOTSTRAP_NAMESPACE,
+)
+_BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](
+    (
+        "locale_support",
+        "reconciliation_helpers",
+        "accountant_report",
+        "review_session",
+        "workpaper_outputs",
+    )
+)
+_SCRIPTS_DIR = _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))
+if _SCRIPTS_DIR not in _bootstrap_sys.path:
+    _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
+
+import re
 import sys
+import zipfile
+from functools import wraps
 from pathlib import Path
 from typing import Any
 
 try:
     from .accountant_report import write_accountant_report_workbook
+    from .audit_assurance import (
+        finalize_assurance_run,
+        prepare_assurance_run,
+        rollback_assurance_run,
+    )
     from .locale_support import language_pack, normalize_language
     from .reconciliation_helpers import (
         bank_allocation_candidates,
         build_codex_review_packet,
         checks_pass,
+        closed_bank_allocation_controls,
         codex_review_checks,
         cutoff_window_movements,
         document_source_map,
@@ -42,14 +135,19 @@ except ImportError:  # pragma: no cover - supports direct import from scripts/
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
-    import importlib.util
 
     from accountant_report import write_accountant_report_workbook  # type: ignore
+    from audit_assurance import (  # type: ignore
+        finalize_assurance_run,
+        prepare_assurance_run,
+        rollback_assurance_run,
+    )
     from locale_support import language_pack, normalize_language  # type: ignore
     from reconciliation_helpers import (  # type: ignore
         bank_allocation_candidates,
         build_codex_review_packet,
         checks_pass,
+        closed_bank_allocation_controls,
         codex_review_checks,
         cutoff_window_movements,
         document_source_map,
@@ -63,18 +161,10 @@ except ImportError:  # pragma: no cover - supports direct import from scripts/
         reversal_or_compensation_candidates,
         review_signal_rows,
     )
-
-    _review_session_path = Path(__file__).resolve().parent / "review_session.py"
-    _review_session_spec = importlib.util.spec_from_file_location(
-        "mparanza_audit_reconciliation_review_session",
-        _review_session_path,
+    from review_session import (  # type: ignore
+        write_review_session_artifacts,
+        write_run_intake,
     )
-    assert _review_session_spec and _review_session_spec.loader
-    _review_session = importlib.util.module_from_spec(_review_session_spec)
-    sys.modules[_review_session_spec.name] = _review_session
-    _review_session_spec.loader.exec_module(_review_session)
-    write_review_session_artifacts = _review_session.write_review_session_artifacts
-    write_run_intake = _review_session.write_run_intake
     from workpaper_outputs import (  # type: ignore
         build_audit_workbook_sheets,
         summary_from_reconciliation,
@@ -127,6 +217,91 @@ def default_next_steps(
     return steps or [messages["complete"]]
 
 
+def source_qualification_checks(
+    qualifications: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Convert mechanically validated source statuses into a completion gate."""
+
+    if not qualifications:
+        return []
+    blocked = [
+        str(row.get("qualification_id") or "")
+        for row in qualifications
+        if row.get("status") != "qualified"
+    ]
+    return [
+        {
+            "check": "source_layouts_qualified",
+            "status": "PASS" if not blocked else "FAIL",
+            "actual": len(qualifications) - len(blocked),
+            "expected": len(qualifications),
+            "note": "; ".join(blocked[:10]),
+        }
+    ]
+
+
+def _stabilize_office_package(path: Path) -> None:
+    """Make generated OOXML bytes replayable for audit receipt comparison.
+
+    Fixed core-property values, member order, and ZIP timestamps are mechanical
+    package metadata. Normalizing them removes run-clock noise without changing
+    workbook or document content.
+    """
+
+    with zipfile.ZipFile(path) as archive:
+        entries = [(info, archive.read(info.filename)) for info in archive.infolist()]
+    stable_entries: list[tuple[zipfile.ZipInfo, bytes]] = []
+    for info, data in entries:
+        if info.filename == "docProps/core.xml":
+            for tag in (b"created", b"modified"):
+                pattern = (
+                    rb"(<dcterms:" + tag + rb"\b[^>]*>)[^<]*(</dcterms:" + tag + rb">)"
+                )
+                data = re.sub(
+                    pattern,
+                    rb"\g<1>2000-01-01T00:00:00Z\g<2>",
+                    data,
+                )
+        stable_info = zipfile.ZipInfo(
+            filename=info.filename,
+            date_time=(1980, 1, 1, 0, 0, 0),
+        )
+        stable_info.compress_type = info.compress_type
+        stable_info.comment = info.comment
+        stable_info.internal_attr = info.internal_attr
+        stable_info.external_attr = info.external_attr
+        stable_info.create_system = info.create_system
+        stable_entries.append((stable_info, data))
+    temporary = path.with_name(f".{path.name}.stable")
+    with zipfile.ZipFile(
+        temporary,
+        "w",
+        compression=zipfile.ZIP_DEFLATED,
+        compresslevel=9,
+    ) as archive:
+        for info, data in sorted(stable_entries, key=lambda item: item[0].filename):
+            archive.writestr(info, data)
+    temporary.replace(path)
+
+
+def _rollback_on_workflow_failure(function: Any) -> Any:
+    """Restore the pre-run output image after any downstream workflow failure."""
+
+    @wraps(function)
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
+        completed = False
+        try:
+            result = function(*args, **kwargs)
+            completed = True
+            return result
+        finally:
+            if not completed and "output_dir" in kwargs:
+                rollback_assurance_run(Path(kwargs["output_dir"]))
+
+    return wrapped
+
+
+@_rollback_on_workflow_failure
 def build_reconciliation_artifacts(
     *,
     output_dir: str | Path,
@@ -134,6 +309,10 @@ def build_reconciliation_artifacts(
     evidence_rows: list[dict[str, Any]],
     assumptions: dict[str, Any],
     source_inventory: list[dict[str, Any]] | None = None,
+    source_qualifications: list[dict[str, Any]] | None = None,
+    source_artifact_root: str | Path | None = None,
+    source_artifact_receipts: list[dict[str, Any]] | None = None,
+    reviewed_source_decision_receipts: list[dict[str, Any]] | None = None,
     normalized_records: list[dict[str, Any]] | None = None,
     ledger_balance_rows: list[dict[str, Any]] | None = None,
     account_rollforward_check: list[dict[str, Any]] | None = None,
@@ -153,6 +332,8 @@ def build_reconciliation_artifacts(
     excel_name: str = "riconciliazione_audit.xlsx",
     word_name: str = "relazione_riconciliazione_audit.docx",
     fail_on_check_errors: bool = True,
+    defer_assurance_finalization: bool = False,
+    expected_predecessor_checkpoint: str | None = None,
 ) -> dict[str, Any]:
     """Run deterministic reconciliation and write standard Excel/Word outputs.
 
@@ -161,7 +342,28 @@ def build_reconciliation_artifacts(
     """
 
     out_dir = Path(output_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    assurance_context = prepare_assurance_run(
+        output_dir=out_dir,
+        open_items=open_items,
+        evidence_rows=evidence_rows,
+        assumptions=assumptions,
+        source_root=(
+            Path(source_artifact_root) if source_artifact_root is not None else None
+        ),
+        source_receipts=source_artifact_receipts or [],
+        reviewed_source_decisions=reviewed_source_decision_receipts or [],
+        source_qualifications=source_qualifications or [],
+        expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+    )
+    review_authority = assurance_context.get("professional_review_authority")
+    successor_run_id = (
+        str(review_authority.get("run_id"))
+        if isinstance(review_authority, dict)
+        and review_authority.get("origin") == "applied_decisions"
+        and isinstance(review_authority.get("run_id"), str)
+        and review_authority.get("run_id")
+        else None
+    )
     run_intake = write_run_intake(
         out_dir,
         assumptions=assumptions,
@@ -173,9 +375,15 @@ def build_reconciliation_artifacts(
             if source_inventory
             else out_dir
         ),
+        run_id=successor_run_id,
     )
 
     reconciliation_rows = reconcile_open_items(open_items, evidence_rows, assumptions)
+    relationship_allocation_ledgers, _ = closed_bank_allocation_controls(
+        reconciliation_rows,
+        evidence_rows,
+        assumptions,
+    )
     bank_candidates = bank_allocation_candidates(
         reconciliation_rows, evidence_rows, assumptions
     )
@@ -204,6 +412,7 @@ def build_reconciliation_artifacts(
         )
     )
     checks = [
+        *source_qualification_checks(source_qualifications or []),
         *reconciliation_checks(open_items, reconciliation_rows),
         *codex_review_checks(
             reconciliation_rows,
@@ -282,14 +491,18 @@ def build_reconciliation_artifacts(
         review_rows=review,
         language=language,
     )
+    for office_path in (excel_path, accountant_report_path, word_path):
+        _stabilize_office_package(Path(office_path))
 
     result = {
         "excel_path": str(excel_path),
         "accountant_report_path": str(accountant_report_path),
         "word_path": str(word_path),
         "assumptions": assumptions,
+        "source_qualifications": source_qualifications or [],
         "reconciliation_rows": reconciliation_rows,
         "bank_allocation_candidates": bank_candidates,
+        "relationship_allocation_ledgers": relationship_allocation_ledgers,
         "external_evidence_summary": external_summary,
         "external_evidence_detail": external_detail,
         "ledger_balance_rows": ledger_balance_rows or [],
@@ -306,6 +519,7 @@ def build_reconciliation_artifacts(
         "checks": checks,
         "review_rows": review,
         "checks_pass": checks_pass(checks),
+        "assurance_context": assurance_context,
     }
     review_session = write_review_session_artifacts(
         out_dir,
@@ -324,4 +538,20 @@ def build_reconciliation_artifacts(
         "final_artifacts_path": str(review_session.final_artifacts_path),
         "review_item_count": review_session.review_item_count,
     }
+    if not defer_assurance_finalization:
+        result["assurance"] = finalize_assurance_run(
+            output_dir=out_dir,
+            context=assurance_context,
+            reconciliation_rows=reconciliation_rows,
+            allocation_ledgers=relationship_allocation_ledgers,
+            checks=checks,
+            review_rows=review,
+            source_qualifications=source_qualifications or [],
+            declared_outputs=[
+                Path(excel_path),
+                Path(accountant_report_path),
+                Path(word_path),
+            ],
+            workbook_name=Path(excel_path).name,
+        )
     return result

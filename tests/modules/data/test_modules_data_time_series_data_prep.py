@@ -1,10 +1,10 @@
-import pytest
 import polars as pl
+import pytest
 from polars.testing import assert_frame_equal
 
 from modules.data.time_series_data_prep import (
-    prepare_data_for_timeline_plot,
     prepare_data_for_slope_plot,
+    prepare_data_for_timeline_plot,
 )
 from modules.utilities.config import get_naming_params
 from modules.utilities.utils import get_schema_and_column_names
@@ -106,6 +106,46 @@ def test_prepare_data_for_slope_plot_pivots_metric_and_label_and_drops_zero_sum(
     assert "_A" in cols and "_B" not in cols
     assert "label_A" in cols and "label_B" in cols
     assert unique_items == ["_A"]
+
+
+def test_prepare_data_for_slope_plot_collapses_repeated_identical_labels():
+    # Arrange
+    n = get_naming_params()
+    period_col = n["periodName"]
+    label_col = n["labelName"]
+    df = pl.DataFrame(
+        [
+            {period_col: "2024", "Cat": "A", "value": 2.0, label_col: "same"},
+            {period_col: "2024", "Cat": "A", "value": 3.0, label_col: "same"},
+        ]
+    )
+    unique_items = ["_A"]
+
+    # Act
+    out = prepare_data_for_slope_plot(
+        df, "Cat", "value", unique_items, {}, {}
+    ).collect()
+
+    # Assert
+    assert out.get_column("_A").to_list() == [5.0]
+    assert out.get_column("label_A").to_list() == ["same"]
+
+
+def test_prepare_data_for_slope_plot_rejects_conflicting_labels():
+    # Arrange
+    n = get_naming_params()
+    period_col = n["periodName"]
+    label_col = n["labelName"]
+    df = pl.DataFrame(
+        [
+            {period_col: "2024", "Cat": "A", "value": 2.0, label_col: "first"},
+            {period_col: "2024", "Cat": "A", "value": 3.0, label_col: "second"},
+        ]
+    )
+
+    # Act / Assert
+    with pytest.raises(ValueError, match="labels must agree"):
+        prepare_data_for_slope_plot(df, "Cat", "value", ["_A"], {}, {})
 
 
 def test_prepare_data_for_timeline_plot_raises_when_chosen_chart_missing():

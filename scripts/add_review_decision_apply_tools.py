@@ -5,6 +5,23 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+if __package__:
+    from .review_decision_transaction_template import (
+        APPLY_HELPERS_END,
+        APPLY_HELPERS_START,
+        marked_javascript_block,
+        upsert_marked_javascript_block,
+        upsert_review_output_transaction,
+    )
+else:
+    from review_decision_transaction_template import (
+        APPLY_HELPERS_END,
+        APPLY_HELPERS_START,
+        marked_javascript_block,
+        upsert_marked_javascript_block,
+        upsert_review_output_transaction,
+    )
+
 __all__ = ["main"]
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1056,6 +1073,43 @@ function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, 
 }
 
 function applyDecisionPayload(inputArgs) {
+  const canonicalOutputDir = resolveRunOutputDir(inputArgs);
+  if (!canonicalOutputDir) return applyDecisionPayloadWrites(inputArgs);
+  const workflowOptions = generatedReviewWorkflowTransactionOptions(
+    "apply",
+    inputArgs,
+  );
+  return withGeneratedReviewOutputTransaction(
+    canonicalOutputDir,
+    ({ workingOutputDir }) => {
+      const workingArgs = generatedReviewArgsForWorkingOutput(
+        inputArgs,
+        workingOutputDir,
+      );
+      const workingResult = applyDecisionPayloadWrites(workingArgs);
+      const authorizedWritePaths =
+        generatedReviewCollectApplicationWritePaths(workingResult);
+      const canonicalResult = generatedReviewRewriteOutputPaths(
+        workingResult,
+        workingOutputDir,
+        canonicalOutputDir,
+      );
+      return generatedReviewTransactionEnvelope(
+        canonicalResult,
+        authorizedWritePaths,
+      );
+    },
+    {
+      ...workflowOptions,
+      failureMessage:
+        "__DISPLAY_NAME__ review apply transaction failed safely.",
+      rollbackFailureMessage:
+        "__DISPLAY_NAME__ review apply transaction could not be restored safely.",
+    },
+  );
+}
+
+function applyDecisionPayloadWrites(inputArgs) {
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
@@ -1127,16 +1181,28 @@ function applyDecisionPayload(inputArgs) {
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      decisionOutputPath,
+      `${JSON.stringify(uiDecisions, null, 2)}\\n`,
+      "utf8",
+    );
   }
   if (appliedOutputPath) {
     fs.mkdirSync(path.dirname(appliedOutputPath), { recursive: true });
-    fs.writeFileSync(appliedOutputPath, `${JSON.stringify(appliedDecisions, null, 2)}\\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      appliedOutputPath,
+      `${JSON.stringify(appliedDecisions, null, 2)}\\n`,
+      "utf8",
+    );
     persisted = true;
   }
   if (finalArtifactsPath) {
     fs.mkdirSync(path.dirname(finalArtifactsPath), { recursive: true });
-    fs.writeFileSync(finalArtifactsPath, `${JSON.stringify(finalArtifacts, null, 2)}\\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      finalArtifactsPath,
+      `${JSON.stringify(finalArtifacts, null, 2)}\\n`,
+      "utf8",
+    );
   }
   const workflowSpecificResult = applyWorkflowSpecificReviewApplication(
     outputDir,
@@ -1186,8 +1252,6 @@ function applyDecisionPayload(inputArgs) {
     final_artifacts: responseFinalArtifacts,
   };
 }
-
-__WORKFLOW_SPECIFIC_REVIEW_APPLICATION_HELPER__
 """
 
 
@@ -1526,28 +1590,51 @@ def patch_tool_definition(text: str, target: Target) -> str:
 
 
 def patch_helpers(text: str, target: Target) -> str:
+    updated = upsert_review_output_transaction(
+        text,
+        insert_before=(
+            "function resolveDecisionOutputPath",
+            "function resolveRunOutputDir",
+            "function callTool(name, args = {}) {",
+        ),
+    )
     helper_block = APPLY_HELPERS.replace(
         "__VALIDATION_TYPE__", target.validation_type
     ).replace("__DISPLAY_NAME__", target.display_name)
-    helper_block = helper_block.replace(
-        "__WORKFLOW_SPECIFIC_REVIEW_APPLICATION_HELPER__",
-        workflow_review_application_helper(target),
-    )
-    if "function applyDecisionPayload" in text:
-        pattern = (
-            r"function resolveRunOutputDir\(inputArgs\) "
-            r"\{[\s\S]*?\n\}\n\nfunction callTool\(name, args = \{\}\) \{"
+    has_generated_block = APPLY_HELPERS_START in updated or APPLY_HELPERS_END in updated
+    inserted_generic = False
+    if has_generated_block:
+        updated = upsert_marked_javascript_block(
+            updated,
+            start=APPLY_HELPERS_START,
+            body=helper_block,
+            end=APPLY_HELPERS_END,
+            insert_before=("function callTool(name, args = {}) {",),
         )
-        replacement = f"{helper_block}function callTool(name, args = {{}}) {{"
-        updated, count = re.subn(pattern, lambda _match: replacement, text, count=1)
-        if count != 1:
-            raise RuntimeError("Could not replace existing apply helpers")
-        return updated
-    marker = "function callTool(name, args = {}) {"
-    index = text.find(marker)
-    if index == -1:
-        raise RuntimeError("Could not find callTool")
-    return f"{text[:index]}{helper_block}{text[index:]}"
+        inserted_generic = True
+    elif "function applyDecisionPayload" not in updated:
+        marked_helpers = marked_javascript_block(
+            APPLY_HELPERS_START,
+            helper_block,
+            APPLY_HELPERS_END,
+        )
+        marker = "function callTool(name, args = {}) {"
+        index = updated.find(marker)
+        if index == -1:
+            raise RuntimeError("Could not find callTool")
+        updated = f"{updated[:index]}{marked_helpers}\n{updated[index:]}"
+        inserted_generic = True
+    if (
+        inserted_generic
+        and "function applyWorkflowSpecificReviewApplication" not in updated
+    ):
+        workflow_helper = workflow_review_application_helper(target).rstrip()
+        marker = "function callTool(name, args = {}) {"
+        index = updated.find(marker)
+        if index == -1:
+            raise RuntimeError("Could not find callTool")
+        updated = f"{updated[:index]}{workflow_helper}\n\n{updated[index:]}"
+    return updated
 
 
 def patch_call_tool(text: str) -> str:

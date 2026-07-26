@@ -1,6 +1,6 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.31",
+  "version": "0.1.34",
   "description": "Deterministic journal-to-bank reconciliation guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Journal-Bank Reconciliation",
     "shortDescription": "Reconcile bank statements with journal or ledger exports in Italian, English, French, German, or Spanish.",
-    "longDescription": "Codex workflow for deterministic bank-to-journal reconciliation. Codex inspects local bank and journal files, asks only for non-inferable mappings or assumptions, runs deterministic scripts, reviews exceptions, and explains limits. The plugin normalizes rows, filters sample movements when supplied, performs staged amount/date/reference/beneficiary/description matching, and automatically writes the natural full package: CSV/XLSX/JSON outputs, audit, diagnostics, review notes, and Codex review, without direct model API calls from scripts.",
+    "longDescription": "Codex workflow for bounded bank-to-journal reconciliation. Codex inspects local bank and journal files, reviews mappings and the relationship perimeter, and explains limits. Shared assurance controls qualify only exact supported headers or current reviewed mappings, bind decisions and physical lineage to content-addressed sources, compare canonical Decimal money exactly, enforce one-to-one currency/unit/entity/direction policy, restrict reference matching to stable explicit identifiers, and block generic PDF layouts, invalid samples, residuals, or stale outputs instead of guessing. An additive reviewed adapter supports exact full Italian textual-month dates and exact reviewer-authorized non-movement summary labels without changing the default adapter contract. Valid runs write CSV/XLSX/JSON outputs, audit, gates, diagnostics, review notes, and Codex review without direct model API calls from scripts.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",
@@ -37,7 +37,7 @@
     ],
     "defaultPrompt": [
       "Use Journal-Bank Reconciliation on the bank files and journal/ledger file I provide.",
-      "Infer language and column mappings where possible, ask only for essential ambiguities, then run deterministic reconciliation and prepare the complete natural review package.",
+      "Propose language and column mappings where possible, ask only for essential ambiguities, then seal reviewed mapping and relationship decisions before deterministic reconciliation.",
       "Do not make direct OpenAI API calls from the plugin scripts; use Codex for review judgment and deterministic scripts for extraction/matching."
     ],
     "brandColor": "#496373",

@@ -1,11 +1,90 @@
 from __future__ import annotations
 
+import sys as _bootstrap_sys
+
+_bootstrap_sys.dont_write_bytecode = True
+_bootstrap_sys.pycache_prefix = (
+    r"Z:\__audit_reconciliation_no_bytecode__"
+    if _bootstrap_sys.platform == "win32"
+    else "/dev/null/audit-reconciliation"
+)
+
+import os as _bootstrap_os
+
+_BOOTSTRAP_PATH = _bootstrap_os.path.join(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__)),
+    "implementation_bootstrap.py",
+)
+_BOOTSTRAP_NAMESPACE = {
+    "__file__": _BOOTSTRAP_PATH,
+    "__name__": "_audit_reconciliation_implementation_bootstrap",
+}
+_bootstrap_stat = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
+if _bootstrap_stat.st_mode & 0o170000 != 0o100000 or _bootstrap_stat.st_nlink != 1:
+    raise RuntimeError(
+        "implementation bootstrap must be an ordinary single-link regular file"
+    )
+_bootstrap_descriptor = _bootstrap_os.open(
+    _BOOTSTRAP_PATH,
+    _bootstrap_os.O_RDONLY | getattr(_bootstrap_os, "O_NOFOLLOW", 0),
+)
+try:
+    _bootstrap_open_stat = _bootstrap_os.fstat(_bootstrap_descriptor)
+    _bootstrap_identity = (
+        _bootstrap_stat.st_dev,
+        _bootstrap_stat.st_ino,
+        _bootstrap_stat.st_size,
+        _bootstrap_stat.st_mtime_ns,
+        _bootstrap_stat.st_nlink,
+    )
+    if _bootstrap_identity != (
+        _bootstrap_open_stat.st_dev,
+        _bootstrap_open_stat.st_ino,
+        _bootstrap_open_stat.st_size,
+        _bootstrap_open_stat.st_mtime_ns,
+        _bootstrap_open_stat.st_nlink,
+    ):
+        raise RuntimeError("implementation bootstrap changed before it was read")
+    with _bootstrap_os.fdopen(
+        _bootstrap_descriptor,
+        "rb",
+        closefd=False,
+    ) as _bootstrap_handle:
+        _bootstrap_source = _bootstrap_handle.read()
+    _bootstrap_after_stat = _bootstrap_os.fstat(_bootstrap_descriptor)
+    if (
+        _bootstrap_identity
+        != (
+            _bootstrap_after_stat.st_dev,
+            _bootstrap_after_stat.st_ino,
+            _bootstrap_after_stat.st_size,
+            _bootstrap_after_stat.st_mtime_ns,
+            _bootstrap_after_stat.st_nlink,
+        )
+        or len(_bootstrap_source) != _bootstrap_after_stat.st_size
+    ):
+        raise RuntimeError("implementation bootstrap changed while it was read")
+finally:
+    _bootstrap_os.close(_bootstrap_descriptor)
+# Execute only the pre-opened single-link bootstrap source.
+exec(  # nosec B102
+    compile(_bootstrap_source, _BOOTSTRAP_PATH, "exec"),
+    _BOOTSTRAP_NAMESPACE,
+)
+_BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](
+    ("locale_support", "reconciliation_helpers", "review_session")
+)
+_SCRIPTS_DIR = _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))
+if _SCRIPTS_DIR not in _bootstrap_sys.path:
+    _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
+
 import argparse
 import ipaddress
 import json
 import logging
 import re
 import shutil
+import tempfile
 import webbrowser
 from datetime import datetime, timezone
 from http import HTTPStatus
@@ -13,6 +92,27 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
+
+try:
+    from .audit_assurance import (
+        build_applied_review_authority,
+        build_review_payload_mapping,
+        capture_review_transition_predecessor,
+        retain_review_transition,
+        review_decision_fingerprint,
+        run_review_output_transaction,
+        validate_assurance_run,
+    )
+except ImportError:  # pragma: no cover - direct script/importlib support
+    from audit_assurance import (  # type: ignore
+        build_applied_review_authority,
+        build_review_payload_mapping,
+        capture_review_transition_predecessor,
+        retain_review_transition,
+        review_decision_fingerprint,
+        run_review_output_transaction,
+        validate_assurance_run,
+    )
 
 __all__ = [
     "apply_decisions",
@@ -49,6 +149,13 @@ ACTION_STATUSES = {
     "skip": "skipped",
 }
 BLOCKING_ACTIONS = {"reject", "mark_unclear", "request_more_documents"}
+REQUIRED_REVIEW_ITEM_TYPES = {
+    "closure_evidence_review",
+    "probable_payment_review",
+    "manual_review",
+    "review_exception",
+    "check_exception",
+}
 LOGGER = logging.getLogger(__name__)
 
 
@@ -97,7 +204,10 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _output_dir(path: str | Path) -> Path:
-    output_dir = Path(path).expanduser().resolve()
+    requested = Path(path).expanduser()
+    if requested.is_symlink():
+        raise ValueError("output folder must be a real directory")
+    output_dir = requested.resolve()
     if not output_dir.is_dir():
         raise ValueError(f"output folder does not exist: {output_dir}")
     return output_dir
@@ -348,7 +458,7 @@ def _build_ui_decisions(
     return ui_decisions
 
 
-def save_decisions(
+def _save_decisions_in_place(
     output_dir: str | Path,
     input_args: dict[str, Any],
 ) -> dict[str, Any]:
@@ -372,6 +482,19 @@ def save_decisions(
         ),
         "ui_decisions": ui_decisions,
     }
+
+
+def save_decisions(
+    output_dir: str | Path,
+    input_args: dict[str, Any],
+) -> dict[str, Any]:
+    """Persist browser decisions under an exact whole-tree transaction."""
+
+    directory = _output_dir(output_dir)
+    return run_review_output_transaction(
+        directory,
+        lambda working_dir: _save_decisions_in_place(working_dir, input_args),
+    )
 
 
 def _short_string(value: Any) -> str:
@@ -592,10 +715,165 @@ def _write_structured_artifact_updates(
     return target_outputs, backup_outputs
 
 
-def _application_status(effects: list[dict[str, Any]], item_count: int) -> str:
+def _review_decision_fingerprint(
+    review_payload: dict[str, Any],
+    effects: list[dict[str, Any]],
+) -> str:
+    """Identify the semantic decision set independently of application time."""
+
+    return review_decision_fingerprint(
+        build_review_payload_mapping(review_payload),
+        effects,
+    )
+
+
+def _professional_review_from_effects(
+    *,
+    output_dir: Path,
+    assurance: dict[str, Any],
+    review_payload: dict[str, Any],
+    effects: list[dict[str, Any]],
+    reviewer: str | None,
+    decision_fingerprint: str,
+) -> dict[str, Any]:
+    """Bind accepted review actions one-to-one to the sealed source-row set."""
+
+    reconciliation_result = _read_json_object(
+        output_dir
+        / str(assurance["final_output_inventory"]["boundary_root"])
+        / "reconciliation_results.json",
+        required=True,
+    )
+    authority = build_applied_review_authority(
+        predecessor_assurance=assurance,
+        predecessor_professional_review=assurance["professional_review_authority"],
+        predecessor_reconciliation=reconciliation_result,
+        review_payload_mapping=build_review_payload_mapping(review_payload),
+        effects=effects,
+        reviewer_ref=reviewer,
+    )
+    if authority["decision_fingerprint"] != decision_fingerprint:
+        raise ValueError("professional review decision fingerprint is stale")
+    return authority
+
+
+def _completion_blockers(
+    review_payload: dict[str, Any],
+    effects: list[dict[str, Any]],
+    output_dir: Path | None = None,
+    decision_fingerprint: str | None = None,
+    expected_predecessor_checkpoint: str | None = None,
+) -> list[dict[str, str]]:
+    """Return unresolved run gates that reviewer clicks cannot override."""
+
+    blockers: list[dict[str, str]] = []
+    summary = (
+        review_payload.get("summary")
+        if isinstance(review_payload.get("summary"), dict)
+        else {}
+    )
+    if summary.get("checks_pass") is False or int(
+        summary.get("failed_check_count") or 0
+    ):
+        blockers.append(
+            {
+                "kind": "failed_deterministic_checks",
+                "detail": "Failed deterministic checks require correction and rerun.",
+            }
+        )
+    effect_by_id = {effect["item_id"]: effect for effect in effects}
+    for item in review_payload.get("items", []):
+        if (
+            not isinstance(item, dict)
+            or item.get("item_type") not in REQUIRED_REVIEW_ITEM_TYPES
+        ):
+            continue
+        effect = effect_by_id.get(item.get("id"))
+        if effect is None:
+            blockers.append(
+                {
+                    "kind": "pending_required_review",
+                    "detail": f"Required review item remains pending: {item.get('id')}",
+                }
+            )
+        elif effect.get("action") == "skip":
+            blockers.append(
+                {
+                    "kind": "skipped_required_review",
+                    "detail": f"Required review item was skipped: {item.get('id')}",
+                }
+            )
+    assurance_path = (
+        output_dir / "assurance_gates.json" if output_dir is not None else None
+    )
+    successor_replayed = False
+    if assurance_path is not None and assurance_path.is_file():
+        try:
+            assurance = validate_assurance_run(
+                output_dir,
+                expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+            )
+        except ValueError:
+            blockers.append(
+                {
+                    "kind": "assurance_replay_failed",
+                    "detail": (
+                        "The latest assurance seal did not replay; native outputs "
+                        "must be regenerated before final readiness."
+                    ),
+                }
+            )
+        else:
+            register = assurance.get("gate_register")
+            gates = register.get("gates") if isinstance(register, dict) else None
+            semantic = gates.get("semantic_review") if isinstance(gates, dict) else None
+            reporting = gates.get("reporting") if isinstance(gates, dict) else None
+            if (
+                not isinstance(semantic, dict)
+                or semantic.get("status") not in {"passed", "not_applicable"}
+                or not isinstance(reporting, dict)
+                or reporting.get("status") != "passed"
+            ):
+                blockers.append(
+                    {
+                        "kind": "assurance_replay_failed",
+                        "detail": (
+                            "The prior assurance gates were not report-ready; "
+                            "native outputs must be regenerated."
+                        ),
+                    }
+                )
+            authority = assurance.get("professional_review_authority")
+            successor_replayed = bool(
+                isinstance(authority, dict)
+                and authority.get("origin") == "applied_decisions"
+                and decision_fingerprint
+                and authority.get("decision_fingerprint") == decision_fingerprint
+                and assurance.get("gate_register", {}).get("report_ready") is True
+            )
+    if not successor_replayed:
+        blockers.append(
+            {
+                "kind": "assurance_replay_required",
+                "detail": (
+                    "Reviewed decisions require native regeneration and a fresh "
+                    "successor assurance receipt replay before final readiness."
+                ),
+            }
+        )
+    return blockers
+
+
+def _application_status(
+    effects: list[dict[str, Any]],
+    item_count: int,
+    completion_blockers: list[dict[str, str]],
+) -> str:
     if not effects:
         return "pending_review"
     if any(effect["requires_followup"] for effect in effects):
+        return "blocked"
+    if completion_blockers:
         return "blocked"
     if len(effects) < item_count:
         return "partial_review_applied"
@@ -636,6 +914,20 @@ def _final_artifacts_with_application(
             "status": applied_decisions["application_status"],
         },
     )
+    professional_review = applied_decisions.get("professional_review")
+    if isinstance(professional_review, dict):
+        _upsert_output(
+            outputs,
+            {
+                "path": "professional_review.json",
+                "kind": "json",
+                "status": (
+                    "successor_assurance_replayed"
+                    if professional_review.get("successor_assurance_replayed")
+                    else "written_pending_successor_reseal"
+                ),
+            },
+        )
     for output in target_outputs or []:
         _upsert_output(outputs, output)
     for output in backup_outputs or []:
@@ -647,6 +939,7 @@ def _final_artifacts_with_application(
         "workflow": current.get("workflow", WORKFLOW_NAME),
         "run_id": current.get("run_id", applied_decisions["run_id"]),
         "outputs": outputs,
+        "blockers": applied_decisions.get("completion_blockers", []),
         "status": applied_decisions["application_status"],
         "review_application": {
             "applied_at": applied_decisions["applied_at"],
@@ -654,6 +947,10 @@ def _final_artifacts_with_application(
             "decision_count": applied_decisions["decision_count"],
             "item_count": applied_decisions["item_count"],
             "blocker_count": applied_decisions["blocker_count"],
+            "completion_blockers": applied_decisions.get(
+                "completion_blockers",
+                [],
+            ),
             "target_update_count": applied_decisions.get("target_update_count", 0),
             "target_update_paths": applied_decisions.get("target_update_paths", []),
             "structured_update_count": applied_decisions.get(
@@ -664,6 +961,21 @@ def _final_artifacts_with_application(
             ),
             "original_backup_paths": applied_decisions.get("original_backup_paths", []),
             "applied_decisions_path": "applied_decisions.json",
+            "professional_review_path": (
+                "professional_review.json"
+                if isinstance(professional_review, dict)
+                else None
+            ),
+            "decision_fingerprint": (
+                professional_review.get("decision_fingerprint")
+                if isinstance(professional_review, dict)
+                else None
+            ),
+            "successor_assurance_replayed": (
+                professional_review.get("successor_assurance_replayed") is True
+                if isinstance(professional_review, dict)
+                else False
+            ),
         },
     }
     return final_artifacts
@@ -692,6 +1004,8 @@ def _review_application_trace_outputs(
         "applied_decisions.json",
         "final_artifacts.json",
     ]
+    if isinstance(applied_decisions.get("professional_review"), dict):
+        outputs.append("professional_review.json")
     review_application = final_artifacts.get("review_application")
     if not isinstance(review_application, dict):
         review_application = {}
@@ -756,7 +1070,7 @@ def _append_review_application_trace(
     return run_intake_path
 
 
-def apply_decisions(
+def _apply_decisions_in_place(
     output_dir: str | Path,
     input_args: dict[str, Any],
 ) -> dict[str, Any]:
@@ -771,6 +1085,66 @@ def apply_decisions(
         _application_effect(decision, item_by_id[decision["item_id"]], applied_at)
         for decision in ui_decisions["decisions"]
     ]
+    decision_fingerprint = _review_decision_fingerprint(review_payload, effects)
+    expected_predecessor_checkpoint = input_args.get("expected_predecessor_checkpoint")
+    assurance_path = directory / "assurance_receipts.json"
+    assurance = (
+        validate_assurance_run(
+            directory,
+            expected_predecessor_checkpoint=(
+                expected_predecessor_checkpoint
+                if isinstance(expected_predecessor_checkpoint, str)
+                else None
+            ),
+        )
+        if assurance_path.exists() or assurance_path.is_symlink()
+        else None
+    )
+    current_authority = (
+        assurance.get("professional_review_authority")
+        if isinstance(assurance, dict)
+        else None
+    )
+    successor_replayed = bool(
+        isinstance(current_authority, dict)
+        and current_authority.get("origin") == "applied_decisions"
+        and current_authority.get("decision_fingerprint") == decision_fingerprint
+        and isinstance(assurance, dict)
+        and assurance.get("gate_register", {}).get("report_ready") is True
+    )
+    professional_review = (
+        current_authority
+        if successor_replayed
+        else (
+            _professional_review_from_effects(
+                output_dir=directory,
+                assurance=assurance,
+                review_payload=review_payload,
+                effects=effects,
+                reviewer=_short_string(ui_decisions.get("reviewer")) or None,
+                decision_fingerprint=decision_fingerprint,
+            )
+            if isinstance(assurance, dict)
+            else None
+        )
+    )
+    transition_capture: Path | None = None
+    if isinstance(assurance, dict) and not successor_replayed:
+        transition_capture = Path(
+            tempfile.mkdtemp(
+                prefix=".audit-review-transition-capture-",
+                dir=directory.parent,
+            )
+        )
+        capture_review_transition_predecessor(
+            directory,
+            transition_capture,
+            expected_predecessor_checkpoint=(
+                expected_predecessor_checkpoint
+                if isinstance(expected_predecessor_checkpoint, str)
+                else None
+            ),
+        )
     target_outputs, backup_outputs = _write_structured_artifact_updates(
         directory,
         effects,
@@ -780,8 +1154,25 @@ def apply_decisions(
         for effect in effects
         if effect.get("artifact_update") == "structured_artifact_updated"
     ]
-    blocker_count = sum(1 for effect in effects if effect["requires_followup"])
-    application_status = _application_status(effects, review_payload["item_count"])
+    completion_blockers = _completion_blockers(
+        review_payload,
+        effects,
+        directory,
+        decision_fingerprint,
+        (
+            expected_predecessor_checkpoint
+            if isinstance(expected_predecessor_checkpoint, str)
+            else None
+        ),
+    )
+    blocker_count = sum(1 for effect in effects if effect["requires_followup"]) + len(
+        completion_blockers
+    )
+    application_status = _application_status(
+        effects,
+        review_payload["item_count"],
+        completion_blockers,
+    )
     applied_decisions = {
         "schema_version": review_payload["schema_version"],
         "plugin": review_payload["plugin"],
@@ -799,6 +1190,7 @@ def apply_decisions(
         "decision_count": ui_decisions["decision_count"],
         "item_count": review_payload["item_count"],
         "blocker_count": blocker_count,
+        "completion_blockers": completion_blockers,
         "target_update_count": len(target_outputs),
         "target_update_paths": [output["path"] for output in target_outputs],
         "structured_update_count": len(structured_update_paths),
@@ -806,6 +1198,12 @@ def apply_decisions(
         "original_backup_paths": [output["path"] for output in backup_outputs],
         "application_status": application_status,
     }
+    if professional_review is not None:
+        applied_decisions["professional_review"] = {
+            "path": "professional_review.json",
+            "decision_fingerprint": decision_fingerprint,
+            "successor_assurance_replayed": successor_replayed,
+        }
     if "reviewer" in ui_decisions:
         applied_decisions["reviewer"] = ui_decisions["reviewer"]
     final_artifacts = _final_artifacts_with_application(
@@ -817,8 +1215,22 @@ def apply_decisions(
     ui_decisions_path = directory / "ui_decisions.json"
     applied_decisions_path = directory / "applied_decisions.json"
     final_artifacts_path = directory / "final_artifacts.json"
+    professional_review_path = directory / "professional_review.json"
     _write_json(ui_decisions_path, ui_decisions)
     _write_json(applied_decisions_path, applied_decisions)
+    if professional_review is not None and not successor_replayed:
+        _write_json(professional_review_path, professional_review)
+    if transition_capture is not None:
+        retain_review_transition(
+            directory,
+            transition_capture,
+            expected_predecessor_checkpoint=(
+                expected_predecessor_checkpoint
+                if isinstance(expected_predecessor_checkpoint, str)
+                else None
+            ),
+        )
+        shutil.rmtree(transition_capture)
     _write_json(final_artifacts_path, final_artifacts)
     run_intake_path = _append_review_application_trace(
         directory,
@@ -839,6 +1251,11 @@ def apply_decisions(
         "ui_decisions_path": ui_decisions_path.as_posix(),
         "applied_decisions_path": applied_decisions_path.as_posix(),
         "final_artifacts_path": final_artifacts_path.as_posix(),
+        "professional_review_path": (
+            professional_review_path.as_posix()
+            if professional_review is not None
+            else None
+        ),
         "run_intake_path": run_intake_path.as_posix() if run_intake_path else None,
         "message": (
             f"Applied {applied_decisions['decision_count']} "
@@ -847,6 +1264,24 @@ def apply_decisions(
         "applied_decisions": applied_decisions,
         "final_artifacts": final_artifacts,
     }
+
+
+def apply_decisions(
+    output_dir: str | Path,
+    input_args: dict[str, Any],
+) -> dict[str, Any]:
+    """Apply browser decisions under an exact whole-tree transaction."""
+
+    directory = _output_dir(output_dir)
+    return run_review_output_transaction(
+        directory,
+        lambda working_dir: _apply_decisions_in_place(working_dir, input_args),
+        expected_predecessor_checkpoint=(
+            input_args.get("expected_predecessor_checkpoint")
+            if isinstance(input_args.get("expected_predecessor_checkpoint"), str)
+            else None
+        ),
+    )
 
 
 def _widget_html(output_dir: Path) -> str:

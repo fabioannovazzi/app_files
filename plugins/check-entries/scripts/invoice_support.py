@@ -3,23 +3,68 @@
 from __future__ import annotations
 
 import re
+import sys
 import zipfile
 from dataclasses import dataclass
 from datetime import date, datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Iterable
 
 # Payload size and DTD/entity checks are enforced before this parser is called.
 from xml.etree import ElementTree  # nosec B405
 
+_COMPONENT_ROOT = Path(__file__).resolve().parents[1]
+_VENDOR_CANDIDATES = (
+    _COMPONENT_ROOT / "vendor" / "modules",
+    _COMPONENT_ROOT.parent.parent / "vendor" / "modules",
+    _COMPONENT_ROOT.parent / "_shared" / "vendor" / "modules",
+)
+if "vera_assurance" not in sys.modules:
+    for _vendor_candidate in _VENDOR_CANDIDATES:
+        if (_vendor_candidate / "vera_assurance").is_dir():
+            if str(_vendor_candidate) not in sys.path:
+                sys.path.insert(0, str(_vendor_candidate))
+            break
+
+from vera_assurance import (  # noqa: E402
+    MoneyValidationError,
+    decimal_text,
+    difference_within_tolerance,
+    parse_canonical_decimal,
+    parse_localized_decimal,
+)
+
 __all__ = [
     "InvoiceRecord",
+    "fatturapa_document_polarity",
+    "load_invoice_payloads",
     "load_invoice_records",
     "match_invoice",
 ]
 
 MAX_XML_BYTES = 20 * 1024 * 1024
 MAX_ARCHIVE_FILES = 10_000
+FATTURAPA_POSITIVE_DOCUMENT_TYPES = frozenset(
+    {"TD01", "TD02", "TD03", "TD05", "TD06", "TD09"}
+)
+FATTURAPA_NEGATIVE_DOCUMENT_TYPES = frozenset({"TD04", "TD08"})
+
+
+def fatturapa_document_polarity(document_type: object) -> str | None:
+    """Return bounded document polarity without inferring a journal side.
+
+    ``TipoDocumento`` is mechanically parsed source metadata, but it does not
+    identify which account line is under test. Therefore this diagnostic fact
+    must never promote a debit/credit conclusion for the journal entry.
+    """
+
+    normalized = str(document_type or "").strip().upper()
+    if normalized in FATTURAPA_POSITIVE_DOCUMENT_TYPES:
+        return "positive_document"
+    if normalized in FATTURAPA_NEGATIVE_DOCUMENT_TYPES:
+        return "negative_document"
+    return None
 
 
 @dataclass(frozen=True)
@@ -27,9 +72,11 @@ class InvoiceRecord:
     """Mechanically parsed fields from one FatturaPA XML document."""
 
     source_name: str
+    document_type: str
     invoice_number: str
     invoice_date: str | None
-    total_amount: float | None
+    total_amount: str | None
+    currency: str | None
     supplier_name: str
     supplier_tax_id: str
     customer_name: str
@@ -40,9 +87,12 @@ class InvoiceRecord:
 
         return {
             "source_name": self.source_name,
+            "document_type": self.document_type,
+            "document_polarity": fatturapa_document_polarity(self.document_type),
             "invoice_number": self.invoice_number,
             "invoice_date": self.invoice_date,
             "total_amount": self.total_amount,
+            "currency": self.currency,
             "supplier_name": self.supplier_name,
             "supplier_tax_id": self.supplier_tax_id,
             "customer_name": self.customer_name,
@@ -92,13 +142,18 @@ def _party_tax_id(root: ElementTree.Element, party_tag: str) -> str:
     return vat or _first_text(party, ("DatiAnagrafici", "CodiceFiscale"))
 
 
-def _parse_amount(value: str) -> float | None:
+def _parse_amount(value: str) -> str | None:
     if not value:
         return None
     try:
-        return float(value.replace(",", "."))
-    except ValueError:
-        return None
+        number = parse_localized_decimal(
+            value,
+            label="FatturaPA ImportoTotaleDocumento",
+            decimal_separator=".",
+        )
+    except MoneyValidationError as exc:
+        raise ValueError(str(exc)) from exc
+    return decimal_text(number)
 
 
 def _parse_invoice_xml(source_name: str, payload: bytes) -> InvoiceRecord:
@@ -110,31 +165,44 @@ def _parse_invoice_xml(source_name: str, payload: bytes) -> InvoiceRecord:
     # ElementTree is safe here because payload size is bounded and DTD/entities
     # are rejected before parsing; fixed parsing is required for audit replay.
     root = ElementTree.fromstring(payload)  # nosec B314
-    body = next(
-        (
-            node
-            for node in root.iter()
-            if _local_name(node.tag) == "FatturaElettronicaBody"
-        ),
-        None,
-    )
-    if body is None:
+    if _local_name(root.tag) != "FatturaElettronica":
         raise ValueError(f"Not a FatturaPA invoice: {source_name}")
-    general = next(
-        (
-            node
-            for node in body.iter()
-            if _local_name(node.tag) == "DatiGeneraliDocumento"
-        ),
-        None,
-    )
-    if general is None:
+    bodies = [
+        node
+        for node in root.iter()
+        if _local_name(node.tag) == "FatturaElettronicaBody"
+    ]
+    if len(bodies) != 1:
+        raise ValueError(f"Expected exactly one FatturaElettronicaBody: {source_name}")
+    generals = [
+        node
+        for node in bodies[0].iter()
+        if _local_name(node.tag) == "DatiGeneraliDocumento"
+    ]
+    if len(generals) != 1:
         raise ValueError(f"Missing DatiGeneraliDocumento: {source_name}")
+    general = generals[0]
+    document_type = _first_text(general, ("TipoDocumento",))
+    invoice_number = _first_text(general, ("Numero",))
+    invoice_date = _first_text(general, ("Data",))
+    currency = _first_text(general, ("Divisa",)).upper()
+    if not document_type or not invoice_number or not invoice_date:
+        raise ValueError(
+            f"FatturaPA document type, number, and date are required: {source_name}"
+        )
+    try:
+        date.fromisoformat(invoice_date)
+    except ValueError as exc:
+        raise ValueError(f"Invalid FatturaPA invoice date: {source_name}") from exc
+    if re.fullmatch(r"[A-Z]{3}", currency) is None:
+        raise ValueError(f"Invalid FatturaPA currency: {source_name}")
     return InvoiceRecord(
         source_name=source_name,
-        invoice_number=_first_text(general, ("Numero",)),
-        invoice_date=_first_text(general, ("Data",)) or None,
+        document_type=document_type,
+        invoice_number=invoice_number,
+        invoice_date=invoice_date,
         total_amount=_parse_amount(_first_text(general, ("ImportoTotaleDocumento",))),
+        currency=currency,
         supplier_name=_party_name(root, "CedentePrestatore"),
         supplier_tax_id=_party_tax_id(root, "CedentePrestatore"),
         customer_name=_party_name(root, "CessionarioCommittente"),
@@ -146,7 +214,7 @@ def _xml_payloads(path: Path) -> Iterable[tuple[str, bytes]]:
     if path.is_dir():
         for candidate in sorted(path.rglob("*")):
             if candidate.is_file() and candidate.suffix.lower() in {".xml", ".p7m"}:
-                yield candidate.name, candidate.read_bytes()
+                yield candidate.relative_to(path).as_posix(), candidate.read_bytes()
         return
     if path.suffix.lower() == ".zip":
         with zipfile.ZipFile(path) as archive:
@@ -169,7 +237,7 @@ def _xml_payloads(path: Path) -> Iterable[tuple[str, bytes]]:
                     raise ValueError(
                         f"Invoice XML exceeds {MAX_XML_BYTES} bytes: {member.filename}"
                     )
-                yield member.filename, archive.read(member)
+                yield f"{path.name}!/{member.filename}", archive.read(member)
         return
     if path.suffix.lower() in {".xml", ".p7m"}:
         yield path.name, path.read_bytes()
@@ -185,8 +253,44 @@ def load_invoice_records(
     records: list[InvoiceRecord] = []
     errors: list[dict[str, str]] = []
     for source_name, payload in _xml_payloads(path.expanduser()):
+        if Path(source_name).suffix.lower() == ".p7m":
+            errors.append(
+                {
+                    "source_name": source_name,
+                    "error": (
+                        "P7M support is unsupported without a bounded decoder "
+                        "and signature-validation policy."
+                    ),
+                }
+            )
+            continue
         try:
-            # Signed .p7m envelopes are reported for review unless they contain plain XML.
+            records.append(_parse_invoice_xml(source_name, payload))
+        except (ElementTree.ParseError, ValueError, UnicodeError) as exc:
+            errors.append({"source_name": source_name, "error": str(exc)})
+    return records, errors
+
+
+def load_invoice_payloads(
+    payloads: Iterable[tuple[str, bytes]],
+) -> tuple[list[InvoiceRecord], list[dict[str, str]]]:
+    """Parse already-captured XML bytes without reopening live source files."""
+
+    records: list[InvoiceRecord] = []
+    errors: list[dict[str, str]] = []
+    for source_name, payload in payloads:
+        if Path(source_name).suffix.lower() == ".p7m":
+            errors.append(
+                {
+                    "source_name": source_name,
+                    "error": (
+                        "P7M support is unsupported without a bounded decoder "
+                        "and signature-validation policy."
+                    ),
+                }
+            )
+            continue
+        try:
             records.append(_parse_invoice_xml(source_name, payload))
         except (ElementTree.ParseError, ValueError, UnicodeError) as exc:
             errors.append({"source_name": source_name, "error": str(exc)})
@@ -207,60 +311,91 @@ def _parse_date(value: object) -> date | None:
     return None
 
 
-def _contains_party(expected: object, record: InvoiceRecord) -> bool:
-    expected_norm = _norm(expected)
-    if not expected_norm:
+def _contains_labeled_invoice_identifier(
+    container: object,
+    identifier: object,
+) -> bool:
+    """Match only explicit labelled, distinctive invoice references.
+
+    A fixed syntax is justified here because identity is an audit control:
+    accepting an unlabeled number, year, or single-letter token creates
+    mechanically demonstrable false positives.
+    """
+
+    parts = re.findall(r"[a-z0-9]+", str(identifier or "").lower())
+    if not parts:
         return False
-    parties = " ".join(
-        _norm(value)
-        for value in (
-            record.supplier_name,
-            record.supplier_tax_id,
-            record.customer_name,
-            record.customer_tax_id,
+    compact = "".join(parts)
+    if compact.isdigit() or (len(compact) == 1 and compact.isalpha()):
+        return False
+    text = str(container or "").lower()
+    invoice_identifier = r"[^a-z0-9]+".join(re.escape(part) for part in parts)
+    label = r"(?:invoice|fattura|facture|rechnung|factura)"
+    return (
+        re.search(
+            rf"(?<![a-z0-9]){label}(?:[^a-z0-9]+(?:n|no|nr|numero|number))?"
+            rf"[^a-z0-9]+{invoice_identifier}(?![a-z0-9])",
+            text,
         )
+        is not None
     )
-    tokens = [token for token in expected_norm.split() if len(token) > 2]
-    return bool(tokens) and all(token in parties for token in tokens)
 
 
 def match_invoice(
     entry: dict[str, Any],
     invoices: list[InvoiceRecord],
     *,
-    amount_tolerance: float,
+    amount_tolerance: Decimal,
     date_window_days: int,
 ) -> tuple[InvoiceRecord | None, list[str], str | None]:
     """Return a unique invoice match based on mechanically verifiable signals.
 
-    At least two independent signals are required. This fixed boundary prevents a
-    common amount alone from silently selecting the wrong accounting evidence.
+    An explicit invoice-number relationship plus at least one corroborating
+    signal is required. Amount/date/currency coincidence without an identity key
+    remains a review candidate rather than silently selecting evidence.
     """
 
     candidates: list[tuple[InvoiceRecord, list[str]]] = []
+    weak_candidates: list[tuple[InvoiceRecord, list[str]]] = []
     description = _norm(entry.get("description"))
     expected_amount = entry.get("amount_abs")
+    expected_amount_value = (
+        None
+        if expected_amount in (None, "")
+        else parse_canonical_decimal(expected_amount, label="entry amount_abs")
+    )
+    expected_currency = str(entry.get("currency") or "").strip().upper()
     expected_date = _parse_date(entry.get("entry_date"))
     for invoice in invoices:
         signals: list[str] = []
-        if invoice.invoice_number and _norm(invoice.invoice_number) in description:
+        if invoice.invoice_number and _contains_labeled_invoice_identifier(
+            description, invoice.invoice_number
+        ):
             signals.append("invoice_number")
-        if expected_amount is not None and invoice.total_amount is not None:
-            if (
-                abs(abs(float(expected_amount)) - abs(invoice.total_amount))
-                <= amount_tolerance
-            ):
-                signals.append("amount")
+        if expected_amount_value is not None and invoice.total_amount is not None:
+            invoice_amount = parse_canonical_decimal(
+                invoice.total_amount,
+                label=f"{invoice.source_name} total_amount",
+            )
+            invoice_currency = str(invoice.currency or "").strip().upper()
+            if expected_currency and invoice_currency == expected_currency:
+                _, within = difference_within_tolerance(
+                    abs(invoice_amount), abs(expected_amount_value), amount_tolerance
+                )
+                if within:
+                    signals.append("amount")
         invoice_date = _parse_date(invoice.invoice_date)
         if expected_date is not None and invoice_date is not None:
             if abs((expected_date - invoice_date).days) <= date_window_days:
                 signals.append("date")
-        if _contains_party(entry.get("beneficiary_expected"), invoice):
-            signals.append("beneficiary")
-        if len(signals) >= 2:
+        if "invoice_number" in signals and len(signals) >= 2:
             candidates.append((invoice, signals))
+        elif len(signals) >= 2:
+            weak_candidates.append((invoice, signals))
     if len(candidates) == 1:
         return candidates[0][0], candidates[0][1], None
     if len(candidates) > 1:
         return None, [], "multiple_invoice_candidates"
+    if weak_candidates:
+        return None, [], "invoice_relationship_requires_review"
     return None, [], None

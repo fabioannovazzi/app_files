@@ -7,10 +7,83 @@ or explain the missing libraries to a non-technical user.
 
 from __future__ import annotations
 
+import sys as _bootstrap_sys
+
+_bootstrap_sys.dont_write_bytecode = True
+_bootstrap_sys.pycache_prefix = (
+    r"Z:\__audit_reconciliation_no_bytecode__"
+    if _bootstrap_sys.platform == "win32"
+    else "/dev/null/audit-reconciliation"
+)
+
+import os as _bootstrap_os
+
+_BOOTSTRAP_PATH = _bootstrap_os.path.join(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__)),
+    "implementation_bootstrap.py",
+)
+_BOOTSTRAP_NAMESPACE = {
+    "__file__": _BOOTSTRAP_PATH,
+    "__name__": "_audit_reconciliation_implementation_bootstrap",
+}
+_bootstrap_stat = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
+if _bootstrap_stat.st_mode & 0o170000 != 0o100000 or _bootstrap_stat.st_nlink != 1:
+    raise RuntimeError(
+        "implementation bootstrap must be an ordinary single-link regular file"
+    )
+_bootstrap_descriptor = _bootstrap_os.open(
+    _BOOTSTRAP_PATH,
+    _bootstrap_os.O_RDONLY | getattr(_bootstrap_os, "O_NOFOLLOW", 0),
+)
+try:
+    _bootstrap_open_stat = _bootstrap_os.fstat(_bootstrap_descriptor)
+    _bootstrap_identity = (
+        _bootstrap_stat.st_dev,
+        _bootstrap_stat.st_ino,
+        _bootstrap_stat.st_size,
+        _bootstrap_stat.st_mtime_ns,
+        _bootstrap_stat.st_nlink,
+    )
+    if _bootstrap_identity != (
+        _bootstrap_open_stat.st_dev,
+        _bootstrap_open_stat.st_ino,
+        _bootstrap_open_stat.st_size,
+        _bootstrap_open_stat.st_mtime_ns,
+        _bootstrap_open_stat.st_nlink,
+    ):
+        raise RuntimeError("implementation bootstrap changed before it was read")
+    with _bootstrap_os.fdopen(
+        _bootstrap_descriptor,
+        "rb",
+        closefd=False,
+    ) as _bootstrap_handle:
+        _bootstrap_source = _bootstrap_handle.read()
+    _bootstrap_after_stat = _bootstrap_os.fstat(_bootstrap_descriptor)
+    if (
+        _bootstrap_identity
+        != (
+            _bootstrap_after_stat.st_dev,
+            _bootstrap_after_stat.st_ino,
+            _bootstrap_after_stat.st_size,
+            _bootstrap_after_stat.st_mtime_ns,
+            _bootstrap_after_stat.st_nlink,
+        )
+        or len(_bootstrap_source) != _bootstrap_after_stat.st_size
+    ):
+        raise RuntimeError("implementation bootstrap changed while it was read")
+finally:
+    _bootstrap_os.close(_bootstrap_descriptor)
+# Execute only the pre-opened single-link bootstrap source.
+exec(  # nosec B102
+    compile(_bootstrap_source, _BOOTSTRAP_PATH, "exec"),
+    _BOOTSTRAP_NAMESPACE,
+)
+_BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](())
+
 import argparse
-from datetime import datetime, timezone
 import importlib.util
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 

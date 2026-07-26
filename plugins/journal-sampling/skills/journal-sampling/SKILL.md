@@ -1,6 +1,6 @@
 ---
 name: journal-sampling
-description: Use when a user wants Codex to extract accounting journal entries from variable Excel, CSV, print-friendly Excel, or text PDF formats, map columns, normalize deterministic rows, and generate reproducible audit samples with diagnostics and an audit trail. This is a Codex workflow plugin; users should not operate the helper CLIs directly.
+description: Use when a user wants Codex to qualify and extract accounting journal entries from reviewed CSV, Excel, or bounded print-friendly Excel layouts, normalize exact monetary rows, and generate reproducible audit samples with diagnostics and an audit trail. This is a Codex workflow plugin; users should not operate the helper CLIs directly.
 ---
 
 ## Output Location Rule
@@ -62,19 +62,36 @@ python scripts/check_dependencies.py
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it or explain what dependency capability is missing.
 
-3. Run inspection to produce `inspection.json` and `suggested_recipe.json`:
+3. Run inspection to produce `inspection.json`, `suggested_recipe.json`, and
+   `qualification_review_payload.json`:
 
 ```bash
 python scripts/inspect_journal.py <input-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-4. Read the inspection artifacts. If confidence is low or required fields are missing, ask the user for the smallest needed decision, such as the header row or which column is account/date/debit/credit.
-5. If a mapping decision is needed, edit `suggested_recipe.json` in the work folder, not plugin source.
+4. Read the inspection artifacts. Inspection never promotes a suggested mapping
+   into the population. Review each source-family adapter, header/layout mapping,
+   debit/credit or signed-amount convention, and localized number separators.
+   Ask the user only for the smallest unresolved semantic decision.
+5. Record the reviewed recipe in the work folder, not plugin source. The
+   reviewed contract must explicitly bind the source artifact, adapter and
+   version, field mapping, posting identity, carry-forward policy, currency,
+   unit, and the disposition of every additional monetary-labelled or numeric
+   column. Preserve the generated `mapping_sha256` and attach a complete
+   `vera.reviewed_decision_receipt.v1` whose `decision_type` is
+   `source_mapping` and whose content is the exact mapping contract. A free-text
+   decision reference is not sufficient. If any bound field changes, rerun
+   inspection with that recipe so a new digest is generated and review the new
+   contract.
 6. Normalize rows:
 
 ```bash
 python scripts/normalize_journal.py <input-file-or-folder> --output-dir <output-dir> --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
+
+Require the complete normalization to retain the exact reviewed bytes as
+`normalization_recipe.json`, with matching captured and original-source
+receipts. Do not delete or replace the original reviewed recipe after the run.
 
 7. Run deterministic sampling:
 
@@ -82,15 +99,55 @@ python scripts/normalize_journal.py <input-file-or-folder> --output-dir <output-
 python scripts/run_sample.py <output-dir>/normalized_journal.csv --output-dir <output-dir>/sample --method random --size 25 --language <it|en|fr|de|es>
 ```
 
-8. Review `normalization_diagnostics.json` and `sampling_audit.json` before final delivery. Report parser confidence, missing fields, population size after filters, sample size, and output paths.
+The sample output folder must be absent or empty. Sampling stages every artifact
+privately and publishes nothing to that folder unless upstream source and
+normalization receipts freshly replay, raw input plus the exact retained recipe
+freshly reproduces `normalized_journal.csv` and the material preparation
+contract, CSV and XLSX both close, every sampled
+material field closes from its normalized row to its CSV row and XLSX cell, and
+the exact physical output allowlist closes. Do not treat a partial staging
+failure as a deliverable.
 
-## Supported V1 Inputs
+8. Review `normalization_diagnostics.json`,
+   `qualification_review_payload.json`, `reviewed_decisions.json`,
+   `assurance_gates.json`, `assurance_envelope.json`, `sampling_audit.json`,
+   `sample_reproducibility.json`, `sample_material_value_ledger.json`,
+   `sample_assurance_gates.json`, `sample_assurance_envelope.json`, and
+   `sample_output_receipts.json` before final delivery. Sampling is blocked unless
+   every requested source is qualified, every monetary candidate emits exactly
+   one canonical row, every additional monetary-labelled or numeric column is
+   explicitly mapped or excluded, and the original sources, captured parse
+   bytes, implementation, and normalized CSV still match their receipts.
+   Report qualification status, separately
+   excluded non-monetary rows, excluded and withheld monetary fields, source
+   and preparation gates, population size after filters, sample size, and
+   output paths. A passed deterministic preparation gate does not imply that
+   sample sufficiency or an audit conclusion has been professionally reviewed.
+   Treat the stage-zero manifest as pre-review only. A later save or apply is
+   deliverable only after the MCP transaction archives the exact predecessor,
+   freshly rederives all review counts/effects/statuses and gates, reseals the
+   exact file/directory/mode contract, and replays the full successor chain.
+   Semantic review must remain `not_assessed`, reporting `blocked`, publication
+   `withheld`, and `report_ready=false`; do not translate accepted item
+   decisions into `final_ready`.
 
-- good Excel/CSV journals;
-- print-friendly Excel exports generated from PDFs;
-- text PDFs where journal lines are extractable as text.
+## Supported V2 Inputs
 
-OCR-only scanned PDFs are not a v1 target. If inspection returns no rows for a scanned file, explain that OCR support is outside this plugin milestone rather than pretending the sample is complete.
+- reviewed native Excel/CSV journals with explicit mappings;
+- reviewed print-friendly Excel exports using the bounded
+  `print_friendly.debit_credit_columns.v1` layout adapter.
+
+Multi-worksheet workbooks currently abstain as a whole. No worksheet may be
+silently ignored. Add a bounded multi-sheet adapter and representative fixtures
+before such a workbook can qualify.
+
+Unreadable containers emit no rows and record `failure_class=parser_failure`,
+separately from readable sources whose structure is unsupported.
+
+Generic text PDFs and OCR-only scanned PDFs are not qualified inputs. Text
+position does not establish whether a trailing number is debit, credit, balance,
+or a line total. Inspection returns `unsupported_source_layout` and emits no
+rows unless a source-family-specific PDF adapter is implemented and tested.
 
 ## Language Policy
 
@@ -116,7 +173,18 @@ ES: Usa Journal Sampling en /ruta/input. Idioma: es. Idioma de los documentos: a
 Codex can adjust the recipe JSON generated in the work folder. Use:
 
 - `header_rows`: 1-indexed header rows for tabular files;
-- `mapping`: source columns for `date`, `movement_number`, `account`, `account_desc`, `line_desc`, `debit`, `credit`, or `amount`;
+- `mapping`: source columns for `date`, `movement_number`, `line_number`,
+  `account`, `account_desc`, `line_desc`, `debit`, `credit`, or `amount`;
+- `posting_identity`: source-owned fields that define posting grain, with
+  `source_row` permitted as a locator component rather than a fabricated
+  movement number;
+- `carry_forward_fields`: the exact fields for which reviewed carry-forward is
+  allowed, including `line_desc` for print layouts when description ownership
+  spans physical rows;
+- `excluded_monetary_columns`: additional monetary-labelled or numeric fields
+  that the reviewer has established are outside the posting amount;
+- `currency`, `unit`, and `reported_increment`: explicit monetary context,
+  preserving the source-reported increment per emitted row;
 - per-file overrides under `files`.
 
 Do not ask the user to edit JSON. Ask the user in business terms, then Codex updates the recipe and reruns the deterministic scripts.
@@ -129,11 +197,23 @@ Available methods are `random`, `systematic`, `stratified`, and `mus`. Random sa
 
 - `inspection.json`;
 - `suggested_recipe.json`;
+- `qualification_review_payload.json`;
 - `normalized_journal.csv`;
 - `normalization_diagnostics.json`;
+- `normalization_recipe.json`;
+- `reviewed_decisions.json`;
+- `assurance_gates.json`;
+- `assurance_envelope.json`;
 - `sample/journal_sample.csv`;
 - `sample/journal_sample.xlsx` when XLSX dependencies are available;
 - `sample/sampling_audit.json`;
+- `sample/sample_reproducibility.json`;
+- `sample/sample_material_value_ledger.json`;
+- `sample/sample_assurance_gates.json`;
+- `sample/sample_assurance_envelope.json`;
+- `sample/sample_output_receipts.json`;
+- `sample/assurance_history/<index>_<kind>/...` after each committed review
+  successor;
 - `sample/run_intake.json`;
 - `sample/review_payload.json`;
 - `sample/ui_decisions.json`;
@@ -155,10 +235,14 @@ When the local MCP server is available, prefer the OpenAI-style review handoff:
    sampled entries, and generated CSV/XLSX/JSON artifacts.
 5. When the reviewer records actions in the widget or Codex collects decisions
    through fallback review, call `save_journal_sampling_decisions` so
-   `ui_decisions.json` is validated and persisted. When the reviewer is done,
-   call `apply_journal_sampling_decisions` so `applied_decisions.json` and
-   `final_artifacts.json` reflect accepted, edited, unclear, skipped, or
-   document-requested items before treating the sample as reviewed.
+   `ui_decisions.json` is validated and persisted in a replayed `save`
+   successor. Reload the current `run_intake.json`, `ui_decisions.json`, and
+   `final_artifacts.json` before the next action. When the reviewer is done,
+   call `apply_journal_sampling_decisions` so `applied_decisions.json`,
+   `sampling_audit.json`, `run_intake.json`, assurance gates/envelope,
+   `final_artifacts.json`, and the output-set manifest are freshly closed in an
+   `apply` successor. Accepted, edited, unclear, skipped, or
+   document-requested items remain within the explicit assurance limits.
 
 If MCP rendering is unavailable, fall back to a markdown review summary from
 `review_payload.json`, `sampling_audit.json`, `journal_sample.csv`, and

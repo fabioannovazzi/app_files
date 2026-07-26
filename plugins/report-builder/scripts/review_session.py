@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass
@@ -7,10 +8,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Sequence
 
+try:
+    from .report_gates import build_report_assurance_state
+except ImportError:  # pragma: no cover - supports direct script imports
+    from report_gates import build_report_assurance_state
+
 __all__ = [
     "ReviewSessionResult",
     "RunIntakeResult",
     "build_output_records",
+    "refresh_final_artifacts",
+    "refresh_review_payload",
     "write_review_session_artifacts",
     "write_run_intake",
 ]
@@ -101,6 +109,18 @@ REPORT_TABLES_SUMMARY_HEADERS = [
     "columns",
 ]
 REPORT_TABLES_PREVIEW_CELL_COLUMN_LIMIT = 4
+ALLOWED_REPORT_OUTPUTS = (
+    "report_tables.json",
+    "report_tables.xlsx",
+    "report_analysis.json",
+    "report_draft.md",
+    "report.docx",
+    "report_audit.json",
+    "used_recipe.json",
+    "numeric_evidence_ledger.json",
+    "source_receipts.json",
+    "review_handoff.md",
+)
 
 
 @dataclass(frozen=True)
@@ -133,7 +153,7 @@ def _safe_slug(value: str) -> str:
 
 
 def _run_id(input_path: Path) -> str:
-    timestamp = re.sub(r"[^0-9]", "", _utc_now())
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S%f")
     return f"{PLUGIN_NAME}-{_safe_slug(input_path.stem)}-{timestamp}"
 
 
@@ -144,6 +164,19 @@ def _write_json(path: Path, payload: dict[str, Any]) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def _canonical_json_sha256(payload: dict[str, Any]) -> str:
+    """Bind mutable review state to the exact current review payload."""
+
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _write_review_handoff_card(
@@ -386,9 +419,10 @@ def _section_items(analysis: dict[str, Any], language: str) -> list[dict[str, An
                         "status": status,
                         "row_count": section.get("row_count", 0),
                         "column_count": section.get("column_count", 0),
-                        "numeric_column_count": len(
-                            section.get("numeric_columns", []) or []
+                        "numeric_measure_candidate_count": len(
+                            section.get("numeric_measure_candidates", []) or []
                         ),
+                        "numeric_measure_status": section.get("numeric_measure_status"),
                         "has_codex_comment": has_comment,
                     }
                 ],
@@ -405,6 +439,13 @@ def _section_items(analysis: dict[str, Any], language: str) -> list[dict[str, An
                     "row_count": section.get("row_count", 0),
                     "column_count": section.get("column_count", 0),
                     "numeric_columns": (section.get("numeric_columns") or [])[:8],
+                    "numeric_measure_candidates": (
+                        section.get("numeric_measure_candidates") or []
+                    )[:12],
+                    "numeric_measure_status": section.get("numeric_measure_status"),
+                    "numeric_measure_limitation": section.get(
+                        "numeric_measure_limitation"
+                    ),
                     "preview_rows": (section.get("preview_rows") or [])[:5],
                     "codex_comment": section.get("codex_comment", ""),
                 },
@@ -499,7 +540,69 @@ def _table_evidence_items(
                         else "Reviewer marked the mapped source table as unclear or insufficient."
                     ),
                     "numeric_columns": (section.get("numeric_columns") or [])[:8],
+                    "numeric_measure_candidates": (
+                        section.get("numeric_measure_candidates") or []
+                    )[:12],
+                    "numeric_measure_status": section.get("numeric_measure_status"),
                     "preview_rows": (section.get("preview_rows") or [])[:5],
+                },
+            )
+        )
+    return items
+
+
+def _source_qualification_failure_items(
+    tables: Sequence[dict[str, Any]],
+    *,
+    language: str,
+) -> list[dict[str, Any]]:
+    """Return non-dismissible blockers for unreadable or unsupported sources."""
+
+    failures = [
+        table
+        for table in tables
+        if isinstance(table, dict)
+        and (
+            _clean_text(table.get("kind")) == "error"
+            or bool(_clean_text(table.get("error")))
+            or int(table.get("row_count") or 0) == 0
+        )
+    ]
+    items: list[dict[str, Any]] = []
+    for index, table in enumerate(failures, start=1):
+        source_file = _clean_text(table.get("source_file")) or f"source-{index}"
+        reason = (
+            _clean_text(table.get("error")) or "Source contains no reportable rows."
+        )
+        requested_document = (
+            f"Una versione leggibile o OCR verificato di {source_file}"
+            if _clean_text(language) == "it"
+            else f"A readable export or verified OCR version of {source_file}"
+        )
+        items.append(
+            _base_item(
+                f"source-qualification-failure-{index}",
+                "review_issue",
+                f"Unsupported report source: {source_file}",
+                source_path=source_file,
+                output_path="report_tables.json",
+                allowed_actions=("mark_unclear", "request_more_documents"),
+                recommended_action="request_more_documents",
+                evidence=[
+                    {
+                        "kind": "source_qualification_failure",
+                        "source_file": source_file,
+                        "status": "unsupported_source_layout",
+                        "reason": reason,
+                    }
+                ],
+                data={
+                    "source_file": source_file,
+                    "reason": reason,
+                    "requested_document": requested_document,
+                    "required_document": requested_document,
+                    "source_table": source_file,
+                    "record_id": source_file,
                 },
             )
         )
@@ -549,7 +652,6 @@ def _issue_items(
                     ),
                     output_path="used_recipe.json",
                     allowed_actions=(
-                        "edit",
                         "mark_unclear",
                         "request_more_documents",
                         "skip",
@@ -614,6 +716,47 @@ def _issue_items(
                 },
             )
         )
+    numeric_pending = [
+        section
+        for section in analysis.get("sections", [])
+        if isinstance(section, dict)
+        and section.get("numeric_measure_status") == "needs_review"
+    ]
+    for index, section in enumerate(numeric_pending, start=1):
+        section_key = _clean_text(section.get("section")) or f"section-{index}"
+        items.append(
+            _base_item(
+                f"numeric-measure-review-{index}",
+                "review_issue",
+                (
+                    f"Revisión de medidas numéricas pendiente: {section_key}"
+                    if _is_spanish(language)
+                    else f"Numeric measure review pending: {section_key}"
+                ),
+                output_path="used_recipe.json",
+                allowed_actions=("mark_unclear", "request_more_documents", "skip"),
+                recommended_action="mark_unclear",
+                evidence=[
+                    {
+                        "kind": "numeric_measure_review_pending",
+                        "section": section_key,
+                        "candidate_count": len(
+                            section.get("numeric_measure_candidates") or []
+                        ),
+                    }
+                ],
+                data={
+                    "section": section_key,
+                    "reason": (
+                        "Las columnas numéricas candidatas no tienen un contrato semántico revisado y vinculado a la fuente."
+                        if _is_spanish(language)
+                        else "Candidate numeric columns do not have a reviewed, source-bound semantic contract."
+                    ),
+                    "source_table": section.get("assigned_table"),
+                    "record_id": section_key,
+                },
+            )
+        )
     return items
 
 
@@ -650,6 +793,18 @@ def _artifact_items(
             "report_artifact",
             "JSON de la receta utilizada" if spanish else "Used recipe JSON",
         ),
+        "numeric_evidence": (
+            "report_artifact",
+            (
+                "Libro mayor de evidencia numérica"
+                if spanish
+                else "Numeric evidence ledger"
+            ),
+        ),
+        "source_receipts": (
+            "report_artifact",
+            ("Recibos de fuentes numéricas" if spanish else "Numeric source receipts"),
+        ),
     }
     items: list[dict[str, Any]] = []
     for index, (field, (item_type, title)) in enumerate(labels.items(), start=1):
@@ -664,7 +819,7 @@ def _artifact_items(
                 item_type,
                 title,
                 output_path=path_ref,
-                allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+                allowed_actions=("accept", "mark_unclear", "skip"),
                 recommended_action="accept" if exists else "mark_unclear",
                 evidence=[
                     {
@@ -845,20 +1000,16 @@ def _report_tables_required_cells(
 def _output_records(
     output_dir: Path, audit: dict[str, Any], analysis: dict[str, Any]
 ) -> list[dict[str, Any]]:
-    review_files = {
-        "run_intake.json",
-        "review_payload.json",
-        "ui_decisions.json",
-        "final_artifacts.json",
-    }
     outputs: list[dict[str, Any]] = []
-    for path in sorted(output_dir.rglob("*")):
-        if not path.is_file() or path.name in review_files:
+    for relative in ALLOWED_REPORT_OUTPUTS:
+        path = output_dir / relative
+        if not path.is_file() or path.is_symlink():
             continue
-        relative = path.relative_to(output_dir).as_posix()
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
         output = {
             "path": relative,
             "size_bytes": path.stat().st_size,
+            "sha256": digest,
             "kind": path.suffix.lower().lstrip(".") or "file",
             "status": "written",
         }
@@ -899,6 +1050,15 @@ def _output_records(
         elif relative == "report.docx":
             output["required_text"] = _report_docx_required_text(analysis, audit)
             output["qa_checks"] = ["nonempty_text", "required_text"]
+        elif relative == "review_handoff.md":
+            output.update(
+                _review_handoff_output_record(
+                    path,
+                    str(analysis.get("language") or "en"),
+                )
+            )
+            output["size_bytes"] = path.stat().st_size
+            output["sha256"] = digest
         outputs.append(output)
     return outputs
 
@@ -909,6 +1069,36 @@ def build_output_records(
     """Build final artifact records with workflow-specific QA metadata."""
 
     return _output_records(output_dir, audit, analysis)
+
+
+def refresh_final_artifacts(
+    output_dir: Path,
+    *,
+    audit: dict[str, Any],
+    analysis: dict[str, Any],
+) -> Path:
+    """Rebuild the public gallery only from current allowlisted artifacts."""
+
+    output_dir = Path(output_dir)
+    final_path = output_dir / "final_artifacts.json"
+    payload = json.loads(final_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("final_artifacts.json must be an object")
+    outputs = _output_records(output_dir, audit, analysis)
+    handoff_path = output_dir / "review_handoff.md"
+    if handoff_path.is_file():
+        outputs = [
+            output for output in outputs if output.get("path") != handoff_path.name
+        ]
+        record = _review_handoff_output_record(
+            handoff_path,
+            str(analysis.get("language") or "en"),
+        )
+        record["size_bytes"] = handoff_path.stat().st_size
+        record["sha256"] = hashlib.sha256(handoff_path.read_bytes()).hexdigest()
+        outputs.append(record)
+    payload["outputs"] = outputs
+    return _write_json(final_path, payload)
 
 
 def write_run_intake(
@@ -924,9 +1114,9 @@ def write_run_intake(
 
     run_id = _run_id(input_path)
     spanish = _is_spanish(language)
-    local_files_read = [input_path.as_posix()]
+    local_files_read = [input_path.name]
     if recipe_path is not None:
-        local_files_read.append(recipe_path.as_posix())
+        local_files_read.append(recipe_path.name)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
@@ -935,14 +1125,14 @@ def write_run_intake(
         "created_at": _utc_now(),
         "language": language,
         "document_language": document_language,
-        "input_paths": [input_path.as_posix()],
+        "input_paths": [input_path.name],
         "output_dir": output_dir.as_posix(),
         "inferred_task": "report_builder_review_payload",
         "assumptions": {
             "report_type": report_type,
             "language": language,
             "document_language": document_language,
-            "recipe_path": recipe_path.as_posix() if recipe_path else None,
+            "recipe_path": recipe_path.name if recipe_path else None,
         },
         "unresolved_questions": [],
         "dependency_check": {
@@ -980,7 +1170,7 @@ def write_run_intake(
     )
 
 
-def write_review_session_artifacts(
+def _build_review_payload(
     output_dir: Path,
     *,
     run_id: str,
@@ -990,17 +1180,19 @@ def write_review_session_artifacts(
     recipe: dict[str, Any],
     paths: dict[str, Path],
     tables: Sequence[dict[str, Any]] = (),
-) -> ReviewSessionResult:
-    """Write report review payload, pending decisions, and artifact inventory."""
-
+) -> dict[str, Any]:
     language = str(analysis.get("language", recipe.get("language", "en")))
     items: list[dict[str, Any]] = []
     items.extend(_section_items(analysis, language))
     items.extend(_table_evidence_items(analysis, tables=tables, language=language))
+    items.extend(_source_qualification_failure_items(tables, language=language))
     items.extend(_issue_items(analysis, audit, language))
     items.extend(_artifact_items(paths, output_dir, language))
-
-    review_payload = {
+    numeric_paths_exist = all(
+        key in paths and Path(paths[key]).is_file()
+        for key in ("numeric_evidence", "source_receipts")
+    )
+    return {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
@@ -1024,6 +1216,18 @@ def write_review_session_artifacts(
             "report_tables": "report_tables.json",
             "report_tables_xlsx": "report_tables.xlsx",
             "used_recipe": "used_recipe.json",
+            **(
+                {
+                    "numeric_evidence": _as_output_ref(
+                        paths["numeric_evidence"], output_dir
+                    ),
+                    "source_receipts": _as_output_ref(
+                        paths["source_receipts"], output_dir
+                    ),
+                }
+                if numeric_paths_exist
+                else {}
+            ),
         },
         "allowed_actions": [
             "accept",
@@ -1042,10 +1246,96 @@ def write_review_session_artifacts(
             "table_count": audit.get("table_count", 0),
             "assigned_section_count": audit.get("assigned_section_count", 0),
             "missing_section_count": audit.get("missing_section_count", 0),
+            "numeric_measure_pending_section_count": len(
+                [
+                    section
+                    for section in analysis.get("sections", [])
+                    if isinstance(section, dict)
+                    and section.get("numeric_measure_status") == "needs_review"
+                ]
+            ),
             "codex_narrative_sections": audit.get("codex_narrative_sections", 0),
-            "artifact_count": len(paths),
+            "artifact_count": len(
+                [path for path in paths.values() if Path(path).is_file()]
+            ),
         },
     }
+
+
+def refresh_review_payload(
+    output_dir: Path,
+    *,
+    analysis: dict[str, Any],
+    audit: dict[str, Any],
+    recipe: dict[str, Any],
+    paths: dict[str, Path],
+    tables: Sequence[dict[str, Any]] = (),
+) -> Path:
+    """Regenerate review evidence after a source-mapping change."""
+
+    output_dir = Path(output_dir)
+    current = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    if not isinstance(current, dict):
+        raise ValueError("review_payload.json must be an object")
+    payload = _build_review_payload(
+        output_dir,
+        run_id=str(current.get("run_id") or ""),
+        run_intake_path=output_dir / "run_intake.json",
+        analysis=analysis,
+        audit=audit,
+        recipe=recipe,
+        paths=paths,
+        tables=tables,
+    )
+    payload["status"] = "ready_for_review_after_regeneration"
+    path = _write_json(output_dir / "review_payload.json", payload)
+    _write_json(
+        output_dir / "ui_decisions.json",
+        {
+            "schema_version": SCHEMA_VERSION,
+            "plugin": PLUGIN_NAME,
+            "workflow": WORKFLOW_NAME,
+            "run_id": payload["run_id"],
+            "review_payload_sha256": _canonical_json_sha256(payload),
+            "decided_at": None,
+            "decision_source": "not_collected_after_regeneration",
+            "review_payload_path": path.name,
+            "decisions": [],
+            "decision_count": 0,
+            "item_count": payload["item_count"],
+            "status": "pending_review",
+        },
+    )
+    return path
+
+
+def write_review_session_artifacts(
+    output_dir: Path,
+    *,
+    run_id: str,
+    run_intake_path: Path,
+    analysis: dict[str, Any],
+    audit: dict[str, Any],
+    recipe: dict[str, Any],
+    paths: dict[str, Path],
+    tables: Sequence[dict[str, Any]] = (),
+) -> ReviewSessionResult:
+    """Write report review payload, pending decisions, and artifact inventory."""
+
+    language = str(analysis.get("language", recipe.get("language", "en")))
+    review_payload = _build_review_payload(
+        output_dir,
+        run_id=run_id,
+        run_intake_path=run_intake_path,
+        analysis=analysis,
+        audit=audit,
+        recipe=recipe,
+        paths=paths,
+        tables=tables,
+    )
+    items = review_payload["items"]
     review_payload_path = _write_json(
         output_dir / "review_payload.json",
         review_payload,
@@ -1058,11 +1348,13 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
+            "review_payload_sha256": _canonical_json_sha256(review_payload),
             "decided_at": None,
             "decision_source": "not_collected",
             "review_payload_path": review_payload_path.name,
             "decisions": [],
             "decision_count": 0,
+            "item_count": len(items),
             "status": "pending_review",
         },
     )
@@ -1088,6 +1380,7 @@ def write_review_session_artifacts(
     outputs.append(_review_handoff_output_record(review_handoff_path, language))
 
     spanish = _is_spanish(language)
+    assurance = build_report_assurance_state(analysis, tables)
 
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
@@ -1132,6 +1425,8 @@ def write_review_session_artifacts(
                     else "Use report.docx for Word delivery only after review decisions are recorded."
                 ),
             ],
+            "assurance": assurance,
+            "report_ready": assurance["report_ready"],
             "status": "written_pending_review",
         },
     )

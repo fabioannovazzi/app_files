@@ -5,6 +5,23 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+if __package__:
+    from .review_decision_transaction_template import (
+        SAVE_HELPERS_END,
+        SAVE_HELPERS_START,
+        marked_javascript_block,
+        upsert_marked_javascript_block,
+        upsert_review_output_transaction,
+    )
+else:
+    from review_decision_transaction_template import (
+        SAVE_HELPERS_END,
+        SAVE_HELPERS_START,
+        marked_javascript_block,
+        upsert_marked_javascript_block,
+        upsert_review_output_transaction,
+    )
+
 __all__ = ["main"]
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -428,26 +445,56 @@ function buildUiDecisions(inputArgs) {
 
 function saveDecisionPayload(inputArgs) {
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
-  let persisted = false;
-  if (decisionOutputPath) {
-    fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\\n`, "utf8");
-    persisted = true;
-  }
-  return {
-    ok: true,
-    validation_type: "__VALIDATION_TYPE___decisions",
-    run_id: uiDecisions.run_id,
-    decision_count: uiDecisions.decision_count,
-    item_count: uiDecisions.item_count,
-    status: uiDecisions.status,
-    persisted,
-    ui_decisions_path: persisted ? decisionOutputPath : null,
-    message: persisted
-      ? `Saved ${uiDecisions.decision_count} __DISPLAY_NAME__ decisions.`
-      : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
-    ui_decisions: uiDecisions,
+  const canonicalOutputDir = decisionOutputPath
+    ? path.dirname(decisionOutputPath)
+    : null;
+  const persist = (workingOutputDir) => {
+    const workingDecisionPath = workingOutputDir
+      ? path.join(workingOutputDir, "ui_decisions.json")
+      : null;
+    const persisted = Boolean(workingDecisionPath);
+    if (workingDecisionPath) {
+      generatedReviewAtomicWriteFileSync(
+        workingDecisionPath,
+        `${JSON.stringify(uiDecisions, null, 2)}\\n`,
+        "utf8",
+      );
+    }
+    const result = {
+      ok: true,
+      validation_type: "__VALIDATION_TYPE___decisions",
+      run_id: uiDecisions.run_id,
+      decision_count: uiDecisions.decision_count,
+      item_count: uiDecisions.item_count,
+      status: uiDecisions.status,
+      persisted,
+      ui_decisions_path: persisted ? decisionOutputPath : null,
+      message: persisted
+        ? `Saved ${uiDecisions.decision_count} __DISPLAY_NAME__ decisions.`
+        : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ui_decisions: uiDecisions,
+    };
+    return generatedReviewTransactionEnvelope(
+      result,
+      persisted ? ["ui_decisions.json"] : [],
+    );
   };
+  if (!canonicalOutputDir) return persist(null).result;
+  const workflowOptions = generatedReviewWorkflowTransactionOptions(
+    "save",
+    inputArgs,
+  );
+  return withGeneratedReviewOutputTransaction(
+    canonicalOutputDir,
+    ({ workingOutputDir }) => persist(workingOutputDir),
+    {
+      ...workflowOptions,
+      failureMessage:
+        "__DISPLAY_NAME__ review save transaction failed safely.",
+      rollbackFailureMessage:
+        "__DISPLAY_NAME__ review save transaction could not be restored safely.",
+    },
+  );
 }
 
 """
@@ -548,15 +595,39 @@ def patch_decision_policy(text: str) -> str:
 
 
 def patch_helpers(text: str, target: Target) -> str:
-    if "function resolveDecisionOutputPath" in text:
-        return text
+    updated = upsert_review_output_transaction(
+        text,
+        insert_before=(
+            "function resolveDecisionOutputPath",
+            "function resolveRunOutputDir",
+            "function callTool(name, args = {}) {",
+        ),
+    )
     helper_block = HELPER_TEMPLATE.replace(
         "__VALIDATION_TYPE__", target.validation_type
     ).replace("__DISPLAY_NAME__", target.display_name)
+    if SAVE_HELPERS_START in updated or SAVE_HELPERS_END in updated:
+        return upsert_marked_javascript_block(
+            updated,
+            start=SAVE_HELPERS_START,
+            body=helper_block,
+            end=SAVE_HELPERS_END,
+            insert_before=("function callTool(name, args = {}) {",),
+        )
+    if (
+        "function saveDecisionPayload" in updated
+        or "function resolveDecisionOutputPath" in updated
+    ):
+        return updated
+    marked_helpers = marked_javascript_block(
+        SAVE_HELPERS_START,
+        helper_block,
+        SAVE_HELPERS_END,
+    )
     return replace_once(
-        text,
+        updated,
         "function callTool(name, args = {}) {",
-        f"{helper_block}function callTool(name, args = {{}}) {{",
+        f"{marked_helpers}\nfunction callTool(name, args = {{}}) {{",
         "callTool start",
     )
 

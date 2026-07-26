@@ -71,21 +71,69 @@ python scripts/check_dependencies.py
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it. If installation is unavailable or requires approval, explain which declared capability is missing and stop before producing unreliable output.
 
-3. Run the deterministic review package:
+3. Run the deterministic inspection pass:
 
 ```bash
 python scripts/run_concordato_review.py /path/to/input \
-  --output-dir /path/to/output \
+  --output-dir /path/to/inspection \
   --reference-date 2026-03-31 \
   --language it \
   --document-language it \
-  --tolerance 1.00
+  --tolerance 1
 ```
 
-4. Review generated files:
+This pass intentionally abstains from operative source roles, amount candidates,
+and matches. Filename-based roles are suggestions only.
+
+4. Review `inventory.json`, `raw_amount_candidates.csv`, and
+`suggested_source_role_recipe.json`. Create a complete decisions JSON containing:
+
+- `reviewer_ref` and ISO `reviewed_on`;
+- `source_roles`, keyed by every supported `relative_path`, with explicit
+  `role`, `currency`, and `unit`;
+- exactly one authoritative `concordato_plan`;
+- `candidate_dispositions`, keyed by every raw `candidate_id`, with
+  `candidate_amount` or `excluded_non_amount`.
+
+Do not accept a default disposition for all numeric tokens. Account numbers,
+dates, years, percentages, page numbers, identifiers, and other non-amounts
+require an explicit exclusion.
+
+The review also authorizes the fixed `plan_amount - support_amount` formula,
+sign convention, reference period, tolerance, complete source/candidate
+perimeters, and current implementation receipts. These are exact mechanical
+bindings, not semantic conclusions. If any binding changes, repeat inspection
+and review before qualified parsing.
+
+5. Seal the source-bound recipe:
+
+```bash
+python scripts/review_source_roles.py /path/to/inspection \
+  /path/to/source-role-decisions.json \
+  --output /path/to/reviewed-source-role-recipe.json
+```
+
+6. Run the qualified deterministic pass against the same source bytes:
+
+```bash
+python scripts/run_concordato_review.py /path/to/input \
+  --output-dir /path/to/reviewed-output \
+  --reference-date 2026-03-31 \
+  --language it \
+  --document-language it \
+  --tolerance 1 \
+  --recipe /path/to/reviewed-source-role-recipe.json
+```
+
+If source bytes, candidate identities, role coverage, currencies, units, or
+dispositions changed, stop and repeat inspection/review. Never reseal changed
+sources into an old decision.
+
+7. Review generated files:
 
 - `inventory.json`;
 - `source_pages.json`;
+- `raw_amount_candidates.csv`;
 - `amount_candidates.csv`;
 - `exact_amount_matches.csv`;
 - `concordato_tie_out_workpaper.xlsx`;
@@ -96,28 +144,35 @@ python scripts/run_concordato_review.py /path/to/input \
 - `review_payload.json`;
 - `ui_decisions.json`;
 - `applied_decisions.json` after reviewer decisions are applied;
+- `assurance_envelope.json`;
+- `numeric_evidence_ledger.json`;
+- `workflow_output_closure.json`;
 - `final_artifacts.json`.
 
-5. Read `run_intake.json` and `review_payload.json`. Treat the review payload
+8. Read `run_intake.json` and `review_payload.json`. Treat the review payload
 as the structured contract for reviewer-facing UI: source roles, extraction
 issues, candidate amount matches, unmatched plan amounts, generated artifacts,
 and the Codex memo placeholder.
-6. When the `concordatoPlanReviewWidgets` MCP server is available, call
+9. When the `concordatoPlanReviewWidgets` MCP server is available, call
 `validate_concordato_plan_review` with the complete `review_payload.json`
 object. If validation passes, call `render_concordato_plan_review` with the
 same payload and optional `run_intake`, `ui_decisions`, and `final_artifacts`
 objects. Do not hand-build another HTML page for the same review.
-7. When the reviewer records actions in the widget or Codex collects decisions
+10. When the reviewer records actions in the widget or Codex collects decisions
 through fallback review, call `save_concordato_plan_decisions` so
 `ui_decisions.json` is validated and persisted. When the reviewer is done, call
 `apply_concordato_plan_decisions` so `applied_decisions.json` and
 `final_artifacts.json` reflect accepted, edited, unclear, skipped, or
-document-requested items.
-8. If MCP rendering is unavailable, continue by reading `review_payload.json`
+document-requested items. Before any write, the MCP path must compare the
+submitted payload with the exact persisted JSON and replay the assurance
+envelope, numeric evidence ledger, and predecessor whole-output closure locally.
+The save or application is not committed until a successor closure is sealed
+and replayed.
+11. If MCP rendering is unavailable, continue by reading `review_payload.json`
 and reviewing through Markdown/chat. Keep review decisions pending unless they
 are recorded in `ui_decisions.json` and consumed into
 `applied_decisions.json`.
-9. Codex must then build the actual auditor review: inspect
+12. Codex must then build the actual auditor review: inspect
 `concordato_review_summary.docx`, candidate matches, unmatched material plan
 amounts, distinguish historical data from rettifiche/riclassifiche/assumptions,
 and write `codex_run_review.md` with open items, missing evidence, and
@@ -125,13 +180,24 @@ criticalities. If numbers match mechanically, say they match by amount and
 still require context review. If they do not match, say clearly which amount
 was not found and where it appears in the plan.
 
+The deterministic workflow never sets `final_ready=true`. Applying review
+actions records the review but leaves semantic conclusion, reporting authority,
+and publication withheld. `reviewer_ref` is a recorded assertion, not
+cryptographically authenticated identity.
+
+Load `references/workflow-reference.md` when executing or auditing the
+two-pass authority, numeric evidence closure, whole-output closure, or replay
+contract. The workflow reference is normative for these mechanical controls.
+
 ## MCP Review Handoff
 
 The UI handoff follows the OpenAI-style local MCP/widget pattern:
 
-1. Python writes bounded review-session JSON files in the output folder.
+1. Python writes bounded review-session JSON files and a replayable assurance
+envelope in the output folder.
 2. The local MCP server validates the `review_payload.json` schema and item
-types.
+types, compares caller input with the persisted payload, and invokes local
+assurance replay before writes.
 3. The MCP render tool returns `openai/outputTemplate` metadata for
 `ui://widget/concordato-plan-review.html`.
 4. The reusable HTML widget renders the payload with summary metrics, type
@@ -157,9 +223,19 @@ Expected final review dimensions:
 
 ## Deterministic Output Limits
 
-Do not present `exact_amount_matches.csv` or the Word summary as final support. They are candidate outputs. Equal amounts can appear in unrelated places, and PDF extraction can fragment tables. Codex must review context and source role before marking a number as supported.
+Do not present `exact_amount_matches.csv` or the Word summary as final support.
+They are candidate outputs produced only after source-role and numeric-token
+review. Equal amounts can appear in unrelated places, and PDF extraction can
+fragment tables. Codex must review context and evidence sufficiency before
+marking a number as supported.
 
 Do not use deterministic keyword rules to choose legal topics, tax conclusions, or going-concern conclusions. Use the deterministic data as evidence collection only.
+
+Synthetic and adversarial tests do not validate field performance. Before
+describing the workflow as validated on real corporate plans, run a previously
+unseen corporate-plan holdout and have a qualified reviewer compare the full
+candidate population, differences, omissions, and evidence requests with an
+independently prepared workpaper.
 
 ## Plugin Improvement Feedback
 

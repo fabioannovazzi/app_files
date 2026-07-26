@@ -1,20 +1,32 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import logging
 import re
 import sys
 import unicodedata
+import zipfile
 from dataclasses import dataclass
+from datetime import date, datetime
+from decimal import Decimal, InvalidOperation, localcontext
+from io import BytesIO
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping, Sequence
 
 import openpyxl
+from defusedxml import ElementTree
+from defusedxml.common import DefusedXmlException
 from docx import Document
+from implementation_bootstrap import (
+    IMPLEMENTATION_CONTRACT,
+    validate_implementation_tree,
+)
 from pypdf import PdfReader
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+COMPONENT_ROOT = SCRIPT_DIR.parent
 
 
 def _ensure_local_review_session_import() -> None:
@@ -35,6 +47,45 @@ def _ensure_local_review_session_import() -> None:
 _ensure_local_review_session_import()
 from review_session import write_review_session_artifacts, write_run_intake
 
+
+def _ensure_vendor_import_path() -> None:
+    """Expose component-local or repository-shared Vera vendor modules."""
+
+    component_root = SCRIPT_DIR.parent
+    candidates = (
+        component_root / "vendor" / "modules",
+        component_root.parent / "_shared" / "vendor" / "modules",
+    )
+    for candidate in candidates:
+        if candidate.is_dir() and str(candidate) not in sys.path:
+            sys.path.insert(0, str(candidate))
+
+
+_ensure_vendor_import_path()
+import vera_assurance as vera_assurance_package  # noqa: E402
+from output_closure import (
+    OUTPUT_CLOSURE_NAME,
+    finalize_output_closure,
+    validate_final_artifact_index,
+)
+from vera_assurance import (  # noqa: E402
+    MoneyValidationError,
+    artifact_receipt,
+    build_assurance_envelope,
+    build_gate_register,
+    build_numeric_evidence_ledger,
+    build_reviewed_decision_receipt,
+    build_source_qualification,
+    canonical_json_sha256,
+    decimal_text,
+    file_snapshot,
+    parse_canonical_decimal,
+    parse_localized_decimal,
+    validate_artifact_receipt,
+    validate_assurance_envelope,
+    validate_reviewed_decision_receipt,
+)
+
 LOGGER = logging.getLogger(__name__)
 
 SUPPORTED_SUFFIXES = {".pdf", ".xlsx", ".xlsm", ".csv"}
@@ -42,6 +93,29 @@ TEXT_SUFFIXES = {".csv", ".txt", ".md"}
 PDF_SUFFIXES = {".pdf"}
 WORKBOOK_SUFFIXES = {".xlsx", ".xlsm"}
 SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
+SOURCE_ROLE_ADAPTER_ID = "concordato_source_role_mapping"
+SOURCE_ROLE_ADAPTER_VERSION = "v3"
+CALCULATION_ADAPTER_ID = "concordato_exact_difference_calculation"
+CALCULATION_ADAPTER_VERSION = "v2"
+CALCULATION_FORMULA_ID = "plan_amount_minus_support_amount.v1"
+CALCULATION_DIFFERENCE_FORMULA = "plan_amount - support_amount"
+CALCULATION_ABSOLUTE_FORMULA = "abs(difference)"
+CALCULATION_TOLERANCE_FORMULA = "abs_difference <= tolerance"
+SOURCE_ROLE_RECIPE_SCHEMA = "concordato.source_role_recipe.v3"
+WORKFLOW_VERSION = "4"
+DECIMAL_MAX_DIGITS = 38
+DECIMAL_MAX_SCALE = 18
+DECIMAL_WORKING_PRECISION = DECIMAL_MAX_DIGITS * 2 + DECIMAL_MAX_SCALE + 8
+ASSURANCE_IMPLEMENTATION_ROOT = Path(vera_assurance_package.__file__).resolve().parent
+ALLOWED_SOURCE_ROLES = {
+    "concordato_plan",
+    "trial_balance",
+    "general_ledger",
+    "adjusted_db",
+    "debt_tax_social_security_detail",
+    "other_support",
+    "excluded",
+}
 STOPWORDS = {
     "al",
     "alla",
@@ -71,7 +145,8 @@ ROLE_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
 )
 DATE_LIKE_RE = re.compile(r"^\d{1,2}[./-]\d{1,2}[./-]\d{2,4}$")
 AMOUNT_TOKEN_RE = re.compile(
-    r"(?<![\w/])-?\(?€\s*\d+(?:[.,]\d{1,2})?\)?(?![\w/])"
+    r"(?<![\w/])-?\(?€\s*(?:\d{1,3}(?:[.\s]\d{3})+(?:,\d{1,2})?"
+    r"|\d+(?:[.,]\d{1,2})?)\)?(?![\w/])"
     r"|(?<![\w/])-?\(?\d{1,3}(?:[.\s]\d{3})+(?:,\d{1,2})?\)?(?![\w/])"
     r"|(?<![\w/])-?\(?\d+(?:[.,]\d{2})\)?(?![\w/])"
 )
@@ -80,12 +155,16 @@ WORD_RE = re.compile(r"[a-z0-9]+")
 __all__ = [
     "AmountCandidate",
     "ReviewRun",
+    "candidate_id",
     "classify_source_role",
     "extract_amount_candidates_from_text",
     "find_exact_amount_matches",
     "normalize_language",
     "parse_amount_token",
+    "review_source_roles",
     "run_concordato_review",
+    "validate_implementation_contract",
+    "validate_numeric_evidence_closure",
     "write_json",
 ]
 
@@ -97,9 +176,12 @@ class AmountCandidate:
     source_file: str
     source_role: str
     location: str
-    amount: float
+    amount: Decimal
     token: str
     context: str
+    source_artifact_ref: str = ""
+    currency: str = "EUR"
+    unit: str = "1"
 
 
 @dataclass(frozen=True)
@@ -108,6 +190,7 @@ class ReviewRun:
 
     output_dir: Path
     inventory: list[dict[str, Any]]
+    raw_amount_candidates: list[AmountCandidate]
     amount_candidates: list[AmountCandidate]
     exact_matches: list[dict[str, Any]]
     audit: dict[str, Any]
@@ -150,6 +233,43 @@ def _clean_text(value: object | None) -> str:
     return str(value).replace("\u00a0", " ").replace("\u202f", " ").strip()
 
 
+def _bounded_decimal(value: Decimal, *, label: str) -> Decimal:
+    """Enforce the explicit decimal domain required for exact replay."""
+
+    if not value.is_finite():
+        raise ValueError(f"{label} must be finite")
+    rendered = decimal_text(value)
+    unsigned = rendered.removeprefix("-")
+    integral, separator, fractional = unsigned.partition(".")
+    significant_integral = integral.lstrip("0")
+    digit_count = len(significant_integral) + len(fractional)
+    if digit_count == 0:
+        digit_count = 1
+    if digit_count > DECIMAL_MAX_DIGITS:
+        raise ValueError(
+            f"{label} exceeds the {DECIMAL_MAX_DIGITS}-digit decimal contract"
+        )
+    if separator and len(fractional) > DECIMAL_MAX_SCALE:
+        raise ValueError(
+            f"{label} exceeds the {DECIMAL_MAX_SCALE}-place decimal scale contract"
+        )
+    return value
+
+
+def _exact_difference(plan: Decimal, support: Decimal) -> Decimal:
+    """Subtract within a local context large enough for every allowed operand."""
+
+    with localcontext() as context:
+        context.prec = DECIMAL_WORKING_PRECISION
+        return plan - support
+
+
+def _exact_absolute(value: Decimal) -> Decimal:
+    """Return an absolute Decimal without consulting the process context."""
+
+    return value.copy_abs()
+
+
 def _normalize_text(value: object | None) -> str:
     text = unicodedata.normalize("NFKD", _clean_text(value))
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
@@ -175,43 +295,49 @@ def classify_source_role(path: Path) -> str:
     return "unclassified"
 
 
-def parse_amount_token(token: str) -> float | None:
-    """Parse common Italian/European amount tokens into floats."""
+def parse_amount_token(token: str) -> Decimal | None:
+    """Parse unambiguous Italian/European amount tokens exactly."""
 
     cleaned = (
         token.replace("€", "").replace("\u00a0", " ").replace("\u202f", " ").strip()
     )
     if not cleaned or DATE_LIKE_RE.match(cleaned):
         return None
-    is_negative = cleaned.startswith("-") or (
-        cleaned.startswith("(") and cleaned.endswith(")")
-    )
-    cleaned = cleaned.strip("-() ").replace(" ", "")
     if not re.search(r"\d", cleaned):
         return None
-
-    comma_pos = cleaned.rfind(",")
-    dot_pos = cleaned.rfind(".")
-    if comma_pos >= 0 and dot_pos >= 0:
-        if comma_pos > dot_pos:
-            cleaned = cleaned.replace(".", "").replace(",", ".")
-        else:
-            cleaned = cleaned.replace(",", "")
-    elif comma_pos >= 0:
-        whole, _, decimals = cleaned.partition(",")
-        cleaned = whole.replace(".", "") + ("." + decimals if decimals else "")
-    elif dot_pos >= 0:
-        parts = cleaned.split(".")
-        if len(parts[-1]) == 3 and all(len(part) == 3 for part in parts[1:]):
-            cleaned = "".join(parts)
-
     try:
-        amount = float(cleaned)
+        return _bounded_decimal(
+            parse_localized_decimal(cleaned, label="concordato amount token"),
+            label="concordato amount token",
+        )
+    except MoneyValidationError:
+        return None
     except ValueError:
         return None
-    if is_negative:
-        amount = -amount
-    return amount
+
+
+def _contract_decimal(value: object, *, label: str) -> Decimal:
+    """Parse a programmatic monetary contract without locale guessing."""
+
+    try:
+        if isinstance(value, str):
+            return _bounded_decimal(
+                parse_canonical_decimal(value, label=label),
+                label=label,
+            )
+        if isinstance(value, float):
+            raise MoneyValidationError(
+                f"{label} must not use a binary float; pass canonical Decimal text"
+            )
+        return _bounded_decimal(
+            parse_localized_decimal(
+                value,
+                label=label,
+            ),
+            label=label,
+        )
+    except MoneyValidationError as exc:
+        raise ValueError(str(exc)) from exc
 
 
 def _compact_context(text: str, start: int, end: int, window: int = 180) -> str:
@@ -236,14 +362,14 @@ def extract_amount_candidates_from_text(
         amount = parse_amount_token(token)
         if amount is None:
             continue
-        if abs(amount) < 0.005:
+        if _exact_absolute(amount) < Decimal("0.005"):
             continue
         candidates.append(
             AmountCandidate(
                 source_file=source_file,
                 source_role=source_role,
-                location=location,
-                amount=round(amount, 2),
+                location=f"{location}#char={match.start()}:{match.end()}",
+                amount=amount,
                 token=token.strip(),
                 context=_compact_context(text, match.start(), match.end()),
             )
@@ -251,34 +377,99 @@ def extract_amount_candidates_from_text(
     return candidates
 
 
-def _file_inventory(input_dir: Path) -> list[dict[str, Any]]:
-    files = []
+def _source_artifact_id(input_dir: Path, path: Path, digest: str) -> str:
+    relative_path = path.relative_to(input_dir).as_posix()
+    path_digest = hashlib.sha256(relative_path.encode("utf-8")).hexdigest()
+    return f"source.{path_digest}.{digest}"
+
+
+def _capture_source(
+    input_dir: Path,
+    path: Path,
+) -> tuple[bytes, dict[str, Any]]:
+    """Capture immutable source bytes and reject mutation during capture."""
+
+    observed = path.lstat()
+    if path.is_symlink() or not path.is_file() or observed.st_nlink != 1:
+        raise ValueError(f"Source must be one unlinked regular file: {path}")
+    before_count, before_digest = file_snapshot(path)
+    artifact_id = _source_artifact_id(input_dir, path, before_digest)
+    before_receipt = artifact_receipt(
+        input_dir,
+        path,
+        artifact_id=artifact_id,
+        root_id="source",
+        role="source",
+    )
+    captured = path.read_bytes()
+    after_receipt = artifact_receipt(
+        input_dir,
+        path,
+        artifact_id=artifact_id,
+        root_id="source",
+        role="source",
+    )
+    if (
+        before_receipt != after_receipt
+        or len(captured) != before_count
+        or hashlib.sha256(captured).hexdigest() != before_digest
+    ):
+        raise ValueError(f"Source changed while it was captured: {path}")
+    return captured, before_receipt
+
+
+def _file_inventory(
+    input_dir: Path,
+) -> tuple[list[dict[str, Any]], dict[str, bytes], list[dict[str, Any]]]:
+    files: list[dict[str, Any]] = []
+    source_bytes: dict[str, bytes] = {}
+    source_receipts: list[dict[str, Any]] = []
     for path in sorted(input_dir.rglob("*")):
         if not path.is_file() or path.name == ".DS_Store":
             continue
         suffix = path.suffix.lower()
-        files.append(
-            {
-                "path": str(path),
-                "relative_path": path.relative_to(input_dir).as_posix(),
-                "name": path.name,
-                "suffix": suffix,
-                "size_bytes": path.stat().st_size,
-                "supported": suffix in SUPPORTED_SUFFIXES,
-                "suggested_role": classify_source_role(path),
-            }
-        )
-    return files
+        relative_path = path.relative_to(input_dir).as_posix()
+        row: dict[str, Any] = {
+            "path": str(path),
+            "relative_path": relative_path,
+            "name": path.name,
+            "suffix": suffix,
+            "size_bytes": path.stat().st_size,
+            "supported": suffix in SUPPORTED_SUFFIXES,
+            "suggested_role": classify_source_role(path),
+            "reviewed_role": None,
+            "source_artifact_ref": None,
+            "capture_status": "not_applicable",
+        }
+        if row["supported"]:
+            try:
+                captured, receipt = _capture_source(input_dir, path)
+            except (OSError, ValueError) as exc:
+                row["capture_status"] = "failed"
+                row["capture_error"] = f"{type(exc).__name__}: {exc}"
+            else:
+                row["capture_status"] = "captured"
+                row["source_artifact_ref"] = receipt["artifact_id"]
+                row["size_bytes"] = receipt["byte_count"]
+                source_bytes[relative_path] = captured
+                source_receipts.append(receipt)
+        files.append(row)
+    return files, source_bytes, source_receipts
 
 
-def _read_pdf_pages(path: Path) -> list[dict[str, Any]]:
-    reader = PdfReader(str(path))
+def _read_pdf_pages(
+    path: Path,
+    source_bytes: bytes,
+    *,
+    source_file: str,
+) -> list[dict[str, Any]]:
+    reader = PdfReader(BytesIO(source_bytes))
     pages = []
     for page_number, page in enumerate(reader.pages, start=1):
         text = page.extract_text() or ""
         pages.append(
             {
-                "source_file": path.name,
+                "source_file": source_file,
                 "page": page_number,
                 "method": "pdf_text",
                 "text_length": len(text),
@@ -298,26 +489,132 @@ def _excel_column_name(index: int) -> str:
     return "".join(reversed(letters))
 
 
+def _xlsx_member_path(base: str, target: str) -> str:
+    """Resolve an OOXML relationship target without leaving the archive."""
+
+    if target.startswith("/"):
+        normalized = target.lstrip("/")
+    else:
+        parts = [*Path(base).parent.parts, *Path(target).parts]
+        normalized_parts: list[str] = []
+        for part in parts:
+            if part in {"", "."}:
+                continue
+            if part == "..":
+                if not normalized_parts:
+                    raise ValueError("Unsafe OOXML relationship target")
+                normalized_parts.pop()
+            else:
+                normalized_parts.append(part)
+        normalized = "/".join(normalized_parts)
+    if not normalized.startswith("xl/"):
+        raise ValueError("Unexpected OOXML worksheet relationship target")
+    return normalized
+
+
+def _xlsx_numeric_tokens(source_bytes: bytes) -> dict[str, dict[str, str]]:
+    """Read exact numeric cell tokens from the captured OOXML package."""
+
+    spreadsheet_ns = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    relationship_ns = (
+        "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    )
+    package_relationship_ns = (
+        "http://schemas.openxmlformats.org/package/2006/relationships"
+    )
+    result: dict[str, dict[str, str]] = {}
+    with zipfile.ZipFile(BytesIO(source_bytes)) as archive:
+        workbook_root = ElementTree.fromstring(archive.read("xl/workbook.xml"))
+        relationships_root = ElementTree.fromstring(
+            archive.read("xl/_rels/workbook.xml.rels")
+        )
+        targets = {
+            relation.attrib["Id"]: relation.attrib["Target"]
+            for relation in relationships_root.findall(
+                f"{{{package_relationship_ns}}}Relationship"
+            )
+            if relation.attrib.get("Id") and relation.attrib.get("Target")
+        }
+        for sheet in workbook_root.findall(f".//{{{spreadsheet_ns}}}sheet"):
+            sheet_name = sheet.attrib.get("name")
+            relationship_id = sheet.attrib.get(f"{{{relationship_ns}}}id")
+            if not sheet_name or not relationship_id or relationship_id not in targets:
+                continue
+            member_path = _xlsx_member_path(
+                "xl/workbook.xml",
+                targets[relationship_id],
+            )
+            sheet_root = ElementTree.fromstring(archive.read(member_path))
+            cell_tokens: dict[str, str] = {}
+            for cell in sheet_root.findall(f".//{{{spreadsheet_ns}}}c"):
+                coordinate = cell.attrib.get("r")
+                cell_type = cell.attrib.get("t")
+                if not coordinate or cell_type in {
+                    "b",
+                    "d",
+                    "e",
+                    "inlineStr",
+                    "s",
+                    "str",
+                }:
+                    continue
+                value = cell.find(f"{{{spreadsheet_ns}}}v")
+                if value is None or value.text is None:
+                    continue
+                token = value.text.strip()
+                if token:
+                    cell_tokens[coordinate] = token
+            result[sheet_name] = cell_tokens
+    return result
+
+
+def _parse_ooxml_numeric_token(token: str, *, label: str) -> Decimal:
+    """Parse the exact numeric token stored in OOXML without a float round-trip."""
+
+    try:
+        value = Decimal(token)
+    except InvalidOperation as exc:
+        raise ValueError(f"{label} must be a finite OOXML number") from exc
+    if not value.is_finite():
+        raise ValueError(f"{label} must be a finite OOXML number")
+    return _bounded_decimal(value, label=label)
+
+
 def _workbook_candidates(
     path: Path,
     *,
+    source_bytes: bytes,
+    source_file: str,
+    source_artifact_ref: str,
     source_role: str,
+    currency: str,
+    unit: str,
     max_rows_per_sheet: int,
-) -> tuple[list[dict[str, Any]], list[AmountCandidate]]:
-    workbook = openpyxl.load_workbook(path, read_only=True, data_only=True)
+) -> tuple[list[dict[str, Any]], list[AmountCandidate], bool]:
+    numeric_tokens = _xlsx_numeric_tokens(source_bytes)
+    workbook = openpyxl.load_workbook(
+        BytesIO(source_bytes),
+        read_only=True,
+        data_only=True,
+    )
     sheet_summaries: list[dict[str, Any]] = []
     candidates: list[AmountCandidate] = []
+    truncated = any(sheet.max_row > max_rows_per_sheet for sheet in workbook.worksheets)
     for sheet in workbook.worksheets:
         scanned_rows = min(sheet.max_row, max_rows_per_sheet)
         sheet_summaries.append(
             {
-                "source_file": path.name,
+                "source_file": source_file,
+                "source_artifact_ref": source_artifact_ref,
                 "sheet": sheet.title,
                 "max_row": sheet.max_row,
                 "max_column": sheet.max_column,
                 "scanned_rows": scanned_rows,
+                "truncated": sheet.max_row > max_rows_per_sheet,
             }
         )
+        if truncated:
+            continue
         for row_idx, row in enumerate(
             sheet.iter_rows(
                 min_row=1,
@@ -333,46 +630,116 @@ def _workbook_candidates(
                 continue
             for col_idx, value in enumerate(row, start=1):
                 location = f"{sheet.title}!{_excel_column_name(col_idx)}{row_idx}"
-                if isinstance(value, (int, float)) and abs(value) >= 0.005:
+                coordinate = f"{_excel_column_name(col_idx)}{row_idx}"
+                if (
+                    isinstance(value, (int, float, Decimal))
+                    and not isinstance(value, bool)
+                    and not isinstance(value, (date, datetime))
+                ):
+                    raw_token = numeric_tokens.get(sheet.title, {}).get(coordinate)
+                    if raw_token is None:
+                        raise ValueError(
+                            f"Missing exact OOXML numeric token for {source_file} "
+                            f"{location}"
+                        )
+                    amount = _parse_ooxml_numeric_token(
+                        raw_token,
+                        label="concordato workbook amount",
+                    )
+                    if _exact_absolute(amount) < Decimal("0.005"):
+                        continue
                     candidates.append(
                         AmountCandidate(
-                            source_file=path.name,
+                            source_file=source_file,
                             source_role=source_role,
                             location=location,
-                            amount=round(float(value), 2),
-                            token=str(value),
+                            amount=amount,
+                            token=raw_token,
                             context=row_context[:180],
+                            source_artifact_ref=source_artifact_ref,
+                            currency=currency,
+                            unit=unit,
                         )
                     )
                 elif isinstance(value, str):
-                    candidates.extend(
-                        extract_amount_candidates_from_text(
-                            value,
-                            source_file=path.name,
-                            source_role=source_role,
-                            location=location,
-                        )
+                    extracted = extract_amount_candidates_from_text(
+                        value,
+                        source_file=source_file,
+                        source_role=source_role,
+                        location=location,
                     )
-    return sheet_summaries, candidates
+                    candidates.extend(
+                        AmountCandidate(
+                            source_file=item.source_file,
+                            source_role=item.source_role,
+                            location=item.location,
+                            amount=item.amount,
+                            token=item.token,
+                            context=item.context,
+                            source_artifact_ref=source_artifact_ref,
+                            currency=currency,
+                            unit=unit,
+                        )
+                        for item in extracted
+                    )
+    return sheet_summaries, candidates, truncated
 
 
-def _text_file_candidates(path: Path, *, source_role: str) -> list[AmountCandidate]:
-    text = path.read_text(encoding="utf-8", errors="replace")
-    return extract_amount_candidates_from_text(
+def _text_file_candidates(
+    source_bytes: bytes,
+    *,
+    source_file: str,
+    source_artifact_ref: str,
+    source_role: str,
+    currency: str,
+    unit: str,
+) -> list[AmountCandidate]:
+    text = source_bytes.decode("utf-8")
+    extracted = extract_amount_candidates_from_text(
         text,
-        source_file=path.name,
+        source_file=source_file,
         source_role=source_role,
         location="text",
     )
+    return [
+        AmountCandidate(
+            source_file=item.source_file,
+            source_role=item.source_role,
+            location=item.location,
+            amount=item.amount,
+            token=item.token,
+            context=item.context,
+            source_artifact_ref=source_artifact_ref,
+            currency=currency,
+            unit=unit,
+        )
+        for item in extracted
+    ]
+
+
+def candidate_id(candidate: AmountCandidate) -> str:
+    content = "|".join(
+        (
+            candidate.source_artifact_ref,
+            candidate.location,
+            candidate.token,
+            decimal_text(candidate.amount),
+        )
+    )
+    return "candidate." + hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
 def _candidate_rows(candidates: Iterable[AmountCandidate]) -> list[dict[str, Any]]:
     return [
         {
+            "candidate_id": candidate_id(item),
             "source_file": item.source_file,
+            "source_artifact_ref": item.source_artifact_ref,
             "source_role": item.source_role,
             "location": item.location,
-            "amount": item.amount,
+            "amount": decimal_text(item.amount),
+            "currency": item.currency,
+            "unit": item.unit,
             "token": item.token,
             "context": item.context,
         }
@@ -380,46 +747,67 @@ def _candidate_rows(candidates: Iterable[AmountCandidate]) -> list[dict[str, Any
     ]
 
 
-def _context_overlap(left: str, right: str) -> float:
+def _context_overlap(left: str, right: str) -> str:
     left_tokens = _tokens(left)
     right_tokens = _tokens(right)
     if not left_tokens or not right_tokens:
-        return 0.0
-    return round(len(left_tokens & right_tokens) / len(left_tokens | right_tokens), 4)
+        return "0"
+    with localcontext() as context:
+        context.prec = DECIMAL_WORKING_PRECISION
+        ratio = Decimal(len(left_tokens & right_tokens)) / Decimal(
+            len(left_tokens | right_tokens)
+        )
+        return decimal_text(ratio.quantize(Decimal("0.0001")))
 
 
 def find_exact_amount_matches(
     candidates: list[AmountCandidate],
     *,
-    tolerance: float,
+    tolerance: object,
     plan_role: str = "concordato_plan",
     max_matches_per_plan_amount: int = 20,
 ) -> list[dict[str, Any]]:
     """Find mechanically matching amounts; this is not semantic support."""
 
+    tolerance_value = _contract_decimal(tolerance, label="amount tolerance")
+    if tolerance_value < 0:
+        raise ValueError("amount tolerance must not be negative")
     plan_candidates = [item for item in candidates if item.source_role == plan_role]
     support_candidates = [item for item in candidates if item.source_role != plan_role]
+    for candidate in candidates:
+        _bounded_decimal(candidate.amount, label="candidate amount")
     matches: list[dict[str, Any]] = []
     for plan in plan_candidates:
         row_matches = []
         for support in support_candidates:
-            difference = round(plan.amount - support.amount, 2)
-            abs_difference = abs(difference)
-            if abs_difference > tolerance:
+            if plan.currency != support.currency or plan.unit != support.unit:
+                continue
+            difference = _exact_difference(plan.amount, support.amount)
+            abs_difference = _exact_absolute(difference)
+            if abs_difference > tolerance_value:
                 continue
             row_matches.append(
                 {
                     "plan_source_file": plan.source_file,
+                    "plan_source_artifact_ref": plan.source_artifact_ref,
                     "plan_location": plan.location,
-                    "plan_amount": plan.amount,
+                    "plan_amount": decimal_text(plan.amount),
+                    "plan_currency": plan.currency,
+                    "plan_unit": plan.unit,
                     "plan_context": plan.context,
                     "support_source_file": support.source_file,
+                    "support_source_artifact_ref": support.source_artifact_ref,
                     "support_role": support.source_role,
                     "support_location": support.location,
-                    "support_amount": support.amount,
+                    "support_amount": decimal_text(support.amount),
+                    "support_currency": support.currency,
+                    "support_unit": support.unit,
                     "support_context": support.context,
-                    "difference": difference,
-                    "abs_difference": abs_difference,
+                    "difference": decimal_text(difference),
+                    "abs_difference": decimal_text(abs_difference),
+                    "tolerance": decimal_text(tolerance_value),
+                    "within_tolerance": "true",
+                    "calculation_formula_id": CALCULATION_FORMULA_ID,
                     "context_token_overlap": _context_overlap(
                         plan.context, support.context
                     ),
@@ -427,10 +815,598 @@ def find_exact_amount_matches(
                 }
             )
         row_matches.sort(
-            key=lambda row: (row["abs_difference"], -row["context_token_overlap"])
+            key=lambda row: (
+                _contract_decimal(
+                    row["abs_difference"],
+                    label="absolute match difference",
+                ),
+                -_contract_decimal(
+                    row["context_token_overlap"],
+                    label="context token overlap",
+                ),
+            )
         )
         matches.extend(row_matches[:max_matches_per_plan_amount])
     return matches
+
+
+def _source_role_content(
+    inventory: Sequence[Mapping[str, Any]],
+    source_roles: Mapping[str, object],
+) -> tuple[list[dict[str, str]], str]:
+    """Normalize a complete reviewed role declaration before numeric parsing."""
+
+    supported = [
+        row
+        for row in inventory
+        if row.get("supported") and row.get("source_artifact_ref")
+    ]
+    expected_paths = {str(row["relative_path"]) for row in supported}
+    if set(source_roles) != expected_paths:
+        missing = sorted(expected_paths - set(source_roles))
+        unexpected = sorted(set(source_roles) - expected_paths)
+        raise ValueError(
+            "Source-role mapping must cover every captured supported source; "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+    normalized_specs: dict[str, dict[str, str]] = {}
+    for relative_path in sorted(source_roles):
+        raw_spec = source_roles[relative_path]
+        if isinstance(raw_spec, Mapping):
+            role = str(raw_spec.get("role") or "").strip()
+            currency = str(raw_spec.get("currency") or "").strip().upper()
+            unit = str(raw_spec.get("unit") or "").strip()
+        else:
+            role = str(raw_spec).strip()
+            currency = "EUR"
+            unit = "1"
+        if role not in ALLOWED_SOURCE_ROLES:
+            raise ValueError(f"Unsupported source role for {relative_path}: {role}")
+        if not re.fullmatch(r"[A-Z]{3}", currency):
+            raise ValueError(
+                f"Source currency for {relative_path} must be a three-letter code"
+            )
+        if not unit:
+            raise ValueError(f"Source unit for {relative_path} must be explicit")
+        normalized_specs[relative_path] = {
+            "role": role,
+            "currency": currency,
+            "unit": unit,
+        }
+    plan_paths = [
+        relative_path
+        for relative_path, spec in normalized_specs.items()
+        if spec["role"] == "concordato_plan"
+    ]
+    if len(plan_paths) != 1:
+        raise ValueError("Exactly one captured source must be the authoritative plan")
+    artifact_by_path = {
+        str(row["relative_path"]): str(row["source_artifact_ref"]) for row in supported
+    }
+    source_rows = [
+        {
+            "relative_path": relative_path,
+            "source_artifact_ref": artifact_by_path[relative_path],
+            **normalized_specs[relative_path],
+        }
+        for relative_path in sorted(normalized_specs)
+    ]
+    return source_rows, artifact_by_path[plan_paths[0]]
+
+
+def _review_content(
+    inventory: Sequence[Mapping[str, Any]],
+    source_roles: Mapping[str, object],
+    amount_candidates: Sequence[AmountCandidate],
+    candidate_dispositions: Mapping[str, str],
+) -> dict[str, Any]:
+    source_rows, authoritative_plan_ref = _source_role_content(
+        inventory,
+        source_roles,
+    )
+    candidates_by_id = {
+        candidate_id(candidate): candidate for candidate in amount_candidates
+    }
+    if len(candidates_by_id) != len(amount_candidates):
+        raise ValueError("Raw amount-candidate identities must be unique")
+    if set(candidate_dispositions) != set(candidates_by_id):
+        missing = sorted(set(candidates_by_id) - set(candidate_dispositions))
+        unexpected = sorted(set(candidate_dispositions) - set(candidates_by_id))
+        raise ValueError(
+            "Every raw numeric candidate requires a reviewed disposition; "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+    normalized_dispositions: list[dict[str, str]] = []
+    role_by_artifact = {
+        str(item["source_artifact_ref"]): str(item["role"]) for item in source_rows
+    }
+    for raw_candidate_id in sorted(candidates_by_id):
+        candidate = candidates_by_id[raw_candidate_id]
+        disposition = str(candidate_dispositions[raw_candidate_id]).strip()
+        if disposition not in {"candidate_amount", "excluded_non_amount"}:
+            raise ValueError(
+                "Unsupported candidate disposition for "
+                f"{raw_candidate_id}: {disposition}"
+            )
+        if (
+            role_by_artifact.get(candidate.source_artifact_ref) == "excluded"
+            and disposition != "excluded_non_amount"
+        ):
+            raise ValueError(
+                f"Excluded source candidate {raw_candidate_id} cannot be an amount"
+            )
+        normalized_dispositions.append(
+            {
+                "candidate_id": raw_candidate_id,
+                "source_artifact_ref": candidate.source_artifact_ref,
+                "location": candidate.location,
+                "amount": decimal_text(candidate.amount),
+                "disposition": disposition,
+            }
+        )
+    return {
+        "authoritative_plan_source_artifact_ref": authoritative_plan_ref,
+        "source_roles": source_rows,
+        "candidate_dispositions": normalized_dispositions,
+    }
+
+
+def _implementation_bindings() -> list[dict[str, Any]]:
+    """Bind the reviewed formula to the exact deterministic implementation."""
+
+    receipts: list[dict[str, Any]] = []
+    for root_id, root, implementation_path in _implementation_contract_files():
+        relative = implementation_path.relative_to(root).as_posix()
+        identity = hashlib.sha256(f"{root_id}:{relative}".encode("utf-8")).hexdigest()
+        receipts.append(
+            artifact_receipt(
+                root,
+                implementation_path,
+                artifact_id=f"implementation.{identity}",
+                root_id=root_id,
+                role="implementation",
+                media_type=(
+                    {
+                        ".cjs": "text/javascript",
+                        ".html": "text/html",
+                        ".json": "application/json",
+                        ".py": "text/x-python",
+                        ".svg": "image/svg+xml",
+                    }[implementation_path.suffix.lower()]
+                ),
+            )
+        )
+    return receipts
+
+
+def _implementation_contract_files() -> list[tuple[str, Path, Path]]:
+    """Return the closed transitive file set for mechanical authority."""
+
+    validate_implementation_tree(
+        str(COMPONENT_ROOT),
+        shared_assurance_root=str(ASSURANCE_IMPLEMENTATION_ROOT),
+    )
+    roots = {
+        "plugin": ("implementation", COMPONENT_ROOT),
+        "shared_assurance": (
+            "assurance_implementation",
+            ASSURANCE_IMPLEMENTATION_ROOT,
+        ),
+    }
+    return [
+        (roots[root_id][0], roots[root_id][1], roots[root_id][1] / relative_path)
+        for root_id, relative_path in IMPLEMENTATION_CONTRACT
+    ]
+
+
+def _validate_implementation_bindings(
+    receipts: object,
+) -> list[dict[str, Any]]:
+    """Require the exact current transitive set and every current byte receipt."""
+
+    if not isinstance(receipts, list):
+        raise ValueError("Reviewed implementation receipts must be a list")
+    roots = {
+        "implementation": COMPONENT_ROOT,
+        "assurance_implementation": ASSURANCE_IMPLEMENTATION_ROOT,
+    }
+    expected_locations = [
+        (root_id, path.relative_to(root).as_posix())
+        for root_id, root, path in _implementation_contract_files()
+    ]
+    observed_locations = [
+        (
+            str(receipt.get("root_id") or ""),
+            str(receipt.get("path") or ""),
+        )
+        for receipt in receipts
+        if isinstance(receipt, Mapping)
+    ]
+    if observed_locations != expected_locations or len(observed_locations) != len(
+        receipts
+    ):
+        raise ValueError("Reviewed implementation receipt set is stale")
+    validated: list[dict[str, Any]] = []
+    for receipt in receipts:
+        if not isinstance(receipt, Mapping):
+            raise ValueError("Reviewed implementation receipt is invalid")
+        root_id = str(receipt["root_id"])
+        path = roots[root_id] / str(receipt["path"])
+        if path.lstat().st_nlink != 1:
+            raise ValueError("Reviewed implementation receipt path is hard-linked")
+        validated.append(validate_artifact_receipt(roots, receipt))
+    return validated
+
+
+def validate_implementation_contract(
+    calculation_decision: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Replay the exact transitive implementation set bound by authority."""
+
+    validated = validate_reviewed_decision_receipt(
+        calculation_decision,
+        expected_decision_type="calculation_formula_authority",
+        expected_adapter_id=CALCULATION_ADAPTER_ID,
+        expected_adapter_version=CALCULATION_ADAPTER_VERSION,
+        require_reviewed=True,
+    )
+    content = validated["content"]
+    if not isinstance(content, Mapping):
+        raise ValueError("Reviewed calculation content is invalid")
+    return _validate_implementation_bindings(content.get("implementation_receipts"))
+
+
+def _calculation_content(
+    review_content: Mapping[str, Any],
+    amount_candidates: Sequence[AmountCandidate],
+    *,
+    reference_date: str,
+    tolerance: object,
+) -> dict[str, Any]:
+    """Build the only supported exact difference/sign calculation perimeter."""
+
+    tolerance_value = _contract_decimal(tolerance, label="amount tolerance")
+    source_specs = {
+        str(item["source_artifact_ref"]): item
+        for item in review_content["source_roles"]
+        if isinstance(item, Mapping)
+    }
+    disposition_by_id = {
+        str(item["candidate_id"]): str(item["disposition"])
+        for item in review_content["candidate_dispositions"]
+        if isinstance(item, Mapping)
+    }
+    candidate_perimeter: list[dict[str, str]] = []
+    for ordinal, candidate in enumerate(
+        sorted(amount_candidates, key=candidate_id),
+        start=1,
+    ):
+        identity = candidate_id(candidate)
+        source_spec = source_specs[candidate.source_artifact_ref]
+        candidate_perimeter.append(
+            {
+                "ordinal": str(ordinal),
+                "candidate_id": identity,
+                "source_file": candidate.source_file,
+                "source_artifact_ref": candidate.source_artifact_ref,
+                "location": candidate.location,
+                "amount": decimal_text(candidate.amount),
+                "token": candidate.token,
+                "context": candidate.context,
+                "role": str(source_spec["role"]),
+                "currency": str(source_spec["currency"]),
+                "unit": str(source_spec["unit"]),
+                "disposition": disposition_by_id[identity],
+            }
+        )
+    return {
+        "formula_id": CALCULATION_FORMULA_ID,
+        "signed_difference_formula": CALCULATION_DIFFERENCE_FORMULA,
+        "absolute_difference_formula": CALCULATION_ABSOLUTE_FORMULA,
+        "tolerance_comparison_formula": CALCULATION_TOLERANCE_FORMULA,
+        "sign_convention": {
+            "positive": "plan_amount_exceeds_support_amount",
+            "zero": "plan_amount_equals_support_amount",
+            "negative": "plan_amount_below_support_amount",
+        },
+        "reference_period": str(reference_date),
+        "tolerance": decimal_text(tolerance_value),
+        "authoritative_plan_source_artifact_ref": str(
+            review_content["authoritative_plan_source_artifact_ref"]
+        ),
+        "source_perimeter": [dict(item) for item in review_content["source_roles"]],
+        "candidate_perimeter": candidate_perimeter,
+        "implementation_receipts": _implementation_bindings(),
+        "judgment_boundary": (
+            "This receipt authorizes exact arithmetic and tolerance comparison only. "
+            "Legal or tax relevance, evidence sufficiency, support classification, "
+            "materiality, going-concern implications, and conclusions remain reviewer "
+            "judgment."
+        ),
+    }
+
+
+def review_source_roles(
+    inventory: Sequence[Mapping[str, Any]],
+    source_roles: Mapping[str, object],
+    amount_candidates: Sequence[AmountCandidate],
+    candidate_dispositions: Mapping[str, str],
+    *,
+    reviewer_ref: str,
+    reviewed_on: str,
+    reference_date: str,
+    tolerance: object,
+) -> dict[str, Any]:
+    """Build exact source-role and calculation receipts for a subsequent run."""
+
+    content = _review_content(
+        inventory,
+        source_roles,
+        amount_candidates,
+        candidate_dispositions,
+    )
+    source_refs = [str(item["source_artifact_ref"]) for item in content["source_roles"]]
+    decision_digest = canonical_json_sha256(content)
+    decision = build_reviewed_decision_receipt(
+        decision_id=f"decision.concordato_source_roles.{decision_digest}",
+        decision_type="source_role_mapping",
+        status="reviewed",
+        reviewer_ref=reviewer_ref,
+        reviewed_on=reviewed_on,
+        adapter_id=SOURCE_ROLE_ADAPTER_ID,
+        adapter_version=SOURCE_ROLE_ADAPTER_VERSION,
+        source_artifact_refs=source_refs,
+        content=content,
+    )
+    calculation_content = _calculation_content(
+        content,
+        amount_candidates,
+        reference_date=reference_date,
+        tolerance=tolerance,
+    )
+    calculation_digest = canonical_json_sha256(calculation_content)
+    calculation_decision = build_reviewed_decision_receipt(
+        decision_id=f"decision.concordato_calculation.{calculation_digest}",
+        decision_type="calculation_formula_authority",
+        status="reviewed",
+        reviewer_ref=reviewer_ref,
+        reviewed_on=reviewed_on,
+        adapter_id=CALCULATION_ADAPTER_ID,
+        adapter_version=CALCULATION_ADAPTER_VERSION,
+        source_artifact_refs=source_refs,
+        content=calculation_content,
+    )
+    return {
+        "schema_version": SOURCE_ROLE_RECIPE_SCHEMA,
+        "source_roles": {
+            str(item["relative_path"]): {
+                "role": str(item["role"]),
+                "currency": str(item["currency"]),
+                "unit": str(item["unit"]),
+            }
+            for item in content["source_roles"]
+        },
+        "candidate_dispositions": {
+            str(item["candidate_id"]): str(item["disposition"])
+            for item in content["candidate_dispositions"]
+        },
+        "source_role_decision": decision,
+        "calculation_decision": calculation_decision,
+    }
+
+
+def _load_recipe(recipe: Path | Mapping[str, Any] | None) -> dict[str, Any] | None:
+    if recipe is None:
+        return None
+    if isinstance(recipe, Mapping):
+        return dict(recipe)
+    payload = json.loads(recipe.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Concordato source-role recipe must be a JSON object")
+    return payload
+
+
+def _prevalidated_recipe(
+    inventory: Sequence[Mapping[str, Any]],
+    recipe: Path | Mapping[str, Any] | None,
+    *,
+    reference_date: str,
+    tolerance: object,
+) -> tuple[
+    dict[str, Any] | None,
+    dict[str, dict[str, str]] | None,
+    dict[str, Any] | None,
+    dict[str, Any] | None,
+    str | None,
+]:
+    """Validate role/formula authority that is knowable before numeric parsing."""
+
+    try:
+        payload = _load_recipe(recipe)
+    except (OSError, ValueError) as exc:
+        return None, None, None, None, f"Source-role recipe is invalid: {exc}"
+    if payload is None:
+        return (
+            None,
+            None,
+            None,
+            None,
+            "Source roles and calculation authority require review.",
+        )
+    if payload.get("schema_version") != SOURCE_ROLE_RECIPE_SCHEMA:
+        return None, None, None, None, "Source-role recipe schema is unsupported."
+    raw_roles = payload.get("source_roles")
+    raw_dispositions = payload.get("candidate_dispositions")
+    source_decision = payload.get("source_role_decision")
+    calculation_decision = payload.get("calculation_decision")
+    if (
+        not isinstance(raw_roles, dict)
+        or not isinstance(raw_dispositions, dict)
+        or not isinstance(source_decision, dict)
+        or not isinstance(calculation_decision, dict)
+    ):
+        return None, None, None, None, "Source-role recipe is incomplete."
+    try:
+        source_rows, authoritative_plan_ref = _source_role_content(
+            inventory,
+            {str(key): value for key, value in raw_roles.items()},
+        )
+        source_refs = [str(item["source_artifact_ref"]) for item in source_rows]
+        validated_source = validate_reviewed_decision_receipt(
+            source_decision,
+            expected_decision_type="source_role_mapping",
+            expected_source_artifact_refs=source_refs,
+            expected_adapter_id=SOURCE_ROLE_ADAPTER_ID,
+            expected_adapter_version=SOURCE_ROLE_ADAPTER_VERSION,
+            require_reviewed=True,
+        )
+        source_content = validated_source["content"]
+        if (
+            set(source_content)
+            != {
+                "authoritative_plan_source_artifact_ref",
+                "source_roles",
+                "candidate_dispositions",
+            }
+            or source_content.get("source_roles") != source_rows
+            or source_content.get("authoritative_plan_source_artifact_ref")
+            != authoritative_plan_ref
+            or not isinstance(source_content.get("candidate_dispositions"), list)
+        ):
+            raise ValueError("Reviewed source-role declaration is stale")
+
+        validated_calculation = validate_reviewed_decision_receipt(
+            calculation_decision,
+            expected_decision_type="calculation_formula_authority",
+            expected_source_artifact_refs=source_refs,
+            expected_adapter_id=CALCULATION_ADAPTER_ID,
+            expected_adapter_version=CALCULATION_ADAPTER_VERSION,
+            require_reviewed=True,
+        )
+        expected_calculation = _calculation_content(
+            source_content,
+            [],
+            reference_date=reference_date,
+            tolerance=tolerance,
+        )
+        current_calculation = validated_calculation["content"]
+        if not isinstance(current_calculation.get("candidate_perimeter"), list):
+            raise ValueError("Reviewed calculation candidate perimeter is invalid")
+        current_static = {
+            **current_calculation,
+            "candidate_perimeter": [],
+        }
+        if current_static != expected_calculation:
+            raise ValueError(
+                "Reviewed formula, sign, period, source, unit, tolerance, or "
+                "implementation binding is stale"
+            )
+        _validate_implementation_bindings(
+            current_calculation["implementation_receipts"]
+        )
+    except ValueError as exc:
+        return None, None, None, None, str(exc)
+    return (
+        payload,
+        {
+            str(item["relative_path"]): {
+                "role": str(item["role"]),
+                "currency": str(item["currency"]),
+                "unit": str(item["unit"]),
+            }
+            for item in source_rows
+        },
+        validated_source,
+        validated_calculation,
+        None,
+    )
+
+
+def _validated_recipe_after_parsing(
+    inventory: Sequence[Mapping[str, Any]],
+    amount_candidates: Sequence[AmountCandidate],
+    payload: Mapping[str, Any],
+    *,
+    reference_date: str,
+    tolerance: object,
+) -> tuple[
+    dict[str, dict[str, str]] | None,
+    dict[str, str] | None,
+    dict[str, Any] | None,
+    dict[str, Any] | None,
+    str | None,
+]:
+    """Close candidate identity and disposition perimeters before arithmetic."""
+
+    raw_roles = payload.get("source_roles")
+    raw_dispositions = payload.get("candidate_dispositions")
+    source_decision = payload.get("source_role_decision")
+    calculation_decision = payload.get("calculation_decision")
+    if (
+        not isinstance(raw_roles, Mapping)
+        or not isinstance(raw_dispositions, Mapping)
+        or not isinstance(source_decision, Mapping)
+        or not isinstance(calculation_decision, Mapping)
+    ):
+        return None, None, None, None, "Source-role recipe is incomplete."
+    try:
+        content = _review_content(
+            inventory,
+            {str(key): value for key, value in raw_roles.items()},
+            amount_candidates,
+            {str(key): str(value) for key, value in raw_dispositions.items()},
+        )
+        source_refs = [
+            str(item["source_artifact_ref"]) for item in content["source_roles"]
+        ]
+        validated_source = validate_reviewed_decision_receipt(
+            source_decision,
+            expected_decision_type="source_role_mapping",
+            expected_source_artifact_refs=source_refs,
+            expected_adapter_id=SOURCE_ROLE_ADAPTER_ID,
+            expected_adapter_version=SOURCE_ROLE_ADAPTER_VERSION,
+            require_reviewed=True,
+        )
+        if validated_source["content"] != content:
+            raise ValueError("Reviewed source roles or numeric dispositions are stale")
+        calculation_content = _calculation_content(
+            content,
+            amount_candidates,
+            reference_date=reference_date,
+            tolerance=tolerance,
+        )
+        validated_calculation = validate_reviewed_decision_receipt(
+            calculation_decision,
+            expected_decision_type="calculation_formula_authority",
+            expected_source_artifact_refs=source_refs,
+            expected_adapter_id=CALCULATION_ADAPTER_ID,
+            expected_adapter_version=CALCULATION_ADAPTER_VERSION,
+            require_reviewed=True,
+        )
+        if validated_calculation["content"] != calculation_content:
+            raise ValueError(
+                "Reviewed formula, sign, candidate perimeter, tolerance, or "
+                "implementation binding is stale"
+            )
+    except ValueError as exc:
+        return None, None, None, None, str(exc)
+    return (
+        {
+            str(item["relative_path"]): {
+                "role": str(item["role"]),
+                "currency": str(item["currency"]),
+                "unit": str(item["unit"]),
+            }
+            for item in content["source_roles"]
+        },
+        {
+            str(item["candidate_id"]): str(item["disposition"])
+            for item in content["candidate_dispositions"]
+        },
+        validated_source,
+        validated_calculation,
+        None,
+    )
 
 
 def _write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str]) -> None:
@@ -476,6 +1452,1181 @@ def _write_workbook(
     workbook.save(path)
 
 
+def _numeric_candidate_ledger(
+    candidates: Sequence[AmountCandidate],
+    *,
+    prepared_artifact_ref: str,
+    workpaper_artifact_ref: str,
+    decision_ref: str,
+) -> dict[str, Any] | None:
+    """Bind every emitted candidate amount to source, CSV, and workbook."""
+
+    if not candidates:
+        return None
+    entries: list[dict[str, Any]] = []
+    for index, candidate in enumerate(candidates, start=1):
+        evidence_digest = hashlib.sha256(
+            (
+                f"{candidate.source_artifact_ref}|{candidate.location}|"
+                f"{decimal_text(candidate.amount)}|{candidate.currency}|{candidate.unit}"
+            ).encode("utf-8")
+        ).hexdigest()
+        value = decimal_text(candidate.amount)
+        entries.append(
+            {
+                "evidence_id": f"numeric.concordato_candidate.{evidence_digest}",
+                "value": value,
+                "unit": candidate.unit,
+                "currency": candidate.currency,
+                "source": {
+                    "artifact_ref": candidate.source_artifact_ref,
+                    "locator": candidate.location,
+                    "value": value,
+                },
+                "prepared": {
+                    "artifact_ref": prepared_artifact_ref,
+                    "locator": f"row={index + 1};column=amount",
+                    "value": value,
+                },
+                "outputs": [
+                    {
+                        "artifact_ref": workpaper_artifact_ref,
+                        "locator": f"Amount candidates!F{index + 1}",
+                        "value": value,
+                    }
+                ],
+                "calculation_ref": None,
+                "decision_ref": decision_ref,
+                "limitations": [
+                    "The ledger proves exact numeric transport, not semantic support."
+                ],
+            }
+        )
+    return build_numeric_evidence_ledger(
+        entries,
+        ledger_id="numeric.concordato_candidates",
+    )
+
+
+def _output_address(
+    path: str,
+    locator: str,
+    rendered_value: str,
+) -> dict[str, str]:
+    return {
+        "path": path,
+        "locator": locator,
+        "rendered_value": rendered_value,
+    }
+
+
+def _calculation_evidence_ledger(
+    *,
+    raw_candidates: Sequence[AmountCandidate],
+    candidates: Sequence[AmountCandidate],
+    matches: Sequence[dict[str, Any]],
+    inventory: Sequence[dict[str, Any]],
+    tolerance: Decimal,
+    language: str,
+    calculation_decision_ref: str,
+) -> dict[str, Any]:
+    """Bind every material numeric address and exact calculation to its perimeter."""
+
+    spanish = language == "es"
+    candidate_sheet = "Importes candidatos" if spanish else "Amount candidates"
+    match_sheet = "Coincidencias candidatas" if spanish else "Candidate matches"
+    entries: list[dict[str, Any]] = []
+    entry_by_candidate: dict[str, dict[str, Any]] = {}
+    raw_row_by_id = {
+        candidate_id(candidate): index
+        for index, candidate in enumerate(raw_candidates, start=1)
+    }
+    selected_row_by_id = {
+        candidate_id(candidate): index
+        for index, candidate in enumerate(candidates, start=1)
+    }
+
+    def add_entry(
+        *,
+        kind: str,
+        value: Decimal,
+        currency: str | None,
+        unit: str,
+        source_addresses: list[dict[str, str]],
+        output_addresses: list[dict[str, str]],
+        calculation: dict[str, str] | None = None,
+        comparison_result: bool | None = None,
+        limitation: str,
+    ) -> dict[str, Any]:
+        identity_content = {
+            "kind": kind,
+            "value": decimal_text(value),
+            "source_addresses": source_addresses,
+            "calculation": calculation,
+            "ordinal": len(entries),
+        }
+        entry = {
+            "evidence_id": (
+                "numeric.concordato."
+                + hashlib.sha256(
+                    json.dumps(
+                        identity_content,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    ).encode("utf-8")
+                ).hexdigest()
+            ),
+            "kind": kind,
+            "value": decimal_text(value),
+            "currency": currency,
+            "unit": unit,
+            "source_addresses": source_addresses,
+            "output_addresses": output_addresses,
+            "calculation": calculation,
+            "calculation_decision_ref": calculation_decision_ref,
+            "comparison_result": comparison_result,
+            "limitations": [limitation],
+        }
+        entries.append(entry)
+        return entry
+
+    selected_ids = set(selected_row_by_id)
+    for raw_candidate in raw_candidates:
+        identity = candidate_id(raw_candidate)
+        value = raw_candidate.amount
+        addresses = [
+            _output_address(
+                "raw_amount_candidates.csv",
+                f"row={raw_row_by_id[identity]};column=amount",
+                decimal_text(value),
+            )
+        ]
+        if identity in selected_ids:
+            selected_row = selected_row_by_id[identity]
+            addresses.extend(
+                [
+                    _output_address(
+                        "amount_candidates.csv",
+                        f"row={selected_row};column=amount",
+                        decimal_text(value),
+                    ),
+                    _output_address(
+                        "concordato_tie_out_workpaper.xlsx",
+                        f"{candidate_sheet}!F{selected_row + 1}",
+                        decimal_text(value),
+                    ),
+                ]
+            )
+        entry_by_candidate[identity] = add_entry(
+            kind=(
+                "candidate_amount"
+                if identity in selected_ids
+                else "excluded_numeric_token"
+            ),
+            value=value,
+            currency=raw_candidate.currency,
+            unit=raw_candidate.unit,
+            source_addresses=[
+                {
+                    "artifact_ref": raw_candidate.source_artifact_ref,
+                    "locator": raw_candidate.location,
+                    "value": decimal_text(value),
+                }
+            ],
+            output_addresses=addresses,
+            limitation=(
+                "This entry proves exact numeric transport and reviewed disposition, "
+                "not semantic support."
+            ),
+        )
+
+    tolerance_entry = add_entry(
+        kind="reviewed_tolerance",
+        value=tolerance,
+        currency=None,
+        unit="absolute_difference",
+        source_addresses=[],
+        output_addresses=[],
+        calculation={
+            "formula_id": CALCULATION_FORMULA_ID,
+            "plan_amount": "0",
+            "support_amount": "0",
+            "tolerance": decimal_text(tolerance),
+        },
+        limitation="Tolerance authority comes from the reviewed calculation receipt.",
+    )
+    difference_entry_by_match: dict[tuple[str, ...], dict[str, Any]] = {}
+
+    def match_key(row: Mapping[str, Any]) -> tuple[str, ...]:
+        return (
+            str(row["plan_source_artifact_ref"]),
+            str(row["plan_location"]),
+            str(row["plan_amount"]),
+            str(row["support_source_artifact_ref"]),
+            str(row["support_location"]),
+            str(row["support_amount"]),
+        )
+
+    for row_index, row in enumerate(matches, start=1):
+        plan_value = _contract_decimal(row["plan_amount"], label="plan amount")
+        support_value = _contract_decimal(row["support_amount"], label="support amount")
+        difference = _contract_decimal(row["difference"], label="difference")
+        absolute = _contract_decimal(row["abs_difference"], label="absolute difference")
+        formula = {
+            "formula_id": CALCULATION_FORMULA_ID,
+            "plan_amount": decimal_text(plan_value),
+            "support_amount": decimal_text(support_value),
+            "tolerance": decimal_text(tolerance),
+        }
+        plan_addresses = [
+            _output_address(
+                "exact_amount_matches.csv",
+                f"row={row_index};column=plan_amount",
+                decimal_text(plan_value),
+            ),
+            _output_address(
+                "concordato_tie_out_workpaper.xlsx",
+                f"{match_sheet}!D{row_index + 1}",
+                decimal_text(plan_value),
+            ),
+        ]
+        support_addresses = [
+            _output_address(
+                "exact_amount_matches.csv",
+                f"row={row_index};column=support_amount",
+                decimal_text(support_value),
+            ),
+            _output_address(
+                "concordato_tie_out_workpaper.xlsx",
+                f"{match_sheet}!L{row_index + 1}",
+                decimal_text(support_value),
+            ),
+        ]
+        plan_identity = next(
+            candidate_id(candidate)
+            for candidate in candidates
+            if candidate.source_artifact_ref == str(row["plan_source_artifact_ref"])
+            and candidate.location == str(row["plan_location"])
+            and candidate.amount == plan_value
+        )
+        support_identity = next(
+            candidate_id(candidate)
+            for candidate in candidates
+            if candidate.source_artifact_ref == str(row["support_source_artifact_ref"])
+            and candidate.location == str(row["support_location"])
+            and candidate.amount == support_value
+        )
+        entry_by_candidate[plan_identity]["output_addresses"].extend(plan_addresses)
+        entry_by_candidate[support_identity]["output_addresses"].extend(
+            support_addresses
+        )
+        difference_entry = add_entry(
+            kind="signed_difference",
+            value=difference,
+            currency=str(row["plan_currency"]),
+            unit=str(row["plan_unit"]),
+            source_addresses=[
+                {
+                    "artifact_ref": str(row["plan_source_artifact_ref"]),
+                    "locator": str(row["plan_location"]),
+                    "value": decimal_text(plan_value),
+                },
+                {
+                    "artifact_ref": str(row["support_source_artifact_ref"]),
+                    "locator": str(row["support_location"]),
+                    "value": decimal_text(support_value),
+                },
+            ],
+            output_addresses=[
+                _output_address(
+                    "exact_amount_matches.csv",
+                    f"row={row_index};column=difference",
+                    decimal_text(difference),
+                ),
+                _output_address(
+                    "concordato_tie_out_workpaper.xlsx",
+                    f"{match_sheet}!P{row_index + 1}",
+                    decimal_text(difference),
+                ),
+            ],
+            calculation=formula,
+            limitation="Signed difference uses reviewed plan-minus-support orientation.",
+        )
+        difference_entry_by_match[match_key(row)] = difference_entry
+        add_entry(
+            kind="absolute_difference",
+            value=absolute,
+            currency=str(row["plan_currency"]),
+            unit=str(row["plan_unit"]),
+            source_addresses=[
+                {
+                    "artifact_ref": str(row["plan_source_artifact_ref"]),
+                    "locator": str(row["plan_location"]),
+                    "value": decimal_text(plan_value),
+                },
+                {
+                    "artifact_ref": str(row["support_source_artifact_ref"]),
+                    "locator": str(row["support_location"]),
+                    "value": decimal_text(support_value),
+                },
+            ],
+            output_addresses=[
+                _output_address(
+                    "exact_amount_matches.csv",
+                    f"row={row_index};column=abs_difference",
+                    decimal_text(absolute),
+                ),
+                _output_address(
+                    "concordato_tie_out_workpaper.xlsx",
+                    f"{match_sheet}!Q{row_index + 1}",
+                    decimal_text(absolute),
+                ),
+            ],
+            calculation=formula,
+            limitation="Absolute difference is derived exactly from the signed value.",
+        )
+        tolerance_entry["output_addresses"].extend(
+            [
+                _output_address(
+                    "exact_amount_matches.csv",
+                    f"row={row_index};column=tolerance",
+                    decimal_text(tolerance),
+                ),
+                _output_address(
+                    "concordato_tie_out_workpaper.xlsx",
+                    f"{match_sheet}!R{row_index + 1}",
+                    decimal_text(tolerance),
+                ),
+            ]
+        )
+        add_entry(
+            kind="tolerance_comparison",
+            value=absolute,
+            currency=str(row["plan_currency"]),
+            unit=str(row["plan_unit"]),
+            source_addresses=[
+                {
+                    "artifact_ref": str(row["plan_source_artifact_ref"]),
+                    "locator": str(row["plan_location"]),
+                    "value": decimal_text(plan_value),
+                },
+                {
+                    "artifact_ref": str(row["support_source_artifact_ref"]),
+                    "locator": str(row["support_location"]),
+                    "value": decimal_text(support_value),
+                },
+            ],
+            output_addresses=[
+                _output_address(
+                    "exact_amount_matches.csv",
+                    f"row={row_index};column=within_tolerance",
+                    "true",
+                ),
+                _output_address(
+                    "concordato_tie_out_workpaper.xlsx",
+                    f"{match_sheet}!S{row_index + 1}",
+                    "true",
+                ),
+            ],
+            calculation=formula,
+            comparison_result=True,
+            limitation=(
+                "The comparison is mechanical and does not establish support "
+                "sufficiency or materiality."
+            ),
+        )
+
+    best_matches = _best_match_by_plan_key(list(matches))
+    plan_candidates = _unique_plan_candidates(list(candidates))
+    matched_plan = [
+        candidate
+        for candidate in plan_candidates
+        if (
+            candidate.source_artifact_ref,
+            candidate.source_file,
+            candidate.location,
+            candidate.amount,
+        )
+        in best_matches
+    ]
+    unmatched_plan = [
+        candidate
+        for candidate in plan_candidates
+        if (
+            candidate.source_artifact_ref,
+            candidate.source_file,
+            candidate.location,
+            candidate.amount,
+        )
+        not in best_matches
+    ]
+    for candidate in unmatched_plan:
+        identity = candidate_id(candidate)
+        residual = add_entry(
+            kind="unmatched_plan_residual",
+            value=candidate.amount,
+            currency=candidate.currency,
+            unit=candidate.unit,
+            source_addresses=[
+                {
+                    "artifact_ref": candidate.source_artifact_ref,
+                    "locator": candidate.location,
+                    "value": decimal_text(candidate.amount),
+                }
+            ],
+            output_addresses=[],
+            limitation=(
+                "Unmatched means no amount candidate fell within the reviewed "
+                "tolerance; semantic explanation remains pending."
+            ),
+        )
+        residual["output_addresses"].extend(
+            entry_by_candidate[identity]["output_addresses"]
+        )
+
+    # The Word summary intentionally renders a bounded set. Every numeric cell
+    # that it does render is address-bound here; no first-row sampling is used.
+    outcome_values = [
+        len(inventory),
+        len(plan_candidates),
+        len(matched_plan),
+        len(unmatched_plan),
+        len(matches),
+    ]
+    for row_index, count in enumerate(outcome_values, start=2):
+        add_entry(
+            kind="summary_count",
+            value=Decimal(count),
+            currency=None,
+            unit="count",
+            source_addresses=[],
+            output_addresses=[
+                _output_address(
+                    "concordato_review_summary.docx",
+                    f"table=1;row={row_index};column=2",
+                    str(count),
+                )
+            ],
+            limitation="Summary count is a deterministic population count.",
+        )
+    role_counts: dict[str, int] = {}
+    for item in inventory:
+        role = str(item.get("reviewed_role") or item["suggested_role"])
+        role_counts[role] = role_counts.get(role, 0) + 1
+    for row_index, count in enumerate(
+        (count for _, count in sorted(role_counts.items())),
+        start=2,
+    ):
+        add_entry(
+            kind="source_role_count",
+            value=Decimal(count),
+            currency=None,
+            unit="count",
+            source_addresses=[],
+            output_addresses=[
+                _output_address(
+                    "concordato_review_summary.docx",
+                    f"table=2;row={row_index};column=2",
+                    str(count),
+                )
+            ],
+            limitation="Role count reflects the reviewed source inventory.",
+        )
+    next_table = 3
+    sorted_matched = sorted(
+        matched_plan,
+        key=lambda candidate: _exact_absolute(candidate.amount),
+        reverse=True,
+    )[:12]
+    if sorted_matched:
+        for row_index, candidate in enumerate(sorted_matched, start=2):
+            plan_entry = entry_by_candidate[candidate_id(candidate)]
+            plan_entry["output_addresses"].append(
+                _output_address(
+                    "concordato_review_summary.docx",
+                    f"table={next_table};row={row_index};column=2",
+                    _format_amount(candidate.amount),
+                )
+            )
+            best = best_matches[
+                (
+                    candidate.source_artifact_ref,
+                    candidate.source_file,
+                    candidate.location,
+                    candidate.amount,
+                )
+            ]
+            difference_entry_by_match[match_key(best)]["output_addresses"].append(
+                _output_address(
+                    "concordato_review_summary.docx",
+                    f"table={next_table};row={row_index};column=5",
+                    _format_amount(best["difference"]),
+                )
+            )
+        next_table += 1
+    sorted_unmatched = sorted(
+        unmatched_plan,
+        key=lambda candidate: _exact_absolute(candidate.amount),
+        reverse=True,
+    )[:12]
+    if sorted_unmatched:
+        unmatched_entries = {
+            str(entry["source_addresses"][0]["artifact_ref"])
+            + "|"
+            + str(entry["source_addresses"][0]["locator"]): entry
+            for entry in entries
+            if entry["kind"] == "unmatched_plan_residual"
+        }
+        for row_index, candidate in enumerate(sorted_unmatched, start=2):
+            residual = unmatched_entries[
+                candidate.source_artifact_ref + "|" + candidate.location
+            ]
+            residual["output_addresses"].append(
+                _output_address(
+                    "concordato_review_summary.docx",
+                    f"table={next_table};row={row_index};column=2",
+                    _format_amount(candidate.amount),
+                )
+            )
+    tolerance_entry["output_addresses"].append(
+        _output_address(
+            "concordato_review_summary.docx",
+            (
+                "paragraph_prefix=Tolleranza importi"
+                if not spanish
+                else "paragraph_prefix=Tolerancia de importes"
+            ),
+            _format_amount(tolerance),
+        )
+    )
+    content = {
+        "schema_version": "concordato.numeric_evidence_ledger.v2",
+        "ledger_id": "numeric.concordato_full_output_closure",
+        "formula_decision_ref": calculation_decision_ref,
+        "entries": entries,
+    }
+    return {**content, "content_sha256": canonical_json_sha256(content)}
+
+
+def _csv_address_value(
+    path: Path,
+    locator: str,
+    cache: dict[Path, list[dict[str, str]]],
+) -> str:
+    match = re.fullmatch(r"row=(\d+);column=([A-Za-z0-9_]+)", locator)
+    if match is None:
+        raise ValueError("Numeric CSV locator is invalid")
+    if path not in cache:
+        with path.open(encoding="utf-8", newline="") as handle:
+            cache[path] = [dict(row) for row in csv.DictReader(handle)]
+    row_index = int(match.group(1))
+    rows = cache[path]
+    if row_index < 1 or row_index > len(rows):
+        raise ValueError("Numeric CSV locator row is out of range")
+    column = match.group(2)
+    if column not in rows[row_index - 1]:
+        raise ValueError("Numeric CSV locator column is missing")
+    return str(rows[row_index - 1][column])
+
+
+def _xlsx_address_value(
+    path: Path,
+    locator: str,
+    cache: dict[Path, openpyxl.Workbook],
+) -> str:
+    sheet_name, separator, coordinate = locator.rpartition("!")
+    if not separator or not sheet_name or not coordinate:
+        raise ValueError("Numeric workbook locator is invalid")
+    if path not in cache:
+        cache[path] = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    workbook = cache[path]
+    if sheet_name not in workbook.sheetnames:
+        raise ValueError("Numeric workbook locator sheet is missing")
+    value = workbook[sheet_name][coordinate].value
+    return "" if value is None else str(value)
+
+
+def _docx_address_matches(path: Path, locator: str, expected: str) -> bool:
+    document = Document(path)
+    table_match = re.fullmatch(
+        r"table=(\d+);row=(\d+);column=(\d+)",
+        locator,
+    )
+    if table_match is not None:
+        table_index, row_index, column_index = (
+            int(value) - 1 for value in table_match.groups()
+        )
+        if (
+            table_index < 0
+            or table_index >= len(document.tables)
+            or row_index < 0
+            or row_index >= len(document.tables[table_index].rows)
+            or column_index < 0
+            or column_index >= len(document.tables[table_index].rows[row_index].cells)
+        ):
+            raise ValueError("Numeric Word locator is out of range")
+        return (
+            document.tables[table_index].rows[row_index].cells[column_index].text
+            == expected
+        )
+    prefix = "paragraph_prefix="
+    if locator.startswith(prefix):
+        heading = locator.removeprefix(prefix)
+        matching = [
+            paragraph.text
+            for paragraph in document.paragraphs
+            if paragraph.text.startswith(heading)
+        ]
+        return len(matching) == 1 and expected in matching[0]
+    raise ValueError("Numeric Word locator is invalid")
+
+
+def _expected_material_output_addresses(
+    output_dir: Path,
+    *,
+    language: str,
+) -> set[tuple[str, str]]:
+    expected: set[tuple[str, str]] = set()
+    for name, columns in (
+        ("raw_amount_candidates.csv", ("amount",)),
+        ("amount_candidates.csv", ("amount",)),
+        (
+            "exact_amount_matches.csv",
+            (
+                "plan_amount",
+                "support_amount",
+                "difference",
+                "abs_difference",
+                "tolerance",
+                "within_tolerance",
+            ),
+        ),
+    ):
+        with (output_dir / name).open(encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        for row_index in range(1, len(rows) + 1):
+            for column in columns:
+                expected.add((name, f"row={row_index};column={column}"))
+
+    candidate_sheet = "Importes candidatos" if language == "es" else "Amount candidates"
+    match_sheet = (
+        "Coincidencias candidatas" if language == "es" else "Candidate matches"
+    )
+    workbook_path = output_dir / "concordato_tie_out_workpaper.xlsx"
+    workbook = openpyxl.load_workbook(workbook_path, read_only=True, data_only=True)
+    try:
+        candidate_rows = max(workbook[candidate_sheet].max_row - 1, 0)
+        match_rows = max(workbook[match_sheet].max_row - 1, 0)
+        if workbook[candidate_sheet]["A2"].value in {
+            "No rows generated",
+            "No se generaron filas",
+        }:
+            candidate_rows = 0
+        if workbook[match_sheet]["A2"].value in {
+            "No rows generated",
+            "No se generaron filas",
+        }:
+            match_rows = 0
+    finally:
+        workbook.close()
+    for row_index in range(2, candidate_rows + 2):
+        expected.add(
+            (
+                "concordato_tie_out_workpaper.xlsx",
+                f"{candidate_sheet}!F{row_index}",
+            )
+        )
+    for row_index in range(2, match_rows + 2):
+        for column in ("D", "L", "P", "Q", "R", "S"):
+            expected.add(
+                (
+                    "concordato_tie_out_workpaper.xlsx",
+                    f"{match_sheet}!{column}{row_index}",
+                )
+            )
+
+    document = Document(output_dir / "concordato_review_summary.docx")
+    for table_index, table in enumerate(document.tables, start=1):
+        if not table.rows:
+            continue
+        headers = [cell.text for cell in table.rows[0].cells]
+        numeric_columns: tuple[int, ...] = ()
+        if table_index in {1, 2}:
+            numeric_columns = (2,)
+        elif "Differenza" in headers or "Diferencia" in headers:
+            numeric_columns = (2, 5)
+        elif "Importe del plan" in headers or "Importo piano" in headers:
+            numeric_columns = (2,)
+        for row_index in range(2, len(table.rows) + 1):
+            for column_index in numeric_columns:
+                expected.add(
+                    (
+                        "concordato_review_summary.docx",
+                        (
+                            f"table={table_index};row={row_index};"
+                            f"column={column_index}"
+                        ),
+                    )
+                )
+    expected.add(
+        (
+            "concordato_review_summary.docx",
+            (
+                "paragraph_prefix=Tolerancia de importes"
+                if language == "es"
+                else "paragraph_prefix=Tolleranza importi"
+            ),
+        )
+    )
+    return expected
+
+
+def _reconstruct_numeric_authority(
+    root: Path,
+    decision_content: Mapping[str, Any],
+) -> tuple[list[AmountCandidate], list[AmountCandidate], list[dict[str, Any]], Decimal]:
+    """Rebuild numeric inputs from current source bytes and reviewed authority."""
+
+    raw_sources = decision_content.get("source_perimeter")
+    raw_candidates = decision_content.get("candidate_perimeter")
+    if not isinstance(raw_sources, list) or not isinstance(raw_candidates, list):
+        raise ValueError("Reviewed calculation perimeter is unavailable")
+
+    source_fields = {
+        "relative_path",
+        "source_artifact_ref",
+        "role",
+        "currency",
+        "unit",
+    }
+    sources: list[dict[str, str]] = []
+    for raw_source in raw_sources:
+        if not isinstance(raw_source, Mapping) or set(raw_source) != source_fields:
+            raise ValueError("Reviewed calculation source perimeter is invalid")
+        source = {field: str(raw_source[field]) for field in source_fields}
+        sources.append(source)
+    if sources != sorted(sources, key=lambda item: item["relative_path"]):
+        raise ValueError("Reviewed calculation source order is invalid")
+    source_by_ref = {item["source_artifact_ref"]: item for item in sources}
+    if len(source_by_ref) != len(sources):
+        raise ValueError("Reviewed calculation source identities are not unique")
+
+    candidate_fields = {
+        "ordinal",
+        "candidate_id",
+        "source_file",
+        "source_artifact_ref",
+        "location",
+        "amount",
+        "token",
+        "context",
+        "role",
+        "currency",
+        "unit",
+        "disposition",
+    }
+    reconstructed: list[AmountCandidate] = []
+    selected: list[AmountCandidate] = []
+    identities: list[str] = []
+    for ordinal, raw_candidate in enumerate(raw_candidates, start=1):
+        if (
+            not isinstance(raw_candidate, Mapping)
+            or set(raw_candidate) != candidate_fields
+            or raw_candidate["ordinal"] != str(ordinal)
+        ):
+            raise ValueError("Reviewed calculation candidate order is invalid")
+        source_ref = str(raw_candidate["source_artifact_ref"])
+        source = source_by_ref.get(source_ref)
+        if source is None:
+            raise ValueError("Reviewed calculation candidate source is invalid")
+        if (
+            str(raw_candidate["source_file"]) != source["relative_path"]
+            or str(raw_candidate["role"]) != source["role"]
+            or str(raw_candidate["currency"]) != source["currency"]
+            or str(raw_candidate["unit"]) != source["unit"]
+        ):
+            raise ValueError("Reviewed calculation candidate attributes are stale")
+        amount = _contract_decimal(
+            raw_candidate["amount"],
+            label="reviewed candidate amount",
+        )
+        if str(raw_candidate["amount"]) != decimal_text(amount):
+            raise ValueError("Reviewed calculation candidate amount is not canonical")
+        candidate = AmountCandidate(
+            source_file=str(raw_candidate["source_file"]),
+            source_role=str(raw_candidate["role"]),
+            location=str(raw_candidate["location"]),
+            amount=amount,
+            token=str(raw_candidate["token"]),
+            context=str(raw_candidate["context"]),
+            source_artifact_ref=source_ref,
+            currency=str(raw_candidate["currency"]),
+            unit=str(raw_candidate["unit"]),
+        )
+        identity = candidate_id(candidate)
+        if raw_candidate["candidate_id"] != identity:
+            raise ValueError("Reviewed calculation candidate identity is stale")
+        disposition = str(raw_candidate["disposition"])
+        if disposition not in {"candidate_amount", "excluded_non_amount"}:
+            raise ValueError("Reviewed calculation candidate disposition is invalid")
+        if candidate.source_role == "excluded" and disposition != "excluded_non_amount":
+            raise ValueError("Excluded source candidate cannot be selected")
+        identities.append(identity)
+        reconstructed.append(candidate)
+        if disposition == "candidate_amount":
+            selected.append(candidate)
+    if identities != sorted(identities) or len(set(identities)) != len(identities):
+        raise ValueError("Reviewed calculation candidate identities are not ordered")
+
+    run_intake_path = root / "run_intake.json"
+    if (
+        run_intake_path.is_symlink()
+        or not run_intake_path.is_file()
+        or run_intake_path.lstat().st_nlink != 1
+    ):
+        raise ValueError("Run intake is unavailable or linked")
+    run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
+    input_paths = (
+        run_intake.get("input_paths") if isinstance(run_intake, Mapping) else None
+    )
+    if not isinstance(input_paths, list) or len(input_paths) != 1:
+        raise ValueError("Run intake source root is unavailable")
+    source_root = Path(str(input_paths[0])).resolve()
+    inventory, _, _ = _file_inventory(source_root)
+    supported_refs: list[str] = []
+    for item in inventory:
+        if not item["supported"] or item.get("capture_status") != "captured":
+            continue
+        source_ref = str(item["source_artifact_ref"])
+        source = source_by_ref.get(source_ref)
+        if source is None or source["relative_path"] != str(item["relative_path"]):
+            raise ValueError("Current source inventory is outside reviewed authority")
+        item["reviewed_role"] = source["role"]
+        item["reviewed_currency"] = source["currency"]
+        item["reviewed_unit"] = source["unit"]
+        supported_refs.append(source_ref)
+    if supported_refs != [item["source_artifact_ref"] for item in sources]:
+        raise ValueError("Current source inventory order is outside reviewed authority")
+    inventory_path = root / "inventory.json"
+    if (
+        inventory_path.is_symlink()
+        or not inventory_path.is_file()
+        or inventory_path.lstat().st_nlink != 1
+    ):
+        raise ValueError("Persisted source inventory is unavailable or linked")
+    persisted_inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+    if persisted_inventory != inventory:
+        raise ValueError("Persisted source inventory is not independently reproducible")
+
+    tolerance = _contract_decimal(
+        decision_content.get("tolerance"),
+        label="reviewed amount tolerance",
+    )
+    return reconstructed, selected, inventory, tolerance
+
+
+def validate_numeric_evidence_closure(
+    output_dir: Path,
+    ledger: Mapping[str, Any] | None = None,
+    *,
+    language: str | None = None,
+    calculation_decision: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Reopen and verify every declared CSV, workbook, and Word numeric address."""
+
+    root = Path(output_dir).resolve()
+    payload = (
+        dict(ledger)
+        if ledger is not None
+        else json.loads(
+            (root / "numeric_evidence_ledger.json").read_text(encoding="utf-8")
+        )
+    )
+    required = {
+        "schema_version",
+        "ledger_id",
+        "formula_decision_ref",
+        "entries",
+        "content_sha256",
+    }
+    if set(payload) != required:
+        raise ValueError("Numeric evidence ledger fields are invalid")
+    if payload["schema_version"] != "concordato.numeric_evidence_ledger.v2":
+        raise ValueError("Numeric evidence ledger schema is unsupported")
+    if payload["ledger_id"] != "numeric.concordato_full_output_closure":
+        raise ValueError("Numeric evidence ledger identity is unsupported")
+    if not isinstance(payload["entries"], list) or not payload["entries"]:
+        raise ValueError("Numeric evidence ledger entries are missing")
+    content = {
+        "schema_version": payload["schema_version"],
+        "ledger_id": payload["ledger_id"],
+        "formula_decision_ref": payload["formula_decision_ref"],
+        "entries": payload["entries"],
+    }
+    if payload["content_sha256"] != canonical_json_sha256(content):
+        raise ValueError("Numeric evidence ledger content digest is stale")
+
+    decision_payload: Mapping[str, Any] | None = calculation_decision
+    if decision_payload is None:
+        reviewed_path = root / "reviewed_decisions.json"
+        if reviewed_path.is_file() and not reviewed_path.is_symlink():
+            reviewed = json.loads(reviewed_path.read_text(encoding="utf-8"))
+            decisions = (
+                reviewed.get("decisions") if isinstance(reviewed, Mapping) else None
+            )
+            if isinstance(decisions, list):
+                decision_payload = next(
+                    (
+                        item
+                        for item in decisions
+                        if isinstance(item, Mapping)
+                        and item.get("decision_type") == "calculation_formula_authority"
+                    ),
+                    None,
+                )
+    if decision_payload is None:
+        raise ValueError("Reviewed calculation decision is unavailable")
+    validated_decision = validate_reviewed_decision_receipt(
+        decision_payload,
+        expected_decision_type="calculation_formula_authority",
+        expected_adapter_id=CALCULATION_ADAPTER_ID,
+        expected_adapter_version=CALCULATION_ADAPTER_VERSION,
+        require_reviewed=True,
+    )
+    if payload["formula_decision_ref"] != validated_decision["decision_id"]:
+        raise ValueError("Numeric evidence formula decision binding is stale")
+    decision_content = validated_decision["content"]
+    _validate_implementation_bindings(decision_content.get("implementation_receipts"))
+    (
+        reconstructed_candidates,
+        selected_candidates,
+        authoritative_inventory,
+        reviewed_tolerance,
+    ) = _reconstruct_numeric_authority(root, decision_content)
+    expected_matches = find_exact_amount_matches(
+        selected_candidates,
+        tolerance=reviewed_tolerance,
+    )
+    if language is None:
+        run_intake = json.loads((root / "run_intake.json").read_text(encoding="utf-8"))
+        language = normalize_language(run_intake.get("language"), default="it")
+    expected_ledger = _calculation_evidence_ledger(
+        raw_candidates=reconstructed_candidates,
+        candidates=selected_candidates,
+        matches=expected_matches,
+        inventory=authoritative_inventory,
+        tolerance=reviewed_tolerance,
+        language=language,
+        calculation_decision_ref=str(validated_decision["decision_id"]),
+    )
+
+    raw_perimeter = decision_content["candidate_perimeter"]
+    perimeter_by_source: dict[tuple[str, str, str], Mapping[str, Any]] = {}
+    for raw_candidate in raw_perimeter:
+        if not isinstance(raw_candidate, Mapping):
+            raise ValueError("Reviewed calculation candidate perimeter is invalid")
+        key = (
+            str(raw_candidate.get("source_artifact_ref") or ""),
+            str(raw_candidate.get("location") or ""),
+            str(raw_candidate.get("amount") or ""),
+        )
+        if not all(key) or key in perimeter_by_source:
+            raise ValueError("Reviewed calculation candidate perimeter is invalid")
+        perimeter_by_source[key] = raw_candidate
+
+    csv_cache: dict[Path, list[dict[str, str]]] = {}
+    workbook_cache: dict[Path, openpyxl.Workbook] = {}
+    observed_addresses: set[tuple[str, str]] = set()
+    evidence_ids: set[str] = set()
+    allowed_kinds = {
+        "candidate_amount",
+        "excluded_numeric_token",
+        "reviewed_tolerance",
+        "signed_difference",
+        "absolute_difference",
+        "tolerance_comparison",
+        "unmatched_plan_residual",
+        "summary_count",
+        "source_role_count",
+    }
+    try:
+        for raw_entry in payload["entries"]:
+            if not isinstance(raw_entry, Mapping):
+                raise ValueError("Numeric evidence entry must be an object")
+            expected_fields = {
+                "evidence_id",
+                "kind",
+                "value",
+                "currency",
+                "unit",
+                "source_addresses",
+                "output_addresses",
+                "calculation",
+                "calculation_decision_ref",
+                "comparison_result",
+                "limitations",
+            }
+            if set(raw_entry) != expected_fields:
+                raise ValueError("Numeric evidence entry fields are invalid")
+            evidence_id = str(raw_entry["evidence_id"])
+            if evidence_id in evidence_ids:
+                raise ValueError("Numeric evidence identities are not unique")
+            evidence_ids.add(evidence_id)
+            kind = str(raw_entry["kind"])
+            if kind not in allowed_kinds:
+                raise ValueError("Numeric evidence kind is unsupported")
+            if raw_entry["calculation_decision_ref"] != payload["formula_decision_ref"]:
+                raise ValueError("Numeric evidence decision binding is stale")
+            value = _contract_decimal(
+                raw_entry["value"],
+                label="numeric evidence value",
+            )
+            raw_sources = raw_entry["source_addresses"]
+            if not isinstance(raw_sources, list):
+                raise ValueError("Numeric source addresses must be a list")
+            source_perimeter_rows: list[Mapping[str, Any]] = []
+            for raw_source in raw_sources:
+                if not isinstance(raw_source, Mapping) or set(raw_source) != {
+                    "artifact_ref",
+                    "locator",
+                    "value",
+                }:
+                    raise ValueError("Numeric source address is invalid")
+                source_value = _contract_decimal(
+                    raw_source["value"],
+                    label="numeric source value",
+                )
+                source_key = (
+                    str(raw_source["artifact_ref"]),
+                    str(raw_source["locator"]),
+                    decimal_text(source_value),
+                )
+                perimeter_row = perimeter_by_source.get(source_key)
+                if perimeter_row is None:
+                    raise ValueError(
+                        "Numeric source address is outside the reviewed perimeter"
+                    )
+                source_perimeter_rows.append(perimeter_row)
+            calculation = raw_entry["calculation"]
+            if calculation is not None:
+                if not isinstance(calculation, Mapping) or set(calculation) != {
+                    "formula_id",
+                    "plan_amount",
+                    "support_amount",
+                    "tolerance",
+                }:
+                    raise ValueError("Numeric calculation evidence is invalid")
+                if calculation["formula_id"] != CALCULATION_FORMULA_ID:
+                    raise ValueError("Numeric calculation formula is unsupported")
+                plan = _contract_decimal(
+                    calculation["plan_amount"], label="calculation plan amount"
+                )
+                support = _contract_decimal(
+                    calculation["support_amount"],
+                    label="calculation support amount",
+                )
+                tolerance_value = _contract_decimal(
+                    calculation["tolerance"],
+                    label="calculation tolerance",
+                )
+                exact_difference = _exact_difference(plan, support)
+                if kind == "signed_difference" and value != exact_difference:
+                    raise ValueError("Signed difference evidence does not close")
+                if kind in {"absolute_difference", "tolerance_comparison"} and (
+                    value != _exact_absolute(exact_difference)
+                ):
+                    raise ValueError("Absolute difference evidence does not close")
+                if kind == "tolerance_comparison" and raw_entry[
+                    "comparison_result"
+                ] != (value <= tolerance_value):
+                    raise ValueError("Tolerance comparison evidence does not close")
+                if kind in {
+                    "signed_difference",
+                    "absolute_difference",
+                    "tolerance_comparison",
+                } and (
+                    len(source_perimeter_rows) != 2
+                    or str(raw_sources[0]["value"]) != decimal_text(plan)
+                    or str(raw_sources[1]["value"]) != decimal_text(support)
+                ):
+                    raise ValueError(
+                        "Numeric calculation sources do not close to the formula"
+                    )
+                if kind == "reviewed_tolerance" and value != tolerance_value:
+                    raise ValueError("Reviewed tolerance evidence does not close")
+            if kind in {"candidate_amount", "excluded_numeric_token"} and (
+                len(source_perimeter_rows) != 1
+                or value
+                != _contract_decimal(
+                    raw_sources[0]["value"],
+                    label="candidate source value",
+                )
+                or raw_entry["currency"] != source_perimeter_rows[0].get("currency")
+                or raw_entry["unit"] != source_perimeter_rows[0].get("unit")
+            ):
+                raise ValueError("Numeric candidate evidence does not close")
+            raw_addresses = raw_entry["output_addresses"]
+            if not isinstance(raw_addresses, list):
+                raise ValueError("Numeric output addresses must be a list")
+            for raw_address in raw_addresses:
+                if not isinstance(raw_address, Mapping) or set(raw_address) != {
+                    "path",
+                    "locator",
+                    "rendered_value",
+                }:
+                    raise ValueError("Numeric output address is invalid")
+                relative = str(raw_address["path"])
+                locator = str(raw_address["locator"])
+                expected = str(raw_address["rendered_value"])
+                relative_path = Path(relative)
+                if (
+                    relative_path.is_absolute()
+                    or relative != relative_path.as_posix()
+                    or ".." in relative_path.parts
+                ):
+                    raise ValueError("Numeric output address path is unsafe")
+                path = root / relative_path
+                if (
+                    path.is_symlink()
+                    or not path.is_file()
+                    or path.lstat().st_nlink != 1
+                ):
+                    raise ValueError("Numeric output artifact is missing or linked")
+                if path.suffix.lower() == ".csv":
+                    actual = _csv_address_value(path, locator, csv_cache)
+                    matches = actual == expected
+                elif path.suffix.lower() in {".xlsx", ".xlsm"}:
+                    actual = _xlsx_address_value(path, locator, workbook_cache)
+                    matches = actual == expected
+                elif path.suffix.lower() == ".docx":
+                    matches = _docx_address_matches(path, locator, expected)
+                else:
+                    raise ValueError("Numeric output address format is unsupported")
+                if not matches:
+                    raise ValueError(
+                        "Numeric output address does not match current rendered value"
+                    )
+                observed_addresses.add((relative, locator))
+    finally:
+        for workbook in workbook_cache.values():
+            workbook.close()
+
+    if payload != expected_ledger:
+        raise ValueError(
+            "Numeric evidence ledger is not independently derived from reviewed authority"
+        )
+    expected_addresses = _expected_material_output_addresses(
+        root,
+        language=language,
+    )
+    if not expected_addresses <= observed_addresses:
+        raise ValueError(
+            "Numeric evidence ledger does not cover every material output address"
+        )
+    return dict(payload)
+
+
 def _write_review_packet(
     path: Path,
     *,
@@ -483,26 +2634,37 @@ def _write_review_packet(
     reference_date: str,
     language: str,
     document_language: str,
-    tolerance: float,
+    tolerance: Decimal,
     inventory: list[dict[str, Any]],
     candidates: list[AmountCandidate],
     matches: list[dict[str, Any]],
 ) -> None:
     role_counts: dict[str, int] = {}
     for item in inventory:
-        role = str(item["suggested_role"])
+        role = str(item.get("reviewed_role") or item["suggested_role"])
         role_counts[role] = role_counts.get(role, 0) + 1
     plan_amounts = [
         item for item in candidates if item.source_role == "concordato_plan"
     ]
     supported_plan_keys = {
-        (row["plan_source_file"], row["plan_location"], row["plan_amount"])
+        (
+            row["plan_source_artifact_ref"],
+            row["plan_source_file"],
+            row["plan_location"],
+            row["plan_amount"],
+        )
         for row in matches
     }
     unmatched_plan_count = sum(
         1
         for item in plan_amounts
-        if (item.source_file, item.location, item.amount) not in supported_plan_keys
+        if (
+            item.source_artifact_ref,
+            item.source_file,
+            item.location,
+            decimal_text(item.amount),
+        )
+        not in supported_plan_keys
     )
     if language == "es":
         lines = [
@@ -577,8 +2739,8 @@ def _write_review_packet(
 
 def _format_amount(value: object) -> str:
     try:
-        number = float(value)
-    except (TypeError, ValueError):
+        number = _contract_decimal(value, label="formatted amount")
+    except ValueError:
         return str(value)
     return f"{number:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
@@ -586,12 +2748,17 @@ def _format_amount(value: object) -> str:
 def _unique_plan_candidates(
     candidates: list[AmountCandidate],
 ) -> list[AmountCandidate]:
-    seen: set[tuple[str, str, float]] = set()
+    seen: set[tuple[str, str, str, Decimal]] = set()
     unique: list[AmountCandidate] = []
     for item in candidates:
         if item.source_role != "concordato_plan":
             continue
-        key = (item.source_file, item.location, item.amount)
+        key = (
+            item.source_artifact_ref,
+            item.source_file,
+            item.location,
+            item.amount,
+        )
         if key in seen:
             continue
         seen.add(key)
@@ -601,25 +2768,38 @@ def _unique_plan_candidates(
 
 def _best_match_by_plan_key(
     matches: list[dict[str, Any]],
-) -> dict[tuple[str, str, float], dict[str, Any]]:
-    best: dict[tuple[str, str, float], dict[str, Any]] = {}
+) -> dict[tuple[str, str, str, Decimal], dict[str, Any]]:
+    best: dict[tuple[str, str, str, Decimal], dict[str, Any]] = {}
     for row in matches:
         key = (
+            str(row["plan_source_artifact_ref"]),
             str(row["plan_source_file"]),
             str(row["plan_location"]),
-            float(row["plan_amount"]),
+            _contract_decimal(row["plan_amount"], label="plan amount"),
         )
         current = best.get(key)
         if current is None:
             best[key] = row
             continue
         row_score = (
-            float(row.get("abs_difference", 0)),
-            -float(row.get("context_token_overlap", 0)),
+            _contract_decimal(
+                row.get("abs_difference", "0"),
+                label="absolute match difference",
+            ),
+            -_contract_decimal(
+                row.get("context_token_overlap", "0"),
+                label="context token overlap",
+            ),
         )
         current_score = (
-            float(current.get("abs_difference", 0)),
-            -float(current.get("context_token_overlap", 0)),
+            _contract_decimal(
+                current.get("abs_difference", "0"),
+                label="absolute match difference",
+            ),
+            -_contract_decimal(
+                current.get("context_token_overlap", "0"),
+                label="context token overlap",
+            ),
         )
         if row_score < current_score:
             best[key] = row
@@ -646,7 +2826,7 @@ def _write_summary_docx(
     *,
     input_dir: Path,
     reference_date: str,
-    tolerance: float,
+    tolerance: Decimal,
     inventory: list[dict[str, Any]],
     candidates: list[AmountCandidate],
     matches: list[dict[str, Any]],
@@ -660,16 +2840,28 @@ def _write_summary_docx(
     matched_plan = [
         item
         for item in plan_candidates
-        if (item.source_file, item.location, item.amount) in best_matches
+        if (
+            item.source_artifact_ref,
+            item.source_file,
+            item.location,
+            item.amount,
+        )
+        in best_matches
     ]
     unmatched_plan = [
         item
         for item in plan_candidates
-        if (item.source_file, item.location, item.amount) not in best_matches
+        if (
+            item.source_artifact_ref,
+            item.source_file,
+            item.location,
+            item.amount,
+        )
+        not in best_matches
     ]
     role_counts: dict[str, int] = {}
     for item in inventory:
-        role = str(item["suggested_role"])
+        role = str(item.get("reviewed_role") or item["suggested_role"])
         role_counts[role] = role_counts.get(role, 0) + 1
 
     if language == "es":
@@ -785,10 +2977,19 @@ def _write_summary_docx(
 
     document.add_heading(matched_heading, level=1)
     matched_rows: list[list[str]] = []
-    for item in sorted(matched_plan, key=lambda row: abs(row.amount), reverse=True)[
-        :12
-    ]:
-        match = best_matches[(item.source_file, item.location, item.amount)]
+    for item in sorted(
+        matched_plan,
+        key=lambda row: _exact_absolute(row.amount),
+        reverse=True,
+    )[:12]:
+        match = best_matches[
+            (
+                item.source_artifact_ref,
+                item.source_file,
+                item.location,
+                item.amount,
+            )
+        ]
         matched_rows.append(
             [
                 item.location,
@@ -811,7 +3012,9 @@ def _write_summary_docx(
     unmatched_rows = [
         [item.location, _format_amount(item.amount), item.context[:180]]
         for item in sorted(
-            unmatched_plan, key=lambda row: abs(row.amount), reverse=True
+            unmatched_plan,
+            key=lambda row: _exact_absolute(row.amount),
+            reverse=True,
         )[:12]
     ]
     if unmatched_rows:
@@ -846,85 +3049,399 @@ def run_concordato_review(
     reference_date: str = "",
     language: str = "it",
     document_language: str = "auto",
-    tolerance: float = 1.0,
+    tolerance: object = "1",
     max_rows_per_sheet: int = 5000,
+    recipe: Path | Mapping[str, Any] | None = None,
 ) -> ReviewRun:
     """Run deterministic intake and candidate tie-out for a concordato plan."""
 
     input_dir = input_dir.resolve()
     output_dir = output_dir.resolve()
+    if not input_dir.is_dir():
+        raise ValueError("Concordato input must be an existing directory")
+    if max_rows_per_sheet <= 0:
+        raise ValueError("max_rows_per_sheet must be positive")
     output_dir.mkdir(parents=True, exist_ok=True)
     language = normalize_language(language, default="it")
     document_language = normalize_language(
         document_language, default=language, allow_auto=True
     )
+    tolerance_value = _contract_decimal(tolerance, label="amount tolerance")
+    if tolerance_value < 0:
+        raise ValueError("amount tolerance must not be negative")
 
-    inventory = _file_inventory(input_dir)
+    inventory, captured_sources, source_receipts = _file_inventory(input_dir)
+    (
+        recipe_payload,
+        prevalidated_role_specs,
+        prevalidated_source_decision,
+        prevalidated_calculation_decision,
+        prevalidation_error,
+    ) = _prevalidated_recipe(
+        inventory,
+        recipe,
+        reference_date=reference_date,
+        tolerance=tolerance_value,
+    )
+    advisory_inspection = recipe is None
+    parser_authorized = advisory_inspection or (
+        recipe_payload is not None and prevalidation_error is None
+    )
+    source_pages: list[dict[str, Any]] = []
+    sheet_summaries: list[dict[str, Any]] = []
+    raw_candidates: list[AmountCandidate] = []
+    extraction_errors: list[dict[str, str]] = []
+
+    for item in inventory:
+        if (
+            not parser_authorized
+            or not item["supported"]
+            or item.get("capture_status") != "captured"
+        ):
+            continue
+        relative_path = str(item["relative_path"])
+        source_artifact_ref = str(item["source_artifact_ref"])
+        reviewed_spec = (
+            prevalidated_role_specs.get(relative_path)
+            if prevalidated_role_specs is not None
+            else None
+        )
+        parser_role = (
+            str(reviewed_spec["role"]) if reviewed_spec is not None else "unclassified"
+        )
+        parser_currency = (
+            str(reviewed_spec["currency"]) if reviewed_spec is not None else "EUR"
+        )
+        parser_unit = str(reviewed_spec["unit"]) if reviewed_spec is not None else "1"
+        path = Path(item["path"])
+        suffix = path.suffix.lower()
+        captured = captured_sources[relative_path]
+        try:
+            if suffix in PDF_SUFFIXES:
+                pages = _read_pdf_pages(
+                    path,
+                    captured,
+                    source_file=relative_path,
+                )
+                source_pages.extend(pages)
+                for page in pages:
+                    extracted = extract_amount_candidates_from_text(
+                        str(page["text"]),
+                        source_file=relative_path,
+                        source_role=parser_role,
+                        location=f"page {page['page']}",
+                    )
+                    raw_candidates.extend(
+                        AmountCandidate(
+                            source_file=candidate.source_file,
+                            source_role=candidate.source_role,
+                            location=candidate.location,
+                            amount=candidate.amount,
+                            token=candidate.token,
+                            context=candidate.context,
+                            source_artifact_ref=source_artifact_ref,
+                            currency=parser_currency,
+                            unit=parser_unit,
+                        )
+                        for candidate in extracted
+                    )
+            elif suffix in WORKBOOK_SUFFIXES:
+                sheets, workbook_candidates, truncated = _workbook_candidates(
+                    path,
+                    source_bytes=captured,
+                    source_file=relative_path,
+                    source_artifact_ref=source_artifact_ref,
+                    source_role=parser_role,
+                    currency=parser_currency,
+                    unit=parser_unit,
+                    max_rows_per_sheet=max_rows_per_sheet,
+                )
+                sheet_summaries.extend(sheets)
+                if truncated:
+                    extraction_errors.append(
+                        {
+                            "source_file": relative_path,
+                            "error": (
+                                "Source workbook exceeds max_rows_per_sheet; "
+                                "no candidates were emitted."
+                            ),
+                        }
+                    )
+                else:
+                    raw_candidates.extend(workbook_candidates)
+            elif suffix in TEXT_SUFFIXES:
+                raw_candidates.extend(
+                    _text_file_candidates(
+                        captured,
+                        source_file=relative_path,
+                        source_artifact_ref=source_artifact_ref,
+                        source_role=parser_role,
+                        currency=parser_currency,
+                        unit=parser_unit,
+                    )
+                )
+        except (
+            OSError,
+            ValueError,
+            RuntimeError,
+            KeyError,
+            zipfile.BadZipFile,
+            ElementTree.ParseError,
+            DefusedXmlException,
+        ) as exc:
+            extraction_errors.append(
+                {
+                    "source_file": relative_path,
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
+            )
+            LOGGER.warning("Failed to inspect %s: %s", path, exc)
+
+    for receipt in source_receipts:
+        try:
+            validate_artifact_receipt(input_dir, receipt)
+        except ValueError as exc:
+            extraction_errors.append(
+                {
+                    "source_file": str(receipt["path"]),
+                    "error": f"Source replay failed: {exc}",
+                }
+            )
+
+    # Candidate order is part of reviewed calculation authority. Sorting by the
+    # content-derived identity makes both the decision perimeter and every
+    # downstream row independently replayable.
+    raw_candidates.sort(key=candidate_id)
+
+    role_specs: dict[str, dict[str, str]] | None = None
+    dispositions: dict[str, str] | None = None
+    reviewed_decision: dict[str, Any] | None = None
+    calculation_decision: dict[str, Any] | None = None
+    role_review_error = prevalidation_error
+    if recipe_payload is not None and prevalidation_error is None:
+        (
+            role_specs,
+            dispositions,
+            reviewed_decision,
+            calculation_decision,
+            role_review_error,
+        ) = _validated_recipe_after_parsing(
+            inventory,
+            raw_candidates,
+            recipe_payload,
+            reference_date=reference_date,
+            tolerance=tolerance_value,
+        )
+    elif advisory_inspection:
+        role_review_error = (
+            "Source roles, numeric dispositions, and calculation authority "
+            "require review."
+        )
+    artifact_to_relative = {
+        str(item["source_artifact_ref"]): str(item["relative_path"])
+        for item in inventory
+        if item.get("source_artifact_ref")
+    }
+    candidates: list[AmountCandidate] = []
+    if role_specs is not None and dispositions is not None and not extraction_errors:
+        for candidate in raw_candidates:
+            if dispositions[candidate_id(candidate)] != "candidate_amount":
+                continue
+            relative_path = artifact_to_relative[candidate.source_artifact_ref]
+            spec = role_specs[relative_path]
+            if spec["role"] == "excluded":
+                continue
+            candidates.append(
+                AmountCandidate(
+                    source_file=candidate.source_file,
+                    source_role=spec["role"],
+                    location=candidate.location,
+                    amount=candidate.amount,
+                    token=candidate.token,
+                    context=candidate.context,
+                    source_artifact_ref=candidate.source_artifact_ref,
+                    currency=spec["currency"],
+                    unit=spec["unit"],
+                )
+            )
+        for item in inventory:
+            spec = role_specs.get(str(item["relative_path"]))
+            if spec is not None:
+                item["reviewed_role"] = spec["role"]
+                item["reviewed_currency"] = spec["currency"]
+                item["reviewed_unit"] = spec["unit"]
+
+    capture_failures = [
+        item
+        for item in inventory
+        if item["supported"] and item["capture_status"] != "captured"
+    ]
+    supported_count = sum(1 for item in inventory if item["supported"])
+    plan_candidate_count = sum(
+        1 for candidate in candidates if candidate.source_role == "concordato_plan"
+    )
+    fatal_source_failure = bool(
+        not supported_count
+        or capture_failures
+        or extraction_errors
+        or (recipe is not None and role_review_error is not None)
+        or (reviewed_decision is not None and plan_candidate_count == 0)
+    )
+    if fatal_source_failure:
+        qualification_status = "unsupported_source_layout"
+        candidates = []
+    elif reviewed_decision is None:
+        qualification_status = "needs_review"
+        candidates = []
+    else:
+        qualification_status = "qualified"
+
+    candidate_rows = _candidate_rows(candidates)
+    raw_candidate_rows = _candidate_rows(raw_candidates)
+    matches = find_exact_amount_matches(candidates, tolerance=tolerance_value)
+    source_refs = [str(receipt["artifact_id"]) for receipt in source_receipts]
+    qualifications: list[dict[str, Any]] = []
+    if source_refs:
+        qualification_digest = hashlib.sha256(
+            "|".join(source_refs).encode("utf-8")
+        ).hexdigest()
+        qualifications.append(
+            build_source_qualification(
+                qualification_id=f"qualification.concordato_bundle.{qualification_digest}",
+                adapter_id=SOURCE_ROLE_ADAPTER_ID,
+                adapter_version=SOURCE_ROLE_ADAPTER_VERSION,
+                source_family="concordato_plan_bundle",
+                status=qualification_status,
+                source_artifact_refs=source_refs,
+                reviewed_mapping_ref=(
+                    str(reviewed_decision["decision_id"])
+                    if reviewed_decision is not None
+                    else None
+                ),
+                candidate_row_count=len(raw_candidates),
+                emitted_row_count=len(candidates),
+                controls=[
+                    {
+                        "control_id": "stable_source_capture",
+                        "required": True,
+                        "status": (
+                            "failed"
+                            if capture_failures or not supported_count
+                            else "passed"
+                        ),
+                        "evidence_refs": source_refs,
+                        "detail": "Every supported source was captured before parsing.",
+                    },
+                    {
+                        "control_id": "complete_source_scan",
+                        "required": True,
+                        "status": "failed" if extraction_errors else "passed",
+                        "evidence_refs": source_refs,
+                        "detail": (
+                            "No truncated, corrupt, or stale source contributed rows."
+                        ),
+                    },
+                    {
+                        "control_id": "reviewed_source_roles_and_units",
+                        "required": True,
+                        "status": (
+                            "passed"
+                            if reviewed_decision is not None
+                            else ("failed" if recipe is not None else "not_assessed")
+                        ),
+                        "evidence_refs": (
+                            [str(reviewed_decision["decision_id"])]
+                            if reviewed_decision is not None
+                            else []
+                        ),
+                        "detail": (
+                            "Roles, currency, unit, and every raw numeric disposition "
+                            "are bound to exact source receipts."
+                        ),
+                    },
+                    {
+                        "control_id": "reviewed_formula_sign_and_perimeter",
+                        "required": True,
+                        "status": (
+                            "passed"
+                            if calculation_decision is not None
+                            else ("failed" if recipe is not None else "not_assessed")
+                        ),
+                        "evidence_refs": (
+                            [str(calculation_decision["decision_id"])]
+                            if calculation_decision is not None
+                            else []
+                        ),
+                        "detail": (
+                            "The exact plan-minus-support formula, sign convention, "
+                            "period, tolerance, sources, units, candidate identities, "
+                            "and implementation bytes are reviewed and current."
+                        ),
+                    },
+                    {
+                        "control_id": "authoritative_plan_candidates",
+                        "required": True,
+                        "status": (
+                            "failed"
+                            if reviewed_decision is not None
+                            and plan_candidate_count == 0
+                            else (
+                                "passed"
+                                if reviewed_decision is not None
+                                else "not_assessed"
+                            )
+                        ),
+                        "evidence_refs": (
+                            [str(reviewed_decision["decision_id"])]
+                            if reviewed_decision is not None
+                            else []
+                        ),
+                        "detail": "The reviewed authoritative plan emitted candidates.",
+                    },
+                ],
+                limitations=[
+                    "Numeric candidates and exact matches are not semantic support.",
+                    "Reviewer identity is recorded but not cryptographically authenticated.",
+                ],
+            )
+        )
+
     run_intake = write_run_intake(
         output_dir,
         input_dir,
         reference_date=reference_date,
         language=language,
         document_language=document_language,
-        tolerance=tolerance,
+        tolerance=tolerance_value,
         max_rows_per_sheet=max_rows_per_sheet,
         inventory=inventory,
     )
-    source_pages: list[dict[str, Any]] = []
-    sheet_summaries: list[dict[str, Any]] = []
-    candidates: list[AmountCandidate] = []
-    extraction_errors: list[dict[str, str]] = []
-
-    for item in inventory:
-        if not item["supported"]:
-            continue
-        path = Path(item["path"])
-        role = str(item["suggested_role"])
-        suffix = path.suffix.lower()
-        try:
-            if suffix in PDF_SUFFIXES:
-                pages = _read_pdf_pages(path)
-                source_pages.extend(pages)
-                for page in pages:
-                    candidates.extend(
-                        extract_amount_candidates_from_text(
-                            str(page["text"]),
-                            source_file=path.name,
-                            source_role=role,
-                            location=f"page {page['page']}",
-                        )
-                    )
-            elif suffix in WORKBOOK_SUFFIXES:
-                sheets, workbook_candidates = _workbook_candidates(
-                    path,
-                    source_role=role,
-                    max_rows_per_sheet=max_rows_per_sheet,
-                )
-                sheet_summaries.extend(sheets)
-                candidates.extend(workbook_candidates)
-            elif suffix in TEXT_SUFFIXES:
-                candidates.extend(_text_file_candidates(path, source_role=role))
-        except (OSError, ValueError, RuntimeError, KeyError) as exc:
-            extraction_errors.append(
-                {"source_file": path.name, "error": f"{type(exc).__name__}: {exc}"}
-            )
-            LOGGER.warning("Failed to inspect %s: %s", path, exc)
-
-    candidate_rows = _candidate_rows(candidates)
-    matches = find_exact_amount_matches(candidates, tolerance=tolerance)
     audit = {
         "run_id": run_intake.run_id,
         "input_dir": str(input_dir),
         "reference_date": reference_date,
         "language": language,
         "document_language": document_language,
-        "tolerance": tolerance,
+        "tolerance": decimal_text(tolerance_value),
         "max_rows_per_sheet": max_rows_per_sheet,
         "file_count": len(inventory),
         "supported_file_count": sum(1 for item in inventory if item["supported"]),
         "source_page_count": len(source_pages),
         "sheet_count": len(sheet_summaries),
+        "source_qualification_status": qualification_status,
+        "source_role_review_status": (
+            "reviewed" if reviewed_decision is not None else "needs_review"
+        ),
+        "source_role_review_error": role_review_error,
+        "calculation_review_status": (
+            "reviewed" if calculation_decision is not None else "withheld"
+        ),
+        "calculation_formula_id": (
+            CALCULATION_FORMULA_ID if calculation_decision is not None else None
+        ),
+        "raw_amount_candidate_count": len(raw_candidates),
         "amount_candidate_count": len(candidates),
+        "plan_amount_candidate_count": plan_candidate_count,
         "candidate_match_count": len(matches),
         "extraction_errors": extraction_errors,
         "deterministic_boundary": (
@@ -939,15 +3456,74 @@ def run_concordato_review(
     write_json(output_dir / "inventory.json", inventory)
     write_json(output_dir / "source_pages.json", source_pages)
     write_json(output_dir / "workbook_sheets.json", sheet_summaries)
-    write_json(output_dir / "run_audit.json", audit)
+    write_json(
+        output_dir / "source_receipts.json",
+        {
+            "schema_version": "concordato.source_receipts.v1",
+            "receipts": source_receipts,
+        },
+    )
+    write_json(
+        output_dir / "suggested_source_role_recipe.json",
+        {
+            "schema_version": "concordato.source_role_recipe_suggestion.v2",
+            "status": "needs_review",
+            "source_roles": {
+                str(item["relative_path"]): {
+                    "suggested_role": str(item["suggested_role"]),
+                    "currency": "EUR",
+                    "unit": "1",
+                }
+                for item in inventory
+                if item["supported"] and item.get("source_artifact_ref")
+            },
+            "candidate_dispositions": {
+                str(row["candidate_id"]): "needs_review" for row in raw_candidate_rows
+            },
+            "calculation_contract": {
+                "formula_id": CALCULATION_FORMULA_ID,
+                "signed_difference_formula": CALCULATION_DIFFERENCE_FORMULA,
+                "absolute_difference_formula": CALCULATION_ABSOLUTE_FORMULA,
+                "tolerance_comparison_formula": CALCULATION_TOLERANCE_FORMULA,
+                "reference_period": reference_date,
+                "tolerance": decimal_text(tolerance_value),
+                "status": "needs_review",
+            },
+            "limitation": (
+                "Suggestions are not operative until review_source_roles seals "
+                "complete source roles, units, candidate dispositions, and the "
+                "exact fixed calculation boundary."
+            ),
+        },
+    )
+    _write_csv(
+        output_dir / "raw_amount_candidates.csv",
+        raw_candidate_rows,
+        [
+            "candidate_id",
+            "source_file",
+            "source_artifact_ref",
+            "source_role",
+            "location",
+            "amount",
+            "currency",
+            "unit",
+            "token",
+            "context",
+        ],
+    )
     _write_csv(
         output_dir / "amount_candidates.csv",
         candidate_rows,
         [
+            "candidate_id",
             "source_file",
+            "source_artifact_ref",
             "source_role",
             "location",
             "amount",
+            "currency",
+            "unit",
             "token",
             "context",
         ],
@@ -957,16 +3533,25 @@ def run_concordato_review(
         matches,
         [
             "plan_source_file",
+            "plan_source_artifact_ref",
             "plan_location",
             "plan_amount",
+            "plan_currency",
+            "plan_unit",
             "plan_context",
             "support_source_file",
+            "support_source_artifact_ref",
             "support_role",
             "support_location",
             "support_amount",
+            "support_currency",
+            "support_unit",
             "support_context",
             "difference",
             "abs_difference",
+            "tolerance",
+            "within_tolerance",
+            "calculation_formula_id",
             "context_token_overlap",
             "match_status",
         ],
@@ -984,7 +3569,7 @@ def run_concordato_review(
         reference_date=reference_date,
         language=language,
         document_language=document_language,
-        tolerance=tolerance,
+        tolerance=tolerance_value,
         inventory=inventory,
         candidates=candidates,
         matches=matches,
@@ -993,13 +3578,269 @@ def run_concordato_review(
         output_dir / "concordato_review_summary.docx",
         input_dir=input_dir,
         reference_date=reference_date,
-        tolerance=tolerance,
+        tolerance=tolerance_value,
         inventory=inventory,
         candidates=candidates,
         matches=matches,
         extraction_errors=extraction_errors,
         language=language,
     )
+    prepared_receipt = artifact_receipt(
+        output_dir,
+        output_dir / "amount_candidates.csv",
+        artifact_id="prepared.concordato_amount_candidates",
+        root_id="run",
+        role="prepared",
+        media_type="text/csv",
+    )
+    matches_receipt = artifact_receipt(
+        output_dir,
+        output_dir / "exact_amount_matches.csv",
+        artifact_id="output.concordato_candidate_matches",
+        root_id="run",
+        role="workpaper",
+        media_type="text/csv",
+    )
+    workpaper_receipt = artifact_receipt(
+        output_dir,
+        output_dir / "concordato_tie_out_workpaper.xlsx",
+        artifact_id="output.concordato_tie_out_workpaper",
+        root_id="run",
+        role="workpaper",
+        media_type=(
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ),
+    )
+    output_receipts = [
+        artifact_receipt(
+            output_dir,
+            output_dir / name,
+            artifact_id=f"output.{Path(name).stem}",
+            root_id="run",
+            role=role,
+            media_type=media_type,
+        )
+        for name, role, media_type in (
+            ("inventory.json", "output", "application/json"),
+            ("source_pages.json", "output", "application/json"),
+            ("workbook_sheets.json", "output", "application/json"),
+            ("source_receipts.json", "output", "application/json"),
+            ("raw_amount_candidates.csv", "output", "text/csv"),
+        )
+    ]
+    implementation_receipts = _implementation_bindings()
+    transport_ledger = (
+        _numeric_candidate_ledger(
+            candidates,
+            prepared_artifact_ref=prepared_receipt["artifact_id"],
+            workpaper_artifact_ref=workpaper_receipt["artifact_id"],
+            decision_ref=str(reviewed_decision["decision_id"]),
+        )
+        if reviewed_decision is not None and qualification_status == "qualified"
+        else None
+    )
+    numeric_ledger = (
+        _calculation_evidence_ledger(
+            raw_candidates=raw_candidates,
+            candidates=candidates,
+            matches=matches,
+            inventory=inventory,
+            tolerance=tolerance_value,
+            language=language,
+            calculation_decision_ref=str(calculation_decision["decision_id"]),
+        )
+        if calculation_decision is not None
+        and reviewed_decision is not None
+        and qualification_status == "qualified"
+        else None
+    )
+    numeric_ledgers = [transport_ledger] if transport_ledger is not None else []
+    write_json(
+        output_dir / "numeric_evidence_ledger.json",
+        (
+            numeric_ledger
+            if numeric_ledger is not None
+            else {
+                "schema_version": "concordato.numeric_evidence_status.v1",
+                "status": "withheld",
+                "reason": (
+                    "Numeric evidence requires qualified sources and reviewed "
+                    "candidate dispositions."
+                ),
+            }
+        ),
+    )
+    if numeric_ledger is not None:
+        validate_numeric_evidence_closure(
+            output_dir,
+            numeric_ledger,
+            language=language,
+            calculation_decision=calculation_decision,
+        )
+    numeric_ledger_receipt = artifact_receipt(
+        output_dir,
+        output_dir / "numeric_evidence_ledger.json",
+        artifact_id="output.numeric_evidence_ledger",
+        root_id="run",
+        role="workpaper",
+        media_type="application/json",
+    )
+    source_status = (
+        "passed"
+        if qualification_status == "qualified"
+        else (
+            "failed"
+            if qualification_status == "unsupported_source_layout"
+            else "withheld"
+        )
+    )
+    gate_register = build_gate_register(
+        {
+            "source": {
+                "status": source_status,
+                "evidence_refs": (
+                    [item["qualification_id"] for item in qualifications]
+                    if source_status == "passed"
+                    else []
+                ),
+                "limitations": (
+                    []
+                    if source_status == "passed"
+                    else [
+                        role_review_error or "At least one source failed qualification."
+                    ]
+                ),
+            },
+            "preparation": {
+                "status": (
+                    "passed" if qualification_status == "qualified" else "blocked"
+                ),
+                "evidence_refs": (
+                    [prepared_receipt["artifact_id"]]
+                    if qualification_status == "qualified"
+                    else []
+                ),
+                "limitations": (
+                    []
+                    if qualification_status == "qualified"
+                    else ["Prepared candidate facts are withheld."]
+                ),
+            },
+            "reconciliation": {
+                "status": (
+                    "passed" if qualification_status == "qualified" else "blocked"
+                ),
+                "evidence_refs": (
+                    [
+                        matches_receipt["artifact_id"],
+                        *(
+                            [str(calculation_decision["decision_id"])]
+                            if calculation_decision is not None
+                            else []
+                        ),
+                        *(
+                            [transport_ledger["ledger_id"]]
+                            if transport_ledger is not None
+                            else []
+                        ),
+                        numeric_ledger_receipt["artifact_id"],
+                    ]
+                    if qualification_status == "qualified"
+                    else []
+                ),
+                "limitations": (
+                    [
+                        "Passed means exact candidate comparison completed; "
+                        "it does not establish semantic support."
+                    ]
+                    if qualification_status == "qualified"
+                    else ["Candidate comparison is blocked."]
+                ),
+            },
+            "semantic_review": {
+                "status": "withheld",
+                "evidence_refs": [],
+                "limitations": [
+                    "Professional support classification and conclusions remain pending."
+                ],
+            },
+            "reporting": {
+                "status": "blocked",
+                "evidence_refs": [],
+                "limitations": ["Semantic review is not complete."],
+            },
+            "publication": {
+                "status": "withheld",
+                "evidence_refs": [],
+                "limitations": ["No publication authority was requested."],
+            },
+        }
+    )
+    assurance_envelope = build_assurance_envelope(
+        run_id=run_intake.run_id,
+        workflow_id="concordato-plan-review",
+        workflow_version=WORKFLOW_VERSION,
+        artifact_receipts=[
+            *source_receipts,
+            prepared_receipt,
+            matches_receipt,
+            workpaper_receipt,
+            numeric_ledger_receipt,
+            *output_receipts,
+            *implementation_receipts,
+        ],
+        implementation_artifact_refs=[
+            receipt["artifact_id"] for receipt in implementation_receipts
+        ],
+        reviewed_decisions=(
+            [
+                decision
+                for decision in (reviewed_decision, calculation_decision)
+                if decision is not None
+            ]
+        ),
+        source_qualifications=qualifications,
+        allocation_ledgers=[],
+        numeric_evidence_ledgers=numeric_ledgers,
+        gate_register=gate_register,
+        limitations=[
+            "Equal amounts are candidate evidence only.",
+            "Semantic review, reporting, and publication remain withheld.",
+            "Recorded reviewer identity is not cryptographically authenticated.",
+        ],
+        artifact_roots={
+            "source": input_dir,
+            "run": output_dir,
+            "implementation": COMPONENT_ROOT,
+            "assurance_implementation": ASSURANCE_IMPLEMENTATION_ROOT,
+        },
+    )
+    write_json(output_dir / "assurance_gates.json", gate_register)
+    write_json(
+        output_dir / "source_qualifications.json",
+        {
+            "schema_version": "concordato.source_qualifications.v1",
+            "qualifications": qualifications,
+        },
+    )
+    write_json(
+        output_dir / "reviewed_decisions.json",
+        {
+            "schema_version": "concordato.reviewed_decisions.v1",
+            "decisions": [
+                decision
+                for decision in (reviewed_decision, calculation_decision)
+                if decision is not None
+            ],
+        },
+    )
+    write_json(output_dir / "assurance_envelope.json", assurance_envelope)
+    audit["assurance_envelope"] = {
+        "path": "assurance_envelope.json",
+        "content_sha256": assurance_envelope["content_sha256"],
+    }
+    audit["assurance_gates"] = gate_register
+    write_json(output_dir / "run_audit.json", audit)
     review_session = write_review_session_artifacts(
         output_dir,
         input_dir,
@@ -1008,7 +3849,7 @@ def run_concordato_review(
         reference_date=reference_date,
         language=language,
         document_language=document_language,
-        tolerance=tolerance,
+        tolerance=tolerance_value,
         max_rows_per_sheet=max_rows_per_sheet,
         inventory=inventory,
         candidates=candidates,
@@ -1023,10 +3864,47 @@ def run_concordato_review(
         "final_artifacts_path": review_session.final_artifacts_path.name,
         "review_item_count": review_session.review_item_count,
     }
+    audit["output_closure"] = {
+        "path": OUTPUT_CLOSURE_NAME,
+        "phase": "initial_run_finalization",
+    }
     write_json(output_dir / "run_audit.json", audit)
+    final_review_session = write_review_session_artifacts(
+        output_dir,
+        input_dir,
+        run_id=run_intake.run_id,
+        run_intake_path=run_intake.path,
+        reference_date=reference_date,
+        language=language,
+        document_language=document_language,
+        tolerance=tolerance_value,
+        max_rows_per_sheet=max_rows_per_sheet,
+        inventory=inventory,
+        candidates=candidates,
+        matches=matches,
+        extraction_errors=extraction_errors,
+        audit=audit,
+    )
+    if final_review_session.review_item_count != review_session.review_item_count:
+        raise ValueError("Review-session fixed point changed the review population")
+    validate_final_artifact_index(output_dir)
+    validate_assurance_envelope(
+        assurance_envelope,
+        artifact_roots={
+            "source": input_dir,
+            "run": output_dir,
+            "implementation": COMPONENT_ROOT,
+            "assurance_implementation": ASSURANCE_IMPLEMENTATION_ROOT,
+        },
+    )
+    finalize_output_closure(
+        output_dir,
+        phase="initial_run_finalization",
+    )
     return ReviewRun(
         output_dir=output_dir,
         inventory=inventory,
+        raw_amount_candidates=raw_candidates,
         amount_candidates=candidates,
         exact_matches=matches,
         audit=audit,

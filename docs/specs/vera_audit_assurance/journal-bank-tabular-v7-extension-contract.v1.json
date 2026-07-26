@@ -1,0 +1,130 @@
+{
+  "schema_version": "journal_bank.tabular_extension_contract.v1",
+  "contract_id": "journal_bank.tabular.v7.extension.v1",
+  "purpose": "Freeze the additive adapter-v7 contract for explicitly reviewed Italian textual-month dates and exact reviewed tabular summary-row dispositions without changing the immutable adapter-v6 contract.",
+  "lifecycle": {
+    "contract_status": "frozen_prospective",
+    "promoted": false,
+    "private_real_source_status": "diagnostic_only",
+    "promotion_status": "NO_GO",
+    "promotion_requires": "a fresh independently authored unseen holdout sealed after these exact extension-contract bytes and the candidate implementation are frozen"
+  },
+  "base_contract": {
+    "path": "journal-bank-evaluation-contract.v5.json",
+    "contract_id": "journal_bank.repository_contract.v5",
+    "sha256": "4824652ecdb990a844fd9b72d799a2537f46a21ddb9fefb8a664f828c0ec6657",
+    "default_adapter_id": "journal_bank.tabular.v6",
+    "default_adapter_version": "6",
+    "relationship_adapter_id": "journal_bank.relationship.v2",
+    "relationship_adapter_version": "2",
+    "rule": "Every v5 requirement remains applicable unless this extension states a narrower additive rule."
+  },
+  "extension_adapter": {
+    "adapter_id": "journal_bank.tabular.v7",
+    "adapter_version": "7",
+    "selection": {
+      "v7_when": [
+        "date_locale is explicitly reviewed and non-null",
+        "non_movement_summary_labels contains at least one explicitly reviewed label"
+      ],
+      "v6_when": "date_locale is null and non_movement_summary_labels is empty",
+      "silent_upgrade_forbidden": true
+    }
+  },
+  "review_authority": {
+    "decision_type": "journal_bank_mapping",
+    "required_status": "reviewed",
+    "source_receipt_binding_required": true,
+    "adapter_binding_required": true,
+    "content_bindings": [
+      "date_locale when non-null",
+      "non_movement_summary_labels when non-empty",
+      "every base-v5 mapping binding"
+    ],
+    "mutation_rule": "Changing either extension authority requires a new mapping receipt bound to the current source and adapter-v7 bytes."
+  },
+  "localized_date_contract": {
+    "date_locale_values": [
+      "it"
+    ],
+    "accepted_textual_shape": "D or DD, one or more horizontal spaces, full Italian month name, one or more horizontal spaces, YYYY",
+    "space_normalization": [
+      "U+00A0 NO-BREAK SPACE to ASCII space",
+      "U+202F NARROW NO-BREAK SPACE to ASCII space"
+    ],
+    "case_policy": "Unicode case-insensitive full-month comparison",
+    "month_vocabulary": {
+      "gennaio": 1,
+      "febbraio": 2,
+      "marzo": 3,
+      "aprile": 4,
+      "maggio": 5,
+      "giugno": 6,
+      "luglio": 7,
+      "agosto": 8,
+      "settembre": 9,
+      "ottobre": 10,
+      "novembre": 11,
+      "dicembre": 12
+    },
+    "calendar_rule": "The parsed year, month, and day must form one valid Gregorian calendar date.",
+    "existing_numeric_dates": "The complete adapter-v6 native, Excel-serial, compact-ISO, year-first, and reviewed day_first/month_first rules remain available.",
+    "date_convention_scope": "date_convention applies only to ambiguous numeric day/month forms and does not authorize textual-month parsing.",
+    "without_locale": {
+      "classification": "locale_required",
+      "source_outcome": "needs_review",
+      "emitted_rows": 0
+    },
+    "rejected_forms": [
+      "unknown or mixed-language month words",
+      "abbreviated or partial month words",
+      "two-digit textual years",
+      "punctuation or surrounding text",
+      "embedded line breaks",
+      "invalid Gregorian calendar dates"
+    ],
+    "invalid_form_outcome": {
+      "classification": "invalid",
+      "source_outcome": "unsupported_source_layout",
+      "whole_source_emitted_rows": 0
+    }
+  },
+  "reviewed_summary_contract": {
+    "field": "non_movement_summary_labels",
+    "authority_shape": "a sorted list of unique, non-empty labels after the production label normalization",
+    "row_is_excluded_only_if": [
+      "the mapped date cell is truly blank",
+      "explicit reference and movement-number fields contain no stable non-generic reference token",
+      "the normalized mapped description exactly equals one reviewed summary label"
+    ],
+    "disposition": "excluded_reviewed_summary",
+    "non_override_rules": [
+      "a row with an actual date is not excluded by the label",
+      "a row with a stable reference is not excluded by the label",
+      "substring and fuzzy label matches are forbidden",
+      "an unreviewed label has no exclusion authority"
+    ],
+    "mutation_rule": "Any label-list mutation makes the mapping receipt stale and emits zero authoritative rows pending a new review."
+  },
+  "complete_population_rule": {
+    "qualified_candidate_count": "populated mapped monetary rows excluding exact reviewed non-movement summary rows",
+    "partial_emission_forbidden": true,
+    "invalid_candidate_outcome": "one invalid in-scope monetary candidate withholds the complete source"
+  },
+  "assurance_scalability": {
+    "native_value_scope": "every material match and relationship-residual value remains checked in prepared, CSV, and XLSX addresses",
+    "xlsx_traversal": "read-only worksheets are traversed sequentially by row; repeated random cell access is forbidden",
+    "quality_rule": "performance optimization may not reduce value, row, worksheet, dimension, duplicate-member, receipt, or replay closure"
+  },
+  "deterministic_justification": {
+    "localized_dates": "The accepted vocabulary, token shape, calendar validity, and ISO normalization are mechanically verifiable and require exact replay.",
+    "summary_rows": "The reviewer owns the semantic label; deterministic code enforces only the exact receipt-bound label and structural blank-date/no-reference predicate.",
+    "model_fallback_forbidden": true
+  },
+  "privacy_and_evaluation": {
+    "contains_example_rows": false,
+    "contains_private_source_values": false,
+    "private_correspondence_sources_excluded_from_promotion": true,
+    "unprocessed_sibling_statements_are_not_independent_holdouts": true
+  }
+}

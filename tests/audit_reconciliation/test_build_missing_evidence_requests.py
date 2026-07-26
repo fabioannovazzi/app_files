@@ -31,13 +31,13 @@ def write_reconciliation_workbook(path: Path) -> None:
 
     inventory = workbook.create_sheet("Source inventory")
     inventory.append(["source_file", "source_role"])
-    inventory.append(["All.A.pdf", "open_items"])
+    inventory.append(["Open items.pdf", "open_items"])
     inventory.append(["bank.pdf", "bank_statement"])
     inventory.append(["giornale.xlsx", "journal"])
 
     normalized = workbook.create_sheet("Normalized records")
     normalized.append(["record_id", "source_file", "source_role"])
-    normalized.append(["open-1", "All.A.pdf", "open_items"])
+    normalized.append(["open-1", "Open items.pdf", "open_items"])
     normalized.append(["bank-1", "bank.pdf", "bank_statement"])
     normalized.append(["journal-1", "giornale.xlsx", "journal"])
 

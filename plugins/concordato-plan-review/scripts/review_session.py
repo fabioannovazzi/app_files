@@ -1,11 +1,39 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+
+
+def _ensure_vendor_import_path() -> None:
+    """Expose component-local or repository-shared Vera vendor modules."""
+
+    component_root = SCRIPT_DIR.parent
+    candidates = (
+        component_root / "vendor" / "modules",
+        component_root.parent / "_shared" / "vendor" / "modules",
+    )
+    for candidate in candidates:
+        if candidate.is_dir() and str(candidate) not in sys.path:
+            sys.path.insert(0, str(candidate))
+
+
+_ensure_vendor_import_path()
+from vera_assurance import (  # noqa: E402
+    MoneyValidationError,
+    canonical_json_sha256,
+    decimal_text,
+    parse_canonical_decimal,
+    parse_localized_decimal,
+)
 
 __all__ = [
     "ReviewSessionResult",
@@ -29,27 +57,45 @@ WORKPAPER_SHEET_HEADERS = {
         "size_bytes",
         "supported",
         "suggested_role",
+        "reviewed_role",
+        "source_artifact_ref",
+        "capture_status",
+        "reviewed_currency",
+        "reviewed_unit",
     ],
     "Amount candidates": [
+        "candidate_id",
         "source_file",
+        "source_artifact_ref",
         "source_role",
         "location",
         "amount",
+        "currency",
+        "unit",
         "token",
         "context",
     ],
     "Candidate matches": [
         "plan_source_file",
+        "plan_source_artifact_ref",
         "plan_location",
         "plan_amount",
+        "plan_currency",
+        "plan_unit",
         "plan_context",
         "support_source_file",
+        "support_source_artifact_ref",
         "support_role",
         "support_location",
         "support_amount",
+        "support_currency",
+        "support_unit",
         "support_context",
         "difference",
         "abs_difference",
+        "tolerance",
+        "within_tolerance",
+        "calculation_formula_id",
         "context_token_overlap",
         "match_status",
     ],
@@ -165,6 +211,8 @@ def _write_review_handoff_card(
 def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
     return {
         "path": path.name,
+        "size_bytes": path.stat().st_size,
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "kind": "md",
         "status": "written",
         "required_text": [
@@ -245,11 +293,23 @@ def _role_counts(inventory: Sequence[dict[str, Any]]) -> dict[str, int]:
     return dict(sorted(counts.items(), key=lambda item: item[0]))
 
 
-def _amount(value: object) -> float:
+def _amount(value: object) -> Decimal:
     try:
-        return round(float(value), 2)
-    except (TypeError, ValueError):
-        return 0.0
+        if isinstance(value, str):
+            return parse_canonical_decimal(
+                value,
+                label="concordato review amount",
+            )
+        if isinstance(value, float):
+            raise MoneyValidationError(
+                "concordato review amount must not use a binary float"
+            )
+        return parse_localized_decimal(
+            value,
+            label="concordato review amount",
+        )
+    except MoneyValidationError as exc:
+        raise ValueError(str(exc)) from exc
 
 
 def _format_amount(value: object) -> str:
@@ -263,16 +323,30 @@ def _is_spanish(language: object) -> bool:
     )
 
 
-def _candidate_key(candidate: Any) -> tuple[str, str, float]:
+def _candidate_key(candidate: Any) -> tuple[str, str, str, Decimal]:
     return (
+        str(getattr(candidate, "source_artifact_ref", "")),
         str(getattr(candidate, "source_file", "")),
         str(getattr(candidate, "location", "")),
         _amount(getattr(candidate, "amount", 0)),
     )
 
 
-def _match_key(match: dict[str, Any]) -> tuple[str, str, float]:
+def _candidate_identity(candidate: Any) -> str:
+    content = "|".join(
+        (
+            str(getattr(candidate, "source_artifact_ref", "")),
+            str(getattr(candidate, "location", "")),
+            str(getattr(candidate, "token", "")),
+            decimal_text(_amount(getattr(candidate, "amount", 0))),
+        )
+    )
+    return "candidate." + hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
+def _match_key(match: dict[str, Any]) -> tuple[str, str, str, Decimal]:
     return (
+        str(match.get("plan_source_artifact_ref") or ""),
         str(match.get("plan_source_file") or ""),
         str(match.get("plan_location") or ""),
         _amount(match.get("plan_amount")),
@@ -281,10 +355,15 @@ def _match_key(match: dict[str, Any]) -> tuple[str, str, float]:
 
 def _candidate_data(candidate: Any) -> dict[str, Any]:
     return {
+        "candidate_id": str(getattr(candidate, "candidate_id", ""))
+        or _candidate_identity(candidate),
         "source_file": str(getattr(candidate, "source_file", "")),
+        "source_artifact_ref": str(getattr(candidate, "source_artifact_ref", "")),
         "source_role": str(getattr(candidate, "source_role", "")),
         "location": str(getattr(candidate, "location", "")),
-        "amount": _amount(getattr(candidate, "amount", 0)),
+        "amount": decimal_text(_amount(getattr(candidate, "amount", 0))),
+        "currency": str(getattr(candidate, "currency", "")),
+        "unit": str(getattr(candidate, "unit", "")),
         "token": str(getattr(candidate, "token", "")),
         "context": str(getattr(candidate, "context", "")),
     }
@@ -384,7 +463,7 @@ def _workpaper_required_cells(
 
 
 def _unique_plan_candidates(candidates: Sequence[Any]) -> list[Any]:
-    seen: set[tuple[str, str, float]] = set()
+    seen: set[tuple[str, str, str, Decimal]] = set()
     unique: list[Any] = []
     for candidate in candidates:
         if str(getattr(candidate, "source_role", "")) != "concordato_plan":
@@ -395,14 +474,16 @@ def _unique_plan_candidates(candidates: Sequence[Any]) -> list[Any]:
         seen.add(key)
         unique.append(candidate)
     return sorted(
-        unique, key=lambda item: abs(_amount(getattr(item, "amount", 0))), reverse=True
+        unique,
+        key=lambda item: _amount(getattr(item, "amount", 0)).copy_abs(),
+        reverse=True,
     )
 
 
 def _best_match_by_plan_key(
     matches: Sequence[dict[str, Any]],
-) -> dict[tuple[str, str, float], dict[str, Any]]:
-    best: dict[tuple[str, str, float], dict[str, Any]] = {}
+) -> dict[tuple[str, str, str, Decimal], dict[str, Any]]:
+    best: dict[tuple[str, str, str, Decimal], dict[str, Any]] = {}
     for row in matches:
         key = _match_key(row)
         current = best.get(key)
@@ -882,6 +963,7 @@ def _output_records(
         output = {
             "path": relative,
             "size_bytes": path.stat().st_size,
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             "kind": path.suffix.lower().lstrip(".") or "file",
             "status": "written",
         }
@@ -951,7 +1033,7 @@ def write_run_intake(
     reference_date: str,
     language: str,
     document_language: str,
-    tolerance: float,
+    tolerance: object,
     max_rows_per_sheet: int,
     inventory: Sequence[dict[str, Any]],
 ) -> RunIntakeResult:
@@ -972,7 +1054,7 @@ def write_run_intake(
         "inferred_task": "concordato_plan_support_review",
         "assumptions": {
             "reference_date": reference_date,
-            "tolerance": tolerance,
+            "tolerance": decimal_text(_amount(tolerance)),
             "max_rows_per_sheet": max_rows_per_sheet,
             "currency": "EUR",
             "source_role_counts": _role_counts(inventory),
@@ -1023,7 +1105,7 @@ def write_review_session_artifacts(
     reference_date: str,
     language: str,
     document_language: str,
-    tolerance: float,
+    tolerance: object,
     max_rows_per_sheet: int,
     inventory: Sequence[dict[str, Any]],
     candidates: Sequence[Any],
@@ -1046,7 +1128,7 @@ def write_review_session_artifacts(
     items.extend(_extraction_error_items(extraction_errors, language))
     items.extend(_artifact_items(output_dir, language))
 
-    review_payload = {
+    review_payload_content = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
@@ -1070,6 +1152,11 @@ def write_review_session_artifacts(
             "summary_docx": "concordato_review_summary.docx",
             "review_packet": "review_packet.md",
             "run_audit": "run_audit.json",
+            "assurance_envelope": "assurance_envelope.json",
+            "assurance_gates": "assurance_gates.json",
+            "source_qualifications": "source_qualifications.json",
+            "numeric_evidence_ledger": "numeric_evidence_ledger.json",
+            "workflow_output_closure": "workflow_output_closure.json",
         },
         "allowed_actions": [
             "accept",
@@ -1079,7 +1166,22 @@ def write_review_session_artifacts(
             "request_more_documents",
             "skip",
         ],
-        "status": "ready_for_review",
+        "status": (
+            "ready_for_review"
+            if audit.get("source_qualification_status") == "qualified"
+            else "source_review_required"
+        ),
+        "assurance": {
+            "envelope_path": "assurance_envelope.json",
+            "envelope_content_sha256": (
+                (audit.get("assurance_envelope") or {}).get("content_sha256")
+                if isinstance(audit.get("assurance_envelope"), dict)
+                else None
+            ),
+            "source_qualification_status": audit.get("source_qualification_status"),
+            "gate_register": audit.get("assurance_gates"),
+            "final_ready": False,
+        },
         "summary": {
             "file_count": len(inventory),
             "supported_file_count": audit.get("supported_file_count", 0),
@@ -1096,9 +1198,13 @@ def write_review_session_artifacts(
             "reference_date": reference_date,
             "language": language,
             "document_language": document_language,
-            "tolerance": tolerance,
+            "tolerance": decimal_text(_amount(tolerance)),
             "max_rows_per_sheet": max_rows_per_sheet,
         },
+    }
+    review_payload = {
+        **review_payload_content,
+        "content_sha256": canonical_json_sha256(review_payload_content),
     }
     review_payload_path = _write_json(
         output_dir / "review_payload.json",
@@ -1115,6 +1221,7 @@ def write_review_session_artifacts(
             "decided_at": None,
             "decision_source": "not_collected",
             "review_payload_path": review_payload_path.name,
+            "review_payload_content_sha256": review_payload["content_sha256"],
             "decisions": [],
             "decision_count": 0,
             "status": "pending_review",
@@ -1161,6 +1268,11 @@ def write_review_session_artifacts(
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
             "completed_at": _utc_now(),
+            "review_payload": {
+                "path": review_payload_path.name,
+                "content_sha256": review_payload["content_sha256"],
+            },
+            "assurance": review_payload["assurance"],
             "outputs": outputs,
             "caveats": [
                 (
@@ -1192,6 +1304,7 @@ def write_review_session_artifacts(
                 ),
             ],
             "status": "written_pending_review",
+            "final_ready": False,
         },
     )
     _append_execution_trace(

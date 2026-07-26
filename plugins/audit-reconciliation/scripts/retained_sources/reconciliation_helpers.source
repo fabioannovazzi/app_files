@@ -1,18 +1,18 @@
 """Reusable helper functions for Codex audit reconciliation workflows.
 
-These helpers are intentionally not a standalone product CLI. A Codex skill can
-import or copy them into a case-specific workpaper script when deterministic
-parsing, matching, or reporting logic is needed.
+These helpers are intentionally not a standalone product CLI. Validated public
+workflow entrypoints load this retained source through the implementation
+bootstrap after the exact tree has been closed.
 """
 
 from __future__ import annotations
 
-import html
 import hashlib
+import html
 import re
 import sys
 from datetime import date, datetime
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Any
 
@@ -24,12 +24,43 @@ try:
         language_candidates,
         missing_evidence_messages,
     )
-except ImportError:  # pragma: no cover - direct import support
+except ImportError:  # pragma: no cover - retained top-level loader support
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
-    from locale_support import any_keyword_in, configured_language, keyword_tuple, language_candidates, missing_evidence_messages  # type: ignore
+    from locale_support import (  # type: ignore
+        any_keyword_in,
+        configured_language,
+        keyword_tuple,
+        language_candidates,
+        missing_evidence_messages,
+    )
 
+
+def _add_vera_assurance_module_path() -> None:
+    """Resolve the shared assurance module in source and packaged layouts."""
+
+    component_root = Path(__file__).resolve().parents[1]
+    candidates = (
+        component_root / "vendor" / "modules",
+        component_root.parent.parent / "vendor" / "modules",
+        component_root.parent / "_shared" / "vendor" / "modules",
+    )
+    for candidate in candidates:
+        if (candidate / "vera_assurance").is_dir():
+            if str(candidate) not in sys.path:
+                sys.path.insert(0, str(candidate))
+            return
+    raise RuntimeError("The required vera_assurance module is not available.")
+
+
+_add_vera_assurance_module_path()
+
+from vera_assurance import (  # noqa: E402
+    RelationshipContractError,
+    build_allocation_ledger,
+    decimal_text,
+)
 
 CANONICAL_FIELDS = [
     "record_id",
@@ -69,24 +100,6 @@ DEFAULT_ASSUMPTIONS = {
     "document_date_tolerance_days": "7",
 }
 
-
-ROLE_KEYWORDS = {
-    role: sorted(
-        {
-            keyword
-            for language in language_candidates("auto")
-            for keyword in keyword_tuple(language, "role_keywords", role)
-        }
-    )
-    for role in (
-        "bank_statement",
-        "factoring_statement",
-        "payment_order",
-        "journal",
-        "ledger",
-        "open_items",
-    )
-}
 
 FACTOR_KEYWORDS = tuple(
     sorted(
@@ -183,6 +196,11 @@ INTERNAL_CLOSURE_TYPES = {
 }
 OPEN_SUPPORT_TYPES = {"internal_booking", "ledger_open_item", "open_balance"}
 EXTERNAL_TYPES = {"external_bank", "external_factoring"}
+BANK_ALLOCATION_CLOSURE_RULES = {
+    "external_bank_match",
+    "external_bank_exact_allocation_match",
+    "grouped_payment_external_match",
+}
 PROBABLE_BANK_PAYMENT_STATUS = "probable_payment"
 NON_CLOSING_STATUSES = {
     "needs_evidence",
@@ -239,32 +257,30 @@ def clean_text(value: object) -> str:
 
 
 def parse_decimal(value: object) -> Decimal | None:
-    text = clean_text(value)
-    if not text:
+    """Parse normalized decimal values without localization or float coercion."""
+
+    if value is None or isinstance(value, (bool, float)):
         return None
-    if isinstance(value, (int, float)) and not isinstance(value, bool):
-        return Decimal(str(value)).quantize(Decimal("0.01"))
-    matches = re.findall(r"-?\d[\d.,]*", text)
-    if not matches:
+    if isinstance(value, Decimal):
+        return value if value.is_finite() else None
+    if isinstance(value, int):
+        return Decimal(value)
+    if not isinstance(value, str):
         return None
-    raw = matches[-1]
-    if "," in raw and "." in raw:
-        raw = (
-            raw.replace(".", "").replace(",", ".")
-            if raw.rfind(",") > raw.rfind(".")
-            else raw.replace(",", "")
-        )
-    elif "," in raw:
-        tail = raw.split(",")[-1]
-        raw = raw.replace(",", ".") if len(tail) <= 2 else raw.replace(",", "")
-    elif "." in raw:
-        parts = raw.split(".")
-        if len(parts) > 1 and all(len(part) == 3 for part in parts[1:]):
-            raw = raw.replace(".", "")
-    try:
-        return Decimal(raw).quantize(Decimal("0.01"))
-    except InvalidOperation:
+    text = value.strip()
+    if re.fullmatch(r"-?\d+(?:\.\d+)?", text) is None:
         return None
+    parsed = Decimal(text)
+    return parsed if parsed.is_finite() else None
+
+
+def validated_tolerance(value: object = "0.01") -> Decimal:
+    """Return an exact non-negative tolerance, preserving zero."""
+
+    parsed = parse_decimal(value)
+    if parsed is None or parsed < 0:
+        raise ValueError("amount tolerance must be a non-negative canonical Decimal")
+    return parsed
 
 
 def parse_date(value: object) -> str:
@@ -299,14 +315,6 @@ def merged_assumptions(overrides: dict[str, Any] | None = None) -> dict[str, Any
     if overrides:
         assumptions.update(overrides)
     return assumptions
-
-
-def infer_source_role(path: str | Path) -> str:
-    name = Path(path).name.lower()
-    for role, keywords in ROLE_KEYWORDS.items():
-        if any(keyword in name for keyword in keywords):
-            return role
-    return "unknown"
 
 
 def extract_document_no(text: object) -> str:
@@ -410,7 +418,7 @@ def assumption_enabled(assumptions: dict[str, Any], key: str) -> bool:
 def amounts_equal(left: object, right: object, tolerance: object = "0.01") -> bool:
     left_amount = parse_decimal(left)
     right_amount = parse_decimal(right)
-    allowed = parse_decimal(tolerance) or Decimal("0.01")
+    allowed = validated_tolerance(tolerance)
     if left_amount is None or right_amount is None:
         return False
     return abs(left_amount - right_amount) <= allowed
@@ -1540,6 +1548,41 @@ def amount_for_matching(
     return first_amount(row, fields)
 
 
+def accounting_perimeters_compatible(
+    left: dict[str, Any],
+    right: dict[str, Any],
+) -> bool:
+    """Enforce only explicit mechanical entity/party/currency/unit equality."""
+
+    for field in ("entity_ref", "party_ref", "currency", "unit"):
+        left_value = clean_text(left.get(field))
+        right_value = clean_text(right.get(field))
+        if not left_value and not right_value:
+            continue
+        if not left_value or not right_value or left_value != right_value:
+            return False
+    return True
+
+
+def accounting_perimeter_mismatch_detail(
+    left: dict[str, Any],
+    right: dict[str, Any],
+) -> str:
+    """Return the first exact perimeter mismatch for audit diagnostics."""
+
+    for field, label in (
+        ("currency", "allocation currency mismatch"),
+        ("unit", "allocation unit mismatch"),
+        ("entity_ref", "allocation entity mismatch"),
+        ("party_ref", "allocation party mismatch"),
+    ):
+        left_value = clean_text(left.get(field))
+        right_value = clean_text(right.get(field))
+        if (left_value or right_value) and left_value != right_value:
+            return label
+    return "accounting perimeter mismatch"
+
+
 def side_aware_closure_match(
     open_item: dict[str, Any],
     closure: dict[str, Any],
@@ -1561,6 +1604,8 @@ def side_aware_closure_match(
     after document-key checks pass.
     """
 
+    if not accounting_perimeters_compatible(open_item, closure):
+        return False
     expected_side_clean = clean_text(expected_side).lower()
     if not expected_side_clean:
         return False
@@ -1829,6 +1874,8 @@ def evidence_matches_open_item(
     assumptions: dict[str, Any] | None = None,
 ) -> bool:
     active = merged_assumptions(assumptions)
+    if not accounting_perimeters_compatible(open_item, evidence):
+        return False
     if active.get("post_cutoff_events_excluded") and is_after_cutoff(evidence, active):
         return False
     if document_key_match_rejected_by_date(open_item, evidence, active):
@@ -1946,6 +1993,8 @@ def grouped_external_support(
 
     for evidence in evidence_rows:
         if evidence is bridge_evidence:
+            continue
+        if not accounting_perimeters_compatible(bridge_evidence, evidence):
             continue
         if active.get("post_cutoff_events_excluded") and is_after_cutoff(
             evidence, active
@@ -2452,6 +2501,359 @@ def promote_probable_bank_payments(
         )
         promoted_rows.append(promoted)
     return promoted_rows
+
+
+def _relationship_identifier(prefix: str, value: object) -> str | None:
+    text = clean_text(value).casefold()
+    if not text:
+        return None
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:24]
+    return f"{prefix}.{digest}"
+
+
+def _relationship_value(
+    row: dict[str, Any],
+    row_fields: tuple[str, ...],
+    assumptions: dict[str, Any],
+    assumption_fields: tuple[str, ...],
+) -> str:
+    for field in row_fields:
+        value = clean_text(row.get(field))
+        if value:
+            return value
+    for field in assumption_fields:
+        value = clean_text(assumptions.get(field))
+        if value:
+            return value
+    return ""
+
+
+def _allocation_population_record(
+    row: dict[str, Any],
+    *,
+    record_ref: str,
+    amount: Decimal,
+    assumptions: dict[str, Any],
+) -> dict[str, Any]:
+    currency = (
+        clean_text(row.get("currency"))
+        or clean_text(assumptions.get("currency"))
+        or "EUR"
+    ).upper()
+    entity = _relationship_value(
+        row,
+        ("entity_ref", "entity_id", "entity", "company_name", "company"),
+        assumptions,
+        ("entity_ref", "entity_id", "entity_name", "company_name"),
+    )
+    party = _relationship_value(
+        row,
+        (
+            "party_ref",
+            "party_id",
+            "counterparty_id",
+            "counterparty",
+            "counterparty_name",
+            "party",
+        ),
+        assumptions,
+        ("party_ref", "party_id", "counterparty_name", "counterparty"),
+    )
+    return {
+        "record_id": record_ref,
+        "amount": decimal_text(abs(amount)),
+        "currency": currency,
+        "unit": clean_text(row.get("unit")) or "currency_amount",
+        "entity_ref": _relationship_identifier("entity", entity),
+        "party_ref": _relationship_identifier("party", party),
+    }
+
+
+def closed_bank_allocation_controls(
+    reconciliation_rows: list[dict[str, Any]],
+    evidence_rows: list[dict[str, Any]],
+    assumptions: dict[str, Any] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    """Build exact closure-allocation ledgers and return evidence-level failures.
+
+    Evidence ownership and allocation conservation are mechanical audit
+    assertions, so every deterministic closure—not only a bank closure—must
+    have a balanced shared Vera relationship ledger. Semantic evidence
+    sufficiency remains outside this control.
+    """
+
+    active = merged_assumptions(assumptions)
+    evidence_by_id = {
+        clean_text(row.get("record_id")): row
+        for row in evidence_rows
+        if clean_text(row.get("record_id"))
+    }
+    closed_by_evidence: dict[str, list[dict[str, Any]]] = {}
+    for row in reconciliation_rows:
+        if clean_text(row.get("reconciliation_status")) != "closed":
+            continue
+        evidence_id = clean_text(row.get("matched_evidence_id"))
+        evidence = evidence_by_id.get(evidence_id)
+        if not evidence:
+            continue
+        closed_by_evidence.setdefault(evidence_id, []).append(row)
+
+    ledgers: list[dict[str, Any]] = []
+    failures: dict[str, str] = {}
+    tolerance = validated_tolerance(active.get("amount_tolerance", "0.01"))
+    explicit_pro_soluto_disposition = bool(
+        isinstance(assumptions, dict)
+        and "factoring_pro_soluto_closes_item" in assumptions
+        and parse_bool(assumptions["factoring_pro_soluto_closes_item"])
+    )
+    for evidence_id, closed_rows in sorted(closed_by_evidence.items()):
+        evidence = evidence_by_id[evidence_id]
+        evidence_amount = amount_for_matching(evidence)
+        if evidence_amount is None:
+            evidence_amount = external_amount_total(evidence)
+        target_amounts = [amount_for_matching(row) for row in closed_rows]
+        if evidence_amount is None or any(amount is None for amount in target_amounts):
+            failures[evidence_id] = (
+                "Closure allocation requires exact source and target amounts."
+            )
+            continue
+        face_amount = sum(
+            (abs(amount) for amount in target_amounts if amount is not None),
+            Decimal("0"),
+        )
+        evidence_amount = abs(evidence_amount)
+        pro_soluto_residual = face_amount - evidence_amount
+        pro_soluto_disposition = bool(
+            pro_soluto_residual > tolerance
+            and len(closed_rows) == 1
+            and explicit_pro_soluto_disposition
+            and is_factoring_evidence(evidence, active)
+            and clean_text(closed_rows[0].get("rule_applied"))
+            == "factoring_with_bank_or_external_support"
+        )
+        if pro_soluto_residual < -tolerance:
+            failures[evidence_id] = (
+                "Closure allocation exceeds the exact open-item face amount."
+            )
+            continue
+        if pro_soluto_residual > tolerance and not pro_soluto_disposition:
+            if is_factoring_evidence(evidence, active):
+                failures[evidence_id] = (
+                    "A partial factoring disposition requires an explicit "
+                    "reviewed pro-soluto contract and an exact retained residual."
+                )
+            else:
+                failures[evidence_id] = (
+                    "Closure allocation target amount exceeds the exact "
+                    "evidence amount."
+                )
+            continue
+        source_ref = (
+            "source." + hashlib.sha256(evidence_id.encode("utf-8")).hexdigest()[:24]
+        )
+        target_refs = {
+            _row_identity(row): (
+                "target."
+                + hashlib.sha256(_row_identity(row).encode("utf-8")).hexdigest()[:24]
+            )
+            for row in closed_rows
+        }
+        source_record = _allocation_population_record(
+            evidence,
+            record_ref=source_ref,
+            amount=face_amount if pro_soluto_disposition else evidence_amount,
+            assumptions=active,
+        )
+        target_records = [
+            _allocation_population_record(
+                row,
+                record_ref=target_refs[_row_identity(row)],
+                amount=(
+                    evidence_amount
+                    if pro_soluto_disposition
+                    else amount_for_matching(row) or Decimal("0")
+                ),
+                assumptions=active,
+            )
+            for row in closed_rows
+        ]
+        residual_target_ref = ""
+        if pro_soluto_disposition:
+            residual_digest = hashlib.sha256(
+                f"{evidence_id}|pro_soluto_residual".encode("utf-8")
+            ).hexdigest()[:24]
+            residual_target_ref = f"target.factor_residual.{residual_digest}"
+            target_records.append(
+                {
+                    **target_records[0],
+                    "record_id": residual_target_ref,
+                    "amount": decimal_text(pro_soluto_residual),
+                }
+            )
+        entity_required = any(
+            record["entity_ref"] is not None
+            for record in (source_record, *target_records)
+        )
+        party_required = any(
+            record["party_ref"] is not None
+            for record in (source_record, *target_records)
+        )
+        allocation_policy = clean_text(evidence.get("allocation_policy"))
+        relationship_shape = (
+            allocation_policy
+            if allocation_policy
+            in {"one_to_one", "one_to_many", "many_to_one", "many_to_many"}
+            else (
+                "one_to_many"
+                if len(closed_rows) > 1 or pro_soluto_disposition
+                else "one_to_one"
+            )
+        )
+        allocations = []
+        for index, row in enumerate(closed_rows, start=1):
+            row_identity = _row_identity(row)
+            row_amount = (
+                evidence_amount
+                if pro_soluto_disposition
+                else amount_for_matching(row) or Decimal("0")
+            )
+            allocation_digest = hashlib.sha256(
+                f"{evidence_id}|{row_identity}".encode("utf-8")
+            ).hexdigest()[:24]
+            allocations.append(
+                {
+                    "allocation_id": f"allocation.{allocation_digest}",
+                    "source_record_ref": source_ref,
+                    "target_record_ref": target_refs[row_identity],
+                    "amount": decimal_text(abs(row_amount)),
+                    "currency": target_records[index - 1]["currency"],
+                    "unit": target_records[index - 1]["unit"],
+                    "evidence_refs": [f"evidence.{allocation_digest}"],
+                }
+            )
+        if pro_soluto_disposition:
+            residual_allocation_digest = hashlib.sha256(
+                f"{evidence_id}|pro_soluto_contract_residual".encode("utf-8")
+            ).hexdigest()[:24]
+            allocations.append(
+                {
+                    "allocation_id": (f"allocation.{residual_allocation_digest}"),
+                    "source_record_ref": source_ref,
+                    "target_record_ref": residual_target_ref,
+                    "amount": decimal_text(pro_soluto_residual),
+                    "currency": target_records[-1]["currency"],
+                    "unit": target_records[-1]["unit"],
+                    "evidence_refs": [f"decision.{residual_allocation_digest}"],
+                }
+            )
+        ledger_id = (
+            "bank_allocation."
+            + hashlib.sha256(evidence_id.encode("utf-8")).hexdigest()[:20]
+        )
+        try:
+            ledger = build_allocation_ledger(
+                ledger_id=ledger_id,
+                policy={
+                    "relationship_shape": relationship_shape,
+                    "require_same_currency": True,
+                    "require_same_unit": True,
+                    "require_same_entity": entity_required,
+                    "require_same_party": party_required,
+                    "allow_evidence_reuse": False,
+                    "tolerance": decimal_text(abs(tolerance)),
+                },
+                source_records=[source_record],
+                target_records=target_records,
+                allocations=allocations,
+            )
+        except RelationshipContractError as exc:
+            failures[evidence_id] = str(exc)
+            continue
+        if not ledger["balanced"]:
+            failures[evidence_id] = (
+                "Closure allocation does not conserve the source and target amounts."
+            )
+            continue
+        ledgers.append(ledger)
+    return ledgers, failures
+
+
+def enforce_closed_bank_allocation_controls(
+    reconciliation_rows: list[dict[str, Any]],
+    evidence_rows: list[dict[str, Any]],
+    assumptions: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Withhold bank closures that fail relationship or conservation controls."""
+
+    ledgers, failures = closed_bank_allocation_controls(
+        reconciliation_rows,
+        evidence_rows,
+        assumptions,
+    )
+    ledger_by_source_ref = {
+        ledger["source_records"][0]["record_id"]: ledger for ledger in ledgers
+    }
+    evidence_ledger_ids: dict[str, dict[str, Any]] = {}
+    for evidence_id in {
+        clean_text(row.get("matched_evidence_id")) for row in reconciliation_rows
+    }:
+        if not evidence_id:
+            continue
+        source_ref = (
+            "source." + hashlib.sha256(evidence_id.encode("utf-8")).hexdigest()[:24]
+        )
+        if source_ref in ledger_by_source_ref:
+            evidence_ledger_ids[evidence_id] = ledger_by_source_ref[source_ref]
+
+    controlled: list[dict[str, Any]] = []
+    for row in reconciliation_rows:
+        evidence_id = clean_text(row.get("matched_evidence_id"))
+        is_closed_row = row.get("reconciliation_status") == "closed"
+        control_failure = failures.get(evidence_id, "")
+        if (
+            is_closed_row
+            and not control_failure
+            and (not evidence_id or evidence_id not in evidence_ledger_ids)
+        ):
+            control_failure = (
+                "Closed evidence requires a stable matched evidence record "
+                "and a valid allocation ledger."
+            )
+        if is_closed_row and control_failure:
+            updated = dict(row)
+            updated.update(
+                {
+                    "prior_reconciliation_status": "closed",
+                    "prior_rule_applied": row.get("rule_applied"),
+                    "reconciliation_status": "needs_evidence",
+                    "evidence_level": "bridge_only",
+                    "rule_applied": "bank_allocation_control_failed",
+                    "missing_evidence": (
+                        "The evidence cannot close this row until currency, "
+                        "entity, party, evidence ownership, and exact allocation "
+                        "conservation are resolved. Control detail: "
+                        f"{control_failure}"
+                    ),
+                    "relationship_control_status": "failed",
+                    "relationship_control_detail": control_failure,
+                }
+            )
+            controlled.append(updated)
+            continue
+        ledger = evidence_ledger_ids.get(evidence_id)
+        if ledger and row.get("reconciliation_status") == "closed":
+            updated = dict(row)
+            updated.update(
+                {
+                    "relationship_control_status": "passed",
+                    "relationship_allocation_ledger_id": ledger["ledger_id"],
+                    "relationship_allocation_content_sha256": ledger["content_sha256"],
+                }
+            )
+            controlled.append(updated)
+            continue
+        controlled.append(row)
+    return controlled
 
 
 def direct_supporting_bank_by_key(
@@ -2982,6 +3384,36 @@ def classify_open_item(
         )
         return result
 
+    incompatible = [
+        row
+        for row in match_pool
+        if document_keys_match(open_item, row, require_both=True)
+        and not accounting_perimeters_compatible(open_item, row)
+    ]
+    if incompatible:
+        mismatch_detail = accounting_perimeter_mismatch_detail(
+            open_item,
+            incompatible[0],
+        )
+        result.update(
+            {
+                "reconciliation_status": "needs_evidence",
+                "evidence_level": "none",
+                "rule_applied": "accounting_perimeter_mismatch",
+                "matched_evidence_type": "",
+                "matched_evidence_amounts": "",
+                "matched_evidence_id": "",
+                "matched_evidence_reference": "",
+                "missing_evidence": (
+                    "The candidate evidence does not share the reviewed entity, "
+                    "party, currency, and unit perimeter."
+                ),
+                "relationship_control_status": "failed",
+                "relationship_control_detail": mismatch_detail,
+            }
+        )
+        return result
+
     result.update(
         {
             "reconciliation_status": "unresolved",
@@ -3049,7 +3481,16 @@ def reconcile_open_items(
     reconciliation_rows = promote_probable_bank_payments(
         reconciliation_rows, evidence_rows, active
     )
-    return add_supporting_bank_references(reconciliation_rows, evidence_rows, active)
+    reconciliation_rows = add_supporting_bank_references(
+        reconciliation_rows,
+        evidence_rows,
+        active,
+    )
+    return enforce_closed_bank_allocation_controls(
+        reconciliation_rows,
+        evidence_rows,
+        active,
+    )
 
 
 def reconciliation_checks(
@@ -3145,6 +3586,37 @@ def reconciliation_checks(
         "; ".join(payment_order_closed[:10]),
     )
 
+    relationship_failures = [
+        clean_text(row.get("record_id")) or clean_text(row.get("document_key"))
+        for row in reconciliation_rows
+        if clean_text(row.get("relationship_control_status")) == "failed"
+    ]
+    add(
+        "bank_relationship_controls_pass",
+        not relationship_failures,
+        len(relationship_failures),
+        0,
+        "; ".join(relationship_failures[:10]),
+    )
+
+    unvalidated_bank_closures = [
+        clean_text(row.get("record_id")) or clean_text(row.get("document_key"))
+        for row in reconciliation_rows
+        if row.get("reconciliation_status") == "closed"
+        and (
+            clean_text(row.get("matched_evidence_type")) == "external_bank"
+            or clean_text(row.get("rule_applied")) in BANK_ALLOCATION_CLOSURE_RULES
+        )
+        and clean_text(row.get("relationship_control_status")) != "passed"
+    ]
+    add(
+        "closed_bank_rows_have_allocation_ledger",
+        not unvalidated_bank_closures,
+        len(unvalidated_bank_closures),
+        0,
+        "; ".join(unvalidated_bank_closures[:10]),
+    )
+
     return checks
 
 
@@ -3168,7 +3640,6 @@ def codex_review_sample(
             parse_decimal(row.get(field))
             for field in (
                 "amount",
-                "all_a_balance",
                 "balance",
                 "open_amount",
                 "matched_amount",
@@ -3249,7 +3720,6 @@ def review_amount_abs(row: dict[str, Any]) -> Decimal:
         parse_decimal(row.get(field))
         for field in (
             "amount",
-            "all_a_balance",
             "balance",
             "open_amount",
             "matched_amount",
@@ -3601,7 +4071,6 @@ def codex_review_flags(
         parse_decimal(row.get(field))
         for field in (
             "amount",
-            "all_a_balance",
             "balance",
             "matched_amount",
             "bank_amount",
@@ -3660,7 +4129,6 @@ def stable_review_sample(
     ),
     amount_fields: tuple[str, ...] = (
         "amount",
-        "all_a_balance",
         "balance",
         "matched_amount",
     ),

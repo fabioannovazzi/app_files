@@ -1,0 +1,1186 @@
+{
+  "schema_version": "journal_bank.evaluation_contract.v5",
+  "contract_id": "journal_bank.repository_contract.v5",
+  "purpose": "Freeze the prospective adapter-v6 Journal-Bank repository contract, including explicit signed-source match presentation, non-negative relationship magnitudes, exact delimiter outcome taxonomy, source-bound date interpretation, exact tolerance handling, direction outcomes, material-value native-output closure, and an independent semantic-oracle comparison without hidden expected rows or an oracle-authored workbook.",
+  "supersedes": {
+    "contract_id": "journal_bank.repository_contract.v4",
+    "contract_sha256": "18c3e11da7bf263dbe392c13ad56af64b94c2093a1f2428ede52a66e85bdc97b",
+    "reason": "Contract v4 enumerated the compared amount and delimiter fields but did not explicitly bind signed match-field projection, matched-magnitude delta arithmetic, or delimiter-specific failure kinds and run blocks."
+  },
+  "lifecycle": {
+    "contract_status": "frozen_prospective",
+    "promoted": false,
+    "mechanical_regression_status": "GO",
+    "mechanical_regression_scope": "The adjudicated r3 regression is implementation and contract evidence only; it is not a fresh unseen v5 holdout.",
+    "m7_promotion_status": "NO_GO",
+    "promotion_requires": "a fresh independently authored unseen holdout bound to the exact v5 contract bytes"
+  },
+  "implementation": {
+    "tabular_adapter": {
+      "adapter_id": "journal_bank.tabular.v6",
+      "adapter_version": "6",
+      "invalidates_prior_versions": true
+    },
+    "relationship_adapter": {
+      "adapter_id": "journal_bank.relationship.v2",
+      "adapter_version": "2",
+      "invalidates_prior_versions": true
+    }
+  },
+  "schemas": {
+    "normalized_transaction_columns": [
+      "side",
+      "transaction_id",
+      "transaction_date",
+      "amount_signed",
+      "amount_abs",
+      "description",
+      "beneficiary",
+      "reference",
+      "movement_number",
+      "account",
+      "currency",
+      "unit",
+      "entity_ref",
+      "party_ref",
+      "direction",
+      "source_file",
+      "source_sheet",
+      "source_row"
+    ],
+    "match_columns": [
+      "status",
+      "stage",
+      "bank_transaction_id",
+      "journal_transaction_id",
+      "bank_date",
+      "journal_date",
+      "date_diff_days",
+      "bank_amount",
+      "journal_amount",
+      "amount_delta",
+      "bank_description",
+      "journal_description",
+      "shared_references",
+      "review_note"
+    ],
+    "match_material_fields": [
+      "status",
+      "stage",
+      "bank_transaction_id",
+      "journal_transaction_id",
+      "bank_date",
+      "journal_date",
+      "date_diff_days",
+      "bank_amount",
+      "journal_amount",
+      "amount_delta",
+      "shared_references"
+    ],
+    "relationship_residual_columns": [
+      "side",
+      "record_ref",
+      "transaction_id",
+      "record_amount",
+      "allocated_amount",
+      "residual",
+      "currency",
+      "unit",
+      "entity_ref",
+      "party_ref"
+    ],
+    "non_movement_columns": [
+      "side",
+      "source_file",
+      "source_sheet",
+      "source_row",
+      "classification",
+      "reason",
+      "transaction_date",
+      "amount_signed",
+      "amount_abs",
+      "description"
+    ]
+  },
+  "amount_semantics": {
+    "normalized_rows": {
+      "amount_signed": "canonical Decimal text that preserves the normalized source sign and is not replaced by a non-negative magnitude",
+      "amount_abs_formula": "abs(Decimal(amount_signed))",
+      "amount_abs_non_negative": true
+    },
+    "matching": {
+      "eligibility_amount_field": "amount_abs",
+      "tolerance_comparison_formula": "abs(bank.amount_abs - journal.amount_abs) <= reviewed amount_tolerance",
+      "bank_amount_formula": "matched bank endpoint amount_signed",
+      "journal_amount_formula": "matched journal endpoint amount_signed",
+      "amount_delta_formula": "abs(abs(Decimal(bank_amount)) - abs(Decimal(journal_amount)))",
+      "amount_delta_non_negative": true,
+      "sign_presentation_is_distinct_from_magnitude_matching": true
+    },
+    "relationship_magnitude": {
+      "source_record_amount_formula": "bank endpoint amount_abs",
+      "target_record_amount_formula": "journal endpoint amount_abs",
+      "allocation_amount_formula": "min(source record amount, target record amount) for each accepted one-to-one match",
+      "allocation_amount_non_negative": true,
+      "allocated_amount_formula": "sum(non-negative allocation amounts for the record)",
+      "residual_formula": "record_amount - allocated_amount",
+      "record_allocated_and_residual_values_non_negative": true
+    }
+  },
+  "review_authority": {
+    "mapping": {
+      "fields": [
+        "date",
+        "amount",
+        "debit",
+        "credit",
+        "description",
+        "beneficiary",
+        "reference",
+        "movement_number",
+        "account",
+        "currency",
+        "unit",
+        "entity_ref",
+        "party_ref",
+        "direction"
+      ],
+      "automatic_authority": "one unambiguous exact supported header contract parsed with the uniquely profiled comma default, no ambiguous day/month dates, and no unresolved monetary columns",
+      "review_required_for": [
+        "profiled or fuzzy headers",
+        "physical header-row choice",
+        "non-default CSV field delimiter",
+        "supported explicit CSV field delimiter that does not uniquely match the bounded profile",
+        "decimal separator",
+        "thousands separator",
+        "non-exact field mapping",
+        "complete potential monetary-column disposition",
+        "ambiguous day/month date convention"
+      ],
+      "receipt_bindings": [
+        "source artifact reference",
+        "adapter ID and version",
+        "header rows",
+        "mapping",
+        "direction vocabulary when present",
+        "potential_monetary_columns",
+        "excluded_monetary_columns",
+        "date_convention",
+        "csv_field_delimiter",
+        "decimal_separator",
+        "thousands_separator"
+      ]
+    },
+    "date_interpretation": {
+      "receipt_field": "date_convention",
+      "reviewed_values": [
+        "day_first",
+        "month_first"
+      ],
+      "aliases_or_free_text_allowed": false,
+      "list_order_guessing_allowed": false,
+      "two_digit_year_boundary": {
+        "00_through_68": "2000 through 2068",
+        "69_through_99": "1969 through 1999"
+      },
+      "mechanical_inputs": {
+        "native_date_or_datetime": "calendar date; datetime time component is discarded",
+        "compact_yyyymmdd": "exactly eight digits and a valid Gregorian date",
+        "year_first_text": "YYYY-M-D, YYYY/M/D, or YYYY.M.D with the same separator twice and a valid Gregorian date",
+        "excel_serial": "integral 20000 through 60000 inclusive, epoch 1899-12-30, and accepted only for XLS, XLSX, or XLSM sources",
+        "unambiguous_day_month_text": "D-M-YY(YY), D/M/YY(YY), or D.M.YY(YY) when exactly one calendar interpretation is valid"
+      },
+      "classification_vocabulary": [
+        "parsed",
+        "blank",
+        "ambiguous",
+        "invalid"
+      ],
+      "ambiguous_without_current_receipt": {
+        "qualification_status": "needs_review",
+        "failure_kind": "mapping_review_required",
+        "emitted_row_count": 0,
+        "run_block_code": "mapping_review_required"
+      },
+      "invalid_populated_date": {
+        "row_disposition": "invalid_date_value",
+        "qualification_status": "unsupported_source_layout",
+        "failure_kind": "candidate_row_contract_failed",
+        "emitted_row_count": 0,
+        "stable_reference_does_not_override": true
+      },
+      "blank_date": {
+        "reference_only_emission_requires_stable_reference": true,
+        "emitted_row_disposition": "emitted_reference_only",
+        "missing_reference_disposition": "missing_date_without_stable_reference",
+        "amount_date_stage_eligibility": false
+      },
+      "reviewed_value_must_equal_receipt_content_and_execution_recipe": true
+    },
+    "csv_field_delimiter": {
+      "recipe_field": "csv_field_delimiter",
+      "supported_one_byte_values": [
+        ",",
+        ";",
+        "\t",
+        "|"
+      ],
+      "default_value": ",",
+      "profile_encoding": "UTF-8 with optional BOM",
+      "profile_max_bytes": 131072,
+      "profile_max_rows": 100,
+      "unique_candidate_predicate": "strict CSV parse; at least two non-empty records; constant record width greater than one; exactly one supported candidate",
+      "profile_is_transport_evidence_only": true,
+      "record_terminator_transport": {
+        "supported_byte_sequences": [
+          "LF",
+          "CRLF",
+          "CR"
+        ],
+        "normalization": "mechanically normalize universal-newline forms to LF before the full strict CSV parse",
+        "reviewed_mapping_field": false,
+        "distinct_from_csv_field_delimiter": true,
+        "distinct_from_numeric_separators": true
+      },
+      "full_parse": {
+        "ignore_errors": false,
+        "truncate_ragged_lines": false,
+        "malformed_record_result": {
+          "qualification_status": "unsupported_source_layout",
+          "failure_kind": "parser_failure",
+          "emitted_row_count": 0,
+          "run_block_code": "parser_failure"
+        }
+      },
+      "parser_failure_boundary": "parser_failure is reserved for an actual malformed, ragged, undecodable, or otherwise failed full parse; an ambiguous or unsupported delimiter is not a parser failure",
+      "scored_outcomes": {
+        "ambiguous": {
+          "qualification_status": "needs_review",
+          "failure_kind": "ambiguous_csv_field_delimiter",
+          "emitted_row_count": 0,
+          "run_block_code": "mapping_review_required",
+          "gate_statuses": {
+            "source": "blocked",
+            "preparation": "blocked",
+            "reconciliation": "blocked",
+            "semantic_review": "not_assessed",
+            "reporting": "blocked",
+            "publication": "blocked"
+          }
+        },
+        "unsupported": {
+          "qualification_status": "unsupported_source_layout",
+          "failure_kind": "unsupported_csv_field_delimiter",
+          "emitted_row_count": 0,
+          "run_block_code": "unsupported_source_layout",
+          "gate_statuses": {
+            "source": "failed",
+            "preparation": "blocked",
+            "reconciliation": "blocked",
+            "semantic_review": "not_assessed",
+            "reporting": "blocked",
+            "publication": "blocked"
+          }
+        },
+        "actual_malformed_or_failed_full_parse": {
+          "qualification_status": "unsupported_source_layout",
+          "failure_kind": "parser_failure",
+          "emitted_row_count": 0,
+          "run_block_code": "parser_failure",
+          "gate_statuses": {
+            "source": "failed",
+            "preparation": "blocked",
+            "reconciliation": "blocked",
+            "semantic_review": "not_assessed",
+            "reporting": "blocked",
+            "publication": "blocked"
+          }
+        }
+      },
+      "unique_comma_may_use_exact_automatic_contract": true,
+      "non_default_requires_current_v6_mapping_receipt": true,
+      "explicit_profile_mismatch_requires_current_v6_mapping_receipt": true,
+      "ambiguous_without_review": {
+        "qualification_status": "needs_review",
+        "failure_kind": "ambiguous_csv_field_delimiter",
+        "run_block_code": "mapping_review_required",
+        "emitted_row_count": 0
+      },
+      "unsupported_without_review": {
+        "qualification_status": "unsupported_source_layout",
+        "failure_kind": "unsupported_csv_field_delimiter",
+        "run_block_code": "unsupported_source_layout",
+        "emitted_row_count": 0
+      },
+      "distinct_from_numeric_separators": true
+    },
+    "numeric_policy": {
+      "source_values": {
+        "parser": "exact localized decimal under the reviewed numeric-separator convention",
+        "binary_float_allowed_only_for_native_spreadsheet_numeric_cells": true,
+        "ambiguous_numeric_text_withholds_source": true
+      },
+      "relationship_tolerance": {
+        "accepted_runtime_types": [
+          "canonical decimal string",
+          "Decimal",
+          "int"
+        ],
+        "rejected_runtime_types": [
+          "float",
+          "bool",
+          "localized or noncanonical numeric string",
+          "non-finite value",
+          "negative value"
+        ],
+        "canonical_output": "finite non-negative canonical decimal text",
+        "locale_guessing_allowed": false,
+        "binary_float_conversion_allowed": false
+      }
+    },
+    "monetary_column_disposition": {
+      "public_reviewed_intent_fields": [
+        "potential_monetary_columns",
+        "excluded_monetary_columns"
+      ],
+      "receipt_bound_fields": [
+        "potential_monetary_columns",
+        "excluded_monetary_columns"
+      ],
+      "header_tokens": [
+        "amount",
+        "importo",
+        "dare",
+        "avere",
+        "debit",
+        "débit",
+        "credit",
+        "crédit",
+        "soll",
+        "haben",
+        "montant",
+        "betrag",
+        "saldo",
+        "balance",
+        "fee",
+        "commission",
+        "commissione",
+        "tax",
+        "imposta",
+        "ritenuta",
+        "total",
+        "totale"
+      ],
+      "derived_potential_definition": {
+        "boolean_operator": "OR",
+        "candidate_if": [
+          "normalized column header contains at least one exact supported monetary token",
+          "at least one populated value parses exactly under the reviewed numeric-separator convention"
+        ],
+        "mapped_non_monetary_column_is_excluded_unless_header_is_explicitly_monetary": true,
+        "source_row_and_source_sheet_columns_are_never_candidates": true
+      },
+      "declaration_invariants": {
+        "potential_entries_are_unique_non_empty_column_names": true,
+        "potential_ordered_list_equals_current_derived_evidence": true,
+        "excluded_entries_are_unique_non_empty_column_names": true,
+        "excluded_is_subset_of_potential": true,
+        "mapped_monetary_roles": [
+          "amount",
+          "debit",
+          "credit"
+        ],
+        "mapped_monetary_columns_are_subset_of_potential": true,
+        "mapped_and_excluded_are_disjoint": true,
+        "every_potential_column_is_mapped_or_excluded": true
+      },
+      "explicit_empty_exclusions_required_on_reviewed_paths": true,
+      "incomplete_or_stale_disposition": {
+        "qualification_status": "needs_review",
+        "failure_kind": "mapping_review_required",
+        "emitted_row_count": 0
+      }
+    },
+    "direction": {
+      "canonical_values": [
+        "negative",
+        "positive",
+        "zero"
+      ],
+      "noncanonical_vocabulary_requires_complete_source_bound_mapping": true,
+      "unknown_or_extra_labels_withhold_source": true,
+      "signed_amount_disagreement_withholds_source": true
+    },
+    "relationship_perimeter": {
+      "fields": [
+        "allow_evidence_reuse",
+        "amount_tolerance",
+        "date_window_days",
+        "default_currency",
+        "default_entity_ref",
+        "default_party_ref",
+        "default_unit",
+        "direction_policy",
+        "relationship_shape",
+        "require_same_currency",
+        "require_same_entity",
+        "require_same_party",
+        "require_same_unit"
+      ],
+      "relationship_shape": "one_to_one",
+      "allow_evidence_reuse": false,
+      "require_same_currency": true,
+      "require_same_unit": true,
+      "direction_policy": {
+        "allowed_values": [
+          "absolute_amount",
+          "same_sign",
+          "opposite_sign"
+        ],
+        "semantics": {
+          "absolute_amount": "Do not compare bank and journal canonical directions after each source row independently passes its reviewed vocabulary and signed-amount controls.",
+          "same_sign": "Require both rows to have canonical direction positive, negative, or zero and require exact equality.",
+          "opposite_sign": "Require the unordered direction pair to be exactly positive and negative; zero is never eligible."
+        },
+        "aliases_or_free_text_allowed": false,
+        "reviewed_value_must_equal_execution_value": true,
+        "missing_or_unsupported_result": {
+          "run_block_code": "relationship_review_required",
+          "reconciliation_gate_status": "blocked",
+          "reporting_gate_status": "blocked"
+        }
+      },
+      "reviewed_policy_required_every_run": true,
+      "execution_tolerance_and_window_must_equal_reviewed_policy": true
+    },
+    "stable_reference": {
+      "source_fields": [
+        "reference",
+        "movement_number"
+      ],
+      "normalization": [
+        "Unicode NFKD",
+        "remove combining marks",
+        "lowercase",
+        "collapse whitespace",
+        "tokenize to ASCII lowercase letters and digits"
+      ],
+      "generic_semantic_tokens": [
+        "anno",
+        "banca",
+        "bank",
+        "bonifico",
+        "credit",
+        "debit",
+        "document",
+        "documento",
+        "estratto",
+        "fattura",
+        "invoice",
+        "movimento",
+        "pagamento",
+        "payment",
+        "reference",
+        "riferimento",
+        "statement",
+        "transaction",
+        "transfer",
+        "year"
+      ],
+      "generic_period_prefixes": [
+        "fy",
+        "fq",
+        "fiscal",
+        "financial",
+        "fiscalyear",
+        "financialyear",
+        "fiscalperiod",
+        "financialperiod",
+        "accountingperiod",
+        "reportingperiod",
+        "period",
+        "esercizio",
+        "exercice",
+        "quarter"
+      ],
+      "generic_period_words": [
+        "accountingperiod",
+        "actual",
+        "actuals",
+        "apr",
+        "april",
+        "aug",
+        "august",
+        "budget",
+        "budgeted",
+        "dec",
+        "december",
+        "esercizio",
+        "exercice",
+        "feb",
+        "february",
+        "financial",
+        "financialperiod",
+        "financialyear",
+        "fiscal",
+        "fiscalperiod",
+        "fiscalyear",
+        "forecast",
+        "forecasted",
+        "fq",
+        "fy",
+        "half",
+        "jan",
+        "january",
+        "jul",
+        "july",
+        "jun",
+        "june",
+        "mar",
+        "march",
+        "may",
+        "month",
+        "monthly",
+        "nov",
+        "november",
+        "oct",
+        "october",
+        "period",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "quarter",
+        "quarterly",
+        "reportingperiod",
+        "sem",
+        "semester",
+        "sep",
+        "sept",
+        "september",
+        "week",
+        "weekly"
+      ],
+      "generic_period_regex": "(?:(?:fy|fq|fiscal|financial|fiscalyear|financialyear|fiscalperiod|financialperiod|accountingperiod|reportingperiod|period|esercizio|exercice|quarter)(?:(?:actuals?|budget(?:ed)?|forecast(?:ed)?|quarter(?:ly)?|q[1-4]))*(?:fy)?(?:19|20)\\d{2}(?:(?:19|20)\\d{2}|\\d{2})?(?:(?:actuals?|budget(?:ed)?|forecast(?:ed)?|quarter(?:ly)?|q[1-4]))*(?:(?:fy|fq|fiscal|financial|fiscalyear|financialyear|fiscalperiod|financialperiod|accountingperiod|reportingperiod|period|esercizio|exercice|quarter))?|q[1-4](?:fy)?(?:19|20)\\d{2}(?:(?:19|20)\\d{2}|\\d{2})?(?:(?:actuals?|budget(?:ed)?|forecast(?:ed)?|quarter(?:ly)?|q[1-4]))*|(?:19|20)\\d{2}(?:(?:19|20)\\d{2}|\\d{2})?(?:(?:actuals?|budget(?:ed)?|forecast(?:ed)?|quarter(?:ly)?|q[1-4]))+|(?:(?:actuals?|budget(?:ed)?|forecast(?:ed)?|quarter(?:ly)?|q[1-4]))+(?:fy)?(?:19|20)\\d{2}(?:(?:19|20)\\d{2}|\\d{2})?(?:(?:fy|fq|fiscal|financial|fiscalyear|financialyear|fiscalperiod|financialperiod|accountingperiod|reportingperiod|period|esercizio|exercice|quarter))?)",
+      "generic_version_regex": "(?:version|revision|draft|final|ver|rev|v)\\d*",
+      "generic_period_code_regex": "(?:(?:month|m)(?:0?[1-9]|1[0-2])|(?:week|wk|w)(?:0?[1-9]|[1-4]\\d|5[0-3])|(?:half|h|semester|sem)[12]|q[1-4])",
+      "minimum_token_length": 5,
+      "digit_required": true,
+      "generic_prefix_plus_suffix_is_excluded": true,
+      "all_digit_token_minimum_length": 5,
+      "period_like_distinctive_suffix": {
+        "minimum_length": 5,
+        "digit_required": true,
+        "version_only_suffix_is_excluded": true
+      },
+      "generic_year_range_is_excluded": true,
+      "matching_set_semantics": "deduplicated exact token set; row order does not change membership"
+    }
+  },
+  "source_qualification": {
+    "status_vocabulary": [
+      "qualified",
+      "needs_review",
+      "unsupported_source_layout"
+    ],
+    "control_status_vocabulary": [
+      "passed",
+      "failed",
+      "not_assessed"
+    ],
+    "needs_review_requires_unassessed_required_control_and_zero_emitted_rows": true,
+    "unsupported_requires_failed_required_control_and_zero_emitted_rows": true,
+    "any_invalid_populated_candidate_row_withholds_the_complete_source": true,
+    "candidate_row_dispositions": [
+      "excluded_non_monetary",
+      "invalid_monetary_value",
+      "unreviewed_direction_value",
+      "direction_amount_mismatch",
+      "ambiguous_date_without_review",
+      "invalid_date_value",
+      "missing_date_without_stable_reference",
+      "emitted_reference_only",
+      "emitted"
+    ]
+  },
+  "condition_outcome_matrix": [
+    {
+      "condition": "ambiguous day/month date without a current source-bound convention receipt",
+      "qualification_status": "needs_review",
+      "failure_kind": "mapping_review_required",
+      "run_block_code": "mapping_review_required",
+      "emitted_row_count": 0,
+      "gate_statuses": {
+        "source": "blocked",
+        "preparation": "blocked",
+        "reconciliation": "blocked",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    },
+    {
+      "condition": "invalid populated date on any monetary candidate row",
+      "qualification_status": "unsupported_source_layout",
+      "failure_kind": "candidate_row_contract_failed",
+      "run_block_code": "unsupported_source_layout",
+      "emitted_row_count": 0,
+      "gate_statuses": {
+        "source": "failed",
+        "preparation": "blocked",
+        "reconciliation": "blocked",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    },
+    {
+      "condition": "ambiguous CSV field delimiter without a current reviewed delimiter",
+      "qualification_status": "needs_review",
+      "failure_kind": "ambiguous_csv_field_delimiter",
+      "run_block_code": "mapping_review_required",
+      "emitted_row_count": 0,
+      "gate_statuses": {
+        "source": "blocked",
+        "preparation": "blocked",
+        "reconciliation": "blocked",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    },
+    {
+      "condition": "unsupported CSV field delimiter",
+      "qualification_status": "unsupported_source_layout",
+      "failure_kind": "unsupported_csv_field_delimiter",
+      "run_block_code": "unsupported_source_layout",
+      "emitted_row_count": 0,
+      "gate_statuses": {
+        "source": "failed",
+        "preparation": "blocked",
+        "reconciliation": "blocked",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    },
+    {
+      "condition": "actual malformed or otherwise failed full CSV parse",
+      "qualification_status": "unsupported_source_layout",
+      "failure_kind": "parser_failure",
+      "run_block_code": "parser_failure",
+      "emitted_row_count": 0,
+      "gate_statuses": {
+        "source": "failed",
+        "preparation": "blocked",
+        "reconciliation": "blocked",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    },
+    {
+      "condition": "missing, stale, aliased, free-text, or unsupported relationship direction policy",
+      "qualification_status": "qualified",
+      "failure_kind": null,
+      "run_block_code": "relationship_review_required",
+      "emitted_row_count": "qualified source row count",
+      "gate_statuses": {
+        "source": "passed",
+        "preparation": "passed",
+        "reconciliation": "blocked",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    },
+    {
+      "condition": "qualified and exactly closed initial reconciliation before professional review",
+      "qualification_status": "qualified",
+      "failure_kind": null,
+      "run_block_code": null,
+      "emitted_row_count": "qualified source row count",
+      "gate_statuses": {
+        "source": "passed",
+        "preparation": "passed",
+        "reconciliation": "passed",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    },
+    {
+      "condition": "qualified run with unmatched rows or nonzero exact residuals",
+      "qualification_status": "qualified",
+      "failure_kind": null,
+      "run_block_code": null,
+      "emitted_row_count": "qualified source row count",
+      "gate_statuses": {
+        "source": "passed",
+        "preparation": "passed",
+        "reconciliation": "withheld",
+        "semantic_review": "not_assessed",
+        "reporting": "blocked",
+        "publication": "blocked"
+      }
+    }
+  ],
+  "matching": {
+    "stage_order": [
+      "reference",
+      "amount_date_unique",
+      "amount_date_single"
+    ],
+    "batch_invariant": "Every wave is selected from one unchanged snapshot of currently unmatched rows. Accept a singleton only when no other singleton bank row targets the same journal row.",
+    "stages": {
+      "reference": {
+        "eligible_evidence": [
+          "stable explicit reference or movement-number token",
+          "exact tolerance comparison",
+          "reviewed relationship perimeter"
+        ],
+        "actual_dates_required": false,
+        "when_both_dates_exist": "apply the exact reviewed date window",
+        "wave": "repeat conflict-free singleton batches until stable"
+      },
+      "amount_date_unique": {
+        "eligible_evidence": [
+          "actual dates on both rows",
+          "exact reviewed date window",
+          "exact tolerance comparison",
+          "reviewed relationship perimeter"
+        ],
+        "wave": "first conflict-free singleton batch after reference matching"
+      },
+      "amount_date_single": {
+        "eligible_evidence": [
+          "actual dates on both rows",
+          "exact reviewed date window",
+          "exact tolerance comparison",
+          "reviewed relationship perimeter"
+        ],
+        "wave": "later conflict-free singleton batches created by earlier amount/date allocations"
+      }
+    },
+    "collision_result": "ambiguous and unmatched",
+    "row_order_may_break_collision": false,
+    "matched_rows_may_be_reused": false
+  },
+  "relationship_evidence": {
+    "ledger_schema": "vera.allocation_ledger.v1",
+    "allocation_shape": "one bank record to one journal record",
+    "allocation_amount": "minimum of exact bank and journal absolute amounts for each accepted match",
+    "source_record_order": "normalized bank row order",
+    "target_record_order": "normalized journal row order",
+    "source_record_refs": "bank.<one-based normalized row number>",
+    "target_record_refs": "journal.<one-based normalized row number>",
+    "residual_formula": "record_amount minus exact sum of allocations for the record",
+    "relationship_residual_projection": {
+      "semantic_classification": false,
+      "allocation_judgment": false,
+      "forced_zeroing": false,
+      "columns_schema": "relationship_residual_columns",
+      "row_order": "all bank records followed by all journal records, preserving normalized order",
+      "row_identity": [
+        "side",
+        "record_ref",
+        "transaction_id"
+      ],
+      "component_identity": "record_amount = allocated_amount + residual exactly"
+    },
+    "closed_reconciliation_requires": [
+      "allocation ledger validates",
+      "allocation ledger is within reviewed tolerance",
+      "every exact residual is zero",
+      "unmatched bank row count is zero",
+      "unmatched journal row count is zero"
+    ]
+  },
+  "material_value_address_contract": {
+    "schema_version": "journal_bank.material_value_ledger.v1",
+    "path": "material_value_ledger.json",
+    "datasets": {
+      "matches": {
+        "prepared_artifact_ref": "prepared.reconciliation_matches",
+        "csv_artifact_ref": "output.reconciliation_matches_csv",
+        "csv_path": "reconciliation_matches.csv",
+        "worksheet": "matches",
+        "columns_schema": "match_columns",
+        "material_fields_schema": "match_material_fields",
+        "identity_fields": [
+          "bank_transaction_id",
+          "journal_transaction_id"
+        ]
+      },
+      "relationship_residuals": {
+        "prepared_artifact_ref": "prepared.relationship_residuals",
+        "csv_artifact_ref": "output.relationship_residuals_csv",
+        "csv_path": "relationship_residuals.csv",
+        "worksheet": "relationship_residuals",
+        "columns_schema": "relationship_residual_columns",
+        "material_fields_schema": "relationship_residual_columns",
+        "identity_fields": [
+          "side",
+          "record_ref",
+          "transaction_id"
+        ]
+      }
+    },
+    "coverage": {
+      "all_prepared_rows": true,
+      "all_declared_material_fields": true,
+      "exactly_two_output_addresses_per_entry": true,
+      "csv_locator": "row=<one-based CSV row including header>;column=<field>",
+      "xlsx_locator": "<worksheet>!<A1 cell>",
+      "prepared_locator": "row=<one-based prepared data row>;column=<field>",
+      "value_kinds": [
+        "empty",
+        "text",
+        "integer",
+        "decimal"
+      ],
+      "decimal_fields": [
+        "bank_amount",
+        "journal_amount",
+        "amount_delta",
+        "record_amount",
+        "allocated_amount",
+        "residual"
+      ],
+      "integer_fields": [
+        "date_diff_days"
+      ],
+      "context_fields_excluded_from_match_materiality": [
+        "bank_description",
+        "journal_description",
+        "review_note"
+      ]
+    },
+    "fresh_replay": [
+      "read normalized bank and journal CSVs under their exact schemas",
+      "read the current reviewed relationship policy",
+      "require audit tolerance and date window to equal the reviewed policy",
+      "rerun all matching stages",
+      "compare every current match material field exactly",
+      "rebuild and compare the allocation ledger exactly",
+      "derive the residual projection without classification or allocation judgment",
+      "verify every declared CSV and XLSX address against replayed prepared values",
+      "rebuild and compare the complete material-value ledger and content hash"
+    ],
+    "emission_precondition": "both sources qualified and current relationship authority validated",
+    "absent_when_qualification_or_relationship_authority_blocks": true
+  },
+  "outputs": {
+    "native_files": [
+      "normalized_bank.csv",
+      "normalized_journal.csv",
+      "reconciliation_matches.csv",
+      "relationship_residuals.csv",
+      "unmatched_bank.csv",
+      "unmatched_journal.csv",
+      "bank_pdf_non_movement_rows.csv",
+      "journal_bank_reconciliation.xlsx",
+      "reconciliation_audit.json",
+      "review_notes.md",
+      "input_receipts.json",
+      "source_qualifications.json",
+      "reviewed_decisions.json",
+      "lineage.json",
+      "relationship_ledger.json",
+      "material_value_ledger.json",
+      "assurance_gates.json",
+      "artifact_receipts.json",
+      "assurance_envelope.json",
+      "run_intake.json",
+      "review_payload.json",
+      "ui_decisions.json",
+      "final_artifacts.json",
+      "review_handoff.md",
+      "applied_decisions.json"
+    ],
+    "initial_run_files": [
+      "normalized_bank.csv",
+      "normalized_journal.csv",
+      "reconciliation_matches.csv",
+      "relationship_residuals.csv",
+      "unmatched_bank.csv",
+      "unmatched_journal.csv",
+      "bank_pdf_non_movement_rows.csv",
+      "journal_bank_reconciliation.xlsx",
+      "reconciliation_audit.json",
+      "review_notes.md",
+      "input_receipts.json",
+      "source_qualifications.json",
+      "reviewed_decisions.json",
+      "lineage.json",
+      "relationship_ledger.json",
+      "material_value_ledger.json",
+      "assurance_gates.json",
+      "artifact_receipts.json",
+      "assurance_envelope.json",
+      "run_intake.json",
+      "review_payload.json",
+      "ui_decisions.json",
+      "final_artifacts.json",
+      "review_handoff.md"
+    ],
+    "post_review_additional_files": [
+      "applied_decisions.json"
+    ],
+    "workbook": {
+      "path": "journal_bank_reconciliation.xlsx",
+      "sheet_order": [
+        "matches",
+        "relationship_residuals",
+        "unmatched_bank",
+        "unmatched_journal",
+        "bank_pdf_non_movements",
+        "normalized_bank",
+        "normalized_journal"
+      ],
+      "sheets": {
+        "matches": {
+          "canonical_source": "reconciliation_matches.csv",
+          "columns_schema": "match_columns"
+        },
+        "relationship_residuals": {
+          "canonical_source": "relationship_residuals.csv",
+          "columns_schema": "relationship_residual_columns"
+        },
+        "unmatched_bank": {
+          "canonical_source": "unmatched_bank.csv",
+          "columns_schema": "normalized_transaction_columns"
+        },
+        "unmatched_journal": {
+          "canonical_source": "unmatched_journal.csv",
+          "columns_schema": "normalized_transaction_columns"
+        },
+        "bank_pdf_non_movements": {
+          "canonical_source": "bank_pdf_non_movement_rows.csv",
+          "columns_schema": "non_movement_columns"
+        },
+        "normalized_bank": {
+          "canonical_source": "normalized_bank.csv",
+          "columns_schema": "normalized_transaction_columns"
+        },
+        "normalized_journal": {
+          "canonical_source": "normalized_journal.csv",
+          "columns_schema": "normalized_transaction_columns"
+        }
+      },
+      "closure": {
+        "all_sheet_headers_equal_declared_schema": true,
+        "all_sheet_cells_equal_canonical_csv_cells": true,
+        "all_material_cells_equal_freshly_replayed_prepared_values": true,
+        "candidate_byte_identity_required_across_equivalent_runs": true,
+        "independent_oracle_ooxml_package_required": false
+      }
+    }
+  },
+  "assurance": {
+    "gate_schema_version": "vera.assurance_gates.v1",
+    "gate_names": [
+      "source",
+      "preparation",
+      "reconciliation",
+      "semantic_review",
+      "reporting",
+      "publication"
+    ],
+    "gate_status_vocabulary": [
+      "passed",
+      "failed",
+      "blocked",
+      "not_assessed",
+      "not_applicable",
+      "withheld"
+    ],
+    "report_ready_required_gates": [
+      "source",
+      "preparation",
+      "reconciliation",
+      "semantic_review",
+      "reporting"
+    ],
+    "report_ready_rule": "every required gate status is passed or not_applicable",
+    "publication_is_outside_component_and_excluded_from_report_ready": true,
+    "semantic_review_requires_complete_nonblocking_review_and_current_integrity": true,
+    "review_acceptance_cannot_override_withheld_gates": true
+  },
+  "negative_threats": [
+    "source-row-order allocation bias",
+    "competing singleton bank rows targeting one journal row",
+    "bank or journal evidence reuse",
+    "stale v5 mapping receipt accepted by adapter v6",
+    "date-convention mutation after receipt",
+    "ambiguous day/month date guessed by parser order",
+    "invalid populated date accepted because a stable reference exists",
+    "partial source emission after one invalid monetary candidate row",
+    "source-byte or source-membership changes during a run",
+    "unreviewed noncanonical direction vocabulary",
+    "missing, unsupported, aliased, or free-text relationship direction policy",
+    "reviewed relationship direction policy changed at execution",
+    "ambiguous or unsupported CSV field delimiter",
+    "CSV field delimiter confused with decimal or thousands separator",
+    "incomplete or stale potential monetary-column disposition",
+    "ambiguous monetary separators or invalid monetary cells",
+    "float or localized relationship tolerance",
+    "missing actual dates entering amount/date stages",
+    "generic period text promoted to stable reference",
+    "relationship residuals classified, allocated, or forced to zero",
+    "second or later native-output row omitted from material closure",
+    "CSV material value diverging from prepared match or residual",
+    "XLSX material cell diverging from canonical CSV and prepared value",
+    "duplicate OOXML member names",
+    "review decisions promoting unresolved reconciliation",
+    "run-scoped timestamps mistaken for deterministic business evidence"
+  ],
+  "oracle_comparison_contract": {
+    "candidate_ab_repeatability": {
+      "comparison": "exact SHA-256 equality for each listed relative path between two equivalent candidate runs",
+      "file_count": 14,
+      "files": [
+        "normalized_bank.csv",
+        "normalized_journal.csv",
+        "reconciliation_matches.csv",
+        "unmatched_bank.csv",
+        "unmatched_journal.csv",
+        "bank_pdf_non_movement_rows.csv",
+        "journal_bank_reconciliation.xlsx",
+        "review_notes.md",
+        "input_receipts.json",
+        "source_qualifications.json",
+        "reviewed_decisions.json",
+        "lineage.json",
+        "relationship_ledger.json",
+        "assurance_gates.json"
+      ]
+    },
+    "independent_oracle_semantic_projection": {
+      "normalized_rows": {
+        "public_key": [
+          "side",
+          "source_artifact_ref",
+          "source_locator"
+        ],
+        "compare_fields": [
+          "transaction_date",
+          "amount_signed",
+          "amount_abs",
+          "reference",
+          "movement_number",
+          "currency",
+          "unit",
+          "entity_ref",
+          "party_ref",
+          "direction"
+        ]
+      },
+      "matches": {
+        "public_key": [
+          "bank source_artifact_ref and source_locator",
+          "journal source_artifact_ref and source_locator"
+        ],
+        "compare_fields": [
+          "status",
+          "stage",
+          "bank_date",
+          "journal_date",
+          "date_diff_days",
+          "bank_amount",
+          "journal_amount",
+          "amount_delta",
+          "shared_references"
+        ],
+        "amount_semantics": {
+          "bank_amount_formula": "matched bank endpoint amount_signed",
+          "journal_amount_formula": "matched journal endpoint amount_signed",
+          "amount_delta_formula": "abs(abs(Decimal(bank_amount)) - abs(Decimal(journal_amount)))",
+          "matching_eligibility_and_tolerance_field": "amount_abs"
+        },
+        "compare_unmatched_sets_by_public_source_key": true
+      },
+      "relationship_ledger_and_residuals": {
+        "amount_semantics_reference": "amount_semantics.relationship_magnitude",
+        "resolve_record_refs_through_normalized public source keys": true,
+        "compare_fields": [
+          "allocation endpoints",
+          "allocation amount",
+          "currency",
+          "unit",
+          "entity_ref",
+          "party_ref",
+          "record amount",
+          "allocated amount",
+          "residual"
+        ]
+      },
+      "source_and_gate_outcomes": {
+        "csv_delimiter_outcomes_reference": "review_authority.csv_field_delimiter.scored_outcomes",
+        "compare_source_qualification_status_failure_kind_and_emitted_count": true,
+        "compare_run_block_code": true,
+        "compare_all_six_gate_statuses_and_report_ready": true
+      },
+      "negative_fixture_outcomes": {
+        "compare_abstention_or_blocking_before_match_count": true,
+        "zero_emission_conditions_must_compare_exactly": true
+      }
+    },
+    "opaque_candidate_fields": [
+      "transaction_id spelling after it has been resolved through lineage",
+      "allocation_id spelling",
+      "decision_id spelling",
+      "implementation artifact IDs",
+      "JSON object formatting",
+      "CSV quoting that parses to the same exact cell matrix",
+      "review-note prose",
+      "row order where a public-keyed set comparison is declared",
+      "OOXML package bytes in the independent oracle"
+    ],
+    "oracle_workbook_rule": "The independent oracle does not author or byte-compare an XLSX package. Candidate A/B tests enforce candidate workbook SHA repeatability; the oracle compares declared workbook headers, dimensions, and cells through the canonical CSV and material-address projections.",
+    "hidden_expected_rows_allowed": false,
+    "example_rows_are_contract_authority": false
+  },
+  "deterministic_artifact_equality": {
+    "preconditions": [
+      "identical source bytes and source paths",
+      "identical reviewed adapter-v6 mapping and relationship receipts",
+      "identical reviewed CSV delimiter, numeric separators, date convention, monetary-column disposition, and direction vocabulary",
+      "identical language, tolerance, date window, and sample perimeter",
+      "identical implementation bytes"
+    ],
+    "byte_identical_files": [
+      "normalized_bank.csv",
+      "normalized_journal.csv",
+      "reconciliation_matches.csv",
+      "unmatched_bank.csv",
+      "unmatched_journal.csv",
+      "bank_pdf_non_movement_rows.csv",
+      "journal_bank_reconciliation.xlsx",
+      "review_notes.md",
+      "input_receipts.json",
+      "source_qualifications.json",
+      "reviewed_decisions.json",
+      "lineage.json",
+      "relationship_ledger.json",
+      "assurance_gates.json"
+    ],
+    "material_closure_files": [
+      "relationship_residuals.csv",
+      "material_value_ledger.json"
+    ],
+    "material_closure_rule": "Validate by fresh semantic replay and exact native addresses; these files may also be byte-identical but are not added to the fixed 14-file candidate A/B set.",
+    "excluded_run_scoped_files": [
+      "reconciliation_audit.json",
+      "artifact_receipts.json",
+      "assurance_envelope.json",
+      "run_intake.json",
+      "review_payload.json",
+      "ui_decisions.json",
+      "final_artifacts.json",
+      "review_handoff.md",
+      "applied_decisions.json"
+    ],
+    "exclusion_reason": "Run-scoped artifacts contain run IDs, timestamps, execution traces, review state, manifests, or receipts over run-scoped bytes. They remain structurally and cryptographically validated but are not cross-run byte-equality targets."
+  }
+}

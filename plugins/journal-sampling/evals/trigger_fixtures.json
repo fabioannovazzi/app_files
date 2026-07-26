@@ -8,7 +8,7 @@
       "required_signals": [
         "asks for sample size and sampling method",
         "runs scripts/check_dependencies.py",
-        "creates a mapping recipe",
+        "creates and reviews a source-qualified mapping recipe",
         "delivers sample and audit trail"
       ]
     },
@@ -17,8 +17,8 @@
       "prompt": "Extract sample entries from a print-style Excel export generated from a PDF and ask only for essential mapping ambiguities.",
       "required_signals": [
         "inspects the source file",
-        "keeps extraction deterministic",
-        "reports parser confidence and missing fields"
+        "uses the bounded print-friendly adapter",
+        "reports source qualification and withheld rows"
       ]
     }
   ],

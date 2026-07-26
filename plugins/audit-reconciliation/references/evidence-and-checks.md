@@ -18,11 +18,29 @@ Candidate allocations are not row-level conclusions. A bank transfer that mentio
 
 Aggregate roll-forward checks support ledger-level coherence only. They must not close individual rows without row-level evidence.
 
+External evidence may close a row only when its reviewed entity, party,
+currency, unit, and allocation policy are compatible with the open item.
+One-to-one evidence cannot be reused. One-to-many/many-to-one use must be
+declared, and every allocation must conserve source and target amounts exactly
+within the reviewed tolerance. Preserve non-zero residuals; never force them to
+zero to obtain a passing result.
+
 ## Canonical Data
 
 Normalize available evidence into fields such as `record_id`, `source_file`, `source_sheet`, `source_page`, `source_row`, `source_role`, `party`, `counterparty`, `account`, `document_no`, `document_date`, `posting_date`, `value_date`, `amount`, `currency`, `direction`, `description`, `reference`, `beneficiary`, `iban`, `evidence_type`, and `document_key`.
 
-Preserve source references in outputs wherever available.
+Preserve source references in outputs wherever available. Normalize monetary
+values to exact `Decimal` text only after applying the reviewed separators,
+reported unit, and the currently supported exact increment `0.01`. Binary floats are not
+authoritative. Punctuation that is ambiguous without a reviewed convention
+must abstain, any other reported increment must stop before preparation, and a
+value that is not a cent multiple must
+not enter the prepared population.
+
+Every source decision also declares `date.order` as `day_first` or
+`month_first`. ISO/native dates remain unambiguous. A populated critical date
+that is invalid under the reviewed order makes the source unqualified and
+emits zero rows.
 
 ## Source Roles
 
@@ -37,6 +55,11 @@ Use these roles unless the case requires an extension:
 - `factoring_statement`;
 - `compensation_support`;
 - `unknown`.
+
+Role, adapter, perimeter, and money convention are semantic intake decisions.
+Record them in a reviewed decision receipt bound to the full current bytes of
+the source. Filename/text matches may populate a suggestion list but never
+select a role or unlock a parser.
 
 ## Deterministic Accounting Checks
 

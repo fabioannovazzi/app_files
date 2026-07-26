@@ -1,8 +1,8 @@
 """Output helpers for Codex audit reconciliation workpapers.
 
-These functions are support utilities for a Codex skill. They are not a
-standalone CLI. A case-specific reconciliation script can import them to produce
-the required Excel and Word deliverables from deterministic reconciliation rows.
+These functions are internal support utilities, not a standalone CLI. Validated
+public workflow entrypoints load this retained source through the implementation
+bootstrap to produce Excel and Word deliverables.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from openpyxl.utils import get_column_letter
 
 try:
     from .locale_support import output_labels
-except ImportError:  # pragma: no cover - direct import support
+except ImportError:  # pragma: no cover - retained top-level loader support
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
@@ -1919,7 +1919,7 @@ def summary_from_reconciliation(
             "reconciliation_status": row["reconciliation_status"],
             "rule_applied": row["rule_applied"],
             "rows": row["rows"],
-            "amount": f"{row['amount']:.2f}",
+            "amount": format(row["amount"], "f"),
         }
         for row in sorted(
             buckets.values(),

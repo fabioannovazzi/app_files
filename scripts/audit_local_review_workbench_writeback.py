@@ -378,7 +378,7 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
 
 
 def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
-    """Build a real blocked package for immutable-domain review write-back."""
+    """Build a real blocked package with a grouped AML review proposal."""
 
     plugin_root = root / "plugins" / "new-client"
     initialize = subprocess.run(
@@ -430,13 +430,13 @@ def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
             candidate
             for candidate in items
             if isinstance(candidate, dict)
-            and candidate.get("item_type") == "aml_risk_factor"
+            and candidate.get("item_type") == "aml_factor_section"
             and "edit" in candidate.get("allowed_actions", [])
         ),
         None,
     )
     if item is None:
-        raise RuntimeError("new-client audit package has no editable AML item")
+        raise RuntimeError("new-client audit package has no editable AML section")
     return {
         "item_id": str(item["id"]),
         "target_artifact": "aml_assessment_draft.json",

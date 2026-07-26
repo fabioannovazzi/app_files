@@ -85,7 +85,7 @@ def test_new_client_fixture_uses_real_proposal_only_contract(
     assert fixture["writeback_mode"] == "review_proposal"
     assert fixture["target_artifact"] == "aml_assessment_draft.json"
     assert any(
-        item["id"] == fixture["item_id"] and item["item_type"] == "aml_risk_factor"
+        item["id"] == fixture["item_id"] and item["item_type"] == "aml_factor_section"
         for item in review_payload["items"]
     )
 

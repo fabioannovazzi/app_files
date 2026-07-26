@@ -30,7 +30,11 @@ Questo non è un applicativo standalone: è un workflow Codex. Gli script del pl
 - evidenze factoring, anticipo fatture o operatori di incasso;
 - accordi o supporti di compensazione.
 
-I file possono essere PDF, Excel, CSV o ZIP. I PDF testuali vengono letti direttamente; i PDF scansionati possono usare OCR se le dipendenze opzionali sono installate.
+Il runner raw supporta solo i layout qualificati dal relativo adapter: PDF
+testuali/scansionati per i layout documentati, XLSX/XLSM di giornale con colonne
+riconosciute e ZIP di distinte HTML. Un file CSV o un layout Excel diverso non
+viene interpretato genericamente: resta `unsupported_source_layout` finche non
+esiste un adapter qualificato o una preparazione esterna riveduta.
 
 ## Primo prompt
 
@@ -71,9 +75,96 @@ Per un primo lavoro completo, Codex deve raccogliere e confermare questi element
 
 Lingue supportate per etichette e testi di output: italiano (`it`), inglese (`en`), francese (`fr`), tedesco (`de`) e spagnolo (`es`).
 
+## Contratto di assurance meccanica
+
+Prima dell'estrazione, ogni file deve avere una decisione
+`reviewed_source_decisions` che registra ruolo, adapter, revisore/data, perimetro
+(`entity_ref`, `party_ref`, valuta, unita, direzione e politica di allocazione)
+convenzione monetaria (separatori, unita riportata e incremento esattamente
+`0.01`) e ordine data (`day_first` o `month_first`). La ricevuta v2 e la
+qualifica con `reviewed_mapping_ref` devono coprire esattamente una volta ogni
+sorgente prima di qualsiasi riga preparata. Le
+inferenze da nome o testo sono solo suggerimenti e non autorizzano il parser.
+
+Il run conserva e rigioca ricevute sui byte correnti di sorgenti,
+implementazione, record preparati e output. Gli importi sono gestiti con
+`Decimal`: i float, la punteggiatura ambigua e gli importi non multipli
+dell'incremento centesimale supportato vengono esclusi prima della
+preparazione. Le allocazioni conservano importi,
+identita, valuta, unita, entita/controparte e residui esatti.
+L'implementazione e un contratto ordinato fisso di 25 file (3 asset, 1 server
+MCP, 8 script eseguibili incluso il bootstrap pre-import, 5 unita sorgente
+interne conservate e 8 moduli assurance condivisi), non un elenco estendibile
+dal contenuto della cartella o dalla ricevuta del run. Ogni entrypoint Python
+pubblico esegue il bootstrap sorgente prima di qualsiasi import locale,
+disabilita il bytecode locale e valida l'albero esatto. Le cinque unita interne
+sono sotto `scripts/retained_sources/` con suffisso diverso da `.py`: l'import
+Python ordinario non le risolve e solo il bootstrap ne carica i byte stabili
+dopo la chiusura dell'albero. L'import diretto di questi moduli interni non e
+supportato. Non esistono namespace ignorati: file regolari, directory anche
+vuote, symlink, hardlink, FIFO e altri file speciali aggiunti sotto `assets/`,
+`mcp/`, `scripts/` o nel modulo assurance condiviso fanno fallire il controllo,
+inclusi contenuti sotto `__pycache__/`. Il server MCP ripete il controllo prima
+del manifest e prima di ogni superficie RPC pubblica.
+
+Gli output di assurance principali sono:
+
+- `prepared_records.json`, sigillato prima della riconciliazione;
+- `reconciliation_results.json`, incluso nel perimetro finale;
+- `assurance_final_outputs/` e `final_output_inventory.json`, con uguaglianza
+  esatta tra file dichiarati e file fisici e rifiuto di symlink, hardlink e
+  file speciali;
+- `assurance_receipts.json` e `numeric_evidence_ledger.json`, con indirizzi dei
+  valori materiali e identita record rigiocati per ogni Excel/Word/JSON
+  dichiarato e chiusura fisica esatta di file e directory alla radice;
+- `assurance_gates.json`, con gate separati `source`, `preparation`,
+  `reconciliation`, `semantic_review`, `reporting` e `publication`.
+
+Il set dei review deve coincidere esattamente con i record rivedibili, una riga
+per ID, e ogni review deve avere `reviewer_ref` canonico e data ISO non futura
+rispetto alla data run sigillata. Un review richiesto ancora pendente, un check
+fallito o un residuo non bilanciato non produce stato di
+reporting riuscito. La pubblicazione resta sempre un'azione separata.
+`reviewer_ref` resta pero un'etichetta non firmata, non autenticata e non
+attendibile come prova di identita o autorizzazione. La finalizzazione usa il
+rollback transazionale dell'intero albero; un errore tardivo ripristina
+esattamente lo stato precedente.
+La prima applicazione di una review conserva, dentro la stessa transazione
+copy-on-write, la transizione predecessore in
+`assurance_transition_history/<sha256-del-contenuto-del-seal>/`. Il replay
+richiede i byte esatti del seal, della review professionale, della
+riconciliazione finale e del payload predecessori, oltre alla mappa ordinata
+item-record, alle decisioni/effetti applicati, alla review successore e alla
+ricevuta deterministica. Conserva inoltre `predecessor_run/`, snapshot fisico
+completo del run predecessore, e vi riesegue l'intera validazione assurance:
+data run, assunzioni e ricevuta dei record preparati, valori materiali, gate,
+inventario finale e chiusura esatta dell'albero devono essere nuovamente
+coerenti. Un digest predecessore solo dichiarato o una storia mancante,
+modificata, ampliata, contraddittoria o riordinata non autorizza il successore.
+Prima della prima applicazione, il chiamante deve conservare il
+`content_sha256` del seal predecessore tramite un canale di review separato e
+passarlo esplicitamente come `expected_predecessor_checkpoint` all'apply, alla
+rigenerazione successore e a ogni validazione successore. Il valore non viene
+mai inferito dall'albero candidato. Un checkpoint mancante o diverso blocca
+senza scritture, anche davanti a una sostituzione completamente risigillata di
+importi, valuta, cut-off, data run, identita run, anno o tolleranza. Il replay
+riesegue inoltre righe di riconciliazione, allocazioni e check core del
+predecessore. `run_id` e incluso nel digest del seal. Il checkpoint prova solo
+l'uguaglianza del digest: attendibilita e autorizzazione del canale separato
+restano esterne al controllo.
+Materialita, sufficienza dell'evidenza e conclusione contabile restano giudizi
+professionali: il codice controlla il contratto e la tracciabilita, non li
+decide.
+
+La sequenza e gli stati sono descritti in
+`references/workflow-reference.md`.
+
 ## Review browser locale e UI MCP
 
-Il plugin espone un server MCP locale dichiarato in `.mcp.json`.
+Il plugin espone un server MCP locale dichiarato in `.mcp.json`. Il bridge MCP
+avvia il replay Python con `-I -B`; per il browser/CLI usare analogamente
+`python -I -B scripts/review_server.py <cartella-output>`. Gli entrypoint
+applicano comunque il bootstrap anche se queste opzioni vengono omesse.
 
 - `validate_audit_reconciliation_review` valida `review_payload.json` prima della resa.
 - `render_audit_reconciliation_review` apre il widget MCP `ui://widget/audit-reconciliation-review.html` tramite `openai/outputTemplate`, utile come superficie integrata Codex opzionale.
@@ -81,7 +172,14 @@ Il plugin espone un server MCP locale dichiarato in `.mcp.json`.
 - Il widget mostra righe da rivedere, controlli falliti, righe `needs_evidence` / `unresolved`, pagamenti probabili, workbook e report generati.
 - Le decisioni finali vanno conservate in `ui_decisions.json`; l'applicazione scrive anche `applied_decisions.json` e aggiorna `final_artifacts.json`.
 
-Il passaggio di handoff primario è il browser locale: dopo ogni run normale Codex deve indicare `artifact_card.md`, avviare `python scripts/review_server.py <cartella-output>`, comunicare esplicitamente l'URL `localhost` aperto e spiegare che i pulsanti della pagina scrivono i JSON nella cartella output. Questo passaggio va eseguito prima della risposta finale; non è sufficiente lasciare un file o un widget nascosto.
+Il passaggio di handoff primario è il browser locale: dopo ogni run normale Codex deve indicare `artifact_card.md`, avviare `python -I -B scripts/review_server.py <cartella-output>`, comunicare esplicitamente l'URL `localhost` aperto e spiegare che i pulsanti della pagina scrivono i JSON nella cartella output. Questo passaggio va eseguito prima della risposta finale; non è sufficiente lasciare un file o un widget nascosto.
+
+I descrittori di avvio `.codex-plugin/plugin.json`, `.mcp.json` e `.app.json`
+restano fuori dal contratto assurance in-process dei 25 file: sono letti e
+governati dall'host Codex prima che il processo validato inizi. Il controllo
+del plugin non puo quindi attestare la scelta iniziale dell'eseguibile fatta
+dall'host, ne codice arbitrario gia in esecuzione con lo stesso utente del
+sistema operativo.
 
 La sequenza `validate_audit_reconciliation_review` -> `render_audit_reconciliation_review` resta disponibile quando serve una superficie integrata in Codex, ma non sostituisce il browser locale come handoff normale. Per run grandi, i tool MCP possono ricevere `run_intake_path`, `review_payload_path`, `ui_decisions_path` e `final_artifacts_path` invece dei JSON inline; il server legge solo file coerenti con la cartella output del run. Se il server browser non parte o il browser non può essere aperto, Codex deve dirlo esplicitamente e aprire `review_ui.html` dalla cartella output come fallback statico; quel fallback può copiare/scaricare JSON ma non persiste automaticamente. Se anche quel file non è disponibile, usare `review_payload.json`, `codex_review_packet.json` e il workbook come fallback markdown/statico. Le piccole scelte iniziali restano in chat o, quando disponibile, nei controlli nativi di Plan mode: non serve una pagina HTML dedicata per 2-3 opzioni.
 

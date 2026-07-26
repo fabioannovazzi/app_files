@@ -3,10 +3,80 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
+const crypto = require("node:crypto");
+const zlib = require("node:zlib");
 const { spawnSync } = require("node:child_process");
 
 const SERVER_NAME = "report-builder-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
+const REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS = [
+  ".codex-plugin/plugin.json",
+  ".app.json",
+  ".mcp.json",
+  "assets/icon.svg",
+  "assets/report-builder-review-widget.html",
+  "assets/review-workbench-adapter.json",
+  "mcp/server.cjs",
+  "scripts/apply_review_edits.py",
+  "scripts/build_report.py",
+  "scripts/check_dependencies.py",
+  "scripts/implementation_bootstrap.py",
+  "scripts/implementation_contract.py",
+  "scripts/inspect_inputs.py",
+  "scripts/physical_output_set.py",
+  "scripts/prepared_contract.py",
+  "scripts/report_builder_core.py",
+  "scripts/report_builder_integrity.py",
+  "scripts/report_gates.py",
+  "scripts/review_successor.py",
+  "scripts/review_numeric_measures.py",
+  "scripts/review_session.py",
+  "scripts/seal_review_integrity.py",
+  "scripts/validate_review_integrity.py",
+];
+const REPORT_BUILDER_SHARED_IMPLEMENTATION_PATHS = [
+  "__init__.py",
+  "contracts.py",
+  "decisions.py",
+  "envelope.py",
+  "money.py",
+  "relationships.py",
+  "review_output_transaction.cjs",
+  "serialization.py",
+];
+const REVIEW_TRANSACTION_RUNTIME = (() => {
+  const vendored = path.join(
+    PLUGIN_ROOT,
+    "vendor",
+    "modules",
+    "vera_assurance",
+    "review_output_transaction.cjs",
+  );
+  return fs.existsSync(vendored)
+    ? vendored
+    : path.resolve(
+        PLUGIN_ROOT,
+        "..",
+        "_shared",
+        "vendor",
+        "modules",
+        "vera_assurance",
+        "review_output_transaction.cjs",
+      );
+})();
+const REPORT_BUILDER_ASSURANCE_IMPLEMENTATION_ROOT = path.dirname(
+  REVIEW_TRANSACTION_RUNTIME,
+);
+validateReportBuilderImplementationTree();
+const {
+  generatedReviewArgsForWorkingOutput,
+  generatedReviewAtomicWriteFileSync,
+  generatedReviewCollectApplicationWritePaths,
+  generatedReviewPathEntryStat,
+  generatedReviewRewriteOutputPaths,
+  generatedReviewTransactionEnvelope,
+  withGeneratedReviewOutputTransaction,
+} = require(REVIEW_TRANSACTION_RUNTIME);
 const PLUGIN_MANIFEST = JSON.parse(
   fs.readFileSync(path.join(PLUGIN_ROOT, ".codex-plugin", "plugin.json"), "utf8"),
 );
@@ -163,6 +233,12 @@ function toolDefinitions() {
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
+      expected_predecessor_checkpoint: {
+        type: "string",
+        pattern: "^[0-9a-f]{64}$",
+        description:
+          "Externally retained predecessor checkpoint. Required when validating or changing a successor review state.",
+      },
     },
     ["review_payload"],
   );
@@ -188,6 +264,12 @@ function toolDefinitions() {
       decisions: { type: "array", items: decisionSchema },
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
+      expected_predecessor_checkpoint: {
+        type: "string",
+        pattern: "^[0-9a-f]{64}$",
+        description:
+          "Externally retained current integrity checkpoint. Required before applying a later review round.",
+      },
     },
     ["review_payload", "decisions"],
   );
@@ -316,6 +398,11 @@ function validateItem(item, index) {
         `review_payload.items[${index}].allowed_actions contains unsupported action: ${action}`,
       );
     }
+  }
+  if (item.item_type === "report_artifact" && item.allowed_actions.includes("edit")) {
+    throw new Error(
+      `review_payload.items[${index}] cannot edit a report artifact without an exact application adapter`,
+    );
   }
   if (item.recommended_action != null && !ALLOWED_ACTIONS.has(item.recommended_action)) {
     throw new Error(
@@ -488,32 +575,91 @@ function buildUiDecisions(inputArgs) {
 }
 
 function saveDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
-  const language = languageFromArgs(inputArgs);
-  let persisted = false;
-  if (decisionOutputPath) {
-    fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
-    persisted = true;
-  }
-  return {
-    ok: true,
-    validation_type: "report_builder_decisions",
-    run_id: uiDecisions.run_id,
-    decision_count: uiDecisions.decision_count,
-    item_count: uiDecisions.item_count,
-    status: uiDecisions.status,
-    persisted,
-    ui_decisions_path: persisted ? decisionOutputPath : null,
-    message: persisted
-      ? isSpanish(language)
-        ? `Se guardaron ${uiDecisions.decision_count} decisiones del Generador de informes.`
-        : `Saved ${uiDecisions.decision_count} Build Report decisions.`
-      : isSpanish(language)
-        ? "Las decisiones son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
-        : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
-    ui_decisions: uiDecisions,
+  const outputDir = resolveRunOutputDir(inputArgs);
+  const persist = (
+    trustedArgs,
+    workingOutputDir,
+    reviewPayloadDigest = null,
+  ) => {
+    const { uiDecisions, decisionOutputPath } =
+      buildUiDecisions(trustedArgs);
+    const language = languageFromArgs(trustedArgs);
+    const persisted = Boolean(workingOutputDir);
+    if (workingOutputDir) {
+      uiDecisions.review_payload_sha256 = reviewPayloadDigest;
+      generatedReviewAtomicWriteFileSync(
+        path.join(workingOutputDir, "ui_decisions.json"),
+        `${JSON.stringify(uiDecisions, null, 2)}\n`,
+        "utf8",
+      );
+      sealReportBuilderIntegrityParent(
+        workingOutputDir,
+        trustedArgs.expected_predecessor_checkpoint || null,
+      );
+    }
+    const currentIntegrity = workingOutputDir
+      ? readJsonFileIfPresent(
+          path.join(workingOutputDir, "review_integrity.json"),
+        )
+      : null;
+    const result = {
+      ok: true,
+      validation_type: "report_builder_decisions",
+      run_id: uiDecisions.run_id,
+      decision_count: uiDecisions.decision_count,
+      item_count: uiDecisions.item_count,
+      status: uiDecisions.status,
+      persisted,
+      ui_decisions_path: persisted ? decisionOutputPath : null,
+      predecessor_checkpoint:
+        currentIntegrity?.predecessor_checkpoint || null,
+      integrity_checkpoint: currentIntegrity?.content_sha256 || null,
+      message: persisted
+        ? isSpanish(language)
+          ? `Se guardaron ${uiDecisions.decision_count} decisiones del Generador de informes.`
+          : `Saved ${uiDecisions.decision_count} Build Report decisions.`
+        : isSpanish(language)
+          ? "Las decisiones son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
+          : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
+      ui_decisions: uiDecisions,
+    };
+    return generatedReviewTransactionEnvelope(
+      result,
+      persisted
+        ? ["ui_decisions.json", "review_integrity.json"]
+        : [],
+    );
   };
+  if (!outputDir) return persist(inputArgs, null).result;
+  validateReportBuilderTransactionInput(outputDir);
+  return withGeneratedReviewOutputTransaction(
+    outputDir,
+    ({ workingOutputDir, trustedImage }) => {
+      const authority = parentBoundReportBuilderArgs(inputArgs, {
+        outputDir,
+        trustedImage,
+        trustedImageCaptured: true,
+      });
+      const integrity = validateReportBuilderIntegrityAuthority(
+        workingOutputDir,
+        {
+          required: authority.assured,
+          failureMessage: REPORT_BUILDER_AUTHORIZATION_FAILURE,
+          expectedPredecessorCheckpoint:
+            authority.args.expected_predecessor_checkpoint || null,
+        },
+      );
+      if (!integrity) {
+        throw new Error(REPORT_BUILDER_AUTHORIZATION_FAILURE);
+      }
+      return persist(
+        authority.args,
+        workingOutputDir,
+        integrity.reviewPayloadDigest,
+      );
+    },
+    reportBuilderTransactionOptions("save"),
+  );
 }
 
 function resolveRunOutputDir(inputArgs) {
@@ -773,7 +919,7 @@ function updateCsvArtifact(filePath, effect, spec) {
       `CSV structured edit expected exactly one row for ${spec.idField}=${spec.recordId}, found ${updated}`,
     );
   }
-  fs.writeFileSync(filePath, serializeCsv(rows), "utf8");
+  generatedReviewAtomicWriteFileSync(filePath, serializeCsv(rows), "utf8");
   return { updatedRows: updated, rowCount: Math.max(rows.length - 1, 0) };
 }
 
@@ -781,18 +927,30 @@ function updateJsonArtifact(filePath, effect, spec) {
   const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
   if (Array.isArray(parsed)) {
     const updatedRows = updateMatchingRecord(parsed, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows, rowCount: parsed.length };
   }
   if (isPlainObject(parsed) && spec.recordsKey && Array.isArray(parsed[spec.recordsKey])) {
     const records = parsed[spec.recordsKey];
     const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows, rowCount: records.length };
   }
   if (isPlainObject(parsed) && String(parsed[spec.idField] ?? "") === spec.recordId) {
     parsed[spec.targetField] = effect.edit_value;
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows: 1, rowCount: 1 };
   }
   throw new Error("JSON structured edit requires an object, array, or explicit records_key array");
@@ -805,7 +963,11 @@ function updateJsonlArtifact(filePath, effect, spec) {
     .filter((line) => line.trim())
     .map((line) => JSON.parse(line));
   const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-  fs.writeFileSync(filePath, `${records.map((record) => JSON.stringify(record)).join("\n")}\n`, "utf8");
+  generatedReviewAtomicWriteFileSync(
+    filePath,
+    `${records.map((record) => JSON.stringify(record)).join("\n")}\n`,
+    "utf8",
+  );
   return { updatedRows, rowCount: records.length };
 }
 
@@ -824,6 +986,2329 @@ function readJsonFileIfPresent(filePath) {
     return isPlainObject(parsed) ? parsed : null;
   } catch {
     return null;
+  }
+}
+
+function fileSha256(filePath) {
+  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+}
+
+function persistedReviewPayloadDigest(outputDir) {
+  if (!outputDir) return null;
+  const integrity = readJsonFileIfPresent(path.join(outputDir, "review_integrity.json"));
+  const digest = shortString(integrity?.payload_digests?.review_payload);
+  if (!digest) {
+    throw new Error("Report Builder review payload digest is missing");
+  }
+  return digest;
+}
+
+function preflightReportBuilderEffects(effects, itemById, outputDir) {
+  // Exact adapter/ID validation is mechanically verifiable and must precede every write.
+  const recipe = outputDir
+    ? readJsonFileIfPresent(path.join(outputDir, "used_recipe.json"))
+    : null;
+  const editedTargets = new Set();
+  for (const effect of effects) {
+    if (effect.action !== "edit") continue;
+    const item = itemById.get(effect.item_id);
+    const data = isPlainObject(item?.data) ? item.data : {};
+    const targetPath = shortString(data.target_path);
+    const targetArtifact = artifactPathKey(data.target_artifact);
+    const commentMatch = /^sections\.([^.]+)\.codex_comment$/.exec(targetPath);
+    const mappingMatch = /^sections\.([^.]+)\.assigned_table$/.exec(targetPath);
+    if (
+      targetArtifact !== "report.docx" ||
+      (!commentMatch && !mappingMatch) ||
+      !["report_section", "table_evidence", "review_issue"].includes(item?.item_type)
+    ) {
+      throw new Error(
+        `Edit item ${effect.item_id} has no exact Report Builder application adapter`,
+      );
+    }
+    const sectionKey = (commentMatch || mappingMatch)[1];
+    if (editedTargets.has(targetPath)) {
+      throw new Error(`Multiple edits target the same Report Builder field: ${targetPath}`);
+    }
+    editedTargets.add(targetPath);
+    if (
+      recipe &&
+      (!isPlainObject(recipe.sections) || !isPlainObject(recipe.sections[sectionKey]))
+    ) {
+      throw new Error(`Edit item ${effect.item_id} targets an unknown report section`);
+    }
+    if (mappingMatch) {
+      const available = Array.isArray(data.available_table_ids)
+        ? data.available_table_ids.map(shortString).filter(Boolean)
+        : [];
+      if (!available.includes(shortString(effect.edit_value))) {
+        throw new Error(
+          `Report Builder source mapping edit must use an exact local table_id: ${shortString(effect.edit_value)}`,
+        );
+      }
+    }
+  }
+}
+
+const REPORT_BUILDER_TRANSACTION_FAILURE =
+  "Report Builder review transaction failed safely.";
+const REPORT_BUILDER_ROLLBACK_FAILURE =
+  "Report Builder review transaction could not be restored safely.";
+const REPORT_BUILDER_AUTHORIZATION_FAILURE =
+  "Report Builder persisted review authorization failed.";
+
+function reportBuilderMappedTransactionError(error) {
+  const message = error instanceof Error ? error.message : "";
+  if (
+    message.length > 512 ||
+    /[\\/\u0000-\u001f\u007f]/.test(message) ||
+    /Traceback|\bFile\s+["']|file:|~[\\/]/i.test(message)
+  ) {
+    return null;
+  }
+  if (message === REPORT_BUILDER_AUTHORIZATION_FAILURE) return message;
+  return (
+    [
+      "Report Builder integrity step ",
+      "Report Builder native regeneration ",
+    ].some((prefix) => message.startsWith(prefix))
+      ? message
+      : null
+  );
+}
+
+function reportBuilderCanonicalJson(value) {
+  if (Array.isArray(value)) {
+    return value.map((entry) => reportBuilderCanonicalJson(entry));
+  }
+  if (isPlainObject(value)) {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, reportBuilderCanonicalJson(value[key])]),
+    );
+  }
+  return value;
+}
+
+function reportBuilderJsonValuesEqual(left, right) {
+  return (
+    JSON.stringify(reportBuilderCanonicalJson(left)) ===
+    JSON.stringify(reportBuilderCanonicalJson(right))
+  );
+}
+
+function cloneReportBuilderJson(value) {
+  return JSON.parse(JSON.stringify(reportBuilderCanonicalJson(value)));
+}
+
+const REPORT_BUILDER_ASSURED_MARKERS = [
+  "review_integrity.json",
+  "source_index.json",
+  "report_audit.json",
+  "used_recipe.json",
+  "report_analysis.json",
+];
+
+function reportBuilderTrustedImageJson(trustedImage, relativePath) {
+  const entry = (trustedImage?.files || []).find(
+    (file) => file.path === relativePath,
+  );
+  if (!entry) return null;
+  try {
+    const parsed = JSON.parse(entry.payload.toString("utf8"));
+    return isPlainObject(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function assertReportBuilderCallerMatch(caller, persisted) {
+  if (caller == null) return;
+  if (!isPlainObject(caller) || !reportBuilderJsonValuesEqual(caller, persisted)) {
+    throw new Error(REPORT_BUILDER_AUTHORIZATION_FAILURE);
+  }
+}
+
+function parentBoundReportBuilderArgs(
+  inputArgs,
+  {
+    outputDir = resolveRunOutputDir(inputArgs),
+    trustedImage = null,
+    trustedImageCaptured = false,
+  } = {},
+) {
+  if (!outputDir) return { args: inputArgs, outputDir: null, assured: false };
+  const imageJson = (name) =>
+    trustedImageCaptured
+      ? reportBuilderTrustedImageJson(trustedImage, name)
+      : readJsonFileIfPresent(path.join(outputDir, name));
+  const persistedRunIntake = imageJson("run_intake.json");
+  const persistedReviewPayload = imageJson("review_payload.json");
+  const persistedUiDecisions = imageJson("ui_decisions.json");
+  const persistedFinalArtifacts = imageJson("final_artifacts.json");
+  const assured = trustedImageCaptured
+    ? REPORT_BUILDER_ASSURED_MARKERS.some((name) =>
+        (trustedImage?.files || []).some((file) => file.path === name),
+      )
+    : REPORT_BUILDER_ASSURED_MARKERS.some((name) =>
+        fs.existsSync(path.join(outputDir, name)),
+      );
+  if (
+    assured &&
+    [
+      persistedRunIntake,
+      persistedReviewPayload,
+      persistedUiDecisions,
+      persistedFinalArtifacts,
+      imageJson("source_index.json"),
+      imageJson("review_integrity.json"),
+    ].some((value) => !isPlainObject(value))
+  ) {
+    throw new Error(REPORT_BUILDER_AUTHORIZATION_FAILURE);
+  }
+  if (persistedRunIntake) {
+    assertReportBuilderCallerMatch(inputArgs.run_intake, persistedRunIntake);
+  }
+  if (persistedReviewPayload) {
+    assertReportBuilderCallerMatch(
+      inputArgs.review_payload,
+      persistedReviewPayload,
+    );
+  }
+  if (persistedUiDecisions) {
+    assertReportBuilderCallerMatch(
+      inputArgs.ui_decisions,
+      persistedUiDecisions,
+    );
+  }
+  if (persistedFinalArtifacts) {
+    assertReportBuilderCallerMatch(
+      inputArgs.final_artifacts,
+      persistedFinalArtifacts,
+    );
+  }
+  if (
+    persistedRunIntake &&
+    (typeof persistedRunIntake.output_dir !== "string" ||
+      path.resolve(persistedRunIntake.output_dir) !== path.resolve(outputDir))
+  ) {
+    throw new Error(REPORT_BUILDER_AUTHORIZATION_FAILURE);
+  }
+  return {
+    args: {
+      ...inputArgs,
+      ...(persistedRunIntake
+        ? { run_intake: cloneReportBuilderJson(persistedRunIntake) }
+        : {}),
+      ...(persistedReviewPayload
+        ? { review_payload: cloneReportBuilderJson(persistedReviewPayload) }
+        : {}),
+      ...(persistedUiDecisions
+        ? { ui_decisions: cloneReportBuilderJson(persistedUiDecisions) }
+        : {}),
+      ...(persistedFinalArtifacts
+        ? { final_artifacts: cloneReportBuilderJson(persistedFinalArtifacts) }
+        : {}),
+    },
+    outputDir,
+    assured,
+  };
+}
+
+function reportBuilderCanonicalSha256(value) {
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify(reportBuilderCanonicalJson(value)), "utf8")
+    .digest("hex");
+}
+
+function reportBuilderCheckpoint(value, { required = false } = {}) {
+  const checkpoint = typeof value === "string" ? value.trim() : "";
+  if (!checkpoint) {
+    if (required) {
+      throw new Error("Report Builder predecessor checkpoint is required");
+    }
+    return null;
+  }
+  if (!/^[0-9a-f]{64}$/.test(checkpoint)) {
+    throw new Error("Report Builder predecessor checkpoint is malformed");
+  }
+  return checkpoint;
+}
+
+function reportBuilderExactFields(value, required, optional = []) {
+  if (!isPlainObject(value)) return false;
+  const allowed = new Set([...required, ...optional]);
+  return (
+    required.every((field) => Object.hasOwn(value, field)) &&
+    Object.keys(value).every((field) => allowed.has(field))
+  );
+}
+
+function reportBuilderIdentifier(value) {
+  return (
+    typeof value === "string" &&
+    value === value.trim() &&
+    /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(value)
+  );
+}
+
+function reportBuilderCanonicalRelativePath(value) {
+  if (
+    typeof value !== "string" ||
+    !value ||
+    value !== value.trim() ||
+    value.includes("\\") ||
+    path.posix.isAbsolute(value) ||
+    path.posix.normalize(value) !== value ||
+    value === "." ||
+    value === ".." ||
+    value.startsWith("../") ||
+    /[\u0000-\u001f\u007f]/.test(value)
+  ) {
+    throw new Error("invalid Report Builder integrity path");
+  }
+  return value;
+}
+
+function reportBuilderStableFileSnapshot(filePath) {
+  const unresolved = path.resolve(filePath);
+  const entry = fs.lstatSync(unresolved);
+  if (!entry.isFile() || entry.isSymbolicLink() || entry.nlink !== 1) {
+    throw new Error("invalid Report Builder integrity artifact");
+  }
+  const descriptor = fs.openSync(
+    unresolved,
+    fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW || 0),
+  );
+  try {
+    const before = fs.fstatSync(descriptor);
+    if (!before.isFile() || before.nlink !== 1) {
+      throw new Error("invalid Report Builder integrity artifact");
+    }
+    const payload = fs.readFileSync(descriptor);
+    const after = fs.fstatSync(descriptor);
+    if (
+      before.dev !== after.dev ||
+      before.ino !== after.ino ||
+      before.size !== after.size ||
+      before.mtimeMs !== after.mtimeMs ||
+      payload.length !== after.size
+    ) {
+      throw new Error("Report Builder integrity artifact changed while read");
+    }
+    return {
+      payload,
+      byte_count: payload.length,
+      sha256: crypto.createHash("sha256").update(payload).digest("hex"),
+    };
+  } finally {
+    fs.closeSync(descriptor);
+  }
+}
+
+function reportBuilderContainedFile(rootPath, relativePath) {
+  const canonical = reportBuilderCanonicalRelativePath(relativePath);
+  const root = path.resolve(rootPath);
+  const rootEntry = fs.lstatSync(root);
+  if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("invalid Report Builder source root");
+  }
+  const resolvedRoot = fs.realpathSync.native(root);
+  const unresolved = path.join(resolvedRoot, canonical);
+  const unresolvedEntry = fs.lstatSync(unresolved);
+  if (unresolvedEntry.isSymbolicLink()) {
+    throw new Error("invalid Report Builder integrity artifact");
+  }
+  const resolved = fs.realpathSync.native(unresolved);
+  const relative = path.relative(resolvedRoot, resolved);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error("Report Builder integrity path escapes its root");
+  }
+  return resolved;
+}
+
+function validateReportBuilderRelativeReceipt(outputDir, receipt) {
+  if (
+    !reportBuilderExactFields(
+      receipt,
+      ["path", "role", "byte_count", "sha256"],
+    ) ||
+    receipt.role !== "review_handoff" ||
+    !Number.isInteger(receipt.byte_count) ||
+    receipt.byte_count < 0 ||
+    !/^[0-9a-f]{64}$/.test(receipt.sha256)
+  ) {
+    throw new Error("invalid Report Builder protected receipt");
+  }
+  const artifactPath = reportBuilderContainedFile(outputDir, receipt.path);
+  const snapshot = reportBuilderStableFileSnapshot(artifactPath);
+  if (
+    receipt.byte_count !== snapshot.byte_count ||
+    receipt.sha256 !== snapshot.sha256
+  ) {
+    throw new Error("stale Report Builder protected receipt");
+  }
+}
+
+function validateReportBuilderSourceRecord(record) {
+  if (
+    !reportBuilderExactFields(record, [
+      "artifact_id",
+      "identity_key",
+      "root_path",
+      "receipt",
+    ]) ||
+    typeof record.artifact_id !== "string" ||
+    !record.artifact_id ||
+    typeof record.identity_key !== "string" ||
+    !record.identity_key ||
+    typeof record.root_path !== "string" ||
+    !record.root_path
+  ) {
+    throw new Error("invalid Report Builder source record");
+  }
+  const receipt = record.receipt;
+  if (
+    !reportBuilderExactFields(
+      receipt,
+      [
+        "schema_version",
+        "artifact_id",
+        "root_id",
+        "role",
+        "path",
+        "byte_count",
+        "sha256",
+      ],
+      ["media_type"],
+    ) ||
+    receipt.schema_version !== "vera.artifact_receipt.v1" ||
+    receipt.artifact_id !== record.artifact_id ||
+    !reportBuilderIdentifier(receipt.root_id) ||
+    receipt.role !== "source" ||
+    !Number.isInteger(receipt.byte_count) ||
+    receipt.byte_count < 0 ||
+    !/^[0-9a-f]{64}$/.test(receipt.sha256)
+  ) {
+    throw new Error("invalid Report Builder source receipt");
+  }
+  const sourcePath = reportBuilderContainedFile(
+    record.root_path,
+    receipt.path,
+  );
+  const snapshot = reportBuilderStableFileSnapshot(sourcePath);
+  if (
+    receipt.byte_count !== snapshot.byte_count ||
+    receipt.sha256 !== snapshot.sha256
+  ) {
+    throw new Error("stale Report Builder source receipt");
+  }
+  return { record, sourcePath, snapshot };
+}
+
+function reportBuilderZipMemberPath(value) {
+  if (typeof value !== "string") {
+    throw new Error("invalid ZIP member path");
+  }
+  const normalized = value.replaceAll("\\", "/").normalize("NFC");
+  return reportBuilderCanonicalRelativePath(normalized);
+}
+
+function reportBuilderZipName(nameBytes, utf8) {
+  if (!utf8 && nameBytes.some((value) => value > 0x7f)) {
+    throw new Error("legacy non-ASCII ZIP member names are unsupported");
+  }
+  const decoded = nameBytes.toString(utf8 ? "utf8" : "ascii");
+  if (decoded.includes("\ufffd")) {
+    throw new Error("invalid ZIP member name");
+  }
+  return decoded;
+}
+
+function reportBuilderZipManifest(sourceBytes) {
+  const minimumEocdOffset = Math.max(0, sourceBytes.length - 65_557);
+  let eocdOffset = -1;
+  for (let offset = sourceBytes.length - 22; offset >= minimumEocdOffset; offset -= 1) {
+    if (sourceBytes.readUInt32LE(offset) === 0x06054b50) {
+      const commentLength = sourceBytes.readUInt16LE(offset + 20);
+      if (offset + 22 + commentLength === sourceBytes.length) {
+        eocdOffset = offset;
+        break;
+      }
+    }
+  }
+  if (eocdOffset < 0) throw new Error("invalid ZIP end record");
+  const diskNumber = sourceBytes.readUInt16LE(eocdOffset + 4);
+  const centralDisk = sourceBytes.readUInt16LE(eocdOffset + 6);
+  const diskEntryCount = sourceBytes.readUInt16LE(eocdOffset + 8);
+  const entryCount = sourceBytes.readUInt16LE(eocdOffset + 10);
+  const centralSize = sourceBytes.readUInt32LE(eocdOffset + 12);
+  const centralOffset = sourceBytes.readUInt32LE(eocdOffset + 16);
+  if (
+    diskNumber !== 0 ||
+    centralDisk !== 0 ||
+    diskEntryCount !== entryCount ||
+    entryCount === 0xffff ||
+    centralSize === 0xffffffff ||
+    centralOffset === 0xffffffff ||
+    centralOffset + centralSize > eocdOffset
+  ) {
+    throw new Error("unsupported ZIP structure");
+  }
+  const manifest = [];
+  const portableNames = new Set();
+  let cursor = centralOffset;
+  let totalUncompressed = 0;
+  for (let index = 0; index < entryCount; index += 1) {
+    if (
+      cursor + 46 > sourceBytes.length ||
+      sourceBytes.readUInt32LE(cursor) !== 0x02014b50
+    ) {
+      throw new Error("invalid ZIP central directory");
+    }
+    const flags = sourceBytes.readUInt16LE(cursor + 8);
+    const method = sourceBytes.readUInt16LE(cursor + 10);
+    const compressedSize = sourceBytes.readUInt32LE(cursor + 20);
+    const uncompressedSize = sourceBytes.readUInt32LE(cursor + 24);
+    const nameLength = sourceBytes.readUInt16LE(cursor + 28);
+    const extraLength = sourceBytes.readUInt16LE(cursor + 30);
+    const commentLength = sourceBytes.readUInt16LE(cursor + 32);
+    const externalAttributes = sourceBytes.readUInt32LE(cursor + 38);
+    const localOffset = sourceBytes.readUInt32LE(cursor + 42);
+    const nextCursor =
+      cursor + 46 + nameLength + extraLength + commentLength;
+    if (
+      nextCursor > sourceBytes.length ||
+      compressedSize === 0xffffffff ||
+      uncompressedSize === 0xffffffff ||
+      localOffset === 0xffffffff ||
+      (flags & 0x1) !== 0 ||
+      ![0, 8].includes(method)
+    ) {
+      throw new Error("unsupported ZIP member");
+    }
+    const rawName = reportBuilderZipName(
+      sourceBytes.subarray(cursor + 46, cursor + 46 + nameLength),
+      (flags & 0x800) !== 0,
+    );
+    cursor = nextCursor;
+    if (rawName.endsWith("/")) continue;
+    const memberPath = reportBuilderZipMemberPath(rawName);
+    const portableIdentity = memberPath.toLocaleLowerCase("und");
+    if (portableNames.has(portableIdentity)) {
+      throw new Error("duplicate canonical ZIP member path");
+    }
+    portableNames.add(portableIdentity);
+    const unixMode = externalAttributes >>> 16;
+    if ((unixMode & 0o170000) === 0o120000) {
+      throw new Error("ZIP symbolic links are unsupported");
+    }
+    if (
+      localOffset + 30 > sourceBytes.length ||
+      sourceBytes.readUInt32LE(localOffset) !== 0x04034b50
+    ) {
+      throw new Error("invalid ZIP local header");
+    }
+    const localNameLength = sourceBytes.readUInt16LE(localOffset + 26);
+    const localExtraLength = sourceBytes.readUInt16LE(localOffset + 28);
+    const localName = reportBuilderZipName(
+      sourceBytes.subarray(
+        localOffset + 30,
+        localOffset + 30 + localNameLength,
+      ),
+      (flags & 0x800) !== 0,
+    );
+    if (reportBuilderZipMemberPath(localName) !== memberPath) {
+      throw new Error("ZIP central/local member identity mismatch");
+    }
+    const dataOffset =
+      localOffset + 30 + localNameLength + localExtraLength;
+    if (dataOffset + compressedSize > sourceBytes.length) {
+      throw new Error("truncated ZIP member");
+    }
+    totalUncompressed += uncompressedSize;
+    if (
+      uncompressedSize > 512 * 1024 * 1024 ||
+      totalUncompressed > 1024 * 1024 * 1024
+    ) {
+      throw new Error("ZIP member expansion exceeds the integrity limit");
+    }
+    const compressed = sourceBytes.subarray(
+      dataOffset,
+      dataOffset + compressedSize,
+    );
+    const payload =
+      method === 0 ? Buffer.from(compressed) : zlib.inflateRawSync(compressed);
+    if (payload.length !== uncompressedSize) {
+      throw new Error("ZIP member size mismatch");
+    }
+    manifest.push({
+      path: memberPath,
+      byte_count: payload.length,
+      sha256: crypto.createHash("sha256").update(payload).digest("hex"),
+    });
+  }
+  if (cursor !== centralOffset + centralSize) {
+    throw new Error("ZIP central directory size mismatch");
+  }
+  return manifest.sort((left, right) =>
+    left.path
+      .toLocaleLowerCase("und")
+      .localeCompare(right.path.toLocaleLowerCase("und")),
+  );
+}
+
+function validateReportBuilderSourceIndex(outputDir) {
+  const sourceIndex = readJsonFileIfPresent(
+    path.join(outputDir, "source_index.json"),
+  );
+  if (
+    !reportBuilderExactFields(sourceIndex, [
+      "schema_version",
+      "sources",
+      "archive_manifests",
+      "archive_member_bindings",
+      "content_sha256",
+    ]) ||
+    sourceIndex.schema_version !== "report_builder.source_index.v2" ||
+    !Array.isArray(sourceIndex.sources) ||
+    sourceIndex.sources.length === 0 ||
+    !Array.isArray(sourceIndex.archive_manifests) ||
+    !Array.isArray(sourceIndex.archive_member_bindings)
+  ) {
+    throw new Error("invalid Report Builder source index");
+  }
+  const content = { ...sourceIndex };
+  delete content.content_sha256;
+  if (reportBuilderCanonicalSha256(content) !== sourceIndex.content_sha256) {
+    throw new Error("stale Report Builder source-index digest");
+  }
+  const sourcesById = new Map();
+  for (const source of sourceIndex.sources) {
+    const validated = validateReportBuilderSourceRecord(source);
+    if (sourcesById.has(source.artifact_id)) {
+      throw new Error("duplicate Report Builder source identity");
+    }
+    sourcesById.set(source.artifact_id, validated);
+  }
+  const manifestsByContainer = new Map();
+  for (const rawManifest of sourceIndex.archive_manifests) {
+    if (
+      !reportBuilderExactFields(rawManifest, [
+        "container_artifact_id",
+        "members",
+      ]) ||
+      typeof rawManifest.container_artifact_id !== "string" ||
+      !Array.isArray(rawManifest.members) ||
+      manifestsByContainer.has(rawManifest.container_artifact_id)
+    ) {
+      throw new Error("invalid Report Builder archive manifest");
+    }
+    const container = sourcesById.get(rawManifest.container_artifact_id);
+    if (!container) {
+      throw new Error("missing Report Builder archive container");
+    }
+    const currentManifest = reportBuilderZipManifest(
+      container.snapshot.payload,
+    );
+    if (!reportBuilderJsonValuesEqual(rawManifest.members, currentManifest)) {
+      throw new Error("stale Report Builder archive member manifest");
+    }
+    manifestsByContainer.set(
+      rawManifest.container_artifact_id,
+      currentManifest,
+    );
+  }
+  const seenBindings = new Set();
+  const boundMemberIds = new Set();
+  for (const binding of sourceIndex.archive_member_bindings) {
+    if (
+      !reportBuilderExactFields(binding, [
+        "container_artifact_id",
+        "member_path",
+        "member_artifact_id",
+        "byte_count",
+        "sha256",
+      ]) ||
+      typeof binding.container_artifact_id !== "string" ||
+      typeof binding.member_artifact_id !== "string" ||
+      !Number.isInteger(binding.byte_count) ||
+      binding.byte_count < 0 ||
+      !/^[0-9a-f]{64}$/.test(binding.sha256)
+    ) {
+      throw new Error("invalid Report Builder archive-member binding");
+    }
+    const memberPath = reportBuilderZipMemberPath(binding.member_path);
+    const bindingKey = `${binding.container_artifact_id}\u0000${memberPath}`;
+    if (
+      seenBindings.has(bindingKey) ||
+      boundMemberIds.has(binding.member_artifact_id)
+    ) {
+      throw new Error("duplicate Report Builder archive-member binding");
+    }
+    seenBindings.add(bindingKey);
+    boundMemberIds.add(binding.member_artifact_id);
+    const manifest = manifestsByContainer.get(binding.container_artifact_id);
+    const member = manifest?.find((entry) => entry.path === memberPath);
+    const source = sourcesById.get(binding.member_artifact_id);
+    if (
+      !member ||
+      !source ||
+      binding.byte_count !== member.byte_count ||
+      binding.sha256 !== member.sha256 ||
+      source.record.receipt.byte_count !== member.byte_count ||
+      source.record.receipt.sha256 !== member.sha256 ||
+      !source.record.identity_key.endsWith(`::${memberPath}`)
+    ) {
+      throw new Error("stale Report Builder archive-member binding");
+    }
+  }
+  const extractedMemberIds = new Set(
+    [...sourcesById.entries()]
+      .filter(([, source]) => source.record.identity_key.includes("::"))
+      .map(([artifactId]) => artifactId),
+  );
+  if (!reportBuilderJsonValuesEqual(
+    [...extractedMemberIds].sort(),
+    [...boundMemberIds].sort(),
+  )) {
+    throw new Error("incomplete Report Builder archive-member bindings");
+  }
+  return sourceIndex;
+}
+
+const REPORT_BUILDER_PUBLIC_OUTPUT_ALLOWLIST = new Set([
+  "report_tables.json",
+  "report_tables.xlsx",
+  "report_analysis.json",
+  "report_draft.md",
+  "report.docx",
+  "report_audit.json",
+  "used_recipe.json",
+  "numeric_evidence_ledger.json",
+  "source_receipts.json",
+  "review_handoff.md",
+]);
+
+const REPORT_BUILDER_BASE_OUTPUT_PATHS = new Set([
+  "final_artifacts.json",
+  "report.docx",
+  "report_analysis.json",
+  "report_audit.json",
+  "report_draft.md",
+  "report_tables.json",
+  "report_tables.xlsx",
+  "review_handoff.md",
+  "review_integrity.json",
+  "review_payload.json",
+  "run_intake.json",
+  "source_index.json",
+  "ui_decisions.json",
+  "used_recipe.json",
+]);
+const REPORT_BUILDER_INSPECTION_OUTPUT_PATHS = new Set([
+  "inspection.json",
+  "suggested_recipe.json",
+]);
+const REPORT_BUILDER_NUMERIC_OUTPUT_PATHS = new Set([
+  "numeric_evidence_ledger.json",
+  "source_receipts.json",
+]);
+
+function reportBuilderImplementationMediaType(relativePath) {
+  return {
+    ".cjs": "text/javascript",
+    ".html": "text/html",
+    ".json": "application/json",
+    ".py": "text/x-python",
+    ".svg": "image/svg+xml",
+  }[path.extname(relativePath).toLowerCase()];
+}
+
+function reportBuilderImplementationArtifactId(namespace, relativePath) {
+  return `implementation.${namespace}.${relativePath.replaceAll("/", ".")}`;
+}
+
+function reportBuilderImplementationSpecifications() {
+  return [
+    ...REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS.map((relativePath) => ({
+      artifact_id: reportBuilderImplementationArtifactId(
+        "report_builder",
+        relativePath,
+      ),
+      root_id: "implementation",
+      path: relativePath,
+      media_type: reportBuilderImplementationMediaType(relativePath),
+    })),
+    ...REPORT_BUILDER_SHARED_IMPLEMENTATION_PATHS.map((relativePath) => ({
+      artifact_id: reportBuilderImplementationArtifactId(
+        "vera_assurance",
+        relativePath,
+      ),
+      root_id: "assurance_implementation",
+      path: relativePath,
+      media_type: reportBuilderImplementationMediaType(relativePath),
+    })),
+  ];
+}
+
+function reportBuilderImplementationRoot(rootId) {
+  if (rootId === "implementation") return PLUGIN_ROOT;
+  if (rootId === "assurance_implementation") {
+    return REPORT_BUILDER_ASSURANCE_IMPLEMENTATION_ROOT;
+  }
+  throw new Error("invalid Report Builder implementation root");
+}
+
+function reportBuilderImplementationSnapshot(specification) {
+  const root = reportBuilderImplementationRoot(specification.root_id);
+  let current = root;
+  const parts = specification.path.split("/");
+  for (let index = 0; index < parts.length; index += 1) {
+    current = path.join(current, parts[index]);
+    const entry = fs.lstatSync(current);
+    if (entry.isSymbolicLink()) {
+      throw new Error("invalid Report Builder implementation symlink");
+    }
+    if (index < parts.length - 1 && !entry.isDirectory()) {
+      throw new Error("invalid Report Builder implementation parent");
+    }
+    if (
+      index === parts.length - 1 &&
+      (!entry.isFile() || entry.nlink !== 1)
+    ) {
+      throw new Error("invalid Report Builder implementation artifact");
+    }
+  }
+  const artifactPath = reportBuilderContainedFile(root, specification.path);
+  return reportBuilderStableFileSnapshot(artifactPath);
+}
+
+function buildReportBuilderImplementationReceipts() {
+  validateReportBuilderImplementationTree();
+  return reportBuilderImplementationSpecifications().map((specification) => {
+    const snapshot = reportBuilderImplementationSnapshot(specification);
+    return {
+      ...specification,
+      role: "implementation",
+      byte_count: snapshot.byte_count,
+      sha256: snapshot.sha256,
+    };
+  });
+}
+
+function reportBuilderScanImplementationRoot(root, scanRoots, rootFiles) {
+  const rootEntry = fs.lstatSync(root);
+  if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("invalid Report Builder implementation root");
+  }
+  const files = new Set();
+  const directories = new Set();
+  for (const relativePath of rootFiles) {
+    const entryPath = path.join(root, relativePath);
+    const entry = fs.lstatSync(entryPath);
+    if (entry.isSymbolicLink() || !entry.isFile() || entry.nlink !== 1) {
+      throw new Error("invalid Report Builder implementation artifact");
+    }
+    files.add(relativePath);
+  }
+  const pending = scanRoots.map((relativePath) => {
+    const scanPath = path.join(root, relativePath);
+    const entry = fs.lstatSync(scanPath);
+    if (entry.isSymbolicLink() || !entry.isDirectory()) {
+      throw new Error("invalid Report Builder implementation directory");
+    }
+    if (relativePath !== ".") directories.add(relativePath);
+    return scanPath;
+  });
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current).sort()) {
+      const entryPath = path.join(current, name);
+      const entry = fs.lstatSync(entryPath);
+      const relative = path
+        .relative(root, entryPath)
+        .split(path.sep)
+        .join("/");
+      if (entry.isSymbolicLink()) {
+        throw new Error("invalid Report Builder implementation symlink");
+      }
+      if (entry.isDirectory()) {
+        directories.add(relative);
+        pending.push(entryPath);
+        continue;
+      }
+      if (!entry.isFile() || entry.nlink !== 1) {
+        throw new Error("invalid Report Builder implementation artifact");
+      }
+      files.add(relative);
+    }
+  }
+  return { files, directories };
+}
+
+function validateReportBuilderImplementationTree() {
+  const pluginTree = reportBuilderScanImplementationRoot(
+    PLUGIN_ROOT,
+    [".codex-plugin", "assets", "mcp", "scripts"],
+    [".app.json", ".mcp.json"],
+  );
+  const sharedTree = reportBuilderScanImplementationRoot(
+    REPORT_BUILDER_ASSURANCE_IMPLEMENTATION_ROOT,
+    ["."],
+    [],
+  );
+  const expectedPluginFiles = new Set(
+    REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS,
+  );
+  const expectedPluginDirectories = reportBuilderExpectedDirectories(
+    REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS,
+  );
+  const expectedSharedFiles = new Set(
+    REPORT_BUILDER_SHARED_IMPLEMENTATION_PATHS,
+  );
+  if (
+    !reportBuilderJsonValuesEqual(
+      [...pluginTree.files].sort(),
+      [...expectedPluginFiles].sort(),
+    ) ||
+    !reportBuilderJsonValuesEqual(
+      [...pluginTree.directories].sort(),
+      [...expectedPluginDirectories].sort(),
+    ) ||
+    !reportBuilderJsonValuesEqual(
+      [...sharedTree.files].sort(),
+      [...expectedSharedFiles].sort(),
+    ) ||
+    sharedTree.directories.size !== 0
+  ) {
+    throw new Error("Report Builder implementation tree is not exact");
+  }
+}
+
+function validateReportBuilderImplementationContract(integrity) {
+  validateReportBuilderImplementationTree();
+  const specifications = reportBuilderImplementationSpecifications();
+  const expectedIds = specifications.map(
+    (specification) => specification.artifact_id,
+  );
+  if (
+    !Array.isArray(integrity.implementation_artifact_refs) ||
+    !Array.isArray(integrity.implementation_receipts) ||
+    !reportBuilderJsonValuesEqual(
+      integrity.implementation_artifact_refs,
+      expectedIds,
+    ) ||
+    integrity.implementation_receipts.length !== specifications.length
+  ) {
+    throw new Error("invalid Report Builder implementation receipt set");
+  }
+  for (let index = 0; index < specifications.length; index += 1) {
+    const specification = specifications[index];
+    const receipt = integrity.implementation_receipts[index];
+    if (
+      !reportBuilderExactFields(receipt, [
+        "artifact_id",
+        "root_id",
+        "path",
+        "media_type",
+        "role",
+        "byte_count",
+        "sha256",
+      ]) ||
+      receipt.artifact_id !== specification.artifact_id ||
+      receipt.root_id !== specification.root_id ||
+      receipt.path !== specification.path ||
+      receipt.media_type !== specification.media_type ||
+      receipt.role !== "implementation" ||
+      !Number.isInteger(receipt.byte_count) ||
+      receipt.byte_count < 0 ||
+      !/^[0-9a-f]{64}$/.test(receipt.sha256 || "")
+    ) {
+      throw new Error("invalid Report Builder implementation receipt");
+    }
+    const snapshot = reportBuilderImplementationSnapshot(specification);
+    if (
+      receipt.byte_count !== snapshot.byte_count ||
+      receipt.sha256 !== snapshot.sha256
+    ) {
+      throw new Error("stale Report Builder implementation receipt");
+    }
+  }
+}
+
+function reportBuilderExpectedDirectories(relativePaths) {
+  const directories = new Set();
+  for (const relativePath of relativePaths) {
+    let parent = path.posix.dirname(relativePath);
+    while (parent !== ".") {
+      directories.add(parent);
+      parent = path.posix.dirname(parent);
+    }
+  }
+  return directories;
+}
+
+function reportBuilderPhysicalTree(outputDir) {
+  const root = path.resolve(outputDir);
+  const rootEntry = fs.lstatSync(root);
+  if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("invalid Report Builder physical output root");
+  }
+  const files = new Set();
+  const directories = new Set();
+  const pending = [root];
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current)) {
+      const entryPath = path.join(current, name);
+      const entry = fs.lstatSync(entryPath);
+      const relative = path
+        .relative(root, entryPath)
+        .split(path.sep)
+        .join("/");
+      if (entry.isSymbolicLink()) {
+        throw new Error("invalid Report Builder physical output symlink");
+      }
+      if (entry.isDirectory()) {
+        directories.add(relative);
+        pending.push(entryPath);
+        continue;
+      }
+      if (!entry.isFile() || entry.nlink !== 1) {
+        throw new Error("invalid Report Builder physical output artifact");
+      }
+      files.add(relative);
+    }
+  }
+  return { files, directories };
+}
+
+function reportBuilderHistoryPaths(applied, outputDir) {
+  const rawPaths = Array.isArray(applied.review_history_paths)
+    ? applied.review_history_paths
+    : [];
+  if (
+    rawPaths.length !== new Set(rawPaths).size ||
+    !rawPaths.every(
+      (relativePath) =>
+        typeof relativePath === "string" &&
+        /^revisions\/history\/application__[0-9a-f]{64}\.json$/.test(
+          relativePath,
+        ),
+    )
+  ) {
+    throw new Error("invalid Report Builder review history perimeter");
+  }
+  for (const relativePath of rawPaths) {
+    const historyPath = path.join(outputDir, relativePath);
+    const history = readJsonFileIfPresent(historyPath);
+    if (
+      !isPlainObject(history) ||
+      !reportBuilderExactFields(history, [
+        "schema_version",
+        "archived_at",
+        "predecessor_checkpoint",
+        "predecessor_integrity",
+        "run_intake",
+        "review_payload",
+        "ui_decisions",
+        "applied_decisions",
+        "final_artifacts",
+        "content_sha256",
+      ]) ||
+      history.schema_version !== "report_builder.review_history_entry.v2"
+    ) {
+      throw new Error("invalid Report Builder review history entry");
+    }
+    const content = { ...history };
+    delete content.content_sha256;
+    const digest = reportBuilderCanonicalSha256(content);
+    if (
+      history.content_sha256 !== digest ||
+      relativePath !==
+        `revisions/history/application__${digest}.json`
+    ) {
+      throw new Error("stale Report Builder review history entry");
+    }
+    const predecessorCheckpoint = reportBuilderCheckpoint(
+      history.predecessor_checkpoint,
+      { required: true },
+    );
+    const predecessorIntegrity = history.predecessor_integrity;
+    if (
+      !reportBuilderExactFields(predecessorIntegrity, [
+        "schema_version",
+        "run_id",
+        "source_index",
+        "predecessor_checkpoint",
+        "protected_files",
+        "payload_digests",
+        "implementation_artifact_refs",
+        "implementation_receipts",
+        "prepared_validation",
+        "physical_paths",
+        "physical_directories",
+        "content_sha256",
+      ]) ||
+      predecessorIntegrity.schema_version !==
+        "report_builder.review_integrity.v4" ||
+      predecessorIntegrity.content_sha256 !== predecessorCheckpoint
+    ) {
+      throw new Error("stale Report Builder predecessor checkpoint");
+    }
+    const predecessorContent = { ...predecessorIntegrity };
+    delete predecessorContent.content_sha256;
+    if (
+      reportBuilderCanonicalSha256(predecessorContent) !==
+      predecessorCheckpoint
+    ) {
+      throw new Error("stale Report Builder predecessor checkpoint");
+    }
+    const archivedPayloads = {
+      run_intake: history.run_intake,
+      review_payload: history.review_payload,
+      ui_decisions: history.ui_decisions,
+      applied_decisions: history.applied_decisions,
+      final_artifacts: history.final_artifacts,
+    };
+    const expectedPayloadDigests = Object.fromEntries(
+      Object.entries(archivedPayloads).map(([name, value]) => [
+        name,
+        reportBuilderCanonicalSha256(value),
+      ]),
+    );
+    if (
+      !Object.values(archivedPayloads).every(isPlainObject) ||
+      !reportBuilderJsonValuesEqual(
+        predecessorIntegrity.payload_digests,
+        expectedPayloadDigests,
+      )
+    ) {
+      throw new Error("stale Report Builder predecessor payload receipts");
+    }
+    const priorReviewDigest = expectedPayloadDigests.review_payload;
+    const priorReview = history.review_payload;
+    const priorUi = history.ui_decisions;
+    const priorApplied = history.applied_decisions;
+    const priorFinal = history.final_artifacts;
+    const sourceMappingReviewRequired =
+      priorApplied.source_mapping_review_required === true;
+    if (
+      priorUi.run_id !== priorReview.run_id ||
+      priorUi.review_payload_sha256 !== priorReviewDigest ||
+      priorApplied.run_id !== priorReview.run_id ||
+      priorApplied.review_payload_sha256 !== priorReviewDigest ||
+      (!sourceMappingReviewRequired &&
+        (!reportBuilderJsonValuesEqual(
+          priorApplied.decisions,
+          priorUi.decisions,
+        ) ||
+          priorApplied.decision_count !== priorUi.decision_count)) ||
+      (sourceMappingReviewRequired &&
+        (!Array.isArray(priorUi.decisions) ||
+          priorUi.decisions.length !== 0 ||
+          priorUi.decision_count !== 0 ||
+          !/^[0-9a-f]{64}$/.test(
+            priorApplied.decision_review_payload_sha256 || "",
+          ))) ||
+      priorApplied.item_count !== priorReview.item_count ||
+      priorFinal.run_id !== priorReview.run_id
+    ) {
+      throw new Error("stale Report Builder predecessor review application");
+    }
+    const protectedFiles = predecessorIntegrity.protected_files;
+    if (!Array.isArray(protectedFiles)) {
+      throw new Error("invalid Report Builder predecessor receipts");
+    }
+    const receiptsByPath = new Map();
+    for (const receipt of protectedFiles) {
+      if (
+        !isPlainObject(receipt) ||
+        typeof receipt.path !== "string" ||
+        receiptsByPath.has(receipt.path)
+      ) {
+        throw new Error("invalid Report Builder predecessor receipts");
+      }
+      receiptsByPath.set(receipt.path, receipt);
+    }
+    for (const requiredPath of [
+      "run_intake.json",
+      "review_payload.json",
+      "ui_decisions.json",
+      "applied_decisions.json",
+      "final_artifacts.json",
+    ]) {
+      if (!receiptsByPath.has(requiredPath)) {
+        throw new Error("incomplete Report Builder predecessor receipts");
+      }
+    }
+    if (!Array.isArray(priorFinal.outputs)) {
+      throw new Error("invalid Report Builder predecessor outputs");
+    }
+    for (const output of priorFinal.outputs) {
+      const receipt = isPlainObject(output)
+        ? receiptsByPath.get(output.path)
+        : null;
+      if (
+        !receipt ||
+        output.size_bytes !== receipt.byte_count ||
+        output.sha256 !== receipt.sha256
+      ) {
+        throw new Error("stale Report Builder predecessor output receipt");
+      }
+    }
+  }
+  return rawPaths;
+}
+
+function reportBuilderRetainedReviewPaths(applied, outputDir) {
+  const rawPaths = Array.isArray(applied.retained_review_paths)
+    ? applied.retained_review_paths
+    : [];
+  if (
+    rawPaths.length !== new Set(rawPaths).size ||
+    !rawPaths.every(
+      (relativePath) =>
+        typeof relativePath === "string" &&
+        /^revisions\/(?:report__[A-Za-z0-9._-]+\.txt|originals\/report__[A-Za-z0-9._-]+\.docx)$/.test(
+          relativePath,
+        ),
+    )
+  ) {
+    throw new Error("invalid Report Builder retained review perimeter");
+  }
+  for (const relativePath of rawPaths) {
+    const entry = generatedReviewPathEntryStat(
+      path.join(outputDir, relativePath),
+    );
+    if (
+      !entry ||
+      !entry.isFile() ||
+      entry.isSymbolicLink() ||
+      entry.nlink !== 1
+    ) {
+      throw new Error("invalid Report Builder retained review artifact");
+    }
+  }
+  return rawPaths;
+}
+
+function reportBuilderExpectedReviewPaths(applied, outputDir) {
+  if (!isPlainObject(applied) || !Array.isArray(applied.effects)) {
+    throw new Error("invalid Report Builder review successor perimeter");
+  }
+  const paths = new Set(["applied_decisions.json"]);
+  const editEffects = applied.effects.filter(
+    (effect) => isPlainObject(effect) && shortString(effect.action) === "edit",
+  );
+  if (!applied.effects.every(isPlainObject)) {
+    throw new Error("invalid Report Builder review successor effects");
+  }
+  for (const effect of applied.effects) {
+    const revision = shortString(effect.revision_artifact);
+    if (shortString(effect.action) !== "edit") {
+      if (revision) {
+        throw new Error("invalid Report Builder non-edit revision path");
+      }
+      continue;
+    }
+    if (shortString(effect.target_artifact) !== "report.docx") {
+      throw new Error("unsupported Report Builder material edit");
+    }
+    const expectedRevision =
+      `revisions/report__${safePathSegment(effect.item_id, "item")}.txt`;
+    if (revision !== expectedRevision) {
+      throw new Error("invalid Report Builder revision path");
+    }
+    paths.add(expectedRevision);
+  }
+  const expectedBackups = editEffects.length
+    ? [
+        "revisions/originals/" +
+          `report__${safePathSegment(editEffects[0].item_id, "item")}.docx`,
+      ]
+    : [];
+  if (
+    !Array.isArray(applied.original_backup_paths) ||
+    !reportBuilderJsonValuesEqual(
+      applied.original_backup_paths,
+      expectedBackups,
+    )
+  ) {
+    throw new Error("invalid Report Builder backup perimeter");
+  }
+  expectedBackups.forEach((relativePath) => paths.add(relativePath));
+  reportBuilderHistoryPaths(applied, outputDir).forEach((relativePath) =>
+    paths.add(relativePath),
+  );
+  reportBuilderRetainedReviewPaths(applied, outputDir).forEach(
+    (relativePath) => paths.add(relativePath),
+  );
+  return paths;
+}
+
+function reportBuilderExpectedPhysicalPaths(outputDir) {
+  const expected = new Set(REPORT_BUILDER_BASE_OUTPUT_PATHS);
+  const presentInspection = [
+    ...REPORT_BUILDER_INSPECTION_OUTPUT_PATHS,
+  ].filter((relativePath) =>
+    fs.existsSync(path.join(outputDir, relativePath)),
+  );
+  if (
+    presentInspection.length !== 0 &&
+    presentInspection.length !==
+      REPORT_BUILDER_INSPECTION_OUTPUT_PATHS.size
+  ) {
+    throw new Error("incomplete Report Builder inspection output pair");
+  }
+  presentInspection.forEach((relativePath) => expected.add(relativePath));
+  const presentNumeric = [...REPORT_BUILDER_NUMERIC_OUTPUT_PATHS].filter(
+    (relativePath) => fs.existsSync(path.join(outputDir, relativePath)),
+  );
+  if (
+    presentNumeric.length !== 0 &&
+    presentNumeric.length !== REPORT_BUILDER_NUMERIC_OUTPUT_PATHS.size
+  ) {
+    throw new Error("incomplete Report Builder numeric output pair");
+  }
+  presentNumeric.forEach((relativePath) => expected.add(relativePath));
+  const extractedRoot = path.resolve(outputDir, "extracted_inputs");
+  if (fs.existsSync(extractedRoot)) {
+    const sourceIndex = readJsonFileIfPresent(
+      path.join(outputDir, "source_index.json"),
+    );
+    if (
+      !isPlainObject(sourceIndex) ||
+      !Array.isArray(sourceIndex.sources) ||
+      !Array.isArray(sourceIndex.archive_member_bindings)
+    ) {
+      throw new Error("invalid Report Builder extracted source perimeter");
+    }
+    const bindings = new Map(
+      sourceIndex.archive_member_bindings
+        .filter(
+          (binding) =>
+            isPlainObject(binding) &&
+            typeof binding.member_artifact_id === "string",
+        )
+        .map((binding) => [binding.member_artifact_id, binding]),
+    );
+    for (const source of sourceIndex.sources) {
+      if (
+        !isPlainObject(source) ||
+        typeof source.root_path !== "string" ||
+        !isPlainObject(source.receipt) ||
+        typeof source.receipt.path !== "string"
+      ) {
+        throw new Error("invalid Report Builder extracted source entry");
+      }
+      const sourceRoot = path.resolve(source.root_path);
+      const rootRelative = path.relative(extractedRoot, sourceRoot);
+      if (
+        rootRelative === "" ||
+        rootRelative.startsWith("..") ||
+        path.isAbsolute(rootRelative)
+      ) {
+        continue;
+      }
+      const rootParts = rootRelative.split(path.sep);
+      if (!rootParts.length || !/^[A-Za-z0-9._-]+$/.test(rootParts[0])) {
+        throw new Error("invalid Report Builder extracted source root");
+      }
+      const receiptPath = reportBuilderCanonicalRelativePath(
+        source.receipt.path,
+      );
+      const memberRelative = path.posix.join(
+        ...rootParts.slice(1),
+        receiptPath,
+      );
+      const binding = bindings.get(source.artifact_id);
+      if (
+        !isPlainObject(binding) ||
+        memberRelative !==
+          reportBuilderCanonicalRelativePath(binding.member_path)
+      ) {
+        throw new Error("invalid Report Builder extracted source binding");
+      }
+      expected.add(
+        path.posix.join(
+          "extracted_inputs",
+          rootParts[0],
+          memberRelative,
+        ),
+      );
+    }
+  }
+  const appliedPath = path.join(outputDir, "applied_decisions.json");
+  if (fs.existsSync(appliedPath)) {
+    const applied = readJsonFileIfPresent(appliedPath);
+    for (const relativePath of reportBuilderExpectedReviewPaths(
+      applied,
+      outputDir,
+    )) {
+      expected.add(relativePath);
+    }
+  }
+  return expected;
+}
+
+function validateReportBuilderPhysicalOutputSet(outputDir) {
+  const expectedFiles = reportBuilderExpectedPhysicalPaths(outputDir);
+  const expectedDirectories = reportBuilderExpectedDirectories(expectedFiles);
+  const { files, directories } = reportBuilderPhysicalTree(outputDir);
+  if (
+    !reportBuilderJsonValuesEqual(
+      [...files].sort(),
+      [...expectedFiles].sort(),
+    ) ||
+    !reportBuilderJsonValuesEqual(
+      [...directories].sort(),
+      [...expectedDirectories].sort(),
+    )
+  ) {
+    throw new Error("Report Builder physical output set does not close");
+  }
+  return {
+    physical_paths: [...files].sort(),
+    physical_directories: [...directories].sort(),
+  };
+}
+
+function rederiveReportBuilderPreparedState(outputDir) {
+  const scriptPath = path.join(
+    PLUGIN_ROOT,
+    "scripts",
+    "prepared_contract.py",
+  );
+  const completed = spawnSync(
+    pythonExecutable(),
+    ["-I", "-B", scriptPath, "--output-dir", outputDir],
+    {
+      cwd: PLUGIN_ROOT,
+      encoding: "utf8",
+      maxBuffer: 1024 * 1024,
+    },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error("Report Builder prepared replay failed");
+  }
+  const output = completed.stdout
+    .trim()
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .pop();
+  let parsed;
+  try {
+    parsed = output ? JSON.parse(output) : null;
+  } catch {
+    throw new Error("Report Builder prepared replay was malformed");
+  }
+  const validation = parsed?.validation;
+  if (
+    !isPlainObject(parsed) ||
+    parsed.ok !== true ||
+    !reportBuilderExactFields(validation, [
+      "schema_version",
+      "source_table_count",
+      "section_count",
+      "numeric_evidence_status",
+      "review_successor",
+      "rederived_artifacts",
+    ]) ||
+    validation.schema_version !==
+      "report_builder.prepared_validation.v1" ||
+    !Number.isInteger(validation.source_table_count) ||
+    validation.source_table_count < 0 ||
+    !Number.isInteger(validation.section_count) ||
+    validation.section_count < 0 ||
+    !["passed", "not_applicable"].includes(
+      validation.numeric_evidence_status,
+    ) ||
+    !isPlainObject(validation.review_successor) ||
+    !reportBuilderExactFields(validation.review_successor, [
+      "schema_version",
+      "state",
+      "decision_count",
+      "effect_count",
+      "application_status",
+      "source_mapping_review_required",
+      "reviewer_authentication",
+    ]) ||
+    validation.review_successor.schema_version !==
+      "report_builder.review_successor_validation.v1" ||
+    !["pending", "reviewed", "applied"].includes(
+      validation.review_successor.state,
+    ) ||
+    !Number.isInteger(validation.review_successor.decision_count) ||
+    validation.review_successor.decision_count < 0 ||
+    !Number.isInteger(validation.review_successor.effect_count) ||
+    validation.review_successor.effect_count < 0 ||
+    ![
+      null,
+      "pending_review",
+      "partial_review_applied",
+      "blocked",
+      "final_ready",
+    ].includes(validation.review_successor.application_status) ||
+    typeof validation.review_successor.source_mapping_review_required !==
+      "boolean" ||
+    validation.review_successor.reviewer_authentication !==
+      "not_established" ||
+    !Array.isArray(validation.rederived_artifacts) ||
+    !validation.rederived_artifacts.every(
+      (receipt) =>
+        reportBuilderExactFields(receipt, [
+          "path",
+          "byte_count",
+          "sha256",
+        ]) &&
+        typeof receipt.path === "string" &&
+        Number.isInteger(receipt.byte_count) &&
+        receipt.byte_count >= 0 &&
+        /^[0-9a-f]{64}$/.test(receipt.sha256 || ""),
+    )
+  ) {
+    throw new Error("Report Builder prepared replay was malformed");
+  }
+  return validation;
+}
+
+function validateReportBuilderFinalGallery(outputDir, finalArtifacts) {
+  if (!isPlainObject(finalArtifacts) || !Array.isArray(finalArtifacts.outputs)) {
+    throw new Error("invalid Report Builder final gallery");
+  }
+  const seen = new Set();
+  for (const output of finalArtifacts.outputs) {
+    if (
+      !isPlainObject(output) ||
+      typeof output.path !== "string" ||
+      !REPORT_BUILDER_PUBLIC_OUTPUT_ALLOWLIST.has(output.path) ||
+      seen.has(output.path) ||
+      !Number.isInteger(output.size_bytes) ||
+      output.size_bytes < 0 ||
+      !/^[0-9a-f]{64}$/.test(output.sha256 || "")
+    ) {
+      throw new Error("invalid Report Builder final gallery output");
+    }
+    seen.add(output.path);
+    const artifactPath = reportBuilderContainedFile(outputDir, output.path);
+    const snapshot = reportBuilderStableFileSnapshot(artifactPath);
+    if (
+      output.size_bytes !== snapshot.byte_count ||
+      output.sha256 !== snapshot.sha256
+    ) {
+      throw new Error("stale Report Builder final gallery output");
+    }
+  }
+}
+
+function reportBuilderProtectedPaths(outputDir, finalArtifacts) {
+  validateReportBuilderFinalGallery(outputDir, finalArtifacts);
+  const paths = [
+    "run_intake.json",
+    "review_payload.json",
+    "final_artifacts.json",
+    "source_index.json",
+  ];
+  for (const optional of ["ui_decisions.json", "applied_decisions.json"]) {
+    if (fs.existsSync(path.join(outputDir, optional))) paths.push(optional);
+  }
+  const applied = readJsonFileIfPresent(
+    path.join(outputDir, "applied_decisions.json"),
+  );
+  if (isPlainObject(applied)) {
+    paths.push(...reportBuilderHistoryPaths(applied, outputDir));
+    paths.push(...reportBuilderRetainedReviewPaths(applied, outputDir));
+  }
+  paths.push(...finalArtifacts.outputs.map((output) => output.path));
+  return Array.from(new Set(paths));
+}
+
+function validateReportBuilderIntegrityAuthority(
+  outputDir,
+  {
+    required = false,
+    failureMessage = REPORT_BUILDER_AUTHORIZATION_FAILURE,
+    expectedPredecessorCheckpoint = null,
+    expectedCurrentCheckpoint = null,
+  } = {},
+) {
+  try {
+    const marker = REPORT_BUILDER_ASSURED_MARKERS.some((name) =>
+      fs.existsSync(path.join(outputDir, name)),
+    );
+    if (!marker && !required) return null;
+    const runIntake = readJsonFileIfPresent(
+      path.join(outputDir, "run_intake.json"),
+    );
+    const reviewPayload = readJsonFileIfPresent(
+      path.join(outputDir, "review_payload.json"),
+    );
+    const finalArtifacts = readJsonFileIfPresent(
+      path.join(outputDir, "final_artifacts.json"),
+    );
+    const integrity = readJsonFileIfPresent(
+      path.join(outputDir, "review_integrity.json"),
+    );
+    if (
+      [runIntake, reviewPayload, finalArtifacts, integrity].some(
+        (value) => !isPlainObject(value),
+      ) ||
+      !reportBuilderExactFields(integrity, [
+        "schema_version",
+        "run_id",
+        "source_index",
+        "predecessor_checkpoint",
+        "protected_files",
+        "payload_digests",
+        "implementation_artifact_refs",
+        "implementation_receipts",
+        "prepared_validation",
+        "physical_paths",
+        "physical_directories",
+        "content_sha256",
+      ]) ||
+      integrity.schema_version !== "report_builder.review_integrity.v4" ||
+      integrity.source_index !== "source_index.json" ||
+      !Array.isArray(integrity.protected_files) ||
+      !isPlainObject(integrity.payload_digests)
+    ) {
+      throw new Error("invalid Report Builder integrity state");
+    }
+    const content = { ...integrity };
+    delete content.content_sha256;
+    if (reportBuilderCanonicalSha256(content) !== integrity.content_sha256) {
+      throw new Error("stale Report Builder integrity digest");
+    }
+    const currentCheckpoint = reportBuilderCheckpoint(
+      expectedCurrentCheckpoint,
+    );
+    if (
+      currentCheckpoint &&
+      currentCheckpoint !== integrity.content_sha256
+    ) {
+      throw new Error("unexpected Report Builder current checkpoint");
+    }
+    const storedPredecessorCheckpoint = integrity.predecessor_checkpoint;
+    if (
+      storedPredecessorCheckpoint !== null &&
+      currentCheckpoint === null
+    ) {
+      const suppliedPredecessorCheckpoint = reportBuilderCheckpoint(
+        expectedPredecessorCheckpoint,
+        { required: true },
+      );
+      if (
+        suppliedPredecessorCheckpoint !== storedPredecessorCheckpoint
+      ) {
+        throw new Error("unexpected Report Builder predecessor checkpoint");
+      }
+    } else if (expectedPredecessorCheckpoint !== null) {
+      reportBuilderCheckpoint(expectedPredecessorCheckpoint);
+    }
+    validateReportBuilderImplementationContract(integrity);
+    const physicalState = validateReportBuilderPhysicalOutputSet(outputDir);
+    if (
+      !reportBuilderJsonValuesEqual(
+        integrity.physical_paths,
+        physicalState.physical_paths,
+      ) ||
+      !reportBuilderJsonValuesEqual(
+        integrity.physical_directories,
+        physicalState.physical_directories,
+      )
+    ) {
+      throw new Error("stale Report Builder physical output binding");
+    }
+    validateReportBuilderSourceIndex(outputDir);
+    if (
+      !reportBuilderJsonValuesEqual(
+        integrity.prepared_validation,
+        rederiveReportBuilderPreparedState(outputDir),
+      )
+    ) {
+      throw new Error("stale Report Builder prepared-output binding");
+    }
+    const runId = runIntake.run_id;
+    if (
+      typeof runId !== "string" ||
+      !runId ||
+      reviewPayload.run_id !== runId ||
+      finalArtifacts.run_id !== runId ||
+      integrity.run_id !== runId
+    ) {
+      throw new Error("Report Builder run identity mismatch");
+    }
+    const expectedPayloadDigests = {
+      run_intake: reportBuilderCanonicalSha256(runIntake),
+      review_payload: reportBuilderCanonicalSha256(reviewPayload),
+      final_artifacts: reportBuilderCanonicalSha256(finalArtifacts),
+    };
+    for (const optional of ["ui_decisions", "applied_decisions"]) {
+      const optionalState = readJsonFileIfPresent(
+        path.join(outputDir, `${optional}.json`),
+      );
+      if (optionalState) {
+        expectedPayloadDigests[optional] =
+          reportBuilderCanonicalSha256(optionalState);
+      }
+    }
+    if (
+      !reportBuilderExactFields(
+        integrity.payload_digests,
+        Object.keys(expectedPayloadDigests),
+      ) ||
+      !reportBuilderJsonValuesEqual(
+        integrity.payload_digests,
+        expectedPayloadDigests,
+      )
+    ) {
+      throw new Error("Report Builder payload identity mismatch");
+    }
+    const expectedPaths = reportBuilderProtectedPaths(
+      outputDir,
+      finalArtifacts,
+    );
+    const receiptPaths = [];
+    for (const receipt of integrity.protected_files) {
+      validateReportBuilderRelativeReceipt(outputDir, receipt);
+      receiptPaths.push(receipt.path);
+    }
+    if (
+      new Set(receiptPaths).size !== receiptPaths.length ||
+      !reportBuilderJsonValuesEqual(
+        [...receiptPaths].sort(),
+        [...expectedPaths].sort(),
+      )
+    ) {
+      throw new Error("Report Builder protected receipt set is incomplete");
+    }
+    for (const optional of ["ui_decisions.json", "applied_decisions.json"]) {
+      const state = readJsonFileIfPresent(path.join(outputDir, optional));
+      if (
+        state &&
+        (state.run_id !== runId ||
+          state.review_payload_sha256 !== expectedPayloadDigests.review_payload)
+      ) {
+        throw new Error("Report Builder optional review binding is stale");
+      }
+    }
+    return {
+      runIntake,
+      reviewPayload,
+      finalArtifacts,
+      integrity,
+      reviewPayloadDigest: expectedPayloadDigests.review_payload,
+    };
+  } catch {
+    throw new Error(failureMessage);
+  }
+}
+
+function sealReportBuilderIntegrityParent(
+  outputDir,
+  expectedPredecessorCheckpoint = null,
+) {
+  const runIntake = readJsonFileIfPresent(
+    path.join(outputDir, "run_intake.json"),
+  );
+  const reviewPayload = readJsonFileIfPresent(
+    path.join(outputDir, "review_payload.json"),
+  );
+  const finalArtifacts = readJsonFileIfPresent(
+    path.join(outputDir, "final_artifacts.json"),
+  );
+  if (![runIntake, reviewPayload, finalArtifacts].every(isPlainObject)) {
+    throw new Error("Report Builder transaction result did not close.");
+  }
+  validateReportBuilderSourceIndex(outputDir);
+  if (
+    reviewPayload.run_id !== runIntake.run_id ||
+    finalArtifacts.run_id !== runIntake.run_id
+  ) {
+    throw new Error("Report Builder transaction result did not close.");
+  }
+  const physicalState = validateReportBuilderPhysicalOutputSet(outputDir);
+  const implementationReceipts = buildReportBuilderImplementationReceipts();
+  const preparedValidation = rederiveReportBuilderPreparedState(outputDir);
+  const protectedFiles = reportBuilderProtectedPaths(
+    outputDir,
+    finalArtifacts,
+  ).map((relativePath) => {
+    const snapshot = reportBuilderStableFileSnapshot(
+      reportBuilderContainedFile(outputDir, relativePath),
+    );
+    return {
+      path: relativePath,
+      role: "review_handoff",
+      byte_count: snapshot.byte_count,
+      sha256: snapshot.sha256,
+    };
+  });
+  const payloadDigests = {
+    run_intake: reportBuilderCanonicalSha256(runIntake),
+    review_payload: reportBuilderCanonicalSha256(reviewPayload),
+    final_artifacts: reportBuilderCanonicalSha256(finalArtifacts),
+  };
+  for (const optional of ["ui_decisions", "applied_decisions"]) {
+    const optionalState = readJsonFileIfPresent(
+      path.join(outputDir, `${optional}.json`),
+    );
+    if (optionalState) {
+      payloadDigests[optional] =
+        reportBuilderCanonicalSha256(optionalState);
+    }
+  }
+  let predecessorCheckpoint = null;
+  const appliedDecisions = readJsonFileIfPresent(
+    path.join(outputDir, "applied_decisions.json"),
+  );
+  if (isPlainObject(appliedDecisions)) {
+    const historyPaths = reportBuilderHistoryPaths(
+      appliedDecisions,
+      outputDir,
+    );
+    if (historyPaths.length) {
+      predecessorCheckpoint = reportBuilderCheckpoint(
+        expectedPredecessorCheckpoint,
+        { required: true },
+      );
+      if (
+        appliedDecisions.predecessor_checkpoint !==
+        predecessorCheckpoint
+      ) {
+        throw new Error("Report Builder predecessor checkpoint is stale");
+      }
+      const latestHistory = readJsonFileIfPresent(
+        path.join(outputDir, historyPaths[historyPaths.length - 1]),
+      );
+      if (
+        !isPlainObject(latestHistory) ||
+        latestHistory.predecessor_checkpoint !==
+          predecessorCheckpoint ||
+        latestHistory.predecessor_integrity?.content_sha256 !==
+          predecessorCheckpoint
+      ) {
+        throw new Error("Report Builder predecessor checkpoint is stale");
+      }
+    } else if (appliedDecisions.predecessor_checkpoint !== null) {
+      throw new Error("Report Builder predecessor checkpoint is unexpected");
+    }
+  }
+  const content = {
+    schema_version: "report_builder.review_integrity.v4",
+    run_id: runIntake.run_id,
+    source_index: "source_index.json",
+    predecessor_checkpoint: predecessorCheckpoint,
+    protected_files: protectedFiles,
+    payload_digests: payloadDigests,
+    implementation_artifact_refs: implementationReceipts.map(
+      (receipt) => receipt.artifact_id,
+    ),
+    implementation_receipts: implementationReceipts,
+    prepared_validation: preparedValidation,
+    physical_paths: physicalState.physical_paths,
+    physical_directories: physicalState.physical_directories,
+  };
+  const sealed = {
+    ...content,
+    content_sha256: reportBuilderCanonicalSha256(content),
+  };
+  generatedReviewAtomicWriteFileSync(
+    path.join(outputDir, "review_integrity.json"),
+    `${JSON.stringify(sealed, null, 2)}\n`,
+    "utf8",
+  );
+  validateReportBuilderIntegrityAuthority(outputDir, {
+    required: true,
+    failureMessage: "Report Builder transaction result did not close.",
+    expectedPredecessorCheckpoint: predecessorCheckpoint,
+  });
+  return sealed;
+}
+
+function reportBuilderRunIdentityProjection(value) {
+  if (!isPlainObject(value)) return null;
+  const projection = { ...value };
+  delete projection.execution_trace;
+  return reportBuilderCanonicalJson(projection);
+}
+
+function reportBuilderEffectAuthorityProjection(effect) {
+  if (!isPlainObject(effect)) return null;
+  const fieldNames = [
+    "item_id",
+    "item_type",
+    "title",
+    "action",
+    "status",
+    "applied_at",
+    "applied",
+    "requires_followup",
+    "target_artifact",
+    "target_path",
+    "target_id_field",
+    "target_record_id",
+    "target_field",
+    "target_records_key",
+    "source_path",
+    "reviewer_note",
+    "edit_value",
+    "requested_documents",
+    "followup_context",
+  ];
+  return Object.fromEntries(
+    fieldNames
+      .filter((fieldName) => Object.hasOwn(effect, fieldName))
+      .map((fieldName) => [fieldName, effect[fieldName]]),
+  );
+}
+
+function validateReportBuilderApplicationIdentity({
+  outputDir,
+  authorityArgs,
+  expectedApplied,
+  actualApplied,
+  actualFinalArtifacts,
+}) {
+  const persistedRunIntake = readJsonFileIfPresent(
+    path.join(outputDir, "run_intake.json"),
+  );
+  const persistedReviewPayload = readJsonFileIfPresent(
+    path.join(outputDir, "review_payload.json"),
+  );
+  const expectedRunIntake = authorityArgs.run_intake;
+  const expectedReviewPayload = authorityArgs.review_payload;
+  const expectedFinalArtifacts = authorityArgs.final_artifacts;
+  const sourceMappingRegeneration = expectedApplied.effects.some(
+    (effect) =>
+      effect.action === "edit" &&
+      /^sections\.[A-Za-z0-9_]+\.assigned_table$/.test(
+        shortString(effect.target_path),
+      ),
+  );
+  if (
+    !isPlainObject(persistedRunIntake) ||
+    !isPlainObject(persistedReviewPayload) ||
+    !isPlainObject(actualApplied) ||
+    !isPlainObject(actualFinalArtifacts) ||
+    !reportBuilderJsonValuesEqual(
+      reportBuilderRunIdentityProjection(persistedRunIntake),
+      reportBuilderRunIdentityProjection(expectedRunIntake),
+    ) ||
+    (!sourceMappingRegeneration &&
+      !reportBuilderJsonValuesEqual(
+        persistedReviewPayload,
+        expectedReviewPayload,
+      ))
+  ) {
+    throw new Error("Report Builder persisted application identity did not close.");
+  }
+  for (const fieldName of [
+    "schema_version",
+    "plugin",
+    "workflow",
+    "run_id",
+  ]) {
+    if (
+      persistedReviewPayload[fieldName] !== expectedReviewPayload[fieldName] ||
+      actualApplied[fieldName] !== expectedApplied[fieldName] ||
+      actualFinalArtifacts[fieldName] !== expectedFinalArtifacts[fieldName]
+    ) {
+      throw new Error("Report Builder persisted application identity did not close.");
+    }
+  }
+  for (const fieldName of [
+    "applied_at",
+    "decision_source",
+    "review_payload",
+    "decisions",
+    "decision_count",
+    "item_count",
+    "reviewer",
+    "predecessor_checkpoint",
+  ]) {
+    const expectedHas = Object.hasOwn(expectedApplied, fieldName);
+    const actualHas = Object.hasOwn(actualApplied, fieldName);
+    if (
+      expectedHas !== actualHas ||
+      (expectedHas &&
+        !reportBuilderJsonValuesEqual(
+          actualApplied[fieldName],
+          expectedApplied[fieldName],
+        ))
+    ) {
+      throw new Error("Report Builder persisted application identity did not close.");
+    }
+  }
+  if (
+    !Array.isArray(expectedApplied.effects) ||
+    !Array.isArray(actualApplied.effects) ||
+    expectedApplied.effects.length !== actualApplied.effects.length
+  ) {
+    throw new Error("Report Builder persisted application identity did not close.");
+  }
+  for (let index = 0; index < expectedApplied.effects.length; index += 1) {
+    if (
+      !reportBuilderJsonValuesEqual(
+        reportBuilderEffectAuthorityProjection(actualApplied.effects[index]),
+        reportBuilderEffectAuthorityProjection(expectedApplied.effects[index]),
+      )
+    ) {
+      throw new Error("Report Builder persisted application identity did not close.");
+    }
+  }
+}
+
+function validateReportBuilderTransactionWholeTree(
+  kind,
+  {
+    canonicalOutputDir,
+    workingOutputDir,
+    result,
+  },
+) {
+  const resultPredecessorCheckpoint =
+    kind === "apply"
+      ? result?.applied_decisions?.predecessor_checkpoint || null
+      : result?.predecessor_checkpoint || null;
+  const integrityAuthority =
+    validateReportBuilderIntegrityAuthority(workingOutputDir, {
+      required: true,
+      failureMessage: "Report Builder transaction result did not close.",
+      expectedPredecessorCheckpoint: resultPredecessorCheckpoint,
+    });
+  const persistedUiDecisions = readJsonFileIfPresent(
+    path.join(workingOutputDir, "ui_decisions.json"),
+  );
+  if (
+    !isPlainObject(result) ||
+    result.ok !== true ||
+    result.persisted !== true ||
+    result.integrity_checkpoint !==
+      integrityAuthority?.integrity?.content_sha256 ||
+    result.ui_decisions_path !==
+      path.join(canonicalOutputDir, "ui_decisions.json") ||
+    !isPlainObject(persistedUiDecisions)
+  ) {
+    throw new Error("Report Builder transaction result did not close.");
+  }
+  if (kind === "save") {
+    if (
+      !reportBuilderJsonValuesEqual(
+        result.ui_decisions,
+        persistedUiDecisions,
+      ) ||
+      result.run_id !== persistedUiDecisions.run_id ||
+      result.decision_count !== persistedUiDecisions.decision_count ||
+      result.item_count !== persistedUiDecisions.item_count ||
+      result.status !== persistedUiDecisions.status
+    ) {
+      throw new Error("Report Builder transaction result did not close.");
+    }
+    return;
+  }
+  const persistedAppliedDecisions = readJsonFileIfPresent(
+    path.join(workingOutputDir, "applied_decisions.json"),
+  );
+  const persistedFinalArtifacts = readJsonFileIfPresent(
+    path.join(workingOutputDir, "final_artifacts.json"),
+  );
+  const sourceMappingRegenerated =
+    reportBuilderValidatedWorkflowWritePaths(
+      result,
+      workingOutputDir,
+    ).includes("review_payload.json");
+  const uiStateCloses = sourceMappingRegenerated
+    ? reportBuilderRegeneratedUiStateCloses(
+        persistedUiDecisions,
+        persistedAppliedDecisions,
+        workingOutputDir,
+      )
+    : (
+        persistedUiDecisions.run_id ===
+          persistedAppliedDecisions?.run_id &&
+        persistedUiDecisions.review_payload_sha256 ===
+          persistedAppliedDecisions?.review_payload_sha256 &&
+        persistedUiDecisions.decision_count ===
+          persistedAppliedDecisions?.decision_count &&
+        reportBuilderJsonValuesEqual(
+          persistedUiDecisions.decisions,
+          persistedAppliedDecisions?.decisions,
+        )
+      );
+  if (
+    result.applied_decisions_path !==
+      path.join(canonicalOutputDir, "applied_decisions.json") ||
+    result.final_artifacts_path !==
+      path.join(canonicalOutputDir, "final_artifacts.json") ||
+    result.run_intake_path !==
+      path.join(canonicalOutputDir, "run_intake.json") ||
+    !isPlainObject(persistedAppliedDecisions) ||
+    !isPlainObject(persistedFinalArtifacts) ||
+    !uiStateCloses ||
+    !reportBuilderJsonValuesEqual(
+      result.applied_decisions,
+      persistedAppliedDecisions,
+    ) ||
+    !reportBuilderJsonValuesEqual(
+      result.final_artifacts,
+      persistedFinalArtifacts,
+    ) ||
+    result.run_id !== persistedAppliedDecisions.run_id ||
+    result.decision_count !== persistedAppliedDecisions.decision_count ||
+    result.item_count !== persistedAppliedDecisions.item_count ||
+    result.blocker_count !== persistedAppliedDecisions.blocker_count ||
+    result.revision_count !== persistedAppliedDecisions.revision_count ||
+    result.target_update_count !==
+      persistedAppliedDecisions.target_update_count ||
+    result.structured_update_count !==
+      persistedAppliedDecisions.structured_update_count ||
+    result.native_regeneration_count !==
+      persistedAppliedDecisions.native_regeneration_count ||
+    result.native_regenerated_count !==
+      persistedAppliedDecisions.native_regenerated_count ||
+    result.application_status !==
+      persistedAppliedDecisions.application_status
+  ) {
+    throw new Error("Report Builder transaction result did not close.");
+  }
+}
+
+function reportBuilderTransactionOptions(kind) {
+  return {
+    failureMessage: REPORT_BUILDER_TRANSACTION_FAILURE,
+    rollbackFailureMessage: REPORT_BUILDER_ROLLBACK_FAILURE,
+    mapOperationError: reportBuilderMappedTransactionError,
+    validateWholeTree: (context) =>
+      validateReportBuilderTransactionWholeTree(kind, context),
+  };
+}
+
+const REPORT_BUILDER_SOURCE_MAPPING_REGENERATION_PATHS = new Set([
+  "report.docx",
+  "report_analysis.json",
+  "report_audit.json",
+  "report_draft.md",
+  "report_tables.json",
+  "report_tables.xlsx",
+  "used_recipe.json",
+]);
+const REPORT_BUILDER_STALE_NUMERIC_PATHS = new Set([
+  "numeric_evidence_ledger.json",
+  "source_receipts.json",
+]);
+
+function reportBuilderRegeneratedUiStateCloses(
+  uiDecisions,
+  appliedDecisions,
+  workingOutputDir,
+) {
+  const reviewPayload = readJsonFileIfPresent(
+    path.join(workingOutputDir, "review_payload.json"),
+  );
+  if (
+    !isPlainObject(uiDecisions) ||
+    !isPlainObject(appliedDecisions) ||
+    !isPlainObject(reviewPayload) ||
+    !Array.isArray(reviewPayload.items)
+  ) {
+    return false;
+  }
+  const reviewPayloadDigest =
+    persistedReviewPayloadDigest(workingOutputDir);
+  return (
+    uiDecisions.schema_version === reviewPayload.schema_version &&
+    uiDecisions.plugin === reviewPayload.plugin &&
+    uiDecisions.workflow === reviewPayload.workflow &&
+    uiDecisions.run_id === reviewPayload.run_id &&
+    uiDecisions.run_id === appliedDecisions.run_id &&
+    uiDecisions.review_payload_sha256 === reviewPayloadDigest &&
+    appliedDecisions.review_payload_sha256 === reviewPayloadDigest &&
+    uiDecisions.review_payload_path === "review_payload.json" &&
+    uiDecisions.decision_source ===
+      "not_collected_after_regeneration" &&
+    uiDecisions.decided_at === null &&
+    Array.isArray(uiDecisions.decisions) &&
+    uiDecisions.decisions.length === 0 &&
+    uiDecisions.decision_count === 0 &&
+    uiDecisions.item_count === reviewPayload.items.length &&
+    uiDecisions.item_count === reviewPayload.item_count &&
+    uiDecisions.status === "pending_review"
+  );
+}
+
+function reportBuilderValidatedWorkflowWritePaths(
+  result,
+  workingOutputDir,
+  trustedImage = null,
+) {
+  const persistedAppliedDecisions = readJsonFileIfPresent(
+    path.join(workingOutputDir, "applied_decisions.json"),
+  );
+  if (
+    !isPlainObject(persistedAppliedDecisions) ||
+    !reportBuilderJsonValuesEqual(
+      result?.applied_decisions,
+      persistedAppliedDecisions,
+    )
+  ) {
+    throw new Error("Report Builder persisted effects did not close.");
+  }
+  const authorizedPaths = [
+    ...reportBuilderHistoryPaths(
+      persistedAppliedDecisions,
+      workingOutputDir,
+    ),
+  ];
+  const persistedReviewPayload = readJsonFileIfPresent(
+    path.join(workingOutputDir, "review_payload.json"),
+  );
+  const persistedReviewDigest =
+    persistedReviewPayloadDigest(workingOutputDir);
+  const appliedRegeneratedPaths = new Set(
+    Array.isArray(persistedAppliedDecisions.native_regenerated_paths)
+      ? persistedAppliedDecisions.native_regenerated_paths
+      : [],
+  );
+  const effects = Array.isArray(persistedAppliedDecisions.effects)
+    ? persistedAppliedDecisions.effects
+    : [];
+  let sourceMappingRegenerated = false;
+  for (const effect of effects) {
+    if (
+      !isPlainObject(effect) ||
+      effect.item_type !== "table_evidence" ||
+      effect.action !== "edit" ||
+      effect.status !== "edited" ||
+      effect.applied !== true ||
+      effect.artifact_update !== "native_artifact_regenerated" ||
+      effect.native_regeneration_status !== "regenerated" ||
+      effect.requires_native_regeneration !== false ||
+      effect.terminal_application !== true ||
+      typeof effect.target_path !== "string" ||
+      !/^sections\.[A-Za-z0-9_]+\.assigned_table$/.test(
+        effect.target_path,
+      ) ||
+      !isPlainObject(effect.application_receipt) ||
+      effect.application_receipt.target_path !== effect.target_path
+    ) {
+      continue;
+    }
+    const effectRegeneratedPaths = new Set(
+      Array.isArray(effect.native_regenerated_paths)
+        ? effect.native_regenerated_paths
+        : [],
+    );
+    if (
+      !Array.from(REPORT_BUILDER_SOURCE_MAPPING_REGENERATION_PATHS).every(
+        (relativePath) =>
+          effectRegeneratedPaths.has(relativePath) &&
+          appliedRegeneratedPaths.has(relativePath),
+      )
+    ) {
+      continue;
+    }
+    const receipts = Array.isArray(
+      effect.application_receipt.regenerated_outputs,
+    )
+      ? effect.application_receipt.regenerated_outputs
+      : [];
+    const receiptsByPath = new Map(
+      receipts
+        .filter((receipt) => isPlainObject(receipt))
+        .map((receipt) => [receipt.path, receipt]),
+    );
+    const receiptsClose = Array.from(
+      REPORT_BUILDER_SOURCE_MAPPING_REGENERATION_PATHS,
+    ).every((relativePath) => {
+      const receipt = receiptsByPath.get(relativePath);
+      const artifactPath = path.join(workingOutputDir, relativePath);
+      const artifact = generatedReviewPathEntryStat(artifactPath);
+      return (
+        isPlainObject(receipt) &&
+        artifact?.isFile() === true &&
+        artifact.isSymbolicLink() === false &&
+        artifact.nlink === 1 &&
+        receipt.byte_count === artifact.size &&
+        receipt.sha256 === fileSha256(artifactPath)
+      );
+    });
+    if (!receiptsClose) continue;
+    if (
+      !isPlainObject(persistedReviewPayload) ||
+      persistedReviewPayload.run_id !== persistedAppliedDecisions.run_id ||
+      persistedAppliedDecisions.review_payload_sha256 !==
+        persistedReviewDigest
+    ) {
+      continue;
+    }
+    sourceMappingRegenerated = true;
+  }
+  if (!sourceMappingRegenerated) return authorizedPaths;
+  authorizedPaths.push("review_payload.json");
+  if (!trustedImage) return authorizedPaths;
+  const trustedFiles = new Map(
+    Array.isArray(trustedImage.files)
+      ? trustedImage.files.map((entry) => [entry.path, entry])
+      : [],
+  );
+  const priorFinalEntry = trustedFiles.get("final_artifacts.json");
+  const currentFinalArtifacts = readJsonFileIfPresent(
+    path.join(workingOutputDir, "final_artifacts.json"),
+  );
+  if (
+    !isPlainObject(priorFinalEntry) ||
+    !Buffer.isBuffer(priorFinalEntry.payload) ||
+    !isPlainObject(currentFinalArtifacts)
+  ) {
+    return authorizedPaths;
+  }
+  const priorFinalArtifacts = JSON.parse(
+    priorFinalEntry.payload.toString("utf8"),
+  );
+  const priorOutputPaths = new Set(
+    Array.isArray(priorFinalArtifacts.outputs)
+      ? priorFinalArtifacts.outputs
+          .filter((output) => isPlainObject(output))
+          .map((output) => output.path)
+      : [],
+  );
+  const currentOutputPaths = new Set(
+    Array.isArray(currentFinalArtifacts.outputs)
+      ? currentFinalArtifacts.outputs
+          .filter((output) => isPlainObject(output))
+          .map((output) => output.path)
+      : [],
+  );
+  for (const relativePath of REPORT_BUILDER_STALE_NUMERIC_PATHS) {
+    if (
+      trustedFiles.has(relativePath) &&
+      priorOutputPaths.has(relativePath) &&
+      !generatedReviewPathEntryStat(
+        path.join(workingOutputDir, relativePath),
+      ) &&
+      !currentOutputPaths.has(relativePath)
+    ) {
+      authorizedPaths.push(relativePath);
+    }
+  }
+  return authorizedPaths;
+}
+
+function validateReportBuilderTransactionInput(outputDir) {
+  const outputStat = generatedReviewPathEntryStat(outputDir);
+  if (!outputStat || !outputStat.isDirectory() || outputStat.isSymbolicLink()) {
+    throw new Error(REPORT_BUILDER_TRANSACTION_FAILURE);
+  }
+  const lockPath = path.join(outputDir, ".report-builder-application.lock");
+  if (generatedReviewPathEntryStat(lockPath)) {
+    throw new Error(
+      "Another Report Builder review application is already in progress",
+    );
   }
 }
 
@@ -896,7 +3381,11 @@ function appendReviewApplicationExecutionTrace(
   });
   const updated = { ...current, execution_trace: trace };
   fs.mkdirSync(path.dirname(runIntakePath), { recursive: true });
-  fs.writeFileSync(runIntakePath, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
+  generatedReviewAtomicWriteFileSync(
+    runIntakePath,
+    `${JSON.stringify(updated, null, 2)}\n`,
+    "utf8",
+  );
   return runIntakePath;
 }
 
@@ -1059,7 +3548,11 @@ function writeRevisionArtifacts(outputDir, effects) {
     const relativePath = revisionRelativePath(effect);
     const absolutePath = path.join(outputDir, relativePath);
     fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
-    fs.writeFileSync(absolutePath, effect.edit_value, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      absolutePath,
+      effect.edit_value,
+      "utf8",
+    );
     effect.revision_artifact = relativePath;
     effect.artifact_update = "revision_artifact_written";
     revisionOutputs.push({
@@ -1088,9 +3581,17 @@ function writeDirectTextArtifactUpdates(outputDir, effects) {
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.writeFileSync(backupAbsolutePath, fs.readFileSync(target.absolutePath, "utf8"), "utf8");
+      generatedReviewAtomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath, "utf8"),
+        "utf8",
+      );
     }
-    fs.writeFileSync(target.absolutePath, effect.edit_value, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      target.absolutePath,
+      effect.edit_value,
+      "utf8",
+    );
     effect.target_artifact = target.relativePath;
     effect.original_artifact_backup = backupRelativePath;
     effect.artifact_update = "target_artifact_updated";
@@ -1128,7 +3629,10 @@ function writeStructuredArtifactUpdates(outputDir, effects) {
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.copyFileSync(target.absolutePath, backupAbsolutePath);
+      generatedReviewAtomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath),
+      );
     }
     const extension = path.extname(target.relativePath).toLowerCase();
     const result =
@@ -1233,6 +3737,112 @@ function statusFromEffects(effects, itemCount) {
   return "final_ready";
 }
 
+function reportBuilderCurrentMaterialReviewPaths(applied) {
+  if (!isPlainObject(applied)) return [];
+  const paths = [];
+  for (const effect of Array.isArray(applied.effects) ? applied.effects : []) {
+    if (!isPlainObject(effect)) continue;
+    const revision = shortString(effect.revision_artifact);
+    if (revision) paths.push(revision);
+  }
+  for (const relativePath of Array.isArray(applied.original_backup_paths)
+    ? applied.original_backup_paths
+    : []) {
+    if (typeof relativePath === "string" && relativePath) {
+      paths.push(relativePath);
+    }
+  }
+  return Array.from(new Set(paths));
+}
+
+function archivePriorReportBuilderApplication(
+  outputDir,
+  priorRunIntake,
+  priorApplied,
+  priorUiDecisions,
+  priorReviewPayload,
+  priorFinalArtifacts,
+  priorIntegrity,
+  expectedPredecessorCheckpoint,
+  archivedAt,
+) {
+  const carriedPaths = isPlainObject(priorApplied)
+    ? reportBuilderHistoryPaths(priorApplied, outputDir)
+    : [];
+  if (
+    !isPlainObject(priorApplied) ||
+    !isPlainObject(priorUiDecisions) ||
+    !isPlainObject(priorReviewPayload) ||
+    !isPlainObject(priorRunIntake) ||
+    !isPlainObject(priorFinalArtifacts) ||
+    !isPlainObject(priorIntegrity)
+  ) {
+    return carriedPaths;
+  }
+  const predecessorCheckpoint = reportBuilderCheckpoint(
+    expectedPredecessorCheckpoint,
+    { required: true },
+  );
+  if (
+    priorIntegrity.schema_version !== "report_builder.review_integrity.v4" ||
+    priorIntegrity.content_sha256 !== predecessorCheckpoint
+  ) {
+    throw new Error("Report Builder predecessor checkpoint is stale");
+  }
+  const predecessorContent = { ...priorIntegrity };
+  delete predecessorContent.content_sha256;
+  if (
+    reportBuilderCanonicalSha256(predecessorContent) !==
+    predecessorCheckpoint
+  ) {
+    throw new Error("Report Builder predecessor checkpoint is stale");
+  }
+  const content = {
+    schema_version: "report_builder.review_history_entry.v2",
+    archived_at: archivedAt,
+    predecessor_checkpoint: predecessorCheckpoint,
+    predecessor_integrity: priorIntegrity,
+    run_intake: priorRunIntake,
+    review_payload: priorReviewPayload,
+    ui_decisions: priorUiDecisions,
+    applied_decisions: priorApplied,
+    final_artifacts: priorFinalArtifacts,
+  };
+  const digest = reportBuilderCanonicalSha256(content);
+  const relativePath =
+    `revisions/history/application__${digest}.json`;
+  fs.mkdirSync(path.dirname(path.join(outputDir, relativePath)), {
+    recursive: true,
+  });
+  generatedReviewAtomicWriteFileSync(
+    path.join(outputDir, relativePath),
+    `${JSON.stringify(
+      {
+        ...content,
+        content_sha256: digest,
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+  return Array.from(new Set([...carriedPaths, relativePath]));
+}
+
+function pendingNumericMeasureReviewCount(reviewPayload) {
+  const items = Array.isArray(reviewPayload?.items) ? reviewPayload.items : [];
+  return items.filter((item) => {
+    if (!isPlainObject(item)) return false;
+    if (shortString(item.id).startsWith("numeric-measure-review-")) return true;
+    const evidence = Array.isArray(item.evidence) ? item.evidence : [];
+    return evidence.some(
+      (entry) =>
+        isPlainObject(entry) &&
+        shortString(entry.kind) === "numeric_measure_review_pending",
+    );
+  }).length;
+}
+
 const REVIEW_HANDOFF_PLUGINS = new Set([
   "check-entries",
   "client-file-preparation",
@@ -1317,7 +3927,11 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
           `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
           `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
         ].join("\n");
-    fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      handoffPath,
+      `${text}\n`,
+      "utf8",
+    );
   }
   return reviewHandoffOutputRecord(language);
 }
@@ -1353,6 +3967,13 @@ function finalArtifactsWithApplication(
   for (const output of backupOutputs) upsertOutput(output);
   for (const output of nativeRegenerationOutputs) upsertOutput(output);
   const blockers = effectsToBlockers(appliedDecisions.effects);
+  if (appliedDecisions.numeric_measure_pending_review_count) {
+    blockers.push({
+      kind: "numeric_measure_review",
+      status: "needs_review",
+      pending_count: appliedDecisions.numeric_measure_pending_review_count,
+    });
+  }
   return {
     schema_version: current.schema_version || reviewPayload.schema_version || "1.0",
     plugin: current.plugin || reviewPayload.plugin,
@@ -1375,6 +3996,8 @@ function finalArtifactsWithApplication(
       decision_count: appliedDecisions.decision_count,
       item_count: appliedDecisions.item_count,
       blocker_count: appliedDecisions.blocker_count,
+      numeric_measure_pending_review_count:
+        appliedDecisions.numeric_measure_pending_review_count || 0,
       revision_count: revisionOutputs.length,
       revision_paths: revisionOutputs.map((output) => output.path),
       target_update_count: targetOutputs.length,
@@ -1384,6 +4007,18 @@ function finalArtifactsWithApplication(
       native_regeneration_count: appliedDecisions.native_regeneration_count || 0,
       native_regeneration_paths: appliedDecisions.native_regeneration_paths || [],
       original_backup_paths: backupOutputs.map((output) => output.path),
+      predecessor_checkpoint:
+        appliedDecisions.predecessor_checkpoint || null,
+      retained_review_paths: Array.isArray(
+        appliedDecisions.retained_review_paths,
+      )
+        ? appliedDecisions.retained_review_paths
+        : [],
+      review_history_paths: Array.isArray(
+        appliedDecisions.review_history_paths,
+      )
+        ? appliedDecisions.review_history_paths
+        : [],
       applied_decisions_path: "applied_decisions.json",
     },
   };
@@ -1426,16 +4061,168 @@ function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, 
 }
 
 function applyDecisionPayload(inputArgs) {
-  const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
-  const validationPayload = validateReviewPayload(inputArgs);
-  const reviewPayload = validationPayload.review_payload;
-  const language = languageFromArgs(inputArgs);
-  const itemById = new Map(reviewPayload.items.map((item) => [item.id, item]));
-  const appliedAt = new Date().toISOString();
-  const effects = uiDecisions.decisions.map((decision) =>
-    buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
-  );
   const outputDir = resolveRunOutputDir(inputArgs);
+  const prepareApplication = (trustedArgs) => {
+    const { uiDecisions } = buildUiDecisions(trustedArgs);
+    const validationPayload = validateReviewPayload(trustedArgs);
+    const reviewPayload = validationPayload.review_payload;
+    const itemById = new Map(
+      reviewPayload.items.map((item) => [item.id, item]),
+    );
+    const appliedAt = new Date().toISOString();
+    return {
+      trustedArgs,
+      uiDecisions,
+      reviewPayload,
+      language: languageFromArgs(trustedArgs),
+      itemById,
+      appliedAt,
+      effects: uiDecisions.decisions.map((decision) =>
+        buildApplicationEffect(
+          decision,
+          itemById.get(decision.item_id),
+          appliedAt,
+        ),
+      ),
+    };
+  };
+  const applyPrepared = (
+    prepared,
+    workingOutputDir,
+    reviewPayloadDigest = null,
+  ) => {
+    const {
+      trustedArgs,
+      uiDecisions,
+      reviewPayload,
+      language,
+      itemById,
+      appliedAt,
+      effects,
+    } = prepared;
+    preflightReportBuilderEffects(effects, itemById, workingOutputDir);
+    const workingArgs = workingOutputDir
+      ? generatedReviewArgsForWorkingOutput(trustedArgs, workingOutputDir)
+      : trustedArgs;
+    return applyDecisionPayloadWrites({
+      inputArgs: workingArgs,
+      authorityArgs: trustedArgs,
+      uiDecisions,
+      reviewPayload,
+      reviewPayloadDigest,
+      language,
+      effects,
+      appliedAt,
+      outputDir: workingOutputDir,
+    });
+  };
+  if (!outputDir) return applyPrepared(prepareApplication(inputArgs), null);
+  validateReportBuilderTransactionInput(outputDir);
+  return withGeneratedReviewOutputTransaction(
+    outputDir,
+    ({
+      workingOutputDir,
+      canonicalOutputDir,
+      trustedImage,
+    }) => {
+      const authority = parentBoundReportBuilderArgs(inputArgs, {
+        outputDir,
+        trustedImage,
+        trustedImageCaptured: true,
+      });
+      const integrity = validateReportBuilderIntegrityAuthority(
+        workingOutputDir,
+        {
+          required: authority.assured,
+          failureMessage: REPORT_BUILDER_AUTHORIZATION_FAILURE,
+          expectedCurrentCheckpoint: fs.existsSync(
+            path.join(workingOutputDir, "applied_decisions.json"),
+          )
+            ? authority.args.expected_predecessor_checkpoint || null
+            : null,
+        },
+      );
+      if (!integrity) {
+        throw new Error(REPORT_BUILDER_AUTHORIZATION_FAILURE);
+      }
+      const workingResult = applyPrepared(
+        prepareApplication(authority.args),
+        workingOutputDir,
+        integrity.reviewPayloadDigest,
+      );
+      const authorizedWritePaths =
+        generatedReviewCollectApplicationWritePaths(workingResult);
+      authorizedWritePaths.push(
+        ...reportBuilderValidatedWorkflowWritePaths(
+          workingResult,
+          workingOutputDir,
+          trustedImage,
+        ),
+        "report_audit.json",
+        "review_integrity.json",
+      );
+      const canonicalResult = generatedReviewRewriteOutputPaths(
+        workingResult,
+        workingOutputDir,
+        canonicalOutputDir,
+      );
+      return generatedReviewTransactionEnvelope(
+        canonicalResult,
+        authorizedWritePaths,
+      );
+    },
+    reportBuilderTransactionOptions("apply"),
+  );
+}
+
+function applyDecisionPayloadWrites({
+  inputArgs,
+  authorityArgs,
+  uiDecisions,
+  reviewPayload,
+  reviewPayloadDigest,
+  language,
+  effects,
+  appliedAt,
+  outputDir,
+}) {
+  const decisionOutputPath = resolveDecisionOutputPath(inputArgs);
+  const priorAppliedDecisions = outputDir
+    ? readJsonFileIfPresent(
+        path.join(outputDir, "applied_decisions.json"),
+      )
+    : null;
+  const priorUiDecisions = outputDir
+    ? readJsonFileIfPresent(path.join(outputDir, "ui_decisions.json"))
+    : null;
+  const priorReviewPayload = outputDir
+    ? readJsonFileIfPresent(path.join(outputDir, "review_payload.json"))
+    : null;
+  const priorRunIntake = outputDir
+    ? readJsonFileIfPresent(path.join(outputDir, "run_intake.json"))
+    : null;
+  const priorFinalArtifacts = outputDir
+    ? readJsonFileIfPresent(path.join(outputDir, "final_artifacts.json"))
+    : null;
+  const priorIntegrity = outputDir
+    ? readJsonFileIfPresent(path.join(outputDir, "review_integrity.json"))
+    : null;
+  const predecessorCheckpoint = priorAppliedDecisions
+    ? reportBuilderCheckpoint(
+        inputArgs.expected_predecessor_checkpoint,
+        { required: true },
+      )
+    : null;
+  if (
+    priorAppliedDecisions &&
+    (!isPlainObject(priorIntegrity) ||
+      priorIntegrity.content_sha256 !== predecessorCheckpoint)
+  ) {
+    throw new Error("Report Builder predecessor checkpoint is stale");
+  }
+  if (outputDir) {
+    uiDecisions.review_payload_sha256 = reviewPayloadDigest;
+  }
   const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
   const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
   const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
@@ -1443,20 +4230,28 @@ function applyDecisionPayload(inputArgs) {
   const finalArtifactsPath = resolveFinalArtifactsOutputPath(inputArgs);
   const currentFinalArtifacts = currentFinalArtifactsForApplication(inputArgs, finalArtifactsPath);
   const nativeRegenerationOutputs = [
-    ...markNativeRegenerationPending(effects),
-    ...markDerivedNativeRegenerationPending(outputDir, effects, currentFinalArtifacts),
+      ...markNativeRegenerationPending(effects),
+      ...markDerivedNativeRegenerationPending(outputDir, effects, currentFinalArtifacts),
   ];
-  const targetOutputs = [...textUpdates.targetOutputs, ...structuredUpdates.targetOutputs];
-  const backupOutputs = [...textUpdates.backupOutputs, ...structuredUpdates.backupOutputs];
-  const structuredUpdatePaths = effects
-    .filter((effect) => effect.artifact_update === "structured_artifact_updated")
-    .map((effect) => effect.target_artifact);
-  const nativeRegenerationPaths = Array.from(
-    new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
-  );
-  const blockerCount = effects.filter((effect) => effect.requires_followup).length;
-  const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
-  const appliedDecisions = {
+    const targetOutputs = [...textUpdates.targetOutputs, ...structuredUpdates.targetOutputs];
+    const backupOutputs = [...textUpdates.backupOutputs, ...structuredUpdates.backupOutputs];
+    const structuredUpdatePaths = effects
+      .filter((effect) => effect.artifact_update === "structured_artifact_updated")
+      .map((effect) => effect.target_artifact);
+    const nativeRegenerationPaths = Array.from(
+      new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
+    );
+    const blockerCount = effects.filter((effect) => effect.requires_followup).length;
+    const numericMeasurePendingReviewCount =
+      pendingNumericMeasureReviewCount(reviewPayload);
+    let applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
+    if (
+      numericMeasurePendingReviewCount > 0 &&
+      applicationStatus === "final_ready"
+    ) {
+      applicationStatus = "partial_review_applied";
+    }
+    const appliedDecisions = {
     schema_version: reviewPayload.schema_version,
     plugin: reviewPayload.plugin,
     workflow: reviewPayload.workflow,
@@ -1468,11 +4263,14 @@ function applyDecisionPayload(inputArgs) {
       item_count: reviewPayload.items.length,
       review_type: reviewPayload.review_type || null,
     },
+    review_payload_sha256: reviewPayloadDigest,
+    decision_review_payload_sha256: reviewPayloadDigest,
     decisions: uiDecisions.decisions,
     effects,
     decision_count: uiDecisions.decision_count,
     item_count: reviewPayload.items.length,
     blocker_count: blockerCount,
+    numeric_measure_pending_review_count: numericMeasurePendingReviewCount,
     revision_count: revisionOutputs.length,
     revision_paths: revisionOutputs.map((output) => output.path),
     target_update_count: targetOutputs.length,
@@ -1483,56 +4281,109 @@ function applyDecisionPayload(inputArgs) {
     native_regeneration_paths: nativeRegenerationPaths,
     original_backup_paths: backupOutputs.map((output) => output.path),
     application_status: applicationStatus,
-  };
-  if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
+    predecessor_checkpoint: predecessorCheckpoint,
+    };
+    if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
+    appliedDecisions.review_history_paths = outputDir
+      ? archivePriorReportBuilderApplication(
+          outputDir,
+          priorRunIntake,
+          priorAppliedDecisions,
+          priorUiDecisions,
+          priorReviewPayload,
+          priorFinalArtifacts,
+          priorIntegrity,
+          predecessorCheckpoint,
+          appliedAt,
+        )
+      : [];
+    const currentMaterialPaths = new Set(
+      reportBuilderCurrentMaterialReviewPaths(appliedDecisions),
+    );
+    appliedDecisions.retained_review_paths = outputDir
+      ? Array.from(
+          new Set([
+            ...(Array.isArray(priorAppliedDecisions?.retained_review_paths)
+              ? priorAppliedDecisions.retained_review_paths
+              : []),
+            ...reportBuilderCurrentMaterialReviewPaths(
+              priorAppliedDecisions,
+            ),
+          ]),
+        ).filter((relativePath) => !currentMaterialPaths.has(relativePath))
+      : [];
 
-  const finalArtifacts = finalArtifactsWithApplication(
-    inputArgs,
-    appliedDecisions,
-    finalArtifactsPath,
-    revisionOutputs,
-    targetOutputs,
-    backupOutputs,
-    nativeRegenerationOutputs,
-  );
+    const finalArtifacts = finalArtifactsWithApplication(
+      inputArgs,
+      appliedDecisions,
+      finalArtifactsPath,
+      revisionOutputs,
+      targetOutputs,
+      backupOutputs,
+      nativeRegenerationOutputs,
+    );
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      decisionOutputPath,
+      `${JSON.stringify(uiDecisions, null, 2)}\n`,
+      "utf8",
+    );
   }
   if (appliedOutputPath) {
     fs.mkdirSync(path.dirname(appliedOutputPath), { recursive: true });
-    fs.writeFileSync(appliedOutputPath, `${JSON.stringify(appliedDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      appliedOutputPath,
+      `${JSON.stringify(appliedDecisions, null, 2)}\n`,
+      "utf8",
+    );
     persisted = true;
   }
   if (finalArtifactsPath) {
     fs.mkdirSync(path.dirname(finalArtifactsPath), { recursive: true });
-    fs.writeFileSync(finalArtifactsPath, `${JSON.stringify(finalArtifacts, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      finalArtifactsPath,
+      `${JSON.stringify(finalArtifacts, null, 2)}\n`,
+      "utf8",
+    );
   }
-  const workflowSpecificResult = applyWorkflowSpecificReviewApplication(
-    outputDir,
-    appliedOutputPath,
-    finalArtifactsPath,
-  );
-  const responseAppliedDecisions =
-    (isPlainObject(workflowSpecificResult?.applied_decisions)
-      ? workflowSpecificResult.applied_decisions
-      : null) ||
-    readJsonFileIfPresent(appliedOutputPath) ||
-    appliedDecisions;
-  const responseFinalArtifacts =
-    (isPlainObject(workflowSpecificResult?.final_artifacts)
-      ? workflowSpecificResult.final_artifacts
-      : null) ||
-    readJsonFileIfPresent(finalArtifactsPath) ||
-    finalArtifacts;
-  const runIntakePath = appendReviewApplicationExecutionTrace(
-    inputArgs,
-    outputDir,
-    responseAppliedDecisions,
-    responseFinalArtifacts,
-  );
-  return {
+    applyWorkflowSpecificReviewApplication(
+      outputDir,
+      appliedOutputPath,
+      finalArtifactsPath,
+      appliedOutputPath ? fileSha256(appliedOutputPath) : null,
+      finalArtifactsPath ? fileSha256(finalArtifactsPath) : null,
+    );
+    const responseAppliedDecisions =
+      readJsonFileIfPresent(appliedOutputPath) || appliedDecisions;
+    const responseFinalArtifacts =
+      readJsonFileIfPresent(finalArtifactsPath) || finalArtifacts;
+    if (outputDir) {
+      validateReportBuilderApplicationIdentity({
+        outputDir,
+        authorityArgs,
+        expectedApplied: appliedDecisions,
+        actualApplied: responseAppliedDecisions,
+        actualFinalArtifacts: responseFinalArtifacts,
+      });
+    }
+    const runIntakePath = appendReviewApplicationExecutionTrace(
+      inputArgs,
+      outputDir,
+      responseAppliedDecisions,
+      responseFinalArtifacts,
+    );
+    if (outputDir) {
+      sealReportBuilderIntegrityParent(
+        outputDir,
+        predecessorCheckpoint,
+      );
+    }
+  const currentIntegrity = outputDir
+    ? readJsonFileIfPresent(path.join(outputDir, "review_integrity.json"))
+    : null;
+  const result = {
     ok: true,
     validation_type: "report_builder_application",
     run_id: responseAppliedDecisions.run_id,
@@ -1550,6 +4401,7 @@ function applyDecisionPayload(inputArgs) {
     applied_decisions_path: persisted ? appliedOutputPath : null,
     final_artifacts_path: finalArtifactsPath,
     run_intake_path: runIntakePath,
+    integrity_checkpoint: currentIntegrity?.content_sha256 || null,
     message: persisted
       ? isSpanish(language)
         ? `Se aplicaron ${responseAppliedDecisions.decision_count} decisiones del Generador de informes.`
@@ -1560,6 +4412,7 @@ function applyDecisionPayload(inputArgs) {
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
+  return result;
 }
 
 function pythonExecutable() {
@@ -1577,15 +4430,42 @@ function pythonExecutable() {
   return "python3";
 }
 
-function applyWorkflowSpecificReviewApplication(outputDir, appliedOutputPath, finalArtifactsPath) {
+function sanitizedChildFailure(completed, fallback) {
+  const output = [completed.stderr, completed.stdout]
+    .filter((value) => typeof value === "string" && value.trim())
+    .join("\n");
+  const terminalLine = output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .pop();
+  if (!terminalLine) return fallback;
+  const exception = terminalLine.match(
+    /^([A-Za-z_][A-Za-z0-9_.]*(?:Error|Exception)):\s*(.+)$/,
+  );
+  if (!exception) return fallback;
+  const detail = exception[2]
+    .replace(/\/(?:[^/\s]+\/)+[^:\s,)]+/g, "[local path]")
+    .replace(/[A-Za-z]:\\(?:[^\\\s]+\\)+[^:\s,)]+/g, "[local path]");
+  return `${fallback} ${exception[1]}: ${detail}`;
+}
+
+function applyWorkflowSpecificReviewApplication(
+  outputDir,
+  appliedOutputPath,
+  finalArtifactsPath,
+  expectedAppliedSha256,
+  expectedFinalArtifactsSha256,
+) {
   if (!outputDir || !appliedOutputPath || !finalArtifactsPath) return null;
   const currentApplied = readJsonFileIfPresent(appliedOutputPath);
-  if (!currentApplied || !currentApplied.native_regeneration_count) return null;
-  if (!hasReportBuilderNativeRegenerationTarget(currentApplied)) return null;
+  if (!currentApplied) return null;
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
   const completed = spawnSync(
     pythonExecutable(),
     [
+      "-I",
+      "-B",
       scriptPath,
       "--output-dir",
       outputDir,
@@ -1593,39 +4473,55 @@ function applyWorkflowSpecificReviewApplication(outputDir, appliedOutputPath, fi
       appliedOutputPath,
       "--final-artifacts",
       finalArtifactsPath,
+      "--expected-applied-sha256",
+      expectedAppliedSha256,
+      "--expected-final-artifacts-sha256",
+      expectedFinalArtifactsSha256,
     ],
-    { cwd: PLUGIN_ROOT, encoding: "utf8" },
+    {
+      cwd: PLUGIN_ROOT,
+      encoding: "utf8",
+      maxBuffer: 1024 * 1024,
+    },
   );
-  if (completed.error) throw completed.error;
+  if (completed.error) {
+    throw new Error("Report Builder native regeneration could not start.");
+  }
   if (completed.status !== 0) {
     throw new Error(
-      completed.stderr ||
-        completed.stdout ||
+      sanitizedChildFailure(
+        completed,
         "Report Builder native regeneration failed.",
+      ),
     );
   }
   const output = completed.stdout.trim().split(/\r?\n/).filter(Boolean).pop();
-  if (!output) return null;
-  const parsed = JSON.parse(output);
-  return isPlainObject(parsed) ? parsed : null;
-}
-
-function hasReportBuilderNativeRegenerationTarget(appliedDecisions) {
-  if (!isPlainObject(appliedDecisions)) return false;
-  const effects = Array.isArray(appliedDecisions.effects) ? appliedDecisions.effects : [];
-  return effects.some((effect) => {
-    if (!isPlainObject(effect)) return false;
-    if (effect.action !== "edit") return false;
-    if (effect.artifact_update !== "native_regeneration_pending") return false;
-    if (shortString(effect.target_artifact) !== "report.docx") return false;
-    if (shortString(effect.edit_value) === "") return false;
-    return /^sections\.[^.]+\.(codex_comment|assigned_table)$/.test(shortString(effect.target_path));
-  });
+  if (!output || output.length > 512 * 1024) {
+    throw new Error("Report Builder native regeneration returned an invalid result.");
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(output);
+  } catch {
+    throw new Error("Report Builder native regeneration returned an invalid result.");
+  }
+  if (!isPlainObject(parsed) || parsed.ok !== true) {
+    throw new Error("Report Builder native regeneration returned an invalid result.");
+  }
+  return { ok: true };
 }
 
 function callTool(name, args = {}) {
   if (name === TOOL_NAMES.validateReview) {
-    const payload = validateReviewPayload(args);
+    const authority = parentBoundReportBuilderArgs(args);
+    const payload = validateReviewPayload(authority.args);
+    if (authority.outputDir) {
+      validateReportBuilderIntegrityAuthority(authority.outputDir, {
+        required: authority.assured,
+        expectedPredecessorCheckpoint:
+          authority.args.expected_predecessor_checkpoint || null,
+      });
+    }
     return {
       ok: true,
       validation_type: "report_builder_review",
@@ -1639,7 +4535,15 @@ function callTool(name, args = {}) {
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    return validateReviewPayload(args);
+    const authority = parentBoundReportBuilderArgs(args);
+    if (authority.outputDir) {
+      validateReportBuilderIntegrityAuthority(authority.outputDir, {
+        required: authority.assured,
+        expectedPredecessorCheckpoint:
+          authority.args.expected_predecessor_checkpoint || null,
+      });
+    }
+    return validateReviewPayload(authority.args);
   }
   if (name === TOOL_NAMES.saveDecisions) {
     return saveDecisionPayload(args);
