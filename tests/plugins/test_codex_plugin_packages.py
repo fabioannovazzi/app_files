@@ -406,7 +406,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.35"
+    assert manifest["version"] == "0.1.36"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti del cliente, separa fatti e valutazioni e "
@@ -423,7 +423,14 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt"
     ).read_text(encoding="utf-8").strip()
     assert manifest["interface"]["longDescription"] == approved_description
+    assert "richieste mirate per Deep Research" in approved_description
+    assert "verifica le risposte rispetto alle fonti citate" in approved_description
     assert "Cerca la corrispondenza del cliente." in approved_description
+    assert "Il giudizio professionale resta al commercialista." in (
+        approved_description
+    )
+    assert "New Client" not in approved_description
+    assert "indicizzare" not in approved_description
     assert "consiglia Codex Desktop" not in approved_description
 
     wrapper_path = "skills/studio-archive/SKILL.md"

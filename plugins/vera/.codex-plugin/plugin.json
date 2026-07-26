@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -45,7 +45,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera aiuta il commercialista a portare il lavoro del cliente dall'avvio alla revisione. Organizza il percorso New Client, controlla le evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato e prepara pratiche INPS e Registro Imprese/DIRE da fonti tracciate. Cerca la corrispondenza del cliente. Può anche indicizzare una cartella condivisa dello studio separatamente per ogni professionista e citare i passaggi verificati. Fonti, questioni aperte e decisioni restano visibili; il commercialista mantiene il controllo.",
+    "longDescription": "Vera aiuta il commercialista a seguire il lavoro di ogni cliente, dall’inizio alla revisione finale. Raccoglie e ordina i documenti, controlla i dati contabili, seleziona campioni, riconcilia movimenti e prepara report. Aiuta anche a verificare piani di concordato e a preparare pratiche INPS e Registro Imprese/DIRE. Prepara richieste mirate per Deep Research su temi legali, fiscali e normativi e verifica le risposte rispetto alle fonti citate. Cerca la corrispondenza del cliente. Mostra le fonti, i punti da chiarire e le decisioni da prendere. Il giudizio professionale resta al commercialista.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
