@@ -1,7 +1,7 @@
 {
   "name": "concordato-plan-review",
-  "version": "0.1.28",
-  "description": "Tie-out and auditor-oriented Word/Excel review workflow for Italian concordato plan numerical sections against accounting evidence.",
+  "version": "0.1.29",
+  "description": "Professional review workspace for Italian concordato preventivo cases: procedure, documents, creditors, treatment, liquidation alternative, sources and uses, liquidity, issues, and exact supporting schedules.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -13,20 +13,21 @@
   "keywords": [
     "concordato",
     "audit",
-    "tie-out",
-    "reconciliation",
-    "going-concern",
-    "financial-statements",
-    "piano-concordato",
-    "revision"
+    "concordato-preventivo",
+    "creditors",
+    "restructuring",
+    "insolvency",
+    "feasibility",
+    "liquidation-alternative",
+    "professional-review"
   ],
   "skills": "./skills/",
   "apps": "./.app.json",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Revisione Piano Concordato",
-    "shortDescription": "Confronta il piano di concordato con bilancio, mastrini, DB rettificato e dettagli debiti, con report criticita per revisore.",
-    "longDescription": "Workflow Codex per tie-out numerico e review contabile di piani di concordato. Ispeziona PDF e workbook, chiede solo perimetro/data/tolleranze non inferibili, estrae candidati numerici, crea match meccanici per importo e produce automaticamente il pacchetto completo: Word riassuntivo batte/non batte, tabulato differenze, audit, review Codex, classificazione di dati storici, rettifiche, riclassifiche, assunzioni prospettiche, omissioni e criticita rilevanti per la continuita aziendale.",
+    "displayName": "Concordato Preventivo",
+    "shortDescription": "Riesamina procedura, piano, attestazione, creditori, trattamento, alternativa liquidatoria, liquidità e questioni aperte.",
+    "longDescription": "Workspace Codex per la revisione professionale di un concordato preventivo italiano. Organizza quadro normativo, procedura, proposta, piano, attestazione e documenti autorevoli; struttura creditori, prelazioni, classi, voto, recuperi e tempi; confronta il trattamento con l'alternativa liquidatoria; calcola esattamente fonti e impieghi, funding gap e bridge di liquidità; registra assunzioni, contraddizioni, lacune e follow-up. Il tie-out numerico resta un'appendice opzionale. Codex propone l'interpretazione semantica e il professionista la conferma: il codice non emette pareri legali né attesta la fattibilità.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",
@@ -38,11 +39,11 @@
       "Analysis"
     ],
     "defaultPrompt": [
-      "Usa Revisione Piano Concordato sulla cartella che indico.",
-      "Ispeziona piano, bilancio, mastrini, DB rettificato e dettagli debiti; inferisci quanto possibile e chiedimi solo ambiguita sostanziali su perimetro, data e tolleranze.",
-      "Prepara tabulato tie-out, differenze, fonti usate e criticita per revisore su bilancio, continuita aziendale, omissioni e dati non supportati."
+      "Usa Concordato Preventivo sul fascicolo che indico.",
+      "Ricostruisci procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidità, assunzioni e questioni aperte.",
+      "Fai confermare il modello semantico al professionista e usa il tie-out numerico soltanto come appendice quando è utile."
     ],
-    "brandColor": "#31493C",
+    "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",
     "logo": "./assets/icon.svg"
   }

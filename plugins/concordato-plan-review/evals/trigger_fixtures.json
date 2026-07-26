@@ -3,22 +3,23 @@
   "version": 1,
   "should_trigger": [
     {
-      "id": "italian_concordato_tie_out",
-      "prompt": "Devo confrontare il piano di concordato con bilancio, mastrini, DB rettificato e dettaglio debiti tributari, poi produrre criticita per il revisore.",
+      "id": "italian_concordato_preventivo_review",
+      "prompt": "Devo riesaminare un concordato preventivo: procedura, proposta, piano, attestazione, creditori e classi, trattamento, alternativa liquidatoria, fonti e impieghi e liquidità.",
       "required_signals": [
-        "piano di concordato",
-        "bilancio",
-        "mastrini",
-        "revisore"
+        "concordato preventivo",
+        "attestazione",
+        "creditori",
+        "alternativa liquidatoria"
       ]
     },
     {
-      "id": "plan_cp_numeric_review",
-      "prompt": "Usa i file ExampleCo piano CP, bilancio provvisorio e DB 31.03.2026 per fare il tie-out numerico e segnalare dati non supportati.",
+      "id": "concordato_preventivo_liquidity_and_treatment",
+      "prompt": "Organizza questo fascicolo di concordato preventivo e verifica trattamento dei creditori, recuperi rispetto alla liquidazione, funding gap, bridge di cassa e questioni documentali aperte.",
       "required_signals": [
-        "piano CP",
-        "tie-out",
-        "dati non supportati"
+        "concordato preventivo",
+        "trattamento dei creditori",
+        "liquidazione",
+        "bridge di cassa"
       ]
     }
   ],

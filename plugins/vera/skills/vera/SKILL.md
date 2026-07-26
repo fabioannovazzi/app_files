@@ -117,7 +117,9 @@ deployment's actual OpenAI account settings.
   entries;
 - `journal-bank-reconciliation`: bank statements against journals or ledgers;
 - `report-builder`: financial source files into reviewable reports;
-- `concordato-plan-review`: numerical tie-out of an Italian concordato plan;
+- `concordato-plan-review`: professional review of an Italian concordato
+  preventivo across procedure, documents, creditors and treatment,
+  liquidation alternative, sources and uses, liquidity, and open issues;
 - `prompt-optimizer`: legal, tax, or compliance Deep Research prompts;
 - `deep-research-validator`: cited-claim validation of Deep Research outputs.
 - `previdenza-inps`: evidence-backed INPS case review with page-level local

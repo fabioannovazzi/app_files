@@ -114,6 +114,7 @@ ALLOWED_STATUSES = {
     "ready_for_variance_run",
     "rejected",
     "reviewed",
+    "semantic_model_required",
     "skipped",
     "written",
     "written_pending_review",

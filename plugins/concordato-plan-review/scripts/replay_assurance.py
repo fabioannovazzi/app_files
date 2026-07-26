@@ -174,6 +174,24 @@ def _recipe_from_reviewed_decisions(
     )
 
 
+def _semantic_recipe_from_reviewed_decisions(
+    reviewed: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    raw_decisions = reviewed.get("decisions")
+    if not isinstance(raw_decisions, list):
+        raise ValueError("reviewed_decisions.decisions must be a list")
+    decision = _decision_by_type(
+        raw_decisions,
+        "semantic_review",
+    )
+    if decision is None:
+        return None
+    return {
+        "schema_version": "concordato.preventivo.semantic_recipe.v1",
+        "semantic_case_decision": decision,
+    }
+
+
 def _workbook_image(path: Path) -> list[dict[str, Any]]:
     workbook = openpyxl.load_workbook(path, data_only=False, read_only=False)
     try:
@@ -856,6 +874,7 @@ def _validate_independent_outputs(
     """Regenerate deterministic outputs and compare independent representations."""
 
     recipe, _ = _recipe_from_reviewed_decisions(reviewed)
+    semantic_recipe = _semantic_recipe_from_reviewed_decisions(reviewed)
     assumptions = run_intake.get("assumptions")
     if not isinstance(assumptions, Mapping):
         raise ValueError("run_intake.assumptions is invalid")
@@ -870,13 +889,20 @@ def _validate_independent_outputs(
             tolerance=assumptions.get("tolerance"),
             max_rows_per_sheet=int(assumptions.get("max_rows_per_sheet") or 0),
             recipe=recipe,
+            semantic_recipe=semantic_recipe,
         )
 
         exact_paths = {
             "amount_candidates.csv",
             "assurance_gates.json",
+            "concordato_case_model.json",
+            "concordato_semantic_checks.json",
+            "concordato_semantic_review.md",
+            "creditor_class_summary.csv",
+            "creditor_treatment.csv",
             "exact_amount_matches.csv",
             "inventory.json",
+            "liquidity_schedule.csv",
             "numeric_evidence_ledger.json",
             "raw_amount_candidates.csv",
             "review_packet.md",
@@ -884,6 +910,8 @@ def _validate_independent_outputs(
             "source_pages.json",
             "source_qualifications.json",
             "source_receipts.json",
+            "sources_and_uses.csv",
+            "suggested_concordato_case_model.json",
             "suggested_source_role_recipe.json",
             "workbook_sheets.json",
         }
@@ -898,6 +926,18 @@ def _validate_independent_outputs(
             output_dir / "concordato_tie_out_workpaper.xlsx"
         ) != _workbook_image(baseline / "concordato_tie_out_workpaper.xlsx"):
             raise ValueError("Concordato workpaper is not independently reproducible")
+        if _workbook_image(
+            output_dir / "concordato_review_workpaper.xlsx"
+        ) != _workbook_image(baseline / "concordato_review_workpaper.xlsx"):
+            raise ValueError(
+                "Concordato semantic workpaper is not independently reproducible"
+            )
+        if _docx_image(
+            output_dir / "concordato_preventivo_review_summary.docx"
+        ) != _docx_image(baseline / "concordato_preventivo_review_summary.docx"):
+            raise ValueError(
+                "Concordato semantic summary is not independently reproducible"
+            )
 
         baseline_docx = baseline / "concordato_review_summary.docx"
         expected_docx = Path(temporary) / "expected-summary.docx"

@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "concordatoPlanReviewWidgets": {
-      "title": "Concordato Plan Review Widgets",
-      "description": "Validate and render Concordato Plan Review payloads.",
+      "title": "Concordato Preventivo Review",
+      "description": "Validate and render professional Concordato Preventivo review payloads.",
       "icons": [
         {
           "src": "./assets/icon.svg",

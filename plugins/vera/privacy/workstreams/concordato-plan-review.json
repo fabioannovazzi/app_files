@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "workstream": "concordato-plan-review",
-  "display_name": "Concordato Plan Review",
+  "display_name": "Concordato Preventivo Review",
   "role": "workflow",
   "governed_paths": [
     "skills",
@@ -17,9 +17,24 @@
     "policy": "real_case_data_may_enter_codex_context",
     "classes": [
       {
-        "id": "plan-evidence-and-review",
-        "purpose": "Interpret the concordato plan and explain numerical checks and discrepancies",
-        "content": "User instructions; plan documents and extracted text; financial schedules; recalculations; discrepancies; evidence locators; proposed findings and review decisions"
+        "id": "procedure-and-document-evidence",
+        "purpose": "Identify the concordato preventivo procedure, governing framework, authoritative proposal, plan, attestation, court material, and document perimeter",
+        "content": "User instructions; debtor and procedure identifiers; court and filing details; plan, proposal, attestation, professional and court documents; extracted text; document versions, roles, evidence locators, and reviewer judgment bases"
+      },
+      {
+        "id": "creditor-and-treatment-evidence",
+        "purpose": "Reconstruct and review the creditor perimeter, priority, classes, voting treatment, recoveries, timing, disputes, and liquidation comparator",
+        "content": "Creditor names and identifiers; claim amounts and status; secured, privileged, unsecured, subordinated, tax, and social-security information; classes; vote and treatment data; proposed and liquidation recoveries; payment timing; evidence locators; professional assessments and follow-up"
+      },
+      {
+        "id": "plan-economics-and-feasibility-evidence",
+        "purpose": "Review sources and uses, liquidity, distributions, milestones, assumptions, consistency, and feasibility evidence",
+        "content": "Business-plan and accounting data; assets and disposals; financing and external contributions; procedure costs; cash flows and liquidity; distributions; milestones; assumptions; recalculations; inconsistencies; missing evidence; and reviewer findings"
+      },
+      {
+        "id": "professional-review-decisions",
+        "purpose": "Record review questions, issues, evidence requests, reviewer decisions, and professional handoff material",
+        "content": "Semantic case-model decisions; judgment bases; open and resolved issues; severity and ownership; requested documents; reviewer notes and actions; generated workpapers, summaries, and review memos"
       }
     ]
   },
@@ -52,12 +67,12 @@
       "control": "Supported source bytes are captured before parsing and replayed against sealed receipts before review writes."
     },
     {
-      "id": "reviewed-source-role-boundary",
-      "control": "Filename suggestions remain non-operative until a reviewed, source-bound role, currency, unit, and complete numeric-disposition decision is supplied."
+      "id": "reviewed-semantic-model-boundary",
+      "control": "Filename cues remain non-operative; every captured source must receive a reviewer-confirmed semantic document classification, and the complete case model is normalized and bound to current source receipts before semantic reporting gates can pass."
     },
     {
       "id": "assurance-withheld-by-contract",
-      "control": "The deterministic payload and applied review state remain final_ready=false; semantic conclusion and publication require separate professional authority."
+      "control": "The reviewed case model can authorize semantic schedules and professional reporting artifacts, but legal opinion, plan attestation, reviewer authentication, final professional conclusion, and publication remain separate and explicitly withheld."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -69,13 +84,13 @@
     },
     {
       "id": "exact-implementation-formula-output-and-successor-closure",
-      "control": "Assured commands validate the exact 25-file implementation tree before workflow imports; authoritative numeric work requires paired reviewed source-role and calculation-formula decisions, the ledger closes every material CSV, XLSX and DOCX address, and save or apply seals an exact physical-output successor bound to the prior closure while professional readiness remains false."
+      "control": "Assured commands validate the exact 27-file implementation tree before workflow imports; semantic authority is source-bound and independent from the optional numerical source-role and calculation-formula decisions; numerical ledgers close every material appendix address; and save or apply seals an exact physical-output successor bound to the prior closure."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-25",
+    "reviewed_at": "2026-07-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c1a57fd8494d0f016e7e52ce154f5fc38abd87578c92da06b89ddf2b532ce895"
+    "source_fingerprint": "b7ee9bada538c5c5f77849034ad7ebd533a71aa2614c39331be597f9e079d5e9"
   }
 }

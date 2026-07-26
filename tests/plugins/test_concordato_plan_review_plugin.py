@@ -583,10 +583,12 @@ def test_calculation_receipt_binds_formula_sign_period_sources_and_candidates(
         ("implementation", "scripts/apply_review_edits.py"),
         ("implementation", "scripts/check_dependencies.py"),
         ("implementation", "scripts/concordato_plan_core.py"),
+        ("implementation", "scripts/concordato_semantic.py"),
         ("implementation", "scripts/finalize_output_closure.py"),
         ("implementation", "scripts/implementation_bootstrap.py"),
         ("implementation", "scripts/output_closure.py"),
         ("implementation", "scripts/replay_assurance.py"),
+        ("implementation", "scripts/review_case_model.py"),
         ("implementation", "scripts/review_session.py"),
         ("implementation", "scripts/review_source_roles.py"),
         ("implementation", "scripts/run_concordato_review.py"),
@@ -1094,7 +1096,7 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
     output_dir = tmp_path / "output"
     input_dir.mkdir()
     _save_workbook(
-        input_dir / "ExampleCo piano CP_2026.05.25.xlsx",
+        input_dir / "plan_material.xlsx",
         [
             ["Voce", "Importo"],
             ["Debiti tributari entro 12 mesi", 4124413.15],
@@ -1102,7 +1104,7 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
         ],
     )
     _save_workbook(
-        input_dir / "DB_31.03.2026_21052026.xlsx",
+        input_dir / "accounting_support.xlsx",
         [
             ["Voce", "Saldo rettificato"],
             ["Debiti tributari entro 12 mesi", 4124413.15],
@@ -1121,8 +1123,8 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
         core,
         inspection_run,
         {
-            "ExampleCo piano CP_2026.05.25.xlsx": "concordato_plan",
-            "DB_31.03.2026_21052026.xlsx": "adjusted_db",
+            "plan_material.xlsx": "concordato_plan",
+            "accounting_support.xlsx": "other_support",
         },
     )
     run = core.run_concordato_review(
@@ -1154,7 +1156,7 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
     assert review_payload["plugin"] == "concordato-plan-review"
-    assert review_payload["review_type"] == "concordato_plan_support_review"
+    assert review_payload["review_type"] == "concordato_preventivo_review"
     assert review_payload["item_count"] == len(review_payload["items"])
     item_types = {item["item_type"] for item in review_payload["items"]}
     assert {
@@ -1182,7 +1184,7 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
     assert unmatched_item["data"]["reason"] == (
         "No deterministic support amount matched this plan amount within tolerance."
     )
-    assert unmatched_item["data"]["source_file"] == "ExampleCo piano CP_2026.05.25.xlsx"
+    assert unmatched_item["data"]["source_file"] == "plan_material.xlsx"
     assert unmatched_item["data"]["amount"] == "999,999.99"
     assert (
         unmatched_item["evidence"][0]["requested_document"]
@@ -1221,9 +1223,9 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
         if output["path"] == "review_packet.md"
     )
     assert review_packet_output["required_text"] == [
-        "# Concordato plan review packet",
-        "## Deterministic counts",
-        "## Codex review required",
+        "# Pacchetto di revisione del concordato preventivo",
+        "## Revisione professionale richiesta",
+        "## Appendice deterministica di tie-out",
     ]
     workpaper_output = next(
         output
@@ -1291,11 +1293,11 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
     assert workpaper_output["required_cells"] == {
         "Inventory": {
             "B1": "relative_path",
-            "B2": "DB_31.03.2026_21052026.xlsx",
+            "B2": "accounting_support.xlsx",
             "C1": "name",
-            "C2": "DB_31.03.2026_21052026.xlsx",
+            "C2": "accounting_support.xlsx",
             "G1": "suggested_role",
-            "G2": "adjusted_db",
+            "G2": "unclassified",
         },
         "Amount candidates": {
             "B1": "source_file",
@@ -1309,11 +1311,11 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
         },
         "Candidate matches": {
             "A1": "plan_source_file",
-            "A2": "ExampleCo piano CP_2026.05.25.xlsx",
+            "A2": "plan_material.xlsx",
             "D1": "plan_amount",
             "D2": "4124413.15",
             "H1": "support_source_file",
-            "H2": "DB_31.03.2026_21052026.xlsx",
+            "H2": "accounting_support.xlsx",
             "L1": "support_amount",
             "L2": "4124413.15",
             "V1": "match_status",
@@ -1967,7 +1969,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
             "workflow": "concordato-plan-review",
             "run_id": "concordato-es-runtime",
             "language": "es",
-            "review_type": "concordato_plan_support_review",
+            "review_type": "concordato_preventivo_review",
             "items": [
                 {
                     "id": "source-es-1",
@@ -2130,10 +2132,10 @@ def test_spanish_run_localizes_review_packet_workbook_and_contract(
         if item["output_path"] == "concordato_review_summary.docx"
     )
 
-    assert review_packet.startswith("# Paquete de revisión del plan de concordato\n")
-    assert "- Idioma: `es`" in review_packet
-    assert "## Recuentos deterministas" in review_packet
-    assert "## Revisión requerida por Codex" in review_packet
+    assert review_packet.startswith("# Paquete de revisión del concordato preventivo\n")
+    assert "- Idioma de trabajo: `es`" in review_packet
+    assert "## Anexo determinista de conciliación numérica" in review_packet
+    assert "## Revisión profesional requerida" in review_packet
     assert workbook.sheetnames == [
         "Inventario",
         "Importes candidatos",
@@ -2142,9 +2144,9 @@ def test_spanish_run_localizes_review_packet_workbook_and_contract(
     assert workbook["Inventario"]["A1"].value == "path"
     assert workbook["Importes candidatos"]["D1"].value == "source_role"
     assert outputs_by_path["review_packet.md"]["required_text"] == [
-        "# Paquete de revisión del plan de concordato",
-        "## Recuentos deterministas",
-        "## Revisión requerida por Codex",
+        "# Paquete de revisión del concordato preventivo",
+        "## Revisión profesional requerida",
+        "## Anexo determinista de conciliación numérica",
     ]
     assert outputs_by_path["concordato_tie_out_workpaper.xlsx"]["required_sheets"] == [
         "Inventario",
@@ -2170,7 +2172,7 @@ def test_spanish_run_localizes_review_packet_workbook_and_contract(
     ]
     assert unmatched_item["recommended_action"] == "request_more_documents"
     assert unmatched_item["data"]["requested_document"].startswith(
-        "Justificante o anexo explicativo para el importe del plan de concordato"
+        "Justificante o anexo explicativo para el importe del plan del concordato preventivo"
     )
     assert unmatched_item["data"]["reason"].startswith(
         "Ningún importe justificativo determinista"
@@ -2178,33 +2180,34 @@ def test_spanish_run_localizes_review_packet_workbook_and_contract(
     assert unmatched_item["data"]["review_note"].startswith(
         "Ningún importe de origen coincide"
     )
-    assert artifact_item["title"] == "Resumen de conciliación en Word"
+    assert artifact_item["title"] == "Resumen numérico en Word"
     assert review_handoff.startswith(
-        "# Entrega para revisión: Revisión del plan de concordato\n"
+        "# Entrega para revisión: Revisión del concordato preventivo\n"
     )
     assert "## Revisión en Codex" in review_handoff
     assert outputs_by_path["review_handoff.md"]["required_text"][0] == (
         "Entrega para revisión"
     )
     assert outputs_by_path["concordato_review_summary.docx"]["required_text"] == [
-        "Revisión del plan de concordato: resumen de conciliación",
+        "Anexo numérico del concordato preventivo",
         "Conclusión operativa",
         "Aspectos que deben explicarse en el memorando de revisión",
         "Archivos analizados",
     ]
-    assert "Revisión del plan de concordato: resumen de conciliación" in document_text
+    assert "Anexo numérico del concordato preventivo" in document_text
     assert "Conclusión operativa" in document_text
     assert "Archivos analizados" in document_text
     assert "Fuentes reconocidas" in document_text
     assert "Ejemplos de importes que no coinciden" in document_text
     assert "Aspectos que deben explicarse" in document_text
-    assert "Revisione piano concordato" not in document_text
+    assert "Appendice numerica del concordato preventivo" not in document_text
     assert "Conclusione operativa" not in document_text
-    assert final_artifacts["caveats"][0].startswith(
-        "Las coincidencias exactas por importe"
+    assert any(
+        caveat.startswith("Las coincidencias exactas por importe")
+        for caveat in final_artifacts["caveats"]
     )
     assert final_artifacts["next_actions"][2].startswith(
-        "Clasifique los importes del plan"
+        "Revise procedimiento, acreedores, tratamiento, liquidez"
     )
     contract_report = validate_contract(
         output_dir,
@@ -2224,7 +2227,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
     output_dir = tmp_path / "output"
     input_dir.mkdir()
     _save_workbook(
-        input_dir / "ExampleCo piano CP_2026.05.25.xlsx",
+        input_dir / "case_plan.xlsx",
         [
             ["Voce", "Importo"],
             ["Debiti tributari entro 12 mesi", 4124413.15],
@@ -2232,7 +2235,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
         ],
     )
     _save_workbook(
-        input_dir / "DB_31.03.2026_21052026.xlsx",
+        input_dir / "supporting_ledger.xlsx",
         [
             ["Voce", "Saldo rettificato"],
             ["Debiti tributari entro 12 mesi", 4124413.15],
@@ -2251,8 +2254,8 @@ def test_concordato_request_more_documents_prefills_blocker_context(
         core,
         inspection_run,
         {
-            "ExampleCo piano CP_2026.05.25.xlsx": "concordato_plan",
-            "DB_31.03.2026_21052026.xlsx": "adjusted_db",
+            "case_plan.xlsx": "concordato_plan",
+            "supporting_ledger.xlsx": "other_support",
         },
     )
     core.run_concordato_review(
@@ -2340,8 +2343,8 @@ def test_skill_and_scripts_keep_report_builder_out_of_the_workflow() -> None:
     assert "This is not a general report builder" in skill_text
     assert "scripts/check_dependencies.py" in skill_text
     assert "requirements" in skill_text.lower()
-    assert "generated ZIPs" in skill_text
-    assert "Keep the improvement note local to chat or run artifacts." in skill_text
+    assert "Never write run outputs inside this Git workspace" in skill_text
+    assert "Keep the improvement note local" in skill_text
     assert "validate_concordato_plan_review" in skill_text
     assert "render_concordato_plan_review" in skill_text
     assert "report-builder" not in script_text
@@ -2355,19 +2358,17 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
     ).read_text(encoding="utf-8")
 
     for snippet in (
-        "Revisione numeri di piano",
-        "Controlla i numeri del piano",
-        "exact_amount_matches.csv",
+        "Riesamina il caso, non soltanto i numeri del piano",
+        "concordato_case_model.json",
+        "creditor_treatment.csv",
+        "sources_and_uses.csv",
+        "liquidity_schedule.csv",
+        "concordato_review_workpaper.xlsx",
+        "concordato_preventivo_review_summary.docx",
         "concordato_tie_out_workpaper.xlsx",
-        "concordato_review_summary.docx",
-        "codex_run_review.md",
         "../vera/index.html",
-        "Concordato Plan Review",
-        "Révision du plan de concordat",
-        "Concordato-Plan prüfen",
+        "Concordato preventivo",
         "Torna a Vera",
-        "Back to Vera",
-        "Volver a Vera",
     ):
         assert snippet in page
 
@@ -2379,7 +2380,7 @@ def test_concordato_mcp_server_validates_and_renders_review_payload() -> None:
             "plugin": "concordato-plan-review",
             "workflow": "concordato-plan-review",
             "run_id": "concordato-test-run",
-            "review_type": "concordato_plan_support_review",
+            "review_type": "concordato_preventivo_review",
             "items": [
                 {
                     "id": "source-1",
@@ -2484,7 +2485,7 @@ def test_concordato_mcp_server_validates_and_renders_review_payload() -> None:
     }
     assert "ui://widget/concordato-plan-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
-    assert "Concordato Plan Review" in widget_html
+    assert "Concordato Preventivo Review" in widget_html
 
 
 def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
@@ -2561,7 +2562,9 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
     assert payload["native_regenerated_count"] == 1
     assert payload["run_intake_path"] == str(output_dir / "run_intake.json")
     assert (output_dir / "codex_run_review.md").read_text(encoding="utf-8") == memo_text
-    updated_docx_text = _docx_text(output_dir / "concordato_review_summary.docx")
+    updated_docx_text = _docx_text(
+        output_dir / "concordato_preventivo_review_summary.docx"
+    )
     assert "Memo revisore Codex" in updated_docx_text
     assert "Il piano batte per importo su una voce" in updated_docx_text
     applied = json.loads(
@@ -2573,7 +2576,9 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
         "revisions/codex_run_review__codex-review-memo"
     )
     assert applied["effects"][0]["native_regeneration_status"] == "regenerated"
-    assert applied["native_regenerated_paths"] == ["concordato_review_summary.docx"]
+    assert applied["native_regenerated_paths"] == [
+        "concordato_preventivo_review_summary.docx"
+    ]
     updated_final = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
@@ -2590,7 +2595,7 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
     summary_output = next(
         output
         for output in updated_final["outputs"]
-        if output["path"] == "concordato_review_summary.docx"
+        if output["path"] == "concordato_preventivo_review_summary.docx"
     )
     assert summary_output["status"] == "updated_from_review"
     assert summary_output["native_regenerated"] is True
@@ -2599,7 +2604,7 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
         "Il piano batte per importo su una voce" in summary_output["required_text"][2]
     )
     assert updated_final["review_application"]["native_regenerated_paths"] == [
-        "concordato_review_summary.docx"
+        "concordato_preventivo_review_summary.docx"
     ]
     updated_run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
@@ -2613,7 +2618,7 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
     assert {
         "applied_decisions.json",
         "codex_run_review.md",
-        "concordato_review_summary.docx",
+        "concordato_preventivo_review_summary.docx",
         "final_artifacts.json",
         "ui_decisions.json",
     } <= set(review_apply_steps[0]["outputs"])
@@ -3079,8 +3084,8 @@ def _concordato_post_child_tamper(tmp_path: Path) -> Path:
         "        {'item_id': 'forged-child-effect', 'action': 'accept'}\n"
         "    )\n"
         "    regenerated = [\n"
-        "        'concordato_review_summary.docx',\n"
-        "        'concordato_review_summary.docx',\n"
+        "        'concordato_preventivo_review_summary.docx',\n"
+        "        'concordato_preventivo_review_summary.docx',\n"
         "    ]\n"
         "    applied['native_regenerated_paths'] = regenerated\n"
         "    applied['native_regenerated_count'] = 2\n"
@@ -3110,12 +3115,12 @@ def _concordato_post_child_tamper(tmp_path: Path) -> Path:
         "    with (output_dir / 'review_handoff.md').open('a', encoding='utf-8') as handle:\n"
         "        handle.write('\\n/private/client/forged-handoff\\n')\n"
         "elif mode == 'docx_content':\n"
-        "    summary_path = output_dir / 'concordato_review_summary.docx'\n"
+        "    summary_path = output_dir / 'concordato_preventivo_review_summary.docx'\n"
         "    backup_path = (\n"
         "        output_dir\n"
         "        / 'revisions'\n"
         "        / 'originals'\n"
-        "        / 'concordato_review_summary__codex-review-memo.docx'\n"
+        "        / 'concordato_preventivo_review_summary__codex-review-memo.docx'\n"
         "    )\n"
         "    summary_path.write_bytes(backup_path.read_bytes())\n"
         "    final_path = pathlib.Path(\n"
@@ -3125,7 +3130,7 @@ def _concordato_post_child_tamper(tmp_path: Path) -> Path:
         "    summary_output = next(\n"
         "        output\n"
         "        for output in final_artifacts['outputs']\n"
-        "        if output.get('path') == 'concordato_review_summary.docx'\n"
+        "        if output.get('path') == 'concordato_preventivo_review_summary.docx'\n"
         "    )\n"
         "    summary_output['size_bytes'] = summary_path.stat().st_size\n"
         "    final_path.write_text(\n"
@@ -3135,7 +3140,7 @@ def _concordato_post_child_tamper(tmp_path: Path) -> Path:
         "    result['final_artifacts'] = final_artifacts\n"
         "elif mode == 'docx_numeric':\n"
         "    from docx import Document\n"
-        "    summary_path = output_dir / 'concordato_review_summary.docx'\n"
+        "    summary_path = output_dir / 'concordato_preventivo_review_summary.docx'\n"
         "    document = Document(summary_path)\n"
         "    document.tables[0].rows[1].cells[1].text = '999'\n"
         "    document.save(summary_path)\n"
@@ -3146,7 +3151,7 @@ def _concordato_post_child_tamper(tmp_path: Path) -> Path:
         "    summary_output = next(\n"
         "        output\n"
         "        for output in final_artifacts['outputs']\n"
-        "        if output.get('path') == 'concordato_review_summary.docx'\n"
+        "        if output.get('path') == 'concordato_preventivo_review_summary.docx'\n"
         "    )\n"
         "    summary_output['size_bytes'] = summary_path.stat().st_size\n"
         "    final_path.write_text(\n"

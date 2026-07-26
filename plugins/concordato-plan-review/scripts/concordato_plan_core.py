@@ -63,6 +63,13 @@ def _ensure_vendor_import_path() -> None:
 
 _ensure_vendor_import_path()
 import vera_assurance as vera_assurance_package  # noqa: E402
+from concordato_semantic import (  # noqa: E402
+    CASE_ADAPTER_ID,
+    CASE_ADAPTER_VERSION,
+    SemanticArtifacts,
+    validate_semantic_recipe,
+    write_semantic_artifacts,
+)
 from output_closure import (
     OUTPUT_CLOSURE_NAME,
     finalize_output_closure,
@@ -111,7 +118,10 @@ ALLOWED_SOURCE_ROLES = {
     "concordato_plan",
     "trial_balance",
     "general_ledger",
-    "adjusted_db",
+    "accounting_support",
+    "creditor_schedule",
+    "cash_flow_support",
+    "liquidation_support",
     "debt_tax_social_security_detail",
     "other_support",
     "excluded",
@@ -136,13 +146,6 @@ STOPWORDS = {
     "the",
     "to",
 }
-ROLE_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("debt_tax_social_security_detail", ("debiti tributari", "previdenziali")),
-    ("adjusted_db", ("db_31", "db 31", "db_31.03", "rettificat")),
-    ("trial_balance", ("bilancio", "bive", "situazione")),
-    ("general_ledger", ("mastrini", "mastrino", "mastro")),
-    ("concordato_plan", ("piano cp", "piano", "concordato")),
-)
 DATE_LIKE_RE = re.compile(r"^\d{1,2}[./-]\d{1,2}[./-]\d{2,4}$")
 AMOUNT_TOKEN_RE = re.compile(
     r"(?<![\w/])-?\(?€\s*(?:\d{1,3}(?:[.\s]\d{3})+(?:,\d{1,2})?"
@@ -193,6 +196,8 @@ class ReviewRun:
     raw_amount_candidates: list[AmountCandidate]
     amount_candidates: list[AmountCandidate]
     exact_matches: list[dict[str, Any]]
+    semantic_status: str
+    semantic_summary: dict[str, Any]
     audit: dict[str, Any]
 
 
@@ -286,12 +291,12 @@ def _tokens(value: object | None) -> set[str]:
 
 
 def classify_source_role(path: Path) -> str:
-    """Suggest a source role from stable filename cues for intake only."""
+    """Return no semantic role because filenames are not reliable evidence."""
 
-    text = _normalize_text(path.stem)
-    for role, needles in ROLE_RULES:
-        if any(needle in text for needle in needles):
-            return role
+    # Retained as an intake API only. A model/reviewer must classify document
+    # meaning; deterministic filename keywords showed no representative quality
+    # advantage and encoded one engagement's naming conventions.
+    del path
     return "unclassified"
 
 
@@ -2638,11 +2643,10 @@ def _write_review_packet(
     inventory: list[dict[str, Any]],
     candidates: list[AmountCandidate],
     matches: list[dict[str, Any]],
+    semantic_status: str,
+    semantic_case_model: Mapping[str, Any] | None,
+    semantic_derived: Mapping[str, Any],
 ) -> None:
-    role_counts: dict[str, int] = {}
-    for item in inventory:
-        role = str(item.get("reviewed_role") or item["suggested_role"])
-        role_counts[role] = role_counts.get(role, 0) + 1
     plan_amounts = [
         item for item in candidates if item.source_role == "concordato_plan"
     ]
@@ -2666,72 +2670,147 @@ def _write_review_packet(
         )
         not in supported_plan_keys
     )
-    if language == "es":
+    if language == "it":
         lines = [
-            "# Paquete de revisión del plan de concordato",
+            "# Pacchetto di revisione del concordato preventivo",
+            "",
+            f"- Cartella di input: `{input_dir}`",
+            f"- Data di riferimento: `{reference_date or 'non indicata'}`",
+            f"- Lingua di lavoro: `{language}`",
+            f"- Lingua dei documenti: `{document_language}`",
+            f"- Stato del modello semantico: `{semantic_status}`",
+            f"- Fonti catturate: {len(inventory)}",
+        ]
+    elif language == "es":
+        lines = [
+            "# Paquete de revisión del concordato preventivo",
             "",
             f"- Carpeta de entrada: `{input_dir}`",
             f"- Fecha de referencia: `{reference_date or 'no facilitada'}`",
-            f"- Idioma: `{language}`",
+            f"- Idioma de trabajo: `{language}`",
             f"- Idioma de los documentos: `{document_language}`",
-            f"- Tolerancia de importes: `{tolerance:,.2f}`",
-            "",
-            "## Roles de origen sugeridos a partir de los nombres de archivo",
-            "",
+            f"- Estado del modelo semántico: `{semantic_status}`",
+            f"- Fuentes capturadas: {len(inventory)}",
         ]
     else:
         lines = [
-            "# Concordato plan review packet",
+            "# Concordato Preventivo review packet",
             "",
             f"- Input folder: `{input_dir}`",
             f"- Reference date: `{reference_date or 'not provided'}`",
-            f"- Language: `{language}`",
+            f"- Working language: `{language}`",
             f"- Document language: `{document_language}`",
-            f"- Amount tolerance: `{tolerance:,.2f}`",
-            "",
-            "## Source roles suggested from file names",
-            "",
+            f"- Semantic model status: `{semantic_status}`",
+            f"- Captured sources: {len(inventory)}",
         ]
-    for role, count in sorted(role_counts.items()):
-        lines.append(f"- `{role}`: {count}")
-    if language == "es":
+    if semantic_case_model is not None:
+        procedure = semantic_case_model["procedure"]
+        if language == "it":
+            lines.extend(
+                [
+                    "",
+                    "## Procedura riesaminata",
+                    "",
+                    f"- Debitore: {procedure['debtor_name'] or '—'}",
+                    f"- Tribunale: {procedure['court'] or '—'}",
+                    f"- Riferimento: {procedure['procedure_reference'] or '—'}",
+                    f"- Fase: `{procedure['stage']}`",
+                    f"- Tipo di piano: `{procedure['plan_type']}`",
+                    f"- Creditori: {semantic_derived['summary'].get('creditor_count', 0)}",
+                    f"- Classi: {semantic_derived['summary'].get('class_count', 0)}",
+                    f"- Questioni aperte: {semantic_derived['summary'].get('open_issue_count', 0)}",
+                ]
+            )
+        elif language == "es":
+            lines.extend(
+                [
+                    "",
+                    "## Procedimiento revisado",
+                    "",
+                    f"- Deudor: {procedure['debtor_name'] or '—'}",
+                    f"- Tribunal: {procedure['court'] or '—'}",
+                    f"- Referencia: {procedure['procedure_reference'] or '—'}",
+                    f"- Fase: `{procedure['stage']}`",
+                    f"- Tipo de plan: `{procedure['plan_type']}`",
+                    f"- Acreedores: {semantic_derived['summary'].get('creditor_count', 0)}",
+                    f"- Clases: {semantic_derived['summary'].get('class_count', 0)}",
+                    f"- Cuestiones abiertas: {semantic_derived['summary'].get('open_issue_count', 0)}",
+                ]
+            )
+        else:
+            lines.extend(
+                [
+                    "",
+                    "## Reviewed procedure",
+                    "",
+                    f"- Debtor: {procedure['debtor_name'] or '—'}",
+                    f"- Court: {procedure['court'] or '—'}",
+                    f"- Reference: {procedure['procedure_reference'] or '—'}",
+                    f"- Stage: `{procedure['stage']}`",
+                    f"- Plan type: `{procedure['plan_type']}`",
+                    f"- Creditors: {semantic_derived['summary'].get('creditor_count', 0)}",
+                    f"- Classes: {semantic_derived['summary'].get('class_count', 0)}",
+                    f"- Open issues: {semantic_derived['summary'].get('open_issue_count', 0)}",
+                ]
+            )
+    if language == "it":
         lines.extend(
             [
                 "",
-                "## Recuentos deterministas",
+                "## Revisione professionale richiesta",
                 "",
-                f"- Importes candidatos extraídos: {len(candidates)}",
+                "- Confermare procedura, quadro normativo e versioni autorevoli di proposta, piano e attestazione.",
+                "- Riesaminare perimetro dei creditori, prelazioni, classi, trattamento, tempi e confronto con l'alternativa liquidatoria.",
+                "- Riesaminare fonti, impieghi, liquidità, continuità o liquidazione, assunzioni e questioni aperte.",
+                "- Le classificazioni semantiche sono giudizi di Codex/revisore; il codice non trae conclusioni legali o di fattibilità.",
+                "",
+                "## Appendice deterministica di tie-out",
+                "",
+                f"- Tolleranza di confronto: `{tolerance:,.2f}`",
+                f"- Importi candidati del piano: {len(plan_amounts)}",
+                f"- Corrispondenze candidate per importo: {len(matches)}",
+                f"- Importi del piano senza corrispondenza: {unmatched_plan_count}",
+                "- Le corrispondenze esatte sono soltanto evidenze candidate.",
+            ]
+        )
+    elif language == "es":
+        lines.extend(
+            [
+                "",
+                "## Revisión profesional requerida",
+                "",
+                "- Confirme el procedimiento, marco jurídico y versiones autorizadas de propuesta, plan y atestación.",
+                "- Revise el perímetro de acreedores, prioridades, clases, tratamiento, plazos y alternativa de liquidación.",
+                "- Revise fuentes, usos, liquidez, continuidad o liquidación, hipótesis y cuestiones abiertas.",
+                "- Las clasificaciones semánticas son juicios de Codex/revisor; el código no emite conclusiones jurídicas ni de viabilidad.",
+                "",
+                "## Anexo determinista de conciliación numérica",
+                "",
+                f"- Tolerancia: `{tolerance:,.2f}`",
                 f"- Importes candidatos del plan: {len(plan_amounts)}",
-                f"- Coincidencias candidatas por importe: {len(matches)}",
-                f"- Importes candidatos del plan sin coincidencia por importe: {unmatched_plan_count}",
-                "",
-                "## Revisión requerida por Codex",
-                "",
-                "- Trate las coincidencias exactas de importe solo como candidatas, no como justificantes definitivos.",
-                "- Clasifique las cifras del plan como datos históricos, rectificaciones, reclasificaciones, hipótesis prospectivas o partidas sin justificar o poco claras.",
-                "- Revise los importes elevados del plan sin coincidencia y los importes con múltiples coincidencias del mismo valor.",
-                "- Revise por separado los saldos de deudas tributarias y con la Seguridad Social frente al detalle específico correspondiente.",
-                "- Redacte las cuestiones críticas orientadas al auditor en `codex_run_review.md` después de revisar el contexto.",
+                f"- Coincidencias candidatas: {len(matches)}",
+                f"- Importes del plan sin coincidencia: {unmatched_plan_count}",
+                "- Las coincidencias exactas son solo evidencias candidatas.",
             ]
         )
     else:
         lines.extend(
             [
                 "",
-                "## Deterministic counts",
+                "## Professional review required",
                 "",
-                f"- Amount candidates extracted: {len(candidates)}",
+                "- Confirm the procedure, governing framework, and authoritative proposal, plan, and attestation versions.",
+                "- Review creditor perimeter, priority, classes, treatment, timing, and the liquidation alternative.",
+                "- Review sources, uses, liquidity, continuity or liquidation, assumptions, and open issues.",
+                "- Semantic classifications are Codex/reviewer judgments; code makes no legal or feasibility conclusion.",
+                "",
+                "## Deterministic numerical tie-out appendix",
+                "",
+                f"- Amount tolerance: `{tolerance:,.2f}`",
                 f"- Plan amount candidates: {len(plan_amounts)}",
                 f"- Candidate amount matches: {len(matches)}",
-                f"- Plan amount candidates without an amount match: {unmatched_plan_count}",
-                "",
-                "## Codex review required",
-                "",
-                "- Treat exact amount matches as candidates only, not final support.",
-                "- Classify plan numbers as historical data, rectification, reclassification, prospective assumption, or unsupported/unclear.",
-                "- Review large unmatched plan amounts and plan amounts with many equal-value matches.",
-                "- Inspect tax/social-security debt balances separately against the dedicated detail schedule.",
-                "- Write auditor-oriented criticalities in `codex_run_review.md` after reviewing context.",
+                f"- Plan amounts without an amount match: {unmatched_plan_count}",
+                "- Exact amount matches are candidate evidence only.",
             ]
         )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -2865,7 +2944,7 @@ def _write_summary_docx(
         role_counts[role] = role_counts.get(role, 0) + 1
 
     if language == "es":
-        title = "Revisión del plan de concordato: resumen de conciliación"
+        title = "Anexo numérico del concordato preventivo"
         folder_label = "Carpeta analizada"
         date_label = "Fecha de referencia"
         no_date = "no indicada"
@@ -2911,7 +2990,7 @@ def _write_summary_docx(
         errors_heading = "Errores de extracción"
         error_headers = ["Archivo", "Error"]
     else:
-        title = "Revisione piano concordato - sintesi tie-out"
+        title = "Appendice numerica del concordato preventivo"
         folder_label = "Cartella analizzata"
         date_label = "Data di riferimento"
         no_date = "non indicata"
@@ -3052,8 +3131,9 @@ def run_concordato_review(
     tolerance: object = "1",
     max_rows_per_sheet: int = 5000,
     recipe: Path | Mapping[str, Any] | None = None,
+    semantic_recipe: Path | Mapping[str, Any] | None = None,
 ) -> ReviewRun:
-    """Run deterministic intake and candidate tie-out for a concordato plan."""
+    """Run semantic Concordato review preparation and numeric appendix controls."""
 
     input_dir = input_dir.resolve()
     output_dir = output_dir.resolve()
@@ -3071,6 +3151,17 @@ def run_concordato_review(
         raise ValueError("amount tolerance must not be negative")
 
     inventory, captured_sources, source_receipts = _file_inventory(input_dir)
+    semantic_decision: dict[str, Any] | None = None
+    semantic_case_model: dict[str, Any] | None = None
+    semantic_review_error: str | None = None
+    try:
+        semantic_decision, semantic_case_model = validate_semantic_recipe(
+            inventory,
+            semantic_recipe,
+            reference_date=reference_date,
+        )
+    except (OSError, ValueError) as exc:
+        semantic_review_error = f"Semantic recipe is invalid: {exc}"
     (
         recipe_payload,
         prevalidated_role_specs,
@@ -3428,6 +3519,17 @@ def run_concordato_review(
         "supported_file_count": sum(1 for item in inventory if item["supported"]),
         "source_page_count": len(source_pages),
         "sheet_count": len(sheet_summaries),
+        "semantic_review_status": (
+            "reviewed"
+            if semantic_decision is not None and semantic_case_model is not None
+            else ("invalid" if semantic_review_error else "needs_review")
+        ),
+        "semantic_review_error": semantic_review_error,
+        "semantic_case_decision_ref": (
+            str(semantic_decision["decision_id"])
+            if semantic_decision is not None
+            else None
+        ),
         "source_qualification_status": qualification_status,
         "source_role_review_status": (
             "reviewed" if reviewed_decision is not None else "needs_review"
@@ -3448,7 +3550,7 @@ def run_concordato_review(
             (
                 "El inventario, la extracción, la interpretación de cifras, la aritmética y la búsqueda de coincidencias candidatas por importe son deterministas para facilitar la auditoría. La suficiencia semántica del soporte, las omisiones, la relevancia jurídica o fiscal y los aspectos críticos de empresa en funcionamiento requieren el juicio de Codex o de la persona revisora."
                 if language == "es"
-                else "Inventory, extraction, number parsing, arithmetic and candidate amount matching are deterministic for auditability. Semantic support, omissions, legal/tax relevance and going-concern criticalities are Codex/reviewer judgment."
+                else "Inventory, extraction, source receipts, exact arithmetic, creditor/class aggregation, sources-and-uses totals, cash bridges, and candidate amount matching are deterministic because they are mechanically verifiable. Document meaning, creditor classification, evidence sufficiency, legal/tax relevance, feasibility, materiality, and final conclusions remain Codex/reviewer judgment."
             )
         ),
     }
@@ -3563,16 +3665,16 @@ def run_concordato_review(
         matches=matches,
         language=language,
     )
-    _write_review_packet(
-        output_dir / "review_packet.md",
-        input_dir=input_dir,
+    semantic_artifacts = write_semantic_artifacts(
+        output_dir,
+        inventory,
+        semantic_decision=semantic_decision,
+        case_model=semantic_case_model,
         reference_date=reference_date,
         language=language,
-        document_language=document_language,
-        tolerance=tolerance_value,
-        inventory=inventory,
-        candidates=candidates,
         matches=matches,
+        candidate_count=plan_candidate_count,
+        error=semantic_review_error,
     )
     _write_summary_docx(
         output_dir / "concordato_review_summary.docx",
@@ -3585,6 +3687,60 @@ def run_concordato_review(
         extraction_errors=extraction_errors,
         language=language,
     )
+    _write_review_packet(
+        output_dir / "review_packet.md",
+        input_dir=input_dir,
+        reference_date=reference_date,
+        language=language,
+        document_language=document_language,
+        tolerance=tolerance_value,
+        inventory=inventory,
+        candidates=candidates,
+        matches=matches,
+        semantic_status=semantic_artifacts.status,
+        semantic_case_model=semantic_artifacts.case_model,
+        semantic_derived=semantic_artifacts.derived,
+    )
+    semantic_output_receipts = [
+        artifact_receipt(
+            output_dir,
+            output_dir / relative_path,
+            artifact_id=f"output.concordato_semantic.{index:02d}",
+            root_id="run",
+            role=(
+                "workpaper"
+                if Path(relative_path).suffix.lower() in {".csv", ".xlsx"}
+                else (
+                    "report"
+                    if Path(relative_path).suffix.lower() in {".docx", ".md"}
+                    else "output"
+                )
+            ),
+            media_type={
+                ".csv": "text/csv",
+                ".docx": (
+                    "application/vnd.openxmlformats-officedocument."
+                    "wordprocessingml.document"
+                ),
+                ".json": "application/json",
+                ".md": "text/markdown",
+                ".xlsx": (
+                    "application/vnd.openxmlformats-officedocument."
+                    "spreadsheetml.sheet"
+                ),
+            }[Path(relative_path).suffix.lower()],
+        )
+        for index, relative_path in enumerate(
+            semantic_artifacts.artifact_paths,
+            start=1,
+        )
+    ]
+    semantic_receipt_by_path = {
+        str(receipt["path"]): receipt for receipt in semantic_output_receipts
+    }
+    audit["semantic_review_status"] = semantic_artifacts.status
+    audit["semantic_summary"] = dict(semantic_artifacts.derived.get("summary") or {})
+    audit["semantic_artifact_paths"] = list(semantic_artifacts.artifact_paths)
     prepared_receipt = artifact_receipt(
         output_dir,
         output_dir / "amount_candidates.csv",
@@ -3685,50 +3841,157 @@ def run_concordato_review(
         role="workpaper",
         media_type="application/json",
     )
+    semantic_ready = semantic_artifacts.status == "reviewed"
+    effective_qualifications = list(qualifications)
+    if (
+        semantic_ready
+        and semantic_decision is not None
+        and semantic_case_model is not None
+    ):
+        semantic_qualification = build_source_qualification(
+            qualification_id=(
+                "qualification.concordato_semantic_bundle."
+                f"{semantic_decision['content_sha256']}"
+            ),
+            adapter_id=CASE_ADAPTER_ID,
+            adapter_version=CASE_ADAPTER_VERSION,
+            source_family="concordato_preventivo_case_bundle",
+            status="qualified",
+            source_artifact_refs=[
+                str(item["source_artifact_ref"])
+                for item in semantic_case_model["document_perimeter"]["documents"]
+            ],
+            reviewed_mapping_ref=str(semantic_decision["decision_id"]),
+            candidate_row_count=len(inventory),
+            emitted_row_count=len(
+                semantic_case_model["document_perimeter"]["documents"]
+            ),
+            controls=[
+                {
+                    "control_id": "complete_captured_document_perimeter",
+                    "required": True,
+                    "status": "passed",
+                    "evidence_refs": [str(semantic_decision["decision_id"])],
+                    "detail": (
+                        "Every captured supported source has one reviewed semantic "
+                        "document classification."
+                    ),
+                },
+                {
+                    "control_id": "source_bound_semantic_case_model",
+                    "required": True,
+                    "status": "passed",
+                    "evidence_refs": [str(semantic_decision["decision_id"])],
+                    "detail": (
+                        "The case model is bound to current source artifact receipts."
+                    ),
+                },
+            ],
+            limitations=[
+                "Qualification confirms source binding and reviewed document roles only.",
+                "It does not establish legal compliance, evidence sufficiency, or feasibility.",
+            ],
+        )
+        effective_qualifications = [
+            qualification
+            for qualification in qualifications
+            if qualification.get("status") == "qualified"
+        ]
+        effective_qualifications.append(semantic_qualification)
     source_status = (
         "passed"
-        if qualification_status == "qualified"
+        if semantic_ready or qualification_status == "qualified"
         else (
             "failed"
             if qualification_status == "unsupported_source_layout"
+            or semantic_artifacts.status == "invalid_semantic_recipe"
             else "withheld"
         )
     )
+    semantic_decision_ref = (
+        str(semantic_decision["decision_id"]) if semantic_decision is not None else None
+    )
+    semantic_case_artifact_ref = str(
+        semantic_receipt_by_path["concordato_case_model.json"]["artifact_id"]
+    )
+    semantic_report_artifact_refs = [
+        str(semantic_receipt_by_path[path]["artifact_id"])
+        for path in (
+            "concordato_review_workpaper.xlsx",
+            "concordato_preventivo_review_summary.docx",
+            "concordato_semantic_review.md",
+        )
+    ]
     gate_register = build_gate_register(
         {
             "source": {
                 "status": source_status,
                 "evidence_refs": (
-                    [item["qualification_id"] for item in qualifications]
+                    [
+                        *(
+                            [semantic_decision_ref]
+                            if semantic_decision_ref is not None
+                            else []
+                        ),
+                        *[
+                            item["qualification_id"]
+                            for item in effective_qualifications
+                        ],
+                    ]
                     if source_status == "passed"
                     else []
                 ),
                 "limitations": (
-                    []
-                    if source_status == "passed"
-                    else [
-                        role_review_error or "At least one source failed qualification."
-                    ]
+                    (
+                        [
+                            "Semantic document roles are reviewer judgments; "
+                            "numeric source roles are a separate appendix control."
+                        ]
+                        if source_status == "passed"
+                        else [
+                            semantic_review_error
+                            or role_review_error
+                            or "Source meaning or numeric qualification remains pending."
+                        ]
+                    )
                 ),
             },
             "preparation": {
                 "status": (
-                    "passed" if qualification_status == "qualified" else "blocked"
+                    "passed"
+                    if semantic_ready or qualification_status == "qualified"
+                    else "blocked"
                 ),
                 "evidence_refs": (
-                    [prepared_receipt["artifact_id"]]
-                    if qualification_status == "qualified"
-                    else []
+                    [semantic_case_artifact_ref, semantic_decision_ref]
+                    if semantic_ready and semantic_decision_ref is not None
+                    else (
+                        [prepared_receipt["artifact_id"]]
+                        if qualification_status == "qualified"
+                        else []
+                    )
                 ),
                 "limitations": (
-                    []
-                    if qualification_status == "qualified"
-                    else ["Prepared candidate facts are withheld."]
+                    [
+                        "Passed means the reviewed semantic model was normalized "
+                        "and source-bound; it is not a legal or feasibility conclusion."
+                    ]
+                    if semantic_ready
+                    else (
+                        [
+                            "Only the numerical appendix was prepared; the "
+                            "Concordato semantic model remains withheld."
+                        ]
+                        if qualification_status == "qualified"
+                        else ["Reviewed semantic case preparation is withheld."]
+                    )
                 ),
             },
             "reconciliation": {
                 "status": (
-                    "passed" if qualification_status == "qualified" else "blocked"
+                    "passed"
+                    if qualification_status == "qualified"
+                    else ("not_applicable" if semantic_ready else "blocked")
                 ),
                 "evidence_refs": (
                     [
@@ -3754,20 +4017,48 @@ def run_concordato_review(
                         "it does not establish semantic support."
                     ]
                     if qualification_status == "qualified"
-                    else ["Candidate comparison is blocked."]
+                    else (
+                        [
+                            "The optional numerical tie-out appendix was not "
+                            "authorized; semantic Concordato review can proceed."
+                        ]
+                        if semantic_ready
+                        else ["Candidate comparison is blocked."]
+                    )
                 ),
             },
             "semantic_review": {
-                "status": "withheld",
-                "evidence_refs": [],
-                "limitations": [
-                    "Professional support classification and conclusions remain pending."
-                ],
+                "status": "passed" if semantic_ready else "withheld",
+                "evidence_refs": (
+                    [semantic_decision_ref, semantic_case_artifact_ref]
+                    if semantic_ready and semantic_decision_ref is not None
+                    else []
+                ),
+                "limitations": (
+                    [
+                        "Passed means a professional-confirmed semantic case model "
+                        "is recorded; it does not attest statutory compliance or feasibility."
+                    ]
+                    if semantic_ready
+                    else [
+                        semantic_review_error
+                        or "Professional semantic case modeling remains pending."
+                    ]
+                ),
             },
             "reporting": {
-                "status": "blocked",
-                "evidence_refs": [],
-                "limitations": ["Semantic review is not complete."],
+                "status": "passed" if semantic_ready else "blocked",
+                "evidence_refs": (
+                    semantic_report_artifact_refs if semantic_ready else []
+                ),
+                "limitations": (
+                    [
+                        "Reports organize reviewed judgments and mechanical checks; "
+                        "final professional approval remains separate."
+                    ]
+                    if semantic_ready
+                    else ["Reviewed semantic reporting is not available."]
+                ),
             },
             "publication": {
                 "status": "withheld",
@@ -3786,6 +4077,7 @@ def run_concordato_review(
             matches_receipt,
             workpaper_receipt,
             numeric_ledger_receipt,
+            *semantic_output_receipts,
             *output_receipts,
             *implementation_receipts,
         ],
@@ -3795,17 +4087,27 @@ def run_concordato_review(
         reviewed_decisions=(
             [
                 decision
-                for decision in (reviewed_decision, calculation_decision)
+                for decision in (
+                    reviewed_decision,
+                    calculation_decision,
+                    semantic_decision,
+                )
                 if decision is not None
             ]
         ),
-        source_qualifications=qualifications,
+        source_qualifications=effective_qualifications,
         allocation_ledgers=[],
         numeric_evidence_ledgers=numeric_ledgers,
         gate_register=gate_register,
         limitations=[
             "Equal amounts are candidate evidence only.",
-            "Semantic review, reporting, and publication remain withheld.",
+            (
+                "The reviewed case model records professional judgments but is "
+                "not a legal opinion or plan attestation."
+                if semantic_ready
+                else "Semantic review and reporting remain withheld."
+            ),
+            "Publication remains withheld.",
             "Recorded reviewer identity is not cryptographically authenticated.",
         ],
         artifact_roots={
@@ -3820,7 +4122,7 @@ def run_concordato_review(
         output_dir / "source_qualifications.json",
         {
             "schema_version": "concordato.source_qualifications.v1",
-            "qualifications": qualifications,
+            "qualifications": effective_qualifications,
         },
     )
     write_json(
@@ -3829,7 +4131,11 @@ def run_concordato_review(
             "schema_version": "concordato.reviewed_decisions.v1",
             "decisions": [
                 decision
-                for decision in (reviewed_decision, calculation_decision)
+                for decision in (
+                    reviewed_decision,
+                    calculation_decision,
+                    semantic_decision,
+                )
                 if decision is not None
             ],
         },
@@ -3856,6 +4162,10 @@ def run_concordato_review(
         matches=matches,
         extraction_errors=extraction_errors,
         audit=audit,
+        semantic_status=semantic_artifacts.status,
+        semantic_case_model=semantic_artifacts.case_model,
+        semantic_derived=semantic_artifacts.derived,
+        semantic_error=semantic_artifacts.error,
     )
     audit["review_session"] = {
         "run_intake_path": review_session.run_intake_path.name,
@@ -3884,6 +4194,10 @@ def run_concordato_review(
         matches=matches,
         extraction_errors=extraction_errors,
         audit=audit,
+        semantic_status=semantic_artifacts.status,
+        semantic_case_model=semantic_artifacts.case_model,
+        semantic_derived=semantic_artifacts.derived,
+        semantic_error=semantic_artifacts.error,
     )
     if final_review_session.review_item_count != review_session.review_item_count:
         raise ValueError("Review-session fixed point changed the review population")
@@ -3907,5 +4221,7 @@ def run_concordato_review(
         raw_amount_candidates=raw_candidates,
         amount_candidates=candidates,
         exact_matches=matches,
+        semantic_status=semantic_artifacts.status,
+        semantic_summary=dict(semantic_artifacts.derived.get("summary") or {}),
         audit=audit,
     )
