@@ -780,7 +780,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.113"
+    assert manifest["version"] == "0.1.114"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -789,6 +789,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     assert "brand-fit" in manifest["keywords"]
     assert "reporting-engine" in manifest["keywords"]
     assert "dataset-semantic-layer" in manifest["keywords"]
+    assert "commercial-due-diligence" in manifest["keywords"]
     marketplace_copy = " ".join(
         (
             manifest["description"],
@@ -797,8 +798,11 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
             *manifest["interface"]["defaultPrompt"],
         )
     ).lower()
-    assert "due diligence" not in marketplace_copy
-    assert "due-diligence" not in marketplace_copy
+    assert (
+        "clara supports commercial due-diligence preparation—market, customer, "
+        "product, competitive, and operating evidence."
+    ) in marketplace_copy
+    assert "commercial due-diligence preparation" in main_skill
     assert "Conversation Workflow Router" in main_skill
     assert "Hosted-interview bundles and Hosted Voice bundles" in main_skill
     fixture_ids = {item["id"] for item in fixture["should_trigger"]}

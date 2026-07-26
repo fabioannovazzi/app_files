@@ -8,6 +8,9 @@ for direct folder access, persistent project files, local tools and checks, and
 durable deliverables. The recommendation never blocks the conversation: Clara
 can continue working in ChatGPT.
 
+Clara supports commercial due-diligence preparation—market, customer, product,
+competitive, and operating evidence.
+
 Clara is a Codex plugin for advisory and succession projects where the
 core asset is consultant judgement. It keeps a durable case map, indexes source
 materials in place, stores Codex-structured judgement as draft candidates, and

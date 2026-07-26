@@ -3011,6 +3011,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Apri la cartella del progetto e descrivi ciò che ti serve",
         "The project is not just a presentation",
         "Il progetto non è solo una presentazione",
+        "Clara supports commercial due-diligence preparation—market, customer, product, competitive, and operating evidence.",
+        "Clara supporta la preparazione della due diligence commerciale: evidenze di mercato, clienti, prodotti, concorrenza e attività operative.",
         "Interviews, documents, and data analysis",
         "Interviste, documenti e analisi dati",
         "Conduct an interview with a dedicated link",
@@ -3076,12 +3078,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Altri flussi di Clara",
         "Install the published Clara release",
         "Installa la versione pubblicata di Clara",
-        "due diligence",
-        "due-diligence",
     ):
         assert stale_snippet not in page
-    assert "due diligence" not in page.lower()
-    assert "due-diligence" not in page.lower()
     assert '"dd.' not in page
     assert (
         '<a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2F'

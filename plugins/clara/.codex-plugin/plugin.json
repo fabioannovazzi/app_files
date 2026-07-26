@@ -1,7 +1,7 @@
 {
   "name": "clara",
-  "version": "0.1.113",
-  "description": "Clara runs interviews, transcribes evidence, corrects decks, analyzes business data, and prepares reviewed advisory outputs.",
+  "version": "0.1.114",
+  "description": "Clara supports commercial due-diligence preparation—market, customer, product, competitive, and operating evidence.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -29,6 +29,7 @@
     "reporting-engine",
     "dataset-semantic-layer",
     "data-analysis",
+    "commercial-due-diligence",
     "customer-concentration",
     "working-capital",
     "business-charts",
@@ -45,7 +46,7 @@
   "interface": {
     "displayName": "Clara",
     "shortDescription": "AI companion for consultants",
-    "longDescription": "Clara works in ChatGPT with material supplied in the conversation: she can analyze evidence, ask focused questions, draft and review outputs, and continue the advisory work without requiring Codex. After providing a substantive result, Clara recommends Codex Desktop for direct folder access, persistent project files, local tools and checks, and durable deliverables, while making clear that the conversation can continue in ChatGPT. In Codex Desktop, Clara also handles hosted interviews, transcripts, deck correction, Retailer Signals, Brand Fit, and business-data analysis. Brand Fit compares completed retailer signals with a brand's current presence at that retailer and its owned catalogue in the stored database snapshot. For advisory projects, Clara organizes evidence, separates sources from judgement, and prepares reviewed workpapers and decision outputs. The user keeps professional judgement.",
+    "longDescription": "Clara supports commercial due-diligence preparation—market, customer, product, competitive, and operating evidence. Clara works in ChatGPT with material supplied in the conversation: she can analyze evidence, ask focused questions, draft and review outputs, and continue the advisory work without requiring Codex. After providing a substantive result, Clara recommends Codex Desktop for direct folder access, persistent project files, local tools and checks, and durable deliverables, while making clear that the conversation can continue in ChatGPT. In Codex Desktop, Clara also handles hosted interviews, transcripts, deck correction, Retailer Signals, Brand Fit, and business-data analysis. Brand Fit compares completed retailer signals with a brand's current presence at that retailer and its owned catalogue in the stored database snapshot. For advisory projects, Clara organizes evidence, separates sources from judgement, and prepares reviewed workpapers and decision outputs. The user keeps professional judgement.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [
