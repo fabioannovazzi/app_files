@@ -113,7 +113,7 @@ CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CHATGPT_UPLOAD_SUBTITLE_OVERRIDES = {
-    "vera": "AI companion for accountants",
+    "vera": "Assistente AI x commercialisti",
 }
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"

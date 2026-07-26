@@ -131,6 +131,137 @@ def test_parse_localized_decimal_ambiguous_separator_requires_reviewed_locale() 
         parse_localized_decimal("1.234")
 
 
+@pytest.mark.parametrize(
+    ("raw", "thousands_separator", "expected"),
+    [
+        ("1,234", ",", Decimal("1234")),
+        ("1,234.56", ",", Decimal("1234.56")),
+        ("1.234", ",", Decimal("1.234")),
+        ("1.234", ".", Decimal("1234")),
+        ("1.234,56", ".", Decimal("1234.56")),
+        ("1,234", ".", Decimal("1.234")),
+    ],
+)
+def test_parse_localized_decimal_preserves_explicit_thousands_role(
+    raw: str,
+    thousands_separator: str,
+    expected: Decimal,
+) -> None:
+    result = parse_localized_decimal(
+        raw,
+        decimal_separator=None,
+        thousands_separator=thousands_separator,
+    )
+
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    ("raw", "thousands_separator"),
+    [
+        ("1,23", ","),
+        ("1.23", "."),
+    ],
+)
+def test_parse_localized_decimal_rejects_malformed_explicit_thousands_grouping(
+    raw: str,
+    thousands_separator: str,
+) -> None:
+    with pytest.raises(MoneyValidationError, match="thousands grouping"):
+        parse_localized_decimal(
+            raw,
+            decimal_separator=None,
+            thousands_separator=thousands_separator,
+        )
+
+
+@pytest.mark.parametrize(
+    (
+        "raw",
+        "decimal_separator",
+        "thousands_separator",
+        "allow_float",
+        "expected",
+    ),
+    [
+        ("USD 1,234.50", ".", None, False, Decimal("1234.50")),
+        ("1.234,50 EUR", None, None, False, Decimal("1234.50")),
+        ("1,234,567", None, None, False, Decimal("1234567")),
+        ("1 234 567", None, None, False, Decimal("1234567")),
+        ("1'234'567,50", ",", None, False, Decimal("1234567.50")),
+        ("+ 12.50", ".", None, False, Decimal("12.50")),
+        (Decimal("12.50"), None, None, False, Decimal("12.50")),
+        (0.1, None, None, True, Decimal("0.1")),
+    ],
+)
+def test_parse_localized_decimal_accepts_supported_boundary_syntax(
+    raw: object,
+    decimal_separator: str | None,
+    thousands_separator: str | None,
+    allow_float: bool,
+    expected: Decimal,
+) -> None:
+    result = parse_localized_decimal(
+        raw,
+        decimal_separator=decimal_separator,
+        thousands_separator=thousands_separator,
+        allow_float=allow_float,
+    )
+
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    ("raw", "decimal_separator", "thousands_separator", "message"),
+    [
+        ("1", ";", None, "decimal_separator"),
+        ("1", None, ";", "thousands_separator"),
+        ("1", ",", ",", "must differ"),
+        ("1,,2", None, None, "separator grouping"),
+        ("1,23,456", None, None, "multiple decimal separators"),
+        ("1 234'567", None, None, "multiple thousands-separator"),
+        ("1 234.56.78", ".", None, "multiple decimal separators"),
+        ("1.23 456", ".", None, "after the decimal separator"),
+        (None, None, None, "monetary value"),
+        (True, None, None, "monetary value"),
+        (object(), None, None, "text, int, or Decimal"),
+        ("EUR", None, None, "non-empty"),
+        ("++1", None, None, "invalid sign"),
+        ("(+1)", None, None, "two sign conventions"),
+        ("12A", None, None, "unsupported characters"),
+    ],
+)
+def test_parse_localized_decimal_rejects_unsupported_boundary_syntax(
+    raw: object,
+    decimal_separator: str | None,
+    thousands_separator: str | None,
+    message: str,
+) -> None:
+    with pytest.raises(MoneyValidationError, match=message):
+        parse_localized_decimal(
+            raw,
+            decimal_separator=decimal_separator,
+            thousands_separator=thousands_separator,
+        )
+
+
+@pytest.mark.parametrize(
+    ("raw", "allow_float", "message"),
+    [
+        (Decimal("NaN"), False, "finite"),
+        (float("inf"), True, "finite"),
+        (float("-inf"), True, "finite"),
+    ],
+)
+def test_parse_localized_decimal_rejects_non_finite_numbers(
+    raw: Decimal | float,
+    allow_float: bool,
+    message: str,
+) -> None:
+    with pytest.raises(MoneyValidationError, match=message):
+        parse_localized_decimal(raw, allow_float=allow_float)
+
+
 def test_parse_localized_decimal_rejects_binary_float_by_default() -> None:
     with pytest.raises(MoneyValidationError, match="binary float"):
         parse_localized_decimal(0.1)
@@ -164,6 +295,15 @@ def test_difference_within_tolerance_is_exact_at_cent_boundary() -> None:
 
     assert difference == Decimal("0.01")
     assert within is True
+
+
+def test_difference_within_tolerance_rejects_negative_tolerance() -> None:
+    with pytest.raises(MoneyValidationError, match="must not be negative"):
+        difference_within_tolerance(
+            Decimal("100"),
+            Decimal("100"),
+            Decimal("-0.01"),
+        )
 
 
 def test_canonical_json_is_order_invariant_and_rejects_floats() -> None:

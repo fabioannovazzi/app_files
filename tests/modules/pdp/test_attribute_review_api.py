@@ -3,12 +3,20 @@ from __future__ import annotations
 import pytest
 
 pytest.importorskip("fastapi")
-from fastapi.testclient import TestClient  # type: ignore  # pylint: disable=wrong-import-position
+from fastapi.testclient import (
+    TestClient,  # type: ignore  # pylint: disable=wrong-import-position
+)
 
 from modules.auth.config import get_auth_config
 from modules.pdp.api import app
+from modules.pdp.attribute_mapping_paths import get_attribute_mapping_dir
 
-
+_POSTFILL_CACHE_DIR = get_attribute_mapping_dir() / "postfill_attribute_cache"
+pytestmark = pytest.mark.skipif(
+    not (_POSTFILL_CACHE_DIR / "parents.parquet").is_file()
+    or not (_POSTFILL_CACHE_DIR / "variants.parquet").is_file(),
+    reason="requires generated local PDP post-fill parquet cache",
+)
 client = TestClient(app)
 
 

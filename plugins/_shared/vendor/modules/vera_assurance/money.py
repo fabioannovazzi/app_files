@@ -104,6 +104,11 @@ def _separator_roles(
         if inferred_thousands is None:
             inferred_thousands = "," if decimal_separator == "." else "."
         return decimal_separator, inferred_thousands
+    if thousands_separator is not None:
+        # A reviewed separator role is mechanical authority: source punctuation
+        # must not reinterpret an explicit thousands separator as a decimal one.
+        inferred_decimal = "," if thousands_separator == "." else "."
+        return inferred_decimal, thousands_separator
 
     dot_count = text.count(".")
     comma_count = text.count(",")

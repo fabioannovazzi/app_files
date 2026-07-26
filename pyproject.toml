@@ -29,6 +29,6 @@ incremental = false
 exclude = "(modules|tools)"
 
 [tool.pytest.ini_options]
-addopts = "-q"
+addopts = "-q --import-mode=importlib"
 pythonpath = [".", "src"]
 testpaths = ["tests"]

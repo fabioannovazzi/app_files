@@ -315,12 +315,12 @@ This is not an operating-system sandbox. Same-identity child code retains the
 ambient filesystem and network authority of its parent process; the contract
 protects the bounded canonical output tree and validates declared effects.
 
-The current cross-workflow verification ran 213 shared-assurance, packaging,
+The current cross-workflow verification ran 248 shared-assurance, packaging,
 non-plotting review workbench, review-contract, interaction-pattern,
 payload-coverage, transaction-generator, demo, and visual-audit tests in one
 process with no failures, errors, or skips. The six workflow implementations
 are separate plugin process boundaries and their complete isolated suites
-passed 1,201 tests in aggregate.
+passed 1,239 tests in aggregate.
 
 They are not safe to co-load as source modules in one Python interpreter:
 multiple plugins deliberately use local names such as

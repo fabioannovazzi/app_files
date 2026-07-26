@@ -2051,7 +2051,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
         "Use validate_concordato_plan_review antes"
         in responses[1]["result"]["instructions"]
     )
-    assert validation["message"].startswith("Los datos de Revisión")
+    assert validation["message"].startswith("Los datos de revisión")
     assert saved["message"].startswith("Las decisiones son válidas")
     assert applied["message"].startswith("Las decisiones aplicadas son válidas")
     assert applied["persisted"] is False
@@ -2606,6 +2606,19 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
     assert updated_final["review_application"]["native_regenerated_paths"] == [
         "concordato_preventivo_review_summary.docx"
     ]
+    assurance_envelope = json.loads(
+        (output_dir / "assurance_envelope.json").read_text(encoding="utf-8")
+    )
+    assert "concordato_preventivo_review_summary.docx" not in {
+        receipt["path"] for receipt in assurance_envelope["artifact_receipts"]
+    }
+    output_closure = json.loads(
+        (output_dir / "workflow_output_closure.json").read_text(encoding="utf-8")
+    )
+    assert "concordato_preventivo_review_summary.docx" in {
+        receipt["path"] for receipt in output_closure["artifact_receipts"]
+    }
+    assert output_closure["phase"] == "review_apply_finalization"
     updated_run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -3254,6 +3267,49 @@ def test_concordato_review_transaction_honest_apply_commits_without_residue(
     assert replay["workflow_output_closure_content_sha256"] == closure["content_sha256"]
     assert replay["workflow_output_closure_phase"] == "review_apply_finalization"
     assert not list(tmp_path.glob(".generated-review-transaction-*"))
+
+
+def test_concordato_edit_of_assurance_bound_markdown_writes_revision_only(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _concordato_transaction_case(tmp_path)
+    review_payload = arguments["review_payload"]
+    semantic_item = next(
+        item for item in review_payload["items"] if item["id"] == "semantic-review"
+    )
+    semantic_path = output_dir / "concordato_semantic_review.md"
+    predecessor_bytes = semantic_path.read_bytes()
+    edit_text = "Reviewer revision; predecessor semantic report remains immutable."
+    arguments = {
+        **arguments,
+        "decisions": [
+            {
+                "item_id": semantic_item["id"],
+                "action": "edit",
+                "edit_value": edit_text,
+            }
+        ],
+    }
+
+    result = _concordato_transaction_call(
+        "apply_concordato_plan_decisions",
+        arguments,
+    )
+
+    assert result["ok"] is True
+    assert result["target_update_count"] == 0
+    assert semantic_path.read_bytes() == predecessor_bytes
+    applied = json.loads(
+        (output_dir / "applied_decisions.json").read_text(encoding="utf-8")
+    )
+    effect = applied["effects"][0]
+    assert effect["artifact_update"] == "revision_artifact_written"
+    revision_path = output_dir / effect["revision_artifact"]
+    assert revision_path.read_text(encoding="utf-8") == edit_text
+    from replay_assurance import replay_assurance
+
+    replay = replay_assurance(output_dir)
+    assert replay["workflow_output_closure_phase"] == "review_apply_finalization"
 
 
 def test_standalone_replay_rejects_rehashed_applied_state(

@@ -221,6 +221,13 @@ def test_full_app_keeps_change_request_intake_public_when_login_is_enabled(
     tmp_path: Path, monkeypatch
 ) -> None:
     from modules.auth.config import get_auth_config
+    from modules.utilities import secrets_loader
+
+    monkeypatch.setattr(
+        secrets_loader,
+        "load_env_from_secrets_file",
+        lambda *_args, **_kwargs: {},
+    )
     from modules.pdp.api import create_app
 
     monkeypatch.setenv("AUTH_ENABLED", "1")

@@ -4,12 +4,12 @@ import polars as pl
 import pytest
 from polars.testing import assert_frame_equal
 
+from modules.charting.chart_primitives import get_color_dictionary
 from modules.data.misc_charts_data_prep import (
     aggregate_values_in_distribution_plots,
     color_pareto_classes,
     prepare_sum_dataframe_for_bubble_plot,
 )
-from modules.charting.chart_primitives import get_color_dictionary
 from modules.utilities.config import get_naming_params
 from modules.utilities.utils import get_row_count
 
@@ -42,7 +42,10 @@ def test_aggregate_values_distribution_groups_and_computes_unit_price():
     chart_dict = {x_axis_dim_key: "Region"}
 
     lf = aggregate_values_in_distribution_plots(
-        df, element="Category", valueCols=[naming["monetaryLocalCurrencyName"], naming["unitsName"]], chartDict=chart_dict
+        df,
+        element="Category",
+        valueCols=[naming["monetaryLocalCurrencyName"], naming["unitsName"]],
+        chartDict=chart_dict,
     )
 
     out = lf.collect()
@@ -51,7 +54,9 @@ def test_aggregate_values_distribution_groups_and_computes_unit_price():
     assert price_per_unit in out.columns
 
     # Validate aggregated values for a specific group and derived unit price
-    row_a = out.filter((pl.col("Category") == "A") & (pl.col("Region") == "East")).row(0, named=True)
+    row_a = out.filter((pl.col("Category") == "A") & (pl.col("Region") == "East")).row(
+        0, named=True
+    )
     assert row_a[naming["monetaryLocalCurrencyName"]] == 150.0
     assert row_a[naming["unitsName"]] == 15.0
     assert pytest.approx(row_a[price_per_unit], rel=0, abs=1e-9) == 10.0
@@ -67,7 +72,10 @@ def test_aggregate_values_distribution_no_distribution_no_grouping():
     chart_dict = {x_axis_dim_key: nothing}
 
     lf = aggregate_values_in_distribution_plots(
-        df, element="Category", valueCols=[naming["monetaryLocalCurrencyName"], naming["unitsName"]], chartDict=chart_dict
+        df,
+        element="Category",
+        valueCols=[naming["monetaryLocalCurrencyName"], naming["unitsName"]],
+        chartDict=chart_dict,
     )
     out = lf.collect()
     # No grouping applied; row count stays the same, price per unit is computed per row
@@ -75,7 +83,10 @@ def test_aggregate_values_distribution_no_distribution_no_grouping():
     assert price_per_unit in out.columns
     # Spot-check first row
     first = out.row(0, named=True)
-    assert pytest.approx(first[price_per_unit], rel=0, abs=1e-9) == first[naming["monetaryLocalCurrencyName"]] / first[naming["unitsName"]]
+    assert (
+        pytest.approx(first[price_per_unit], rel=0, abs=1e-9)
+        == first[naming["monetaryLocalCurrencyName"]] / first[naming["unitsName"]]
+    )
 
 
 def test_aggregate_values_distribution_ignores_missing_value_columns():
@@ -168,7 +179,9 @@ def test_prepare_sum_dataframe_for_bubble_plot_total_true_computes_percents_and_
     # Percentage metrics get multiplied by 100 and rounded to 1 decimal
     assert pytest.approx(row[disc_pct], rel=0, abs=1e-9) == 5.0  # 10 / 200 * 100
     assert pytest.approx(row[margin_pct], rel=0, abs=1e-9) == 30.0  # 60 / 200 * 100
-    assert pytest.approx(row[margin_pct_net], rel=0, abs=1e-9) == 31.6  # round(60/190*100,1)
+    assert (
+        pytest.approx(row[margin_pct_net], rel=0, abs=1e-9) == 31.6
+    )  # round(60/190*100,1)
 
 
 def test_prepare_sum_dataframe_for_bubble_plot_total_false_returns_empty():
@@ -229,22 +242,31 @@ def test_color_pareto_classes_assigns_expected_colors_and_classes():
     )
 
     lf, class_color_map, color_list = color_pareto_classes(
-        df.lazy(), metric=margin, chartDict=chart_dict, paramDict={}, colorName=color_name, ratioName=ratio_name, className=class_name
+        df.lazy(),
+        metric=margin,
+        chartDict=chart_dict,
+        paramDict={},
+        colorName=color_name,
+        ratioName=ratio_name,
+        className=class_name,
     )
     out = lf.collect()
 
-    # For positive rows, current logic first matches the broadest condition (<= 200),
-    # assigning the first palette color and class "C". Negative rows get red and "Loss".
-    assert out.get_column(class_name).to_list() == ["C", "C", naming["lossClassName"]]
-    assert out.get_column(color_name).to_list()[0] == palette[0]
+    # The first matching cumulative-ratio band wins; negative margin is a loss.
+    assert out.get_column(class_name).to_list() == [
+        "B",
+        "A",
+        naming["lossClassName"],
+    ]
+    assert out.get_column(color_name).to_list()[:2] == [palette[3], palette[0]]
     assert out.get_column(color_name).to_list()[-1] == color_dict["redColor"]
 
     # Mapping dictionary exposes class -> color associations for all classes
     mapping = class_color_map[margin]
-    assert mapping[naming["aClassName"]] == palette[2]
-    assert mapping[naming["bClassName"]] == palette[1]
-    assert mapping[naming["cClassName"]] == palette[0]
+    assert mapping[naming["aClassName"]] == palette[0]
+    assert mapping[naming["bClassName"]] == palette[3]
+    assert mapping[naming["cClassName"]] == palette[1]
     assert mapping[naming["lossClassName"]] == color_dict["redColor"]
 
     # Returned color list should contain the unique colors in order of appearance
-    assert color_list == [palette[0], color_dict["redColor"]]
+    assert color_list == [palette[3], palette[0], color_dict["redColor"]]

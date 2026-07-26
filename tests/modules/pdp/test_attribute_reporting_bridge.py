@@ -980,9 +980,11 @@ def test_attribute_reporting_rejects_user_with_only_general_clara_access(
 
 
 def test_attribute_reporting_permission_config_is_deployment_specific() -> None:
-    config_dir = Path(__file__).resolve().parents[3] / "config"
+    root_dir = Path(__file__).resolve().parents[3]
+    config_dir = root_dir / "config"
 
-    assert not (config_dir / "site_page_permissions.json").exists()
+    gitignore = (root_dir / ".gitignore").read_text(encoding="utf-8")
+    assert "\nconfig/*_permissions.json\n" in f"\n{gitignore}\n"
     assert (
         json.loads(
             (config_dir / "site_page_permissions.example.json").read_text(

@@ -944,6 +944,37 @@ def test_reviewed_french_csv_preserves_localized_exact_amounts(
     ]
 
 
+def test_reviewed_thousands_separator_cannot_be_reinterpreted_as_decimal(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    journal_path = tmp_path / "journal.csv"
+    output_dir = tmp_path / "out"
+    journal_path.write_text(
+        "Date,Account,Description,Debit,Credit\n" '2025-07-01,4010,Purchase,"1,23",\n',
+        encoding="utf-8",
+    )
+    core.inspect_path(journal_path, output_dir)
+    recipe_path = output_dir / "suggested_recipe.json"
+    recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+    file_recipe = recipe["files"][journal_path.name]
+    file_recipe["decimal_separator"] = None
+    file_recipe["thousands_separator"] = ","
+    recipe_path.write_text(
+        json.dumps(recipe, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    _approve_suggested_recipe(recipe_path)
+
+    normalized = core.normalize_path(journal_path, output_dir, recipe_path)
+
+    assert normalized.frame.height == 0
+    assert normalized.diagnostics["population_status"] == "incomplete"
+    qualification = normalized.diagnostics["source_qualifications"][0]
+    assert qualification["status"] == "unsupported_source_layout"
+    assert qualification["emitted_row_count"] == 0
+
+
 def test_unreviewed_mapping_withholds_population_and_blocks_sampling(
     tmp_path: Path,
 ) -> None:

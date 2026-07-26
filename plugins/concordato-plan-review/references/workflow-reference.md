@@ -120,6 +120,13 @@ the gate evidence. The semantic qualification proves reviewed document-role
 coverage and source binding only; it does not prove legal compliance,
 feasibility, or evidence sufficiency.
 
+The immutable assurance envelope binds the semantic model, schedules,
+workpaper, and semantic Markdown. The reviewable
+`concordato_preventivo_review_summary.docx` is a mutable presentation artifact:
+an authorized memo edit may regenerate it, so its current bytes are bound by
+`final_artifacts.json` and the chained whole-output closure rather than by the
+predecessor assurance envelope.
+
 ## 7. Numeric evidence and output closure
 
 When the numerical appendix is qualified, `numeric_evidence_ledger.json`
