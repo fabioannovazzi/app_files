@@ -106,6 +106,12 @@ NATURAL_INTER_SCENE_PAUSE_SECONDS = 0.9
 TRANSITION_SILENCE_MARGIN_SECONDS = 0.2
 TRANSITION_MAX_VOLUME_DB = -45.0
 EXPECTED_LOCALIZATIONS = {
+    ("vera-overview", "core", "it"),
+    ("vera-overview", "core", "en"),
+    ("vera-overview", "core", "fr"),
+    ("vera-overview", "core", "de"),
+    ("vera-overview", "core", "es"),
+    ("concordato-plan-review", "italy", "it"),
     ("data-handling", "core", "it"),
     ("data-handling", "core", "en"),
     ("data-handling", "core", "fr"),

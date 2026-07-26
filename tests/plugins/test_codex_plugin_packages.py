@@ -2504,7 +2504,7 @@ def test_journal_sampling_page_matches_plugin_site_pattern() -> None:
         "suggested_recipe.json",
         "normalized_journal.csv",
         "sampling_audit.json",
-        "/?lang=${safeLang}",
+        "index.html?lang=${safeLang}",
     ):
         assert snippet in page
     for stale_snippet in (
@@ -2634,7 +2634,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
     assert "FatturaPA" not in core
     assert "FatturaPA" in italy
-    assert 'src="../video-library.js?v=2026072402"' in page
+    assert 'src="../video-library.js?v=20260726-assurance"' in page
     assert (
         'const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", '
         'de: "CH-ZH", es: null };'
@@ -3482,7 +3482,7 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "vera",
             "/?lang=it",
             "Vera",
-            ("#core", "#jurisdiction", "#data-boundary", "#video"),
+            ("#core", "#assurance", "#jurisdiction", "#data-boundary", "#video"),
         ),
         (
             "clara",

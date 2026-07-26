@@ -1,12 +1,127 @@
 {
   "schemaVersion": "3.0.0",
-  "createdAt": "2026-07-20",
+  "createdAt": "2026-07-26",
   "publicationStatus": "youtube_source",
   "remotePublish": true,
   "identityModel": "module + edition + jurisdiction + language",
   "voicePolicy": "Core capabilities may be localized: Italian uses Marin; English, French, German, and Spanish use Cedar. Jurisdiction-specific videos use only the native language of that jurisdiction.",
   "voiceDirection": "Natural, calm and specific. Speak as one professional showing another a useful working method. Keep the pace measured and the ending practical.",
   "concepts": [
+    {
+      "conceptId": "from-source-to-reviewable-assurance",
+      "module": "vera-overview",
+      "edition": "core",
+      "scope": "core",
+      "jurisdiction": null,
+      "targetDurationSeconds": 72,
+      "pageTargets": [
+        "/static/shared/vera/index.html"
+      ],
+      "scenes": [
+        "Professional work begins with evidence",
+        "Codex proposes meaning and structure",
+        "The professional confirms the contract",
+        "Code performs exact repeatable work",
+        "Ambiguity remains visible",
+        "A reviewable result, not an automatic conclusion"
+      ],
+      "localizations": {
+        "it": {
+          "title": "Vera | Dal lavoro dello studio a un risultato rivedibile",
+          "narration": "Vera aiuta lo studio a preparare controlli, riconciliazioni, fascicoli cliente e report senza confondere calcolo e giudizio. Il lavoro comincia dalle fonti: Codex ne interpreta struttura e significato e propone ruoli, relazioni e perimetro. Il professionista conferma ciò che il documento rappresenta, quali evidenze sono ammesse e quale controllo deve essere eseguito. Solo allora il codice normalizza, campiona, confronta, riconcilia o compone tabelle con regole esatte e ripetibili. Se il layout non è affidabile o la relazione è ambigua, Vera non inventa dati plausibili: conserva il punto aperto e chiede una decisione. Fonti, preparazione, riconciliazione, revisione e pubblicazione restano passaggi distinti. Il risultato è un lavoro che il professionista può ripercorrere, correggere e assumere come proprio.",
+          "onScreen": [
+            "Il lavoro parte dalle evidenze",
+            "Codex propone significato e struttura",
+            "Il professionista conferma il contratto",
+            "Il codice esegue controlli esatti",
+            "Le ambiguità restano visibili",
+            "Un risultato rivedibile"
+          ]
+        },
+        "en": {
+          "title": "Vera | From professional work to a reviewable result",
+          "narration": "Vera helps firms prepare controls, reconciliations, client files and reports without confusing calculation with judgment. Work begins with the sources: Codex interprets their structure and meaning and proposes roles, relationships and scope. The professional confirms what the document represents, which evidence is admissible and which test should run. Only then does code normalize, sample, compare, reconcile or assemble tables under exact repeatable rules. If a layout is unreliable or a relationship is ambiguous, Vera does not invent plausible data: it preserves the open point and asks for a decision. Source, preparation, reconciliation, review and publication remain separate steps. The result is work the professional can retrace, correct and take responsibility for.",
+          "onScreen": [
+            "Work begins with evidence",
+            "Codex proposes meaning and structure",
+            "The professional confirms the contract",
+            "Code performs exact controls",
+            "Ambiguity remains visible",
+            "A reviewable result"
+          ]
+        },
+        "fr": {
+          "title": "Vera | Du travail du cabinet à un résultat révisable",
+          "narration": "Vera aide le cabinet à préparer contrôles, rapprochements, dossiers clients et rapports sans confondre calcul et jugement. Le travail commence par les sources : Codex en interprète la structure et le sens et propose rôles, relations et périmètre. Le professionnel confirme ce que le document représente, quelles preuves sont admises et quel contrôle doit être exécuté. Alors seulement, le code normalise, échantillonne, compare, rapproche ou compose les tableaux selon des règles exactes et reproductibles. Si une mise en page n’est pas fiable ou une relation reste ambiguë, Vera n’invente pas de données plausibles : elle conserve le point ouvert et demande une décision. Sources, préparation, rapprochement, revue et publication restent des étapes distinctes. Le résultat est un travail que le professionnel peut retracer, corriger et assumer.",
+          "onScreen": [
+            "Le travail commence par les preuves",
+            "Codex propose le sens et la structure",
+            "Le professionnel confirme le contrat",
+            "Le code exécute des contrôles exacts",
+            "Les ambiguïtés restent visibles",
+            "Un résultat révisable"
+          ]
+        },
+        "de": {
+          "title": "Vera | Von der Kanzleiarbeit zum prüfbaren Ergebnis",
+          "narration": "Vera unterstützt Kanzleien bei Kontrollen, Abstimmungen, Mandantenakten und Berichten, ohne Berechnung und Beurteilung zu vermischen. Die Arbeit beginnt bei den Quellen: Codex interpretiert Struktur und Bedeutung und schlägt Rollen, Beziehungen und Umfang vor. Der Prüfer bestätigt, wofür das Dokument steht, welche Nachweise zulässig sind und welche Kontrolle ausgeführt werden soll. Erst dann normalisiert, stichprobt, vergleicht, stimmt oder erstellt der Code Tabellen nach exakten, wiederholbaren Regeln. Ist ein Layout nicht verlässlich oder eine Beziehung mehrdeutig, erfindet Vera keine plausiblen Daten, sondern hält den offenen Punkt fest und verlangt eine Entscheidung. Quelle, Vorbereitung, Abstimmung, Review und Veröffentlichung bleiben getrennte Schritte. Das Ergebnis ist eine Arbeit, die der Prüfer nachvollziehen, korrigieren und verantworten kann.",
+          "onScreen": [
+            "Arbeit beginnt mit Nachweisen",
+            "Codex schlägt Bedeutung und Struktur vor",
+            "Der Prüfer bestätigt den Vertrag",
+            "Code führt exakte Kontrollen aus",
+            "Mehrdeutiges bleibt sichtbar",
+            "Ein prüfbares Ergebnis"
+          ]
+        },
+        "es": {
+          "title": "Vera | Del trabajo profesional a un resultado revisable",
+          "narration": "Vera ayuda al despacho a preparar controles, conciliaciones, expedientes de clientes e informes sin confundir el cálculo con el juicio. El trabajo comienza por las fuentes: Codex interpreta su estructura y significado y propone funciones, relaciones y alcance. El profesional confirma qué representa el documento, qué evidencias son admisibles y qué control debe ejecutarse. Solo entonces el código normaliza, muestrea, compara, concilia o compone tablas con reglas exactas y repetibles. Si un formato no es fiable o una relación es ambigua, Vera no inventa datos plausibles: conserva la cuestión abierta y solicita una decisión. Fuente, preparación, conciliación, revisión y publicación siguen siendo pasos distintos. El resultado es un trabajo que el profesional puede reconstruir, corregir y asumir.",
+          "onScreen": [
+            "El trabajo comienza con evidencias",
+            "Codex propone significado y estructura",
+            "El profesional confirma el contrato",
+            "El código ejecuta controles exactos",
+            "Las ambigüedades siguen visibles",
+            "Un resultado revisable"
+          ]
+        }
+      }
+    },
+    {
+      "conceptId": "concordato-preventivo-semantic-review",
+      "module": "concordato-plan-review",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "targetDurationSeconds": 82,
+      "pageTargets": [
+        "/static/shared/vera/index.html",
+        "/static/shared/concordato-plan-review/index.html"
+      ],
+      "scenes": [
+        "The procedure and authoritative documents",
+        "Creditors, classes and proposed treatment",
+        "Liquidation alternative and comparison",
+        "Sources, uses and liquidity path",
+        "Confirmed semantic model and exact schedules",
+        "Open questions, evidence and review"
+      ],
+      "localizations": {
+        "it": {
+          "title": "Vera | Concordato Preventivo, dal fascicolo a una revisione strutturata",
+          "narration": "Un Concordato Preventivo non è un foglio da far quadrare: è una procedura descritta da documenti che devono essere letti insieme. Vera parte dal ricorso, dal piano, dalla proposta, dall’attestazione e dagli allegati autorevoli e ne costruisce una mappa citabile. Codex propone il significato di soggetti, creditori, classi, trattamento, tempi e condizioni; il professionista conferma il modello semantico prima dei calcoli. La revisione confronta proposta e alternativa liquidatoria, collega fonti e impieghi e rende visibile il percorso della liquidità. Dopo la conferma, il codice produce scadenze, aggregazioni e controlli numerici esatti, conservando ogni fonte e trasformazione. Domande aperte, contraddizioni e documenti mancanti restano distinti dai risultati verificati. La quadratura di un prospetto può essere un’appendice utile, ma non sostituisce la comprensione della procedura. Il risultato è un fascicolo di revisione strutturato che il professionista può verificare e usare nel proprio incarico.",
+          "onScreen": [
+            "Procedura e documenti autorevoli",
+            "Creditori · classi · trattamento",
+            "Alternativa liquidatoria",
+            "Fonti · impieghi · liquidità",
+            "Modello confermato · calcoli esatti",
+            "Domande aperte e fascicolo rivedibile"
+          ]
+        }
+      }
+    },
     {
       "conceptId": "from-client-folder-to-operational-file",
       "module": "new-client",
