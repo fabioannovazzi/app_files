@@ -406,7 +406,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.38"
+    assert manifest["version"] == "0.1.39"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti del cliente, separa fatti e valutazioni e "
