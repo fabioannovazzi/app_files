@@ -86,17 +86,19 @@ def test_whatsapp_desktop_evals_cover_success_and_failure_paths() -> None:
         assert required in serialized
 
 
-def test_vera_manifest_remains_broad_and_supports_chatgpt_handoff() -> None:
+def test_vera_manifest_uses_approved_capability_copy() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     interface = manifest["interface"]
+    approved_description = (
+        ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt"
+    ).read_text(encoding="utf-8").strip()
 
-    assert manifest["version"] == "0.1.31"
+    assert manifest["version"] == "0.1.35"
     assert manifest["description"].startswith("Vera affianca il commercialista")
-    assert "Codex Desktop" in interface["longDescription"]
-    assert "può continuare in ChatGPT" in interface["longDescription"]
-    assert "Computer Use" in interface["longDescription"]
-    assert "controlla evidenze contabili" in interface["longDescription"]
-    assert "connettore ospitato" not in interface["longDescription"]
+    assert interface["longDescription"] == approved_description
+    assert "controlla le evidenze contabili" in interface["longDescription"]
+    assert "Cerca la corrispondenza del cliente." in interface["longDescription"]
+    assert "consiglia Codex Desktop" not in interface["longDescription"]
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
     assert any("documenti del cliente" in prompt for prompt in interface["defaultPrompt"])

@@ -406,7 +406,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.34"
+    assert manifest["version"] == "0.1.35"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti del cliente, separa fatti e valutazioni e "
@@ -419,13 +419,12 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "Cerca in Gmail le email di un cliente usando solo indirizzi "
         "confermati e senza mescolare altri clienti."
     )
-    assert (
-        "connector Gmail di OpenAI è collegato"
-        in manifest["interface"]["longDescription"]
-    )
-    assert "Computer Use" in manifest["interface"]["longDescription"]
-    assert "connettore ospitato" not in manifest["interface"]["longDescription"]
-    assert "può continuare in ChatGPT" in manifest["interface"]["longDescription"]
+    approved_description = (
+        ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt"
+    ).read_text(encoding="utf-8").strip()
+    assert manifest["interface"]["longDescription"] == approved_description
+    assert "Cerca la corrispondenza del cliente." in approved_description
+    assert "consiglia Codex Desktop" not in approved_description
 
     wrapper_path = "skills/studio-archive/SKILL.md"
     reference_path = "skills/studio-archive/references/marketplace-gmail.md"
@@ -602,17 +601,18 @@ def test_chatgpt_manifest_rejects_default_prompt_over_character_limit() -> None:
         builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
 
 
-def test_public_plugin_manifest_requires_codex_desktop_disclosure() -> None:
+def test_chatgpt_manifest_preserves_product_specific_long_description() -> None:
     builder = load_builder()
     source_path = ROOT / "plugins" / "clara" / ".codex-plugin" / "plugin.json"
     manifest = json.loads(source_path.read_text(encoding="utf-8"))
-    manifest["interface"]["longDescription"] = "Generic cross-surface workflow."
+    expected = "Product-specific capability description."
+    manifest["interface"]["longDescription"] = expected
 
-    with pytest.raises(
-        ValueError,
-        match="must describe both ChatGPT and Codex Desktop",
-    ):
+    projected = json.loads(
         builder.project_chatgpt_manifest(json.dumps(manifest).encode("utf-8"))
+    )
+
+    assert projected["interface"]["longDescription"] == expected
 
 
 def test_chatgpt_upload_zip_matches_source_without_replacing_install_zip(
