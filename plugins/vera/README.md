@@ -44,6 +44,19 @@ local tools and checks, and durable deliverables. The recommendation follows
 the conversation language and never blocks the work: Vera can continue in
 ChatGPT. The user's existing ChatGPT plan governs the selected account.
 
+For legal, tax, and compliance research, Vera presents Prompt Optimizer and
+Deep Research Validator as one resumable journey. She prepares and validates
+the prompt and qualified-site list, gives the user a compact handoff for native
+ChatGPT Deep Research, recommends whether to restrict research to those sites
+or prioritize them while allowing broader web research, and recognizes the
+returned report as the continuation of the same task. That recommendation is a
+professional, model-led judgment based on the confirmed research posture rather
+than a keyword classifier. Vera then checks material claims, cited-source
+support, and reasoning and prepares the corrected validation package. Starting
+native Deep Research remains an explicit user action unless the current host
+exposes a callable tool for it; Vera never labels an ordinary web-search run as
+native Deep Research.
+
 In ChatGPT or Codex, Studio Archive can use the official OpenAI Gmail connector
 installed and connected separately. Vera searches the correspondence
 of one selected client using addresses confirmed in the current task, bounded

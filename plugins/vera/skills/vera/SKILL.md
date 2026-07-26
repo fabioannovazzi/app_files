@@ -140,6 +140,63 @@ deployment's actual OpenAI account settings.
   receives credentials, accesses a filing session, signs, pays, asks support,
   or submits a practice.
 
+## Resumable Deep Research Journey
+
+When the user asks Vera to research a legal, tax, or compliance question from
+start to finish, treat `prompt-optimizer` and `deep-research-validator` as one
+resumable journey rather than two unrelated module choices:
+
+1. Route the question through `prompt-optimizer` and complete its intake,
+   jurisdiction confirmation, source curation, deterministic validation, and
+   review package.
+2. Present one concise native Deep Research handoff containing:
+   - the complete text of `optimized_prompt.md`, or a direct local link when the
+     current surface can open the file;
+   - the complete comma-separated contents of `source_domains_comma.txt`;
+   - a model-led recommendation for the ChatGPT Deep Research site policy:
+     either restrict research to the listed sites or prioritize them while
+     allowing broader web research;
+   - the instruction to start ChatGPT Deep Research, place the first value in
+     the prompt field, place the second in the specific-sites field, and select
+     the recommended site policy.
+3. Choose the site policy from the confirmed framework, research objective,
+   source posture, and issue—not from keywords or a deterministic classifier.
+   Recommend restriction when the work must stay within a closed, authoritative
+   source universe or an expressly bounded evidentiary record. Recommend
+   prioritization with broader search when identifying contrary authority,
+   recent developments, cross-jurisdiction material, or material omissions
+   matters to the objective. State the recommendation and one-sentence reason.
+   Ask the user to choose only when the competing policies would materially
+   change the professional result and the confirmed posture does not resolve
+   the choice.
+4. Keep the handoff explicit: Vera and a Codex skill cannot claim to start,
+   monitor, interrupt, or retrieve a native ChatGPT Deep Research run unless a
+   callable host tool expressly provides that capability in the current
+   session. Do not substitute an ordinary web-search run while describing it as
+   native Deep Research.
+5. End the handoff with one continuation instruction: return the completed
+   Deep Research report in the same conversation as Markdown, text, HTML,
+   readable PDF, or DOCX. Do not ask the user to restate the question,
+   jurisdiction, objective, or source posture.
+6. When the user returns a plausible completed report after that handoff,
+   infer continuation of the journey and route it directly through
+   `deep-research-validator`. Reuse the confirmed language, framework, research
+   lens, source posture, and material assumptions from the prompt-optimization
+   stage when they remain available in conversation or durable run artifacts.
+7. Run the validator's full default package, expose unavailable or gated
+   sources, collect any review decisions, and deliver the corrected document
+   and validation package as the end of the same journey.
+
+If native Deep Research is unavailable to the user because of plan, country,
+workspace policy, or current-surface limitations, state that limitation.
+Offer an ordinary Codex web-research run only as a clearly labelled alternative
+with its own evidence limits; never imply that it is the same product mode.
+
+This orchestration does not create a new external data route. The preparation
+stage remains governed by the `prompt-optimizer` workstream record, and the
+returned-report stage remains governed by the `deep-research-validator`
+workstream record.
+
 For a selected local workflow module that actually needs scripts, files, or MCP,
 resolve its root in this order:
 

@@ -33,6 +33,11 @@
       "required_signals": ["Vera", "SARI", "pratica DIRE"]
     },
     {
+      "id": "vera-deep-research-journey",
+      "prompt": "Vera, prepara questa domanda fiscale per Deep Research, consigliami se limitare o solo prioritizzare i siti e, quando ti restituisco il report, validalo senza farmi ricominciare.",
+      "required_signals": ["Vera", "Deep Research", "siti", "validalo"]
+    },
+    {
       "id": "vera-studio-archive",
       "prompt": "Vera, cerca nell'archivio condiviso dello studio i precedenti sulla cessione di quote e cita solo i passaggi verificati.",
       "required_signals": ["Vera", "archivio condiviso", "passaggi verificati"]
