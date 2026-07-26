@@ -2,8 +2,8 @@ import sys
 import types
 
 import polars as pl
-from plotly.subplots import make_subplots
 import pytest
+from plotly.subplots import make_subplots
 
 
 @pytest.fixture(scope="module")
@@ -64,6 +64,7 @@ def _stub_naming_params():
         "timelineChart": "timeline",
         "plotValuesAsChoice": "plotValuesAsChoice",
         "absolute": "absolute",
+        "showValueLabels": "showValueLabels",
         "chosenChart": "chosenChartKey",
         "metConditionValue": 1,
         "notMetConditionValue": 0,

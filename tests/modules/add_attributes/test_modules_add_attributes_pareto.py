@@ -27,7 +27,7 @@ def test_infer_amount_column_prefers_known_names_no_llm_call(monkeypatch):
     monkeypatch.setattr(pareto, "run_step_json", fake_run_step_json)
 
     # Act
-    result = infer_amount_column(None, lf)
+    result = infer_amount_column(object(), lf)
 
     # Assert
     assert result == "Sales"
@@ -45,7 +45,7 @@ def test_infer_amount_column_uses_llm_when_no_amount_like(monkeypatch):
     monkeypatch.setattr(pareto, "run_step_json", fake_run_step_json)
 
     # Act
-    result = infer_amount_column(None, lf)
+    result = infer_amount_column(object(), lf)
 
     # Assert
     assert result == "Y"
@@ -63,7 +63,7 @@ def test_infer_amount_column_invalid_llm_response_returns_none(monkeypatch):
     monkeypatch.setattr(pareto, "run_step_json", fake_run_step_json)
 
     # Act
-    result = infer_amount_column(None, lf)
+    result = infer_amount_column(object(), lf)
 
     # Assert
     assert result is None

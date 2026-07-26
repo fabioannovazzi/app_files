@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import types
 from pathlib import Path
@@ -21,7 +22,11 @@ from tests_tagging_stub import ensure_tagging_stub  # isort: skip
 __all__ = []
 
 _CANONICAL_MODULES: dict[str, types.ModuleType] = {}
-_RUNTIME_IMPORT_SNAPSHOTS: dict[str, tuple[dict[str, types.ModuleType], list[str]]] = {}
+_COLLECTION_ENVIRONMENT = dict(os.environ)
+_RUNTIME_IMPORT_SNAPSHOTS: dict[
+    str,
+    tuple[dict[str, types.ModuleType], list[str], dict[str, str]],
+] = {}
 
 
 def _drop_imported_module(name: str) -> None:
@@ -210,6 +215,8 @@ def pytest_collection_finish(session: object) -> None:
 
     del session
     _reset_test_import_boundaries(ROOT / "tests" / "_after_collection.py")
+    os.environ.clear()
+    os.environ.update(_COLLECTION_ENVIRONMENT)
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -224,6 +231,7 @@ def pytest_runtest_setup(item: object) -> None:
     _RUNTIME_IMPORT_SNAPSHOTS[nodeid] = (
         dict(sys.modules),
         list(sys.path),
+        dict(os.environ),
     )
 
 
@@ -237,7 +245,7 @@ def pytest_runtest_teardown(item: object) -> None:
     snapshot = _RUNTIME_IMPORT_SNAPSHOTS.pop(nodeid, None)
     if snapshot is None:
         return
-    prior_modules, prior_path = snapshot
+    prior_modules, prior_path, prior_environment = snapshot
 
     for name, module in list(sys.modules.items()):
         if name in prior_modules:
@@ -253,6 +261,8 @@ def pytest_runtest_teardown(item: object) -> None:
             _restore_parent_attribute(name, module)
 
     sys.path[:] = prior_path
+    os.environ.clear()
+    os.environ.update(prior_environment)
     _restore_canonical_modules(excluded=set())
 
 

@@ -157,14 +157,13 @@ Check Entries now replays the qualified Journal Sampling population and its
 source, decision, normalized, implementation, and gate receipts; material
 amounts, signed support, differences, and tolerances remain canonical Decimal
 text through CSV, XLSX, the numeric ledger, and the assurance envelope.
-The six isolated full workflow suites completed 1,220 collected cases without
-failures or errors on 2026-07-25; Journal–Bank accounts for 89
-dependency-gated skips. The intended production topology is one CLI/MCP process
-per plugin; same-interpreter source co-loading is not a supported execution
-contract. A separate 213-case cross-workflow gate completed without failures or
-errors, with 55 dependency-gated skips, across shared assurance, packaging,
-non-plotting workbench, interaction, payload-coverage, review-contract,
-transaction-generator, demo, and visual-audit checks.
+The six isolated full workflow suites completed 1,239 cases without failures,
+errors, or skips on 2026-07-26. Node-backed Journal–Bank cases were enabled.
+The intended production topology is one CLI/MCP process per plugin;
+same-interpreter source co-loading is not a supported execution contract. A
+separate 248-case cross-workflow gate passed across shared assurance,
+packaging, non-plotting workbench, interaction, payload-coverage,
+review-contract, transaction-generator, demo, and visual-audit checks.
 
 ## V5 - Evaluation, privacy, and release
 
@@ -191,8 +190,7 @@ transaction-generator, demo, and visual-audit checks.
     qualified independent reviewer has adjudicated that model on a previously
     unseen complete real case.
 - [x] Run focused workflow regressions: six isolated full workflow suites
-  collected 1,220 cases without failures or errors; 89 Journal-Bank cases were
-  dependency-gated skips.
+  passed 1,239/1,239 cases without failures, errors, or skips.
 - [ ] Commission and execute a new independent unseen Journal-Bank v6 holdout
   from the frozen v5 contract and exact production schemas; do not retrofit the
   prior v2/Aurora, v3/v5, v4, adjudicated r3, exposed v7, or sealed 23/24
@@ -212,23 +210,22 @@ transaction-generator, demo, and visual-audit checks.
   plan-versus-liquidation basis, sources and uses, liquidity, feasibility
   evidence, and open issues—not only the historical numerical candidate
   population. Reviewer and custody fields remain unassigned.
-- [x] Run full test suite and coverage gate. The final uncapped importlib-mode
-  run collected 7,373 tests: 7,364 passed, nine were dependency-gated skips,
-  and there were no failures or errors (JUnit SHA-256
-  `b4515aebc2172b7894f4d894faf3cdfe8410090bd20be8c9fa51ae079357c72e`).
-  The complete coverage traversal reached 80.32%, above the repository's 80%
-  gate (JUnit SHA-256
-  `c94deb613f5998ccc53afcab05a3851fdefd5c717deadbcd16237c078bcc0733`).
-  The eight defects isolated during the earlier red traversals were remediated
-  and their disposition is recorded in `classified-production-defects.md`.
+- [ ] Re-establish the full repository runtime and coverage gate for the
+  current source state. Clean importlib collection passes at 7,398 tests. A
+  current runtime attempt was stopped at 22% after 31 unrelated baseline
+  failures involving missing local fixtures, stale legacy-UI expectations,
+  private permission-path leakage, and blocked local Postgres access. The
+  historical 7,373-test/80.32% result remains evidence for its earlier source
+  state only.
 - [x] Refresh every changed Vera privacy-surface fingerprint.
-- [x] Validate the complete Vera privacy register and 23 focused privacy/package
-  tests.
-- [x] Run plugin interaction and review-contract validators: 213 passed.
-- [x] Run plugin release checks: 270 passed after version and published-manifest
-  corrections.
-- [x] Build and verify the Marketplace-ready Vera package with its manifest at
-  ZIP root and exact source-drift checks.
+- [x] Validate the complete Vera privacy register and 21 focused privacy tests.
+- [x] Run plugin interaction and review-contract validators: 248 passed.
+- [x] Run plugin release checks: 270 passed in a clean disposable release
+  surface after version and published-manifest corrections.
+- [x] Build and verify source-derived install and ChatGPT-upload archives with
+  exact source-drift checks.
+- [ ] Reconcile the pre-existing worktree archive state: the tracked install
+  archive is deleted and an undeclared wrapped upload archive is present.
 - [x] Complete the requirement-by-requirement completion audit in
   `completion-audit.md`; the strict program remains open on the independent M7
   evidence listed above.

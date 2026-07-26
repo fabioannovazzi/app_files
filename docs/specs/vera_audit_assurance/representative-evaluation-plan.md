@@ -100,8 +100,8 @@ adapter contract.
   private rerun qualified 202 bank and all 8,141 journal movements, produced 36
   deterministic candidate matches, retained 8,343 relationship residual rows,
   replayed 83,826 material-value addresses, and kept reconciliation, semantic,
-  reporting, and publication authority withheld. The complete 317-case
-  Journal–Bank file passes with 89 dependency-gated skips. This remains exposed
+  reporting, and publication authority withheld. The complete 318-case
+  Journal–Bank file passes with Node-backed cases enabled and no skips. This remains exposed
   diagnostic evidence, not v5 or v7 promotion; the sibling statements cannot
   serve as an independent holdout for either contract.
 - Concordato Preventivo Review now has a reusable semantic contract and
@@ -112,15 +112,14 @@ adapter contract.
   capability. Promotion still requires one previously unseen complete case
   modeled and adjudicated by a qualified independent reviewer.
 - The repository collection and runtime import boundaries are repaired in test
-  code. The eight previously classified production or source-contract defects
-  are remediated with focused negative and affected-file regressions. An
-  uncapped 7,373-test traversal then found only one stale privacy fingerprint
-  caused by the final Journal Sampling interpreter-selection correction; all
-  other tests passed and `src` coverage reached 80.32%. After the changed
-  surface was reviewed, the complete Vera privacy gate and package gate
-  passed. The final uncapped 7,373-test regression then completed with 7,364
-  passes, 9 dependency-gated skips, and no failures or errors. These gates
-  close repository state; they do not substitute for representative
-  evaluation.
+  code. At the earlier source state, the eight previously classified
+  production or source-contract defects were remediated and an uncapped
+  7,373-test traversal reached 80.32% `src` coverage; the subsequent regression
+  recorded 7,364 passes and 9 dependency-gated skips. Those results are
+  historical, not current proof. On the 2026-07-26 remediation state, clean
+  collection succeeds for 7,398 tests, while a repository-wide runtime attempt
+  was stopped at 22% after 31 unrelated baseline failures. Current closure
+  therefore rests on the complete Vera workflow, cross-workflow, privacy, and
+  clean release gates, not on a claimed green repository-wide traversal.
 - Privacy, full-regression, interaction, release, and Marketplace-package
   checks remain V5 requirements after case execution.

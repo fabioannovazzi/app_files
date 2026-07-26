@@ -83,6 +83,10 @@
       "control": "The MCP parent binds caller run, review, current decisions, final state, source-role decisions, and output paths to the persisted trusted snapshot, replays every source, implementation, gate, ledger, review, final, and assurance-envelope receipt, and treats child output only as a bounded acknowledgement before commit."
     },
     {
+      "id": "immutable-semantic-and-mutable-presentation-separation",
+      "control": "The assurance envelope remains bound to immutable semantic evidence and cannot be overwritten by an item edit. Authorized edits to envelope-bound artifacts create separate revision files, while the regenerable Concordato summary DOCX is treated as a mutable presentation artifact whose current bytes are closed by the final-artifact index and predecessor-linked whole-output successor."
+    },
+    {
       "id": "exact-implementation-formula-output-and-successor-closure",
       "control": "Assured commands validate the exact 27-file implementation tree before workflow imports; semantic authority is source-bound and independent from the optional numerical source-role and calculation-formula decisions; numerical ledgers close every material appendix address; and save or apply seals an exact physical-output successor bound to the prior closure."
     }
@@ -91,6 +95,6 @@
     "reviewed_at": "2026-07-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b7ee9bada538c5c5f77849034ad7ebd533a71aa2614c39331be597f9e079d5e9"
+    "source_fingerprint": "a9f54e3737108cfa8bf4cff26787b657e4682c812509d441416e82e61d692dee"
   }
 }

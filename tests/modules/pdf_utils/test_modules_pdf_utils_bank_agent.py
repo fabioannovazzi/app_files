@@ -106,8 +106,12 @@ def test_extract_bank_pdf_table_invalid_date_skips_row(monkeypatch):
 
     stub_fitz.open = lambda *a, **k: _StubDoc()
     monkeypatch.setitem(sys.modules, "fitz", stub_fitz)
-    # Avoid pdf2image calling external binaries in OCR fallback
-    monkeypatch.setattr(bank_agent, "convert_from_bytes", lambda *_a, **_k: [])
+    # Keep the OCR fallback self-contained at its public module seam.
+    monkeypatch.setattr(
+        bank_agent,
+        "extract_pdf_text_with_ocr",
+        lambda *_a, **_k: types.SimpleNamespace(text=""),
+    )
 
     # Act
     txs = extract_bank_pdf(b"%PDF-1.4 dummy")

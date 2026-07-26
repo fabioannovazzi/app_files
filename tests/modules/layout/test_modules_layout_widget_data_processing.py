@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-import polars as pl
 from datetime import date
+
+import polars as pl
 import pytest
 
-from modules.layout.widget_data_processing import (
-    count_periods,
-    select_possible_aggregation_options,
+from modules.layout.core.variance_options import (
     check_if_options_compatible_with_one_dimensional,
+    select_possible_aggregation_options,
 )
+from modules.layout.widget_data_processing import count_periods
 from modules.utilities.config import get_naming_params
 
 
@@ -22,12 +23,18 @@ def test_count_periods_with_date_and_year_choice_counts_unique_years():
     period_choice = naming["periodChoice"]
 
     df = pl.DataFrame(
-        {date_name: pl.Series(date_name, [
-            date(2020, 1, 1),
-            date(2021, 1, 1),
-            date(2021, 5, 1),
-            None,
-        ], dtype=pl.Date)}
+        {
+            date_name: pl.Series(
+                date_name,
+                [
+                    date(2020, 1, 1),
+                    date(2021, 1, 1),
+                    date(2021, 5, 1),
+                    None,
+                ],
+                dtype=pl.Date,
+            )
+        }
     )
     chart_dict = {period_choice: year_name}
     param_dict = {date_col_found: True, period_col_found: False}

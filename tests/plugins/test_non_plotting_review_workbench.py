@@ -903,7 +903,7 @@ def test_non_plotting_review_render_tools_enforce_bounded_payload_policy(
 
     oversized_result = responses[2]["result"]
     assert oversized_result["isError"] is True
-    assert "widget payload exceeds" in oversized_result["structuredContent"]["error"]
+    assert "payload exceeds" in oversized_result["structuredContent"]["error"]
 
 
 def _call_mcp_server(plugin: str, messages: list[dict[str, object]]) -> list[dict]:

@@ -3565,13 +3565,39 @@ function writeRevisionArtifacts(outputDir, effects) {
   return revisionOutputs;
 }
 
+function concordatoAssuranceBoundRunPaths(outputDir) {
+  const envelope = readJsonFileIfPresent(
+    path.join(outputDir, "assurance_envelope.json"),
+  );
+  if (!isPlainObject(envelope) || !Array.isArray(envelope.artifact_receipts)) {
+    throw new Error(
+      "Concordato review application returned an invalid result.",
+    );
+  }
+  return new Set(
+    envelope.artifact_receipts
+      .filter(
+        (receipt) =>
+          isPlainObject(receipt) &&
+          receipt.root_id === "run" &&
+          typeof receipt.path === "string",
+      )
+      .map((receipt) => artifactPathKey(receipt.path))
+      .filter(Boolean),
+  );
+}
+
 function writeDirectTextArtifactUpdates(outputDir, effects) {
   if (!outputDir) return { targetOutputs: [], backupOutputs: [] };
   const targetOutputs = [];
   const backupOutputs = [];
+  const assuranceBoundPaths = concordatoAssuranceBoundRunPaths(outputDir);
   for (const effect of effects) {
     if (effect.action !== "edit" || !effect.edit_value) continue;
     if (!canDirectlyUpdateTextArtifact(effect.target_artifact)) continue;
+    // A reviewer edit may create a revision, but it cannot overwrite an
+    // artifact attested by the immutable predecessor assurance envelope.
+    if (assuranceBoundPaths.has(artifactPathKey(effect.target_artifact))) continue;
     const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
     if (!target) continue;
     const stat = generatedReviewPathEntryStat(target.absolutePath);
@@ -3617,11 +3643,13 @@ function writeStructuredArtifactUpdates(outputDir, effects) {
   if (!outputDir) return { targetOutputs: [], backupOutputs: [] };
   const targetOutputs = [];
   const backupOutputs = [];
+  const assuranceBoundPaths = concordatoAssuranceBoundRunPaths(outputDir);
   for (const effect of effects) {
     if (effect.action !== "edit" || !effect.edit_value) continue;
     const spec = structuredUpdateSpec(effect);
     if (!spec) continue;
     if (!canUpdateStructuredArtifact(effect.target_artifact)) continue;
+    if (assuranceBoundPaths.has(artifactPathKey(effect.target_artifact))) continue;
     const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
     if (!target) continue;
     const stat = generatedReviewPathEntryStat(target.absolutePath);

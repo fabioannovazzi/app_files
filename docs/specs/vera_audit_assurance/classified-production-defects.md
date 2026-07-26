@@ -179,6 +179,12 @@ no other failure; coverage passed at 80.32%. After reviewing the intervening
 interpreter-selection change, that fingerprint was refreshed and the complete
 21-test Vera privacy gate and 253-test package gate passed.
 
+Those repository and package totals are historical closure evidence for that
+source state. Current 2026-07-26 remediation evidence is recorded in
+`completion-audit.md`; it includes a 7,398-test clean collection boundary and a
+270-test clean release surface, but not a current green repository-wide runtime
+traversal.
+
 ## Remediation organization
 
 Production changes should be split by surface and reviewed separately:

@@ -89,12 +89,9 @@ def test_parse_date_fallback_handles_two_digit_year_and_dayfirst(monkeypatch):
     assert result == date(2023, 2, 1)
 
 
-def test_parse_date_returns_none_for_unparsable_input():
-    # Act
-    result = parse_date("not a date", "en")
-
-    # Assert
-    assert result is None
+def test_parse_date_raises_value_error_for_unparsable_input():
+    with pytest.raises(ValueError, match="Unrecognised date"):
+        parse_date("not a date", "en")
 
 
 def test_parse_date_invalid_string_logs_no_error(caplog):

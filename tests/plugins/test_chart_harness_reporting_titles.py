@@ -1,19 +1,26 @@
 from __future__ import annotations
 
+import importlib
 import sys
+import types
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SHARED_VENDOR_ROOT = ROOT / "plugins" / "_shared" / "vendor"
-if str(SHARED_VENDOR_ROOT) not in sys.path:
-    sys.path.insert(0, str(SHARED_VENDOR_ROOT))
-
-from modules.chart_harness import (  # noqa: E402
-    reporting_entity_label_from_recipe,
-    reporting_filter_label_from_recipe,
-    reporting_subject_label_from_recipe,
-    reporting_title_html,
+CHART_HARNESS_ROOT = (
+    ROOT / "plugins" / "_shared" / "vendor" / "modules" / "chart_harness"
 )
+if "chart_harness" not in sys.modules:
+    chart_harness_package = types.ModuleType("chart_harness")
+    chart_harness_package.__path__ = [str(CHART_HARNESS_ROOT)]
+    sys.modules["chart_harness"] = chart_harness_package
+
+reporting_titles = importlib.import_module("chart_harness.reporting_titles")
+reporting_entity_label_from_recipe = reporting_titles.reporting_entity_label_from_recipe
+reporting_filter_label_from_recipe = reporting_titles.reporting_filter_label_from_recipe
+reporting_subject_label_from_recipe = (
+    reporting_titles.reporting_subject_label_from_recipe
+)
+reporting_title_html = reporting_titles.reporting_title_html
 
 
 def test_reporting_entity_label_prefers_explicit_recipe_label() -> None:

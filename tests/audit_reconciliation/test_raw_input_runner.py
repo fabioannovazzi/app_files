@@ -447,6 +447,19 @@ def test_authoritative_money_abstains_on_ambiguous_separator_and_float():
     )
 
 
+def test_authoritative_money_honors_explicit_thousands_separator_role():
+    runner = load_runner()
+    convention = {
+        "decimal_separator": None,
+        "thousands_separator": ",",
+        "reported_increment": "0.01",
+    }
+
+    result = runner.parse_money("1,23", convention=convention)
+
+    assert result is None
+
+
 def test_journal_float_cell_never_becomes_authoritative_money():
     runner = load_runner()
 

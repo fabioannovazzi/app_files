@@ -3745,6 +3745,71 @@ def test_separator_ambiguous_money_blocks_source_qualification(
     )
 
 
+def test_reviewed_thousands_separator_cannot_be_reinterpreted_as_decimal(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    recipe_dir = tmp_path / "recipe"
+    output_dir = tmp_path / "out"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "1,23", "TX100"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "123", "TX100"],
+        ],
+    )
+    inspection = core.inspect_inputs(bank_path, journal_path, recipe_dir)
+    recipe = inspection.suggested_recipe
+    receipts = json.loads(
+        (recipe_dir / "input_receipts.json").read_text(encoding="utf-8")
+    )["receipts"]
+    bank_recipe = recipe["bank"]["files"][bank_path.name]
+    bank_recipe["decimal_separator"] = None
+    bank_recipe["thousands_separator"] = ","
+    _attach_current_mapping_receipt(
+        core,
+        recipe,
+        receipts,
+        side="bank",
+        source_path=bank_path,
+        decision_id="decision.mapping.bank.numeric_locale",
+    )
+    recipe_path = recipe_dir / "reviewed_recipe.json"
+    recipe_path.write_text(
+        json.dumps(recipe, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    _seal_relationship_recipe(
+        core,
+        recipe_path,
+        recipe_dir / "input_receipts.json",
+    )
+
+    with pytest.raises(core.ReconciliationBlockedError) as exc_info:
+        core.run_reconciliation(bank_path, journal_path, output_dir, recipe_path)
+
+    qualifications = json.loads(
+        (output_dir / "source_qualifications.json").read_text(encoding="utf-8")
+    )
+    bank_qualification = next(
+        entry
+        for entry in qualifications["qualifications"]
+        if entry["qualification_id"] == "qualification.bank.1"
+    )
+    assert exc_info.value.code == "unsupported_source_layout"
+    assert bank_qualification["status"] == "unsupported_source_layout"
+    assert bank_qualification["emitted_row_count"] == 0
+
+
 @pytest.mark.parametrize("delimiter", [";", "\t", "|"])
 def test_supported_nondefault_csv_delimiter_is_a_zero_row_review_proposal(
     tmp_path: Path,
@@ -7381,7 +7446,7 @@ def test_journal_bank_mcp_child_cannot_author_assurance_envelope_fields(
                 "receipts_path.write_text(",
                 '    json.dumps(receipts, indent=2, sort_keys=True) + "\\n"',
                 ")",
-                "sys.stdout.write('{\"ok\": true}\\n')",
+                "sys.stdout.buffer.write(completed.stdout)",
                 "raise SystemExit(0)",
                 "",
             ]
@@ -8770,7 +8835,7 @@ def test_journal_bank_mcp_rejects_forged_regenerated_workbook_bytes(
 
     assert response["isError"] is True
     assert response["structuredContent"]["error"] == (
-        "Journal-Bank assurance preflight failed."
+        "Journal-Bank review application returned an invalid result."
     )
     assert _tree_snapshot(output_dir) == before
     assert list(output_dir.parent.glob(".journal-bank-apply-*")) == []

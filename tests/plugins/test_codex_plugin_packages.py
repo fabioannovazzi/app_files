@@ -403,10 +403,12 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
-    assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
+    assert manifest["interface"]["shortDescription"] == (
+        "Assistente AI x commercialisti"
+    )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.39"
+    assert manifest["version"] == "0.1.40"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti del cliente, separa fatti e valutazioni e "
