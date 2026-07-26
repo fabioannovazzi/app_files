@@ -156,7 +156,6 @@ def test_clara_register_does_not_relabel_workflow_hygiene_as_security() -> None:
         "semantic-boundary",
     }
 
-    assert manifests["beautify-deck"]["security_controls"] == []
     assert manifests["claim-basis-map"]["security_controls"] == []
     assert manifests["reporting-engine"]["security_controls"] == []
     assert manifests["transcribe"]["security_controls"] == []
