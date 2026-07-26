@@ -1,6 +1,6 @@
 ---
 name: check-entries
-description: Use when a user wants Codex to compare selected journal entries with supporting PDF documents, map entry columns, run deterministic amount/date/beneficiary checks, and produce reviewable CSV/XLSX/JSON outputs.
+description: Use when a user wants Codex to compare qualified Journal Sampling entries with FatturaPA XML or supporting PDFs, run exact evidence checks, and produce lineage-bound review outputs.
 ---
 
 # Check Entries

@@ -428,6 +428,8 @@ def _sample_items(
                     "kind": "sampled_entry",
                     "account": row.get("account"),
                     "amount_abs": row.get("amount_abs"),
+                    "currency": row.get("currency"),
+                    "reported_increment": row.get("reported_increment"),
                     "movement_number": row.get("movement_number"),
                     "source_file": row.get("source_file"),
                     "source_row": row.get("source_row"),
@@ -469,6 +471,7 @@ def _control_items(audit: dict[str, Any], language: str) -> list[dict[str, Any]]
                     "requested_size": requested,
                     "population_size_after_filters": population,
                     "filters": audit.get("filters"),
+                    "population_proof": audit.get("population_proof"),
                 }
             ],
             data={
@@ -477,6 +480,7 @@ def _control_items(audit: dict[str, Any], language: str) -> list[dict[str, Any]]
                 "sample_size": sample_size,
                 "population_size_after_filters": population,
                 "filters": audit.get("filters"),
+                "population_proof": audit.get("population_proof"),
             },
         )
     ]
@@ -499,7 +503,9 @@ def _artifact_items(
         if not path_value:
             continue
         path_ref = _as_output_ref(path_value, output_dir)
-        exists = Path(path_value).exists()
+        candidate = Path(path_value)
+        actual_path = candidate if candidate.is_absolute() else output_dir / candidate
+        exists = actual_path.exists()
         items.append(
             _base_item(
                 f"artifact-{index}",
@@ -533,20 +539,15 @@ SAMPLE_TABLE_COLUMNS = [
     "credit",
     "amount_signed",
     "amount_abs",
+    "currency",
+    "unit",
+    "reported_increment",
     "source_file",
     "source_sheet",
     "source_page",
     "source_row",
 ]
-SAMPLE_REQUIRED_COLUMNS = [
-    "entry_date",
-    "account",
-    "account_desc",
-    "line_desc",
-    "amount_abs",
-    "source_file",
-    "source_row",
-]
+SAMPLE_REQUIRED_COLUMNS = SAMPLE_TABLE_COLUMNS.copy()
 
 
 def _column_letters(index: int) -> str:
@@ -569,16 +570,11 @@ def _add_cell_check(cells: dict[str, str], reference: str, value: object) -> Non
 
 def _sample_required_text(sample_rows: Sequence[dict[str, Any]]) -> list[str]:
     fragments = SAMPLE_REQUIRED_COLUMNS.copy()
-    if sample_rows and isinstance(sample_rows[0], dict):
-        first_row = sample_rows[0]
-        for field in [
-            "entry_date",
-            "account",
-            "account_desc",
-            "line_desc",
-            "source_file",
-        ]:
-            value = _clean_text(first_row.get(field))
+    for row in sample_rows:
+        if not isinstance(row, dict):
+            continue
+        for field in SAMPLE_REQUIRED_COLUMNS:
+            value = _clean_text(row.get(field))
             if value:
                 fragments.append(value)
     return list(dict.fromkeys(fragments))
@@ -588,20 +584,14 @@ def _sample_required_cells(
     sample_rows: Sequence[dict[str, Any]], language: str
 ) -> dict[str, dict[str, str]]:
     cells: dict[str, str] = {}
-    fields = [
-        "entry_date",
-        "account",
-        "account_desc",
-        "line_desc",
-        "source_file",
-        "source_row",
-    ]
+    fields = SAMPLE_REQUIRED_COLUMNS
     for field in fields:
         cells[_cell_reference(field, 1)] = field
-    if sample_rows and isinstance(sample_rows[0], dict):
-        first_row = sample_rows[0]
+    for row_index, row in enumerate(sample_rows, start=2):
+        if not isinstance(row, dict):
+            continue
         for field in fields:
-            _add_cell_check(cells, _cell_reference(field, 2), first_row.get(field))
+            _add_cell_check(cells, _cell_reference(field, row_index), row.get(field))
     return {workbook_sheet_name(language): cells}
 
 
@@ -666,9 +656,10 @@ def write_run_intake(
     exclude_accounts: Sequence[str],
     date_start: str | None,
     date_end: str | None,
-    min_abs: float | None,
+    min_abs: str | None,
     keyword: str | None,
     language: str,
+    declared_output_dir: Path | None = None,
 ) -> RunIntakeResult:
     """Write run intake before deterministic sample selection."""
 
@@ -683,7 +674,7 @@ def write_run_intake(
         "created_at": _utc_now(),
         "language": language_code,
         "input_paths": [normalized_csv.as_posix()],
-        "output_dir": output_dir.as_posix(),
+        "output_dir": (declared_output_dir or output_dir).as_posix(),
         "inferred_task": "journal_sampling_review_payload",
         "assumptions": {
             "normalized_csv": normalized_csv.as_posix(),
@@ -783,6 +774,7 @@ def write_review_session_artifacts(
             "population_size_after_filters": audit.get("population_size_after_filters"),
             "sample_size": audit.get("sample_size", len(sample_rows)),
             "filters": audit.get("filters", {}),
+            "population_proof": audit.get("population_proof"),
         },
     }
     review_payload_path = _write_json(

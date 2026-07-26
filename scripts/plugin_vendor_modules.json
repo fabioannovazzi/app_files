@@ -40,7 +40,38 @@
     },
     "vera": {
       "module_roots": [
+        "vera_assurance",
         "vera_ocr"
+      ]
+    },
+    "audit-reconciliation": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "check-entries": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "concordato-plan-review": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "journal-sampling": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "journal-bank-reconciliation": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "report-builder": {
+      "module_roots": [
+        "vera_assurance"
       ]
     },
     "studio-archive": {

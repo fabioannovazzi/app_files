@@ -1116,7 +1116,7 @@
             kind: "deterministic_review_session",
             status: "passed",
             execution_location: "local_codex_workspace",
-            command: ["python", "plugins/" + CONFIG.plugin + "/scripts/review_session.py"],
+            command: ["python", "plugins/" + CONFIG.plugin + "/scripts/raw_input_runner.py"],
             inputs: ["input.xlsx", "evidence/"],
             outputs: ["review_payload.json", "review_summary.md", "evidence_workbook.xlsx", "final_artifacts.json"],
           },
@@ -1965,6 +1965,17 @@
       };
     }
     function applyToolArgs() {
+      let expectedPredecessorCheckpoint = String(state.expectedPredecessorCheckpoint || "").trim();
+      if (!/^[0-9a-f]{64}$/.test(expectedPredecessorCheckpoint)) {
+        expectedPredecessorCheckpoint = String(window.prompt(
+          "Enter the predecessor SHA-256 checkpoint retained through the separate review channel.",
+          "",
+        ) || "").trim();
+      }
+      if (!/^[0-9a-f]{64}$/.test(expectedPredecessorCheckpoint)) {
+        throw new Error("A valid external predecessor checkpoint is required before apply.");
+      }
+      state.expectedPredecessorCheckpoint = expectedPredecessorCheckpoint;
       return {
         run_intake: state.payload.run_intake || null,
         review_payload: reviewPayload(),
@@ -1972,6 +1983,7 @@
         final_artifacts: state.payload.final_artifacts || null,
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
+        expected_predecessor_checkpoint: expectedPredecessorCheckpoint,
       };
     }
     function parseToolResult(result) {
@@ -2037,9 +2049,10 @@
       }
       setSaveStatus(uiText("savingApplying", "Saving and applying..."));
       try {
-        await saveCurrentDecisions();
+        const applicationArgs = applyToolArgs();
+
         const applyTool = state.payload.decision_policy?.apply_tool || CONFIG.applyTool;
-        const result = parseToolResult(await window.openai.callTool(applyTool, applyToolArgs()));
+        const result = parseToolResult(await window.openai.callTool(applyTool, applicationArgs));
         if (!result?.ok) throw new Error(result?.error || uiText("applyFailed", "Decision apply failed."));
         if (result.final_artifacts) state.payload.final_artifacts = result.final_artifacts;
         if (result.applied_decisions) state.payload.applied_decisions = result.applied_decisions;

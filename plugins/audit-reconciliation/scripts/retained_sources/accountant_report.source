@@ -74,28 +74,32 @@ def split_values(value: object) -> list[str]:
 
 
 def parse_decimal(value: object) -> Decimal | None:
-    """Parse accounting amounts stored as strings, floats or Decimals."""
+    """Parse an exact cent amount without binary-float or rounding promotion."""
 
-    if value is None or isinstance(value, bool):
+    if value is None or isinstance(value, (bool, float)):
         return None
     if isinstance(value, Decimal):
-        return value.quantize(Decimal("0.01"))
-    if isinstance(value, (int, float)):
-        return Decimal(str(value)).quantize(Decimal("0.01"))
+        parsed = value
+    elif isinstance(value, int):
+        parsed = Decimal(value)
+    else:
+        text = clean_text(value)
+        if not text:
+            return None
+        text = text.replace("EUR", "").replace("euro", "").replace(" ", "")
+        text = text.replace("(", "-").replace(")", "")
+        if "," in text and "." in text:
+            text = text.replace(".", "").replace(",", ".")
+        elif "," in text:
+            text = text.replace(",", ".")
+        try:
+            parsed = Decimal(text)
+        except InvalidOperation:
+            return None
 
-    text = clean_text(value)
-    if not text:
+    if not parsed.is_finite() or parsed % Decimal("0.01"):
         return None
-    text = text.replace("EUR", "").replace("euro", "").replace(" ", "")
-    text = text.replace("(", "-").replace(")", "")
-    if "," in text and "." in text:
-        text = text.replace(".", "").replace(",", ".")
-    elif "," in text:
-        text = text.replace(",", ".")
-    try:
-        return Decimal(text).quantize(Decimal("0.01"))
-    except InvalidOperation:
-        return None
+    return parsed
 
 
 def format_decimal(value: Decimal | None) -> str:

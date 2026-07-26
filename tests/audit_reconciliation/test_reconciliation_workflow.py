@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import zipfile
 from pathlib import Path
 
 from docx import Document
@@ -73,6 +74,8 @@ def test_build_reconciliation_artifacts_writes_excel_and_word(tmp_path):
 
     assert result["checks_pass"] is True
     assert result["reconciliation_rows"][0]["reconciliation_status"] == "closed"
+    assert result["reconciliation_rows"][0]["relationship_control_status"] == "passed"
+    assert len(result["relationship_allocation_ledgers"]) == 1
     assert Path(result["excel_path"]).exists()
     assert Path(result["accountant_report_path"]).exists()
     assert Path(result["word_path"]).exists()
@@ -195,3 +198,57 @@ def test_workflow_can_require_completed_review(tmp_path):
         raise AssertionError(
             "expected pending Codex review to fail when completion is required"
         )
+
+
+def test_office_outputs_are_byte_replayable_and_have_fixed_package_metadata(
+    tmp_path,
+):
+    workflow = load_workflow()
+    open_items = [
+        {
+            "record_id": "open-1",
+            "document_key": "INV1|2025",
+            "document_date": "2025-01-01",
+            "amount": "10.00",
+            "currency": "EUR",
+        }
+    ]
+    evidence_rows = [
+        {
+            "record_id": "bank-1",
+            "source_role": "bank_statement",
+            "evidence_type": "external_bank",
+            "document_key": "INV1|2025",
+            "posting_date": "2025-01-02",
+            "amount": "10.00",
+            "currency": "EUR",
+            "source_file": "bank.csv",
+            "source_row": "2",
+        }
+    ]
+
+    first = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path / "first",
+        open_items=open_items,
+        evidence_rows=evidence_rows,
+        assumptions={"scope_year": "2025", "amount_tolerance": "0"},
+        require_completed_review=False,
+    )
+    second = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path / "second",
+        open_items=open_items,
+        evidence_rows=evidence_rows,
+        assumptions={"scope_year": "2025", "amount_tolerance": "0"},
+        require_completed_review=False,
+    )
+
+    for key in ("excel_path", "accountant_report_path", "word_path"):
+        first_path = Path(first[key])
+        second_path = Path(second[key])
+        assert first_path.read_bytes() == second_path.read_bytes()
+        with zipfile.ZipFile(first_path) as package:
+            assert all(
+                info.date_time == (1980, 1, 1, 0, 0, 0) for info in package.infolist()
+            )
+            core_properties = package.read("docProps/core.xml")
+        assert b"2000-01-01T00:00:00Z" in core_properties

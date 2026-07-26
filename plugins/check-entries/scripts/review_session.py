@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Sequence
+
+from physical_output_set import validate_initial_output_set
 
 __all__ = [
     "ReviewSessionResult",
@@ -14,7 +17,7 @@ __all__ = [
     "write_run_intake",
 ]
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "2.0"
 PLUGIN_NAME = "check-entries"
 WORKFLOW_NAME = "check-entries"
 MAX_RESULT_ITEMS = 1500
@@ -61,6 +64,19 @@ def _write_json(path: Path, payload: dict[str, Any]) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def _content_sha256(payload: dict[str, Any]) -> str:
+    """Hash a JSON object using the assurance canonical serialization."""
+
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _write_review_handoff_card(
@@ -328,15 +344,18 @@ def _entry_items(rows: Sequence[dict[str, Any]], language: str) -> list[dict[str
     items: list[dict[str, Any]] = []
     for index, row in enumerate(rows[:MAX_RESULT_ITEMS], start=1):
         status = str(row.get("status") or "unknown")
+        prepared_entry_id = _clean_text(row.get("prepared_entry_id"))
+        if not prepared_entry_id:
+            raise ValueError("Every check result requires a prepared_entry_id.")
         data = dict(row)
         data["target_artifact"] = "check_results.csv"
-        data["target_id_field"] = "source_row"
-        data["target_record_id"] = str(row.get("source_row") or index)
+        data["target_id_field"] = "prepared_entry_id"
+        data["target_record_id"] = prepared_entry_id
         data["target_field"] = "review_notes"
         data["edit_hint"] = (
-            "Editar esta fila actualiza review_notes en check_results.csv para el source_row correspondiente."
+            "Editar esta fila actualiza review_notes en check_results.csv para la identidad preparada estable."
             if _is_spanish(language)
-            else "Editing this row updates review_notes in check_results.csv for the matching source_row."
+            else "Editing this row updates review_notes in check_results.csv for the stable prepared identity."
         )
         evidence = [
             {
@@ -347,6 +366,12 @@ def _entry_items(rows: Sequence[dict[str, Any]], language: str) -> list[dict[str
                 "matched_pdf": row.get("matched_pdf"),
                 "matched_support": row.get("matched_support"),
                 "support_type": row.get("support_type"),
+                "support_artifact_id": row.get("support_artifact_id"),
+                "support_match_status": row.get("support_match_status"),
+                "support_match_signals": row.get("support_match_signals"),
+                "evidence_facts": row.get("evidence_facts"),
+                "professional_conclusion": row.get("professional_conclusion"),
+                "assurance_gate_status": row.get("assurance_gate_status"),
             }
         ]
         if row.get("amount_found") not in (None, ""):
@@ -373,20 +398,19 @@ def _entry_items(rows: Sequence[dict[str, Any]], language: str) -> list[dict[str
                     "status": "needs_evidence",
                 }
             )
+        allowed_actions = (
+            ("accept", "edit", "mark_unclear", "request_more_documents", "skip")
+            if status == "ok"
+            else ("edit", "mark_unclear", "request_more_documents", "skip")
+        )
         items.append(
             _base_item(
-                f"entry-{index}",
+                f"check.{prepared_entry_id}",
                 _result_item_type(status),
                 _entry_title(row, index, language),
                 source_path=str(row.get("source_file") or ""),
                 output_path="check_results.csv",
-                allowed_actions=(
-                    "accept",
-                    "edit",
-                    "mark_unclear",
-                    "request_more_documents",
-                    "skip",
-                ),
+                allowed_actions=allowed_actions,
                 recommended_action=_recommended_action(status),
                 evidence=evidence,
                 data=data,
@@ -422,9 +446,14 @@ def _pdf_items(
     for index, row in enumerate(pdf_inventory[:MAX_PDF_ITEMS], start=1):
         extractable = bool(row.get("extractable_text"))
         error = row.get("error")
+        support_artifact_id = _clean_text(row.get("support_artifact_id"))
         items.append(
             _base_item(
-                f"pdf-{index}",
+                (
+                    f"pdf.{support_artifact_id}"
+                    if support_artifact_id
+                    else f"pdf-unidentified-{index}"
+                ),
                 "pdf_inventory",
                 str(row.get("filename") or f"PDF {index}"),
                 source_path=str(row.get("path") or ""),
@@ -439,6 +468,7 @@ def _pdf_items(
                         "extractable_text": extractable,
                         "text_chars": row.get("text_chars"),
                         "error": error,
+                        "support_artifact_id": support_artifact_id or None,
                     }
                 ],
                 data=dict(row),
@@ -488,7 +518,11 @@ def _mapping_items(mapping: dict[str, Any], language: str) -> list[dict[str, Any
     ]
 
 
-def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
+def _artifact_items(
+    output_dir: Path,
+    language: str,
+    audit: dict[str, Any],
+) -> list[dict[str, Any]]:
     spanish = _is_spanish(language)
     artifacts = [
         (
@@ -496,6 +530,12 @@ def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
             "review_artifact",
             "Asientos normalizados" if spanish else "Normalized entries",
             "normalized_entries.csv",
+        ),
+        (
+            "prepared-support-facts",
+            "review_artifact",
+            ("Hechos de soporte preparados" if spanish else "Prepared support facts"),
+            "prepared_support_facts.csv",
         ),
         (
             "check-results-csv",
@@ -530,10 +570,42 @@ def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
             "invoice_inventory.json",
         ),
         (
+            "support-manifest-json",
+            "review_artifact",
+            ("Manifiesto de justificantes" if spanish else "Support manifest"),
+            "support_manifest.json",
+        ),
+        (
+            "execution-recipe-json",
+            "review_artifact",
+            (
+                "Receta de ejecución capturada"
+                if spanish
+                else "Captured execution recipe"
+            ),
+            "execution_recipe.json",
+        ),
+        (
             "check-audit-json",
             "review_artifact",
             "JSON de auditoría de la comprobación" if spanish else "Check audit JSON",
             "check_audit.json",
+        ),
+        (
+            "numeric-evidence-ledger-json",
+            "review_artifact",
+            (
+                "Libro mayor de evidencia numérica"
+                if spanish
+                else "Numeric evidence ledger"
+            ),
+            "numeric_evidence_ledger.json",
+        ),
+        (
+            "assurance-envelope-json",
+            "review_artifact",
+            ("Sobre de aseguramiento" if spanish else "Replayable assurance envelope"),
+            "assurance_envelope.json",
         ),
         (
             "review-notes-md",
@@ -542,9 +614,16 @@ def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
             "review_notes.md",
         ),
     ]
+    receipt_by_path = {
+        str(receipt.get("path")): receipt
+        for receipt in audit.get("output_artifact_receipts", [])
+        if isinstance(receipt, dict) and receipt.get("path")
+    }
     items: list[dict[str, Any]] = []
     for item_id, item_type, title, relative_path in artifacts:
         path = output_dir / relative_path
+        receipt = receipt_by_path.get(relative_path)
+        receipt_valid = isinstance(receipt, dict) and bool(receipt.get("sha256"))
         items.append(
             _base_item(
                 item_id,
@@ -552,11 +631,15 @@ def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
                 title,
                 output_path=relative_path,
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
-                recommended_action="accept" if path.exists() else "mark_unclear",
+                recommended_action=(
+                    "accept" if path.exists() and receipt_valid else "mark_unclear"
+                ),
                 data={
                     "path": relative_path,
                     "exists": path.exists(),
                     "size_bytes": path.stat().st_size if path.exists() else 0,
+                    "artifact_receipt": receipt,
+                    "receipt_status": "valid" if receipt_valid else "not_sealed",
                 },
             )
         )
@@ -565,13 +648,23 @@ def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
 
 CHECK_RESULTS_WORKBOOK_SHEET = "Sheet1"
 CHECK_RESULTS_WORKBOOK_COLUMNS = [
+    "prepared_entry_id",
+    "source_qualification_id",
     "movement_number",
+    "line_number",
     "entry_date",
+    "account",
+    "account_desc",
     "description",
     "beneficiary_expected",
     "amount_signed",
     "amount_abs",
+    "currency",
+    "unit",
+    "reported_increment",
     "source_file",
+    "source_sheet",
+    "source_page",
     "source_row",
     "status",
     "matched_pdf",
@@ -581,6 +674,14 @@ CHECK_RESULTS_WORKBOOK_COLUMNS = [
     "amount_found",
     "date_found",
     "beneficiary_found",
+    "matched_support",
+    "support_type",
+    "support_artifact_id",
+    "support_match_status",
+    "support_match_signals",
+    "evidence_facts",
+    "professional_conclusion",
+    "assurance_gate_status",
 ]
 
 
@@ -603,6 +704,7 @@ def _check_results_workbook_required_cells(
 ) -> dict[str, dict[str, str]]:
     cells: dict[str, str] = {}
     fields = [
+        "prepared_entry_id",
         "movement_number",
         "source_row",
         "status",
@@ -633,6 +735,11 @@ def _output_records(
         "ui_decisions.json",
         "final_artifacts.json",
     }
+    receipt_by_path = {
+        str(receipt.get("path")): receipt
+        for receipt in audit.get("output_artifact_receipts", [])
+        if isinstance(receipt, dict) and receipt.get("path")
+    }
     outputs: list[dict[str, Any]] = []
     for path in sorted(output_dir.rglob("*")):
         if not path.is_file() or path.name in review_files:
@@ -644,18 +751,32 @@ def _output_records(
             "kind": path.suffix.lower().lstrip(".") or "file",
             "status": "written",
         }
+        if relative in receipt_by_path:
+            output["artifact_receipt"] = receipt_by_path[relative]
         if relative == "check_results.csv":
             output["row_count"] = int(audit.get("result_row_count", 0))
             output["required_columns"] = [
+                "prepared_entry_id",
+                "source_qualification_id",
                 "movement_number",
+                "source_file",
+                "source_sheet",
+                "source_page",
+                "source_row",
                 "status",
                 "matched_pdf",
+                "currency",
+                "unit",
+                "reported_increment",
+                "professional_conclusion",
+                "assurance_gate_status",
             ]
         elif relative == "check_results.xlsx":
             output["source_row_count"] = int(audit.get("result_row_count", 0))
             output["required_sheets"] = [CHECK_RESULTS_WORKBOOK_SHEET]
             output["required_sheet_headers"] = {
                 CHECK_RESULTS_WORKBOOK_SHEET: [
+                    "prepared_entry_id",
                     "movement_number",
                     "source_row",
                     "status",
@@ -697,10 +818,11 @@ def write_run_intake(
     journal: Path,
     pdf_path: Path,
     *,
+    normalization_diagnostics_path: Path,
     recipe_path: Path | None,
     language: str,
     document_language: str,
-    amount_tolerance: float,
+    amount_tolerance: str,
     date_window_days: int,
     mapping: dict[str, Any],
     journal_row_count: int,
@@ -712,7 +834,11 @@ def write_run_intake(
 
     run_id = _run_id(journal)
     spanish = _is_spanish(language)
-    local_files_read = [journal.as_posix(), pdf_path.as_posix()]
+    local_files_read = [
+        journal.as_posix(),
+        normalization_diagnostics_path.as_posix(),
+        pdf_path.as_posix(),
+    ]
     if recipe_path is not None:
         local_files_read.append(recipe_path.as_posix())
     payload = {
@@ -723,7 +849,11 @@ def write_run_intake(
         "created_at": _utc_now(),
         "language": language,
         "document_language": document_language,
-        "input_paths": [journal.as_posix(), pdf_path.as_posix()],
+        "input_paths": [
+            journal.as_posix(),
+            normalization_diagnostics_path.as_posix(),
+            pdf_path.as_posix(),
+        ],
         "output_dir": output_dir.as_posix(),
         "inferred_task": "journal_entry_support_check",
         "assumptions": {
@@ -731,11 +861,15 @@ def write_run_intake(
             "date_window_days": date_window_days,
             "currency": "EUR",
             "mapping": mapping,
+            "source_preparation_status": "qualified",
             "journal_row_count": journal_row_count,
             "pdf_count": pdf_count,
             "invoice_count": invoice_count,
             "connector_name": connector_name,
             "recipe_path": recipe_path.as_posix() if recipe_path else None,
+            "normalization_diagnostics_path": (
+                normalization_diagnostics_path.as_posix()
+            ),
         },
         "unresolved_questions": [
             {
@@ -811,7 +945,7 @@ def write_review_session_artifacts(
     recipe_path: Path | None,
     language: str,
     document_language: str,
-    amount_tolerance: float,
+    amount_tolerance: str,
     date_window_days: int,
     mapping: dict[str, Any],
     result_rows: Sequence[dict[str, Any]],
@@ -825,7 +959,7 @@ def write_review_session_artifacts(
     items.extend(_mapping_items(mapping, language))
     items.extend(_entry_items(result_rows, language))
     items.extend(_pdf_items(pdf_inventory, language))
-    items.extend(_artifact_items(output_dir, language))
+    items.extend(_artifact_items(output_dir, language, audit))
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -848,7 +982,10 @@ def write_review_session_artifacts(
             "check_results_xlsx": "check_results.xlsx",
             "pdf_inventory": "pdf_inventory.json",
             "invoice_inventory": "invoice_inventory.json",
+            "support_manifest": "support_manifest.json",
+            "execution_recipe": "execution_recipe.json",
             "check_audit": "check_audit.json",
+            "assurance_envelope": "assurance_envelope.json",
             "review_notes": "review_notes.md",
         },
         "allowed_actions": [
@@ -878,8 +1015,18 @@ def write_review_session_artifacts(
             "amount_tolerance": amount_tolerance,
             "date_window_days": date_window_days,
             "mapping_missing": _missing_mapping(mapping),
+            "source_preparation_status": (
+                audit.get("source_preparation", {}).get("source_preparation_status")
+                if isinstance(audit.get("source_preparation"), dict)
+                else None
+            ),
+            "assurance_gates": audit.get("assurance_gates"),
+            "professional_conclusion_status": audit.get(
+                "professional_conclusion_status"
+            ),
         },
     }
+    review_payload["content_sha256"] = _content_sha256(review_payload)
     review_payload_path = _write_json(
         output_dir / "review_payload.json",
         review_payload,
@@ -895,6 +1042,7 @@ def write_review_session_artifacts(
             "decided_at": None,
             "decision_source": "not_collected",
             "review_payload_path": review_payload_path.name,
+            "review_payload_content_sha256": review_payload["content_sha256"],
             "decisions": [],
             "decision_count": 0,
             "status": "pending_review",
@@ -934,6 +1082,12 @@ def write_review_session_artifacts(
             "run_id": run_id,
             "completed_at": _utc_now(),
             "outputs": outputs,
+            "assurance_gates": audit.get("assurance_gates"),
+            "assurance_envelope": audit.get("assurance_envelope"),
+            "review_payload_content_sha256": review_payload["content_sha256"],
+            "professional_conclusion_status": audit.get(
+                "professional_conclusion_status"
+            ),
             "caveats": [
                 (
                     "Los scripts solo comparan evidencias deterministas; Codex debe explicar los casos no resueltos y el juicio aplicado."
@@ -966,6 +1120,7 @@ def write_review_session_artifacts(
         final_artifacts_path,
         command=["python", "plugins/check-entries/scripts/run_checks.py"],
     )
+    validate_initial_output_set(output_dir)
 
     return ReviewSessionResult(
         run_intake_path=run_intake_path,

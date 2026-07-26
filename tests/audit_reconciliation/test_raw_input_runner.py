@@ -26,6 +26,71 @@ def load_runner():
     return module
 
 
+def reviewed_source_input(
+    *,
+    role: str,
+    adapter_family: str,
+    direction_policy: str = "not_applicable",
+    decimal_separator: str | None = ".",
+    thousands_separator: str | None = ",",
+) -> dict[str, object]:
+    return {
+        "role": role,
+        "adapter_family": adapter_family,
+        "reviewer_ref": "reviewer.test",
+        "reviewed_on": "2026-07-25",
+        "perimeter": {
+            "entity_ref": "entity.test",
+            "party_ref": "party.test",
+            "currency": "EUR",
+            "unit": "currency_amount",
+            "direction_policy": direction_policy,
+            "allocation_policy": "one_to_one",
+        },
+        "money": {
+            "decimal_separator": decimal_separator,
+            "thousands_separator": thousands_separator,
+            "reported_unit": "EUR",
+            "reported_increment": "0.01",
+        },
+        "date": {"order": "day_first"},
+    }
+
+
+def direct_reviewed_assumptions(
+    source_file: str,
+    *,
+    role: str,
+    adapter_family: str,
+    direction_policy: str = "not_applicable",
+    decimal_separator: str | None = ".",
+    thousands_separator: str | None = ",",
+) -> dict[str, object]:
+    reviewed = reviewed_source_input(
+        role=role,
+        adapter_family=adapter_family,
+        direction_policy=direction_policy,
+        decimal_separator=decimal_separator,
+        thousands_separator=thousands_separator,
+    )
+    return {
+        "currency": "EUR",
+        "_reviewed_source_decision_receipts": {
+            source_file: {
+                "decision_id": "source_mapping.test",
+                "content": {
+                    "source_path": source_file,
+                    "role": reviewed["role"],
+                    "adapter_family": reviewed["adapter_family"],
+                    "perimeter": reviewed["perimeter"],
+                    "money": reviewed["money"],
+                    "date": reviewed["date"],
+                },
+            }
+        },
+    }
+
+
 def test_open_item_document_key_matches_invoice_style_document_key():
     runner = load_runner()
 
@@ -38,14 +103,20 @@ def test_open_item_document_key_matches_invoice_style_document_key():
 def test_two_digit_bank_dates_are_normalized():
     runner = load_runner()
 
-    assert runner.iso_date("03/07/23") == "2023-07-03"
+    assert (
+        runner.iso_date(
+            "03/07/23",
+            convention={"order": "day_first"},
+        )
+        == "2023-07-03"
+    )
 
 
-def test_source_role_inference_is_generic_not_customer_specific():
+def test_source_role_suggestions_are_generic_and_not_reviewed_mappings():
     runner = load_runner()
 
     assert (
-        runner.infer_source_role("All.A-Scheda Cliente anno 2023.pdf") == "open_items"
+        runner.infer_source_role("Open items 2023.pdf", language="en") == "open_items"
     )
     assert (
         runner.infer_source_role("Estratto_Conto_corrente_30_09_2023.pdf")
@@ -53,13 +124,24 @@ def test_source_role_inference_is_generic_not_customer_specific():
     )
     assert runner.infer_source_role("GIORNALE 2023.xlsx") == "journal"
     assert runner.infer_source_role("DistintaPagamento.doc") == "payment_order"
+    assert runner.infer_source_role("Unrecognized annex.pdf") == "unknown"
+
+    resolution = runner.resolve_source_role(
+        "Open items 2023.pdf",
+        assumptions={},
+        language="en",
+    )
+
+    assert resolution["source_role"] == "unknown"
+    assert resolution["suggested_source_role"] == "open_items"
+    assert resolution["status"] == "needs_review"
 
 
 def test_source_role_inference_supports_configured_languages():
     runner = load_runner()
 
     assert (
-        runner.infer_source_role("Customer statement 2023.pdf", language="en_US")
+        runner.infer_source_role("Customer open items 2023.pdf", language="en_US")
         == "open_items"
     )
     assert (
@@ -76,15 +158,54 @@ def test_source_role_inference_supports_configured_languages():
     )
 
 
-def test_internal_advance_ledger_is_ledger_not_external_factoring_statement():
+def test_ambiguous_source_role_suggestions_require_reviewed_input():
     runner = load_runner()
 
     text = "MASTRINO DI SOTTOCONTO Banca c/anticipi DISPONIBILITA LIQUIDE"
 
     assert (
         runner.infer_source_role("Banca anticipi.pdf", sample_text=text, language="it")
-        == "ledger"
+        == "unknown"
     )
+    assert set(
+        runner.infer_source_role_candidates(
+            "Banca anticipi.pdf",
+            sample_text=text,
+            language="it",
+        )
+    ) >= {"bank_statement", "ledger", "factoring_statement"}
+
+
+def test_generic_statement_filename_abstains_when_roles_are_ambiguous():
+    runner = load_runner()
+
+    assert (
+        runner.infer_source_role("Customer statement 2023.pdf", language="en_US")
+        == "unknown"
+    )
+    assert set(
+        runner.infer_source_role_candidates(
+            "Customer statement 2023.pdf",
+            language="en_US",
+        )
+    ) == {"bank_statement", "open_items"}
+
+
+def test_reviewed_source_role_is_authoritative_over_advisory_filename():
+    runner = load_runner()
+
+    resolution = runner.resolve_source_role(
+        "ambiguous bank journal.pdf",
+        assumptions=direct_reviewed_assumptions(
+            "ambiguous bank journal.pdf",
+            role="bank_statement",
+            adapter_family="bank_statement_text_v1",
+        ),
+        language="en",
+    )
+
+    assert resolution["source_role"] == "bank_statement"
+    assert resolution["status"] == "reviewed"
 
 
 def test_base_requirements_declare_pymupdf():
@@ -215,6 +336,124 @@ def test_extract_normalized_records_defaults_cache_inside_output_dir(tmp_path):
     assert (output_dir / ".audit_reconciliation_cache").exists()
 
 
+def test_unreviewed_source_role_abstains_and_surfaces_needs_review(tmp_path):
+    runner = load_runner()
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+    (input_dir / "bank journal.pdf").write_bytes(b"not parsed")
+
+    result = runner.extract_normalized_records(
+        input_dir,
+        {},
+        output_dir=output_dir,
+    )
+
+    assert result["normalized_records"] == []
+    assert result["source_qualifications"][0]["status"] == "needs_review"
+    assert result["source_inventory"][0]["source_role"] == "unknown"
+    assert result["extraction_errors"][0]["status"] == "needs_review"
+
+
+def test_plain_legacy_role_mapping_never_grants_parser_authority(tmp_path):
+    runner = load_runner()
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+    source_name = "customer ledger.pdf"
+    (input_dir / source_name).write_bytes(b"not parsed")
+
+    result = runner.extract_normalized_records(
+        input_dir,
+        {"reviewed_source_roles": {source_name: "ledger"}},
+        output_dir=output_dir,
+    )
+
+    qualification = result["source_qualifications"][0]
+    assert result["normalized_records"] == []
+    assert qualification["status"] == "needs_review"
+    assert qualification["emitted_row_count"] == 0
+    assert result["extraction_errors"][0]["status"] == "needs_review"
+
+
+def test_unknown_reviewed_adapter_does_not_unlock_source_parser(tmp_path):
+    runner = load_runner()
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+    source_name = "customer open items.pdf"
+    (input_dir / source_name).write_bytes(b"not parsed")
+
+    result = runner.extract_normalized_records(
+        input_dir,
+        {
+            "reviewed_source_decisions": {
+                source_name: reviewed_source_input(
+                    role="open_items",
+                    adapter_family="custom_unknown_v1",
+                    direction_policy="customer",
+                )
+            },
+        },
+        output_dir=output_dir,
+    )
+
+    qualification = result["source_qualifications"][0]
+    assert result["normalized_records"] == []
+    assert qualification["adapter_id"] == "custom_unknown_v1"
+    assert qualification["status"] == "unsupported_source_layout"
+    assert result["extraction_errors"][0]["status"] == "unsupported_source_layout"
+
+
+def test_journal_amount_ownership_requires_exact_columns_or_legacy_adapter():
+    runner = load_runner()
+    row = ("1", "Account", "Description", "40.00", "999.00", "60.00")
+    layout = {"operation_col": 3, "debit_col": 4, "credit_col": 6}
+
+    exact = runner.journal_amount_sides(row, layout)
+    legacy = runner.journal_amount_sides(
+        row,
+        layout,
+        adapter_family=runner.LEGACY_ADAPTER_FAMILY,
+    )
+
+    assert exact == (runner.Decimal("40.00"), runner.Decimal("60.00"))
+    assert legacy == (runner.Decimal("1039.00"), runner.Decimal("60.00"))
+
+
+def test_authoritative_money_abstains_on_ambiguous_separator_and_float():
+    runner = load_runner()
+
+    assert runner.parse_money("1.000") is None
+    assert runner.parse_money(1000.25) is None
+    assert runner.parse_money(
+        "1.000",
+        convention={
+            "decimal_separator": ",",
+            "thousands_separator": ".",
+            "reported_increment": "0.01",
+        },
+    ) == runner.Decimal("1000")
+    assert (
+        runner.parse_money(
+            "10.005",
+            convention={
+                "decimal_separator": ".",
+                "thousands_separator": ",",
+                "reported_increment": "0.01",
+            },
+        )
+        is None
+    )
+
+
+def test_journal_float_cell_never_becomes_authoritative_money():
+    runner = load_runner()
+
+    assert runner.journal_money_cell(1000.25) is None
+    assert runner.journal_money_cell("1000.25") == runner.Decimal("1000.25")
+
+
 def test_bank_row_without_document_reference_is_unallocated_external():
     runner = load_runner()
     page = runner.SourcePage(
@@ -231,7 +470,16 @@ def test_bank_row_without_document_reference_is_unallocated_external():
         page,
         "03/07/23 03/07/23 27.400,77 BONIFICO o/c: CUSTOMER S.DO DIST.PG.152",
         1,
-        {"counterparty_keywords": ["customer"]},
+        {
+            **direct_reviewed_assumptions(
+                page.source_file,
+                role="bank_statement",
+                adapter_family="bank_statement_text_v1",
+                decimal_separator=",",
+                thousands_separator=".",
+            ),
+            "counterparty_keywords": ["customer"],
+        },
         ["customer"],
     )
 
@@ -256,7 +504,16 @@ def test_bank_distinta_range_is_batch_not_invoice_reference():
         page,
         "11/07/23 11/07/23 133.633,12 BONIFICO o/c: CUSTOMER S.DO DIST.PG.1-7 CUSTOMER",
         1,
-        {"counterparty_keywords": ["customer"]},
+        {
+            **direct_reviewed_assumptions(
+                page.source_file,
+                role="bank_statement",
+                adapter_family="bank_statement_text_v1",
+                decimal_separator=",",
+                thousands_separator=".",
+            ),
+            "counterparty_keywords": ["customer"],
+        },
         ["customer"],
     )
 
@@ -284,7 +541,16 @@ def test_bank_fatt_number_reference_is_invoice_key():
         page,
         "13/01/23 13/01/23 2.752,96 RIENTRO ANTICIPO/FINANZIAMENTO FATT. 587 CUSTOMER",
         1,
-        {"counterparty_keywords": ["customer"]},
+        {
+            **direct_reviewed_assumptions(
+                page.source_file,
+                role="bank_statement",
+                adapter_family="bank_statement_text_v1",
+                decimal_separator=",",
+                thousands_separator=".",
+            ),
+            "counterparty_keywords": ["customer"],
+        },
         ["customer"],
     )
 
@@ -309,6 +575,13 @@ def test_bank_ft_number_reference_is_invoice_key():
         "19/05/23 19/05/23 26.067,14 BONIFICI ESTERI o/c: PAYMENTCO SAS FACTORCO-22651 ACCONTO ID 12411 FT. 293 - CUSTOMER",
         1,
         {
+            **direct_reviewed_assumptions(
+                page.source_file,
+                role="bank_statement",
+                adapter_family="bank_statement_text_v1",
+                decimal_separator=",",
+                thousands_separator=".",
+            ),
             "counterparty_keywords": ["customer"],
             "factoring_operator_keywords": ["factorco", "paymentco"],
         },
@@ -337,7 +610,17 @@ def test_bank_invoice_reference_supports_english_keyword_and_decimal_point():
         page,
         "19/05/23 19/05/23 26,067.14 WIRE TRANSFER CUSTOMER INVOICE 293",
         1,
-        {"counterparty_keywords": ["customer"], "document_language": "en"},
+        {
+            **direct_reviewed_assumptions(
+                page.source_file,
+                role="bank_statement",
+                adapter_family="bank_statement_text_v1",
+                decimal_separator=".",
+                thousands_separator=",",
+            ),
+            "counterparty_keywords": ["customer"],
+            "document_language": "en",
+        },
         ["customer"],
     )
 
@@ -349,7 +632,7 @@ def test_bank_invoice_reference_supports_english_keyword_and_decimal_point():
 def test_parse_open_items_from_ocr_like_lines():
     runner = load_runner()
     page = runner.SourcePage(
-        source_file="All.A-Scheda Cliente anno 2023.pdf",
+        source_file="Open-items-customers-2023.pdf",
         source_role="open_items",
         source_page=1,
         extraction_method="paddle_ocr",
@@ -366,7 +649,17 @@ def test_parse_open_items_from_ocr_like_lines():
         ),
     )
 
-    rows = runner.parse_open_items([page], {"currency": "EUR"})
+    rows = runner.parse_open_items(
+        [page],
+        direct_reviewed_assumptions(
+            page.source_file,
+            role="open_items",
+            adapter_family="open_items_text_v1",
+            direction_policy="customer",
+            decimal_separator=",",
+            thousands_separator=".",
+        ),
+    )
 
     assert len(rows) == 1
     assert rows[0]["document_key"] == "120FE|2023"
@@ -374,7 +667,7 @@ def test_parse_open_items_from_ocr_like_lines():
     assert rows[0]["expected_side"] == "customer"
 
 
-def test_parse_open_items_side_detection_uses_configured_language():
+def test_parse_open_items_keywords_cannot_choose_accounting_direction():
     runner = load_runner()
     page = runner.SourcePage(
         source_file="Supplier statement 2023.pdf",
@@ -394,13 +687,9 @@ def test_parse_open_items_side_detection_uses_configured_language():
         ),
     )
 
-    rows = runner.parse_open_items(
-        [page], {"currency": "EUR", "document_language": "en"}
-    )
+    rows = runner.parse_open_items([page], {"currency": "EUR"})
 
-    assert len(rows) == 1
-    assert rows[0]["expected_side"] == "supplier"
-    assert rows[0]["amount"] == "1000.00"
+    assert rows == []
 
 
 def test_extract_pdf_pages_uses_page_cache(tmp_path):
@@ -563,7 +852,16 @@ def test_payment_order_zip_extracts_invoice_rows_and_batch_total(tmp_path):
     with zipfile.ZipFile(zip_path, "w") as zf:
         zf.writestr("DistintaPagamento.doc", html)
 
-    rows = runner.parse_payment_order_zip(zip_path, {"currency": "EUR"})
+    rows = runner.parse_payment_order_zip(
+        zip_path,
+        direct_reviewed_assumptions(
+            zip_path.name,
+            role="payment_order",
+            adapter_family="payment_order_html_zip_v1",
+            decimal_separator=",",
+            thousands_separator=".",
+        ),
+    )
 
     assert len(rows) == 1
     assert rows[0]["document_key"] == "1515|2023"
@@ -589,13 +887,47 @@ def test_parse_pdf_journal_page_when_no_spreadsheet_journal():
         ),
     )
 
-    rows = runner.parse_journal_pages([page], {"currency": "EUR"})
+    rows = runner.parse_journal_pages(
+        [page],
+        {
+            **direct_reviewed_assumptions(
+                page.source_file,
+                role="journal",
+                adapter_family=runner.LEGACY_ADAPTER_FAMILY,
+                decimal_separator=",",
+                thousands_separator=".",
+            ),
+        },
+    )
 
     assert len(rows) == 1
     assert rows[0]["source_role"] == "journal"
     assert rows[0]["evidence_type"] == "internal_closure"
     assert rows[0]["document_key"] == "3389|2023"
     assert rows[0]["amount"] == "244324.25"
+
+
+def test_parse_pdf_journal_page_abstains_without_reviewed_legacy_adapter():
+    runner = load_runner()
+    page = runner.SourcePage(
+        source_file="giornale.pdf",
+        source_role="journal",
+        source_page=7,
+        extraction_method="pdf_text",
+        text_length=200,
+        line_count=2,
+        text="\n".join(
+            [
+                "07/04/2023 INCASSATA FATTURA",
+                "11746 15 / 5 / 1003 Example Bank S.p.A. "
+                "N.3389-23 del 07042023 EXAMPLE SUPPLIER 244.324,25",
+            ]
+        ),
+    )
+
+    rows = runner.parse_journal_pages([page], {"currency": "EUR"})
+
+    assert rows == []
 
 
 def test_parse_journal_rollforward_xlsx_extracts_counterparty_opening_and_movements(
@@ -619,36 +951,43 @@ def test_parse_journal_rollforward_xlsx_extracts_counterparty_opening_and_moveme
     ws.cell(row=7, column=7).value = "9 / 5 / 3"
     ws.cell(row=7, column=12).value = "Customer Srl"
     ws.cell(row=7, column=19).value = "Apertura esercizio in data 01/01/2023"
-    ws.cell(row=7, column=25).value = 1000.00
+    ws.cell(row=7, column=25).value = "1000.00"
     ws.cell(row=8, column=1).value = 149
     ws.cell(row=8, column=7).value = "22 / 5 / 15"
     ws.cell(row=8, column=12).value = "Customer Srl"
     ws.cell(row=8, column=19).value = "Apertura esercizio in data 01/01/2023"
-    ws.cell(row=8, column=43).value = 300.00
+    ws.cell(row=8, column=43).value = "300.00"
     ws.cell(row=9, column=1).value = "15/01/2023 INCASSATA FATTURA"
     ws.cell(row=10, column=1).value = 300
     ws.cell(row=10, column=7).value = "9 / 5 / 3"
     ws.cell(row=10, column=12).value = "Customer Srl"
     ws.cell(row=10, column=19).value = "Incasso fattura"
-    ws.cell(row=10, column=43).value = 200.00
+    ws.cell(row=10, column=43).value = "200.00"
     ws.cell(row=11, column=1).value = 301
     ws.cell(row=11, column=7).value = "22 / 5 / 15"
     ws.cell(row=11, column=12).value = "Customer Srl"
     ws.cell(row=11, column=19).value = "Pagamento fattura"
-    ws.cell(row=11, column=25).value = 50.00
+    ws.cell(row=11, column=25).value = "50.00"
     workbook.save(path)
 
     rows = runner.parse_journal_rollforward_xlsx(
         path,
-        {"counterparty_keywords": ["customer"], "currency": "EUR"},
+        {
+            **direct_reviewed_assumptions(
+                path.name,
+                role="journal",
+                adapter_family=runner.LEGACY_ADAPTER_FAMILY,
+            ),
+            "counterparty_keywords": ["customer"],
+        },
     )
     summary = runner.summarize_journal_rollforward(rows)
     total = summary[0]
 
     assert len(rows) == 4
     assert rows[0]["movement_type"] == "opening"
-    assert rows[0]["debit_amount"] == "1000.00"
-    assert rows[1]["credit_amount"] == "300.00"
+    assert rows[0]["debit_amount"] == "1000"
+    assert rows[1]["credit_amount"] == "300"
     assert total["account"] == "TOTAL"
     assert total["opening_net_debit_minus_credit"] == "700.00"
     assert total["period_net_debit_minus_credit"] == "-150.00"
@@ -741,7 +1080,17 @@ def test_parse_ledger_balance_pages_extracts_pre_closing_balance():
     )
 
     rows = runner.parse_ledger_balance_pages(
-        [page], {"counterparty_keywords": ["customer"], "currency": "EUR"}
+        [page],
+        {
+            "counterparty_keywords": ["customer"],
+            **direct_reviewed_assumptions(
+                page.source_file,
+                role="ledger",
+                adapter_family=runner.LEGACY_ADAPTER_FAMILY,
+                decimal_separator=",",
+                thousands_separator=".",
+            ),
+        },
     )
 
     assert rows[0]["account"] == "TOTAL"

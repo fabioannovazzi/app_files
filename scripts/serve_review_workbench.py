@@ -255,7 +255,7 @@ def _validate_review_payload(
 
 
 def _empty_ui_decisions(review_payload: dict[str, Any]) -> dict[str, Any]:
-    return {
+    decisions = {
         "schema_version": review_payload.get("schema_version", "1.0"),
         "plugin": review_payload.get("plugin"),
         "workflow": review_payload.get("workflow"),
@@ -268,6 +268,10 @@ def _empty_ui_decisions(review_payload: dict[str, Any]) -> dict[str, Any]:
         "item_count": review_payload["item_count"],
         "status": "pending_review",
     }
+    content_sha256 = review_payload.get("content_sha256")
+    if isinstance(content_sha256, str) and content_sha256:
+        decisions["review_payload_content_sha256"] = content_sha256
+    return decisions
 
 
 def _raw_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
@@ -347,7 +351,10 @@ def _sanitize_browser_payload(
     """Remove server-only paths and private QA text from any plugin render result."""
 
     empty_path_lists = {"input_paths", "local_files_read"}
-    dropped_fields = {"output_dir", "required_text"}
+    # Run-intake assumptions are server-owned context and may contain client names
+    # or other private case labels. They are not required to operate the browser
+    # review controls, so exclude the field rather than guessing which text is safe.
+    dropped_fields = {"assumptions", "output_dir", "required_text"}
     if isinstance(value, dict):
         sanitized: dict[str, Any] = {}
         for key, item in value.items():

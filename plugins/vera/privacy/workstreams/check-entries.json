@@ -10,13 +10,16 @@
     "assets/review-workbench-adapter.json",
     "assets/check-entries-review-widget.html"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "codex_context": {
     "policy": "real_case_data_may_enter_codex_context",
     "classes": [
       {
         "id": "entry-and-support-review",
         "purpose": "Map selected entries and resolve accounting-support checks",
-        "content": "User instructions; journal entries; FatturaPA data or connector exports; supporting PDFs; match results; evidence excerpts and review decisions"
+        "content": "User instructions; qualified journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; local source metadata; match results; evidence excerpts; reviewed party, relationship, currency and direction decisions"
       }
     ]
   },
@@ -56,14 +59,38 @@
   ],
   "security_controls": [
     {
-      "id": "private-output-root",
-      "control": "Run artifacts are written outside published repository paths."
+      "id": "sealed-upstream-and-support-replay",
+      "control": "The Journal Sampling assurance envelope and normalized receipt are replayed before and after support extraction; every support artifact is captured once and its receipt, bounded parser result, qualification, comparison, numeric ledger, and final assurance replay use the same bytes."
+    },
+    {
+      "id": "complete-support-membership",
+      "control": "A selected support directory is sealed as a complete canonical relative-path manifest; added, removed, replaced, Unicode/case aliases, temporary-prefixed files, symbolic links, hard-link aliases, and special filesystem entries fail closed."
+    },
+    {
+      "id": "source-bound-professional-decisions",
+      "control": "Party, support-relationship, currency, and direction exceptions are accepted only as reviewed-decision receipts bound to the exact normalized journal, prepared entry, support artifact and locator; free-text names or amount/date coincidence cannot promote a result."
+    },
+    {
+      "id": "transactional-review-writes",
+      "control": "MCP save and apply capture the bounded canonical output tree and modes in parent-process memory, execute workflow helpers only against a detached working tree, reject linked, aliased, special, oversized, swapped, or unexpected entries, and restore exact trusted bytes and modes if revision, workbook, assurance, manifest, trace, or commit validation fails."
+    },
+    {
+      "id": "trusted-review-application-postcondition",
+      "control": "Inside the transaction, the MCP parent derives run, review, current UI, final state, decisions, effects, paths, gates, readiness, and professional status from the trusted persisted image; supplied copies must match exactly, helper JSON is acknowledgement-only, and every source, run, implementation, review, audit, envelope, and current-output binding is replayed before commit."
+    },
+    {
+      "id": "sanitized-helper-failures",
+      "control": "Workflow-child startup, nonzero exit, oversized, empty, malformed, wrongly typed, and contradictory status-zero results fail with bounded fixed messages; child stdout, traceback text, absolute client paths, and unvalidated result fields are not copied into the MCP response or execution trace."
+    },
+    {
+      "id": "exact-initial-transition-and-successor-output-sets",
+      "control": "Run, validate, render, save and apply enforce the same workflow-owned physical file and directory perimeter for the initial package, bounded review transition and accepted successor; foreign files, links, hardlink aliases, special entries and post-preflight swaps fail closed, and late failures restore the exact prior tree."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-21",
+    "reviewed_at": "2026-07-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "105c083fc6136ac3fd03a8947ecd9f92d86cd9cc3e56a27a9bc25b7a2d48a4bb"
+    "source_fingerprint": "121235bf23ef65804def57376ab2f92a25b8b9f7a187351f430d06f124512aee"
   }
 }

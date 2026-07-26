@@ -1,6 +1,7 @@
 aspose-slides==26.2.0
 beautifulsoup4==4.13.3
 datashader==0.18.1
+defusedxml>=0.7.1,<1
 # Datashader relies on Numba to compile its Python code; pin NumPy and
 # Numba to mutually compatible versions.  Numba 0.61.2 supports NumPy
 # ≥1.24 and <2.3, and requires llvmlite 0.44.x

@@ -12,6 +12,10 @@ from excel_sanitization import sanitize_excel_string
 __all__ = [
     "ReviewSessionResult",
     "RunIntakeResult",
+    "WORKBOOK_REQUIRED_HEADERS",
+    "WORKBOOK_REQUIRED_SHEETS",
+    "refresh_final_artifacts",
+    "refresh_review_execution_trace",
     "write_review_session_artifacts",
     "write_run_intake",
 ]
@@ -21,6 +25,18 @@ PLUGIN_NAME = "journal-bank-reconciliation"
 WORKFLOW_NAME = "journal-bank-reconciliation"
 MAX_MATCH_ITEMS = 200
 MAX_UNMATCHED_ITEMS = 500
+FINAL_ARTIFACT_EXCLUDED_NAMES = frozenset(
+    {
+        "run_intake.json",
+        "review_payload.json",
+        "ui_decisions.json",
+        "final_artifacts.json",
+    }
+)
+RECONCILIATION_COMMAND = (
+    "python",
+    "plugins/journal-bank-reconciliation/scripts/run_reconciliation.py",
+)
 
 
 @dataclass(frozen=True)
@@ -130,6 +146,7 @@ def _write_review_handoff_card(
 def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
     return {
         "path": path.name,
+        "size_bytes": path.stat().st_size,
         "kind": "md",
         "status": "written",
         "required_text": [
@@ -195,6 +212,19 @@ def _append_execution_trace(
     _write_json(run_intake_path, payload)
 
 
+def refresh_review_execution_trace(
+    run_intake_path: Path,
+    final_artifacts_path: Path,
+) -> None:
+    """Refresh the review-session trace against the current final manifest."""
+
+    _append_execution_trace(
+        run_intake_path,
+        final_artifacts_path,
+        command=RECONCILIATION_COMMAND,
+    )
+
+
 def _as_output_ref(path: str | Path | None, output_dir: Path) -> str | None:
     if path is None:
         return None
@@ -203,6 +233,13 @@ def _as_output_ref(path: str | Path | None, output_dir: Path) -> str | None:
         return candidate.relative_to(output_dir).as_posix()
     except ValueError:
         return candidate.as_posix()
+
+
+def _json_object_if_present(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else {}
 
 
 def _clean_text(value: Any) -> str:
@@ -485,6 +522,14 @@ def _artifact_items(
                 else "Reconciliation matches CSV"
             ),
         ),
+        "relationship_residuals_csv": (
+            "review_artifact",
+            (
+                "CSV de residuales de la relación"
+                if spanish
+                else "Relationship residuals CSV"
+            ),
+        ),
         "unmatched_bank_csv": (
             "review_artifact",
             "CSV bancario sin conciliar" if spanish else "Unmatched bank CSV",
@@ -512,6 +557,14 @@ def _artifact_items(
         "review_notes_md": (
             "review_artifact",
             "Notas de revisión" if spanish else "Review notes",
+        ),
+        "material_value_ledger_json": (
+            "review_artifact",
+            (
+                "Libro de direcciones de valores materiales"
+                if spanish
+                else "Material-value address ledger"
+            ),
         ),
     }
     items: list[dict[str, Any]] = []
@@ -559,6 +612,18 @@ MATCH_WORKBOOK_COLUMNS = [
     "shared_references",
     "review_note",
 ]
+RESIDUAL_WORKBOOK_COLUMNS = [
+    "side",
+    "record_ref",
+    "transaction_id",
+    "record_amount",
+    "allocated_amount",
+    "residual",
+    "currency",
+    "unit",
+    "entity_ref",
+    "party_ref",
+]
 TRANSACTION_WORKBOOK_COLUMNS = [
     "side",
     "transaction_id",
@@ -570,12 +635,19 @@ TRANSACTION_WORKBOOK_COLUMNS = [
     "reference",
     "movement_number",
     "account",
+    "currency",
+    "unit",
+    "entity_ref",
+    "party_ref",
+    "direction",
     "source_file",
+    "source_sheet",
     "source_row",
 ]
 NON_MOVEMENT_WORKBOOK_COLUMNS = [
     "side",
     "source_file",
+    "source_sheet",
     "source_row",
     "classification",
     "reason",
@@ -585,36 +657,23 @@ NON_MOVEMENT_WORKBOOK_COLUMNS = [
     "description",
 ]
 WORKBOOK_REQUIRED_HEADERS = {
-    "matches": [
-        "status",
-        "stage",
-        "bank_transaction_id",
-        "journal_transaction_id",
-        "amount_delta",
-        "shared_references",
-    ],
-    "unmatched_bank": [
-        "side",
-        "transaction_id",
-        "transaction_date",
-        "amount_abs",
-        "reference",
-    ],
-    "unmatched_journal": [
-        "side",
-        "transaction_id",
-        "transaction_date",
-        "amount_abs",
-        "reference",
-    ],
-    "bank_pdf_non_movements": [
-        "source_file",
-        "source_row",
-        "classification",
-        "description",
-        "amount_abs",
-    ],
+    "matches": MATCH_WORKBOOK_COLUMNS,
+    "relationship_residuals": RESIDUAL_WORKBOOK_COLUMNS,
+    "unmatched_bank": TRANSACTION_WORKBOOK_COLUMNS,
+    "unmatched_journal": TRANSACTION_WORKBOOK_COLUMNS,
+    "bank_pdf_non_movements": NON_MOVEMENT_WORKBOOK_COLUMNS,
+    "normalized_bank": TRANSACTION_WORKBOOK_COLUMNS,
+    "normalized_journal": TRANSACTION_WORKBOOK_COLUMNS,
 }
+WORKBOOK_REQUIRED_SHEETS = [
+    "matches",
+    "relationship_residuals",
+    "unmatched_bank",
+    "unmatched_journal",
+    "bank_pdf_non_movements",
+    "normalized_bank",
+    "normalized_journal",
+]
 
 
 def _column_letters(index: int) -> str:
@@ -655,6 +714,7 @@ def _required_sheet_cells(
 
 def _workbook_required_cells(
     match_rows: Sequence[dict[str, Any]],
+    relationship_residual_rows: Sequence[dict[str, Any]],
     unmatched_bank_rows: Sequence[dict[str, Any]],
     unmatched_journal_rows: Sequence[dict[str, Any]],
     bank_pdf_non_movement_rows: Sequence[dict[str, Any]],
@@ -671,6 +731,20 @@ def _workbook_required_cells(
             ],
             first_row=match_rows[0] if match_rows else None,
         ),
+        "relationship_residuals": _required_sheet_cells(
+            columns=RESIDUAL_WORKBOOK_COLUMNS,
+            fields=[
+                "side",
+                "record_ref",
+                "transaction_id",
+                "record_amount",
+                "allocated_amount",
+                "residual",
+            ],
+            first_row=(
+                relationship_residual_rows[0] if relationship_residual_rows else None
+            ),
+        ),
         "unmatched_bank": _required_sheet_cells(
             columns=TRANSACTION_WORKBOOK_COLUMNS,
             fields=["side", "transaction_id", "transaction_date", "reference"],
@@ -685,6 +759,7 @@ def _workbook_required_cells(
             columns=NON_MOVEMENT_WORKBOOK_COLUMNS,
             fields=[
                 "source_file",
+                "source_sheet",
                 "source_row",
                 "classification",
                 "description",
@@ -702,19 +777,14 @@ def _output_records(
     audit: dict[str, Any],
     *,
     match_rows: Sequence[dict[str, Any]],
+    relationship_residual_rows: Sequence[dict[str, Any]],
     unmatched_bank_rows: Sequence[dict[str, Any]],
     unmatched_journal_rows: Sequence[dict[str, Any]],
     bank_pdf_non_movement_rows: Sequence[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    review_files = {
-        "run_intake.json",
-        "review_payload.json",
-        "ui_decisions.json",
-        "final_artifacts.json",
-    }
     outputs: list[dict[str, Any]] = []
     for path in sorted(output_dir.rglob("*")):
-        if not path.is_file() or path.name in review_files:
+        if not path.is_file() or path.name in FINAL_ARTIFACT_EXCLUDED_NAMES:
             continue
         relative = path.relative_to(output_dir).as_posix()
         output = {
@@ -724,26 +794,27 @@ def _output_records(
             "status": "written",
         }
         if relative == "journal_bank_reconciliation.xlsx":
-            output["required_sheets"] = [
-                "matches",
-                "unmatched_bank",
-                "unmatched_journal",
-                "bank_pdf_non_movements",
-            ]
+            output["required_sheets"] = WORKBOOK_REQUIRED_SHEETS
             output["required_sheet_headers"] = WORKBOOK_REQUIRED_HEADERS
             output["required_cells"] = _workbook_required_cells(
                 match_rows,
+                relationship_residual_rows,
                 unmatched_bank_rows,
                 unmatched_journal_rows,
                 bank_pdf_non_movement_rows,
             )
             output["source_row_counts"] = {
                 "matches": int(audit.get("matched_count", 0)),
+                "relationship_residuals": int(
+                    audit.get("relationship_residual_row_count", 0)
+                ),
                 "unmatched_bank": int(audit.get("unmatched_bank_count", 0)),
                 "unmatched_journal": int(audit.get("unmatched_journal_count", 0)),
                 "bank_pdf_non_movements": int(
                     audit.get("bank_pdf_non_movement_row_count", 0)
                 ),
+                "normalized_bank": int(audit.get("bank_row_count", 0)),
+                "normalized_journal": int(audit.get("journal_row_count", 0)),
             }
             output["qa_checks"] = [
                 "office_zip",
@@ -760,6 +831,9 @@ def _output_records(
                 "journal_transaction_id",
                 "amount_delta",
             ]
+        elif relative == "relationship_residuals.csv":
+            output["row_count"] = int(audit.get("relationship_residual_row_count", 0))
+            output["required_columns"] = RESIDUAL_WORKBOOK_COLUMNS
         elif relative == "unmatched_bank.csv":
             output["row_count"] = int(audit.get("unmatched_bank_count", 0))
             output["required_columns"] = [
@@ -802,6 +876,45 @@ def _output_records(
     return outputs
 
 
+def refresh_final_artifacts(final_artifacts_path: Path) -> dict[str, Any]:
+    """Refresh the manifest against the current output files without losing QA."""
+
+    payload = json.loads(final_artifacts_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("final_artifacts.json must contain an object")
+    outputs = payload.get("outputs")
+    existing_by_path = (
+        {
+            str(output["path"]): dict(output)
+            for output in outputs
+            if isinstance(output, dict) and isinstance(output.get("path"), str)
+        }
+        if isinstance(outputs, list)
+        else {}
+    )
+
+    refreshed: list[dict[str, Any]] = []
+    output_dir = final_artifacts_path.parent
+    for path in sorted(output_dir.rglob("*")):
+        if not path.is_file() or path.name in FINAL_ARTIFACT_EXCLUDED_NAMES:
+            continue
+        relative = path.relative_to(output_dir).as_posix()
+        output = existing_by_path.get(relative, {})
+        output.update(
+            {
+                "path": relative,
+                "size_bytes": path.stat().st_size,
+                "kind": path.suffix.lower().lstrip(".") or "file",
+            }
+        )
+        output.setdefault("status", "written")
+        refreshed.append(output)
+
+    payload["outputs"] = refreshed
+    _write_json(final_artifacts_path, payload)
+    return payload
+
+
 def write_run_intake(
     output_dir: Path,
     *,
@@ -811,7 +924,7 @@ def write_run_intake(
     sample_path: Path | None,
     language: str,
     document_language: str,
-    tolerance: float,
+    tolerance: str,
     date_window_days: int,
 ) -> RunIntakeResult:
     """Write run intake before deterministic matching."""
@@ -894,6 +1007,7 @@ def write_review_session_artifacts(
     unmatched_journal: Any,
     audit: dict[str, Any],
     bank_pdf_non_movements: Any = None,
+    relationship_residuals: Any = None,
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifacts."""
 
@@ -901,6 +1015,7 @@ def write_review_session_artifacts(
     unmatched_bank_rows = _rows(unmatched_bank)
     unmatched_journal_rows = _rows(unmatched_journal)
     bank_pdf_non_movement_rows = _rows(bank_pdf_non_movements)
+    relationship_residual_rows = _rows(relationship_residuals)
     language = str(audit.get("language") or "en")
     items: list[dict[str, Any]] = []
     items.extend(
@@ -921,6 +1036,17 @@ def write_review_session_artifacts(
     )
     items.extend(_match_items(match_rows, language))
     items.extend(_artifact_items(audit, output_dir, language))
+    gate_register = _json_object_if_present(output_dir / "assurance_gates.json")
+    gate_entries = gate_register.get("gates")
+    gate_statuses = (
+        {
+            str(name): str(gate.get("status") or "not_assessed")
+            for name, gate in gate_entries.items()
+            if isinstance(gate, dict)
+        }
+        if isinstance(gate_entries, dict)
+        else {}
+    )
 
     review_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -941,6 +1067,15 @@ def write_review_session_artifacts(
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
             "audit": "reconciliation_audit.json",
+            "input_receipts": "input_receipts.json",
+            "source_qualifications": "source_qualifications.json",
+            "reviewed_decisions": "reviewed_decisions.json",
+            "lineage": "lineage.json",
+            "relationship_ledger": "relationship_ledger.json",
+            "relationship_residuals": "relationship_residuals.csv",
+            "material_value_ledger": "material_value_ledger.json",
+            "assurance_gates": "assurance_gates.json",
+            "artifact_receipts": "artifact_receipts.json",
             "review_notes": "review_notes.md",
             "matches": "reconciliation_matches.csv",
             "unmatched_bank": "unmatched_bank.csv",
@@ -957,10 +1092,21 @@ def write_review_session_artifacts(
             "skip",
         ],
         "status": "ready_for_review",
+        "assurance": {
+            "gate_statuses": gate_statuses,
+            "report_ready": bool(gate_register.get("report_ready", False)),
+            "relationship_balanced": bool(audit.get("relationship_balanced", False)),
+            "unresolved_relationship_rows": int(audit.get("unmatched_bank_count") or 0)
+            + int(audit.get("unmatched_journal_count") or 0),
+        },
         "summary": {
             "bank_row_count": audit.get("bank_row_count", len(match_rows)),
             "journal_row_count": audit.get("journal_row_count", 0),
             "matched_count": audit.get("matched_count", len(match_rows)),
+            "relationship_residual_row_count": audit.get(
+                "relationship_residual_row_count",
+                len(relationship_residual_rows),
+            ),
             "unmatched_bank_count": audit.get(
                 "unmatched_bank_count", len(unmatched_bank_rows)
             ),
@@ -1018,6 +1164,7 @@ def write_review_session_artifacts(
         output_dir,
         audit,
         match_rows=match_rows,
+        relationship_residual_rows=relationship_residual_rows,
         unmatched_bank_rows=unmatched_bank_rows,
         unmatched_journal_rows=unmatched_journal_rows,
         bank_pdf_non_movement_rows=bank_pdf_non_movement_rows,
@@ -1079,14 +1226,7 @@ def write_review_session_artifacts(
             "status": "written_pending_review",
         },
     )
-    _append_execution_trace(
-        run_intake_path,
-        final_artifacts_path,
-        command=[
-            "python",
-            "plugins/journal-bank-reconciliation/scripts/run_reconciliation.py",
-        ],
-    )
+    refresh_review_execution_trace(run_intake_path, final_artifacts_path)
 
     return ReviewSessionResult(
         run_id=run_id,

@@ -66,6 +66,7 @@ def _valid_adapter(plugin: str = "demo-review") -> dict[str, object]:
             "it": {"title": "Demo"},
             "fr": {"title": "Demo"},
             "de": {"title": "Demo"},
+            "es": {"title": "Demo"},
         },
         "demo": {
             "review_type": "demo_review",

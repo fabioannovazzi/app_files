@@ -74,6 +74,8 @@ def prepare_data_for_timeline_plot(
 def prepare_data_for_slope_plot(
     dfCopy, chosenDimension, metric, uniqueItems, paramDict, chartDict
 ):
+    """Pivot slope values while requiring one unambiguous label per plot cell."""
+
     namingParams = get_naming_params()
     periodChoice = namingParams["periodChoice"]
     yearName = namingParams["yearName"]
@@ -92,12 +94,32 @@ def prepare_data_for_slope_plot(
         value_col=metric,
         agg_func="sum",
     )
+    # Metric duplicates are additive, but display labels are categorical. Collapse
+    # repeated identical labels and fail when one period/dimension cell contains
+    # conflicting non-null labels rather than selecting one by row order.
+    label_count_col = "__slope_label_count"
+    label_groups = df_lazy.group_by(
+        [periodName, chosenDimension], maintain_order=True
+    ).agg(
+        pl.col(labelName).drop_nulls().n_unique().alias(label_count_col),
+        pl.col(labelName).drop_nulls().first().alias(labelName),
+    )
+    conflicting_labels = (
+        label_groups.filter(pl.col(label_count_col) > 1)
+        .select(periodName, chosenDimension)
+        .limit(1)
+        .collect()
+    )
+    if not conflicting_labels.is_empty():
+        raise ValueError(
+            "Slope plot labels must agree within each period and dimension."
+        )
     pivot_label = pivot_lazy(
-        lf=df_lazy,
+        lf=label_groups.select(periodName, chosenDimension, labelName),
         index_col=periodName,
         pivot_col=chosenDimension,
         value_col=labelName,
-        agg_func="sum",
+        agg_func="first",
     )
     df_lazy = pivot_metric.join(pivot_label, on=periodName, how="left")
     df_lazy = flatten_cols_polars(df_lazy, "")

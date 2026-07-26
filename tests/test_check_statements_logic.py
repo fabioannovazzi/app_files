@@ -1,3 +1,4 @@
+import importlib
 import io
 import json
 import re
@@ -18,38 +19,77 @@ for path in (ROOT, SRC):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-# Minimal utilities.config stub
-modules_pkg = sys.modules.setdefault("modules", ModuleType("modules"))
-modules_pkg.__path__ = [str(ROOT / "modules")]
-utilities_pkg = ModuleType("modules.utilities")
-utilities_pkg.__path__ = [str(ROOT / "modules" / "utilities")]
-config_mod = ModuleType("modules.utilities.config")
-config_mod.get_naming_params = lambda: {}
-config_mod.get_run_params = lambda: {}
-utilities_pkg.config = config_mod
-utils_mod = ModuleType("modules.utilities.utils")
-utils_mod.get_row_count = lambda df: getattr(df, "height", 0)
-utils_mod.get_schema_and_column_names = lambda df: (getattr(df, "columns", []), [])
-utils_mod.ensure_polars_df = lambda df: df
-utilities_pkg.utils = utils_mod
-sys.modules["modules.utilities"] = utilities_pkg
-sys.modules["modules.utilities.config"] = config_mod
-sys.modules["modules.utilities.utils"] = utils_mod
+import src as src_package
 
-# Stub for modules.utils.polars_excel_writer
-utils_pkg = ModuleType("modules.utils")
-polars_writer_mod = ModuleType("modules.utils.polars_excel_writer")
-polars_writer_mod._prepare_df_for_excel = lambda df: df
-utils_pkg.polars_excel_writer = polars_writer_mod
-sys.modules["modules.utils"] = utils_pkg
-sys.modules["modules.utils.polars_excel_writer"] = polars_writer_mod
 
-import src.check_statements as logic
-from src.check_statements_logic import (
-    Transaction,
-    _enrich_transaction,
-    _extract_counterparty_code_and_name,
-)
+def _is_isolated_import(name: str) -> bool:
+    roots = ("finance", "modules", "parsers", "statements")
+    return (
+        any(name == root or name.startswith(f"{root}.") for root in roots)
+        or name == "src.final_pass_filter"
+        or name.startswith("src.check_statements")
+    )
+
+
+original_modules = {
+    name: module for name, module in sys.modules.items() if _is_isolated_import(name)
+}
+original_src_state = dict(src_package.__dict__)
+for module_name in original_modules:
+    sys.modules.pop(module_name, None)
+
+try:
+    # Minimal utilities.config stub
+    modules_pkg = ModuleType("modules")
+    modules_pkg.__path__ = [str(ROOT / "modules")]
+    sys.modules["modules"] = modules_pkg
+    utilities_pkg = ModuleType("modules.utilities")
+    utilities_pkg.__path__ = [str(ROOT / "modules" / "utilities")]
+    config_mod = ModuleType("modules.utilities.config")
+    config_mod.get_naming_params = lambda: {}
+    config_mod.get_run_params = lambda: {}
+    utilities_pkg.config = config_mod
+    utils_mod = ModuleType("modules.utilities.utils")
+    utils_mod.get_row_count = lambda df: getattr(df, "height", 0)
+    utils_mod.get_schema_and_column_names = lambda df: (
+        getattr(df, "columns", []),
+        [],
+    )
+    utils_mod.ensure_polars_df = lambda df: df
+    utilities_pkg.utils = utils_mod
+    sys.modules["modules.utilities"] = utilities_pkg
+    sys.modules["modules.utilities.config"] = config_mod
+    sys.modules["modules.utilities.utils"] = utils_mod
+
+    # Stub for modules.utils.polars_excel_writer
+    utils_pkg = ModuleType("modules.utils")
+    polars_writer_mod = ModuleType("modules.utils.polars_excel_writer")
+    polars_writer_mod._prepare_df_for_excel = lambda df: df
+    utils_pkg.polars_excel_writer = polars_writer_mod
+    sys.modules["modules.utils"] = utils_pkg
+    sys.modules["modules.utils.polars_excel_writer"] = polars_writer_mod
+
+    logic = importlib.import_module("src.check_statements")
+    statements_logic = importlib.import_module("src.check_statements_logic")
+    Transaction = statements_logic.Transaction
+    _enrich_transaction = statements_logic._enrich_transaction
+    _extract_counterparty_code_and_name = (
+        statements_logic._extract_counterparty_code_and_name
+    )
+finally:
+    for module_name in list(sys.modules):
+        if _is_isolated_import(module_name):
+            sys.modules.pop(module_name, None)
+    sys.modules.update(original_modules)
+    src_package.__dict__.clear()
+    src_package.__dict__.update(original_src_state)
+
+
+def _install_isolated_logic_facade(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Expose the isolated facade to functions that resolve it dynamically."""
+
+    monkeypatch.setitem(sys.modules, "src.check_statements", logic)
+    monkeypatch.setattr(src_package, "check_statements", logic, raising=False)
 
 
 def _extract_sheet_names(xlsx_bytes: bytes) -> list[str]:
@@ -139,6 +179,7 @@ def test_transaction_normalised_description_local_cleaning_when_no_llm(
         "12/08/2024 ABI-CAB: 12345-67890 CIGXYZ CUP123 1.234,56"
     )
     tx = logic.Transaction(date=date(2024, 8, 12), amount=10.0, description=raw)
+    _install_isolated_logic_facade(monkeypatch)
     monkeypatch.setattr(logic, "_DESCRIPTION_CACHE", {}, raising=True)
 
     # Act
@@ -154,6 +195,7 @@ def test_transaction_normalised_description_uses_cache_before_local_cleaner(
     # Arrange
     desc = "Already there"
     tx = logic.Transaction(date=date(2024, 1, 1), amount=0.0, description=desc)
+    _install_isolated_logic_facade(monkeypatch)
     monkeypatch.setattr(logic, "_DESCRIPTION_CACHE", {desc: "IN CACHE"}, raising=True)
 
     def should_not_run(*args, **kwargs):  # pragma: no cover - must not be called
@@ -175,6 +217,7 @@ def test_transaction_normalised_description_ignores_llm_wrapper(
     desc = "Bonifico a favore di Foo S.p.A."
     tx = logic.Transaction(date=date(2024, 1, 1), amount=0.0, description=desc)
     cache: dict[str, str] = {}
+    _install_isolated_logic_facade(monkeypatch)
     monkeypatch.setattr(logic, "_DESCRIPTION_CACHE", cache, raising=True)
 
     calls: list[str] = []
@@ -313,8 +356,13 @@ def test_export_to_excel_logs_filter(monkeypatch) -> None:
         return result
 
     messages: list[str] = []
+    _install_isolated_logic_facade(monkeypatch)
     monkeypatch.setattr(logic, "clean_bank_not_matched", spy)
-    monkeypatch.setattr(logic.logger, "info", lambda msg, *a: messages.append(msg % a))
+    monkeypatch.setattr(
+        logic.logger,
+        "info",
+        lambda msg, *a: messages.append(msg % a),
+    )
 
     bank = [
         logic.Transaction(
@@ -353,6 +401,7 @@ def test_export_to_excel_skips_filter_when_disabled(monkeypatch) -> None:
     ):  # pragma: no cover - should not be called
         raise AssertionError("clean_bank_not_matched should not run when disabled")
 
+    _install_isolated_logic_facade(monkeypatch)
     monkeypatch.setattr(logic, "clean_bank_not_matched", spy)
 
     bank = [

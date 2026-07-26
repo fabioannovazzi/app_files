@@ -1,25 +1,34 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
-HELPERS = (
-    Path(__file__).resolve().parents[2]
-    / "plugins"
-    / "audit-reconciliation"
-    / "scripts"
-    / "reconciliation_helpers.py"
+SCRIPTS = (
+    Path(__file__).resolve().parents[2] / "plugins" / "audit-reconciliation" / "scripts"
 )
+ASSURANCE = SCRIPTS / "audit_assurance.py"
 
 
 def load_helpers():
     spec = importlib.util.spec_from_file_location(
-        "audit_reconciliation_helpers", HELPERS
+        "audit_reconciliation_helpers_entrypoint",
+        ASSURANCE,
     )
     assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    entrypoint = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = entrypoint
+    spec.loader.exec_module(entrypoint)
+    return sys.modules["reconciliation_helpers"]
+
+
+def test_normalized_decimal_parser_never_guesses_localized_punctuation_or_float():
+    helpers = load_helpers()
+
+    assert helpers.parse_decimal("1000.25") == helpers.Decimal("1000.25")
+    assert helpers.parse_decimal("1,000.25") is None
+    assert helpers.parse_decimal("1.000,25") is None
+    assert helpers.parse_decimal(1000.25) is None
 
 
 def test_document_key_numeric_year_suffix_matches_invoice_series_alias():
@@ -127,6 +136,43 @@ def test_pro_soluto_factoring_document_reference_can_close_partial_advance():
     assert rows[0]["rule_applied"] == "factoring_with_bank_or_external_support"
 
 
+def test_pro_soluto_factoring_ledger_preserves_retained_residual():
+    helpers = load_helpers()
+    reconciliation_rows = [
+        {
+            "record_id": "open-1",
+            "document_key": "INV-PARTIAL|2023",
+            "amount": "53609.37",
+            "currency": "EUR",
+            "reconciliation_status": "closed",
+            "matched_evidence_id": "factor-1",
+            "rule_applied": "factoring_with_bank_or_external_support",
+        }
+    ]
+    evidence_rows = [
+        {
+            "record_id": "factor-1",
+            "document_key": "INV-PARTIAL|2023",
+            "evidence_type": "external_factoring",
+            "amount": "42887.49",
+            "currency": "EUR",
+        }
+    ]
+
+    ledgers, failures = helpers.closed_bank_allocation_controls(
+        reconciliation_rows,
+        evidence_rows,
+        {"factoring_pro_soluto_closes_item": True},
+    )
+
+    assert failures == {}
+    assert ledgers[0]["balanced"] is True
+    assert {row["amount"] for row in ledgers[0]["target_records"]} == {
+        "42887.49",
+        "10721.88",
+    }
+
+
 def test_partial_bank_payment_does_not_close_as_factoring():
     helpers = load_helpers()
     rows = helpers.reconcile_open_items(
@@ -150,6 +196,129 @@ def test_partial_bank_payment_does_not_close_as_factoring():
     )
 
     assert rows[0]["reconciliation_status"] == "unresolved"
+
+
+def test_duplicate_open_rows_cannot_reuse_one_bank_amount_to_close_twice():
+    helpers = load_helpers()
+    open_rows = [
+        {
+            "record_id": "open-1",
+            "document_key": "INV-DUP|2023",
+            "amount": "100.00",
+            "currency": "EUR",
+        },
+        {
+            "record_id": "open-2",
+            "document_key": "INV-DUP|2023",
+            "amount": "100.00",
+            "currency": "EUR",
+        },
+    ]
+    evidence_rows = [
+        {
+            "record_id": "bank-1",
+            "source_role": "bank_statement",
+            "evidence_type": "external_bank",
+            "document_key": "INV-DUP|2023",
+            "amount": "100.00",
+            "currency": "EUR",
+        }
+    ]
+
+    rows = helpers.reconcile_open_items(open_rows, evidence_rows)
+
+    assert {row["reconciliation_status"] for row in rows} == {"needs_evidence"}
+    assert {row["rule_applied"] for row in rows} == {"bank_allocation_control_failed"}
+    assert {row["relationship_control_status"] for row in rows} == {"failed"}
+    assert "exceeds" in rows[0]["relationship_control_detail"]
+
+
+def test_cross_currency_bank_evidence_cannot_close_open_item():
+    helpers = load_helpers()
+
+    rows = helpers.reconcile_open_items(
+        [
+            {
+                "record_id": "open-usd",
+                "document_key": "INV-FX|2023",
+                "amount": "100.00",
+                "currency": "USD",
+            }
+        ],
+        [
+            {
+                "record_id": "bank-eur",
+                "source_role": "bank_statement",
+                "evidence_type": "external_bank",
+                "document_key": "INV-FX|2023",
+                "amount": "100.00",
+                "currency": "EUR",
+            }
+        ],
+    )
+
+    assert rows[0]["reconciliation_status"] == "needs_evidence"
+    assert rows[0]["relationship_control_status"] == "failed"
+    assert rows[0]["relationship_control_detail"] == "allocation currency mismatch"
+
+
+def test_cross_entity_or_party_bank_evidence_cannot_close_open_item():
+    helpers = load_helpers()
+
+    rows = helpers.reconcile_open_items(
+        [
+            {
+                "record_id": "open-entity-a",
+                "document_key": "INV-ENTITY|2023",
+                "amount": "100.00",
+                "currency": "EUR",
+                "entity_ref": "entity-a",
+                "party_ref": "customer-a",
+            }
+        ],
+        [
+            {
+                "record_id": "bank-entity-b",
+                "source_role": "bank_statement",
+                "evidence_type": "external_bank",
+                "document_key": "INV-ENTITY|2023",
+                "amount": "100.00",
+                "currency": "EUR",
+                "entity_ref": "entity-b",
+                "party_ref": "customer-a",
+            }
+        ],
+    )
+
+    assert rows[0]["reconciliation_status"] == "needs_evidence"
+    assert rows[0]["relationship_control_detail"] == "allocation entity mismatch"
+
+
+def test_bank_evidence_without_stable_record_id_cannot_close_open_item():
+    helpers = load_helpers()
+
+    rows = helpers.reconcile_open_items(
+        [
+            {
+                "record_id": "open-1",
+                "document_key": "INV-NO-ID|2023",
+                "amount": "100.00",
+            }
+        ],
+        [
+            {
+                "source_role": "bank_statement",
+                "evidence_type": "external_bank",
+                "document_key": "INV-NO-ID|2023",
+                "amount": "100.00",
+            }
+        ],
+    )
+
+    assert rows[0]["reconciliation_status"] == "needs_evidence"
+    assert rows[0]["rule_applied"] == "bank_allocation_control_failed"
+    assert rows[0]["relationship_control_status"] == "failed"
+    assert "stable matched evidence record" in rows[0]["relationship_control_detail"]
 
 
 def test_partial_factoring_does_not_close_when_pro_soluto_assumption_disabled():
@@ -771,7 +940,7 @@ def test_unallocated_external_bank_requires_allocation_and_beats_open_support():
     assert "allocato" in rows[0]["missing_evidence"]
 
 
-def test_grouped_payment_order_closes_when_batch_total_matches_bank():
+def test_grouped_payment_order_does_not_close_without_conserved_row_allocation():
     helpers = load_helpers()
     rows = helpers.reconcile_open_items(
         [{"record_id": "open-1", "document_key": "INV1|2023", "amount": "100.00"}],
@@ -795,12 +964,13 @@ def test_grouped_payment_order_closes_when_batch_total_matches_bank():
         {"cutoff_date": "2023-12-31"},
     )
 
-    assert rows[0]["reconciliation_status"] == "closed"
-    assert rows[0]["rule_applied"] == "grouped_payment_external_match"
+    assert rows[0]["reconciliation_status"] == "needs_evidence"
+    assert rows[0]["rule_applied"] == "bank_allocation_control_failed"
     assert rows[0]["matched_evidence_id"] == "bank-1"
+    assert rows[0]["relationship_control_status"] == "failed"
 
 
-def test_grouped_payment_order_closes_unallocated_bank_by_amount_and_value_date():
+def test_grouped_payment_order_does_not_close_unallocated_bank_without_conservation():
     helpers = load_helpers()
     rows = helpers.reconcile_open_items(
         [{"record_id": "open-1", "document_key": "1524FE|2023", "amount": "100.00"}],
@@ -824,9 +994,10 @@ def test_grouped_payment_order_closes_unallocated_bank_by_amount_and_value_date(
         {"cutoff_date": "2023-12-31"},
     )
 
-    assert rows[0]["reconciliation_status"] == "closed"
-    assert rows[0]["rule_applied"] == "grouped_payment_external_match"
+    assert rows[0]["reconciliation_status"] == "needs_evidence"
+    assert rows[0]["rule_applied"] == "bank_allocation_control_failed"
     assert rows[0]["matched_evidence_id"] == "bank-1"
+    assert rows[0]["relationship_control_status"] == "failed"
 
 
 def test_grouped_bridge_does_not_close_with_different_document_specific_bank_row():

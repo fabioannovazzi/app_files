@@ -1,11 +1,158 @@
 "use strict";
 
+const crypto = require("node:crypto");
+const childProcess = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
 
-const SERVER_NAME = "audit-reconciliation-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
+const IMPLEMENTATION_CONTRACT = [
+  ["plugin", "assets/audit-reconciliation-review-widget.html"],
+  ["plugin", "assets/icon.svg"],
+  ["plugin", "assets/review-workbench-adapter.json"],
+  ["plugin", "mcp/server.cjs"],
+  ["plugin", "scripts/audit_assurance.py"],
+  ["plugin", "scripts/build_missing_evidence_requests.py"],
+  ["plugin", "scripts/build_review_sample.py"],
+  ["plugin", "scripts/check_dependencies.py"],
+  ["plugin", "scripts/implementation_bootstrap.py"],
+  ["plugin", "scripts/raw_input_runner.py"],
+  ["plugin", "scripts/reconciliation_workflow.py"],
+  ["plugin", "scripts/retained_sources/accountant_report.source"],
+  ["plugin", "scripts/retained_sources/locale_support.source"],
+  ["plugin", "scripts/retained_sources/reconciliation_helpers.source"],
+  ["plugin", "scripts/retained_sources/review_session.source"],
+  ["plugin", "scripts/retained_sources/workpaper_outputs.source"],
+  ["plugin", "scripts/review_server.py"],
+  ["shared_assurance", "__init__.py"],
+  ["shared_assurance", "contracts.py"],
+  ["shared_assurance", "decisions.py"],
+  ["shared_assurance", "envelope.py"],
+  ["shared_assurance", "money.py"],
+  ["shared_assurance", "relationships.py"],
+  ["shared_assurance", "review_output_transaction.cjs"],
+  ["shared_assurance", "serialization.py"],
+];
+
+function realDirectory(target) {
+  try {
+    const current = fs.lstatSync(target);
+    return current.isDirectory() && !current.isSymbolicLink();
+  } catch (error) {
+    if (error?.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+function sharedAssuranceRoot() {
+  const candidates = [
+    path.join(PLUGIN_ROOT, "vendor", "modules", "vera_assurance"),
+    path.join(
+      path.dirname(path.dirname(PLUGIN_ROOT)),
+      "vendor",
+      "modules",
+      "vera_assurance",
+    ),
+    path.join(
+      path.dirname(PLUGIN_ROOT),
+      "_shared",
+      "vendor",
+      "modules",
+      "vera_assurance",
+    ),
+  ];
+  const selected = candidates.find(realDirectory);
+  if (!selected) {
+    throw new Error("The required vera_assurance module is not available.");
+  }
+  return path.resolve(selected);
+}
+
+function implementationKey(rootId, relativePath) {
+  return `${rootId}\u0000${relativePath}`;
+}
+
+function expectedImplementationDirectories() {
+  const expected = new Set();
+  for (const [rootId, relativePath] of IMPLEMENTATION_CONTRACT) {
+    let parent = path.posix.dirname(relativePath);
+    while (parent !== ".") {
+      expected.add(implementationKey(rootId, parent));
+      parent = path.posix.dirname(parent);
+    }
+  }
+  return expected;
+}
+
+function scanImplementationTree(rootId, root, scanRoot, files, directories) {
+  const rootStat = fs.lstatSync(scanRoot);
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) {
+    throw new Error("implementation root must be a real directory");
+  }
+  const pending = [scanRoot];
+  const initialRelative = path.relative(root, scanRoot).split(path.sep).join("/");
+  if (initialRelative && initialRelative !== ".") {
+    directories.add(implementationKey(rootId, initialRelative));
+  }
+  while (pending.length) {
+    const directory = pending.pop();
+    for (const name of fs.readdirSync(directory).sort()) {
+      const candidate = path.join(directory, name);
+      const current = fs.lstatSync(candidate);
+      const relative = path.relative(root, candidate).split(path.sep).join("/");
+      if (current.isSymbolicLink()) {
+        throw new Error("implementation entries must not be symlinks");
+      }
+      if (current.isDirectory()) {
+        directories.add(implementationKey(rootId, relative));
+        pending.push(candidate);
+      } else if (current.isFile() && current.nlink === 1) {
+        files.add(implementationKey(rootId, relative));
+      } else {
+        throw new Error(
+          "implementation files must be ordinary single-link regular files",
+        );
+      }
+    }
+  }
+}
+
+function setEquals(left, right) {
+  return left.size === right.size && [...left].every((item) => right.has(item));
+}
+
+function validateImplementationTree() {
+  const sharedRoot = sharedAssuranceRoot();
+  const files = new Set();
+  const directories = new Set();
+  for (const [rootId, root, scanRoot] of [
+    ["plugin", PLUGIN_ROOT, path.join(PLUGIN_ROOT, "assets")],
+    ["plugin", PLUGIN_ROOT, path.join(PLUGIN_ROOT, "mcp")],
+    ["plugin", PLUGIN_ROOT, path.join(PLUGIN_ROOT, "scripts")],
+    ["shared_assurance", sharedRoot, sharedRoot],
+  ]) {
+    scanImplementationTree(rootId, root, scanRoot, files, directories);
+  }
+  const expectedFiles = new Set(
+    IMPLEMENTATION_CONTRACT.map(([rootId, relativePath]) =>
+      implementationKey(rootId, relativePath),
+    ),
+  );
+  if (!setEquals(files, expectedFiles)) {
+    throw new Error(
+      "implementation filesystem does not match the exact 25-file contract",
+    );
+  }
+  if (!setEquals(directories, expectedImplementationDirectories())) {
+    throw new Error("implementation directories do not match the exact contract");
+  }
+}
+
+// This must run before any local manifest, asset, or transaction-runtime read.
+validateImplementationTree();
+
+const SERVER_NAME = "audit-reconciliation-widgets";
 const PLUGIN_MANIFEST = JSON.parse(
   fs.readFileSync(path.join(PLUGIN_ROOT, ".codex-plugin", "plugin.json"), "utf8"),
 );
@@ -93,6 +240,13 @@ const ITEM_TYPES = new Set([
   "report_artifact",
   "evidence_request_artifact",
   "review_artifact",
+]);
+const REQUIRED_REVIEW_ITEM_TYPES = new Set([
+  "closure_evidence_review",
+  "probable_payment_review",
+  "manual_review",
+  "review_exception",
+  "check_exception",
 ]);
 
 function isPlainObject(value) {
@@ -282,6 +436,12 @@ function toolDefinitions() {
       decisions: { type: "array", items: decisionSchema },
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
+      expected_predecessor_checkpoint: {
+        type: "string",
+        pattern: "^[0-9a-f]{64}$",
+        description:
+          "SHA-256 predecessor checkpoint retained outside the mutable run tree. Its authority depends on that separate channel.",
+      },
     },
     ["decisions"],
   );
@@ -590,6 +750,928 @@ function validateReviewPayload(inputArgs) {
   return payload;
 }
 
+// BEGIN GENERATED REVIEW OUTPUT TRANSACTION
+const GENERATED_REVIEW_TRANSACTION_LIMITS = {
+  maxEntryCount: 20_000,
+  maxFileBytes: 128 * 1024 * 1024,
+  maxTotalBytes: 512 * 1024 * 1024,
+};
+
+let generatedReviewWriteCounter = 0;
+const GENERATED_REVIEW_TRANSACTION_ERROR_KIND = Symbol(
+  "generated-review-transaction-error-kind",
+);
+const GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR = Symbol(
+  "generated-review-transaction-operation-error",
+);
+
+function generatedReviewPathEntryStat(targetPath) {
+  try {
+    return fs.lstatSync(targetPath);
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+function generatedReviewPathEntryExists(targetPath) {
+  return generatedReviewPathEntryStat(targetPath) !== null;
+}
+
+function generatedReviewRemoveExactPath(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry) return;
+  if (entry.isDirectory() && !entry.isSymbolicLink()) {
+    fs.rmSync(targetPath, {
+      recursive: true,
+      force: true,
+      maxRetries: 3,
+      retryDelay: 25,
+    });
+    return;
+  }
+  fs.unlinkSync(targetPath);
+}
+
+function generatedReviewDirectoryIdentity(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry || !entry.isDirectory() || entry.isSymbolicLink()) {
+    throw new Error("Review transaction root must be a real directory.");
+  }
+  return { dev: entry.dev, ino: entry.ino };
+}
+
+function generatedReviewIdentityMatches(entry, identity) {
+  return (
+    entry != null &&
+    entry.isDirectory() &&
+    !entry.isSymbolicLink() &&
+    entry.dev === identity.dev &&
+    entry.ino === identity.ino
+  );
+}
+
+function generatedReviewTrackedRootsWithinParent(outputParent, identity) {
+  generatedReviewValidateRealDirectoryAncestors(outputParent);
+  const matches = [];
+  for (const name of fs.readdirSync(outputParent).sort()) {
+    const candidate = path.join(outputParent, name);
+    const entry = generatedReviewPathEntryStat(candidate);
+    if (generatedReviewIdentityMatches(entry, identity)) {
+      matches.push(candidate);
+    }
+  }
+  return matches;
+}
+
+function generatedReviewRemoveTrackedRootWithinParent(
+  outputParent,
+  expectedPath,
+  identity,
+) {
+  const matches = generatedReviewTrackedRootsWithinParent(
+    outputParent,
+    identity,
+  );
+  const expected = path.resolve(expectedPath);
+  const relocated = matches.some(
+    (candidate) => path.resolve(candidate) !== expected,
+  );
+  for (const candidate of matches) {
+    generatedReviewRemoveExactPath(candidate);
+  }
+  if (
+    generatedReviewTrackedRootsWithinParent(outputParent, identity).length
+  ) {
+    throw new Error("Review transaction root cleanup did not close.");
+  }
+  return { found: matches.length > 0, relocated };
+}
+
+function generatedReviewValidateRealDirectoryAncestors(targetDir) {
+  const resolved = path.resolve(targetDir);
+  const parsed = path.parse(resolved);
+  let current = parsed.root;
+  for (const component of resolved
+    .slice(parsed.root.length)
+    .split(path.sep)
+    .filter(Boolean)) {
+    current = path.join(current, component);
+    const entry = generatedReviewPathEntryStat(current);
+    if (!entry || !entry.isDirectory() || entry.isSymbolicLink()) {
+      throw new Error("Review output parent must be a real directory.");
+    }
+  }
+}
+
+function generatedReviewCanonicalRelativePath(value) {
+  if (
+    typeof value !== "string" ||
+    value !== value.trim() ||
+    !value ||
+    /[\u0000-\u001f\u007f\\]/.test(value) ||
+    path.posix.isAbsolute(value)
+  ) {
+    throw new Error("Review transaction received an invalid output path.");
+  }
+  const normalized = path.posix.normalize(value);
+  if (
+    normalized !== value ||
+    normalized === "." ||
+    normalized === ".." ||
+    normalized.startsWith("../")
+  ) {
+    throw new Error("Review transaction received an invalid output path.");
+  }
+  return normalized;
+}
+
+function generatedReviewAbsolutePath(root, relativePath) {
+  const canonical = generatedReviewCanonicalRelativePath(relativePath);
+  return path.join(root, ...canonical.split("/"));
+}
+
+function generatedReviewCaptureDirectoryImage(outputDir) {
+  const rootEntry = generatedReviewPathEntryStat(outputDir);
+  if (!rootEntry || !rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("Review output must be a real directory.");
+  }
+  const directories = [];
+  const files = [];
+  let entryCount = 0;
+  let totalBytes = 0;
+  const pending = [outputDir];
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current).sort()) {
+      entryCount += 1;
+      if (entryCount > GENERATED_REVIEW_TRANSACTION_LIMITS.maxEntryCount) {
+        throw new Error("Review output exceeds the transaction entry limit.");
+      }
+      const candidate = path.join(current, name);
+      const observed = generatedReviewPathEntryStat(candidate);
+      if (!observed || observed.isSymbolicLink()) {
+        throw new Error("Review output contains an unsafe filesystem entry.");
+      }
+      const relativePath = path
+        .relative(outputDir, candidate)
+        .split(path.sep)
+        .join("/");
+      generatedReviewCanonicalRelativePath(relativePath);
+      if (observed.isDirectory()) {
+        directories.push({
+          path: relativePath,
+          mode: observed.mode & 0o7777,
+        });
+        pending.push(candidate);
+        continue;
+      }
+      if (
+        !observed.isFile() ||
+        observed.nlink !== 1 ||
+        observed.size > GENERATED_REVIEW_TRANSACTION_LIMITS.maxFileBytes
+      ) {
+        throw new Error("Review output contains an unsupported file.");
+      }
+      totalBytes += observed.size;
+      if (totalBytes > GENERATED_REVIEW_TRANSACTION_LIMITS.maxTotalBytes) {
+        throw new Error("Review output exceeds the transaction byte limit.");
+      }
+      const noFollow = fs.constants.O_NOFOLLOW || 0;
+      let descriptor;
+      try {
+        descriptor = fs.openSync(candidate, fs.constants.O_RDONLY | noFollow);
+        const before = fs.fstatSync(descriptor);
+        const payload = fs.readFileSync(descriptor);
+        const after = fs.fstatSync(descriptor);
+        if (
+          !before.isFile() ||
+          before.nlink !== 1 ||
+          before.dev !== observed.dev ||
+          before.ino !== observed.ino ||
+          before.dev !== after.dev ||
+          before.ino !== after.ino ||
+          before.size !== after.size ||
+          before.mtimeMs !== after.mtimeMs ||
+          payload.length !== after.size
+        ) {
+          throw new Error("Review output changed during transaction capture.");
+        }
+        files.push({
+          path: relativePath,
+          mode: after.mode & 0o7777,
+          payload,
+        });
+      } finally {
+        if (descriptor !== undefined) fs.closeSync(descriptor);
+      }
+    }
+  }
+  directories.sort((left, right) => left.path.localeCompare(right.path));
+  files.sort((left, right) => left.path.localeCompare(right.path));
+  return {
+    rootMode: rootEntry.mode & 0o7777,
+    directories,
+    files,
+  };
+}
+
+function generatedReviewImagesEqual(left, right) {
+  if (left == null || right == null) return left === right;
+  if (
+    left.rootMode !== right.rootMode ||
+    left.directories.length !== right.directories.length ||
+    left.files.length !== right.files.length
+  ) {
+    return false;
+  }
+  for (let index = 0; index < left.directories.length; index += 1) {
+    const leftEntry = left.directories[index];
+    const rightEntry = right.directories[index];
+    if (
+      leftEntry.path !== rightEntry.path ||
+      leftEntry.mode !== rightEntry.mode
+    ) {
+      return false;
+    }
+  }
+  for (let index = 0; index < left.files.length; index += 1) {
+    const leftEntry = left.files[index];
+    const rightEntry = right.files[index];
+    if (
+      leftEntry.path !== rightEntry.path ||
+      leftEntry.mode !== rightEntry.mode ||
+      !leftEntry.payload.equals(rightEntry.payload)
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function generatedReviewMaterializeDirectoryImage(targetDir, image) {
+  if (generatedReviewPathEntryExists(targetDir)) {
+    throw new Error("Review transaction target already exists.");
+  }
+  fs.mkdirSync(targetDir, { mode: 0o700 });
+  const effectiveImage =
+    image || { rootMode: 0o755, directories: [], files: [] };
+  for (const directory of [...effectiveImage.directories].sort(
+    (left, right) =>
+      left.path.split("/").length - right.path.split("/").length ||
+      left.path.localeCompare(right.path),
+  )) {
+    fs.mkdirSync(generatedReviewAbsolutePath(targetDir, directory.path), {
+      mode: 0o700,
+    });
+  }
+  for (const file of effectiveImage.files) {
+    const target = generatedReviewAbsolutePath(targetDir, file.path);
+    generatedReviewValidateRealDirectoryAncestors(path.dirname(target));
+    const noFollow = fs.constants.O_NOFOLLOW || 0;
+    const descriptor = fs.openSync(
+      target,
+      fs.constants.O_WRONLY |
+        fs.constants.O_CREAT |
+        fs.constants.O_EXCL |
+        noFollow,
+      0o600,
+    );
+    try {
+      fs.writeFileSync(descriptor, file.payload);
+      fs.fsyncSync(descriptor);
+    } finally {
+      fs.closeSync(descriptor);
+    }
+    fs.chmodSync(target, file.mode);
+  }
+  for (const directory of [...effectiveImage.directories].sort(
+    (left, right) =>
+      right.path.split("/").length - left.path.split("/").length ||
+      left.path.localeCompare(right.path),
+  )) {
+    fs.chmodSync(
+      generatedReviewAbsolutePath(targetDir, directory.path),
+      directory.mode,
+    );
+  }
+  fs.chmodSync(targetDir, effectiveImage.rootMode);
+  const replay = generatedReviewCaptureDirectoryImage(targetDir);
+  if (!generatedReviewImagesEqual(effectiveImage, replay)) {
+    throw new Error("Review transaction materialization did not replay.");
+  }
+}
+
+function generatedReviewWritableLeafSignature(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry) return null;
+  if (entry.isSymbolicLink() || !entry.isFile() || entry.nlink !== 1) {
+    throw new Error("Review output contains an unsafe writable file.");
+  }
+  return [
+    entry.dev,
+    entry.ino,
+    entry.size,
+    entry.mtimeMs,
+    entry.mode,
+  ].join(":");
+}
+
+function generatedReviewAtomicWriteFileSync(
+  targetPath,
+  payload,
+  encoding = null,
+) {
+  generatedReviewValidateRealDirectoryAncestors(path.dirname(targetPath));
+  const initialSignature = generatedReviewWritableLeafSignature(targetPath);
+  const targetEntry = generatedReviewPathEntryStat(targetPath);
+  const targetMode = targetEntry ? targetEntry.mode & 0o7777 : 0o644;
+  generatedReviewWriteCounter += 1;
+  const tempPath = path.join(
+    path.dirname(targetPath),
+    `.${path.basename(targetPath)}.generated-review-write-${process.pid}-${generatedReviewWriteCounter}`,
+  );
+  let descriptor;
+  let tempExists = false;
+  try {
+    const noFollow = fs.constants.O_NOFOLLOW || 0;
+    descriptor = fs.openSync(
+      tempPath,
+      fs.constants.O_WRONLY |
+        fs.constants.O_CREAT |
+        fs.constants.O_EXCL |
+        noFollow,
+      targetMode,
+    );
+    tempExists = true;
+    fs.writeFileSync(
+      descriptor,
+      payload,
+      encoding ? { encoding } : undefined,
+    );
+    fs.fchmodSync(descriptor, targetMode);
+    fs.fsyncSync(descriptor);
+    fs.closeSync(descriptor);
+    descriptor = undefined;
+    if (
+      generatedReviewWritableLeafSignature(targetPath) !== initialSignature
+    ) {
+      throw new Error("Review output changed during an atomic write.");
+    }
+    generatedReviewValidateRealDirectoryAncestors(path.dirname(targetPath));
+    fs.renameSync(tempPath, targetPath);
+    tempExists = false;
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+    if (tempExists) {
+      try {
+        fs.unlinkSync(tempPath);
+      } catch (error) {
+        if (error?.code !== "ENOENT") throw error;
+      }
+    }
+  }
+}
+
+function generatedReviewImageEntryMaps(image) {
+  const directoryModes = new Map();
+  const files = new Map();
+  if (!image) {
+    return {
+      rootMode: 0o755,
+      directoryModes,
+      files,
+    };
+  }
+  for (const entry of image.directories) {
+    directoryModes.set(entry.path, entry.mode);
+  }
+  for (const entry of image.files) {
+    files.set(entry.path, entry);
+  }
+  return {
+    rootMode: image.rootMode,
+    directoryModes,
+    files,
+  };
+}
+
+function generatedReviewAuthorizedPathSet(paths) {
+  if (!Array.isArray(paths)) {
+    throw new Error("Review transaction requires an authorized write set.");
+  }
+  const authorized = new Set();
+  for (const value of paths) {
+    authorized.add(generatedReviewCanonicalRelativePath(value));
+  }
+  return authorized;
+}
+
+function generatedReviewDirectoryIsAuthorized(relativePath, authorized) {
+  if (authorized.has(relativePath)) return true;
+  const prefix = `${relativePath}/`;
+  return Array.from(authorized).some((entry) => entry.startsWith(prefix));
+}
+
+function generatedReviewValidateAuthorizedChanges(
+  beforeImage,
+  afterImage,
+  authorizedWritePaths,
+) {
+  const authorized = generatedReviewAuthorizedPathSet(authorizedWritePaths);
+  const before = generatedReviewImageEntryMaps(beforeImage);
+  const after = generatedReviewImageEntryMaps(afterImage);
+  if (before.rootMode !== after.rootMode) {
+    throw new Error("Review transaction changed the output directory mode.");
+  }
+  const directoryPaths = new Set([
+    ...before.directoryModes.keys(),
+    ...after.directoryModes.keys(),
+  ]);
+  for (const relativePath of directoryPaths) {
+    const beforeMode = before.directoryModes.get(relativePath);
+    const afterMode = after.directoryModes.get(relativePath);
+    if (beforeMode === afterMode) continue;
+    if (
+      beforeMode != null ||
+      afterMode == null ||
+      !generatedReviewDirectoryIsAuthorized(relativePath, authorized)
+    ) {
+      throw new Error("Review transaction changed an unauthorized directory.");
+    }
+  }
+  const filePaths = new Set([...before.files.keys(), ...after.files.keys()]);
+  for (const relativePath of filePaths) {
+    const beforeEntry = before.files.get(relativePath);
+    const afterEntry = after.files.get(relativePath);
+    const unchanged =
+      beforeEntry != null &&
+      afterEntry != null &&
+      beforeEntry.mode === afterEntry.mode &&
+      beforeEntry.payload.equals(afterEntry.payload);
+    if (unchanged) continue;
+    if (!authorized.has(relativePath)) {
+      throw new Error("Review transaction changed an unauthorized file.");
+    }
+    if (
+      beforeEntry != null &&
+      afterEntry != null &&
+      beforeEntry.mode !== afterEntry.mode
+    ) {
+      throw new Error("Review transaction changed an artifact mode.");
+    }
+  }
+  return authorized;
+}
+
+function generatedReviewTransactionEnvelope(result, authorizedWritePaths) {
+  return { result, authorizedWritePaths };
+}
+
+function generatedReviewArgsForWorkingOutput(inputArgs, workingOutputDir) {
+  const runIntake = isPlainObject(inputArgs.run_intake)
+    ? { ...inputArgs.run_intake, output_dir: workingOutputDir }
+    : { output_dir: workingOutputDir };
+  return { ...inputArgs, run_intake: runIntake };
+}
+
+function generatedReviewRewriteOutputPaths(
+  value,
+  workingOutputDir,
+  canonicalOutputDir,
+) {
+  if (Array.isArray(value)) {
+    return value.map((entry) =>
+      generatedReviewRewriteOutputPaths(
+        entry,
+        workingOutputDir,
+        canonicalOutputDir,
+      ),
+    );
+  }
+  if (value != null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        generatedReviewRewriteOutputPaths(
+          entry,
+          workingOutputDir,
+          canonicalOutputDir,
+        ),
+      ]),
+    );
+  }
+  if (typeof value !== "string") return value;
+  if (value === workingOutputDir) return canonicalOutputDir;
+  const prefix = `${workingOutputDir}${path.sep}`;
+  if (!value.startsWith(prefix)) return value;
+  return path.join(canonicalOutputDir, value.slice(prefix.length));
+}
+
+function generatedReviewCollectApplicationWritePaths(result) {
+  const paths = new Set([
+    "ui_decisions.json",
+    "applied_decisions.json",
+    "final_artifacts.json",
+    "run_intake.json",
+    "review_handoff.md",
+  ]);
+  function add(value) {
+    if (Array.isArray(value)) {
+      for (const entry of value) add(entry);
+      return;
+    }
+    if (typeof value !== "string" || !value) return;
+    paths.add(generatedReviewCanonicalRelativePath(value));
+  }
+  const applied = isPlainObject(result?.applied_decisions)
+    ? result.applied_decisions
+    : {};
+  const finalArtifacts = isPlainObject(result?.final_artifacts)
+    ? result.final_artifacts
+    : {};
+  const application = isPlainObject(finalArtifacts.review_application)
+    ? finalArtifacts.review_application
+    : {};
+  for (const source of [result, applied, application]) {
+    for (const fieldName of [
+      "revision_paths",
+      "target_update_paths",
+      "structured_update_paths",
+      "native_regeneration_paths",
+      "native_regenerated_paths",
+      "downstream_regenerated_paths",
+      "original_backup_paths",
+      "backup_paths",
+    ]) {
+      add(source?.[fieldName]);
+    }
+  }
+  for (const effect of Array.isArray(applied.effects) ? applied.effects : []) {
+    if (!isPlainObject(effect)) continue;
+    for (const fieldName of [
+      "revision_artifact",
+      "original_artifact_backup",
+      "derived_native_regeneration_paths",
+      "native_regenerated_paths",
+    ]) {
+      add(effect[fieldName]);
+    }
+  }
+  return Array.from(paths);
+}
+
+function generatedReviewWorkflowTransactionOptions(kind, inputArgs) {
+  if (typeof workflowReviewTransactionOptions !== "function") return {};
+  const options = workflowReviewTransactionOptions(kind, inputArgs);
+  if (options == null) return {};
+  if (!isPlainObject(options)) {
+    throw new Error("Workflow review transaction options must be an object.");
+  }
+  return options;
+}
+
+function generatedReviewRestoreFromTrustedImage(
+  outputDir,
+  trustedImage,
+  outputParent,
+) {
+  // Recovery is deliberately created only after the untrusted operation has
+  // returned. It never depends on a transaction tree that the operation knew.
+  const recoveryRoot = fs.mkdtempSync(
+    path.join(outputParent, ".generated-review-recovery-"),
+  );
+  fs.chmodSync(recoveryRoot, 0o700);
+  const recoveryIdentity =
+    generatedReviewDirectoryIdentity(recoveryRoot);
+  const recoveryOutput = path.join(recoveryRoot, "output");
+  let restored = false;
+  try {
+    if (trustedImage) {
+      generatedReviewMaterializeDirectoryImage(
+        recoveryOutput,
+        trustedImage,
+      );
+      const recoveryReplay =
+        generatedReviewCaptureDirectoryImage(recoveryOutput);
+      if (!generatedReviewImagesEqual(trustedImage, recoveryReplay)) {
+        throw new Error("Review output recovery did not replay.");
+      }
+    }
+    generatedReviewRemoveExactPath(outputDir);
+    if (trustedImage) {
+      if (generatedReviewPathEntryExists(outputDir)) {
+        throw new Error("Review output changed during recovery.");
+      }
+      fs.renameSync(recoveryOutput, outputDir);
+      const canonicalReplay =
+        generatedReviewCaptureDirectoryImage(outputDir);
+      if (!generatedReviewImagesEqual(trustedImage, canonicalReplay)) {
+        throw new Error("Review output recovery did not close.");
+      }
+    } else if (generatedReviewPathEntryExists(outputDir)) {
+      throw new Error("Review output recovery did not restore absence.");
+    }
+    restored = true;
+  } finally {
+    const cleanup = generatedReviewRemoveTrackedRootWithinParent(
+      outputParent,
+      recoveryRoot,
+      recoveryIdentity,
+    );
+    if (!cleanup.found || cleanup.relocated) {
+      throw new Error("Review output recovery root changed.");
+    }
+  }
+  if (!restored) {
+    throw new Error("Review output recovery did not close.");
+  }
+}
+
+function generatedReviewCanonicalMatchesTrusted(outputDir, trustedImage) {
+  if (!trustedImage) {
+    return !generatedReviewPathEntryExists(outputDir);
+  }
+  try {
+    return generatedReviewImagesEqual(
+      trustedImage,
+      generatedReviewCaptureDirectoryImage(outputDir),
+    );
+  } catch {
+    return false;
+  }
+}
+
+function generatedReviewRunOutputTransaction(
+  outputDir,
+  operation,
+  options = {},
+) {
+  if (!outputDir) {
+    const envelope = operation({
+      workingOutputDir: null,
+      canonicalOutputDir: null,
+      trustedImage: null,
+    });
+    if (
+      !isPlainObject(envelope) ||
+      !Object.hasOwn(envelope, "result") ||
+      !Array.isArray(envelope.authorizedWritePaths)
+    ) {
+      throw new Error("Review transaction operation returned an invalid result.");
+    }
+    return envelope.result;
+  }
+  const resolvedOutputDir = path.resolve(outputDir);
+  if (resolvedOutputDir === path.parse(resolvedOutputDir).root) {
+    throw new Error("Review output transaction rejected the output path.");
+  }
+  const outputParent = path.dirname(resolvedOutputDir);
+  generatedReviewValidateRealDirectoryAncestors(outputParent);
+  const outputExisted = generatedReviewPathEntryExists(resolvedOutputDir);
+  const trustedImage = outputExisted
+    ? generatedReviewCaptureDirectoryImage(resolvedOutputDir)
+    : null;
+  let transactionRoot = null;
+  let transactionIdentity = null;
+  let workingOutputDir = null;
+  let commitRoot = null;
+  let commitIdentity = null;
+  let canonicalDetached = false;
+  let committed = false;
+  try {
+    transactionRoot = fs.mkdtempSync(
+      path.join(outputParent, ".generated-review-transaction-"),
+    );
+    fs.chmodSync(transactionRoot, 0o700);
+    transactionIdentity =
+      generatedReviewDirectoryIdentity(transactionRoot);
+    workingOutputDir = path.join(transactionRoot, "working");
+    generatedReviewMaterializeDirectoryImage(
+      workingOutputDir,
+      trustedImage,
+    );
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed before transaction start.");
+    }
+    const envelope = operation({
+      workingOutputDir,
+      canonicalOutputDir: resolvedOutputDir,
+      trustedImage,
+    });
+    if (
+      !isPlainObject(envelope) ||
+      !Object.hasOwn(envelope, "result") ||
+      !Array.isArray(envelope.authorizedWritePaths)
+    ) {
+      throw new Error("Review transaction operation returned an invalid result.");
+    }
+    const workingImage =
+      generatedReviewCaptureDirectoryImage(workingOutputDir);
+    const authorized = generatedReviewValidateAuthorizedChanges(
+      trustedImage,
+      workingImage,
+      envelope.authorizedWritePaths,
+    );
+    if (typeof options.validateWholeTree === "function") {
+      options.validateWholeTree({
+        canonicalOutputDir: resolvedOutputDir,
+        workingOutputDir,
+        trustedImage,
+        workingImage,
+        authorizedWritePaths: authorized,
+        result: envelope.result,
+      });
+    }
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed during the transaction.");
+    }
+
+    // The validated working tree is now held in parent memory. Close the
+    // child-visible tree before creating any commit or recovery material.
+    const transactionCleanup =
+      generatedReviewRemoveTrackedRootWithinParent(
+        outputParent,
+        transactionRoot,
+        transactionIdentity,
+      );
+    transactionIdentity = null;
+    if (!transactionCleanup.found || transactionCleanup.relocated) {
+      throw new Error("Review transaction root changed.");
+    }
+
+    commitRoot = fs.mkdtempSync(
+      path.join(outputParent, ".generated-review-commit-"),
+    );
+    fs.chmodSync(commitRoot, 0o700);
+    commitIdentity = generatedReviewDirectoryIdentity(commitRoot);
+    const commitCandidate = path.join(commitRoot, "candidate");
+    const commitBackup = path.join(commitRoot, "trusted-backup");
+    generatedReviewMaterializeDirectoryImage(
+      commitCandidate,
+      workingImage,
+    );
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed before transaction commit.");
+    }
+    if (outputExisted) {
+      fs.renameSync(resolvedOutputDir, commitBackup);
+      canonicalDetached = true;
+    } else if (generatedReviewPathEntryExists(resolvedOutputDir)) {
+      throw new Error("Review output changed before transaction commit.");
+    }
+    if (generatedReviewPathEntryExists(resolvedOutputDir)) {
+      throw new Error("Review output changed during transaction commit.");
+    }
+    fs.renameSync(commitCandidate, resolvedOutputDir);
+    committed = true;
+    const committedImage =
+      generatedReviewCaptureDirectoryImage(resolvedOutputDir);
+    if (!generatedReviewImagesEqual(workingImage, committedImage)) {
+      throw new Error("Review output changed during transaction commit.");
+    }
+    const commitCleanup = generatedReviewRemoveTrackedRootWithinParent(
+      outputParent,
+      commitRoot,
+      commitIdentity,
+    );
+    commitIdentity = null;
+    if (!commitCleanup.found || commitCleanup.relocated) {
+      throw new Error("Review transaction commit root changed.");
+    }
+    return envelope.result;
+  } catch (operationError) {
+    let rollbackFailed = false;
+    if (
+      canonicalDetached ||
+      committed ||
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      try {
+        generatedReviewRestoreFromTrustedImage(
+          resolvedOutputDir,
+          trustedImage,
+          outputParent,
+        );
+      } catch {
+        rollbackFailed = true;
+      }
+    }
+    for (const [trackedPath, trackedIdentity] of [
+      [transactionRoot, transactionIdentity],
+      [commitRoot, commitIdentity],
+    ]) {
+      if (!trackedPath || !trackedIdentity) continue;
+      try {
+        generatedReviewRemoveTrackedRootWithinParent(
+          outputParent,
+          trackedPath,
+          trackedIdentity,
+        );
+      } catch {
+        rollbackFailed = true;
+      }
+    }
+    if (rollbackFailed) {
+      const rollbackError = new Error(
+        options.rollbackFailureMessage ||
+          "Review output transaction could not be restored safely.",
+      );
+      rollbackError[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] = "rollback";
+      throw rollbackError;
+    }
+    const transactionError = new Error(
+      options.failureMessage || "Review output transaction failed safely.",
+    );
+    transactionError[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] = "operation";
+    transactionError[GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR] =
+      operationError;
+    throw transactionError;
+  }
+}
+
+function generatedReviewMappedOperationFailure(error, options, fallback) {
+  if (
+    error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] !== "operation" ||
+    typeof options.mapOperationError !== "function"
+  ) {
+    return fallback;
+  }
+  try {
+    const candidate = options.mapOperationError(
+      error[GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR],
+    );
+    if (
+      typeof candidate !== "string" ||
+      !candidate ||
+      candidate.length > 512 ||
+      /[\\/\u0000-\u001f\u007f]/.test(candidate) ||
+      /Traceback|\bFile\s+["']|file:|~[\\/]/i.test(candidate)
+    ) {
+      return fallback;
+    }
+    return candidate;
+  } catch {
+    return fallback;
+  }
+}
+
+function withGeneratedReviewOutputTransaction(
+  outputDir,
+  operation,
+  options = {},
+) {
+  const failureMessage =
+    options.failureMessage || "Review output transaction failed safely.";
+  const rollbackFailureMessage =
+    options.rollbackFailureMessage ||
+    "Review output transaction could not be restored safely.";
+  try {
+    return generatedReviewRunOutputTransaction(outputDir, operation, {
+      ...options,
+      failureMessage,
+      rollbackFailureMessage,
+    });
+  } catch (error) {
+    const rollbackFailed =
+      error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] === "rollback";
+    const publicMessage = rollbackFailed
+      ? rollbackFailureMessage
+      : generatedReviewMappedOperationFailure(
+          error,
+          options,
+          failureMessage,
+        );
+    throw new Error(publicMessage);
+  }
+}
+
+// Limitation: this is a bounded transaction contract, not an OS sandbox.
+// Same-identity code can copy or move data outside the output parent and a
+// hostile background descendant can mutate canonical output after return.
+// The parent restores canonical bytes/modes from memory and removes a renamed
+// transaction sibling by inode inside the bounded output parent; deleting
+// arbitrary external copies requires an OS sandbox or a separate identity.
+// END GENERATED REVIEW OUTPUT TRANSACTION
+
 function resolveDecisionOutputPath(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
   const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
@@ -717,15 +1799,749 @@ function buildUiDecisions(inputArgs) {
   };
 }
 
+function reviewIntegerOrZero(value) {
+  return Number.isInteger(value) ? value : 0;
+}
+
+function reviewResponseMatches(result, expected) {
+  if (!isPlainObject(result) || !isPlainObject(expected)) return false;
+  const resultKeys = Object.keys(result).sort();
+  const expectedKeys = Object.keys(expected).sort();
+  return (
+    JSON.stringify(resultKeys) === JSON.stringify(expectedKeys) &&
+    expectedKeys.every(
+      (key) => JSON.stringify(result[key]) === JSON.stringify(expected[key]),
+    )
+  );
+}
+
+const AUDIT_REVIEW_TRANSACTION_STATE = Symbol(
+  "audit-review-transaction-state",
+);
+
+function cloneAuditReviewTransactionValue(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function auditReviewTransactionJsonFromImage(image, relativePath) {
+  const entry = image?.files?.find((candidate) => candidate.path === relativePath);
+  if (!entry) return null;
+  try {
+    const parsed = JSON.parse(entry.payload.toString("utf8"));
+    return isPlainObject(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function auditReviewStableJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map((entry) => auditReviewStableJson(entry)).join(",")}]`;
+  }
+  if (isPlainObject(value)) {
+    return `{${Object.keys(value)
+      .sort()
+      .map(
+        (key) => `${JSON.stringify(key)}:${auditReviewStableJson(value[key])}`,
+      )
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function auditReviewCanonicalSha256(value) {
+  return crypto
+    .createHash("sha256")
+    .update(auditReviewStableJson(value), "utf8")
+    .digest("hex");
+}
+
+function auditReviewPythonCandidates() {
+  const candidates = [
+    process.env.AUDIT_RECONCILIATION_PYTHON,
+    process.env.VIRTUAL_ENV
+      ? path.join(
+          process.env.VIRTUAL_ENV,
+          process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+        )
+      : null,
+    path.resolve(
+      PLUGIN_ROOT,
+      "..",
+      "..",
+      ".venv",
+      process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+    ),
+    path.resolve(
+      process.cwd(),
+      ".venv",
+      process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+    ),
+    process.platform === "win32" ? "python.exe" : "python3",
+    process.platform === "win32" ? "py.exe" : "python",
+  ];
+  return Array.from(
+    new Set(candidates.filter((candidate) => typeof candidate === "string" && candidate)),
+  );
+}
+
+function auditReviewPythonBridge(command, ...args) {
+  const scriptPath = path.join(
+    PLUGIN_ROOT,
+    "scripts",
+    "audit_assurance.py",
+  );
+  for (const executable of auditReviewPythonCandidates()) {
+    const replay = childProcess.spawnSync(
+      executable,
+      ["-I", "-B", scriptPath, command, ...args],
+      {
+        encoding: "utf8",
+        maxBuffer: 64 * 1024 * 1024,
+        timeout: 120_000,
+        windowsHide: true,
+      },
+    );
+    if (replay.error?.code === "ENOENT") continue;
+    if (replay.error || replay.status !== 0) {
+      throw new Error("Complete assurance replay failed.");
+    }
+    let payload;
+    try {
+      payload = JSON.parse(replay.stdout);
+    } catch {
+      throw new Error("Complete assurance replay failed.");
+    }
+    if (
+      !isPlainObject(payload) ||
+      payload.ok !== true
+    ) {
+      throw new Error("Complete assurance replay failed.");
+    }
+    return payload;
+  }
+  throw new Error("Complete assurance replay runtime is unavailable.");
+}
+
+function auditReviewReplayAssuranceWithPython(
+  outputDir,
+  expectedPredecessorCheckpoint,
+) {
+  const bridgeArgs = [outputDir];
+  if (expectedPredecessorCheckpoint) {
+    bridgeArgs.push(
+      "--expected-predecessor-checkpoint",
+      expectedPredecessorCheckpoint,
+    );
+  }
+  const payload = auditReviewPythonBridge("validate-run-json", ...bridgeArgs);
+  if (
+    !isPlainObject(payload.assurance) ||
+    !isPlainObject(payload.result)
+  ) {
+    throw new Error("Complete assurance replay failed.");
+  }
+  return payload;
+}
+
+function auditReviewReplayAssurance(
+  outputDir,
+  decisionFingerprint,
+  expectedPredecessorCheckpoint,
+) {
+  const replay = auditReviewReplayAssuranceWithPython(
+    outputDir,
+    expectedPredecessorCheckpoint,
+  );
+  const assurance = replay.assurance;
+  const gates = assurance.gate_register;
+  const authority = assurance.professional_review_authority;
+  const result = replay.result;
+  const semantic = gates?.gates?.semantic_review;
+  const reporting = gates?.gates?.reporting;
+  const reportReady =
+    gates.report_ready === true &&
+    ["passed", "not_applicable"].includes(semantic?.status) &&
+    reporting?.status === "passed";
+  const successorReplayed =
+    reportReady &&
+    authority.origin === "applied_decisions" &&
+    authority.decision_fingerprint === decisionFingerprint;
+  return {
+    assurance,
+    authority,
+    result,
+    reportReady,
+    successorReplayed,
+  };
+}
+
+function auditReviewDecisionFingerprint(reviewPayload, effects) {
+  const itemById = new Map(
+    (reviewPayload.items || [])
+      .filter((item) => isPlainObject(item) && shortString(item.id))
+      .map((item) => [String(item.id), item]),
+  );
+  const records = effects.map((effect) => {
+    const item = itemById.get(String(effect.item_id)) || {};
+    const data = isPlainObject(item.data) ? item.data : {};
+    let recordId = shortString(data.record_id);
+    if (!recordId && shortString(data.target_id_field) === "record_id") {
+      recordId = shortString(data.target_record_id);
+    }
+    return {
+      item_id: effect.item_id ?? null,
+      record_id: recordId || null,
+      action: effect.action ?? null,
+      edit_value: effect.edit_value ?? null,
+      requested_documents: Array.isArray(effect.requested_documents)
+        ? effect.requested_documents
+        : [],
+    };
+  });
+  records.sort((left, right) =>
+    String(left.item_id) < String(right.item_id)
+      ? -1
+      : String(left.item_id) > String(right.item_id)
+        ? 1
+        : 0,
+  );
+  return auditReviewCanonicalSha256({
+    run_id: reviewPayload.run_id ?? null,
+    decisions: records,
+  });
+}
+
+function auditReviewProfessionalAuthority(
+  reviewPayload,
+  effects,
+  reviewer,
+  decisionFingerprint,
+  replay,
+) {
+  const currentRecords = Array.isArray(replay.authority?.records)
+    ? replay.authority.records
+    : [];
+  const metadataById = new Map(
+    currentRecords
+      .filter((record) => isPlainObject(record) && shortString(record.record_id))
+      .map((record) => [String(record.record_id), record]),
+  );
+  const expectedIds = (replay.result.reconciliation_rows || [])
+    .filter(
+      (record) =>
+        isPlainObject(record) &&
+        shortString(record.record_id) &&
+        shortString(record.reconciliation_status).toLowerCase() !==
+          "out_of_scope",
+    )
+    .map((record) => String(record.record_id));
+  if (new Set(expectedIds).size !== expectedIds.length) {
+    throw new Error("Professional review source-row identities are not unique.");
+  }
+  const itemById = new Map(
+    (reviewPayload.items || [])
+      .filter((item) => isPlainObject(item) && shortString(item.id))
+      .map((item) => [String(item.id), item]),
+  );
+  const effectByRecord = new Map();
+  for (const effect of effects) {
+    const item = itemById.get(String(effect.item_id)) || {};
+    const data = isPlainObject(item.data) ? item.data : {};
+    let recordId = shortString(data.record_id);
+    if (!recordId && shortString(data.target_id_field) === "record_id") {
+      recordId = shortString(data.target_record_id);
+    }
+    if (!recordId) continue;
+    if (effectByRecord.has(recordId)) {
+      throw new Error(
+        `Professional review has duplicate decisions for ${recordId}.`,
+      );
+    }
+    effectByRecord.set(recordId, effect);
+  }
+  const records = expectedIds.map((recordId) => {
+    const prior = metadataById.get(recordId);
+    if (!prior) {
+      throw new Error(
+        `Professional review authority omits source row ${recordId}.`,
+      );
+    }
+    const action = effectByRecord.get(recordId)?.action;
+    return {
+      record_id: recordId,
+      review_status:
+        action === "accept" ? "PASS" : action === "reject" ? "FAIL" : "UNRESOLVED",
+      reviewer_ref: reviewer || prior.reviewer_ref || "reviewer.local",
+      reviewed_on:
+        prior.reviewed_on || String(replay.assurance.run_date || "").slice(0, 10),
+    };
+  });
+  const content = {
+    schema_version: "audit_reconciliation.professional_review.v1",
+    origin: "applied_decisions",
+    run_id: shortString(reviewPayload.run_id) || null,
+    records,
+    reviewer_ref_trust: "unsigned_untrusted_label",
+    decision_fingerprint: decisionFingerprint,
+    predecessor_assurance_sha256: replay.assurance.content_sha256,
+  };
+  return {
+    ...content,
+    content_sha256: auditReviewCanonicalSha256(content),
+  };
+}
+
+function initializeAuditReviewTransactionState(state, trustedImage, inputArgs) {
+  const persistedRunIntake = auditReviewTransactionJsonFromImage(
+    trustedImage,
+    "run_intake.json",
+  );
+  const persistedReviewPayload = auditReviewTransactionJsonFromImage(
+    trustedImage,
+    "review_payload.json",
+  );
+  const persistedFinalArtifacts = auditReviewTransactionJsonFromImage(
+    trustedImage,
+    "final_artifacts.json",
+  );
+  const persistedUiDecisions = auditReviewTransactionJsonFromImage(
+    trustedImage,
+    "ui_decisions.json",
+  );
+  if (
+    !isPlainObject(persistedRunIntake) ||
+    !isPlainObject(persistedReviewPayload) ||
+    !isPlainObject(persistedFinalArtifacts)
+  ) {
+    throw new Error(
+      "Persisted run intake, review payload, and final artifacts are required before Audit Reconciliation review writes.",
+    );
+  }
+  if (
+    auditReviewStableJson(inputArgs.run_intake) !==
+    auditReviewStableJson(persistedRunIntake)
+  ) {
+    throw new Error(
+      "Caller run intake does not match the persisted Audit Reconciliation run intake.",
+    );
+  }
+  if (
+    auditReviewStableJson(inputArgs.review_payload) !==
+    auditReviewStableJson(persistedReviewPayload)
+  ) {
+    throw new Error(
+      "Caller review payload does not match the persisted Audit Reconciliation review payload.",
+    );
+  }
+  if (
+    inputArgs.final_artifacts != null &&
+    auditReviewStableJson(inputArgs.final_artifacts) !==
+      auditReviewStableJson(persistedFinalArtifacts)
+  ) {
+    throw new Error(
+      "Caller final artifacts do not match the persisted Audit Reconciliation final artifacts.",
+    );
+  }
+  if (
+    inputArgs.ui_decisions != null &&
+    auditReviewStableJson(inputArgs.ui_decisions) !==
+      auditReviewStableJson(persistedUiDecisions)
+  ) {
+    throw new Error(
+      "Caller UI decisions do not match the persisted Audit Reconciliation UI decisions.",
+    );
+  }
+  state.baselinePaths = new Set(
+    Array.isArray(trustedImage?.files)
+      ? trustedImage.files.map((entry) => entry.path)
+      : [],
+  );
+  state.baselineRunIntake =
+    cloneAuditReviewTransactionValue(persistedRunIntake);
+  state.persistedRunIntake =
+    cloneAuditReviewTransactionValue(persistedRunIntake);
+  state.persistedReviewPayload =
+    cloneAuditReviewTransactionValue(persistedReviewPayload);
+  state.persistedFinalArtifacts =
+    cloneAuditReviewTransactionValue(persistedFinalArtifacts);
+  state.persistedUiDecisions =
+    cloneAuditReviewTransactionValue(persistedUiDecisions);
+}
+
+function auditReviewTrustedArgsForWorkingOutput(
+  inputArgs,
+  workingOutputDir,
+  state,
+) {
+  const trustedArgs = generatedReviewArgsForWorkingOutput(
+    inputArgs,
+    workingOutputDir,
+  );
+  trustedArgs.run_intake = {
+    ...cloneAuditReviewTransactionValue(state.persistedRunIntake),
+    output_dir: workingOutputDir,
+  };
+  trustedArgs.review_payload = cloneAuditReviewTransactionValue(
+    state.persistedReviewPayload,
+  );
+  trustedArgs.final_artifacts = cloneAuditReviewTransactionValue(
+    state.persistedFinalArtifacts,
+  );
+  if (state.persistedUiDecisions == null) {
+    delete trustedArgs.ui_decisions;
+  } else {
+    trustedArgs.ui_decisions = cloneAuditReviewTransactionValue(
+      state.persistedUiDecisions,
+    );
+  }
+  return trustedArgs;
+}
+
+function auditReviewParentWritePaths(
+  state,
+  revisionOutputs,
+  targetOutputs,
+  backupOutputs,
+  runIntakePath,
+) {
+  const paths = new Set([
+    "ui_decisions.json",
+    "applied_decisions.json",
+    "final_artifacts.json",
+  ]);
+  if (state.expectedProfessionalReview != null) {
+    paths.add("professional_review.json");
+  }
+  for (const output of [...revisionOutputs, ...targetOutputs]) {
+    paths.add(generatedReviewCanonicalRelativePath(output.path));
+  }
+  for (const output of backupOutputs) {
+    const relativePath = generatedReviewCanonicalRelativePath(output.path);
+    if (!state.baselinePaths.has(relativePath)) paths.add(relativePath);
+  }
+  if (runIntakePath) paths.add("run_intake.json");
+  if (state.expectedReviewHandoffContent != null) {
+    paths.add("review_handoff.md");
+  }
+  for (const relativePath of state.expectedTransitionHistoryPaths || []) {
+    paths.add(generatedReviewCanonicalRelativePath(relativePath));
+  }
+  return Array.from(paths);
+}
+
+function validateAuditParentTransactionState(
+  kind,
+  state,
+  workingOutputDir,
+  authorizedWritePaths,
+  persistedUiDecisions,
+  persistedAppliedDecisions = null,
+  persistedFinalArtifacts = null,
+) {
+  if (!state?.complete) {
+    throw new Error("Audit Reconciliation parent transaction state is incomplete.");
+  }
+  const expectedAuthorized = [...state.authorizedWritePaths].sort();
+  const observedAuthorized = Array.from(authorizedWritePaths).sort();
+  if (
+    JSON.stringify(expectedAuthorized) !== JSON.stringify(observedAuthorized)
+  ) {
+    throw new Error("Audit Reconciliation write authorization did not close.");
+  }
+  if (
+    JSON.stringify(persistedUiDecisions) !==
+    JSON.stringify(state.expectedUiDecisions)
+  ) {
+    throw new Error("Audit Reconciliation UI receipt did not close.");
+  }
+  if (kind === "apply") {
+    if (
+      JSON.stringify(persistedAppliedDecisions) !==
+        JSON.stringify(state.expectedAppliedDecisions) ||
+      JSON.stringify(persistedFinalArtifacts) !==
+        JSON.stringify(state.expectedFinalArtifacts)
+    ) {
+      throw new Error("Audit Reconciliation parent application did not close.");
+    }
+    if (state.expectedRunIntake != null) {
+      const persistedRunIntake = readJsonFileIfPresent(
+        path.join(workingOutputDir, "run_intake.json"),
+      );
+      if (
+        JSON.stringify(persistedRunIntake) !==
+        JSON.stringify(state.expectedRunIntake)
+      ) {
+        throw new Error("Audit Reconciliation run receipt did not close.");
+      }
+    }
+    if (state.expectedProfessionalReview != null) {
+      const persistedProfessionalReview = readJsonFileIfPresent(
+        path.join(workingOutputDir, "professional_review.json"),
+      );
+      if (
+        !isPlainObject(persistedProfessionalReview) ||
+        JSON.stringify(persistedProfessionalReview) !==
+          JSON.stringify(state.expectedProfessionalReview)
+      ) {
+        throw new Error(
+          "Audit Reconciliation professional review authority did not close.",
+        );
+      }
+    }
+    for (const relativePath of state.expectedTransitionHistoryPaths || []) {
+      const transitionPath = path.join(workingOutputDir, relativePath);
+      if (
+        !fs.existsSync(transitionPath) ||
+        !fs.lstatSync(transitionPath).isFile()
+      ) {
+        throw new Error(
+          "Audit Reconciliation review transition did not close.",
+        );
+      }
+    }
+    if (state.expectedReviewHandoffContent != null) {
+      const handoffPath = path.join(workingOutputDir, "review_handoff.md");
+      if (
+        !fs.existsSync(handoffPath) ||
+        fs.readFileSync(handoffPath, "utf8") !==
+          state.expectedReviewHandoffContent
+      ) {
+        throw new Error("Audit Reconciliation review handoff did not close.");
+      }
+    }
+  }
+}
+
+function validateAuditReconciliationReviewTransaction(
+  kind,
+  inputArgs,
+  context,
+  parentState,
+) {
+  const {
+    canonicalOutputDir,
+    workingOutputDir,
+    workingImage,
+    authorizedWritePaths,
+    result,
+  } = context;
+  if (!isPlainObject(result) || result.ok !== true || result.persisted !== true) {
+    throw new Error("Audit Reconciliation review transaction result is invalid.");
+  }
+  const requiredPaths =
+    kind === "save"
+      ? ["ui_decisions.json"]
+      : [
+          "ui_decisions.json",
+          "applied_decisions.json",
+          "final_artifacts.json",
+          ...(parentState.expectedProfessionalReview != null
+            ? ["professional_review.json"]
+            : []),
+        ];
+  const filePaths = new Set(workingImage.files.map((entry) => entry.path));
+  if (!requiredPaths.every((relativePath) => filePaths.has(relativePath))) {
+    throw new Error("Audit Reconciliation review transaction is incomplete.");
+  }
+  const persistedUiDecisions = readJsonFileIfPresent(
+    path.join(workingOutputDir, "ui_decisions.json"),
+  );
+  if (!isPlainObject(persistedUiDecisions)) {
+    throw new Error("Audit Reconciliation review transaction is incomplete.");
+  }
+  if (kind === "save") {
+    validateAuditParentTransactionState(
+      kind,
+      parentState,
+      workingOutputDir,
+      authorizedWritePaths,
+      persistedUiDecisions,
+    );
+    const expectedResult = {
+      ok: true,
+      validation_type: "audit_reconciliation_decisions",
+      run_id: persistedUiDecisions?.run_id,
+      decision_count: persistedUiDecisions?.decision_count,
+      item_count: persistedUiDecisions?.item_count,
+      status: persistedUiDecisions?.status,
+      persisted: true,
+      ui_decisions_path: path.join(
+        canonicalOutputDir,
+        "ui_decisions.json",
+      ),
+      message: isSpanishRuntime(inputArgs)
+        ? `Se han guardado ${persistedUiDecisions?.decision_count} decisiones de Audit Reconciliation.`
+        : `Saved ${persistedUiDecisions?.decision_count} Audit Reconciliation decisions.`,
+      ui_decisions: persistedUiDecisions,
+    };
+    if (!reviewResponseMatches(result, expectedResult)) {
+      throw new Error("Audit Reconciliation saved decisions did not close.");
+    }
+  } else {
+    const persistedAppliedDecisions = readJsonFileIfPresent(
+      path.join(workingOutputDir, "applied_decisions.json"),
+    );
+    const persistedFinalArtifacts = readJsonFileIfPresent(
+      path.join(workingOutputDir, "final_artifacts.json"),
+    );
+    if (
+      !isPlainObject(persistedAppliedDecisions) ||
+      !isPlainObject(persistedFinalArtifacts)
+    ) {
+      throw new Error(
+        "Audit Reconciliation review transaction is incomplete.",
+      );
+    }
+    validateAuditParentTransactionState(
+      kind,
+      parentState,
+      workingOutputDir,
+      authorizedWritePaths,
+      persistedUiDecisions,
+      persistedAppliedDecisions,
+      persistedFinalArtifacts,
+    );
+    if (
+      JSON.stringify(persistedAppliedDecisions) !==
+        JSON.stringify(result.applied_decisions) ||
+      JSON.stringify(persistedFinalArtifacts) !==
+        JSON.stringify(result.final_artifacts)
+    ) {
+      throw new Error("Audit Reconciliation applied decisions did not close.");
+    }
+    if (
+      persistedUiDecisions.run_id !== persistedAppliedDecisions.run_id ||
+      persistedUiDecisions.decision_count !==
+        persistedAppliedDecisions.decision_count ||
+      JSON.stringify(persistedUiDecisions.decisions) !==
+        JSON.stringify(persistedAppliedDecisions.decisions)
+    ) {
+      throw new Error(
+        "Audit Reconciliation review decision state did not close.",
+      );
+    }
+    const expectedResult = {
+      ok: true,
+      validation_type: "audit_reconciliation_application",
+      run_id: persistedAppliedDecisions.run_id,
+      decision_count: persistedAppliedDecisions.decision_count,
+      item_count: persistedAppliedDecisions.item_count,
+      blocker_count: persistedAppliedDecisions.blocker_count,
+      revision_count: persistedAppliedDecisions.revision_count,
+      target_update_count: persistedAppliedDecisions.target_update_count,
+      structured_update_count:
+        persistedAppliedDecisions.structured_update_count,
+      native_regeneration_count:
+        persistedAppliedDecisions.native_regeneration_count,
+      native_regenerated_count: reviewIntegerOrZero(
+        persistedAppliedDecisions.native_regenerated_count,
+      ),
+      application_status: persistedAppliedDecisions.application_status,
+      persisted: true,
+      ui_decisions_path: path.join(
+        canonicalOutputDir,
+        "ui_decisions.json",
+      ),
+      applied_decisions_path: path.join(
+        canonicalOutputDir,
+        "applied_decisions.json",
+      ),
+      final_artifacts_path: path.join(
+        canonicalOutputDir,
+        "final_artifacts.json",
+      ),
+      professional_review_path:
+        parentState.expectedProfessionalReview != null
+          ? path.join(canonicalOutputDir, "professional_review.json")
+          : null,
+      run_intake_path: path.join(canonicalOutputDir, "run_intake.json"),
+      message: isSpanishRuntime(inputArgs)
+        ? `Se han aplicado ${persistedAppliedDecisions.decision_count} decisiones de Audit Reconciliation.`
+        : `Applied ${persistedAppliedDecisions.decision_count} Audit Reconciliation decisions.`,
+      applied_decisions: persistedAppliedDecisions,
+      final_artifacts: persistedFinalArtifacts,
+    };
+    if (!reviewResponseMatches(result, expectedResult)) {
+      throw new Error("Audit Reconciliation response did not close.");
+    }
+  }
+}
+
+function workflowReviewTransactionOptions(kind, inputArgs, parentState) {
+  return {
+    validateWholeTree: (context) =>
+      validateAuditReconciliationReviewTransaction(
+        kind,
+        inputArgs,
+        context,
+        parentState,
+      ),
+    mapOperationError: (error) => error?.message,
+  };
+}
+
 function saveDecisionPayload(inputArgs) {
+  const materializedArgs = materializeInputArgs(inputArgs);
+  const canonicalOutputDir = resolveRunOutputDir(materializedArgs);
+  if (!canonicalOutputDir) return saveDecisionPayloadWrites(materializedArgs);
+  const parentState = {};
+  const workflowOptions = workflowReviewTransactionOptions(
+    "save",
+    materializedArgs,
+    parentState,
+  );
+  return withGeneratedReviewOutputTransaction(
+    canonicalOutputDir,
+    ({ workingOutputDir, trustedImage }) => {
+      initializeAuditReviewTransactionState(
+        parentState,
+        trustedImage,
+        materializedArgs,
+      );
+      const workingArgs = auditReviewTrustedArgsForWorkingOutput(
+        materializedArgs,
+        workingOutputDir,
+        parentState,
+      );
+      Object.defineProperty(workingArgs, AUDIT_REVIEW_TRANSACTION_STATE, {
+        value: parentState,
+      });
+      const workingResult = saveDecisionPayloadWrites(workingArgs);
+      const canonicalResult = generatedReviewRewriteOutputPaths(
+        workingResult,
+        workingOutputDir,
+        canonicalOutputDir,
+      );
+      return generatedReviewTransactionEnvelope(
+        canonicalResult,
+        parentState.authorizedWritePaths,
+      );
+    },
+    {
+      ...workflowOptions,
+      failureMessage:
+        "Audit Reconciliation review save transaction failed safely.",
+      rollbackFailureMessage:
+        "Audit Reconciliation review save transaction could not be restored safely.",
+    },
+  );
+}
+
+function saveDecisionPayloadWrites(inputArgs) {
+  const parentState = inputArgs[AUDIT_REVIEW_TRANSACTION_STATE] || null;
   const { uiDecisions, decisionOutputPath, materializedArgs } = buildUiDecisions(inputArgs);
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      decisionOutputPath,
+      `${JSON.stringify(uiDecisions, null, 2)}\n`,
+      "utf8",
+    );
     persisted = true;
   }
-  return {
+  const result = {
     ok: true,
     validation_type: "audit_reconciliation_decisions",
     run_id: uiDecisions.run_id,
@@ -743,6 +2559,13 @@ function saveDecisionPayload(inputArgs) {
         : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
     ui_decisions: uiDecisions,
   };
+  if (parentState) {
+    parentState.expectedUiDecisions =
+      cloneAuditReviewTransactionValue(uiDecisions);
+    parentState.authorizedWritePaths = ["ui_decisions.json"];
+    parentState.complete = true;
+  }
+  return result;
 }
 
 function resolveRunOutputDir(inputArgs) {
@@ -1002,7 +2825,7 @@ function updateCsvArtifact(filePath, effect, spec) {
       `CSV structured edit expected exactly one row for ${spec.idField}=${spec.recordId}, found ${updated}`,
     );
   }
-  fs.writeFileSync(filePath, serializeCsv(rows), "utf8");
+  generatedReviewAtomicWriteFileSync(filePath, serializeCsv(rows), "utf8");
   return { updatedRows: updated, rowCount: Math.max(rows.length - 1, 0) };
 }
 
@@ -1010,18 +2833,30 @@ function updateJsonArtifact(filePath, effect, spec) {
   const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
   if (Array.isArray(parsed)) {
     const updatedRows = updateMatchingRecord(parsed, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows, rowCount: parsed.length };
   }
   if (isPlainObject(parsed) && spec.recordsKey && Array.isArray(parsed[spec.recordsKey])) {
     const records = parsed[spec.recordsKey];
     const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows, rowCount: records.length };
   }
   if (isPlainObject(parsed) && String(parsed[spec.idField] ?? "") === spec.recordId) {
     parsed[spec.targetField] = effect.edit_value;
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows: 1, rowCount: 1 };
   }
   throw new Error("JSON structured edit requires an object, array, or explicit records_key array");
@@ -1034,7 +2869,11 @@ function updateJsonlArtifact(filePath, effect, spec) {
     .filter((line) => line.trim())
     .map((line) => JSON.parse(line));
   const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-  fs.writeFileSync(filePath, `${records.map((record) => JSON.stringify(record)).join("\n")}\n`, "utf8");
+  generatedReviewAtomicWriteFileSync(
+    filePath,
+    `${records.map((record) => JSON.stringify(record)).join("\n")}\n`,
+    "utf8",
+  );
   return { updatedRows, rowCount: records.length };
 }
 
@@ -1103,8 +2942,11 @@ function appendReviewApplicationExecutionTrace(
   finalArtifacts,
 ) {
   if (!outputDir) return null;
+  const parentState = inputArgs[AUDIT_REVIEW_TRANSACTION_STATE] || null;
   const runIntakePath = path.join(outputDir, "run_intake.json");
-  const current = readJsonFileIfPresent(runIntakePath) ||
+  const current = cloneAuditReviewTransactionValue(
+    parentState?.baselineRunIntake,
+  ) || readJsonFileIfPresent(runIntakePath) ||
     (isPlainObject(inputArgs.run_intake) ? { ...inputArgs.run_intake } : null);
   if (!current) return null;
   const trace = Array.isArray(current.execution_trace) ? [...current.execution_trace] : [];
@@ -1125,7 +2967,15 @@ function appendReviewApplicationExecutionTrace(
   });
   const updated = { ...current, execution_trace: trace };
   fs.mkdirSync(path.dirname(runIntakePath), { recursive: true });
-  fs.writeFileSync(runIntakePath, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
+  generatedReviewAtomicWriteFileSync(
+    runIntakePath,
+    `${JSON.stringify(updated, null, 2)}\n`,
+    "utf8",
+  );
+  if (parentState) {
+    parentState.expectedRunIntake =
+      cloneAuditReviewTransactionValue(updated);
+  }
   return runIntakePath;
 }
 
@@ -1288,7 +3138,11 @@ function writeRevisionArtifacts(outputDir, effects) {
     const relativePath = revisionRelativePath(effect);
     const absolutePath = path.join(outputDir, relativePath);
     fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
-    fs.writeFileSync(absolutePath, effect.edit_value, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      absolutePath,
+      effect.edit_value,
+      "utf8",
+    );
     effect.revision_artifact = relativePath;
     effect.artifact_update = "revision_artifact_written";
     revisionOutputs.push({
@@ -1310,16 +3164,26 @@ function writeDirectTextArtifactUpdates(outputDir, effects) {
     if (effect.action !== "edit" || !effect.edit_value) continue;
     if (!canDirectlyUpdateTextArtifact(effect.target_artifact)) continue;
     const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
-    if (!target || !fs.existsSync(target.absolutePath)) continue;
-    const stat = fs.statSync(target.absolutePath);
-    if (!stat.isFile()) continue;
+    if (!target) continue;
+    const stat = generatedReviewPathEntryStat(target.absolutePath);
+    if (!stat) continue;
+    if (stat.isSymbolicLink() || !stat.isFile() || stat.nlink !== 1) {
+      throw new Error("Audit Reconciliation review target is unsafe.");
+    }
     const backupRelativePath = originalBackupRelativePath(effect, target.relativePath);
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.writeFileSync(backupAbsolutePath, fs.readFileSync(target.absolutePath, "utf8"), "utf8");
+      generatedReviewAtomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath),
+      );
     }
-    fs.writeFileSync(target.absolutePath, effect.edit_value, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      target.absolutePath,
+      effect.edit_value,
+      "utf8",
+    );
     effect.target_artifact = target.relativePath;
     effect.original_artifact_backup = backupRelativePath;
     effect.artifact_update = "target_artifact_updated";
@@ -1350,14 +3214,20 @@ function writeStructuredArtifactUpdates(outputDir, effects) {
     if (!spec) continue;
     if (!canUpdateStructuredArtifact(effect.target_artifact)) continue;
     const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
-    if (!target || !fs.existsSync(target.absolutePath)) continue;
-    const stat = fs.statSync(target.absolutePath);
-    if (!stat.isFile()) continue;
+    if (!target) continue;
+    const stat = generatedReviewPathEntryStat(target.absolutePath);
+    if (!stat) continue;
+    if (stat.isSymbolicLink() || !stat.isFile() || stat.nlink !== 1) {
+      throw new Error("Audit Reconciliation structured review target is unsafe.");
+    }
     const backupRelativePath = originalBackupRelativePath(effect, target.relativePath);
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.copyFileSync(target.absolutePath, backupAbsolutePath);
+      generatedReviewAtomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath),
+      );
     }
     const extension = path.extname(target.relativePath).toLowerCase();
     const result =
@@ -1454,9 +3324,45 @@ function nativeRegenerationPathsForEffect(effect) {
   return Array.from(new Set(paths.map(artifactPathKey).filter(Boolean)));
 }
 
-function statusFromEffects(effects, itemCount) {
+function completionBlockers(reviewPayload, effects, successorReplayed = false) {
+  const blockers = [];
+  const summary = isPlainObject(reviewPayload.summary) ? reviewPayload.summary : {};
+  if (summary.checks_pass === false || Number(summary.failed_check_count || 0) > 0) {
+    blockers.push({
+      kind: "failed_deterministic_checks",
+      detail: "Failed deterministic checks require correction and rerun.",
+    });
+  }
+  const effectById = new Map(effects.map((effect) => [effect.item_id, effect]));
+  for (const item of reviewPayload.items || []) {
+    if (!isPlainObject(item) || !REQUIRED_REVIEW_ITEM_TYPES.has(item.item_type)) continue;
+    const effect = effectById.get(item.id);
+    if (!effect) {
+      blockers.push({
+        kind: "pending_required_review",
+        detail: `Required review item remains pending: ${item.id}`,
+      });
+    } else if (effect.action === "skip") {
+      blockers.push({
+        kind: "skipped_required_review",
+        detail: `Required review item was skipped: ${item.id}`,
+      });
+    }
+  }
+  if (!successorReplayed) {
+    blockers.push({
+      kind: "assurance_replay_required",
+      detail:
+        "Reviewed decisions require native regeneration and a fresh successor assurance receipt replay before final readiness.",
+    });
+  }
+  return blockers;
+}
+
+function statusFromEffects(effects, itemCount, completionGateBlockers) {
   if (!effects.length) return "pending_review";
   if (effects.some((effect) => effect.requires_followup)) return "blocked";
+  if (completionGateBlockers.length) return "blocked";
   if (effects.some((effect) => effect.requires_native_regeneration)) return "partial_review_applied";
   if (effects.length < itemCount) return "partial_review_applied";
   return "final_ready";
@@ -1534,7 +3440,12 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
           `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
           `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
         ].join("\n");
-    fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
+    const handoffContent = `${text}\n`;
+    generatedReviewAtomicWriteFileSync(handoffPath, handoffContent, "utf8");
+    const parentState = inputArgs[AUDIT_REVIEW_TRANSACTION_STATE] || null;
+    if (parentState) {
+      parentState.expectedReviewHandoffContent = handoffContent;
+    }
   }
   return reviewHandoffOutputRecord();
 }
@@ -1565,11 +3476,25 @@ function finalArtifactsWithApplication(
     kind: "json",
     status: appliedDecisions.application_status,
   });
+  if (isPlainObject(appliedDecisions.professional_review)) {
+    upsertOutput({
+      path: "professional_review.json",
+      kind: "json",
+      status: appliedDecisions.professional_review.successor_assurance_replayed
+        ? "successor_assurance_replayed"
+        : "review_authority_persisted",
+    });
+  }
   for (const output of revisionOutputs) upsertOutput(output);
   for (const output of targetOutputs) upsertOutput(output);
   for (const output of backupOutputs) upsertOutput(output);
   for (const output of nativeRegenerationOutputs) upsertOutput(output);
-  const blockers = effectsToBlockers(appliedDecisions.effects);
+  const blockers = [
+    ...effectsToBlockers(appliedDecisions.effects),
+    ...(Array.isArray(appliedDecisions.completion_blockers)
+      ? appliedDecisions.completion_blockers
+      : []),
+  ];
   return {
     schema_version: current.schema_version || reviewPayload.schema_version || "1.0",
     plugin: current.plugin || reviewPayload.plugin,
@@ -1592,6 +3517,9 @@ function finalArtifactsWithApplication(
       decision_count: appliedDecisions.decision_count,
       item_count: appliedDecisions.item_count,
       blocker_count: appliedDecisions.blocker_count,
+      completion_blockers: Array.isArray(appliedDecisions.completion_blockers)
+        ? appliedDecisions.completion_blockers
+        : [],
       revision_count: revisionOutputs.length,
       revision_paths: revisionOutputs.map((output) => output.path),
       target_update_count: targetOutputs.length,
@@ -1602,6 +3530,18 @@ function finalArtifactsWithApplication(
       native_regeneration_paths: appliedDecisions.native_regeneration_paths || [],
       original_backup_paths: backupOutputs.map((output) => output.path),
       applied_decisions_path: "applied_decisions.json",
+      professional_review_path: isPlainObject(
+        appliedDecisions.professional_review,
+      )
+        ? "professional_review.json"
+        : null,
+      decision_fingerprint: isPlainObject(
+        appliedDecisions.professional_review,
+      )
+        ? appliedDecisions.professional_review.decision_fingerprint
+        : null,
+      successor_assurance_replayed:
+        appliedDecisions.professional_review?.successor_assurance_replayed === true,
     },
   };
 }
@@ -1665,6 +3605,54 @@ function nextActionsWithReviewApplication(
 }
 
 function applyDecisionPayload(inputArgs) {
+  const materializedArgs = materializeInputArgs(inputArgs);
+  const canonicalOutputDir = resolveRunOutputDir(materializedArgs);
+  if (!canonicalOutputDir) return applyDecisionPayloadWrites(materializedArgs);
+  const parentState = {};
+  const workflowOptions = workflowReviewTransactionOptions(
+    "apply",
+    materializedArgs,
+    parentState,
+  );
+  return withGeneratedReviewOutputTransaction(
+    canonicalOutputDir,
+    ({ workingOutputDir, trustedImage }) => {
+      initializeAuditReviewTransactionState(
+        parentState,
+        trustedImage,
+        materializedArgs,
+      );
+      const workingArgs = auditReviewTrustedArgsForWorkingOutput(
+        materializedArgs,
+        workingOutputDir,
+        parentState,
+      );
+      Object.defineProperty(workingArgs, AUDIT_REVIEW_TRANSACTION_STATE, {
+        value: parentState,
+      });
+      const workingResult = applyDecisionPayloadWrites(workingArgs);
+      const canonicalResult = generatedReviewRewriteOutputPaths(
+        workingResult,
+        workingOutputDir,
+        canonicalOutputDir,
+      );
+      return generatedReviewTransactionEnvelope(
+        canonicalResult,
+        parentState.authorizedWritePaths,
+      );
+    },
+    {
+      ...workflowOptions,
+      failureMessage:
+        "Audit Reconciliation review apply transaction failed safely.",
+      rollbackFailureMessage:
+        "Audit Reconciliation review apply transaction could not be restored safely.",
+    },
+  );
+}
+
+function applyDecisionPayloadWrites(inputArgs) {
+  const parentState = inputArgs[AUDIT_REVIEW_TRANSACTION_STATE] || null;
   const { uiDecisions, decisionOutputPath, materializedArgs } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
@@ -1674,11 +3662,74 @@ function applyDecisionPayload(inputArgs) {
     buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
   );
   const outputDir = resolveRunOutputDir(inputArgs);
+  const decisionFingerprint = auditReviewDecisionFingerprint(
+    reviewPayload,
+    effects,
+  );
+  const expectedPredecessorCheckpoint = shortString(
+    inputArgs.expected_predecessor_checkpoint,
+  );
+  let assuranceReplay = null;
+  if (
+    outputDir &&
+    fs.existsSync(path.join(outputDir, "assurance_receipts.json"))
+  ) {
+    if (!/^[0-9a-f]{64}$/.test(expectedPredecessorCheckpoint)) {
+      throw new Error(
+        "An external expected predecessor checkpoint is required.",
+      );
+    }
+    assuranceReplay = auditReviewReplayAssurance(
+      outputDir,
+      decisionFingerprint,
+      expectedPredecessorCheckpoint,
+    );
+    if (
+      assuranceReplay.authority?.origin !== "applied_decisions" &&
+      assuranceReplay.assurance.content_sha256 !== expectedPredecessorCheckpoint
+    ) {
+      throw new Error(
+        "External expected predecessor checkpoint does not match.",
+      );
+    }
+  }
+  const successorReplayed = assuranceReplay?.successorReplayed === true;
+  const professionalReview = assuranceReplay
+    ? successorReplayed
+      ? assuranceReplay.authority
+      : auditReviewProfessionalAuthority(
+          reviewPayload,
+          effects,
+          shortString(uiDecisions.reviewer),
+          decisionFingerprint,
+          assuranceReplay,
+        )
+    : null;
+  let transitionCaptureDir = null;
+  if (outputDir && assuranceReplay && !successorReplayed) {
+    transitionCaptureDir = fs.mkdtempSync(
+      path.join(
+        path.dirname(outputDir),
+        ".audit-review-transition-capture-",
+      ),
+    );
+    fs.chmodSync(transitionCaptureDir, 0o700);
+    auditReviewPythonBridge(
+      "capture-review-transition-json",
+      outputDir,
+      transitionCaptureDir,
+      "--expected-predecessor-checkpoint",
+      expectedPredecessorCheckpoint,
+    );
+  }
   const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
   const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
   const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
   const appliedOutputPath = resolveAppliedDecisionOutputPath(inputArgs);
   const finalArtifactsPath = resolveFinalArtifactsOutputPath(inputArgs);
+  const professionalReviewPath = outputDir && professionalReview
+    ? path.join(outputDir, "professional_review.json")
+    : null;
   const currentFinalArtifacts = currentFinalArtifactsForApplication(inputArgs, finalArtifactsPath);
   const nativeRegenerationOutputs = [
     ...markNativeRegenerationPending(effects),
@@ -1692,8 +3743,19 @@ function applyDecisionPayload(inputArgs) {
   const nativeRegenerationPaths = Array.from(
     new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
   );
-  const blockerCount = effects.filter((effect) => effect.requires_followup).length;
-  const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
+  const completionGateBlockers = completionBlockers(
+    reviewPayload,
+    effects,
+    successorReplayed,
+  );
+  const blockerCount =
+    effects.filter((effect) => effect.requires_followup).length +
+    completionGateBlockers.length;
+  const applicationStatus = statusFromEffects(
+    effects,
+    reviewPayload.items.length,
+    completionGateBlockers,
+  );
   const appliedDecisions = {
     schema_version: reviewPayload.schema_version,
     plugin: reviewPayload.plugin,
@@ -1711,6 +3773,7 @@ function applyDecisionPayload(inputArgs) {
     decision_count: uiDecisions.decision_count,
     item_count: reviewPayload.items.length,
     blocker_count: blockerCount,
+    completion_blockers: completionGateBlockers,
     revision_count: revisionOutputs.length,
     revision_paths: revisionOutputs.map((output) => output.path),
     target_update_count: targetOutputs.length,
@@ -1722,6 +3785,13 @@ function applyDecisionPayload(inputArgs) {
     original_backup_paths: backupOutputs.map((output) => output.path),
     application_status: applicationStatus,
   };
+  if (professionalReview) {
+    appliedDecisions.professional_review = {
+      path: "professional_review.json",
+      decision_fingerprint: decisionFingerprint,
+      successor_assurance_replayed: successorReplayed,
+    };
+  }
   if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
 
   const finalArtifacts = finalArtifactsWithApplication(
@@ -1736,16 +3806,51 @@ function applyDecisionPayload(inputArgs) {
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      decisionOutputPath,
+      `${JSON.stringify(uiDecisions, null, 2)}\n`,
+      "utf8",
+    );
+  }
+  if (professionalReviewPath && !successorReplayed) {
+    generatedReviewAtomicWriteFileSync(
+      professionalReviewPath,
+      `${JSON.stringify(professionalReview, null, 2)}\n`,
+      "utf8",
+    );
   }
   if (appliedOutputPath) {
     fs.mkdirSync(path.dirname(appliedOutputPath), { recursive: true });
-    fs.writeFileSync(appliedOutputPath, `${JSON.stringify(appliedDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      appliedOutputPath,
+      `${JSON.stringify(appliedDecisions, null, 2)}\n`,
+      "utf8",
+    );
     persisted = true;
+  }
+  let transitionHistoryPaths = [];
+  if (transitionCaptureDir) {
+    const retained = auditReviewPythonBridge(
+      "retain-review-transition-json",
+      outputDir,
+      transitionCaptureDir,
+      "--expected-predecessor-checkpoint",
+      expectedPredecessorCheckpoint,
+    );
+    if (!Array.isArray(retained.history_paths)) {
+      throw new Error("Review transition replay failed.");
+    }
+    transitionHistoryPaths = retained.history_paths;
+    fs.rmSync(transitionCaptureDir, { recursive: true, force: true });
+    transitionCaptureDir = null;
   }
   if (finalArtifactsPath) {
     fs.mkdirSync(path.dirname(finalArtifactsPath), { recursive: true });
-    fs.writeFileSync(finalArtifactsPath, `${JSON.stringify(finalArtifacts, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      finalArtifactsPath,
+      `${JSON.stringify(finalArtifacts, null, 2)}\n`,
+      "utf8",
+    );
   }
   const workflowSpecificResult = applyWorkflowSpecificReviewApplication(
     outputDir,
@@ -1770,23 +3875,42 @@ function applyDecisionPayload(inputArgs) {
     responseAppliedDecisions,
     responseFinalArtifacts,
   );
-  return {
+  const result = {
     ok: true,
     validation_type: "audit_reconciliation_application",
     run_id: responseAppliedDecisions.run_id,
     decision_count: responseAppliedDecisions.decision_count,
     item_count: responseAppliedDecisions.item_count,
     blocker_count: responseAppliedDecisions.blocker_count,
-    revision_count: responseAppliedDecisions.revision_count || revisionOutputs.length,
-    target_update_count: responseAppliedDecisions.target_update_count || targetOutputs.length,
-    structured_update_count: responseAppliedDecisions.structured_update_count || structuredUpdatePaths.length,
-    native_regeneration_count: responseAppliedDecisions.native_regeneration_count || 0,
-    native_regenerated_count: responseAppliedDecisions.native_regenerated_count || 0,
-    application_status: responseAppliedDecisions.application_status || applicationStatus,
+    revision_count: Number.isInteger(responseAppliedDecisions.revision_count)
+      ? responseAppliedDecisions.revision_count
+      : revisionOutputs.length,
+    target_update_count: Number.isInteger(
+      responseAppliedDecisions.target_update_count,
+    )
+      ? responseAppliedDecisions.target_update_count
+      : targetOutputs.length,
+    structured_update_count: Number.isInteger(
+      responseAppliedDecisions.structured_update_count,
+    )
+      ? responseAppliedDecisions.structured_update_count
+      : structuredUpdatePaths.length,
+    native_regeneration_count: reviewIntegerOrZero(
+      responseAppliedDecisions.native_regeneration_count,
+    ),
+    native_regenerated_count: reviewIntegerOrZero(
+      responseAppliedDecisions.native_regenerated_count,
+    ),
+    application_status:
+      typeof responseAppliedDecisions.application_status === "string" &&
+      responseAppliedDecisions.application_status.trim()
+        ? responseAppliedDecisions.application_status
+        : applicationStatus,
     persisted,
     ui_decisions_path: decisionOutputPath,
     applied_decisions_path: persisted ? appliedOutputPath : null,
     final_artifacts_path: finalArtifactsPath,
+    professional_review_path: professionalReviewPath,
     run_intake_path: runIntakePath,
     message: isSpanishRuntime(materializedArgs)
       ? persisted
@@ -1798,6 +3922,26 @@ function applyDecisionPayload(inputArgs) {
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
+  if (parentState) {
+    parentState.expectedUiDecisions =
+      cloneAuditReviewTransactionValue(uiDecisions);
+    parentState.expectedAppliedDecisions =
+      cloneAuditReviewTransactionValue(responseAppliedDecisions);
+    parentState.expectedFinalArtifacts =
+      cloneAuditReviewTransactionValue(responseFinalArtifacts);
+    parentState.expectedProfessionalReview =
+      cloneAuditReviewTransactionValue(professionalReview);
+    parentState.expectedTransitionHistoryPaths = [...transitionHistoryPaths];
+    parentState.authorizedWritePaths = auditReviewParentWritePaths(
+      parentState,
+      revisionOutputs,
+      targetOutputs,
+      backupOutputs,
+      runIntakePath,
+    );
+    parentState.complete = true;
+  }
+  return result;
 }
 
 function applyWorkflowSpecificReviewApplication(
@@ -1869,6 +4013,9 @@ function rpcError(id, code, message) {
 }
 
 function handleRpc(message) {
+  // Recheck before every public surface so post-start expansion cannot receive
+  // a normal initialize, resource, prompt, or tool response.
+  validateImplementationTree();
   const messageId = message.id ?? null;
   const method = message.method;
   const params = isPlainObject(message.params) ? message.params : {};

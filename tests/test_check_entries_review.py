@@ -4,13 +4,13 @@ from io import BytesIO
 from typing import Mapping
 
 import polars as pl
-from polars.testing import assert_frame_equal
 import pytest
+from polars.testing import assert_frame_equal
 
 from src.check_entries_review import merge_review_feedback, pdf_bytes_for
 
 
-def test_pdf_bytes_for_bytesio_returns_data_default_name_and_resets_pointer():
+def test_pdf_bytes_for_bytesio_returns_data_default_name_without_moving_pointer():
     # Arrange
     movement = "001"
     content = b"%PDF-sample\n"
@@ -24,7 +24,7 @@ def test_pdf_bytes_for_bytesio_returns_data_default_name_and_resets_pointer():
     # Assert
     assert data == content
     assert name == f"{movement}.pdf"
-    assert buf.tell() == 0  # reset for re-reads
+    assert buf.tell() == 3
 
 
 def test_pdf_bytes_for_read_only_object_uses_name_and_resets_pointer():

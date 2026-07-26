@@ -10,6 +10,9 @@
     "assets/review-workbench-adapter.json",
     "assets/journal-sampling-review-widget.html"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "codex_context": {
     "policy": "real_case_data_may_enter_codex_context",
     "classes": [
@@ -39,11 +42,32 @@
     "local_filtering_or_aggregation": "only_when_useful_for_the_work"
   },
   "boundaries_beyond_codex": [],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "qualified-source-before-population",
+      "control": "Only a bounded source-family adapter or complete source-bound reviewed mapping may emit canonical journal rows; every monetary candidate must be disposed, generic PDF layouts abstain, and failed or unsupported qualification emits no population for sampling."
+    },
+    {
+      "id": "sealed-population-and-implementation-replay",
+      "control": "Sampling replays current original-source, captured-parse, reviewed-decision, normalized-population, implementation, and assurance receipts and blocks if the qualified population or its complete monetary disposition has changed."
+    },
+    {
+      "id": "bounded-trusted-memory-review-transaction",
+      "control": "MCP review save and apply capture the bounded canonical output tree and modes in parent-process memory, execute helpers only against a detached working tree, reject links, aliases, special or oversized entries, and restore exact trusted bytes and modes on failure."
+    },
+    {
+      "id": "parent-owned-review-authorization",
+      "control": "The MCP parent binds caller run, review, decision, and final objects to the persisted trusted snapshot, reconstructs authorized staged arguments, independently validates the persisted result and readiness, and treats helper-returned paths, effects, and status only as non-authoritative acknowledgements."
+    },
+    {
+      "id": "exact-sample-output-and-successor-chain",
+      "control": "The sample stage and each review successor seal the exact regular single-link file, directory and mode set, archive every trusted predecessor under its canonical stage identity, bind the successor to the predecessor manifest, and freshly rederive decisions, effects, counts and non-final gates before accepting save or apply."
+    }
+  ],
   "review": {
-    "reviewed_at": "2026-07-21",
+    "reviewed_at": "2026-07-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9b84d78fa73cba74b1efbd4198e8ce60cfa8f1f57907245a5b70e18775690d95"
+    "source_fingerprint": "77cf5b0994cd553d063478e8db0249fe6a145e407404da6fc241a36c1e96e70a"
   }
 }

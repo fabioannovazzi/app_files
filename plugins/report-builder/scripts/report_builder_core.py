@@ -1,17 +1,25 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
+import hashlib
 import json
 import logging
 import re
+import shutil
+import stat
 import sys
+import tempfile
 import unicodedata
 import zipfile
+from collections import Counter
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date, datetime
-from decimal import Decimal, InvalidOperation
-from pathlib import Path
+from decimal import Decimal
+from io import BytesIO
+from pathlib import Path, PurePosixPath
 from typing import Any, Sequence
 
 import openpyxl
@@ -24,21 +32,76 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 try:
-    from .review_session import write_review_session_artifacts, write_run_intake
+    from .report_builder_integrity import (
+        load_source_index,
+        seal_review_integrity,
+        validate_source_index,
+        write_source_index,
+    )
+    from .review_session import (
+        refresh_final_artifacts,
+        write_review_session_artifacts,
+        write_run_intake,
+    )
 except ImportError:  # pragma: no cover - supports direct script imports
     import importlib.util
+
+    _integrity_path = Path(__file__).resolve().parent / "report_builder_integrity.py"
+    _integrity_spec = importlib.util.spec_from_file_location(
+        "mparanza_report_builder_integrity",
+        _integrity_path,
+    )
+    if _integrity_spec is None or _integrity_spec.loader is None:
+        raise ImportError("Could not load Report Builder integrity module")
+    _integrity = importlib.util.module_from_spec(_integrity_spec)
+    sys.modules[_integrity_spec.name] = _integrity
+    _integrity_spec.loader.exec_module(_integrity)
+    load_source_index = _integrity.load_source_index
+    seal_review_integrity = _integrity.seal_review_integrity
+    validate_source_index = _integrity.validate_source_index
+    write_source_index = _integrity.write_source_index
 
     _review_session_path = Path(__file__).resolve().parent / "review_session.py"
     _review_session_spec = importlib.util.spec_from_file_location(
         "mparanza_report_builder_review_session",
         _review_session_path,
     )
-    assert _review_session_spec and _review_session_spec.loader
+    if _review_session_spec is None or _review_session_spec.loader is None:
+        raise ImportError("Could not load Report Builder review-session module")
     _review_session = importlib.util.module_from_spec(_review_session_spec)
     sys.modules[_review_session_spec.name] = _review_session
     _review_session_spec.loader.exec_module(_review_session)
+    refresh_final_artifacts = _review_session.refresh_final_artifacts
     write_review_session_artifacts = _review_session.write_review_session_artifacts
     write_run_intake = _review_session.write_run_intake
+
+
+def _ensure_vendor_import_path() -> None:
+    """Expose component-local or repository-shared Vera vendor modules."""
+
+    component_root = Path(__file__).resolve().parents[1]
+    candidates = (
+        component_root / "vendor" / "modules",
+        component_root.parent / "_shared" / "vendor" / "modules",
+    )
+    for candidate in candidates:
+        if candidate.is_dir() and str(candidate) not in sys.path:
+            sys.path.insert(0, str(candidate))
+
+
+_ensure_vendor_import_path()
+from vera_assurance import (  # noqa: E402
+    MoneyValidationError,
+    artifact_receipt,
+    build_numeric_evidence_ledger,
+    build_reviewed_decision_receipt,
+    decimal_text,
+    file_snapshot,
+    parse_canonical_decimal,
+    parse_localized_decimal,
+    validate_artifact_receipt,
+    validate_reviewed_decision_receipt,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -47,6 +110,22 @@ SUPPORTED_DOCUMENT_LANGUAGES = ("auto", *SUPPORTED_LANGUAGES)
 SUPPORTED_SUFFIXES = {".csv", ".pdf", ".xlsx", ".xlsm", ".zip"}
 TEXT_SUFFIXES = {".pdf"}
 WORKBOOK_SUFFIXES = {".xlsx", ".xlsm"}
+NUMERIC_MEASURE_ADAPTER_ID = "report_table_numeric_profile"
+NUMERIC_MEASURE_ADAPTER_VERSION = "v4"
+NUMERIC_MEASURE_DECISION_TYPE = "numeric_measure_mapping"
+NUMERIC_PARSE_POLICY = "strict_all_nonblank_v1"
+NUMERIC_SIGN_POLICIES = {"as_presented_v1", "invert_v1"}
+NUMERIC_LOCALE_SEPARATORS: dict[str, tuple[str, str]] = {
+    "en": (".", ","),
+    "it": (",", "."),
+    "fr": (",", "."),
+    "de": (",", "."),
+    "es": (",", "."),
+}
+NUMERIC_UNITS = {"currency", "number", "count", "ratio", "percentage"}
+_CURRENCY_CODES = ("EUR", "USD", "GBP", "CHF", "CAD", "AUD", "JPY")
+_CURRENCY_SYMBOLS = {"€": "EUR", "£": "GBP"}
+_AMBIGUOUS_CURRENCY_SYMBOLS = {"$"}
 
 REPORT_TYPES: dict[str, dict[str, Any]] = {
     "management_report": {
@@ -471,6 +550,27 @@ DOCX_COPY: dict[str, dict[str, str]] = {
         "de": "Summe",
         "es": "suma",
     },
+    "currency": {
+        "en": "Currency",
+        "it": "Valuta",
+        "fr": "Devise",
+        "de": "Waehrung",
+        "es": "Moneda",
+    },
+    "unit": {
+        "en": "Unit",
+        "it": "Unita",
+        "fr": "Unite",
+        "de": "Einheit",
+        "es": "Unidad",
+    },
+    "scale": {
+        "en": "Scale",
+        "it": "Scala",
+        "fr": "Echelle",
+        "de": "Skalierung",
+        "es": "Escala",
+    },
     "table_preview": {
         "en": "Table preview",
         "it": "Anteprima tabella",
@@ -578,7 +678,6 @@ DOCX_COPY: dict[str, dict[str, str]] = {
     },
 }
 
-AMOUNT_RE = re.compile(r"^\(?-?\d{1,3}(?:[.,\s]\d{3})*(?:[.,]\d+)?\)?$")
 WORD_RE = re.compile(r"[a-z0-9]+")
 
 __all__ = [
@@ -588,7 +687,11 @@ __all__ = [
     "build_report",
     "configure_logging",
     "inspect_inputs",
+    "load_indexed_tables",
     "normalize_language",
+    "review_numeric_measure_columns",
+    "validate_narrative_numeric_boundary",
+    "write_numeric_evidence_ledger",
     "write_json",
 ]
 
@@ -668,6 +771,46 @@ def write_json(path: Path, payload: Any) -> None:
     )
 
 
+def _stabilize_office_package(path: Path) -> None:
+    """Normalize OOXML metadata, entry order, and ZIP timestamps."""
+
+    source = Path(path)
+    with zipfile.ZipFile(source) as archive:
+        entries = [(info, archive.read(info.filename)) for info in archive.infolist()]
+    stable_entries: list[tuple[zipfile.ZipInfo, bytes]] = []
+    for info, data in entries:
+        if info.filename == "docProps/core.xml":
+            for tag in (b"created", b"modified"):
+                pattern = (
+                    rb"(<dcterms:" + tag + rb"\b[^>]*>)[^<]*(</dcterms:" + tag + rb">)"
+                )
+                data = re.sub(
+                    pattern,
+                    rb"\g<1>2000-01-01T00:00:00Z\g<2>",
+                    data,
+                )
+        stable_info = zipfile.ZipInfo(
+            filename=info.filename,
+            date_time=(1980, 1, 1, 0, 0, 0),
+        )
+        stable_info.compress_type = info.compress_type
+        stable_info.comment = info.comment
+        stable_info.internal_attr = info.internal_attr
+        stable_info.external_attr = info.external_attr
+        stable_info.create_system = info.create_system
+        stable_entries.append((stable_info, data))
+    temporary = source.with_name(f".{source.name}.stable")
+    with zipfile.ZipFile(
+        temporary,
+        "w",
+        compression=zipfile.ZIP_DEFLATED,
+        compresslevel=9,
+    ) as archive:
+        for info, data in sorted(stable_entries, key=lambda item: item[0].filename):
+            archive.writestr(info, data)
+    temporary.replace(source)
+
+
 def read_json(path: Path | None) -> dict[str, Any]:
     """Return a JSON object or an empty mapping when no file is provided."""
 
@@ -709,38 +852,36 @@ def safe_sheet_name(name: str, fallback: str) -> str:
 
 
 def parse_amount(value: Any) -> Decimal | None:
-    """Parse common financial number formats into Decimal."""
+    """Parse unambiguous financial numbers into exact Decimal values."""
 
     if value is None or isinstance(value, bool):
         return None
-    if isinstance(value, (int, float, Decimal)):
-        try:
-            return Decimal(str(value))
-        except InvalidOperation:
-            return None
-    text = clean_text(value)
-    if not text:
-        return None
-    compact = text.replace(" ", "")
-    negative = compact.startswith("(") and compact.endswith(")")
-    compact = compact.strip("()")
-    compact = compact.replace("+", "")
-    compact = compact.replace("EUR", "").replace("€", "")
-    compact = compact.strip()
-    if not AMOUNT_RE.match(compact):
-        return None
-    if "," in compact and "." in compact:
-        if compact.rfind(",") > compact.rfind("."):
-            compact = compact.replace(".", "").replace(",", ".")
-        else:
-            compact = compact.replace(",", "")
-    elif "," in compact:
-        compact = compact.replace(".", "").replace(",", ".")
     try:
-        number = Decimal(compact)
-    except InvalidOperation:
+        return parse_localized_decimal(
+            value,
+            label="report numeric cell",
+            allow_float=isinstance(value, float),
+        )
+    except MoneyValidationError:
         return None
-    return -number if negative else number
+
+
+def _looks_numeric_candidate(value: Any) -> bool:
+    """Surface numeric-looking syntax for review without assigning semantics."""
+
+    if value is None or isinstance(value, bool):
+        return False
+    if isinstance(value, (int, float, Decimal)):
+        return True
+    text = clean_text(value).upper()
+    if not text or not any(character.isdigit() for character in text):
+        return False
+    for code in _CURRENCY_CODES:
+        text = re.sub(rf"\b{code}\b", "", text)
+    for symbol in {*_CURRENCY_SYMBOLS, *_AMBIGUOUS_CURRENCY_SYMBOLS}:
+        text = text.replace(symbol, "")
+    text = re.sub(r"\b(?:CR|DR)\b", "", text)
+    return re.sub(r"[\d\s.,'’+\-()%]", "", text) == ""
 
 
 def row_nonempty_count(row: Sequence[Any]) -> int:
@@ -767,10 +908,14 @@ def trim_rows(rows: Sequence[Sequence[Any]]) -> list[list[Any]]:
     ]
 
 
-def read_csv_rows(path: Path) -> list[list[Any]]:
+def read_csv_rows(
+    path: Path,
+    *,
+    source_bytes: bytes | None = None,
+) -> list[list[Any]]:
     """Read a CSV file with deterministic dialect fallback."""
 
-    raw = path.read_bytes()
+    raw = path.read_bytes() if source_bytes is None else source_bytes
     for encoding in ("utf-8-sig", "utf-8", "cp1252"):
         try:
             text = raw.decode(encoding)
@@ -788,45 +933,137 @@ def read_csv_rows(path: Path) -> list[list[Any]]:
     return trim_rows(csv.reader(text.splitlines(), dialect))
 
 
-def read_workbook_tables(path: Path) -> list[dict[str, Any]]:
-    """Read visible worksheets from an Excel workbook."""
+def read_workbook_tables(
+    path: Path,
+    *,
+    source_bytes: bytes | None = None,
+) -> list[dict[str, Any]]:
+    """Read formula and cached-value views from one immutable workbook snapshot."""
 
-    workbook = openpyxl.load_workbook(path, data_only=True, read_only=True)
+    captured = path.read_bytes() if source_bytes is None else source_bytes
+    cached_workbook = openpyxl.load_workbook(
+        BytesIO(captured),
+        data_only=True,
+        read_only=True,
+    )
+    formula_workbook = openpyxl.load_workbook(
+        BytesIO(captured),
+        data_only=False,
+        read_only=True,
+    )
     tables: list[dict[str, Any]] = []
-    for sheet in workbook.worksheets:
-        if sheet.sheet_state != "visible":
+    cached_sheets = {sheet.title: sheet for sheet in cached_workbook.worksheets}
+    for formula_sheet in formula_workbook.worksheets:
+        if formula_sheet.sheet_state != "visible":
             continue
-        rows = trim_rows(sheet.iter_rows(values_only=True))
+        cached_sheet = cached_sheets.get(formula_sheet.title)
+        if cached_sheet is None:
+            raise ValueError(
+                f"Workbook cached view is missing worksheet: {formula_sheet.title}"
+            )
+        formula_rows = [list(row) for row in formula_sheet.iter_rows(values_only=False)]
+        cached_rows = [list(row) for row in cached_sheet.iter_rows(values_only=False)]
+        height = max(len(formula_rows), len(cached_rows))
+        width = max(
+            (len(row) for row in [*formula_rows, *cached_rows]),
+            default=0,
+        )
+        rows: list[list[Any]] = []
+        formula_cells: dict[str, dict[str, Any]] = {}
+        cell_formats: dict[str, str] = {}
+        for row_offset in range(height):
+            display_row: list[Any] = []
+            for column_offset in range(width):
+                formula_cell = (
+                    formula_rows[row_offset][column_offset]
+                    if row_offset < len(formula_rows)
+                    and column_offset < len(formula_rows[row_offset])
+                    else None
+                )
+                cached_cell = (
+                    cached_rows[row_offset][column_offset]
+                    if row_offset < len(cached_rows)
+                    and column_offset < len(cached_rows[row_offset])
+                    else None
+                )
+                formula_value = formula_cell.value if formula_cell is not None else None
+                cached_value = cached_cell.value if cached_cell is not None else None
+                is_formula = isinstance(
+                    formula_value, str
+                ) and formula_value.startswith("=")
+                # Formula text remains the visible source value; an unverified
+                # workbook cache is evidence metadata, never a reported literal.
+                display_value = formula_value if is_formula else cached_value
+                display_row.append(display_value)
+                coordinate_key = f"{row_offset + 1}:{column_offset + 1}"
+                number_format = clean_text(
+                    formula_cell.number_format if formula_cell is not None else ""
+                )
+                if clean_text(display_value) or is_formula:
+                    cell_formats[coordinate_key] = number_format
+                if is_formula:
+                    formula_cells[coordinate_key] = {
+                        "coordinate": (
+                            formula_cell.coordinate
+                            if formula_cell is not None
+                            else f"{_excel_column_name(column_offset + 1)}{row_offset + 1}"
+                        ),
+                        "formula": formula_value,
+                        "cached_value": clean_text(cached_value),
+                        "cache_status": (
+                            "present" if cached_value is not None else "missing"
+                        ),
+                    }
+            rows.append(display_row)
+        rows = trim_rows(rows)
+        cell_formats = {
+            key: value
+            for key, value in cell_formats.items()
+            if int(key.split(":", 1)[0]) <= len(rows)
+        }
         tables.append(
             {
                 "kind": "worksheet",
                 "source_file": path.name,
-                "source_path": str(path),
-                "sheet_name": sheet.title,
-                "table_id": f"{path.name}::{sheet.title}",
+                "source_path": path.name,
+                "sheet_name": formula_sheet.title,
+                "table_id": f"{path.name}::{formula_sheet.title}",
                 "rows": rows,
+                "cell_formats": cell_formats,
+                "formula_cells": formula_cells,
             }
         )
+    cached_workbook.close()
+    formula_workbook.close()
     return tables
 
 
-def read_pdf_text_table(path: Path) -> dict[str, Any]:
+def read_pdf_text_table(
+    path: Path,
+    *,
+    source_bytes: bytes | None = None,
+) -> dict[str, Any]:
     """Extract text lines from a readable PDF."""
 
     import pdfplumber
 
     lines: list[str] = []
     page_count = 0
-    with pdfplumber.open(path) as pdf:
+    pdf_source: Path | BytesIO = path if source_bytes is None else BytesIO(source_bytes)
+    with pdfplumber.open(pdf_source) as pdf:
         page_count = len(pdf.pages)
         for page in pdf.pages:
             text = page.extract_text() or ""
             lines.extend(line.strip() for line in text.splitlines() if line.strip())
+    if not lines:
+        raise ValueError(
+            "unsupported_source_layout: PDF has no extractable text; OCR is required"
+        )
     rows = [[line] for line in lines]
     return {
         "kind": "pdf_text",
         "source_file": path.name,
-        "source_path": str(path),
+        "source_path": path.name,
         "sheet_name": "",
         "table_id": path.name,
         "rows": rows,
@@ -834,83 +1071,457 @@ def read_pdf_text_table(path: Path) -> dict[str, Any]:
     }
 
 
-def extract_zip(path: Path, output_dir: Path) -> Path:
-    """Extract a ZIP into output_dir/extracted_inputs with path traversal checks."""
+def _canonical_zip_member_path(member_name: str) -> str:
+    """Return a portable member identity or reject an unsafe archive path."""
 
-    destination = output_dir / "extracted_inputs" / path.stem
-    destination.mkdir(parents=True, exist_ok=True)
-    root = destination.resolve()
-    with zipfile.ZipFile(path) as archive:
+    normalized = unicodedata.normalize("NFC", member_name.replace("\\", "/"))
+    member_path = PurePosixPath(normalized)
+    if (
+        not normalized
+        or normalized.startswith("/")
+        or member_path.is_absolute()
+        or any(part in {"", ".", ".."} for part in member_path.parts)
+    ):
+        raise ValueError(f"Unsafe ZIP member path: {member_name}")
+    return member_path.as_posix()
+
+
+def _zip_destination(
+    path: Path,
+    output_dir: Path,
+    *,
+    source_bytes: bytes | None = None,
+) -> Path:
+    """Bind an extraction directory to the current archive bytes."""
+
+    digest = hashlib.sha256(
+        path.read_bytes() if source_bytes is None else source_bytes
+    ).hexdigest()
+    safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", path.stem).strip("-._") or "archive"
+    return output_dir / "extracted_inputs" / f"{safe_stem}-{digest[:24]}"
+
+
+def _zip_member_manifest(source_bytes: bytes) -> list[dict[str, Any]]:
+    """Inventory every canonical member from the exact captured archive bytes."""
+
+    manifest: list[dict[str, Any]] = []
+    with zipfile.ZipFile(BytesIO(source_bytes)) as archive:
+        seen: dict[str, str] = {}
         for member in archive.infolist():
             if member.is_dir():
                 continue
-            target = (destination / member.filename).resolve()
-            if root not in target.parents and target != root:
-                raise ValueError(f"Unsafe ZIP member path: {member.filename}")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            with archive.open(member) as source, target.open("wb") as handle:
-                handle.write(source.read())
+            canonical = _canonical_zip_member_path(member.filename)
+            portable_identity = canonical.casefold()
+            if portable_identity in seen:
+                raise ValueError(
+                    "ZIP contains duplicate canonical member paths: "
+                    f"{seen[portable_identity]} and {member.filename}"
+                )
+            if (member.external_attr >> 16) & 0o170000 == 0o120000:
+                raise ValueError(
+                    f"ZIP symbolic links are not supported: {member.filename}"
+                )
+            digest = hashlib.sha256()
+            byte_count = 0
+            with archive.open(member) as source:
+                for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                    byte_count += len(chunk)
+                    digest.update(chunk)
+            if byte_count != member.file_size:
+                raise ValueError(f"ZIP member size changed while read: {canonical}")
+            seen[portable_identity] = member.filename
+            manifest.append(
+                {
+                    "path": canonical,
+                    "byte_count": byte_count,
+                    "sha256": digest.hexdigest(),
+                }
+            )
+    return sorted(manifest, key=lambda item: str(item["path"]).casefold())
+
+
+def extract_zip(
+    path: Path,
+    output_dir: Path,
+    *,
+    source_bytes: bytes | None = None,
+) -> Path:
+    """Materialize exactly the current ZIP member set into an isolated snapshot."""
+
+    captured = path.read_bytes() if source_bytes is None else source_bytes
+    manifest = _zip_member_manifest(captured)
+    expected_by_path = {str(item["path"]): item for item in manifest}
+    destination = _zip_destination(path, output_dir, source_bytes=captured)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(
+        tempfile.mkdtemp(
+            prefix=f".{destination.name}.",
+            dir=destination.parent,
+        )
+    )
+    committed = False
+    try:
+        with zipfile.ZipFile(BytesIO(captured)) as archive:
+            members: list[tuple[zipfile.ZipInfo, str]] = []
+            for member in archive.infolist():
+                if member.is_dir():
+                    continue
+                canonical = _canonical_zip_member_path(member.filename)
+                members.append((member, canonical))
+            for member, canonical in members:
+                target = staging.joinpath(*PurePosixPath(canonical).parts)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                digest = hashlib.sha256()
+                byte_count = 0
+                with archive.open(member) as source, target.open("wb") as handle:
+                    for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                        byte_count += len(chunk)
+                        digest.update(chunk)
+                        handle.write(chunk)
+                expected = expected_by_path[canonical]
+                if (
+                    byte_count != expected["byte_count"]
+                    or digest.hexdigest() != expected["sha256"]
+                ):
+                    raise ValueError(f"ZIP member changed while extracted: {canonical}")
+        if destination.exists():
+            shutil.rmtree(destination)
+        staging.replace(destination)
+        committed = True
+    finally:
+        if not committed:
+            shutil.rmtree(staging, ignore_errors=True)
     return destination
 
 
-def discover_input_files(input_path: Path, output_dir: Path) -> list[Path]:
+def discover_input_files(
+    input_path: Path,
+    output_dir: Path,
+    *,
+    zip_source_bytes: bytes | None = None,
+) -> list[Path]:
     """Return supported files from a file, folder, or ZIP archive."""
 
-    path = input_path.expanduser().resolve()
+    requested_path = input_path.expanduser()
+    if requested_path.is_symlink():
+        raise ValueError("Report Builder input path cannot be a symbolic link")
+    requested_metadata = requested_path.lstat()
+    if (
+        stat.S_ISREG(requested_metadata.st_mode)
+        and requested_metadata.st_nlink > 1
+        and requested_path.suffix.lower() in SUPPORTED_SUFFIXES
+    ):
+        raise ValueError("Report Builder input source cannot be hard-linked")
+    path = requested_path.resolve()
     if not path.exists():
         raise FileNotFoundError(path)
     if path.is_file() and path.suffix.lower() == ".zip":
-        path = extract_zip(path, output_dir)
+        path = extract_zip(path, output_dir, source_bytes=zip_source_bytes)
     if path.is_file():
         return [path] if path.suffix.lower() in SUPPORTED_SUFFIXES - {".zip"} else []
-    files = [
-        item
-        for item in path.rglob("*")
-        if item.is_file() and item.suffix.lower() in SUPPORTED_SUFFIXES - {".zip"}
-    ]
+    files: list[Path] = []
+    pending = [path]
+    while pending:
+        directory = pending.pop()
+        for item in directory.iterdir():
+            metadata = item.lstat()
+            if stat.S_ISLNK(metadata.st_mode):
+                relative = item.relative_to(path).as_posix()
+                raise ValueError(
+                    "Report Builder input directory contains a symbolic link: "
+                    f"{relative}"
+                )
+            if stat.S_ISDIR(metadata.st_mode):
+                pending.append(item)
+                continue
+            if stat.S_ISREG(metadata.st_mode):
+                if (
+                    metadata.st_nlink > 1
+                    and item.suffix.lower() in SUPPORTED_SUFFIXES - {".zip"}
+                ):
+                    relative = item.relative_to(path).as_posix()
+                    raise ValueError(
+                        "Report Builder input directory contains a hard-linked "
+                        f"source: {relative}"
+                    )
+                if item.suffix.lower() in SUPPORTED_SUFFIXES - {".zip"}:
+                    files.append(item)
+                continue
+            if item.suffix.lower() in SUPPORTED_SUFFIXES - {".zip"}:
+                relative = item.relative_to(path).as_posix()
+                raise ValueError(
+                    "Report Builder input directory contains an unsupported file "
+                    f"type: {relative}"
+                )
     return sorted(files, key=lambda item: item.as_posix().lower())
+
+
+def _capture_source(
+    path: Path,
+    *,
+    identity_key: str | None = None,
+) -> tuple[bytes, dict[str, Any]]:
+    """Capture immutable bytes and a stable receipt for one source file."""
+
+    source = path.expanduser().resolve()
+    source_identity = identity_key or source.as_posix()
+    path_digest = hashlib.sha256(source_identity.encode("utf-8")).hexdigest()
+    before_count, before_digest = file_snapshot(source)
+    artifact_id = f"source.{path_digest}.{before_digest}"
+    root_id = f"source_{path_digest}"
+    before_receipt = artifact_receipt(
+        source.parent,
+        source,
+        artifact_id=artifact_id,
+        root_id=root_id,
+        role="source",
+    )
+    captured = source.read_bytes()
+    after_receipt = artifact_receipt(
+        source.parent,
+        source,
+        artifact_id=artifact_id,
+        root_id=root_id,
+        role="source",
+    )
+    captured_digest = hashlib.sha256(captured).hexdigest()
+    if (
+        before_receipt != after_receipt
+        or before_receipt["byte_count"] != before_count
+        or before_receipt["sha256"] != before_digest
+        or len(captured) != before_count
+        or captured_digest != before_digest
+    ):
+        raise ValueError(f"Source changed while it was captured: {source}")
+    return captured, {
+        "identity_key": source_identity,
+        "root_path": str(source.parent),
+        "receipt": before_receipt,
+    }
+
+
+def _tables_from_captured_source(
+    path: Path,
+    source_bytes: bytes,
+) -> list[dict[str, Any]]:
+    """Parse one source only from its captured immutable bytes."""
+
+    suffix = path.suffix.lower()
+    if suffix in WORKBOOK_SUFFIXES:
+        return read_workbook_tables(path, source_bytes=source_bytes)
+    if suffix == ".csv":
+        return [
+            {
+                "kind": "csv",
+                "source_file": path.name,
+                "source_path": path.name,
+                "sheet_name": "",
+                "table_id": path.name,
+                "rows": read_csv_rows(path, source_bytes=source_bytes),
+            }
+        ]
+    if suffix in TEXT_SUFFIXES:
+        return [read_pdf_text_table(path, source_bytes=source_bytes)]
+    return []
+
+
+def _disambiguate_table_ids(tables: list[dict[str, Any]]) -> None:
+    """Keep familiar IDs when unique and bind collisions to source identity."""
+
+    counts = Counter(clean_text(table.get("table_id")) for table in tables)
+    for table in tables:
+        table_id = clean_text(table.get("table_id"))
+        if counts[table_id] <= 1:
+            continue
+        source_ref = clean_text(table.get("source_artifact_ref"))
+        path_fragment = source_ref.split(".")[1][:16] if source_ref else "unknown"
+        sheet = clean_text(table.get("sheet_name")) or "table"
+        table["table_id"] = f"{table.get('source_file')}@{path_fragment}::{sheet}"
 
 
 def load_tables(input_path: Path, output_dir: Path) -> list[dict[str, Any]]:
     """Load all inspectable tables/text blocks from the input path."""
 
     tables: list[dict[str, Any]] = []
-    for file_path in discover_input_files(input_path, output_dir):
-        suffix = file_path.suffix.lower()
+    input_source = input_path.expanduser().resolve()
+    archive_source_receipt: dict[str, Any] | None = None
+    archive_bytes: bytes | None = None
+    archive_member_manifest: list[dict[str, Any]] = []
+    if input_source.is_file() and input_source.suffix.lower() == ".zip":
+        archive_bytes, archive_source_receipt = _capture_source(input_source)
+        archive_member_manifest = _zip_member_manifest(archive_bytes)
+    archive_root = (
+        _zip_destination(
+            input_source,
+            output_dir,
+            source_bytes=archive_bytes,
+        ).resolve()
+        if archive_bytes is not None
+        else None
+    )
+    for file_path in discover_input_files(
+        input_path,
+        output_dir,
+        zip_source_bytes=archive_bytes,
+    ):
+        source_metadata: dict[str, Any] = {}
         try:
-            if suffix in WORKBOOK_SUFFIXES:
-                tables.extend(read_workbook_tables(file_path))
-            elif suffix == ".csv":
-                tables.append(
-                    {
-                        "kind": "csv",
-                        "source_file": file_path.name,
-                        "source_path": str(file_path),
-                        "sheet_name": "",
-                        "table_id": file_path.name,
-                        "rows": read_csv_rows(file_path),
-                    }
+            source_identity = file_path.resolve().as_posix()
+            archive_member_binding: dict[str, Any] | None = None
+            if archive_root is not None:
+                member_path = file_path.resolve().relative_to(archive_root).as_posix()
+                source_identity = f"{input_source.as_posix()}::{member_path}"
+            source_bytes, source_receipt = _capture_source(
+                file_path,
+                identity_key=source_identity,
+            )
+            if archive_root is not None and archive_source_receipt is not None:
+                expected_member = next(
+                    (
+                        item
+                        for item in archive_member_manifest
+                        if item["path"] == member_path
+                    ),
+                    None,
                 )
-            elif suffix in TEXT_SUFFIXES:
-                tables.append(read_pdf_text_table(file_path))
+                if expected_member is None:
+                    raise ValueError(
+                        f"Extracted ZIP member is absent from manifest: {member_path}"
+                    )
+                member_receipt = source_receipt["receipt"]
+                if (
+                    member_receipt["byte_count"] != expected_member["byte_count"]
+                    or member_receipt["sha256"] != expected_member["sha256"]
+                ):
+                    raise ValueError(
+                        "Extracted ZIP member does not derive from the captured "
+                        f"archive: {member_path}"
+                    )
+                archive_member_binding = {
+                    "container_artifact_id": archive_source_receipt["receipt"][
+                        "artifact_id"
+                    ],
+                    "member_path": member_path,
+                    "member_artifact_id": member_receipt["artifact_id"],
+                    "byte_count": expected_member["byte_count"],
+                    "sha256": expected_member["sha256"],
+                }
+            source_metadata = {
+                "source_artifact_ref": source_receipt["receipt"]["artifact_id"],
+                "source_receipt": source_receipt,
+                **(
+                    {"container_source_receipt": archive_source_receipt}
+                    if archive_source_receipt is not None
+                    else {}
+                ),
+                **(
+                    {
+                        "container_member_manifest": archive_member_manifest,
+                        "archive_member_binding": archive_member_binding,
+                    }
+                    if archive_member_binding is not None
+                    else {}
+                ),
+            }
+            parsed_tables = _tables_from_captured_source(file_path, source_bytes)
+            for table in parsed_tables:
+                table.update(source_metadata)
+            tables.extend(parsed_tables)
         except (OSError, ValueError, zipfile.BadZipFile) as exc:
             LOGGER.warning("Could not inspect %s: %s", file_path, exc)
+            public_error = str(exc).replace(
+                file_path.expanduser().resolve().as_posix(),
+                file_path.name,
+            )
             tables.append(
                 {
                     "kind": "error",
                     "source_file": file_path.name,
-                    "source_path": str(file_path),
+                    "source_path": file_path.name,
                     "sheet_name": "",
                     "table_id": file_path.name,
                     "rows": [],
-                    "error": str(exc),
+                    "error": public_error,
+                    **source_metadata,
                 }
             )
+    _disambiguate_table_ids(tables)
+    if any(isinstance(table.get("source_receipt"), dict) for table in tables):
+        write_source_index(output_dir, tables)
+    return tables
+
+
+def load_indexed_tables(
+    output_dir: Path,
+    *,
+    persist_source_index: bool = True,
+) -> list[dict[str, Any]]:
+    """Reload exactly the receipted sources used by the reviewed generation."""
+
+    source_index = validate_source_index(output_dir)
+    tables: list[dict[str, Any]] = []
+    for source_record in source_index["sources"]:
+        if not isinstance(source_record, dict):
+            raise ValueError("Malformed Report Builder source index")
+        root_path = source_record.get("root_path")
+        identity_key = source_record.get("identity_key")
+        receipt = source_record.get("receipt")
+        if (
+            not isinstance(root_path, str)
+            or not isinstance(identity_key, str)
+            or not identity_key
+            or not isinstance(receipt, dict)
+        ):
+            raise ValueError("Malformed Report Builder source record")
+        source_path = Path(root_path) / str(receipt.get("path") or "")
+        captured, current_receipt = _capture_source(
+            source_path,
+            identity_key=identity_key,
+        )
+        if current_receipt != {
+            "identity_key": source_record["identity_key"],
+            "root_path": source_record["root_path"],
+            "receipt": source_record["receipt"],
+        }:
+            raise ValueError(
+                "Source receipt does not match the reviewed generation: "
+                f"{source_record.get('artifact_id')}"
+            )
+        source_metadata = {
+            "source_artifact_ref": receipt["artifact_id"],
+            "source_receipt": source_record,
+        }
+        try:
+            parsed_tables = _tables_from_captured_source(source_path, captured)
+            for table in parsed_tables:
+                table.update(source_metadata)
+            tables.extend(parsed_tables)
+        except (OSError, ValueError, zipfile.BadZipFile) as exc:
+            LOGGER.warning("Could not replay %s: %s", source_path, exc)
+            public_error = str(exc).replace(
+                source_path.expanduser().resolve().as_posix(),
+                source_path.name,
+            )
+            tables.append(
+                {
+                    "kind": "error",
+                    "source_file": source_path.name,
+                    "source_path": source_path.name,
+                    "sheet_name": "",
+                    "table_id": source_path.name,
+                    "rows": [],
+                    "error": public_error,
+                    **source_metadata,
+                }
+            )
+    _disambiguate_table_ids(tables)
+    if persist_source_index:
+        write_source_index(output_dir, tables)
     return tables
 
 
 def header_candidate_index(rows: Sequence[Sequence[Any]]) -> int | None:
-    """Pick a likely header row using text density and position."""
+    """Pick a text-supported header row without consuming numeric data."""
 
     best_idx: int | None = None
     best_score = -1.0
@@ -933,12 +1544,29 @@ def header_candidate_index(rows: Sequence[Sequence[Any]]) -> int | None:
                 "actual",
                 "saldo",
                 "conto",
+                "metric",
+                "line",
+                "item",
+                "description",
+                "date",
+                "currency",
+                "unit",
+                "account",
             )
             if token in labels
         )
         text_cells = sum(
             1 for value in row if clean_text(value) and parse_amount(value) is None
         )
+        if text_cells < 2 and not (text_cells >= 1 and label_hits > 0):
+            continue
+        if any(
+            _looks_numeric_candidate(value)
+            for earlier_row in rows[:idx]
+            for value in earlier_row
+            if clean_text(value)
+        ):
+            continue
         score = nonempty + label_hits * 2 + text_cells * 0.5 - idx * 0.1
         if score > best_score:
             best_idx = idx
@@ -985,10 +1613,34 @@ def rows_as_dicts(
     ]
 
 
+def _redact_numeric_preview_rows(
+    rows: Sequence[dict[str, str]],
+) -> list[dict[str, str]]:
+    """Keep source context while withholding unledgered numeric cell values."""
+
+    redacted: list[dict[str, str]] = []
+    for row in rows:
+        redacted.append(
+            {
+                header: (
+                    "[numeric source value withheld]"
+                    if re.search(r"\d", clean_text(value))
+                    or clean_text(value).startswith(("=", "+", "-", "@"))
+                    else clean_text(value)
+                )
+                for header, value in row.items()
+            }
+        )
+    return redacted
+
+
 def table_numeric_profile(
-    rows: Sequence[Sequence[Any]], header_idx: int | None
+    rows: Sequence[Sequence[Any]],
+    header_idx: int | None,
+    *,
+    formula_cells: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Summarize numeric columns without changing source values."""
+    """Inventory literal and formula numeric candidates without semantic selection."""
 
     if not rows:
         return {"numeric_cells": 0, "numeric_columns": []}
@@ -999,27 +1651,483 @@ def table_numeric_profile(
         else [f"column_{idx + 1}" for idx in range(width)]
     )
     start_idx = header_idx + 1 if header_idx is not None else 0
+    formulas = formula_cells or {}
     column_sums: list[dict[str, Any]] = []
     numeric_cells = 0
     for col_idx, header in enumerate(headers):
         values: list[Decimal] = []
-        for row in rows[start_idx:]:
-            value = parse_amount(row[col_idx] if col_idx < len(row) else None)
+        numeric_rows: list[int] = []
+        candidate_rows: list[int] = []
+        for row_idx, row in enumerate(rows[start_idx:], start=start_idx + 1):
+            source_value = row[col_idx] if col_idx < len(row) else None
+            if _looks_numeric_candidate(source_value):
+                candidate_rows.append(row_idx)
+            value = parse_amount(source_value)
             if value is not None:
                 values.append(value)
-        numeric_cells += len(values)
-        if values:
+                numeric_rows.append(row_idx)
+        formula_rows = [
+            row_idx
+            for row_idx in range(start_idx + 1, len(rows) + 1)
+            if f"{row_idx}:{col_idx + 1}" in formulas
+        ]
+        numeric_cells += len(
+            set(candidate_rows) | set(numeric_rows) | set(formula_rows)
+        )
+        if candidate_rows or values or formula_rows:
             total = sum(values, Decimal("0"))
             column_sums.append(
                 {
                     "column": header,
+                    "column_index": col_idx + 1,
+                    "numeric_rows": numeric_rows,
                     "numeric_count": len(values),
-                    "sum": float(total),
-                    "min": float(min(values)),
-                    "max": float(max(values)),
+                    "sum": decimal_text(total) if values else None,
+                    "min": decimal_text(min(values)) if values else None,
+                    "max": decimal_text(max(values)) if values else None,
+                    **(
+                        {
+                            "formula_rows": formula_rows,
+                            "formula_cell_count": len(formula_rows),
+                        }
+                        if formula_rows
+                        else {}
+                    ),
+                    **(
+                        {"candidate_rows": candidate_rows}
+                        if candidate_rows != numeric_rows
+                        else {}
+                    ),
                 }
             )
     return {"numeric_cells": numeric_cells, "numeric_columns": column_sums}
+
+
+def _numeric_candidate_columns(
+    columns: Sequence[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Remove unreviewed values while preserving candidate-cell diagnostics."""
+
+    return [
+        {
+            key: value
+            for key, value in column.items()
+            if key not in {"sum", "min", "max"}
+        }
+        for column in columns
+        if isinstance(column, dict)
+    ]
+
+
+def _numeric_cell_inventory(
+    rows: Sequence[Sequence[Any]],
+    header_idx: int | None,
+    *,
+    cell_formats: dict[str, Any] | None = None,
+    formula_cells: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Bind each nonblank cell to its coordinate, format, and formula/cache state."""
+
+    if not rows:
+        return []
+    width = max((len(row) for row in rows), default=0)
+    headers = (
+        unique_headers(rows[header_idx], width)
+        if header_idx is not None
+        else [f"column_{idx + 1}" for idx in range(width)]
+    )
+    start_idx = header_idx + 1 if header_idx is not None else 0
+    formats = cell_formats or {}
+    formulas = formula_cells or {}
+    inventory: list[dict[str, Any]] = []
+    for col_idx, header in enumerate(headers):
+        cells: list[dict[str, Any]] = []
+        for row_idx, row in enumerate(rows[start_idx:], start=start_idx + 1):
+            value = row[col_idx] if col_idx < len(row) else None
+            source_text = clean_text(value)
+            if not source_text:
+                continue
+            coordinate_key = f"{row_idx}:{col_idx + 1}"
+            formula_metadata = formulas.get(coordinate_key)
+            if formula_metadata is not None and not isinstance(
+                formula_metadata, Mapping
+            ):
+                raise ValueError("Malformed workbook formula metadata")
+            cells.append(
+                {
+                    "row": row_idx,
+                    "coordinate": (
+                        clean_text(formula_metadata.get("coordinate"))
+                        if isinstance(formula_metadata, Mapping)
+                        else f"{_excel_column_name(col_idx + 1)}{row_idx}"
+                    ),
+                    "source_text": source_text,
+                    "number_format": clean_text(formats.get(coordinate_key)),
+                    "formula": (
+                        clean_text(formula_metadata.get("formula"))
+                        if isinstance(formula_metadata, Mapping)
+                        else None
+                    ),
+                    "formula_cached_value": (
+                        clean_text(formula_metadata.get("cached_value")) or None
+                        if isinstance(formula_metadata, Mapping)
+                        else None
+                    ),
+                    "formula_cache_status": (
+                        clean_text(formula_metadata.get("cache_status"))
+                        if isinstance(formula_metadata, Mapping)
+                        else "not_formula"
+                    ),
+                }
+            )
+        inventory.append(
+            {
+                "column": header,
+                "column_index": col_idx + 1,
+                "nonblank_cells": cells,
+            }
+        )
+    return inventory
+
+
+def _currency_markers(source_text: str, number_format: str) -> list[str]:
+    """Return unambiguous currency markers without inferring from bare `$`."""
+
+    combined = f"{source_text} {number_format}".upper()
+    markers = {code for code in _CURRENCY_CODES if re.search(rf"\b{code}\b", combined)}
+    markers.update(
+        currency for symbol, currency in _CURRENCY_SYMBOLS.items() if symbol in combined
+    )
+    return sorted(markers)
+
+
+def _ambiguous_currency_symbols(source_text: str, number_format: str) -> list[str]:
+    """Return symbols whose ISO currency must come from reviewed context."""
+
+    combined = f"{source_text} {number_format}"
+    return sorted(
+        symbol for symbol in _AMBIGUOUS_CURRENCY_SYMBOLS if symbol in combined
+    )
+
+
+def _numeric_contract(
+    *,
+    numeric_locale: object,
+    currency: object | None,
+    unit: object,
+    scale: object,
+    parse_policy: object,
+    sign_policy: object,
+) -> dict[str, Any]:
+    """Validate reviewed numeric semantics with an explicit parser contract."""
+
+    locale = normalize_language(numeric_locale, default="")
+    if locale not in NUMERIC_LOCALE_SEPARATORS:
+        raise ValueError(
+            f"Reviewed numeric locale must be one of {sorted(NUMERIC_LOCALE_SEPARATORS)}"
+        )
+    policy = clean_text(parse_policy)
+    if policy != NUMERIC_PARSE_POLICY:
+        raise ValueError(f"Unsupported numeric parse policy: {policy}")
+    normalized_sign_policy = clean_text(sign_policy)
+    if normalized_sign_policy not in NUMERIC_SIGN_POLICIES:
+        raise ValueError(f"Unsupported numeric sign policy: {normalized_sign_policy}")
+    normalized_unit = clean_text(unit).lower()
+    if normalized_unit not in NUMERIC_UNITS:
+        raise ValueError(f"Unsupported numeric unit: {normalized_unit}")
+    normalized_currency = clean_text(currency).upper() or None
+    if normalized_unit == "currency":
+        if (
+            normalized_currency is None
+            or re.fullmatch(r"[A-Z]{3}", normalized_currency) is None
+        ):
+            raise ValueError("Currency measures require a reviewed ISO currency")
+    elif normalized_currency is not None:
+        raise ValueError("Non-currency measures cannot declare a currency")
+    scale_text = clean_text(scale)
+    try:
+        scale_value = parse_canonical_decimal(scale_text, label="numeric scale")
+    except MoneyValidationError as exc:
+        raise ValueError(str(exc)) from exc
+    if scale_value <= 0:
+        raise ValueError("Numeric scale must be greater than zero")
+    decimal_separator, thousands_separator = NUMERIC_LOCALE_SEPARATORS[locale]
+    return {
+        "policy_id": policy,
+        "locale": locale,
+        "decimal_separator": decimal_separator,
+        "thousands_separator": thousands_separator,
+        "currency": normalized_currency,
+        "unit": normalized_unit,
+        "scale": decimal_text(scale_value),
+        "sign_policy": normalized_sign_policy,
+    }
+
+
+def _signed_numeric_value(value: Decimal, sign_policy: str) -> Decimal:
+    """Apply only the exact reviewer-selected, mechanically replayable sign rule."""
+
+    if sign_policy == "as_presented_v1":
+        return value
+    if sign_policy == "invert_v1":
+        return -value
+    raise ValueError(f"Unsupported numeric sign policy: {sign_policy}")
+
+
+def _strict_reviewed_numeric_profile(
+    inventory: Sequence[dict[str, Any]],
+    columns: Sequence[str],
+    contract: dict[str, Any],
+    cell_reviews: Mapping[str, Mapping[int, str]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Replay an explicit include/exclude disposition for every selected cell."""
+
+    by_name = {
+        clean_text(item.get("column")): item
+        for item in inventory
+        if isinstance(item, dict) and clean_text(item.get("column"))
+    }
+    unknown = set(columns) - set(by_name)
+    if unknown:
+        raise ValueError(f"Unknown numeric measure columns: {sorted(unknown)}")
+    if set(cell_reviews) != set(columns):
+        raise ValueError(
+            "Selected numeric columns require one explicit cell-disposition map each"
+        )
+    scale_value = parse_canonical_decimal(contract["scale"], label="numeric scale")
+    reviewed_columns: list[dict[str, Any]] = []
+    dispositions: list[dict[str, Any]] = []
+    observed_currencies: set[str] = set()
+    for name in columns:
+        item = by_name[name]
+        cells = item.get("nonblank_cells")
+        if not isinstance(cells, list) or not cells:
+            raise ValueError(f"Reviewed measure column has no nonblank cells: {name}")
+        raw_cell_review = cell_reviews.get(name)
+        if not isinstance(raw_cell_review, Mapping):
+            raise ValueError(f"Reviewed measure cell dispositions are missing: {name}")
+        if any(
+            not isinstance(row, int) or isinstance(row, bool) for row in raw_cell_review
+        ):
+            raise ValueError(
+                f"Reviewed measure cell disposition rows are invalid: {name}"
+            )
+        expected_rows = {
+            int(cell["row"])
+            for cell in cells
+            if isinstance(cell, dict)
+            and isinstance(cell.get("row"), int)
+            and not isinstance(cell.get("row"), bool)
+        }
+        reviewed_rows = set(raw_cell_review)
+        if reviewed_rows != expected_rows:
+            raise ValueError(
+                f"Reviewed measure cell dispositions do not close for {name}: "
+                f"expected {sorted(expected_rows)}, got {sorted(reviewed_rows)}"
+            )
+        if any(
+            disposition not in {"include", "exclude"}
+            for disposition in raw_cell_review.values()
+        ):
+            raise ValueError(
+                f"Reviewed measure cell dispositions are invalid for {name}"
+            )
+        values: list[Decimal] = []
+        numeric_rows: list[int] = []
+        cell_dispositions: list[dict[str, Any]] = []
+        unresolved_rows: list[int] = []
+        for cell in cells:
+            if not isinstance(cell, dict):
+                raise ValueError(f"Malformed numeric cell inventory for {name}")
+            row_number = cell.get("row")
+            source_text = clean_text(cell.get("source_text"))
+            number_format = clean_text(cell.get("number_format"))
+            coordinate = clean_text(cell.get("coordinate"))
+            formula = clean_text(cell.get("formula"))
+            formula_cached_value = clean_text(cell.get("formula_cached_value"))
+            formula_cache_status = clean_text(cell.get("formula_cache_status"))
+            if not isinstance(row_number, int) or isinstance(row_number, bool):
+                raise ValueError(f"Malformed numeric source row for {name}")
+            disposition = raw_cell_review[row_number]
+            base_disposition = {
+                "row": row_number,
+                "coordinate": coordinate,
+                "source_text": source_text,
+                "number_format": number_format,
+                "formula": formula or None,
+                "formula_cached_value": formula_cached_value or None,
+                "formula_cache_status": formula_cache_status,
+            }
+            if disposition == "exclude":
+                cell_dispositions.append(
+                    {
+                        **base_disposition,
+                        "status": "excluded_by_review",
+                        "reason": "reviewed_cell_exclusion",
+                    }
+                )
+                continue
+            markers = _currency_markers(source_text, number_format)
+            ambiguous_symbols = _ambiguous_currency_symbols(
+                source_text,
+                number_format,
+            )
+            observed_currencies.update(markers)
+            percent_formatted = "%" in number_format
+            reason = ""
+            try:
+                if formula:
+                    raise MoneyValidationError(
+                        "formula cells require a separately verified recalculation policy"
+                    )
+                value = parse_localized_decimal(
+                    source_text,
+                    label=f"{name} row {row_number}",
+                    decimal_separator=contract["decimal_separator"],
+                    thousands_separator=contract["thousands_separator"],
+                )
+                if len(markers) > 1:
+                    raise MoneyValidationError("cell has multiple currency markers")
+                if contract["unit"] == "currency":
+                    if markers and markers != [contract["currency"]]:
+                        raise MoneyValidationError(
+                            "cell currency does not match reviewed currency"
+                        )
+                    if percent_formatted:
+                        raise MoneyValidationError(
+                            "currency measure uses a percentage number format"
+                        )
+                elif markers or ambiguous_symbols:
+                    raise MoneyValidationError(
+                        "non-currency measure contains a currency marker or symbol"
+                    )
+                if percent_formatted and contract["unit"] != "percentage":
+                    raise MoneyValidationError(
+                        "percentage number format requires percentage unit"
+                    )
+            except MoneyValidationError as exc:
+                value = None
+                reason = str(exc)
+            if value is None:
+                unresolved_rows.append(row_number)
+                cell_dispositions.append(
+                    {
+                        **base_disposition,
+                        "status": "unresolved",
+                        "reason": reason,
+                    }
+                )
+                continue
+            signed = _signed_numeric_value(value, contract["sign_policy"])
+            scaled = signed * scale_value
+            values.append(scaled)
+            numeric_rows.append(row_number)
+            cell_dispositions.append(
+                {
+                    **base_disposition,
+                    "status": "included",
+                    "currency_marker": markers[0] if markers else None,
+                    "ambiguous_currency_symbols": ambiguous_symbols,
+                    "canonical_value": decimal_text(value),
+                    "signed_value": decimal_text(signed),
+                    "scaled_value": decimal_text(scaled),
+                }
+            )
+        if unresolved_rows:
+            raise ValueError(
+                f"Reviewed measure column {name} has unresolved nonblank rows: "
+                f"{unresolved_rows}"
+            )
+        if contract["unit"] == "currency" and len(observed_currencies) > 1:
+            raise ValueError(
+                "Reviewed currency measure contains mixed explicit currencies: "
+                f"{sorted(observed_currencies)}"
+            )
+        if not values:
+            raise ValueError(f"Reviewed measure column has no included cells: {name}")
+        total = sum(values, Decimal("0"))
+        reviewed_columns.append(
+            {
+                "column": name,
+                "column_index": int(item["column_index"]),
+                "numeric_rows": numeric_rows,
+                "numeric_count": len(values),
+                "sum": decimal_text(total),
+                "min": decimal_text(min(values)),
+                "max": decimal_text(max(values)),
+                "currency": contract["currency"],
+                "unit": contract["unit"],
+                "scale": contract["scale"],
+                "sign_policy": contract["sign_policy"],
+            }
+        )
+        dispositions.append(
+            {
+                "column": name,
+                "column_index": int(item["column_index"]),
+                "nonblank_cell_count": len(cell_dispositions),
+                "cells": cell_dispositions,
+            }
+        )
+    return reviewed_columns, dispositions
+
+
+def _excluded_numeric_column_dispositions(
+    inventory: Sequence[dict[str, Any]],
+    columns: Sequence[str],
+) -> list[dict[str, Any]]:
+    """Expand reviewed column exclusions to exact cell-level dispositions."""
+
+    by_name = {
+        clean_text(item.get("column")): item
+        for item in inventory
+        if isinstance(item, dict) and clean_text(item.get("column"))
+    }
+    result: list[dict[str, Any]] = []
+    for name in columns:
+        item = by_name.get(name)
+        if not isinstance(item, dict):
+            raise ValueError(f"Unknown excluded numeric candidate column: {name}")
+        cells = item.get("nonblank_cells")
+        if not isinstance(cells, list) or not cells:
+            raise ValueError(f"Excluded numeric candidate has no cells: {name}")
+        result.append(
+            {
+                "column": name,
+                "column_index": int(item["column_index"]),
+                "status": "excluded_by_review",
+                "nonblank_cell_count": len(cells),
+                "cells": [
+                    {
+                        "row": int(cell["row"]),
+                        "coordinate": clean_text(cell.get("coordinate")),
+                        "source_text": clean_text(cell.get("source_text")),
+                        "number_format": clean_text(cell.get("number_format")),
+                        "formula": clean_text(cell.get("formula")) or None,
+                        "formula_cached_value": (
+                            clean_text(cell.get("formula_cached_value")) or None
+                        ),
+                        "formula_cache_status": clean_text(
+                            cell.get("formula_cache_status")
+                        ),
+                        "status": "excluded_by_review",
+                        "reason": "reviewed_column_exclusion",
+                    }
+                    for cell in cells
+                    if isinstance(cell, dict)
+                ],
+            }
+        )
+    return result
+
+
+def _numeric_decision_id(section_key: str, source_artifact_ref: str) -> str:
+    return (
+        "decision.report_numeric_measures."
+        + hashlib.sha256(
+            f"{section_key}:{source_artifact_ref}".encode("utf-8")
+        ).hexdigest()
+    )
 
 
 def suggest_section(table: dict[str, Any]) -> dict[str, Any]:
@@ -1056,14 +2164,25 @@ def inspect_table(table: dict[str, Any]) -> dict[str, Any]:
 
     rows = table.get("rows", [])
     header_idx = header_candidate_index(rows)
-    preview = rows_as_dicts(rows, header_idx)[:8]
-    profile = table_numeric_profile(rows, header_idx)
+    preview = _redact_numeric_preview_rows(rows_as_dicts(rows, header_idx)[:8])
+    profile = table_numeric_profile(
+        rows,
+        header_idx,
+        formula_cells=table.get("formula_cells"),
+    )
+    numeric_candidates = _numeric_candidate_columns(profile["numeric_columns"])
+    headerless_profile = table_numeric_profile(
+        rows,
+        None,
+        formula_cells=table.get("formula_cells"),
+    )
     suggestion = suggest_section(table)
     return {
         "table_id": table.get("table_id", ""),
         "kind": table.get("kind", ""),
         "source_file": table.get("source_file", ""),
-        "source_path": table.get("source_path", ""),
+        "source_path": table.get("source_file", ""),
+        "source_artifact_ref": table.get("source_artifact_ref", ""),
         "sheet_name": table.get("sheet_name", ""),
         "page_count": table.get("page_count", 0),
         "error": table.get("error", ""),
@@ -1071,11 +2190,42 @@ def inspect_table(table: dict[str, Any]) -> dict[str, Any]:
         "column_count": max((len(row) for row in rows), default=0),
         "header_row": header_idx + 1 if header_idx is not None else None,
         "numeric_cell_count": profile["numeric_cells"],
-        "numeric_columns": profile["numeric_columns"][:12],
+        "numeric_columns": numeric_candidates,
+        "numeric_measure_cells": _numeric_cell_inventory(
+            rows,
+            header_idx,
+            cell_formats=table.get("cell_formats"),
+            formula_cells=table.get("formula_cells"),
+        ),
+        "header_review_options": {
+            "detected_header_row": header_idx + 1 if header_idx is not None else None,
+            "supported_choices": [
+                *([header_idx + 1] if header_idx is not None else []),
+                None,
+            ],
+        },
+        "headerless_numeric_columns": _numeric_candidate_columns(
+            headerless_profile["numeric_columns"]
+        ),
+        "headerless_numeric_measure_cells": _numeric_cell_inventory(
+            rows,
+            None,
+            cell_formats=table.get("cell_formats"),
+            formula_cells=table.get("formula_cells"),
+        ),
         "suggested_section": suggestion["section"],
         "suggestion_confidence": suggestion["confidence"],
         "preview_rows": preview,
     }
+
+
+def _public_table_inspection(table: dict[str, Any]) -> dict[str, Any]:
+    """Remove cell-level review material from a rendered table inventory."""
+
+    public = copy.deepcopy(table)
+    public.pop("numeric_measure_cells", None)
+    public.pop("headerless_numeric_measure_cells", None)
+    return public
 
 
 def section_title(section_key: str, language: str) -> str:
@@ -1114,6 +2264,9 @@ def build_suggested_recipe(
             for table in table_records
             if table.get("suggested_section") == section_key
             and table.get("table_id") not in assigned_tables
+            and table.get("kind") != "error"
+            and not clean_text(table.get("error"))
+            and int(table.get("row_count") or 0) > 0
         ]
         candidates.sort(
             key=lambda item: item.get("suggestion_confidence", 0), reverse=True
@@ -1127,6 +2280,9 @@ def build_suggested_recipe(
             "assigned_table": assigned_table,
             "codex_comment": "",
             "include_preview_rows": 8,
+            "numeric_measure_columns": [],
+            "excluded_numeric_candidate_columns": [],
+            "numeric_measure_decision": None,
         }
 
     return {
@@ -1144,6 +2300,162 @@ def build_suggested_recipe(
             "include_table_previews": True,
         },
     }
+
+
+def review_numeric_measure_columns(
+    inspection: dict[str, Any],
+    recipe: dict[str, Any],
+    *,
+    section_key: str,
+    header_row: int | None,
+    columns: Sequence[str],
+    excluded_columns: Sequence[str],
+    cell_dispositions: Mapping[str, Mapping[int, str]],
+    reviewer_ref: str,
+    reviewed_on: str,
+    numeric_locale: str,
+    currency: str | None,
+    unit: str,
+    scale: str,
+    parse_policy: str,
+    sign_policy: str,
+) -> dict[str, Any]:
+    """Bind every numeric candidate and cell to an exact reviewed disposition."""
+
+    sections = selected_sections(recipe)
+    section = sections.get(section_key)
+    if not isinstance(section, dict):
+        raise ValueError(f"Unknown report section: {section_key}")
+    table_id = clean_text(section.get("assigned_table"))
+    table = next(
+        (
+            item
+            for item in inspection.get("tables", [])
+            if isinstance(item, dict) and clean_text(item.get("table_id")) == table_id
+        ),
+        None,
+    )
+    if table is None:
+        raise ValueError(f"Assigned table is not present in inspection: {table_id}")
+    source_artifact_ref = clean_text(table.get("source_artifact_ref"))
+    if not source_artifact_ref:
+        raise ValueError("Assigned table has no stable source-artifact identity")
+    detected_header_row = table.get("header_row")
+    if header_row is not None and (
+        not isinstance(header_row, int)
+        or isinstance(header_row, bool)
+        or header_row < 1
+    ):
+        raise ValueError("Reviewed header row must be a positive integer or none")
+    if header_row is None:
+        inventory = table.get("headerless_numeric_measure_cells")
+        candidate_records = table.get("headerless_numeric_columns")
+    elif header_row == detected_header_row:
+        inventory = table.get("numeric_measure_cells")
+        candidate_records = table.get("numeric_columns")
+    else:
+        raise ValueError(
+            "Reviewed header row must be the detected candidate or none; "
+            "prepare a bounded adapter for another header layout"
+        )
+    if not isinstance(inventory, list) or not isinstance(candidate_records, list):
+        raise ValueError("Inspection lacks full numeric cell inventory")
+    available_names = [
+        clean_text(item.get("column"))
+        for item in inventory
+        if isinstance(item, dict) and clean_text(item.get("column"))
+    ]
+    numeric_candidates = [
+        clean_text(item.get("column"))
+        for item in candidate_records or []
+        if isinstance(item, dict) and clean_text(item.get("column"))
+    ]
+    requested = [clean_text(column) for column in columns if clean_text(column)]
+    excluded = [clean_text(column) for column in excluded_columns if clean_text(column)]
+    if len(requested) != len(set(requested)) or len(excluded) != len(set(excluded)):
+        raise ValueError("Reviewed numeric candidate columns must be unique")
+    if set(requested) & set(excluded):
+        raise ValueError(
+            "Numeric candidate columns cannot be both included and excluded"
+        )
+    unknown = (set(requested) | set(excluded)) - set(numeric_candidates)
+    if unknown:
+        raise ValueError(f"Unknown numeric candidate columns: {sorted(unknown)}")
+    if set(requested) | set(excluded) != set(numeric_candidates):
+        undisposed = set(numeric_candidates) - set(requested) - set(excluded)
+        raise ValueError(
+            "Every numeric candidate column requires an include/exclude disposition: "
+            f"{sorted(undisposed)}"
+        )
+    if set(cell_dispositions) != set(requested):
+        raise ValueError(
+            "Every included numeric column requires explicit dispositions for all cells"
+        )
+    normalized_columns = [name for name in available_names if name in requested]
+    normalized_excluded = [name for name in available_names if name in excluded]
+    contract = _numeric_contract(
+        numeric_locale=numeric_locale,
+        currency=currency,
+        unit=unit,
+        scale=scale,
+        parse_policy=parse_policy,
+        sign_policy=sign_policy,
+    )
+    _, included_dispositions = _strict_reviewed_numeric_profile(
+        inventory,
+        normalized_columns,
+        contract,
+        cell_dispositions,
+    )
+    excluded_dispositions = _excluded_numeric_column_dispositions(
+        inventory,
+        normalized_excluded,
+    )
+    dispositions_by_name = {
+        clean_text(item.get("column")): item
+        for item in [*included_dispositions, *excluded_dispositions]
+    }
+    dispositions = [
+        dispositions_by_name[name]
+        for name in numeric_candidates
+        if name in dispositions_by_name
+    ]
+    try:
+        reviewed_date = date.fromisoformat(reviewed_on)
+    except ValueError as exc:
+        raise ValueError("reviewed_on must be an ISO date") from exc
+    if reviewed_date > date.today():
+        raise ValueError("reviewed_on cannot be in the future")
+    content = {
+        "section": section_key,
+        "report_period": clean_text(recipe.get("period")),
+        "header_row": header_row,
+        "source_artifact_ref": source_artifact_ref,
+        "table_id": table_id,
+        "source_file": clean_text(table.get("source_file")),
+        "sheet_name": clean_text(table.get("sheet_name")),
+        "numeric_measure_columns": normalized_columns,
+        "excluded_numeric_candidate_columns": normalized_excluded,
+        "numeric_contract": contract,
+        "column_dispositions": dispositions,
+    }
+    decision = build_reviewed_decision_receipt(
+        decision_id=_numeric_decision_id(section_key, source_artifact_ref),
+        decision_type=NUMERIC_MEASURE_DECISION_TYPE,
+        status="reviewed",
+        reviewer_ref=reviewer_ref,
+        reviewed_on=reviewed_on,
+        adapter_id=NUMERIC_MEASURE_ADAPTER_ID,
+        adapter_version=NUMERIC_MEASURE_ADAPTER_VERSION,
+        source_artifact_refs=[source_artifact_ref],
+        content=content,
+    )
+    updated = copy.deepcopy(recipe)
+    updated_section = updated["sections"][section_key]
+    updated_section["numeric_measure_columns"] = normalized_columns
+    updated_section["excluded_numeric_candidate_columns"] = normalized_excluded
+    updated_section["numeric_measure_decision"] = decision
+    return updated
 
 
 def inspect_inputs(
@@ -1170,13 +2482,18 @@ def inspect_inputs(
         "document_language": assumptions["document_language"],
         "report_type": report_key,
         "report_type_label": report_type_label(report_key, assumptions["language"]),
-        "input_path": str(input_path),
+        "input_path": input_path.name,
         "table_count": len(tables),
         "tables": tables,
         "supported_suffixes": sorted(SUPPORTED_SUFFIXES),
         "limitations": [
             "Scanned PDFs require OCR before deterministic extraction.",
             "Excel binary .xls files should be converted to .xlsx or CSV for this plugin version.",
+            (
+                "Workbook formulas and cached values are inventoried separately; "
+                "formula cells cannot be included in measures without a verified "
+                "recalculation/export adapter."
+            ),
         ],
     }
     recipe = build_suggested_recipe(
@@ -1199,10 +2516,263 @@ def selected_sections(recipe: dict[str, Any]) -> dict[str, Any]:
     return sections
 
 
+def validate_narrative_numeric_boundary(recipe: dict[str, Any]) -> None:
+    """Reject free-form numerals that have no numeric-evidence ledger address."""
+
+    entity = clean_text(recipe.get("entity"))
+    if re.search(r"\d", entity):
+        raise ValueError(
+            "Entity contains digits that cannot be distinguished from an "
+            "unledgered numeric claim; use a digit-free reviewed display name."
+        )
+    period = clean_text(recipe.get("period"))
+    canonical_period = re.fullmatch(
+        r"(?:"
+        r"(?:FY\s*)?\d{4}"
+        r"|Q[1-4]\s+\d{4}"
+        r"|\d{4}-\d{2}-\d{2}"
+        r"|(?:Year|Period|Quarter)\s+ended\s+\d{4}-\d{2}-\d{2}"
+        r"|\d{4}-\d{2}-\d{2}\s+(?:to|through)\s+\d{4}-\d{2}-\d{2}"
+        r")",
+        period,
+        flags=re.IGNORECASE,
+    )
+    if re.search(r"\d", period) and canonical_period is None:
+        raise ValueError(
+            "Reporting period contains numeric text outside the supported "
+            "canonical period formats."
+        )
+    narrative_fields: list[tuple[str, str]] = [
+        ("executive_summary", clean_text(recipe.get("executive_summary"))),
+    ]
+    context_items = recipe.get("context_items")
+    if isinstance(context_items, dict):
+        for key, value in context_items.items():
+            key_text = clean_text(key)
+            narrative_fields.extend(
+                [
+                    (f"context_items.{key_text}.key", key_text),
+                    (f"context_items.{key_text}.value", clean_text(value)),
+                ]
+            )
+    for section_key, section in selected_sections(recipe).items():
+        if not isinstance(section, dict):
+            continue
+        narrative_fields.extend(
+            [
+                (
+                    f"sections.{section_key}.title",
+                    clean_text(section.get("title")),
+                ),
+                (
+                    f"sections.{section_key}.codex_comment",
+                    clean_text(section.get("codex_comment")),
+                ),
+            ]
+        )
+    offenders = [field for field, text in narrative_fields if re.search(r"\d", text)]
+    if offenders:
+        raise ValueError(
+            "Free-form report narrative contains unledgered numeric tokens: "
+            f"{offenders}. Remove the numerals and rely on reviewed numeric "
+            "measures until a claim-basis reference contract is available."
+        )
+
+
+def _reviewed_numeric_profile(
+    section_key: str,
+    section_recipe: dict[str, Any],
+    table: dict[str, Any],
+    *,
+    report_period: str,
+    header_row: int | None,
+    candidates: Sequence[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], str, dict[str, Any] | None, str]:
+    """Return only source-bound measure columns approved in the recipe."""
+
+    if table.get("kind") not in {"worksheet", "csv"}:
+        return [], "not_applicable", None, ""
+    raw_columns = section_recipe.get("numeric_measure_columns")
+    raw_excluded_columns = section_recipe.get("excluded_numeric_candidate_columns")
+    decision = section_recipe.get("numeric_measure_decision")
+    if not isinstance(decision, dict):
+        if not candidates:
+            return [], "not_applicable", None, ""
+        return (
+            [],
+            "needs_review",
+            None,
+            "Numeric-looking columns are candidates until their measure role is reviewed.",
+        )
+    if not isinstance(raw_columns, list) or not isinstance(raw_excluded_columns, list):
+        return [], "needs_review", None, "Numeric candidate dispositions are malformed."
+    columns = [clean_text(item) for item in raw_columns]
+    excluded_columns = [clean_text(item) for item in raw_excluded_columns]
+    if (
+        any(not item for item in [*columns, *excluded_columns])
+        or len(columns) != len(set(columns))
+        or len(excluded_columns) != len(set(excluded_columns))
+        or set(columns) & set(excluded_columns)
+    ):
+        return [], "needs_review", None, "Reviewed measure columns are malformed."
+    source_artifact_ref = clean_text(table.get("source_artifact_ref"))
+    try:
+        validated = validate_reviewed_decision_receipt(
+            decision,
+            expected_source_artifact_refs=[source_artifact_ref],
+            expected_adapter_id=NUMERIC_MEASURE_ADAPTER_ID,
+            expected_adapter_version=NUMERIC_MEASURE_ADAPTER_VERSION,
+            require_reviewed=True,
+        )
+        if validated["decision_type"] != NUMERIC_MEASURE_DECISION_TYPE:
+            raise ValueError("Numeric-measure decision type is stale")
+        if validated["decision_id"] != _numeric_decision_id(
+            section_key, source_artifact_ref
+        ):
+            raise ValueError("Numeric-measure decision identity is stale")
+        if date.fromisoformat(validated["reviewed_on"]) > date.today():
+            raise ValueError("Numeric-measure review date is in the future")
+        content = validated["content"]
+        reviewed_header_row = content.get("header_row")
+        if reviewed_header_row is not None and (
+            not isinstance(reviewed_header_row, int)
+            or isinstance(reviewed_header_row, bool)
+            or reviewed_header_row < 1
+            or reviewed_header_row > len(table.get("rows", []))
+        ):
+            raise ValueError("Reviewed header row is invalid or stale")
+        reviewed_header_index = (
+            reviewed_header_row - 1 if isinstance(reviewed_header_row, int) else None
+        )
+        raw_contract = content.get("numeric_contract")
+        if not isinstance(raw_contract, dict):
+            raise ValueError("Numeric-measure contract is missing")
+        contract = _numeric_contract(
+            numeric_locale=raw_contract.get("locale"),
+            currency=raw_contract.get("currency"),
+            unit=raw_contract.get("unit"),
+            scale=raw_contract.get("scale"),
+            parse_policy=raw_contract.get("policy_id"),
+            sign_policy=raw_contract.get("sign_policy"),
+        )
+        if raw_contract != contract:
+            raise ValueError("Numeric-measure parser contract is not canonical")
+        inventory = _numeric_cell_inventory(
+            table.get("rows", []),
+            reviewed_header_index,
+            cell_formats=table.get("cell_formats"),
+            formula_cells=table.get("formula_cells"),
+        )
+        available_names = [
+            clean_text(item.get("column"))
+            for item in inventory
+            if isinstance(item, dict) and clean_text(item.get("column"))
+        ]
+        unknown = set(columns) - set(available_names)
+        if unknown:
+            raise ValueError(f"Reviewed measure columns are stale: {sorted(unknown)}")
+        current_profile = table_numeric_profile(
+            table.get("rows", []),
+            reviewed_header_index,
+            formula_cells=table.get("formula_cells"),
+        )
+        current_candidates = _numeric_candidate_columns(
+            current_profile["numeric_columns"]
+        )
+        candidate_names = [
+            clean_text(candidate.get("column"))
+            for candidate in current_candidates
+            if isinstance(candidate, dict) and clean_text(candidate.get("column"))
+        ]
+        if set(columns) | set(excluded_columns) != set(candidate_names):
+            raise ValueError("Numeric candidate column dispositions are incomplete")
+        normalized_columns = [name for name in available_names if name in columns]
+        normalized_excluded = [
+            name for name in available_names if name in excluded_columns
+        ]
+        recorded_dispositions = content.get("column_dispositions")
+        if not isinstance(recorded_dispositions, list):
+            raise ValueError("Numeric cell dispositions are missing")
+        recorded_by_name = {
+            clean_text(item.get("column")): item
+            for item in recorded_dispositions
+            if isinstance(item, dict) and clean_text(item.get("column"))
+        }
+        cell_reviews: dict[str, dict[int, str]] = {}
+        for name in normalized_columns:
+            disposition = recorded_by_name.get(name)
+            cells = disposition.get("cells") if isinstance(disposition, dict) else None
+            if not isinstance(cells, list):
+                raise ValueError(f"Numeric cell dispositions are missing: {name}")
+            cell_reviews[name] = {}
+            for cell in cells:
+                if not isinstance(cell, dict):
+                    raise ValueError(f"Malformed numeric cell disposition: {name}")
+                row_number = cell.get("row")
+                status = clean_text(cell.get("status"))
+                if not isinstance(row_number, int) or isinstance(row_number, bool):
+                    raise ValueError(f"Malformed numeric cell row: {name}")
+                if status == "included":
+                    cell_reviews[name][row_number] = "include"
+                elif (
+                    status == "excluded_by_review"
+                    and cell.get("reason") == "reviewed_cell_exclusion"
+                ):
+                    cell_reviews[name][row_number] = "exclude"
+                else:
+                    raise ValueError(f"Invalid numeric cell disposition: {name}")
+        selected, dispositions = _strict_reviewed_numeric_profile(
+            inventory,
+            normalized_columns,
+            contract,
+            cell_reviews,
+        )
+        excluded_dispositions = _excluded_numeric_column_dispositions(
+            inventory,
+            normalized_excluded,
+        )
+        dispositions_by_name = {
+            clean_text(item.get("column")): item
+            for item in [*dispositions, *excluded_dispositions]
+        }
+        all_dispositions = [
+            dispositions_by_name[name]
+            for name in candidate_names
+            if name in dispositions_by_name
+        ]
+        expected_content = {
+            "section": section_key,
+            "report_period": report_period,
+            "source_artifact_ref": source_artifact_ref,
+            "table_id": clean_text(table.get("table_id")),
+            "source_file": clean_text(table.get("source_file")),
+            "sheet_name": clean_text(table.get("sheet_name")),
+            "header_row": reviewed_header_row,
+            "numeric_measure_columns": normalized_columns,
+            "excluded_numeric_candidate_columns": normalized_excluded,
+            "numeric_contract": contract,
+            "column_dispositions": all_dispositions,
+        }
+        if content != expected_content:
+            raise ValueError(
+                "Numeric-measure review content does not match the current table"
+            )
+    except (ValueError, TypeError):
+        return (
+            [],
+            "needs_review",
+            None,
+            "Numeric-measure review receipt is missing, invalid, or stale.",
+        )
+    return selected, "reviewed", validated, ""
+
+
 def analysis_for_section(
     section_key: str,
     section_recipe: dict[str, Any],
     table_by_id: dict[str, dict[str, Any]],
+    *,
+    report_period: str,
 ) -> dict[str, Any]:
     """Build deterministic analysis for one report section."""
 
@@ -1217,24 +2787,116 @@ def analysis_for_section(
             "row_count": 0,
             "column_count": 0,
             "numeric_columns": [],
+            "numeric_measure_candidates": [],
+            "numeric_measure_status": "not_applicable",
+            "numeric_measure_decision": None,
+            "numeric_measure_limitation": "",
             "preview_rows": [],
         }
     rows = table.get("rows", [])
+    if (
+        table.get("kind") == "error"
+        or clean_text(table.get("error"))
+        or not any(row_nonempty_count(row) > 0 for row in rows)
+    ):
+        return {
+            "section": section_key,
+            "title": clean_text(section_recipe.get("title")) or section_key,
+            "assigned_table": table_id,
+            "source_file": table.get("source_file", ""),
+            "source_path": table.get("source_file", ""),
+            "source_artifact_ref": table.get("source_artifact_ref", ""),
+            "sheet_name": table.get("sheet_name", ""),
+            "status": "unsupported_source_layout",
+            "row_count": 0,
+            "column_count": 0,
+            "numeric_columns": [],
+            "numeric_measure_candidates": [],
+            "numeric_measure_status": "not_applicable",
+            "numeric_measure_decision": None,
+            "numeric_measure_limitation": (
+                clean_text(table.get("error"))
+                or "Source table contains no reportable rows."
+            ),
+            "preview_rows": [],
+            "codex_comment": clean_text(section_recipe.get("codex_comment")),
+        }
     header_idx = header_candidate_index(rows)
     include_rows = int(section_recipe.get("include_preview_rows") or 8)
-    profile = table_numeric_profile(rows, header_idx)
+    profile = (
+        table_numeric_profile(
+            rows,
+            header_idx,
+            formula_cells=table.get("formula_cells"),
+        )
+        if table.get("kind") in {"worksheet", "csv"}
+        else {"numeric_cells": 0, "numeric_columns": []}
+    )
+    numeric_candidates = _numeric_candidate_columns(profile["numeric_columns"])
+    headerless_profile = (
+        table_numeric_profile(
+            rows,
+            None,
+            formula_cells=table.get("formula_cells"),
+        )
+        if table.get("kind") in {"worksheet", "csv"}
+        else {"numeric_cells": 0, "numeric_columns": []}
+    )
+    headerless_candidates = _numeric_candidate_columns(
+        headerless_profile["numeric_columns"]
+    )
+    pending_candidates = numeric_candidates or headerless_candidates
+    header_row = header_idx + 1 if header_idx is not None else None
+    (
+        numeric_columns,
+        numeric_measure_status,
+        numeric_measure_decision,
+        numeric_measure_limitation,
+    ) = _reviewed_numeric_profile(
+        section_key,
+        section_recipe,
+        table,
+        report_period=report_period,
+        header_row=header_row,
+        candidates=pending_candidates,
+    )
+    effective_header_row = header_row
+    if isinstance(numeric_measure_decision, dict):
+        decision_content = numeric_measure_decision.get("content")
+        if isinstance(decision_content, dict):
+            effective_header_row = decision_content.get("header_row")
     return {
         "section": section_key,
         "title": clean_text(section_recipe.get("title")) or section_key,
         "assigned_table": table_id,
         "source_file": table.get("source_file", ""),
+        "source_path": table.get("source_file", ""),
+        "source_artifact_ref": table.get("source_artifact_ref", ""),
         "sheet_name": table.get("sheet_name", ""),
         "status": "assigned",
         "row_count": len([row for row in rows if row_nonempty_count(row) > 0]),
         "column_count": max((len(row) for row in rows), default=0),
-        "header_row": header_idx + 1 if header_idx is not None else None,
-        "numeric_columns": profile["numeric_columns"],
-        "preview_rows": rows_as_dicts(rows, header_idx)[: max(0, include_rows)],
+        "header_row": effective_header_row,
+        "numeric_columns": numeric_columns,
+        "numeric_measure_candidates": pending_candidates,
+        "numeric_header_review_options": {
+            "detected_header_row": header_row,
+            "detected_header_candidates": numeric_candidates,
+            "headerless_candidates": headerless_candidates,
+        },
+        "numeric_measure_status": numeric_measure_status,
+        "numeric_measure_decision": numeric_measure_decision,
+        "numeric_measure_limitation": numeric_measure_limitation,
+        "preview_rows": _redact_numeric_preview_rows(
+            rows_as_dicts(
+                rows,
+                (
+                    effective_header_row - 1
+                    if isinstance(effective_header_row, int)
+                    else None
+                ),
+            )[: max(0, include_rows)]
+        ),
         "codex_comment": clean_text(section_recipe.get("codex_comment")),
     }
 
@@ -1307,11 +2969,15 @@ def render_markdown(recipe: dict[str, Any], analysis: dict[str, Any]) -> str:
         numeric_columns = section.get("numeric_columns") or []
         if numeric_columns:
             lines.extend(["", f"{docx_label('numeric_totals', language)}:"])
-            for column in numeric_columns[:8]:
+            for column in numeric_columns:
+                currency = clean_text(column.get("currency")) or "none"
                 lines.append(
-                    f"- {column['column']}: {docx_label('count', language)} "
-                    f"{column['numeric_count']}, {docx_label('sum', language)} "
-                    f"{column['sum']}"
+                    f"- {column['column']}: {docx_label('sum', language)} "
+                    f"{column['sum']} | {docx_label('currency', language)}: "
+                    f"{currency} | {docx_label('unit', language)}: "
+                    f"{clean_text(column.get('unit'))} | "
+                    f"{docx_label('scale', language)}: "
+                    f"{clean_text(column.get('scale'))}"
                 )
         preview_table = markdown_table(section.get("preview_rows") or [])
         if preview_table and recipe.get("render", {}).get(
@@ -1466,21 +3132,21 @@ def add_numeric_totals_table(
     document: Any,
     numeric_columns: Sequence[dict[str, Any]],
     *,
-    max_rows: int = 8,
     language: str = "en",
 ) -> None:
-    """Add a small deterministic numeric summary table."""
+    """Add every reviewed, ledger-backed numeric total."""
 
     if not numeric_columns:
         return
-    table = document.add_table(rows=1, cols=4)
+    table = document.add_table(rows=1, cols=5)
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
     table.style = "Table Grid"
     headers = (
         docx_label("column", language),
-        docx_label("count", language).capitalize(),
         docx_label("sum", language).capitalize(),
-        docx_label("range", language),
+        docx_label("currency", language),
+        docx_label("unit", language),
+        docx_label("scale", language),
     )
     for idx, header in enumerate(headers):
         table.rows[0].cells[idx].text = header
@@ -1488,14 +3154,13 @@ def add_numeric_totals_table(
         set_cell_margins(table.rows[0].cells[idx])
         for paragraph in table.rows[0].cells[idx].paragraphs:
             set_paragraph_font(paragraph, size=8.5, bold=True, color="243026")
-    for column in numeric_columns[:max_rows]:
+    for column in numeric_columns:
         cells = table.add_row().cells
         cells[0].text = clean_text(column.get("column"))
-        cells[1].text = clean_text(column.get("numeric_count"))
-        cells[2].text = clean_text(column.get("sum"))
-        cells[3].text = (
-            f"{clean_text(column.get('min'))} - {clean_text(column.get('max'))}"
-        )
+        cells[1].text = clean_text(column.get("sum"))
+        cells[2].text = clean_text(column.get("currency")) or "none"
+        cells[3].text = clean_text(column.get("unit"))
+        cells[4].text = clean_text(column.get("scale"))
         for cell in cells:
             set_cell_margins(cell)
             for paragraph in cell.paragraphs:
@@ -1631,24 +3296,137 @@ def write_report_docx(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     document.save(output_path)
+    _stabilize_office_package(output_path)
+
+
+def _excel_column_name(index: int) -> str:
+    """Return a one-based Excel column name."""
+
+    name = ""
+    while index > 0:
+        index, remainder = divmod(index - 1, 26)
+        name = chr(65 + remainder) + name
+    return name
+
+
+def _numeric_evidence_rows(analysis: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return the numeric summaries that appear in every rendered report."""
+
+    evidence: list[dict[str, Any]] = []
+    for section_index, section in enumerate(analysis.get("sections", [])):
+        if not isinstance(section, dict) or section.get("status") != "assigned":
+            continue
+        source_artifact_ref = clean_text(section.get("source_artifact_ref"))
+        numeric_decision = section.get("numeric_measure_decision")
+        decision_ref = (
+            clean_text(numeric_decision.get("decision_id"))
+            if isinstance(numeric_decision, dict)
+            else ""
+        )
+        numeric_contract = (
+            numeric_decision.get("content", {}).get("numeric_contract")
+            if isinstance(numeric_decision, dict)
+            and isinstance(numeric_decision.get("content"), dict)
+            else None
+        )
+        source_name = clean_text(section.get("sheet_name")) or clean_text(
+            section.get("assigned_table")
+        )
+        for column_offset, column in enumerate(section.get("numeric_columns") or []):
+            if not isinstance(column, dict):
+                continue
+            value = clean_text(column.get("sum"))
+            if not value:
+                continue
+            column_index = int(column.get("column_index") or column_offset + 1)
+            physical_rows = [
+                int(row_number)
+                for row_number in column.get("numeric_rows", [])
+                if isinstance(row_number, int) and not isinstance(row_number, bool)
+            ]
+            evidence_id = (
+                f"numeric.section_{section_index + 1:03d}."
+                f"column_{column_offset + 1:03d}.sum"
+            )
+            cell_column = _excel_column_name(column_index)
+            source_cells = ",".join(
+                f"{cell_column}{row_number}" for row_number in physical_rows
+            )
+            limitations = []
+            if not source_artifact_ref:
+                limitations.append("source_receipt_unresolved")
+            if not decision_ref:
+                limitations.append("numeric_measure_decision_unresolved")
+            evidence.append(
+                {
+                    "evidence_id": evidence_id,
+                    "section_index": section_index,
+                    "section": clean_text(section.get("section")),
+                    "column_offset": column_offset,
+                    "column": clean_text(column.get("column")),
+                    "value": value,
+                    "currency": column.get("currency"),
+                    "unit": clean_text(column.get("unit")),
+                    "scale": clean_text(column.get("scale")),
+                    "decision_ref": decision_ref,
+                    "numeric_contract": numeric_contract,
+                    "source_artifact_ref": source_artifact_ref,
+                    "source_table_id": clean_text(section.get("assigned_table")),
+                    "source_sheet": clean_text(section.get("sheet_name")),
+                    "source_header_row": section.get("header_row"),
+                    "source_locator": (
+                        f"{source_name}!{source_cells}"
+                        if source_cells
+                        else f"{source_name}!column:{cell_column}"
+                    ),
+                    "prepared_locator": (
+                        f"/sections/{section_index}/numeric_columns/"
+                        f"{column_offset}/sum"
+                    ),
+                    "column_index": column_index,
+                    "numeric_rows": physical_rows,
+                    "numeric_count": int(column.get("numeric_count") or 0),
+                    "limitations": limitations,
+                }
+            )
+    return evidence
 
 
 def write_tables_workbook(output_path: Path, analysis: dict[str, Any]) -> None:
     """Write assigned table previews to an Excel workbook."""
 
+    def append_safe_row(sheet: Any, values: Sequence[Any]) -> None:
+        row_index = (
+            1
+            if sheet.max_row == 1
+            and sheet.max_column == 1
+            and sheet.cell(row=1, column=1).value is None
+            else sheet.max_row + 1
+        )
+        for column_index, value in enumerate(values, start=1):
+            cell = sheet.cell(row=row_index, column=column_index)
+            cell.value = value
+            if isinstance(value, str):
+                cell.data_type = "s"
+                cell.number_format = "@"
+
     workbook = openpyxl.Workbook()
     default = workbook.active
     default.title = "summary"
-    default.append(["section", "status", "assigned_table", "rows", "columns"])
+    append_safe_row(
+        default,
+        ["section", "status", "assigned_table", "rows", "columns"],
+    )
     for section in analysis["sections"]:
-        default.append(
+        append_safe_row(
+            default,
             [
                 section["section"],
                 section["status"],
                 section.get("assigned_table", ""),
                 section.get("row_count", 0),
                 section.get("column_count", 0),
-            ]
+            ],
         )
         rows = section.get("preview_rows") or []
         if rows:
@@ -1658,14 +3436,450 @@ def write_tables_workbook(output_path: Path, analysis: dict[str, Any]) -> None:
                 )
             )
             headers = list(rows[0].keys())
-            sheet.append(headers)
+            append_safe_row(sheet, headers)
             for row in rows:
-                sheet.append([row.get(header, "") for header in headers])
+                append_safe_row(
+                    sheet,
+                    [row.get(header, "") for header in headers],
+                )
+    evidence_sheet = workbook.create_sheet("numeric_evidence")
+    append_safe_row(
+        evidence_sheet,
+        ["evidence_id", "section", "column", "sum", "currency", "unit", "scale"],
+    )
+    for evidence in _numeric_evidence_rows(analysis):
+        append_safe_row(
+            evidence_sheet,
+            [
+                evidence["evidence_id"],
+                evidence["section"],
+                evidence["column"],
+                evidence["value"],
+                evidence["currency"] or "none",
+                evidence["unit"],
+                evidence["scale"],
+            ],
+        )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(output_path)
+    _stabilize_office_package(output_path)
 
 
-def build_report(
+def _markdown_numeric_locations(
+    path: Path,
+    evidence_rows: Sequence[dict[str, Any]],
+    *,
+    language: str,
+) -> dict[str, tuple[str, str]]:
+    """Reopen Markdown and locate each exact rendered numeric value."""
+
+    lines = path.read_text(encoding="utf-8").splitlines()
+    locations: dict[str, tuple[str, str]] = {}
+    cursor = 0
+    for evidence in evidence_rows:
+        expected = (
+            f"- {evidence['column']}: {docx_label('sum', language)} "
+            f"{evidence['value']} | {docx_label('currency', language)}: "
+            f"{evidence['currency'] or 'none'} | "
+            f"{docx_label('unit', language)}: {evidence['unit']} | "
+            f"{docx_label('scale', language)}: {evidence['scale']}"
+        )
+        match = next(
+            (index for index in range(cursor, len(lines)) if lines[index] == expected),
+            None,
+        )
+        if match is None:
+            raise ValueError(
+                "Numeric output closure failed for Markdown evidence "
+                f"{evidence['evidence_id']}"
+            )
+        locations[str(evidence["evidence_id"])] = (
+            f"line:{match + 1}",
+            str(evidence["value"]),
+        )
+        cursor = match + 1
+    return locations
+
+
+def _docx_numeric_locations(
+    path: Path,
+    evidence_rows: Sequence[dict[str, Any]],
+    *,
+    language: str,
+) -> dict[str, tuple[str, str]]:
+    """Reopen Word output and locate each numeric-summary cell."""
+
+    document = Document(path)
+    rendered: list[tuple[int, int, str, str, str, str, str]] = []
+    expected_headers = (
+        docx_label("column", language),
+        docx_label("sum", language).capitalize(),
+        docx_label("currency", language),
+        docx_label("unit", language),
+        docx_label("scale", language),
+    )
+    for table_index, table in enumerate(document.tables, start=1):
+        if not table.rows or len(table.rows[0].cells) != 5:
+            continue
+        header = tuple(clean_text(cell.text) for cell in table.rows[0].cells)
+        if header != expected_headers:
+            continue
+        for row_index, row in enumerate(table.rows[1:], start=2):
+            rendered.append(
+                (
+                    table_index,
+                    row_index,
+                    clean_text(row.cells[0].text),
+                    clean_text(row.cells[1].text),
+                    clean_text(row.cells[2].text),
+                    clean_text(row.cells[3].text),
+                    clean_text(row.cells[4].text),
+                )
+            )
+    if len(rendered) != len(evidence_rows):
+        raise ValueError(
+            "Numeric output closure failed because Word numeric rows do not close"
+        )
+    locations: dict[str, tuple[str, str]] = {}
+    for evidence, (
+        table_index,
+        row_index,
+        column,
+        value,
+        currency,
+        unit,
+        scale,
+    ) in zip(evidence_rows, rendered, strict=True):
+        if (
+            column != evidence["column"]
+            or value != evidence["value"]
+            or currency != (evidence["currency"] or "none")
+            or unit != evidence["unit"]
+            or scale != evidence["scale"]
+        ):
+            raise ValueError(
+                "Numeric output closure failed for Word evidence "
+                f"{evidence['evidence_id']}"
+            )
+        locations[str(evidence["evidence_id"])] = (
+            f"table:{table_index}/row:{row_index}/cell:2",
+            value,
+        )
+    return locations
+
+
+def _workbook_numeric_locations(
+    path: Path,
+    evidence_rows: Sequence[dict[str, Any]],
+) -> dict[str, tuple[str, str]]:
+    """Reopen Excel output and locate each exact numeric-summary cell."""
+
+    workbook = openpyxl.load_workbook(path, data_only=True, read_only=True)
+    if "numeric_evidence" not in workbook.sheetnames:
+        raise ValueError("Numeric output closure failed: Excel evidence sheet missing")
+    sheet = workbook["numeric_evidence"]
+    headers = [clean_text(cell.value) for cell in sheet[1]]
+    if headers != [
+        "evidence_id",
+        "section",
+        "column",
+        "sum",
+        "currency",
+        "unit",
+        "scale",
+    ]:
+        raise ValueError(
+            "Numeric output closure failed: Excel evidence headers changed"
+        )
+    rendered = [
+        (
+            clean_text(row[0].value),
+            clean_text(row[2].value),
+            clean_text(row[3].value),
+            clean_text(row[4].value),
+            clean_text(row[5].value),
+            clean_text(row[6].value),
+            row[3].coordinate,
+        )
+        for row in sheet.iter_rows(min_row=2)
+        if clean_text(row[0].value)
+    ]
+    if len(rendered) != len(evidence_rows):
+        raise ValueError(
+            "Numeric output closure failed because Excel numeric rows do not close"
+        )
+    locations: dict[str, tuple[str, str]] = {}
+    for evidence, (
+        evidence_id,
+        column,
+        value,
+        currency,
+        unit,
+        scale,
+        coordinate,
+    ) in zip(evidence_rows, rendered, strict=True):
+        if (
+            evidence_id != evidence["evidence_id"]
+            or column != evidence["column"]
+            or value != evidence["value"]
+            or currency != (evidence["currency"] or "none")
+            or unit != evidence["unit"]
+            or scale != evidence["scale"]
+        ):
+            raise ValueError(
+                "Numeric output closure failed for Excel evidence "
+                f"{evidence['evidence_id']}"
+            )
+        locations[evidence_id] = (f"numeric_evidence!{coordinate}", value)
+    return locations
+
+
+def _replay_source_numeric_value(
+    evidence: dict[str, Any],
+    sources_by_id: dict[str, dict[str, Any]],
+) -> str:
+    """Reopen one receipted source and recompute the referenced column total."""
+
+    source_receipt = sources_by_id.get(str(evidence["source_artifact_ref"]))
+    if not isinstance(source_receipt, dict):
+        raise ValueError(
+            f"Numeric source receipt is missing for {evidence['evidence_id']}"
+        )
+    root_path = source_receipt.get("root_path")
+    receipt = source_receipt.get("receipt")
+    if not isinstance(root_path, str) or not isinstance(receipt, dict):
+        raise ValueError(
+            f"Numeric source receipt is malformed for {evidence['evidence_id']}"
+        )
+    validated = validate_artifact_receipt(Path(root_path), receipt)
+    if validated["artifact_id"] != evidence["source_artifact_ref"]:
+        raise ValueError(
+            f"Numeric source identity is stale for {evidence['evidence_id']}"
+        )
+    source_path = Path(root_path) / str(validated["path"])
+    identity_key = source_receipt.get("identity_key")
+    if not isinstance(identity_key, str) or not identity_key:
+        raise ValueError(
+            f"Numeric source identity is missing for {evidence['evidence_id']}"
+        )
+    captured, current_receipt = _capture_source(
+        source_path,
+        identity_key=identity_key,
+    )
+    if current_receipt != {
+        "identity_key": source_receipt["identity_key"],
+        "root_path": source_receipt["root_path"],
+        "receipt": source_receipt["receipt"],
+    }:
+        raise ValueError(
+            f"Numeric source receipt changed for {evidence['evidence_id']}"
+        )
+    tables = _tables_from_captured_source(source_path, captured)
+    source_sheet = clean_text(evidence.get("source_sheet"))
+    candidates = [
+        table for table in tables if clean_text(table.get("sheet_name")) == source_sheet
+    ]
+    if len(candidates) != 1:
+        raise ValueError(
+            f"Numeric source table is not unique for {evidence['evidence_id']}"
+        )
+    rows = candidates[0].get("rows", [])
+    expected_header_row = evidence.get("source_header_row")
+    if expected_header_row is not None and (
+        not isinstance(expected_header_row, int)
+        or isinstance(expected_header_row, bool)
+        or expected_header_row < 1
+        or expected_header_row > len(rows)
+    ):
+        raise ValueError(
+            f"Reviewed numeric source header is invalid for {evidence['evidence_id']}"
+        )
+    header_idx = (
+        expected_header_row - 1 if isinstance(expected_header_row, int) else None
+    )
+    inventory = _numeric_cell_inventory(
+        rows,
+        header_idx,
+        cell_formats=candidates[0].get("cell_formats"),
+        formula_cells=candidates[0].get("formula_cells"),
+    )
+    contract = evidence.get("numeric_contract")
+    if not isinstance(contract, dict):
+        raise ValueError(f"Numeric contract is missing for {evidence['evidence_id']}")
+    matching_inventory = [
+        item
+        for item in inventory
+        if item["column_index"] == evidence["column_index"]
+        and item["column"] == evidence["column"]
+    ]
+    if len(matching_inventory) != 1:
+        raise ValueError(
+            f"Numeric source column is not unique for {evidence['evidence_id']}"
+        )
+    matching_columns, _ = _strict_reviewed_numeric_profile(
+        matching_inventory,
+        [str(evidence["column"])],
+        contract,
+        {
+            str(evidence["column"]): {
+                int(cell["row"]): (
+                    "include"
+                    if int(cell["row"]) in set(evidence["numeric_rows"])
+                    else "exclude"
+                )
+                for cell in matching_inventory[0].get("nonblank_cells", [])
+                if isinstance(cell, dict)
+                and isinstance(cell.get("row"), int)
+                and not isinstance(cell.get("row"), bool)
+            }
+        },
+    )
+    if len(matching_columns) != 1:
+        raise ValueError(
+            f"Numeric source column is not unique for {evidence['evidence_id']}"
+        )
+    column = matching_columns[0]
+    if (
+        column["numeric_rows"] != evidence["numeric_rows"]
+        or column["numeric_count"] != evidence["numeric_count"]
+        or column["sum"] != evidence["value"]
+    ):
+        raise ValueError(f"Numeric source closure failed for {evidence['evidence_id']}")
+    return str(column["sum"])
+
+
+def _write_source_receipts(
+    output_dir: Path,
+    evidence_rows: Sequence[dict[str, Any]],
+    sources_by_id: dict[str, dict[str, Any]],
+) -> Path:
+    """Persist the unique source receipts referenced by numeric evidence."""
+
+    for evidence in evidence_rows:
+        artifact_id = str(evidence["source_artifact_ref"])
+        source_receipt = sources_by_id.get(artifact_id)
+        if not isinstance(source_receipt, dict):
+            raise ValueError(
+                f"Numeric source receipt is missing for {evidence['evidence_id']}"
+            )
+        receipt = source_receipt.get("receipt")
+        if not isinstance(receipt, dict):
+            raise ValueError(
+                f"Numeric source receipt is malformed for {evidence['evidence_id']}"
+            )
+    path = output_dir / "source_receipts.json"
+    write_json(
+        path,
+        {
+            "schema_version": "report_builder.source_receipts.v1",
+            "sources": [
+                {
+                    "artifact_id": artifact_id,
+                    "receipt": dict(sources_by_id[artifact_id]["receipt"]),
+                }
+                for artifact_id in sorted(
+                    {str(evidence["source_artifact_ref"]) for evidence in evidence_rows}
+                )
+            ],
+        },
+    )
+    return path
+
+
+def write_numeric_evidence_ledger(
+    output_dir: Path,
+    analysis: dict[str, Any],
+) -> dict[str, Any] | None:
+    """Reopen rendered outputs and seal exact numeric source-to-output closure."""
+
+    output_dir = Path(output_dir)
+    ledger_path = output_dir / "numeric_evidence_ledger.json"
+    prepared_path = output_dir / "report_analysis.json"
+    prepared = read_json(prepared_path)
+    if prepared != analysis:
+        raise ValueError("Numeric output closure failed: prepared analysis is stale")
+    evidence_rows = _numeric_evidence_rows(prepared)
+    if not evidence_rows:
+        ledger_path.unlink(missing_ok=True)
+        (output_dir / "source_receipts.json").unlink(missing_ok=True)
+        return None
+
+    source_index = validate_source_index(output_dir)
+    sources_by_id = {
+        str(source["artifact_id"]): source
+        for source in source_index["sources"]
+        if isinstance(source, dict)
+    }
+    _write_source_receipts(output_dir, evidence_rows, sources_by_id)
+    language = normalize_language(prepared.get("language"), default="en")
+    workbook_locations = _workbook_numeric_locations(
+        output_dir / "report_tables.xlsx",
+        evidence_rows,
+    )
+    markdown_locations = _markdown_numeric_locations(
+        output_dir / "report_draft.md",
+        evidence_rows,
+        language=language,
+    )
+    docx_locations = _docx_numeric_locations(
+        output_dir / "report.docx",
+        evidence_rows,
+        language=language,
+    )
+    entries = []
+    for evidence in evidence_rows:
+        evidence_id = str(evidence["evidence_id"])
+        source_value = _replay_source_numeric_value(evidence, sources_by_id)
+        workbook_locator, workbook_value = workbook_locations[evidence_id]
+        markdown_locator, markdown_value = markdown_locations[evidence_id]
+        docx_locator, docx_value = docx_locations[evidence_id]
+        entries.append(
+            {
+                "evidence_id": evidence_id,
+                "value": evidence["value"],
+                "unit": evidence["unit"],
+                "currency": evidence["currency"],
+                "source": {
+                    "artifact_ref": evidence["source_artifact_ref"],
+                    "locator": evidence["source_locator"],
+                    "value": source_value,
+                },
+                "prepared": {
+                    "artifact_ref": "prepared.report_analysis",
+                    "locator": evidence["prepared_locator"],
+                    "value": evidence["value"],
+                },
+                "outputs": [
+                    {
+                        "artifact_ref": "output.report_tables",
+                        "locator": workbook_locator,
+                        "value": workbook_value,
+                    },
+                    {
+                        "artifact_ref": "output.report_draft",
+                        "locator": markdown_locator,
+                        "value": markdown_value,
+                    },
+                    {
+                        "artifact_ref": "output.report_docx",
+                        "locator": docx_locator,
+                        "value": docx_value,
+                    },
+                ],
+                "calculation_ref": ("calculation.reviewed_signed_scaled_cell_sum.v2"),
+                "decision_ref": evidence["decision_ref"],
+                "limitations": evidence["limitations"],
+            }
+        )
+    ledger = build_numeric_evidence_ledger(
+        entries,
+        ledger_id="report_builder.numeric_outputs",
+    )
+    write_json(ledger_path, ledger)
+    return ledger
+
+
+def _build_report_in_place(
     input_path: Path,
     output_dir: Path,
     *,
@@ -1677,6 +3891,11 @@ def build_report(
     """Build report outputs from inspected files and an editable recipe."""
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    # A rebuild is a new review run; prior reviewer application state must not carry.
+    (output_dir / "applied_decisions.json").unlink(missing_ok=True)
+    revisions_dir = output_dir / "revisions"
+    if revisions_dir.exists():
+        shutil.rmtree(revisions_dir)
     recipe = read_json(recipe_path)
     assumptions = language_assumptions(
         recipe,
@@ -1698,6 +3917,7 @@ def build_report(
         recipe["document_language"] = assumptions["document_language"]
     if report_type is not None:
         recipe["report_type"] = normalize_report_type(report_type)
+    validate_narrative_numeric_boundary(recipe)
 
     run_intake = write_run_intake(
         output_dir,
@@ -1713,7 +3933,12 @@ def build_report(
     raw_tables = load_tables(input_path, output_dir)
     table_by_id = {clean_text(table.get("table_id")): table for table in raw_tables}
     sections_analysis = [
-        analysis_for_section(section_key, section_recipe, table_by_id)
+        analysis_for_section(
+            section_key,
+            section_recipe,
+            table_by_id,
+            report_period=clean_text(recipe.get("period")),
+        )
         for section_key, section_recipe in selected_sections(recipe).items()
     ]
     assigned_sections = [
@@ -1723,6 +3948,11 @@ def build_report(
         section["section"]
         for section in sections_analysis
         if section["status"] != "assigned"
+    ]
+    numeric_measure_pending_sections = [
+        section["section"]
+        for section in sections_analysis
+        if section.get("numeric_measure_status") == "needs_review"
     ]
     analysis = {
         "version": 1,
@@ -1736,8 +3966,11 @@ def build_report(
         "sections": sections_analysis,
         "assigned_section_count": len(assigned_sections),
         "missing_sections": missing_sections,
+        "numeric_measure_pending_sections": numeric_measure_pending_sections,
     }
-    table_inspection = [inspect_table(table) for table in raw_tables]
+    table_inspection = [
+        _public_table_inspection(inspect_table(table)) for table in raw_tables
+    ]
     report_language = str(recipe.get("language", assumptions["language"]))
     audit_notes = (
         [
@@ -1750,15 +3983,25 @@ def build_report(
             "Review unassigned sections and Codex-pending comments before final use.",
         ]
     )
+    if numeric_measure_pending_sections:
+        audit_notes.append(
+            (
+                "Las columnas con apariencia numérica permanecen excluidas de los totales hasta que se revise su función como medidas."
+                if report_language == "es"
+                else "Numeric-looking columns remain excluded from totals until their measure role is reviewed."
+            )
+        )
     audit = {
         "version": 1,
         "status": "draft",
-        "input_path": str(input_path),
+        "input_path": input_path.name,
         "table_count": len(raw_tables),
         "section_count": len(sections_analysis),
         "assigned_section_count": len(assigned_sections),
         "missing_section_count": len(missing_sections),
         "missing_sections": missing_sections,
+        "numeric_measure_pending_section_count": len(numeric_measure_pending_sections),
+        "numeric_measure_pending_sections": numeric_measure_pending_sections,
         "codex_narrative_sections": sum(
             1 for section in sections_analysis if section.get("codex_comment")
         ),
@@ -1776,6 +4019,9 @@ def build_report(
     markdown_path.write_text(markdown_text, encoding="utf-8")
     docx_path = output_dir / "report.docx"
     write_report_docx(recipe, analysis, audit, docx_path)
+    numeric_evidence = write_numeric_evidence_ledger(output_dir, analysis)
+    numeric_evidence_path = output_dir / "numeric_evidence_ledger.json"
+    source_receipts_path = output_dir / "source_receipts.json"
     review_session = write_review_session_artifacts(
         output_dir,
         run_id=run_intake.run_id,
@@ -1791,6 +4037,14 @@ def build_report(
             "used_recipe": output_dir / "used_recipe.json",
             "report_draft": markdown_path,
             "report_docx": docx_path,
+            **(
+                {
+                    "numeric_evidence": numeric_evidence_path,
+                    "source_receipts": source_receipts_path,
+                }
+                if numeric_evidence is not None
+                else {}
+            ),
         },
         tables=table_inspection,
     )
@@ -1803,6 +4057,8 @@ def build_report(
         "review_item_count": review_session.review_item_count,
     }
     write_json(output_dir / "report_audit.json", audit)
+    refresh_final_artifacts(output_dir, audit=audit, analysis=analysis)
+    seal_review_integrity(output_dir, run_id=run_intake.run_id)
 
     return BuildResult(
         analysis=analysis,
@@ -1811,6 +4067,89 @@ def build_report(
         docx_path=docx_path,
         review_session=audit["review_session"],
     )
+
+
+def _reject_unsafe_output_entries(output_dir: Path) -> None:
+    """Reject linked or special prior state before any output path is opened."""
+
+    pending = [output_dir]
+    while pending:
+        directory = pending.pop()
+        for child in directory.iterdir():
+            metadata = child.lstat()
+            if stat.S_ISLNK(metadata.st_mode):
+                relative = child.relative_to(output_dir).as_posix()
+                raise ValueError(
+                    "Report Builder output directory contains a symbolic link: "
+                    f"{relative}"
+                )
+            if stat.S_ISREG(metadata.st_mode):
+                if metadata.st_nlink > 1:
+                    relative = child.relative_to(output_dir).as_posix()
+                    raise ValueError(
+                        "Report Builder output directory contains a hard-linked "
+                        f"file: {relative}"
+                    )
+                continue
+            if stat.S_ISDIR(metadata.st_mode):
+                pending.append(child)
+                continue
+            relative = child.relative_to(output_dir).as_posix()
+            raise ValueError(
+                "Report Builder output directory contains an unsupported file "
+                f"type: {relative}"
+            )
+
+
+def build_report(
+    input_path: Path,
+    output_dir: Path,
+    *,
+    recipe_path: Path | None = None,
+    language: object | None = None,
+    document_language: object | None = None,
+    report_type: object | None = None,
+) -> BuildResult:
+    """Build atomically, restoring the exact prior run after any failure."""
+
+    requested_target = output_dir.expanduser()
+    if requested_target.is_symlink():
+        raise ValueError("Report Builder output path cannot be a symbolic link.")
+    target = requested_target.resolve()
+    if target.exists() and not target.is_dir():
+        raise ValueError("Report Builder output path must be a directory.")
+    if target.exists():
+        _reject_unsafe_output_entries(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    transaction_root = Path(
+        tempfile.mkdtemp(
+            prefix=f".{target.name}.report-build-transaction.",
+            dir=target.parent,
+        )
+    )
+    snapshot = transaction_root / "prior-output"
+    existed = target.exists()
+    if existed:
+        shutil.copytree(target, snapshot, symlinks=True)
+    completed = False
+    try:
+        result = _build_report_in_place(
+            input_path,
+            target,
+            recipe_path=recipe_path,
+            language=language,
+            document_language=document_language,
+            report_type=report_type,
+        )
+        completed = True
+        return result
+    finally:
+        if not completed:
+            if target.exists():
+                shutil.rmtree(target)
+            if existed:
+                shutil.copytree(snapshot, target, symlinks=True)
+        shutil.rmtree(transaction_root, ignore_errors=True)
 
 
 def add_common_args(parser: argparse.ArgumentParser) -> None:

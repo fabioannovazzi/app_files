@@ -1,5 +1,64 @@
 from __future__ import annotations
 
+import sys as _bootstrap_sys  # isort: skip
+
+_bootstrap_sys.dont_write_bytecode = True
+_bootstrap_sys.pycache_prefix = (
+    r"Z:\__concordato_no_bytecode__"
+    if _bootstrap_sys.platform == "win32"
+    else "/dev/null/concordato-plan-review"
+)
+
+import os as _bootstrap_os  # isort: skip
+
+_BOOTSTRAP_PATH = _bootstrap_os.path.join(
+    _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__)),
+    "implementation_bootstrap.py",
+)
+_BOOTSTRAP_ENTRY = _bootstrap_os.lstat(_BOOTSTRAP_PATH)
+if _BOOTSTRAP_ENTRY.st_mode & 0o170000 != 0o100000 or _BOOTSTRAP_ENTRY.st_nlink != 1:
+    raise RuntimeError("Concordato implementation bootstrap is not a real file.")
+with open(_BOOTSTRAP_PATH, "rb") as _bootstrap_handle:
+    _BOOTSTRAP_BEFORE = _bootstrap_os.fstat(_bootstrap_handle.fileno())
+    _BOOTSTRAP_BYTES = _bootstrap_handle.read()
+    _BOOTSTRAP_AFTER = _bootstrap_os.fstat(_bootstrap_handle.fileno())
+_BOOTSTRAP_IDENTITY = (
+    _BOOTSTRAP_ENTRY.st_dev,
+    _BOOTSTRAP_ENTRY.st_ino,
+    _BOOTSTRAP_ENTRY.st_size,
+    _BOOTSTRAP_ENTRY.st_mtime_ns,
+)
+if (
+    _BOOTSTRAP_IDENTITY
+    != (
+        _BOOTSTRAP_BEFORE.st_dev,
+        _BOOTSTRAP_BEFORE.st_ino,
+        _BOOTSTRAP_BEFORE.st_size,
+        _BOOTSTRAP_BEFORE.st_mtime_ns,
+    )
+    or _BOOTSTRAP_IDENTITY
+    != (
+        _BOOTSTRAP_AFTER.st_dev,
+        _BOOTSTRAP_AFTER.st_ino,
+        _BOOTSTRAP_AFTER.st_size,
+        _BOOTSTRAP_AFTER.st_mtime_ns,
+    )
+    or len(_BOOTSTRAP_BYTES) != _BOOTSTRAP_AFTER.st_size
+):
+    raise RuntimeError("Concordato implementation bootstrap changed while read.")
+_BOOTSTRAP_NAMESPACE = {
+    "__file__": _BOOTSTRAP_PATH,
+    "__name__": "_concordato_implementation_bootstrap",
+}
+# The exact stable single-link bootstrap source is verified above.
+exec(  # nosec B102
+    compile(_BOOTSTRAP_BYTES, _BOOTSTRAP_PATH, "exec"), _BOOTSTRAP_NAMESPACE
+)
+_BOOTSTRAP_NAMESPACE["activate_implementation_boundary"]()
+_SCRIPTS_DIR = _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))
+if _SCRIPTS_DIR not in _bootstrap_sys.path:
+    _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
+
 import argparse
 import json
 import re
@@ -9,6 +68,7 @@ from pathlib import Path
 from typing import Any
 
 from docx import Document
+from replay_assurance import replay_assurance
 
 __all__ = ["apply_review_edits", "main"]
 
@@ -17,7 +77,7 @@ REGENERATE_NATIVE_OUTPUT_ACTION = (
     "Regenerate native DOCX/XLSX/PDF outputs before final handoff."
 )
 FINAL_HANDOFF_ACTION = (
-    "Use final_artifacts.json as the reviewed artifact gallery for handoff."
+    "Review is recorded; professional conclusion and publication remain withheld."
 )
 COMPLETE_REVIEW_ACTION = "Complete remaining review decisions before final handoff."
 
@@ -200,7 +260,7 @@ def _application_status(applied: dict[str, Any]) -> str:
         return "partial_review_applied"
     if int(applied.get("decision_count") or 0) < int(applied.get("item_count") or 0):
         return "partial_review_applied"
-    return "final_ready"
+    return "review_applied_assurance_withheld"
 
 
 def _next_actions(current: list[Any], status: str) -> list[str]:
@@ -209,7 +269,7 @@ def _next_actions(current: list[Any], status: str) -> list[str]:
         for action in current
         if clean_text(action) != REGENERATE_NATIVE_OUTPUT_ACTION
     ]
-    if status == "final_ready":
+    if status == "review_applied_assurance_withheld":
         next_actions.append(FINAL_HANDOFF_ACTION)
     elif status == "partial_review_applied":
         next_actions.append(COMPLETE_REVIEW_ACTION)
@@ -228,6 +288,19 @@ def apply_review_edits(
     final_artifacts_path = final_artifacts_path.resolve()
     applied = _read_json(applied_decisions_path)
     final_artifacts = _read_json(final_artifacts_path)
+    # The parent already replayed the predecessor closure before opening the
+    # bounded transaction. At this point authorized review files exist, so the
+    # predecessor whole-tree seal is intentionally stale until finalization.
+    assurance_replay = replay_assurance(
+        output_dir,
+        require_output_closure=False,
+    )
+    persisted_review = _read_json(output_dir / "review_payload.json")
+    applied_review = applied.get("review_payload")
+    if not isinstance(applied_review, dict) or applied_review.get(
+        "content_sha256"
+    ) != persisted_review.get("content_sha256"):
+        raise ValueError("Applied decisions are not bound to review_payload.json")
     effects = [
         effect for effect in applied.get("effects", []) if isinstance(effect, dict)
     ]
@@ -320,6 +393,7 @@ def apply_review_edits(
     final_artifacts["outputs"] = outputs
     final_artifacts["status"] = applied["application_status"]
     final_artifacts["review_status"] = applied["application_status"]
+    final_artifacts["final_ready"] = False
     review_application = final_artifacts.setdefault("review_application", {})
     if isinstance(review_application, dict):
         review_application["application_status"] = applied["application_status"]
@@ -347,6 +421,7 @@ def apply_review_edits(
         "native_regenerated_paths": native_regenerated_paths,
         "backup_paths": [backup_output["path"]] if backup_output else [],
         "application_status": applied["application_status"],
+        "assurance_replay": assurance_replay,
         "applied_decisions": applied,
         "final_artifacts": final_artifacts,
     }

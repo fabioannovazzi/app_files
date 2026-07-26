@@ -10,6 +10,9 @@
     "assets/review-workbench-adapter.json",
     "assets/concordato-plan-review-widget.html"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "codex_context": {
     "policy": "real_case_data_may_enter_codex_context",
     "classes": [
@@ -43,12 +46,36 @@
     {
       "id": "private-output-root",
       "control": "Run artifacts are written outside published repository paths."
+    },
+    {
+      "id": "stable-source-capture",
+      "control": "Supported source bytes are captured before parsing and replayed against sealed receipts before review writes."
+    },
+    {
+      "id": "reviewed-source-role-boundary",
+      "control": "Filename suggestions remain non-operative until a reviewed, source-bound role, currency, unit, and complete numeric-disposition decision is supplied."
+    },
+    {
+      "id": "assurance-withheld-by-contract",
+      "control": "The deterministic payload and applied review state remain final_ready=false; semantic conclusion and publication require separate professional authority."
+    },
+    {
+      "id": "bounded-trusted-memory-review-transaction",
+      "control": "MCP review save and apply capture the bounded canonical output tree and modes in parent-process memory, run helpers only against a detached working tree, reject links, aliases, special or oversized entries, and restore exact trusted bytes and modes on any rejected commit."
+    },
+    {
+      "id": "parent-owned-assurance-authorization",
+      "control": "The MCP parent binds caller run, review, current decisions, final state, source-role decisions, and output paths to the persisted trusted snapshot, replays every source, implementation, gate, ledger, review, final, and assurance-envelope receipt, and treats child output only as a bounded acknowledgement before commit."
+    },
+    {
+      "id": "exact-implementation-formula-output-and-successor-closure",
+      "control": "Assured commands validate the exact 25-file implementation tree before workflow imports; authoritative numeric work requires paired reviewed source-role and calculation-formula decisions, the ledger closes every material CSV, XLSX and DOCX address, and save or apply seals an exact physical-output successor bound to the prior closure while professional readiness remains false."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-21",
+    "reviewed_at": "2026-07-25",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5e5b55d008d9bfd349e7bd992dcb9e96d55d4e8ec88a6c7ab3e9daf97c3ebcb7"
+    "source_fingerprint": "c1a57fd8494d0f016e7e52ce154f5fc38abd87578c92da06b89ddf2b532ce895"
   }
 }

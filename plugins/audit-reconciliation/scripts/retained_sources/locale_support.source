@@ -53,7 +53,6 @@ LANGUAGE_PACKS: dict[str, dict[str, Any]] = {
             "ledger": ("mastrino", "partitario", "interrogazione conto", "sottoconto"),
             "open_items": (
                 "partite aperte",
-                "all.a",
                 "scheda clienti",
                 "scheda cliente",
                 "scheda fornitori",
@@ -117,12 +116,12 @@ LANGUAGE_PACKS: dict[str, dict[str, Any]] = {
         "missing_evidence": {
             "probable_bank_payment_candidate": "Esiste un pagamento bancario probabile collegato alla riga; verificare distinta, descrizione bancaria o dettaglio allocazione prima di trattarlo come chiusura definitiva.",
             "payment_order_only": "La distinta è solo evidenza ponte; acquisire estratto conto, contabile bancaria o estratto del factor/operatore collegato al lotto.",
-            "payment_order_amount_mismatch": "La distinta esiste, ma l'importo allocato non coincide con la riga All.A; acquisire dettaglio allocazione o conferma di saldo parziale.",
+            "payment_order_amount_mismatch": "La distinta esiste, ma l'importo allocato non coincide con la partita aperta; acquisire dettaglio allocazione o conferma di saldo parziale.",
             "factoring_bridge_only": "La scrittura factor/operatore è solo evidenza ponte; acquisire estratto conto bancario o estratto operatore collegato a fattura o lotto.",
             "unallocated_external_bank_requires_allocation": "Esiste un movimento bancario, ma non è allocato alla specifica fattura/partita; acquisire dettaglio allocazione, avviso di pagamento o breakdown del lotto.",
             "internal_closure_without_external": "Esiste una chiusura interna; acquisire evidenza esterna bancaria, factor/operatore o compensazione documentata collegata alla riga.",
             "internal_booking_open_support": "La posizione aperta è supportata da registrazione/saldo interno; per superarla serve evidenza esterna specifica di chiusura.",
-            "grouped_open_amount_internal_booking_support": "La posizione aperta è supportata da una registrazione interna aggregata che coincide con la somma delle righe All.A dello stesso documento; per superarla serve evidenza esterna specifica di chiusura.",
+            "grouped_open_amount_internal_booking_support": "La posizione aperta è supportata da una registrazione interna aggregata che coincide con la somma delle partite aperte dello stesso documento; per superarla serve evidenza esterna specifica di chiusura.",
             "internal_accounting_only": "Esiste una scrittura interna di mastro/giornale; acquisire evidenza esterna bancaria, factor/operatore o compensazione documentata.",
             "compensation_needs_external_support": "La compensazione è indicata, ma la regola configurata richiede supporto bancario/esterno.",
             "default": "Acquisire evidenza specifica per documento: movimento bancario, estratto factor/operatore, compensazione documentata o dettaglio mastro.",

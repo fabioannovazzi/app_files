@@ -1,19 +1,23 @@
 from __future__ import annotations
 
+import itertools
+import logging
+import re
+import time
+from collections.abc import Mapping
 from typing import Callable, Optional, Sequence
 
 import polars as pl
-import re
-import itertools
-import time
-import logging
 
 try:
     from rapidfuzz import fuzz  # type: ignore
 except Exception:  # pragma: no cover - optional dependency
     fuzz = None  # type: ignore
 
-from src.check_statements.classify import classify_op, is_tax_ledger_entry as _is_tax_ledger_entry
+from src.check_statements.classify import (
+    classify_op,
+)
+from src.check_statements.classify import is_tax_ledger_entry as _is_tax_ledger_entry
 
 _log = logging.getLogger(__name__)
 
@@ -88,7 +92,9 @@ def _build_bank_candidates(
     joined = (
         bank_expanded.join(ledger_df, on="bucket", how="inner")
         .filter((pl.col("b_amount") - pl.col("l_amount")).abs() <= tolerance)
-        .filter((pl.col("b_date") - pl.col("l_date")).dt.total_days().abs() <= date_window)
+        .filter(
+            (pl.col("b_date") - pl.col("l_date")).dt.total_days().abs() <= date_window
+        )
     )
     if not use_absolute_amounts:
         joined = joined.filter(pl.col("b_amount") * pl.col("l_amount") >= 0)
@@ -155,6 +161,7 @@ def _group_match(
     within_tolerance: Callable[["Transaction", "Transaction"], bool],
     within_date: Callable[["Transaction", "Transaction"], bool],
     update_progress: Optional[Callable[[int, int], None]] = None,
+    progress_pass_index: int = 2,
     group_candidates_cap: Optional[int] = None,
     max_combos_per_bank: Optional[int] = None,
     group_time_budget_ms: Optional[int] = None,
@@ -163,18 +170,23 @@ def _group_match(
         return
     gtol = group_tolerance if group_tolerance is not None else tolerance
 
-    b_ops = [((t.metadata or {}).get("op_type") or classify_op(t.description)) for t in bank]
+    b_ops = [
+        ((t.metadata or {}).get("op_type") or classify_op(t.description)) for t in bank
+    ]
     b_ibans = [((t.metadata or {}).get("iban") or "") for t in bank]
     b_ben_norm = [(t.beneficiary or "").upper() for t in bank]
     b_ben_key = [_ben_key(t.beneficiary or "") for t in bank]
     l_ibans = [((t.metadata or {}).get("iban") or "") for t in ledger]
     l_ben_norm = [(t.beneficiary or "").upper() for t in ledger]
     l_ben_key = [_ben_key(t.beneficiary or "") for t in ledger]
-    l_is_tax = [bool(((t.metadata or {}).get("tax_flag"))) or _is_tax_ledger_entry(t) for t in ledger]
+    l_is_tax = [
+        bool(((t.metadata or {}).get("tax_flag"))) or _is_tax_ledger_entry(t)
+        for t in ledger
+    ]
 
     for bi, b_txn in enumerate(bank):
         if update_progress:
-            update_progress(2, bi)
+            update_progress(progress_pass_index, bi)
         if bi in matched_bank_indices:
             continue
         t0 = time.perf_counter()
@@ -206,7 +218,18 @@ def _group_match(
             candidates.append(li)
 
         tgt = abs(b_txn.amount) if use_absolute_amounts else b_txn.amount
-        candidates.sort(key=lambda i: abs(((abs(ledger[i].amount) if use_absolute_amounts else ledger[i].amount) - tgt)))
+        candidates.sort(
+            key=lambda i: abs(
+                (
+                    (
+                        abs(ledger[i].amount)
+                        if use_absolute_amounts
+                        else ledger[i].amount
+                    )
+                    - tgt
+                )
+            )
+        )
         if isinstance(group_candidates_cap, int) and group_candidates_cap > 0:
             candidates = candidates[:group_candidates_cap]
 
@@ -244,15 +267,28 @@ def _group_match(
                             continue
                         if b_type == "BONIFICO" and (l_is_tax[li1] or l_is_tax[li2]):
                             continue
-                        total = (abs(l1.amount) if use_absolute_amounts else l1.amount) + (abs(l2.amount) if use_absolute_amounts else l2.amount)
-                        diff = abs(abs(total) - abs(b_txn.amount)) if use_absolute_amounts else abs(total - b_txn.amount)
+                        total = (
+                            abs(l1.amount) if use_absolute_amounts else l1.amount
+                        ) + (abs(l2.amount) if use_absolute_amounts else l2.amount)
+                        diff = (
+                            abs(abs(total) - abs(b_txn.amount))
+                            if use_absolute_amounts
+                            else abs(total - b_txn.amount)
+                        )
                         if diff <= gtol:
                             if beneficiary_mode == "hard":
-                                if not (_similarity_str(b_ben, l_ben_norm[li1]) >= fuzzy_threshold and _similarity_str(b_ben, l_ben_norm[li2]) >= fuzzy_threshold):
+                                if not (
+                                    _similarity_str(b_ben, l_ben_norm[li1])
+                                    >= fuzzy_threshold
+                                    and _similarity_str(b_ben, l_ben_norm[li2])
+                                    >= fuzzy_threshold
+                                ):
                                     continue
                             matched_bank_indices.add(bi)
                             matched_ledger_indices.update((li1, li2))
-                            matched_pairs.append((bi, tuple(sorted((li1, li2))), "group"))
+                            matched_pairs.append(
+                                (bi, tuple(sorted((li1, li2))), "group")
+                            )
                             found = True
                             seen.add(li1)
                             seen.add(li2)
@@ -265,7 +301,10 @@ def _group_match(
                 triple_checks += 1
                 if not all(within_date(b_txn, ledger[i]) for i in combo):
                     continue
-                if isinstance(max_combos_per_bank, int) and triple_checks > max_combos_per_bank:
+                if (
+                    isinstance(max_combos_per_bank, int)
+                    and triple_checks > max_combos_per_bank
+                ):
                     break
                 if isinstance(group_time_budget_ms, int):
                     elapsed_ms = (time.perf_counter() - t0) * 1000.0
@@ -284,12 +323,23 @@ def _group_match(
                     continue
                 if b_op == "F24":
                     continue
-                total = sum(abs(ledger[i].amount) if use_absolute_amounts else ledger[i].amount for i in combo)
-                diff = abs(abs(total) - abs(b_txn.amount)) if use_absolute_amounts else abs(total - b_txn.amount)
+                total = sum(
+                    abs(ledger[i].amount) if use_absolute_amounts else ledger[i].amount
+                    for i in combo
+                )
+                diff = (
+                    abs(abs(total) - abs(b_txn.amount))
+                    if use_absolute_amounts
+                    else abs(total - b_txn.amount)
+                )
                 if diff <= gtol:
                     if beneficiary_mode == "hard":
                         if not all(
-                            _similarity_str(b_txn.normalised_beneficiary(), ledger[i].normalised_beneficiary()) >= fuzzy_threshold
+                            _similarity_str(
+                                b_txn.normalised_beneficiary(),
+                                ledger[i].normalised_beneficiary(),
+                            )
+                            >= fuzzy_threshold
                             for i in combo
                         ):
                             continue
@@ -328,22 +378,35 @@ def _exact_pass(
     date_window: int,
     use_absolute_amounts: bool,
     update_progress: Optional[Callable[[int, int], None]] = None,
+    synthetic_fee_links: Mapping[int, int] | None = None,
 ) -> None:
     """Greedy strict pass: require base constraints + one strong signal.
 
-    Strong signals: shared id, equal IBAN, beneficiary similarity, or F24/tax alignment.
+    Strong signals are shared ids, equal IBANs, beneficiary similarity,
+    F24/tax alignment, or an exact synthetic-fee origin link created by the
+    current reconciliation call. The origin link is mechanical one-to-one
+    provenance; fee-like text or amount/date coincidence is not sufficient.
     """
     b_ibans = [((t.metadata or {}).get("iban")) for t in bank]
     l_ibans = [((t.metadata or {}).get("iban")) for t in ledger]
-    b_ops = [((t.metadata or {}).get("op_type") or classify_op(t.description)) for t in bank]
-    l_tax_flags = [bool(((t.metadata or {}).get("tax_flag"))) or _is_tax_ledger_entry(t) for t in ledger]
+    b_ops = [
+        ((t.metadata or {}).get("op_type") or classify_op(t.description)) for t in bank
+    ]
+    l_tax_flags = [
+        bool(((t.metadata or {}).get("tax_flag"))) or _is_tax_ledger_entry(t)
+        for t in ledger
+    ]
     b_ben_norm = [(t.beneficiary or "").upper() for t in bank]
     l_ben_norm = [(t.beneficiary or "").upper() for t in ledger]
 
     def base_ok(bi: int, li: int) -> bool:
         b = bank[bi]
         l = ledger[li]
-        amt_diff = abs(abs(b.amount) - abs(l.amount)) if use_absolute_amounts else abs(b.amount - l.amount)
+        amt_diff = (
+            abs(abs(b.amount) - abs(l.amount))
+            if use_absolute_amounts
+            else abs(b.amount - l.amount)
+        )
         if amt_diff > tolerance:
             return False
         if abs((b.date - l.date).days) > date_window:
@@ -360,6 +423,21 @@ def _exact_pass(
             return not l_tax_flags[li]
         return True
 
+    def synthetic_fee_linked(bi: int, li: int) -> bool:
+        """Return whether this exact synthetic endpoint was created for ``bi``."""
+
+        if synthetic_fee_links is None or synthetic_fee_links.get(li) != bi:
+            return False
+        metadata = ledger[li].metadata
+        if not isinstance(metadata, Mapping):
+            return False
+        source = metadata.get("source")
+        source_name = source.get("name") if isinstance(source, Mapping) else source
+        return (
+            source_name in {"synthetic_fee", "synthetic_fee_amount"}
+            and metadata.get("synthetic_fee_bank_index") == bi
+        )
+
     def score(bi: int, li: int) -> tuple[float, dict[str, bool | float]]:
         b = bank[bi]
         l = ledger[li]
@@ -372,8 +450,11 @@ def _exact_pass(
         ben_sim = _similarity_str(b_ben_norm[bi], l_ben_norm[li])
         b_type = b_ops[bi]
         type_align = type_consistent(bi, li)
+        synthetic_fee_link = synthetic_fee_linked(bi, li)
 
         sc = 0.0
+        if synthetic_fee_link:
+            sc += 1.0
         if has_id:
             sc += 1.0
         if has_iban:
@@ -387,7 +468,13 @@ def _exact_pass(
             sc += 0.20
         if b_type == "F24" and type_align:
             sc = max(sc, 0.80)
-        return sc, {"has_id": has_id, "has_iban": has_iban, "ben_sim": float(ben_sim), "type_align": type_align}
+        return sc, {
+            "has_id": has_id,
+            "has_iban": has_iban,
+            "ben_sim": float(ben_sim),
+            "type_align": type_align,
+            "synthetic_fee_link": synthetic_fee_link,
+        }
 
     for bi, _ in enumerate(bank):
         if update_progress:
@@ -407,14 +494,20 @@ def _exact_pass(
                 continue
             sc, signals = score(bi, li)
             strong = (
-                bool(signals["has_id"]) or bool(signals["has_iban"]) or float(signals["ben_sim"]) >= max(85.0, float(fuzzy_threshold)) or (bool(signals["type_align"]) and b_ops[bi] == "F24")
+                bool(signals["has_id"])
+                or bool(signals["has_iban"])
+                or bool(signals["synthetic_fee_link"])
+                or float(signals["ben_sim"]) >= max(85.0, float(fuzzy_threshold))
+                or (bool(signals["type_align"]) and b_ops[bi] == "F24")
             )
             if not strong:
                 continue
             if sc < 0.80:
                 continue
             dd = abs((bank[bi].date - ledger[li].date).days)
-            if sc > best_sc or (sc == best_sc and (best_date_diff is None or dd < best_date_diff)):
+            if sc > best_sc or (
+                sc == best_sc and (best_date_diff is None or dd < best_date_diff)
+            ):
                 best_sc = sc
                 best_li = li
                 best_date_diff = dd
@@ -425,6 +518,8 @@ def _exact_pass(
             matched_pairs.append((bi, best_li, "exact"))
             matched_bank_indices.add(bi)
             matched_ledger_indices.add(best_li)
+
+
 __all__ = (
     "_txns_to_polars",
     "_pairs_from_candidates",
@@ -634,20 +729,18 @@ def _fuzzy_margin_pass(
         .filter((pl.col("b_op") != "F24") | (pl.col("l_op") == "F24"))
         .filter(~((pl.col("b_op") == "BONIFICO") & (pl.col("l_op") == "F24")))
         .with_columns(
-            pl.struct(["b_llm", "l_loc", "b_loc", "l_llm"]).map_elements(
-                lambda s: _fuzzy_score(
-                    s["b_llm"], s["l_loc"], s["b_loc"], s["l_llm"]
-                )
-            ).alias("score")
+            pl.struct(["b_llm", "l_loc", "b_loc", "l_llm"])
+            .map_elements(
+                lambda s: _fuzzy_score(s["b_llm"], s["l_loc"], s["b_loc"], s["l_llm"])
+            )
+            .alias("score")
         )
     )
     if joined.is_empty():
         return
     # Rank by score per bank row and compute margin
     joined = joined.sort(["bi", "score"], descending=[False, True])
-    top_two = joined.group_by("bi").agg(
-        pl.col("li").head(2), pl.col("score").head(2)
-    )
+    top_two = joined.group_by("bi").agg(pl.col("li").head(2), pl.col("score").head(2))
     for row in top_two.iter_rows(named=True):
         bi = int(row["bi"]) if row["bi"] is not None else None
         li_vals = row["li"] or []

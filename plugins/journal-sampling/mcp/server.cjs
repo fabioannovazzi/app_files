@@ -3,11 +3,174 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
+const childProcess = require("node:child_process");
 
 const SERVER_NAME = "journal-sampling-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
+const JOURNAL_SAMPLING_PLUGIN_IMPLEMENTATION_PATHS = [
+  "scripts/check_dependencies.py",
+  "scripts/implementation_bootstrap.py",
+  "scripts/inspect_journal.py",
+  "scripts/journal_sampling_core.py",
+  "scripts/normalize_journal.py",
+  "scripts/replay_normalization.py",
+  "scripts/review_session.py",
+  "scripts/review_successor.py",
+  "scripts/run_sample.py",
+  "mcp/server.cjs",
+  "assets/icon.svg",
+  "assets/journal-sampling-review-widget.html",
+  "assets/review-workbench-adapter.json",
+  ".app.json",
+  ".mcp.json",
+  ".codex-plugin/plugin.json",
+];
+const JOURNAL_SAMPLING_SHARED_IMPLEMENTATION_PATHS = [
+  "__init__.py",
+  "contracts.py",
+  "decisions.py",
+  "envelope.py",
+  "money.py",
+  "relationships.py",
+  "review_output_transaction.cjs",
+  "serialization.py",
+];
+const JOURNAL_SAMPLING_SHARED_ROOT = (() => {
+  const vendored = path.join(
+    PLUGIN_ROOT,
+    "vendor",
+    "modules",
+    "vera_assurance",
+  );
+  return fs.existsSync(vendored)
+    ? vendored
+    : path.resolve(
+        PLUGIN_ROOT,
+        "..",
+        "_shared",
+        "vendor",
+        "modules",
+        "vera_assurance",
+      );
+})();
+
+function journalExpectedImplementationDirectories(relativePaths) {
+  const expected = new Set();
+  for (const relativePath of relativePaths) {
+    let parent = path.posix.dirname(relativePath);
+    while (parent && parent !== ".") {
+      expected.add(parent);
+      parent = path.posix.dirname(parent);
+    }
+  }
+  return expected;
+}
+
+function journalScanImplementationRoot(root, scanRoots, rootFiles) {
+  const rootEntry = fs.lstatSync(root);
+  if (!rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("Journal Sampling implementation root must be real.");
+  }
+  const files = new Set();
+  const directories = new Set();
+  for (const relativePath of rootFiles) {
+    const entry = fs.lstatSync(path.join(root, relativePath));
+    if (entry.isSymbolicLink() || !entry.isFile() || entry.nlink !== 1) {
+      throw new Error("Journal Sampling implementation artifact is invalid.");
+    }
+    files.add(relativePath);
+  }
+  const pending = scanRoots.map((relativePath) => {
+    const scanPath = path.join(root, relativePath);
+    const entry = fs.lstatSync(scanPath);
+    if (entry.isSymbolicLink() || !entry.isDirectory()) {
+      throw new Error("Journal Sampling implementation directory is invalid.");
+    }
+    if (relativePath !== ".") directories.add(relativePath);
+    return scanPath;
+  });
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current).sort()) {
+      const entryPath = path.join(current, name);
+      const entry = fs.lstatSync(entryPath);
+      const relative = path
+        .relative(root, entryPath)
+        .split(path.sep)
+        .join("/");
+      if (entry.isSymbolicLink()) {
+        throw new Error("Journal Sampling implementation cannot contain symlinks.");
+      }
+      if (entry.isDirectory()) {
+        directories.add(relative);
+        pending.push(entryPath);
+        continue;
+      }
+      if (!entry.isFile() || entry.nlink !== 1) {
+        throw new Error("Journal Sampling implementation artifact is invalid.");
+      }
+      files.add(relative);
+    }
+  }
+  return { files, directories };
+}
+
+function validateJournalImplementationTree() {
+  const pluginTree = journalScanImplementationRoot(
+    PLUGIN_ROOT,
+    [".codex-plugin", "assets", "mcp", "scripts"],
+    [".app.json", ".mcp.json"],
+  );
+  const sharedTree = journalScanImplementationRoot(
+    JOURNAL_SAMPLING_SHARED_ROOT,
+    ["."],
+    [],
+  );
+  const expectedPluginDirectories =
+    journalExpectedImplementationDirectories(
+      JOURNAL_SAMPLING_PLUGIN_IMPLEMENTATION_PATHS,
+    );
+  if (
+    JSON.stringify([...pluginTree.files].sort()) !==
+      JSON.stringify([...JOURNAL_SAMPLING_PLUGIN_IMPLEMENTATION_PATHS].sort()) ||
+    JSON.stringify([...pluginTree.directories].sort()) !==
+      JSON.stringify([...expectedPluginDirectories].sort()) ||
+    JSON.stringify([...sharedTree.files].sort()) !==
+      JSON.stringify([...JOURNAL_SAMPLING_SHARED_IMPLEMENTATION_PATHS].sort()) ||
+    sharedTree.directories.size !== 0
+  ) {
+    throw new Error("Journal Sampling implementation tree is not exact.");
+  }
+}
+
+validateJournalImplementationTree();
+
+function readJournalImplementationText(relativePath) {
+  const implementationPath = path.join(PLUGIN_ROOT, relativePath);
+  const observed = fs.lstatSync(implementationPath);
+  if (
+    observed.isSymbolicLink() ||
+    !observed.isFile() ||
+    observed.nlink !== 1
+  ) {
+    throw new Error(
+      "Journal Sampling implementation must be an ordinary single-link file.",
+    );
+  }
+  return fs.readFileSync(implementationPath, "utf8");
+}
+
 const PLUGIN_MANIFEST = JSON.parse(
-  fs.readFileSync(path.join(PLUGIN_ROOT, ".codex-plugin", "plugin.json"), "utf8"),
+  readJournalImplementationText(".codex-plugin/plugin.json"),
+);
+const APP_MANIFEST = JSON.parse(
+  readJournalImplementationText(".app.json"),
+);
+const MCP_MANIFEST = JSON.parse(
+  readJournalImplementationText(".mcp.json"),
+);
+const REVIEW_ADAPTER = JSON.parse(
+  readJournalImplementationText("assets/review-workbench-adapter.json"),
 );
 const SERVER_VERSION = PLUGIN_MANIFEST.version || "0.1.0";
 const WIDGET_URI = "ui://widget/journal-sampling-review.html";
@@ -43,6 +206,64 @@ const ITEM_TYPES = new Set([
   "sample_artifact",
   "review_artifact",
 ]);
+
+function validateJournalImplementationConfiguration() {
+  validateJournalImplementationTree();
+  const serverObserved = fs.lstatSync(__filename);
+  if (
+    serverObserved.isSymbolicLink() ||
+    !serverObserved.isFile() ||
+    serverObserved.nlink !== 1 ||
+    PLUGIN_MANIFEST.name !== "journal-sampling" ||
+    PLUGIN_MANIFEST.skills !== "./skills/" ||
+    PLUGIN_MANIFEST.apps !== "./.app.json" ||
+    PLUGIN_MANIFEST.mcpServers !== "./.mcp.json" ||
+    journalReviewStableJson(APP_MANIFEST) !== '{"apps":{}}'
+  ) {
+    throw new Error("Journal Sampling plugin discovery configuration is stale.");
+  }
+  const servers = MCP_MANIFEST.mcpServers;
+  const serverNames = isPlainObject(servers) ? Object.keys(servers) : [];
+  const server = isPlainObject(servers)
+    ? servers.journalSamplingWidgets
+    : null;
+  if (
+    journalReviewStableJson(serverNames.sort()) !==
+      '["journalSamplingWidgets"]' ||
+    !isPlainObject(server) ||
+    server.cwd !== "." ||
+    server.command !== "node" ||
+    journalReviewStableJson(server.args) !==
+      '["./mcp/server.cjs","--stdio"]'
+  ) {
+    throw new Error("Journal Sampling MCP launch contract is stale.");
+  }
+  if (
+    REVIEW_ADAPTER.plugin !== "journal-sampling" ||
+    REVIEW_ADAPTER.saveTool !== TOOL_NAMES.saveDecisions ||
+    REVIEW_ADAPTER.applyTool !== TOOL_NAMES.applyDecisions ||
+    REVIEW_ADAPTER.widgetType !== "journal_sampling_review"
+  ) {
+    throw new Error("Journal Sampling review adapter contract is stale.");
+  }
+  const widget = readJournalImplementationText(
+    "assets/journal-sampling-review-widget.html",
+  );
+  const matches = Array.from(
+    widget.matchAll(/^[ \t]*const CONFIG = (\{.*\});[ \t]*$/gm),
+  );
+  if (
+    matches.length !== 1 ||
+    journalReviewStableJson(JSON.parse(matches[0][1])) !==
+      journalReviewStableJson(REVIEW_ADAPTER)
+  ) {
+    throw new Error(
+      "Journal Sampling widget does not embed the exact review adapter.",
+    );
+  }
+}
+
+validateJournalImplementationConfiguration();
 
 function isPlainObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
@@ -273,9 +494,8 @@ function resourceText(uri) {
   if (uri !== WIDGET_URI) {
   throw new Error(`unknown Journal Sampling widget resource: ${uri}`);
   }
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "journal-sampling-review-widget.html"),
-    "utf8",
+  return readJournalImplementationText(
+    "assets/journal-sampling-review-widget.html",
   );
 }
 
@@ -369,6 +589,928 @@ function validateReviewPayload(inputArgs) {
   }
   return payload;
 }
+
+// BEGIN GENERATED REVIEW OUTPUT TRANSACTION
+const GENERATED_REVIEW_TRANSACTION_LIMITS = {
+  maxEntryCount: 20_000,
+  maxFileBytes: 128 * 1024 * 1024,
+  maxTotalBytes: 512 * 1024 * 1024,
+};
+
+let generatedReviewWriteCounter = 0;
+const GENERATED_REVIEW_TRANSACTION_ERROR_KIND = Symbol(
+  "generated-review-transaction-error-kind",
+);
+const GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR = Symbol(
+  "generated-review-transaction-operation-error",
+);
+
+function generatedReviewPathEntryStat(targetPath) {
+  try {
+    return fs.lstatSync(targetPath);
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+function generatedReviewPathEntryExists(targetPath) {
+  return generatedReviewPathEntryStat(targetPath) !== null;
+}
+
+function generatedReviewRemoveExactPath(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry) return;
+  if (entry.isDirectory() && !entry.isSymbolicLink()) {
+    fs.rmSync(targetPath, {
+      recursive: true,
+      force: true,
+      maxRetries: 3,
+      retryDelay: 25,
+    });
+    return;
+  }
+  fs.unlinkSync(targetPath);
+}
+
+function generatedReviewDirectoryIdentity(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry || !entry.isDirectory() || entry.isSymbolicLink()) {
+    throw new Error("Review transaction root must be a real directory.");
+  }
+  return { dev: entry.dev, ino: entry.ino };
+}
+
+function generatedReviewIdentityMatches(entry, identity) {
+  return (
+    entry != null &&
+    entry.isDirectory() &&
+    !entry.isSymbolicLink() &&
+    entry.dev === identity.dev &&
+    entry.ino === identity.ino
+  );
+}
+
+function generatedReviewTrackedRootsWithinParent(outputParent, identity) {
+  generatedReviewValidateRealDirectoryAncestors(outputParent);
+  const matches = [];
+  for (const name of fs.readdirSync(outputParent).sort()) {
+    const candidate = path.join(outputParent, name);
+    const entry = generatedReviewPathEntryStat(candidate);
+    if (generatedReviewIdentityMatches(entry, identity)) {
+      matches.push(candidate);
+    }
+  }
+  return matches;
+}
+
+function generatedReviewRemoveTrackedRootWithinParent(
+  outputParent,
+  expectedPath,
+  identity,
+) {
+  const matches = generatedReviewTrackedRootsWithinParent(
+    outputParent,
+    identity,
+  );
+  const expected = path.resolve(expectedPath);
+  const relocated = matches.some(
+    (candidate) => path.resolve(candidate) !== expected,
+  );
+  for (const candidate of matches) {
+    generatedReviewRemoveExactPath(candidate);
+  }
+  if (
+    generatedReviewTrackedRootsWithinParent(outputParent, identity).length
+  ) {
+    throw new Error("Review transaction root cleanup did not close.");
+  }
+  return { found: matches.length > 0, relocated };
+}
+
+function generatedReviewValidateRealDirectoryAncestors(targetDir) {
+  const resolved = path.resolve(targetDir);
+  const parsed = path.parse(resolved);
+  let current = parsed.root;
+  for (const component of resolved
+    .slice(parsed.root.length)
+    .split(path.sep)
+    .filter(Boolean)) {
+    current = path.join(current, component);
+    const entry = generatedReviewPathEntryStat(current);
+    if (!entry || !entry.isDirectory() || entry.isSymbolicLink()) {
+      throw new Error("Review output parent must be a real directory.");
+    }
+  }
+}
+
+function generatedReviewCanonicalRelativePath(value) {
+  if (
+    typeof value !== "string" ||
+    value !== value.trim() ||
+    !value ||
+    /[\u0000-\u001f\u007f\\]/.test(value) ||
+    path.posix.isAbsolute(value)
+  ) {
+    throw new Error("Review transaction received an invalid output path.");
+  }
+  const normalized = path.posix.normalize(value);
+  if (
+    normalized !== value ||
+    normalized === "." ||
+    normalized === ".." ||
+    normalized.startsWith("../")
+  ) {
+    throw new Error("Review transaction received an invalid output path.");
+  }
+  return normalized;
+}
+
+function generatedReviewAbsolutePath(root, relativePath) {
+  const canonical = generatedReviewCanonicalRelativePath(relativePath);
+  return path.join(root, ...canonical.split("/"));
+}
+
+function generatedReviewCaptureDirectoryImage(outputDir) {
+  const rootEntry = generatedReviewPathEntryStat(outputDir);
+  if (!rootEntry || !rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("Review output must be a real directory.");
+  }
+  const directories = [];
+  const files = [];
+  let entryCount = 0;
+  let totalBytes = 0;
+  const pending = [outputDir];
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current).sort()) {
+      entryCount += 1;
+      if (entryCount > GENERATED_REVIEW_TRANSACTION_LIMITS.maxEntryCount) {
+        throw new Error("Review output exceeds the transaction entry limit.");
+      }
+      const candidate = path.join(current, name);
+      const observed = generatedReviewPathEntryStat(candidate);
+      if (!observed || observed.isSymbolicLink()) {
+        throw new Error("Review output contains an unsafe filesystem entry.");
+      }
+      const relativePath = path
+        .relative(outputDir, candidate)
+        .split(path.sep)
+        .join("/");
+      generatedReviewCanonicalRelativePath(relativePath);
+      if (observed.isDirectory()) {
+        directories.push({
+          path: relativePath,
+          mode: observed.mode & 0o7777,
+        });
+        pending.push(candidate);
+        continue;
+      }
+      if (
+        !observed.isFile() ||
+        observed.nlink !== 1 ||
+        observed.size > GENERATED_REVIEW_TRANSACTION_LIMITS.maxFileBytes
+      ) {
+        throw new Error("Review output contains an unsupported file.");
+      }
+      totalBytes += observed.size;
+      if (totalBytes > GENERATED_REVIEW_TRANSACTION_LIMITS.maxTotalBytes) {
+        throw new Error("Review output exceeds the transaction byte limit.");
+      }
+      const noFollow = fs.constants.O_NOFOLLOW || 0;
+      let descriptor;
+      try {
+        descriptor = fs.openSync(candidate, fs.constants.O_RDONLY | noFollow);
+        const before = fs.fstatSync(descriptor);
+        const payload = fs.readFileSync(descriptor);
+        const after = fs.fstatSync(descriptor);
+        if (
+          !before.isFile() ||
+          before.nlink !== 1 ||
+          before.dev !== observed.dev ||
+          before.ino !== observed.ino ||
+          before.dev !== after.dev ||
+          before.ino !== after.ino ||
+          before.size !== after.size ||
+          before.mtimeMs !== after.mtimeMs ||
+          payload.length !== after.size
+        ) {
+          throw new Error("Review output changed during transaction capture.");
+        }
+        files.push({
+          path: relativePath,
+          mode: after.mode & 0o7777,
+          payload,
+        });
+      } finally {
+        if (descriptor !== undefined) fs.closeSync(descriptor);
+      }
+    }
+  }
+  directories.sort((left, right) => left.path.localeCompare(right.path));
+  files.sort((left, right) => left.path.localeCompare(right.path));
+  return {
+    rootMode: rootEntry.mode & 0o7777,
+    directories,
+    files,
+  };
+}
+
+function generatedReviewImagesEqual(left, right) {
+  if (left == null || right == null) return left === right;
+  if (
+    left.rootMode !== right.rootMode ||
+    left.directories.length !== right.directories.length ||
+    left.files.length !== right.files.length
+  ) {
+    return false;
+  }
+  for (let index = 0; index < left.directories.length; index += 1) {
+    const leftEntry = left.directories[index];
+    const rightEntry = right.directories[index];
+    if (
+      leftEntry.path !== rightEntry.path ||
+      leftEntry.mode !== rightEntry.mode
+    ) {
+      return false;
+    }
+  }
+  for (let index = 0; index < left.files.length; index += 1) {
+    const leftEntry = left.files[index];
+    const rightEntry = right.files[index];
+    if (
+      leftEntry.path !== rightEntry.path ||
+      leftEntry.mode !== rightEntry.mode ||
+      !leftEntry.payload.equals(rightEntry.payload)
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function generatedReviewMaterializeDirectoryImage(targetDir, image) {
+  if (generatedReviewPathEntryExists(targetDir)) {
+    throw new Error("Review transaction target already exists.");
+  }
+  fs.mkdirSync(targetDir, { mode: 0o700 });
+  const effectiveImage =
+    image || { rootMode: 0o755, directories: [], files: [] };
+  for (const directory of [...effectiveImage.directories].sort(
+    (left, right) =>
+      left.path.split("/").length - right.path.split("/").length ||
+      left.path.localeCompare(right.path),
+  )) {
+    fs.mkdirSync(generatedReviewAbsolutePath(targetDir, directory.path), {
+      mode: 0o700,
+    });
+  }
+  for (const file of effectiveImage.files) {
+    const target = generatedReviewAbsolutePath(targetDir, file.path);
+    generatedReviewValidateRealDirectoryAncestors(path.dirname(target));
+    const noFollow = fs.constants.O_NOFOLLOW || 0;
+    const descriptor = fs.openSync(
+      target,
+      fs.constants.O_WRONLY |
+        fs.constants.O_CREAT |
+        fs.constants.O_EXCL |
+        noFollow,
+      0o600,
+    );
+    try {
+      fs.writeFileSync(descriptor, file.payload);
+      fs.fsyncSync(descriptor);
+    } finally {
+      fs.closeSync(descriptor);
+    }
+    fs.chmodSync(target, file.mode);
+  }
+  for (const directory of [...effectiveImage.directories].sort(
+    (left, right) =>
+      right.path.split("/").length - left.path.split("/").length ||
+      left.path.localeCompare(right.path),
+  )) {
+    fs.chmodSync(
+      generatedReviewAbsolutePath(targetDir, directory.path),
+      directory.mode,
+    );
+  }
+  fs.chmodSync(targetDir, effectiveImage.rootMode);
+  const replay = generatedReviewCaptureDirectoryImage(targetDir);
+  if (!generatedReviewImagesEqual(effectiveImage, replay)) {
+    throw new Error("Review transaction materialization did not replay.");
+  }
+}
+
+function generatedReviewWritableLeafSignature(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry) return null;
+  if (entry.isSymbolicLink() || !entry.isFile() || entry.nlink !== 1) {
+    throw new Error("Review output contains an unsafe writable file.");
+  }
+  return [
+    entry.dev,
+    entry.ino,
+    entry.size,
+    entry.mtimeMs,
+    entry.mode,
+  ].join(":");
+}
+
+function generatedReviewAtomicWriteFileSync(
+  targetPath,
+  payload,
+  encoding = null,
+) {
+  generatedReviewValidateRealDirectoryAncestors(path.dirname(targetPath));
+  const initialSignature = generatedReviewWritableLeafSignature(targetPath);
+  const targetEntry = generatedReviewPathEntryStat(targetPath);
+  const targetMode = targetEntry ? targetEntry.mode & 0o7777 : 0o644;
+  generatedReviewWriteCounter += 1;
+  const tempPath = path.join(
+    path.dirname(targetPath),
+    `.${path.basename(targetPath)}.generated-review-write-${process.pid}-${generatedReviewWriteCounter}`,
+  );
+  let descriptor;
+  let tempExists = false;
+  try {
+    const noFollow = fs.constants.O_NOFOLLOW || 0;
+    descriptor = fs.openSync(
+      tempPath,
+      fs.constants.O_WRONLY |
+        fs.constants.O_CREAT |
+        fs.constants.O_EXCL |
+        noFollow,
+      targetMode,
+    );
+    tempExists = true;
+    fs.writeFileSync(
+      descriptor,
+      payload,
+      encoding ? { encoding } : undefined,
+    );
+    fs.fchmodSync(descriptor, targetMode);
+    fs.fsyncSync(descriptor);
+    fs.closeSync(descriptor);
+    descriptor = undefined;
+    if (
+      generatedReviewWritableLeafSignature(targetPath) !== initialSignature
+    ) {
+      throw new Error("Review output changed during an atomic write.");
+    }
+    generatedReviewValidateRealDirectoryAncestors(path.dirname(targetPath));
+    fs.renameSync(tempPath, targetPath);
+    tempExists = false;
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+    if (tempExists) {
+      try {
+        fs.unlinkSync(tempPath);
+      } catch (error) {
+        if (error?.code !== "ENOENT") throw error;
+      }
+    }
+  }
+}
+
+function generatedReviewImageEntryMaps(image) {
+  const directoryModes = new Map();
+  const files = new Map();
+  if (!image) {
+    return {
+      rootMode: 0o755,
+      directoryModes,
+      files,
+    };
+  }
+  for (const entry of image.directories) {
+    directoryModes.set(entry.path, entry.mode);
+  }
+  for (const entry of image.files) {
+    files.set(entry.path, entry);
+  }
+  return {
+    rootMode: image.rootMode,
+    directoryModes,
+    files,
+  };
+}
+
+function generatedReviewAuthorizedPathSet(paths) {
+  if (!Array.isArray(paths)) {
+    throw new Error("Review transaction requires an authorized write set.");
+  }
+  const authorized = new Set();
+  for (const value of paths) {
+    authorized.add(generatedReviewCanonicalRelativePath(value));
+  }
+  return authorized;
+}
+
+function generatedReviewDirectoryIsAuthorized(relativePath, authorized) {
+  if (authorized.has(relativePath)) return true;
+  const prefix = `${relativePath}/`;
+  return Array.from(authorized).some((entry) => entry.startsWith(prefix));
+}
+
+function generatedReviewValidateAuthorizedChanges(
+  beforeImage,
+  afterImage,
+  authorizedWritePaths,
+) {
+  const authorized = generatedReviewAuthorizedPathSet(authorizedWritePaths);
+  const before = generatedReviewImageEntryMaps(beforeImage);
+  const after = generatedReviewImageEntryMaps(afterImage);
+  if (before.rootMode !== after.rootMode) {
+    throw new Error("Review transaction changed the output directory mode.");
+  }
+  const directoryPaths = new Set([
+    ...before.directoryModes.keys(),
+    ...after.directoryModes.keys(),
+  ]);
+  for (const relativePath of directoryPaths) {
+    const beforeMode = before.directoryModes.get(relativePath);
+    const afterMode = after.directoryModes.get(relativePath);
+    if (beforeMode === afterMode) continue;
+    if (
+      beforeMode != null ||
+      afterMode == null ||
+      !generatedReviewDirectoryIsAuthorized(relativePath, authorized)
+    ) {
+      throw new Error("Review transaction changed an unauthorized directory.");
+    }
+  }
+  const filePaths = new Set([...before.files.keys(), ...after.files.keys()]);
+  for (const relativePath of filePaths) {
+    const beforeEntry = before.files.get(relativePath);
+    const afterEntry = after.files.get(relativePath);
+    const unchanged =
+      beforeEntry != null &&
+      afterEntry != null &&
+      beforeEntry.mode === afterEntry.mode &&
+      beforeEntry.payload.equals(afterEntry.payload);
+    if (unchanged) continue;
+    if (!authorized.has(relativePath)) {
+      throw new Error("Review transaction changed an unauthorized file.");
+    }
+    if (
+      beforeEntry != null &&
+      afterEntry != null &&
+      beforeEntry.mode !== afterEntry.mode
+    ) {
+      throw new Error("Review transaction changed an artifact mode.");
+    }
+  }
+  return authorized;
+}
+
+function generatedReviewTransactionEnvelope(result, authorizedWritePaths) {
+  return { result, authorizedWritePaths };
+}
+
+function generatedReviewArgsForWorkingOutput(inputArgs, workingOutputDir) {
+  const runIntake = isPlainObject(inputArgs.run_intake)
+    ? { ...inputArgs.run_intake, output_dir: workingOutputDir }
+    : { output_dir: workingOutputDir };
+  return { ...inputArgs, run_intake: runIntake };
+}
+
+function generatedReviewRewriteOutputPaths(
+  value,
+  workingOutputDir,
+  canonicalOutputDir,
+) {
+  if (Array.isArray(value)) {
+    return value.map((entry) =>
+      generatedReviewRewriteOutputPaths(
+        entry,
+        workingOutputDir,
+        canonicalOutputDir,
+      ),
+    );
+  }
+  if (value != null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        generatedReviewRewriteOutputPaths(
+          entry,
+          workingOutputDir,
+          canonicalOutputDir,
+        ),
+      ]),
+    );
+  }
+  if (typeof value !== "string") return value;
+  if (value === workingOutputDir) return canonicalOutputDir;
+  const prefix = `${workingOutputDir}${path.sep}`;
+  if (!value.startsWith(prefix)) return value;
+  return path.join(canonicalOutputDir, value.slice(prefix.length));
+}
+
+function generatedReviewCollectApplicationWritePaths(result) {
+  const paths = new Set([
+    "ui_decisions.json",
+    "applied_decisions.json",
+    "final_artifacts.json",
+    "run_intake.json",
+    "review_handoff.md",
+  ]);
+  function add(value) {
+    if (Array.isArray(value)) {
+      for (const entry of value) add(entry);
+      return;
+    }
+    if (typeof value !== "string" || !value) return;
+    paths.add(generatedReviewCanonicalRelativePath(value));
+  }
+  const applied = isPlainObject(result?.applied_decisions)
+    ? result.applied_decisions
+    : {};
+  const finalArtifacts = isPlainObject(result?.final_artifacts)
+    ? result.final_artifacts
+    : {};
+  const application = isPlainObject(finalArtifacts.review_application)
+    ? finalArtifacts.review_application
+    : {};
+  for (const source of [result, applied, application]) {
+    for (const fieldName of [
+      "revision_paths",
+      "target_update_paths",
+      "structured_update_paths",
+      "native_regeneration_paths",
+      "native_regenerated_paths",
+      "downstream_regenerated_paths",
+      "original_backup_paths",
+      "backup_paths",
+    ]) {
+      add(source?.[fieldName]);
+    }
+  }
+  for (const effect of Array.isArray(applied.effects) ? applied.effects : []) {
+    if (!isPlainObject(effect)) continue;
+    for (const fieldName of [
+      "revision_artifact",
+      "original_artifact_backup",
+      "derived_native_regeneration_paths",
+      "native_regenerated_paths",
+    ]) {
+      add(effect[fieldName]);
+    }
+  }
+  return Array.from(paths);
+}
+
+function generatedReviewWorkflowTransactionOptions(kind, inputArgs) {
+  if (typeof workflowReviewTransactionOptions !== "function") return {};
+  const options = workflowReviewTransactionOptions(kind, inputArgs);
+  if (options == null) return {};
+  if (!isPlainObject(options)) {
+    throw new Error("Workflow review transaction options must be an object.");
+  }
+  return options;
+}
+
+function generatedReviewRestoreFromTrustedImage(
+  outputDir,
+  trustedImage,
+  outputParent,
+) {
+  // Recovery is deliberately created only after the untrusted operation has
+  // returned. It never depends on a transaction tree that the operation knew.
+  const recoveryRoot = fs.mkdtempSync(
+    path.join(outputParent, ".generated-review-recovery-"),
+  );
+  fs.chmodSync(recoveryRoot, 0o700);
+  const recoveryIdentity =
+    generatedReviewDirectoryIdentity(recoveryRoot);
+  const recoveryOutput = path.join(recoveryRoot, "output");
+  let restored = false;
+  try {
+    if (trustedImage) {
+      generatedReviewMaterializeDirectoryImage(
+        recoveryOutput,
+        trustedImage,
+      );
+      const recoveryReplay =
+        generatedReviewCaptureDirectoryImage(recoveryOutput);
+      if (!generatedReviewImagesEqual(trustedImage, recoveryReplay)) {
+        throw new Error("Review output recovery did not replay.");
+      }
+    }
+    generatedReviewRemoveExactPath(outputDir);
+    if (trustedImage) {
+      if (generatedReviewPathEntryExists(outputDir)) {
+        throw new Error("Review output changed during recovery.");
+      }
+      fs.renameSync(recoveryOutput, outputDir);
+      const canonicalReplay =
+        generatedReviewCaptureDirectoryImage(outputDir);
+      if (!generatedReviewImagesEqual(trustedImage, canonicalReplay)) {
+        throw new Error("Review output recovery did not close.");
+      }
+    } else if (generatedReviewPathEntryExists(outputDir)) {
+      throw new Error("Review output recovery did not restore absence.");
+    }
+    restored = true;
+  } finally {
+    const cleanup = generatedReviewRemoveTrackedRootWithinParent(
+      outputParent,
+      recoveryRoot,
+      recoveryIdentity,
+    );
+    if (!cleanup.found || cleanup.relocated) {
+      throw new Error("Review output recovery root changed.");
+    }
+  }
+  if (!restored) {
+    throw new Error("Review output recovery did not close.");
+  }
+}
+
+function generatedReviewCanonicalMatchesTrusted(outputDir, trustedImage) {
+  if (!trustedImage) {
+    return !generatedReviewPathEntryExists(outputDir);
+  }
+  try {
+    return generatedReviewImagesEqual(
+      trustedImage,
+      generatedReviewCaptureDirectoryImage(outputDir),
+    );
+  } catch {
+    return false;
+  }
+}
+
+function generatedReviewRunOutputTransaction(
+  outputDir,
+  operation,
+  options = {},
+) {
+  if (!outputDir) {
+    const envelope = operation({
+      workingOutputDir: null,
+      canonicalOutputDir: null,
+      trustedImage: null,
+    });
+    if (
+      !isPlainObject(envelope) ||
+      !Object.hasOwn(envelope, "result") ||
+      !Array.isArray(envelope.authorizedWritePaths)
+    ) {
+      throw new Error("Review transaction operation returned an invalid result.");
+    }
+    return envelope.result;
+  }
+  const resolvedOutputDir = path.resolve(outputDir);
+  if (resolvedOutputDir === path.parse(resolvedOutputDir).root) {
+    throw new Error("Review output transaction rejected the output path.");
+  }
+  const outputParent = path.dirname(resolvedOutputDir);
+  generatedReviewValidateRealDirectoryAncestors(outputParent);
+  const outputExisted = generatedReviewPathEntryExists(resolvedOutputDir);
+  const trustedImage = outputExisted
+    ? generatedReviewCaptureDirectoryImage(resolvedOutputDir)
+    : null;
+  let transactionRoot = null;
+  let transactionIdentity = null;
+  let workingOutputDir = null;
+  let commitRoot = null;
+  let commitIdentity = null;
+  let canonicalDetached = false;
+  let committed = false;
+  try {
+    transactionRoot = fs.mkdtempSync(
+      path.join(outputParent, ".generated-review-transaction-"),
+    );
+    fs.chmodSync(transactionRoot, 0o700);
+    transactionIdentity =
+      generatedReviewDirectoryIdentity(transactionRoot);
+    workingOutputDir = path.join(transactionRoot, "working");
+    generatedReviewMaterializeDirectoryImage(
+      workingOutputDir,
+      trustedImage,
+    );
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed before transaction start.");
+    }
+    const envelope = operation({
+      workingOutputDir,
+      canonicalOutputDir: resolvedOutputDir,
+      trustedImage,
+    });
+    if (
+      !isPlainObject(envelope) ||
+      !Object.hasOwn(envelope, "result") ||
+      !Array.isArray(envelope.authorizedWritePaths)
+    ) {
+      throw new Error("Review transaction operation returned an invalid result.");
+    }
+    const workingImage =
+      generatedReviewCaptureDirectoryImage(workingOutputDir);
+    const authorized = generatedReviewValidateAuthorizedChanges(
+      trustedImage,
+      workingImage,
+      envelope.authorizedWritePaths,
+    );
+    if (typeof options.validateWholeTree === "function") {
+      options.validateWholeTree({
+        canonicalOutputDir: resolvedOutputDir,
+        workingOutputDir,
+        trustedImage,
+        workingImage,
+        authorizedWritePaths: authorized,
+        result: envelope.result,
+      });
+    }
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed during the transaction.");
+    }
+
+    // The validated working tree is now held in parent memory. Close the
+    // child-visible tree before creating any commit or recovery material.
+    const transactionCleanup =
+      generatedReviewRemoveTrackedRootWithinParent(
+        outputParent,
+        transactionRoot,
+        transactionIdentity,
+      );
+    transactionIdentity = null;
+    if (!transactionCleanup.found || transactionCleanup.relocated) {
+      throw new Error("Review transaction root changed.");
+    }
+
+    commitRoot = fs.mkdtempSync(
+      path.join(outputParent, ".generated-review-commit-"),
+    );
+    fs.chmodSync(commitRoot, 0o700);
+    commitIdentity = generatedReviewDirectoryIdentity(commitRoot);
+    const commitCandidate = path.join(commitRoot, "candidate");
+    const commitBackup = path.join(commitRoot, "trusted-backup");
+    generatedReviewMaterializeDirectoryImage(
+      commitCandidate,
+      workingImage,
+    );
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed before transaction commit.");
+    }
+    if (outputExisted) {
+      fs.renameSync(resolvedOutputDir, commitBackup);
+      canonicalDetached = true;
+    } else if (generatedReviewPathEntryExists(resolvedOutputDir)) {
+      throw new Error("Review output changed before transaction commit.");
+    }
+    if (generatedReviewPathEntryExists(resolvedOutputDir)) {
+      throw new Error("Review output changed during transaction commit.");
+    }
+    fs.renameSync(commitCandidate, resolvedOutputDir);
+    committed = true;
+    const committedImage =
+      generatedReviewCaptureDirectoryImage(resolvedOutputDir);
+    if (!generatedReviewImagesEqual(workingImage, committedImage)) {
+      throw new Error("Review output changed during transaction commit.");
+    }
+    const commitCleanup = generatedReviewRemoveTrackedRootWithinParent(
+      outputParent,
+      commitRoot,
+      commitIdentity,
+    );
+    commitIdentity = null;
+    if (!commitCleanup.found || commitCleanup.relocated) {
+      throw new Error("Review transaction commit root changed.");
+    }
+    return envelope.result;
+  } catch (operationError) {
+    let rollbackFailed = false;
+    if (
+      canonicalDetached ||
+      committed ||
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      try {
+        generatedReviewRestoreFromTrustedImage(
+          resolvedOutputDir,
+          trustedImage,
+          outputParent,
+        );
+      } catch {
+        rollbackFailed = true;
+      }
+    }
+    for (const [trackedPath, trackedIdentity] of [
+      [transactionRoot, transactionIdentity],
+      [commitRoot, commitIdentity],
+    ]) {
+      if (!trackedPath || !trackedIdentity) continue;
+      try {
+        generatedReviewRemoveTrackedRootWithinParent(
+          outputParent,
+          trackedPath,
+          trackedIdentity,
+        );
+      } catch {
+        rollbackFailed = true;
+      }
+    }
+    if (rollbackFailed) {
+      const rollbackError = new Error(
+        options.rollbackFailureMessage ||
+          "Review output transaction could not be restored safely.",
+      );
+      rollbackError[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] = "rollback";
+      throw rollbackError;
+    }
+    const transactionError = new Error(
+      options.failureMessage || "Review output transaction failed safely.",
+    );
+    transactionError[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] = "operation";
+    transactionError[GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR] =
+      operationError;
+    throw transactionError;
+  }
+}
+
+function generatedReviewMappedOperationFailure(error, options, fallback) {
+  if (
+    error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] !== "operation" ||
+    typeof options.mapOperationError !== "function"
+  ) {
+    return fallback;
+  }
+  try {
+    const candidate = options.mapOperationError(
+      error[GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR],
+    );
+    if (
+      typeof candidate !== "string" ||
+      !candidate ||
+      candidate.length > 512 ||
+      /[\\/\u0000-\u001f\u007f]/.test(candidate) ||
+      /Traceback|\bFile\s+["']|file:|~[\\/]/i.test(candidate)
+    ) {
+      return fallback;
+    }
+    return candidate;
+  } catch {
+    return fallback;
+  }
+}
+
+function withGeneratedReviewOutputTransaction(
+  outputDir,
+  operation,
+  options = {},
+) {
+  const failureMessage =
+    options.failureMessage || "Review output transaction failed safely.";
+  const rollbackFailureMessage =
+    options.rollbackFailureMessage ||
+    "Review output transaction could not be restored safely.";
+  try {
+    return generatedReviewRunOutputTransaction(outputDir, operation, {
+      ...options,
+      failureMessage,
+      rollbackFailureMessage,
+    });
+  } catch (error) {
+    const rollbackFailed =
+      error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] === "rollback";
+    const publicMessage = rollbackFailed
+      ? rollbackFailureMessage
+      : generatedReviewMappedOperationFailure(
+          error,
+          options,
+          failureMessage,
+        );
+    throw new Error(publicMessage);
+  }
+}
+
+// Limitation: this is a bounded transaction contract, not an OS sandbox.
+// Same-identity code can copy or move data outside the output parent and a
+// hostile background descendant can mutate canonical output after return.
+// The parent restores canonical bytes/modes from memory and removes a renamed
+// transaction sibling by inode inside the bounded output parent; deleting
+// arbitrary external copies requires an OS sandbox or a separate identity.
+// END GENERATED REVIEW OUTPUT TRANSACTION
 
 function resolveDecisionOutputPath(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
@@ -494,15 +1636,664 @@ function buildUiDecisions(inputArgs) {
   };
 }
 
+function reviewIntegerOrZero(value) {
+  return Number.isInteger(value) ? value : 0;
+}
+
+function reviewResponseMatches(result, expected) {
+  if (!isPlainObject(result) || !isPlainObject(expected)) return false;
+  const resultKeys = Object.keys(result).sort();
+  const expectedKeys = Object.keys(expected).sort();
+  return (
+    JSON.stringify(resultKeys) === JSON.stringify(expectedKeys) &&
+    expectedKeys.every(
+      (key) =>
+        journalReviewStableJson(result[key]) ===
+        journalReviewStableJson(expected[key]),
+    )
+  );
+}
+
+const JOURNAL_REVIEW_TRANSACTION_STATE = Symbol(
+  "journal-review-transaction-state",
+);
+
+function cloneJournalReviewTransactionValue(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function journalReviewTransactionJsonFromImage(image, relativePath) {
+  const entry = image?.files?.find((candidate) => candidate.path === relativePath);
+  if (!entry) return null;
+  try {
+    const parsed = JSON.parse(entry.payload.toString("utf8"));
+    return isPlainObject(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function journalReviewStableJson(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map((entry) => journalReviewStableJson(entry)).join(",")}]`;
+  }
+  if (isPlainObject(value)) {
+    return `{${Object.keys(value)
+      .sort()
+      .map(
+        (key) =>
+          `${JSON.stringify(key)}:${journalReviewStableJson(value[key])}`,
+      )
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function journalAssuranceManifestPath(outputDir) {
+  return path.join(outputDir, "sample_output_receipts.json");
+}
+
+function journalOutputHasAssuranceManifest(outputDir) {
+  if (!outputDir) return false;
+  const manifestPath = journalAssuranceManifestPath(outputDir);
+  const observed = generatedReviewPathEntryStat(manifestPath);
+  return Boolean(
+    observed &&
+      observed.isFile() &&
+      !observed.isSymbolicLink() &&
+      observed.nlink === 1,
+  );
+}
+
+function journalAssurancePythonExecutable() {
+  const candidates = [
+    process.env.JOURNAL_SAMPLING_PYTHON,
+    process.env.PYTHON,
+    process.env.VIRTUAL_ENV
+      ? path.join(process.env.VIRTUAL_ENV, "bin", "python")
+      : "",
+    path.resolve(PLUGIN_ROOT, "..", "..", ".venv", "bin", "python"),
+    "python3",
+    "python",
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    return candidate;
+  }
+  return "python3";
+}
+
+function runJournalAssuranceBridge(command, outputDir, kind = null) {
+  const canonicalServer = path.join(PLUGIN_ROOT, "mcp", "server.cjs");
+  if (path.resolve(__filename) !== path.resolve(canonicalServer)) {
+    throw new Error(
+      "Journal Sampling assured review requires the receipted MCP implementation.",
+    );
+  }
+  const scriptPath = path.join(
+    PLUGIN_ROOT,
+    "scripts",
+    "review_successor.py",
+  );
+  const args = [scriptPath, command, outputDir];
+  if (kind) args.push("--kind", kind);
+  const completed = childProcess.spawnSync(
+    journalAssurancePythonExecutable(),
+    ["-I", "-B", ...args],
+    {
+      cwd: PLUGIN_ROOT,
+      encoding: "utf8",
+      timeout: 60_000,
+      maxBuffer: 16 * 1024 * 1024,
+      env: process.env,
+    },
+  );
+  if (
+    completed.error ||
+    completed.status !== 0 ||
+    typeof completed.stdout !== "string"
+  ) {
+    throw new Error(`Journal Sampling assurance ${command} failed.`);
+  }
+  try {
+    const result = JSON.parse(completed.stdout.trim());
+    if (!isPlainObject(result)) throw new Error("invalid result");
+    return result;
+  } catch {
+    throw new Error(`Journal Sampling assurance ${command} returned invalid data.`);
+  }
+}
+
+function refreshJournalAssuredTransactionResult(
+  kind,
+  workingResult,
+  workingOutputDir,
+  parentState,
+) {
+  const successor = runJournalAssuranceBridge(
+    "finalize",
+    workingOutputDir,
+    kind,
+  );
+  const persistedUiDecisions = readJsonFileIfPresent(
+    path.join(workingOutputDir, "ui_decisions.json"),
+  );
+  const persistedFinalArtifacts = readJsonFileIfPresent(
+    path.join(workingOutputDir, "final_artifacts.json"),
+  );
+  const persistedRunIntake = readJsonFileIfPresent(
+    path.join(workingOutputDir, "run_intake.json"),
+  );
+  if (
+    !isPlainObject(persistedUiDecisions) ||
+    !isPlainObject(persistedFinalArtifacts) ||
+    !isPlainObject(persistedRunIntake) ||
+    !Array.isArray(successor.physical_paths)
+  ) {
+    throw new Error("Journal Sampling successor finalization did not close.");
+  }
+  if (kind === "save") {
+    workingResult.ui_decisions = persistedUiDecisions;
+  }
+  parentState.expectedUiDecisions =
+    cloneJournalReviewTransactionValue(persistedUiDecisions);
+  parentState.expectedFinalArtifacts =
+    cloneJournalReviewTransactionValue(persistedFinalArtifacts);
+  parentState.expectedRunIntake =
+    cloneJournalReviewTransactionValue(persistedRunIntake);
+  parentState.authorizedWritePaths = [...successor.physical_paths];
+  parentState.successorStage =
+    cloneJournalReviewTransactionValue(successor.stage);
+  if (kind === "apply") {
+    const persistedAppliedDecisions = readJsonFileIfPresent(
+      path.join(workingOutputDir, "applied_decisions.json"),
+    );
+    if (!isPlainObject(persistedAppliedDecisions)) {
+      throw new Error("Journal Sampling applied successor is incomplete.");
+    }
+    workingResult.run_id = persistedAppliedDecisions.run_id;
+    workingResult.decision_count = persistedAppliedDecisions.decision_count;
+    workingResult.item_count = persistedAppliedDecisions.item_count;
+    workingResult.blocker_count = persistedAppliedDecisions.blocker_count;
+    workingResult.revision_count = persistedAppliedDecisions.revision_count;
+    workingResult.target_update_count =
+      persistedAppliedDecisions.target_update_count;
+    workingResult.structured_update_count =
+      persistedAppliedDecisions.structured_update_count;
+    workingResult.native_regeneration_count =
+      persistedAppliedDecisions.native_regeneration_count;
+    workingResult.native_regenerated_count = reviewIntegerOrZero(
+      persistedAppliedDecisions.native_regenerated_count,
+    );
+    workingResult.application_status =
+      persistedAppliedDecisions.application_status;
+    workingResult.applied_decisions = persistedAppliedDecisions;
+    workingResult.final_artifacts = persistedFinalArtifacts;
+    parentState.expectedAppliedDecisions =
+      cloneJournalReviewTransactionValue(persistedAppliedDecisions);
+  }
+  parentState.complete = true;
+  return workingResult;
+}
+
+function validateJournalAssuredReadState(inputArgs) {
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir || !journalOutputHasAssuranceManifest(outputDir)) return null;
+  const replay = runJournalAssuranceBridge("validate", outputDir);
+  const fields = [
+    ["run_intake", "run_intake.json"],
+    ["review_payload", "review_payload.json"],
+    ["ui_decisions", "ui_decisions.json"],
+    ["final_artifacts", "final_artifacts.json"],
+  ];
+  for (const [fieldName, relativePath] of fields) {
+    if (inputArgs[fieldName] == null) continue;
+    const persisted = readJsonFileIfPresent(
+      path.join(outputDir, relativePath),
+    );
+    if (
+      !isPlainObject(persisted) ||
+      journalReviewStableJson(inputArgs[fieldName]) !==
+        journalReviewStableJson(persisted)
+    ) {
+      throw new Error(
+        `Caller ${fieldName} does not match the persisted Journal Sampling state.`,
+      );
+    }
+  }
+  return replay;
+}
+
+function initializeJournalReviewTransactionState(state, trustedImage, inputArgs) {
+  const persistedRunIntake = journalReviewTransactionJsonFromImage(
+    trustedImage,
+    "run_intake.json",
+  );
+  const persistedReviewPayload = journalReviewTransactionJsonFromImage(
+    trustedImage,
+    "review_payload.json",
+  );
+  const persistedFinalArtifacts = journalReviewTransactionJsonFromImage(
+    trustedImage,
+    "final_artifacts.json",
+  );
+  const persistedUiDecisions = journalReviewTransactionJsonFromImage(
+    trustedImage,
+    "ui_decisions.json",
+  );
+  if (
+    !isPlainObject(persistedRunIntake) ||
+    !isPlainObject(persistedReviewPayload) ||
+    !isPlainObject(persistedFinalArtifacts)
+  ) {
+    throw new Error(
+      "Persisted run intake, review payload, and final artifacts are required before Journal Sampling review writes.",
+    );
+  }
+  if (
+    journalReviewStableJson(inputArgs.run_intake) !==
+    journalReviewStableJson(persistedRunIntake)
+  ) {
+    throw new Error(
+      "Caller run intake does not match the persisted Journal Sampling run intake.",
+    );
+  }
+  if (
+    journalReviewStableJson(inputArgs.review_payload) !==
+    journalReviewStableJson(persistedReviewPayload)
+  ) {
+    throw new Error(
+      "Caller review payload does not match the persisted Journal Sampling review payload.",
+    );
+  }
+  if (
+    inputArgs.final_artifacts != null &&
+    journalReviewStableJson(inputArgs.final_artifacts) !==
+      journalReviewStableJson(persistedFinalArtifacts)
+  ) {
+    throw new Error(
+      "Caller final artifacts do not match the persisted Journal Sampling final artifacts.",
+    );
+  }
+  if (
+    inputArgs.ui_decisions != null &&
+    journalReviewStableJson(inputArgs.ui_decisions) !==
+      journalReviewStableJson(persistedUiDecisions)
+  ) {
+    throw new Error(
+      "Caller UI decisions do not match the persisted Journal Sampling UI decisions.",
+    );
+  }
+  state.baselinePaths = new Set(
+    Array.isArray(trustedImage?.files)
+      ? trustedImage.files.map((entry) => entry.path)
+      : [],
+  );
+  state.baselineRunIntake =
+    cloneJournalReviewTransactionValue(persistedRunIntake);
+  state.persistedRunIntake =
+    cloneJournalReviewTransactionValue(persistedRunIntake);
+  state.persistedReviewPayload =
+    cloneJournalReviewTransactionValue(persistedReviewPayload);
+  state.persistedFinalArtifacts =
+    cloneJournalReviewTransactionValue(persistedFinalArtifacts);
+  state.persistedUiDecisions =
+    cloneJournalReviewTransactionValue(persistedUiDecisions);
+}
+
+function journalReviewTrustedArgsForWorkingOutput(
+  inputArgs,
+  workingOutputDir,
+  state,
+) {
+  const trustedArgs = generatedReviewArgsForWorkingOutput(
+    inputArgs,
+    workingOutputDir,
+  );
+  trustedArgs.run_intake = {
+    ...cloneJournalReviewTransactionValue(state.persistedRunIntake),
+    output_dir: workingOutputDir,
+  };
+  trustedArgs.review_payload = cloneJournalReviewTransactionValue(
+    state.persistedReviewPayload,
+  );
+  trustedArgs.final_artifacts = cloneJournalReviewTransactionValue(
+    state.persistedFinalArtifacts,
+  );
+  if (state.persistedUiDecisions == null) {
+    delete trustedArgs.ui_decisions;
+  } else {
+    trustedArgs.ui_decisions = cloneJournalReviewTransactionValue(
+      state.persistedUiDecisions,
+    );
+  }
+  return trustedArgs;
+}
+
+function journalReviewParentWritePaths(
+  state,
+  revisionOutputs,
+  targetOutputs,
+  backupOutputs,
+  runIntakePath,
+) {
+  const paths = new Set([
+    "ui_decisions.json",
+    "applied_decisions.json",
+    "final_artifacts.json",
+  ]);
+  for (const output of [...revisionOutputs, ...targetOutputs]) {
+    paths.add(generatedReviewCanonicalRelativePath(output.path));
+  }
+  for (const output of backupOutputs) {
+    const relativePath = generatedReviewCanonicalRelativePath(output.path);
+    if (!state.baselinePaths.has(relativePath)) paths.add(relativePath);
+  }
+  if (runIntakePath) paths.add("run_intake.json");
+  if (state.expectedReviewHandoffContent != null) {
+    paths.add("review_handoff.md");
+  }
+  return Array.from(paths);
+}
+
+function validateJournalParentTransactionState(
+  kind,
+  state,
+  workingOutputDir,
+  authorizedWritePaths,
+  persistedUiDecisions,
+  persistedAppliedDecisions = null,
+  persistedFinalArtifacts = null,
+) {
+  if (!state?.complete) {
+    throw new Error("Journal Sampling parent transaction state is incomplete.");
+  }
+  const expectedAuthorized = [...state.authorizedWritePaths].sort();
+  const observedAuthorized = Array.from(authorizedWritePaths).sort();
+  if (
+    JSON.stringify(expectedAuthorized) !== JSON.stringify(observedAuthorized)
+  ) {
+    throw new Error("Journal Sampling write authorization did not close.");
+  }
+  if (
+    JSON.stringify(persistedUiDecisions) !==
+    JSON.stringify(state.expectedUiDecisions)
+  ) {
+    throw new Error("Journal Sampling UI receipt did not close.");
+  }
+  if (kind === "apply") {
+    if (
+      JSON.stringify(persistedAppliedDecisions) !==
+        JSON.stringify(state.expectedAppliedDecisions) ||
+      JSON.stringify(persistedFinalArtifacts) !==
+        JSON.stringify(state.expectedFinalArtifacts)
+    ) {
+      throw new Error("Journal Sampling parent application did not close.");
+    }
+    if (state.expectedRunIntake != null) {
+      const persistedRunIntake = readJsonFileIfPresent(
+        path.join(workingOutputDir, "run_intake.json"),
+      );
+      if (
+        JSON.stringify(persistedRunIntake) !==
+        JSON.stringify(state.expectedRunIntake)
+      ) {
+        throw new Error("Journal Sampling run receipt did not close.");
+      }
+    }
+    if (state.expectedReviewHandoffContent != null) {
+      const handoffPath = path.join(workingOutputDir, "review_handoff.md");
+      if (
+        !fs.existsSync(handoffPath) ||
+        fs.readFileSync(handoffPath, "utf8") !==
+          state.expectedReviewHandoffContent
+      ) {
+        throw new Error("Journal Sampling review handoff did not close.");
+      }
+    }
+  }
+}
+
+function validateJournalSamplingReviewTransaction(
+  kind,
+  inputArgs,
+  context,
+  parentState,
+) {
+  const {
+    canonicalOutputDir,
+    workingOutputDir,
+    workingImage,
+    authorizedWritePaths,
+    result,
+  } = context;
+  if (!isPlainObject(result) || result.ok !== true || result.persisted !== true) {
+    throw new Error("Journal Sampling review transaction result is invalid.");
+  }
+  if (parentState?.assured) {
+    const replay = runJournalAssuranceBridge("validate", workingOutputDir);
+    if (
+      !isPlainObject(replay.output_set) ||
+      journalReviewStableJson(replay.output_set.stage) !==
+        journalReviewStableJson(parentState.successorStage)
+    ) {
+      throw new Error("Journal Sampling successor replay did not close.");
+    }
+  }
+  const requiredPaths =
+    kind === "save"
+      ? ["ui_decisions.json"]
+      : ["ui_decisions.json", "applied_decisions.json", "final_artifacts.json"];
+  const filePaths = new Set(workingImage.files.map((entry) => entry.path));
+  if (!requiredPaths.every((relativePath) => filePaths.has(relativePath))) {
+    throw new Error("Journal Sampling review transaction is incomplete.");
+  }
+  const persistedUiDecisions = readJsonFileIfPresent(
+    path.join(workingOutputDir, "ui_decisions.json"),
+  );
+  if (!isPlainObject(persistedUiDecisions)) {
+    throw new Error("Journal Sampling review transaction is incomplete.");
+  }
+  if (kind === "save") {
+    validateJournalParentTransactionState(
+      kind,
+      parentState,
+      workingOutputDir,
+      authorizedWritePaths,
+      persistedUiDecisions,
+    );
+    const expectedResult = {
+      ok: true,
+      validation_type: "journal_sampling_decisions",
+      run_id: persistedUiDecisions?.run_id,
+      decision_count: persistedUiDecisions?.decision_count,
+      item_count: persistedUiDecisions?.item_count,
+      status: persistedUiDecisions?.status,
+      persisted: true,
+      ui_decisions_path: path.join(
+        canonicalOutputDir,
+        "ui_decisions.json",
+      ),
+      message: isSpanishRuntime(inputArgs)
+        ? `Se han guardado ${persistedUiDecisions?.decision_count} decisiones de Journal Sampling.`
+        : `Saved ${persistedUiDecisions?.decision_count} Journal Sampling decisions.`,
+      ui_decisions: persistedUiDecisions,
+    };
+    if (!reviewResponseMatches(result, expectedResult)) {
+      throw new Error("Journal Sampling saved decisions did not close.");
+    }
+  } else {
+    const persistedAppliedDecisions = readJsonFileIfPresent(
+      path.join(workingOutputDir, "applied_decisions.json"),
+    );
+    const persistedFinalArtifacts = readJsonFileIfPresent(
+      path.join(workingOutputDir, "final_artifacts.json"),
+    );
+    if (
+      !isPlainObject(persistedAppliedDecisions) ||
+      !isPlainObject(persistedFinalArtifacts)
+    ) {
+      throw new Error("Journal Sampling review transaction is incomplete.");
+    }
+    validateJournalParentTransactionState(
+      kind,
+      parentState,
+      workingOutputDir,
+      authorizedWritePaths,
+      persistedUiDecisions,
+      persistedAppliedDecisions,
+      persistedFinalArtifacts,
+    );
+    if (
+      JSON.stringify(persistedAppliedDecisions) !==
+        JSON.stringify(result.applied_decisions) ||
+      JSON.stringify(persistedFinalArtifacts) !==
+        JSON.stringify(result.final_artifacts)
+    ) {
+      throw new Error("Journal Sampling applied decisions did not close.");
+    }
+    if (
+      persistedUiDecisions.run_id !== persistedAppliedDecisions.run_id ||
+      persistedUiDecisions.decision_count !==
+        persistedAppliedDecisions.decision_count ||
+      journalReviewStableJson(persistedUiDecisions.decisions) !==
+        journalReviewStableJson(persistedAppliedDecisions.decisions)
+    ) {
+      throw new Error("Journal Sampling review decision state did not close.");
+    }
+    const expectedResult = {
+      ok: true,
+      validation_type: "journal_sampling_application",
+      run_id: persistedAppliedDecisions.run_id,
+      decision_count: persistedAppliedDecisions.decision_count,
+      item_count: persistedAppliedDecisions.item_count,
+      blocker_count: persistedAppliedDecisions.blocker_count,
+      revision_count: persistedAppliedDecisions.revision_count,
+      target_update_count: persistedAppliedDecisions.target_update_count,
+      structured_update_count:
+        persistedAppliedDecisions.structured_update_count,
+      native_regeneration_count:
+        persistedAppliedDecisions.native_regeneration_count,
+      native_regenerated_count: reviewIntegerOrZero(
+        persistedAppliedDecisions.native_regenerated_count,
+      ),
+      application_status: persistedAppliedDecisions.application_status,
+      persisted: true,
+      ui_decisions_path: path.join(
+        canonicalOutputDir,
+        "ui_decisions.json",
+      ),
+      applied_decisions_path: path.join(
+        canonicalOutputDir,
+        "applied_decisions.json",
+      ),
+      final_artifacts_path: path.join(
+        canonicalOutputDir,
+        "final_artifacts.json",
+      ),
+      run_intake_path: path.join(canonicalOutputDir, "run_intake.json"),
+      message: isSpanishRuntime(inputArgs)
+        ? `Se han aplicado ${persistedAppliedDecisions.decision_count} decisiones de Journal Sampling.`
+        : `Applied ${persistedAppliedDecisions.decision_count} Journal Sampling decisions.`,
+      applied_decisions: persistedAppliedDecisions,
+      final_artifacts: persistedFinalArtifacts,
+    };
+    if (!reviewResponseMatches(result, expectedResult)) {
+      throw new Error("Journal Sampling response did not close.");
+    }
+  }
+}
+
+function workflowReviewTransactionOptions(kind, inputArgs, parentState) {
+  return {
+    validateWholeTree: (context) =>
+      validateJournalSamplingReviewTransaction(
+        kind,
+        inputArgs,
+        context,
+        parentState,
+      ),
+    mapOperationError: (error) => error?.message,
+  };
+}
+
 function saveDecisionPayload(inputArgs) {
+  const canonicalOutputDir = resolveRunOutputDir(inputArgs);
+  if (!canonicalOutputDir) return saveDecisionPayloadWrites(inputArgs);
+  const parentState = {};
+  const workflowOptions = workflowReviewTransactionOptions(
+    "save",
+    inputArgs,
+    parentState,
+  );
+  return withGeneratedReviewOutputTransaction(
+    canonicalOutputDir,
+    ({ workingOutputDir, trustedImage }) => {
+      initializeJournalReviewTransactionState(
+        parentState,
+        trustedImage,
+        inputArgs,
+      );
+      parentState.assured =
+        journalOutputHasAssuranceManifest(workingOutputDir);
+      if (parentState.assured) {
+        runJournalAssuranceBridge(
+          "prepare",
+          workingOutputDir,
+          "save",
+        );
+      }
+      const workingArgs = journalReviewTrustedArgsForWorkingOutput(
+        inputArgs,
+        workingOutputDir,
+        parentState,
+      );
+      Object.defineProperty(workingArgs, JOURNAL_REVIEW_TRANSACTION_STATE, {
+        value: parentState,
+      });
+      const workingResult = saveDecisionPayloadWrites(workingArgs);
+      if (parentState.assured) {
+        refreshJournalAssuredTransactionResult(
+          "save",
+          workingResult,
+          workingOutputDir,
+          parentState,
+        );
+      }
+      const canonicalResult = generatedReviewRewriteOutputPaths(
+        workingResult,
+        workingOutputDir,
+        canonicalOutputDir,
+      );
+      return generatedReviewTransactionEnvelope(
+        canonicalResult,
+        parentState.authorizedWritePaths,
+      );
+    },
+    {
+      ...workflowOptions,
+      failureMessage:
+        "Journal Sampling review save transaction failed safely.",
+      rollbackFailureMessage:
+        "Journal Sampling review save transaction could not be restored safely.",
+    },
+  );
+}
+
+function saveDecisionPayloadWrites(inputArgs) {
+  const parentState = inputArgs[JOURNAL_REVIEW_TRANSACTION_STATE] || null;
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      decisionOutputPath,
+      `${JSON.stringify(uiDecisions, null, 2)}\n`,
+      "utf8",
+    );
     persisted = true;
   }
-  return {
+  const result = {
     ok: true,
     validation_type: "journal_sampling_decisions",
     run_id: uiDecisions.run_id,
@@ -520,6 +2311,13 @@ function saveDecisionPayload(inputArgs) {
         : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
     ui_decisions: uiDecisions,
   };
+  if (parentState) {
+    parentState.expectedUiDecisions =
+      cloneJournalReviewTransactionValue(uiDecisions);
+    parentState.authorizedWritePaths = ["ui_decisions.json"];
+    parentState.complete = true;
+  }
+  return result;
 }
 
 function resolveRunOutputDir(inputArgs) {
@@ -779,7 +2577,7 @@ function updateCsvArtifact(filePath, effect, spec) {
       `CSV structured edit expected exactly one row for ${spec.idField}=${spec.recordId}, found ${updated}`,
     );
   }
-  fs.writeFileSync(filePath, serializeCsv(rows), "utf8");
+  generatedReviewAtomicWriteFileSync(filePath, serializeCsv(rows), "utf8");
   return { updatedRows: updated, rowCount: Math.max(rows.length - 1, 0) };
 }
 
@@ -787,18 +2585,30 @@ function updateJsonArtifact(filePath, effect, spec) {
   const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
   if (Array.isArray(parsed)) {
     const updatedRows = updateMatchingRecord(parsed, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows, rowCount: parsed.length };
   }
   if (isPlainObject(parsed) && spec.recordsKey && Array.isArray(parsed[spec.recordsKey])) {
     const records = parsed[spec.recordsKey];
     const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows, rowCount: records.length };
   }
   if (isPlainObject(parsed) && String(parsed[spec.idField] ?? "") === spec.recordId) {
     parsed[spec.targetField] = effect.edit_value;
-    fs.writeFileSync(filePath, `${JSON.stringify(parsed, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      filePath,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      "utf8",
+    );
     return { updatedRows: 1, rowCount: 1 };
   }
   throw new Error("JSON structured edit requires an object, array, or explicit records_key array");
@@ -811,7 +2621,11 @@ function updateJsonlArtifact(filePath, effect, spec) {
     .filter((line) => line.trim())
     .map((line) => JSON.parse(line));
   const updatedRows = updateMatchingRecord(records, spec, effect.edit_value);
-  fs.writeFileSync(filePath, `${records.map((record) => JSON.stringify(record)).join("\n")}\n`, "utf8");
+  generatedReviewAtomicWriteFileSync(
+    filePath,
+    `${records.map((record) => JSON.stringify(record)).join("\n")}\n`,
+    "utf8",
+  );
   return { updatedRows, rowCount: records.length };
 }
 
@@ -880,8 +2694,11 @@ function appendReviewApplicationExecutionTrace(
   finalArtifacts,
 ) {
   if (!outputDir) return null;
+  const parentState = inputArgs[JOURNAL_REVIEW_TRANSACTION_STATE] || null;
   const runIntakePath = path.join(outputDir, "run_intake.json");
-  const current = readJsonFileIfPresent(runIntakePath) ||
+  const current = cloneJournalReviewTransactionValue(
+    parentState?.baselineRunIntake,
+  ) || readJsonFileIfPresent(runIntakePath) ||
     (isPlainObject(inputArgs.run_intake) ? { ...inputArgs.run_intake } : null);
   if (!current) return null;
   const trace = Array.isArray(current.execution_trace) ? [...current.execution_trace] : [];
@@ -902,7 +2719,15 @@ function appendReviewApplicationExecutionTrace(
   });
   const updated = { ...current, execution_trace: trace };
   fs.mkdirSync(path.dirname(runIntakePath), { recursive: true });
-  fs.writeFileSync(runIntakePath, `${JSON.stringify(updated, null, 2)}\n`, "utf8");
+  generatedReviewAtomicWriteFileSync(
+    runIntakePath,
+    `${JSON.stringify(updated, null, 2)}\n`,
+    "utf8",
+  );
+  if (parentState) {
+    parentState.expectedRunIntake =
+      cloneJournalReviewTransactionValue(updated);
+  }
   return runIntakePath;
 }
 
@@ -1065,7 +2890,11 @@ function writeRevisionArtifacts(outputDir, effects) {
     const relativePath = revisionRelativePath(effect);
     const absolutePath = path.join(outputDir, relativePath);
     fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
-    fs.writeFileSync(absolutePath, effect.edit_value, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      absolutePath,
+      effect.edit_value,
+      "utf8",
+    );
     effect.revision_artifact = relativePath;
     effect.artifact_update = "revision_artifact_written";
     revisionOutputs.push({
@@ -1087,16 +2916,26 @@ function writeDirectTextArtifactUpdates(outputDir, effects) {
     if (effect.action !== "edit" || !effect.edit_value) continue;
     if (!canDirectlyUpdateTextArtifact(effect.target_artifact)) continue;
     const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
-    if (!target || !fs.existsSync(target.absolutePath)) continue;
-    const stat = fs.statSync(target.absolutePath);
-    if (!stat.isFile()) continue;
+    if (!target) continue;
+    const stat = generatedReviewPathEntryStat(target.absolutePath);
+    if (!stat) continue;
+    if (stat.isSymbolicLink() || !stat.isFile() || stat.nlink !== 1) {
+      throw new Error("Journal Sampling review target is unsafe.");
+    }
     const backupRelativePath = originalBackupRelativePath(effect, target.relativePath);
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.writeFileSync(backupAbsolutePath, fs.readFileSync(target.absolutePath, "utf8"), "utf8");
+      generatedReviewAtomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath),
+      );
     }
-    fs.writeFileSync(target.absolutePath, effect.edit_value, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      target.absolutePath,
+      effect.edit_value,
+      "utf8",
+    );
     effect.target_artifact = target.relativePath;
     effect.original_artifact_backup = backupRelativePath;
     effect.artifact_update = "target_artifact_updated";
@@ -1127,14 +2966,20 @@ function writeStructuredArtifactUpdates(outputDir, effects) {
     if (!spec) continue;
     if (!canUpdateStructuredArtifact(effect.target_artifact)) continue;
     const target = resolveSafeRunOutputPath(outputDir, effect.target_artifact);
-    if (!target || !fs.existsSync(target.absolutePath)) continue;
-    const stat = fs.statSync(target.absolutePath);
-    if (!stat.isFile()) continue;
+    if (!target) continue;
+    const stat = generatedReviewPathEntryStat(target.absolutePath);
+    if (!stat) continue;
+    if (stat.isSymbolicLink() || !stat.isFile() || stat.nlink !== 1) {
+      throw new Error("Journal Sampling structured review target is unsafe.");
+    }
     const backupRelativePath = originalBackupRelativePath(effect, target.relativePath);
     const backupAbsolutePath = path.join(outputDir, backupRelativePath);
     fs.mkdirSync(path.dirname(backupAbsolutePath), { recursive: true });
     if (!fs.existsSync(backupAbsolutePath)) {
-      fs.copyFileSync(target.absolutePath, backupAbsolutePath);
+      generatedReviewAtomicWriteFileSync(
+        backupAbsolutePath,
+        fs.readFileSync(target.absolutePath),
+      );
     }
     const extension = path.extname(target.relativePath).toLowerCase();
     const result =
@@ -1236,7 +3081,7 @@ function statusFromEffects(effects, itemCount) {
   if (effects.some((effect) => effect.requires_followup)) return "blocked";
   if (effects.some((effect) => effect.requires_native_regeneration)) return "partial_review_applied";
   if (effects.length < itemCount) return "partial_review_applied";
-  return "final_ready";
+  return "review_applied_with_assurance_limits";
 }
 
 const REVIEW_HANDOFF_PLUGINS = new Set([
@@ -1307,7 +3152,12 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
           `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
           `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
         ].join("\n");
-    fs.writeFileSync(handoffPath, `${text}\n`, "utf8");
+    const handoffContent = `${text}\n`;
+    generatedReviewAtomicWriteFileSync(handoffPath, handoffContent, "utf8");
+    const parentState = inputArgs[JOURNAL_REVIEW_TRANSACTION_STATE] || null;
+    if (parentState) {
+      parentState.expectedReviewHandoffContent = handoffContent;
+    }
   }
   return reviewHandoffOutputRecord();
 }
@@ -1421,11 +3271,14 @@ function nextActionsWithReviewApplication(
         ? "Vuelva a generar las salidas DOCX/XLSX/PDF nativas antes de la entrega final."
         : "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
     );
-  } else if (appliedDecisions.application_status === "final_ready") {
+  } else if (
+    appliedDecisions.application_status ===
+    "review_applied_with_assurance_limits"
+  ) {
     nextActions.push(
       spanish
-        ? "Use final_artifacts.json como galería de artefactos revisados para la entrega."
-        : "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
+        ? "Use los artefactos solo como muestra revisada; la suficiencia profesional, los informes y la publicación siguen pendientes."
+        : "Use the artifacts only as a reviewed sample; professional sufficiency, reporting, and publication remain pending.",
     );
   } else if (appliedDecisions.application_status === "partial_review_applied") {
     nextActions.push(
@@ -1438,6 +3291,70 @@ function nextActionsWithReviewApplication(
 }
 
 function applyDecisionPayload(inputArgs) {
+  const canonicalOutputDir = resolveRunOutputDir(inputArgs);
+  if (!canonicalOutputDir) return applyDecisionPayloadWrites(inputArgs);
+  const parentState = {};
+  const workflowOptions = workflowReviewTransactionOptions(
+    "apply",
+    inputArgs,
+    parentState,
+  );
+  return withGeneratedReviewOutputTransaction(
+    canonicalOutputDir,
+    ({ workingOutputDir, trustedImage }) => {
+      initializeJournalReviewTransactionState(
+        parentState,
+        trustedImage,
+        inputArgs,
+      );
+      parentState.assured =
+        journalOutputHasAssuranceManifest(workingOutputDir);
+      if (parentState.assured) {
+        runJournalAssuranceBridge(
+          "prepare",
+          workingOutputDir,
+          "apply",
+        );
+      }
+      const workingArgs = journalReviewTrustedArgsForWorkingOutput(
+        inputArgs,
+        workingOutputDir,
+        parentState,
+      );
+      Object.defineProperty(workingArgs, JOURNAL_REVIEW_TRANSACTION_STATE, {
+        value: parentState,
+      });
+      const workingResult = applyDecisionPayloadWrites(workingArgs);
+      if (parentState.assured) {
+        refreshJournalAssuredTransactionResult(
+          "apply",
+          workingResult,
+          workingOutputDir,
+          parentState,
+        );
+      }
+      const canonicalResult = generatedReviewRewriteOutputPaths(
+        workingResult,
+        workingOutputDir,
+        canonicalOutputDir,
+      );
+      return generatedReviewTransactionEnvelope(
+        canonicalResult,
+        parentState.authorizedWritePaths,
+      );
+    },
+    {
+      ...workflowOptions,
+      failureMessage:
+        "Journal Sampling review apply transaction failed safely.",
+      rollbackFailureMessage:
+        "Journal Sampling review apply transaction could not be restored safely.",
+    },
+  );
+}
+
+function applyDecisionPayloadWrites(inputArgs) {
+  const parentState = inputArgs[JOURNAL_REVIEW_TRANSACTION_STATE] || null;
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
@@ -1466,7 +3383,9 @@ function applyDecisionPayload(inputArgs) {
     new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
   );
   const blockerCount = effects.filter((effect) => effect.requires_followup).length;
-  const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
+  const applicationStatus = parentState?.assured
+    ? "successor_pending"
+    : statusFromEffects(effects, reviewPayload.items.length);
   const appliedDecisions = {
     schema_version: reviewPayload.schema_version,
     plugin: reviewPayload.plugin,
@@ -1509,16 +3428,28 @@ function applyDecisionPayload(inputArgs) {
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
-    fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      decisionOutputPath,
+      `${JSON.stringify(uiDecisions, null, 2)}\n`,
+      "utf8",
+    );
   }
   if (appliedOutputPath) {
     fs.mkdirSync(path.dirname(appliedOutputPath), { recursive: true });
-    fs.writeFileSync(appliedOutputPath, `${JSON.stringify(appliedDecisions, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      appliedOutputPath,
+      `${JSON.stringify(appliedDecisions, null, 2)}\n`,
+      "utf8",
+    );
     persisted = true;
   }
   if (finalArtifactsPath) {
     fs.mkdirSync(path.dirname(finalArtifactsPath), { recursive: true });
-    fs.writeFileSync(finalArtifactsPath, `${JSON.stringify(finalArtifacts, null, 2)}\n`, "utf8");
+    generatedReviewAtomicWriteFileSync(
+      finalArtifactsPath,
+      `${JSON.stringify(finalArtifacts, null, 2)}\n`,
+      "utf8",
+    );
   }
   const workflowSpecificResult = applyWorkflowSpecificReviewApplication(
     outputDir,
@@ -1543,19 +3474,37 @@ function applyDecisionPayload(inputArgs) {
     responseAppliedDecisions,
     responseFinalArtifacts,
   );
-  return {
+  const result = {
     ok: true,
     validation_type: "journal_sampling_application",
     run_id: responseAppliedDecisions.run_id,
     decision_count: responseAppliedDecisions.decision_count,
     item_count: responseAppliedDecisions.item_count,
     blocker_count: responseAppliedDecisions.blocker_count,
-    revision_count: responseAppliedDecisions.revision_count || revisionOutputs.length,
-    target_update_count: responseAppliedDecisions.target_update_count || targetOutputs.length,
-    structured_update_count: responseAppliedDecisions.structured_update_count || structuredUpdatePaths.length,
-    native_regeneration_count: responseAppliedDecisions.native_regeneration_count || 0,
-    native_regenerated_count: responseAppliedDecisions.native_regenerated_count || 0,
-    application_status: responseAppliedDecisions.application_status || applicationStatus,
+    revision_count: Number.isInteger(responseAppliedDecisions.revision_count)
+      ? responseAppliedDecisions.revision_count
+      : revisionOutputs.length,
+    target_update_count: Number.isInteger(
+      responseAppliedDecisions.target_update_count,
+    )
+      ? responseAppliedDecisions.target_update_count
+      : targetOutputs.length,
+    structured_update_count: Number.isInteger(
+      responseAppliedDecisions.structured_update_count,
+    )
+      ? responseAppliedDecisions.structured_update_count
+      : structuredUpdatePaths.length,
+    native_regeneration_count: reviewIntegerOrZero(
+      responseAppliedDecisions.native_regeneration_count,
+    ),
+    native_regenerated_count: reviewIntegerOrZero(
+      responseAppliedDecisions.native_regenerated_count,
+    ),
+    application_status:
+      typeof responseAppliedDecisions.application_status === "string" &&
+      responseAppliedDecisions.application_status.trim()
+        ? responseAppliedDecisions.application_status
+        : applicationStatus,
     persisted,
     ui_decisions_path: decisionOutputPath,
     applied_decisions_path: persisted ? appliedOutputPath : null,
@@ -1571,6 +3520,23 @@ function applyDecisionPayload(inputArgs) {
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
+  if (parentState) {
+    parentState.expectedUiDecisions =
+      cloneJournalReviewTransactionValue(uiDecisions);
+    parentState.expectedAppliedDecisions =
+      cloneJournalReviewTransactionValue(responseAppliedDecisions);
+    parentState.expectedFinalArtifacts =
+      cloneJournalReviewTransactionValue(responseFinalArtifacts);
+    parentState.authorizedWritePaths = journalReviewParentWritePaths(
+      parentState,
+      revisionOutputs,
+      targetOutputs,
+      backupOutputs,
+      runIntakePath,
+    );
+    parentState.complete = true;
+  }
+  return result;
 }
 
 function applyWorkflowSpecificReviewApplication(
@@ -1583,6 +3549,7 @@ function applyWorkflowSpecificReviewApplication(
 
 function callTool(name, args = {}) {
   if (name === TOOL_NAMES.validateReview) {
+    validateJournalAssuredReadState(args);
     const payload = validateReviewPayload(args);
     return {
       ok: true,
@@ -1597,6 +3564,7 @@ function callTool(name, args = {}) {
     };
   }
   if (name === TOOL_NAMES.renderReview) {
+    validateJournalAssuredReadState(args);
     return validateReviewPayload(args);
   }
   if (name === TOOL_NAMES.saveDecisions) {

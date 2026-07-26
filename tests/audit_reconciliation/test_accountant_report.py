@@ -9,18 +9,19 @@ from openpyxl import load_workbook
 SCRIPTS = (
     Path(__file__).resolve().parents[2] / "plugins" / "audit-reconciliation" / "scripts"
 )
-ACCOUNTANT_REPORT = SCRIPTS / "accountant_report.py"
+WORKFLOW = SCRIPTS / "reconciliation_workflow.py"
 
 
 def load_accountant_report():
-    sys.path.insert(0, str(SCRIPTS))
     spec = importlib.util.spec_from_file_location(
-        "audit_accountant_report", ACCOUNTANT_REPORT
+        "audit_accountant_report_entrypoint",
+        WORKFLOW,
     )
     assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    entrypoint = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = entrypoint
+    spec.loader.exec_module(entrypoint)
+    return sys.modules["accountant_report"]
 
 
 def test_build_accountant_report_rows_explains_probable_bank_candidate():

@@ -1,0 +1,365 @@
+{
+  "schema_version": "journal_bank.evaluation_contract.v2",
+  "contract_id": "journal_bank.repository_contract.v2",
+  "purpose": "Freeze the documented repository contract without example rows, hidden expected matches, or an independently authored oracle workbook.",
+  "implementation": {
+    "tabular_adapter": {
+      "adapter_id": "journal_bank.tabular.v4",
+      "adapter_version": "4"
+    },
+    "relationship_adapter": {
+      "adapter_id": "journal_bank.relationship.v2",
+      "adapter_version": "2",
+      "invalidates_prior_versions": true
+    }
+  },
+  "schemas": {
+    "normalized_transaction_columns": [
+      "side",
+      "transaction_id",
+      "transaction_date",
+      "amount_signed",
+      "amount_abs",
+      "description",
+      "beneficiary",
+      "reference",
+      "movement_number",
+      "account",
+      "currency",
+      "unit",
+      "entity_ref",
+      "party_ref",
+      "direction",
+      "source_file",
+      "source_sheet",
+      "source_row"
+    ],
+    "match_columns": [
+      "status",
+      "stage",
+      "bank_transaction_id",
+      "journal_transaction_id",
+      "bank_date",
+      "journal_date",
+      "date_diff_days",
+      "bank_amount",
+      "journal_amount",
+      "amount_delta",
+      "bank_description",
+      "journal_description",
+      "shared_references",
+      "review_note"
+    ]
+  },
+  "review_authority": {
+    "mapping": {
+      "fields": [
+        "date",
+        "amount",
+        "debit",
+        "credit",
+        "description",
+        "beneficiary",
+        "reference",
+        "movement_number",
+        "account",
+        "currency",
+        "unit",
+        "entity_ref",
+        "party_ref",
+        "direction"
+      ],
+      "automatic_authority": "one unambiguous exact supported header contract",
+      "review_required_for": [
+        "profiled or fuzzy headers",
+        "physical header-row choice",
+        "separator convention",
+        "non-exact field mapping"
+      ],
+      "receipt_bindings": [
+        "source artifact reference",
+        "adapter ID and version",
+        "header rows",
+        "mapping",
+        "separator convention",
+        "direction vocabulary when present"
+      ]
+    },
+    "direction": {
+      "canonical_values": [
+        "negative",
+        "positive",
+        "zero"
+      ],
+      "noncanonical_vocabulary_requires_complete_source_bound_mapping": true,
+      "unknown_or_extra_labels_withhold_source": true,
+      "signed_amount_disagreement_withholds_source": true
+    },
+    "relationship_perimeter": {
+      "fields": [
+        "allow_evidence_reuse",
+        "amount_tolerance",
+        "date_window_days",
+        "default_currency",
+        "default_entity_ref",
+        "default_party_ref",
+        "default_unit",
+        "direction_policy",
+        "relationship_shape",
+        "require_same_currency",
+        "require_same_entity",
+        "require_same_party",
+        "require_same_unit"
+      ],
+      "relationship_shape": "one_to_one",
+      "allow_evidence_reuse": false,
+      "require_same_currency": true,
+      "require_same_unit": true,
+      "reviewed_policy_required_every_run": true,
+      "execution_tolerance_and_window_must_equal_reviewed_policy": true
+    },
+    "stable_reference": {
+      "source_fields": [
+        "reference",
+        "movement_number"
+      ],
+      "normalization": [
+        "Unicode NFKD normalization",
+        "diacritic removal",
+        "lowercase conversion",
+        "whitespace collapse",
+        "tokenization to lowercase ASCII letters and digits"
+      ],
+      "minimum_token_length": 5,
+      "digit_required": true,
+      "generic_semantic_words_excluded": true,
+      "generic_word_prefixes_excluded": true,
+      "generic_fiscal_periods_years_ranges_and_version_fragments_excluded": true,
+      "period_like_value_requires_distinctive_suffix_with_minimum_length_and_digit": true,
+      "period_like_distinctive_suffix_minimum_length": 5
+    }
+  },
+  "matching": {
+    "stage_order": [
+      "reference",
+      "amount_date_unique",
+      "amount_date_single"
+    ],
+    "batch_invariant": "Every wave is selected from one unchanged snapshot of currently unmatched rows. A singleton is accepted only when no other singleton bank row targets the same journal row.",
+    "stages": {
+      "reference": {
+        "eligible_evidence": [
+          "explicit reference",
+          "movement number",
+          "exact amount tolerance",
+          "reviewed perimeter"
+        ],
+        "actual_dates_required": false,
+        "when_both_dates_exist": "the configured reviewed date window still applies",
+        "wave": "repeat conflict-free singleton batches until stable"
+      },
+      "amount_date_unique": {
+        "eligible_evidence": [
+          "actual dates on both rows",
+          "reviewed date window",
+          "exact amount tolerance",
+          "reviewed perimeter"
+        ],
+        "wave": "first conflict-free singleton batch after reference matching"
+      },
+      "amount_date_single": {
+        "eligible_evidence": [
+          "actual dates on both rows",
+          "reviewed date window",
+          "exact amount tolerance",
+          "reviewed perimeter"
+        ],
+        "wave": "later conflict-free singleton batches created by earlier amount/date allocations"
+      }
+    },
+    "collision_result": "ambiguous and unmatched",
+    "row_order_may_break_collision": false,
+    "matched_rows_may_be_reused": false
+  },
+  "outputs": {
+    "native_files": [
+      "normalized_bank.csv",
+      "normalized_journal.csv",
+      "reconciliation_matches.csv",
+      "unmatched_bank.csv",
+      "unmatched_journal.csv",
+      "bank_pdf_non_movement_rows.csv",
+      "journal_bank_reconciliation.xlsx",
+      "reconciliation_audit.json",
+      "review_notes.md",
+      "input_receipts.json",
+      "source_qualifications.json",
+      "reviewed_decisions.json",
+      "lineage.json",
+      "relationship_ledger.json",
+      "assurance_gates.json",
+      "artifact_receipts.json",
+      "assurance_envelope.json",
+      "run_intake.json",
+      "review_payload.json",
+      "ui_decisions.json",
+      "final_artifacts.json",
+      "review_handoff.md",
+      "applied_decisions.json"
+    ],
+    "initial_run_files": [
+      "normalized_bank.csv",
+      "normalized_journal.csv",
+      "reconciliation_matches.csv",
+      "unmatched_bank.csv",
+      "unmatched_journal.csv",
+      "bank_pdf_non_movement_rows.csv",
+      "journal_bank_reconciliation.xlsx",
+      "reconciliation_audit.json",
+      "review_notes.md",
+      "input_receipts.json",
+      "source_qualifications.json",
+      "reviewed_decisions.json",
+      "lineage.json",
+      "relationship_ledger.json",
+      "assurance_gates.json",
+      "artifact_receipts.json",
+      "assurance_envelope.json",
+      "run_intake.json",
+      "review_payload.json",
+      "ui_decisions.json",
+      "final_artifacts.json",
+      "review_handoff.md"
+    ],
+    "post_review_additional_files": [
+      "applied_decisions.json"
+    ],
+    "workbook": {
+      "path": "journal_bank_reconciliation.xlsx",
+      "sheet_order": [
+        "matches",
+        "unmatched_bank",
+        "unmatched_journal",
+        "bank_pdf_non_movements",
+        "normalized_bank",
+        "normalized_journal"
+      ],
+      "sheets": {
+        "matches": {
+          "canonical_source": "reconciliation_matches.csv",
+          "columns_schema": "match_columns"
+        },
+        "unmatched_bank": {
+          "canonical_source": "unmatched_bank.csv",
+          "columns_schema": "normalized_transaction_columns"
+        },
+        "unmatched_journal": {
+          "canonical_source": "unmatched_journal.csv",
+          "columns_schema": "normalized_transaction_columns"
+        },
+        "bank_pdf_non_movements": {
+          "canonical_source": "bank_pdf_non_movement_rows.csv",
+          "columns": [
+            "side",
+            "source_file",
+            "source_sheet",
+            "source_row",
+            "classification",
+            "reason",
+            "transaction_date",
+            "amount_signed",
+            "amount_abs",
+            "description"
+          ]
+        },
+        "normalized_bank": {
+          "canonical_source": "normalized_bank.csv",
+          "columns_schema": "normalized_transaction_columns"
+        },
+        "normalized_journal": {
+          "canonical_source": "normalized_journal.csv",
+          "columns_schema": "normalized_transaction_columns"
+        }
+      },
+      "closure": {
+        "sheet_headers_follow_declared_schema": true,
+        "sheet_rows_follow_canonical_csv_rows": true,
+        "byte_identity_required_between_equivalent_candidate_runs": true,
+        "independent_oracle_ooxml_package_required": false
+      }
+    }
+  },
+  "assurance": {
+    "gate_schema_version": "vera.assurance_gates.v1",
+    "gate_names": [
+      "source",
+      "preparation",
+      "reconciliation",
+      "semantic_review",
+      "reporting",
+      "publication"
+    ],
+    "report_ready_required_gates": [
+      "source",
+      "preparation",
+      "reconciliation",
+      "semantic_review",
+      "reporting"
+    ],
+    "publication_is_outside_component_and_excluded_from_report_ready": true,
+    "reconciliation_requires_closed_one_to_one_ledger_and_no_unmatched_rows": true,
+    "semantic_review_requires_complete_nonblocking_review_and_current_integrity": true,
+    "reporting_requires_reconciliation_semantic_review_and_current_receipts": true,
+    "review_acceptance_cannot_override_withheld_gates": true
+  },
+  "negative_threats": [
+    "source-row-order allocation bias",
+    "competing singleton bank rows targeting one journal row",
+    "bank or journal evidence reuse",
+    "stale mapping or relationship receipts",
+    "source-byte or source-membership changes during a run",
+    "unreviewed noncanonical direction vocabulary",
+    "ambiguous monetary separators or invalid monetary cells",
+    "missing actual dates entering amount/date stages",
+    "generic PDF text promoted to movements without a source-family adapter",
+    "duplicate OOXML member names",
+    "review decisions promoting unresolved reconciliation",
+    "run-scoped timestamps mistaken for deterministic business evidence"
+  ],
+  "deterministic_artifact_equality": {
+    "preconditions": [
+      "identical source bytes and source paths",
+      "identical reviewed mapping and relationship receipts",
+      "identical language, tolerance, date window, and sample perimeter",
+      "identical implementation bytes"
+    ],
+    "byte_identical_files": [
+      "normalized_bank.csv",
+      "normalized_journal.csv",
+      "reconciliation_matches.csv",
+      "unmatched_bank.csv",
+      "unmatched_journal.csv",
+      "bank_pdf_non_movement_rows.csv",
+      "journal_bank_reconciliation.xlsx",
+      "review_notes.md",
+      "input_receipts.json",
+      "source_qualifications.json",
+      "reviewed_decisions.json",
+      "lineage.json",
+      "relationship_ledger.json",
+      "assurance_gates.json"
+    ],
+    "excluded_run_scoped_files": [
+      "reconciliation_audit.json",
+      "artifact_receipts.json",
+      "assurance_envelope.json",
+      "run_intake.json",
+      "review_payload.json",
+      "ui_decisions.json",
+      "final_artifacts.json",
+      "review_handoff.md",
+      "applied_decisions.json"
+    ],
+    "exclusion_reason": "These artifacts contain run IDs, timestamps, execution traces, review state, manifests, or receipts over run-scoped bytes. They remain structurally and cryptographically validated but are not cross-run byte-equality targets."
+  }
+}

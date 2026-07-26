@@ -65,6 +65,25 @@ plugins/audit-reconciliation
 
 Do not edit downloaded plugin folders, ZIP contents, or Codex cache copies as source.
 
+Filename and text keyword matches are source-role suggestions only. Before raw
+ingestion, Codex must record one `reviewed_source_decisions` entry per current
+source. Each entry contains the reviewed role, adapter family, reviewer
+identity/date, accounting perimeter, cent-only monetary convention
+(`reported_increment: "0.01"`), and `date.order` (`day_first` or
+`month_first`). The v2 decision and one qualification carrying its
+`reviewed_mapping_ref` are bound to exactly one current-byte source receipt.
+Plain `reviewed_source_roles` or
+`reviewed_source_adapters` maps are not authority. Ambiguous or unreviewed files
+abstain and surface `needs_review`; unsupported layouts surface
+`unsupported_source_layout` and emit no accounting rows. The legacy Italian
+PDF/print-export parser may be named only inside this reviewed decision with
+adapter `legacy_it_accounting_export_v1`; do not ask the user to edit plugin
+files.
+
+Every `reviewer_ref` is an unsigned, unauthenticated, untrusted label. Its
+canonical syntax and sealed bytes do not prove the reviewer's identity or
+authorization.
+
 ## Core Principle
 
 Deterministic code is the authority for row-level classifications.
@@ -120,6 +139,9 @@ Expected delivery artifacts are:
   cannot start or the browser cannot be opened;
 - Codex review rows in the workbook;
 - targeted missing-evidence requests when the user needs an operational follow-up pack.
+- `prepared_records.json`, `assurance_receipts.json`, `assurance_gates.json`,
+  `final_output_inventory.json`, and the exact `assurance_final_outputs/`
+  boundary for replayable mechanical assurance.
 
 ## Browser Review UI And MCP Widget
 
@@ -135,7 +157,7 @@ Required handoff sequence:
 
 1. Read `artifact_card.md` and `final_artifacts.json` from the output folder.
 2. Start the browser review server from the plugin directory:
-   `python scripts/review_server.py <output-folder>`.
+   `python -I -B scripts/review_server.py <output-folder>`.
 3. The server opens the system browser by default on `127.0.0.1`; tell the
    reviewer the exact localhost URL and the `artifact_card.md` path in chat.
 4. Use the browser page to save/apply accepted, edited, rejected, unclear, or
@@ -143,6 +165,44 @@ Required handoff sequence:
    `applied_decisions.json`, and updated `final_artifacts.json`.
 5. Only after the browser surface is opened and the handoff is explicit should
    Codex report the workpapers and explain review status to the user.
+
+Review actions cannot waive a failed deterministic check. Failed checks,
+skipped required review items, and pending required review items keep
+`final_artifacts.json` out of `final_ready` until the underlying run is
+corrected and regenerated.
+For an assured run, every applied review decision is newer than the prior seal.
+Keep it blocked until native outputs are regenerated and
+`validate_assurance_run` freshly replays the new seal and exact output
+inventory.
+On the first apply, retain the exact predecessor seal, professional review,
+final reconciliation, review payload, ordered item-record mapping, applied
+decisions/effects, rederived successor review, and deterministic transition
+receipt in the same copy-on-write transaction. Also retain the complete
+validated predecessor run under `predecessor_run/` and freshly replay that
+snapshot before accepting the successor. The selected predecessor evidence
+must equal its snapshot counterpart, and the predecessor seal's run date,
+prepared assumptions and receipts, material values, gates, final inventory,
+and exact run tree must all revalidate. A successor is invalid if that
+content-addressed history is missing, changed, expanded, reordered,
+contradictory, or path-forged.
+Before that first apply, retain the predecessor seal's 64-hex
+`content_sha256` through a separate review channel. Supply it explicitly as
+`expected_predecessor_checkpoint` on browser/MCP apply, on the successor
+workflow rebuild, and on successor validation. Never infer or copy this value
+from the candidate successor tree. Missing or unequal checkpoints fail without
+changing the output tree. Checkpoint provenance remains the responsibility of
+the separate channel; digest equality does not authenticate a reviewer.
+That replay also enforces the fixed ordered 25-file implementation contract,
+including its pre-import bootstrap and every cache entry, plus the exact
+physical file-and-directory closure at the run and final-output boundaries.
+MCP terminal readiness must use the same complete replay and invokes Python
+with isolated, bytecode-disabled flags.
+The bootstrap is the only supported loader for the five non-`.py` retained
+internal source units under `scripts/retained_sources/`; ordinary direct import
+of those internal modules is unsupported. Public workflow entrypoints remain
+the supported execution surface. The boundary does not attest arbitrary code
+already running as the same operating-system user or the host's launcher
+selection.
 
 The MCP validate/render tools remain useful as an optional integrated Codex
 surface. Load them with `tool_search` when needed, call
@@ -177,6 +237,9 @@ Load `references/starter-prompts.md` for beta-facing prompt examples. Keep this 
 
 Load `references/evidence-and-checks.md` when deciding evidence strength, canonical fields, source roles, or deterministic accounting checks.
 
+Load `references/workflow-reference.md` for the exact source-decision contract,
+receipt replay points, gate meanings, and promotion rules.
+
 Core rule: row-level classifications must be supported by deterministic evidence and preserved source references. Candidate allocations and aggregate roll-forward checks may guide review, but they must not close individual rows unless a deterministic rule connects row-level evidence.
 
 ## Deterministic Run
@@ -202,13 +265,30 @@ assumptions, the intake check includes `requirements-ocr.txt`.
 
 The deterministic workflow should:
 
-1. inventory source files;
-2. extract PDF, Excel, CSV, ZIP/payment-order content where possible;
-3. normalize rows to canonical fields;
-4. classify open/disputed rows against evidence;
-5. produce row-level output with status, rule, evidence type, source reference, and missing-evidence request;
-6. produce diagnostic outputs: normalized records, checks, review packet, external evidence summary, bank allocation candidates, and ledger/journal controls where available;
-7. produce deterministic roll-forward and post-cut-off candidate checks where the source data supports them.
+1. inventory source files and capture full current-byte receipts;
+2. record/replay one v2 reviewed source, perimeter, adapter, cent-only money,
+   and date-order decision plus one mapping-bound qualification per source;
+   suggestions never authorize parsing;
+3. extract only sources with qualified adapters and abstain on ambiguous money,
+   floats, or unsupported layouts;
+4. normalize rows to exact decimal text and the reviewed entity, party,
+   currency, unit, direction, and allocation perimeter;
+5. replay source, decision, qualification, bounded record/value locators, and
+   implementation receipts, then atomically seal `prepared_records.json`;
+6. classify rows and build exact allocation/conservation ledgers, preserving
+   non-zero residuals;
+7. produce workpapers, diagnostics, an exact one-row-per-record review set, and
+   record-aware material-value addresses for every declared Excel/Word/JSON;
+8. publish only the declared regular files into `assurance_final_outputs/`,
+   receipt every ordinary single-link file, reject symlinks/hardlinks/special
+   files, and replay declared-versus-physical equality;
+9. write independent assurance gates. Pending/failed professional review blocks
+   reporting; publication remains withheld as a separate action. Build and
+   replay final controls in staging before transactional promotion.
+
+The raw runner does not interpret arbitrary CSV or arbitrary spreadsheet
+layouts. Such a source requires a qualified adapter or reviewed external
+preparation; do not coerce it through a similar-looking parser.
 
 When extracting long PDFs, enable `verbose_extraction` and set
 `pdf_progress_every_pages` when the default cadence is too sparse. The runner
@@ -220,10 +300,13 @@ For generic runs, pass `scope_year` and `cutoff_date` through assumptions when t
 Useful helper scripts include:
 
 - `scripts/raw_input_runner.py`: input-folder orchestration where available;
-- `scripts/reconciliation_helpers.py`: normalization, matching helpers, evidence typing, and diagnostics;
-- `scripts/workpaper_outputs.py`: workbook and report creation helpers;
+- `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
+- `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.
 - `scripts/build_missing_evidence_requests.py`: post-run workbook of targeted missing-evidence requests that distinguishes evidence already acquired from the exact missing item per row, using localized operational labels instead of internal status/rule codes.
+
+Normalization/matching and workpaper-output internals are retained source units
+loaded by the validated entrypoints; do not import or execute them directly.
 
 ## Review, Outputs, Locales, And Wording
 

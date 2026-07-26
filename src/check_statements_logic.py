@@ -2056,6 +2056,10 @@ def reconcile_transactions(
     norm_map_local: Dict[str, str] = {d: _clean_description_local(d) for d in raw_descs}
     norm_map: Dict[str, str] = dict(norm_map_local)
 
+    # Synthetic fees are authoritative only through this call-local link. The
+    # link is mechanically created from the originating bank row and cannot be
+    # inferred from fee wording or caller-supplied transaction metadata.
+    synthetic_fee_links: dict[int, int] = {}
     if exclude_fees:
         fee_indices: List[int] = []
         patterns = load_fee_patterns()
@@ -2086,6 +2090,7 @@ def reconcile_transactions(
             if is_fee_like:
                 fee_indices.append(i)
                 if eff_fee_mode == "match":
+                    synthetic_ledger_index = len(ledger)
                     ledger.append(
                         Transaction(
                             date=tx.date,
@@ -2093,12 +2098,17 @@ def reconcile_transactions(
                             description="Bank fee",
                             reference_ids=[],
                             beneficiary=None,
-                            metadata={"source": {"name": "synthetic_fee"}},
+                            metadata={
+                                "source": {"name": "synthetic_fee"},
+                                "synthetic_fee_bank_index": i,
+                            },
                         )
                     )
                     original_ledger_indices.append(None)
+                    synthetic_fee_links[synthetic_ledger_index] = i
             elif is_recurring_small and eff_fee_mode == "match":
                 # Dynamic fee handling: recurring small amounts get synthetic ledger entries
+                synthetic_ledger_index = len(ledger)
                 ledger.append(
                     Transaction(
                         date=tx.date,
@@ -2106,10 +2116,14 @@ def reconcile_transactions(
                         description="Bank fee (recurring amount)",
                         reference_ids=[],
                         beneficiary=None,
-                        metadata={"source": {"name": "synthetic_fee_amount"}},
+                        metadata={
+                            "source": {"name": "synthetic_fee_amount"},
+                            "synthetic_fee_bank_index": i,
+                        },
                     )
                 )
                 original_ledger_indices.append(None)
+                synthetic_fee_links[synthetic_ledger_index] = i
         if eff_fee_mode == "exclude" and fee_indices:
             bank = [tx for i, tx in enumerate(bank) if i not in fee_indices]
             original_bank_indices = [
@@ -2173,12 +2187,27 @@ def reconcile_transactions(
     matched_bank_indices = {bi for (bi, _, _) in matched_pairs}
     matched_ledger_indices = {li for (_, li, _) in matched_pairs}
 
-    total_passes = 3 if group_limit and group_limit > 1 else 2
+    adaptive_group_pass_eligible = group_limit <= 2
+    total_passes = (
+        4
+        if adaptive_group_pass_eligible
+        else (3 if group_limit and group_limit > 1 else 2)
+    )
+    last_progress = 0.0
 
     def _update_progress(pass_idx: int, bi: int) -> None:
+        nonlocal last_progress
         if progress_callback is None:
             return
-        progress = (pass_idx + (bi + 1) / len(bank)) / total_passes
+        if not bank:
+            return
+        progress = min(1.0, (pass_idx + (bi + 1) / len(bank)) / total_passes)
+        # Final completion is emitted after every optional matching pass. This
+        # keeps 1.0 both truthful and mechanically ordered.
+        if progress >= 1.0:
+            return
+        progress = max(last_progress, progress)
+        last_progress = progress
         progress_callback(progress, len(matched_pairs), bi + 1)
 
     for bi, b_txn in enumerate(bank):
@@ -2234,6 +2263,7 @@ def reconcile_transactions(
         date_window=date_window,
         use_absolute_amounts=use_absolute_amounts,
         update_progress=_update_progress,
+        synthetic_fee_links=synthetic_fee_links,
     )
     # Fuzzy matching (local/offline normalisation only at this stage)
     _fuzzy_pass(
@@ -2300,6 +2330,7 @@ def reconcile_transactions(
             within_tolerance=within_tolerance,
             within_date=within_date,
             update_progress=_update_progress,
+            progress_pass_index=3,
             group_candidates_cap=(
                 24 if not group_candidates_cap else min(24, int(group_candidates_cap))
             ),
@@ -2447,6 +2478,10 @@ def reconcile_transactions(
                     save_alias_rules(alias_map)
                 except Exception as exc:  # pragma: no cover - defensive
                     logger.warning("Alias learning: failed to save rules: %s", exc)
+
+    if progress_callback is not None:
+        last_progress = 1.0
+        progress_callback(last_progress, len(matched_pairs), len(bank))
 
     unmatched_bank = [i for i in range(len(bank)) if i not in matched_bank_indices]
     unmatched_ledger = [

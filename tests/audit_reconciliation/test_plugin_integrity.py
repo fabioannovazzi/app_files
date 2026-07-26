@@ -105,7 +105,7 @@ def test_plugin_beta_onboarding_and_prompt_bank_are_documented():
         assert snippet.lower() in combined
 
 
-def test_file_preparation_engine_run_guidance_and_prompt_bank_are_documented():
+def test_file_preparation_engine_new_client_guidance_and_prompt_bank_are_documented():
     readme = (FILE_PREPARATION_PLUGIN / "README.md").read_text(encoding="utf-8")
     skill = (
         FILE_PREPARATION_PLUGIN / "skills" / "client-file-preparation" / "SKILL.md"
@@ -116,18 +116,18 @@ def test_file_preparation_engine_run_guidance_and_prompt_bank_are_documented():
     combined = f"{readme}\n{skill}\n{workflow_reference}".lower()
 
     for snippet in (
-        "Primo run beta",
+        "New Client",
         "First Run",
-        "Prompt di avvio per beta user",
+        "For a beta user's first run",
         "Starter Prompt Bank",
-        "Istruttoria completa fascicolo cliente",
+        "Full customer-folder intake",
         "730/Redditi PF first intake",
         "Geneva / Zurich intake",
         "UK Self Assessment intake",
         "FatturaPA XML formal check",
         "Structured fiscal fields",
         "Missing-document email pack",
-        "Avviso intake",
+        "Avviso presente nel fascicolo",
         "python scripts/check_dependencies.py --folder",
         "cartella cliente",
         "giurisdizione",

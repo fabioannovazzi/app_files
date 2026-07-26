@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -135,12 +136,23 @@ REVIEW_SAVE_TOOLS = [
     ),
 ]
 
-# Client File Preparation deliberately refuses ad-hoc persistent directories: its
-# own integration suite builds and seals a real phase-one run before Save/Apply.
-# The generic persistence fixtures below exercise only servers whose contract
-# permits synthetic unsealed output directories.
+# Assurance-bearing workflows deliberately refuse ad-hoc persistent directories.
+# Their integration suites build and seal real runs before Save/Apply. The generic
+# persistence fixtures below exercise only servers whose contract permits
+# synthetic unsealed output directories.
 GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS = [
-    tool for tool in REVIEW_SAVE_TOOLS if tool[0] != "client-file-preparation"
+    tool
+    for tool in REVIEW_SAVE_TOOLS
+    if tool[0]
+    not in {
+        "audit-reconciliation",
+        "check-entries",
+        "client-file-preparation",
+        "concordato-plan-review",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "report-builder",
+    }
 ]
 
 REVIEW_RENDER_TOOLS = {
@@ -192,6 +204,27 @@ def test_non_plotting_review_assets_match_generator(
         ensure_ascii=True,
         indent=2,
     ) + "\n"
+
+
+def test_audit_reconciliation_widget_preflights_external_checkpoint_before_apply() -> (
+    None
+):
+    widget = (
+        ROOT
+        / "plugins"
+        / "audit-reconciliation"
+        / "assets"
+        / "audit-reconciliation-review-widget.html"
+    ).read_text(encoding="utf-8")
+    apply_handler = widget.split("async function handleApplyDecisions()", 1)[1].split(
+        "function copyDecisionJson", 1
+    )[0]
+
+    assert "const applicationArgs = applyToolArgs();" in apply_handler
+    assert "await saveCurrentDecisions();" not in apply_handler
+    assert "window.openai.callTool(applyTool, applicationArgs)" in apply_handler
+    assert "expected_predecessor_checkpoint: expectedPredecessorCheckpoint" in widget
+    assert "retained through the separate review channel" in widget
 
 
 def test_client_file_preparation_widget_forwards_stable_reviewer_attribution() -> None:
@@ -671,15 +704,15 @@ def test_non_plotting_review_workbench_adapters_are_workflow_specific() -> None:
         if item["item_type"] == "supported_entry"
     )
     assert supported_demo_item["data"]["target_artifact"] == "check_results.csv"
-    assert supported_demo_item["data"]["target_id_field"] == "source_row"
-    assert supported_demo_item["data"]["target_record_id"] == "1"
+    assert supported_demo_item["data"]["target_id_field"] == "prepared_entry_id"
+    assert supported_demo_item["data"]["target_record_id"] == "entry.demo-1001"
     assert supported_demo_item["data"]["target_field"] == "review_notes"
     assert "edit_hint" in supported_demo_item["data"]
     assert (
         missing_demo_item["data"]["requested_document"]
         == "Supporting PDF for movement 1002"
     )
-    assert missing_demo_item["data"]["target_record_id"] == "2"
+    assert missing_demo_item["data"]["target_record_id"] == "entry.demo-1002"
     journal_bank = next(
         adapter
         for adapter in adapters
@@ -877,16 +910,72 @@ def _call_mcp_server(plugin: str, messages: list[dict[str, object]]) -> list[dic
     node = shutil.which("node")
     if node is None:
         pytest.skip("Node.js is required to exercise MCP review save tools.")
+    normalized_messages = json.loads(json.dumps(messages))
+    if plugin == "check-entries":
+        for message in normalized_messages:
+            params = message.get("params")
+            arguments = params.get("arguments") if isinstance(params, dict) else None
+            review_payload = (
+                arguments.get("review_payload") if isinstance(arguments, dict) else None
+            )
+            if not isinstance(review_payload, dict):
+                continue
+            review_payload = _normalize_js_json_numbers(review_payload)
+            arguments["review_payload"] = review_payload
+            review_payload["schema_version"] = "2.0"
+            review_payload.pop("content_sha256", None)
+            encoded = json.dumps(
+                review_payload,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+            review_payload["content_sha256"] = hashlib.sha256(encoded).hexdigest()
+            ui_decisions = arguments.get("ui_decisions")
+            if isinstance(ui_decisions, dict):
+                ui_decisions["review_payload_content_sha256"] = review_payload[
+                    "content_sha256"
+                ]
+    if plugin == "concordato-plan-review":
+        for message in normalized_messages:
+            params = message.get("params")
+            arguments = params.get("arguments") if isinstance(params, dict) else None
+            review_payload = (
+                arguments.get("review_payload") if isinstance(arguments, dict) else None
+            )
+            if not isinstance(review_payload, dict):
+                continue
+            review_payload.setdefault("assurance", {"final_ready": False})
+            review_payload.pop("content_sha256", None)
+            encoded = json.dumps(
+                review_payload,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+            review_payload["content_sha256"] = hashlib.sha256(encoded).hexdigest()
     server_path = ROOT / "plugins" / plugin / "mcp" / "server.cjs"
     completed = subprocess.run(
         [node, str(server_path), "--stdio"],
-        input="\n".join(json.dumps(message) for message in messages) + "\n",
+        input="\n".join(json.dumps(message) for message in normalized_messages) + "\n",
         capture_output=True,
         text=True,
         check=True,
         timeout=20,
     )
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
+
+
+def _normalize_js_json_numbers(value: Any) -> Any:
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, list):
+        return [_normalize_js_json_numbers(item) for item in value]
+    if isinstance(value, dict):
+        return {key: _normalize_js_json_numbers(item) for key, item in value.items()}
+    return value
 
 
 def _minimal_review_payload(plugin: str, item_type: str) -> dict[str, object]:
@@ -1309,13 +1398,16 @@ def test_non_plotting_review_save_and_apply_tools_persist_review_results(
     assert apply_result["persisted"] is True
     assert apply_result["decision_count"] == 1
     assert apply_result["blocker_count"] == 0
-    assert apply_result["application_status"] == "final_ready"
+    expected_application_status = (
+        "blocked" if plugin == "check-entries" else "final_ready"
+    )
+    assert apply_result["application_status"] == expected_application_status
 
     applied = json.loads(
         (output_dir / "applied_decisions.json").read_text(encoding="utf-8")
     )
     assert applied["plugin"] == plugin
-    assert applied["application_status"] == "final_ready"
+    assert applied["application_status"] == expected_application_status
     assert applied["effects"][0]["item_id"] == "item-1"
     assert applied["effects"][0]["target_artifact"] == "review_payload.json"
     assert applied["effects"][0]["artifact_update"] == "decision_manifest_only"
@@ -1323,14 +1415,16 @@ def test_non_plotting_review_save_and_apply_tools_persist_review_results(
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
-    assert final_artifacts["status"] == "final_ready"
-    assert final_artifacts["review_status"] == "final_ready"
+    assert final_artifacts["status"] == expected_application_status
+    assert final_artifacts["review_status"] == expected_application_status
     assert final_artifacts["caveats"] == ["Original gallery caveat."]
     assert final_artifacts["blockers"] == []
-    assert final_artifacts["next_actions"] == [
-        "Original gallery next action.",
-        "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
-    ]
+    expected_next_actions = ["Original gallery next action."]
+    if plugin != "check-entries":
+        expected_next_actions.append(
+            "Use final_artifacts.json as the reviewed artifact gallery for handoff."
+        )
+    assert final_artifacts["next_actions"] == expected_next_actions
     output_paths = {output["path"] for output in final_artifacts["outputs"]}
     assert {"ui_decisions.json", "applied_decisions.json"} <= output_paths
 
@@ -1710,7 +1804,9 @@ def test_non_plotting_review_apply_tools_update_safe_text_artifacts_for_edit_dec
 
     apply_result = responses[1]["result"]["structuredContent"]
     assert apply_result["ok"] is True
-    assert apply_result["application_status"] == "final_ready"
+    assert apply_result["application_status"] == (
+        "blocked" if plugin == "check-entries" else "final_ready"
+    )
     assert apply_result["revision_count"] == 1
     assert apply_result["target_update_count"] == 1
     applied = json.loads(

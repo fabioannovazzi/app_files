@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import socket
@@ -25,6 +26,16 @@ def _write_json(path: Path, payload: dict[str, object]) -> None:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
+def _seal_review_payload(payload: dict[str, object]) -> None:
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    payload["content_sha256"] = hashlib.sha256(encoded).hexdigest()
+
+
 def _fixture_output_dir(tmp_path: Path) -> Path:
     output_dir = tmp_path / "check-entries-run"
     output_dir.mkdir()
@@ -32,7 +43,7 @@ def _fixture_output_dir(tmp_path: Path) -> Path:
     _write_json(
         output_dir / "run_intake.json",
         {
-            "schema_version": "1.0",
+            "schema_version": "2.0",
             "plugin": "check-entries",
             "workflow": "check-entries",
             "run_id": run_id,
@@ -58,47 +69,46 @@ def _fixture_output_dir(tmp_path: Path) -> Path:
             ],
         },
     )
-    _write_json(
-        output_dir / "review_payload.json",
-        {
-            "schema_version": "1.0",
-            "plugin": "check-entries",
-            "workflow": "check-entries",
-            "run_id": run_id,
-            "source_paths": ["entries.xlsx", "support.pdf"],
-            "review_type": "journal_entry_support_review",
-            "items": [
-                {
-                    "id": "entry-1",
-                    "item_type": "supported_entry",
-                    "title": "1001 | 123.45 | 2025-01-02",
-                    "source_path": "entries.xlsx",
-                    "output_path": "check_results.csv",
-                    "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
-                    "recommended_action": "edit",
-                    "data": {
-                        "status": "ok",
-                        "source_row": "1",
-                        "target_artifact": "check_results.csv",
-                        "target_id_field": "source_row",
-                        "target_record_id": "1",
-                        "target_field": "review_notes",
-                        "client_name": "Acme Review Alias",
-                    },
-                    "evidence": [{"kind": "deterministic_checks", "status": "ok"}],
-                }
-            ],
-            "item_count": 1,
-            "columns": ["source_row", "review_notes"],
-            "evidence": [{"kind": "deterministic_checks", "status": "ok"}],
-            "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
-            "status": "ready_for_review",
-        },
-    )
+    review_payload: dict[str, object] = {
+        "schema_version": "2.0",
+        "plugin": "check-entries",
+        "workflow": "check-entries",
+        "run_id": run_id,
+        "source_paths": ["entries.xlsx", "support.pdf"],
+        "review_type": "journal_entry_support_review",
+        "items": [
+            {
+                "id": "entry-1",
+                "item_type": "supported_entry",
+                "title": "1001 | 123.45 | 2025-01-02",
+                "source_path": "entries.xlsx",
+                "output_path": "check_results.csv",
+                "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
+                "recommended_action": "edit",
+                "data": {
+                    "status": "ok",
+                    "source_row": "1",
+                    "target_artifact": "check_results.csv",
+                    "target_id_field": "source_row",
+                    "target_record_id": "1",
+                    "target_field": "review_notes",
+                    "client_name": "Acme Review Alias",
+                },
+                "evidence": [{"kind": "deterministic_checks", "status": "ok"}],
+            }
+        ],
+        "item_count": 1,
+        "columns": ["source_row", "review_notes"],
+        "evidence": [{"kind": "deterministic_checks", "status": "ok"}],
+        "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
+        "status": "ready_for_review",
+    }
+    _seal_review_payload(review_payload)
+    _write_json(output_dir / "review_payload.json", review_payload)
     _write_json(
         output_dir / "final_artifacts.json",
         {
-            "schema_version": "1.0",
+            "schema_version": "2.0",
             "plugin": "check-entries",
             "workflow": "check-entries",
             "run_id": run_id,
@@ -219,7 +229,11 @@ def test_local_review_workbench_injects_browser_write_bridge(tmp_path: Path) -> 
     assert session["decision_policy"]["can_persist"] is True
     assert session["decision_policy"]["save_tool"] == "save_check_entries_decisions"
     assert session["review_payload"]["item_count"] == 1
+    assert session["ui_decisions"]["review_payload_content_sha256"] == (
+        session["review_payload"]["content_sha256"]
+    )
     assert session["run_intake"]["input_paths"] == []
+    assert "assumptions" not in session["run_intake"]
     assert "output_dir" not in session["run_intake"]
     assert "required_text" not in session["final_artifacts"]["outputs"][0]
     assert session["review_payload"]["items"][0]["data"]["client_name"] == (
@@ -254,6 +268,7 @@ def test_phase_one_local_workbench_uses_sanitized_and_script_safe_payload(
     serialized_session = json.dumps(session, ensure_ascii=False)
     assert "/Users/private/customer" not in serialized_session
     assert "Francesco Private Client" not in serialized_session
+    assert "assumptions" not in session["run_intake"]
     assert "source_snapshot" not in session["run_intake"]
     assert "required_text" not in session["final_artifacts"]["outputs"][0]
     assert malicious_title in session["review_payload"]["items"][0]["title"]
@@ -364,12 +379,16 @@ def test_node_executable_rejects_invalid_explicit_override(
         server._node_executable()
 
 
-def test_local_review_server_rejects_non_loopback_host(tmp_path: Path) -> None:
+def test_local_review_server_rejects_non_loopback_host(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     server = load_server_module()
     workbench = server.LocalReviewWorkbench(
         plugin_dir=ROOT / "plugins" / "check-entries",
         output_dir=_fixture_output_dir(tmp_path),
     )
+    monkeypatch.setattr(server, "build_session_payload", lambda _workbench: {})
 
     with pytest.raises(ValueError, match="loopback"):
         server.create_review_http_server(workbench, host="0.0.0.0")

@@ -10,36 +10,34 @@ from openpyxl import load_workbook
 
 from scripts.validate_plugin_review_contract import validate_contract
 
-OUTPUTS = (
-    Path(__file__).resolve().parents[2]
-    / "plugins"
-    / "audit-reconciliation"
-    / "scripts"
-    / "workpaper_outputs.py"
+SCRIPTS = (
+    Path(__file__).resolve().parents[2] / "plugins" / "audit-reconciliation" / "scripts"
 )
-REVIEW_SESSION = OUTPUTS.with_name("review_session.py")
+WORKFLOW = SCRIPTS / "reconciliation_workflow.py"
 
 
 def load_outputs():
-    spec = importlib.util.spec_from_file_location("audit_workpaper_outputs", OUTPUTS)
+    spec = importlib.util.spec_from_file_location(
+        "audit_workpaper_outputs_entrypoint",
+        WORKFLOW,
+    )
     assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    entrypoint = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = entrypoint
+    spec.loader.exec_module(entrypoint)
+    return sys.modules["workpaper_outputs"]
 
 
 def load_review_session():
-    script_dir = str(REVIEW_SESSION.parent)
-    if script_dir not in sys.path:
-        sys.path.insert(0, script_dir)
     spec = importlib.util.spec_from_file_location(
-        "audit_workpaper_review_session", REVIEW_SESSION
+        "audit_workpaper_review_session_entrypoint",
+        WORKFLOW,
     )
     assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+    entrypoint = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = entrypoint
+    spec.loader.exec_module(entrypoint)
+    return sys.modules["review_session"]
 
 
 def document_text(path: Path) -> str:

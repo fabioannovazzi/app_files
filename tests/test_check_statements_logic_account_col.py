@@ -1,3 +1,4 @@
+import importlib
 import sys
 import types
 from pathlib import Path
@@ -6,7 +7,7 @@ import polars as pl
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-import src  # noqa: F401  # ensure real package is loaded before stubs
+import src as src_package
 
 modules_to_stub = {
     "parsers.extractors": [
@@ -36,25 +37,55 @@ def ensure_package(name: str) -> None:
         sys.modules[name] = pkg
 
 
-for module_name, attrs in modules_to_stub.items():
-    parts = module_name.split(".")
-    for i in range(1, len(parts)):
-        ensure_package(".".join(parts[:i]))
-    stub = types.ModuleType(module_name)
-    for attr in attrs:
-        if attr[0].isupper():
-            stub.__dict__[attr] = type(attr, (), {})
-        elif module_name == "parsers.extractors" and attr == "extract_references":
-            stub.__dict__[attr] = lambda *args, **kwargs: []
-        elif attr == "get_schema_and_column_names":
-            stub.__dict__[attr] = lambda df: (list(df.columns), list(df.columns))
-        elif attr == "get_row_count":
-            stub.__dict__[attr] = lambda df: df.height if hasattr(df, "height") else 0
-        else:
-            stub.__dict__[attr] = lambda *args, **kwargs: None
-    sys.modules[module_name] = stub
+def _is_isolated_import(name: str) -> bool:
+    roots = ("finance", "modules", "parsers", "statements")
+    return (
+        any(name == root or name.startswith(f"{root}.") for root in roots)
+        or name == "src.final_pass_filter"
+        or name.startswith("src.check_statements")
+    )
 
-from src.check_statements import _resolve_account_col
+
+original_modules = {
+    name: module for name, module in sys.modules.items() if _is_isolated_import(name)
+}
+original_src_state = dict(src_package.__dict__)
+for module_name in original_modules:
+    sys.modules.pop(module_name, None)
+
+try:
+    for module_name, attrs in modules_to_stub.items():
+        parts = module_name.split(".")
+        for i in range(1, len(parts)):
+            ensure_package(".".join(parts[:i]))
+        stub = types.ModuleType(module_name)
+        for attr in attrs:
+            if attr[0].isupper():
+                stub.__dict__[attr] = type(attr, (), {})
+            elif module_name == "parsers.extractors" and attr == "extract_references":
+                stub.__dict__[attr] = lambda *args, **kwargs: []
+            elif attr == "get_schema_and_column_names":
+                stub.__dict__[attr] = lambda df: (
+                    list(df.columns),
+                    list(df.columns),
+                )
+            elif attr == "get_row_count":
+                stub.__dict__[attr] = lambda df: (
+                    df.height if hasattr(df, "height") else 0
+                )
+            else:
+                stub.__dict__[attr] = lambda *args, **kwargs: None
+        sys.modules[module_name] = stub
+
+    check_statements = importlib.import_module("src.check_statements")
+    _resolve_account_col = check_statements._resolve_account_col
+finally:
+    for module_name in list(sys.modules):
+        if _is_isolated_import(module_name):
+            sys.modules.pop(module_name, None)
+    sys.modules.update(original_modules)
+    src_package.__dict__.clear()
+    src_package.__dict__.update(original_src_state)
 
 
 def test_resolve_account_col_exact_match() -> None:
