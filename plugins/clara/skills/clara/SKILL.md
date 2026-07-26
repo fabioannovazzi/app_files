@@ -1,6 +1,6 @@
 ---
 name: clara
-description: Use when a user wants Clara to organize advisory work or route a request for presentations, interviews, recordings, Retailer Signals, Brand Fit, or business-data charts to the correct Clara workflow.
+description: Use when a user wants Clara to organize advisory work, support commercial due-diligence preparation, or route a request for presentations, interviews, recordings, Retailer Signals, Brand Fit, or business-data charts to the correct Clara workflow.
 ---
 
 ## ChatGPT and Codex Runtime
